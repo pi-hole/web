@@ -1,0 +1,13 @@
+.sidebar-menu>li>a>.fa,
+.sidebar-menu>li>a>.glyphicon,
+.sidebar-menu>li>a>.ion {
+    width: 20px;
+    top: 3px;
+    position: relative;
+}
+
+@media (min-width: 768px) {
+    .sidebar-mini.sidebar-collapse .sidebar-menu>li>a {
+        height: 44px;
+    }
+}

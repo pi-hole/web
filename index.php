@@ -1,8 +1,5 @@
 <?php
-    $domains_being_blocked = exec("wc -l /etc/pihole/gravity.list | awk '{print $1}'");
-    $dns_queries_today = exec("cat /var/log/pihole.log | awk '/query/ {print $6}' | wc -l");
-    $ads_blocked_today = exec("cat /var/log/pihole.log | awk '/\/etc\/pihole\/gravity.list/ && !/address/ {print $6}' | wc -l");
-    $ads_percentage_today = $ads_blocked_today / $dns_queries_today * 100;
+    require_once ('inc/stats.inc.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -18,6 +15,7 @@
 
         <link href="./css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
         <link href="./css/skin-blue.min.css" rel="stylesheet" type="text/css" />
+        <link href="./css/additions.css" rel="stylesheet" type="text/css" />
 
         <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -106,6 +104,16 @@
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <ul class="sidebar-menu">
                         <li class="header">MAIN NAVIGATION</li>
+                        <li class="active">
+                            <a href="./">
+                                <i class="fa fa-tachometer pull-left"></i> <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="./customNameserver.php">
+                                <i class="fa fa-server pull-left"></i> <span>Custom Nameservers</span>
+                            </a>
+                        </li>
                         <li>
                             <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
                             <i class="fa fa-paypal pull-left"></i> <span>Donate</span>
@@ -125,7 +133,7 @@
                             <!-- small box -->
                             <div class="small-box bg-aqua">
                                 <div class="inner">
-                                    <h3><?php echo number_format($ads_blocked_today) ?></h3>
+                                    <h3><?php echo Stats::getBlockedCount() ?></h3>
                                     <p>Ads Blocked Today</p>
                                 </div>
                                 <div class="icon">
@@ -139,7 +147,7 @@
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3><?php echo number_format($dns_queries_today) ?></h3>
+                                    <h3><?php echo Stats::getQueryCount() ?></h3>
                                     <p>DNS Queries Today</p>
                                 </div>
                                 <div class="icon">
@@ -153,7 +161,7 @@
                             <!-- small box -->
                             <div class="small-box bg-yellow">
                                 <div class="inner">
-                                    <h3><?php echo number_format($ads_percentage_today, 2, '.', '') ?><sup style="font-size: 20px">%</sup></h3>
+                                    <h3><?php echo Stats::getBlockedPercentage() ?><sup style="font-size: 20px">%</sup></h3>
                                     <p>Of Today's Traffic Is Ads</p>
                                 </div>
                                 <div class="icon">
@@ -167,7 +175,7 @@
                             <!-- small box -->
                             <div class="small-box bg-red">
                                 <div class="inner">
-                                    <h3><sup style="font-size: 30px"><?php echo number_format($domains_being_blocked) ?></sup></h3>
+                                    <h3><sup style="font-size: 30px"><?php echo Stats::getBlockedDomains() ?></sup></h3>
                                     <p>Domains Being Blocked</p>
                                 </div>
                                 <div class="icon">
