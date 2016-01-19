@@ -18,7 +18,7 @@
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
         <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
+        <link href="./plugins/datatables/dataTables.bootstrap.css" rel="stylesheet">
         <link href="./css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
         <link href="./css/skin-blue.min.css" rel="stylesheet" type="text/css" />
 
@@ -268,8 +268,8 @@
         <!-- ./wrapper -->
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
-        <script src="plugins/datatables/jquery.dataTables.min.js"></script>
-		<script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
+        <script src="./plugins/datatables/jquery.dataTables.min.js"></script>
+	<script src="./plugins/datatables/dataTables.bootstrap.min.js"></script>
         <script src="./js/app.min.js" type="text/javascript"></script>
         <script>
         	$(function () {
