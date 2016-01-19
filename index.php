@@ -1,10 +1,10 @@
 <?php
-    $domains_being_blocked = exec("wc -l /etc/pihole/pihole.3.eventHorizon.txt | awk '{print $1}'");
+    $domains_being_blocked = exec("wc -l /etc/pihole/gravity.list | awk '{print $1}'");
     $dns_queries_today = exec("cat /var/log/pihole.log | awk '/query/ {print $6}' | wc -l");
     $ads_blocked_today = exec("cat /var/log/pihole.log | awk '/\/etc\/pihole\/gravity.list/ && !/address/ {print $6}' | wc -l");
     $ads_percentage_today = $ads_blocked_today / $dns_queries_today * 100;
     $dns_query_info = exec("cat /var/log/pihole.log | awk '/query/ {print $6 \"|\" $8 \"|\" $1\"-\"$2\"-\"$3}'", $dns_array);
-	$blocked_dns_query_info = exec("cat /var/log/pihole.log | awk '/\/etc\/pihole\/gravity.list/ && !/address/ {print $6 \"|\" $8 \"|\" $1 \"-\"$2\"-\"$3}'", $blocked_dns_array);
+    $blocked_dns_query_info = exec("cat /var/log/pihole.log | awk '/\/etc\/pihole\/gravity.list/ && !/address/ {print $6 \"|\" $8 \"|\" $1 \"-\"$2\"-\"$3}'", $blocked_dns_array);
 
 ?>
 <!DOCTYPE html>
@@ -182,6 +182,78 @@
                         <!-- ./col -->
                     </div>
                     <!-- /.row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Default box -->
+                   	    	<div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">All DNS Queries</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <table id="alldnstable" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Day/Time</th>
+				                                <th>DNS Name</th>
+				                                <th>IP Address</th>
+                                            </tr>
+                                        </thead>
+                                    	<tbody>
+		                                    <?php foreach($dns_array as $key=>$value){ $dnsq_arr = explode("|", $value) ?>
+		                                        <tr>
+		                                            <td><?php echo str_replace("-", " ", $dnsq_arr[2]); ?></td>
+		                                            <td><?php echo $dnsq_arr[0]; ?></td>
+		                                            <td><?php echo $dnsq_arr[1]; ?></td>
+		                                        </tr>
+		                                    <?php } ?>
+                                		</tbody>
+                                		<tfoot>
+		                                  	<tr>
+		                                    	<th>Day/Time</th>
+		                                    	<th>Cover</th>
+		                                    	<th>Title</th>
+		                                  	</tr>
+                                		</tfoot>
+                              		</table>
+                            	</div><!-- /.box-body -->
+                          	</div><!-- /.box -->
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Default box -->
+                          	<div class="box">
+                            	<div class="box-header">
+                              		<h3 class="box-title">Blocked DNS Queries</h3>
+                            	</div><!-- /.box-header -->
+                            	<div class="box-body">
+                              		<table id="blockeddnstable" class="table table-bordered table-hover">
+                                		<thead>
+                                  			<tr>
+                                    			<th>Day/Time</th>
+                                    			<th>DNS Name</th>
+                                    			<th>IP Address</th>
+                                  			</tr>
+                                		</thead>
+                                		<tbody>
+                                    		<?php foreach($blocked_dns_array as $key=>$value){ $dnsq_arr = explode("|", $value) ?>
+                                        		<tr>
+                                            		<td><?php echo str_replace("-", " ", $dnsq_arr[2]); ?></td>
+                                            		<td><?php echo $dnsq_arr[0]; ?></td>
+                                            		<td><?php echo $dnsq_arr[1]; ?></td>
+                                        		</tr>
+                                    		<?php } ?>
+                                		</tbody>
+                                		<tfoot>
+                                  			<tr>
+                                    			<th>Day/Time</th>
+                                    			<th>Cover</th>
+                                    			<th>Title</th>
+                                  			</tr>
+                                		</tfoot>
+                              		</table>
+                            	</div><!-- /.box-body -->
+                          	</div><!-- /.box -->
+                        </div>
+                    </div>
                 </section>
                 <!-- /.content -->
             </div>
@@ -199,5 +271,25 @@
         <script src="plugins/datatables/jquery.dataTables.min.js"></script>
 		<script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
         <script src="./js/app.min.js" type="text/javascript"></script>
+        <script>
+        	$(function () {
+			$('#alldnstable').DataTable({
+		    		"paging": true,
+			    	"lengthChange": false,
+			    	"searching": false,
+			    	"ordering": true,
+			    	"info": true,
+			    	"autoWidth": false
+		  	});
+		  	$('#blockeddnstable').DataTable({
+		    		"paging": true,
+				"lengthChange": false,
+				"searching": false,
+				"ordering": true,
+			    	"info": true,
+			    	"autoWidth": false
+		  	});
+		});
+        </script>
     </body>
 </html>
