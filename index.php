@@ -1,11 +1,11 @@
 <?php
-    $domains_being_blocked = exec("wc -l /etc/pihole/gravity.list | awk '{print $1}'");
-    $dns_queries_today = exec("cat /var/log/pihole.log | awk '/query/ {print $6}' | wc -l");
-    $ads_blocked_today = exec("cat /var/log/pihole.log | awk '/\/etc\/pihole\/gravity.list/ && !/address/ {print $6}' | wc -l");
-    $ads_percentage_today = $ads_blocked_today / $dns_queries_today * 100;
-    $dns_query_info = exec("cat /var/log/pihole.log | awk '/query/ {print $6 \"|\" $8 \"|\" $1\"-\"$2\"-\"$3}'", $dns_array);
-    $blocked_dns_query_info = exec("cat /var/log/pihole.log | awk '/\/etc\/pihole\/gravity.list/ && !/address/ {print $6 \"|\" $8 \"|\" $1 \"-\"$2\"-\"$3}'", $blocked_dns_array);
 
+    $output = exec('/usr/local/bin/chronometer.sh -j');
+    $outj = json_decode($output);
+    $domains_being_blocked = $outj->domains_being_blocked;
+    $dns_queries_today = $outj->dns_queries_today;
+    $ads_blocked_today = $outj->ads_blocked_today;
+    $ads_percentage_today = $outj->ads_percentage_today;
 ?>
 <!DOCTYPE html>
 <html>
@@ -261,7 +261,7 @@
             <!-- /.content-wrapper -->
             <footer class="main-footer">
                 <div class="pull-right hidden-xs">
-                    <b>Pi-hole Version</b> 2.2
+                    <b>Pi-hole Version</b> 2.3
                 </div>
                 <i class="fa fa-github"></i> <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY">Donate</a></strong> if you found this useful.
             </footer>
