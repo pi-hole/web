@@ -97,7 +97,13 @@
 	<div class="col-md-6">
 		<div class="box">
 			<div class="box-header box-danger collapse">
+				<span class="fa fa-archive"></span>
 				<h3 class="box-title">All DNS Queries</h3>
+				<div class="pull-right box-tools">
+					<button type="button" class="btn btn-box-tool" data-widget="collapse">
+						<i class="fa fa-minus"></i>
+					</button>
+				</div>
 			</div><!-- /.box-header -->
 			<div class="box-body">
 				<table id="alldnstable" class="table table-bordered table-hover">
@@ -134,7 +140,13 @@
 	<div class="col-md-6">
 		<div class="box">
 			<div class="box-header box-danger collapse">
+				<span class="fa fa-ban"></span>
 				<h3 class="box-title">Blocked DNS Queries</h3>
+				<div class="pull-right box-tools">
+					<button type="button" class="btn btn-box-tool" data-widget="collapse">
+						<i class="fa fa-minus"></i>
+					</button>
+				</div>
 			</div><!-- /.box-header -->
 			<div class="box-body">
 				<table id="blockeddnstable" class="table table-bordered table-hover">
@@ -179,7 +191,19 @@
 <script>
     $(document).ready(function(){
         $('#frequent_queries').DataTable({"order": [[ 0, "desc" ]]});
-		$('#alldnstable').DataTable({"order": [[ 0, "desc" ]]});
-		$('#blockeddnstable').DataTable({"order": [[ 0, "desc" ]]});
+		$('#alldnstable').DataTable({
+			"order": [
+				[ 0, "desc" ]
+			],
+			"responsive": true,
+			"autoWidth": false
+		});
+		$('#blockeddnstable').DataTable({
+			"order": [
+				[ 0, "desc" ]
+			],
+			"responsive": true,
+			"autoWidth": false
+		});
     });
 </script>
