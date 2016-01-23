@@ -8,7 +8,9 @@
     $ads_blocked_today = $outj->ads_blocked_today;
     $ads_percentage_today = $outj->ads_percentage_today;
     exec('grep -F "query[A]" /var/log/pihole.log | cut -d " " -f 6 | sort | uniq -c | sort -nr | head -n 100', $frequent_queries);
-	//this is a test
+	exec("cat /var/log/pihole.log | awk '/query/ {print $6 \"|\" $8 \"|\" $1\"-\"$2\"-\"$3}'", $dns_info_array);
+    exec("cat /var/log/pihole.log | awk '/\/etc\/pihole\/gravity.list/ && !/address/ {print $6 \"|\" $8 \"|\" $1 \"-\"$2\"-\"$3}'", $blocked_dns_info_array);
+
 ?>
 
 <!-- Small boxes (Stat box) -->
@@ -91,6 +93,82 @@
         </table>
     </div><!-- /.box-body -->
 </div><!-- /.box -->
+<div class="row">
+	<div class="col-md-6">
+		<div class="box">
+			<div class="box-header box-danger collapse">
+				<h3 class="box-title">All DNS Queries</h3>
+			</div><!-- /.box-header -->
+			<div class="box-body">
+				<table id="alldnstable" class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>Day/Time</th>
+							<th>DNS Name</th>
+							<th>IP Address</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php 
+							foreach($dns_info_array as $key=>$value){ 
+								$dnsq_arr = explode("|", trim($value)); 
+								echo "<tr>" .
+										"<td>" . str_replace("-", " ", $dnsq_arr[2]) . "</td>" .
+										"<td>" . $dnsq_arr[0] . "</td>" .
+										"<td>" . $dnsq_arr[1] . "</td>" .
+									"</tr>";
+							}
+						?>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Day/Time</th>
+							<th>Cover</th>
+							<th>Title</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div><!-- /.box-body -->
+		</div><!-- /.box -->
+	</div><!-- /.col -->
+	<div class="col-md-6">
+		<div class="box">
+			<div class="box-header box-danger collapse">
+				<h3 class="box-title">Blocked DNS Queries</h3>
+			</div><!-- /.box-header -->
+			<div class="box-body">
+				<table id="blockeddnstable" class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>Day/Time</th>
+							<th>DNS Name</th>
+							<th>IP Address</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php 
+							foreach($blocked_dns_info_array as $key=>$value){ 
+								$dnsq_arr = explode("|", trim($value)); 
+								echo "<tr>" .
+										"<td>" . str_replace("-", " ", $dnsq_arr[2]) . "</td>" .
+										"<td>" . $dnsq_arr[0] . "</td>" .
+										"<td>" . $dnsq_arr[1] . "</td>" .
+									"</tr>";
+							}
+						?>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Day/Time</th>
+							<th>Cover</th>
+							<th>Title</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div><!-- /.box-body -->
+		</div><!-- /.box -->
+	</div><!-- /.col -->
+</div><!-- /.row -->
 
 <?php
     require "footer.html";
@@ -101,5 +179,7 @@
 <script>
     $(document).ready(function(){
         $('#frequent_queries').DataTable({"order": [[ 0, "desc" ]]});
+		$('#alldnstable').DataTable({"order": [[ 0, "desc" ]]});
+		$('#blockeddnstable').DataTable({"order": [[ 0, "desc" ]]});
     });
 </script>
