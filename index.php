@@ -1,4 +1,5 @@
 <?php
+
     $output = exec('/usr/local/bin/chronometer.sh -j');
     $outj = json_decode($output);
     $domains_being_blocked = $outj->domains_being_blocked;
@@ -17,7 +18,8 @@
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
         <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-
+        <link href="./plugins/datatables/dataTables.bootstrap.css" rel="stylesheet">
+       	<link href="./plugins/datatables/responsive.dataTables.min.css" rel="stylesheet">
         <link href="./css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
         <link href="./css/skin-blue.min.css" rel="stylesheet" type="text/css" />
 
@@ -181,6 +183,78 @@
                         <!-- ./col -->
                     </div>
                     <!-- /.row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Default box -->
+                   	    	<div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title">All DNS Queries</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <table id="alldnstable" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Day/Time</th>
+				                                <th>DNS Name</th>
+				                                <th>IP Address</th>
+                                            </tr>
+                                        </thead>
+                                    	<tbody>
+		                                    <?php foreach($dns_array as $key=>$value){ $dnsq_arr = explode("|", $value) ?>
+		                                        <tr>
+		                                            <td><?php echo str_replace("-", " ", $dnsq_arr[2]); ?></td>
+		                                            <td><?php echo $dnsq_arr[0]; ?></td>
+		                                            <td><?php echo $dnsq_arr[1]; ?></td>
+		                                        </tr>
+		                                    <?php } ?>
+                                		</tbody>
+                                		<tfoot>
+		                                  	<tr>
+		                                    	<th>Day/Time</th>
+		                                    	<th>Cover</th>
+		                                    	<th>Title</th>
+		                                  	</tr>
+                                		</tfoot>
+                              		</table>
+                            	</div><!-- /.box-body -->
+                          	</div><!-- /.box -->
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Default box -->
+                          	<div class="box">
+                            	<div class="box-header">
+                              		<h3 class="box-title">Blocked DNS Queries</h3>
+                            	</div><!-- /.box-header -->
+                            	<div class="box-body">
+                              		<table id="blockeddnstable" class="table table-bordered table-hover">
+                                		<thead>
+                                  			<tr>
+                                    			<th>Day/Time</th>
+                                    			<th>DNS Name</th>
+                                    			<th>IP Address</th>
+                                  			</tr>
+                                		</thead>
+                                		<tbody>
+                                    		<?php foreach($blocked_dns_array as $key=>$value){ $dnsq_arr = explode("|", $value) ?>
+                                        		<tr>
+                                            		<td><?php echo str_replace("-", " ", $dnsq_arr[2]); ?></td>
+                                            		<td><?php echo $dnsq_arr[0]; ?></td>
+                                            		<td><?php echo $dnsq_arr[1]; ?></td>
+                                        		</tr>
+                                    		<?php } ?>
+                                		</tbody>
+                                		<tfoot>
+                                  			<tr>
+                                    			<th>Day/Time</th>
+                                    			<th>Cover</th>
+                                    			<th>Title</th>
+                                  			</tr>
+                                		</tfoot>
+                              		</table>
+                            	</div><!-- /.box-body -->
+                          	</div><!-- /.box -->
+                        </div>
+                    </div>
                 </section>
                 <!-- /.content -->
             </div>
@@ -195,6 +269,32 @@
         <!-- ./wrapper -->
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="./plugins/datatables/jquery.dataTables.min.js"></script>
+	<script src="./plugins/datatables/dataTables.bootstrap.min.js"></script>
+	<script src="./plugins/datatables/dataTables.responsive.min.js"></script>
+
         <script src="./js/app.min.js" type="text/javascript"></script>
+        <script>
+        	$(function () {
+			$('#alldnstable').DataTable({
+		    		"paging": true,
+			    	"lengthChange": false,
+			    	"searching": false,
+			    	"ordering": true,
+			    	"info": true,
+			    	"autoWidth": false,
+			    	"responsive": true
+		  	});
+		  	$('#blockeddnstable').DataTable({
+		    		"paging": true,
+				"lengthChange": false,
+				"searching": false,
+				"ordering": true,
+			    	"info": true,
+			    	"autoWidth": false,
+			    	"responsive": true
+		  	});
+		});
+        </script>
     </body>
 </html>
