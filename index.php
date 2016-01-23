@@ -188,9 +188,16 @@
 
 <script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js" type="text/javascript"></script>
 <script src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
+<script src="https://cdn.datatables.net/responsive/2.0.1/js/dataTables.responsive.min.js" type="text/javascript"></script>
+
 <script>
     $(document).ready(function(){
-        $('#frequent_queries').DataTable({"order": [[ 0, "desc" ]]});
+        $('#frequent_queries').DataTable(
+			{"order": [
+				[ 0, "desc" ]
+			],
+			"responsive": true
+		});
 		$('#alldnstable').DataTable({
 			"order": [
 				[ 0, "desc" ]
