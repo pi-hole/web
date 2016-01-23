@@ -8,6 +8,7 @@
     $ads_blocked_today = $outj->ads_blocked_today;
     $ads_percentage_today = $outj->ads_percentage_today;
     exec('grep -F "query[A]" /var/log/pihole.log | cut -d " " -f 6 | sort | uniq -c | sort -nr | head -n 100', $frequent_queries);
+	//this is a test
 ?>
 
 <!-- Small boxes (Stat box) -->
