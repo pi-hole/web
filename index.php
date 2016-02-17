@@ -133,7 +133,6 @@
                                 <div class="icon">
                                     <i class="ion ion-android-hand"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->
@@ -147,7 +146,6 @@
                                 <div class="icon">
                                     <i class="ion ion-earth"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->
@@ -161,7 +159,6 @@
                                 <div class="icon">
                                     <i class="ion ion-pie-graph"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->
@@ -175,7 +172,6 @@
                                 <div class="icon">
                                     <i class="ion ion-ios-list"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->
