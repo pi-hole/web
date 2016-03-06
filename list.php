@@ -118,7 +118,7 @@ require "footer.php";
             $.ajax({
                 url: "php/add.php",
                 method: "get",
-                data: {"domain":domain, "list":"<?php echo $list ?>", "pass":password},
+                data: {"domain":domain, "list":"<?php echo $list ?>", "pass":btoa(password)},
                 success: function(response) {
                     if(response.length !== 0)
                         return;
@@ -138,7 +138,7 @@ require "footer.php";
             $.ajax({
                 url: "php/sub.php",
                 method: "get",
-                data: {"domain":entry, "list":"<?php echo $list ?>", "pass":password},
+                data: {"domain":entry, "list":"<?php echo $list ?>", "pass":btoa(password)},
                 success: function(response) {
                     if(response.length !== 0)
                         return;
@@ -157,7 +157,7 @@ require "footer.php";
             $.ajax({
                 url: "php/checkPass.php",
                 method: "get",
-                data: {"pass":password},
+                data: {"pass":btoa(password)},
                 success: function(response) {
                     if(response === "Correct")
                         callback();
@@ -185,7 +185,7 @@ require "footer.php";
                 $.ajax({
                     url: "php/checkPass.php",
                     method: "get",
-                    data: {"pass":password},
+                    data: {"pass":btoa(password)},
                     success: function(response) {
                         if(response === "Correct") {
                             passInput.html("");
