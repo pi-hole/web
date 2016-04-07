@@ -5,29 +5,29 @@
     $data = array();
 
     if (isset($_GET['summaryRaw'])) {
-        $data = array_merge($data,  getSummaryData());
+        $data = array_merge($data, getSummaryData());
     }
 
     if (isset($_GET['summary']) || !count($_GET)) {
         $sum = getSummaryData();
-        $sum['ads_blocked_today'] = number_format( $sum['ads_blocked_today']);
-        $sum['dns_queries_today'] = number_format( $sum['dns_queries_today']);
-        $sum['ads_percentage_today'] = number_format( $sum['ads_percentage_today'], 1, '.', '');
-        $sum['domains_being_blocked'] = number_format( $sum['domains_being_blocked']);
-        $data = array_merge($data,  $sum);
+        $sum['ads_blocked_today'] = number_format($sum['ads_blocked_today']);
+        $sum['dns_queries_today'] = number_format($sum['dns_queries_today']);
+        $sum['ads_percentage_today'] = number_format($sum['ads_percentage_today'], 1, '.', '');
+        $sum['domains_being_blocked'] = number_format($sum['domains_being_blocked']);
+        $data = array_merge($data, $sum);
     }
 
     if (isset($_GET['overTimeData'])) {
-        $data = array_merge($data,  getOverTimeData());
+        $data = array_merge($data, getOverTimeData());
     }
 
     if (isset($_GET['topItems'])) {
-        $data = array_merge($data,  getTopItems());
+        $data = array_merge($data, getTopItems());
     }
 
     if (isset($_GET['recentItems'])) {
         if (is_numeric($_GET['recentItems'])) {
-            $data = array_merge($data,  getRecentItems($_GET['recentItems']));
+            $data = array_merge($data, getRecentItems($_GET['recentItems']));
         }
     }
 
@@ -49,4 +49,3 @@
 
 
     echo json_encode($data);
-?>

@@ -1,10 +1,10 @@
-<?php    
+<?php
     $log = array();
     $ipv6 = file_exists("/etc/pihole/.useIPv6");
 
     /*******   Public Members ********/
     function getSummaryData() {
-        global $ipv6;        
+        global $ipv6;
         $log = readInLog();
         $domains_being_blocked = readInBlockList() / ($ipv6 ? 2 : 1);
 
@@ -22,7 +22,7 @@
         );
     }
 
-    function getOverTimeData() {        
+    function getOverTimeData() {
         $log = readInLog();
         $dns_queries = getDnsQueries($log);
         $ads_blocked = getBlockedQueries($log);
@@ -36,7 +36,7 @@
         );
     }
 
-    function getTopItems() {        
+    function getTopItems() {
         $log = readInLog();
         $dns_queries = getDnsQueries($log);
         $ads_blocked = getBlockedQueries($log);
@@ -63,7 +63,7 @@
         $dns_queries = getDnsQueries($log);
         $queryTypes = array();
 
-        foreach($dns_queries as $query) {
+        foreach ($dns_queries as $query) {
             $info = trim(explode(": ", $query)[1]);
             $queryType = explode(" ", $info)[0];
             if (isset($queryTypes[$queryType])) {
@@ -100,9 +100,9 @@
         $log = readInLog();
         $dns_queries = getDnsQueries($log);
         $sources = array();
-        foreach($dns_queries as $query) {
+        foreach ($dns_queries as $query) {
             $exploded = explode(" ", $query);
-            $ip = trim($exploded[count($exploded)-1]);
+            $ip = trim($exploded[count($exploded) - 1]);
             if (isset($sources[$ip])) {
                 $sources[$ip]++;
             }
@@ -123,7 +123,7 @@
         $lines = explode("\n", file_get_contents($fileName));
 
         //Create a new array and set domain name as index instead of value, with value as 1
-        foreach(array_values($lines) as $v){
+        foreach (array_values($lines) as $v) {
             $new_lines[trim(strstr($v, ' '))] = 1;
         }
 
@@ -132,18 +132,17 @@
             $exploded = explode(" ", trim($query));
 
             //Is index of the domain name set?
-            if (isset($new_lines[$exploded[count($exploded)-3]])){
-            	$extra = "Pi-holed";
+            if (isset($new_lines[$exploded[count($exploded) - 3]])) {
+                $extra = "Pi-holed";
             }
-            else
-            {
-            	$extra = "OK";
+            else {
+                $extra = "OK";
             }
             array_push($allQueries['data'], array(
                 $time->format('Y-m-d\TH:i:s'),
-                substr($exploded[count($exploded)-4], 6, -1),
-                $exploded[count($exploded)-3],
-                $exploded[count($exploded)-1],
+                substr($exploded[count($exploded) - 4], 6, -1),
+                $exploded[count($exploded) - 3],
+                $exploded[count($exploded) - 1],
                 $extra,
             ));
         }
@@ -153,36 +152,40 @@
     /******** Private Members ********/
     function readInBlockList() {
         //returns count of domains in blocklist.
-        $file="/etc/pihole/gravity.list";
+        $file = "/etc/pihole/gravity.list";
         $linecount = 0;
         $handle = fopen($file, "r");
-        while(!feof($handle)){
-          $line = fgets($handle);
-          $linecount++;
+        while (!feof($handle)) {
+            $line = fgets($handle);
+            $linecount++;
         }
-        
+
         fclose($handle);
-        
+
         return $linecount;
-            
+
     }
+
     function readInLog() {
         global $log;
         return count($log) > 1 ? $log :
             file("/var/log/pihole.log");
     }
+
     function getDnsQueries($log) {
         return array_filter($log, "findQueries");
     }
+
     function getBlockedQueries($log) {
         return array_filter($log, "findAds");
     }
+
     function getForwards($log) {
         return array_filter($log, "findForwards");
     }
 
 
-    function topItems($queries, $exclude = array(), $qty=10) {
+    function topItems($queries, $exclude = array(), $qty = 10) {
         $splitQueries = array();
         foreach ($queries as $query) {
             $exploded = explode(" ", $query);
@@ -219,7 +222,7 @@
     function alignTimeArrays(&$times1, &$times2) {
         $max = max(array(max(array_keys($times1)), max(array_keys($times2))));
         $min = min(array(min(array_keys($times1)), min(array_keys($times2))));
-        
+
         for ($i = $min; $i <= $max; $i++) {
             if (!isset($times2[$i])) {
                 $times2[$i] = 0;
@@ -233,7 +236,7 @@
         ksort($times2);
     }
 
-    function getRecent($queries, $qty){
+    function getRecent($queries, $qty) {
         $recent = array();
         foreach (array_slice($queries, -$qty) as $query) {
             $queryArray = array();
@@ -241,7 +244,7 @@
             $time = date_create(substr($query, 0, 16));
             $queryArray['time'] = $time->format('h:i:s a');
             $queryArray['domain'] = trim($exploded[count($exploded) - 3]);
-            $queryArray['ip'] = trim($exploded[count($exploded)-1]);
+            $queryArray['ip'] = trim($exploded[count($exploded) - 1]);
             array_push($recent, $queryArray);
 
         }
@@ -274,4 +277,3 @@
     );
 
  */
-?>
