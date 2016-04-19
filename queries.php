@@ -25,6 +25,7 @@
                         <th>Domain</th>
                         <th>Client</th>
                         <th>Status</th>
+                        <th>Forwarded</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -34,6 +35,7 @@
                         <th>Domain</th>
                         <th>Client</th>
                         <th>Status</th>
+                        <th>Forwarded</th>
                     </tr>
                 </tfoot>
             </table>
@@ -67,9 +69,10 @@
             "columns": [
                 { "width" : "20%", "type": "date" },
                 { "width" : "10%" },
-                { "width" : "40%" },
+                { "width" : "20%" },
                 { "width" : "15%" },
-                { "width" : "15%" }
+                { "width" : "15%" },
+                { "width" : "20%" }
               ]
             })
     } );
