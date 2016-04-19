@@ -135,9 +135,11 @@
               $status = "";
             }
             elseif (substr($tmp, 0, 9) == "forwarded" ){
+              $forwarded = $exploded[count($exploded)-1];
               $status="OK";
             }
             elseif (substr($tmp, strlen($tmp) - 12, 12)  == "gravity.list"  && $exploded[count($exploded)-5] != "read"){
+              $forwarded = $exploded[count($exploded)-1];
               $status="Pi-holed";
             }
             
@@ -148,6 +150,7 @@
                 $domain,
                 hasHostName($client),
                 $status,
+                $forwarded,
               )); 
             }
             
