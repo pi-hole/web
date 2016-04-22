@@ -52,8 +52,8 @@
 <script type="text/javascript">
     $(document).ready(function() {
         tableApi = $('#all-queries').DataTable({
-            "rowCallback": function (row, data, index ) {
-                if (data[4] == "Pi-holed") {
+            "rowCallback": function(row, data, index ) {
+                if(data[4] == "Pi-holed") {
                     $(row).css('color', 'red')
                 }
                 else {

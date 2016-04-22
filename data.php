@@ -30,7 +30,7 @@
         $domains_over_time = overTime($dns_queries);
         $ads_over_time = overTime($ads_blocked);
         alignTimeArrays($ads_over_time, $domains_over_time);
-        return Array(
+        return array(
             'domains_over_time' => $domains_over_time,
             'ads_over_time' => $ads_over_time,
         );
@@ -44,7 +44,7 @@
         $topAds = topItems($ads_blocked);
         $topQueries = topItems($dns_queries, $topAds);
 
-        return Array(
+        return array(
             'top_queries' => $topQueries,
             'top_ads' => $topAds,
         );
@@ -53,7 +53,7 @@
     function getRecentItems($qty) {
         $log = readInLog();
         $dns_queries = getDnsQueries($log);
-        return Array(
+        return array(
             'recent_queries' => getRecent($dns_queries, $qty)
         );
     }
@@ -63,10 +63,10 @@
         $dns_queries = getDnsQueries($log);
         $queryTypes = array();
 
-        foreach ($dns_queries as $query) {
+        foreach($dns_queries as $query) {
             $info = trim(explode(": ", $query)[1]);
             $queryType = explode(" ", $info)[0];
-            if (isset($queryTypes[$queryType])) {
+            if(isset($queryTypes[$queryType])) {
                 $queryTypes[$queryType]++;
             }
             else {
@@ -81,10 +81,10 @@
         $log = readInLog();
         $forwards = getForwards($log);
         $destinations = array();
-        foreach ($forwards as $forward) {
+        foreach($forwards as $forward) {
             $exploded = explode(" ", trim($forward));
             $dest = $exploded[count($exploded) - 1];
-            if (isset($destinations[$dest])) {
+            if(isset($destinations[$dest])) {
                 $destinations[$dest]++;
             }
             else {
@@ -100,10 +100,10 @@
         $log = readInLog();
         $dns_queries = getDnsQueries($log);
         $sources = array();
-        foreach ($dns_queries as $query) {
+        foreach($dns_queries as $query) {
             $exploded = explode(" ", $query);
             $ip = trim($exploded[count($exploded) - 1]);
-            if (isset($sources[$ip])) {
+            if(isset($sources[$ip])) {
                 $sources[$ip]++;
             }
             else {
@@ -123,16 +123,16 @@
         $lines = explode("\n", file_get_contents($fileName));
 
         //Create a new array and set domain name as index instead of value, with value as 1
-        foreach (array_values($lines) as $v) {
+        foreach(array_values($lines) as $v) {
             $new_lines[trim(strstr($v, ' '))] = 1;
         }
 
-        foreach ($dns_queries as $query) {
+        foreach($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
             $exploded = explode(" ", trim($query));
 
             //Is index of the domain name set?
-            if (isset($new_lines[$exploded[count($exploded) - 3]])) {
+            if(isset($new_lines[$exploded[count($exploded) - 3]])) {
                 $extra = "Pi-holed";
             }
             else {
@@ -155,7 +155,7 @@
         $file = "/etc/pihole/gravity.list";
         $linecount = 0;
         $handle = fopen($file, "r");
-        while (!feof($handle)) {
+        while(!feof($handle)) {
             $line = fgets($handle);
             $linecount++;
         }
@@ -168,8 +168,7 @@
 
     function readInLog() {
         global $log;
-        return count($log) > 1 ? $log :
-            file("/var/log/pihole.log");
+        return count($log) > 1 ? $log : file("/var/log/pihole.log");
     }
 
     function getDnsQueries($log) {
@@ -187,11 +186,11 @@
 
     function topItems($queries, $exclude = array(), $qty = 10) {
         $splitQueries = array();
-        foreach ($queries as $query) {
+        foreach($queries as $query) {
             $exploded = explode(" ", $query);
             $domain = trim($exploded[count($exploded) - 3]);
-            if (!isset($exclude[$domain])) {
-                if (isset($splitQueries[$domain])) {
+            if(!isset($exclude[$domain])) {
+                if(isset($splitQueries[$domain])) {
                     $splitQueries[$domain]++;
                 }
                 else {
@@ -205,11 +204,11 @@
 
     function overTime($entries) {
         $byTime = array();
-        foreach ($entries as $entry) {
+        foreach($entries as $entry) {
             $time = date_create(substr($entry, 0, 16));
             $hour = $time->format('G');
 
-            if (isset($byTime[$hour])) {
+            if(isset($byTime[$hour])) {
                 $byTime[$hour]++;
             }
             else {
@@ -223,11 +222,11 @@
         $max = max(array(max(array_keys($times1)), max(array_keys($times2))));
         $min = min(array(min(array_keys($times1)), min(array_keys($times2))));
 
-        for ($i = $min; $i <= $max; $i++) {
-            if (!isset($times2[$i])) {
+        for($i = $min; $i <= $max; $i++) {
+            if(!isset($times2[$i])) {
                 $times2[$i] = 0;
             }
-            if (!isset($times1[$i])) {
+            if(!isset($times1[$i])) {
                 $times1[$i] = 0;
             }
         }
