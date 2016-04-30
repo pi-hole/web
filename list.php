@@ -2,6 +2,62 @@
     require "header.html";
     include "blacklist.php";
     include "whitelist.php";
+
+    if(isset($_GET['l']))
+    {
+        switch($_GET['l'])
+        {
+            case "black":
+                $type = "black";
+                break;
+            case "white":
+                $type = "white";
+                break;
+            default:
+                $type = "invalid";
+        }
+    }
+
+    if(isset($_POST['btn_update']) && isset($_POST['list_type']))
+    {
+        switch($_POST['list_type'])
+        {
+            case "black":
+                if(update_blacklist($_POST['list_domains']))
+                {
+?>
+                <div class="alert alert-success">
+                <strong>Success!</strong> List updated!</div>
+<?php
+                }
+                else
+                {
+?>
+                <div class="alert alert-danger">
+                <strong>Error!</strong> Failed to update list!</div>
+<?php
+                }
+                break;
+            case "white":
+                if(update_whitelist($_POST['list_domains']))
+                {
+?>
+                <div class="alert alert-success">
+                <strong>Success!</strong> List updated!</div>
+<?php
+                }
+                else
+                {
+?>
+                <div class="alert alert-danger">
+                <strong>Error!</strong> Failed to update list!</div>
+<?php
+                }
+                break;
+            default:
+                echo "<h1>Invalid Request!</h1>";
+        }
+    }
 ?>
 <!-- JS Warning -->
 <div>
@@ -16,16 +72,27 @@
 <div class="row">
     <div class="col-md-12">
         <div class="contianer">
+            <form role="form" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
+                <div class="form-group">
 <?php
-if(isset($_GET['l']) && $_GET['l'] == "black")
+if($type  == "black")
 {
     display_blacklist();
 }
-else if(isset($_GET['l']) && $_GET['l'] == "white")
+else if($type == "white")
 {
     display_whitelist();
 }
 ?>
+                </div>
+                <input type="hidden" name="list_type" value="<?php echo $type; ?>" />
+                <button type="button" class="btn btn-danger" onclick="addToList()">
+                    <span class="glyphicon glyphicon-plus"></span> Add to List
+                </button>
+                <button type="submit" class="btn btn-success" name="btn_update">
+                    <span class="glyphicon glyphicon-ok"></span> Update
+                </button>
+            </form>
         </div>
     </div>
 </div>
@@ -34,3 +101,15 @@ else if(isset($_GET['l']) && $_GET['l'] == "white")
 <?php
     require "footer.php";
 ?>
+
+<script type="text/javascript">
+
+function addToList()
+{
+    var table = document.getElementById("list-table");
+    var row = table.insertRow(table.rows.length);
+    var cell1 = row.insertCell(0);
+    cell1.innerHTML = '<input type="text" class="form-control" name="list_domains[]">';
+}
+
+</script>
