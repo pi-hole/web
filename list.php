@@ -1,7 +1,6 @@
 <?php
     require "header.html";
-    include "blacklist.php";
-    include "whitelist.php";
+    include "includes/blacklist.php";
 
     if(isset($_GET['l']))
     {
@@ -20,42 +19,19 @@
 
     if(isset($_POST['btn_update']) && isset($_POST['list_type']))
     {
-        switch($_POST['list_type'])
+        if(update_list($_POST['list_type'], $_POST['list_domains']))
         {
-            case "black":
-                if(update_blacklist($_POST['list_domains']))
-                {
 ?>
-                <div class="alert alert-success">
-                <strong>Success!</strong> List updated!</div>
+            <div class="alert alert-success">
+            <strong>Success!</strong> List updated!</div>
 <?php
-                }
-                else
-                {
+        }
+        else
+        {
 ?>
-                <div class="alert alert-danger">
-                <strong>Error!</strong> Failed to update list!</div>
+            <div class="alert alert-danger">
+            <strong>Error!</strong> Failed to update list!</div>
 <?php
-                }
-                break;
-            case "white":
-                if(update_whitelist($_POST['list_domains']))
-                {
-?>
-                <div class="alert alert-success">
-                <strong>Success!</strong> List updated!</div>
-<?php
-                }
-                else
-                {
-?>
-                <div class="alert alert-danger">
-                <strong>Error!</strong> Failed to update list!</div>
-<?php
-                }
-                break;
-            default:
-                echo "<h1>Invalid Request!</h1>";
         }
     }
 ?>
@@ -72,22 +48,20 @@
 <div class="row">
     <div class="col-md-12">
         <div class="contianer">
+
+            <div class="alert alert-warning">
+                <strong>Warning!</strong> Any changes to this list will require dnsmasq service restart or device reboot to take effect!
+            </div>
+
             <form role="form" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
                 <div class="form-group">
 <?php
-if($type  == "black")
-{
-    display_blacklist();
-}
-else if($type == "white")
-{
-    display_whitelist();
-}
+    display_list($type);
 ?>
                 </div>
                 <input type="hidden" name="list_type" value="<?php echo $type; ?>" />
                 <button type="button" class="btn btn-danger" onclick="addToList()">
-                    <span class="glyphicon glyphicon-plus"></span> Add to List
+                    <span class="glyphicon glyphicon-plus"></span> Add Domain
                 </button>
                 <button type="submit" class="btn btn-success" name="btn_update">
                     <span class="glyphicon glyphicon-ok"></span> Update

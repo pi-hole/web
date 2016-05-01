@@ -1,19 +1,19 @@
 <?php
-$blacklist_file = "/etc/pihole/blacklist.txt";
+$list_folder = "/etc/pihole/";
 
-function display_blacklist()
+function display_list($type)
 {
 ?>
     <table id="list-table" class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
-                <th>Blacklisted domain(s)</th>
+                <th><?php echo ucfirst($type); ?>listed domain(s)</th>
             </tr>
         </thead>
         <tbody>
 
 <?php
-    $file = fopen($GLOBALS['blacklist_file'], "r");
+    $file = fopen($GLOBALS['list_folder'] . $type . "list.txt", "r");
 
     while(! feof($file))
     {
@@ -33,11 +33,11 @@ function display_blacklist()
 }
 
 
-function update_blacklist($list_domains)
+function update_list($type, $list_domains)
 {
     try
     {
-        $file = fopen($GLOBALS['blacklist_file'], "w");
+        $file = fopen($GLOBALS['list_folder'] . $type . "list.txt", "w");
 
         foreach($list_domains as $domain)
         {
