@@ -1,0 +1,61 @@
+{
+  "name": "angular-datatables",
+  "version": "0.5.4",
+  "author": "l-lin",
+  "license": "MIT",
+  "main": [
+    "dist/angular-datatables.js",
+    "dist/plugins/bootstrap/angular-datatables.bootstrap.js",
+    "dist/plugins/bootstrap/datatables.bootstrap.css",
+    "dist/plugins/colreorder/angular-datatables.colreorder.js",
+    "dist/plugins/columnfilter/angular-datatables.columnfilter.js",
+    "dist/plugins/light-columnfilter/angular-datatables.light-columnfilter.js",
+    "dist/plugins/colvis/angular-datatables.colvis.js",
+    "dist/plugins/fixedcolumns/angular-datatables.fixedcolumns.js",
+    "dist/plugins/fixedheader/angular-datatables.fixedheader.js",
+    "dist/plugins/scroller/angular-datatables.scroller.js",
+    "dist/plugins/tabletools/angular-datatables.tabletools.js",
+    "dist/plugins/buttons/angular-datatables.buttons.js",
+    "dist/plugins/select/angular-datatables.select.js"
+  ],
+  "ignore": [
+    ".bowerrc",
+    ".editorconfig",
+    ".git*",
+    ".jshintrc",
+    ".esformatter",
+    "Gruntfile.js",
+    "test",
+    "node_modules",
+    "src",
+    ".travis.yml",
+    "vendor",
+    "data.json",
+    "data1.json",
+    "demo",
+    "favicon.png",
+    "index.html",
+    "README.md",
+    "CONTRIBUTING.md",
+    "server.js",
+    "styles",
+    "_config.yml",
+    "grunt",
+    "images",
+    "package.json",
+    "archives",
+    "archives.json",
+    "dtOptions.json",
+    "dtColumns.json"
+  ],
+  "dependencies": {
+    "angular": ">=1.3.0",
+    "datatables": ">=1.10.9",
+    "jquery": ">=1.11.0"
+  },
+  "devDependencies": {
+    "angular-mocks": ">=1.3.0",
+    "bootstrap": ">=3.0.1",
+    "angular-bootstrap": ">=0.10.0"
+  }
+}
