@@ -124,6 +124,14 @@ angular.module('piholeAdminApp')
               return result.data;
             });
       },
+      getVersions: function () {
+          return $http.get('api.php?getVersions')
+            .then(function (result) {
+              //resolve the promise as the data
+
+              return result.data;
+            });
+      },
 
       addToList: function (listType, domain, token) {
         if (listType == 'white' || listType == 'black') {
