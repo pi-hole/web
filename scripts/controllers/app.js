@@ -17,4 +17,5 @@ angular.module('piholeAdminApp')
         $scope.versions = status;
       });
     };
+    refreshData();
   }]);
