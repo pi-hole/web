@@ -116,6 +116,15 @@ angular.module('piholeAdminApp')
             });
         }
       },
+      getStatus: function () {
+          return $http.get('api.php?getStatus')
+            .then(function (result) {
+              //resolve the promise as the data
+
+              return result.data;
+            });
+      },
+
       addToList: function (listType, domain, token) {
         if (listType == 'white' || listType == 'black') {
           return $http.post('php/add.php', {

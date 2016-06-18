@@ -101,7 +101,7 @@
         </nav>
     </header>
     <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar">
+    <aside class="main-sidebar" ng-controller="MenuCtrl">
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
             <!-- Sidebar user panel -->
@@ -111,14 +111,22 @@
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
-                    <!-- <?php
-                               $pistatus = exec('pgrep dnsmasq | wc -l');
-                               if ($pistatus > "0") {
-                     echo '<a href="#"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
-                     } else {
-                     echo '<a href="#"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
-                     }
-                     ?> -->
+                    <div class="row">
+                        <div class="col-xs-5 col-md-5">
+                            DNS:
+                        </div>
+                        <div class="col-xs-3 col-md-3">
+                            <span status="status.dnsmasq"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-5 col-md-5">
+                            Blackhole:
+                        </div>
+                        <div class="col-xs-3 col-md-3">
+                            <span status="status.blackhole"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -211,9 +219,11 @@
 
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="scripts/app.js"></script>
+<script src="scripts/controllers/menu.js"></script>
 <script src="scripts/controllers/dashboard.js"></script>
 <script src="scripts/controllers/querylog.js"></script>
 <script src="scripts/services/api.js"></script>
+<script src="scripts/directives/status.js"></script>
 <script src="scripts/directives/glow.js"></script>
 <script src="scripts/controllers/list.js"></script>
 <script src="scripts/legacy/app.min.js"></script>

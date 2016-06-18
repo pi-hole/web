@@ -285,4 +285,23 @@
         }
         return $var;
     }
+
+    function getVersions(){
+        $version['pihole'] = exec("cd /etc/.pihole/ && git describe --tags --abbrev=0");
+        $version['pihole_webinterface'] = exec("cd /var/www/html/admin/ && git describe --tags --abbrev=0");
+        return $version;
+    }
+
+    function getStatus(){
+        $pistatus = exec('pgrep dnsmasq | wc -l');
+
+        $status['dnsmasq'] = ($pistatus > '0') ? true : false;
+        /**
+         * Support for the on / off button
+         * More info see http://thetimmy.silvernight.org/pages/endisbutton/
+         */
+        $listFileExists = file_exists('/etc/pihole/gravity.list');
+        $status['blackhole'] = ($listFileExists) ? true : false;
+        return $status;
+    }
 ?>

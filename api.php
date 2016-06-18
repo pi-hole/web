@@ -47,6 +47,16 @@
         $data = array_merge($data, getAllQueries());
     }
 
+    if (isset($_GET['getVersions'])) {
+        $data = array_merge($data, getVersions());
+    }
+
+    if (isset($_GET['getStatus'])) {
+        $data = array_merge($data, getStatus());
+    }
+
+
+
     function filterArray(&$a) {
 	    $sanArray = array();
 	    foreach ($a as $k=>$v) {
