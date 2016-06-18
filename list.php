@@ -1,6 +1,6 @@
 <?php
 session_start();
-require "header.html";
+//require "header.html";
 
 $list = $_GET['l'];
 
@@ -54,7 +54,7 @@ $token = $_SESSION['token'];
 <ul class="list-group" id="list"></ul>
 
 <?php
-require "footer.php";
+//require "footer.php";
 ?>
 
 <script src="js/pihole/list.js"></script>

@@ -153,10 +153,10 @@ angular.module('piholeAdminApp')
        * Quick dirty hack to obtain the token
        */
       fetchCRSFToken: function () {
-        return $http.get('list.php')
+        return $http.get('api.php?getToken')
           .then(function (result) {
             var token;
-            token = jQuery(result.data).find('#token').html();
+            token = result.data.token;
             return token;
           });
       }

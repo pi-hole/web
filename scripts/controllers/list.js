@@ -10,7 +10,7 @@
 angular.module('piholeAdminApp')
   .controller('ListCtrl', ['$scope', 'API', 'CacheService', '$location', '$timeout', function ($scope, API, CacheService, $location, $timeout) {
     var listType = $location.path().replace('/', '').replace('list', '');
-    $scope.token = false;
+    $scope.token = true;
     $scope.alInfo = false;
     $scope.alSuccess = false;
     $scope.alFailure = false;
@@ -42,6 +42,7 @@ angular.module('piholeAdminApp')
 
     $scope.addDomain = function () {
       API.fetchCRSFToken().then(function (token) {
+        console.log(token)
         API.addToList(listType, $scope.domain, token).then(function (result) {
           if (result.indexOf("not a valid argument") >= 0) {
             $scope.alFailure = true;
@@ -66,6 +67,7 @@ angular.module('piholeAdminApp')
 
     $scope.removeDomain = function (domain) {
       API.fetchCRSFToken().then(function (token) {
+        console.log(token)
         API.removeFromList(listType, domain, token).then(function () {
           var idx = $scope.list.indexOf(domain);
           $scope.list.splice(idx, 1);

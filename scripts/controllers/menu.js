@@ -14,7 +14,6 @@ angular.module('piholeAdminApp')
 
     var refreshData = function () {
       API.getStatus().then(function (status) {
-        console.log(status);
         $scope.status = status;
       });
     };
