@@ -87,8 +87,11 @@ angular.module('piholeAdminApp')
               var rows = [];
 
               angular.forEach(result.data.data, function (row, k) {
+                var offset =  new Date().getTimezoneOffset();
+                var d = new Date(row[0]);
+                var utc = d.getTime() + (offset * 60000);
                 rows.push({
-                  date: row[0],
+                  date: utc,
                   recordType: row[1],
                   domain: row[2],
                   clientIP: row[3],
