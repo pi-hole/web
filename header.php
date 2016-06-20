@@ -1,3 +1,9 @@
+<?php
+	$cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2`)).$((`cat /sys/class/thermal/thermal_zone0/temp|cut -c3-5`))";
+	$output = shell_exec($cmd);
+	$output = str_replace(["\r\n","\r","\n"],"", $output);
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,6 +65,7 @@
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
+					<li><?php echo "<p class='navbar-txt'>$output °C</p>"; ?></li>
                     <!-- User Account: style can be found in dropdown.less -->
                     <li id="dropdown-menu" class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle">
