@@ -141,7 +141,7 @@ angular.module('piholeAdminApp')
           return $http.post('php/add.php', {
             'domain': domain,
             'list': listType,
-            'token': CSRFToken
+            'token': token
           }).then(function (result) {
             //resolve the promise as the data
             return result.data;
