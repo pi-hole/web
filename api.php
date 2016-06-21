@@ -1,4 +1,5 @@
 <?php
+    session_start();
     include('data.php');
     header('Content-type: application/json');
 
