@@ -1,7 +1,7 @@
 <?php
-	$cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2`)).$((`cat /sys/class/thermal/thermal_zone0/temp|cut -c3-4`))";
-	$output = shell_exec($cmd);
-	$output = str_replace(["\r\n","\r","\n"],"", $output);
+    $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2`)).$((`cat /sys/class/thermal/thermal_zone0/temp|cut -c3-4`))";
+    $output = shell_exec($cmd);
+    $output = str_replace(["\r\n","\r","\n"],"", $output);
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +65,7 @@
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                  <!-- User Account: style can be found in dropdown.less -->
+                    <!-- User Account: style can be found in dropdown.less -->
                     <li id="dropdown-menu" class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle">
                             <img src="img/pihole-160x160.jpg" class="user-image" alt="Pi-hole logo" />
@@ -128,23 +128,21 @@
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
-		    <?php 
-			$pistatus = exec('pgrep dnsmasq | wc -l');
+                    <?php 
+                        $pistatus = exec('pgrep dnsmasq | wc -l');
                         if ($pistatus > "0") {
                             echo '<a href="#"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
                         } else {
                             echo '<a href="#"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
                         }
-			
-			// CPU Temp
-			if ($output > "45") {
+
+                        // CPU Temp
+                        if ($output > "45") {
                             echo '<a href="#"><i class="fa fa-fire" style="color:#FF0000"></i> Temp: ' . $output . '</a>';
                         } else {
                             echo '<a href="#"><i class="fa fa-fire" style="color:#3366FF"></i> Temp: ' . $output . '</a>';
                         }
-
-
-		    ?>
+                    ?>
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
