@@ -1,3 +1,9 @@
+<?php
+    $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2`)).$((`cat /sys/class/thermal/thermal_zone0/temp|cut -c3-4`))";
+    $output = shell_exec($cmd);
+    $output = str_replace(["\r\n","\r","\n"],"", $output);
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -128,6 +134,13 @@
                             echo '<a href="#"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
                         } else {
                             echo '<a href="#"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
+                        }
+
+                        // CPU Temp
+                        if ($output > "45") {
+                            echo '<a href="#"><i class="fa fa-fire" style="color:#FF0000"></i> Temp: ' . $output . '</a>';
+                        } else {
+                            echo '<a href="#"><i class="fa fa-fire" style="color:#3366FF"></i> Temp: ' . $output . '</a>';
                         }
                     ?>
                 </div>
