@@ -12,15 +12,29 @@ angular.module('piholeAdminApp')
     var inCache = [];
 
 
-    var refreshData = function () {
+    var getStatus = function () {
       API.getStatus().then(function (status) {
         $scope.status = status;
+      });
+
+
+    };
+
+    var getTemp = function(){
+      API.getTemp().then(function (temp) {
+        $scope.temp = temp.temp;
       });
     };
 
 
-    refreshData();
+    getStatus();
+    getTemp();
+
     $interval(function () {
-      refreshData();
+      getStatus();
     }, 10 * 1000);
+
+    $interval(function () {
+      getTemp();
+    }, 60 * 1000);
   }]);

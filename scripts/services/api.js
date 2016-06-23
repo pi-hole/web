@@ -135,6 +135,14 @@ angular.module('piholeAdminApp')
               return result.data;
             });
       },
+      getTemp: function () {
+          return $http.get('api.php?getTemp')
+            .then(function (result) {
+              //resolve the promise as the data
+
+              return result.data;
+            });
+      },
 
       addToList: function (listType, domain, token) {
         if (listType == 'white' || listType == 'black') {

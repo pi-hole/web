@@ -304,4 +304,11 @@
         $status['blackhole'] = ($listFileExists) ? true : false;
         return $status;
     }
+
+    function getTemp(){
+        $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2`)).$((`cat /sys/class/thermal/thermal_zone0/temp|cut -c3-4`))";
+        $output = shell_exec($cmd);
+        $output = str_replace(["\r\n","\r","\n"],"", $output);
+        return $output;
+    }
 ?>

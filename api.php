@@ -64,7 +64,10 @@
         $data = array_merge($data, $token);
     }
 
-
+    if(isset($_GET['getTemp'])){
+        $temp['temp'] = getTemp();
+        $data = array_merge($data, $temp);
+    }
 
     function filterArray(&$a) {
 	    $sanArray = array();
