@@ -8,6 +8,13 @@ h3 {
   transition-duration: 500ms; }
 
 .user-panel {
-  height: 90px; }
+  height: 100px; }
+  .user-panel .info {
+    left: 0px !important; }
+  .user-panel .status_row {
+    padding-top: 3px;
+    padding-bottom: 3px; }
+    .user-panel .status_row .status_label {
+      color: #b8c7ce; }
 
 /*# sourceMappingURL=main.css.map */

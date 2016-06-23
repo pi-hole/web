@@ -7,5 +7,20 @@
 h3 { transition-duration: 500ms }
 
 .user-panel{
-  height: 90px;
+  .info{
+    left: 0px !important;
+  }
+  .status_row{
+    padding-top: 3px;
+    padding-bottom: 3px;
+    .status_label{
+      color: #b8c7ce;
+
+    }
+    .status_value{
+
+    }
+  }
+
+  height: 100px;
 }
