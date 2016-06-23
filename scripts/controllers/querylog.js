@@ -51,9 +51,6 @@ angular.module('piholeAdminApp')
       ]
     });
 
-    var intervalId = $interval(function(){
-      $scope.refreshData();
-    },30000);
 
     $scope.refreshData = function(){
       CacheService.put('queries', null);
