@@ -2,13 +2,19 @@
   font-size: 30px !important; }
 
 .glow {
-  text-shadow: 0px 0px 5px #fff; }
+  text-shadow: 0 0 5px #fff; }
 
 h3 {
   transition-duration: 500ms; }
 
+.logo img {
+  height: 25px;
+  width: 25px;
+  top: -3px;
+  position: relative; }
+
 .user-panel {
-  height: 100px; }
+  height: 170px; }
   .user-panel .info {
     left: 0px !important; }
   .user-panel .status_row {

@@ -26,9 +26,23 @@ angular.module('piholeAdminApp')
       });
     };
 
+    var getMemoryStats = function(){
+      API.getMemoryStats().then(function (memory) {
+        $scope.mem = memory.memory;
+      });
+    };
+
+    var getCPUStats = function(){
+      API.getCPUStats().then(function (cpustats) {
+        $scope.cpu = cpustats.cpu;
+      });
+    };
+
 
     getStatus();
     getTemp();
+    getMemoryStats();
+    getCPUStats();
 
     $interval(function () {
       getStatus();

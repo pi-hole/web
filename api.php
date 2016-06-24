@@ -69,6 +69,16 @@
         $data = array_merge($data, $temp);
     }
 
+    if(isset($_GET['getMemoryStats'])){
+        $stats['memory'] = getMemoryStats();
+        $data = array_merge($data, $stats);
+    }
+
+    if(isset($_GET['getCPUStats'])){
+        $stats['cpu'] = sys_getloadavg();
+        $data = array_merge($data, $stats);
+    }
+
     function filterArray(&$a) {
 	    $sanArray = array();
 	    foreach ($a as $k=>$v) {

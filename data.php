@@ -311,4 +311,18 @@
         $output = str_replace(["\r\n","\r","\n"],"", $output);
         return $output;
     }
+
+    function getMemoryStats(){
+        exec('free -mo', $out);
+        preg_match_all('/\s+([0-9]+)/', $out[1], $matches);
+        list($total, $used, $free, $shared, $buffers, $cached) = $matches[1];
+        $memory = array();
+        $memory['total'] = $total;
+        $memory['used'] = $used;
+        $memory['free'] = $free;
+        $memory['shared'] = $shared;
+        $memory['buffers'] = $buffers;
+        $memory['cached'] = $cached;
+        return $memory;
+    }
 ?>

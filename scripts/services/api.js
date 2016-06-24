@@ -143,6 +143,22 @@ angular.module('piholeAdminApp')
               return result.data;
             });
       },
+      getMemoryStats: function () {
+          return $http.get('api.php?getMemoryStats')
+            .then(function (result) {
+              //resolve the promise as the data
+
+              return result.data;
+            });
+      },
+      getCPUStats: function () {
+          return $http.get('api.php?getCPUStats')
+            .then(function (result) {
+              //resolve the promise as the data
+
+              return result.data;
+            });
+      },
 
       addToList: function (listType, domain, token) {
         if (listType == 'white' || listType == 'black') {

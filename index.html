@@ -39,10 +39,11 @@
     <header class="main-header">
         <!-- Logo -->
         <a href="/admin" class="logo">
+
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>P</b>H</span>
+            <span class="logo-mini"><img src="images/pihole-160x160.jpg" alt="Pi-hole logo"/> <b>P</b>H</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>Pi</b>-hole</span>
+            <span class="logo-lg"><img src="images/pihole-160x160.jpg" alt="Pi-hole logo"/> <b>Pi</b>-hole</span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
@@ -129,6 +130,26 @@
                         </div>
                         <div class="col-xs-3 col-md-3 status_value">
                             <span temp="temp"></span>
+                        </div>
+                    </div>
+                    <div class="row status_row">
+                        <div class="col-xs-5 col-md-5 status_label">
+                            CPU:
+                        </div>
+                        <div class="col-xs-3 col-md-3 status_value">
+                            {{cpu[0]}},
+                            {{cpu[1]}},
+                            {{cpu[2]}}
+                        </div>
+                    </div>
+                    <div class="row status_row">
+                        <div class="col-xs-5 col-md-5 status_label">
+                            Memory:
+                        </div>
+                        <div class="col-xs-3 col-md-3 status_value">
+                            {{mem.total}}Mb Total <br />
+                            {{mem.used}}Mb Used <br />
+                            {{mem.free}}Mb Free <br />
                         </div>
                     </div>
                 </div>
