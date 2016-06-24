@@ -1,0 +1,36 @@
+
+<!-- Domain Input -->
+<div class="form-group input-group">
+    <input ng-disabled="!token" ng-model="domain" type="text" class="form-control" placeholder="Add a domain (example.com or sub.example.com)" ng-enter="addDomain()">
+    <span class="input-group-btn">
+        <button class="btn btn-default" type="button" ng-click="addDomain()" ng-disabled="!token" >Add</button>
+        <button class="btn btn-default" ng-click="refreshData()">
+            <i class="fa fa-refresh fa-1"
+               ng-class="{'fa-spin': refreshing}" ></i> Refresh Data </button>
+    </span>
+</div>
+
+<!-- Alerts -->
+<div ng-if="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    Adding to the {{listFullname}}...
+</div>
+<div ng-if="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden="true">
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    Success! The list will refresh.
+</div>
+<div ng-if="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden="true">
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    Failure! Something went wrong.
+</div>
+
+<!-- Domain List -->
+<ul class="list-group" id="list">
+    <div class="alert alert-info" role="alert" ng-if="list.length === 0">Your {{listFullname}} is empty!</div>
+    <li ng-repeat="item in list" class="list-group-item clearfix">
+        {{item}}
+        <button class="btn btn-danger btn-xs pull-right" type="button" ng-click="removeDomain(item)">
+            <span class="glyphicon glyphicon-trash"></span>
+        </button>
+    </li>
+</ul>

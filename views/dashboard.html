@@ -1,0 +1,254 @@
+<div class="row">
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-aqua">
+            <div class="inner">
+                <h3 class="statistic" id="ads_blocked_today" glow value="summary.ads_blocked_today">
+
+                </h3>
+
+                <p>Ads Blocked Today</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-android-hand"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3 class="statistic" glow value="summary.dns_queries_today">
+
+                </h3>
+
+                <p>DNS Queries Today</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-earth"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3 class="statistic" glow value="summary.ads_percentage_today" suffix="%">
+
+                </h3>
+
+                <p>Of Today's Traffic Is Ads</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h3 class="statistic" glow value="summary.domains_being_blocked">
+
+                </h3>
+
+                <p>Domains Being Blocked</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-ios-list"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box" id="queries-over-time">
+            <div class="box-header with-border">
+                <h3 class="box-title">Queries over time</h3>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas id="line" class="chart chart-line" chart-data="timeLineChart.data"  chart-options="timeLineChart.options"
+                            chart-labels="timeLineChart.labels" chart-colours="timeLineChart.colours"
+                            chart-legend="false" chart-click="zoomOverTimeData"
+                            style="height: 247px; width: 466px;" width="932"
+                            height="494">
+                    </canvas>
+
+                </div>
+            </div>
+            <div class="overlay">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="box" id="query-types">
+            <div class="box-header with-border">
+                <h3 class="box-title">Query Types</h3>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas id="doughnut" class="chart chart-doughnut" style="height: 247px; width: 466px;" width="932"
+                            height="494"
+                            chart-options="queryTypeChart.options" chart-colours="queryTypeChart.color"
+                            chart-data="queryTypeChart.data" chart-labels="queryTypeChart.labels">
+                    </canvas>
+
+                </div>
+            </div>
+            <div class="overlay">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box" id="forward-destinations">
+            <div class="box-header with-border">
+                <h3 class="box-title">Forward Destinations</h3>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas id="forwardDestinationChart" class="chart chart-doughnut"
+                            style="height: 247px; width: 466px;" width="932" height="494"
+                            chart-options="forwardDestinationChart.options"
+                            chart-colours="forwardDestinationChart.color" chart-data="forwardDestinationChart.data"
+                            chart-labels="forwardDestinationChart.labels">
+                    </canvas>
+                </div>
+            </div>
+            <div class="overlay">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="box" id="domain-frequency">
+            <div class="box-header with-border">
+                <h3 class="box-title">Top Domains</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Domain</th>
+                        <th>Hits</th>
+                        <th>Frequency</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="domain in topDomains">
+                        <td>{{domain.ip}}</td>
+                        <td>{{domain.amount}}</td>
+                        <td>
+                            <div class="progress progress-sm">
+                                <div class="progress-bar progress-bar-green" style="width: {{domain.percent}}%">
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="overlay">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-4">
+        <div class="box" id="ad-frequency">
+            <div class="box-header with-border">
+                <h3 class="box-title">Top Advertisers</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Domain</th>
+                        <th>Hits</th>
+                        <th>Frequency</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="advertiser in topAds">
+                        <td>{{advertiser.ip}}</td>
+                        <td>{{advertiser.amount}}</td>
+                        <td>
+                            <div class="progress progress-sm">
+                                <div class="progress-bar progress-bar-yellow" style="width: {{advertiser.percent}}%">
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="overlay">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-4">
+        <div class="box" id="client-frequency">
+            <div class="box-header with-border">
+                <h3 class="box-title">Top Clients</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Requests</th>
+                        <th>Frequency</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="client in topClients">
+                        <td>{{client.ip}}</td>
+                        <td>{{client.amount}}</td>
+                        <td>
+                            <div class="progress progress-sm">
+                                <div class="progress-bar progress-bar-blue" style="width: {{client.percent}}%">
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="overlay">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->

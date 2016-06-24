@@ -285,4 +285,44 @@
         }
         return $var;
     }
+
+    function getVersions(){
+        $version['pihole'] = exec("cd /etc/.pihole/ && git describe --tags --abbrev=0");
+        $version['pihole_webinterface'] = exec("cd /var/www/html/admin/ && git describe --tags --abbrev=0");
+        return $version;
+    }
+
+    function getStatus(){
+        $pistatus = exec('pgrep dnsmasq | wc -l');
+
+        $status['dnsmasq'] = ($pistatus > '0') ? true : false;
+        /**
+         * Support for the on / off button
+         * More info see http://thetimmy.silvernight.org/pages/endisbutton/
+         */
+        $listFileExists = file_exists('/etc/pihole/gravity.list');
+        $status['blackhole'] = ($listFileExists) ? true : false;
+        return $status;
+    }
+
+    function getTemp(){
+        $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2`)).$((`cat /sys/class/thermal/thermal_zone0/temp|cut -c3-4`))";
+        $output = shell_exec($cmd);
+        $output = str_replace(["\r\n","\r","\n"],"", $output);
+        return $output;
+    }
+
+    function getMemoryStats(){
+        exec('free -mo', $out);
+        preg_match_all('/\s+([0-9]+)/', $out[1], $matches);
+        list($total, $used, $free, $shared, $buffers, $cached) = $matches[1];
+        $memory = array();
+        $memory['total'] = $total;
+        $memory['used'] = $used;
+        $memory['free'] = $free;
+        $memory['shared'] = $shared;
+        $memory['buffers'] = $buffers;
+        $memory['cached'] = $cached;
+        return $memory;
+    }
 ?>
