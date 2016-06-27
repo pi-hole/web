@@ -1,0 +1,26 @@
+.big-font {
+  font-size: 30px !important; }
+
+.glow {
+  text-shadow: 0 0 5px #fff; }
+
+h3 {
+  transition-duration: 500ms; }
+
+.logo img {
+  height: 25px;
+  width: 25px;
+  top: -3px;
+  position: relative; }
+
+.user-panel {
+  height: 170px; }
+  .user-panel .info {
+    left: 0px !important; }
+  .user-panel .status_row {
+    padding-top: 3px;
+    padding-bottom: 3px; }
+    .user-panel .status_row .status_label {
+      color: #b8c7ce; }
+
+/*# sourceMappingURL=main.css.map */

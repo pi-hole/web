@@ -1,4 +1,5 @@
 <?php
+    session_start();
     include('data.php');
     header('Content-type: application/json');
 
@@ -45,6 +46,53 @@
 
     if (isset($_GET['getAllQueries'])) {
         $data = array_merge($data, getAllQueries());
+    }
+
+    if (isset($_GET['getVersions'])) {
+        $data = array_merge($data, getVersions());
+    }
+
+    if (isset($_GET['getStatus'])) {
+        $status['status'] = getStatus();
+        $data = array_merge($data, $status);
+    }
+
+    if (isset($_GET['getToken'])) {
+        if(empty($_SESSION['token'])) {
+            $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
+        }
+        $token['token'] = $_SESSION['token'];
+        $data = array_merge($data, $token);
+    }
+
+    if(isset($_GET['getTemp'])){
+        $temp['temp'] = getTemp();
+        $data = array_merge($data, $temp);
+    }
+
+    if(isset($_GET['getMemoryStats'])){
+        $stats['memory'] = getMemoryStats();
+        $data = array_merge($data, $stats);
+    }
+
+    if(isset($_GET['getCPUStats'])){
+        $stats['cpu'] = sys_getloadavg();
+        $data = array_merge($data, $stats);
+    }
+
+    if(isset($_GET['getDiskStats'])){
+        $stats['disk'] = getDiskStats();
+        $data = array_merge($data, $stats);
+    }
+
+    if(isset($_GET['getNetworkStats'])){
+        $stats['network'] = ifconfig();
+        $data = array_merge($data, $stats);
+    }
+
+    if(isset($_GET['getProcesses'])){
+        $stats['processes'] = getProcesses(10);
+        $data = array_merge($data, $stats);
     }
 
     function filterArray(&$a) {
