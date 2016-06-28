@@ -14,7 +14,6 @@ if(!isset($_POST['domain'], $_POST['list'], $_POST['token'])) {
 
 $SERVER_SIDE_IDS = [
     $_SERVER['SERVER_ADDR'],
-    $_SERVER['SERVER_NAME'],
     'pi.hole'
 ];
 
