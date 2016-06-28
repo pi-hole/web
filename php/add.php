@@ -24,7 +24,7 @@ if(in_array($_SERVER['HTTP_ORIGIN'], $SERVER_SIDE_IDS)) {
 } else if(in_array($_SERVER['HTTP_HOST'], $SERVER_SIDE_IDS)) {
     $CORS_ALLOW_ORIGIN = $_SERVER['HTTP_HOST'];
 }
- 
+
 if (!$CORS_ALLOW_ORIGIN)
     die_and_log("Failed CORS");
 
@@ -38,7 +38,7 @@ if(!hash_equals($_SESSION['token'], $_POST['token']))
 
 
 switch($_POST['list']) {
-    case "white":        
+    case "white":
         echo exec("sudo pihole -w -q ${_POST['domain']}");
         break;
     case "black":
