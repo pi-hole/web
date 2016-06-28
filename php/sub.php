@@ -12,16 +12,16 @@ if(!isset($_POST['domain'], $_POST['list'], $_POST['token'])) {
     die_and_log("Missing POST variables");
 }
 
-$SERVER_SIDE_IDS = [
+$AUTHORIZED_HOSTNAMES = [
     $_SERVER['SERVER_ADDR'],
     'pi.hole'
 ];
 
 // Check CORS
 $CORS_ALLOW_ORIGIN = false;
-if(in_array($_SERVER['HTTP_ORIGIN'], $SERVER_SIDE_IDS)) {
+if(in_array($_SERVER['HTTP_ORIGIN'], $AUTHORIZED_HOSTNAMES)) {
     $CORS_ALLOW_ORIGIN = $_SERVER['HTTP_ORIGIN'];
-} else if(in_array($_SERVER['HTTP_HOST'], $SERVER_SIDE_IDS)) {
+} else if(in_array($_SERVER['HTTP_HOST'], $AUTHORIZED_HOSTNAMES)) {
     $CORS_ALLOW_ORIGIN = $_SERVER['HTTP_HOST'];
 }
 
