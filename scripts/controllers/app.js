@@ -8,9 +8,33 @@
  * Controller of the piholeAdminApp
  */
 angular.module('piholeAdminApp')
-  .controller('AppCtrl', ['$scope', 'API', '$interval', '$rootScope', '$location', function ($scope, API, $interval, $rootScope, $location) {
+  .controller('AppCtrl', ['$scope', 'API', '$interval', '$rootScope', '$location', '$translate', function ($scope, API, $interval, $rootScope, $location, $translate) {
     $scope.piholeUpdateAvailable = false;
     $scope.webUpdateAvailable = false;
+
+    /**
+     * Define availble languages here
+     * @type {*[]}
+     */
+    $scope.languages = [
+      {
+        language_key:'en',
+        value_key: 'LANGUAGE_ENGLISH'
+      },
+      {
+        language_key:'nl',
+        value_key: 'LANGUAGE_DUTCH'
+      },
+      {
+        language_key:'es',
+        value_key: 'LANGUAGE_SPANISH'
+      }
+    ];
+
+    $scope.changeLanguage = function(key){
+      $translate.use(key);
+    };
+
     var refreshData = function () {
       API.getVersions().then(function (status) {
         $scope.versions = status;

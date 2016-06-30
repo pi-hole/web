@@ -23,4 +23,7 @@ h3 {
     .user-panel .status_row .status_label {
       color: #b8c7ce; }
 
+.dropdown-menu li a {
+  cursor: pointer; }
+
 /*# sourceMappingURL=main.css.map */

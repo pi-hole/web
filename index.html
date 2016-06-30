@@ -49,7 +49,7 @@
         <nav class="navbar navbar-static-top" role="navigation">
             <!-- Sidebar toggle button-->
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                <span class="sr-only">Toggle navigation</span>
+                <span class="sr-only">{{ 'TOGGLE_NAV' | translate }}</span>
             </a>
 
             <div class="navbar-custom-menu">
@@ -60,37 +60,47 @@
                             <img src="images/pihole-160x160.jpg" class="user-image" alt="Pi-hole logo"/>
                             <span class="hidden-xs">Pi-hole</span>
                         </a>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ 'SELECT_LANGUAGE' | translate}} <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li ng-repeat="language in languages">
+                                    <a ng-click="changeLanguage(language.language_key)">{{ language.value_key | translate }} </a>
+                                </li>
+
+                            </ul>
+                        </li>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
                                 <img src="./images/pihole-160x160.jpg" alt="User Image"/>
 
                                 <p>
-                                    Open Source Ad Blocker
-                                    <small>Designed For Raspberry Pi</small>
+                                    {{ 'OSS_ADB' | translate }}
+                                    <small>{{ 'DESIGNED_FOR_PI' | translate }}</small>
                                 </p>
                             </li>
                             <!-- Menu Body -->
                             <li class="user-body">
                                 <div class="col-xs-4 text-center">
-                                    <a href="https://github.com/jacobsalmela/pi-hole">Github</a>
+                                    <a href="https://github.com/jacobsalmela/pi-hole">{{ 'GITHUB' | translate }}</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/">Details</a>
+                                    <a href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/">{{ 'DETAILS' | translate }}</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a href="https://github.com/pi-hole/pi-hole/releases">Updates</a>
+                                    <a href="https://github.com/pi-hole/pi-hole/releases">{{ 'UPDATES' | translate }}</a>
                                 </div>
                             </li>
+
+
                             <!-- Menu Footer-->
-                            <li class="user-footer">
                             <li class="user-footer">
                                 <!-- Update alerts -->
                                 <div id="alPiholeUpdate" class="alert alert-info alert-dismissible fade in" role="alert" ng-hide="!piholeUpdateAvailable">
-                                    <a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">There's an update available for this Pi-hole!</a>
+                                    <a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">{{ 'UPDATE_AVAILBLE_PIHOLE' | translate }}!</a>
                                 </div>
                                 <div id="alWebUpdate" class="alert alert-info alert-dismissible fade in" role="alert" ng-hide="!webUpdateAvailable">
-                                    <a class="alert-link" href="https://github.com/pi-hole/AdminLTE/releases">There's an update available for this Web Interface!</a>
+                                    <a class="alert-link" href="https://github.com/pi-hole/AdminLTE/releases">{{ 'UPDATE_AVAILBLE_WEB' | translate }}!</a>
                                 </div>
 
                                 <!-- PayPal -->
@@ -115,10 +125,10 @@
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left info">
-                    <p>Status</p>
+                    <p>{{ 'STATUS' | translate }}</p>
                     <div class="row status_row">
                         <div class="col-xs-5 col-md-5 status_label">
-                            DNS:
+                            {{ 'DNS' | translate }}:
                         </div>
                         <div class="col-xs-3 col-md-3 status_value">
                             <span status="status.dnsmasq"></span>
@@ -126,7 +136,7 @@
                     </div>
                     <div class="row status_row">
                         <div class="col-xs-5 col-md-5 status_label">
-                            Blackhole:
+                           {{ 'BLACKHOLE' | translate }}:
                         </div>
                         <div class="col-xs-3 col-md-3 status_value">
                             <span status="status.blackhole"></span>
@@ -134,7 +144,7 @@
                     </div>
                     <div class="row status_row">
                         <div class="col-xs-5 col-md-5 status_label">
-                            Temp:
+                            {{ 'TEMP' | translate }}:
                         </div>
                         <div class="col-xs-3 col-md-3 status_value">
                             <span temp="temp"></span>
@@ -142,7 +152,7 @@
                     </div>
                     <div class="row status_row">
                         <div class="col-xs-5 col-md-5 status_label">
-                            CPU:
+                            {{ 'CPU' | translate }}:
                         </div>
                         <div class="col-xs-3 col-md-3 status_value">
                             {{cpu[0]}},
@@ -152,52 +162,52 @@
                     </div>
                     <div class="row status_row">
                         <div class="col-xs-5 col-md-5 status_label">
-                            Memory:
+                            {{ 'MEMORY' | translate }}:
                         </div>
                         <div class="col-xs-3 col-md-3 status_value">
-                            {{mem.total}}Mb Total <br />
-                            {{mem.used}}Mb Used <br />
-                            {{mem.free}}Mb Free <br />
+                            {{mem.total}}Mb {{'TOTAL' | translate }} <br />
+                            {{mem.used}}Mb {{ 'USED' | translate }} <br />
+                            {{mem.free}}Mb {{ 'FREE' | translate }} <br />
                         </div>
                     </div>
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu">
-                <li class="header">MAIN NAVIGATION</li>
+                <li class="header">{{ 'MAIN_NAV' | translate }}</li>
                 <!-- Home Page -->
                 <li ng-class="getClass('/')">
                     <a href="#/">
-                        <i class="fa fa-home"></i> <span>Main Page</span>
+                        <i class="fa fa-home"></i> <span>{{ 'MAIN_PAGE' | translate }}</span>
                     </a>
                 </li>
                 <!-- Query Log -->
                 <li ng-class="getClass('/queries')">
                     <a ng-href="#/queries">
-                        <i class="fa fa-file-text-o"></i> <span>Query Log</span>
+                        <i class="fa fa-file-text-o"></i> <span>{{ 'QUERY_LOG' | translate}}</span>
                     </a>
                 </li>
                 <li ng-class="getClass('/whitelist')">
                     <a ng-href="#/whitelist">
-                        <i class="fa fa-pencil-square-o"></i> <span>Whitelist</span>
+                        <i class="fa fa-pencil-square-o"></i> <span>{{ 'WHITELIST' | translate }}</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
                 <li ng-class="getClass('/blacklist')">
                     <a ng-href="#/blacklist">
-                        <i class="fa fa-ban"></i> <span>Blacklist</span>
+                        <i class="fa fa-ban"></i> <span>{{ 'BLACKLIST' | translate }}</span>
                     </a>
                 </li>
                 <!-- System info -->
                 <li ng-class="getClass('/sysinfo')">
                     <a ng-href="#/sysinfo">
-                        <i class="fa fa-server"></i> <span>System info</span>
+                        <i class="fa fa-server"></i> <span>{{ 'SYSTEM_INFO' | translate }}</span>
                     </a>
                 </li>
                 <!-- Donate -->
                 <li>
                     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
-                        <i class="fa fa-paypal"></i> <span>Donate</span>
+                        <i class="fa fa-paypal"></i> <span>{{ 'DONATE' | translate }}</span>
                     </a>
                 </li>
             </ul>
@@ -215,13 +225,12 @@
     <!-- /.content-wrapper -->
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b>Pi-hole Version </b> {{versions.pihole}}
-            <b>Web Interface
-                Version </b> {{versions.pihole_webinterface}}
+            <b>{{ 'PIHOLE_VERSION' | translate }}</b> {{versions.pihole}}
+            <b>{{ 'WEB_VERSION' | translate }}</b> {{versions.pihole_webinterface}}
         </div>
         <i class="fa fa-github"></i> <strong><a
-            href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY">Donate</a></strong>
-        if you found this useful.
+            href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY">{{ 'DONATE' | translate }}</a></strong>
+        {{ 'FOUND_USEFUL' | translate }}
     </footer>
 </div>
 <!-- ./wrapper -->
@@ -241,6 +250,8 @@
 <script src="scripts/vendor/Chart.js/Chart.js"></script>
 <script src="scripts/vendor/angular-chart.js/angular-chart.js"></script>
 <script src="scripts/vendor/datatables/dataTables.bootstrap.js"></script>
+<script src="scripts/vendor/angular-translate/angular-translate.min.js"></script>
+<script src="scripts/vendor/angular-translate/angular-translate-loader-static-files.min.js"></script>
 <!-- <script src="bower_components/angular-datatables/dist/plugins/select/angular-datatables.select.js"></script> -->
 <!-- endbower -->
 <!-- endbuild -->
