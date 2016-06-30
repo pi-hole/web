@@ -90,10 +90,19 @@ angular.module('piholeAdminApp')
     var updateAll = function(){
       API.rawQuery('getStatus&getTemp&getMemoryStats&getCPUStats').then(function(result){
         result.timestamp = new Date();
-        $scope.status = result.status;
-        $scope.temp = result.temp;
-        $scope.mem = result.memory;
-        $scope.cpu = result.cpu;
+        if(result.status) {
+          $scope.status = result.status;
+        }
+        if(result.temp){
+          $scope.temp = result.temp;
+        }
+        if(result.memory){
+          $scope.mem = result.memory;
+        }
+        if(result.cpu){
+          $scope.cpu = result.cpu;
+        }
+
         $rootScope.$emit('statusUpdate', result);
         $rootScope.status_history.push(result);
         $rootScope.status_history = $rootScope.status_history.slice(0,6)
