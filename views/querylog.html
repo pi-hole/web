@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="box" id="recent-queries">
             <div class="box-header with-border">
-                <h3 class="box-title">Recent Queries</h3>
+                <h3 class="box-title">{{ 'RECENT_QUERIES' | translate }}</h3>
 
             </div>
             <!-- /.box-header -->
@@ -10,27 +10,27 @@
                 <div class="col-md-12">
                     <button class="btn btn-default margin-bottom pull-right" ng-click="refreshData()">
                         <i class="fa fa-refresh fa-1"
-                            ng-class="{'fa-spin': refreshing}" ></i> Refresh Data </button>
+                            ng-class="{'fa-spin': refreshing}" ></i> {{ 'REFRESH_DATA' | translate }} </button>
                 </div>
                 <div>
                     <table id="all-queries" class="display table table-striped table-bordered" cellspacing="0"
                            width="100%">
                         <thead>
                         <tr>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Domain</th>
-                            <th>Client</th>
-                            <th>Status</th>
+                            <th>{{ 'TIME' | translate }}</th>
+                            <th>{{ 'TYPE' | translate }}</th>
+                            <th>{{ 'DOMAIN' | translate }}</th>
+                            <th>{{ 'CLIENT' | translate }}</th>
+                            <th>{{ 'STATUS' | translate }}</th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Domain</th>
-                            <th>Client</th>
-                            <th>Status</th>
+                            <th>{{ 'TIME' | translate }}</th>
+                            <th>{{ 'TYPE' | translate }}</th>
+                            <th>{{ 'DOMAIN' | translate }}</th>
+                            <th>{{ 'CLIENT' | translate }}</th>
+                            <th>{{ 'STATUS' | translate }}</th>
                         </tr>
                         </tfoot>
                     </table>

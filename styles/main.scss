@@ -31,3 +31,10 @@ h3 { transition-duration: 500ms }
 
   height: 170px;
 }
+.dropdown-menu{
+  li {
+    a {
+      cursor: pointer;
+    }
+  }
+}

@@ -2,17 +2,17 @@
     <div class="col-md-12">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">History</h3>
+                <h3 class="box-title">{{ 'History' | translate }}</h3>
                 <br />
                 <span class="btn btn-default" ng-click="switchGraph('cpu')"
                       ng-class="{'btn-info': mode==='cpu'}"
-                        >CPU Load</span>
+                        >{{ 'CPU_LOAD' | translate }}</span>
                 <span class="btn btn-default" ng-click="switchGraph('temp')"
                       ng-class="{'btn-info': mode==='temp'}"
-                        >CPU Temp</span>
+                        >{{ 'CPU_TEMP' | translate }}</span>
                 <span class="btn btn-default" ng-click="switchGraph('memory')"
                       ng-class="{'btn-info': mode==='memory'}"
-                        >Mem usage</span>
+                        >{{ 'MEM_USAGE' | translate }}</span>
             </div>
             <div class="box-body">
                 <div class="chart">
@@ -34,7 +34,7 @@
     <div class="col-md-6">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Disk status</h3>
+                <h3 class="box-title">{{ 'Disk status' | translate }}</h3>
             </div>
             <div class="box-body">
                 <div class="chart">
@@ -46,12 +46,12 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th>Mount</th>
-                            <th>Type</th>
-                            <th>Disk</th>
-                            <th>Size</th>
-                            <th>Used</th>
-                            <th>Usage</th>
+                            <th>{{ 'MOUNT' | translate }}</th>
+                            <th>{{ 'TYPE' | translate }}</th>
+                            <th>{{ 'DISK' | translate }}</th>
+                            <th>{{ 'SIZE' | translate }}</th>
+                            <th>{{ 'USED' | translate }}</th>
+                            <th>{{ 'USAGE' | translate }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -79,7 +79,7 @@
     <div class="col-md-6">
         <div class="box" id="forward-destinations">
             <div class="box-header with-border">
-                <h3 class="box-title">Network</h3>
+                <h3 class="box-title">{{ 'NETWORK' | translate }}</h3>
             </div>
             <div class="box-body">
                 <div class="chart">
@@ -94,33 +94,33 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th>In</th>
-                        <th>Out</th>
+                        <th>{{ 'IN' | translate }}</th>
+                        <th>{{ 'OUT' | translate }}</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td>Packets</td>
+                        <td>{{ 'PACKETS' | translate }}</td>
                         <td>{{interface.tx.packets}}</td>
                         <td>{{interface.rx.packets}}</td>
                     </tr>
                     <tr>
-                        <td>Bytes</td>
+                        <td>{{ 'BYTES' | translate }}</td>
                         <td>{{interface.tx.hbytes}}</td>
                         <td>{{interface.rx.hbytes}}</td>
                     </tr>
                     <tr>
-                        <td>Errors</td>
+                        <td>{{ 'ERRORS' | translate }}</td>
                         <td>{{interface.tx.errors}}</td>
                         <td>{{interface.rx.errors}}</td>
                     </tr>
                     <tr>
-                        <td>Dropped</td>
+                        <td>{{ 'DROPPED' | translate }}</td>
                         <td>{{interface.tx.dropped}}</td>
                         <td>{{interface.rx.dropped}}</td>
                     </tr>
                     <tr>
-                        <td>Overruns</td>
+                        <td>{{ 'OVERRUNS' | translate }}</td>
                         <td>{{interface.tx.overruns}}</td>
                         <td>{{interface.rx.overruns}}</td>
                     </tr>
@@ -136,7 +136,7 @@
     <div class="col-md-6">
         <div class="box" id="client-frequency">
             <div class="box-header with-border">
-                <h3 class="box-title">Top Processes</h3>
+                <h3 class="box-title">{{ 'TOP_PROCESSES' | translate }}</h3>
                 <button class="btn btn-default margin-bottom pull-right" ng-click="refreshProcesses()">
                     <i class="fa fa-refresh fa-1"
                        ng-class="{'fa-spin': refreshing_process}" ></i></button>
@@ -146,11 +146,11 @@
                 <table class="table table-bordered table-responsive">
                     <thead>
                     <tr>
-                        <th>PID</th>
-                        <th>User</th>
-                        <th>Memory Usage</th>
-                        <th>CPU Usage</th>
-                        <th>Command</th>
+                        <th>{{ 'PID' | translate }}</th>
+                        <th>{{ 'USER' | translate }}</th>
+                        <th>{{ 'MEMORY_USAGE' | translate }}</th>
+                        <th>{{ 'CPU_USAGE' | translate }}</th>
+                        <th>{{ 'COMMAND' | translate }}</th>
                     </tr>
                     </thead>
                     <tbody>

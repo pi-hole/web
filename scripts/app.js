@@ -16,7 +16,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'chart.js'
+    'chart.js',
+    'pascalprecht.translate'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -55,14 +56,14 @@ angular
      * @param {Object} obj
      * @return {String}
      */
-    var param = function(obj) {
+    var param = function (obj) {
       var query = '', name, value, fullSubName, subName, subValue, innerObj, i;
 
-      for(name in obj) {
+      for (name in obj) {
         value = obj[name];
 
-        if(value instanceof Array) {
-          for(i=0; i<value.length; ++i) {
+        if (value instanceof Array) {
+          for (i = 0; i < value.length; ++i) {
             subValue = value[i];
             fullSubName = name + '[' + i + ']';
             innerObj = {};
@@ -70,8 +71,8 @@ angular
             query += param(innerObj) + '&';
           }
         }
-        else if(value instanceof Object) {
-          for(subName in value) {
+        else if (value instanceof Object) {
+          for (subName in value) {
             subValue = value[subName];
             fullSubName = name + '[' + subName + ']';
             innerObj = {};
@@ -79,7 +80,7 @@ angular
             query += param(innerObj) + '&';
           }
         }
-        else if(value !== undefined && value !== null)
+        else if (value !== undefined && value !== null)
           query += encodeURIComponent(name) + '=' + encodeURIComponent(value) + '&';
       }
 
@@ -87,7 +88,7 @@ angular
     };
 
     // Override $http service's default transformRequest
-    $httpProvider.defaults.transformRequest = [function(data) {
+    $httpProvider.defaults.transformRequest = [function (data) {
       return angular.isObject(data) && String(data) !== '[object File]' ? param(data) : data;
     }];
 
@@ -104,8 +105,15 @@ angular
     // extra
     $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
     $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
+  }).config(function ($translateProvider) {
+
+    $translateProvider.useStaticFilesLoader({
+      prefix: 'languages/',
+      suffix: '.json'
+    });
+    $translateProvider.preferredLanguage('en');
   });
 
-String.prototype.capitalizeFirstLetter = function() {
+String.prototype.capitalizeFirstLetter = function () {
   return this.charAt(0).toUpperCase() + this.slice(1);
 };
