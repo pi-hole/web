@@ -41,9 +41,9 @@
         <a href="/admin" class="logo">
 
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><img src="images/pihole-160x160.jpg" alt="Pi-hole logo"/> <b>P</b>H</span>
+            <span class="logo-mini"><b>P</b>H</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><img src="images/pihole-160x160.jpg" alt="Pi-hole logo"/> <b>Pi</b>-hole</span>
+            <span class="logo-lg"><b>Pi</b>-hole</span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
@@ -54,21 +54,20 @@
 
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav" >
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ 'SELECT_LANGUAGE' | translate}} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="language in languages">
+                                <a ng-click="changeLanguage(language.language_key)">{{ language.value_key | translate }} </a>
+                            </li>
+
+                        </ul>
+                    </li>
                     <!-- User Account: style can be found in dropdown.less -->
-                    <li class="dropdown user user-menu">
+                    <li id="dropdown-menu" class="dropdown user user-menu">
                         <a  class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="images/pihole-160x160.jpg" class="user-image" alt="Pi-hole logo"/>
                             <span class="hidden-xs">Pi-hole</span>
                         </a>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ 'SELECT_LANGUAGE' | translate}} <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li ng-repeat="language in languages">
-                                    <a ng-click="changeLanguage(language.language_key)">{{ language.value_key | translate }} </a>
-                                </li>
-
-                            </ul>
-                        </li>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
@@ -91,9 +90,8 @@
                                     <a href="https://github.com/pi-hole/pi-hole/releases">{{ 'UPDATES' | translate }}</a>
                                 </div>
                             </li>
-
-
                             <!-- Menu Footer-->
+                            <li class="user-footer">
                             <li class="user-footer">
                                 <!-- Update alerts -->
                                 <div id="alPiholeUpdate" class="alert alert-info alert-dismissible fade in" role="alert" ng-hide="!piholeUpdateAvailable">
