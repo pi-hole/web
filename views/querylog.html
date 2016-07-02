@@ -12,8 +12,10 @@
                         <i class="fa fa-refresh fa-1"
                             ng-class="{'fa-spin': refreshing}" ></i> {{ 'REFRESH_DATA' | translate }} </button>
                 </div>
-                <div>
-                    <table id="all-queries" class="display table table-striped table-bordered" cellspacing="0"
+                <div class="col-xs-12" >
+                    <div class="grid" ui-grid="gridOptions"></div>
+                </div>
+                    <!--<table id="all-queries" class="display table table-striped table-bordered" cellspacing="0"
                            width="100%">
                         <thead>
                         <tr>
@@ -33,8 +35,8 @@
                             <th>{{ 'STATUS' | translate }}</th>
                         </tr>
                         </tfoot>
-                    </table>
-                </div>
+                    </table> -->
+
             </div>
             <!-- /.box-body -->
         </div>

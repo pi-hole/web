@@ -156,7 +156,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="domain in topDomains">
-                        <td>{{domain.ip}}</td>
+                        <td><a ng-href="#/queries?filterDomain={{domain.ip}}">{{domain.ip}}</a></td>
                         <td>{{domain.amount}}</td>
                         <td>
                             <div class="progress progress-sm">
@@ -194,7 +194,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="advertiser in topAds">
-                        <td>{{advertiser.ip}}</td>
+                        <td><a ng-href="#/queries?filterDomain={{advertiser.ip}}">{{advertiser.ip}}</a></td>
                         <td>{{advertiser.amount}}</td>
                         <td>
                             <div class="progress progress-sm">
@@ -232,7 +232,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="client in topClients">
-                        <td>{{client.ip}}</td>
+                        <td><a ng-href="#/queries?filterIP={{client.ip}}">{{client.ip}}</a></td>
                         <td>{{client.amount}}</td>
                         <td>
                             <div class="progress progress-sm">

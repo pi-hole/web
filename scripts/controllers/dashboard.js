@@ -293,6 +293,7 @@ angular.module('piholeAdminApp')
 
     API.getAllQueries(false).then(function (result) {
       queries = result;
+      CacheService.put('queryPage', queries);
     });
 
     var refreshData = function () {
