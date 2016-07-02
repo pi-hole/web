@@ -61,7 +61,6 @@ angular.module('piholeAdminApp')
         API.findBlockedDomain(row.entity.domain).then(function (result) {
           row.entity.subGridOptions.height = getTableHeight(result.length);
           row.entity.subGridOptions.data = result;
-          console.log(row);
           row.$$height = row.entity.subGridOptions.height;
         })
       }

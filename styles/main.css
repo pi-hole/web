@@ -36,4 +36,7 @@ h3 {
 .lookupTable .ui-grid-row, .lookupTable .ui-grid-header-cell-row {
   color: #333 !important; }
 
+.ui-grid-icon-minus-squared, .ui-grid-icon-plus-squared {
+  cursor: pointer; }
+
 /*# sourceMappingURL=main.css.map */
