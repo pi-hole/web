@@ -95,6 +95,11 @@
         $data = array_merge($data, $stats);
     }
 
+    if(isset($_GET['findBlockedDomain'])){
+        $stats['findBlockedDomain'] = findBlockedDomain($_GET['findBlockedDomain']);
+        $data = array_merge($data, $stats);
+    }
+
     function filterArray(&$a) {
 	    $sanArray = array();
 	    foreach ($a as $k=>$v) {

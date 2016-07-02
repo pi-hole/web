@@ -74,6 +74,14 @@ angular.module('piholeAdminApp')
             return result.data;
           });
       },
+      findBlockedDomain: function findBlockedDomain(domain) {
+              //return the promise directly.
+              return $http.get('api.php?findBlockedDomain='+ domain)
+                .then(function (result) {
+                  //resolve the promise as the data
+                  return result.data.findBlockedDomain;
+                });
+      },
 
       getAllQueries: function APIgetAllQueries(asArray) {
         //return the promise directly.

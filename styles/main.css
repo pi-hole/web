@@ -26,4 +26,12 @@ h3 {
 .dropdown-menu li a {
   cursor: pointer; }
 
+.toolkit {
+  color: #3c8dbc; }
+  .toolkit i {
+    cursor: pointer; }
+
+.lookupTable .ui-grid-row, .lookupTable .ui-grid-header-cell-row {
+  color: #333 !important; }
+
 /*# sourceMappingURL=main.css.map */
