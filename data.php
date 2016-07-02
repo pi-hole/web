@@ -159,24 +159,32 @@ function getAllQueries()
     return $allQueries;
 }
 
-function findBlockedDomain($domain){
-    $exec = 'for list in /etc/pihole/list.*;do echo $list;grep \''. $domain .'\' $list;done';
+function findBlockedDomain($domain)
+{
+    $exec = 'for list in /etc/pihole/list.*;do echo $list;grep \'' . $domain . '\' $list;done';
     exec($exec, $results);
     $lists = array();
     $index = 0;
-    foreach($results as $line){
-        if(preg_match('/\/etc\/pihole/', $line)){
+    foreach ($results as $line) {
+        if (preg_match('/\/etc\/pihole/', $line)) {
             $list = array();
             $list['list'] = basename($line);
             $list['found'] = false;
             $lists[] = $list;
             $index++;
         } else {
-            $lists[$index-1]['found'] = true;
+            $lists[$index - 1]['found'] = true;
         }
 
     }
-    return $lists;
+    $found = array();
+    foreach ($lists as $list) {
+        if($list['found'] == true){
+            $found[] = $list;
+        }
+    }
+
+    return $found;
 }
 
 /******** Private Members ********/
@@ -374,19 +382,19 @@ function getMemoryStats()
 function getDiskStats()
 {
 
-    exec("df -x tmpfs -x devtmpfs -T ",$df);
+    exec("df -x tmpfs -x devtmpfs -T ", $df);
     array_shift($df);
     $mounts = array();
-    foreach($df as $disks){
+    foreach ($df as $disks) {
         $split = preg_split('/\s+/', $disks);
         $mounts[] = array(
-            'disk'      => $split[0],
-            'mount'     => $split[6],
-            'type'      => $split[1],
-            'bytes_total'  => $split[2],
-            'bytes_used'   => $split[3],
-            'bytes_free'   => $split[4],
-            'percent'   => $split[5],
+            'disk' => $split[0],
+            'mount' => $split[6],
+            'type' => $split[1],
+            'bytes_total' => $split[2],
+            'bytes_used' => $split[3],
+            'bytes_free' => $split[4],
+            'percent' => $split[5],
         );
     }
 
@@ -395,7 +403,6 @@ function getDiskStats()
     $disk['mounts'] = $mounts;
     return $disk;
 }
-
 
 
 function ifconfig()
@@ -447,16 +454,17 @@ function ifconfig()
     return $interfaces;
 }
 
-function getProcesses($num = 5){
+function getProcesses($num = 5)
+{
     $processes = array();
-    $cmd = 'ps aux | sort -nrk 3,3 | head -n '. $num;
+    $cmd = 'ps aux | sort -nrk 3,3 | head -n ' . $num;
     exec($cmd, $results);
-    if($results){
-        foreach($results as $result){
+    if ($results) {
+        foreach ($results as $result) {
             preg_match('/([a-z0-9-]+)\s+([a-z0-9-]+)\s+([0-9.]+)\s+([0-9.]+)\s+([0-9]+)\s+([0-9]+)\s+([a-z?]+)\s+([A-z])\s+([A-z0-9:]+)\s+([0-9:]+)\s(.*)/', $result, $process);
 
             $process = array_splice($process, 1);
-            if($process[1]) {
+            if ($process[1]) {
                 list($p['user'], $p['pid'], $p['cpu_usage'], $p['memory_usage'],
                     $p['virtual_memory_usage'], $p['resident_set_size'], $p['tty'],
                     $p['stat'], $p['start'], $p['time'], $p['command']) = $process;
