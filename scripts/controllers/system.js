@@ -8,23 +8,23 @@
  * Controller of the piholeAdminApp
  */
 angular.module('piholeAdminApp')
-  .controller('SystemCtrl', ['$scope', 'API', '$rootScope', function ($scope, API, $rootScope) {
+  .controller('SystemCtrl', ['$scope', 'API', '$rootScope', '$translate', function ($scope, API, $rootScope, $translate) {
     $scope.labels = [];
     $scope.history = {
       memory: {
-        serie: ['Memory used','Memory free','Memory cached'],
+        serie: [$translate.instant('MEM_USED'), $translate.instant('MEM_FREE'), $translate.instant('MEM_CACHED')],
         values: [[],[],[]]
       },
       cpu: {
-        serie: ['CPU Load'],
+        serie: [$translate.instant('CPU_LOAD')],
         values: [[]]
       },
       temp: {
-        serie: ['Temp'],
+        serie: [$translate.instant('TEMP')],
         values: [[]]
       }
     };
-    $scope.series = ['CPU Load'];
+    $scope.series = [$translate.instant('CPU_LOAD')];
     $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
     $scope.options = {
       animation: false
