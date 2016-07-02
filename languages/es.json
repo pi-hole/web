@@ -42,6 +42,7 @@
   "HITS": "Peticiones",
   "FREQUENCY": "Frecuencia",
   "TOP_ADVERTISERS": "Anunciantes principales",
+  "TOP_CLIENTS": "Clientes principales",
   "CLIENT": "Cliente",
   "REQUESTS": "Peticiones",
   "ADD_DOMAIN": "Añade un dominio (ejemplo.com ó sub.ejemplo.com)",
