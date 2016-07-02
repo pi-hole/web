@@ -116,7 +116,14 @@ angular
       prefix: 'languages/',
       suffix: '.json'
     });
-    $translateProvider.preferredLanguage('en');
+    $translateProvider.registerAvailableLanguageKeys(['en', 'nl','fr','es'], {
+      'en_*': 'en',
+      'de_*': 'de',
+      'nl_*': 'nl',
+      'es_*': 'es'
+    }).determinePreferredLanguage();
+
+    $translateProvider.useLocalStorage();
   });
 
 String.prototype.capitalizeFirstLetter = function () {
