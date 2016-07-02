@@ -12,6 +12,8 @@
   "UPDATE_AVAILBLE_PIHOLE": "There's an update available for this Pi-hole",
   "UPDATE_AVAILBLE_WEB": "There's an update available for this Web Interface",
   "STATUS": "Status",
+  "ACTIVE": "Active",
+  "OFFLINE": "Offline",
   "DNS": "DNS",
   "BLACKHOLE": "Blackhole",
   "TEMP": "Temp",
