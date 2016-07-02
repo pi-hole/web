@@ -42,6 +42,7 @@
   "HITS": "Hits",
   "FREQUENCY": "Frequency",
   "TOP_ADVERTISERS": "Top Advertisers",
+  "TOP_CLIENTS": "Top Clients",
   "CLIENT": "Client",
   "REQUESTS": "Requests",
   "ADD_DOMAIN": "Add a domain (example.com or sub.example.com)",
@@ -75,5 +76,8 @@
   "USER": "User",
   "MEMORY_USAGE": "Memory Usage",
   "CPU_USAGE": "CPU Usage",
-  "COMMAND": "Command"
+  "COMMAND": "Command",
+  "MEM_USED": "Memory Used",
+  "MEM_FREE": "Memory Free",
+  "MEM_CACHED": "Memory Cached"
 }
