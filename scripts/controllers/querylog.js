@@ -40,8 +40,8 @@ angular.module('piholeAdminApp')
     };
 
     var getTableHeight = function(numResults) {
-      var rowHeight = 45; // your row height
-      var headerHeight = 45; // your header height
+      var rowHeight = 35; // your row height
+      var headerHeight = 35; // your header height
       return (numResults * rowHeight + headerHeight)
     };
 
@@ -62,6 +62,7 @@ angular.module('piholeAdminApp')
           row.entity.subGridOptions.height = getTableHeight(result.length);
           row.entity.subGridOptions.data = result;
           row.$$height = row.entity.subGridOptions.height;
+          $scope.gridOptions.expandableRowHeight = row.entity.subGridOptions.height;
         })
       }
 
@@ -96,6 +97,10 @@ angular.module('piholeAdminApp')
       enableGridMenu: true,
       onRegisterApi: function (gridApi) {
         gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+          if(row.isExpanded){
+            gridApi.expandable.collapseAllRows();
+            row.isExpanded = true;
+          }
           $scope.getdomainInfo(row);
         });
       },
