@@ -33,6 +33,7 @@ angular.module('piholeAdminApp')
 
     $scope.changeLanguage = function(key){
       $translate.use(key);
+      $rootScope.$emit('languageChanged', key)
     };
 
     var refreshData = function () {

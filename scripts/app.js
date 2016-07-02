@@ -17,7 +17,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'chart.js',
-    'pascalprecht.translate'
+    'pascalprecht.translate',
+    'ui.grid'
   ])
   .config(function ($routeProvider) {
     $routeProvider
