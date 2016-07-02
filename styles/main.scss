@@ -38,3 +38,14 @@ h3 { transition-duration: 500ms }
     }
   }
 }
+.toolkit{
+  color: #3c8dbc;
+  i {
+    cursor: pointer;
+  }
+}
+.lookupTable{
+  .ui-grid-row, .ui-grid-header-cell-row{
+    color: #333 !important;
+  }
+}

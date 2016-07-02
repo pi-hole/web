@@ -28,6 +28,10 @@ angular.module('piholeAdminApp')
       {
         language_key:'es',
         value_key: 'LANGUAGE_SPANISH'
+      },
+      {
+        language_key:'fr',
+        value_key: 'LANGUAGE_FRENCH'
       }
     ];
 

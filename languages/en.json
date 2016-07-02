@@ -2,6 +2,7 @@
   "TOGGLE_NAV": "Toggle navigation",
   "SELECT_LANGUAGE": "Select langauge",
   "LANGUAGE_ENGLISH": "English",
+  "LANGUAGE_FRENCH": "French",
   "LANGUAGE_SPANISH": "Spanish",
   "LANGUAGE_DUTCH": "Dutch",
   "OSS_ADB": "Open Source Ad Blocker",
@@ -81,5 +82,9 @@
   "COMMAND": "Command",
   "MEM_USED": "Memory Used",
   "MEM_FREE": "Memory Free",
-  "MEM_CACHED": "Memory Cached"
+  "MEM_CACHED": "Memory Cached",
+  "DOMAIN_FOUND_IN_LIST": "Domain found in this list",
+  "DOMAIN_NOT_FOUND_IN_LIST": "No",
+  "BLOCK_DOMAIN": "Block this domain",
+  "UNBLOCK_DOMAIN": "Unblock this domain"
 }

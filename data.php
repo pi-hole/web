@@ -159,6 +159,26 @@ function getAllQueries()
     return $allQueries;
 }
 
+function findBlockedDomain($domain){
+    $exec = 'for list in /etc/pihole/list.*;do echo $list;grep \''. $domain .'\' $list;done';
+    exec($exec, $results);
+    $lists = array();
+    $index = 0;
+    foreach($results as $line){
+        if(preg_match('/\/etc\/pihole/', $line)){
+            $list = array();
+            $list['list'] = basename($line);
+            $list['found'] = false;
+            $lists[] = $list;
+            $index++;
+        } else {
+            $lists[$index-1]['found'] = true;
+        }
+
+    }
+    return $lists;
+}
+
 /******** Private Members ********/
 function gravityCount()
 {

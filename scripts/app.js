@@ -18,7 +18,11 @@ angular
     'ngTouch',
     'chart.js',
     'pascalprecht.translate',
-    'ui.grid'
+    'ui.grid',
+    'ui.grid.exporter',
+    'ui.grid.expandable',
+    'ui.grid.selection',
+    'ui.grid.pinning'
   ])
   .config(function ($routeProvider) {
     $routeProvider

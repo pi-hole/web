@@ -8,7 +8,7 @@
  * Controller of the piholeAdminApp
  */
 angular.module('piholeAdminApp')
-  .controller('QuerylogCtrl', ['$scope', 'API', 'CacheService', 'uiGridConstants', '$translate', 'i18nService','$rootScope', '$routeParams', function ($scope, API, CacheService, uiGridConstants, $translate, i18nService, $rootScope, $routeParams) {
+  .controller('QuerylogCtrl', ['$scope', 'API', 'CacheService', 'uiGridConstants', '$translate', 'i18nService', '$rootScope', '$routeParams', function ($scope, API, CacheService, uiGridConstants, $translate, i18nService, $rootScope, $routeParams) {
     //
     var queries = CacheService.get('queryPage');
     var tableCache = function () {
@@ -28,62 +28,123 @@ angular.module('piholeAdminApp')
       }
     };
 
-    var rowTemplate = function(){
+    var rowTemplate = function () {
       return '<div ng-class="{ \'pi-holed\': grid.appScope.rowFormatter( row ) }">' +
         '  <div ng-if="row.entity.merge">{{row.entity.title}}</div>' +
         '  <div ng-if="!row.entity.merge" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }"  ui-grid-cell></div>' +
         '</div>';
     };
 
-    $scope.rowFormatter = function( row ) {
+    $scope.rowFormatter = function (row) {
       return row.entity.status === 'Pi-holed';
     };
+
+    $scope.getdomainInfo = function (row) {
+      if (row.isExpanded) {
+        row.entity.subGridOptions = {
+          columnDefs: [
+            {
+              name: 'list'
+            },
+            {
+              name: 'found',
+              cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP"><span ng-if="COL_FIELD">{{\'DOMAIN_FOUND_IN_LIST\' | translate}}</span><span ng-if="!COL_FIELD"> {{\'DOMAIN_NOT_FOUND_IN_LIST\' | translate}} </span></div>',
+            }
+          ]
+        };
+        API.findBlockedDomain(row.entity.domain).then(function (result) {
+          row.entity.subGridOptions.data = result
+        })
+      }
+
+    };
+
+    $scope.blockDomain = function(row){
+      var listType = 'black';
+      API.fetchCRSFToken().then(function (token) {
+        API.addToList(listType, row.entity.domain, token).then(function (result) {
+
+        });
+      });
+    };
+
+    $scope.unblockDomain = function(row){
+      var listType = 'white';
+      API.fetchCRSFToken().then(function (token) {
+        API.addToList(listType, row.entity.domain, token).then(function (result) {
+
+        });
+      });
+    };
+
     $scope.langs = i18nService.getAllLangs();
     $scope.lang = $translate.use();
     $scope.gridOptions = {
       rowTemplate: rowTemplate(),
+      expandableRowTemplate: 'views/templates/row.html',
+      expandableRowHeight: 350,
       enableFiltering: true,
-      rowHeight:38,
+      exporterMenuCsv: true,
+      enableGridMenu: true,
+      onRegisterApi: function (gridApi) {
+        gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+          $scope.getdomainInfo(row);
+        });
+      },
+      rowHeight: 38,
       columnDefs: [
-        { name: 'date',
+        {
+          name: 'date',
+          displayName: $translate.instant('DATE'),
           cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD | date: \'dd-MMMM-yyyy HH:mm:ss\'}}</div>',
+          cellFilter: 'date',
           sort: {
             direction: uiGridConstants.DESC,
             priority: 0
           }
         },
-        { name: 'recordType',
+        {
+          name: 'recordType',
+          displayName: $translate.instant('TYPE'),
           filter: {
             term: ($routeParams.filterType) ? $routeParams.filterType : ''
           }
         },
-        { name: 'domain',
+        {
+          name: 'domain',
+          displayName: $translate.instant('DOMAIN'),
+
           filter: {
             term: ($routeParams.filterDomain) ? $routeParams.filterDomain : ''
           }
         },
-        { name: 'Client IP',
+        {
+          displayName: $translate.instant('CLIENT'),
           field: 'clientIP',
           filter: {
             term: ($routeParams.filterIP) ? $routeParams.filterIP : ''
           }
         },
-        { name: 'status',
+        {
 
+          name: 'status',
+          displayName: $translate.instant('STATUS'),
+          cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD}} <span class="toolkit"><i class="fa fa-ban" ng-click="grid.appScope.blockDomain(row)" ng-show="COL_FIELD !==\'Pi-holed\'" title="{{ \'BLOCK_DOMAIN\' | translate }}"></i><i class="fa fa-check" title="{{ \'UNBLOCK_DOMAIN\' | translate }}" ng-click="grid.appScope.unblockDomain(row)" ng-show="COL_FIELD ===\'Pi-holed\'"></i></span></div>',
           filter: {
-            term: '',
             type: uiGridConstants.filter.SELECT,
-            selectOptions: [ { value: 'Pi-holed', label: 'Pi-holed' }, { value: 'OK', label: 'OK' } ]
+            selectOptions: [{value: 'Pi-holed', label: 'Pi-holed'}, {value: 'OK', label: 'OK'}]
           }
         }
       ]
     };
-    $rootScope.$on('languageChanged', function(evt, lang){
+
+
+    $rootScope.$on('languageChanged', function (evt, lang) {
       $scope.lang = $translate.use();
     });
 
     tableCache();
-    $scope.refreshData = function(){
+    $scope.refreshData = function () {
       CacheService.put('queries', null);
       tableCache()
     };
