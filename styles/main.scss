@@ -45,6 +45,9 @@ h3 { transition-duration: 500ms }
   }
 }
 .lookupTable{
+  .ui-grid-viewport{
+    overflow: hidden !important;
+  }
   .ui-grid-row, .ui-grid-header-cell-row{
     color: #333 !important;
   }

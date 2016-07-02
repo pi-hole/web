@@ -39,6 +39,12 @@ angular.module('piholeAdminApp')
       return row.entity.status === 'Pi-holed';
     };
 
+    var getTableHeight = function(numResults) {
+      var rowHeight = 45; // your row height
+      var headerHeight = 45; // your header height
+      return (numResults * rowHeight + headerHeight)
+    };
+
     $scope.getdomainInfo = function (row) {
       if (row.isExpanded) {
         row.entity.subGridOptions = {
@@ -53,7 +59,10 @@ angular.module('piholeAdminApp')
           ]
         };
         API.findBlockedDomain(row.entity.domain).then(function (result) {
-          row.entity.subGridOptions.data = result
+          row.entity.subGridOptions.height = getTableHeight(result.length);
+          row.entity.subGridOptions.data = result;
+          console.log(row);
+          row.$$height = row.entity.subGridOptions.height;
         })
       }
 
@@ -82,7 +91,7 @@ angular.module('piholeAdminApp')
     $scope.gridOptions = {
       rowTemplate: rowTemplate(),
       expandableRowTemplate: 'views/templates/row.html',
-      expandableRowHeight: 350,
+      expandableRowHeight: 100,
       enableFiltering: true,
       exporterMenuCsv: true,
       enableGridMenu: true,
@@ -137,6 +146,8 @@ angular.module('piholeAdminApp')
         }
       ]
     };
+
+
 
 
     $rootScope.$on('languageChanged', function (evt, lang) {
