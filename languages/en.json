@@ -88,5 +88,7 @@
   "BLOCK_DOMAIN": "Block this domain",
   "UNBLOCK_DOMAIN": "Unblock this domain",
   "DATE": "Date",
+  "QUERIES": "Queries",
+  "BLOCKED": "Blocked",
   "LOADING": "Loading"
 }
