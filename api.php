@@ -3,6 +3,30 @@
     include('data.php');
     header('Content-type: application/json');
 
+    function pi_log($message) {
+        error_log($message . "\n", 3, '/var/log/lighttpd/pihole_php.log');
+    }
+    function die_and_log($message) {
+        pi_log($message);
+        die($message);
+    }
+
+    $AUTHORIZED_HOSTNAMES = [
+        $_SERVER['SERVER_ADDR'],
+        'pi.hole'
+    ];
+    // Check CORS
+    $CORS_ALLOW_ORIGIN = false;
+    if(in_array($_SERVER['HTTP_ORIGIN'], $AUTHORIZED_HOSTNAMES)) {
+        $CORS_ALLOW_ORIGIN = $_SERVER['HTTP_ORIGIN'];
+    } else if(in_array($_SERVER['HTTP_HOST'], $AUTHORIZED_HOSTNAMES)) {
+        $CORS_ALLOW_ORIGIN = $_SERVER['HTTP_HOST'];
+    }
+    if (!$CORS_ALLOW_ORIGIN)
+        die_and_log("Failed CORS");
+    header("Access-Control-Allow-Origin: $CORS_ALLOW_ORIGIN");
+
+
     $data = array();
 
     if (isset($_GET['summaryRaw'])) {

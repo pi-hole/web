@@ -87,5 +87,6 @@
   "DOMAIN_NOT_FOUND_IN_LIST": "No",
   "BLOCK_DOMAIN": "Block this domain",
   "UNBLOCK_DOMAIN": "Unblock this domain",
-  "DATE": "Date"
+  "DATE": "Date",
+  "LOADING": "Loading"
 }

@@ -80,6 +80,7 @@ angular.module('piholeAdminApp')
       });
     };
 
+
     $scope.unblockDomain = function (row) {
       var listType = 'white';
       API.fetchCRSFToken().then(function (token) {
@@ -106,6 +107,7 @@ angular.module('piholeAdminApp')
       enableGridMenu: true,
       onRegisterApi: function (gridApi) {
         gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+
           if (row.isExpanded) {
             gridApi.expandable.collapseAllRows();
             row.isExpanded = true;
@@ -159,8 +161,7 @@ angular.module('piholeAdminApp')
         }
       ]
     };
-
-
+    
     $rootScope.$on('languageChanged', function (evt, lang) {
       $scope.lang = $translate.use();
     });

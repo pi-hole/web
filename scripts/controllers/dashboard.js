@@ -8,7 +8,7 @@
  * Controller of the piholeAdminApp
  */
 angular.module('piholeAdminApp')
-  .controller('DashboardCtrl', ['$scope', 'API', '$interval', 'CacheService', '$timeout', function ($scope, API, $interval, CacheService, $timeout) {
+  .controller('DashboardCtrl', ['$scope', 'API', '$interval', 'CacheService', '$timeout', '$translate', function ($scope, API, $interval, CacheService, $timeout, $translate) {
     var queries;
     var inCache = [];
 
@@ -64,6 +64,7 @@ angular.module('piholeAdminApp')
         [],
         []
       ],
+      series: [$translate.instant('QUERIES') , $translate.instant('BLOCKED')],
       colours: [
         "#00a65a",
         "#00c0ef"
