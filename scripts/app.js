@@ -113,7 +113,7 @@ angular
     $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
     $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
   }).config(function ($translateProvider) {
-    $translateProvider.useSanitizeValueStrategy('sanitize');
+    $translateProvider.useSanitizeValueStrategy('escape');
     $translateProvider.useStaticFilesLoader({
       prefix: 'languages/',
       suffix: '.json'
@@ -123,7 +123,7 @@ angular
       'de_*': 'de',
       'nl_*': 'nl',
       'es_*': 'es'
-    }).determinePreferredLanguage();
+    }).determinePreferredLanguage().fallbackLanguage('en');
 
     $translateProvider.useLocalStorage();
   });
