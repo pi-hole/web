@@ -33,6 +33,7 @@ angular.module('piholeAdminApp')
       loadData(listType);
     } else {
       $scope.list = cache;
+      loadData(listType);
     }
 
 

@@ -22,7 +22,9 @@ angular
     'ui.grid.exporter',
     'ui.grid.expandable',
     'ui.grid.selection',
-    'ui.grid.pinning'
+    'ui.grid.pinning',
+    'ui.grid.autoResize',
+    'ui.grid.pagination'
   ])
   .config(function ($routeProvider) {
     $routeProvider

@@ -31,6 +31,10 @@ h3 {
   .toolkit i {
     cursor: pointer; }
 
+.loadingLookupTable {
+  color: #333;
+  margin-top: 5px; }
+
 .lookupTable .ui-grid-viewport {
   overflow: hidden !important; }
 .lookupTable .ui-grid-row, .lookupTable .ui-grid-header-cell-row {

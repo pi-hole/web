@@ -8,7 +8,7 @@
  * Controller of the piholeAdminApp
  */
 angular.module('piholeAdminApp')
-  .controller('QuerylogCtrl', ['$scope', 'API', 'CacheService', 'uiGridConstants', '$translate', 'i18nService', '$rootScope', '$routeParams', function ($scope, API, CacheService, uiGridConstants, $translate, i18nService, $rootScope, $routeParams) {
+  .controller('QuerylogCtrl', ['$scope', 'API', 'CacheService', 'uiGridConstants', '$translate', 'i18nService', '$rootScope', '$routeParams', '$timeout', function ($scope, API, CacheService, uiGridConstants, $translate, i18nService, $rootScope, $routeParams, $timeout) {
     //
     var queries = CacheService.get('queryPage');
     var tableCache = function () {
@@ -39,7 +39,7 @@ angular.module('piholeAdminApp')
       return row.entity.status === 'Pi-holed';
     };
 
-    var getTableHeight = function(numResults) {
+    var getTableHeight = function (numResults) {
       var rowHeight = 35; // your row height
       var headerHeight = 35; // your header height
       return (numResults * rowHeight + headerHeight)
@@ -68,20 +68,26 @@ angular.module('piholeAdminApp')
 
     };
 
-    $scope.blockDomain = function(row){
+    $scope.blockDomain = function (row) {
       var listType = 'black';
       API.fetchCRSFToken().then(function (token) {
         API.addToList(listType, row.entity.domain, token).then(function (result) {
-
+          $scope.add_result = result;
+          $timeout(function(){
+            $scope.add_result = false;
+          }, 4000)
         });
       });
     };
 
-    $scope.unblockDomain = function(row){
+    $scope.unblockDomain = function (row) {
       var listType = 'white';
       API.fetchCRSFToken().then(function (token) {
         API.addToList(listType, row.entity.domain, token).then(function (result) {
-
+          $scope.add_result = result;
+          $timeout(function(){
+            $scope.add_result = false;
+          }, 4000)
         });
       });
     };
@@ -92,12 +98,15 @@ angular.module('piholeAdminApp')
       rowTemplate: rowTemplate(),
       expandableRowTemplate: 'views/templates/row.html',
       expandableRowHeight: 100,
+      paginationPageSizes: [25, 50, 75],
+      paginationPageSize: 25,
+      flatEntityAccess: true,
       enableFiltering: true,
       exporterMenuCsv: true,
       enableGridMenu: true,
       onRegisterApi: function (gridApi) {
         gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-          if(row.isExpanded){
+          if (row.isExpanded) {
             gridApi.expandable.collapseAllRows();
             row.isExpanded = true;
           }
@@ -150,8 +159,6 @@ angular.module('piholeAdminApp')
         }
       ]
     };
-
-
 
 
     $rootScope.$on('languageChanged', function (evt, lang) {

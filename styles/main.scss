@@ -1,57 +1,73 @@
-.big-font{
+.big-font {
   font-size: 30px !important;
 }
+
 .glow {
   text-shadow: 0 0 5px #fff;
 }
-h3 { transition-duration: 500ms }
-.logo{
-  img{
+
+h3 {
+  transition-duration: 500ms
+}
+
+.logo {
+  img {
     height: 25px;
     width: 25px;
     top: -3px;
     position: relative;
   }
 }
-.user-panel{
-  .info{
+
+.user-panel {
+  .info {
     left: 0px !important;
   }
-  .status_row{
+  .status_row {
     padding-top: 3px;
     padding-bottom: 3px;
-    .status_label{
+    .status_label {
       color: #b8c7ce;
 
     }
-    .status_value{
+    .status_value {
 
     }
   }
 
   height: 170px;
 }
-.dropdown-menu{
+
+.dropdown-menu {
   li {
     a {
       cursor: pointer;
     }
   }
 }
-.toolkit{
+
+.toolkit {
   color: #3c8dbc;
   i {
     cursor: pointer;
   }
 }
-.lookupTable{
-  .ui-grid-viewport{
+
+.loadingLookupTable {
+  color: #333;
+  margin-top: 5px;
+}
+
+.lookupTable {
+
+  .ui-grid-viewport {
     overflow: hidden !important;
   }
-  .ui-grid-row, .ui-grid-header-cell-row{
+  .ui-grid-row, .ui-grid-header-cell-row {
     color: #333 !important;
   }
 }
-.ui-grid-icon-minus-squared, .ui-grid-icon-plus-squared{
-   cursor: pointer;
+
+.ui-grid-icon-minus-squared, .ui-grid-icon-plus-squared {
+  cursor: pointer;
 }

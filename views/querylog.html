@@ -12,8 +12,14 @@
                         <i class="fa fa-refresh fa-1"
                             ng-class="{'fa-spin': refreshing}" ></i> {{ 'REFRESH_DATA' | translate }} </button>
                 </div>
+                <div class="col-xs-12">
+                    <div ng-if="add_result" class="alert alert-info alert-dismissible fade in" role="alert" >
+                        <button type="button" class="close" data-hide="alert" aria-label="Close" ng-click="add_result = false"><span>&times;</span></button>
+                        {{ add_result }}...
+                    </div>
+                </div>
                 <div class="col-xs-12" >
-                    <div class="grid" ui-grid="gridOptions" ui-grid-expandable></div>
+                    <div class="grid" ui-grid="gridOptions" ui-grid-expandable ui-grid-exporter ui-grid-auto-resize ui-grid-pagination></div>
                 </div>
                     <!--<table id="all-queries" class="display table table-striped table-bordered" cellspacing="0"
                            width="100%">
