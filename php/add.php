@@ -26,11 +26,12 @@ header("Access-Control-Allow-Origin: $CORS_ALLOW_ORIGIN");
 session_start();
 
 // Check CSRF token
+session_start();
 if(!hash_equals($_SESSION['token'], $_POST['token']))
     die("Wrong token");
 
 switch($_POST['list']) {
-    case "white":        
+    case "white":
         echo exec("sudo pihole -w -q ${_POST['domain']}");
         break;
     case "black":

@@ -25,6 +25,7 @@ if (!$CORS_ALLOW_ORIGIN)
 header("Access-Control-Allow-Origin: $CORS_ALLOW_ORIGIN");
 session_start();
 // Check CSRF token
+session_start();
 if(!hash_equals($_SESSION['token'], $_POST['token']))
     die("Wrong token");
 
