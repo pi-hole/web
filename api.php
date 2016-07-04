@@ -17,9 +17,9 @@
     ];
     // Check CORS
     $CORS_ALLOW_ORIGIN = false;
-    if(in_array($_SERVER['HTTP_ORIGIN'], $AUTHORIZED_HOSTNAMES)) {
+    if(isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $AUTHORIZED_HOSTNAMES)) {
         $CORS_ALLOW_ORIGIN = $_SERVER['HTTP_ORIGIN'];
-    } else if(in_array($_SERVER['HTTP_HOST'], $AUTHORIZED_HOSTNAMES)) {
+    } else if(isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], $AUTHORIZED_HOSTNAMES)) {
         $CORS_ALLOW_ORIGIN = $_SERVER['HTTP_HOST'];
     }
     if (!$CORS_ALLOW_ORIGIN)
