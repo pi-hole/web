@@ -70,4 +70,11 @@ h3 {
 
 .ui-grid-icon-minus-squared, .ui-grid-icon-plus-squared {
   cursor: pointer;
+  display: none;
+}
+
+.pi-holed{
+  .ui-grid-icon-minus-squared, .ui-grid-icon-plus-squared {
+    display: inline-block;
+  }
 }

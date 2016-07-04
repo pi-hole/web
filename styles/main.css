@@ -41,6 +41,10 @@ h3 {
   color: #333 !important; }
 
 .ui-grid-icon-minus-squared, .ui-grid-icon-plus-squared {
-  cursor: pointer; }
+  cursor: pointer;
+  display: none; }
+
+.pi-holed .ui-grid-icon-minus-squared, .pi-holed .ui-grid-icon-plus-squared {
+  display: inline-block; }
 
 /*# sourceMappingURL=main.css.map */
