@@ -168,7 +168,7 @@ angular.module('piholeAdminApp')
 
     tableCache();
     $scope.refreshData = function () {
-      CacheService.put('queries', null);
+      CacheService.put('queryPage', null);
       tableCache()
     };
 

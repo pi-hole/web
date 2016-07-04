@@ -104,9 +104,6 @@ angular
       $httpProvider.defaults.headers.get = {};
     }
 
-    // Answer edited to include suggestions from comments
-    // because previous version of code introduced browser-related errors
-
     //disable IE ajax request caching
     $httpProvider.defaults.headers.get['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
     // extra
