@@ -90,5 +90,6 @@
   "DATE": "Date",
   "QUERIES": "Queries",
   "BLOCKED": "Blocked",
-  "LOADING": "Loading"
+  "LOADING": "Loading",
+  "ACTIONS": "Actions"
 }

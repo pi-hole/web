@@ -153,11 +153,17 @@ angular.module('piholeAdminApp')
 
           name: 'status',
           displayName: $translate.instant('STATUS'),
-          cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD}} <span class="toolkit"><i class="fa fa-ban" ng-click="grid.appScope.blockDomain(row)" ng-show="COL_FIELD !==\'Pi-holed\'" title="{{ \'BLOCK_DOMAIN\' | translate }}"></i><i class="fa fa-check" title="{{ \'UNBLOCK_DOMAIN\' | translate }}" ng-click="grid.appScope.unblockDomain(row)" ng-show="COL_FIELD ===\'Pi-holed\'"></i></span></div>',
+          cellTemplate: '<div class="ui-grid-cell-contents text-center" title="TOOLTIP">{{COL_FIELD}}</div>',
           filter: {
             type: uiGridConstants.filter.SELECT,
             selectOptions: [{value: 'Pi-holed', label: 'Pi-holed'}, {value: 'OK', label: 'OK'}]
           }
+        },
+        {
+          name: 'actions',
+          displayName: $translate.instant('ACTIONS'),
+          cellTemplate: '<div class="ui-grid-cell-contents text-center" title="TOOLTIP"><span class="toolkit"><button type="button" class="btn btn-default btn-xs" ng-click="grid.appScope.blockDomain(row)" ng-show="row.entity.status !==\'Pi-holed\'">   <span class="fa fa-ban" aria-hidden="true" ></span> {{ \'BLOCK_DOMAIN\' | translate }}</button><button type="button" class="btn btn-default btn-xs" ng-click="grid.appScope.unblockDomain(row)" ng-show="row.entity.status ===\'Pi-holed\'">   <span class="glyphicon glyphicon-ok" aria-hidden="true" ></span> {{ \'UNBLOCK_DOMAIN\' | translate }}</button></span></div>',
+          enableFiltering: false
         }
       ]
     };
