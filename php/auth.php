@@ -25,11 +25,6 @@ $virtual_host = getenv('VIRTUAL_HOST');
 if (! empty($virtual_host))
     array_push($AUTHORIZED_HOSTNAMES, 'http://' . $virtual_host);
 
-# For docker container's host IP, SERVER_ADDR will be docker0 interface ip
-$server_ip = getenv('ServerIP');
-if (! empty($server_ip))
-    array_push($AUTHORIZED_HOSTNAMES, 'http://' . $server_ip);
-
 // Check CORS
 if(isset($_SERVER['HTTP_ORIGIN'])) {
     if(in_array($_SERVER['HTTP_ORIGIN'], $AUTHORIZED_HOSTNAMES)) {
