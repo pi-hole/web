@@ -19,20 +19,20 @@
     <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
     <meta name="msapplication-TileColor" content="#367fa9">
     <meta name="msapplication-TileImage" content="img/ms-icon-144x144.png">
-    
+
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="css/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="css/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
     <link href="css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
-    
+
     <link href="css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
     <link href="css/skin-blue.min.css" rel="stylesheet" type="text/css" />
-    <link rel="icon" type="image/png" href="img/pihole-160x160.jpg" />
+    <link rel="icon" type="image/png" href="img/pihole-160x160.png" />
     <style type="text/css">
         .glow { text-shadow: 0px 0px 5px #fff; }
         h3 { transition-duration: 500ms }
     </style>
-    
+
     <!--[if lt IE 9]>
     <script src="js/other/html5shiv.min.js"></script>
     <script src="js/other/respond.min.js"></script>
@@ -101,7 +101,7 @@
                                 <div id="alWebUpdate" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
                                     <a class="alert-link" href="https://github.com/pi-hole/AdminLTE/releases">There's an update available for this Web Interface!</a>
                                 </div>
-                                
+
                                 <!-- PayPal -->
                                 <div>
                                     <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
@@ -128,7 +128,7 @@
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
-                    <?php 
+                    <?php
                         $pistatus = exec('pgrep dnsmasq | wc -l');
                         if ($pistatus > "0") {
                             echo '<a href="#"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
