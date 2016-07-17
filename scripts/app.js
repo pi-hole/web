@@ -47,9 +47,6 @@ angular
       .when('/sysinfo', {
         templateUrl: 'views/system_info.html',
         controller: 'SystemCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
       });
   })
   .config(function ($locationProvider) {
