@@ -68,13 +68,13 @@
                     <!-- User Account: style can be found in dropdown.less -->
                     <li id="dropdown-menu" class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle">
-                            <img src="img/pihole-160x160.jpg" class="user-image" alt="Pi-hole logo" />
+                            <img src="img/pihole-160x160.png" class="user-image" alt="Pi-hole logo" />
                             <span class="hidden-xs">Pi-hole</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="./img/pihole-160x160.jpg" alt="User Image" />
+                                <img src="./img/pihole-160x160.png" alt="User Image" />
                                 <p>
                                     Open Source Ad Blocker
                                     <small>Designed For Raspberry Pi</small>
@@ -124,7 +124,7 @@
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="img/pihole-160x160.jpg" class="img-circle" alt="Pi-hole logo" />
+                    <img src="img/pihole-160x160.png" class="img-circle" alt="Pi-hole logo" />
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
