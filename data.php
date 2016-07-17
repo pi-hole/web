@@ -464,7 +464,7 @@ function getProcesses($num = 5)
             preg_match('/([a-z0-9-]+)\s+([a-z0-9-]+)\s+([0-9.]+)\s+([0-9.]+)\s+([0-9]+)\s+([0-9]+)\s+([a-z?]+)\s+([A-z])\s+([A-z0-9:]+)\s+([0-9:]+)\s(.*)/', $result, $process);
 
             $process = array_splice($process, 1);
-            if ($process[1]) {
+            if (isset($process[1])) {
                 list($p['user'], $p['pid'], $p['cpu_usage'], $p['memory_usage'],
                     $p['virtual_memory_usage'], $p['resident_set_size'], $p['tty'],
                     $p['stat'], $p['start'], $p['time'], $p['command']) = $process;
