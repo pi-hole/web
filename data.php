@@ -128,11 +128,11 @@ function getAllQueries()
     $log = readInLog();
     $dns_queries = getDnsQueriesAll($log);
 
+    $status = false;
     foreach ($dns_queries as $query) {
         $time = date_create(substr($query, 0, 16));
         $exploded = explode(" ", trim($query));
         $tmp = $exploded[count($exploded) - 4];
-
         if (substr($tmp, 0, 5) == "query") {
             $type = substr($exploded[count($exploded) - 4], 6, -1);
             $domain = $exploded[count($exploded) - 3];

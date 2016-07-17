@@ -176,30 +176,30 @@
                 <li class="header">{{ 'MAIN_NAV' | translate }}</li>
                 <!-- Home Page -->
                 <li ng-class="getClass('/')">
-                    <a href="#/">
+                    <a ng-href="/admin">
                         <i class="fa fa-home"></i> <span>{{ 'MAIN_PAGE' | translate }}</span>
                     </a>
                 </li>
                 <!-- Query Log -->
                 <li ng-class="getClass('/queries')">
-                    <a ng-href="#/queries">
+                    <a ng-href="queries">
                         <i class="fa fa-file-text-o"></i> <span>{{ 'QUERY_LOG' | translate}}</span>
                     </a>
                 </li>
                 <li ng-class="getClass('/whitelist')">
-                    <a ng-href="#/whitelist">
+                    <a ng-href="whitelist">
                         <i class="fa fa-pencil-square-o"></i> <span>{{ 'WHITELIST' | translate }}</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
                 <li ng-class="getClass('/blacklist')">
-                    <a ng-href="#/blacklist">
+                    <a ng-href="blacklist">
                         <i class="fa fa-ban"></i> <span>{{ 'BLACKLIST' | translate }}</span>
                     </a>
                 </li>
                 <!-- System info -->
                 <li ng-class="getClass('/sysinfo')">
-                    <a ng-href="#/sysinfo">
+                    <a ng-href="sysinfo">
                         <i class="fa fa-server"></i> <span>{{ 'SYSTEM_INFO' | translate }}</span>
                     </a>
                 </li>

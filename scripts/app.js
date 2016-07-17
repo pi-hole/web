@@ -53,7 +53,7 @@ angular
       });
   })
   .config(function ($locationProvider) {
-    //$locationProvider.html5Mode(true);
+    $locationProvider.html5Mode(true);
   })
   .config(function ($httpProvider) {
     //$locationProvider.html5Mode(true);
