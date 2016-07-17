@@ -1,21 +1,31 @@
 <?php
-if(!isset($_POST['domain'], $_POST['list'], $_POST['token']))
-    die("Missing POST variables");
-
-// Check CORS
-if(isset($_SERVER['HTTP_ORIGIN'])) {
-    if ($_SERVER['HTTP_ORIGIN'] == "http://pi.hole" ||
-        $_SERVER['HTTP_ORIGIN'] == "http://${_SERVER['SERVER_ADDR']}" ||
-        $_SERVER['HTTP_ORIGIN'] == "http://localhost"
-    )
-        header("Access-Control-Allow-Origin: ${_SERVER['HTTP_ORIGIN']}");
-    else
-        die("Failed CORS");
+function pi_log($message) {
+    error_log($message . "\n", 3, '/var/log/lighttpd/pihole_php.log');
 }
-// Otherwise probably same origin... out of the scope of CORS
+function die_and_log($message) {
+    pi_log($message);
+    die($message);
+}
+if(!isset($_POST['domain'], $_POST['list'], $_POST['token'])) {
+    die_and_log("Missing POST variables");
+}
+$AUTHORIZED_HOSTNAMES = [
+    $_SERVER['SERVER_ADDR'],
+    'pi.hole'
+];
+// Check CORS
+$CORS_ALLOW_ORIGIN = false;
+if(in_array($_SERVER['HTTP_ORIGIN'], $AUTHORIZED_HOSTNAMES)) {
+    $CORS_ALLOW_ORIGIN = $_SERVER['HTTP_ORIGIN'];
+} else if(in_array($_SERVER['HTTP_HOST'], $AUTHORIZED_HOSTNAMES)) {
+    $CORS_ALLOW_ORIGIN = $_SERVER['HTTP_HOST'];
+}
+if (!$CORS_ALLOW_ORIGIN)
+    die_and_log("Failed CORS");
+header("Access-Control-Allow-Origin: $CORS_ALLOW_ORIGIN");
+session_start();
 
 // Check CSRF token
-session_start();
 if(!hash_equals($_SESSION['token'], $_POST['token']))
     die("Wrong token");
 

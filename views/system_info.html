@@ -1,0 +1,171 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ 'History' | translate }}</h3>
+                <br />
+                <span class="btn btn-default" ng-click="switchGraph('cpu')"
+                      ng-class="{'btn-info': mode==='cpu'}"
+                        >{{ 'CPU_LOAD' | translate }}</span>
+                <span class="btn btn-default" ng-click="switchGraph('temp')"
+                      ng-class="{'btn-info': mode==='temp'}"
+                        >{{ 'CPU_TEMP' | translate }}</span>
+                <span class="btn btn-default" ng-click="switchGraph('memory')"
+                      ng-class="{'btn-info': mode==='memory'}"
+                        >{{ 'MEM_USAGE' | translate }}</span>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas id="line" class="chart chart-line" chart-data="data"
+                            chart-dataset-override="datasetOverride"
+                            chart-labels="labels" chart-series="series" chart-options="options"
+                            style="height: 247px; width: 466px;" width="932" chart-legend="true"
+                            height="494">
+                    </canvas>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ 'Disk status' | translate }}</h3>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas class="chart chart-doughnut" style="height: 247px; width: 466px;" width="932"
+                            height="494" chart-legend="true"
+                            chart-options="diskStatsChart.options" chart-colours="diskStatsChart.color"
+                            chart-data="diskStatsChart.data" chart-labels="diskStatsChart.labels">
+                    </canvas>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>{{ 'MOUNT' | translate }}</th>
+                            <th>{{ 'TYPE' | translate }}</th>
+                            <th>{{ 'DISK' | translate }}</th>
+                            <th>{{ 'SIZE' | translate }}</th>
+                            <th>{{ 'USED' | translate }}</th>
+                            <th>{{ 'USAGE' | translate }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="mount in mounts">
+                            <td>{{mount.mount}}</td>
+                            <td>{{mount.type}}</td>
+                            <td>{{mount.disk}}</td>
+                            <td>{{mount.bytes_total*1024 | bytes}}</td>
+                            <td>{{mount.bytes_used*1024 | bytes}}</td>
+                            <td>
+                                <div class="progress progress-sm">
+                                    <div class="progress-bar progress-bar-blue" style="width: {{mount.percent}}">
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box" id="forward-destinations">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ 'NETWORK' | translate }}</h3>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas class="chart chart-doughnut" chart-legend="true"
+                            style="height: 247px; width: 466px;" width="932" height="494"
+                            chart-options="networkChart.options"
+                            chart-colours="networkChart.color" chart-data="networkChart.data"
+                            chart-labels="networkChart.labels">
+                    </canvas>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>{{ 'IN' | translate }}</th>
+                        <th>{{ 'OUT' | translate }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ 'PACKETS' | translate }}</td>
+                        <td>{{interface.tx.packets}}</td>
+                        <td>{{interface.rx.packets}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'BYTES' | translate }}</td>
+                        <td>{{interface.tx.hbytes}}</td>
+                        <td>{{interface.rx.hbytes}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'ERRORS' | translate }}</td>
+                        <td>{{interface.tx.errors}}</td>
+                        <td>{{interface.rx.errors}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'DROPPED' | translate }}</td>
+                        <td>{{interface.tx.dropped}}</td>
+                        <td>{{interface.rx.dropped}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'OVERRUNS' | translate }}</td>
+                        <td>{{interface.tx.overruns}}</td>
+                        <td>{{interface.rx.overruns}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="box" id="client-frequency">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ 'TOP_PROCESSES' | translate }}</h3>
+                <button class="btn btn-default margin-bottom pull-right" ng-click="refreshProcesses()">
+                    <i class="fa fa-refresh fa-1"
+                       ng-class="{'fa-spin': refreshing_process}" ></i></button>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table class="table table-bordered table-responsive">
+                    <thead>
+                    <tr>
+                        <th>{{ 'PID' | translate }}</th>
+                        <th>{{ 'USER' | translate }}</th>
+                        <th>{{ 'MEMORY_USAGE' | translate }}</th>
+                        <th>{{ 'CPU_USAGE' | translate }}</th>
+                        <th>{{ 'COMMAND' | translate }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="process in processes">
+                        <td>{{process.pid}}</td>
+                        <td>{{process.user}}</td>
+                        <td>{{process.virtual_memory_usage*1024 | bytes}}</td>
+                        <td>{{process.cpu_usage}}%</td>
+                        <td>{{process.command}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>

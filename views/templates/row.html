@@ -1,0 +1,2 @@
+<span ng-if="!row.entity.subGridOptions.data.length"  class="loadingLookupTable"><i class="fa fa-spinner fa-spin"></i> {{ 'LOADING' | translate }}... </span>
+<div ng-if="row.entity.subGridOptions.data.length" ui-grid="row.entity.subGridOptions" ng-style="{height: row.entity.subGridOptions.height + 'px' }" class="lookupTable"></div>

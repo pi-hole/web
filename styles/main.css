@@ -1,0 +1,50 @@
+.big-font {
+  font-size: 30px !important; }
+
+.glow {
+  text-shadow: 0 0 5px #fff; }
+
+h3 {
+  transition-duration: 500ms; }
+
+.logo img {
+  height: 25px;
+  width: 25px;
+  top: -3px;
+  position: relative; }
+
+.user-panel {
+  height: 170px; }
+  .user-panel .info {
+    left: 0px !important; }
+  .user-panel .status_row {
+    padding-top: 3px;
+    padding-bottom: 3px; }
+    .user-panel .status_row .status_label {
+      color: #b8c7ce; }
+
+.dropdown-menu li a {
+  cursor: pointer; }
+
+.toolkit {
+  color: #3c8dbc; }
+  .toolkit i {
+    cursor: pointer; }
+
+.loadingLookupTable {
+  color: #333;
+  margin-top: 5px; }
+
+.lookupTable .ui-grid-viewport {
+  overflow: hidden !important; }
+.lookupTable .ui-grid-row, .lookupTable .ui-grid-header-cell-row {
+  color: #333 !important; }
+
+.ui-grid-icon-minus-squared, .ui-grid-icon-plus-squared {
+  cursor: pointer;
+  display: none; }
+
+.pi-holed .ui-grid-icon-minus-squared, .pi-holed .ui-grid-icon-plus-squared {
+  display: inline-block; }
+
+/*# sourceMappingURL=main.css.map */

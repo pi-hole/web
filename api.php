@@ -1,6 +1,31 @@
 <?php
+    session_start();
     include('data.php');
     header('Content-type: application/json');
+
+    function pi_log($message) {
+        error_log($message . "\n", 3, '/var/log/lighttpd/pihole_php.log');
+    }
+    function die_and_log($message) {
+        pi_log($message);
+        die($message);
+    }
+
+    $AUTHORIZED_HOSTNAMES = [
+        $_SERVER['SERVER_ADDR'],
+        'pi.hole'
+    ];
+    // Check CORS
+    $CORS_ALLOW_ORIGIN = false;
+    if(isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $AUTHORIZED_HOSTNAMES)) {
+        $CORS_ALLOW_ORIGIN = $_SERVER['HTTP_ORIGIN'];
+    } else if(isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], $AUTHORIZED_HOSTNAMES)) {
+        $CORS_ALLOW_ORIGIN = $_SERVER['HTTP_HOST'];
+    }
+    if (!$CORS_ALLOW_ORIGIN)
+        die_and_log("Failed CORS");
+    header("Access-Control-Allow-Origin: $CORS_ALLOW_ORIGIN");
+
 
     $data = array();
 
@@ -45,6 +70,58 @@
 
     if (isset($_GET['getAllQueries'])) {
         $data = array_merge($data, getAllQueries());
+    }
+
+    if (isset($_GET['getVersions'])) {
+        $data = array_merge($data, getVersions());
+    }
+
+    if (isset($_GET['getStatus'])) {
+        $status['status'] = getStatus();
+        $data = array_merge($data, $status);
+    }
+
+    if (isset($_GET['getToken'])) {
+        if(empty($_SESSION['token'])) {
+            $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
+        }
+        $token['token'] = $_SESSION['token'];
+        $data = array_merge($data, $token);
+    }
+
+    if(isset($_GET['getTemp'])){
+        $temp['temp'] = getTemp();
+        $data = array_merge($data, $temp);
+    }
+
+    if(isset($_GET['getMemoryStats'])){
+        $stats['memory'] = getMemoryStats();
+        $data = array_merge($data, $stats);
+    }
+
+    if(isset($_GET['getCPUStats'])){
+        $stats['cpu'] = sys_getloadavg();
+        $data = array_merge($data, $stats);
+    }
+
+    if(isset($_GET['getDiskStats'])){
+        $stats['disk'] = getDiskStats();
+        $data = array_merge($data, $stats);
+    }
+
+    if(isset($_GET['getNetworkStats'])){
+        $stats['network'] = ifconfig();
+        $data = array_merge($data, $stats);
+    }
+
+    if(isset($_GET['getProcesses'])){
+        $stats['processes'] = getProcesses(10);
+        $data = array_merge($data, $stats);
+    }
+
+    if(isset($_GET['findBlockedDomain'])){
+        $stats['findBlockedDomain'] = findBlockedDomain($_GET['findBlockedDomain']);
+        $data = array_merge($data, $stats);
     }
 
     function filterArray(&$a) {

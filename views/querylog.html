@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="box" id="recent-queries">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ 'RECENT_QUERIES' | translate }}</h3>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="col-md-12">
+                    <button class="btn btn-default margin-bottom pull-right" ng-click="refreshData()">
+                        <i class="fa fa-refresh fa-1"
+                            ng-class="{'fa-spin': refreshing}" ></i> {{ 'REFRESH_DATA' | translate }} </button>
+                </div>
+                <div class="col-xs-12">
+                    <div ng-if="add_result" class="alert alert-info alert-dismissible fade in" role="alert" >
+                        <button type="button" class="close" data-hide="alert" aria-label="Close" ng-click="add_result = false"><span>&times;</span></button>
+                        {{ add_result }}...
+                    </div>
+                </div>
+                <div class="col-xs-12" >
+                    <div class="grid" ui-grid="gridOptions" ui-grid-expandable ui-grid-exporter ui-grid-auto-resize ui-grid-pagination></div>
+                </div>
+                    <!--<table id="all-queries" class="display table table-striped table-bordered" cellspacing="0"
+                           width="100%">
+                        <thead>
+                        <tr>
+                            <th>{{ 'TIME' | translate }}</th>
+                            <th>{{ 'TYPE' | translate }}</th>
+                            <th>{{ 'DOMAIN' | translate }}</th>
+                            <th>{{ 'CLIENT' | translate }}</th>
+                            <th>{{ 'STATUS' | translate }}</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>{{ 'TIME' | translate }}</th>
+                            <th>{{ 'TYPE' | translate }}</th>
+                            <th>{{ 'DOMAIN' | translate }}</th>
+                            <th>{{ 'CLIENT' | translate }}</th>
+                            <th>{{ 'STATUS' | translate }}</th>
+                        </tr>
+                        </tfoot>
+                    </table> -->
+
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+<!-- /.row -->

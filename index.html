@@ -1,0 +1,278 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Pi-hole Admin Console</title>
+    <base href="/admin/"/>
+    <meta name="description" content="">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <meta name="theme-color" content="#367fa9">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="images/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96x96.png">
+    <meta name="msapplication-TileColor" content="#367fa9">
+    <meta name="msapplication-TileImage" content="images/ms-icon-144x144.png">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="styles/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="styles/ionicons/ionicons.min.css">
+    <link rel="stylesheet" href="styles/angular-chart.css" />
+
+    <link rel="stylesheet" href="styles/dataTables.bootstrap.min.css" />
+    <link rel="stylesheet" href="styles/ui-grid.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/AdminLTE.css">
+    <link rel="stylesheet" href="styles/skin-blue.css">
+    <!-- endbuild -->
+</head>
+<body ng-app="piholeAdminApp" class="skin-blue sidebar-mini">
+<!--[if lte IE 8]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
+<div class="wrapper" ng-controller="AppCtrl">
+    <header class="main-header">
+        <!-- Logo -->
+        <a href="/admin" class="logo">
+
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>P</b>H</span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b>Pi</b>-hole</span>
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">{{ 'TOGGLE_NAV' | translate }}</span>
+            </a>
+
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav" >
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ 'SELECT_LANGUAGE' | translate}} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="language in languages">
+                                <a ng-click="changeLanguage(language.language_key)">{{ language.value_key | translate }} </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li id="dropdown-menu" class="dropdown user user-menu">
+                        <a  class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="hidden-xs">Pi-hole</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img src="./images/pihole-160x160.jpg" alt="User Image"/>
+
+                                <p>
+                                    {{ 'OSS_ADB' | translate }}
+                                    <small>{{ 'DESIGNED_FOR_PI' | translate }}</small>
+                                </p>
+                            </li>
+                            <!-- Menu Body -->
+                            <li class="user-body">
+                                <div class="col-xs-4 text-center">
+                                    <a href="https://github.com/jacobsalmela/pi-hole">{{ 'GITHUB' | translate }}</a>
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                    <a href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/">{{ 'DETAILS' | translate }}</a>
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                    <a href="https://github.com/pi-hole/pi-hole/releases">{{ 'UPDATES' | translate }}</a>
+                                </div>
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                            <li class="user-footer">
+                                <!-- Update alerts -->
+                                <div id="alPiholeUpdate" class="alert alert-info alert-dismissible fade in" role="alert" ng-hide="!piholeUpdateAvailable">
+                                    <a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">{{ 'UPDATE_AVAILBLE_PIHOLE' | translate }}!</a>
+                                </div>
+                                <div id="alWebUpdate" class="alert alert-info alert-dismissible fade in" role="alert" ng-hide="!webUpdateAvailable">
+                                    <a class="alert-link" href="https://github.com/pi-hole/AdminLTE/releases">{{ 'UPDATE_AVAILBLE_WEB' | translate }}!</a>
+                                </div>
+
+                                <!-- PayPal -->
+                                <div>
+                                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                                        <input type="hidden" name="cmd" value="_s-xclick">
+                                        <input type="hidden" name="hosted_button_id" value="3J2L3Z4DHW9UY">
+                                        <input style="display: block; margin: 0 auto;" type="image" src="images/donate.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                                    </form>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar" ng-controller="MenuCtrl">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+                <div class="pull-left info">
+                    <p>{{ 'STATUS' | translate }}</p>
+                    <div class="row status_row">
+                        <div class="col-xs-5 col-md-5 status_label">
+                            {{ 'DNS' | translate }}:
+                        </div>
+                        <div class="col-xs-3 col-md-3 status_value">
+                            <span status="status.dnsmasq"></span>
+                        </div>
+                    </div>
+                    <div class="row status_row">
+                        <div class="col-xs-5 col-md-5 status_label">
+                           {{ 'BLACKHOLE' | translate }}:
+                        </div>
+                        <div class="col-xs-3 col-md-3 status_value">
+                            <span status="status.blackhole"></span>
+                        </div>
+                    </div>
+                    <div class="row status_row">
+                        <div class="col-xs-5 col-md-5 status_label">
+                            {{ 'TEMP' | translate }}:
+                        </div>
+                        <div class="col-xs-3 col-md-3 status_value">
+                            <span temp="temp"></span>
+                        </div>
+                    </div>
+                    <div class="row status_row">
+                        <div class="col-xs-5 col-md-5 status_label">
+                            {{ 'CPU' | translate }}:
+                        </div>
+                        <div class="col-xs-3 col-md-3 status_value">
+                            {{cpu[0]}},
+                            {{cpu[1]}},
+                            {{cpu[2]}}
+                        </div>
+                    </div>
+                    <div class="row status_row">
+                        <div class="col-xs-5 col-md-5 status_label">
+                            {{ 'MEMORY' | translate }}:
+                        </div>
+                        <div class="col-xs-3 col-md-3 status_value">
+                            {{mem.total}}Mb {{'TOTAL' | translate }} <br />
+                            {{mem.used}}Mb {{ 'USED' | translate }} <br />
+                            {{mem.free}}Mb {{ 'FREE' | translate }} <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu">
+                <li class="header">{{ 'MAIN_NAV' | translate }}</li>
+                <!-- Home Page -->
+                <li ng-class="getClass('/')">
+                    <a ng-href="./">
+                        <i class="fa fa-home"></i> <span>{{ 'MAIN_PAGE' | translate }}</span>
+                    </a>
+                </li>
+                <!-- Query Log -->
+                <li ng-class="getClass('/queries')">
+                    <a ng-href="queries">
+                        <i class="fa fa-file-text-o"></i> <span>{{ 'QUERY_LOG' | translate}}</span>
+                    </a>
+                </li>
+                <li ng-class="getClass('/whitelist')">
+                    <a ng-href="whitelist">
+                        <i class="fa fa-pencil-square-o"></i> <span>{{ 'WHITELIST' | translate }}</span>
+                    </a>
+                </li>
+                <!-- Blacklist -->
+                <li ng-class="getClass('/blacklist')">
+                    <a ng-href="blacklist">
+                        <i class="fa fa-ban"></i> <span>{{ 'BLACKLIST' | translate }}</span>
+                    </a>
+                </li>
+                <!-- System info -->
+                <li ng-class="getClass('/sysinfo')">
+                    <a ng-href="sysinfo">
+                        <i class="fa fa-server"></i> <span>{{ 'SYSTEM_INFO' | translate }}</span>
+                    </a>
+                </li>
+                <!-- Donate -->
+                <li>
+                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
+                        <i class="fa fa-paypal"></i> <span>{{ 'DONATE' | translate }}</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Main content -->
+        <section class="content">
+                <div ng-view=""></div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>{{ 'PIHOLE_VERSION' | translate }}</b> {{versions.pihole}}
+            <b>{{ 'WEB_VERSION' | translate }}</b> {{versions.pihole_webinterface}}
+        </div>
+        <i class="fa fa-github"></i> <strong><a
+            href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY">{{ 'DONATE' | translate }}</a></strong>
+        {{ 'FOUND_USEFUL' | translate }}
+    </footer>
+</div>
+<!-- ./wrapper -->
+
+
+<!-- build:js(.) scripts/vendor.js -->
+<!-- bower:js -->
+<script src="scripts/vendor/jquery/jquery.min.js"></script>
+<script src="scripts/vendor/angular/angular.min.js"></script>
+<script src="scripts/vendor/bootstrap/bootstrap.min.js"></script>
+<script src="scripts/vendor/angular-animate/angular-animate.js"></script>
+<script src="scripts/vendor/angular-cookies/angular-cookies.js"></script>
+<script src="scripts/vendor/angular-resource/angular-resource.js"></script>
+<script src="scripts/vendor/angular-route/angular-route.js"></script>
+<script src="scripts/vendor/angular-sanitize/angular-sanitize.js"></script>
+<script src="scripts/vendor/angular-touch/angular-touch.js"></script>
+<script src="scripts/vendor/Chart.js/Chart.js"></script>
+<script src="scripts/vendor/angular-chart.js/angular-chart.js"></script>
+<script src="scripts/vendor/angular-translate/angular-translate.min.js"></script>
+<script src="scripts/vendor/angular-translate-storage-cookie/angular-translate-storage-cookie.min.js"></script>
+<script src="scripts/vendor/angular-translate-storage-local/angular-translate-storage-local.min.js"></script>
+<script src="scripts/vendor/angular-translate/angular-translate-loader-static-files.min.js"></script>
+<script src="scripts/vendor/ui-grid/ui-grid-stable.min.js"></script>
+<!-- <script src="bower_components/angular-datatables/dist/plugins/select/angular-datatables.select.js"></script> -->
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="scripts/app.js"></script>
+<script src="scripts/controllers/menu.js"></script>
+<script src="scripts/controllers/app.js"></script>
+<script src="scripts/controllers/dashboard.js"></script>
+<script src="scripts/controllers/querylog.js"></script>
+<script src="scripts/controllers/system.js"></script>
+<script src="scripts/controllers/list.js"></script>
+<script src="scripts/services/api.js"></script>
+<script src="scripts/services/cacheservice.js"></script>
+<script src="scripts/directives/status.js"></script>
+<script src="scripts/directives/temp.js"></script>
+<script src="scripts/directives/glow.js"></script>
+<script src="scripts/directives/ngenter.js"></script>
+<script src="scripts/filters/bytefilter.js"></script>
+<script src="scripts/legacy/app.min.js"></script>
+<!-- endbuild -->
+</body>
+</html>
