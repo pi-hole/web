@@ -1,7 +1,7 @@
 <?php
 $ERRORLOG = getenv('PHP_ERROR_LOG');
 if (empty($ERRORLOG)) {
-    $ERRORLOG = '/var/log/lighttpd/error.log'
+    $ERRORLOG = '/var/log/lighttpd/error.log';
 }
 
 function pi_log($message) {
