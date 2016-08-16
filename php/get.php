@@ -4,7 +4,7 @@ if(!isset($_GET['list']))
 
 $type = $_GET['list'];
 
-if($type !== "white" || $type !== "black")
+if($type !== "white" && $type !== "black")
     die("Invalid list parameter");
 
 $rawList = file_get_contents("/etc/pihole/${type}list.txt");
