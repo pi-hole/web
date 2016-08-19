@@ -119,13 +119,17 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-          <table class="table table-bordered">
-            <tbody><tr>
-              <th>Domain</th>
-              <th>Hits</th>
-              <th>Frequency</th>
-            </tr>
-          </tbody></table>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                    <th>Domain</th>
+                    <th>Hits</th>
+                    <th>Frequency</th>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
         </div>
         <div class="overlay">
           <i class="fa fa-refresh fa-spin"></i>
@@ -142,15 +146,17 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-          <table class="table table-bordered">
-            <tbody>
-              <tr>
-              <th>Domain</th>
-              <th>Hits</th>
-              <th>Frequency</th>
-              </tr>
-            </tbody>
-          </table>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                    <th>Domain</th>
+                    <th>Hits</th>
+                    <th>Frequency</th>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
         </div>
         <div class="overlay">
           <i class="fa fa-refresh fa-spin"></i>
@@ -167,13 +173,17 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-          <table class="table table-bordered">
-            <tbody><tr>
-              <th>Client</th>
-              <th>Requests</th>
-              <th>Frequency</th>
-            </tr>
-          </tbody></table>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                    <th>Client</th>
+                    <th>Requests</th>
+                    <th>Frequency</th>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
         </div>
         <div class="overlay">
           <i class="fa fa-refresh fa-spin"></i>
