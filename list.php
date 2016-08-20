@@ -1,6 +1,6 @@
 <?php
 session_start();
-require "header.html";
+require "header.php";
 
 $list = $_GET['l'];
 
