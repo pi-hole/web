@@ -85,7 +85,8 @@ function add() {
         method: "post",
         data: {"domain":domain.val(), "list":list_type, "token":token},
         success: function(response) {
-          if (response.indexOf("not a valid argument")>=0) {
+          if (response.indexOf("not a valid argument") >= 0 ||
+              response.indexOf("is not a valid domain") >= 0) {
             alFailure.show();
             alFailure.delay(1000).fadeOut(2000, function() {
                 alFailure.hide();

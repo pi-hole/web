@@ -1,4 +1,5 @@
 <?php
+require('func.php');
 $ERRORLOG = getenv('PHP_ERROR_LOG');
 if (empty($ERRORLOG)) {
     $ERRORLOG = '/var/log/lighttpd/error.log';
@@ -47,6 +48,13 @@ session_start();
 // Check CSRF token
 if(!isset($_SESSION['token'], $_POST['token']) || !hash_equals($_SESSION['token'], $_POST['token'])) {
     log_and_die("Wrong token");
+}
+
+if(isset($_POST['domain'])){
+    $validDomain = is_valid_domain_name($_POST['domain']);
+    if(!$validDomain){
+        log_and_die($_POST['domain']. ' is not a valid domain');
+    }
 }
 
 ?>
