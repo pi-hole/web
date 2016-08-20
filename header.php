@@ -12,13 +12,13 @@
     <title>Pi-hole Admin Console</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
     <meta name="theme-color" content="#367fa9">
-    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="img/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/logo.svg">
+    <link rel="icon" type="image/png" sizes="192x192"  href="img/logo.svg">
+    <link rel="icon" type="image/png" sizes="96x96" href="img/logo.svg">
     <meta name="msapplication-TileColor" content="#367fa9">
-    <meta name="msapplication-TileImage" content="img/ms-icon-144x144.png">
+    <meta name="msapplication-TileImage" content="img/logo.svg">
 
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="css/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
@@ -27,7 +27,7 @@
 
     <link href="css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
     <link href="css/skin-blue.min.css" rel="stylesheet" type="text/css" />
-    <link rel="icon" type="image/png" href="img/pihole-160x160.png" />
+    <link rel="icon" type="image/png" sizes="160x160" href="img/logo.svg" />
     <style type="text/css">
         .glow { text-shadow: 0px 0px 5px #fff; }
         h3 { transition-duration: 500ms }
@@ -68,13 +68,13 @@
                     <!-- User Account: style can be found in dropdown.less -->
                     <li id="dropdown-menu" class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle">
-                            <img src="img/pihole-160x160.png" class="user-image" alt="Pi-hole logo" />
+                            <img src="img/logo.svg" class="user-image" style="border-radius: initial" sizes="160x160" alt="Pi-hole logo" />
                             <span class="hidden-xs">Pi-hole</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="./img/pihole-160x160.png" alt="User Image" />
+                                <img src="img/logo.svg" sizes="160x160" alt="User Image" />
                                 <p>
                                     Open Source Ad Blocker
                                     <small>Designed For Raspberry Pi</small>
@@ -124,7 +124,7 @@
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="img/pihole-160x160.png" class="img-circle" alt="Pi-hole logo" />
+                    <img src="img/logo.svg" sizes="160x160" alt="Pi-hole logo" />
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
