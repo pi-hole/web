@@ -122,6 +122,7 @@
         $allQueries = array("data" => array());
         $log = readInLog();
         $dns_queries = getDnsQueriesAll($log);
+        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
@@ -134,7 +135,7 @@
               $client = $exploded[count($exploded)-1];
               $status = "";
             }
-            elseif (substr($tmp, 0, 9) == "forwarded" ){
+            elseif (substr($tmp, 0, 9) == "forwarded" || $exploded[count($exploded)-3] == "pi.hole" || $exploded[count($exploded)-3] == $hostname){
               $status="OK";
             }
             elseif (substr($tmp, strlen($tmp) - 12, 12)  == "gravity.list"  && $exploded[count($exploded)-5] != "read"){
@@ -267,8 +268,11 @@
       $exploded = explode(" ", $var);
       $tmp = $exploded[count($exploded)-4];
       $tmp2 = $exploded[count($exploded)-5];
+      $tmp3 = $exploded[count($exploded) -3];
+      $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+
       //filter out bad names and host file reloads:
-      return (substr($tmp, strlen($tmp) - 12, 12)  == "gravity.list" && $tmp2 != "read") ;
+      return (substr($tmp, strlen($tmp) - 12, 12)  == "gravity.list" && $tmp2 != "read" && $tmp3 != "pi.hole" && $tmp3 != $hostname) ;
     }
 
     function findForwards($var) {
