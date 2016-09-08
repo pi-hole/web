@@ -288,7 +288,7 @@
             $domain = $exploded[count($exploded)-3];
             $client = $exploded[count($exploded)-1];
 
-            if (isset($gravity[$domain]))
+            if (isset($gravity[$domain]) && $domain != "pi.hole" && $domain != $hostname)
             {
               $status="Pi-holed";
             }
