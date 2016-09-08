@@ -1,5 +1,7 @@
 <?php
     $log = array();
+    //add domains that you don't want in stats to $filter =' ' seperated by commas
+    $filter = '127.0.0.1' 
     $ipv6 = file_exists("/etc/pihole/.useIPv6");
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
 
@@ -169,13 +171,28 @@
         fclose($NGC4889);
 
         return $swallowed;
-
     }
+
     function readInLog() {
         global $log;
-        return count($log) > 1 ? $log :
+        $logData = count($log) > 1 ? $log :
             file("/var/log/pihole.log");
+        // Avoid localhost entries to appear in the statistics
+        return array_filter($logData, "avoidLocalhostEntries");
     }
+
+    function avoidLocalhostEntries($var) {
+        global $filter;
+        // Explode filters on comma
+        $filters = explode(',', $filter);
+        // Trim whitespace around filter sections
+        $filters = array_map('trim', $filters);
+        // Put back together pipe-separated
+        $filters_str = implode('|', $filters);
+        // Avoid matching any filter sections
+        return (preg_match('/(' . $filters_str . ')/', $var) == false);
+    }
+
     function getDnsQueries($log) {
         return array_filter($log, "findQueries");
     }
