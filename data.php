@@ -43,7 +43,7 @@
             {
                 $domainRequested = $exploded[count($exploded) -3];
                 $requestedFromClient = $exploded[count($exploded) -1];
-                //echo "$domainRequested $requestedFromClient $clientFilter \r\n";
+
                 if ($clientFilter == "")
                 {
                     if ($domainRequested != "pi.hole" && $domainRequested != $hostname){
@@ -60,23 +60,53 @@
                         }
                     }
                 }
-
             }
-
         }
-
         return $count;
     }
 
     function getAds(){
+        $returnArray = array();
         $log = readInLog();
         $gravity = readInGrav();
+        $hostname = readInHostname();
+        $clientFilter = readInClientFilter();
+
+        foreach($log as $logLine)
+        {
+            $exploded = explode(" ", $logLine);
+            $logType = substr($exploded[count($exploded)-4],0,5) == "query";
+
+            if ($logType == 1)
+            {
+                $domainRequested = $exploded[count($exploded) -3];
+                $requestedFromClient = $exploded[count($exploded) -1];
+
+                if ($clientFilter == "")
+                {
+                    if ($domainRequested != "pi.hole" && $domainRequested != $hostname){
+                        if (isset($gravity[$domainRequested])){
+                            array_push($returnArray,$logLine);
+                        }
+                    }
+                }
+                elseif (preg_match('/(' . $clientFilter . ')/', $requestedFromClient) == false){
+
+                    if ($domainRequested != "pi.hole" && $domainRequested != $hostname){
+                        if (isset($gravity[$domainRequested])){
+                            array_push($returnArray,$logLine);
+                        }
+                    }
+                }
+            }
+        }
+        return $returnArray;
     }
 
     function getOverTimeData() {
         $log = readInLog();
         $dns_queries = getDnsQueries($log);
-        $ads_blocked = getBlockedQueries($log);
+        $ads_blocked =getAds();
 
         $domains_over_time = overTime($dns_queries);
         $ads_over_time = overTime($ads_blocked);
@@ -90,7 +120,7 @@
     function getTopItems() {
         $log = readInLog();
         $dns_queries = getDnsQueries($log);
-        $ads_blocked = getBlockedQueries($log);
+        $ads_blocked = getAds();
 
         $topAds = topItems($ads_blocked);
         $topQueries = topItems($dns_queries, $topAds);
