@@ -1,7 +1,5 @@
 <?php
     $log = array();
-    //add domains that you don't want in stats to $filter = ' ' seperated by commas
-    $filter = '127.0.0.1' 
     $ipv6 = file_exists("/etc/pihole/.useIPv6");
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
 
@@ -177,14 +175,21 @@
         global $log;
         $logData = count($log) > 1 ? $log :
             file("/var/log/pihole.log");
+
         // Avoid localhost entries to appear in the statistics
-        return array_filter($logData, "avoidLocalhostEntries");
+        if (file_exists(/etc/pihole/webClientFilter.conf)) {
+            return array_filter($logData, "avoidLocalhostEntries");
     }
 
     function avoidLocalhostEntries($var) {
-        global $filter;
-        // Explode filters on comma
-        $filters = explode(',', $filter);
+        //add clients that you don't want in stats to /etc/pihole/webClientFilter.conf each on a new line
+        $filters = array();
+        $handle = fopen("/etc/pihole/webClientFilter.conf", "r");
+        while (!feof($handle)) {
+            $filters[] = fgets($handle);
+        }
+        fclose($handle);
+
         // Trim whitespace around filter sections
         $filters = array_map('trim', $filters);
         // Put back together pipe-separated
