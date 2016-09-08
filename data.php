@@ -169,13 +169,48 @@
         fclose($NGC4889);
 
         return $swallowed;
-
     }
+
     function readInLog() {
         global $log;
-        return count($log) > 1 ? $log :
+        $logData = count($log) > 1 ? $log :
             file("/var/log/pihole.log");
+
+        // Avoid localhost entries to appear in the statistics
+        if (file_exists(/etc/pihole/webClientFilter.conf || /etc/pihole/webDomainFilter.conf)) {
+            return array_filter($logData, "avoidLocalhostEntries");
+        } else {
+            return $logData;
+        }
     }
+
+    function avoidLocalhostEntries($var) {
+        //add clients that you don't want in stats to /etc/pihole/webClientFilter.conf each on a new line
+        $filters = array();
+        if (file_exists(/etc/pihole/webClientFilter.conf)) {
+            $handle = fopen("/etc/pihole/webClientFilter.conf", "r");
+            while (!feof($handle)) {
+                $filters[] = fgets($handle);
+            }
+            fclose($handle);
+        }
+        
+        if (file_exists(/etc/pihole/webDomainFilter.conf)) {
+            $handle = fopen("/etc/pihole/webDomainFilter.conf", "r");
+            while (!feof($handle)) {
+                $filters[] = fgets($handle);
+            }
+            fclose($handle);
+        }
+
+        // Trim whitespace around filter sections
+        $filters = array_map('trim', $filters);
+        // Put back together pipe-separated
+        $filters_str = implode('|', $filters);
+        // Avoid matching any filter sections
+        return (preg_match('/(' . $filters_str . ')/', $var) == false);
+    }
+
     function getDnsQueries($log) {
         return array_filter($log, "findQueries");
     }
