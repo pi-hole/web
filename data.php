@@ -1,6 +1,6 @@
 <?php
     $log = array();
-    //add domains that you don't want in stats to $filter =' ' seperated by commas
+    //add domains that you don't want in stats to $filter = ' ' seperated by commas
     $filter = '127.0.0.1' 
     $ipv6 = file_exists("/etc/pihole/.useIPv6");
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
