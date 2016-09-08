@@ -179,6 +179,9 @@
         // Avoid localhost entries to appear in the statistics
         if (file_exists(/etc/pihole/webClientFilter.conf || /etc/pihole/webDomainFilter.conf)) {
             return array_filter($logData, "avoidLocalhostEntries");
+        } else {
+            return $logData;
+        }
     }
 
     function avoidLocalhostEntries($var) {
