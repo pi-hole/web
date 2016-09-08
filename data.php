@@ -1,5 +1,9 @@
 <?php
     $log = array();
+    $gravity = array();
+    $hostname = "";
+    $clientFilter="";
+    $domainFilter="";
     $ipv6 = file_exists("/etc/pihole/.useIPv6");
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
 
@@ -27,8 +31,8 @@
         $count = 0;
         $log = readInLog();
         $gravity = readInGrav();
-
-        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+        $hostname = readInHostname();
+        $clientFilter = readInClientFilter();
 
         foreach($log as $logLine)
         {
@@ -38,17 +42,35 @@
             if ($logType == 1)
             {
                 $domainRequested = $exploded[count($exploded) -3];
-                //echo "$domainRequested\r\n";
-                if ($domainRequested != "pi.hole" && $domainRequested != $hostname){
-                    if (isset($gravity[$domainRequested])){
-                        $count ++;
+                $requestedFromClient = $exploded[count($exploded) -1];
+                //echo "$domainRequested $requestedFromClient $clientFilter \r\n";
+                if ($clientFilter == "")
+                {
+                    if ($domainRequested != "pi.hole" && $domainRequested != $hostname){
+                        if (isset($gravity[$domainRequested])){
+                            $count ++;
+                        }
                     }
                 }
+                elseif (preg_match('/(' . $clientFilter . ')/', $requestedFromClient) == false){
+
+                    if ($domainRequested != "pi.hole" && $domainRequested != $hostname){
+                        if (isset($gravity[$domainRequested])){
+                            $count ++;
+                        }
+                    }
+                }
+
             }
 
         }
 
         return $count;
+    }
+
+    function getAds(){
+        $log = readInLog();
+        $gravity = readInGrav();
     }
 
     function getOverTimeData() {
@@ -199,6 +221,30 @@
         return $swallowed;
 
     }
+
+    function readInClientFilter(){
+        global $clientFilter;
+
+        if ($clientFilter != "")
+        {
+            return $clientFilter;
+        }
+        else{
+            $tmp = file_exists("/etc/pihole/webClientFilter.conf") ? file("/etc/pihole/webClientFilter.conf") : array();
+            return implode('|',$tmp);
+        }
+    }
+
+    function readInDomainFilter(){
+
+    }
+
+    function readInHostname(){
+        global $hostname;
+        return $hostname != "" ? $hostname :
+          trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+    }
+
     function readInLog() {
         global $log;
         return count($log) > 1 ? $log :
