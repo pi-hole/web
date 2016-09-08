@@ -28,6 +28,8 @@
         $log = readInLog();
         $gravity = readInGrav();
 
+        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+
         foreach($log as $logLine)
         {
             $exploded = explode(" ", $logLine);
@@ -37,17 +39,13 @@
             {
                 $domainRequested = $exploded[count($exploded) -3];
                 //echo "$domainRequested\r\n";
-                if (isset($gravity[$domainRequested])){
-                    $count ++;
+                if ($domainRequested != "pi.hole" && $domainRequested != $hostname){
+                    if (isset($gravity[$domainRequested])){
+                        $count ++;
+                    }
                 }
             }
-            //
-            //
-            $tmp = $exploded[count($exploded)-5];
 
-            //
-            //echo $isAd;
-            $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
         }
 
         return $count;
