@@ -177,18 +177,28 @@
             file("/var/log/pihole.log");
 
         // Avoid localhost entries to appear in the statistics
-        if (file_exists(/etc/pihole/webClientFilter.conf)) {
+        if (file_exists(/etc/pihole/webClientFilter.conf || /etc/pihole/webDomainFilter.conf)) {
             return array_filter($logData, "avoidLocalhostEntries");
     }
 
     function avoidLocalhostEntries($var) {
         //add clients that you don't want in stats to /etc/pihole/webClientFilter.conf each on a new line
         $filters = array();
-        $handle = fopen("/etc/pihole/webClientFilter.conf", "r");
-        while (!feof($handle)) {
-            $filters[] = fgets($handle);
+        if (file_exists(/etc/pihole/webClientFilter.conf)) {
+            $handle = fopen("/etc/pihole/webClientFilter.conf", "r");
+            while (!feof($handle)) {
+                $filters[] = fgets($handle);
+            }
+            fclose($handle);
         }
-        fclose($handle);
+        
+        if (file_exists(/etc/pihole/webDomainFilter.conf)) {
+            $handle = fopen("/etc/pihole/webDomainFilter.conf", "r");
+            while (!feof($handle)) {
+                $filters[] = fgets($handle);
+            }
+            fclose($handle);
+        }
 
         // Trim whitespace around filter sections
         $filters = array_map('trim', $filters);
