@@ -11,7 +11,7 @@
 
         $dns_queries_today = count(getDnsQueries($log));
 
-        $ads_blocked_today = count(getBlockedQueries($log));
+        $ads_blocked_today = getAdsCount();
 
         $ads_percentage_today = $dns_queries_today > 0 ? ($ads_blocked_today / $dns_queries_today * 100) : 0;
 
@@ -21,6 +21,36 @@
             'ads_blocked_today' => $ads_blocked_today,
             'ads_percentage_today' => $ads_percentage_today,
         );
+    }
+
+    function getAdsCount(){
+        $count = 0;
+        $log = readInLog();
+        $gravity = readInGrav();
+
+        foreach($log as $logLine)
+        {
+            $exploded = explode(" ", $logLine);
+            $logType = substr($exploded[count($exploded)-4],0,5) == "query";
+
+            if ($logType == 1)
+            {
+                $domainRequested = $exploded[count($exploded) -3];
+                //echo "$domainRequested\r\n";
+                if (isset($gravity[$domainRequested])){
+                    $count ++;
+                }
+            }
+            //
+            //
+            $tmp = $exploded[count($exploded)-5];
+
+            //
+            //echo $isAd;
+            $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+        }
+
+        return $count;
     }
 
     function getOverTimeData() {
@@ -175,6 +205,28 @@
         global $log;
         return count($log) > 1 ? $log :
             file("/var/log/pihole.log");
+    }
+
+    function readInGrav() {
+        global $gravity;
+
+        if (count($gravity) > 1){
+            echo "already set";
+
+            return $gravity;
+        }
+        else{
+            $fileName = '/etc/pihole/gravity.list';
+            //Turn gravity.list into an array
+            $lines = explode("\n", file_get_contents($fileName));
+
+            //Create a new array and set domain name as index instead of value, with value as 1
+            foreach(array_values($lines) as $v){
+                $new_lines[trim(strstr($v, ' '))] = 1;
+            }
+            return $new_lines;
+        }
+
     }
     function getDnsQueries($log) {
         return array_filter($log, "findQueries");
