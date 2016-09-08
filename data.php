@@ -10,7 +10,7 @@
     /*******   Public Members ********/
     function getSummaryData() {
         global $ipv6;
-        $log = readInLog();
+
         $domains_being_blocked = gravityCount() / ($ipv6 ? 2 : 1);
 
         $dns_queries_today = getQueryCount();
@@ -209,7 +209,7 @@
 
     //Not sure this function is actually used
     function getRecentItems($qty) {
-        $log = readInLog();
+
         $dns_queries = getQueries();
         return Array(
             'recent_queries' => getRecent($dns_queries, $qty)
@@ -282,7 +282,6 @@
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
             $exploded = explode(" ", trim($query));
-            $tmp = $exploded[count($exploded)-4];
 
             $type = substr($exploded[count($exploded)-4], 6, -1);
             $domain = $exploded[count($exploded)-3];
