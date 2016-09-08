@@ -177,6 +177,36 @@
         );
     }
 
+    function getForwards(){
+      $returnArray = array();
+      $log = readInLog();
+      //$clientFilter = readInClientFilter();
+      $domainFilter = readInDomainFilter();
+
+      foreach($log as $logLine)
+      {
+        $exploded = explode(" ", $logLine);
+        $logType = substr($exploded[count($exploded)-4],0,9) == "forwarded";
+
+        if ($logType == 1)
+        {
+          $domainRequested = $exploded[count($exploded) -3];
+          //$requestedFromClient = trim($exploded[count($exploded) -1], "\x00..\x1F");
+         // $clientIsFiltered = preg_match('/(' . $clientFilter . ')/', $requestedFromClient);
+          $domainIsFiltered = preg_match('/(' . $domainFilter . ')/', $domainRequested);
+
+          //echo "$domainRequested is ($domainIsFiltered) @@@ $requestedFromClient is ($clientIsFiltered)\r\n";
+
+          if ($domainIsFiltered == 0){
+           // if ($clientIsFiltered == 0){
+              array_push($returnArray,$logLine);
+          //  }
+          }
+        }
+      }
+      return $returnArray;
+    }
+
     //Not sure this function is actually used
     function getRecentItems($qty) {
         $log = readInLog();
@@ -205,8 +235,7 @@
     }
 
     function getForwardDestinations() {
-        $log = readInLog();
-        $forwards = getForwards($log);
+        $forwards = getForwards();
         $destinations = array();
         foreach ($forwards as $forward) {
             $exploded = explode(" ", trim($forward));
@@ -245,29 +274,30 @@
 
     function getAllQueries() {
         $allQueries = array("data" => array());
-        $log = readInLog();
-        $dns_queries = getDnsQueriesAll($log);
-        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+        //$log = readInLog();
+        $dns_queries = getQueries();
+        $hostname = gethostname();
+        $gravity=readInGrav();
 
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
             $exploded = explode(" ", trim($query));
             $tmp = $exploded[count($exploded)-4];
 
-            if (substr($tmp, 0, 5) == "query"){
-              $type = substr($exploded[count($exploded)-4], 6, -1);
-              $domain = $exploded[count($exploded)-3];
-              $client = $exploded[count($exploded)-1];
-              $status = "";
-            }
-            elseif (substr($tmp, 0, 9) == "forwarded" || $exploded[count($exploded)-3] == "pi.hole" || $exploded[count($exploded)-3] == $hostname){
-              $status="OK";
-            }
-            elseif (substr($tmp, strlen($tmp) - 12, 12)  == "gravity.list"  && $exploded[count($exploded)-5] != "read"){
+            $type = substr($exploded[count($exploded)-4], 6, -1);
+            $domain = $exploded[count($exploded)-3];
+            $client = $exploded[count($exploded)-1];
+
+            if (isset($gravity[$domain]))
+            {
               $status="Pi-holed";
             }
+            else
+            {
+              $status="OK";
+            }
 
-            if ( $status != ""){
+
               array_push($allQueries['data'], array(
                 $time->format('Y-m-d\TH:i:s'),
                 $type,
@@ -275,7 +305,7 @@
                 hasHostName($client),
                 $status,
               ));
-            }
+
 
 
         }
@@ -360,15 +390,6 @@
 
     }
 
-    function getDnsQueriesAll($log) {
-      return array_filter($log, "findQueriesAll");
-    }
-
-    function getForwards($log) {
-        return array_filter($log, "findForwards");
-    }
-
-
     function topItems($queries, $exclude = array(), $qty=10) {
         $splitQueries = array();
         foreach ($queries as $query) {
@@ -433,18 +454,6 @@
 
         }
         return array_reverse($recent);
-    }
-
-    function findQueriesAll($var) {
-        return strpos($var, ": query[") || strpos($var, "gravity.list") || strpos($var, ": forwarded") !== false;
-    }
-
-    function findQueries($var) {
-        return strpos($var, ": query[") !== false;
-    }
-
-    function findForwards($var) {
-        return strpos($var, ": forwarded") !== false;
     }
 
     function hasHostName($var){
