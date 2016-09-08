@@ -177,6 +177,7 @@
         );
     }
 
+    //Not sure this function is actually used
     function getRecentItems($qty) {
         $log = readInLog();
         $dns_queries = getDnsQueries($log);
@@ -187,7 +188,7 @@
 
     function getIpvType() {
         $log = readInLog();
-        $dns_queries = getDnsQueries($log);
+        $dns_queries = getQueries();
         $queryTypes = array();
 
         foreach($dns_queries as $query) {
@@ -224,8 +225,7 @@
     }
 
     function getQuerySources() {
-        $log = readInLog();
-        $dns_queries = getDnsQueries($log);
+        $dns_queries = getQueries();
         $sources = array();
         foreach($dns_queries as $query) {
             $exploded = explode(" ", $query);
@@ -308,6 +308,7 @@
         else{
             $tmp = file_exists("/etc/pihole/webClientFilter.conf") ? file("/etc/pihole/webClientFilter.conf") : array("@@@@@");
             $tmp = array_map('trim', $tmp);
+            foreach ($tmp as $key => $value) {$tmp[$key] = $value . "$";}
             return implode('|',$tmp);
         }
     }
@@ -322,6 +323,7 @@
         else{
             $tmp = file_exists("/etc/pihole/webDomainFilter.conf") ? file("/etc/pihole/webDomainFilter.conf") : array("@@@@@");
             $tmp = array_map('trim', $tmp);
+            foreach ($tmp as $key => $value) {$tmp[$key] = $value . "$";}
             return implode('|',$tmp);
         }
     }
