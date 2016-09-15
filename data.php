@@ -1,17 +1,21 @@
 <?php
     $log = array();
+    $gravity = array();
+    $hostname = "";
+    $clientFilter="";
+    $domainFilter="";
     $ipv6 = file_exists("/etc/pihole/.useIPv6");
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
 
     /*******   Public Members ********/
     function getSummaryData() {
         global $ipv6;
-        $log = readInLog();
+
         $domains_being_blocked = gravityCount() / ($ipv6 ? 2 : 1);
 
-        $dns_queries_today = count(getDnsQueries($log));
+        $dns_queries_today = getQueryCount();
 
-        $ads_blocked_today = count(getBlockedQueries($log));
+        $ads_blocked_today = getAdsCount();
 
         $ads_percentage_today = $dns_queries_today > 0 ? ($ads_blocked_today / $dns_queries_today * 100) : 0;
 
@@ -23,10 +27,133 @@
         );
     }
 
-    function getOverTimeData() {
+    function getAdsCount(){
+        $count = 0;
         $log = readInLog();
-        $dns_queries = getDnsQueries($log);
-        $ads_blocked = getBlockedQueries($log);
+        $gravity = readInGrav();
+        $hostname = readInHostname();
+        $clientFilter = readInClientFilter();
+        $domainFilter = readInDomainFilter();
+
+        foreach($log as $logLine)
+        {
+            $exploded = explode(" ", $logLine);
+            $logType = substr($exploded[count($exploded)-4],0,5) == "query";
+
+            if ($logType == 1)
+            {
+                $domainRequested = $exploded[count($exploded) -3];
+                $requestedFromClient = trim($exploded[count($exploded) -1], "\x00..\x1F");
+                $clientIsFiltered = preg_match('/(' . $clientFilter . ')/', $requestedFromClient);
+                $domainIsFiltered = preg_match('/(' . $domainFilter . ')/', $domainRequested);
+
+                //echo "$domainRequested is ($domainIsFiltered) @@@ $requestedFromClient is ($clientIsFiltered)\r\n";
+
+                if ($domainRequested != "pi.hole" && $domainRequested != $hostname && $domainIsFiltered == 0){
+                      if (isset($gravity[$domainRequested]) && $clientIsFiltered == 0){
+                            $count ++;
+                        }
+                }
+            }
+        }
+        return $count;
+    }
+
+    function getAds(){
+        $returnArray = array();
+        $log = readInLog();
+        $gravity = readInGrav();
+        $hostname = readInHostname();
+        $clientFilter = readInClientFilter();
+        $domainFilter = readInDomainFilter();
+
+        foreach($log as $logLine)
+        {
+            $exploded = explode(" ", $logLine);
+            $logType = substr($exploded[count($exploded)-4],0,5) == "query";
+
+            if ($logType == 1)
+            {
+                $domainRequested = $exploded[count($exploded) -3];
+                $requestedFromClient = trim($exploded[count($exploded) -1], "\x00..\x1F");
+                $clientIsFiltered = preg_match('/(' . $clientFilter . ')/', $requestedFromClient);
+                $domainIsFiltered = preg_match('/(' . $domainFilter . ')/', $domainRequested);
+
+                //echo "$domainRequested is ($domainIsFiltered) @@@ $requestedFromClient is ($clientIsFiltered)\r\n";
+
+                if ($domainRequested != "pi.hole" && $domainRequested != $hostname && $domainIsFiltered == 0){
+                    if (isset($gravity[$domainRequested]) && $clientIsFiltered == 0){
+                        array_push($returnArray,$logLine);
+                    }
+                }
+            }
+        }
+        return $returnArray;
+    }
+
+    function getQueryCount(){
+        $count = 0;
+        $log = readInLog();
+        $clientFilter = readInClientFilter();
+        $domainFilter = readInDomainFilter();
+
+        foreach($log as $logLine)
+        {
+            $exploded = explode(" ", $logLine);
+            $logType = substr($exploded[count($exploded)-4],0,5) == "query";
+
+            if ($logType == 1)
+            {
+                $domainRequested = $exploded[count($exploded) -3];
+                $requestedFromClient = trim($exploded[count($exploded) -1], "\x00..\x1F");
+                $clientIsFiltered = preg_match('/(' . $clientFilter . ')/', $requestedFromClient);
+                $domainIsFiltered = preg_match('/(' . $domainFilter . ')/', $domainRequested);
+
+                //echo "$domainRequested is ($domainIsFiltered) @@@ $requestedFromClient is ($clientIsFiltered)\r\n";
+
+                if ($domainIsFiltered == 0){
+                    if ($clientIsFiltered == 0){
+                        $count ++;
+                    }
+                }
+            }
+        }
+        return $count;
+    }
+
+    function getQueries(){
+        $returnArray = array();
+        $log = readInLog();
+        $clientFilter = readInClientFilter();
+        $domainFilter = readInDomainFilter();
+
+        foreach($log as $logLine)
+        {
+            $exploded = explode(" ", $logLine);
+            $logType = substr($exploded[count($exploded)-4],0,5) == "query";
+
+            if ($logType == 1)
+            {
+                $domainRequested = $exploded[count($exploded) -3];
+                $requestedFromClient = trim($exploded[count($exploded) -1], "\x00..\x1F");
+                $clientIsFiltered = preg_match('/(' . $clientFilter . ')/', $requestedFromClient);
+                $domainIsFiltered = preg_match('/(' . $domainFilter . ')/', $domainRequested);
+
+                //echo "$domainRequested is ($domainIsFiltered) @@@ $requestedFromClient is ($clientIsFiltered)\r\n";
+
+                if ($domainIsFiltered == 0){
+                    if ($clientIsFiltered == 0){
+                        array_push($returnArray,$logLine);
+                    }
+                }
+            }
+        }
+        return $returnArray;
+    }
+
+    function getOverTimeData() {
+        $dns_queries = getQueries();
+        $ads_blocked =getAds();
 
         $domains_over_time = overTime($dns_queries);
         $ads_over_time = overTime($ads_blocked);
@@ -38,9 +165,8 @@
     }
 
     function getTopItems() {
-        $log = readInLog();
-        $dns_queries = getDnsQueries($log);
-        $ads_blocked = getBlockedQueries($log);
+        $dns_queries = getQueries();
+        $ads_blocked = getAds();
 
         $topAds = topItems($ads_blocked);
         $topQueries = topItems($dns_queries, $topAds);
@@ -51,17 +177,47 @@
         );
     }
 
+    function getForwards(){
+      $returnArray = array();
+      $log = readInLog();
+      //$clientFilter = readInClientFilter();
+      $domainFilter = readInDomainFilter();
+
+      foreach($log as $logLine)
+      {
+        $exploded = explode(" ", $logLine);
+        $logType = substr($exploded[count($exploded)-4],0,9) == "forwarded";
+
+        if ($logType == 1)
+        {
+          $domainRequested = $exploded[count($exploded) -3];
+          //$requestedFromClient = trim($exploded[count($exploded) -1], "\x00..\x1F");
+         // $clientIsFiltered = preg_match('/(' . $clientFilter . ')/', $requestedFromClient);
+          $domainIsFiltered = preg_match('/(' . $domainFilter . ')/', $domainRequested);
+
+          //echo "$domainRequested is ($domainIsFiltered) @@@ $requestedFromClient is ($clientIsFiltered)\r\n";
+
+          if ($domainIsFiltered == 0){
+           // if ($clientIsFiltered == 0){
+              array_push($returnArray,$logLine);
+          //  }
+          }
+        }
+      }
+      return $returnArray;
+    }
+
+    //Not sure this function is actually used
     function getRecentItems($qty) {
-        $log = readInLog();
-        $dns_queries = getDnsQueries($log);
+
+        $dns_queries = getQueries();
         return Array(
             'recent_queries' => getRecent($dns_queries, $qty)
         );
     }
 
     function getIpvType() {
-        $log = readInLog();
-        $dns_queries = getDnsQueries($log);
+        $dns_queries = getQueries();
         $queryTypes = array();
 
         foreach($dns_queries as $query) {
@@ -79,8 +235,7 @@
     }
 
     function getForwardDestinations() {
-        $log = readInLog();
-        $forwards = getForwards($log);
+        $forwards = getForwards();
         $destinations = array();
         foreach ($forwards as $forward) {
             $exploded = explode(" ", trim($forward));
@@ -98,8 +253,7 @@
     }
 
     function getQuerySources() {
-        $log = readInLog();
-        $dns_queries = getDnsQueries($log);
+        $dns_queries = getQueries();
         $sources = array();
         foreach($dns_queries as $query) {
             $exploded = explode(" ", $query);
@@ -120,29 +274,29 @@
 
     function getAllQueries() {
         $allQueries = array("data" => array());
-        $log = readInLog();
-        $dns_queries = getDnsQueriesAll($log);
-        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+        //$log = readInLog();
+        $dns_queries = getQueries();
+        $hostname = gethostname();
+        $gravity=readInGrav();
 
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
             $exploded = explode(" ", trim($query));
-            $tmp = $exploded[count($exploded)-4];
 
-            if (substr($tmp, 0, 5) == "query"){
-              $type = substr($exploded[count($exploded)-4], 6, -1);
-              $domain = $exploded[count($exploded)-3];
-              $client = $exploded[count($exploded)-1];
-              $status = "";
-            }
-            elseif (substr($tmp, 0, 9) == "forwarded" || $exploded[count($exploded)-3] == "pi.hole" || $exploded[count($exploded)-3] == $hostname){
-              $status="OK";
-            }
-            elseif (substr($tmp, strlen($tmp) - 12, 12)  == "gravity.list"  && $exploded[count($exploded)-5] != "read"){
+            $type = substr($exploded[count($exploded)-4], 6, -1);
+            $domain = $exploded[count($exploded)-3];
+            $client = $exploded[count($exploded)-1];
+
+            if (isset($gravity[$domain]) && $domain != "pi.hole" && $domain != $hostname)
+            {
               $status="Pi-holed";
             }
+            else
+            {
+              $status="OK";
+            }
 
-            if ( $status != ""){
+
               array_push($allQueries['data'], array(
                 $time->format('Y-m-d\TH:i:s'),
                 $type,
@@ -150,7 +304,7 @@
                 hasHostName($client),
                 $status,
               ));
-            }
+
 
 
         }
@@ -171,24 +325,69 @@
         return $swallowed;
 
     }
+
+    function readInClientFilter(){
+        global $clientFilter;
+
+        if ($clientFilter != "")
+        {
+            return $clientFilter;
+        }
+        else{
+            $tmp = file_exists("/etc/pihole/webClientFilter.conf") ? file("/etc/pihole/webClientFilter.conf") : array("@@@@@");
+            $tmp = array_map('trim', $tmp);
+            foreach ($tmp as $key => $value) {$tmp[$key] = $value . "$";}
+            return implode('|',$tmp);
+        }
+    }
+
+    function readInDomainFilter(){
+        global $domainFilter;
+
+        if ($domainFilter != "")
+        {
+            return $domainFilter;
+        }
+        else{
+            $tmp = file_exists("/etc/pihole/webDomainFilter.conf") ? file("/etc/pihole/webDomainFilter.conf") : array("@@@@@");
+            $tmp = array_map('trim', $tmp);
+            foreach ($tmp as $key => $value) {$tmp[$key] = $value . "$";}
+            return implode('|',$tmp);
+        }
+    }
+
+    function readInHostname(){
+        global $hostname;
+        return $hostname != "" ? $hostname :
+          trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+    }
+
     function readInLog() {
         global $log;
         return count($log) > 1 ? $log :
             file("/var/log/pihole.log");
     }
-    function getDnsQueries($log) {
-        return array_filter($log, "findQueries");
-    }
-    function getDnsQueriesAll($log) {
-      return array_filter($log, "findQueriesAll");
-    }
-    function getBlockedQueries($log) {
-        return array_filter($log, "findAds");
-    }
-    function getForwards($log) {
-        return array_filter($log, "findForwards");
-    }
 
+    function readInGrav() {
+        global $gravity;
+
+        if (count($gravity) > 1){
+
+            return $gravity;
+        }
+        else{
+            $fileName = '/etc/pihole/gravity.list';
+            //Turn gravity.list into an array
+            $lines = explode("\n", file_get_contents($fileName));
+
+            //Create a new array and set domain name as index instead of value, with value as 1
+            foreach(array_values($lines) as $v){
+                $new_lines[trim(strstr($v, ' '))] = 1;
+            }
+            return $new_lines;
+        }
+
+    }
 
     function topItems($queries, $exclude = array(), $qty=10) {
         $splitQueries = array();
@@ -254,29 +453,6 @@
 
         }
         return array_reverse($recent);
-    }
-
-    function findQueriesAll($var) {
-        return strpos($var, ": query[") || strpos($var, "gravity.list") || strpos($var, ": forwarded") !== false;
-    }
-
-    function findQueries($var) {
-        return strpos($var, ": query[") !== false;
-    }
-
-    function findAds($var) {
-      $exploded = explode(" ", $var);
-      $tmp = $exploded[count($exploded)-4];
-      $tmp2 = $exploded[count($exploded)-5];
-      $tmp3 = $exploded[count($exploded) -3];
-      $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
-
-      //filter out bad names and host file reloads:
-      return (substr($tmp, strlen($tmp) - 12, 12)  == "gravity.list" && $tmp2 != "read" && $tmp3 != "pi.hole" && $tmp3 != $hostname) ;
-    }
-
-    function findForwards($var) {
-        return strpos($var, ": forwarded") !== false;
     }
 
     function hasHostName($var){
