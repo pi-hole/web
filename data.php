@@ -267,13 +267,18 @@
 
     function findAds($var) {
       $exploded = explode(" ", $var);
-      $tmp = $exploded[count($exploded)-4];
-      $tmp2 = $exploded[count($exploded)-5];
-      $tmp3 = $exploded[count($exploded) -3];
-      $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+      if(count($exploded) == 8) {
+          $tmp = $exploded[count($exploded) - 4];
+          $tmp2 = $exploded[count($exploded) - 5];
+          $tmp3 = $exploded[count($exploded) - 3];
+          $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+          //filter out bad names and host file reloads:
+          return (substr($tmp, strlen($tmp) - 12, 12) == "gravity.list" && $tmp2 != "read" && $tmp3 != "pi.hole" && $tmp3 != $hostname);
+      }
+      else{
+          return false;
+      }
 
-      //filter out bad names and host file reloads:
-      return (substr($tmp, strlen($tmp) - 12, 12)  == "gravity.list" && $tmp2 != "read" && $tmp3 != "pi.hole" && $tmp3 != $hostname) ;
     }
 
     function findForwards($var) {
