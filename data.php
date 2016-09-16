@@ -128,12 +128,13 @@
             $time = date_create(substr($query, 0, 16));
             $exploded = explode(" ", trim($query));
             $tmp = $exploded[count($exploded)-4];
+            $status = "";
 
             if (substr($tmp, 0, 5) == "query"){
               $type = substr($exploded[count($exploded)-4], 6, -1);
               $domain = $exploded[count($exploded)-3];
               $client = $exploded[count($exploded)-1];
-              $status = "";
+
             }
             elseif (substr($tmp, 0, 9) == "forwarded" || $exploded[count($exploded)-3] == "pi.hole" || $exploded[count($exploded)-3] == $hostname){
               $status="OK";
