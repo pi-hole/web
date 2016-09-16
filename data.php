@@ -1,6 +1,6 @@
 <?php
     $log = array();
-    $ipv6 = file_exists("/etc/pihole/.useIPv6");
+    $ipv6 =  parse_ini_file("/etc/pihole/setupVars.conf")['piholeIPv6'] != "";
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
 
     /*******   Public Members ********/
