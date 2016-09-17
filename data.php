@@ -187,10 +187,6 @@
      function getDnsQueriesAll($log) {
       return array_filter($log, "findQueriesAll");
     }
-
-    function getLogQueriesAll($log) {
-      return array_filter($log, "findLogQueriesAll");
-    }
     function getBlockedQueries($log) {
         return array_filter($log, "findAds");
     }
