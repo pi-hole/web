@@ -9,7 +9,7 @@ $(document).ready(function() {
             }
 
         },
-        "ajax": "api.php?getAllQueries",
+        "ajax": "api.php?getLogQueries",
         "autoWidth" : false,
         "order" : [[0, "desc"]],
         "columns": [
@@ -23,5 +23,6 @@ $(document).ready(function() {
 } );
 
 function refreshData() {
-    tableApi.ajax.url("api.php?getAllQueries").load();
+    tableApi.ajax.url("api.php?getLogQueries").load();
 }
+

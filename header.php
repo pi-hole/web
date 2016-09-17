@@ -172,6 +172,12 @@
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
+                <!-- Logs -->
+                <li>
+                    <a href="logqueries.php">
+                        <i class="fa fa-file-text-o"></i> <span>Logs</span>
+                    </a>
+                </li>
                 <!-- Donate -->
                 <li>
                     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">

@@ -8,8 +8,10 @@ function getFullName() {
     global $list;
     if($list == "white")
         echo "Whitelist";
+    elseif($list == "logs")
+	echo "Logs";
     else
-        echo "Blacklist";
+	echo "Blacklist";
 }
 
 // Generate CSRF token

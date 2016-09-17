@@ -3,6 +3,8 @@
     $ipv6 = file_exists("/etc/pihole/.useIPv6");
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
 
+    include 'syslog_data.php';
+
     /*******   Public Members ********/
     function getSummaryData() {
         global $ipv6;
@@ -118,7 +120,7 @@
         );
     }
 
-    function getAllQueries() {
+        function getAllQueries() {
         $allQueries = array("data" => array());
         $log = readInLog();
         $dns_queries = getDnsQueriesAll($log);
@@ -156,6 +158,7 @@
         return $allQueries;
     }
 
+
     /******** Private Members ********/
     function gravityCount() {
         //returns count of domains in blocklist.
@@ -170,15 +173,18 @@
         return $swallowed;
 
     }
+
     function readInLog() {
         global $log;
         return count($log) > 1 ? $log :
             file("/var/log/pihole.log");
     }
+
     function getDnsQueries($log) {
         return array_filter($log, "findQueries");
     }
-    function getDnsQueriesAll($log) {
+
+     function getDnsQueriesAll($log) {
       return array_filter($log, "findQueriesAll");
     }
     function getBlockedQueries($log) {
@@ -259,9 +265,6 @@
         return strpos($var, ": query[") || strpos($var, "gravity.list") || strpos($var, ": forwarded") !== false;
     }
 
-    function findQueries($var) {
-        return strpos($var, ": query[") !== false;
-    }
 
     function findAds($var) {
       $exploded = explode(" ", $var);

@@ -46,6 +46,10 @@
     if (isset($_GET['getAllQueries'])) {
         $data = array_merge($data, getAllQueries());
     }
+    
+    if (isset($_GET['getLogQueries'])) {
+        $data = array_merge($data, getLogQueries());
+    }
 
     function filterArray(&$a) {
 	    $sanArray = array();
