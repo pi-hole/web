@@ -1,6 +1,6 @@
 <?php
     $log = array();
-    $ipv6 = file_exists("/etc/pihole/.useIPv6");
+    $ipv6 =  parse_ini_file("/etc/pihole/setupVars.conf")['piholeIPv6'] != "";
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
 
     /*******   Public Members ********/
@@ -128,12 +128,13 @@
             $time = date_create(substr($query, 0, 16));
             $exploded = explode(" ", trim($query));
             $tmp = $exploded[count($exploded)-4];
+            $status = "";
 
             if (substr($tmp, 0, 5) == "query"){
               $type = substr($exploded[count($exploded)-4], 6, -1);
               $domain = $exploded[count($exploded)-3];
               $client = $exploded[count($exploded)-1];
-              $status = "";
+
             }
             elseif (substr($tmp, 0, 9) == "forwarded" || $exploded[count($exploded)-3] == "pi.hole" || $exploded[count($exploded)-3] == $hostname){
               $status="OK";
@@ -266,13 +267,18 @@
 
     function findAds($var) {
       $exploded = explode(" ", $var);
-      $tmp = $exploded[count($exploded)-4];
-      $tmp2 = $exploded[count($exploded)-5];
-      $tmp3 = $exploded[count($exploded) -3];
-      $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+      if(count($exploded) == 8) {
+          $tmp = $exploded[count($exploded) - 4];
+          $tmp2 = $exploded[count($exploded) - 5];
+          $tmp3 = $exploded[count($exploded) - 3];
+          $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+          //filter out bad names and host file reloads:
+          return (substr($tmp, strlen($tmp) - 12, 12) == "gravity.list" && $tmp2 != "read" && $tmp3 != "pi.hole" && $tmp3 != $hostname);
+      }
+      else{
+          return false;
+      }
 
-      //filter out bad names and host file reloads:
-      return (substr($tmp, strlen($tmp) - 12, 12)  == "gravity.list" && $tmp2 != "read" && $tmp3 != "pi.hole" && $tmp3 != $hostname) ;
     }
 
     function findForwards($var) {
