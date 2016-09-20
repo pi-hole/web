@@ -83,23 +83,23 @@
                             <!-- Menu Body -->
                             <li class="user-body">
                                 <div class="col-xs-4 text-center">
-                                    <a href="https://github.com/jacobsalmela/pi-hole">Github</a>
+                                    <a href="https://github.com/jacobsalmela/pi-hole" target="_blank">Github</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/">Details</a>
+                                    <a href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/" target="_blank">Details</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a href="https://github.com/pi-hole/pi-hole/releases">Updates</a>
+                                    <a href="https://github.com/pi-hole/pi-hole/releases" target="_blank">Updates</a>
                                 </div>
                             </li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
                                 <!-- Update alerts -->
                                 <div id="alPiholeUpdate" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
-                                    <a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">There's an update available for this Pi-hole!</a>
+                                    <a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases" target="_blank">There's an update available for this Pi-hole!</a>
                                 </div>
                                 <div id="alWebUpdate" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
-                                    <a class="alert-link" href="https://github.com/pi-hole/AdminLTE/releases">There's an update available for this Web Interface!</a>
+                                    <a class="alert-link" href="https://github.com/pi-hole/AdminLTE/releases" target="_blank">There's an update available for this Web Interface!</a>
                                 </div>
 
                                 <!-- PayPal -->
