@@ -83,7 +83,7 @@
                             <!-- Menu Body -->
                             <li class="user-body">
                                 <div class="col-xs-4 text-center">
-                                    <a href="https://github.com/jacobsalmela/pi-hole">Github</a>
+                                    <a href="https://github.com/pi-hole/pi-hole">GitHub</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
                                     <a href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/">Details</a>
