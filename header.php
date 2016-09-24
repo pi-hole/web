@@ -1,5 +1,5 @@
 <?php
-    $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp|cut -c1-2`)).$((`cat /sys/class/thermal/thermal_zone0/temp|cut -c3-4`))";
+    $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
     $output = str_replace(["\r\n","\r","\n"],"", $output);
 ?>
@@ -14,7 +14,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
     <meta name="theme-color" content="#367fa9">
-    <link rel="apple-touch-icon" sizes="180x180" href="img/logo.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon.png">
     <link rel="icon" type="image/png" sizes="192x192"  href="img/logo.svg">
     <link rel="icon" type="image/png" sizes="96x96" href="img/logo.svg">
     <meta name="msapplication-TileColor" content="#367fa9">
@@ -83,7 +83,7 @@
                             <!-- Menu Body -->
                             <li class="user-body">
                                 <div class="col-xs-4 text-center">
-                                    <a href="https://github.com/jacobsalmela/pi-hole">Github</a>
+                                    <a href="https://github.com/pi-hole/pi-hole">GitHub</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
                                     <a href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/">Details</a>
