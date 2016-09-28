@@ -4,6 +4,16 @@
 
     $data = array();
 
+    if (isset($_GET['querytest'])) {
+
+        $db = new SQLite3('/etc/pihole/pihole.db');
+
+        $results = $db->query('SELECT name, count(name) FROM queries group by name order by count(name) desc');
+        while ($row = $results->fetchArray()) {
+            var_dump($row);
+        }
+    }
+
     if (isset($_GET['summaryRaw'])) {
         $data = array_merge($data,  getSummaryData());
     }

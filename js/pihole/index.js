@@ -139,7 +139,7 @@ function updateQueryTypes() {
             queryTypeChart.addData({
                 value: value,
                 color: colors.shift(),
-                label: key.substr(6,key.length - 7)
+                label: key
             });
         });
         $('#query-types .overlay').remove();
