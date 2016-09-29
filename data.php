@@ -3,15 +3,23 @@ $log = array();
 $ipv6 =  parse_ini_file("/etc/pihole/setupVars.conf")['piholeIPv6'] != "";
 $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
 $db = new SQLite3('/etc/pihole/pihole.db');
+$hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 
 /*******   Public Members ********/
 function getSummaryData() {
     global $db;
+    global $hostname;
     $domains_being_blocked = $db->querySingle('SELECT count(id) FROM gravity');
-    $dns_queries_today = $db->querySingle('SELECT count(id) FROM queries');
+
+    $dns_queries_today = $db->querySingle('SELECT count(id) 
+                                           FROM queries
+                                           WHERE (source || name !=\'127.0.0.1' . $hostname . '\')');
+
     $ads_blocked_today = $db->querySingle('SELECT count(a.id) 
                                            FROM queries AS a JOIN 
-                                                gravity AS b ON a.name = b.domain');
+                                                gravity AS b ON a.name = b.domain
+                                           WHERE (source || name !=\'127.0.0.1' . $hostname . '\')');
+
     $ads_percentage_today = $dns_queries_today > 0 ? ($ads_blocked_today / $dns_queries_today * 100) : 0;
 
     return array(
@@ -26,8 +34,10 @@ function getOverTimeData() {
     $domains_over_time = array();
     $ads_over_time = array();
     global $db;
+    global $hostname;
     $results = $db->query('SELECT strftime(\'%H\',ts) AS Hour, count(strftime(\'%H\',ts)) AS cnt 
-                           FROM queries 
+                           FROM queries
+                           WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
                            GROUP BY strftime(\'%H\',ts) 
                            ORDER BY strftime(\'%H\',ts)');
     while ($row = $results->fetchArray()) {
@@ -41,6 +51,7 @@ function getOverTimeData() {
     $results = $db->query('SELECT strftime(\'%H\',ts) AS Hour, count(strftime(\'%H\',ts)) AS cnt
                            FROM queries AS a JOIN
                                 gravity AS b ON a.name = b.domain 
+                           WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
                            GROUP BY strftime(\'%H\',ts)
                            ORDER BY strftime(\'%H\',ts)');
     while ($row = $results->fetchArray()) {
@@ -54,8 +65,8 @@ function getOverTimeData() {
     alignTimeArrays($domains_over_time,$ads_over_time);
 
     return Array(
-        'domains_over_time' => $domains_over_time,
-        'ads_over_time' => $ads_over_time,
+      'domains_over_time' => $domains_over_time,
+      'ads_over_time' => $ads_over_time,
     );
 }
 
@@ -63,10 +74,12 @@ function getTopItems() {
     $topQueries =array();
     $topAds=array();
     global $db;
+    global $hostname;
     $results = $db->query('SELECT name, COUNT(name) AS cnt 
-                           FROM queries 
+                           FROM queries
+                           WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
                            GROUP BY name 
-                           ORDER BY COUNT(name) DESC 
+                           ORDER BY COUNT(name) DESC                           
                            LIMIT 10');
     while ($row = $results->fetchArray()) {
         $topQueries[$row['name']] = $row['cnt'];
@@ -75,6 +88,7 @@ function getTopItems() {
     $results = $db->query('SELECT a.name, COUNT(a.name) AS cnt
                            FROM queries AS a JOIN
                                 gravity AS b ON a.name = b.domain
+                           WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
                            GROUP BY a.name 
                            ORDER BY COUNT(a.name) DESC
                            LIMIT 10');
@@ -89,8 +103,10 @@ function getTopItems() {
 
 function getIpvType() {
     global $db;
+    global $hostname;
     $results = $db->query('SELECT query_type, COUNT(query_type) AS cnt 
                            FROM queries
+                           WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
                            GROUP BY query_type
                            ORDER BY COUNT(query_type) DESC');
     $queryTypes = array();
@@ -102,8 +118,9 @@ function getIpvType() {
 
 function getForwardDestinations() {
     global $db;
+    global $hostname;
     $results = $db->query('SELECT resolver, COUNT(resolver) AS cnt
-                           FROM forwards
+                           FROM forwards                           
                            GROUP BY resolver
                            ORDER BY COUNT(resolver) DESC');
     $destinations = array();
@@ -115,8 +132,10 @@ function getForwardDestinations() {
 
 function getQuerySources() {
     global $db;
+    global $hostname;
     $results = $db->query('SELECT source, COUNT(source) AS cnt
                            FROM queries
+                           WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
                            GROUP BY source
                            ORDER BY COUNT(source) DESC');
     $sources = array("top_sources" => array());
@@ -131,10 +150,13 @@ function getQuerySources() {
 
 function getAllQueries() {
     global $db;
+    global $hostname;
     $allQueries = array("data" => array());
-    $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 
-    $results = $db->query('SELECT * FROM queries AS a LEFT JOIN gravity AS b ON a.name = b.domain');
+    $results = $db->query('SELECT * 
+                           FROM queries AS a LEFT JOIN 
+                           gravity AS b ON a.name = b.domain
+                           WHERE (source || name !=\'127.0.0.1' . $hostname . '\')');
     while ($row = $results->fetchArray()) {
         $time =$row['ts'];
         $status = "";
