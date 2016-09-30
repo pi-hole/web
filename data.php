@@ -76,8 +76,10 @@ function getTopItems() {
     global $db;
     global $hostname;
     $results = $db->query('SELECT name, COUNT(name) AS cnt 
-                           FROM queries
+                           FROM queries AS a LEFT JOIN
+                                gravity AS b ON a.name = b.domain
                            WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
+                           AND b.domain is null
                            GROUP BY name 
                            ORDER BY COUNT(name) DESC                           
                            LIMIT 10');
