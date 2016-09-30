@@ -36,20 +36,16 @@ $.getJSON("https://api.github.com/repos/pi-hole/pi-hole/releases/latest", functi
     // Skip if on dev
     if(piholeVersion !== "vDev" && versionCompare(piholeVersion, json.tag_name.slice(1)) < 0) {
         // Alert user
+        $("#piholeVersion").html($("#piholeVersion").text() + '<a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">(Update available!)</a>');
         $("#alPiholeUpdate").show();
-        if(!$("#dropdown-menu").hasClass("open")) {
-            $("#dropdown-menu").addClass("open");
-        }
     }
 });
 $.getJSON("https://api.github.com/repos/pi-hole/AdminLTE/releases/latest", function(json) {
     // Skip if on dev
     if(webVersion !== "vDev" && versionCompare(webVersion, json.tag_name.slice(1)) < 0) {
         // Alert user
+        $("#webVersion").html($("#webVersion").text() + '<a class="alert-link" href="https://github.com/pi-hole/adminLTE/releases">(Update available!)</a>');
         $("#alWebUpdate").show();
-        if(!$("#dropdown-menu").hasClass("open")) {
-            $("#dropdown-menu").addClass("open");
-        }
     }
 });
 
