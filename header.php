@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'">
     <title>Pi-hole Admin Console</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -21,9 +21,9 @@
     <meta name="msapplication-TileImage" content="img/logo.svg">
 
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/jquery.bootgrid.css" rel="stylesheet" type="text/css">
     <link href="css/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="css/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-    <link href="css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
 
     <link href="css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
     <link href="css/skin-blue.min.css" rel="stylesheet" type="text/css" />

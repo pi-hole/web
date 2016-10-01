@@ -18,26 +18,18 @@
         <!-- /.box-header -->
         <div class="box-body">
             <div class="table-responsive">
-                <table id="all-queries" class="display table table-striped table-bordered" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Domain</th>
-                            <th>Client</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Domain</th>
-                            <th>Client</th>
-                            <th>Status</th>
-                        </tr>
-                    </tfoot>
-                </table>
+              <table id="grid-data" class="display table table-striped table-bordered" data-toggle="bootgrid" data-ajax="true" data-url="server.php">
+                <thead>
+                <tr>
+                  <th data-column-id="id" data-identifier="true">Id</th>
+                  <th data-column-id="ts">Time</th>
+                  <th data-column-id="query_type">Type</th>
+                  <th data-column-id="name">Domain</th>
+                  <th data-column-id="source">Client</th>
+                  <th data-column-id="domain">Status</th>
+                </tr>
+                </thead>
+              </table>
             </div>
        </div>
         <!-- /.box-body -->
@@ -45,10 +37,28 @@
       <!-- /.box -->
     </div>
 </div>
+
+
+
 <!-- /.row -->
 
 <?php
     require "footer.php";
 ?>
 
-<script src="js/pihole/queries.js"></script>
+<script language="javascript">
+  //Refer to http://jquery-bootgrid.com/Documentation for methods, events and settings
+  //load gird on page\e load...
+  $("#grid-data").bootgrid(
+    {
+      caseSensitive:false /* make search case insensitive */
+    });
+
+  function getServerData()
+  {
+    console.log("getServerData");
+    $("#grid-data").bootgrid({ caseSensitive:false});
+  }
+
+
+</script>

@@ -18,6 +18,7 @@
 <script src="js/other/jquery.min.js"></script>
 <script src="js/other/jquery-ui.min.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="js/other/jquery.bootgrid.min.js"></script>
 <script src="js/other/app.min.js"></script>
 
 <script src="js/other/jquery.dataTables.min.js"></script>
