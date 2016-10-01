@@ -19,15 +19,15 @@ require "header.php";
       <div class="box-body">
         <div class="table-responsive">
           <table id="grid-data" class="display table table-striped table-bordered" data-toggle="bootgrid"
-                 data-ajax="true" data-url="server.php"
+                 data-ajax="true" data-url="server.php" data-columnSelection="false"
           ">
           <thead>
           <tr>
-            <th data-column-id="ts">Time</th>
-            <th data-column-id="query_type">Type</th>
-            <th data-column-id="name">Domain</th>
-            <th data-column-id="source">Client</th>
-            <th data-column-id="domain">Status</th>
+            <th data-column-id="ts" data-visible-in-selection="false">Time</th>
+            <th data-column-id="query_type" data-visible-in-selection="false">Type</th>
+            <th data-column-id="name" data-visible-in-selection="false">Domain</th>
+            <th data-column-id="source" data-visible-in-selection="false">Client</th>
+            <th data-column-id="domain" data-visible-in-selection="false">Status</th>
           </tr>
           </thead>
           </table>
