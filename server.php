@@ -8,7 +8,7 @@ try {
   $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 
   $where ="(source || name !='127.0.0.1$hostname')";
-  $order_by="id";
+  $order_by="ts desc";
   $rows=25;
   $current=1;
   $limit_l=($current * $rows) - ($rows);

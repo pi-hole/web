@@ -53,9 +53,24 @@ require "footer.php";
     {
       caseSensitive: false /* make search case insensitive */
 
-    }).on("load.rs.jquery.bootgrid", function (e) {
-    /* your code goes here */
+    }).on("loaded.rs.jquery.bootgrid", function (e) { //once table has loaded, set the colours for easy recognition of blocked queries.
+      console.log("Loaded!");
+
+    $("table tr td:nth-child(5)").each(function () {
+      console.log($(this).text());
+      if ($(this).text() == '\u00a0') { //Unicode for space or &nbsp;
+        $(this).html('OK!');
+        $(this).parent().css('color','green');
+      }
+      else{
+        $(this).html('Pi-holed');
+        $(this).parent().css('color','red');
+      }
+
+    });
+
   });
+
 
 
 </script>
