@@ -18,10 +18,9 @@
         <!-- /.box-header -->
         <div class="box-body">
             <div class="table-responsive">
-              <table id="grid-data" class="display table table-striped table-bordered" data-toggle="bootgrid" data-ajax="true" data-url="server.php">
+              <table id="grid-data" class="display table table-striped table-bordered" data-toggle="bootgrid" data-ajax="true" data-url="server.php" ">
                 <thead>
                 <tr>
-                  <th data-column-id="id" data-identifier="true">Id</th>
                   <th data-column-id="ts">Time</th>
                   <th data-column-id="query_type">Type</th>
                   <th data-column-id="name">Domain</th>
@@ -52,13 +51,11 @@
   $("#grid-data").bootgrid(
     {
       caseSensitive:false /* make search case insensitive */
+
     });
 
-  function getServerData()
-  {
-    console.log("getServerData");
-    $("#grid-data").bootgrid({ caseSensitive:false});
-  }
+
+
 
 
 </script>

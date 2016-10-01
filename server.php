@@ -48,7 +48,7 @@ try {
     $limit=" LIMIT $limit_l,$limit_h  ";
 
 //NOTE: No security here please beef this up using a prepared statement - as is this is prone to SQL injection.
-  $sql="SELECT id, ts, query_type, name,source, domain FROM queries left join gravity on queries.name = gravity.domain WHERE $where ORDER BY $order_by $limit";
+  $sql="SELECT ts, query_type, name,source, domain FROM queries left join gravity on queries.name = gravity.domain WHERE $where ORDER BY $order_by $limit";
 
   $stmt=$conn->prepare($sql);
   $stmt->execute();
