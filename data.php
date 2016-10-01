@@ -9,13 +9,13 @@ $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 function getSummaryData() {
     global $db;
     global $hostname;
-    $domains_being_blocked = $db->querySingle('SELECT count(id) FROM gravity');
+    $domains_being_blocked = $db->querySingle('SELECT count(*) FROM gravity');
 
-    $dns_queries_today = $db->querySingle('SELECT count(id) 
+    $dns_queries_today = $db->querySingle('SELECT count(*) 
                                            FROM queries
                                            WHERE (source || name !=\'127.0.0.1' . $hostname . '\')');
 
-    $ads_blocked_today = $db->querySingle('SELECT count(a.id) 
+    $ads_blocked_today = $db->querySingle('SELECT count(*) 
                                            FROM queries AS a JOIN 
                                                 gravity AS b ON a.name = b.domain
                                            WHERE (source || name !=\'127.0.0.1' . $hostname . '\')');
