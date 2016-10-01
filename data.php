@@ -266,6 +266,7 @@
     }
 
     function findAds($var) {
+      $var = preg_replace('/ {2,}/', ' ', $var);          
       $exploded = explode(" ", $var);
       if(count($exploded) == 8) {
           $tmp = $exploded[count($exploded) - 4];
