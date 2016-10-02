@@ -129,26 +129,26 @@ function updateSummaryData(runOnce) {
 
 function updateQueriesOverTime() {
     $.getJSON("api.php?overTimeData", function (data) {
-        for (hour in data["ads_over_time"]) {
+        for (var hour in data["ads_over_time"]) {
             if ($.isNumeric(hour)) { //Check value is numeric. Some strange string values were appearing, even though they're not in the raw response
-                timeLineChart.addData([data.domains_over_time[hour], data.ads_over_time[hour]], hour + ":00");
+                timeLineChart.addData([data['domains_over_time'][hour], data['ads_over_time'][hour]], hour + ":00");
             }
         }
-        $('#queries-over-time .overlay').remove();
+        $('#queries-over-time').find('.overlay').remove();
         //$('#queries-over-time').append(timeLineChart.generateLegend());
     });
 }
 
 function updateTopClientsChart() {
     $.getJSON("api.php?getQuerySources", function (data) {
-        var clienttable = $('#client-frequency').find('tbody:last');
-        for (domain in data.top_sources) {
-            clienttable.append('<tr> <td>' + domain +
-                '</td> <td>' + data.top_sources[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-blue" style="width: ' +
-                data.top_sources[domain] / globalSummary.dns_queries_today * 100 + '%"></div> </div> </td> </tr> ');
+        var clientTable = $('#client-frequency').find('tbody:last');
+        for (var domain in data['top_sources']) {
+            clientTable.append('<tr> <td>' + domain +
+                '</td> <td>' + data['top_sources'][domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-blue" style="width: ' +
+                data['top_sources'][domain] / globalSummary['dns_queries_today'] * 100 + '%"></div> </div> </td> </tr> ');
         }
 
-        $('#client-frequency .overlay').remove();
+        $('#client-frequency').find('.overlay').remove();
     });
 }
 
@@ -165,7 +165,7 @@ function updateQueryTypes() {
                 label: key
             });
         });
-        $('#query-types .overlay').remove();
+        $('#query-types').find('.overlay').remove();
         //$('#query-types').append(queryTypeChart.generateLegend());
     });
 }
@@ -190,21 +190,21 @@ function updateForwardDestinations() {
 
 function updateTopLists() {
     $.getJSON("api.php?topItems", function (data) {
-        var domaintable = $('#domain-frequency').find('tbody:last');
-        var adtable = $('#ad-frequency').find('tbody:last');
+        var domainTable = $('#domain-frequency').find('tbody:last');
+        var adTable = $('#ad-frequency').find('tbody:last');
 
-        for (domain in data.top_queries) {
-            domaintable.append('<tr> <td>' + domain +
-                '</td> <td>' + data.top_queries[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-green" style="width: ' +
-                data.top_queries[domain] / globalSummary.dns_queries_today * 100 + '%"></div> </div> </td> </tr> ');
+        for (var domain in data['top_queries']) {
+            domainTable.append('<tr> <td>' + domain +
+                '</td> <td>' + data['top_queries'][domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-green" style="width: ' +
+                data['top_queries'][domain] / globalSummary['dns_queries_today'] * 100 + '%"></div> </div> </td> </tr> ');
         }
-        for (domain in data.top_ads) {
-            adtable.append('<tr> <td>' + domain +
-                '</td> <td>' + data.top_ads[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-yellow" style="width: ' +
-                data.top_ads[domain] / globalSummary.ads_blocked_today * 100 + '%"></div> </div> </td> </tr> ');
+        for (var domain in data['top_ads']) {
+            adTable.append('<tr> <td>' + domain +
+                '</td> <td>' + data['top_ads'][domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-yellow" style="width: ' +
+                data['top_ads'][domain] / globalSummary['ads_blocked_today'] * 100 + '%"></div> </div> </td> </tr> ');
         }
 
-        $('#domain-frequency .overlay').remove();
-        $('#ad-frequency .overlay').remove();
+        $('#domain-frequency').find('.overlay').remove();
+        $("#ad-frequency").find('.overlay').remove();
     });
 }
