@@ -110,8 +110,10 @@ function updateSummaryData(runOnce) {
 
 function updateQueriesOverTime() {
     $.getJSON("api.php?overTimeData", function(data) {
-        for (hour in data.ads_over_time) {
-            timeLineChart.addData([data.domains_over_time[hour], data.ads_over_time[hour]], hour + ":00");
+        for (hour in data["ads_over_time"]) {
+            if ($.isNumeric(hour)){ //Check value is numeric. Some strange string values were appearing, even though they're not in the raw response
+                timeLineChart.addData([data.domains_over_time[hour], data.ads_over_time[hour]], hour + ":00");
+            }
         }
         $('#queries-over-time .overlay').remove();
         //$('#queries-over-time').append(timeLineChart.generateLegend());
