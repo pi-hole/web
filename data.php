@@ -150,39 +150,6 @@ function getQuerySources() {
 
 }
 
-function getAllQueries() {
-    global $db;
-    global $hostname;
-    $allQueries = array("data" => array());
-
-    $results = $db->query('SELECT * 
-                           FROM queries AS a LEFT JOIN 
-                           gravity AS b ON a.name = b.domain
-                           WHERE (source || name !=\'127.0.0.1' . $hostname . '\')');
-    while ($row = $results->fetchArray()) {
-        $time =$row['ts'];
-        $status = "";
-        $type = $row['query_type'];
-        $domain = $row['name'];
-        $client = $row['source'];
-
-        if ($domain == "pi.hole" || $domain == $hostname || $row['domain'] == null){
-            $status="OK";
-        }
-        elseif ($row['domain'] != null){
-            $status="Pi-holed";
-        }
-        array_push($allQueries['data'], array(
-          $time,#->format('Y-m-d\TH:i:s'),
-          $type,
-          $domain,
-          hasHostName($client),
-          $status,
-        ));
-    }
-
-    return $allQueries;
-}
 
 /******** Private Members ********/
 

@@ -53,10 +53,6 @@
         $data = array_merge($data, getQuerySources());
     }
 
-    if (isset($_GET['getAllQueries'])) {
-        $data = array_merge($data, getAllQueries());
-    }
-
     function filterArray(&$a) {
 	    $sanArray = array();
 	    foreach ($a as $k=>$v) {
