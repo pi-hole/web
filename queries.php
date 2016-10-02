@@ -39,6 +39,26 @@ require "header.php";
   </div>
 </div>
 
+<table id="hosts" hidden="true">
+  <thead>
+  <tr>
+    <th>IP</th>
+  </tr>
+  </thead>
+  <tbody>
+  <?php //Read in /etc/hosts and show in this hidden table for later use
+  $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
+  foreach ($hosts as $host){
+    $x = preg_split('/\s+/', $host);
+    if ($x[0] != '' && $x[0] != '#'){
+      echo '<tr><td>'.$x[0].'#'.$x[1].'</td></tr>';
+    }
+
+  }
+  ?>
+  </tbody>
+</table>
+
 
 <!-- /.row -->
 
@@ -54,23 +74,31 @@ require "footer.php";
       caseSensitive: false /* make search case insensitive */
 
     }).on("loaded.rs.jquery.bootgrid", function (e) { //once table has loaded, set the colours for easy recognition of blocked queries.
-      console.log("Loaded!");
 
-    $("table tr td:nth-child(5)").each(function () {
-      console.log($(this).text());
+    $("table tr td:nth-child(5)").each(function () {//Status column
       if ($(this).text() == '\u00a0') { //Unicode for space or &nbsp;
         $(this).html('OK!');
-        $(this).parent().css('color','green');
+        $(this).parent().css('color', 'green');
       }
-      else{
+      else {
         $(this).html('Pi-holed');
-        $(this).parent().css('color','red');
+        $(this).parent().css('color', 'red');
       }
-
+    });
+    //Remember the hidden table from earlier? This is where we apply the host name to the Client column!
+    $("table tr td:nth-child(4)").each(function () {//Client column
+      var str=$(this).text(); // Save text out to a variable
+      $("#hosts").find("tr td").each(function(){//loop through hidden table rows
+        var comp = $(this).text();
+        var arr = comp.split('#'); //split each row on #
+        if (arr[0] == str){
+          str=(arr[1] +" ("+str+")"); //if IP address matches, then we have a hostname!
+        }
+      });
+      $(this).html(str); //set the cell's text to the new hostname(ip)
     });
 
   });
-
 
 
 </script>
