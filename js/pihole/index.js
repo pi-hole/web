@@ -1,17 +1,32 @@
+var globalSummary;
+
 $(document).ready(function() {
     // Pull in data via AJAX
 
+
     updateSummaryData();
+    var check = function(){
+        if(globalSummary == null){
+            setTimeout(check, 50);
+        }
+        else {
+            // check again in a second
+            updateQueriesOverTime();
 
-    updateQueriesOverTime();
+            updateQueryTypes();
 
-    updateQueryTypes();
+            updateForwardDestinations();
 
-    updateTopClientsChart();
+            updateTopLists();
+            updateTopClientsChart();
+        }
+    }
 
-    updateForwardDestinations();
+    check();
 
-    updateTopLists();
+
+
+
 
     // Create charts
     var chartData = {
@@ -75,32 +90,39 @@ $(document).ready(function() {
     );
 });
 
-// Functions to oupdate data in page
+
+function addCommas(string)
+{
+    return string.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+}
 
 function updateSummaryData(runOnce) {
-    $.getJSON("api.php?summary", function LoadSummaryData(data) {
+    $.getJSON("api.php?summaryRaw", function LoadSummaryData(data) {
         //$("h3.statistic").addClass("glow");
-        if ($("h3#ads_blocked_today").text() != data.ads_blocked_today) {
+        globalSummary = data;
+        if ($("h3#ads_blocked_today").text() != addCommas(data['ads_blocked_today'])) {
             $("h3#ads_blocked_today").addClass("glow");
         }
-        if ($("h3#dns_queries_today").text() != data.dns_queries_today) {
+        if ($("h3#dns_queries_today").text() != addCommas(data['dns_queries_today'])) {
             $("h3#dns_queries_today").addClass("glow");
         }
-        if ($("h3#ads_percentage_today").text() != data.ads_percentage_today) {
+        if ($("h3#ads_percentage_today").text() != (Math.round(data['ads_percentage_today'] * 10) / 10).toFixed(1)) {
             $("h3#ads_percentage_today").addClass("glow");
         }
 
         window.setTimeout(function(){
-            $("h3#ads_blocked_today").text(data.ads_blocked_today);
-            $("h3#dns_queries_today").text(data.dns_queries_today);
-            $("h3#domains_being_blocked").text(data.domains_being_blocked);
-            $("h3#ads_percentage_today").text(data.ads_percentage_today + "%");
+            $("h3#ads_blocked_today").text(addCommas(data['ads_blocked_today']));
+            $("h3#dns_queries_today").text(addCommas(data['dns_queries_today']));
+            $("h3#domains_being_blocked").text(addCommas(data['domains_being_blocked']));
+            $("h3#ads_percentage_today").text((Math.round(data['ads_percentage_today'] * 10) / 10).toFixed(1) + "%");
             $("h3.statistic.glow").removeClass("glow")
         }, 500);
     }).done(function() {
         if (runOnce !== true) {
             setTimeout(updateSummaryData, 10000);
+
         }
+
     }).fail(function() {
         if (runOnce !== true) {
             setTimeout(updateSummaryData, (1000 * 60 * 5));
@@ -121,12 +143,12 @@ function updateQueriesOverTime() {
 }
 
 function updateTopClientsChart() {
-    $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
+    $.getJSON("api.php?getQuerySources", function(data) {
         var clienttable =  $('#client-frequency').find('tbody:last');
         for (domain in data.top_sources) {
             clienttable.append('<tr> <td>' + domain +
                 '</td> <td>' + data.top_sources[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-blue" style="width: ' +
-                data.top_sources[domain] / data.dns_queries_today * 100 + '%"></div> </div> </td> </tr> ');
+                data.top_sources[domain] / globalSummary.dns_queries_today * 100 + '%"></div> </div> </td> </tr> ');
         }
 
         $('#client-frequency .overlay').remove();
@@ -153,7 +175,7 @@ function updateForwardDestinations() {
     $.getJSON("api.php?getForwardDestinations", function(data) {
         var colors = [];
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
-        $.each(data, function(key , value) {
+        $.each(data, function (key, value) {
             forwardDestinationChart.addData({
                 value: value,
                 color: colors.shift(),
@@ -166,19 +188,19 @@ function updateForwardDestinations() {
 }
 
 function updateTopLists() {
-    $.getJSON("api.php?summaryRaw&topItems", function(data) {
+    $.getJSON("api.php?topItems", function(data) {
         var domaintable = $('#domain-frequency').find('tbody:last');
         var adtable = $('#ad-frequency').find('tbody:last');
 
         for (domain in data.top_queries) {
             domaintable.append('<tr> <td>' + domain +
                 '</td> <td>' + data.top_queries[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-green" style="width: ' +
-                data.top_queries[domain] / data.dns_queries_today * 100 + '%"></div> </div> </td> </tr> ');
+                data.top_queries[domain] / globalSummary.dns_queries_today * 100 + '%"></div> </div> </td> </tr> ');
         }
         for (domain in data.top_ads) {
             adtable.append('<tr> <td>' + domain +
                 '</td> <td>' + data.top_ads[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-yellow" style="width: ' +
-                data.top_ads[domain] / data.ads_blocked_today * 100 + '%"></div> </div> </td> </tr> ');
+                data.top_ads[domain] / globalSummary.ads_blocked_today * 100 + '%"></div> </div> </td> </tr> ');
         }
 
         $('#domain-frequency .overlay').remove();
