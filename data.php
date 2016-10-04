@@ -127,7 +127,8 @@ function getForwardDestinations() {
                            ORDER BY COUNT(resolver) DESC');
     $destinations = array();
     while ($row = $results->fetchArray()) {
-        $destinations[$row['resolver']] = $row['cnt'];
+        $resolver = hasHostName($row['resolver']);
+        $destinations[$resolver] = $row['cnt'];
     }
     return $destinations;
 }
