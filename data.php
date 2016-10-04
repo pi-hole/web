@@ -2,6 +2,7 @@
     $log = array();
     $ipv6 =  parse_ini_file("/etc/pihole/setupVars.conf")['piholeIPv6'] != "";
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
+    date_default_timezone_set('UTC');
 
     /*******   Public Members ********/
     function getSummaryData() {
