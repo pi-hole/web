@@ -1,6 +1,4 @@
 <?php
-$log = array();
-$ipv6 =  parse_ini_file("/etc/pihole/setupVars.conf")['piholeIPv6'] != "";
 $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
 $db = new SQLite3('/etc/pihole/pihole.db');
 $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
@@ -9,7 +7,9 @@ $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 function getSummaryData() {
     global $db;
     global $hostname;
-    $domains_being_blocked = $db->querySingle('SELECT count(*) FROM gravity');
+
+    $ipv6 =  parse_ini_file("/etc/pihole/setupVars.conf")['piholeIPv6'] != "";
+    $domains_being_blocked = gravityCount() / ($ipv6 ? 2 : 1);
 
     $dns_queries_today = $db->querySingle('SELECT count(*) 
                                            FROM queries
@@ -152,6 +152,18 @@ function getQuerySources() {
 
 
 /******** Private Members ********/
+
+function gravityCount() {
+    //returns count of domains in blocklist.
+    $gravity="/etc/pihole/gravity.list";
+    $swallowed = 0;
+    $NGC4889 = fopen($gravity, "r");
+    while ($stars = fread($NGC4889, 1024000)) {
+        $swallowed += substr_count($stars, "\n");
+    }
+    fclose($NGC4889);
+    return $swallowed;
+}
 
 function alignTimeArrays(&$times1, &$times2) {
     $max = max(array(max(array_keys($times1)), max(array_keys($times2))));
