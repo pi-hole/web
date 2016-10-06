@@ -27,7 +27,7 @@ require "header.php";
             <th data-column-id="query_type" data-visible-in-selection="false">Type</th>
             <th data-column-id="name" data-visible-in-selection="false">Domain</th>
             <th data-column-id="source" data-visible-in-selection="false">Client</th>
-            <th data-column-id="domain" data-visible-in-selection="false">Status</th>
+            <th data-column-id="piholed" data-visible-in-selection="false">Status</th>
           </tr>
           </thead>
           </table>
@@ -76,7 +76,7 @@ require "footer.php";
     }).on("loaded.rs.jquery.bootgrid", function (e) { //once table has loaded, set the colours for easy recognition of blocked queries.
 
     $("table tr td:nth-child(5)").each(function () {//Status column
-      if ($(this).text() == '\u00a0') { //Unicode for space or &nbsp;
+      if ($(this).text() == '0') { //Unicode for space or &nbsp;
         $(this).html('OK!');
         $(this).parent().css('color', 'green');
       }

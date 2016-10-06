@@ -27,7 +27,7 @@ try {
   if (isset($_REQUEST['searchPhrase']) )
   {
     $search=trim($_REQUEST['searchPhrase']);
-    $where.= " AND ( ts LIKE '%".$search."%' OR  query_type LIKE '%".$search."%' OR  name LIKE '%".$search."%' OR  source LIKE '%".$search."%' OR domain LIKE '%".$search."%'  ) ";
+    $where.= " AND ( ts LIKE '%".$search."%' OR  query_type LIKE '%".$search."%' OR  name LIKE '%".$search."%' OR  source LIKE '%".$search."%'  ) ";
   }
 
 //Handles determines where in the paging count this result set falls in
@@ -48,7 +48,7 @@ try {
     $limit=" LIMIT $limit_l,$limit_h  ";
 
 //NOTE: No security here please beef this up using a prepared statement - as is this is prone to SQL injection.
-  $sql="SELECT ts, query_type, name,source, domain FROM queries left join gravity on queries.name = gravity.domain WHERE $where ORDER BY $order_by $limit";
+  $sql="SELECT ts, query_type, name,source, piholed FROM queries WHERE $where ORDER BY $order_by $limit";
 
   $stmt=$conn->prepare($sql);
   $stmt->execute();
@@ -56,7 +56,7 @@ try {
 
   $json=json_encode( $results_array );
 
-  $nRows=$conn->query("SELECT count(*) FROM queries left join gravity on queries.name = gravity.domain  WHERE $where")->fetchColumn();   /* specific search then how many match */
+  $nRows=$conn->query("SELECT count(*) FROM queries WHERE $where")->fetchColumn();   /* specific search then how many match */
 
   header('Content-Type: application/json'); //tell the broswer JSON is coming
 
