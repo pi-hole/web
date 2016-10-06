@@ -69,6 +69,10 @@ require "footer.php";
     //load grid on page\e load...
     $("#grid-data").bootgrid({
         ajax:true,
+        ajaxSettings: {
+            method: "POST",
+            cache: true
+        },
         url:"server.php",
         columnSelection:false,
         rowCount: [10,25,50,100]
