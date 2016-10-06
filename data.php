@@ -16,9 +16,9 @@ function getSummaryData() {
                                            WHERE (source || name !=\'127.0.0.1' . $hostname . '\')');
 
     $ads_blocked_today = $db->querySingle('SELECT count(*) 
-                                           FROM queries AS a JOIN 
-                                                gravity AS b ON a.name = b.domain
-                                           WHERE (source || name !=\'127.0.0.1' . $hostname . '\')');
+                                           FROM queries
+                                           WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
+                                           AND piholed = 1');
 
     $ads_percentage_today = $dns_queries_today > 0 ? ($ads_blocked_today / $dns_queries_today * 100) : 0;
 
@@ -49,9 +49,9 @@ function getOverTimeData() {
     }
 
     $results = $db->query('SELECT strftime(\'%H\',ts) AS Hour, count(strftime(\'%H\',ts)) AS cnt
-                           FROM queries AS a JOIN
-                                gravity AS b ON a.name = b.domain 
+                           FROM queries
                            WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
+                           AND piholed = 1
                            GROUP BY strftime(\'%H\',ts)
                            ORDER BY strftime(\'%H\',ts)');
     while ($row = $results->fetchArray()) {
@@ -76,10 +76,9 @@ function getTopItems() {
     global $db;
     global $hostname;
     $results = $db->query('SELECT name, COUNT(name) AS cnt 
-                           FROM queries AS a LEFT JOIN
-                                gravity AS b ON a.name = b.domain
+                           FROM queries
                            WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
-                           AND b.domain is null
+                           AND piholed = 0
                            GROUP BY name 
                            ORDER BY COUNT(name) DESC                           
                            LIMIT 10');
@@ -87,12 +86,12 @@ function getTopItems() {
         $topQueries[$row['name']] = $row['cnt'];
     }
 
-    $results = $db->query('SELECT a.name, COUNT(a.name) AS cnt
-                           FROM queries AS a JOIN
-                                gravity AS b ON a.name = b.domain
+    $results = $db->query('SELECT name, COUNT(name) AS cnt
+                           FROM queries
                            WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
-                           GROUP BY a.name 
-                           ORDER BY COUNT(a.name) DESC
+                           AND piholed = 1
+                           GROUP BY name 
+                           ORDER BY COUNT(name) DESC
                            LIMIT 10');
     while ($row = $results->fetchArray()) {
         $topAds[$row['name']] = $row['cnt'];
