@@ -19,7 +19,7 @@ require "header.php";
       <div class="box-body">
         <div class="table-responsive">
           <table id="grid-data" class="display table table-striped table-bordered" data-toggle="bootgrid"
-                 data-ajax="true" data-url="server.php" data-columnSelection="false"
+                 data-ajax="true" data-url="server.php"
           ">
           <thead>
           <tr>
@@ -68,15 +68,11 @@ require "footer.php";
 
 <script language="javascript">
   //Refer to http://jquery-bootgrid.com/Documentation for methods, events and settings
-  //load gird on page\e load...
-  $("#grid-data").bootgrid(
-    {
-      caseSensitive: false /* make search case insensitive */
-
-    }).on("loaded.rs.jquery.bootgrid", function (e) { //once table has loaded, set the colours for easy recognition of blocked queries.
+  //load grid on page\e load...
+  $("#grid-data").bootgrid().on("loaded.rs.jquery.bootgrid", function (e) { //once table has loaded, set the colours for easy recognition of blocked queries.
 
     $("table tr td:nth-child(5)").each(function () {//Status column
-      if ($(this).text() == '0') { //Unicode for space or &nbsp;
+      if ($(this).text() == '0') {
         $(this).html('OK!');
         $(this).parent().css('color', 'green');
       }
