@@ -4,9 +4,9 @@ $ERRORLOG = getenv('PHP_ERROR_LOG');
 if (empty($ERRORLOG)) {
     $ERRORLOG = '/var/log/lighttpd/error.log';
 }
-$date = exec("date +'%Y-%m-%d %H:%M:%S'");
 
 function pi_log($message) {
+    $date = exec("date +'%Y-%m-%d %H:%M:%S'");
     error_log($date . ': ' . $message . "\n", 3, $GLOBALS['ERRORLOG']);
 }
 
