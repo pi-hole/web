@@ -125,7 +125,7 @@
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 
         foreach ($dns_queries as $query) {
-            $time = exec("date --date='" . trim(substr($query, 0, 16)) . "' +'%Y-%m-%d\%Z%H:%M:%S'");
+            $time = exec("date --date='" . trim(substr($query, 0, 16)) . "' +'%Y-%m-%dT%H:%M:%S'");
             $exploded = explode(" ", trim($query));
             $tmp = $exploded[count($exploded)-4];
             $status = "";
