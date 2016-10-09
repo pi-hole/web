@@ -2,7 +2,6 @@
     $log = array();
     $ipv6 =  parse_ini_file("/etc/pihole/setupVars.conf")['piholeIPv6'] != "";
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
-    date_default_timezone_set('UTC');
 
     /*******   Public Members ********/
     function getSummaryData() {
@@ -126,7 +125,7 @@
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 
         foreach ($dns_queries as $query) {
-            $time = date_create(substr($query, 0, 16));
+            $time = exec("date --date='" . trim(substr($query, 0, 16)) . "' +'%Y-%m-%d\%Z%H:%M:%S'");
             $exploded = explode(" ", trim($query));
             $tmp = $exploded[count($exploded)-4];
             $status = "";
@@ -146,7 +145,7 @@
 
             if ( $status != ""){
               array_push($allQueries['data'], array(
-                $time->format('Y-m-d\TH:i:s'),
+                $time,
                 $type,
                 $domain,
                 hasHostName($client),
@@ -213,8 +212,7 @@
     function overTime($entries) {
         $byTime = array();
         foreach ($entries as $entry) {
-            $time = date_create(substr($entry, 0, 16));
-            $hour = $time->format('G');
+            $hour = trim(exec("date --date='" . trim(substr($entry, 0, 16)) . "' +'%k'"));
 
             if (isset($byTime[$hour])) {
                 $byTime[$hour]++;
@@ -248,8 +246,7 @@
         foreach (array_slice($queries, -$qty) as $query) {
             $queryArray = array();
             $exploded = explode(" ", $query);
-            $time = date_create(substr($query, 0, 16));
-            $queryArray['time'] = $time->format('h:i:s a');
+            $queryArray['time'] = strtolower(exec("date --date='" . trim(substr($query, 0, 16)) . "' +'%I:%M:%S %p'"));
             $queryArray['domain'] = trim($exploded[count($exploded) - 3]);
             $queryArray['ip'] = trim($exploded[count($exploded)-1]);
             array_push($recent, $queryArray);
