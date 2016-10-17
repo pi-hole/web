@@ -1,7 +1,7 @@
 <?php
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
-    $output = str_replace(["\r\n","\r","\n"],"", $output);
+    $output = str_replace(array("\r\n","\r","\n"),"", $output);
 ?>
 
 <!DOCTYPE html>
