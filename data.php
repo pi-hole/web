@@ -2,11 +2,11 @@
     $log = array();
     $ipv6 =  parse_ini_file("/etc/pihole/setupVars.conf")['piholeIPv6'] != "";
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
+    $log = new \SplFileObject('/var/log/pihole.log');
 
     /*******   Public Members ********/
     function getSummaryData() {
-        global $ipv6;
-        $log = readInLog();
+        global $log, $ipv6;
         $domains_being_blocked = gravityCount() / ($ipv6 ? 2 : 1);
 
         $dns_queries_today = count(getDnsQueries($log));
@@ -24,7 +24,7 @@
     }
 
     function getOverTimeData() {
-        $log = readInLog();
+        global $log;
         $dns_queries = getDnsQueries($log);
         $ads_blocked = getBlockedQueries($log);
 
@@ -38,7 +38,7 @@
     }
 
     function getTopItems() {
-        $log = readInLog();
+        global $log;
         $dns_queries = getDnsQueries($log);
         $ads_blocked = getBlockedQueries($log);
 
@@ -52,7 +52,7 @@
     }
 
     function getRecentItems($qty) {
-        $log = readInLog();
+        global $log;
         $dns_queries = getDnsQueries($log);
         return Array(
             'recent_queries' => getRecent($dns_queries, $qty)
@@ -60,7 +60,7 @@
     }
 
     function getIpvType() {
-        $log = readInLog();
+        global $log;
         $dns_queries = getDnsQueries($log);
         $queryTypes = array();
 
@@ -79,7 +79,7 @@
     }
 
     function getForwardDestinations() {
-        $log = readInLog();
+        global $log;
         $forwards = getForwards($log);
         $destinations = array();
         foreach ($forwards as $forward) {
@@ -89,7 +89,7 @@
                 $destinations[$dest]++;
             }
             else {
-                $destinations[$dest] = 0;
+                $destinations[$dest] = 1;
             }
         }
 
@@ -98,7 +98,7 @@
     }
 
     function getQuerySources() {
-        $log = readInLog();
+        global $log;
         $dns_queries = getDnsQueries($log);
         $sources = array();
         foreach($dns_queries as $query) {
@@ -119,8 +119,8 @@
     }
 
     function getAllQueries() {
+        global $log;
         $allQueries = array("data" => array());
-        $log = readInLog();
         $dns_queries = getDnsQueriesAll($log);
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 
@@ -161,35 +161,62 @@
     /******** Private Members ********/
     function gravityCount() {
         //returns count of domains in blocklist.
-        $gravity="/etc/pihole/gravity.list";
-        $swallowed = 0;
-        $NGC4889 = fopen($gravity, "r");
-        while ($stars = fread($NGC4889, 1024000)) {
-          $swallowed += substr_count($stars, "\n");
-        }
-        fclose($NGC4889);
+        $NGC4889 = new \SplFileObject('/etc/pihole/gravity.list');
+        $NGC4889->seek($NGC4889->getSize());
+        $swallowed = $NGC4889->key();
 
         return $swallowed;
 
     }
-    function readInLog() {
-        global $log;
-        return count($log) > 1 ? $log :
-            file("/var/log/pihole.log");
+    function getDnsQueries(\SplFileObject $log) {
+        $log->rewind();
+        $lines = [];
+        foreach ($log as $line) {
+            if(strpos($line, ": query[") !== false) {
+                $lines[] = $line;
+            }
+        }
+        return $lines;
     }
-    function getDnsQueries($log) {
-        return array_filter($log, "findQueries");
+    function getDnsQueriesAll(\SplFileObject $log) {
+        $log->rewind();
+        $lines = [];
+        foreach ($log as $line) {
+            if(strpos($line, ": query[") || strpos($line, "gravity.list") || strpos($line, ": forwarded") !== false) {
+                $lines[] = $line;
+            }
+        }
+        return $lines;
     }
-    function getDnsQueriesAll($log) {
-      return array_filter($log, "findQueriesAll");
+    function getBlockedQueries(\SplFileObject $log) {
+        $log->rewind();
+        $lines = [];
+        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+        foreach ($log as $line) {
+            $line = preg_replace('/ {2,}/', ' ', $line);
+            $exploded = explode(" ", $line);
+            if(count($exploded) == 8) {
+                $tmp = $exploded[count($exploded) - 4];
+                $tmp2 = $exploded[count($exploded) - 5];
+                $tmp3 = $exploded[count($exploded) - 3];
+                //filter out bad names and host file reloads:
+                if(substr($tmp, strlen($tmp) - 12, 12) == "gravity.list" && $tmp2 != "read" && $tmp3 != "pi.hole" && $tmp3 != $hostname) {
+                    $lines[] = $line;
+                };
+            }
+        }
+        return $lines;
     }
-    function getBlockedQueries($log) {
-        return array_filter($log, "findAds");
+    function getForwards(\SplFileObject $log) {
+        $log->rewind();
+        $lines = [];
+        foreach ($log as $line) {
+            if(strpos($line, ": forwarded") !== false) {
+                $lines[] = $line;
+            }
+        }
+        return $lines;
     }
-    function getForwards($log) {
-        return array_filter($log, "findForwards");
-    }
-
 
     function topItems($queries, $exclude = array(), $qty=10) {
         $splitQueries = array();
@@ -225,8 +252,8 @@
     }
 
     function alignTimeArrays(&$times1, &$times2) {
-        $max = max(array(max(array_keys($times1)), max(array_keys($times2))));
-        $min = min(array(min(array_keys($times1)), min(array_keys($times2))));
+        $max = max(array_merge(array_keys($times1), array_keys($times2)));
+        $min = min(array_merge(array_keys($times1), array_keys($times2)));
 
         for ($i = $min; $i <= $max; $i++) {
             if (!isset($times2[$i])) {
@@ -253,35 +280,6 @@
 
         }
         return array_reverse($recent);
-    }
-
-    function findQueriesAll($var) {
-        return strpos($var, ": query[") || strpos($var, "gravity.list") || strpos($var, ": forwarded") !== false;
-    }
-
-    function findQueries($var) {
-        return strpos($var, ": query[") !== false;
-    }
-
-    function findAds($var) {
-      $var = preg_replace('/ {2,}/', ' ', $var);          
-      $exploded = explode(" ", $var);
-      if(count($exploded) == 8) {
-          $tmp = $exploded[count($exploded) - 4];
-          $tmp2 = $exploded[count($exploded) - 5];
-          $tmp3 = $exploded[count($exploded) - 3];
-          $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
-          //filter out bad names and host file reloads:
-          return (substr($tmp, strlen($tmp) - 12, 12) == "gravity.list" && $tmp2 != "read" && $tmp3 != "pi.hole" && $tmp3 != $hostname);
-      }
-      else{
-          return false;
-      }
-
-    }
-
-    function findForwards($var) {
-        return strpos($var, ": forwarded") !== false;
     }
 
     function hasHostName($var){
