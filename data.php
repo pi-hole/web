@@ -1,6 +1,6 @@
 <?php
     $log = array();
-    $ipv6 =  parse_ini_file("/etc/pihole/setupVars.conf")['piholeIPv6'] != "";
+    $ipv6 =  parse_ini_file("/etc/pihole/setupVars.conf")['IPv6_address'] != "";
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
     $log = new \SplFileObject('/var/log/pihole.log');
 
