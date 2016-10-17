@@ -84,7 +84,7 @@
         $destinations = array();
         foreach ($forwards as $forward) {
             $exploded = explode(" ", trim($forward));
-            $dest = $exploded[count($exploded) - 1];
+            $dest = hasHostName($exploded[count($exploded) - 1]);
             if (isset($destinations[$dest])) {
                 $destinations[$dest]++;
             }
