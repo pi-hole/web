@@ -6,8 +6,7 @@ if (empty($ERRORLOG)) {
 }
 
 function pi_log($message) {
-    $date = exec("date +'%Y-%m-%d %H:%M:%S'");
-    error_log($date . ': ' . $message . "\n", 3, $GLOBALS['ERRORLOG']);
+    error_log(date('Y-m-d H:i:s') . ': ' . $message . "\n", 3, $GLOBALS['ERRORLOG']);
 }
 
 function log_and_die($message) {

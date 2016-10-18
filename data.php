@@ -125,7 +125,7 @@
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 
         foreach ($dns_queries as $query) {
-            $time = exec("date --date='" . trim(substr($query, 0, 16)) . "' +'%Y-%m-%dT%H:%M:%S'");
+            $time = date_create(substr($query, 0, 16));
             $exploded = explode(" ", trim($query));
             $tmp = $exploded[count($exploded)-4];
             $status = "";
@@ -145,7 +145,7 @@
 
             if ( $status != ""){
               array_push($allQueries['data'], array(
-                $time,
+                $time->format('Y-m-d\TH:i:s'),
                 $type,
                 $domain,
                 hasHostName($client),
@@ -239,7 +239,8 @@
     function overTime($entries) {
         $byTime = array();
         foreach ($entries as $entry) {
-            $hour = trim(exec("date --date='" . trim(substr($entry, 0, 16)) . "' +'%k'"));
+            $time = date_create(substr($entry, 0, 16));
+            $hour = $time->format('G');
 
             if (isset($byTime[$hour])) {
                 $byTime[$hour]++;
@@ -273,7 +274,8 @@
         foreach (array_slice($queries, -$qty) as $query) {
             $queryArray = array();
             $exploded = explode(" ", $query);
-            $queryArray['time'] = strtolower(exec("date --date='" . trim(substr($query, 0, 16)) . "' +'%I:%M:%S %p'"));
+            $time = date_create(substr($query, 0, 16));
+            $queryArray['time'] = $time->format('h:i:s a');
             $queryArray['domain'] = trim($exploded[count($exploded) - 3]);
             $queryArray['ip'] = trim($exploded[count($exploded)-1]);
             array_push($recent, $queryArray);
