@@ -4,6 +4,11 @@ require "header.php";
 
 $list = $_GET['l'];
 
+if($list !== "white" && $list !== "black")
+    echo "Invalid list parameter";
+    require "footer.php";
+    die();
+
 function getFullName() {
     global $list;
     if($list == "white")
