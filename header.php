@@ -139,10 +139,12 @@
                     <p>Status</p>
                     <?php
                         $pistatus = exec('sudo pihole status web');
-                        if ($pistatus > "0") {
+                        if ($pistatus == "1") {
                             echo '<a href="?disable"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
-                        } else {
+                        } elseif ($pistatus == "0") {
                             echo '<a href="?enable"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
+                        } else {
+                            echo '<a href="?disable"><i class="fa fa-circle" style="color:#ff9900"></i> Starting</a>';
                         }
 
                         // CPU Temp
