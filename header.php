@@ -1,4 +1,9 @@
 <?php
+	if (isset($_GET['enable'])) {
+	  exec('sudo pihole enable');
+	} elseif (isset($_GET['disable'])) {
+	  exec('sudo pihole disable');
+	}
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
     $output = str_replace(array("\r\n","\r","\n"),"", $output);
@@ -129,11 +134,11 @@
                 <div class="pull-left info">
                     <p>Status</p>
                     <?php
-                        $pistatus = exec('pgrep dnsmasq | wc -l');
+                        $pistatus = exec('sudo pihole status web');
                         if ($pistatus > "0") {
-                            echo '<a href="#"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
+                            echo '<a href="?disable"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
                         } else {
-                            echo '<a href="#"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
+                            echo '<a href="?enable"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
                         }
 
                         // CPU Temp
