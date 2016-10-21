@@ -183,6 +183,14 @@
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
+				<!-- Toggle for enable/disable -->
+                    <?php
+                        if ($pistatus != "1") {
+                            echo '<il><a href=\"?enable\"><i class=\"fa fa-play\"></i><span>Enable</span></a></li></div>';
+                        } else {
+                            echo '<il><a href=\"?disable\"><i class=\"fa fa-play\"></i><span>Disable</span></a></li></div>';
+                        }
+                    ?>
                 <!-- Donate -->
                 <li>
                     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
