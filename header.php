@@ -184,23 +184,13 @@
                     </a>
                 </li>
                 <!-- Toggle -->
-<?php
-if ($pistatus == "1") {
-echo '               <li>
-                    <a href="?disable">
-                        <i class="fa fa-stop"></i> <span>Disable</span>
-                    </a>
-                </li>
-';
-} else {
-echo '                <li>
-                    <a href="?enable">
-                        <i class="fa fa-play"></i> <span>Enable</span>
-                    </a>
-                </li>
-';
-}
-?>
+                <?php
+                if ($pistatus == "1") {
+                  echo '                <li><a href="?disable"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
+                } else {
+                  echo '                <li><a href="?enable"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
+                }
+                ?>
                 <!-- Donate -->
                 <li>
                     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
