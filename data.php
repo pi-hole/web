@@ -11,11 +11,11 @@ function getSummaryData() {
     $ipv6 =  parse_ini_file("/etc/pihole/setupVars.conf")['piholeIPv6'] != "";
     $domains_being_blocked = gravityCount() / ($ipv6 ? 2 : 1);
 
-    $dns_queries_today = $db->querySingle('SELECT count(*) 
+    $dns_queries_today = $db->querySingle('SELECT count(*)
                                            FROM queries
                                            WHERE (source || name !=\'127.0.0.1' . $hostname . '\')');
 
-    $ads_blocked_today = $db->querySingle('SELECT count(*) 
+    $ads_blocked_today = $db->querySingle('SELECT count(*)
                                            FROM queries
                                            WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
                                            AND piholed = 1');
@@ -35,10 +35,10 @@ function getOverTimeData() {
     $ads_over_time = array();
     global $db;
     global $hostname;
-    $results = $db->query('SELECT strftime(\'%H\',ts) AS Hour, count(strftime(\'%H\',ts)) AS cnt 
+    $results = $db->query('SELECT strftime(\'%H\',ts) AS Hour, count(strftime(\'%H\',ts)) AS cnt
                            FROM queries
                            WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
-                           GROUP BY strftime(\'%H\',ts) 
+                           GROUP BY strftime(\'%H\',ts)
                            ORDER BY strftime(\'%H\',ts)');
     while ($row = $results->fetchArray()) {
         if (substr($row['Hour'],0,1) == '0')
@@ -75,12 +75,12 @@ function getTopItems() {
     $topAds=array();
     global $db;
     global $hostname;
-    $results = $db->query('SELECT name, COUNT(name) AS cnt 
+    $results = $db->query('SELECT name, COUNT(name) AS cnt
                            FROM queries
                            WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
                            AND piholed = 0
-                           GROUP BY name 
-                           ORDER BY COUNT(name) DESC                           
+                           GROUP BY name
+                           ORDER BY COUNT(name) DESC
                            LIMIT 10');
     while ($row = $results->fetchArray()) {
         $topQueries[$row['name']] = $row['cnt'];
@@ -90,7 +90,7 @@ function getTopItems() {
                            FROM queries
                            WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
                            AND piholed = 1
-                           GROUP BY name 
+                           GROUP BY name
                            ORDER BY COUNT(name) DESC
                            LIMIT 10');
     while ($row = $results->fetchArray()) {
@@ -105,7 +105,7 @@ function getTopItems() {
 function getIpvType() {
     global $db;
     global $hostname;
-    $results = $db->query('SELECT query_type, COUNT(query_type) AS cnt 
+    $results = $db->query('SELECT query_type, COUNT(query_type) AS cnt
                            FROM queries
                            WHERE (source || name !=\'127.0.0.1' . $hostname . '\')
                            GROUP BY query_type
@@ -121,7 +121,7 @@ function getForwardDestinations() {
     global $db;
     global $hostname;
     $results = $db->query('SELECT resolver, COUNT(resolver) AS cnt
-                           FROM forwards                           
+                           FROM forwards
                            GROUP BY resolver
                            ORDER BY COUNT(resolver) DESC');
     $destinations = array();

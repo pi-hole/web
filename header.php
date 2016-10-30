@@ -1,7 +1,16 @@
 <?php
+    if (isset($_GET['enable'])) {
+      exec('sudo pihole enable');
+      $refer = $_SERVER['HTTP_REFERER'];
+      header("location:$refer");
+    } elseif (isset($_GET['disable'])) {
+      exec('sudo pihole disable');
+      $refer = $_SERVER['HTTP_REFERER'];
+      header("location:$refer");
+    }
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
-    $output = str_replace(["\r\n","\r","\n"],"", $output);
+    $output = str_replace(array("\r\n","\r","\n"),"", $output);
 ?>
 
 <!DOCTYPE html>
@@ -129,11 +138,13 @@
                 <div class="pull-left info">
                     <p>Status</p>
                     <?php
-                        $pistatus = exec('pgrep dnsmasq | wc -l');
-                        if ($pistatus > "0") {
+                        $pistatus = exec('sudo pihole status web');
+                        if ($pistatus == "1") {
                             echo '<a href="#"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
-                        } else {
+                        } elseif ($pistatus == "0") {
                             echo '<a href="#"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
+                        } else {
+                            echo '<a href="#"><i class="fa fa-circle" style="color:#ff9900"></i> Starting</a>';
                         }
 
                         // CPU Temp
@@ -172,6 +183,14 @@
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
+                <!-- Toggle -->
+                <?php
+                if ($pistatus == "1") {
+                  echo '                <li><a href="?disable"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
+                } else {
+                  echo '                <li><a href="?enable"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
+                }
+                ?>
                 <!-- Donate -->
                 <li>
                     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">

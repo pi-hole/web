@@ -18,11 +18,11 @@ if(!isset($_POST['domain'], $_POST['list'], $_POST['token'])) {
     log_and_die("Missing POST variables");
 }
 
-$AUTHORIZED_HOSTNAMES = [
+$AUTHORIZED_HOSTNAMES = array(
     'http://' . $_SERVER['SERVER_ADDR'],
     'http://pi.hole',
     'http://localhost'
-];
+);
 
 # Allow user set virtual hostnames
 $virtual_host = getenv('VIRTUAL_HOST');
@@ -46,6 +46,26 @@ if(isset($_SERVER['HTTP_ORIGIN'])) {
 session_start();
 
 // Check CSRF token
+// Credit: http://php.net/manual/en/function.hash-equals.php#119576
+if(!function_exists('hash_equals')) {
+    function hash_equals($known_string, $user_string) {
+        $ret = 0;
+
+        if (strlen($known_string) !== strlen($user_string)) {
+            $user_string = $known_string;
+            $ret = 1;
+        }
+
+        $res = $known_string ^ $user_string;
+
+        for ($i = strlen($res) - 1; $i >= 0; --$i) {
+            $ret |= ord($res[$i]);
+        }
+
+        return !$ret;
+    }
+}
+
 if(!isset($_SESSION['token'], $_POST['token']) || !hash_equals($_SESSION['token'], $_POST['token'])) {
     log_and_die("Wrong token");
 }
