@@ -8,7 +8,7 @@ function getSummaryData() {
     global $db;
     global $hostname;
 
-    $ipv6 =  parse_ini_file("/etc/pihole/setupVars.conf")['piholeIPv6'] != "";
+    $ipv6 =  parse_ini_file("/etc/pihole/setupVars.conf")['IPv6_address'] != "";
     $domains_being_blocked = gravityCount() / ($ipv6 ? 2 : 1);
 
     $dns_queries_today = $db->querySingle('SELECT count(*)
