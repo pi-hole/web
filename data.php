@@ -253,6 +253,10 @@
     }
 
     function alignTimeArrays(&$times1, &$times2) {
+        if(count($times1) == 0 || count($times2) < 2) {
+            return;
+        }
+
         $max = max(array_merge(array_keys($times1), array_keys($times2)));
         $min = min(array_merge(array_keys($times1), array_keys($times2)));
 
