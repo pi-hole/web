@@ -146,7 +146,6 @@ function updateQueriesOverTime() {
         }
         $('#queries-over-time .overlay').remove();
         timeLineChart.update();
-        timeLineChart.resize();
     });
 }
 
@@ -168,7 +167,6 @@ function updateQueryTypes() {
         queryTypeChart.data.datasets.push(dd);
         $('#query-types .overlay').remove();
         queryTypeChart.update();
-        queryTypeChart.resize();
     });
 }
 
