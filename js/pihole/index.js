@@ -61,6 +61,9 @@ $(document).ready(function() {
             tooltips: {
                 enabled: true,
                 mode: 'x-axis'
+            },
+            legend: {
+                display: false
             }
         }
     });
@@ -70,14 +73,13 @@ $(document).ready(function() {
         type: 'doughnut',
         data: {
             labels: [],
-            datasets: [{
-                data: []
-            }]
+            datasets: [{ data: [] }]
         },
         options: {
             legend: {
                 display: false
-            }
+            },
+            cutoutPercentage: 30
         }
     });
 
@@ -86,14 +88,13 @@ $(document).ready(function() {
         type: 'doughnut',
         data: {
             labels: [],
-            datasets: [{
-                data: []
-            }]
+            datasets: [{ data: [] }]
         },
         options: {
             legend: {
                 display: false
-            }
+            },
+            cutoutPercentage: 30
         }
     });
 });
@@ -145,6 +146,7 @@ function updateQueriesOverTime() {
         }
         $('#queries-over-time .overlay').remove();
         timeLineChart.update();
+        timeLineChart.resize();
     });
 }
 
@@ -166,6 +168,7 @@ function updateQueryTypes() {
         queryTypeChart.data.datasets.push(dd);
         $('#query-types .overlay').remove();
         queryTypeChart.update();
+        queryTypeChart.resize();
     });
 }
 
