@@ -44,7 +44,8 @@ $(document).ready(function() {
                     borderColor: "rgba(0, 166, 90,.8)",
                     pointBorderColor: "rgba(0, 166, 90,.8)",
                     pointRadius: 0,
-                    data: []
+                    data: [],
+                    pointHitRadius: 20
                 },
                 {
                     label: "Ad Queries",
@@ -53,7 +54,8 @@ $(document).ready(function() {
                     borderColor: "rgba(0,192,239,1)",
                     pointBorderColor: "rgba(0,192,239,1)",
                     pointRadius: 0,
-                    data: []
+                    data: [],
+                    pointHitRadius: 20
                 }
             ]
         },
@@ -64,7 +66,15 @@ $(document).ready(function() {
             },
             legend: {
                 display: false
-            }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+            maintainAspectRatio: false
         }
     });
 
