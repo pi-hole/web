@@ -79,7 +79,7 @@ $(document).ready(function() {
             legend: {
                 display: false
             },
-            cutoutPercentage: 30
+            cutoutPercentage: 0
         }
     });
 
@@ -94,7 +94,7 @@ $(document).ready(function() {
             legend: {
                 display: false
             },
-            cutoutPercentage: 30
+            cutoutPercentage: 0
         }
     });
 });
@@ -167,6 +167,9 @@ function updateQueryTypes() {
         queryTypeChart.data.datasets.push(dd);
         $('#query-types .overlay').remove();
         queryTypeChart.update();
+        queryTypeChart.chart.config.options.animation.duration=2000;
+        queryTypeChart.chart.config.options.cutoutPercentage=30;
+        queryTypeChart.update();
     });
 }
 
@@ -200,6 +203,9 @@ function updateForwardDestinations() {
         // and push it at once
         forwardDestinationChart.data.datasets.push(dd);
         $('#forward-destinations .overlay').remove();
+        forwardDestinationChart.update();
+        forwardDestinationChart.chart.config.options.animation.duration=2000;
+        forwardDestinationChart.chart.config.options.cutoutPercentage=30;
         forwardDestinationChart.update();
     });
 }
