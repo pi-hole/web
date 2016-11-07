@@ -65,7 +65,7 @@
         </div>
         <div class="box-body">
           <div class="chart">
-            <canvas id="queryOverTimeChart" width="800" height="160"></canvas>
+            <canvas id="queryOverTimeChart" width="800" height="250"></canvas>
           </div>
         </div>
         <div class="overlay">
