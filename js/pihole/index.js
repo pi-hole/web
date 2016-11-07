@@ -45,7 +45,8 @@ $(document).ready(function() {
                     pointBorderColor: "rgba(0, 166, 90,.8)",
                     pointRadius: 0,
                     data: [],
-                    pointHitRadius: 20
+                    pointHitRadius: 20,
+                    cubicInterpolationMode: 'monotone'
                 },
                 {
                     label: "Ad Queries",
@@ -55,7 +56,8 @@ $(document).ready(function() {
                     pointBorderColor: "rgba(0,192,239,1)",
                     pointRadius: 0,
                     data: [],
-                    pointHitRadius: 20
+                    pointHitRadius: 20,
+                    cubicInterpolationMode: 'monotone'
                 }
             ]
         },
