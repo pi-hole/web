@@ -1,17 +1,4 @@
 $(document).ready(function() {
-    // Pull in data via AJAX
-
-    updateSummaryData();
-
-    updateQueriesOverTime();
-
-    updateQueryTypes();
-
-    updateTopClientsChart();
-
-    updateForwardDestinations();
-
-    updateTopLists();
 
     var isMobile = {
         Windows: function() {
@@ -43,7 +30,8 @@ $(document).ready(function() {
                     backgroundColor: "rgba(220,220,220,0.5)",
                     borderColor: "rgba(0, 166, 90,.8)",
                     pointBorderColor: "rgba(0, 166, 90,.8)",
-                    pointRadius: 0,
+                    pointRadius: 1,
+                    pointHoverRadius: 5,
                     data: [],
                     pointHitRadius: 20,
                     cubicInterpolationMode: 'monotone'
@@ -54,7 +42,8 @@ $(document).ready(function() {
                     backgroundColor: "rgba(0,192,239,0.5)",
                     borderColor: "rgba(0,192,239,1)",
                     pointBorderColor: "rgba(0,192,239,1)",
-                    pointRadius: 0,
+                    pointRadius: 1,
+                    pointHoverRadius: 5,
                     data: [],
                     pointHitRadius: 20,
                     cubicInterpolationMode: 'monotone'
@@ -91,6 +80,9 @@ $(document).ready(function() {
             legend: {
                 display: false
             },
+            animation: {
+                duration: 2000
+            },
             cutoutPercentage: 0
         }
     });
@@ -106,9 +98,26 @@ $(document).ready(function() {
             legend: {
                 display: false
             },
+            animation: {
+                duration: 2000
+            },
             cutoutPercentage: 0
         }
     });
+
+    // Pull in data via AJAX
+
+    updateSummaryData();
+
+    updateQueriesOverTime();
+
+    updateQueryTypes();
+
+    updateTopClientsChart();
+
+    updateForwardDestinations();
+
+    updateTopLists();
 });
 
 // Functions to update data in page
@@ -150,11 +159,8 @@ function updateQueriesOverTime() {
         for (hour in data.ads_over_time) {
             // Add x-axis label
             timeLineChart.data.labels.push(hour + ":00");
-            timeLineChart.data.datasets.forEach(function(dataset, index) {
-                // Add data to line with index 0 or 1
-                if(index == 0) dataset.data.push(data.domains_over_time[hour]);
-                if(index == 1) dataset.data.push(data.ads_over_time[hour]);
-            });
+            timeLineChart.data.datasets[0].data.push(data.domains_over_time[hour]);
+            timeLineChart.data.datasets[1].data.push(data.ads_over_time[hour]);
         }
         $('#queries-over-time .overlay').remove();
         timeLineChart.update();
@@ -179,7 +185,6 @@ function updateQueryTypes() {
         queryTypeChart.data.datasets.push(dd);
         $('#query-types .overlay').remove();
         queryTypeChart.update();
-        queryTypeChart.chart.config.options.animation.duration=2000;
         queryTypeChart.chart.config.options.cutoutPercentage=30;
         queryTypeChart.update();
     });
@@ -216,7 +221,6 @@ function updateForwardDestinations() {
         forwardDestinationChart.data.datasets.push(dd);
         $('#forward-destinations .overlay').remove();
         forwardDestinationChart.update();
-        forwardDestinationChart.chart.config.options.animation.duration=2000;
         forwardDestinationChart.chart.config.options.cutoutPercentage=30;
         forwardDestinationChart.update();
     });
