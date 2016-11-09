@@ -22,7 +22,9 @@
     $mem = explode(" ", $free_arr[1]);
     $mem = array_filter($mem);
     $mem = array_merge($mem);
-    $memory_usage = $mem[2]/$mem[1]*100;
+    $used = $mem[2] - $mem[5] - $mem[6];
+    $total = $mem[1];
+    $memory_usage = $used/$total*100;
 ?>
 
 <!DOCTYPE html>
