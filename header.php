@@ -165,7 +165,7 @@
                         }
                         else
                         {
-                            echo '#3366FF';
+                            echo '#7FFF00';
                         }
                         echo '""></i> Load:&nbsp;&nbsp;' . $loaddata[0] . '&nbsp;&nbsp;' . $loaddata[1] . '&nbsp;&nbsp;'. $loaddata[2] . '</a>';
                     ?>
