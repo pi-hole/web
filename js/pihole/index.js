@@ -107,17 +107,17 @@ $(document).ready(function() {
 
     // Pull in data via AJAX
 
-    updateSummaryData();
+//    updateSummaryData();
 
     updateQueriesOverTime();
 
-    updateQueryTypes();
+//    updateQueryTypes();
 
-    updateTopClientsChart();
+//    updateTopClientsChart();
 
-    updateForwardDestinations();
+//    updateForwardDestinations();
 
-    updateTopLists();
+//    updateTopLists();
 });
 
 // Functions to update data in page
@@ -154,13 +154,21 @@ function updateSummaryData(runOnce) {
 }
 
 function updateQueriesOverTime() {
-    $.getJSON("api.php?overTimeData", function(data) {
+    $.getJSON("api.php?overTimeData10mins", function(data) {
         // Add data for each hour that is available
         for (hour in data.ads_over_time) {
             // Add x-axis label
-            timeLineChart.data.labels.push(hour + ":00");
-            timeLineChart.data.datasets[0].data.push(data.domains_over_time[hour]);
-            timeLineChart.data.datasets[1].data.push(data.ads_over_time[hour]);
+            if(hour%6 == 0)
+            {
+                timeLineChart.data.labels.push(hour/6 + ":00");
+            }
+            else
+            {
+                timeLineChart.data.labels.push("");
+            }
+            // Have to multiply the data by 6 to have again the correct units (per hour, not per 10min)
+            timeLineChart.data.datasets[0].data.push(6*data.domains_over_time[hour]);
+            timeLineChart.data.datasets[1].data.push(6*data.ads_over_time[hour]);
         }
         $('#queries-over-time .overlay').remove();
         timeLineChart.update();
