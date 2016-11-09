@@ -273,7 +273,14 @@
             $hour = $time->format('G');
             $minute = $time->format('i');
 
-            $time = $minute/6 + 6*$hour;
+            // 00:00 - 00:09 -> 0
+            // 00:10 - 00:19 -> 1
+            // ...
+            // 12:00 - 12:10 -> 72
+            // ...
+            // 15:30 - 15:39 -> 93
+            // etc.
+            $time = ($minute-$minute%10)/10 + 6*$hour;
 
             if (isset($byTime[$time])) {
                 $byTime[$time]++;
