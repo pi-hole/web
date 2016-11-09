@@ -107,17 +107,17 @@ $(document).ready(function() {
 
     // Pull in data via AJAX
 
-//    updateSummaryData();
+    updateSummaryData();
 
     updateQueriesOverTime();
 
-//    updateQueryTypes();
+    updateQueryTypes();
 
-//    updateTopClientsChart();
+    updateTopClientsChart();
 
-//    updateForwardDestinations();
+    updateForwardDestinations();
 
-//    updateTopLists();
+    updateTopLists();
 });
 
 // Functions to update data in page
