@@ -14,6 +14,15 @@
 
     // Get load
     $loaddata = sys_getloadavg();
+
+    // Get memory usage
+    $free = shell_exec('free');
+    $free = (string)trim($free);
+    $free_arr = explode("\n", $free);
+    $mem = explode(" ", $free_arr[1]);
+    $mem = array_filter($mem);
+    $mem = array_merge($mem);
+    $memory_usage = $mem[2]/$mem[1]*100;
 ?>
 
 <!DOCTYPE html>
@@ -168,6 +177,18 @@
                             echo '#7FFF00';
                         }
                         echo '""></i> Load:&nbsp;&nbsp;' . $loaddata[0] . '&nbsp;&nbsp;' . $loaddata[1] . '&nbsp;&nbsp;'. $loaddata[2] . '</a>';
+                    ?>
+                    <br/>
+                    <?php
+                    echo '<a href="#"><i class="fa fa-circle" style="color:';
+                        if ($memory_usage > 75) {
+                            echo '#FF0000';
+                        }
+                        else
+                        {
+                            echo '#7FFF00';
+                        }
+                        echo '""></i> Memory usage:&nbsp;&nbsp;' . sprintf("%.1f",$memory_usage) . '%</a>';
                     ?>
                 </div>
             </div>
