@@ -11,6 +11,9 @@
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
     $output = str_replace(array("\r\n","\r","\n"),"", $output);
+
+    // Get load
+    $loaddata = sys_getloadavg();
 ?>
 
 <!DOCTYPE html>
@@ -153,6 +156,18 @@
                         } else {
                             echo '<a href="#"><i class="fa fa-fire" style="color:#3366FF"></i> Temp: ' . $output . '</a>';
                         }
+                    ?>
+                    <br/>
+                    <?php
+                    echo '<a href="#"><i class="fa fa-circle" style="color:';
+                        if ($loaddata[0] > 2.0) {
+                            echo '#FF0000';
+                        }
+                        else
+                        {
+                            echo '#3366FF';
+                        }
+                        echo '""></i> Load:&nbsp;&nbsp;' . $loaddata[0] . '&nbsp;&nbsp;' . $loaddata[1] . '&nbsp;&nbsp;'. $loaddata[2] . '</a>';
                     ?>
                 </div>
             </div>
