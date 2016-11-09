@@ -1,36 +1,5 @@
 $(document).ready(function() {
-    // Pull in data via AJAX
 
-    updateSummaryData();
-
-    updateQueriesOverTime();
-
-    updateQueryTypes();
-
-    updateTopClientsChart();
-
-    updateForwardDestinations();
-
-    updateTopLists();
-
-    // Create charts
-    var chartData = {
-        labels: [],
-        datasets: [
-            {
-                label: "All Queries",
-                fillColor: "rgba(220,220,220,0.5)",
-                strokeColor: "rgba(0, 166, 90,.8)",
-                pointColor: "rgba(0, 166, 90,.8)"
-            },
-            {
-                label: "Ad Queries",
-                fillColor: "rgba(0,192,239,0.5)",
-                strokeColor: "rgba(0,192,239,1)",
-                pointColor: "rgba(0,192,239,1)"
-            }
-        ]
-    };
     var isMobile = {
         Windows: function() {
             return /IEMobile/i.test(navigator.userAgent);
@@ -50,32 +19,108 @@ $(document).ready(function() {
     };
     var animate = false;
     var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
-    timeLineChart = new Chart(ctx).Line(chartData,
-        {
-            pointDot : false,
-            legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
-            animation : animate
+    timeLineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [
+                {
+                    label: "All Queries",
+                    fill: true,
+                    backgroundColor: "rgba(220,220,220,0.5)",
+                    borderColor: "rgba(0, 166, 90,.8)",
+                    pointBorderColor: "rgba(0, 166, 90,.8)",
+                    pointRadius: 1,
+                    pointHoverRadius: 5,
+                    data: [],
+                    pointHitRadius: 20,
+                    cubicInterpolationMode: 'monotone'
+                },
+                {
+                    label: "Ad Queries",
+                    fill: true,
+                    backgroundColor: "rgba(0,192,239,0.5)",
+                    borderColor: "rgba(0,192,239,1)",
+                    pointBorderColor: "rgba(0,192,239,1)",
+                    pointRadius: 1,
+                    pointHoverRadius: 5,
+                    data: [],
+                    pointHitRadius: 20,
+                    cubicInterpolationMode: 'monotone'
+                }
+            ]
+        },
+        options: {
+            tooltips: {
+                enabled: true,
+                mode: 'x-axis'
+            },
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+            maintainAspectRatio: false
         }
-    );
+    });
 
     ctx = document.getElementById("queryTypeChart").getContext("2d");
-    queryTypeChart = new Chart(ctx).Doughnut([],
-        {
-            legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].strokeColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>",
-            animation : animate
+    queryTypeChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [],
+            datasets: [{ data: [] }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            animation: {
+                duration: 2000
+            },
+            cutoutPercentage: 0
         }
-    );
+    });
 
     ctx = document.getElementById("forwardDestinationChart").getContext("2d");
-    forwardDestinationChart = new Chart(ctx).Doughnut([],
-        {
-            legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].strokeColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>",
-            animation : animate
+    forwardDestinationChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [],
+            datasets: [{ data: [] }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            animation: {
+                duration: 2000
+            },
+            cutoutPercentage: 0
         }
-    );
+    });
+
+    // Pull in data via AJAX
+
+    updateSummaryData();
+
+    updateQueriesOverTime();
+
+    updateQueryTypes();
+
+    updateTopClientsChart();
+
+    updateForwardDestinations();
+
+    updateTopLists();
 });
 
-// Functions to oupdate data in page
+// Functions to update data in page
 
 function updateSummaryData(runOnce) {
     $.getJSON("api.php?summary", function LoadSummaryData(data) {
@@ -110,11 +155,38 @@ function updateSummaryData(runOnce) {
 
 function updateQueriesOverTime() {
     $.getJSON("api.php?overTimeData", function(data) {
+        // Add data for each hour that is available
         for (hour in data.ads_over_time) {
-            timeLineChart.addData([data.domains_over_time[hour], data.ads_over_time[hour]], hour + ":00");
+            // Add x-axis label
+            timeLineChart.data.labels.push(hour + ":00");
+            timeLineChart.data.datasets[0].data.push(data.domains_over_time[hour]);
+            timeLineChart.data.datasets[1].data.push(data.ads_over_time[hour]);
         }
         $('#queries-over-time .overlay').remove();
-        //$('#queries-over-time').append(timeLineChart.generateLegend());
+        timeLineChart.update();
+    });
+}
+
+function updateQueryTypes() {
+    $.getJSON("api.php?getQueryTypes", function(data) {
+        var colors = [];
+        // Get colors from AdminLTE
+        $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
+        var v = [], c = [];
+        // Collect values and colors, immediately push individual labels
+        $.each(data, function(key , value) {
+            v.push(value);
+            c.push(colors.shift());
+            queryTypeChart.data.labels.push(key.substr(6,key.length - 7));
+        });
+        // Build a single dataset with the data to be pushed
+        var dd = {data: v, backgroundColor: c};
+        // and push it at once
+        queryTypeChart.data.datasets.push(dd);
+        $('#query-types .overlay').remove();
+        queryTypeChart.update();
+        queryTypeChart.chart.config.options.cutoutPercentage=30;
+        queryTypeChart.update();
     });
 }
 
@@ -131,35 +203,26 @@ function updateTopClientsChart() {
     });
 }
 
-function updateQueryTypes() {
-    $.getJSON("api.php?getQueryTypes", function(data) {
-        var colors = [];
-        $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
-        $.each(data, function(key , value) {
-            queryTypeChart.addData({
-                value: value,
-                color: colors.shift(),
-                label: key.substr(6,key.length - 7)
-            });
-        });
-        $('#query-types .overlay').remove();
-        //$('#query-types').append(queryTypeChart.generateLegend());
-    });
-}
-
 function updateForwardDestinations() {
     $.getJSON("api.php?getForwardDestinations", function(data) {
         var colors = [];
+        // Get colors from AdminLTE
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
+        var v = [], c = [];
+        // Collect values and colors, immediately push individual labels
         $.each(data, function(key , value) {
-            forwardDestinationChart.addData({
-                value: value,
-                color: colors.shift(),
-                label: key
-            });
+            v.push(value);
+            c.push(colors.shift());
+            forwardDestinationChart.data.labels.push(key);
         });
+        // Build a single dataset with the data to be pushed
+        var dd = {data: v, backgroundColor: c};
+        // and push it at once
+        forwardDestinationChart.data.datasets.push(dd);
         $('#forward-destinations .overlay').remove();
-        //$('#forward-destinations').append(forwardDestinationChart.generateLegend());
+        forwardDestinationChart.update();
+        forwardDestinationChart.chart.config.options.cutoutPercentage=30;
+        forwardDestinationChart.update();
     });
 }
 
