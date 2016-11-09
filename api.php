@@ -21,6 +21,10 @@
         $data = array_merge($data,  getOverTimeData());
     }
 
+    if (isset($_GET['overTimeData10mins'])) {
+        $data = array_merge($data,  getOverTimeData10mins());
+    }
+
     if (isset($_GET['topItems'])) {
         $data = array_merge($data,  getTopItems());
     }
@@ -58,7 +62,7 @@
 	    }
 	    return $sanArray;
     }
-    
+
     $data = filterArray($data);
     echo json_encode($data);
 ?>
