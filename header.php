@@ -174,7 +174,7 @@
                     <br/>
                     <?php
                     echo '<a href="#"><i class="fa fa-circle" style="color:';
-                        if ($loaddata[0] > nproc) {
+                        if ($loaddata[0] > $nproc) {
                             echo '#FF0000';
                         }
                         else
