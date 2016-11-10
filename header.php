@@ -14,6 +14,9 @@
 
     // Get load
     $loaddata = sys_getloadavg();
+    // Get number of processing units available to PHP
+    // (may be less than the number of online processors)
+    $nproc = shell_exec('nproc');
 
     // Get memory usage
     $free = shell_exec('free');
@@ -171,7 +174,7 @@
                     <br/>
                     <?php
                     echo '<a href="#"><i class="fa fa-circle" style="color:';
-                        if ($loaddata[0] > 2.0) {
+                        if ($loaddata[0] > nproc) {
                             echo '#FF0000';
                         }
                         else
