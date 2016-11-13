@@ -2,10 +2,12 @@ $(document).ready(function() {
     tableApi = $('#all-queries').DataTable( {
         "rowCallback": function( row, data, index ){
             if (data[4] == "Pi-holed") {
-                $(row).css('color','red')
+                $(row).css('color','red');
+                $('td:eq(5)', row).html( '<button style="color:green;"><i class="fa fa-pencil-square-o"></i> To whitelist</button>' );
             }
             else{
-                $(row).css('color','green')
+                $(row).css('color','green');
+                $('td:eq(5)', row).html( '<button style="color:red;"><i class="fa fa-ban"></i> To blacklist</button>' );
             }
 
         },
@@ -16,14 +18,14 @@ $(document).ready(function() {
             { "width" : "20%", "type": "date" },
             { "width" : "10%" },
             { "width" : "40%" },
-            { "width" : "12.5%" },
-            { "width" : "12.5%" },
-            { "width" : "5%" },
+            { "width" : "10%" },
+            { "width" : "10%" },
+            { "width" : "10%" },
         ],
         "columnDefs": [ {
             "targets": -1,
             "data": null,
-            "defaultContent": "<button>Do it!</button>"
+            "defaultContent": ''
         } ]
     });
     $('#all-queries tbody').on( 'click', 'button', function () {
