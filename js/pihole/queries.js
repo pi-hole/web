@@ -47,10 +47,58 @@ function refreshData() {
 
 function add(domain,list) {
     var token = $("#token").html();
+    var alInfo = $("#alInfo");
+    var alList = $("#alList");
+    var alSuccess = $("#alSuccess");
+    var alFailure = $("#alFailure");
+
+    if(list == "white")
+    {
+        alList.html("Whitelist");
+    }
+    else
+    {
+        alList.html("Blacklist");
+    }
+
+    alInfo.show();
+    alSuccess.hide();
+    alFailure.hide();
     $.ajax({
         url: "php/add.php",
         method: "post",
-        data: {"domain":domain, "list":list, "token":token}
-//        success: function(response) { alert(response); }
+        data: {"domain":domain, "list":list, "token":token},
+        success: function(response) {
+          if (response.indexOf("not a valid argument") >= 0 ||
+              response.indexOf("is not a valid domain") >= 0) {
+            alFailure.show();
+            alFailure.delay(1000).fadeOut(2000, function() {
+                alFailure.hide();
+            });
+            alInfo.delay(1000).fadeOut(2000, function() {
+                alInfo.hide();
+                alList.html("");
+            });
+          } else {
+            alSuccess.show();
+            alSuccess.delay(1000).fadeOut(2000, function() {
+                alSuccess.hide();
+            });
+            alInfo.delay(1000).fadeOut(2000, function() {
+                alInfo.hide();
+                alList.html("");
+            });
+          }
+        },
+        error: function(jqXHR, exception) {
+            alFailure.show();
+            alFailure.delay(1000).fadeOut(2000, function() {
+                alFailure.hide();
+            });
+            alInfo.delay(1000).fadeOut(2000, function() {
+                alInfo.hide();
+                alList.html("");
+            });
+        }
     });
 }

@@ -18,6 +18,21 @@ $token = $_SESSION['token'];
     </div>
 </div>
 -->
+
+<!-- Alerts -->
+<div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    Adding to the <span id="alList"></span>...
+</div>
+<div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden="true">
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    Success!
+</div>
+<div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden="true">
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    Failure! Something went wrong.
+</div>
+
 <div class="row">
     <div class="col-md-12">
       <div class="box" id="recent-queries">
