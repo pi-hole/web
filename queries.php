@@ -1,6 +1,15 @@
 <?php
     require "header.php";
+
+session_start();
+// Generate CSRF token
+if(empty($_SESSION['token'])) {
+    $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
+}
+$token = $_SESSION['token'];
 ?>
+<!-- Send PHP info to JS -->
+<div id="token" hidden><?php echo $token ?></div>
 
 <!--
 <div class="row">
@@ -26,6 +35,7 @@
                             <th>Domain</th>
                             <th>Client</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -35,6 +45,7 @@
                             <th>Domain</th>
                             <th>Client</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </tfoot>
                 </table>
