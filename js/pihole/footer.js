@@ -8,6 +8,14 @@ $("body").on("click", function(event) {
     }
 });
 
+// Temperature display toogle
+$(function() {
+    $( "#temperature" ).click(function() {
+        $( "#celsius" ).toggle();
+        $( "#fahrenheit" ).toggle();
+    });
+});
+
 var piholeVersion = $("#piholeVersion").html();
 var webVersion = $("#webVersion").html();
 
