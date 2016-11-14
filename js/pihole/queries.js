@@ -49,6 +49,8 @@ function add(domain,list) {
     var token = $("#token").html();
     var alInfo = $("#alInfo");
     var alList = $("#alList");
+    var alDomain = $("#alDomain");
+    alDomain.html(domain);
     var alSuccess = $("#alSuccess");
     var alFailure = $("#alFailure");
 
@@ -78,6 +80,7 @@ function add(domain,list) {
             alInfo.delay(1000).fadeOut(2000, function() {
                 alInfo.hide();
                 alList.html("");
+                alDomain.html("");
             });
           } else {
             alSuccess.show();
@@ -87,6 +90,7 @@ function add(domain,list) {
             alInfo.delay(1000).fadeOut(2000, function() {
                 alInfo.hide();
                 alList.html("");
+                alDomain.html("");
             });
           }
         },
@@ -98,6 +102,7 @@ function add(domain,list) {
             alInfo.delay(1000).fadeOut(2000, function() {
                 alInfo.hide();
                 alList.html("");
+                alDomain.html("");
             });
         }
     });
