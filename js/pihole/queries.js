@@ -18,7 +18,8 @@ $(document).ready(function() {
             { "width" : "40%" },
             { "width" : "15%" },
             { "width" : "15%" }
-        ]
+        ],
+        "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
     })
 } );
 
