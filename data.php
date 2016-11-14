@@ -150,6 +150,7 @@
                 $domain,
                 hasHostName($client),
                 $status,
+                ""
               ));
             }
 
