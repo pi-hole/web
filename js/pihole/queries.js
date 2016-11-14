@@ -71,28 +71,21 @@ function add(domain,list) {
         method: "post",
         data: {"domain":domain, "list":list, "token":token},
         success: function(response) {
-          if (response.indexOf("not a valid argument") >= 0 ||
-              response.indexOf("is not a valid domain") >= 0) {
-            alFailure.show();
-            alFailure.delay(1000).fadeOut(2000, function() {
-                alFailure.hide();
-            });
-            alInfo.delay(1000).fadeOut(2000, function() {
-                alInfo.hide();
-                alList.html("");
-                alDomain.html("");
-            });
-          } else {
-            alSuccess.show();
-            alSuccess.delay(1000).fadeOut(2000, function() {
-                alSuccess.hide();
-            });
-            alInfo.delay(1000).fadeOut(2000, function() {
-                alInfo.hide();
-                alList.html("");
-                alDomain.html("");
-            });
+          if (response.indexOf("not a valid argument") >= 0 || response.indexOf("is not a valid domain") >= 0)
+          {
+              alFailure.show();
+              alFailure.delay(1000).fadeOut(2000, function() { alFailure.hide(); });
           }
+          else
+          {
+              alSuccess.show();
+              alSuccess.delay(1000).fadeOut(2000, function() { alSuccess.hide(); });
+          }
+          alInfo.delay(1000).fadeOut(2000, function() {
+              alInfo.hide();
+              alList.html("");
+              alDomain.html("");
+          });
         },
         error: function(jqXHR, exception) {
             alFailure.show();
