@@ -10,7 +10,9 @@
     }
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
-    $output = str_replace(array("\r\n","\r","\n"),"", $output);
+    $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
+    $fahrenheit = str_replace(["\r\n","\r","\n"],"", $output*9./5)+32;
+    $temperatureunit =  parse_ini_file("/etc/pihole/setupVars.conf")['temperatureunit'];
 ?>
 
 <!DOCTYPE html>
@@ -148,11 +150,20 @@
                         }
 
                         // CPU Temp
-                        if ($output > "45") {
-                            echo '<a href="#"><i class="fa fa-fire" style="color:#FF0000"></i> Temp: ' . $output . '</a>';
-                        } else {
-                            echo '<a href="#"><i class="fa fa-fire" style="color:#3366FF"></i> Temp: ' . $output . '</a>';
+                        echo '<a href="#" id="temperature"><i class="fa fa-fire" style="color:';
+                        if ($celsius > "45") {
+                            echo '#FF0000';
                         }
+                        else
+                        {
+                            echo '#3366FF';
+                        }
+                        echo '"></i> Temp:&nbsp;';
+                        if($temperatureunit != "F")
+                            echo $celsius . '&deg;C';
+                        else
+                            echo $fahrenheit . '&deg;F';
+                        echo '</a>';
                     ?>
                 </div>
             </div>
