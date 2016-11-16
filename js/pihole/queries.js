@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    // Get auth hash
+    hash = document.getElementById("hash").innerHTML;
+
     tableApi = $('#all-queries').DataTable( {
         "rowCallback": function( row, data, index ){
             if (data[4] == "Pi-holed") {
@@ -11,7 +14,7 @@ $(document).ready(function() {
             }
 
         },
-        "ajax": "api.php?getAllQueries",
+        "ajax": "api.php?getAllQueries&"+hash,
         "autoWidth" : false,
         "order" : [[0, "desc"]],
         "columns": [
@@ -42,7 +45,7 @@ $(document).ready(function() {
 } );
 
 function refreshData() {
-    tableApi.ajax.url("api.php?getAllQueries").load();
+    tableApi.ajax.url("api.php?getAllQueries&"+hash).load();
 }
 
 function add(domain,list) {

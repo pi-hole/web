@@ -1,29 +1,5 @@
 <?php
-    $pwhash =  parse_ini_file("/etc/pihole/setupVars.conf")['WEBPASSWORD'];
-
-    // Test if password is set
-    if(strlen($pwhash) > 0)
-    {
-        // Password set compare with double hash
-        if(hash('sha256',hash('sha256',$_POST["pw"])) == $pwhash || $_GET["auth"] == $pwhash)
-        {
-            // Password (POST) correct or hash (GET) correct
-            $auth = true;
-            $pwstring = "auth=".$pwhash;
-        }
-        else
-        {
-            // Password or hash wrong
-            $auth = false;
-            $pwstring = "";
-        }
-    }
-    else
-    {
-        // No password set
-        $auth = true;
-        $pwstring = "";
-    }
+    require "php/password.php";
 
     if (isset($_GET['enable']) && $auth) {
       exec('sudo pihole enable');
@@ -84,6 +60,7 @@
     <div class="js-warn" id="js-warn-exit"><h1>Javascript Is Disabled</h1><p>Javascript seems to be disabled. This will break some site features.</p>
         <p>To enable Javascript click <a href="http://www.enable-javascript.com/" target="_blank">here</a></p><label for="js-hide">Close</label></div>
 </div>
+<div id="hash" hidden><?php echo $pwstring; ?></div>
 <!-- /JS Warning -->
 <script src="js/pihole/header.js"></script>
 <div class="wrapper">

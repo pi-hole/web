@@ -1,4 +1,7 @@
 <?php
+    require "php/password.php";
+    if(!$auth)
+        exit();
     include('data.php');
     header('Content-type: application/json');
 
@@ -58,7 +61,7 @@
 	    }
 	    return $sanArray;
     }
-    
+
     $data = filterArray($data);
     echo json_encode($data);
 ?>
