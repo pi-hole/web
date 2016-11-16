@@ -37,14 +37,9 @@
 
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
-<<<<<<< HEAD
-    $output = str_replace(array("\r\n","\r","\n"),"", $output);
-
-=======
     $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
     $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
     $temperatureunit =  parse_ini_file("/etc/pihole/setupVars.conf")['TEMPERATUREUNIT'];
->>>>>>> devel
 ?>
 
 <!DOCTYPE html>
