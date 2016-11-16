@@ -186,6 +186,7 @@
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
+            <?php if($auth){ ?>
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
                 <!-- Home Page -->
@@ -227,7 +228,7 @@
                     </a>
                 </li>
                 <!-- Logout -->
-                <?php if(strlen($webpw) > 0 && $auth) { ?>
+                <?php if(strlen($webpw) > 0) { ?>
                 <li>
                     <a href="index.php">
                         <i class="fa fa-user-times"></i> <span>Logout</span>
@@ -235,6 +236,7 @@
                 </li>
                 <?php } ?>
             </ul>
+            <?php } ?>
         </section>
         <!-- /.sidebar -->
     </aside>
