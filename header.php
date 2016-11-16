@@ -211,6 +211,12 @@
                         <i class="fa fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
+                <!-- Logout -->
+                <li>
+                    <a href="index.php">
+                        <i class="fa fa-user-times"></i> <span>Logout</span>
+                    </a>
+                </li>
             </ul>
         </section>
         <!-- /.sidebar -->
