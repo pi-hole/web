@@ -227,7 +227,7 @@
                     </a>
                 </li>
                 <!-- Logout -->
-                <?php if(strlen($webpw) > 0) { ?>
+                <?php if(strlen($webpw) > 0 && $auth) { ?>
                 <li>
                     <a href="index.php">
                         <i class="fa fa-user-times"></i> <span>Logout</span>
