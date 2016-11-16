@@ -1,14 +1,29 @@
 <?php
     $webpw =  parse_ini_file("/etc/pihole/setupVars.conf")['webpassword'];
     $pwhash = hash('sha256',$webpw);
-    if($_POST["pw"] == $webpw || $_GET["auth"] == $pwhash)
+
+    // Test if password is set
+    if(strlen($webpw) > 0)
     {
-        $auth = true;
-        $pwstring = "auth=".$pwhash;
+        // Password set
+        if($_POST["pw"] == $webpw || $_GET["auth"] == $pwhash)
+        {
+            // Password (POST) correct or hash (GET) correct
+            $auth = true;
+            $pwstring = "auth=".$pwhash;
+        }
+        else
+        {
+            // Password or hash wrong
+            $auth = false;
+            $pwstring = "";
+        }
     }
     else
     {
-        $auth = false;
+        // No password set
+        $auth = true;
+        $pwstring = "";
     }
 
     if (isset($_GET['enable']) && $auth) {
@@ -212,11 +227,13 @@
                     </a>
                 </li>
                 <!-- Logout -->
+                <?php if(strlen($webpw) > 0) { ?>
                 <li>
                     <a href="index.php">
                         <i class="fa fa-user-times"></i> <span>Logout</span>
                     </a>
                 </li>
+                <?php } ?>
             </ul>
         </section>
         <!-- /.sidebar -->
