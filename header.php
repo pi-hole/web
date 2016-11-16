@@ -1,16 +1,29 @@
 <?php
-    if (isset($_GET['enable'])) {
+    $webpw =  parse_ini_file("/etc/pihole/setupVars.conf")['webpassword'];
+    if($_GET["pw"] == $webpw)
+    {
+        $auth = true;
+        $pwstring = "&pw=".$_GET["pw"];
+    }
+    else
+    {
+        $auth = false;
+    }
+
+    if (isset($_GET['enable']) && $auth) {
       exec('sudo pihole enable');
       $refer = $_SERVER['HTTP_REFERER'];
       header("location:$refer");
-    } elseif (isset($_GET['disable'])) {
+    } elseif (isset($_GET['disable']) && $auth) {
       exec('sudo pihole disable');
       $refer = $_SERVER['HTTP_REFERER'];
       header("location:$refer");
     }
+
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
     $output = str_replace(array("\r\n","\r","\n"),"", $output);
+
 ?>
 
 <!DOCTYPE html>
@@ -161,34 +174,34 @@
                 <li class="header">MAIN NAVIGATION</li>
                 <!-- Home Page -->
                 <li>
-                    <a href="index.php">
+                    <a href="index.php<?php echo $pwstring; ?>">
                         <i class="fa fa-home"></i> <span>Main Page</span>
                     </a>
                 </li>
                 <!-- Query Log -->
                 <li>
-                    <a href="queries.php">
+                    <a href="queries.php<?php echo $pwstring; ?>">
                         <i class="fa fa-file-text-o"></i> <span>Query Log</span>
                     </a>
                 </li>
                 <!-- Whitelist -->
                 <li>
-                    <a href="list.php?l=white">
+                    <a href="list.php?l=white<?php echo $pwstring; ?>">
                         <i class="fa fa-pencil-square-o"></i> <span>Whitelist</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
                 <li>
-                    <a href="list.php?l=black">
+                    <a href="list.php?l=black<?php echo $pwstring; ?>">
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
                 <!-- Toggle -->
                 <?php
                 if ($pistatus == "1") {
-                  echo '                <li><a href="?disable"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
+                  echo '                <li><a href="?disable'.$pwstring.'"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
                 } else {
-                  echo '                <li><a href="?enable"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
+                  echo '                <li><a href="?enable'.$pwstring.'"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
                 }
                 ?>
                 <!-- Donate -->
@@ -205,3 +218,30 @@
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
+<?php
+    // If password is not equal to the password set
+    // in the setupVars.conf file, then we skip any
+    // content and just complete the page. If no
+    // password is set at all, we keep the current
+    // behavior: everything is always authorized
+    // and will be displayed
+    if(!$auth){ ?>
+<div class="page-header">
+    <h1>Not authorized!</h1>
+</div>
+<form action="" method="get">
+<?php
+    // Keep all GET variables that might have been set
+    foreach($_GET as $name => $value) {
+      $name = htmlspecialchars($name);
+      $value = htmlspecialchars($value);
+      echo '<input type="hidden" name="'. $name .'" value="'. $value .'">';
+    }
+?>
+  Password: <input type="password" name="pw">&nbsp;<input type="submit" value="Submit">
+</form>
+<?php
+        require "footer.php";
+        exit();
+    }
+?>
