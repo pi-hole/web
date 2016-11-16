@@ -4,8 +4,8 @@
     // Test if password is set
     if(strlen($pwhash) > 0)
     {
-        // Password set
-        if(hash('sha256',$_POST["pw"]) == $pwhash || $_GET["auth"] == $pwhash)
+        // Password set compare with double hash
+        if(hash('sha256',hash('sha256',$_POST["pw"])) == $pwhash || $_GET["auth"] == $pwhash)
         {
             // Password (POST) correct or hash (GET) correct
             $auth = true;
