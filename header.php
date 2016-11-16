@@ -1,5 +1,5 @@
 <?php
-    $pwhash =  parse_ini_file("/etc/pihole/setupVars.conf")['webpassword'];
+    $pwhash =  parse_ini_file("/etc/pihole/setupVars.conf")['WEBPASSWORD'];
 
     // Test if password is set
     if(strlen($pwhash) > 0)
