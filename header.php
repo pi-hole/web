@@ -1,9 +1,10 @@
 <?php
     $webpw =  parse_ini_file("/etc/pihole/setupVars.conf")['webpassword'];
-    if($_GET["pw"] == $webpw)
+    $pwhash = hash('sha256',$webpw);
+    if($_POST["pw"] == $webpw || $_GET["auth"] == $pwhash)
     {
         $auth = true;
-        $pwstring = "&pw=".$_GET["pw"];
+        $pwstring = "auth=".$pwhash;
     }
     else
     {
@@ -174,34 +175,34 @@
                 <li class="header">MAIN NAVIGATION</li>
                 <!-- Home Page -->
                 <li>
-                    <a href="index.php<?php echo $pwstring; ?>">
+                    <a href="index.php?<?php echo $pwstring; ?>">
                         <i class="fa fa-home"></i> <span>Main Page</span>
                     </a>
                 </li>
                 <!-- Query Log -->
                 <li>
-                    <a href="queries.php<?php echo $pwstring; ?>">
+                    <a href="queries.php&<?php echo $pwstring; ?>">
                         <i class="fa fa-file-text-o"></i> <span>Query Log</span>
                     </a>
                 </li>
                 <!-- Whitelist -->
                 <li>
-                    <a href="list.php?l=white<?php echo $pwstring; ?>">
+                    <a href="list.php?l=white&<?php echo $pwstring; ?>">
                         <i class="fa fa-pencil-square-o"></i> <span>Whitelist</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
                 <li>
-                    <a href="list.php?l=black<?php echo $pwstring; ?>">
+                    <a href="list.php?l=black&<?php echo $pwstring; ?>">
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
                 <!-- Toggle -->
                 <?php
                 if ($pistatus == "1") {
-                  echo '                <li><a href="?disable'.$pwstring.'"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
+                  echo '                <li><a href="?disable&'.$pwstring.'"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
                 } else {
-                  echo '                <li><a href="?enable'.$pwstring.'"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
+                  echo '                <li><a href="?enable&'.$pwstring.'"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
                 }
                 ?>
                 <!-- Donate -->
@@ -229,15 +230,7 @@
 <div class="page-header">
     <h1>Not authorized!</h1>
 </div>
-<form action="" method="get">
-<?php
-    // Keep all GET variables that might have been set
-    foreach($_GET as $name => $value) {
-      $name = htmlspecialchars($name);
-      $value = htmlspecialchars($value);
-      echo '<input type="hidden" name="'. $name .'" value="'. $value .'">';
-    }
-?>
+<form action="" method="POST">
   Password: <input type="password" name="pw">&nbsp;<input type="submit" value="Submit">
 </form>
 <?php
