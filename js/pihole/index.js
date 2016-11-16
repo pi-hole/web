@@ -33,7 +33,7 @@ $(document).ready(function() {
                     pointRadius: 1,
                     pointHoverRadius: 5,
                     data: [],
-                    pointHitRadius: 20,
+                    pointHitRadius: 5,
                     cubicInterpolationMode: 'monotone'
                 },
                 {
@@ -45,7 +45,7 @@ $(document).ready(function() {
                     pointRadius: 1,
                     pointHoverRadius: 5,
                     data: [],
-                    pointHitRadius: 20,
+                    pointHitRadius: 5,
                     cubicInterpolationMode: 'monotone'
                 }
             ]
