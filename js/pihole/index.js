@@ -165,6 +165,7 @@ function updateQueriesOverTime() {
             else
             {
                 timeLineChart.data.labels.push("");
+                //timeLineChart.data.labels.push(Math.floor(hour/6) + ":" + hour%6 +"0");
             }
             // Have to multiply the data by 6 to have again the correct units (per hour, not per 10min)
             timeLineChart.data.datasets[0].data.push(6*data.domains_over_time[hour]);
