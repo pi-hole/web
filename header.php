@@ -231,7 +231,7 @@
     <h1>Not authorized!</h1>
 </div>
 <form action="" method="POST">
-  Password: <input type="password" name="pw">&nbsp;<input type="submit" value="Submit">
+  Password: <input type="password" name="pw">&nbsp;<input type="submit" value="Login">
 </form>
 <?php
         require "footer.php";
