@@ -181,7 +181,7 @@
                 </li>
                 <!-- Query Log -->
                 <li>
-                    <a href="queries.php&<?php echo $pwstring; ?>">
+                    <a href="queries.php?<?php echo $pwstring; ?>">
                         <i class="fa fa-file-text-o"></i> <span>Query Log</span>
                     </a>
                 </li>
