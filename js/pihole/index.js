@@ -156,6 +156,8 @@ function updateSummaryData(runOnce) {
 function updateQueriesOverTime() {
     $.getJSON("api.php?overTimeData", function(data) {
         // Add data for each hour that is available
+        // remove last data point since it not representative
+        data.ads_over_time.splice(-1,1);
         for (hour in data.ads_over_time) {
             // Add x-axis label
             timeLineChart.data.labels.push(hour + ":00");
