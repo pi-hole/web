@@ -64,7 +64,7 @@ $(document).ready(function() {
                     time: {
                         unit: 'hour',
                         displayFormats: {
-                            hour: 'hh:mm'
+                            hour: 'HH:mm'
                         }
                     }
                 }],
