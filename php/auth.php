@@ -14,7 +14,7 @@ function log_and_die($message) {
     die($message);
 }
 
-function check_cors() {
+function check_cors($strict=false) {
     // Check CORS
     $AUTHORIZED_HOSTNAMES = array(
         'http://' . $_SERVER['SERVER_ADDR'],
@@ -35,6 +35,9 @@ function check_cors() {
             log_and_die("Failed CORS: http://" . $_SERVER['HTTP_HOST'] .' vs '. join(',', $AUTHORIZED_HOSTNAMES));
         }
     }
+    else if($strict) {
+        log_and_die("Failed CORS: Unknown HTTP_HOST (Strict flag enabled)");
+    }
     else {
         pi_log("HTTP_HOST check skipped, unknown HTTP_HOST");
     }
@@ -45,7 +48,11 @@ function check_cors() {
         } else {
             log_and_die("Failed CORS: " . $_SERVER['HTTP_ORIGIN'] .' vs '. join(',', $AUTHORIZED_HOSTNAMES));
         }
-    } else {
+    }
+    else if($strict) {
+        log_and_die("Failed CORS: Unknown HTTP_ORIGIN (Strict flag enabled)");
+    }
+    else {
         pi_log("CORS skipped, unknown HTTP_ORIGIN");
     }
 }

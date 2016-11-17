@@ -1,15 +1,19 @@
 <?php
     require "php/auth.php";
-    check_cors();
     if (isset($_GET['enable'])) {
+        check_cors(true);
         exec('sudo pihole enable');
         $refer = $_SERVER['HTTP_REFERER'];
         header("location:$refer");
     }
     elseif (isset($_GET['disable'])) {
+        check_cors(true);
         exec('sudo pihole disable');
         $refer = $_SERVER['HTTP_REFERER'];
         header("location:$refer");
+    }
+    else {
+        check_cors();
     }
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
