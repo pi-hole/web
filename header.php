@@ -13,6 +13,23 @@
     $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
     $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
     $temperatureunit =  parse_ini_file("/etc/pihole/setupVars.conf")['TEMPERATUREUNIT'];
+
+    // Get load
+    $loaddata = sys_getloadavg();
+    // Get number of processing units available to PHP
+    // (may be less than the number of online processors)
+    $nproc = shell_exec('nproc');
+
+    // Get memory usage
+    $free = shell_exec('free');
+    $free = (string)trim($free);
+    $free_arr = explode("\n", $free);
+    $mem = explode(" ", $free_arr[1]);
+    $mem = array_filter($mem);
+    $mem = array_merge($mem);
+    $used = $mem[2] - $mem[5] - $mem[6];
+    $total = $mem[1];
+    $memory_usage = $used/$total*100;
 ?>
 
 <!DOCTYPE html>
@@ -164,6 +181,30 @@
                         else
                             echo $fahrenheit . '&deg;F';
                         echo '</a>';
+                    ?>
+                    <br/>
+                    <?php
+                    echo '<a href="#"><i class="fa fa-circle" style="color:';
+                        if ($loaddata[0] > $nproc) {
+                            echo '#FF0000';
+                        }
+                        else
+                        {
+                            echo '#7FFF00';
+                        }
+                        echo '""></i> Load:&nbsp;&nbsp;' . $loaddata[0] . '&nbsp;&nbsp;' . $loaddata[1] . '&nbsp;&nbsp;'. $loaddata[2] . '</a>';
+                    ?>
+                    <br/>
+                    <?php
+                    echo '<a href="#"><i class="fa fa-circle" style="color:';
+                        if ($memory_usage > 75) {
+                            echo '#FF0000';
+                        }
+                        else
+                        {
+                            echo '#7FFF00';
+                        }
+                        echo '""></i> Memory usage:&nbsp;&nbsp;' . sprintf("%.1f",$memory_usage) . '%</a>';
                     ?>
                 </div>
             </div>
