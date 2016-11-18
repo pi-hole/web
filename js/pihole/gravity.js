@@ -11,7 +11,6 @@ function eventsourcetest() {
         if(e.data.indexOf("Pi-hole blocking is Enabled") !== -1)
         {
             alSuccess.show();
-            alInfo.delay(1000).fadeOut(2000, function() { alInfo.hide(); });
         }
 
         ta.innerHTML += e.data;
@@ -20,6 +19,7 @@ function eventsourcetest() {
 
     // Will be called when script has finished
     source.addEventListener("error", function(e) {
+        alInfo.delay(1000).fadeOut(2000, function() { alInfo.hide(); });
         source.close();
     }, false);
 }
