@@ -9,11 +9,12 @@ function echoEvent($datatext) {
     echo "data: ".implode("\ndata: ", explode("\n", $datatext))."\n\n";
 }
 
-echoEvent("***START***");
+// echoEvent("***START***");
 
 $proc = popen("sudo pihole -g", 'r');
 while (!feof($proc)) {
     echoEvent(fread($proc, 4096));
 }
 
-echoEvent("***END***");
+// echoEvent("***END***");
+?>

@@ -4,25 +4,18 @@ function eventsourcetest() {
     var ta = document.getElementById("output");
     var source = new EventSource("php/gravity.sh.php");
 
-    alInfo.hide();
+    alInfo.show();
     alSuccess.hide();
 
     source.addEventListener("message", function(e) {
-        if(e.data === "***START***"){
-           alInfo.show();
-        }
-        else if(e.data === "***END***"){
-           alInfo.delay(1000).fadeOut(2000, function() { alInfo.hide(); });
-        }
-        else if (e.data !== "")
-        {
-            ta.innerHTML += e.data;
-        }
-
         if(e.data.indexOf("Pi-hole blocking is Enabled") !== -1)
         {
             alSuccess.show();
+            alInfo.delay(1000).fadeOut(2000, function() { alInfo.hide(); });
         }
+
+        ta.innerHTML += e.data;
+
     }, false);
 
     // Will be called when script has finished
