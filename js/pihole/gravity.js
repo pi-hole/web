@@ -8,16 +8,19 @@ function eventsourcetest() {
     alSuccess.hide();
 
     source.addEventListener("message", function(e) {
-        if(e.data === "START"){
+        if(e.data === "***START***"){
            alInfo.show();
         }
-        else if(e.data === "SUCCESS"){
-           alSuccess.show();
+        else if(e.data === "***END***"){
            alInfo.delay(1000).fadeOut(2000, function() { alInfo.hide(); });
         }
         else if (e.data !== "")
         {
             ta.innerHTML += e.data;
+            if(e.data.indexOf("Pi-hole blocking is Enabled") !== -1)
+            {
+                alSuccess.show();
+            }
         }
     }, false);
 
