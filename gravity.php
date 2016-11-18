@@ -18,10 +18,6 @@
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     Success!
 </div>
-<div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden="true">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Failure! Something went wrong.
-</div>
 
 <pre id="output" style="width: 100%; height: 100%;"></pre>
 

@@ -1,13 +1,11 @@
 function eventsourcetest() {
     var alInfo = $("#alInfo");
     var alSuccess = $("#alSuccess");
-    var alFailure = $("#alFailure");
     var ta = document.getElementById('output');
     var source = new EventSource('php/gravity.sh.php');
 
     alInfo.show();
     alSuccess.hide();
-    alFailure.hide();
 
     source.addEventListener('message', function(e) {
         if(e.data == "START"){
@@ -23,10 +21,9 @@ function eventsourcetest() {
         }
     }, false);
 
+    // Will be called when script has finished
     source.addEventListener('error', function(e) {
         source.close();
-        alFailure.show();
-        alInfo.delay(5000).fadeOut(2000, function() { alInfo.hide(); });
     }, false);
 }
 $(function(){
