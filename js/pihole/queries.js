@@ -1,3 +1,5 @@
+// Define global variables
+var hash;
 $(document).ready(function() {
     // Get auth hash
     hash = document.getElementById("hash").innerHTML;
