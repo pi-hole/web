@@ -1,9 +1,6 @@
 <?php
     require "header.php";
 ?>
-<!-- Send PHP info to JS -->
-<div id="token" hidden><?php echo $token ?></div>
-
 <!-- Title -->
 <div class="page-header">
     <h1>Update list of ad-serving domains</h1>
