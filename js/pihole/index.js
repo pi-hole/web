@@ -1,3 +1,6 @@
+// Define global variables
+var timeLineChart, queryTypeChart, forwardDestinationChart, forwardDestinationChart;
+
 $(document).ready(function() {
 
     var isMobile = {
@@ -165,7 +168,7 @@ function updateSummaryData(runOnce) {
 function updateQueriesOverTime() {
     $.getJSON("api.php?overTimeData10mins", function(data) {
         // Add data for each hour that is available
-        for (hour in data.ads_over_time) {
+        for (var hour in data.ads_over_time) {
             var d = new Date();
             d.setHours(Math.floor(hour/6),10*(hour%6),0,0);
             timeLineChart.data.labels.push(d);
