@@ -17,7 +17,10 @@ $(document).ready(function() {
             return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Windows());
         }
     };
-    var animate = false;
+
+    // Get auth hash
+    hash = document.getElementById("hash").innerHTML;
+
     var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
     timeLineChart = new Chart(ctx, {
         type: 'line',
@@ -69,56 +72,56 @@ $(document).ready(function() {
         }
     });
 
-    ctx = document.getElementById("queryTypeChart").getContext("2d");
-    queryTypeChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: [],
-            datasets: [{ data: [] }]
-        },
-        options: {
-            legend: {
-                display: false
+    if(!!document.getElementById("queryTypeChart"))
+    {
+        ctx = document.getElementById("queryTypeChart").getContext("2d");
+        queryTypeChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{ data: [] }]
             },
-            animation: {
-                duration: 2000
-            },
-            cutoutPercentage: 0
-        }
-    });
+            options: {
+                legend: {
+                    display: false
+                },
+                animation: {
+                    duration: 2000
+                },
+                cutoutPercentage: 0
+            }
+        });
+        updateQueryTypes();
+    }
 
-    ctx = document.getElementById("forwardDestinationChart").getContext("2d");
-    forwardDestinationChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: [],
-            datasets: [{ data: [] }]
-        },
-        options: {
-            legend: {
-                display: false
+    if(!!document.getElementById("forwardDestinationChart"))
+    {
+        ctx = document.getElementById("forwardDestinationChart").getContext("2d");
+        forwardDestinationChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{ data: [] }]
             },
-            animation: {
-                duration: 2000
-            },
-            cutoutPercentage: 0
-        }
-    });
-
-    // Get auth hash
-    hash = document.getElementById("hash").innerHTML;
-
+            options: {
+                legend: {
+                    display: false
+                },
+                animation: {
+                    duration: 2000
+                },
+                cutoutPercentage: 0
+            }
+        });
+        updateForwardDestinations();
+    }
     // Pull in data via AJAX
 
     updateSummaryData();
 
     updateQueriesOverTime();
 
-    updateQueryTypes();
-
     updateTopClientsChart();
-
-    updateForwardDestinations();
 
     updateTopLists();
 });

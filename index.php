@@ -1,4 +1,5 @@
 <?php
+    $indexpage = true;
     require "header.php";
 ?>
 <!-- Small boxes (Stat box) -->
@@ -75,7 +76,7 @@
       </div>
     </div>
 </div>
-
+<?php if($auth){ ?>
 <div class="row">
     <div class="col-md-6">
     <div class="box" id="query-types">
@@ -195,7 +196,7 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-
+<?php } ?>
 <?php
     require "footer.php";
 ?>

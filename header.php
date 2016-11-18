@@ -213,7 +213,6 @@
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
-            <?php if($auth){ ?>
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
                 <!-- Home Page -->
@@ -222,6 +221,7 @@
                         <i class="fa fa-home"></i> <span>Main Page</span>
                     </a>
                 </li>
+                <?php if($auth){ ?>
                 <!-- Query Log -->
                 <li>
                     <a href="queries.php?<?php echo $pwstring; ?>">
@@ -262,8 +262,16 @@
                     </a>
                 </li>
                 <?php } ?>
+                <?php } ?>
+                <!-- Login -->
+                <?php if(strlen($pwhash) > 0 && !$auth) { ?>
+                <li>
+                    <a href="index.php?login">
+                        <i class="fa fa-user"></i> <span>Login</span>
+                    </a>
+                </li>
+                <?php } ?>
             </ul>
-            <?php } ?>
         </section>
         <!-- /.sidebar -->
     </aside>
@@ -278,9 +286,12 @@
     // password is set at all, we keep the current
     // behavior: everything is always authorized
     // and will be displayed
-    if(!$auth){ ?>
+    //
+    // If auth is required and wrong, we show the reduced
+    // version of the summary (index) page
+    if(!$auth && (!isset($indexpage) || isset($_GET['login']))){ ?>
 <div class="page-header">
-    <h1>Not authorized!</h1>
+    <h1>Login required!</h1>
 </div>
 <form action="" method="POST">
   Password: <input type="password" name="pw">&nbsp;<input type="submit" value="Login">
