@@ -168,6 +168,8 @@ function updateSummaryData(runOnce) {
 function updateQueriesOverTime() {
     $.getJSON("api.php?overTimeData10mins", function(data) {
         // Add data for each hour that is available
+        // remove last data point since it not representative
+        data.ads_over_time.splice(-1,1);
         for (var hour in data.ads_over_time) {
             var d = new Date();
             d.setHours(Math.floor(hour/6),10*(hour%6),0,0);
