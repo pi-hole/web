@@ -13,7 +13,7 @@ function eventsourcetest() {
         }
         else if(e.data == "SUCCESS"){
            alSuccess.show();
-           alInfo.delay(5000).fadeOut(2000, function() { alInfo.hide(); });
+           alInfo.delay(1000).fadeOut(2000, function() { alInfo.hide(); });
         }
         else if (e.data !== '')
         {
