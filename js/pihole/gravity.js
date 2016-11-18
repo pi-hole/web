@@ -14,14 +14,14 @@ function eventsourcetest() {
         else if(e.data === "***END***"){
            alInfo.delay(1000).fadeOut(2000, function() { alInfo.hide(); });
         }
-        else if(e.data.indexOf("Pi-hole blocking is Enabled") !== -1)
-        {
-            alSuccess.show();
-            ta.innerHTML += e.data;
-        }
         else if (e.data !== "")
         {
             ta.innerHTML += e.data;
+        }
+
+        if(e.data.indexOf("Pi-hole blocking is Enabled") !== -1)
+        {
+            alSuccess.show();
         }
     }, false);
 
