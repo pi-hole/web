@@ -60,11 +60,11 @@ $(document).ready(function() {
             },
             scales: {
                 xAxes: [{
-                    type: 'time',
+                    type: "time",
                     time: {
-                        unit: 'hour',
+                        unit: "hour",
                         displayFormats: {
-                            hour: 'HH:mm'
+                            hour: "HH:mm"
                         }
                     }
                 }],
