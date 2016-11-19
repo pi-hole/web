@@ -8,7 +8,7 @@ function eventsourcetest() {
     alSuccess.hide();
 
     source.addEventListener("message", function(e) {
-        if(e.data.indexOf("Pi-hole blocking is Enabled") !== -1)
+        if(e.data.indexOf("Pi-hole blocking is") !== -1)
         {
             alSuccess.show();
         }
