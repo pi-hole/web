@@ -72,6 +72,7 @@ $(document).ready(function() {
         }
     });
 
+    // Create / load "Query Types" only if authorized
     if(!!document.getElementById("queryTypeChart"))
     {
         ctx = document.getElementById("queryTypeChart").getContext("2d");
@@ -94,6 +95,7 @@ $(document).ready(function() {
         updateQueryTypes();
     }
 
+    // Create / load "Forward Destinations" only if authorized
     if(!!document.getElementById("forwardDestinationChart"))
     {
         ctx = document.getElementById("forwardDestinationChart").getContext("2d");
@@ -115,6 +117,7 @@ $(document).ready(function() {
         });
         updateForwardDestinations();
     }
+
     // Pull in data via AJAX
 
     updateSummaryData();
