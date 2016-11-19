@@ -76,7 +76,12 @@
       </div>
     </div>
 </div>
-<?php if($auth){ ?>
+<?php
+  // If the user is logged in, then we show the more detailed index page.
+  // Even if we would include them here anyhow, there would be nothing to
+  // show since the API will respect the privacy of the user if he defines
+  // a password
+  if($auth){ ?>
 <div class="row">
     <div class="col-md-6">
     <div class="box" id="query-types">
