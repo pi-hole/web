@@ -4,12 +4,18 @@
     // Test if password is set
     if(strlen($pwhash) > 0)
     {
-        // Password set compare with double hash
-        if(hash('sha256',hash('sha256',$_POST["pw"])) == $pwhash || $_GET["auth"] == $pwhash)
+        // Compare doubly hashes password input with saved hash
+        if(isset($_POST["pw"]))
         {
-            // Password (POST) correct or hash (GET) correct
-            $auth = true;
-            $pwstring = "auth=".$pwhash;
+            $postinput = hash('sha256',hash('sha256',$_POST["pw"]));
+            if($postinput == $pwhash)
+                $auth = true;
+        }
+        // Compare auth hash with saved hash
+        else if (isset($_GET["auth"]))
+        {
+            if($_GET["auth"] == $pwhash)
+                $auth = true;
         }
         else
         {
@@ -17,6 +23,10 @@
             $auth = false;
             $pwstring = "";
         }
+        // If authorized, then set the hash that will be
+        // passed through using GET
+        if($auth)
+            $pwstring = "auth=".$pwhash;
     }
     else
     {
