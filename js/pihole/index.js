@@ -68,7 +68,8 @@ $(document).ready(function() {
                         unit: "hour",
                         displayFormats: {
                             hour: "HH:mm"
-                        }
+                        },
+                        tooltipFormat: "HH:mm"
                     }
                 }],
                 yAxes: [{
