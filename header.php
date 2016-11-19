@@ -255,7 +255,9 @@
                     </a>
                 </li>
                 <!-- Logout -->
-                <?php if(strlen($pwhash) > 0) { ?>
+                <?php
+                // Show Logout button if $auth is set and authorization is required
+                if(strlen($pwhash) > 0) { ?>
                 <li>
                     <a href="index.php">
                         <i class="fa fa-user-times"></i> <span>Logout</span>
@@ -264,7 +266,9 @@
                 <?php } ?>
                 <?php } ?>
                 <!-- Login -->
-                <?php if(strlen($pwhash) > 0 && !$auth) { ?>
+                <?php
+                // Show Login button if $auth is *not* set and authorization is required
+                if(strlen($pwhash) > 0 && !$auth) { ?>
                 <li>
                     <a href="index.php?login">
                         <i class="fa fa-user"></i> <span>Login</span>
@@ -287,8 +291,8 @@
     // behavior: everything is always authorized
     // and will be displayed
     //
-    // If auth is required and wrong, we show the reduced
-    // version of the summary (index) page
+    // If auth is required and not set, i.e. no successfully logged in,
+    // we show the reduced version of the summary (index) page
     if(!$auth && (!isset($indexpage) || isset($_GET['login']))){ ?>
 <div class="page-header">
     <h1>Login required!</h1>
