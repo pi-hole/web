@@ -6,7 +6,7 @@
 
     $data = array();
 
-    if (isset($_GET['summaryRaw']) && $auth) {
+    if (isset($_GET['summaryRaw'])) {
         $data = array_merge($data,  getSummaryData());
     }
 
