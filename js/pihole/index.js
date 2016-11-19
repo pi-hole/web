@@ -174,9 +174,8 @@ function updateQueriesOverTime() {
             var d = new Date();
             d.setHours(Math.floor(hour/6),10*(hour%6),0,0);
             timeLineChart.data.labels.push(d);
-            // Have to multiply the data by 6 to have again the correct units (per hour, not per 10min)
-            timeLineChart.data.datasets[0].data.push(6*data.domains_over_time[hour]);
-            timeLineChart.data.datasets[1].data.push(6*data.ads_over_time[hour]);
+            timeLineChart.data.datasets[0].data.push(data.domains_over_time[hour]);
+            timeLineChart.data.datasets[1].data.push(data.ads_over_time[hour]);
         }
         $('#queries-over-time .overlay').remove();
         timeLineChart.update();
