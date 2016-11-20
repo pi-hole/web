@@ -26,6 +26,12 @@
             if($_SESSION["hash"] == $pwhash)
                 $auth = true;
         }
+        // API can use the hash to get data without logging in via plain-text password
+        else if (isset($api) && isset($_GET["auth"]))
+        {
+            if($_GET["auth"] == $pwhash)
+                $auth = true;
+        }
         else
         {
             // Password or hash wrong

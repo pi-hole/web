@@ -1,4 +1,5 @@
 <?php
+    $api = true;
     require "php/password.php";
 
     include('data.php');
@@ -31,29 +32,29 @@
         $data = array_merge($data,  getTopItems());
     }
 
-    // Requires authorization 
+    // Requires authorization
     if (isset($_GET['recentItems']) && $auth) {
         if (is_numeric($_GET['recentItems'])) {
             $data = array_merge($data,  getRecentItems($_GET['recentItems']));
         }
     }
 
-    // Requires authorization 
+    // Requires authorization
     if (isset($_GET['getQueryTypes']) && $auth) {
         $data = array_merge($data, getIpvType());
     }
 
-    // Requires authorization 
+    // Requires authorization
     if (isset($_GET['getForwardDestinations']) && $auth) {
         $data = array_merge($data, getForwardDestinations());
     }
 
-    // Requires authorization 
+    // Requires authorization
     if (isset($_GET['getQuerySources']) && $auth) {
         $data = array_merge($data, getQuerySources());
     }
-    
-    // Requires authorization 
+
+    // Requires authorization
     if (isset($_GET['getAllQueries']) && $auth) {
         $data = array_merge($data, getAllQueries());
     }
