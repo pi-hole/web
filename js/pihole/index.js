@@ -62,8 +62,8 @@ $(document).ready(function() {
                 enabled: true,
                 mode: "x-axis",
                 callbacks: {
-                    title: function(tooltipItem, data) {
-                        var idx = tooltipItem[0].index
+                    title(tooltipItem, data) {
+                        var idx = tooltipItem[0].index;
                         var h = Math.floor(idx/6);
                         var m = 10*(idx%6);
                         var from = padNumber(h)+":"+padNumber(m)+":00";
