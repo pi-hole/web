@@ -5,7 +5,7 @@ Number.prototype.pad = function(size) {
     var s = String(this);
     while (s.length < (size || 2)) {s = "0" + s;}
     return s;
-}
+};
 
 $(document).ready(function() {
 
@@ -34,7 +34,7 @@ $(document).ready(function() {
             labels: [],
             datasets: [
                 {
-                    label: "All Queries",
+                    label: "Total DNS Queries",
                     fill: true,
                     backgroundColor: "rgba(220,220,220,0.5)",
                     borderColor: "rgba(0, 166, 90,.8)",
@@ -46,7 +46,7 @@ $(document).ready(function() {
                     cubicInterpolationMode: 'monotone'
                 },
                 {
-                    label: "Ad Queries",
+                    label: "Blocked DNS Queries",
                     fill: true,
                     backgroundColor: "rgba(0,192,239,0.5)",
                     borderColor: "rgba(0,192,239,1)",
