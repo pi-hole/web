@@ -85,8 +85,10 @@ if(sessionvalidity > 0)
         var seconds = Math.floor(total_seconds % 60);
         if(seconds < 10) seconds = "0" + seconds;
 
-        var currentTimeString = minutes + ":" + seconds;
-        document.getElementById("sessiontimercounter").textContent = currentTimeString;
+        if(total_seconds > 0)
+            document.getElementById("sessiontimercounter").textContent = minutes + ":" + seconds;
+        else
+            document.getElementById("sessiontimercounter").textContent = "-- : --";
 
         $('.timer').text(currentTimeString);
     }, 1000);
