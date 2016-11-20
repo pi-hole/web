@@ -34,7 +34,7 @@
         <div class="small-box bg-yellow">
             <div class="inner">
                 <h3 class="statistic" id="ads_percentage_today">---</h3>
-                <p>Of Today's Queries were blocked</p>
+                <p>Of Today's Queries Were Blocked</p>
             </div>
             <div class="icon">
                 <i class="ion ion-pie-graph"></i>
