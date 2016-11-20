@@ -1,5 +1,10 @@
 <?php
+    // Start a new PHP session (or continue an existing one)
+    session_start();
     $pwhash =  parse_ini_file("/etc/pihole/setupVars.conf")['WEBPASSWORD'];
+
+    if(isset($_GET["logout"]))
+        unset($_SESSION["hash"]);
 
     // Test if password is set
     if(strlen($pwhash) > 0)
@@ -9,29 +14,26 @@
         {
             $postinput = hash('sha256',hash('sha256',$_POST["pw"]));
             if($postinput == $pwhash)
+            {
+                $_SESSION["hash"] = $pwhash;
                 $auth = true;
+            }
         }
         // Compare auth hash with saved hash
-        else if (isset($_GET["auth"]))
+        else if (isset($_SESSION["hash"]))
         {
-            if($_GET["auth"] == $pwhash)
+            if($_SESSION["hash"] == $pwhash)
                 $auth = true;
         }
         else
         {
             // Password or hash wrong
             $auth = false;
-            $pwstring = "";
         }
-        // If authorized, then set the hash that will be
-        // passed through using GET
-        if($auth)
-            $pwstring = "auth=".$pwhash;
     }
     else
     {
         // No password set
         $auth = true;
-        $pwstring = "";
     }
 ?>

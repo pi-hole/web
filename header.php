@@ -217,41 +217,41 @@
                 <li class="header">MAIN NAVIGATION</li>
                 <!-- Home Page -->
                 <li>
-                    <a href="index.php?<?php echo $pwstring; ?>">
+                    <a href="index.php">
                         <i class="fa fa-home"></i> <span>Main Page</span>
                     </a>
                 </li>
                 <?php if($auth){ ?>
                 <!-- Query Log -->
                 <li>
-                    <a href="queries.php?<?php echo $pwstring; ?>">
+                    <a href="queries.php">
                         <i class="fa fa-file-text-o"></i> <span>Query Log</span>
                     </a>
                 </li>
                 <!-- Whitelist -->
                 <li>
-                    <a href="list.php?l=white&<?php echo $pwstring; ?>">
+                    <a href="list.php?l=white">
                         <i class="fa fa-pencil-square-o"></i> <span>Whitelist</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
                 <li>
-                    <a href="list.php?l=black&<?php echo $pwstring; ?>">
+                    <a href="list.php?l=black">
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
                 <!-- Run gravity.sh -->
                 <li>
-                    <a href="gravity.php?<?php echo $pwstring; ?>">
+                    <a href="gravity.php">
                         <i class="fa fa-arrow-circle-down"></i> <span>Update lists</span>
                     </a>
                 </li>
                 <!-- Toggle -->
                 <?php
                 if ($pistatus == "1") {
-                  echo '                <li><a href="?disable&'.$pwstring.'"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
+                  echo '                <li><a href="?disable"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
                 } else {
-                  echo '                <li><a href="?enable&'.$pwstring.'"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
+                  echo '                <li><a href="?enable"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
                 }
                 ?>
                 <!-- Donate -->
@@ -265,7 +265,7 @@
                 // Show Logout button if $auth is set and authorization is required
                 if(strlen($pwhash) > 0) { ?>
                 <li>
-                    <a href="index.php">
+                    <a href="index.php?logout">
                         <i class="fa fa-user-times"></i> <span>Logout</span>
                     </a>
                 </li>
