@@ -235,6 +235,12 @@
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
+                <!-- Run gravity.sh -->
+                <li>
+                    <a href="gravity.php">
+                        <i class="fa fa-arrow-circle-down"></i> <span>Update lists</span>
+                    </a>
+                </li>
                 <!-- Toggle -->
                 <?php
                 if ($pistatus == "1") {
