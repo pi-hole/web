@@ -1,3 +1,10 @@
+// Define global variables
+var timeLineChart, queryTypeChart, forwardDestinationChart, forwardDestinationChart;
+
+function padNumber(num) {
+    return ("00" + num).substr(-2,2);
+}
+
 $(document).ready(function() {
 
     var isMobile = {
@@ -20,12 +27,12 @@ $(document).ready(function() {
     var animate = false;
     var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
     timeLineChart = new Chart(ctx, {
-        type: 'line',
+        type: "line",
         data: {
             labels: [],
             datasets: [
                 {
-                    label: "All Queries",
+                    label: "Total DNS Queries",
                     fill: true,
                     backgroundColor: "rgba(220,220,220,0.5)",
                     borderColor: "rgba(0, 166, 90,.8)",
@@ -33,11 +40,11 @@ $(document).ready(function() {
                     pointRadius: 1,
                     pointHoverRadius: 5,
                     data: [],
-                    pointHitRadius: 20,
-                    cubicInterpolationMode: 'monotone'
+                    pointHitRadius: 5,
+                    cubicInterpolationMode: "monotone"
                 },
                 {
-                    label: "Ad Queries",
+                    label: "Blocked DNS Queries",
                     fill: true,
                     backgroundColor: "rgba(0,192,239,0.5)",
                     borderColor: "rgba(0,192,239,1)",
@@ -45,20 +52,40 @@ $(document).ready(function() {
                     pointRadius: 1,
                     pointHoverRadius: 5,
                     data: [],
-                    pointHitRadius: 20,
-                    cubicInterpolationMode: 'monotone'
+                    pointHitRadius: 5,
+                    cubicInterpolationMode: "monotone"
                 }
             ]
         },
         options: {
             tooltips: {
                 enabled: true,
-                mode: 'x-axis'
+                mode: "x-axis",
+                callbacks: {
+                    title(tooltipItem, data) {
+                        var idx = tooltipItem[0].index;
+                        var h = Math.floor(idx/6);
+                        var m = 10*(idx%6);
+                        var from = padNumber(h)+":"+padNumber(m)+":00";
+                        var to = padNumber(h)+":"+padNumber(m+9)+":59";
+                        return "Queries from "+from+" to "+to;
+                    }
+                }
             },
             legend: {
                 display: false
             },
             scales: {
+                xAxes: [{
+                    type: "time",
+                    time: {
+                        unit: "hour",
+                        displayFormats: {
+                            hour: "HH:mm"
+                        },
+                        tooltipFormat: "HH:mm"
+                    }
+                }],
                 yAxes: [{
                     ticks: {
                         beginAtZero: true
@@ -71,7 +98,7 @@ $(document).ready(function() {
 
     ctx = document.getElementById("queryTypeChart").getContext("2d");
     queryTypeChart = new Chart(ctx, {
-        type: 'doughnut',
+        type: "doughnut",
         data: {
             labels: [],
             datasets: [{ data: [] }]
@@ -89,7 +116,7 @@ $(document).ready(function() {
 
     ctx = document.getElementById("forwardDestinationChart").getContext("2d");
     forwardDestinationChart = new Chart(ctx, {
-        type: 'doughnut',
+        type: "doughnut",
         data: {
             labels: [],
             datasets: [{ data: [] }]
@@ -154,13 +181,14 @@ function updateSummaryData(runOnce) {
 }
 
 function updateQueriesOverTime() {
-    $.getJSON("api.php?overTimeData", function(data) {
+    $.getJSON("api.php?overTimeData10mins", function(data) {
         // Add data for each hour that is available
         // remove last data point since it not representative
         data.ads_over_time.splice(-1,1);
-        for (hour in data.ads_over_time) {
-            // Add x-axis label
-            timeLineChart.data.labels.push(hour + ":00");
+        for (var hour in data.ads_over_time) {
+            var d = new Date();
+            d.setHours(Math.floor(hour/6),10*(hour%6),0,0);
+            timeLineChart.data.labels.push(d);
             timeLineChart.data.datasets[0].data.push(data.domains_over_time[hour]);
             timeLineChart.data.datasets[1].data.push(data.ads_over_time[hour]);
         }
