@@ -148,6 +148,8 @@ function updateSummaryData(runOnce) {
             $("h3#ads_percentage_today").text(data.ads_percentage_today + "%");
             $("h3.statistic.glow").removeClass("glow")
         }, 500);
+
+        updateSessionTimer();
     }).done(function() {
         if (runOnce !== true) {
             setTimeout(updateSummaryData, 10000);

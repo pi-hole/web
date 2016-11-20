@@ -33,6 +33,9 @@
     $used = $mem[2] - $mem[5] - $mem[6];
     $total = $mem[1];
     $memory_usage = $used/$total*100;
+
+    // For session timer
+    $maxlifetime = ini_get("session.gc_maxlifetime");
 ?>
 
 <!DOCTYPE html>
@@ -122,6 +125,7 @@
                                 <div class="col-xs-4 text-center">
                                     <a href="https://github.com/pi-hole/pi-hole/releases">Updates</a>
                                 </div>
+                                <div class="col-xs-12 text-center">Session is valid for <span id="sessiontimer"><?php if(strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></div>
                             </li>
                             <!-- Menu Footer -->
                             <li class="user-footer">

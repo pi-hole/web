@@ -44,6 +44,7 @@ $(document).ready(function() {
 
 function refreshData() {
     tableApi.ajax.url("api.php?getAllQueries").load();
+    updateSessionTimer();
 }
 
 function add(domain,list) {
