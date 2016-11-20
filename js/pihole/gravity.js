@@ -2,7 +2,8 @@ function eventsourcetest() {
     var alInfo = $("#alInfo");
     var alSuccess = $("#alSuccess");
     var ta = document.getElementById("output");
-    var source = new EventSource("php/gravity.sh.php");
+    var hash = document.getElementById("hash").innerHTML;
+    var source = new EventSource("php/gravity.sh.php?"+hash);
 
     alInfo.show();
     alSuccess.hide();
