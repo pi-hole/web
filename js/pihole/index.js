@@ -18,9 +18,6 @@ $(document).ready(function() {
         }
     };
 
-    // Get auth hash
-    hash = document.getElementById("hash").innerHTML;
-
     var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
     timeLineChart = new Chart(ctx, {
         type: 'line',
@@ -132,7 +129,7 @@ $(document).ready(function() {
 // Functions to update data in page
 
 function updateSummaryData(runOnce) {
-    $.getJSON("api.php?summary&"+hash, function LoadSummaryData(data) {
+    $.getJSON("api.php?summary", function LoadSummaryData(data) {
         //$("h3.statistic").addClass("glow");
         if ($("h3#ads_blocked_today").text() != data.ads_blocked_today) {
             $("h3#ads_blocked_today").addClass("glow");
@@ -163,7 +160,7 @@ function updateSummaryData(runOnce) {
 }
 
 function updateQueriesOverTime() {
-    $.getJSON("api.php?overTimeData&"+hash, function(data) {
+    $.getJSON("api.php?overTimeData", function(data) {
         // Add data for each hour that is available
         // remove last data point since it not representative
         data.ads_over_time.splice(-1,1);
@@ -179,7 +176,7 @@ function updateQueriesOverTime() {
 }
 
 function updateQueryTypes() {
-    $.getJSON("api.php?getQueryTypes&"+hash, function(data) {
+    $.getJSON("api.php?getQueryTypes", function(data) {
         var colors = [];
         // Get colors from AdminLTE
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
@@ -202,7 +199,7 @@ function updateQueryTypes() {
 }
 
 function updateTopClientsChart() {
-    $.getJSON("api.php?summaryRaw&getQuerySources&"+hash, function(data) {
+    $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
         var clienttable =  $('#client-frequency').find('tbody:last');
         for (domain in data.top_sources) {
             clienttable.append('<tr> <td>' + domain +
@@ -215,7 +212,7 @@ function updateTopClientsChart() {
 }
 
 function updateForwardDestinations() {
-    $.getJSON("api.php?getForwardDestinations&"+hash, function(data) {
+    $.getJSON("api.php?getForwardDestinations", function(data) {
         var colors = [];
         // Get colors from AdminLTE
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
@@ -238,7 +235,7 @@ function updateForwardDestinations() {
 }
 
 function updateTopLists() {
-    $.getJSON("api.php?summaryRaw&topItems&"+hash, function(data) {
+    $.getJSON("api.php?summaryRaw&topItems", function(data) {
         var domaintable = $('#domain-frequency').find('tbody:last');
         var adtable = $('#ad-frequency').find('tbody:last');
 

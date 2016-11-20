@@ -1,8 +1,4 @@
-// Define global variables
-var hash;
 $(document).ready(function() {
-    // Get auth hash
-    hash = document.getElementById("hash").innerHTML;
 
     tableApi = $('#all-queries').DataTable( {
         "rowCallback": function( row, data, index ){
@@ -48,7 +44,7 @@ $(document).ready(function() {
 } );
 
 function refreshData() {
-    tableApi.ajax.url("api.php?getAllQueries&"+hash).load();
+    tableApi.ajax.url("api.php?getAllQueries").load();
 }
 
 function add(domain,list) {

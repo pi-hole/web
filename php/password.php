@@ -3,8 +3,9 @@
     session_start();
     $pwhash =  parse_ini_file("/etc/pihole/setupVars.conf")['WEBPASSWORD'];
 
+    // If the user wants to log out, we free all session variables currently registered
     if(isset($_GET["logout"]))
-        unset($_SESSION["hash"]);
+        session_unset();
 
     // Test if password is set
     if(strlen($pwhash) > 0)
