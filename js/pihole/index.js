@@ -3,7 +3,7 @@ var timeLineChart, queryTypeChart, forwardDestinationChart, forwardDestinationCh
 
 function padNumber(num) {
     return ("00" + num).substr(-2,2);
-};
+}
 
 $(document).ready(function() {
 
