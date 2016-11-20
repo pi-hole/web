@@ -27,7 +27,7 @@ $(document).ready(function() {
     var animate = false;
     var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
     timeLineChart = new Chart(ctx, {
-        type: 'line',
+        type: "line",
         data: {
             labels: [],
             datasets: [
@@ -41,7 +41,7 @@ $(document).ready(function() {
                     pointHoverRadius: 5,
                     data: [],
                     pointHitRadius: 5,
-                    cubicInterpolationMode: 'monotone'
+                    cubicInterpolationMode: "monotone"
                 },
                 {
                     label: "Blocked DNS Queries",
@@ -53,15 +53,14 @@ $(document).ready(function() {
                     pointHoverRadius: 5,
                     data: [],
                     pointHitRadius: 5,
-                    cubicInterpolationMode: 'monotone'
+                    cubicInterpolationMode: "monotone"
                 }
             ]
         },
         options: {
             tooltips: {
                 enabled: true,
-                mode: 'x-axis',
-                position: 'nearest',
+                mode: "x-axis",
                 callbacks: {
                     title: function(tooltipItem, data) {
                         var idx = tooltipItem[0].index
@@ -99,7 +98,7 @@ $(document).ready(function() {
 
     ctx = document.getElementById("queryTypeChart").getContext("2d");
     queryTypeChart = new Chart(ctx, {
-        type: 'doughnut',
+        type: "doughnut",
         data: {
             labels: [],
             datasets: [{ data: [] }]
@@ -117,7 +116,7 @@ $(document).ready(function() {
 
     ctx = document.getElementById("forwardDestinationChart").getContext("2d");
     forwardDestinationChart = new Chart(ctx, {
-        type: 'doughnut',
+        type: "doughnut",
         data: {
             labels: [],
             datasets: [{ data: [] }]
