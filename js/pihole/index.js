@@ -1,10 +1,8 @@
 // Define global variables
 var timeLineChart, queryTypeChart, forwardDestinationChart, forwardDestinationChart;
 
-Number.prototype.pad = function(size) {
-    var s = String(this);
-    while (s.length < (size || 2)) {s = "0" + s;}
-    return s;
+function padNumber(num) {
+    return ("00" + num).substr(-2,2);
 };
 
 $(document).ready(function() {
@@ -69,8 +67,8 @@ $(document).ready(function() {
                         var idx = tooltipItem[0].index
                         var h = Math.floor(idx/6);
                         var m = 10*(idx%6);
-                        var from = h.pad(2)+":"+m.pad(2)+":00";
-                        var to = h.pad(2)+":"+(m+9).pad(2)+":59";
+                        var from = padNumber(h)+":"+padNumber(m)+":00";
+                        var to = padNumber(h)+":"+padNumber(m+9)+":59";
                         return "Queries from "+from+" to "+to;
                     }
                 }
