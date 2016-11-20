@@ -33,10 +33,10 @@ function check_cors($strict=false) {
         }
         header("Access-Control-Allow-Origin: ${_SERVER['HTTP_HOST']}");
     }
-    else if($strict) {
-        log_and_die("Failed CORS: Unknown HTTP_HOST (Strict flag enabled)");
-    }
     else {
+        if($strict) {
+            log_and_die("Failed CORS: Unknown HTTP_HOST (Strict flag enabled)");
+        }
         pi_log("HTTP_HOST check skipped, unknown HTTP_HOST");
     }
 
