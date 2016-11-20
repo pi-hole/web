@@ -57,7 +57,7 @@ if(piholeVersion !== "vDev" && versionCompare(piholeVersion, "v2.7") < 0)
     alert("Pi-hole needs to be updated to at least v2.7 before you can use features such as whitelisting/blacklisting from this web interface!")
 
 // Session timer
-var sessionvalidity = parseInt(document.getElementById("sessiontimer").textContent);
+var sessionvalidity = parseInt(document.getElementById("sessiontimercounter").textContent);
 var start = new Date;
 
 function updateSessionTimer()
@@ -86,8 +86,12 @@ if(sessionvalidity > 0)
         if(seconds < 10) seconds = "0" + seconds;
 
         var currentTimeString = minutes + ":" + seconds;
-        document.getElementById("sessiontimer").textContent = currentTimeString;
+        document.getElementById("sessiontimercounter").textContent = currentTimeString;
 
         $('.timer').text(currentTimeString);
     }, 1000);
+}
+else
+{
+    document.getElementById("sessiontimer").style.display = 'none';
 }
