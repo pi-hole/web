@@ -242,7 +242,7 @@
                 </li>
                 <!-- Run gravity.sh -->
                 <li>
-                    <a href="gravity.php">
+                    <a href="gravity.php?<?php echo $pwstring; ?>">
                         <i class="fa fa-arrow-circle-down"></i> <span>Update lists</span>
                     </a>
                 </li>
