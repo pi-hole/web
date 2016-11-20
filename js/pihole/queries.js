@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     tableApi = $('#all-queries').DataTable( {
         "rowCallback": function( row, data, index ){
             if (data[4] == "Pi-holed") {
