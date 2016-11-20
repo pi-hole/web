@@ -28,12 +28,10 @@ function check_cors($strict=false) {
         array_push($AUTHORIZED_HOSTNAMES, 'http://' . $virtual_host);
 
     if(isset($_SERVER['HTTP_HOST'])) {
-        if(in_array('http://'.$_SERVER['HTTP_HOST'], $AUTHORIZED_HOSTNAMES)) {
-            header("Access-Control-Allow-Origin: ${_SERVER['HTTP_HOST']}");
+        if(!in_array('http://'.$_SERVER['HTTP_HOST'], $AUTHORIZED_HOSTNAMES)) {
+            log_and_die("Failed CORS: http://" . $_SERVER['HTTP_HOST'] . ' vs ' . join(',', $AUTHORIZED_HOSTNAMES));
         }
-        else {
-            log_and_die("Failed CORS: http://" . $_SERVER['HTTP_HOST'] .' vs '. join(',', $AUTHORIZED_HOSTNAMES));
-        }
+        header("Access-Control-Allow-Origin: ${_SERVER['HTTP_HOST']}");
     }
     else if($strict) {
         log_and_die("Failed CORS: Unknown HTTP_HOST (Strict flag enabled)");
@@ -43,11 +41,11 @@ function check_cors($strict=false) {
     }
 
     if(isset($_SERVER['HTTP_ORIGIN'])) {
-        if(in_array($_SERVER['HTTP_ORIGIN'], $AUTHORIZED_HOSTNAMES)) {
-            header("Access-Control-Allow-Origin: ${_SERVER['HTTP_ORIGIN']}");
-        } else {
+        if(!in_array($_SERVER['HTTP_ORIGIN'], $AUTHORIZED_HOSTNAMES)) {
             log_and_die("Failed CORS: " . $_SERVER['HTTP_ORIGIN'] .' vs '. join(',', $AUTHORIZED_HOSTNAMES));
+
         }
+        header("Access-Control-Allow-Origin: ${_SERVER['HTTP_ORIGIN']}");
     }
     else if($strict) {
         log_and_die("Failed CORS: Unknown HTTP_ORIGIN (Strict flag enabled)");
