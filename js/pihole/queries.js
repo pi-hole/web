@@ -12,7 +12,7 @@ $(document).ready(function() {
             }
 
         },
-        "ajax": "api.php?getAllQueries&"+hash,
+        "ajax": "api.php?getAllQueries",
         "autoWidth" : false,
         "order" : [[0, "desc"]],
         "columns": [
