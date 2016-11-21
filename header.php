@@ -257,12 +257,6 @@
                   echo '                <li><a href="?enable"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
                 }
                 ?>
-                <!-- Donate -->
-                <li>
-                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
-                        <i class="fa fa-paypal"></i> <span>Donate</span>
-                    </a>
-                </li>
                 <!-- Logout -->
                 <?php
                 // Show Logout button if $auth is set and authorization is required
@@ -284,6 +278,12 @@
                     </a>
                 </li>
                 <?php } ?>
+                <!-- Donate -->
+                <li>
+                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
+                        <i class="fa fa-paypal"></i> <span>Donate</span>
+                    </a>
+                </li>
             </ul>
         </section>
         <!-- /.sidebar -->
