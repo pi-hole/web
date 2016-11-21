@@ -96,6 +96,12 @@ $(document).ready(function() {
         }
     });
 
+    // Pull in data via AJAX
+
+    updateSummaryData();
+
+    updateQueriesOverTime();
+
     // Create / load "Query Types" only if authorized
     if(!!document.getElementById("queryTypeChart"))
     {
@@ -142,15 +148,20 @@ $(document).ready(function() {
         updateForwardDestinations();
     }
 
-    // Pull in data via AJAX
-
-    updateSummaryData();
-
-    updateQueriesOverTime();
-
-    updateTopClientsChart();
+    // Create / load "Top Domains" and "Top Advertisers" only if authorized
+    if(!!document.getElementById("domain-frequency")
+       && !!document.getElementById("ad-frequency"))
+    {
+        updateTopClientsChart();
+    }
 
     updateTopLists();
+
+    // Create / load "Top Clients" only if authorized
+    if(!!document.getElementById("client-frequency"))
+    {
+        updateTopClientsChart();
+    }
 });
 
 // Functions to update data in page
