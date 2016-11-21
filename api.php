@@ -27,6 +27,11 @@
         $data = array_merge($data,  getOverTimeData());
     }
 
+    // Works without authorization
+    if (isset($_GET['overTimeData10mins'])) {
+        $data = array_merge($data,  getOverTimeData10mins());
+    }
+
     // Requires authorization
     if (isset($_GET['topItems']) && $auth) {
         $data = array_merge($data,  getTopItems());

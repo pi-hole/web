@@ -37,6 +37,20 @@
         );
     }
 
+    function getOverTimeData10mins() {
+        global $log;
+        $dns_queries = getDnsQueries($log);
+        $ads_blocked = getBlockedQueries($log);
+
+        $domains_over_time = overTime10mins($dns_queries);
+        $ads_over_time = overTime10mins($ads_blocked);
+        alignTimeArrays($ads_over_time, $domains_over_time);
+        return Array(
+            'domains_over_time' => $domains_over_time,
+            'ads_over_time' => $ads_over_time,
+        );
+    }
+
     function getTopItems() {
         global $log;
         $dns_queries = getDnsQueries($log);
@@ -248,6 +262,32 @@
             }
             else {
                 $byTime[$hour] = 1;
+            }
+        }
+        return $byTime;
+    }
+
+    function overTime10mins($entries) {
+        $byTime = array();
+        foreach ($entries as $entry) {
+            $time = date_create(substr($entry, 0, 16));
+            $hour = $time->format('G');
+            $minute = $time->format('i');
+
+            // 00:00 - 00:09 -> 0
+            // 00:10 - 00:19 -> 1
+            // ...
+            // 12:00 - 12:10 -> 72
+            // ...
+            // 15:30 - 15:39 -> 93
+            // etc.
+            $time = ($minute-$minute%10)/10 + 6*$hour;
+
+            if (isset($byTime[$time])) {
+                $byTime[$time]++;
+            }
+            else {
+                $byTime[$time] = 1;
             }
         }
         return $byTime;

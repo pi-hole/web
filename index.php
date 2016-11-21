@@ -35,7 +35,7 @@
         <div class="small-box bg-yellow">
             <div class="inner">
                 <h3 class="statistic" id="ads_percentage_today">---</h3>
-                <p>Of Today's Queries were blocked</p>
+                <p>Of Today's Queries Were Blocked</p>
             </div>
             <div class="icon">
                 <i class="ion ion-pie-graph"></i>
@@ -62,7 +62,7 @@
     <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
-          <h3 class="box-title">Queries per hour</h3>
+          <h3 class="box-title">Queries over time</h3>
         </div>
         <div class="box-body">
           <div class="chart">
