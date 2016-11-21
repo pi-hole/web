@@ -5,7 +5,9 @@
 
     // If the user wants to log out, we free all session variables currently registered
     if(isset($_GET["logout"]))
+    {
         session_unset();
+    }
 
     // Test if password is set
     if(strlen($pwhash) > 0)

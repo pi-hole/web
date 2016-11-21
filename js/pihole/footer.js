@@ -73,27 +73,24 @@ if(sessionvalidity > 0)
 
     setInterval(function() {
         var current = new Date;
-        var total_seconds = (start - current) / 1000;
+        var totalseconds = (start - current) / 1000;
 
-        // var hours = Math.floor(total_seconds / 3600);
-        // total_seconds = total_seconds % 3600;
-        // hours = pretty_time_string(hours);
+        // var hours = Math.floor(totalseconds / 3600);
+        // totalseconds = totalseconds % 3600;
 
-        var minutes = Math.floor(total_seconds / 60);
-        if(minutes < 10) minutes = "0" + minutes;
+        var minutes = Math.floor(totalseconds / 60);
+        if(minutes < 10){ minutes = "0" + minutes; }
 
-        var seconds = Math.floor(total_seconds % 60);
-        if(seconds < 10) seconds = "0" + seconds;
+        var seconds = Math.floor(totalseconds % 60);
+        if(seconds < 10){ seconds = "0" + seconds; }
 
-        if(total_seconds > 0)
+        if(totalseconds > 0)
             document.getElementById("sessiontimercounter").textContent = minutes + ":" + seconds;
         else
             document.getElementById("sessiontimercounter").textContent = "-- : --";
-
-        $('.timer').text(currentTimeString);
     }, 1000);
 }
 else
 {
-    document.getElementById("sessiontimer").style.display = 'none';
+    document.getElementById("sessiontimer").style.display = "none";
 }
