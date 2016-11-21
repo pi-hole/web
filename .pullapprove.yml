@@ -25,7 +25,7 @@ groups:
         - devel       
     required: 2
     teams:
-      - dashboard
+      - approvers
   
   master:
     approve_by_comment:
