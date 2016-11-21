@@ -223,9 +223,9 @@ function updateQueryTypes() {
 function updateTopClientsChart() {
     $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
         var clienttable =  $('#client-frequency').find('tbody:last');
-        for (domain in data.top_sources) {
-            var url = '<a href="queries.php?client='+domain+'">'+domain+'</a>';
-            clienttable.append('<tr> <td>' + url +
+        for (var domain in data.top_sources) {
+            var url = url = "<a href=\"queries.php?client="+domain+"\">"+domain+"</a>";
+            clienttable.append("<tr> <td>" + url +
                 '</td> <td>' + data.top_sources[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-blue" style="width: ' +
                 data.top_sources[domain] / data.dns_queries_today * 100 + '%"></div> </div> </td> </tr> ');
         }
@@ -263,22 +263,22 @@ function updateTopLists() {
         var adtable = $('#ad-frequency').find('tbody:last');
         var url;
 
-        for (domain in data.top_queries) {
+        for (var domain in data.top_queries) {
             if(domain !== "pi.hole")
             {
-                url = '<a href="queries.php?domain='+domain+'">'+domain+'</a>';
+                url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
             }
             else
             {
                 url = domain;
             }
-            domaintable.append('<tr> <td>' + url +
+            domaintable.append("<tr> <td>" + url +
                 '</td> <td>' + data.top_queries[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-green" style="width: ' +
                 data.top_queries[domain] / data.dns_queries_today * 100 + '%"></div> </div> </td> </tr> ');
         }
         for (domain in data.top_ads) {
-            url = '<a href="queries.php?domain='+domain+'">'+domain+'</a>';
-            adtable.append('<tr> <td>' + url +
+            url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
+            adtable.append("<tr> <td>" + url +
                 '</td> <td>' + data.top_ads[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-yellow" style="width: ' +
                 data.top_ads[domain] / data.ads_blocked_today * 100 + '%"></div> </div> </td> </tr> ');
         }

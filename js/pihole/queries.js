@@ -1,4 +1,5 @@
-$(document).ready(function() {
+var tableApi;
+(document).ready(function() {
     tableApi = $('#all-queries').DataTable( {
         "rowCallback": function( row, data, index ){
             if (data[4] == "Pi-holed") {
@@ -42,11 +43,11 @@ $(document).ready(function() {
     } );
 
     // Do we want to filter queries?
-    var GETDict = {}
-    location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1]})
+    var GETDict = {};
+    location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1]});
     if("client" in GETDict)
     {
-        if(GETDict["client"] == "localhost(127.0.0.1)")
+        if(GETDict["client"] === "localhost(127.0.0.1)")
         {
             // Have to use normal search, as regexp of DataTable is broken
             // It should be fixed in next release which might come up next
