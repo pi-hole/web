@@ -44,7 +44,7 @@ var tableApi;
 
     // Do we want to filter queries?
     var GETDict = {};
-    location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1]});
+    location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
     if("client" in GETDict)
     {
         if(GETDict["client"] === "localhost(127.0.0.1)")
