@@ -25,7 +25,7 @@ function eventsource() {
 //    eventsourcetest();
 // });
 
-// Handle enter button for adding domains
+// Handle enter button
 $(document).keypress(function(e) {
     if(e.which === 13 && $("#domain").is(":focus")) {
         // Enter was pressed, and the input has focus
