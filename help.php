@@ -64,6 +64,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Query Log</h2>
+    <p>Shows the recent queries after parsing the pi-hole log files. It is possible to search through the whole list by using the "Search" input field. If the status is reported as "OK", then the DNS request has been permitted. Otherwise ("Pi-holed") it has been blocked. By clicking on the buttons under "Action" the corresponding domains can quickly be added to the white-/blacklist. The status of this action will be reported on this page.</p>
     </div>
 </div>
 <div class="row">
