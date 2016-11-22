@@ -1,6 +1,7 @@
 <?php
     require "header.php";
 ?>
+
 <div class="row">
     <div class="col-md-12">
     <h1>Help center</h1>
@@ -101,8 +102,24 @@
     Shows the currently installed Pi-hole and Web Interface version. If an update is available, this will be indicated here
     </div>
 </div>
-
+<div class="row">
+    <div class="col-md-12">
+    <h2>Emergency help</h2>
+    In case the web UI does not work properly anymore (i.e. timeout errors or diagrams not showing up) you can try to flush the Pi-hole config file by clicking <a href="#" id="flush">FLUSH</a>. Note that your statistics will be reset and you loose the statistics of the day until now.
+    </div>
+</div>
 
 <?php
+    // Web based flushing of pi-hole log file
+    if (isset($_GET['flush']))
+    {
+        if($_GET['flush'] == "true")
+        {
+            exec('sudo pihole -f');
+        }
+    }
+
     require "footer.php";
 ?>
+
+<script src="js/pihole/help.js"></script>
