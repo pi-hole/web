@@ -11,8 +11,8 @@
     <h3>Top left: Status display</h3>
     <p>Shows different status messages:</p>
     <ul>
-        <li>Status (Active (<i class="fa fa-circle" style="color:#7FFF00"></i>), Offline (<i class="fa fa-circle" style="color:#FF0000"></i>), Starting (<i class="fa fa-circle" style="color:#ff9900"></i>)) of the Pi-hole</li>
-        <li>Current CPU temperature
+        <li>Status: Current status of the Pi-hole - Active (<i class="fa fa-circle" style="color:#7FFF00"></i>), Offline (<i class="fa fa-circle" style="color:#FF0000"></i>), or Starting (<i class="fa fa-circle" style="color:#ff9900"></i>)</li>
+        <li>Temp: Current CPU temperature
         <?php
         if($temperatureunit != "F"){
         ?>
@@ -30,6 +30,12 @@
         <li>Memory usage: Shows the percentage of memory acutally blocked by applications. We show a red icon if the memory usage exceeds 75%</li>
     </ul>
     <h3>Top right: About</h3>
+    <ul>
+        <li>GitHub: Link to pi-hole repository</li>
+        <li>Details: Link to Jacob Salmela's blog with some more details, describing also the concept of the Pi-hole</li>
+        <li>Updates: Link to list of releases</li>
+        <li>Update notifications: If updates are available, a link will be shown here.</li>
+    </ul>
     </div>
 </div>
 <div class="row">
