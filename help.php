@@ -48,6 +48,7 @@
                 <li>AAAA: IPv6 address lookup (most commonly used to map hostnames to an IP address of the host)</li>
                 <li>PTR: most common use is for implementing reverse DNS lookups</li>
                 <li>SRV: Service locator (often used by XMPP, SIP, and LDAP)</li>
+                <li>and others</li>
             </ul>
         </li>
         <li>Query Types: Shows to which upstream DNS the permitted requests have been forwarded to.</li>
