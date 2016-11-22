@@ -4,7 +4,8 @@ if(isset($_GET["domain"]))
 {
     // Remove illegal characters
     $url = filter_var($_GET["domain"], FILTER_SANITIZE_URL);
-    if(!filter_var("http://".$url, FILTER_VALIDATE_URL ) === true)
+    // Is this a valid domain?
+    if(!filter_var(gethostbyname($url), FILTER_VALIDATE_IP))
     {
        die("Invalid domain!");
     }
