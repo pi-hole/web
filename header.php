@@ -242,6 +242,12 @@
                         <i class="fa fa-arrow-circle-down"></i> <span>Update lists</span>
                     </a>
                 </li>
+                <!-- Query adlists -->
+                <li>
+                    <a href="queryads.php">
+                        <i class="fa fa-search"></i> <span>Query adlists</span>
+                    </a>
+                </li>
                 <!-- Toggle -->
                 <?php
                 if ($pistatus == "1") {
