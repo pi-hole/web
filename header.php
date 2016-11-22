@@ -253,7 +253,7 @@
                 <!-- Run gravity.sh -->
                 <li>
                     <a href="gravity.php">
-                        <i class="fa fa-arrow-circle-down"></i> <span>Update lists</span>
+                        <i class="fa fa-arrow-circle-down"></i> <span>Update Lists</span>
                     </a>
                 </li>
                 <!-- Toggle -->

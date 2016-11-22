@@ -75,7 +75,8 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-    <h2>Update lists</h2>
+    <h2>Update Lists</h2>
+    <p>Runs the command <pre>sudo pihole -g</pre> and prints the result transparently to the web UI. The gravity.sh script will update the list of ad-serving domains</p>
     </div>
 </div>
 <div class="row">
