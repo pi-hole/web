@@ -11,7 +11,7 @@
     <h3>Top left: Status display</h3>
     <p>Shows different status messages:</p>
     <ul>
-        <li>Status (Active, Offline, Starting) of the Pi-hole</li>
+        <li>Status (Active (<i class="fa fa-circle" style="color:#7FFF00"></i>), Offline (<i class="fa fa-circle" style="color:#FF0000"></i>), Starting (<i class="fa fa-circle" style="color:#ff9900"></i>)) of the Pi-hole</li>
         <li>Current CPU temperature
         <?php
         if($temperatureunit != "F"){
@@ -26,7 +26,8 @@
         <?php
         }
         ?></li>
-        <li></li>
+        <li>Load: load averages for the last minute, 5 minutes and 15 minutes, respectively. A load average of 1 reflects the full workload of a single processor on the system. We show a red icon if the current load exceeds the number of available processors on this machine (which is <?php echo $nproc; ?>)</li>
+        <li>Memory usage: Shows the percentage of memory acutally blocked by applications. We show a red icon if the memory usage exceeds 75%</li>
     </ul>
     <h3>Top right: About</h3>
     </div>
