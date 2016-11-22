@@ -41,7 +41,24 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Main page</h2>
-    <p>On the main page, various statistics of pi-hole are shown to the user.</p>
+    <p>On the main page, various statistics of pi-hole are shown to the user:</p>
+    <ul>
+        <li>Summary: A summary of statistics showing how many out of how many total DNS queries have been blocked today, how that translates into a percentage and how many domains are on the blacklist. This graph is updated every 10 seconds. Changes are highlighted.</li>
+        <li>Queries over time: Diagram showing DNS queries (total and blocked) over 10 minute time intervals. More information can be acquired by hovering over the lines.</li>
+        <li>Query Types: Shows which types of query have been processed:
+            <ul>
+                <li>A: IPv4 address lookup (most commonly used to map hostnames to an IP address of the host)</li>
+                <li>AAAA: IPv6 address lookup (most commonly used to map hostnames to an IP address of the host)</li>
+                <li>PTR: most common use is for implementing reverse DNS lookups</li>
+                <li>SRV: Service locator (often used by XMPP, SIP, and LDAP)</li>
+            </ul>
+        </li>
+        <li>Query Types: Shows to which upstream DNS the permitted requests have been forwarded to.</li>
+        <li>Top Domains: Ranking of requested sites by number of DNS lookups.</li>
+        <li>Top Advertisers: Ranking of requested sites by number of DNS lookups.</li>
+        <li>Top Advertisers: Ranking of requested advertisments by number of DNS lookups.</li>
+        <li>Top Clients: Ranking of total DNS requests separated by clients on the local network.</li>
+    </ul>
     </div>
 </div>
 <div class="row">
