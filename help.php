@@ -24,7 +24,7 @@
         }
         ?></li>
         <li>Load: load averages for the last minute, 5 minutes and 15 minutes, respectively. A load average of 1 reflects the full workload of a single processor on the system. We show a red icon if the current load exceeds the number of available processors on this machine (which is <?php echo $nproc; ?>)</li>
-        <li>Memory usage: Shows the percentage of memory acutally blocked by applications. We show a red icon if the memory usage exceeds 75%</li>
+        <li>Memory usage: Shows the percentage of memory actually blocked by applications. We show a red icon if the memory usage exceeds 75%</li>
     </ul>
     <h4>Top right: About</h4>
     <ul>
@@ -54,7 +54,7 @@
         <li>Query Types: Shows to which upstream DNS the permitted requests have been forwarded to.</li>
         <li>Top Domains: Ranking of requested sites by number of DNS lookups.</li>
         <li>Top Advertisers: Ranking of requested sites by number of DNS lookups.</li>
-        <li>Top Advertisers: Ranking of requested advertisments by number of DNS lookups.</li>
+        <li>Top Advertisers: Ranking of requested advertisements by number of DNS lookups.</li>
         <li>Top Clients: Ranking of total DNS requests separated by clients on the local network.</li>
     </ul>
     </div>
@@ -68,7 +68,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>White- / Blacklist</h2>
-    <p>Add or remove domains (or subdomains) from the white-/blacklist. If a domain is added to e.g. the whitelist, any possible entry of the same domain will be automatically removed from the blacklist and vice versa. Adding wildcars is currently <em>not</em> supported.</p>
+    <p>Add or remove domains (or subdomains) from the white-/blacklist. If a domain is added to e.g. the whitelist, any possible entry of the same domain will be automatically removed from the blacklist and vice versa. Adding wildcards using the web UI is currently <em>not</em> supported.</p>
     </div>
 </div>
 <div class="row">
