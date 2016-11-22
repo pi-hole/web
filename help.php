@@ -111,11 +111,11 @@
 
 <?php
     // Web based flushing of pi-hole log file
-    if (isset($_GET['flush']))
+    if (isset($_GET["flush"]))
     {
-        if($_GET['flush'] == "true")
+        if($_GET["flush"] == "true")
         {
-            exec('sudo pihole -f');
+            exec("sudo pihole -f");
         }
     }
 
