@@ -70,6 +70,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>White- / Blacklist</h2>
+    <p>Add or remove domains (or subdomains) from the white-/blacklist. If a domain is added to e.g. the whitelist, any possible entry of the same domain will be automatically removed from the blacklist and vice versa. Adding wildcars is currently <em>not</em> supported.</p>
     </div>
 </div>
 <div class="row">
