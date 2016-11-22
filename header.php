@@ -256,6 +256,12 @@
                         <i class="fa fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
+                <!-- Help -->
+                <li>
+                    <a href="help.php">
+                        <i class="fa fa-question-circle"></i> <span>Help</span>
+                    </a>
+                </li>
             </ul>
         </section>
         <!-- /.sidebar -->
