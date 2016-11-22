@@ -88,6 +88,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Donate</h2>
+    If you like Pi-Hole, please consider a small donation. Keep in mind that Pi-hole is free, but powered by your donations
     </div>
 </div>
 <div class="row">
