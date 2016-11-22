@@ -2,7 +2,9 @@ function eventsource() {
     var ta = $("#output");
     var domain = $("#domain");
     if(domain.val().length === 0)
+    {
         return;
+    }
     var source = new EventSource("php/queryads.php?domain="+domain.val());
 
     // Reset and show field
