@@ -54,7 +54,6 @@
         </li>
         <li>Query Types: Shows to which upstream DNS the permitted requests have been forwarded to.</li>
         <li>Top Domains: Ranking of requested sites by number of DNS lookups.</li>
-        <li>Top Advertisers: Ranking of requested sites by number of DNS lookups.</li>
         <li>Top Advertisers: Ranking of requested advertisements by number of DNS lookups.</li>
         <li>Top Clients: Ranking of total DNS requests separated by clients on the local network.</li>
     </ul>
