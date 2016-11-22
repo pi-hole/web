@@ -100,6 +100,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Footer</h2>
+    Shows the currently installed Pi-hole and Web Interface version. If an update is available, this will be indicated here
     </div>
 </div>
 
