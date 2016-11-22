@@ -9,6 +9,25 @@
     <div class="col-md-12">
     <h2>Header</h2>
     <h3>Top left: Status display</h3>
+    <p>Shows different status messages:</p>
+    <ul>
+        <li>Status (Active, Offline, Starting) of the Pi-hole</li>
+        <li>Current CPU temperature
+        <?php
+        if($temperatureunit != "F"){
+        ?>
+        (switch unit to <a href="help.php?tempunit=fahrenheit">Fahrenheit</a>)
+        <?php
+        }
+        else
+        {
+        ?>
+        (switch unit to <a href="help.php?tempunit=celsius">Celsius</a>)
+        <?php
+        }
+        ?></li>
+        <li></li>
+    </ul>
     <h3>Top right: About</h3>
     </div>
 </div>

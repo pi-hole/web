@@ -8,6 +8,20 @@
       $refer = $_SERVER['HTTP_REFERER'];
       header("location:$refer");
     }
+
+    // Web based change of temperature unit
+    if (isset($_GET['tempunit']))
+    {
+        if($_GET['tempunit'] == "fahrenheit")
+        {
+            exec('sudo pihole -a -f');
+        }
+        else
+        {
+            exec('sudo pihole -a -c');
+        }
+    }
+
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
     $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
