@@ -94,6 +94,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Help (this page)</h2>
+    Shows information about what is happening behind the scenes and what can be done with this web user interface (web UI)
     </div>
 </div>
 <div class="row">
