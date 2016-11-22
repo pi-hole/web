@@ -82,6 +82,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Disable / Enable</h2>
+    Disables resp. enables Pi-Hole DNS Blocking completely. The change will be reflected by a changed status (top left)
     </div>
 </div>
 <div class="row">
