@@ -1,14 +1,11 @@
 <?php
     require "header.php";
 ?>
-<!-- Title -->
-<div class="page-header">
-    <h1>Help center</h1>
-</div>
 <div class="row">
     <div class="col-md-12">
+    <h1>Help center</h1>
     <h2>Header</h2>
-    <h3>Top left: Status display</h3>
+    <h4>Top left: Status display</h4>
     <p>Shows different status messages:</p>
     <ul>
         <li>Status: Current status of the Pi-hole - Active (<i class="fa fa-circle" style="color:#7FFF00"></i>), Offline (<i class="fa fa-circle" style="color:#FF0000"></i>), or Starting (<i class="fa fa-circle" style="color:#ff9900"></i>)</li>
@@ -29,7 +26,7 @@
         <li>Load: load averages for the last minute, 5 minutes and 15 minutes, respectively. A load average of 1 reflects the full workload of a single processor on the system. We show a red icon if the current load exceeds the number of available processors on this machine (which is <?php echo $nproc; ?>)</li>
         <li>Memory usage: Shows the percentage of memory acutally blocked by applications. We show a red icon if the memory usage exceeds 75%</li>
     </ul>
-    <h3>Top right: About</h3>
+    <h4>Top right: About</h4>
     <ul>
         <li>GitHub: Link to pi-hole repository</li>
         <li>Details: Link to Jacob Salmela's blog with some more details, describing also the concept of the Pi-hole</li>
