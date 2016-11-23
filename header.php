@@ -8,6 +8,20 @@
       $refer = $_SERVER['HTTP_REFERER'];
       header("location:$refer");
     }
+
+    // Web based change of temperature unit
+    if (isset($_GET['tempunit']))
+    {
+        if($_GET['tempunit'] == "fahrenheit")
+        {
+            exec('sudo pihole -a -f');
+        }
+        else
+        {
+            exec('sudo pihole -a -c');
+        }
+    }
+
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
     $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
@@ -239,7 +253,7 @@
                 <!-- Run gravity.sh -->
                 <li>
                     <a href="gravity.php">
-                        <i class="fa fa-arrow-circle-down"></i> <span>Update lists</span>
+                        <i class="fa fa-arrow-circle-down"></i> <span>Update Lists</span>
                     </a>
                 </li>
                 <!-- Toggle -->
@@ -254,6 +268,12 @@
                 <li>
                     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
                         <i class="fa fa-paypal"></i> <span>Donate</span>
+                    </a>
+                </li>
+                <!-- Help -->
+                <li>
+                    <a href="help.php">
+                        <i class="fa fa-question-circle"></i> <span>Help</span>
                     </a>
                 </li>
             </ul>
