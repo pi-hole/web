@@ -55,3 +55,42 @@ $.getJSON("https://api.github.com/repos/pi-hole/AdminLTE/releases/latest", funct
  */
 if(piholeVersion !== "vDev" && versionCompare(piholeVersion, "v2.7") < 0)
     alert("Pi-hole needs to be updated to at least v2.7 before you can use features such as whitelisting/blacklisting from this web interface!")
+
+// Session timer
+var sessionvalidity = parseInt(document.getElementById("sessiontimercounter").textContent);
+var start = new Date;
+
+function updateSessionTimer()
+{
+    start = new Date;
+    start.setSeconds(start.getSeconds() + sessionvalidity);
+}
+
+if(sessionvalidity > 0)
+{
+    // setSeconds will correctly handle wrap-around cases
+    updateSessionTimer();
+
+    setInterval(function() {
+        var current = new Date;
+        var totalseconds = (start - current) / 1000;
+
+        // var hours = Math.floor(totalseconds / 3600);
+        // totalseconds = totalseconds % 3600;
+
+        var minutes = Math.floor(totalseconds / 60);
+        if(minutes < 10){ minutes = "0" + minutes; }
+
+        var seconds = Math.floor(totalseconds % 60);
+        if(seconds < 10){ seconds = "0" + seconds; }
+
+        if(totalseconds > 0)
+            document.getElementById("sessiontimercounter").textContent = minutes + ":" + seconds;
+        else
+            document.getElementById("sessiontimercounter").textContent = "-- : --";
+    }, 1000);
+}
+else
+{
+    document.getElementById("sessiontimer").style.display = "none";
+}
