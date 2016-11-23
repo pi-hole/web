@@ -166,7 +166,6 @@ $(document).ready(function() {
 // Helper function needed for converting the Objects to Arrays
 
 function objectToArray(p){
-	console.log(p);
     var keys = Object.keys(p);
     keys.sort(function(a, b) {
         return a - b;
