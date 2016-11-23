@@ -6,9 +6,8 @@
     <h1>Pi-hole web updater</h1>
 </div>
 
-<div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
-    Connection closed
-</div>
+<button id="btnStart" class="btn btn-default" type="button">Start update</button>
+
 
 <pre id="output" style="width: 100%; height: 100%;"></pre>
 
