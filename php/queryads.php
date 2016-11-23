@@ -9,13 +9,20 @@ function echoEvent($datatext) {
     echo "data: ".implode("\ndata: ", explode("\n", $datatext))."\n\n";
 }
 
+// Credit: http://stackoverflow.com/a/4694816/2087442
+function is_valid_domain_name($domain_name)
+{
+    return (preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domain_name) //valid chars check
+            && preg_match("/^.{1,253}$/", $domain_name) //overall length check
+            && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)   ); //length of each label
+}
+
 // Test if domain is set
 if(isset($_GET["domain"]))
 {
-    // Remove illegal characters
-    $url = filter_var($_GET["domain"], FILTER_SANITIZE_URL);
     // Is this a valid domain?
-    if(!filter_var(gethostbyname($url), FILTER_VALIDATE_IP))
+    $url = $_GET["domain"];
+    if(!is_valid_domain_name($url))
     {
         echoEvent("Invalid domain!");
         die();
