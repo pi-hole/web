@@ -152,10 +152,8 @@ $(document).ready(function() {
     if(!!document.getElementById("domain-frequency")
        && !!document.getElementById("ad-frequency"))
     {
-        updateTopClientsChart();
+        updateTopLists();
     }
-
-    updateTopLists();
 
     // Create / load "Top Clients" only if authorized
     if(!!document.getElementById("client-frequency"))
