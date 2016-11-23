@@ -5,7 +5,6 @@ if(isset($_GET["getlog"]))
 }
 else if(isset($_GET["startupdate"]))
 {
-    echo "Start";
     exec("sudo pihole -up -webbased");
 }
 ?>

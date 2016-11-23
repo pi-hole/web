@@ -15,24 +15,9 @@ $("#btnStart").on("click", function() {
 });
 
 function getContent() {
-//     $.ajax({
-//         url: "php/webupdater.php?getlog",
-//         success: function(result) { $("#output").text(result); },
-//         error : function(xhr, textStatus, errorThrown ) { alert("Whoops"); }
-//     });
-// }
-  $.get( "php/webupdater.php?getlog")
-  .done(function(result) { $("#output").text(result); })
-  .fail(function() { });
-  .always(function() { setTimeout( getContent(), 100); });
+    $.ajax({
+        url: "php/webupdater.php?getlog",
+        success: function(result) { $("#output").text(result); },
+        complete : function() { setTimeout( getContent(), 100); }
+    });
 }
-// function getContent(){
-//     $.ajax( 'php/webupdater.php?getlog' )
-//         .success( function(result) {
-//             $("#output").text(result); return;
-//         })
-//         .error(function() {
-//             console.log( 'Ajax request failed...' );
-//             setTimeout ( function(){ func() }, $.ajaxSetup().retryAfter );
-//         });
-// }
