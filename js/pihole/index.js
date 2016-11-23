@@ -24,7 +24,7 @@ $(document).ready(function() {
             return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Windows());
         }
     };
-    var animate = false;
+
     var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
     timeLineChart = new Chart(ctx, {
         type: "line",
@@ -96,55 +96,70 @@ $(document).ready(function() {
         }
     });
 
-    ctx = document.getElementById("queryTypeChart").getContext("2d");
-    queryTypeChart = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-            labels: [],
-            datasets: [{ data: [] }]
-        },
-        options: {
-            legend: {
-                display: false
-            },
-            animation: {
-                duration: 2000
-            },
-            cutoutPercentage: 0
-        }
-    });
-
-    ctx = document.getElementById("forwardDestinationChart").getContext("2d");
-    forwardDestinationChart = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-            labels: [],
-            datasets: [{ data: [] }]
-        },
-        options: {
-            legend: {
-                display: false
-            },
-            animation: {
-                duration: 2000
-            },
-            cutoutPercentage: 0
-        }
-    });
-
     // Pull in data via AJAX
 
     updateSummaryData();
 
     updateQueriesOverTime();
 
-    updateQueryTypes();
+    // Create / load "Query Types" only if authorized
+    if(!!document.getElementById("queryTypeChart"))
+    {
+        ctx = document.getElementById("queryTypeChart").getContext("2d");
+        queryTypeChart = new Chart(ctx, {
+            type: "doughnut",
+            data: {
+                labels: [],
+                datasets: [{ data: [] }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                animation: {
+                    duration: 2000
+                },
+                cutoutPercentage: 0
+            }
+        });
+        updateQueryTypes();
+    }
 
-    updateTopClientsChart();
+    // Create / load "Forward Destinations" only if authorized
+    if(!!document.getElementById("forwardDestinationChart"))
+    {
+        ctx = document.getElementById("forwardDestinationChart").getContext("2d");
+        forwardDestinationChart = new Chart(ctx, {
+            type: "doughnut",
+            data: {
+                labels: [],
+                datasets: [{ data: [] }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                animation: {
+                    duration: 2000
+                },
+                cutoutPercentage: 0
+            }
+        });
+        updateForwardDestinations();
+    }
 
-    updateForwardDestinations();
+    // Create / load "Top Domains" and "Top Advertisers" only if authorized
+    if(!!document.getElementById("domain-frequency")
+       && !!document.getElementById("ad-frequency"))
+    {
+        updateTopLists();
+    }
 
-    updateTopLists();
+    // Create / load "Top Clients" only if authorized
+    if(!!document.getElementById("client-frequency"))
+    {
+        updateTopClientsChart();
+    }
 });
 
 // Functions to update data in page
@@ -169,6 +184,8 @@ function updateSummaryData(runOnce) {
             $("h3#ads_percentage_today").text(data.ads_percentage_today + "%");
             $("h3.statistic.glow").removeClass("glow")
         }, 500);
+
+        updateSessionTimer();
     }).done(function() {
         if (runOnce !== true) {
             setTimeout(updateSummaryData, 10000);

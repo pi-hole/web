@@ -1,9 +1,11 @@
 <?php
-    if (isset($_GET['enable'])) {
+    require "php/password.php";
+
+    if (isset($_GET['enable']) && $auth) {
       exec('sudo pihole enable');
       $refer = $_SERVER['HTTP_REFERER'];
       header("location:$refer");
-    } elseif (isset($_GET['disable'])) {
+    } elseif (isset($_GET['disable']) && $auth) {
       exec('sudo pihole disable');
       $refer = $_SERVER['HTTP_REFERER'];
       header("location:$refer");
@@ -44,6 +46,9 @@
     $used = $mem[2] - $mem[5] - $mem[6];
     $total = $mem[1];
     $memory_usage = $used/$total*100;
+
+    // For session timer
+    $maxlifetime = ini_get("session.gc_maxlifetime");
 ?>
 
 <!DOCTYPE html>
@@ -134,6 +139,7 @@
                                 <div class="col-xs-4 text-center">
                                     <a href="https://github.com/pi-hole/pi-hole/releases">Updates</a>
                                 </div>
+                                <div class="col-xs-12 text-center" id="sessiontimer">Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></div>
                             </li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
@@ -232,6 +238,7 @@
                         <i class="fa fa-home"></i> <span>Main Page</span>
                     </a>
                 </li>
+                <?php if($auth){ ?>
                 <!-- Query Log -->
                 <li>
                     <a href="queries.php">
@@ -270,18 +277,41 @@
                   echo '                <li><a href="?enable"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
                 }
                 ?>
+                <!-- Logout -->
+                <?php
+                // Show Logout button if $auth is set and authorization is required
+                if(strlen($pwhash) > 0) { ?>
+                <li>
+                    <a href="index.php?logout">
+                        <i class="fa fa-user-times"></i> <span>Logout</span>
+                    </a>
+                </li>
+                <?php } ?>
+                <?php } ?>
+                <!-- Login -->
+                <?php
+                // Show Login button if $auth is *not* set and authorization is required
+                if(strlen($pwhash) > 0 && !$auth) { ?>
+                <li>
+                    <a href="index.php?login">
+                        <i class="fa fa-user"></i> <span>Login</span>
+                    </a>
+                </li>
+                <?php } ?>
                 <!-- Donate -->
                 <li>
                     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
                         <i class="fa fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
+                <?php if($auth){ ?>
                 <!-- Help -->
                 <li>
                     <a href="help.php">
                         <i class="fa fa-question-circle"></i> <span>Help</span>
                     </a>
                 </li>
+                <?php } ?>
             </ul>
         </section>
         <!-- /.sidebar -->
@@ -290,3 +320,25 @@
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
+<?php
+    // If password is not equal to the password set
+    // in the setupVars.conf file, then we skip any
+    // content and just complete the page. If no
+    // password is set at all, we keep the current
+    // behavior: everything is always authorized
+    // and will be displayed
+    //
+    // If auth is required and not set, i.e. no successfully logged in,
+    // we show the reduced version of the summary (index) page
+    if(!$auth && (!isset($indexpage) || isset($_GET['login']))){ ?>
+<div class="page-header">
+    <h1>Login required!</h1>
+</div>
+<form action="" method="POST">
+  Password: <input type="password" name="pw">&nbsp;<input type="submit" value="Login">
+</form>
+<?php
+        require "footer.php";
+        exit();
+    }
+?>
