@@ -213,7 +213,7 @@ function updateSummaryData(runOnce) {
         }
     });;
 }
-var iff;
+
 function updateQueriesOverTime() {
     $.getJSON("api.php?overTimeData10mins", function(data) {
         // Add data for each hour that is available
