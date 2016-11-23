@@ -304,12 +304,14 @@
                         <i class="fa fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
+                <?php if($auth){ ?>
                 <!-- Help -->
                 <li>
                     <a href="help.php">
                         <i class="fa fa-question-circle"></i> <span>Help</span>
                     </a>
                 </li>
+                <?php } ?>
             </ul>
         </section>
         <!-- /.sidebar -->
