@@ -1,3 +1,11 @@
+function getContent() {
+    $.ajax({
+        url: "php/webupdater.php?getlog",
+        success(result) { $("#output").text(result); },
+        complete() { setTimeout( getContent(), 100); }
+    });
+}
+
 function startupdate() {
     $.get("php/webupdater.php?startupdate");
 
@@ -13,11 +21,3 @@ $("#btnStart").on("click", function() {
     $("#output").text("");
     startupdate();
 });
-
-function getContent() {
-    $.ajax({
-        url: "php/webupdater.php?getlog",
-        success: function(result) { $("#output").text(result); },
-        complete : function() { setTimeout( getContent(), 100); }
-    });
-}
