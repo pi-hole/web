@@ -11,6 +11,19 @@
       header("location:$refer");
     }
 
+    // Web based change of temperature unit
+    if (isset($_GET['tempunit']))
+    {
+        if($_GET['tempunit'] == "fahrenheit")
+        {
+            exec('sudo pihole -a -f');
+        }
+        else
+        {
+            exec('sudo pihole -a -c');
+        }
+    }
+
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
     $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
@@ -53,6 +66,7 @@
     <link rel="icon" type="image/png" sizes="96x96" href="img/logo.svg">
     <meta name="msapplication-TileColor" content="#367fa9">
     <meta name="msapplication-TileImage" content="img/logo.svg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="css/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
@@ -246,7 +260,13 @@
                 <!-- Run gravity.sh -->
                 <li>
                     <a href="gravity.php">
-                        <i class="fa fa-arrow-circle-down"></i> <span>Update lists</span>
+                        <i class="fa fa-arrow-circle-down"></i> <span>Update Lists</span>
+                    </a>
+                </li>
+                <!-- Query adlists -->
+                <li>
+                    <a href="queryads.php">
+                        <i class="fa fa-search"></i> <span>Query adlists</span>
                     </a>
                 </li>
                 <!-- Toggle -->
@@ -282,6 +302,12 @@
                 <li>
                     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
                         <i class="fa fa-paypal"></i> <span>Donate</span>
+                    </a>
+                </li>
+                <!-- Help -->
+                <li>
+                    <a href="help.php">
+                        <i class="fa fa-question-circle"></i> <span>Help</span>
                     </a>
                 </li>
             </ul>

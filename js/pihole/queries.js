@@ -1,3 +1,14 @@
+var tableApi;
+
+function escapeRegex(text) {
+  var map = {
+    "(": "\\(",
+    ")": "\\)",
+    ".": "\\.",
+  };
+  return text.replace(/[().]/g, function(m) { return map[m]; });
+}
+
 $(document).ready(function() {
     tableApi = $('#all-queries').DataTable( {
         "rowCallback": function( row, data, index ){
@@ -40,6 +51,23 @@ $(document).ready(function() {
           add(data[2],"black");
         }
     } );
+
+    // Do we want to filter queries?
+    var GETDict = {};
+    location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
+    if("client" in GETDict)
+    {
+        // Search in third column (zero indexed)
+        // Use regular expression to only show exact matches, i.e.
+        // don't show 192.168.0.100 when searching for 192.168.0.1
+        // true = use regex, false = don't use smart search
+        tableApi.column(3).search("^"+escapeRegex(GETDict["client"])+"$",true,false);
+    }
+    if("domain" in GETDict)
+    {
+        // Search in second column (zero indexed)
+        tableApi.column(2).search("^"+escapeRegex(GETDict["domain"])+"$",true,false);
+    }
 } );
 
 function refreshData() {
