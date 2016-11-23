@@ -236,7 +236,8 @@ function escapeHtml(text) {
 function updateTopClientsChart() {
     $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
         var clienttable =  $('#client-frequency').find('tbody:last');
-        for (var domain in data.top_sources) {
+        var domain;
+        for (domain in data.top_sources) {
             // Sanitize domain
             domain = escapeHtml(domain);
             var url = "<a href=\"queries.php?client="+domain+"\">"+domain+"</a>";
