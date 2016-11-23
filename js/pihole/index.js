@@ -63,9 +63,10 @@ $(document).ready(function() {
                 mode: "x-axis",
                 callbacks: {
                     title(tooltipItem, data) {
-                        var idx = tooltipItem[0].index;
-                        var h = Math.floor(idx/6);
-                        var m = 10*(idx%6);
+                        var label = tooltipItem[0].xLabel;
+                        var time = label.match(/(\d?\d):?(\d?\d?)/);
+                        var h = parseInt(time[1], 10);
+                        var m = parseInt(time[2], 10) || 0;
                         var from = padNumber(h)+":"+padNumber(m)+":00";
                         var to = padNumber(h)+":"+padNumber(m+9)+":59";
                         return "Queries from "+from+" to "+to;
@@ -162,6 +163,22 @@ $(document).ready(function() {
     }
 });
 
+// Helper function needed for converting the Objects to Arrays
+
+function objectToArray(p){
+    var keys = Object.keys(p);
+    keys.sort(function(a, b) {
+        return a - b;
+    });
+
+    var arr = [], idx = [];
+    for (var i = 0; i < keys.length; i++) {
+        arr.push(p[keys[i]]);
+        idx.push(keys[i]);
+    }
+    return [idx,arr];
+}
+
 // Functions to update data in page
 
 function updateSummaryData(runOnce) {
@@ -201,13 +218,17 @@ function updateQueriesOverTime() {
     $.getJSON("api.php?overTimeData10mins", function(data) {
         // Add data for each hour that is available
         // remove last data point since it not representative
-        data.ads_over_time.splice(-1,1);
-        for (var hour in data.ads_over_time) {
+        data.domains_over_time = objectToArray(data.domains_over_time);
+        data.ads_over_time = objectToArray(data.ads_over_time);
+        data.ads_over_time[0].splice(-1,1);
+        iff = data.ads_over_time;
+        for (var hour in data.ads_over_time[0]) {
             var d = new Date();
-            d.setHours(Math.floor(hour/6),10*(hour%6),0,0);
+            var h = parseInt(data.domains_over_time[0][hour]);
+            d.setHours(Math.floor(h/6),10*(h%6),0,0);
             timeLineChart.data.labels.push(d);
-            timeLineChart.data.datasets[0].data.push(data.domains_over_time[hour]);
-            timeLineChart.data.datasets[1].data.push(data.ads_over_time[hour]);
+            timeLineChart.data.datasets[0].data.push(data.domains_over_time[1][hour]);
+            timeLineChart.data.datasets[1].data.push(data.ads_over_time[1][hour]);
         }
         $('#queries-over-time .overlay').remove();
         timeLineChart.update();
