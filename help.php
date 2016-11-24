@@ -126,7 +126,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Login / Logout</h2>
-    <p>Using the Login / Logout function, a user can initiate / terminate a login session. The login page will also always be shown if a user tries to access a protected page directly without haveing a valid login session</p>
+    <p>Using the Login / Logout function, a user can initiate / terminate a login session. The login page will also always be shown if a user tries to access a protected page directly without having a valid login session</p>
     </div>
 </div>
 <?php } ?>
