@@ -28,7 +28,16 @@
     $output = shell_exec($cmd);
     $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
     $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
-    $temperatureunit =  parse_ini_file("/etc/pihole/setupVars.conf")['TEMPERATUREUNIT'];
+
+    $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+    if(isset($setupVars['TEMPERATUREUNIT']))
+    {
+        $temperatureunit = $setupVars['TEMPERATUREUNIT'];
+    }
+    else
+    {
+        $temperatureunit = "C";
+    }
 
     // Get load
     $loaddata = sys_getloadavg();
