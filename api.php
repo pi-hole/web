@@ -77,5 +77,13 @@
     }
 
     $data = filterArray($data);
-    echo json_encode($data);
+
+    if(isset($_GET["jsonForceObject"]))
+    {
+        echo json_encode($data, JSON_FORCE_OBJECT);
+    }
+    else
+    {
+        echo json_encode($data);
+    }
 ?>
