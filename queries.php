@@ -1,7 +1,6 @@
 <?php
     require "header.php";
 
-session_start();
 // Generate CSRF token
 if(empty($_SESSION['token'])) {
     $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
