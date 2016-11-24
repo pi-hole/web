@@ -29,8 +29,7 @@
     $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
     $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
 
-    // Reparse setupVars.conf here, as we might have changes the temperature units
-    // above
+    // Reparse setupVars.conf here, as we might have switched temperature units above
     $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
     if(isset($setupVars['TEMPERATUREUNIT']))
     {
