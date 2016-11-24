@@ -70,7 +70,7 @@
         <li>Top Clients: Ranking of how many DNS requests each client has made on the local network.</li>
     </ul>
     <?php if($authenticationsystem){ ?>
-    <p><li>Note that the login session does <em>not</em> expire on the main page, as the summary is updated every 10 seconds which refreshes the session.</li></p>
+    <p>Note that the login session does <em>not</em> expire on the main page, as the summary is updated every 10 seconds which refreshes the session.</p>
     <?php } ?>
     </div>
 </div>
@@ -95,7 +95,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Query adlists</h2>
-    <p>Runs the command <pre>sudo pihole -q <i>searchstring</i></pre> and prints the result transparently to the web UI. This command can be used to scan for strings in the list of blocked domains, e.g., &quot;analytics&quot; will deliver all domains which *analytics*, where the asterisk (*) represents a number of characters or an empty string</p>
+    <p>Runs the command <pre>sudo pihole -q <i>searchstring</i></pre> and prints the result transparently to the web UI. This command can be used to scan for strings in the list of blocked domains, e.g., &quot;analytics&quot; will deliver all domains which contain *analytics*, where the asterisk (*) represents a number of characters or an empty string</p>
     </div>
 </div>
 <div class="row">
@@ -119,7 +119,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Authentication system (currently <?php if($authenticationsystem) { ?>enabled<?php } else { ?>disabled<?php } ?>)</h2>
-    <p>Using the command<pre>sudo pihole -a -p pa22w0rd</pre> where <em>pa22w0rd</em> is the password to be set in this example, one can enable the authentication system of this web interface. Thereafter, a login is required for most sites (the main page will show a limited amount of statistics). Note that the authentication system may be disabled again, by setting an empty password using the command shown above. The Help center will show more details concerning the authentication system only if it is enabled</p>
+    <p>Using the command<pre>sudo pihole -a -p pa22w0rd</pre> where <em>pa22w0rd</em> is the password to be set in this example, one can enable the authentication system of this web interface. Thereafter, a login is required for most pages (the main page will show a limited amount of statistics). Note that the authentication system may be disabled again, by setting an empty password using the command shown above. The Help center will show more details concerning the authentication system only if it is enabled</p>
     </div>
 </div>
 <?php if($authenticationsystem) { ?>
