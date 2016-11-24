@@ -1,7 +1,18 @@
 <?php
     // Start a new PHP session (or continue an existing one)
     session_start();
-    $pwhash =  parse_ini_file("/etc/pihole/setupVars.conf")['WEBPASSWORD'];
+
+    // Read setupVars.conf file
+    $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+    // Try to read password hash from setupVars.conf
+    if(isset($setupVars['WEBPASSWORD']))
+    {
+        $pwhash = $setupVars['WEBPASSWORD'];
+    }
+    else
+    {
+        $pwhash = "";
+    }
 
     // If the user wants to log out, we free all session variables currently registered
     if(isset($_GET["logout"]))
