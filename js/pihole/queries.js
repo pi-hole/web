@@ -22,6 +22,7 @@ $(document).ready(function() {
             }
 
         },
+        "dom": '<"top"fp<"clear">>rt<"bottom"iflp<"clear">>',
         "ajax": "api.php?getAllQueries",
         "autoWidth" : false,
         "order" : [[0, "desc"]],
