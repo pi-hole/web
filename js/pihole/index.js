@@ -214,6 +214,7 @@ function updateSummaryData(runOnce) {
     });;
 }
 
+var failures = 0;
 function updateQueriesOverTime() {
     $.getJSON("api.php?overTimeData10mins", function(data) {
         // convert received objects to arrays
@@ -238,10 +239,16 @@ function updateQueriesOverTime() {
         timeLineChart.update();
     }).done(function() {
         // Reload graph after 10 minutes
+        failures = 0;
         setTimeout(updateQueriesOverTime, 600000);
     }).fail(function() {
-        // Try again after 1 minute
-        setTimeout(updateQueriesOverTime, 60000);
+        failures++;
+        if(failures < 5)
+        {
+            // Try again after 1 minute only if this has not failed more
+            // than five times in a row
+            setTimeout(updateQueriesOverTime, 60000);
+        }
     });
 }
 
