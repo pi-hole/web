@@ -22,6 +22,10 @@ $(document).ready(function() {
             }
 
         },
+        dom: "<'row'<'col-sm-12'f>>" +
+             "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
+             "<'row'<'col-sm-12'tr>>" +
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         "ajax": "api.php?getAllQueries",
         "autoWidth" : false,
         "order" : [[0, "desc"]],
