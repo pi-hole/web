@@ -1,5 +1,14 @@
 <?php
     require "header.php";
+
+    if(strlen($pwhash) > 0)
+    {
+        $authenticationsystem = true;
+    }
+    else
+    {
+        $authenticationsystem = false;
+    }
 ?>
 
 <div class="row">
@@ -33,6 +42,9 @@
         <li>Details: Link to Jacob Salmela's blog with some more details, describing also the concept of the Pi-hole</li>
         <li>Updates: Link to list of releases</li>
         <li>Update notifications: If updates are available, a link will be shown here.</li>
+        <?php if($authenticationsystem){ ?>
+        <li>Session timer: Shows the time remaining until the current login session expires.</li>
+        <?php } ?>
     </ul>
     </div>
 </div>
@@ -57,6 +69,9 @@
         <li>Top Advertisers: Ranking of requested advertisements by number of DNS lookups.</li>
         <li>Top Clients: Ranking of how many DNS requests each client has made on the local network.</li>
     </ul>
+    <?php if($authenticationsystem){ ?>
+    <p>Note that the login session does <em>not</em> expire on the main page, as the summary is updated every 10 seconds which refreshes the session.</p>
+    <?php } ?>
     </div>
 </div>
 <div class="row">
@@ -79,6 +94,12 @@
 </div>
 <div class="row">
     <div class="col-md-12">
+    <h2>Query adlists</h2>
+    <p>Runs the command <pre>sudo pihole -q <i>searchstring</i></pre> and prints the result transparently to the web UI. This command can be used to scan for strings in the list of blocked domains, e.g., &quot;analytics&quot; will deliver all domains which contain *analytics*, where the asterisk (*) represents a number of characters or an empty string</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
     <h2>Disable / Enable</h2>
     Disables/enables Pi-Hole blocking completely. You may have to wait a few minutes for the changes to reach all of your devices. The change will be reflected by a changed status (top left)
     </div>
@@ -92,9 +113,23 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Help (this page)</h2>
-    Shows information about what is happening behind the scenes and what can be done with this web user interface (web UI)
+    Shows information about what is happening behind the scenes and what can be done with this web user interface (web UI). The Help center will show details concerning the authentication system only if it is enabled
     </div>
 </div>
+<div class="row">
+    <div class="col-md-12">
+    <h2>Authentication system (currently <?php if($authenticationsystem) { ?>enabled<?php } else { ?>disabled<?php } ?>)</h2>
+    <p>Using the command<pre>sudo pihole -a -p pa22w0rd</pre> where <em>pa22w0rd</em> is the password to be set in this example, one can enable the authentication system of this web interface. Thereafter, a login is required for most pages (the main page will show a limited amount of statistics). Note that the authentication system may be disabled again, by setting an empty password using the command shown above. The Help center will show more details concerning the authentication system only if it is enabled</p>
+    </div>
+</div>
+<?php if($authenticationsystem) { ?>
+<div class="row">
+    <div class="col-md-12">
+    <h2>Login / Logout</h2>
+    <p>Using the Login / Logout function, a user can initiate / terminate a login session. The login page will also always be shown if a user tries to access a protected page directly without having a valid login session</p>
+    </div>
+</div>
+<?php } ?>
 <div class="row">
     <div class="col-md-12">
     <h2>Footer</h2>
