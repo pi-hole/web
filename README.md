@@ -23,12 +23,3 @@ A read-only API can be accessed at `/admin/api.php`. With either no parameters o
 ```
 
 There are many more parameters, such as `summaryRaw`, `overTimeData`, `topItems`, `recentItems`, `getQueryTypes`, `getForwardDestinations`, `getQuerySources`, and finally `getAllQueries`.
-
-## Contributing
-
-You can start AdminLTE using stubbed information in order to help ease the development process on machines where Pi-hole is not installed.
-
-To activate Stubbed data, modify system.php and set ENABLE_STUBS to true. Make sure you set it back to false before commiting.
-```php
-$ENABLE_STUBS = true;
-```
