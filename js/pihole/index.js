@@ -214,24 +214,41 @@ function updateSummaryData(runOnce) {
     });;
 }
 
+var failures = 0;
 function updateQueriesOverTime() {
     $.getJSON("api.php?overTimeData10mins", function(data) {
-        // Add data for each hour that is available
-        // remove last data point since it not representative
+        // convert received objects to arrays
         data.domains_over_time = objectToArray(data.domains_over_time);
         data.ads_over_time = objectToArray(data.ads_over_time);
+        // remove last data point since it not representative
         data.ads_over_time[0].splice(-1,1);
-        iff = data.ads_over_time;
+        // Remove possibly already existing data
+        timeLineChart.data.labels = [];
+        timeLineChart.data.datasets[0].data = [];
+        timeLineChart.data.datasets[1].data = [];
+        // Add data for each hour that is available
         for (var hour in data.ads_over_time[0]) {
-            var d = new Date();
             var h = parseInt(data.domains_over_time[0][hour]);
-            d.setHours(Math.floor(h/6),10*(h%6),0,0);
+            var d = new Date().setHours(Math.floor(h/6),10*(h%6),0,0);
+
             timeLineChart.data.labels.push(d);
             timeLineChart.data.datasets[0].data.push(data.domains_over_time[1][hour]);
             timeLineChart.data.datasets[1].data.push(data.ads_over_time[1][hour]);
         }
         $('#queries-over-time .overlay').remove();
         timeLineChart.update();
+    }).done(function() {
+        // Reload graph after 10 minutes
+        failures = 0;
+        setTimeout(updateQueriesOverTime, 600000);
+    }).fail(function() {
+        failures++;
+        if(failures < 5)
+        {
+            // Try again after 1 minute only if this has not failed more
+            // than five times in a row
+            setTimeout(updateQueriesOverTime, 60000);
+        }
     });
 }
 
