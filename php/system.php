@@ -15,7 +15,7 @@ function isUsingStubs() {
 
 function getFileList($type) {
     global $PI_HOLE_DIR;
-    return file_get_contents("$PI_HOLE_DIR/${type}list.txt");
+    return file_get_contents($PI_HOLE_DIR . "/" . $type . "list.txt");
 }
 
 function getSystemVars() {
