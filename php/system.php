@@ -2,7 +2,7 @@
 
 $PI_HOLE_DIR = "/etc/pihole";
 
-$ENABLE_STUBS = false;
+$ENABLE_STUBS = true;
 
 if ($ENABLE_STUBS) {
     $PI_HOLE_DIR = "stubs";

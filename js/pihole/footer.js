@@ -33,18 +33,18 @@ function versionCompare(left, right) {
 
 // Update check
 $.getJSON("https://api.github.com/repos/pi-hole/pi-hole/releases/latest", function(json) {
-    // Skip if on dev
-    if(piholeVersion !== "vDev" && versionCompare(piholeVersion, json.tag_name.slice(1)) < 0) {
-        // Alert user
-        $("#piholeVersion").html($("#piholeVersion").text() + '<a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">(Update available!)</a>');
+    if(webVersion !== "vDev" && piholeVersion !== "Stub" && versionCompare(webVersion, json.tag_name.slice(1)) < 0) {
+        // Alert usera
+        var $piholeVersion = $("#piholeVersion");
+        $piholeVersion.html($piholeVersion.text() + '<a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">(Update available!)</a>');
         $("#alPiholeUpdate").show();
     }
 });
 $.getJSON("https://api.github.com/repos/pi-hole/AdminLTE/releases/latest", function(json) {
-    // Skip if on dev
-    if(webVersion !== "vDev" && versionCompare(webVersion, json.tag_name.slice(1)) < 0) {
+    if(webVersion !== "vDev" && piholeVersion !== "Stub" && versionCompare(webVersion, json.tag_name.slice(1)) < 0) {
         // Alert user
-        $("#webVersion").html($("#webVersion").text() + '<a class="alert-link" href="https://github.com/pi-hole/adminLTE/releases">(Update available!)</a>');
+        var $webVersion = $("#webVersion");
+        $webVersion.html($webVersion.text() + '<a class="alert-link" href="https://github.com/pi-hole/adminLTE/releases">(Update available!)</a>');
         $("#alWebUpdate").show();
     }
 });
@@ -53,7 +53,7 @@ $.getJSON("https://api.github.com/repos/pi-hole/AdminLTE/releases/latest", funct
  * Make sure that Pi-hole is updated to at least v2.7, since that is needed to use the sudo
  * features of the interface. Skip if on dev
  */
-if(piholeVersion !== "vDev" && versionCompare(piholeVersion, "v2.7") < 0 && !isUsingStubs() )
+if(piholeVersion !== "vDev" && versionCompare(piholeVersion, "v2.7") < 0 && piholeVersion !== "Stub")
     alert("Pi-hole needs to be updated to at least v2.7 before you can use features such as whitelisting/blacklisting from this web interface!")
 
 // Session timer
