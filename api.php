@@ -1,13 +1,18 @@
 <?php
+    $api = true;
+    require "php/password.php";
+
     include('data.php');
     header('Content-type: application/json');
 
     $data = array();
 
+    // Works without authorization
     if (isset($_GET['summaryRaw'])) {
         $data = array_merge($data,  getSummaryData());
     }
 
+    // Works without authorization
     if (isset($_GET['summary']) || !count($_GET)) {
         $sum = getSummaryData();
         $sum['ads_blocked_today'] = number_format( $sum['ads_blocked_today']);
@@ -17,33 +22,45 @@
         $data = array_merge($data,  $sum);
     }
 
+    // Works without authorization
     if (isset($_GET['overTimeData'])) {
         $data = array_merge($data,  getOverTimeData());
     }
 
-    if (isset($_GET['topItems'])) {
+    // Works without authorization
+    if (isset($_GET['overTimeData10mins'])) {
+        $data = array_merge($data,  getOverTimeData10mins());
+    }
+
+    // Requires authorization
+    if (isset($_GET['topItems']) && $auth) {
         $data = array_merge($data,  getTopItems());
     }
 
-    if (isset($_GET['recentItems'])) {
+    // Requires authorization
+    if (isset($_GET['recentItems']) && $auth) {
         if (is_numeric($_GET['recentItems'])) {
             $data = array_merge($data,  getRecentItems($_GET['recentItems']));
         }
     }
 
-    if (isset($_GET['getQueryTypes'])) {
+    // Requires authorization
+    if (isset($_GET['getQueryTypes']) && $auth) {
         $data = array_merge($data, getIpvType());
     }
 
-    if (isset($_GET['getForwardDestinations'])) {
+    // Requires authorization
+    if (isset($_GET['getForwardDestinations']) && $auth) {
         $data = array_merge($data, getForwardDestinations());
     }
 
-    if (isset($_GET['getQuerySources'])) {
+    // Requires authorization
+    if (isset($_GET['getQuerySources']) && $auth) {
         $data = array_merge($data, getQuerySources());
     }
 
-    if (isset($_GET['getAllQueries'])) {
+    // Requires authorization
+    if (isset($_GET['getAllQueries']) && $auth) {
         $data = array_merge($data, getAllQueries());
     }
 
@@ -58,7 +75,15 @@
 	    }
 	    return $sanArray;
     }
-    
+
     $data = filterArray($data);
-    echo json_encode($data);
+
+    if(isset($_GET["jsonForceObject"]))
+    {
+        echo json_encode($data, JSON_FORCE_OBJECT);
+    }
+    else
+    {
+        echo json_encode($data);
+    }
 ?>

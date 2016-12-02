@@ -1,4 +1,5 @@
 <?php
+    $indexpage = true;
     require "header.php";
 ?>
 <!-- Small boxes (Stat box) -->
@@ -8,7 +9,7 @@
         <div class="small-box bg-aqua">
             <div class="inner">
                 <h3 class="statistic" id="ads_blocked_today">---</h3>
-                <p>Ads Blocked Today</p>
+                <p>DNS Queries Blocked Today</p>
             </div>
             <div class="icon">
                 <i class="ion ion-android-hand"></i>
@@ -34,7 +35,7 @@
         <div class="small-box bg-yellow">
             <div class="inner">
                 <h3 class="statistic" id="ads_percentage_today">---</h3>
-                <p>Of Today's Traffic Is Ads</p>
+                <p>Of Today's Queries Were Blocked</p>
             </div>
             <div class="icon">
                 <i class="ion ion-pie-graph"></i>
@@ -65,7 +66,7 @@
         </div>
         <div class="box-body">
           <div class="chart">
-            <canvas id="queryOverTimeChart" style="height: 247px; width: 466px;" width="932" height="494"></canvas>
+            <canvas id="queryOverTimeChart" width="800" height="250"></canvas>
           </div>
         </div>
         <div class="overlay">
@@ -75,7 +76,12 @@
       </div>
     </div>
 </div>
-
+<?php
+  // If the user is logged in, then we show the more detailed index page.
+  // Even if we would include them here anyhow, there would be nothing to
+  // show since the API will respect the privacy of the user if he defines
+  // a password
+  if($auth){ ?>
 <div class="row">
     <div class="col-md-6">
     <div class="box" id="query-types">
@@ -84,7 +90,7 @@
         </div>
         <div class="box-body">
           <div class="chart">
-            <canvas id="queryTypeChart" style="height: 247px; width: 466px;" width="932" height="494"></canvas>
+            <canvas id="queryTypeChart" width="400" height="200"></canvas>
           </div>
         </div>
         <div class="overlay">
@@ -100,7 +106,7 @@
         </div>
         <div class="box-body">
           <div class="chart">
-            <canvas id="forwardDestinationChart" style="height: 247px; width: 466px;" width="932" height="494"></canvas>
+            <canvas id="forwardDestinationChart" width="400" height="200"></canvas>
           </div>
         </div>
         <div class="overlay">
@@ -195,7 +201,7 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-
+<?php } ?>
 <?php
     require "footer.php";
 ?>
