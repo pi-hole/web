@@ -1,4 +1,5 @@
 <?php
+require('system.php');
 require('auth.php');
 
 switch($_POST['list']) {

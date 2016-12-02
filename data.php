@@ -2,7 +2,7 @@
     $log = array();
     $divide =  parse_ini_file("/etc/pihole/setupVars.conf")['IPV6_ADDRESS'] != "" && parse_ini_file("/etc/pihole/setupVars.conf")['IPV4_ADDRESS'] != "";
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
-    $log = new \SplFileObject('/var/log/pihole.log');
+    $log = getPiHoleLog();
 
     /*******   Public Members ********/
     function getSummaryData() {
@@ -176,7 +176,7 @@
     /******** Private Members ********/
     function gravityCount() {
         //returns count of domains in blocklist.
-        $NGC4889 = new \SplFileObject('/etc/pihole/gravity.list');
+        $NGC4889 = getGravityList();
         $NGC4889->seek($NGC4889->getSize());
         $swallowed = $NGC4889->key();
 

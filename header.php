@@ -24,13 +24,12 @@
         }
     }
 
-    $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
-    $output = shell_exec($cmd);
+    $output = getSystemTemperature();
     $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
     $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
 
     // Reparse setupVars.conf here, as we might have switched temperature units above
-    $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+    $setupVars = getSystemVars();
     if(isset($setupVars['TEMPERATUREUNIT']))
     {
         $temperatureunit = $setupVars['TEMPERATUREUNIT'];
@@ -55,7 +54,7 @@
     $mem = array_merge($mem);
     $used = $mem[2] - $mem[5] - $mem[6];
     $total = $mem[1];
-    $memory_usage = $used/$total*100;
+    $memory_usage = ($total == 0 ? 0 : $used/$total*100);
 
     // For session timer
     $maxlifetime = ini_get("session.gc_maxlifetime");

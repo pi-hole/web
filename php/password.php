@@ -1,9 +1,10 @@
 <?php
+include('system.php');
     // Start a new PHP session (or continue an existing one)
     session_start();
 
     // Read setupVars.conf file
-    $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+    $setupVars = getSystemVars();
     // Try to read password hash from setupVars.conf
     if(isset($setupVars['WEBPASSWORD']))
     {

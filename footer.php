@@ -5,7 +5,7 @@
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
             <?php
-            $piholeVersion = exec("cd /etc/.pihole/ && git describe --tags --abbrev=0");
+            $piholeVersion = getPiHoleVersion();
             $webVersion = exec("git describe --tags --abbrev=0");
             ?>
             <b>Pi-hole Version </b> <span id="piholeVersion"><?php echo $piholeVersion; ?></span>
