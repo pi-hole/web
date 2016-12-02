@@ -2,19 +2,16 @@
     require "php/auth.php";
     require "php/password.php";
 
+    check_cors();
+
     if (isset($_GET['enable']) && $auth) {
-        check_cors(true);
         exec('sudo pihole enable');
         $refer = $_SERVER['HTTP_REFERER'];
         header("location:$refer");
     } elseif (isset($_GET['disable']) && $auth) {
-        check_cors(true);
         exec('sudo pihole disable');
         $refer = $_SERVER['HTTP_REFERER'];
         header("location:$refer");
-    }
-    else {
-        check_cors();
     }
 
     // Web based change of temperature unit

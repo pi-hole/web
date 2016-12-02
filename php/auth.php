@@ -14,7 +14,7 @@ function log_and_die($message) {
     die($message);
 }
 
-function check_cors($strict=false) {
+function check_cors() {
     // Check CORS
     $AUTHORIZED_HOSTNAMES = array(
         'http://' . $_SERVER['SERVER_ADDR'],
@@ -27,28 +27,17 @@ function check_cors($strict=false) {
     if (! empty($virtual_host))
         array_push($AUTHORIZED_HOSTNAMES, 'http://' . $virtual_host);
 
-    if(isset($_SERVER['HTTP_HOST'])) {
-        if(!in_array('http://'.$_SERVER['HTTP_HOST'], $AUTHORIZED_HOSTNAMES)) {
-            log_and_die("Failed CORS: http://" . $_SERVER['HTTP_HOST'] . ' vs ' . join(',', $AUTHORIZED_HOSTNAMES));
-        }
-        header("Access-Control-Allow-Origin: ${_SERVER['HTTP_HOST']}");
-    }
-    else {
-        if($strict) {
-            log_and_die("Failed CORS: Unknown HTTP_HOST (Strict flag enabled)");
-        }
-        pi_log("HTTP_HOST check skipped, unknown HTTP_HOST");
+    // Since the Host header is easily manipulated, we can only check if it's wrong and can't use it
+    // to validate that the client is authorized, only unauthorized.
+    if(isset($_SERVER['HTTP_HOST']) && !in_array("http://".$_SERVER['HTTP_HOST'], $AUTHORIZED_HOSTNAMES)) {
+        log_and_die("Failed Host Check: " . $_SERVER['HTTP_HOST'] .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
     }
 
     if(isset($_SERVER['HTTP_ORIGIN'])) {
         if(!in_array($_SERVER['HTTP_ORIGIN'], $AUTHORIZED_HOSTNAMES)) {
-            log_and_die("Failed CORS: " . $_SERVER['HTTP_ORIGIN'] .' vs '. join(',', $AUTHORIZED_HOSTNAMES));
-
+            log_and_die("Failed CORS: " . $_SERVER['HTTP_ORIGIN'] .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
         }
         header("Access-Control-Allow-Origin: ${_SERVER['HTTP_ORIGIN']}");
-    }
-    else if($strict) {
-        log_and_die("Failed CORS: Unknown HTTP_ORIGIN (Strict flag enabled)");
     }
     else {
         pi_log("CORS skipped, unknown HTTP_ORIGIN");
