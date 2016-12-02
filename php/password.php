@@ -4,7 +4,7 @@ include('system.php');
     session_start();
 
     // Read setupVars.conf file
-    $setupVars = getSystemVars();
+    $setupVars = getSetupVars();
     // Try to read password hash from setupVars.conf
     if(isset($setupVars['WEBPASSWORD']))
     {

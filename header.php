@@ -29,7 +29,7 @@
     $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
 
     // Reparse setupVars.conf here, as we might have switched temperature units above
-    $setupVars = getSystemVars();
+    $setupVars = getSetupVars();
     if(isset($setupVars['TEMPERATUREUNIT']))
     {
         $temperatureunit = $setupVars['TEMPERATUREUNIT'];

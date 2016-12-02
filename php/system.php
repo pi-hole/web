@@ -18,7 +18,7 @@ function getFileList($type) {
     return file_get_contents($PI_HOLE_DIR . "/" . $type . "list.txt");
 }
 
-function getSystemVars() {
+function getSetupVars() {
     global $PI_HOLE_DIR;
     return parse_ini_file("$PI_HOLE_DIR/setupVars.conf");
 }
