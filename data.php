@@ -1,13 +1,13 @@
 <?php
     $log = array();
-    $divide =  parse_ini_file("/etc/pihole/setupVars.conf")['IPV6_ADDRESS'] != "" && parse_ini_file("/etc/pihole/setupVars.conf")['IPV4_ADDRESS'] != "";
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
     $log = getPiHoleLog();
+    echo $log;
 
     /*******   Public Members ********/
     function getSummaryData() {
-        global $log, $divide;
-        $domains_being_blocked = gravityCount() / ($divide ? 2 : 1);
+        global $log;
+        $domains_being_blocked = gravityCount() / (isUsingIVP6() ? 2 : 1);
 
         $dns_queries_today = count(getDnsQueries($log));
 

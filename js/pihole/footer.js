@@ -33,7 +33,7 @@ function versionCompare(left, right) {
 
 // Update check
 $.getJSON("https://api.github.com/repos/pi-hole/pi-hole/releases/latest", function(json) {
-    if(webVersion !== "vDev" && piholeVersion !== "Stub" && versionCompare(webVersion, json.tag_name.slice(1)) < 0) {
+    if(piholeVersion !== "vDev" && piholeVersion !== "Stub" && versionCompare(webVersion, json.tag_name.slice(1)) < 0) {
         // Alert usera
         var $piholeVersion = $("#piholeVersion");
         $piholeVersion.html($piholeVersion.text() + '<a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">(Update available!)</a>');
@@ -41,7 +41,7 @@ $.getJSON("https://api.github.com/repos/pi-hole/pi-hole/releases/latest", functi
     }
 });
 $.getJSON("https://api.github.com/repos/pi-hole/AdminLTE/releases/latest", function(json) {
-    if(webVersion !== "vDev" && piholeVersion !== "Stub" && versionCompare(webVersion, json.tag_name.slice(1)) < 0) {
+    if(piholeVersion !== "vDev" && piholeVersion !== "Stub" && versionCompare(webVersion, json.tag_name.slice(1)) < 0) {
         // Alert user
         var $webVersion = $("#webVersion");
         $webVersion.html($webVersion.text() + '<a class="alert-link" href="https://github.com/pi-hole/adminLTE/releases">(Update available!)</a>');

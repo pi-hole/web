@@ -14,7 +14,7 @@ function echoEvent($datatext) {
 
 // echoEvent("***START***");
 
-$proc = popen("sudo pihole -g", 'r');
+$proc = updateGravity();
 while (!feof($proc)) {
     echoEvent(fread($proc, 4096));
 }

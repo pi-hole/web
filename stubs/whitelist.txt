@@ -1,0 +1,8 @@
+raw.githubusercontent.com
+mirror1.malwaredomains.com
+sysctl.org
+zeustracker.abuse.ch
+s3.amazonaws.com
+hosts-file.net
+ransomwaretracker.abuse.ch
+mozilla.com

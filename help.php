@@ -147,7 +147,7 @@
     // Web based flushing of pi-hole log file
     if (isset($_GET["flush"]))
     {
-        exec("sudo pihole -f");
+        flushPiHole();
     }
 
     require "footer.php";
