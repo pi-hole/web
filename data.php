@@ -1,8 +1,7 @@
 <?php
-    $log = array();
+
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
     $log = getPiHoleLog();
-    echo $log;
 
     /*******   Public Members ********/
     function getSummaryData() {
