@@ -149,8 +149,8 @@ function disablePiHole() {
 }
 
 function updateGravity() {
-    stubWith(
-        $original = function () { popen("sudo pihole -g", 'r'); },
-        $stub = function () {}
+    return stubWith(
+        $original = function () { return popen("sudo pihole -g", 'r'); },
+        $stub     = function () { return popen("echo \"Stubbed update.\"", 'r'); }
     );
 }
