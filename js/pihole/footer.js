@@ -9,12 +9,15 @@ $("body").on("click", function(event) {
 });
 
 // Enable/Disable
-$("#flip-status").on("click", () => {
+$("#flip-status").on("click", (e) => {
+    e.preventDefault();
     const btnStatus = $("#flip-status");
     const status = $("#status");
+    const text = btnStatus.text().trim();
 
-    switch(btnStatus.text().trim()) {
+    switch(text) {
         case "Enable":
+            btnStatus.html("<i class='fa fa-spinner'></i> <span>Enabling...</span>");
             $.getJSON("api.php?enable", (data) => {
                 if(data.status === "enabled") {
                     btnStatus.html("<i class='fa fa-stop'></i> <span>Disable</span>");
@@ -23,6 +26,7 @@ $("#flip-status").on("click", () => {
             });
             break;
         case "Disable":
+            btnStatus.html("<i class='fa fa-spinner'></i> <span>Disabling...</span>");
             $.getJSON("api.php?disable", (data) => {
                 if(data.status === "disabled") {
                     btnStatus.html("<i class='fa fa-play'></i> <span>Enable</span>");
