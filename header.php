@@ -2,11 +2,11 @@
     require "php/password.php";
 
     if (isset($_GET['enable']) && $auth) {
-      exec('sudo pihole enable');
+      enablePiHole();
       $refer = $_SERVER['HTTP_REFERER'];
       header("location:$refer");
     } elseif (isset($_GET['disable']) && $auth) {
-      exec('sudo pihole disable');
+      disablePiHole();
       $refer = $_SERVER['HTTP_REFERER'];
       header("location:$refer");
     }
@@ -24,13 +24,12 @@
         }
     }
 
-    $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
-    $output = shell_exec($cmd);
+    $output = getSystemTemperature();
     $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
     $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
 
     // Reparse setupVars.conf here, as we might have switched temperature units above
-    $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+    $setupVars = getSetupVars();
     if(isset($setupVars['TEMPERATUREUNIT']))
     {
         $temperatureunit = $setupVars['TEMPERATUREUNIT'];
@@ -42,20 +41,13 @@
 
     // Get load
     $loaddata = sys_getloadavg();
+
     // Get number of processing units available to PHP
     // (may be less than the number of online processors)
-    $nproc = shell_exec('nproc');
+    $nproc = getProcValue();
 
     // Get memory usage
-    $free = shell_exec('free');
-    $free = (string)trim($free);
-    $free_arr = explode("\n", $free);
-    $mem = explode(" ", $free_arr[1]);
-    $mem = array_filter($mem);
-    $mem = array_merge($mem);
-    $used = $mem[2] - $mem[5] - $mem[6];
-    $total = $mem[1];
-    $memory_usage = $used/$total*100;
+    $memory_usage = getMemoryUsage();
 
     // For session timer
     $maxlifetime = ini_get("session.gc_maxlifetime");
@@ -188,10 +180,10 @@
                 <div class="pull-left info">
                     <p>Status</p>
                     <?php
-                        $pistatus = exec('sudo pihole status web');
-                        if ($pistatus == "1") {
+                        $piholeStatus = getPiHoleStatus();
+                        if ($piholeStatus == "1") {
                             echo '<a href="#"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
-                        } elseif ($pistatus == "0") {
+                        } elseif ($piholeStatus == "0") {
                             echo '<a href="#"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
                         } else {
                             echo '<a href="#"><i class="fa fa-circle" style="color:#ff9900"></i> Starting</a>';
@@ -281,7 +273,7 @@
                 </li>
                 <!-- Toggle -->
                 <?php
-                if ($pistatus == "1") {
+                if ($piholeStatus == "1") {
                   echo '                <li><a href="?disable"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
                 } else {
                   echo '                <li><a href="?enable"><i class="fa fa-play"></i> <span>Enable</span></a></li>';

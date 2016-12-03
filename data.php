@@ -1,13 +1,12 @@
 <?php
-    $log = array();
-    $divide =  parse_ini_file("/etc/pihole/setupVars.conf")['IPV6_ADDRESS'] != "" && parse_ini_file("/etc/pihole/setupVars.conf")['IPV4_ADDRESS'] != "";
+
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
-    $log = new \SplFileObject('/var/log/pihole.log');
+    $log = getPiHoleLog();
 
     /*******   Public Members ********/
     function getSummaryData() {
-        global $log, $divide;
-        $domains_being_blocked = gravityCount() / ($divide ? 2 : 1);
+        global $log;
+        $domains_being_blocked = gravityCount() / (isUsingIVP6() ? 2 : 1);
 
         $dns_queries_today = count(getDnsQueries($log));
 
@@ -136,7 +135,7 @@
         global $log;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueriesAll($log);
-        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+        $hostname = gethostname();
 
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
@@ -176,7 +175,7 @@
     /******** Private Members ********/
     function gravityCount() {
         //returns count of domains in blocklist.
-        $NGC4889 = new \SplFileObject('/etc/pihole/gravity.list');
+        $NGC4889 = getGravityList();
         $NGC4889->seek($NGC4889->getSize());
         $swallowed = $NGC4889->key();
 
@@ -206,7 +205,8 @@
     function getBlockedQueries(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
-        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+        $hostname = gethostname();
+
         foreach ($log as $line) {
             $line = preg_replace('/ {2,}/', ' ', $line);
             $exploded = explode(" ", $line);
