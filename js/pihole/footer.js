@@ -16,17 +16,17 @@ $("#flip-status").on("click", () => {
     switch(btnStatus.text().trim()) {
         case "Enable":
             $.getJSON("api.php?enable", (data) => {
-                if(data.status == "enabled") {
-                    btnStatus.html('<i class="fa fa-stop"></i> <span>Disable</span>');
-                    status.html('<i class="fa fa-circle" style="color:#7FFF00"></i> Active');
+                if(data.status === "enabled") {
+                    btnStatus.html("<i class='fa fa-stop'></i> <span>Disable</span>");
+                    status.html("<i class='fa fa-circle' style='color:#7FFF00'></i> Active");
                 }
             });
             break;
         case "Disable":
             $.getJSON("api.php?disable", (data) => {
-                if(data.status == "disabled") {
-                    btnStatus.html('<i class="fa fa-play"></i> <span>Enable</span>');
-                    status.html('<i class="fa fa-circle" style="color:#FF0000"></i> Offline');
+                if(data.status === "disabled") {
+                    btnStatus.html("<i class='fa fa-play'></i> <span>Enable</span>");
+                    status.html("<i class='fa fa-circle' style='color:#FF0000'></i> Offline");
                 }
             });
             break;
