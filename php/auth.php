@@ -1,5 +1,5 @@
 <?php
-require('func.php');
+require_once('func.php');
 
 $ERRORLOG = getenv('PHP_ERROR_LOG');
 if (empty($ERRORLOG)) {

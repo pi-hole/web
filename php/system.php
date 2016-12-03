@@ -1,5 +1,5 @@
 <?php
-require('func.php');
+require_once('func.php');
 
 $PI_HOLE_DIR = "/etc/pihole";
 
@@ -9,22 +9,16 @@ if ($ENABLE_STUBS) {
     $PI_HOLE_DIR = "stubs";
 }
 
-function stubWith($original, $stub)
-{
+function stubWith($original, $stub) {
     global $PI_HOLE_DIR;
     if ($PI_HOLE_DIR != "stubs") {
         return $original();
-    } else if (isset($stub)) {
+    } else {
         return $stub();
     }
 }
 
-function doNothing()
-{
-}
-
-function getFileList($type)
-{
+function getFileList($type) {
     global $PI_HOLE_DIR;
     $list = "";
     if ($type == "white" || $type == "black") {
@@ -33,34 +27,30 @@ function getFileList($type)
     return $list;
 }
 
-function getGravityList()
-{
+function getGravityList() {
     global $PI_HOLE_DIR;
     return new \SplFileObject("$PI_HOLE_DIR/gravity.list");
 }
 
-function getSetupVars()
-{
+function getSetupVars() {
     global $PI_HOLE_DIR;
     return parse_ini_file("$PI_HOLE_DIR/setupVars.conf");
 }
 
-function getPiHoleVersion()
-{
+function getPiHoleVersion() {
     return stubWith(
         $original = function () { return exec("cd /etc/.pihole/ && git describe --tags --abbrev=0"); },
         $stub = function () { return "Stub"; }
     );
 }
 
-function getPiHoleLog()
-{
+function getPiHoleLog() {
+    global $PI_HOLE_DIR;
     return stubWith(
         $original = function () {
             return new \SplFileObject("/var/log/pihole.log");
         },
-        $stub = function () {
-            global $PI_HOLE_DIR;
+        $stub = function () use ($PI_HOLE_DIR) {
             return new \SplFileObject("$PI_HOLE_DIR/pihole.log");
         }
     );
@@ -76,14 +66,10 @@ function getSystemTemperature() {
 }
 
 function isUsingIVP6() {
-    return stubWith(
-        $original = function () {
-            $ipv4 = parse_ini_file("/etc/pihole/setupVars.conf")['IPV4_ADDRESS'] != "";
-            $ipv6 = parse_ini_file("/etc/pihole/setupVars.conf")['IPV6_ADDRESS'] != "";
-            return $ipv4 && $ipv6;
-        },
-        $stub = function () { return false; }
-    );
+    global $PI_HOLE_DIR;
+    $ipv4 = parse_ini_file("$PI_HOLE_DIR/setupVars.conf")['IPV4_ADDRESS'] != "";
+    $ipv6 = parse_ini_file("$PI_HOLE_DIR/setupVars.conf")['IPV6_ADDRESS'] != "";
+    return $ipv4 && $ipv6;
 }
 
 function getProcValue() {

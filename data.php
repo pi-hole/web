@@ -135,7 +135,7 @@
         global $log;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueriesAll($log);
-        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+        $hostname = gethostname();
 
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
@@ -205,7 +205,8 @@
     function getBlockedQueries(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
-        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+        $hostname = gethostname();
+
         foreach ($log as $line) {
             $line = preg_replace('/ {2,}/', ' ', $line);
             $exploded = explode(" ", $line);
