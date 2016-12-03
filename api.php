@@ -1,18 +1,21 @@
 <?php
     $api = true;
     require "php/password.php";
+    require "php/auth.php";
+
+    check_cors();
 
     include('data.php');
     header('Content-type: application/json');
 
     $data = array();
 
-    // Works without authorization
+    // Non-Auth
+
     if (isset($_GET['summaryRaw'])) {
         $data = array_merge($data,  getSummaryData());
     }
 
-    // Works without authorization
     if (isset($_GET['summary']) || !count($_GET)) {
         $sum = getSummaryData();
         $sum['ads_blocked_today'] = number_format( $sum['ads_blocked_today']);
@@ -22,46 +25,54 @@
         $data = array_merge($data,  $sum);
     }
 
-    // Works without authorization
     if (isset($_GET['overTimeData'])) {
         $data = array_merge($data,  getOverTimeData());
     }
 
-    // Works without authorization
     if (isset($_GET['overTimeData10mins'])) {
         $data = array_merge($data,  getOverTimeData10mins());
     }
 
-    // Requires authorization
+    // Auth Required
+
     if (isset($_GET['topItems']) && $auth) {
         $data = array_merge($data,  getTopItems());
     }
 
-    // Requires authorization
     if (isset($_GET['recentItems']) && $auth) {
         if (is_numeric($_GET['recentItems'])) {
             $data = array_merge($data,  getRecentItems($_GET['recentItems']));
         }
     }
 
-    // Requires authorization
     if (isset($_GET['getQueryTypes']) && $auth) {
         $data = array_merge($data, getIpvType());
     }
 
-    // Requires authorization
     if (isset($_GET['getForwardDestinations']) && $auth) {
         $data = array_merge($data, getForwardDestinations());
     }
 
-    // Requires authorization
     if (isset($_GET['getQuerySources']) && $auth) {
         $data = array_merge($data, getQuerySources());
     }
 
-    // Requires authorization
     if (isset($_GET['getAllQueries']) && $auth) {
         $data = array_merge($data, getAllQueries());
+    }
+
+    if (isset($_GET['enable']) && $auth) {
+        exec('sudo pihole enable');
+        $data = array_merge($data, Array(
+            "status" => "enabled"
+        ));
+    }
+
+    if (isset($_GET['disable']) && $auth) {
+        exec('sudo pihole disable');
+        $data = array_merge($data, Array(
+            "status" => "disabled"
+        ));
     }
 
     function filterArray(&$a) {
