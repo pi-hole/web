@@ -4,7 +4,7 @@ require_once('func.php');
 $PI_HOLE_DIR = "/etc/pihole";
 
 /** Make sure this is false before merging */
-$ENABLE_STUBS = true;
+$ENABLE_STUBS = false;
 if ($ENABLE_STUBS) {
     $PI_HOLE_DIR = "stubs";
 }
