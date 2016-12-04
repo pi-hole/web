@@ -68,8 +68,7 @@
             "status" => "enabled"
         ));
     }
-
-    if (isset($_GET['disable'], $_GET['token']) && $auth) {
+    elseif (isset($_GET['disable'], $_GET['token']) && $auth) {
         check_csrf($_GET['token']);
         exec('sudo pihole disable');
         $data = array_merge($data, Array(
