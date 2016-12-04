@@ -182,36 +182,30 @@ function objectToArray(p){
 // Functions to update data in page
 
 function updateSummaryData(runOnce) {
+    var setTimer = function(timeInMs) {
+        if (!runOnce) {
+            setTimeout(updateSummaryData, timeInMs);
+        }
+    };
     $.getJSON("api.php?summary", function LoadSummaryData(data) {
-        //$("h3.statistic").addClass("glow");
-        if ($("h3#ads_blocked_today").text() != data.ads_blocked_today) {
-            $("h3#ads_blocked_today").addClass("glow");
-        }
-        if ($("h3#dns_queries_today").text() != data.dns_queries_today) {
-            $("h3#dns_queries_today").addClass("glow");
-        }
-        if ($("h3#ads_percentage_today").text() != data.ads_percentage_today) {
-            $("h3#ads_percentage_today").addClass("glow");
-        }
 
-        window.setTimeout(function(){
+        ['ads_blocked_today', 'dns_queries_today', 'ads_percentage_today'].forEach(function(today) {
+            var todayElement = $("h3#" + today);
+            todayElement.text() != data[today] && todayElement.addClass("glow");
+        });
+
+        window.setTimeout(function() {
             $("h3#ads_blocked_today").text(data.ads_blocked_today);
             $("h3#dns_queries_today").text(data.dns_queries_today);
             $("h3#domains_being_blocked").text(data.domains_being_blocked);
             $("h3#ads_percentage_today").text(data.ads_percentage_today + "%");
             $("h3.statistic.glow").removeClass("glow")
         }, 500);
-
-        updateSessionTimer();
     }).done(function() {
-        if (runOnce !== true) {
-            setTimeout(updateSummaryData, 10000);
-        }
+        setTimer(10000);
     }).fail(function() {
-        if (runOnce !== true) {
-            setTimeout(updateSummaryData, (1000 * 60 * 5));
-        }
-    });;
+        setTimer(300000);
+    });
 }
 
 var failures = 0;
