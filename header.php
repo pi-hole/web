@@ -52,6 +52,12 @@
 
     // For session timer
     $maxlifetime = ini_get("session.gc_maxlifetime");
+
+    // Generate CSRF token
+    if(empty($_SESSION['token'])) {
+        $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
+    }
+    $token = $_SESSION['token'];
 ?>
 
 <!DOCTYPE html>
@@ -99,6 +105,8 @@
 </div>
 <!-- /JS Warning -->
 <script src="js/pihole/header.js"></script>
+<!-- Send token to JS -->
+<div id="token" hidden><?php echo $token ?></div>
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->

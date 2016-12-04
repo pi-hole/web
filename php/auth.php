@@ -44,9 +44,15 @@ function check_cors() {
     }
 }
 
-function check_csrf() {
+function check_csrf($token) {
     // Check CSRF token
-    session_start();
+    $session_started = function_exists("session_status") ?
+        session_status() == PHP_SESSION_ACTIVE :
+        session_id() == "";
+
+    if(!$session_started) {
+        session_start();
+    }
 
     // Credit: http://php.net/manual/en/function.hash-equals.php#119576
     if(!function_exists('hash_equals')) {
@@ -68,7 +74,7 @@ function check_csrf() {
         }
     }
 
-    if(!isset($_SESSION['token'], $_POST['token']) || !hash_equals($_SESSION['token'], $_POST['token'])) {
+    if(!isset($_SESSION['token']) || empty($token) || !hash_equals($_SESSION['token'], $token)) {
         log_and_die("Wrong token");
     }
 }

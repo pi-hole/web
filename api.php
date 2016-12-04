@@ -61,14 +61,16 @@
         $data = array_merge($data, getAllQueries());
     }
 
-    if (isset($_GET['enable']) && $auth) {
+    if (isset($_GET['enable'], $_GET['token']) && $auth) {
+        check_csrf($_GET['token']);
         exec('sudo pihole enable');
         $data = array_merge($data, Array(
             "status" => "enabled"
         ));
     }
 
-    if (isset($_GET['disable']) && $auth) {
+    if (isset($_GET['disable'], $_GET['token']) && $auth) {
+        check_csrf($_GET['token']);
         exec('sudo pihole disable');
         $data = array_merge($data, Array(
             "status" => "disabled"

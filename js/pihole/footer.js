@@ -14,11 +14,12 @@ $("#flip-status").on("click", (e) => {
     const btnStatus = $("#flip-status");
     const status = $("#status");
     const text = btnStatus.text().trim();
+    const token = $("#token").html();
 
     switch(text) {
         case "Enable":
             btnStatus.html("<i class='fa fa-spinner'></i> <span>Enabling...</span>");
-            $.getJSON("api.php?enable", (data) => {
+            $.getJSON("api.php?enable&token=" + token, (data) => {
                 if(data.status === "enabled") {
                     btnStatus.html("<i class='fa fa-stop'></i> <span>Disable</span>");
                     status.html("<i class='fa fa-circle' style='color:#7FFF00'></i> Active");
@@ -27,7 +28,7 @@ $("#flip-status").on("click", (e) => {
             break;
         case "Disable":
             btnStatus.html("<i class='fa fa-spinner'></i> <span>Disabling...</span>");
-            $.getJSON("api.php?disable", (data) => {
+            $.getJSON("api.php?disable&token=" + token, (data) => {
                 if(data.status === "disabled") {
                     btnStatus.html("<i class='fa fa-play'></i> <span>Enable</span>");
                     status.html("<i class='fa fa-circle' style='color:#FF0000'></i> Offline");

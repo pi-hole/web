@@ -6,7 +6,7 @@ if(!isset($_POST['domain'], $_POST['list'], $_POST['token'])) {
 }
 
 check_cors();
-check_csrf();
+check_csrf($_POST['token']);
 check_domain();
 
 switch($_POST['list']) {
