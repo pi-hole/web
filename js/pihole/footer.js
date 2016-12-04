@@ -14,7 +14,7 @@ $("#flip-status").on("click", (e) => {
     const btnStatus = $("#flip-status");
     const status = $("#status");
     const text = btnStatus.text().trim();
-    const token = $("#token").html();
+    const token = encodeURIComponent($("#token").html());
 
     switch(text) {
         case "Enable":
