@@ -189,7 +189,7 @@ function updateSummaryData(runOnce) {
     };
     $.getJSON("api.php?summary", function LoadSummaryData(data) {
 
-        ['ads_blocked_today', 'dns_queries_today', 'ads_percentage_today'].forEach(function(today) {
+        ["ads_blocked_today", "dns_queries_today", "ads_percentage_today"].forEach(function(today) {
             var todayElement = $("h3#" + today);
             todayElement.text() != data[today] && todayElement.addClass("glow");
         });
