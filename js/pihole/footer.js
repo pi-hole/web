@@ -8,6 +8,36 @@ $("body").on("click", function(event) {
     }
 });
 
+// Enable/Disable
+$("#flip-status").on("click", (e) => {
+    e.preventDefault();
+    const btnStatus = $("#flip-status");
+    const status = $("#status");
+    const text = btnStatus.text().trim();
+    const token = encodeURIComponent($("#token").html());
+
+    switch(text) {
+        case "Enable":
+            btnStatus.html("<i class='fa fa-spinner'></i> <span>Enabling...</span>");
+            $.getJSON("api.php?enable&token=" + token, (data) => {
+                if(data.status === "enabled") {
+                    btnStatus.html("<i class='fa fa-stop'></i> <span>Disable</span>");
+                    status.html("<i class='fa fa-circle' style='color:#7FFF00'></i> Active");
+                }
+            });
+            break;
+        case "Disable":
+            btnStatus.html("<i class='fa fa-spinner'></i> <span>Disabling...</span>");
+            $.getJSON("api.php?disable&token=" + token, (data) => {
+                if(data.status === "disabled") {
+                    btnStatus.html("<i class='fa fa-play'></i> <span>Enable</span>");
+                    status.html("<i class='fa fa-circle' style='color:#FF0000'></i> Offline");
+                }
+            });
+            break;
+    }
+});
+
 var piholeVersion = $("#piholeVersion").html();
 var webVersion = $("#webVersion").html();
 

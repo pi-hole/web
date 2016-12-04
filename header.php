@@ -1,15 +1,8 @@
 <?php
+    require "php/auth.php";
     require "php/password.php";
 
-    if (isset($_GET['enable']) && $auth) {
-      exec('sudo pihole enable');
-      $refer = $_SERVER['HTTP_REFERER'];
-      header("location:$refer");
-    } elseif (isset($_GET['disable']) && $auth) {
-      exec('sudo pihole disable');
-      $refer = $_SERVER['HTTP_REFERER'];
-      header("location:$refer");
-    }
+    check_cors();
 
     // Web based change of temperature unit
     if (isset($_GET['tempunit']))
@@ -59,6 +52,12 @@
 
     // For session timer
     $maxlifetime = ini_get("session.gc_maxlifetime");
+
+    // Generate CSRF token
+    if(empty($_SESSION['token'])) {
+        $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
+    }
+    $token = $_SESSION['token'];
 ?>
 
 <!DOCTYPE html>
@@ -106,6 +105,8 @@
 </div>
 <!-- /JS Warning -->
 <script src="js/pihole/header.js"></script>
+<!-- Send token to JS -->
+<div id="token" hidden><?php echo $token ?></div>
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
@@ -190,11 +191,11 @@
                     <?php
                         $pistatus = exec('sudo pihole status web');
                         if ($pistatus == "1") {
-                            echo '<a href="#"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
+                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
                         } elseif ($pistatus == "0") {
-                            echo '<a href="#"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
+                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
                         } else {
-                            echo '<a href="#"><i class="fa fa-circle" style="color:#ff9900"></i> Starting</a>';
+                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#ff9900"></i> Starting</a>';
                         }
 
                         // CPU Temp
@@ -282,9 +283,9 @@
                 <!-- Toggle -->
                 <?php
                 if ($pistatus == "1") {
-                  echo '                <li><a href="?disable"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
+                  echo '                <li><a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
                 } else {
-                  echo '                <li><a href="?enable"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
+                  echo '                <li><a href="#" id="flip-status"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
                 }
                 ?>
                 <!-- Logout -->
