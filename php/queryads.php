@@ -1,7 +1,4 @@
 <?php
-require "password.php";
-if(!$auth) die("Not authorized");
-
 ob_end_flush();
 ini_set("output_buffering", "0");
 ob_implicit_flush(true);

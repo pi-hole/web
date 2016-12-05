@@ -5,7 +5,8 @@ function eventsource() {
     {
         return;
     }
-    var source = new EventSource("php/queryads.php?domain="+domain.val());
+    var host = window.location.host;
+    var source = new EventSource("http://"+host+"/admin/php/queryads.php?domain="+domain.val());
 
     // Reset and show field
     ta.empty();
