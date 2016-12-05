@@ -9,7 +9,7 @@
         global $log, $divide;
         $domains_being_blocked = gravityCount() / ($divide ? 2 : 1);
 
-        $dns_queries_today = count(getDnsQueries($log));
+        $dns_queries_today = countDnsQueries();
 
         $ads_blocked_today = count(getBlockedQueries($log));
 
@@ -183,6 +183,7 @@
         return $swallowed;
 
     }
+
     function getDnsQueries(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
@@ -193,6 +194,11 @@
         }
         return $lines;
     }
+
+    function countDnsQueries() {
+        return exec("grep -c \": query\\[\" /var/log/pihole.log");
+    }
+
     function getDnsQueriesAll(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
@@ -203,6 +209,7 @@
         }
         return $lines;
     }
+
     function getBlockedQueries(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
@@ -222,6 +229,7 @@
         }
         return $lines;
     }
+
     function getForwards(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
