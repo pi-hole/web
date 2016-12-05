@@ -175,13 +175,7 @@
 
     /******** Private Members ********/
     function gravityCount() {
-        //returns count of domains in blocklist.
-        $NGC4889 = new \SplFileObject('/etc/pihole/gravity.list');
-        $NGC4889->seek($NGC4889->getSize());
-        $swallowed = $NGC4889->key();
-
-        return $swallowed;
-
+        return exec("grep -c ^ /etc/pihole/gravity.list");
     }
 
     function getDnsQueries(\SplFileObject $log) {
