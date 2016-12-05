@@ -11,7 +11,7 @@
 
         $dns_queries_today = countDnsQueries();
 
-        $ads_blocked_today = count(getBlockedQueries($log));
+        $ads_blocked_today = countBlockedQueries();
 
         $ads_percentage_today = $dns_queries_today > 0 ? ($ads_blocked_today / $dns_queries_today * 100) : 0;
 
@@ -228,6 +228,11 @@
             }
         }
         return $lines;
+    }
+
+    function countBlockedQueries() {
+        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+        return exec("grep \"gravity.list\" /var/log/pihole.log | grep -v \"pi.hole\" | grep -v -c \"".$hostname."\"");
     }
 
     function getForwards(\SplFileObject $log) {
