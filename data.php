@@ -9,9 +9,9 @@
         global $log, $divide;
         $domains_being_blocked = gravityCount() / ($divide ? 2 : 1);
 
-        $dns_queries_today = count(getDnsQueries($log));
+        $dns_queries_today = countDnsQueries();
 
-        $ads_blocked_today = count(getBlockedQueries($log));
+        $ads_blocked_today = countBlockedQueries();
 
         $ads_percentage_today = $dns_queries_today > 0 ? ($ads_blocked_today / $dns_queries_today * 100) : 0;
 
@@ -175,14 +175,9 @@
 
     /******** Private Members ********/
     function gravityCount() {
-        //returns count of domains in blocklist.
-        $NGC4889 = new \SplFileObject('/etc/pihole/gravity.list');
-        $NGC4889->seek($NGC4889->getSize());
-        $swallowed = $NGC4889->key();
-
-        return $swallowed;
-
+        return exec("grep -c ^ /etc/pihole/gravity.list");
     }
+
     function getDnsQueries(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
@@ -193,6 +188,11 @@
         }
         return $lines;
     }
+
+    function countDnsQueries() {
+        return exec("grep -c \": query\\[\" /var/log/pihole.log");
+    }
+
     function getDnsQueriesAll(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
@@ -203,6 +203,7 @@
         }
         return $lines;
     }
+
     function getBlockedQueries(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
@@ -222,6 +223,12 @@
         }
         return $lines;
     }
+
+    function countBlockedQueries() {
+        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+        return exec("grep \"gravity.list\" /var/log/pihole.log | grep -v \"pi.hole\" | grep -v \" read \" | grep -v -c \"".$hostname."\"");
+    }
+
     function getForwards(\SplFileObject $log) {
         $log->rewind();
         $lines = [];

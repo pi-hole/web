@@ -24,7 +24,7 @@ $(document).ready(function() {
             return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Windows());
         }
     };
-    var animate = false;
+
     var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
     timeLineChart = new Chart(ctx, {
         type: "line",
@@ -63,9 +63,10 @@ $(document).ready(function() {
                 mode: "x-axis",
                 callbacks: {
                     title(tooltipItem, data) {
-                        var idx = tooltipItem[0].index;
-                        var h = Math.floor(idx/6);
-                        var m = 10*(idx%6);
+                        var label = tooltipItem[0].xLabel;
+                        var time = label.match(/(\d?\d):?(\d?\d?)/);
+                        var h = parseInt(time[1], 10);
+                        var m = parseInt(time[2], 10) || 0;
                         var from = padNumber(h)+":"+padNumber(m)+":00";
                         var to = padNumber(h)+":"+padNumber(m+9)+":59";
                         return "Queries from "+from+" to "+to;
@@ -96,56 +97,87 @@ $(document).ready(function() {
         }
     });
 
-    ctx = document.getElementById("queryTypeChart").getContext("2d");
-    queryTypeChart = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-            labels: [],
-            datasets: [{ data: [] }]
-        },
-        options: {
-            legend: {
-                display: false
-            },
-            animation: {
-                duration: 2000
-            },
-            cutoutPercentage: 0
-        }
-    });
-
-    ctx = document.getElementById("forwardDestinationChart").getContext("2d");
-    forwardDestinationChart = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-            labels: [],
-            datasets: [{ data: [] }]
-        },
-        options: {
-            legend: {
-                display: false
-            },
-            animation: {
-                duration: 2000
-            },
-            cutoutPercentage: 0
-        }
-    });
-
     // Pull in data via AJAX
 
     updateSummaryData();
 
     updateQueriesOverTime();
 
-    updateQueryTypes();
+    // Create / load "Query Types" only if authorized
+    if(!!document.getElementById("queryTypeChart"))
+    {
+        ctx = document.getElementById("queryTypeChart").getContext("2d");
+        queryTypeChart = new Chart(ctx, {
+            type: "doughnut",
+            data: {
+                labels: [],
+                datasets: [{ data: [] }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                animation: {
+                    duration: 2000
+                },
+                cutoutPercentage: 0
+            }
+        });
+        updateQueryTypes();
+    }
 
-    updateTopClientsChart();
+    // Create / load "Forward Destinations" only if authorized
+    if(!!document.getElementById("forwardDestinationChart"))
+    {
+        ctx = document.getElementById("forwardDestinationChart").getContext("2d");
+        forwardDestinationChart = new Chart(ctx, {
+            type: "doughnut",
+            data: {
+                labels: [],
+                datasets: [{ data: [] }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                animation: {
+                    duration: 2000
+                },
+                cutoutPercentage: 0
+            }
+        });
+        updateForwardDestinations();
+    }
 
-    updateForwardDestinations();
+    // Create / load "Top Domains" and "Top Advertisers" only if authorized
+    if(!!document.getElementById("domain-frequency")
+       && !!document.getElementById("ad-frequency"))
+    {
+        updateTopLists();
+    }
 
-    updateTopLists();
+    // Create / load "Top Clients" only if authorized
+    if(!!document.getElementById("client-frequency"))
+    {
+        updateTopClientsChart();
+    }
 });
+
+// Helper function needed for converting the Objects to Arrays
+
+function objectToArray(p){
+    var keys = Object.keys(p);
+    keys.sort(function(a, b) {
+        return a - b;
+    });
+
+    var arr = [], idx = [];
+    for (var i = 0; i < keys.length; i++) {
+        arr.push(p[keys[i]]);
+        idx.push(keys[i]);
+    }
+    return [idx,arr];
+}
 
 // Functions to update data in page
 
@@ -169,6 +201,8 @@ function updateSummaryData(runOnce) {
             $("h3#ads_percentage_today").text(data.ads_percentage_today + "%");
             $("h3.statistic.glow").removeClass("glow")
         }, 500);
+
+        updateSessionTimer();
     }).done(function() {
         if (runOnce !== true) {
             setTimeout(updateSummaryData, 10000);
@@ -180,20 +214,41 @@ function updateSummaryData(runOnce) {
     });;
 }
 
+var failures = 0;
 function updateQueriesOverTime() {
     $.getJSON("api.php?overTimeData10mins", function(data) {
-        // Add data for each hour that is available
+        // convert received objects to arrays
+        data.domains_over_time = objectToArray(data.domains_over_time);
+        data.ads_over_time = objectToArray(data.ads_over_time);
         // remove last data point since it not representative
-        data.ads_over_time.splice(-1,1);
-        for (var hour in data.ads_over_time) {
-            var d = new Date();
-            d.setHours(Math.floor(hour/6),10*(hour%6),0,0);
+        data.ads_over_time[0].splice(-1,1);
+        // Remove possibly already existing data
+        timeLineChart.data.labels = [];
+        timeLineChart.data.datasets[0].data = [];
+        timeLineChart.data.datasets[1].data = [];
+        // Add data for each hour that is available
+        for (var hour in data.ads_over_time[0]) {
+            var h = parseInt(data.domains_over_time[0][hour]);
+            var d = new Date().setHours(Math.floor(h/6),10*(h%6),0,0);
+
             timeLineChart.data.labels.push(d);
-            timeLineChart.data.datasets[0].data.push(data.domains_over_time[hour]);
-            timeLineChart.data.datasets[1].data.push(data.ads_over_time[hour]);
+            timeLineChart.data.datasets[0].data.push(data.domains_over_time[1][hour]);
+            timeLineChart.data.datasets[1].data.push(data.ads_over_time[1][hour]);
         }
         $('#queries-over-time .overlay').remove();
         timeLineChart.update();
+    }).done(function() {
+        // Reload graph after 10 minutes
+        failures = 0;
+        setTimeout(updateQueriesOverTime, 600000);
+    }).fail(function() {
+        failures++;
+        if(failures < 5)
+        {
+            // Try again after 1 minute only if this has not failed more
+            // than five times in a row
+            setTimeout(updateQueriesOverTime, 60000);
+        }
     });
 }
 
@@ -220,11 +275,28 @@ function updateQueryTypes() {
     });
 }
 
+// Credit: http://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406
+function escapeHtml(text) {
+  var map = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "\'": "&#039;"
+  };
+
+  return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+
 function updateTopClientsChart() {
     $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
         var clienttable =  $('#client-frequency').find('tbody:last');
+        var domain;
         for (domain in data.top_sources) {
-            clienttable.append('<tr> <td>' + domain +
+            // Sanitize domain
+            domain = escapeHtml(domain);
+            var url = "<a href=\"queries.php?client="+domain+"\">"+domain+"</a>";
+            clienttable.append("<tr> <td>" + url +
                 '</td> <td>' + data.top_sources[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-blue" style="width: ' +
                 data.top_sources[domain] / data.dns_queries_today * 100 + '%"></div> </div> </td> </tr> ');
         }
@@ -260,14 +332,28 @@ function updateTopLists() {
     $.getJSON("api.php?summaryRaw&topItems", function(data) {
         var domaintable = $('#domain-frequency').find('tbody:last');
         var adtable = $('#ad-frequency').find('tbody:last');
+        var url, domain;
 
         for (domain in data.top_queries) {
-            domaintable.append('<tr> <td>' + domain +
+            // Sanitize domain
+            domain = escapeHtml(domain);
+            if(domain !== "pi.hole")
+            {
+                url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
+            }
+            else
+            {
+                url = domain;
+            }
+            domaintable.append("<tr> <td>" + url +
                 '</td> <td>' + data.top_queries[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-green" style="width: ' +
                 data.top_queries[domain] / data.dns_queries_today * 100 + '%"></div> </div> </td> </tr> ');
         }
         for (domain in data.top_ads) {
-            adtable.append('<tr> <td>' + domain +
+            // Sanitize domain
+            domain = escapeHtml(domain);
+            url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
+            adtable.append("<tr> <td>" + url +
                 '</td> <td>' + data.top_ads[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-yellow" style="width: ' +
                 data.top_ads[domain] / data.ads_blocked_today * 100 + '%"></div> </div> </td> </tr> ');
         }
