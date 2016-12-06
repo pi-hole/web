@@ -226,7 +226,7 @@
 
     function countBlockedQueries() {
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
-        return exec("grep \"gravity.list\" /var/log/pihole.log | grep -v \"pi.hole\" | grep -v -c \"".$hostname."\"");
+        return exec("grep \"gravity.list\" /var/log/pihole.log | grep -v \"pi.hole\" | grep -v \" read \" | grep -v -c \"".$hostname."\"");
     }
 
     function getForwards(\SplFileObject $log) {
