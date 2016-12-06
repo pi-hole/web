@@ -30,6 +30,8 @@ function eventsource() {
             if(e.data.indexOf("results") !== -1 && e.data.indexOf("0 results") === -1)
             {
                 var shortstring = e.data.replace("::: /etc/pihole/","");
+		// Remove "(x results)"
+		shortstring = shortstring.substring(0, shortstring.indexOf("("));
                 ta.append(shortstring);
             }
         }
