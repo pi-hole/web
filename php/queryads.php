@@ -34,7 +34,16 @@ else
     die();
 }
 
-$proc = popen("sudo pihole -q ".$url, 'r');
+if(isset($_GET["exact"]))
+{
+    $exact = "-exact";
+}
+else
+{
+    $exact = "";
+}
+
+$proc = popen("sudo pihole -q ".$url." ".$exact, 'r');
 while (!feof($proc)) {
     echoEvent(fread($proc, 4096));
 }

@@ -13,8 +13,14 @@ function eventsource() {
         quiet = true;
     }
 
+    var exact = "";
+    if(quiet)
+    {
+        exact = "exact";
+    }
+
     var host = window.location.host;
-    var source = new EventSource("http://"+host+"/admin/php/queryads.php?domain="+domain.val());
+    var source = new EventSource("http://"+host+"/admin/php/queryads.php?domain="+domain.val()+"&"+exact);
 
     // Reset and show field
     ta.empty();
@@ -27,12 +33,17 @@ function eventsource() {
         }
         else
         {
-            if(e.data.indexOf("results") !== -1 && e.data.indexOf("0 results") === -1)
+            var lines = e.data.split("\n");
+            for(var i = 0;i<lines.length;i++)
             {
-                var shortstring = e.data.replace("::: /etc/pihole/","");
-		// Remove "(x results)"
-		shortstring = shortstring.replace(/\(.*/,"");
-                ta.append(shortstring);
+                if(lines[i].indexOf("results") !== -1 && lines[i].indexOf("0 results") === -1)
+                {
+                    var shortstring = lines[i].replace("::: /etc/pihole/","");
+                    // Remove "(x results)"
+                    shortstring = shortstring.replace(/\(.*/,"");
+                    ta.append(shortstring+"\n");
+                    // ta.append(e.data);
+                }
             }
         }
     }, false);
