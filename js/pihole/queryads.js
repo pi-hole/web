@@ -1,3 +1,4 @@
+var exact = "";
 function eventsource() {
     var ta = $("#output");
     var domain = $("#domain");
@@ -13,7 +14,6 @@ function eventsource() {
         quiet = true;
     }
 
-    var exact = "";
     if(quiet)
     {
         exact = "exact";
@@ -52,20 +52,26 @@ function eventsource() {
     source.addEventListener("error", function(e) {
         source.close();
     }, false);
-}
 
-// $(function(){
-//    eventsourcetest();
-// });
+    // Reset exact variable
+    exact = "";
+}
 
 // Handle enter button
 $(document).keypress(function(e) {
     if(e.which === 13 && $("#domain").is(":focus")) {
         // Enter was pressed, and the input has focus
+        exact = "";
         eventsource();
     }
 });
 // Handle button
 $("#btnSearch").on("click", function() {
+    exact = "";
+    eventsource();
+});
+// Handle exact button
+$("#btnSearchExact").on("click", function() {
+    exact = "exact";
     eventsource();
 });
