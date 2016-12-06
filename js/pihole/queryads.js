@@ -31,7 +31,7 @@ function eventsource() {
             {
                 var shortstring = e.data.replace("::: /etc/pihole/","");
 		// Remove "(x results)"
-		shortstring = shortstring.substring(0, shortstring.indexOf("("));
+		shortstring = shortstring.replace(/\(.*/,"");
                 ta.append(shortstring);
             }
         }
