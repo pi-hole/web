@@ -11,7 +11,7 @@
             <b>Pi-hole Version </b> <span id="piholeVersion"><?php echo $piholeVersion; ?></span>
             <b>Web Interface Version </b> <span id="webVersion"><?php echo $webVersion; ?></span>
         </div>
-        <i class="fa fa-github"></i> <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY">Donate</a></strong> if you found this useful.
+        <i class="fa fa-github"></i> <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY" target="_blank">Donate</a></strong> if you found this useful.
     </footer>
 </div>
 <!-- ./wrapper -->
