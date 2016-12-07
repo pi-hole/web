@@ -23,3 +23,5 @@ A read-only API can be accessed at `/admin/api.php`. With either no parameters o
 ```
 
 There are many more parameters, such as `summaryRaw`, `overTimeData`, `topItems`, `recentItems`, `getQueryTypes`, `getForwardDestinations`, `getQuerySources`, and finally `getAllQueries`.
+
+`getAllQueries` can optionally be set with one this values to return JSON hash ordered as value implies: `orderByClientDomainTime`. `orderByClientTimeDomain`, `orderByTimeClientDomain`, `orderByTimeDomainClient`, `orderByDomainClientTime` or `orderByDomainTimeClient`.
