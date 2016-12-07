@@ -44,7 +44,7 @@
     }
 
     if (isset($_GET['getAllQueries'])) {
-        $data = array_merge($data, getAllQueries());
+        $data = array_merge($data, getAllQueries($_GET['getAllQueries']));
     }
 
     function filterArray(&$a) {
