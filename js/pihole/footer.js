@@ -61,7 +61,8 @@ function versionCompare(left, right) {
             return -1;
         }
     }
-
+    return 0;
+}
 
 
 // Update check
