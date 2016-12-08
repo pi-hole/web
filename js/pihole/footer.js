@@ -44,8 +44,16 @@ var webVersion = $("#webVersion").html();
 // Credit for following function: https://gist.github.com/alexey-bass/1115557
 // Modified to discard any possible "v" in the string
 function versionCompare(left, right) {
-    if (typeof left + typeof right != 'stringstring')
+    if (typeof left + typeof right !== 'stringstring')
         return false;
+
+    // If we are on vDev then we assume that it is always
+    // newer than the latest online release, i.e. version
+    // comparion should return 1
+    if(left === "vDev")
+    {
+        return 1;
+    }
 
     var aa = left.split("v"),
         bb = right.split("v");
@@ -67,16 +75,14 @@ function versionCompare(left, right) {
 
 // Update check
 $.getJSON("https://api.github.com/repos/pi-hole/pi-hole/releases/latest", function(json) {
-    // Skip if on dev
-    if(piholeVersion !== "vDev" && versionCompare(piholeVersion, json.tag_name.slice(1)) < 0) {
+    if(versionCompare(piholeVersion, json.tag_name.slice(1)) < 0) {
         // Alert user
         $("#piholeVersion").html($("#piholeVersion").text() + '<a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">(Update available!)</a>');
         $("#alPiholeUpdate").show();
     }
 });
 $.getJSON("https://api.github.com/repos/pi-hole/AdminLTE/releases/latest", function(json) {
-    // Skip if on dev
-    if(webVersion !== "vDev" && versionCompare(webVersion, json.tag_name.slice(1)) < 0) {
+    if(versionCompare(webVersion, json.tag_name.slice(1)) < 0) {
         // Alert user
         $("#webVersion").html($("#webVersion").text() + '<a class="alert-link" href="https://github.com/pi-hole/adminLTE/releases">(Update available!)</a>');
         $("#alWebUpdate").show();
@@ -87,8 +93,9 @@ $.getJSON("https://api.github.com/repos/pi-hole/AdminLTE/releases/latest", funct
  * Make sure that Pi-hole is updated to at least v2.7, since that is needed to use the sudo
  * features of the interface. Skip if on dev
  */
-if(piholeVersion !== "vDev" && versionCompare(piholeVersion, "v2.7") < 0)
-    alert("Pi-hole needs to be updated to at least v2.7 before you can use features such as whitelisting/blacklisting from this web interface!")
+if(versionCompare(piholeVersion, "v2.7") < 0) {
+    alert("Pi-hole needs to be updated to at least v2.7 before you can use features such as whitelisting/blacklisting from this web interface!");
+}
 
 // Session timer
 var sessionvalidity = parseInt(document.getElementById("sessiontimercounter").textContent);
