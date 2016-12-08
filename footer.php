@@ -10,15 +10,19 @@
             $webVersion = exec("git rev-parse --abbrev-ref HEAD");
 
             // Use vDev if not on master
-            if($piholeVersion !== "master")
+            if($piholeVersion !== "master") {
                 $piholeVersion = "vDev";
-            else
+            }
+            else {
                 $piholeVersion = exec("cd /etc/.pihole/ && git describe --tags --abbrev=0");
+            }
 
-            if($webVersion !== "master")
+            if($webVersion !== "master") {
                 $webVersion = "vDev";
-            else
+            }
+            else {
                 $webVersion = exec("git describe --tags --abbrev=0");
+            }
             ?>
             <b>Pi-hole Version </b> <span id="piholeVersion"><?php echo $piholeVersion; ?></span>
             <b>Web Interface Version </b> <span id="webVersion"><?php echo $webVersion; ?></span>
