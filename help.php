@@ -54,7 +54,7 @@
     <p>On the main page, you can see various Pi-hole statistics:</p>
     <ul>
         <li>Summary: A summary of statistics showing how many total DNS queries have been blocked today, what percentage of DNS queries have been blocked, and how many domains are in the compiled ad list. This summary is updated every 10 seconds.</li>
-        <li>Queries over time: Graph showing DNS queries (total and blocked) over 10 minute time intervals. More information can be acquired by hovering over the lines.</li>
+        <li>Queries over time: Graph showing DNS queries (total and blocked) over 10 minute time intervals. More information can be acquired by hovering over the lines. This graph is updated every 10 minutes.</li>
         <li>Query Types: Identifies the types of processed queries:
             <ul>
                 <li>A: address lookup (most commonly used to map hostnames to an IPv4 address of the host)</li>
