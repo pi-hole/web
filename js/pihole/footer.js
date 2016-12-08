@@ -42,12 +42,16 @@ var piholeVersion = $("#piholeVersion").html();
 var webVersion = $("#webVersion").html();
 
 // Credit for following function: https://gist.github.com/alexey-bass/1115557
+// Modified to discard any possible "v" in the string
 function versionCompare(left, right) {
     if (typeof left + typeof right != 'stringstring')
         return false;
 
-    var a = left.split('.')
-        ,   b = right.split('.')
+    var aa = left.split("v"),
+        bb = right.split("v");
+
+    var a = aa[aa.length-1].split(".")
+        ,   b = bb[bb.length-1].split(".")
         ,   i = 0, len = Math.max(a.length, b.length);
 
     for (; i < len; i++) {
@@ -58,8 +62,7 @@ function versionCompare(left, right) {
         }
     }
 
-    return 0;
-}
+
 
 // Update check
 $.getJSON("https://api.github.com/repos/pi-hole/pi-hole/releases/latest", function(json) {
