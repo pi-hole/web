@@ -89,13 +89,13 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Update Lists</h2>
-    <p>Runs the command <pre>sudo pihole -g</pre> and prints the result transparently to the web UI. The gravity.sh script will update the list of ad-serving domains</p>
+    <p>Will download any updates from the third-party ad-serving domain lists that we source. By default, this command runs once a week via cron.</p>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
     <h2>Query adlists</h2>
-    <p>Runs the command <pre>sudo pihole -q <i>searchstring</i></pre> and prints the result transparently to the web UI. This command can be used to scan for strings in the list of blocked domains, e.g., &quot;analytics&quot; will deliver all domains which contain *analytics*, where the asterisk (*) represents a number of characters or an empty string</p>
+    This function is useful to find out what list a domain appears on. Since we don't control what the third-parties put on the block lists, you may find that a domain you normally visit stops working. If this is the case, you could run  this command to scan for strings in the list of blocked domains and it will return the list the domain is found on. This proved useful a while back when the Mahakala list was adding apple.com and microsoft.com to their block list.</p>
     </div>
 </div>
 <div class="row">
@@ -139,7 +139,8 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Emergency help</h2>
-    In case the web UI does not work properly anymore (i.e. timeout errors or diagrams not showing up) you can try to flush the Pi-hole config file by clicking <a href="#" id="flush">FLUSH</a>. Note that your statistics will be reset and you lose the statistics up to this point.
+    Depending on your system and how heavily your Pi-hole is used, you may want to flush the log throughout the day by clicking on <a href="#" id="flush">FLUSH</a>. By default, the log if flushed at the end of the day via cron, but a very large log file can slow down the Web interface, so flushing it can be useful.
+    Note that your statistics will be reset and you lose the statistics up to this point.
     </div>
 </div>
 
