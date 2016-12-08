@@ -47,6 +47,14 @@ function versionCompare(left, right) {
     if (typeof left + typeof right != 'stringstring')
         return false;
 
+    // If we are on vDev then we assume that it is always
+    // newer than the latest online release, i.e. version
+    // comparion should return 1
+    if(left == "vDev")
+    {
+        return 1;
+    }
+
     var aa = left.split("v"),
         bb = right.split("v");
 
