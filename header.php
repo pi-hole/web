@@ -58,6 +58,9 @@
         $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
     }
     $token = $_SESSION['token'];
+
+    $piholeVersion = exec("cd /etc/.pihole/ && git describe --tags --abbrev=0");
+    $webVersion = exec("git describe --tags --abbrev=0");
 ?>
 
 <!DOCTYPE html>
