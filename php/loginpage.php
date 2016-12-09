@@ -51,7 +51,7 @@
         <div class="form-group <?php if($wrongpassword){ ?>has-error<?php } ?> input-lg">
         <?php if($wrongpassword){ ?><label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Wrong password!</label><?php } ?>
         <div class="input-group">
-            <input type="password" class="form-control " name="pw" placeholder="Enter password to continue">
+            <input type="password" class="form-control " name="pw" placeholder="Enter password to unlock">
             <span class="input-group-btn">
               <button type="submit" class="btn btn-info btn-flat <?php if($wrongpassword){ ?>btn-danger<?php } ?>">Submit</button>
           </span>
