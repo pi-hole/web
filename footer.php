@@ -12,7 +12,7 @@
             // Use vDev if not on master
             if($piholeBranch !== "master") {
                 $piholeVersion = "vDev";
-                $piholeCommit = exec("cd /etc/.pihole/ && git describe --long --dirty --abbrev=10 --tags");
+                $piholeCommit = exec("cd /etc/.pihole/ && git describe --long --dirty --tags");
             }
             else {
                 $piholeVersion = exec("cd /etc/.pihole/ && git describe --tags --abbrev=0");
@@ -20,7 +20,7 @@
 
             if($webBranch !== "master") {
                 $webVersion = "vDev";
-                $webCommit = exec("git describe --long --dirty --abbrev=10 --tags");
+                $webCommit = exec("git describe --long --dirty --tags");
             }
             else {
                 $webVersion = exec("git describe --tags --abbrev=0");
