@@ -1,6 +1,7 @@
 <?php
     $log = array();
-    $divide =  parse_ini_file("/etc/pihole/setupVars.conf")['IPV6_ADDRESS'] != "" && parse_ini_file("/etc/pihole/setupVars.conf")['IPV4_ADDRESS'] != "";
+    $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+    $divide =  $setupVars['IPV6_ADDRESS'] != "" && $setupVars['IPV4_ADDRESS'] != "";
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
     $log = new \SplFileObject('/var/log/pihole.log');
 
@@ -254,8 +255,27 @@
                 }
             }
         }
+
+        global $setupVars;
+        if(isset($setupVars["WEBUI_EXCLUDE_DOMAINS"]))
+        {
+            $splitQueries = excludeDomainsfromList($splitQueries);
+        }
         arsort($splitQueries);
         return array_slice($splitQueries, 0, $qty);
+    }
+
+    function excludeDomainsfromList($array)
+    {
+        global $setupVars;
+        $domains = explode(",",$setupVars["WEBUI_EXCLUDE_DOMAINS"]);
+        foreach ($domains as $domain) {
+            if(isset($array[$domain]))
+            {
+                unset($array[$domain]);
+            }
+        }
+        return $array;
     }
 
     function overTime($entries) {
