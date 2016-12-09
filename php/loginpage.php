@@ -1,27 +1,37 @@
 <div class="row">
-  <div class="col-sm-12 col-sm-offset-0">
+  <div class="col-sm-6 col-sm-offset-3">
   <center>
-	<svg width="60%" viewBox="-80 -20 260 181" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> <!-- style="border: 1px solid black;" > -->
+	<svg width="100%" viewBox="-60 -20 220 181" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> <!-- style="border: 1px solid black;" > -->
 		<defs>
 			<style type="text/css">
 				<![CDATA[
-					.filtered{
-						filter: url(#svgfilter);
+					.bluranddarken{
+						filter: url(#bluranddarken);
+					}
+					.blurslightly{
+						filter: url(#blurslightly);
 					}
 				]]>
 			</style>
-			<filter id="svgfilter">
+			<filter id="bluranddarken">
 				<!-- Add blur -->
-				<feGaussianBlur in="SourceGraphic" stdDeviation="2,2" />
+				<feGaussianBlur in="SourceGraphic" stdDeviation="3,3" />
 				<feComponentTransfer> <!-- Make it darker -->
 					<feFuncR type="linear" slope="0.5"/>
 					<feFuncG type="linear" slope="0.5"/>
 					<feFuncB type="linear" slope="0.5"/>
 				</feComponentTransfer>
 			</filter>
+			<filter id="blurslightly">
+				<feGaussianBlur in="SourceGraphic" stdDeviation="2,2" />
+			</filter>
 		</defs>
-		<g class="filtered">
+		<g class="bluranddarken">
 			<image x="0" y="0" width="100" height="100" xlink:href="img/logo.svg"/>
+		</g>
+		<g class="blurslightly">
+			<text font-family="Verdana" x="-18" y="130" font-size="24">Protected area</text>
+			<path id="text_path" d="M-48,58 L-25,58 a68,68 0 0 1 150,0 L150,58 L150,150 L-48,150 L-48,58 L-25,58" fill="none" class="path" strokemiterlimit="10" stroke="black" stroke-width="4" />
 		</g>
 
 		<!--
@@ -31,14 +41,12 @@
 
 		L is lineto
 		-->
-		<path id="text_path" d="M-48,58 L-25,58 a68,68 0 0 1 150,0 L150,58 L150,150 L-48,150 L-48,58 L-25,58" fill="none" class="path" strokemiterlimit="10" stroke="black" stroke-width="4" />
-		<text font-family="Verdana" x="-5" y="130" font-size="18">Protected page</text>
 	</svg>
   </center>
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-8 col-sm-offset-2">
+  <div class="col-sm-6 col-sm-offset-3">
     <form action="" method="POST">
         <div class="form-group <?php if($wrongpassword){ ?>has-error<?php } ?> input-lg">
         <?php if($wrongpassword){ ?><label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Wrong password!</label><?php } ?>
