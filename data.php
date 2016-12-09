@@ -259,16 +259,17 @@
         global $setupVars;
         if(isset($setupVars["WEBUI_EXCLUDE_DOMAINS"]))
         {
-            $splitQueries = excludeDomainsfromList($splitQueries);
+            $splitQueries = excludeFromList($splitQueries, "WEBUI_EXCLUDE_DOMAINS");
         }
+
         arsort($splitQueries);
         return array_slice($splitQueries, 0, $qty);
     }
 
-    function excludeDomainsfromList($array)
+    function excludeFromList($array,$key)
     {
         global $setupVars;
-        $domains = explode(",",$setupVars["WEBUI_EXCLUDE_DOMAINS"]);
+        $domains = explode(",",$setupVars[$key]);
         foreach ($domains as $domain) {
             if(isset($array[$domain]))
             {
