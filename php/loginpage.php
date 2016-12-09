@@ -30,8 +30,7 @@
 			<image x="0" y="0" width="100" height="100" xlink:href="img/logo.svg"/>
 		</g>
 		<g class="blurslightly">
-			<text font-family="Verdana" x="-18" y="130" font-size="24">Protected area</text>
-			<path id="text_path" d="M-48,58 L-25,58 a68,68 0 0 1 150,0 L150,58 L150,150 L-48,150 L-48,58 L-25,58" fill="none" class="path" strokemiterlimit="10" stroke="black" stroke-width="4" />
+			<text font-family="Verdana" x="-18" y="130" font-size="24" class="protected">Protected area</text>
 		</g>
 
 		<!--
@@ -49,7 +48,7 @@
   <div class="col-sm-6 col-sm-offset-3">
     <form action="" method="POST">
         <div class="form-group <?php if($wrongpassword){ ?>has-error<?php } ?> input-lg">
-        <?php if($wrongpassword){ ?><label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Wrong password!</label><?php } ?>
+        <?php if($wrongpassword){ ?><center><label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Wrong password!</label></center><?php } ?>
         <div class="input-group">
             <input type="password" class="form-control " name="pw" placeholder="Enter password to unlock">
             <span class="input-group-btn">
@@ -63,18 +62,24 @@
 </div>
 
 <style type="text/css">
-.path {
-	stroke-dasharray: 14.4,14.4;
-	animation-name: dash;
-	/* Set animation to linear style (no acceleration) */
-	animation-duration: 30s; /* Determines spinning speed */
-	animation-timing-function: linear; /* Play the animation with the same speed from beginning to end */
-	animation-iteration-count: infinite; /* Never stop animation */
+.protected {
+<?php if($wrongpassword){ ?>
+	animation-name: color;
+	animation-duration: 2s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+<?php } ?>
 }
 
-@keyframes dash {
-  to {
-    stroke-dashoffset: 1440;
+@keyframes color {
+  0% {
+    stroke: #000;
+  }
+  50% {
+    stroke: #C00;
+  }
+  100% {
+    stroke: #000;
   }
 }
 </style>
