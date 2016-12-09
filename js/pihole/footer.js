@@ -137,7 +137,7 @@ else
 }
 
 // Hide "exact match" button on queryads.php page if version is 2.9.5 or lower
-if(versionCompare(piholeVersion, "v2.9.5") < 1)
+if(versionCompare(piholeVersion, "v2.9.5") < 1 || versionCompare(piholeVersion, "vDev") = 1 )
 {
 	$("#btnSearchExact").hide();
 }
