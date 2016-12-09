@@ -347,8 +347,8 @@ function updateTopLists() {
             }
             percentage = data.top_queries[domain] / data.dns_queries_today * 100;
             domaintable.append("<tr> <td>" + url +
-                '</td> <td>' + data.top_queries[domain] + '</td> <td> <div class="progress progress-sm" title="'+percentage.toFixed(1)+'%"> <div class="progress-bar progress-bar-green" style="width: ' +
-                percentage + '%"></div> </div> </td> </tr> ');
+                "</td> <td>" + data.top_queries[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
+                percentage + "%\"></div> </div> </td> </tr> ");
         }
         for (domain in data.top_ads) {
             // Sanitize domain
@@ -356,8 +356,8 @@ function updateTopLists() {
             url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
             percentage = data.top_ads[domain] / data.ads_blocked_today * 100;
             adtable.append("<tr> <td>" + url +
-                '</td> <td>' + data.top_ads[domain] + '</td> <td> <div class="progress progress-sm" title="'+percentage.toFixed(1)+'%"> <div class="progress-bar progress-bar-yellow" style="width: ' +
-                 percentage + '%"></div> </div> </td> </tr> ');
+                "</td> <td>" + data.top_ads[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-yellow\" style=\"width: " +
+                 percentage + "%\"></div> </div> </td> </tr> ");
         }
 
         $('#domain-frequency .overlay').remove();
