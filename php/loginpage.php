@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-6 col-sm-offset-3">
   <center>
-	<svg width="100%" viewBox="-60 -20 220 181" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="max-width: 400px;"> <!-- style="border: 1px solid black;" > -->
+	<svg width="100%" viewBox="-60 -5 220 140" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="max-width: 400px; border: 1px solid black;" >
 		<defs>
 			<style type="text/css">
 				<![CDATA[
