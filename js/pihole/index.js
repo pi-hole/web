@@ -332,7 +332,7 @@ function updateTopLists() {
     $.getJSON("api.php?summaryRaw&topItems", function(data) {
         var domaintable = $('#domain-frequency').find('tbody:last');
         var adtable = $('#ad-frequency').find('tbody:last');
-        var url, domain;
+        var url, domain, percentage;
 
         for (domain in data.top_queries) {
             // Sanitize domain
@@ -345,17 +345,19 @@ function updateTopLists() {
             {
                 url = domain;
             }
+            percentage = data.top_queries[domain] / data.dns_queries_today * 100;
             domaintable.append("<tr> <td>" + url +
-                '</td> <td>' + data.top_queries[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-green" style="width: ' +
-                data.top_queries[domain] / data.dns_queries_today * 100 + '%"></div> </div> </td> </tr> ');
+                "</td> <td>" + data.top_queries[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
+                percentage + "%\"></div> </div> </td> </tr> ");
         }
         for (domain in data.top_ads) {
             // Sanitize domain
             domain = escapeHtml(domain);
             url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
+            percentage = data.top_ads[domain] / data.ads_blocked_today * 100;
             adtable.append("<tr> <td>" + url +
-                '</td> <td>' + data.top_ads[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-yellow" style="width: ' +
-                data.top_ads[domain] / data.ads_blocked_today * 100 + '%"></div> </div> </td> </tr> ');
+                "</td> <td>" + data.top_ads[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-yellow\" style=\"width: " +
+                 percentage + "%\"></div> </div> </td> </tr> ");
         }
 
         $('#domain-frequency .overlay').remove();
