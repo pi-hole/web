@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-6 col-sm-offset-3">
   <center>
-	<svg width="100%" viewBox="-60 -20 220 181" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> <!-- style="border: 1px solid black;" > -->
+	<svg width="100%" viewBox="-60 -20 220 181" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="max-width: 400px;"> <!-- style="border: 1px solid black;" > -->
 		<defs>
 			<style type="text/css">
 				<![CDATA[
@@ -70,12 +70,11 @@
 	animation-duration: 30s; /* Determines spinning speed */
 	animation-timing-function: linear; /* Play the animation with the same speed from beginning to end */
 	animation-iteration-count: infinite; /* Never stop animation */
-	transform-origin: 50% 50%; /* get circle rolling around itself */
 }
 
 @keyframes dash {
   to {
-    stroke-dashoffset: 1000;
+    stroke-dashoffset: 1440;
   }
 }
 </style>
