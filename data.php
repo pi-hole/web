@@ -126,6 +126,13 @@
                 $sources[$ip] = 1;
             }
         }
+
+        global $setupVars;
+        if(isset($setupVars["WEBUI_EXCLUDE_CLIENTS"]))
+        {
+            $sources = excludeFromList($sources, "WEBUI_EXCLUDE_CLIENTS");
+        }
+
         arsort($sources);
         $sources = array_slice($sources, 0, 10);
         return Array(
