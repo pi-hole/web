@@ -291,14 +291,16 @@ function escapeHtml(text) {
 function updateTopClientsChart() {
     $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
         var clienttable =  $('#client-frequency').find('tbody:last');
-        var domain;
+        var domain, percentage;
         for (domain in data.top_sources) {
             // Sanitize domain
             domain = escapeHtml(domain);
+
             var url = "<a href=\"queries.php?client="+domain+"\">"+domain+"</a>";
+            percentage = data.top_sources[domain] / data.dns_queries_today * 100;
             clienttable.append("<tr> <td>" + url +
-                '</td> <td>' + data.top_sources[domain] + '</td> <td> <div class="progress progress-sm"> <div class="progress-bar progress-bar-blue" style="width: ' +
-                data.top_sources[domain] / data.dns_queries_today * 100 + '%"></div> </div> </td> </tr> ');
+                "</td> <td>" + data.top_sources[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
+                percentage + "%\"></div> </div> </td> </tr> ");
         }
 
         $('#client-frequency .overlay').remove();
