@@ -12,10 +12,6 @@ function eventsource() {
     if(q.val() === "yes")
     {
         quiet = true;
-    }
-
-    if(quiet)
-    {
         exact = "exact";
     }
 
@@ -42,7 +38,6 @@ function eventsource() {
                     // Remove "(x results)"
                     shortstring = shortstring.replace(/\(.*/,"");
                     ta.append(shortstring+"\n");
-                    // ta.append(e.data);
                 }
             }
         }
