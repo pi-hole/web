@@ -291,7 +291,7 @@ function escapeHtml(text) {
 function updateTopClientsChart() {
     $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
         var clienttable =  $('#client-frequency').find('tbody:last');
-        var domain;
+        var domain, percentage;
         for (domain in data.top_sources) {
             // Sanitize domain
             domain = escapeHtml(domain);
