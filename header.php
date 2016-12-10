@@ -288,6 +288,12 @@
                   echo '                <li><a href="#" id="flip-status"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
                 }
                 ?>
+                <!-- Query adlists -->
+                <li>
+                    <a href="settings.php">
+                        <i class="fa fa-gears"></i> <span>Settings</span>
+                    </a>
+                </li>
                 <!-- Logout -->
                 <?php
                 // Show Logout button if $auth is set and authorization is required
