@@ -1,4 +1,9 @@
 <?php
+
+function validIP($ip){
+	return filter_var($secondaryIP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false;
+}
+
 	$debug = $_POST;
 
 	$primaryDNSservers = [
@@ -37,7 +42,7 @@
 				}
 
 				// Validate primary IP
-				if (!filter_var($primaryIP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === true)
+				if (!validIP($primaryIP))
 				{
 					$error = "Primary IP (".$primaryIP.") is invalid!";
 				}
@@ -53,7 +58,7 @@
 				}
 
 				// Validate secondary IP
-				if (!filter_var($secondaryIP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === true)
+				if (!validIP($secondaryIP))
 				{
 					$error = "Secondary IP (".$secondaryIP.") is invalid!";
 				}
