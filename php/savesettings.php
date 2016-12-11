@@ -165,6 +165,10 @@ function validDomain($domain_name)
 					exec('sudo pihole -a -c');
 				}
 
+			case "reboot":
+				exec("sudo pihole -a reboot");
+				break;
+
 			default:
 
 				break;

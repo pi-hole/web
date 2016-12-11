@@ -281,7 +281,7 @@
 				<h3 class="box-title">System Administration</h3>
 			</div>
 			<div class="box-body">
-				<button type="submit" class="btn btn-default" disabled>Restart system</button>
+				<button type="button" class="btn btn-default confirm-reboot">Restart system</button>
 				<button type="submit" class="btn btn-default" disabled>Restart DNS server</button>
 				<button type="submit" class="btn btn-default" disabled>Flush logs</button>
 			</div>
@@ -294,5 +294,6 @@
 ?>
 <script src="js/other/jquery.inputmask.js"></script>
 <script src="js/other/jquery.inputmask.extensions.js"></script>
+<script src="js/other/jquery.confirm.min.js"></script>
 <script src="js/pihole/settings.js"></script>
 
