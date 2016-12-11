@@ -103,11 +103,7 @@
 				<div class="col-lg-6">
 					<label>Primary DNS Server</label>
 					<div class="form-group">
-						<div class="radio"><label><input type="radio" name="primaryDNS" value="Google"  <?php if($piHoleDNS1 === "Google" ){ ?>checked<?php } ?> >Google</label></div>
-						<div class="radio"><label><input type="radio" name="primaryDNS" value="OpenDNS" <?php if($piHoleDNS1 === "OpenDNS"){ ?>checked<?php } ?> >OpenDNS</label></div>
-						<div class="radio"><label><input type="radio" name="primaryDNS" value="Level3"  <?php if($piHoleDNS1 === "Level3" ){ ?>checked<?php } ?> >Level3</label></div>
-						<div class="radio"><label><input type="radio" name="primaryDNS" value="Norton"  <?php if($piHoleDNS1 === "Norton" ){ ?>checked<?php } ?> >Norton ConnectSafe</label></div>
-						<div class="radio"><label><input type="radio" name="primaryDNS" value="Comodo"  <?php if($piHoleDNS1 === "Comodo" ){ ?>checked<?php } ?> >Comodo Secure</label></div>
+						<?php foreach ($primaryDNSservers as $key => $value) { ?> <div class="radio"><label><input type="radio" name="primaryDNS" value="<?php echo $value;?>" <?php if($piHoleDNS1 === $value){ ?>checked<?php } ?> ><?php echo $value;?> (<?php echo $key;?>)</label></div> <?php } ?>
 						<label>Custom</label>
 						<div class="input-group">
 							<div class="input-group-addon"><input type="radio" name="primaryDNS" value="Custom"
@@ -120,11 +116,7 @@
 				<div class="col-lg-6">
 					<label>Secondary DNS Server</label>
 					<div class="form-group">
-						<div class="radio"><label><input type="radio" name="secondaryDNS" value="Google"  <?php if($piHoleDNS2 === "Google" ){ ?>checked<?php } ?> >Google</label></div>
-						<div class="radio"><label><input type="radio" name="secondaryDNS" value="OpenDNS" <?php if($piHoleDNS2 === "OpenDNS"){ ?>checked<?php } ?> >OpenDNS</label></div>
-						<div class="radio"><label><input type="radio" name="secondaryDNS" value="Level3"  <?php if($piHoleDNS2 === "Level3" ){ ?>checked<?php } ?> >Level3</label></div>
-						<div class="radio"><label><input type="radio" name="secondaryDNS" value="Norton"  <?php if($piHoleDNS2 === "Norton" ){ ?>checked<?php } ?> >Norton ConnectSafe</label></div>
-						<div class="radio"><label><input type="radio" name="secondaryDNS" value="Comodo"  <?php if($piHoleDNS2 === "Comodo" ){ ?>checked<?php } ?> >Comodo Secure</label></div>
+						<?php foreach ($secondaryDNSservers as $key => $value) { ?> <div class="radio"><label><input type="radio" name="secondaryDNS" value="<?php echo $value;?>" <?php if($piHoleDNS2 === $value){ ?>checked<?php } ?> ><?php echo $value;?> (<?php echo $key;?>)</label></div> <?php } ?>
 						<label>Custom</label>
 						<div class="input-group">
 							<div class="input-group-addon"><input type="radio" name="secondaryDNS" value="Custom"
