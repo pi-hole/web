@@ -241,9 +241,13 @@
 				</div>
 				<h4>CPU Temperature Unit</h4>
 				<div class="form-group">
-					<div class="radio"><label><input type="radio" name="temperature" value="C" <?php if($temperatureunit === "C"){ ?>checked<?php } ?> >Celsius</label></div>
-					<div class="radio"><label><input type="radio" name="temperature" value="F" <?php if($temperatureunit === "F"){ ?>checked<?php } ?> >Fahrenheit</label></div>
+					<div class="radio"><label><input type="radio" name="tempunit" value="C" <?php if($temperatureunit === "C"){ ?>checked<?php } ?> >Celsius</label></div>
+					<div class="radio"><label><input type="radio" name="tempunit" value="F" <?php if($temperatureunit === "F"){ ?>checked<?php } ?> >Fahrenheit</label></div>
 				</div>
+			</div>
+			<div class="box-footer">
+				<input type="hidden" name="field" value="webUI">
+				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
 		</div>

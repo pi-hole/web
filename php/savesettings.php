@@ -155,6 +155,16 @@ function validDomain($domain_name)
 
 				break;
 
+			case "webUI":
+				if($_POST["tempunit"] == "F")
+				{
+					exec('sudo pihole -a -f');
+				}
+				else
+				{
+					exec('sudo pihole -a -c');
+				}
+
 			default:
 
 				break;
