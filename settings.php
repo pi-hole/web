@@ -3,39 +3,105 @@
 ?>
 <div class="row">
 	<div class="col-md-6">
+<?php
+	// Networking
+	if(isset($setupVars["PIHOLE_INTERFACE"])){
+		$piHoleInterface = $setupVars["PIHOLE_INTERFACE"];
+	} else {
+		$piHoleInterface = "unknown";
+	}
+	if(isset($setupVars["IPV4_ADDRESS"])){
+		$piHoleIPv4 = $setupVars["IPV4_ADDRESS"];
+	} else {
+		$piHoleIPv4 = "unknown";
+	}
+	if(isset($setupVars["IPV6_ADDRESS"])){
+		$piHoleIPv6 = $setupVars["IPV6_ADDRESS"];
+	} else {
+		$piHoleIPv6 = "unknown";
+	}
+	$hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+?>
 		<div class="box box-info">
 			<div class="box-header with-border">
 				<h3 class="box-title">Networking</h3>
 			</div>
 			<div class="box-body">
-				<form role="form">
 				<div class="form-group">
 					<label>Pi-Hole Ethernet Interface</label>
 					<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-plug"></i></div>
-						<select class="form-control" disabled>
-							<option>eth0</option>
-						</select>
+						<input type="text" class="form-control" disabled value="<?php echo $piHoleInterface; ?>">
 					</div>
 				</div>
 				<div class="form-group">
 					<label>Pi-Hole IPv4 address</label>
 					<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-plug"></i></div>
-						<input type="text" class="form-control" disabled value="192.168.2.10/24">
+						<input type="text" class="form-control" disabled value="<?php echo $piHoleIPv4; ?>">
 					</div>
 				</div>
 				<div class="form-group">
 					<label>Pi-Hole IPv6 address</label>
 					<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-plug"></i></div>
-						<input type="text" class="form-control" disabled value="">
+						<input type="text" class="form-control" disabled value="<?php echo $piHoleIPv6; ?>">
 					</div>
 				</div>
-				</form>
+				<div class="form-group">
+					<label>Pi-Hole hostname</label>
+					<div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-laptop"></i></div>
+						<input type="text" class="form-control" disabled value="<?php echo $hostname; ?>">
+					</div>
+				</div>
 			</div>
 		</div>
 
+<?php
+	// DNS settings
+	$primaryDNSservers = [
+			"8.8.8.8" => "Google",
+			"208.67.222.222" => "OpenDNS",
+			"4.2.2.1" => "Level3",
+			"199.85.126.10" => "Norton",
+			"8.26.56.26" => "Comodo"
+		];
+
+	$secondaryDNSservers = [
+			"8.8.4.4" => "Google",
+			"208.67.220.220" => "OpenDNS",
+			"4.2.2.2" => "Level3",
+			"199.85.127.10" => "Norton",
+			"8.20.247.20" => "Comodo"
+		];
+
+	if(isset($setupVars["PIHOLE_DNS_1"])){
+		if(isset($primaryDNSservers[$setupVars["PIHOLE_DNS_1"]]))
+		{
+			$piHoleDNS1 = $primaryDNSservers[$setupVars["PIHOLE_DNS_1"]];
+		}
+		else
+		{
+			$piHoleDNS1 = "Custom";
+		}
+	} else {
+		$piHoleDNS1 = "unknown";
+	}
+
+	if(isset($setupVars["PIHOLE_DNS_2"])){
+		if(isset($secondaryDNSservers[$setupVars["PIHOLE_DNS_2"]]))
+		{
+			$piHoleDNS2 = $secondaryDNSservers[$setupVars["PIHOLE_DNS_2"]];
+		}
+		else
+		{
+			$piHoleDNS2 = "Custom";
+		}
+	} else {
+		$piHoleDNS2 = "unknown";
+	}
+?>
 		<div class="box box-warning">
 			<div class="box-header with-border">
 				<h3 class="box-title">Upstream DNS Servers</h3>
@@ -45,14 +111,15 @@
 				<div class="col-lg-6">
 					<label>Primary DNS Server</label>
 					<div class="form-group">
-						<div class="radio"><label><input type="radio" name="primaryDNS" value="Google" checked>Google</label></div>
-						<div class="radio"><label><input type="radio" name="primaryDNS" value="OpenDNS">OpenDNS</label></div>
-						<div class="radio"><label><input type="radio" name="primaryDNS" value="Level3">Level3</label></div>
-						<div class="radio"><label><input type="radio" name="primaryDNS" value="Norton">Norton</label></div>
-						<div class="radio"><label><input type="radio" name="primaryDNS" value="Comodo">Comodo</label></div>
+						<div class="radio"><label><input type="radio" name="primaryDNS" value="Google"  <?php if($piHoleDNS1 === "Google" ){ ?>checked<?php } ?> >Google</label></div>
+						<div class="radio"><label><input type="radio" name="primaryDNS" value="OpenDNS" <?php if($piHoleDNS1 === "OpenDNS"){ ?>checked<?php } ?> >OpenDNS</label></div>
+						<div class="radio"><label><input type="radio" name="primaryDNS" value="Level3"  <?php if($piHoleDNS1 === "Level3" ){ ?>checked<?php } ?> >Level3</label></div>
+						<div class="radio"><label><input type="radio" name="primaryDNS" value="Norton"  <?php if($piHoleDNS1 === "Norton" ){ ?>checked<?php } ?> >Norton ConnectSafe</label></div>
+						<div class="radio"><label><input type="radio" name="primaryDNS" value="Comodo"  <?php if($piHoleDNS1 === "Comodo" ){ ?>checked<?php } ?> >Comodo Secure</label></div>
 						<label>Custom</label>
 						<div class="input-group">
-							<div class="input-group-addon"><input type="radio" name="primaryDNS" value="Custom"></div>
+							<div class="input-group-addon"><input type="radio" name="primaryDNS" value="Custom"
+							<?php if($piHoleDNS1 === "Custom"){ ?>checked<?php } ?>></div>
 							<input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
 						</div>
 					</div>
@@ -60,21 +127,39 @@
 				<div class="col-lg-6">
 					<label>Secondary DNS Server</label>
 					<div class="form-group">
-						<div class="radio"><label><input type="radio" name="secondaryDNS" value="Google" checked>Google</label></div>
-						<div class="radio"><label><input type="radio" name="secondaryDNS" value="OpenDNS">OpenDNS</label></div>
-						<div class="radio"><label><input type="radio" name="secondaryDNS" value="Level3">Level3</label></div>
-						<div class="radio"><label><input type="radio" name="secondaryDNS" value="Norton">Norton</label></div>
-						<div class="radio"><label><input type="radio" name="secondaryDNS" value="Comodo">Comodo</label></div>
+						<div class="radio"><label><input type="radio" name="secondaryDNS" value="Google"  <?php if($piHoleDNS2 === "Google" ){ ?>checked<?php } ?> >Google</label></div>
+						<div class="radio"><label><input type="radio" name="secondaryDNS" value="OpenDNS" <?php if($piHoleDNS2 === "OpenDNS"){ ?>checked<?php } ?> >OpenDNS</label></div>
+						<div class="radio"><label><input type="radio" name="secondaryDNS" value="Level3"  <?php if($piHoleDNS2 === "Level3" ){ ?>checked<?php } ?> >Level3</label></div>
+						<div class="radio"><label><input type="radio" name="secondaryDNS" value="Norton"  <?php if($piHoleDNS2 === "Norton" ){ ?>checked<?php } ?> >Norton ConnectSafe</label></div>
+						<div class="radio"><label><input type="radio" name="secondaryDNS" value="Comodo"  <?php if($piHoleDNS2 === "Comodo" ){ ?>checked<?php } ?> >Comodo Secure</label></div>
 						<label>Custom</label>
 						<div class="input-group">
-							<div class="input-group-addon"><input type="radio" name="secondaryDNS" value="Custom"></div>
-							<input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
+							<div class="input-group-addon"><input type="radio" name="primaryDNS" value="Custom"
+							<?php if($piHoleDNS2 === "Custom"){ ?>checked<?php } ?>></div>
+							<input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask
+							<?php if($piHoleDNS2 === "Custom"){ ?>value="<?php echo $setupVars["PIHOLE_DNS_2"]; ?>"<?php } ?>>
 						</div>
 					</div>
 				</div>
 				</form>
 			</div>
 		</div>
+<?php
+	// Query logging
+	if(isset($setupVars["QUERY_LOGGING"]))
+	{
+		if($setupVars["QUERY_LOGGING"] == 1)
+		{
+			$piHoleLogging = true;
+		}
+		else
+		{
+			$piHoleLogging = false;
+		}
+	} else {
+		$piHoleLogging = true;
+	}
+?>
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h3 class="box-title">Query Logging</h3>
@@ -82,59 +167,85 @@
 			<div class="box-body">
 				<form role="form">
 				<div class="form-group">
-					<div class="checkbox">
-						<label><input type="checkbox" checked>Enabled (recommended)</label>
-					</div>
+					<div class="checkbox"><label><input type="checkbox" <?php if($piHoleLogging) { ?>checked<?php } ?>>Enabled (recommended)</label></div>
 				</div>
 				Note that disabling will render graphs on the web user interface useless
 				</form>
 			</div>
 		</div>
 	</div>
+<?php
+	// Exluded domains
+	if(isset($setupVars["WEBUI_EXCLUDE_DOMAINS"]))
+	{
+		$excludedDomains = explode(",", $setupVars["WEBUI_EXCLUDE_DOMAINS"]);
+	} else {
+		$excludedDomains = "";
+	}
+
+	// Exluded clients
+	if(isset($setupVars["WEBUI_EXCLUDE_CLIENTS"]))
+	{
+		$excludedClients = explode(",", $setupVars["WEBUI_EXCLUDE_CLIENTS"]);
+	} else {
+		$excludedClients = "";
+	}
+?>
 	<div class="col-md-6">
 		<div class="box box-success">
 			<div class="box-header with-border">
 				<h3 class="box-title">Web User Interface</h3>
 			</div>
+			<form role="form">
 			<div class="box-body">
-				<label>Exclude the following domains from being shown in</label>
-				<form role="form">
-					<div class="col-lg-6">
-						<div class="form-group">
-						<label>Top Domains / Top Advertisers</label>
-						<div class="input-group">
-							<div class="input-group-addon"><i class="fa fa-ban"></i></div>
-							<select class="form-control" multiple>
-								<option>ssl.google-analytics.com</option>
-								<option>www.googleadservices.com</option>
-								<option>www.google-analytics.com</option>
-								<option>csi.gstatic.com</option>
-								<option>fls-eu.amazon.com</option>
-								<option>collector.githubapp.com</option>
-								<option>pagead2.googlesyndication.com</option>
-								<option></option>
-								<option></option>
-							</select>
-						</div>
-						</div>
-					</div>
-					<div class="col-lg-6">
-						<div class="form-group">
-						<label>Top Clients</label>
-						<div class="input-group">
-							<div class="input-group-addon"><i class="fa fa-ban"></i></div>
-							<select class="form-control" multiple>
-								<option>192.168.2.10</option>
-								<option>192.168.2.12</option>
-								<option>192.168.2.15</option>
-								<option>192.168.2.17</option>
-								<option>192.168.2.16</option>
-								<option>192.168.2.19</option>
-							</select>
-						</div>
+				<h4>Top Lists</h4>
+				<p>Exclude the following domains from being shown in</p>
+				<div class="col-lg-6">
+					<div class="form-group">
+					<label>Top Domains / Top Advertisers</label>
+					<textarea class="form-control" rows="4"><?php foreach ($excludedDomains as $domain) { echo $domain."\n"; } ?></textarea>
 					</div>
 				</div>
-				</form>
+				<div class="col-lg-6">
+					<div class="form-group">
+					<label>Top Clients</label>
+					<textarea class="form-control" rows="4"><?php foreach ($excludedClient as $client) { echo $client."\n"; } ?></textarea>
+					</div>
+				</div>
+				<h4>Query Log Page</h4>
+				<div class="col-lg-6">
+					<div class="form-group">
+						<div class="checkbox"><label><input type="checkbox"> Show permitted queries</label></div>
+						<div class="checkbox"><label><input type="checkbox"> Show blocked queries</label></div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="form-group">
+						<label>Default value for <em>Show XX entries</em></label>
+						<select class="form-control">
+							<option>10</option>
+							<option>25</option>
+							<option>50</option>
+							<option>100</option>
+							<option>All</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+		<div class="box box-danger">
+			<div class="box-header with-border">
+				<h3 class="box-title">Blocking Page</h3>
+			</div>
+			<div class="box-body">
+				<p>Show page with details if a site is blocked</p>
+				<div class="form-group">
+					<div class="radio"><label><input type="radio" name="blockingPage" value="Yes" <?php if($pishowBlockPage){ ?>checked<?php } ?> >Yes</label></div>
+					<div class="radio"><label><input type="radio" name="blockingPage" value="No" <?php if(!$pishowBlockPage){ ?>checked<?php } ?> >No</label></div>
+					<p>If Yes: Hide content for in page ads?</p>
+					<div class="checkbox"><label><input type="checkbox" <?php if($pishowBlockPageInpage) { ?>checked<?php } ?>>Enabled (recommended)</label></div>
+				</div>
 			</div>
 		</div>
 	</div>
