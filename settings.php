@@ -155,10 +155,16 @@
 			</div>
 			<div class="box-body">
 				<form role="form" method="post">
-				<div class="form-group">
-					<div class="checkbox"><label><input type="checkbox" <?php if($piHoleLogging) { ?>checked<?php } ?>>Enabled (recommended)</label></div>
-				</div>
-				Note that disabling will render graphs on the web user interface useless
+				<p>Current status: <?php if($piHoleLogging) { ?>Enabled (recommended)<?php }else{ ?>Disabled<?php } ?></p>
+					<input type="hidden" name="field" value="Logging">
+					<?php if($piHoleLogging) { ?>
+					<input type="hidden" name="action" value="Disable">
+					<button type="submit" class="btn btn-primary pull-right">Disable query logging</button>
+					<?php } else { ?>
+					<input type="hidden" name="action" value="Enable">
+					<button type="submit" class="btn btn-primary pull-right">Enable query logging</button>
+					<?php } ?>
+				<?php if($piHoleLogging) { ?><p>Note that disabling will render graphs on the web user interface useless</p><?php } ?>
 				</form>
 			</div>
 		</div>

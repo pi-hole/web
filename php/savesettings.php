@@ -67,6 +67,20 @@
 
 				break;
 
+			// Set query logging
+			case "Logging":
+
+				if($_POST["action"] === "Disable")
+				{
+					exec("sudo pihole -l off");
+				}
+				else
+				{
+					exec("sudo pihole -l on");
+				}
+
+				break;
+
 			default:
 
 				break;
