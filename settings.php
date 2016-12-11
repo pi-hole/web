@@ -22,7 +22,7 @@
 	}
 	$hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 ?>
-		<div class="box box-info">
+		<div class="box box-warning">
 			<div class="box-header with-border">
 				<h3 class="box-title">Networking</h3>
 			</div>
@@ -141,6 +141,9 @@
 						</div>
 					</div>
 				</div>
+				<div class="box-footer">
+					<button type="submit" class="btn btn-primary pull-right">Save</button>
+				</div>
 				</form>
 			</div>
 		</div>
@@ -203,26 +206,26 @@
 				<div class="col-lg-6">
 					<div class="form-group">
 					<label>Top Domains / Top Advertisers</label>
-					<textarea class="form-control" rows="4"><?php foreach ($excludedDomains as $domain) { echo $domain."\n"; } ?></textarea>
+					<textarea class="form-control" rows="4" placeholder="Enter one domain per line"><?php foreach ($excludedDomains as $domain) { echo $domain."\n"; } ?></textarea>
 					</div>
 				</div>
 				<div class="col-lg-6">
 					<div class="form-group">
 					<label>Top Clients</label>
-					<textarea class="form-control" rows="4"><?php foreach ($excludedClient as $client) { echo $client."\n"; } ?></textarea>
+					<textarea class="form-control" rows="4" placeholder="Enter one domain per line"><?php foreach ($excludedClient as $client) { echo $client."\n"; } ?></textarea>
 					</div>
 				</div>
 				<h4>Query Log Page</h4>
 				<div class="col-lg-6">
 					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox"> Show permitted queries</label></div>
-						<div class="checkbox"><label><input type="checkbox"> Show blocked queries</label></div>
+						<div class="checkbox"><label><input type="checkbox" disabled> Show permitted queries</label></div>
+						<div class="checkbox"><label><input type="checkbox" disabled> Show blocked queries</label></div>
 					</div>
 				</div>
 				<div class="col-lg-6">
 					<div class="form-group">
 						<label>Default value for <em>Show XX entries</em></label>
-						<select class="form-control">
+						<select class="form-control" disabled>
 							<option>10</option>
 							<option>25</option>
 							<option>50</option>
@@ -231,21 +234,36 @@
 						</select>
 					</div>
 				</div>
+				<h4>CPU Temperature Unit</h4>
+				<div class="form-group">
+					<div class="radio"><label><input type="radio" name="temperature" value="C" <?php if($temperatureunit === "C"){ ?>checked<?php } ?> >Celsius</label></div>
+					<div class="radio"><label><input type="radio" name="temperature" value="F" <?php if($temperatureunit === "F"){ ?>checked<?php } ?> >Fahrenheit</label></div>
+				</div>
 			</div>
 			</form>
 		</div>
-		<div class="box box-danger">
+		<div class="box box-info">
 			<div class="box-header with-border">
 				<h3 class="box-title">Blocking Page</h3>
 			</div>
 			<div class="box-body">
 				<p>Show page with details if a site is blocked</p>
 				<div class="form-group">
-					<div class="radio"><label><input type="radio" name="blockingPage" value="Yes" <?php if($pishowBlockPage){ ?>checked<?php } ?> >Yes</label></div>
-					<div class="radio"><label><input type="radio" name="blockingPage" value="No" <?php if(!$pishowBlockPage){ ?>checked<?php } ?> >No</label></div>
+					<div class="radio"><label><input type="radio" name="blockingPage" value="Yes" <?php if($pishowBlockPage){ ?>checked<?php } ?> disabled>Yes</label></div>
+					<div class="radio"><label><input type="radio" name="blockingPage" value="No" <?php if(!$pishowBlockPage){ ?>checked<?php } ?> disabled>No</label></div>
 					<p>If Yes: Hide content for in page ads?</p>
-					<div class="checkbox"><label><input type="checkbox" <?php if($pishowBlockPageInpage) { ?>checked<?php } ?>>Enabled (recommended)</label></div>
+					<div class="checkbox"><label><input type="checkbox" <?php if($pishowBlockPageInpage) { ?>checked<?php } ?> disabled>Enabled (recommended)</label></div>
 				</div>
+			</div>
+		</div>
+		<div class="box box-danger">
+			<div class="box-header with-border">
+				<h3 class="box-title">System Administration</h3>
+			</div>
+			<div class="box-body">
+				<button type="submit" class="btn btn-default" disabled>Restart system</button>
+				<button type="submit" class="btn btn-default" disabled>Restart DNS server</button>
+				<button type="submit" class="btn btn-default" disabled>Flush logs</button>
 			</div>
 		</div>
 	</div>
