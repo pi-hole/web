@@ -110,7 +110,7 @@
 				<h3 class="box-title">Upstream DNS Servers</h3>
 			</div>
 			<div class="box-body">
-				<form role="form">
+				<form role="form" method="post">
 				<div class="col-lg-6">
 					<label>Primary DNS Server</label>
 					<div class="form-group">
@@ -171,7 +171,7 @@
 				<h3 class="box-title">Query Logging</h3>
 			</div>
 			<div class="box-body">
-				<form role="form">
+				<form role="form" method="post">
 				<div class="form-group">
 					<div class="checkbox"><label><input type="checkbox" <?php if($piHoleLogging) { ?>checked<?php } ?>>Enabled (recommended)</label></div>
 				</div>
@@ -202,7 +202,7 @@
 			<div class="box-header with-border">
 				<h3 class="box-title">API</h3>
 			</div>
-			<form role="form">
+			<form role="form" method="post">
 			<div class="box-body">
 				<h4>Top Lists</h4>
 				<p>Exclude the following domains from being shown in</p>
@@ -228,7 +228,7 @@
 			<div class="box-header with-border">
 				<h3 class="box-title">Web User Interface</h3>
 			</div>
-			<form role="form">
+			<form role="form" method="post">
 			<div class="box-body">
 				<h4>Query Log Page</h4>
 				<div class="col-lg-6">
