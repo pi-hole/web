@@ -214,6 +214,17 @@
 			</div>
 			</form>
 		</div>
+<?php
+	// CPU temperature unit
+	if(isset($setupVars["TEMPERATUREUNIT"]))
+	{
+		$temperatureunit = $setupVars["TEMPERATUREUNIT"];
+	}
+	else
+	{
+		$temperatureunit = "C";
+	}
+?>
 		<div class="box box-success">
 			<div class="box-header with-border">
 				<h3 class="box-title">Web User Interface</h3>
