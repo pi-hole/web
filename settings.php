@@ -1,9 +1,14 @@
 <?php
 	require "header.php";
-
+	require "php/savesettings.php";
 	// Reread ini file as things might have been changed
 	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 ?>
+<div class="row">
+	<div class="col-md-6"><p>Debug output: <?php print_r($debug); ?></p></div>
+	<div class="col-md-6"><p>Error output: <?php print_r($error); ?></p></div>
+</div>
+
 <div class="row">
 	<div class="col-md-6">
 <?php
@@ -63,22 +68,6 @@
 
 <?php
 	// DNS settings
-	$primaryDNSservers = [
-			"8.8.8.8" => "Google",
-			"208.67.222.222" => "OpenDNS",
-			"4.2.2.1" => "Level3",
-			"199.85.126.10" => "Norton",
-			"8.26.56.26" => "Comodo"
-		];
-
-	$secondaryDNSservers = [
-			"8.8.4.4" => "Google",
-			"208.67.220.220" => "OpenDNS",
-			"4.2.2.2" => "Level3",
-			"199.85.127.10" => "Norton",
-			"8.20.247.20" => "Comodo"
-		];
-
 	if(isset($setupVars["PIHOLE_DNS_1"])){
 		if(isset($primaryDNSservers[$setupVars["PIHOLE_DNS_1"]]))
 		{
@@ -123,7 +112,8 @@
 						<div class="input-group">
 							<div class="input-group-addon"><input type="radio" name="primaryDNS" value="Custom"
 							<?php if($piHoleDNS1 === "Custom"){ ?>checked<?php } ?>></div>
-							<input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
+							<input type="text" name="DNS1IP" class="form-control" data-inputmask="'alias': 'ip'" data-mask
+							<?php if($piHoleDNS1 === "Custom"){ ?>value="<?php echo $setupVars["PIHOLE_DNS_1"]; ?>"<?php } ?>>
 						</div>
 					</div>
 				</div>
@@ -137,15 +127,16 @@
 						<div class="radio"><label><input type="radio" name="secondaryDNS" value="Comodo"  <?php if($piHoleDNS2 === "Comodo" ){ ?>checked<?php } ?> >Comodo Secure</label></div>
 						<label>Custom</label>
 						<div class="input-group">
-							<div class="input-group-addon"><input type="radio" name="primaryDNS" value="Custom"
+							<div class="input-group-addon"><input type="radio" name="secondaryDNS" value="Custom"
 							<?php if($piHoleDNS2 === "Custom"){ ?>checked<?php } ?>></div>
-							<input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask
+							<input type="text" name="DNS2IP" class="form-control" data-inputmask="'alias': 'ip'" data-mask
 							<?php if($piHoleDNS2 === "Custom"){ ?>value="<?php echo $setupVars["PIHOLE_DNS_2"]; ?>"<?php } ?>>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="box-footer">
+				<input type="hidden" name="field" value="DNS">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
