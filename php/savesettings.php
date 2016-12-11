@@ -4,6 +4,15 @@ function validIP($ip){
 	return filter_var($secondaryIP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false;
 }
 
+// Credit: http://stackoverflow.com/a/4694816/2087442
+function validDomain($domain_name)
+{
+	$validChars = preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domain_name);
+	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
+	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
+	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
+}
+
 	$debug = $_POST;
 
 	$primaryDNSservers = [
@@ -82,6 +91,66 @@ function validIP($ip){
 				else
 				{
 					exec("sudo pihole -l on");
+				}
+
+				break;
+
+			// Set domains to be excludef from being shown in Top Domains (or Ads) and Top Clients
+			case "API":
+
+				// Explode the contests of the textareas into PHP arrays
+				// \n (Unix) and \r\n (Win) will be considered as newline
+				// array_filter( ... ) will remove any empty lines
+				$domains = array_filter(preg_split('/\r\n|[\r\n]/', $_POST["domains"]));
+				$clients = array_filter(preg_split('/\r\n|[\r\n]/', $_POST["clients"]));
+
+				$domainlist = "";
+				$first = true;
+				foreach($domains as $domain)
+				{
+					if(!validDomain($domain))
+					{
+						$error = "Entry ".$domain." is invalid!";
+						break;
+					}
+					if(!$first)
+					{
+						$domainlist .= ",";
+					}
+					else
+					{
+						$first = false;
+					}
+					$domainlist .= $domain;
+				}
+
+				$clientlist = "";
+				$first = true;
+				foreach($clients as $client)
+				{
+					if(!validDomain($client))
+					{
+						$error = "Entry ".$client." is invalid!";
+						break;
+					}
+					if(!$first)
+					{
+						$clientlist .= ",";
+					}
+					else
+					{
+						$first = false;
+					}
+					$clientlist .= $client;
+				}
+
+				if(!isset($error))
+				{
+					// All entries are okay
+					$cmd = "sudo pihole -a setexcludedomains ".$domainlist;
+					exec($cmd);
+					$cmd = "sudo pihole -a setexcludeclients ".$clientlist;
+					exec($cmd);
 				}
 
 				break;

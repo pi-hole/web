@@ -171,17 +171,17 @@
 	</div>
 <?php
 	// Exluded domains
-	if(isset($setupVars["WEBUI_EXCLUDE_DOMAINS"]))
+	if(isset($setupVars["API_EXCLUDE_DOMAINS"]))
 	{
-		$excludedDomains = explode(",", $setupVars["WEBUI_EXCLUDE_DOMAINS"]);
+		$excludedDomains = explode(",", $setupVars["API_EXCLUDE_DOMAINS"]);
 	} else {
 		$excludedDomains = "";
 	}
 
 	// Exluded clients
-	if(isset($setupVars["WEBUI_EXCLUDE_CLIENTS"]))
+	if(isset($setupVars["API_EXCLUDE_CLIENTS"]))
 	{
-		$excludedClients = explode(",", $setupVars["WEBUI_EXCLUDE_CLIENTS"]);
+		$excludedClients = explode(",", $setupVars["API_EXCLUDE_CLIENTS"]);
 	} else {
 		$excludedClients = "";
 	}
@@ -198,17 +198,18 @@
 				<div class="col-lg-6">
 					<div class="form-group">
 					<label>Top Domains / Top Advertisers</label>
-					<textarea class="form-control" rows="4" placeholder="Enter one domain per line"><?php foreach ($excludedDomains as $domain) { echo $domain."\n"; } ?></textarea>
+					<textarea name="domains" class="form-control" rows="4" placeholder="Enter one domain per line"><?php foreach ($excludedDomains as $domain) { echo $domain."\n"; } ?></textarea>
 					</div>
 				</div>
 				<div class="col-lg-6">
 					<div class="form-group">
 					<label>Top Clients</label>
-					<textarea class="form-control" rows="4" placeholder="Enter one domain per line"><?php foreach ($excludedClient as $client) { echo $client."\n"; } ?></textarea>
+					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one domain per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
 					</div>
 				</div>
 			</div>
 			<div class="box-footer">
+				<input type="hidden" name="field" value="API">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
