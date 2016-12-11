@@ -1,5 +1,8 @@
 <?php
-    require "header.php";
+	require "header.php";
+
+	// Reread ini file as things might have been changed
+	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 ?>
 <div class="row">
 	<div class="col-md-6">
@@ -141,11 +144,11 @@
 						</div>
 					</div>
 				</div>
-				<div class="box-footer">
-					<button type="submit" class="btn btn-primary pull-right">Save</button>
-				</div>
-				</form>
 			</div>
+			<div class="box-footer">
+				<button type="submit" class="btn btn-primary pull-right">Save</button>
+			</div>
+			</form>
 		</div>
 <?php
 	// Query logging
@@ -197,7 +200,7 @@
 	<div class="col-md-6">
 		<div class="box box-success">
 			<div class="box-header with-border">
-				<h3 class="box-title">Web User Interface</h3>
+				<h3 class="box-title">API</h3>
 			</div>
 			<form role="form">
 			<div class="box-body">
@@ -215,6 +218,18 @@
 					<textarea class="form-control" rows="4" placeholder="Enter one domain per line"><?php foreach ($excludedClient as $client) { echo $client."\n"; } ?></textarea>
 					</div>
 				</div>
+			</div>
+			<div class="box-footer">
+				<button type="submit" class="btn btn-primary pull-right">Save</button>
+			</div>
+			</form>
+		</div>
+		<div class="box box-success">
+			<div class="box-header with-border">
+				<h3 class="box-title">Web User Interface</h3>
+			</div>
+			<form role="form">
+			<div class="box-body">
 				<h4>Query Log Page</h4>
 				<div class="col-lg-6">
 					<div class="form-group">
