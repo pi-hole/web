@@ -128,9 +128,9 @@
         }
 
         global $setupVars;
-        if(isset($setupVars["WEBUI_EXCLUDE_CLIENTS"]))
+        if(isset($setupVars["API_EXCLUDE_CLIENTS"]))
         {
-            $sources = excludeFromList($sources, "WEBUI_EXCLUDE_CLIENTS");
+            $sources = excludeFromList($sources, "API_EXCLUDE_CLIENTS");
         }
 
         arsort($sources);
@@ -264,9 +264,9 @@
         }
 
         global $setupVars;
-        if(isset($setupVars["WEBUI_EXCLUDE_DOMAINS"]))
+        if(isset($setupVars["API_EXCLUDE_DOMAINS"]))
         {
-            $splitQueries = excludeFromList($splitQueries, "WEBUI_EXCLUDE_DOMAINS");
+            $splitQueries = excludeFromList($splitQueries, "API_EXCLUDE_DOMAINS");
         }
 
         arsort($splitQueries);
