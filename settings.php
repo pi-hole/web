@@ -225,7 +225,7 @@
 ?>
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">Query Logging</h3>
+				<h3 class="box-title">Query Logging (size of log <?php echo formatSizeUnits(filesize("/var/log/pihole.log")); ?>)</h3>
 			</div>
 			<div class="box-body">
 				<form role="form" method="post">
