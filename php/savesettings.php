@@ -144,6 +144,7 @@ function validDomain($domain_name)
 					$clientlist .= $client;
 				}
 
+				// Set Top Lists options
 				if(!isset($error))
 				{
 					// All entries are okay
@@ -151,6 +152,24 @@ function validDomain($domain_name)
 					exec($cmd);
 					$cmd = "sudo pihole -a setexcludeclients ".$clientlist;
 					exec($cmd);
+				}
+
+				// Set query log options
+				if(isset($_POST["querylog-permitted"]) && isset($_POST["querylog-blocked"]))
+				{
+					exec("sudo pihole -a setquerylog all");
+				}
+				elseif(isset($_POST["querylog-permitted"]))
+				{
+					exec("sudo pihole -a setquerylog permittedonly");
+				}
+				elseif(isset($_POST["querylog-blocked"]))
+				{
+					exec("sudo pihole -a setquerylog blockedonly");
+				}
+				else
+				{
+					exec("sudo pihole -a setquerylog none");
 				}
 
 				break;

@@ -185,6 +185,14 @@
 	} else {
 		$excludedClients = "";
 	}
+
+	// Exluded clients
+	if(isset($setupVars["API_QUERY_LOG_SHOW"]))
+	{
+		$queryLog = $setupVars["API_QUERY_LOG_SHOW"];
+	} else {
+		$queryLog = "all";
+	}
 ?>
 	<div class="col-md-6">
 		<div class="box box-success">
@@ -206,6 +214,11 @@
 					<label>Top Clients</label>
 					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one domain per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
 					</div>
+				</div>
+				<h4>Query Log</h4>
+				<div class="form-group">
+					<div class="checkbox"><label><input type="checkbox" name="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show permitted queries</label></div>
+					<div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked queries</label></div>
 				</div>
 			</div>
 			<div class="box-footer">
