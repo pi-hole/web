@@ -282,7 +282,7 @@
 			</div>
 			<div class="box-body">
 				<button type="button" class="btn btn-default confirm-reboot">Restart system</button>
-				<button type="submit" class="btn btn-default" disabled>Restart DNS server</button>
+				<button type="button" class="btn btn-default confirm-restartdns">Restart DNS server</button>
 				<button type="submit" class="btn btn-default" disabled>Flush logs</button>
 			</div>
 		</div>

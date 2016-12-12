@@ -169,6 +169,10 @@ function validDomain($domain_name)
 				exec("sudo pihole -a reboot");
 				break;
 
+			case "restartdns":
+				exec("sudo pihole -a restartdns");
+				break;
+
 			default:
 
 				break;
