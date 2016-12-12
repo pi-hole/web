@@ -8,6 +8,36 @@ $("body").on("click", function(event) {
     }
 });
 
+// Enable/Disable
+$("#flip-status").on("click", (e) => {
+    e.preventDefault();
+    const btnStatus = $("#flip-status");
+    const status = $("#status");
+    const text = btnStatus.text().trim();
+    const token = encodeURIComponent($("#token").html());
+
+    switch(text) {
+        case "Enable":
+            btnStatus.html("<i class='fa fa-spinner'></i> <span>Enabling...</span>");
+            $.getJSON("api.php?enable&token=" + token, (data) => {
+                if(data.status === "enabled") {
+                    btnStatus.html("<i class='fa fa-stop'></i> <span>Disable</span>");
+                    status.html("<i class='fa fa-circle' style='color:#7FFF00'></i> Active");
+                }
+            });
+            break;
+        case "Disable":
+            btnStatus.html("<i class='fa fa-spinner'></i> <span>Disabling...</span>");
+            $.getJSON("api.php?disable&token=" + token, (data) => {
+                if(data.status === "disabled") {
+                    btnStatus.html("<i class='fa fa-play'></i> <span>Enable</span>");
+                    status.html("<i class='fa fa-circle' style='color:#FF0000'></i> Offline");
+                }
+            });
+            break;
+    }
+});
+
 var piholeVersion = $("#piholeVersion").html();
 var webVersion = $("#webVersion").html();
 
@@ -55,3 +85,42 @@ $.getJSON("https://api.github.com/repos/pi-hole/AdminLTE/releases/latest", funct
  */
 if(piholeVersion !== "vDev" && versionCompare(piholeVersion, "v2.7") < 0)
     alert("Pi-hole needs to be updated to at least v2.7 before you can use features such as whitelisting/blacklisting from this web interface!")
+
+// Session timer
+var sessionvalidity = parseInt(document.getElementById("sessiontimercounter").textContent);
+var start = new Date;
+
+function updateSessionTimer()
+{
+    start = new Date;
+    start.setSeconds(start.getSeconds() + sessionvalidity);
+}
+
+if(sessionvalidity > 0)
+{
+    // setSeconds will correctly handle wrap-around cases
+    updateSessionTimer();
+
+    setInterval(function() {
+        var current = new Date;
+        var totalseconds = (start - current) / 1000;
+
+        // var hours = Math.floor(totalseconds / 3600);
+        // totalseconds = totalseconds % 3600;
+
+        var minutes = Math.floor(totalseconds / 60);
+        if(minutes < 10){ minutes = "0" + minutes; }
+
+        var seconds = Math.floor(totalseconds % 60);
+        if(seconds < 10){ seconds = "0" + seconds; }
+
+        if(totalseconds > 0)
+            document.getElementById("sessiontimercounter").textContent = minutes + ":" + seconds;
+        else
+            document.getElementById("sessiontimercounter").textContent = "-- : --";
+    }, 1000);
+}
+else
+{
+    document.getElementById("sessiontimer").style.display = "none";
+}

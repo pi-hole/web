@@ -1,5 +1,4 @@
 <?php
-session_start();
 require "header.php";
 
 $list = $_GET['l'];
@@ -17,15 +16,8 @@ function getFullName() {
     else
         echo "Blacklist";
 }
-
-// Generate CSRF token
-if(empty($_SESSION['token'])) {
-    $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
-}
-$token = $_SESSION['token'];
 ?>
-<!-- Send PHP info to JS -->
-<div id="token" hidden><?php echo $token ?></div>
+<!-- Send list type to JS -->
 <div id="list-type" hidden><?php echo $list ?></div>
 
 <!-- Title -->

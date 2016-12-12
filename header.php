@@ -1,18 +1,37 @@
 <?php
-    if (isset($_GET['enable'])) {
-      exec('sudo pihole enable');
-      $refer = $_SERVER['HTTP_REFERER'];
-      header("location:$refer");
-    } elseif (isset($_GET['disable'])) {
-      exec('sudo pihole disable');
-      $refer = $_SERVER['HTTP_REFERER'];
-      header("location:$refer");
+    require "php/auth.php";
+    require "php/password.php";
+
+    check_cors();
+
+    // Web based change of temperature unit
+    if (isset($_GET['tempunit']))
+    {
+        if($_GET['tempunit'] == "fahrenheit")
+        {
+            exec('sudo pihole -a -f');
+        }
+        else
+        {
+            exec('sudo pihole -a -c');
+        }
     }
+
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
     $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
     $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
-    $temperatureunit =  parse_ini_file("/etc/pihole/setupVars.conf")['TEMPERATUREUNIT'];
+
+    // Reparse setupVars.conf here, as we might have switched temperature units above
+    $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+    if(isset($setupVars['TEMPERATUREUNIT']))
+    {
+        $temperatureunit = $setupVars['TEMPERATUREUNIT'];
+    }
+    else
+    {
+        $temperatureunit = "C";
+    }
 
     // Get load
     $loaddata = sys_getloadavg();
@@ -30,6 +49,15 @@
     $used = $mem[2] - $mem[5] - $mem[6];
     $total = $mem[1];
     $memory_usage = $used/$total*100;
+
+    // For session timer
+    $maxlifetime = ini_get("session.gc_maxlifetime");
+
+    // Generate CSRF token
+    if(empty($_SESSION['token'])) {
+        $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
+    }
+    $token = $_SESSION['token'];
 ?>
 
 <!DOCTYPE html>
@@ -77,6 +105,8 @@
 </div>
 <!-- /JS Warning -->
 <script src="js/pihole/header.js"></script>
+<!-- Send token to JS -->
+<div id="token" hidden><?php echo $token ?></div>
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
@@ -120,6 +150,7 @@
                                 <div class="col-xs-4 text-center">
                                     <a href="https://github.com/pi-hole/pi-hole/releases">Updates</a>
                                 </div>
+                                <div class="col-xs-12 text-center" id="sessiontimer">Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></div>
                             </li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
@@ -160,11 +191,11 @@
                     <?php
                         $pistatus = exec('sudo pihole status web');
                         if ($pistatus == "1") {
-                            echo '<a href="#"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
+                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
                         } elseif ($pistatus == "0") {
-                            echo '<a href="#"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
+                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
                         } else {
-                            echo '<a href="#"><i class="fa fa-circle" style="color:#ff9900"></i> Starting</a>';
+                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#ff9900"></i> Starting</a>';
                         }
 
                         // CPU Temp
@@ -218,6 +249,7 @@
                         <i class="fa fa-home"></i> <span>Main Page</span>
                     </a>
                 </li>
+                <?php if($auth){ ?>
                 <!-- Query Log -->
                 <li>
                     <a href="queries.php">
@@ -239,7 +271,13 @@
                 <!-- Run gravity.sh -->
                 <li>
                     <a href="gravity.php">
-                        <i class="fa fa-arrow-circle-down"></i> <span>Update lists</span>
+                        <i class="fa fa-arrow-circle-down"></i> <span>Update Lists</span>
+                    </a>
+                </li>
+                <!-- Query adlists -->
+                <li>
+                    <a href="queryads.php">
+                        <i class="fa fa-search"></i> <span>Query adlists</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
@@ -251,17 +289,46 @@
                 <!-- Toggle -->
                 <?php
                 if ($pistatus == "1") {
-                  echo '                <li><a href="?disable"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
+                  echo '                <li><a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
                 } else {
-                  echo '                <li><a href="?enable"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
+                  echo '                <li><a href="#" id="flip-status"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
                 }
                 ?>
+                <!-- Logout -->
+                <?php
+                // Show Logout button if $auth is set and authorization is required
+                if(strlen($pwhash) > 0) { ?>
+                <li>
+                    <a href="index.php?logout">
+                        <i class="fa fa-user-times"></i> <span>Logout</span>
+                    </a>
+                </li>
+                <?php } ?>
+                <?php } ?>
+                <!-- Login -->
+                <?php
+                // Show Login button if $auth is *not* set and authorization is required
+                if(strlen($pwhash) > 0 && !$auth) { ?>
+                <li>
+                    <a href="index.php?login">
+                        <i class="fa fa-user"></i> <span>Login</span>
+                    </a>
+                </li>
+                <?php } ?>
                 <!-- Donate -->
                 <li>
                     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
                         <i class="fa fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
+                <?php if($auth){ ?>
+                <!-- Help -->
+                <li>
+                    <a href="help.php">
+                        <i class="fa fa-question-circle"></i> <span>Help</span>
+                    </a>
+                </li>
+                <?php } ?>
             </ul>
         </section>
         <!-- /.sidebar -->
@@ -270,3 +337,25 @@
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
+<?php
+    // If password is not equal to the password set
+    // in the setupVars.conf file, then we skip any
+    // content and just complete the page. If no
+    // password is set at all, we keep the current
+    // behavior: everything is always authorized
+    // and will be displayed
+    //
+    // If auth is required and not set, i.e. no successfully logged in,
+    // we show the reduced version of the summary (index) page
+    if(!$auth && (!isset($indexpage) || isset($_GET['login']))){ ?>
+<div class="page-header">
+    <h1>Login required!</h1>
+</div>
+<form action="" method="POST">
+  Password: <input type="password" name="pw">&nbsp;<input type="submit" value="Login">
+</form>
+<?php
+        require "footer.php";
+        exit();
+    }
+?>
