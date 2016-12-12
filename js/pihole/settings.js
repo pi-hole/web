@@ -56,3 +56,10 @@ $(".confirm-flushlogs").confirm({
 $("#DHCPchk").click(function() {
 	$("input.DHCPgroup").prop("disabled", !this.checked);
 });
+
+$(document).ready(function() {
+	if(!!document.getElementById("DHCPLeasesTable"))
+	{
+		$('#DHCPLeasesTable').DataTable();
+	}
+} );

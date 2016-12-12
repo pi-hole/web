@@ -122,11 +122,44 @@
 								<input type="text" class="form-control DHCPgroup" name="router" value="<?php echo $DHCProuter; ?>" data-inputmask="'alias': 'ip'" data-mask>
 						</div>
 					</div><br/>
-<?php if($DHCP) { ?>
+<?php if($DHCP) {
+
+	// Read leases file
+	$dhcpleases = fopen('/etc/pihole/dhcp.leases', 'r');
+	$dhcp_leases  = [];
+
+	while(!feof($dhcpleases))
+	{
+		$line = explode(" ",trim(fgets($dhcpleases)));
+		if(count($line) > 1)
+		{
+			array_push($dhcp_leases,["MAC"=>$line[1], "IP"=>$line[2], "NAME"=>$line[3]]);
+		}
+
+		// // Sort $dhcpleases by IP (ASC)
+		// usort($dhcp_leases, function ($a, $b) {
+		// 	$explodea = explode(".",$a["IP"]);
+		// 	$explodeb = explode(".",$b["IP"]);
+		// 	if ($explodea == $explodeb) return 0;
+		// 	return ($explodea < $explodeb) ? -1 : 1;
+		// });
+	}
+	?>
 					<label>DHCP leases</label>
 					<div class="col-md-12">
-							<pre style=" height: 10em; overflow-y: scroll;"><?php echo file_get_contents("/etc/pihole/dhcp.leases"); ?></pre>
 
+						<table id="DHCPLeasesTable" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th>IP address</th>
+									<th>Hostname</th>
+									<th>MAC address</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach($dhcp_leases as $lease) { ?><tr><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["NAME"]; ?></td><td><?php echo $lease["MAC"]; ?></td></tr><?php } ?>
+							</tbody>
+						</table>
 					</div>
 <?php } ?>
 				</div>
