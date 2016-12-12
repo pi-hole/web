@@ -35,3 +35,20 @@ $(".confirm-restartdns").confirm({
 	cancelButtonClass: "btn-success",
 	dialogClass: "modal-dialog modal-mg"
 });
+
+$(".confirm-flushlogs").confirm({
+	text: "By default, the log is flushed at the end of the day via cron, but a very large log file can slow down the Web interface, so flushing it can be useful. Note that your statistics will be reset and you lose the statistics up to this point. Are you sure you want to flush your logs?",
+	title: "Confirmation required",
+	confirm(button) {
+		$.post( "php/savesettings.php", { "field": "flushlogs" } );
+	},
+	cancel(button) {
+		// nothing to do
+	},
+	confirmButton: "Yes, flush logs",
+	cancelButton: "No, go back",
+	post: true,
+	confirmButtonClass: "btn-danger",
+	cancelButtonClass: "btn-success",
+	dialogClass: "modal-dialog modal-mg"
+});

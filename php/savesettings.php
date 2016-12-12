@@ -173,6 +173,10 @@ function validDomain($domain_name)
 				exec("sudo pihole -a restartdns");
 				break;
 
+			case "flushlogs":
+				exec("sudo pihole -f");
+				break;
+
 			default:
 
 				break;
