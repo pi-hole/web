@@ -231,6 +231,7 @@
 			</div>
 			<form role="form" method="post">
 			<div class="box-body">
+<?php /*
 				<h4>Query Log Page</h4>
 				<div class="col-lg-6">
 					<div class="form-group">
@@ -250,6 +251,7 @@
 						</select>
 					</div>
 				</div>
+*/ ?>
 				<h4>CPU Temperature Unit</h4>
 				<div class="form-group">
 					<div class="radio"><label><input type="radio" name="tempunit" value="C" <?php if($temperatureunit === "C"){ ?>checked<?php } ?> >Celsius</label></div>
@@ -262,6 +264,7 @@
 			</div>
 			</form>
 		</div>
+<?php /*
 		<div class="box box-info">
 			<div class="box-header with-border">
 				<h3 class="box-title">Blocking Page</h3>
@@ -276,6 +279,7 @@
 				</div>
 			</div>
 		</div>
+*/ ?>
 		<div class="box box-danger">
 			<div class="box-header with-border">
 				<h3 class="box-title">System Administration</h3>
