@@ -52,3 +52,8 @@ $(".confirm-flushlogs").confirm({
 	cancelButtonClass: "btn-success",
 	dialogClass: "modal-dialog modal-mg"
 });
+
+$("#DHCPchk").click(function() {
+	$("input.DHCPgroup").prop("disabled", !this.checked);
+	console.log(this.checked);
+});

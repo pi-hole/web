@@ -196,6 +196,46 @@ function validDomain($domain_name)
 				exec("sudo pihole -f");
 				break;
 
+			case "DHCP":
+
+				if(isset($_POST["active"]))
+				{
+					// Validate from IP
+					$from = $_POST["from"];
+					if (!validIP($from))
+					{
+						$error = "From IP (".$from.") is invalid!";
+					}
+
+					// Validate to IP
+					$to = $_POST["to"];
+					if (!validIP($to))
+					{
+						$error = "To IP (".$to.") is invalid!";
+					}
+
+					// Validate router IP
+					$router = $_POST["router"];
+					if (!validIP($router))
+					{
+						$error = "Router IP (".$router.") is invalid!";
+					}
+
+					$cmd = "sudo pihole -a enabledhcp ".$from." ".$to." ".$router;
+					if(!isset($error))
+					{
+						exec($cmd);
+					}
+				}
+				else
+				{
+					exec("sudo pihole -a disabledhcp");
+				}
+
+				// $error = $cmd;
+
+				break;
+
 			default:
 
 				break;

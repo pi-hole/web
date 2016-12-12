@@ -65,6 +65,83 @@
 				</div>
 			</div>
 		</div>
+<?php
+	// Pi-Hole DHCP server
+	if(isset($setupVars["DHCP_ACTIVE"]))
+	{
+		if($setupVars["DHCP_ACTIVE"] == 1)
+		{
+			$DHCP = true;
+		}
+		else
+		{
+			$DHCP = false;
+		}
+		// Read setings from config file
+		$DHCPstart = $setupVars["DHCP_START"];
+		$DHCPend = $setupVars["DHCP_END"];
+		$DHCProuter = $setupVars["DHCP_ROUTER"];
+	}
+	else
+	{
+		$DHCP = false;
+		// Try to guess initial settings
+		$DHCPdomain = explode(".",$piHoleIPv4);
+		$DHCPstart  = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".201";
+		$DHCPend    = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".251";
+		$DHCProuter = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".1";
+	}
+?>
+		<div class="box box-warning">
+			<div class="box-header with-border">
+				<h3 class="box-title">Pi-Hole DHCP Server</h3>
+			</div>
+			<div class="box-body">
+				<form role="form" method="post">
+				<div class="form-group">
+					<div class="checkbox"><label><input type="checkbox" name="active" <?php if($DHCP){ ?>checked<?php } ?> id="DHCPchk"> DHCP server enabled</label></div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-12">
+						<label>Range of IP addresses to hand out</label>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<div class="input-group-addon">From</div>
+								<input type="text" class="form-control DHCPgroup" name="from" value="<?php echo $DHCPstart; ?>" data-inputmask="'alias': 'ip'" data-mask>
+					</div>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<div class="input-group-addon">To</div>
+								<input type="text" class="form-control DHCPgroup" name="to" value="<?php echo $DHCPend; ?>" data-inputmask="'alias': 'ip'" data-mask>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<label>Router IP address</label>
+					</div>
+					<div class="col-md-12">
+						<div class="input-group">
+							<div class="input-group-addon">Router</div>
+								<input type="text" class="form-control DHCPgroup" name="router" value="<?php echo $DHCProuter; ?>" data-inputmask="'alias': 'ip'" data-mask>
+						</div>
+					</div>
+<?php if($DHCP) { ?>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>DHCP leases</label>
+							<textarea name="clients" class="form-control" rows="4" placeholder="DHCP leases will be shown here" disabled><?php echo file_get_contents("/etc/pihole/dhcp.leases"); ?></textarea>
+						</div>
+					</div>
+<?php } ?>
+				</div>
+			</div>
+			<div class="box-footer">
+				<input type="hidden" name="field" value="DHCP">
+				<button type="submit" class="btn btn-primary pull-right">Save</button>
+			</div>
+			</form>
+		</div>
 
 <?php
 	// DNS settings
@@ -133,6 +210,8 @@
 			</div>
 			</form>
 		</div>
+	</div>
+	<div class="col-md-6">
 <?php
 	// Query logging
 	if(isset($setupVars["QUERY_LOGGING"]))
@@ -155,20 +234,29 @@
 			</div>
 			<div class="box-body">
 				<form role="form" method="post">
-				<p>Current status: <?php if($piHoleLogging) { ?>Enabled (recommended)<?php }else{ ?>Disabled<?php } ?></p>
-					<input type="hidden" name="field" value="Logging">
-					<?php if($piHoleLogging) { ?>
-					<input type="hidden" name="action" value="Disable">
-					<button type="submit" class="btn btn-primary pull-right">Disable query logging</button>
-					<?php } else { ?>
-					<input type="hidden" name="action" value="Enable">
-					<button type="submit" class="btn btn-primary pull-right">Enable query logging</button>
-					<?php } ?>
-				<?php if($piHoleLogging) { ?><p>Note that disabling will render graphs on the web user interface useless</p><?php } ?>
+				<p>Current status:
+				<?php if($piHoleLogging) { ?>
+					Enabled (recommended)
+				<?php }else{ ?>
+					Disabled
+				<?php } ?></p>
+				<input type="hidden" name="field" value="Logging">
+				<?php if($piHoleLogging) { ?>
+					<p>Note that disabling will render graphs on the web user interface useless</p>
+				<?php } ?>
 				</form>
 			</div>
+			<div class="box-footer">
+				<input type="hidden" name="field" value="DNS">
+				<?php if($piHoleLogging) { ?>
+					<input type="hidden" name="action" value="Disable">
+					<button type="submit" class="btn btn-primary pull-right">Disable query logging</button>
+				<?php } else { ?>
+					<input type="hidden" name="action" value="Enable">
+					<button type="submit" class="btn btn-primary pull-right">Enable query logging</button>
+				<?php } ?>
+			</div>
 		</div>
-	</div>
 <?php
 	// Exluded domains
 	if(isset($setupVars["API_EXCLUDE_DOMAINS"]))
@@ -194,7 +282,6 @@
 		$queryLog = "all";
 	}
 ?>
-	<div class="col-md-6">
 		<div class="box box-success">
 			<div class="box-header with-border">
 				<h3 class="box-title">API</h3>
