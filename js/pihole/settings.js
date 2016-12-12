@@ -5,10 +5,10 @@ $(function () {
 $(".confirm-reboot").confirm({
 	text: "Are you sure you want to send a reboot command to your Pi-Hole?",
 	title: "Confirmation required",
-	confirm: function(button) {
+	confirm(button) {
 		$.post( "php/savesettings.php", { "field": "reboot" } );
 	},
-	cancel: function(button) {
+	cancel(button) {
 		// nothing to do
 	},
 	confirmButton: "Yes, reboot",
