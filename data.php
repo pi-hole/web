@@ -1,6 +1,7 @@
 <?php
     $log = array();
-    $divide =  parse_ini_file("/etc/pihole/setupVars.conf")['IPV6_ADDRESS'] != "" && parse_ini_file("/etc/pihole/setupVars.conf")['IPV4_ADDRESS'] != "";
+    $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+    $divide =  $setupVars['IPV6_ADDRESS'] != "" && $setupVars['IPV4_ADDRESS'] != "";
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
     $log = new \SplFileObject('/var/log/pihole.log');
 
@@ -125,6 +126,13 @@
                 $sources[$ip] = 1;
             }
         }
+
+        global $setupVars;
+        if(isset($setupVars["API_EXCLUDE_CLIENTS"]))
+        {
+            $sources = excludeFromList($sources, "API_EXCLUDE_CLIENTS");
+        }
+
         arsort($sources);
         $sources = array_slice($sources, 0, 10);
         return Array(
@@ -132,7 +140,7 @@
         );
     }
 
-    function getAllQueries() {
+    function getAllQueries($orderBy) {
         global $log;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueriesAll($log);
@@ -158,16 +166,29 @@
             }
 
             if ( $status != ""){
-              array_push($allQueries['data'], array(
-                $time->format('Y-m-d\TH:i:s'),
-                $type,
-                $domain,
-                hasHostName($client),
-                $status,
-                ""
-              ));
+              if($orderBy == "orderByClientDomainTime"){
+                $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d\TH:i:s')] = $status;
+              }elseif ($orderBy == "orderByClientTimeDomain"){
+                $allQueries['data'][hasHostName($client)][$time->format('Y-m-d\TH:i:s')][$domain] = $status;
+              }elseif ($orderBy == "orderByTimeClientDomain"){
+                $allQueries['data'][$time->format('Y-m-d\TH:i:s')][hasHostName($client)][$domain] = $status;
+              }elseif ($orderBy == "orderByTimeDomainClient"){
+                $allQueries['data'][$time->format('Y-m-d\TH:i:s')][$domain][hasHostName($client)] = $status;
+              }elseif ($orderBy == "orderByDomainClientTime"){
+                $allQueries['data'][$domain][hasHostName($client)][$time->format('Y-m-d\TH:i:s')] = $status;
+              }elseif ($orderBy == "orderByDomainTimeClient"){
+                $allQueries['data'][$domain][$time->format('Y-m-d\TH:i:s')][hasHostName($client)] = $status;
+              }else{
+                array_push($allQueries['data'], array(
+                  $time->format('Y-m-d\TH:i:s'),
+                  $type,
+                  $domain,
+                  hasHostName($client),
+                  $status,
+                  ""
+                ));
+              }
             }
-
 
         }
         return $allQueries;
@@ -254,8 +275,28 @@
                 }
             }
         }
+
+        global $setupVars;
+        if(isset($setupVars["API_EXCLUDE_DOMAINS"]))
+        {
+            $splitQueries = excludeFromList($splitQueries, "API_EXCLUDE_DOMAINS");
+        }
+
         arsort($splitQueries);
         return array_slice($splitQueries, 0, $qty);
+    }
+
+    function excludeFromList($array,$key)
+    {
+        global $setupVars;
+        $domains = explode(",",$setupVars[$key]);
+        foreach ($domains as $domain) {
+            if(isset($array[$domain]))
+            {
+                unset($array[$domain]);
+            }
+        }
+        return $array;
     }
 
     function overTime($entries) {

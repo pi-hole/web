@@ -39,9 +39,7 @@ function check_cors() {
         }
         header("Access-Control-Allow-Origin: ${_SERVER['HTTP_ORIGIN']}");
     }
-    else {
-        pi_log("CORS skipped, unknown HTTP_ORIGIN");
-    }
+    // If there's no HTTP_ORIGIN, CORS should not be used
 }
 
 function check_csrf($token) {
