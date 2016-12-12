@@ -101,10 +101,8 @@
 				<div class="form-group">
 					<div class="checkbox"><label><input type="checkbox" name="active" <?php if($DHCP){ ?>checked<?php } ?> id="DHCPchk"> DHCP server enabled</label></div>
 				</div>
+				<label>Range of IP addresses to hand out</label>
 				<div class="form-group">
-					<div class="col-md-12">
-						<label>Range of IP addresses to hand out</label>
-					</div>
 					<div class="col-md-6">
 						<div class="input-group">
 							<div class="input-group-addon">From</div>
@@ -117,19 +115,17 @@
 								<input type="text" class="form-control DHCPgroup" name="to" value="<?php echo $DHCPend; ?>" data-inputmask="'alias': 'ip'" data-mask>
 						</div>
 					</div>
-					<div class="col-md-12">
-						<label>Router IP address</label>
-					</div>
+					<label>Router IP address</label>
 					<div class="col-md-12">
 						<div class="input-group">
 							<div class="input-group-addon">Router</div>
 								<input type="text" class="form-control DHCPgroup" name="router" value="<?php echo $DHCProuter; ?>" data-inputmask="'alias': 'ip'" data-mask>
 						</div>
-					</div>
+					</div><br/>
 <?php if($DHCP) { ?>
+					<label>DHCP leases</label>
 					<div class="col-md-12">
 						<div class="form-group">
-							<label>DHCP leases</label>
 							<textarea name="clients" class="form-control" rows="4" placeholder="DHCP leases will be shown here" disabled><?php echo file_get_contents("/etc/pihole/dhcp.leases"); ?></textarea>
 						</div>
 					</div>

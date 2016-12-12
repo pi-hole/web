@@ -55,5 +55,4 @@ $(".confirm-flushlogs").confirm({
 
 $("#DHCPchk").click(function() {
 	$("input.DHCPgroup").prop("disabled", !this.checked);
-	console.log(this.checked);
 });
