@@ -4,26 +4,11 @@
 
     check_cors();
 
-    // Web based change of temperature unit
-    if (isset($_GET['tempunit']))
-    {
-        if($_GET['tempunit'] == "fahrenheit")
-        {
-            exec('sudo pihole -a -f');
-        }
-        else
-        {
-            exec('sudo pihole -a -c');
-        }
-    }
-
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
     $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
     $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
 
-    // Reparse setupVars.conf here, as we might have switched temperature units above
-    $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
     if(isset($setupVars['TEMPERATUREUNIT']))
     {
         $temperatureunit = $setupVars['TEMPERATUREUNIT'];
