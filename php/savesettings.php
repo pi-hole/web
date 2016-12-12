@@ -1,5 +1,10 @@
 <?php
 
+if(basename($_SERVER['SCRIPT_FILENAME']) !== "settings.php")
+{
+	die("Direct access to this script is forbidden!");
+}
+
 function validIP($address){
 	return !filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false;
 }
