@@ -1,7 +1,7 @@
 <?php
 
 function validIP($address){
-	return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false;
+	return !filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false;
 }
 
 // Credit: http://stackoverflow.com/a/4694816/2087442
