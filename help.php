@@ -136,21 +136,8 @@
     Shows the currently installed Pi-hole and Web Interface version. If an update is available, this will be indicated here
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-    <h2>Emergency help</h2>
-    Depending on your system and how heavily your Pi-hole is used, you may want to flush the log throughout the day by clicking on <a href="#" id="flush">FLUSH</a>. By default, the log if flushed at the end of the day via cron, but a very large log file can slow down the Web interface, so flushing it can be useful.
-    Note that your statistics will be reset and you lose the statistics up to this point.
-    </div>
-</div>
 
 <?php
-    // Web based flushing of pi-hole log file
-    if (isset($_GET["flush"]))
-    {
-        exec("sudo pihole -f");
-    }
-
     require "footer.php";
 ?>
 
