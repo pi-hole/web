@@ -125,9 +125,8 @@
 <?php if($DHCP) { ?>
 					<label>DHCP leases</label>
 					<div class="col-md-12">
-						<div class="form-group">
-							<textarea name="clients" class="form-control" rows="4" placeholder="DHCP leases will be shown here" disabled><?php echo file_get_contents("/etc/pihole/dhcp.leases"); ?></textarea>
-						</div>
+							<pre style=" height: 10em; overflow-y: scroll;"><?php echo file_get_contents("/etc/pihole/dhcp.leases"); ?></pre>
+
 					</div>
 <?php } ?>
 				</div>

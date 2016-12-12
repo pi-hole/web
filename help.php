@@ -93,6 +93,16 @@
 </div>
 <div class="row">
     <div class="col-md-12">
+    <h2>Setings</h2>
+    Change settings for the Pi-Hole
+    <h4>Networking</h4>
+    Displays information about the interfaces of the Pi-Hole. No changes possible
+    <h4>Pi-Hole DHCP Server</h4>
+    Using this setting you can enable/disable the DHCP server of the Pi-Hole. Note that you should disable any other DHCP server on your network to avoid IP addresses being used more than once. You have to give the range of IPs that DHCP will serve and the IP of the local router (gateway). If the DHCP server is active, the current leases are shown on the settings page.
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
     <h2>Donate</h2>
     Keep in mind that Pi-hole is free. If you like Pi-hole, please consider a small donation to help support its development
     </div>
