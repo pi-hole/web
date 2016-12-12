@@ -135,14 +135,6 @@
 		{
 			array_push($dhcp_leases,["MAC"=>$line[1], "IP"=>$line[2], "NAME"=>$line[3]]);
 		}
-
-		// // Sort $dhcpleases by IP (ASC)
-		// usort($dhcp_leases, function ($a, $b) {
-		// 	$explodea = explode(".",$a["IP"]);
-		// 	$explodeb = explode(".",$b["IP"]);
-		// 	if ($explodea == $explodeb) return 0;
-		// 	return ($explodea < $explodeb) ? -1 : 1;
-		// });
 	}
 	?>
 					<label>DHCP leases</label>
