@@ -141,10 +141,45 @@
     }
 
     function getAllQueries($orderBy) {
-        global $log;
+        global $log,$setupVars;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueriesAll($log);
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+
+        if(isset($setupVars["API_QUERY_LOG_SHOW"]))
+        {
+            if($setupVars["API_QUERY_LOG_SHOW"] === "all")
+            {
+                $showblocked = true;
+                $showpermitted = true;
+            }
+            elseif($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly")
+            {
+                $showblocked = false;
+                $showpermitted = true;
+            }
+            elseif($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly")
+            {
+                $showblocked = true;
+                $showpermitted = false;
+            }
+            elseif($setupVars["API_QUERY_LOG_SHOW"] === "none")
+            {
+                $showblocked = false;
+                $showpermitted = false;
+            }
+            else
+            {
+                // Invalid settings, show everything
+                $showblocked = true;
+                $showpermitted = true;
+            }
+        }
+        else
+        {
+            $showblocked = true;
+            $showpermitted = true;
+        }
 
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
@@ -158,10 +193,10 @@
               $client = $exploded[count($exploded)-1];
 
             }
-            elseif (substr($tmp, 0, 9) == "forwarded" || $exploded[count($exploded)-3] == "pi.hole" || $exploded[count($exploded)-3] == $hostname){
+            elseif ((substr($tmp, 0, 9) == "forwarded" || $exploded[count($exploded)-3] == "pi.hole" || $exploded[count($exploded)-3] == $hostname) && $showpermitted){
               $status="OK";
             }
-            elseif (substr($tmp, strlen($tmp) - 12, 12)  == "gravity.list"  && $exploded[count($exploded)-5] != "read"){
+            elseif ((substr($tmp, strlen($tmp) - 12, 12)  == "gravity.list"  && $exploded[count($exploded)-5] != "read") && $showblocked){
               $status="Pi-holed";
             }
 
