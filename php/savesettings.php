@@ -45,6 +45,8 @@ function validDomain($domain_name)
 				$primaryDNS = $_POST["primaryDNS"];
 				$secondaryDNS = $_POST["secondaryDNS"];
 
+				$error = "";
+
 				// Get primary DNS server IP address
 				if($primaryDNS === "Custom")
 				{
@@ -58,7 +60,7 @@ function validDomain($domain_name)
 				// Validate primary IP
 				if (!validIP($primaryIP))
 				{
-					$error = "Primary IP (".$primaryIP.") is invalid!";
+					$error .= "Primary IP (".$primaryIP.") is invalid! ";
 				}
 
 				// Get secondary DNS server IP address
@@ -74,11 +76,11 @@ function validDomain($domain_name)
 				// Validate secondary IP
 				if (!validIP($secondaryIP))
 				{
-					$error = "Secondary IP (".$secondaryIP.") is invalid!";
+					$error .= "Secondary IP (".$secondaryIP.") is invalid!";
 				}
 
 				// If there has been no error we can save the new DNS server IPs
-				if(!isset($error))
+				if(!strlen($error))
 				{
 					$cmd = "sudo pihole -a setdns ".$primaryIP." ".$secondaryIP;
 					exec($cmd);
@@ -110,12 +112,13 @@ function validDomain($domain_name)
 				$clients = array_filter(preg_split('/\r\n|[\r\n]/', $_POST["clients"]));
 
 				$domainlist = "";
+				$error = "";
 				$first = true;
 				foreach($domains as $domain)
 				{
 					if(!validDomain($domain))
 					{
-						$error = "Entry ".$domain." is invalid!";
+						$error .= "Top Domains/Ads entry ".$domain." is invalid! ";
 						break;
 					}
 					if(!$first)
@@ -135,7 +138,7 @@ function validDomain($domain_name)
 				{
 					if(!validDomain($client))
 					{
-						$error = "Entry ".$client." is invalid!";
+						$error .= "Top Clients entry ".$client." is invalid! ";
 						break;
 					}
 					if(!$first)
@@ -150,7 +153,7 @@ function validDomain($domain_name)
 				}
 
 				// Set Top Lists options
-				if(!isset($error))
+				if(!strlen($error))
 				{
 					// All entries are okay
 					$cmd = "sudo pihole -a setexcludedomains ".$domainlist;
@@ -205,29 +208,30 @@ function validDomain($domain_name)
 
 				if(isset($_POST["active"]))
 				{
+					$error = "";
 					// Validate from IP
 					$from = $_POST["from"];
 					if (!validIP($from))
 					{
-						$error = "From IP (".$from.") is invalid!";
+						$error .= "From IP (".$from.") is invalid! ";
 					}
 
 					// Validate to IP
 					$to = $_POST["to"];
 					if (!validIP($to))
 					{
-						$error = "To IP (".$to.") is invalid!";
+						$error .= "To IP (".$to.") is invalid! ";
 					}
 
 					// Validate router IP
 					$router = $_POST["router"];
 					if (!validIP($router))
 					{
-						$error = "Router IP (".$router.") is invalid!";
+						$error .= "Router IP (".$router.") is invalid! ";
 					}
 
 					$cmd = "sudo pihole -a enabledhcp ".$from." ".$to." ".$router;
-					if(!isset($error))
+					if(!strlen($error))
 					{
 						exec($cmd);
 					}
