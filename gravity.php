@@ -16,7 +16,8 @@
     Success!
 </div>
 
-<pre id="output" style="width: 100%; height: 100%;"></pre>
+<button class="btn btn-lg btn-primary btn-block" id="gravityBtn">Update Lists</button>
+<pre id="output" style="width: 100%; height: 100%;" hidden="true"></pre>
 
 <?php
     require "footer.php";

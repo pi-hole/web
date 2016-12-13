@@ -58,7 +58,7 @@
     }
 
     if (isset($_GET['getAllQueries']) && $auth) {
-        $data = array_merge($data, getAllQueries());
+        $data = array_merge($data, getAllQueries($_GET['getAllQueries']));
     }
 
     if (isset($_GET['enable'], $_GET['token']) && $auth) {

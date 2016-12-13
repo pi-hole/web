@@ -6,9 +6,29 @@ if(empty($_SESSION['token'])) {
     $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
 }
 $token = $_SESSION['token'];
+
+$showing = "";
+
+if(isset($setupVars["API_QUERY_LOG_SHOW"]))
+{
+	if($setupVars["API_QUERY_LOG_SHOW"] === "all")
+	{
+		$showing = "(showing all queries)";
+	}
+	elseif($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly")
+	{
+		$showing = "(showing permitted queries only)";
+	}
+	elseif($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly")
+	{
+		$showing = "(showing blocked queries only)";
+	}
+}
+
 ?>
 <!-- Send PHP info to JS -->
 <div id="token" hidden><?php echo $token ?></div>
+
 
 <!--
 <div class="row">
@@ -36,7 +56,7 @@ $token = $_SESSION['token'];
     <div class="col-md-12">
       <div class="box" id="recent-queries">
         <div class="box-header with-border">
-          <h3 class="box-title">Recent Queries</h3>
+          <h3 class="box-title">Recent Queries <?php echo $showing; ?></h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">

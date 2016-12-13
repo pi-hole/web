@@ -1,9 +1,11 @@
-function eventsourcetest() {
+function eventsource() {
     var alInfo = $("#alInfo");
     var alSuccess = $("#alSuccess");
-    var ta = document.getElementById("output");
+    var ta = $("#output");
     var source = new EventSource("php/gravity.sh.php");
 
+    ta.html("");
+    ta.show();
     alInfo.show();
     alSuccess.hide();
 
@@ -13,7 +15,7 @@ function eventsourcetest() {
             alSuccess.show();
         }
 
-        ta.innerHTML += e.data;
+        ta.append(e.data);
 
     }, false);
 
@@ -21,11 +23,13 @@ function eventsourcetest() {
     source.addEventListener("error", function(e) {
         alInfo.delay(1000).fadeOut(2000, function() { alInfo.hide(); });
         source.close();
+        $("#gravityBtn").removeAttr("disabled");
     }, false);
 }
 
-$(function(){
-   eventsourcetest();
+$("#gravityBtn").on("click", () => {
+    $("#gravityBtn").attr("disabled", true);
+    eventsource();
 });
 
 // Handle hiding of alerts

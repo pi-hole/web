@@ -1,7 +1,4 @@
 <?php
-require "password.php";
-if(!$auth) die("Not authorized");
-
 ob_end_flush();
 ini_set("output_buffering", "0");
 ob_implicit_flush(true);
@@ -37,7 +34,16 @@ else
     die();
 }
 
-$proc = popen("sudo pihole -q ".$url, 'r');
+if(isset($_GET["exact"]))
+{
+    $exact = "-exact";
+}
+else
+{
+    $exact = "";
+}
+
+$proc = popen("sudo pihole -q ".$url." ".$exact, 'r');
 while (!feof($proc)) {
     echoEvent(fread($proc, 4096));
 }
