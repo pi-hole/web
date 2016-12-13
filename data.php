@@ -163,6 +163,17 @@
                 $showblocked = true;
                 $showpermitted = false;
             }
+            elseif($setupVars["API_QUERY_LOG_SHOW"] === "none")
+            {
+                $showblocked = false;
+                $showpermitted = false;
+            }
+            else
+            {
+                // Invalid settings, show everything
+                $showblocked = true;
+                $showpermitted = true;
+            }
         }
         else
         {
