@@ -7,19 +7,25 @@
 
 <?php if(strlen($success) > 0){ ?>
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $success; ?>
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4><i class="icon fa fa-info"></i> Info</h4>
+    <?php echo $success; ?>
 </div>
 <?php } ?>
 
 <?php if(strlen($error) > 0){ ?>
 <div id="alError" class="alert alert-danger alert-dismissible fade in" role="alert">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $error; ?>
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4><i class="icon fa fa-ban"></i> Error</h4>
+    <?php echo $error; ?>
 </div>
 <?php } ?>
 
 <?php if(isset($debug)){ ?>
-<div id="alDebug" class="alert alert-success alert-dismissible fade in" role="alert">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Debug: <?php echo $debug; ?>
+<div id="alDebug" class="alert alert-warning alert-dismissible fade in" role="alert">
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4><i class="icon fa fa-warning"></i> Debug</h4>
+    <?php echo $debug; ?>
 </div>
 <?php } ?>
 
