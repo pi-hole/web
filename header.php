@@ -273,7 +273,7 @@
                   echo '                <li><a href="#" id="flip-status"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
                 }
                 ?>
-                <!-- Query adlists -->
+                <!-- Settings -->
                 <li>
                     <a href="settings.php">
                         <i class="fa fa-gears"></i> <span>Settings</span>
