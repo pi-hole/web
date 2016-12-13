@@ -35,7 +35,7 @@
                     <div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa <?php if($wrongpassword){ ?>fa-minus<?php }else{ ?>fa-plus<?php } ?>"></i></button></div>
                 </div>
                 <div class="box-body">
-                    After installing Pi-Hole for the first time, a password is generated and displayed to the user. The password cannot be retrived later on, but it is possible to set a new password (or explicitly disable the password) using the command <pre>sudo pihole -a -p newpassword</pre>
+                    After installing Pi-Hole for the first time, a password is generated and displayed to the user. The password cannot be retrived later on, but it is possible to set a new password (or explicitly disable the password by setting an empty password) using the command <pre>sudo pihole -a -p newpassword</pre>
                 </div>
             </div>
         </div>
