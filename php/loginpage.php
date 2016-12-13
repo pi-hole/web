@@ -7,20 +7,6 @@
     </div>
 </div>
 <div class="login-box">
-<!--   <div class="col-sm-6 col-sm-offset-3">
-    <form action="" method="POST">
-        <div class="form-group <?php if($wrongpassword){ ?>has-error<?php } ?> input-group-lg">
-        <?php if($wrongpassword){ ?><center><label class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> Wrong password!</label></center><?php } ?>
-            <div class="form-group has-feedback">
-                <input type="password" class="form-control" placeholder="Password">
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-            </div>
-        </div>
-        <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
-        </div>
-  </form>
-</center> -->
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start your session</p>
       <?php if($wrongpassword){ ?>
@@ -42,11 +28,11 @@
       <br>
       <div class="row">
         <div class="col-xs-12">
-            <div class="box box-info collapsed-box box-solid">
+            <div class="box box-info <?php if(!$wrongpassword){ ?>collapsed-box<?php } ?> box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">Forgot password</h3>
 
-                    <div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
+                    <div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa <?php if($wrongpassword){ ?>fa-minus<?php }else{ ?>fa-plus<?php } ?>"></i></button></div>
                 </div>
                 <div class="box-body">
                     After installing Pi-Hole for the first time, a password is generated and displayed to the user. The password cannot be retrived later on, but it is possible to set a new password (or explicitly disable the password) using the command <pre>sudo pihole -a -p newpassword</pre>
