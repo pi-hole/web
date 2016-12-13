@@ -58,9 +58,9 @@ $("#DHCPchk").click(function() {
 });
 
 $(document).ready(function() {
-	if(!!document.getElementById("DHCPLeasesTable"))
+	if(document.getElementById("DHCPLeasesTable"))
 	{
-		$('#DHCPLeasesTable').DataTable({
+		$("#DHCPLeasesTable").DataTable({
 			dom: "<'row'<'col-sm-12'i>>" +
 				"<'row'<'col-sm-12'tr>>" +
 				"<'row'<'col-sm-5'f><'col-sm-7'p>>",
