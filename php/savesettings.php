@@ -191,14 +191,17 @@ function validDomain($domain_name)
 
 			case "reboot":
 				exec("sudo pihole -a reboot");
+				$success = "The system will reboot in 5 seconds...";
 				break;
 
 			case "restartdns":
 				exec("sudo pihole -a restartdns");
+				$success = "The DNS server has been restarted";
 				break;
 
 			case "flushlogs":
 				exec("sudo pihole -f");
+				$success = "The Pi-Hole log file has been flushed";
 				break;
 
 			case "DHCP":

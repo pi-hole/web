@@ -68,3 +68,10 @@ $(document).ready(function() {
 		});
 	}
 } );
+
+// Handle hiding of alerts
+$(function(){
+    $("[data-hide]").on("click", function(){
+        $(this).closest("." + $(this).attr("data-hide")).hide();
+    });
+});

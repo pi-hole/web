@@ -4,6 +4,13 @@
 	// Reread ini file as things might have been changed
 	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 ?>
+
+<?php if($success){ ?>
+<div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert">
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $success; ?>
+</div>
+<?php } ?>
+
 <div class="row">
 	<div class="col-md-6"><p>Debug output: <?php print_r($debug); ?></p></div>
 	<div class="col-md-6"><p>Error output: <?php print_r($error); ?></p></div>
