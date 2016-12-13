@@ -60,7 +60,7 @@ function validDomain($domain_name)
 				// Validate primary IP
 				if (!validIP($primaryIP))
 				{
-					$error .= "Primary IP (".$primaryIP.") is invalid! ";
+					$error .= "Primary IP (".$primaryIP.") is invalid!<br>";
 				}
 
 				// Get secondary DNS server IP address
@@ -76,13 +76,14 @@ function validDomain($domain_name)
 				// Validate secondary IP
 				if (!validIP($secondaryIP))
 				{
-					$error .= "Secondary IP (".$secondaryIP.") is invalid!";
+					$error .= "Secondary IP (".$secondaryIP.") is invalid!<br>";
 				}
 
 				// If there has been no error we can save the new DNS server IPs
 				if(!strlen($error))
 				{
 					exec("sudo pihole -a setdns ".$primaryIP." ".$secondaryIP);
+					$success = "The DNS settings have been updated";
 				}
 
 				break;
@@ -93,10 +94,12 @@ function validDomain($domain_name)
 				if($_POST["action"] === "Disable")
 				{
 					exec("sudo pihole -l off");
+					$success = "Logging has been disabled";
 				}
 				else
 				{
 					exec("sudo pihole -l on");
+					$success = "Logging has been enabled";
 				}
 
 				break;
@@ -117,8 +120,7 @@ function validDomain($domain_name)
 				{
 					if(!validDomain($domain))
 					{
-						$error .= "Top Domains/Ads entry ".$domain." is invalid! ";
-						break;
+						$error .= "Top Domains/Ads entry ".$domain." is invalid!<br>";
 					}
 					if(!$first)
 					{
@@ -137,8 +139,7 @@ function validDomain($domain_name)
 				{
 					if(!validIP($client))
 					{
-						$error .= "Top Clients entry ".$client." is invalid (use only IP addresses)! ";
-						break;
+						$error .= "Top Clients entry ".$client." is invalid (use only IP addresses)!<br>";
 					}
 					if(!$first)
 					{
@@ -157,24 +158,29 @@ function validDomain($domain_name)
 					// All entries are okay
 					exec("sudo pihole -a setexcludedomains ".$domainlist);
 					exec("sudo pihole -a setexcludeclients ".$clientlist);
+					$success = "The API settings have been updated<br>";
 				}
 
 				// Set query log options
 				if(isset($_POST["querylog-permitted"]) && isset($_POST["querylog-blocked"]))
 				{
 					exec("sudo pihole -a setquerylog all");
+					$success .= "All entries will be shown in Query Log";
 				}
 				elseif(isset($_POST["querylog-permitted"]))
 				{
 					exec("sudo pihole -a setquerylog permittedonly");
+					$success .= "Only permitted will be shown in Query Log";
 				}
 				elseif(isset($_POST["querylog-blocked"]))
 				{
 					exec("sudo pihole -a setquerylog blockedonly");
+					$success .= "Only blocked entries will be shown in Query Log";
 				}
 				else
 				{
 					exec("sudo pihole -a setquerylog none");
+					$success .= "No entries will be shown in Query Log";
 				}
 
 				break;
@@ -183,10 +189,12 @@ function validDomain($domain_name)
 				if($_POST["tempunit"] == "F")
 				{
 					exec('sudo pihole -a -f');
+					$success = "The webUI settings have been updated";
 				}
 				else
 				{
 					exec('sudo pihole -a -c');
+					$success = "The webUI settings have been updated";
 				}
 
 			case "reboot":
@@ -213,31 +221,33 @@ function validDomain($domain_name)
 					$from = $_POST["from"];
 					if (!validIP($from))
 					{
-						$error .= "From IP (".$from.") is invalid! ";
+						$error .= "From IP (".$from.") is invalid!<br>";
 					}
 
 					// Validate to IP
 					$to = $_POST["to"];
 					if (!validIP($to))
 					{
-						$error .= "To IP (".$to.") is invalid! ";
+						$error .= "To IP (".$to.") is invalid!<br>";
 					}
 
 					// Validate router IP
 					$router = $_POST["router"];
 					if (!validIP($router))
 					{
-						$error .= "Router IP (".$router.") is invalid! ";
+						$error .= "Router IP (".$router.") is invalid!<br>";
 					}
 
 					if(!strlen($error))
 					{
 						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router);
+						$success = "The DHCP server has been activated";
 					}
 				}
 				else
 				{
 					exec("sudo pihole -a disabledhcp");
+					$success = "The DHCP server has been deactivated";
 				}
 
 				break;

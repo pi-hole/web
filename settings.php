@@ -5,16 +5,23 @@
 	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 ?>
 
-<?php if($success){ ?>
+<?php if(isset($success)){ ?>
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $success; ?>
 </div>
 <?php } ?>
 
-<div class="row">
-	<div class="col-md-6"><p>Debug output: <?php print_r($debug); ?></p></div>
-	<div class="col-md-6"><p>Error output: <?php print_r($error); ?></p></div>
+<?php if(strlen($error) > 0){ ?>
+<div id="alError" class="alert alert-danger alert-dismissible fade in" role="alert">
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $error; ?>
 </div>
+<?php } ?>
+
+<?php if(isset($debug)){ ?>
+<div id="alDebug" class="alert alert-success alert-dismissible fade in" role="alert">
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Debug: <?php echo $debug; ?>
+</div>
+<?php } ?>
 
 <div class="row">
 	<div class="col-md-6">
@@ -267,14 +274,13 @@
 				<?php }else{ ?>
 					Disabled
 				<?php } ?></p>
-				<input type="hidden" name="field" value="Logging">
 				<?php if($piHoleLogging) { ?>
 					<p>Note that disabling will render graphs on the web user interface useless</p>
 				<?php } ?>
 			</div>
 			<div class="box-footer">
 				<form role="form" method="post">
-				<input type="hidden" name="field" value="DNS">
+				<input type="hidden" name="field" value="Logging">
 				<?php if($piHoleLogging) { ?>
 					<input type="hidden" name="action" value="Disable">
 					<button type="submit" class="btn btn-primary pull-right">Disable query logging</button>
