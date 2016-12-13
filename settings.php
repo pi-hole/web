@@ -253,7 +253,6 @@
 				<h3 class="box-title">Query Logging (size of log <?php echo formatSizeUnits(filesize("/var/log/pihole.log")); ?>)</h3>
 			</div>
 			<div class="box-body">
-				<form role="form" method="post">
 				<p>Current status:
 				<?php if($piHoleLogging) { ?>
 					Enabled (recommended)
@@ -264,9 +263,9 @@
 				<?php if($piHoleLogging) { ?>
 					<p>Note that disabling will render graphs on the web user interface useless</p>
 				<?php } ?>
-				</form>
 			</div>
 			<div class="box-footer">
+				<form role="form" method="post">
 				<input type="hidden" name="field" value="DNS">
 				<?php if($piHoleLogging) { ?>
 					<input type="hidden" name="action" value="Disable">
@@ -275,10 +274,11 @@
 					<input type="hidden" name="action" value="Enable">
 					<button type="submit" class="btn btn-primary pull-right">Enable query logging</button>
 				<?php } ?>
+				</form>
 			</div>
 		</div>
 <?php
-	// Exluded domains
+	// Excluded domains in API Query Log call
 	if(isset($setupVars["API_EXCLUDE_DOMAINS"]))
 	{
 		$excludedDomains = explode(",", $setupVars["API_EXCLUDE_DOMAINS"]);
@@ -319,7 +319,7 @@
 				<div class="col-lg-6">
 					<div class="form-group">
 					<label>Top Clients</label>
-					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one domain per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
+					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
 					</div>
 				</div>
 				<h4>Query Log</h4>

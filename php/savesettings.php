@@ -135,9 +135,9 @@ function validDomain($domain_name)
 				$first = true;
 				foreach($clients as $client)
 				{
-					if(!validDomain($client))
+					if(!validIP($client))
 					{
-						$error .= "Top Clients entry ".$client." is invalid! ";
+						$error .= "Top Clients entry ".$client." is invalid (use only IP addresses)! ";
 						break;
 					}
 					if(!$first)
