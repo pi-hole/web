@@ -59,6 +59,19 @@
     {
         $boxedlayout = true;
     }
+
+    // Override layout setting if layout is changed via Settings page3
+    if(isset($_POST["field"]))
+    {
+        if($_POST["field"] === "webUI" && isset($_POST["boxedlayout"]))
+        {
+            $boxedlayout = true;
+        }
+        elseif($_POST["field"] === "webUI" && !isset($_POST["boxedlayout"]))
+        {
+            $boxedlayout = false;
+        }
+    }
 ?>
 
 <!DOCTYPE html>

@@ -364,21 +364,7 @@
 	{
 		$temperatureunit = "C";
 	}
-	if(isset($setupVars['WEBUILAYOUT']))
-	{
-		if($setupVars['WEBUILAYOUT'] === "boxed")
-		{
-			$boxedlayout = true;
-		}
-		else
-		{
-			$boxedlayout = false;
-		}
-	}
-	else
-	{
-		$boxedlayout = true;
-	}
+	// Use $boxedlayout value determined in header.php
 ?>
 		<div class="box box-success">
 			<div class="box-header with-border">
