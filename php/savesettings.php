@@ -82,8 +82,7 @@ function validDomain($domain_name)
 				// If there has been no error we can save the new DNS server IPs
 				if(!strlen($error))
 				{
-					$cmd = "sudo pihole -a setdns ".$primaryIP." ".$secondaryIP;
-					exec($cmd);
+					exec("sudo pihole -a setdns ".$primaryIP." ".$secondaryIP);
 				}
 
 				break;
@@ -102,10 +101,10 @@ function validDomain($domain_name)
 
 				break;
 
-			// Set domains to be excludef from being shown in Top Domains (or Ads) and Top Clients
+			// Set domains to be excluded from being shown in Top Domains (or Ads) and Top Clients
 			case "API":
 
-				// Explode the contests of the textareas into PHP arrays
+				// Explode the contents of the textareas into PHP arrays
 				// \n (Unix) and \r\n (Win) will be considered as newline
 				// array_filter( ... ) will remove any empty lines
 				$domains = array_filter(preg_split('/\r\n|[\r\n]/', $_POST["domains"]));
@@ -156,10 +155,8 @@ function validDomain($domain_name)
 				if(!strlen($error))
 				{
 					// All entries are okay
-					$cmd = "sudo pihole -a setexcludedomains ".$domainlist;
-					exec($cmd);
-					$cmd = "sudo pihole -a setexcludeclients ".$clientlist;
-					exec($cmd);
+					exec("sudo pihole -a setexcludedomains ".$domainlist);
+					exec("sudo pihole -a setexcludeclients ".$clientlist);
 				}
 
 				// Set query log options
@@ -230,18 +227,15 @@ function validDomain($domain_name)
 						$error .= "Router IP (".$router.") is invalid! ";
 					}
 
-					$cmd = "sudo pihole -a enabledhcp ".$from." ".$to." ".$router;
 					if(!strlen($error))
 					{
-						exec($cmd);
+						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router);
 					}
 				}
 				else
 				{
 					exec("sudo pihole -a disabledhcp");
 				}
-
-				// $error = $cmd;
 
 				break;
 
