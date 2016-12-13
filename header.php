@@ -43,6 +43,22 @@
         $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
     }
     $token = $_SESSION['token'];
+
+    if(isset($setupVars['WEBUIBOXEDLAYOUT']))
+    {
+        if($setupVars['WEBUIBOXEDLAYOUT'] === "boxed")
+        {
+            $boxedlayout = true;
+        }
+        else
+        {
+            $boxedlayout = false;
+        }
+    }
+    else
+    {
+        $boxedlayout = true;
+    }
 ?>
 
 <!DOCTYPE html>
@@ -80,7 +96,7 @@
     <script src="js/other/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="skin-blue sidebar-mini">
+<body class="skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <!-- JS Warning -->
 <div>
     <link rel="stylesheet" type="text/css" href="css/js-warn.css">

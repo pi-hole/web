@@ -203,6 +203,15 @@ function validDomain($domain_name)
 					exec('sudo pihole -a -c');
 					$success .= "The webUI settings have been updated";
 				}
+				if(isset($_POST["boxedlayout"]))
+				{
+					exec('sudo pihole -a layout boxed');
+				}
+				else
+				{
+					exec('sudo pihole -a layout traditional');
+				}
+				break;
 
 			case "reboot":
 				exec("sudo pihole -a reboot");

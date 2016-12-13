@@ -358,6 +358,21 @@
 	{
 		$temperatureunit = "C";
 	}
+	if(isset($setupVars['WEBUILAYOUT']))
+	{
+		if($setupVars['WEBUILAYOUT'] === "boxed")
+		{
+			$boxedlayout = true;
+		}
+		else
+		{
+			$boxedlayout = false;
+		}
+	}
+	else
+	{
+		$boxedlayout = true;
+	}
 ?>
 		<div class="box box-success">
 			<div class="box-header with-border">
@@ -367,12 +382,6 @@
 			<div class="box-body">
 <?php /*
 				<h4>Query Log Page</h4>
-				<div class="col-lg-6">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" disabled> Show permitted queries</label></div>
-						<div class="checkbox"><label><input type="checkbox" disabled> Show blocked queries</label></div>
-					</div>
-				</div>
 				<div class="col-lg-6">
 					<div class="form-group">
 						<label>Default value for <em>Show XX entries</em></label>
@@ -386,6 +395,10 @@
 					</div>
 				</div>
 */ ?>
+				<h4>Interface appearance</h4>
+				<div class="form-group">
+					<div class="checkbox"><label><input type="checkbox" name="boxedlayout" value="yes" <?php if($boxedlayout){ ?>checked<?php } ?> >Use boxed layout (helpful when working on large screens)</label></div>
+				</div>
 				<h4>CPU Temperature Unit</h4>
 				<div class="form-group">
 					<div class="radio"><label><input type="radio" name="tempunit" value="C" <?php if($temperatureunit === "C"){ ?>checked<?php } ?> >Celsius</label></div>
