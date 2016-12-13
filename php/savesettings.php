@@ -18,8 +18,6 @@ function validDomain($domain_name)
 	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
 }
 
-	$debug = $_POST;
-
 	$primaryDNSservers = [
 			"8.8.8.8" => "Google",
 			"208.67.222.222" => "OpenDNS",

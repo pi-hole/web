@@ -21,14 +21,6 @@
 </div>
 <?php } ?>
 
-<?php if(isset($debug)){ ?>
-<div id="alDebug" class="alert alert-warning alert-dismissible fade in" role="alert">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h4><i class="icon fa fa-warning"></i> Debug</h4>
-    <?php echo $debug; ?>
-</div>
-<?php } ?>
-
 <div class="row">
 	<div class="col-md-6">
 <?php
