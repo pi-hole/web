@@ -408,6 +408,16 @@
 				<button type="button" class="btn btn-default confirm-reboot">Restart system</button>
 				<button type="button" class="btn btn-default confirm-restartdns">Restart DNS server</button>
 				<button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
+
+				<form role="form" method="post" id="rebootform">
+					<input type="hidden" name="field" value="reboot">
+				</form>
+				<form role="form" method="post" id="restartdnsform">
+					<input type="hidden" name="field" value="restartdns">
+				</form>
+				<form role="form" method="post" id="flushlogsform">
+					<input type="hidden" name="field" value="flushlogs">
+				</form>
 			</div>
 		</div>
 	</div>
