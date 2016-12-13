@@ -4,6 +4,7 @@
     $divide =  $setupVars['IPV6_ADDRESS'] != "" && $setupVars['IPV4_ADDRESS'] != "";
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
     $log = new \SplFileObject('/var/log/pihole.log');
+    $gravity = new \SplFileObject('/etc/pihole/list.preEventHorizon');
 
     /*******   Public Members ********/
     function getSummaryData() {
@@ -141,9 +142,10 @@
     }
 
     function getAllQueries($orderBy) {
-        global $log,$setupVars;
+        global $log,$setupVars,$gravity;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueriesAll($log);
+        $gravity_domains = getGravityDomains($gravity);
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 
         if(isset($setupVars["API_QUERY_LOG_SHOW"]))
@@ -188,16 +190,10 @@
             $status = "";
 
             if (substr($tmp, 0, 5) == "query"){
-              $type = substr($exploded[count($exploded)-4], 6, -1);
-              $domain = $exploded[count($exploded)-3];
-              $client = $exploded[count($exploded)-1];
-
-            }
-            elseif ((substr($tmp, 0, 9) == "forwarded" || $exploded[count($exploded)-3] == "pi.hole" || $exploded[count($exploded)-3] == $hostname) && $showpermitted){
-              $status="OK";
-            }
-            elseif ((substr($tmp, strlen($tmp) - 12, 12)  == "gravity.list"  && $exploded[count($exploded)-5] != "read") && $showblocked){
-              $status="Pi-holed";
+                $type = substr($exploded[count($exploded)-4], 6, -1);
+                $domain = $exploded[count($exploded)-3];
+                $client = $exploded[count($exploded)-1];
+                $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
             }
 
             if ( $status != ""){
@@ -258,6 +254,23 @@
             }
         }
         return $lines;
+    }
+
+    function getGravityDomains($gravity){
+        $gravity->rewind();
+        $lines=[];
+        $new_lines=[];
+        foreach ($gravity as $line) {
+            $lines[] = $line;
+        }
+
+        //Probably a more elegant way to do this...
+        foreach(array_values($lines) as $v){
+            $new_lines[str_replace(array("\r", "\n"), '', $v)] = 1;
+        }
+
+        return $new_lines;
+
     }
 
     function getBlockedQueries(\SplFileObject $log) {
