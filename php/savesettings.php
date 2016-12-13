@@ -38,14 +38,14 @@ function validDomain($domain_name)
 
 	if(isset($_POST["field"]))
 	{
+		$error = "";
+		$success = "";
 		// Process request
 		switch ($_POST["field"]) {
 			// Set DNS server
 			case "DNS":
 				$primaryDNS = $_POST["primaryDNS"];
 				$secondaryDNS = $_POST["secondaryDNS"];
-
-				$error = "";
 
 				// Get primary DNS server IP address
 				if($primaryDNS === "Custom")
@@ -83,7 +83,11 @@ function validDomain($domain_name)
 				if(!strlen($error))
 				{
 					exec("sudo pihole -a setdns ".$primaryIP." ".$secondaryIP);
-					$success = "The DNS settings have been updated";
+					$success .= "The DNS settings have been updated";
+				}
+				else
+				{
+					$error .= "The settings have been reset to their previous values";
 				}
 
 				break;
@@ -94,12 +98,12 @@ function validDomain($domain_name)
 				if($_POST["action"] === "Disable")
 				{
 					exec("sudo pihole -l off");
-					$success = "Logging has been disabled";
+					$success .= "Logging has been disabled";
 				}
 				else
 				{
 					exec("sudo pihole -l on");
-					$success = "Logging has been enabled";
+					$success .= "Logging has been enabled";
 				}
 
 				break;
@@ -114,7 +118,6 @@ function validDomain($domain_name)
 				$clients = array_filter(preg_split('/\r\n|[\r\n]/', $_POST["clients"]));
 
 				$domainlist = "";
-				$error = "";
 				$first = true;
 				foreach($domains as $domain)
 				{
@@ -158,7 +161,11 @@ function validDomain($domain_name)
 					// All entries are okay
 					exec("sudo pihole -a setexcludedomains ".$domainlist);
 					exec("sudo pihole -a setexcludeclients ".$clientlist);
-					$success = "The API settings have been updated<br>";
+					$success .= "The API settings have been updated<br>";
+				}
+				else
+				{
+					$error .= "The settings have been reset to their previous values";
 				}
 
 				// Set query log options
@@ -189,12 +196,12 @@ function validDomain($domain_name)
 				if($_POST["tempunit"] == "F")
 				{
 					exec('sudo pihole -a -f');
-					$success = "The webUI settings have been updated";
+					$success .= "The webUI settings have been updated";
 				}
 				else
 				{
 					exec('sudo pihole -a -c');
-					$success = "The webUI settings have been updated";
+					$success .= "The webUI settings have been updated";
 				}
 
 			case "reboot":
@@ -216,7 +223,6 @@ function validDomain($domain_name)
 
 				if(isset($_POST["active"]))
 				{
-					$error = "";
 					// Validate from IP
 					$from = $_POST["from"];
 					if (!validIP($from))
@@ -241,7 +247,7 @@ function validDomain($domain_name)
 					if(!strlen($error))
 					{
 						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router);
-						$success = "The DHCP server has been activated";
+						$success .= "The DHCP server has been activated";
 					}
 				}
 				else
