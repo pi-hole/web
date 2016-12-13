@@ -286,7 +286,7 @@
 		$excludedDomains = "";
 	}
 
-	// Exluded clients
+	// Exluded clients in API Query Log call
 	if(isset($setupVars["API_EXCLUDE_CLIENTS"]))
 	{
 		$excludedClients = explode(",", $setupVars["API_EXCLUDE_CLIENTS"]);
