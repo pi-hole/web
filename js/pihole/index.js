@@ -182,9 +182,9 @@ function objectToArray(p){
 // Functions to update data in page
 
 function updateSummaryData(runOnce) {
-    var setTimer = function(timeInMs) {
+    var setTimer = function(timeInSeconds) {
         if (!runOnce) {
-            setTimeout(updateSummaryData, timeInMs);
+            setTimeout(updateSummaryData, timeInSeconds * 1000);
         }
     };
     $.getJSON("api.php?summary", function LoadSummaryData(data) {
@@ -195,18 +195,18 @@ function updateSummaryData(runOnce) {
         });
 
         window.setTimeout(function() {
-            $("h3#ads_blocked_today").text(data.ads_blocked_today);
-            $("h3#dns_queries_today").text(data.dns_queries_today);
-            $("h3#domains_being_blocked").text(data.domains_being_blocked);
-            $("h3#ads_percentage_today").text(data.ads_percentage_today + "%");
+            ["ads_blocked_today", "dns_queries_today", "domains_being_blocked", "ads_percentage_today"].forEach(function(header, idx) {
+                var textData = idx === 3 ? data[header] + "%" : data[header];
+                $("h3#" + header).text(textData);
+            });
             $("h3.statistic.glow").removeClass("glow")
         }, 500);
-        
+
         updateSessionTimer();
     }).done(function() {
-        setTimer(10000);
+        setTimer(10);
     }).fail(function() {
-        setTimer(300000);
+        setTimer(300);
     });
 }
 
