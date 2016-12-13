@@ -5,7 +5,7 @@
 	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 ?>
 
-<?php if(isset($success)){ ?>
+<?php if(strlen($success) > 0){ ?>
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $success; ?>
 </div>
