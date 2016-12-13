@@ -132,10 +132,11 @@
 <?php if($DHCP) {
 
 	// Read leases file
-	$dhcpleases = fopen('/etc/pihole/dhcp.leases', 'r');
+	$leasesfile = true;
+	$dhcpleases = fopen('/etc/pihole/dhcp.leases', 'r') or $leasesfile = false;
 	$dhcp_leases  = [];
 
-	while(!feof($dhcpleases))
+	while(!feof($dhcpleases) && $leasesfile)
 	{
 		$line = explode(" ",trim(fgets($dhcpleases)));
 		if(count($line) > 1)
