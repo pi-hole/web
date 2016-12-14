@@ -260,18 +260,13 @@
     function getGravityDomains($gravity){
         $gravity->rewind();
         $lines=[];
-        $new_lines=[];
         foreach ($gravity as $line) {
-            $lines[] = $line;
+            // Strip newline (and possibly carriage return) from end of string
+            // using rtrim()
+            $lines[rtrim($line)] = true;
         }
 
-        //Probably a more elegant way to do this...
-        foreach(array_values($lines) as $v){
-            $new_lines[str_replace(array("\r", "\n"), '', $v)] = 1;
-        }
-
-        return $new_lines;
-
+        return $lines;
     }
 
     function getBlockedQueries(\SplFileObject $log) {
