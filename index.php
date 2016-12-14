@@ -117,8 +117,18 @@
     </div>
 </div>
 
+<?php
+if($boxedlayout)
+{
+	$tablelayout = "col-md-6";
+}
+else
+{
+	$tablelayout = "col-md-6 col-lg-4";
+}
+?>
 <div class="row">
-        <div class="col-md-4">
+    <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="domain-frequency">
         <div class="box-header with-border">
           <h3 class="box-title">Top Domains</h3>
@@ -145,7 +155,7 @@
       <!-- /.box -->
     </div>
     <!-- /.col -->
-    <div class="col-md-4">
+    <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="ad-frequency">
         <div class="box-header with-border">
           <h3 class="box-title">Top Advertisers</h3>
@@ -172,7 +182,7 @@
       <!-- /.box -->
     </div>
     <!-- /.col -->
-    <div class="col-md-4">
+    <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="client-frequency">
         <div class="box-header with-border">
           <h3 class="box-title">Top Clients</h3>

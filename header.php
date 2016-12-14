@@ -4,26 +4,11 @@
 
     check_cors();
 
-    // Web based change of temperature unit
-    if (isset($_GET['tempunit']))
-    {
-        if($_GET['tempunit'] == "fahrenheit")
-        {
-            exec('sudo pihole -a -f');
-        }
-        else
-        {
-            exec('sudo pihole -a -c');
-        }
-    }
-
     $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
     $output = shell_exec($cmd);
     $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
     $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
 
-    // Reparse setupVars.conf here, as we might have switched temperature units above
-    $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
     if(isset($setupVars['TEMPERATUREUNIT']))
     {
         $temperatureunit = $setupVars['TEMPERATUREUNIT'];
@@ -58,6 +43,35 @@
         $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
     }
     $token = $_SESSION['token'];
+
+    if(isset($setupVars['WEBUIBOXEDLAYOUT']))
+    {
+        if($setupVars['WEBUIBOXEDLAYOUT'] === "boxed")
+        {
+            $boxedlayout = true;
+        }
+        else
+        {
+            $boxedlayout = false;
+        }
+    }
+    else
+    {
+        $boxedlayout = true;
+    }
+
+    // Override layout setting if layout is changed via Settings page3
+    if(isset($_POST["field"]))
+    {
+        if($_POST["field"] === "webUI" && isset($_POST["boxedlayout"]))
+        {
+            $boxedlayout = true;
+        }
+        elseif($_POST["field"] === "webUI" && !isset($_POST["boxedlayout"]))
+        {
+            $boxedlayout = false;
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -95,7 +109,7 @@
     <script src="js/other/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="skin-blue sidebar-mini">
+<body class="skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <!-- JS Warning -->
 <div>
     <link rel="stylesheet" type="text/css" href="css/js-warn.css">
@@ -288,6 +302,12 @@
                   echo '                <li><a href="#" id="flip-status"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
                 }
                 ?>
+                <!-- Settings -->
+                <li>
+                    <a href="settings.php">
+                        <i class="fa fa-gears"></i> <span>Settings</span>
+                    </a>
+                </li>
                 <!-- Logout -->
                 <?php
                 // Show Logout button if $auth is set and authorization is required
