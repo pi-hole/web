@@ -265,8 +265,24 @@ function validDomain($domain_name)
 
 				break;
 
-			default:
+			// Set DNS server domain name
+			case "domainname":
 
+				$domain = $_POST["domain"];
+				if(!validDomain($domain))
+				{
+					$error .= "Domain name ".$domain." is invalid!<br>The domain name has been reset to its previous value";
+				}
+				else
+				{
+					exec("sudo pihole -a domainname ".$domain);
+				}
+				break;
+
+
+			default:
+				// Option not found
+				$debug = true;
 				break;
 		}
 	}

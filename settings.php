@@ -5,6 +5,14 @@
 	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 ?>
 
+<?php if(isset($debug)){ ?>
+<div id="alDebug" class="alert alert-warning alert-dismissible fade in" role="alert">
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4><i class="icon fa fa-warning"></i> Debug</h4>
+    <?php print_r($_POST); ?>
+</div>
+<?php } ?>
+
 <?php if(strlen($success) > 0){ ?>
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -40,6 +48,11 @@
 	} else {
 		$piHoleIPv6 = "unknown";
 	}
+	if(isset($setupVars["PIHOLE_DOMAIN"])){
+		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
+	} else {
+		$piHoleDomain = "local";
+	}
 	$hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 ?>
 		<div class="box box-warning">
@@ -74,6 +87,18 @@
 						<div class="input-group-addon"><i class="fa fa-laptop"></i></div>
 						<input type="text" class="form-control" disabled value="<?php echo $hostname; ?>">
 					</div>
+				</div>
+				<div class="form-group">
+					<label>Pi-Hole domain name</label>
+					<form role="form" method="post">
+					<div class="input-group">
+						<input type="hidden" name="field" value="domainname">
+						<input type="text" class="form-control" name="domain" value="<?php echo $piHoleDomain; ?>">
+						<div class="input-group-btn">
+							<button type="submit" class="btn btn-primary">Save</button>
+						</div>
+					</div>
+					</form>
 				</div>
 			</div>
 		</div>
