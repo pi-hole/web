@@ -6,7 +6,6 @@
 
     /*******   Public Members ********/
     function getSummaryData() {
-        global $log;
         $domains_being_blocked = gravityCount();
 
         $dns_queries_today = countDnsQueries();
