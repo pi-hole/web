@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-sm-12">
-        <center><img src="img/logo.svg" width="20%"></center>
+        <center><img src="img/DarkVortex.svg" width="20%"></center>
     </div>
     <div class="col-sm-12">
         <center><span class="logo-lg" style="font-size: 25px;"><b>Pi</b>-hole</span></center>
