@@ -251,9 +251,18 @@ function validDomain($domain_name)
 						$error .= "Router IP (".$router.") is invalid!<br>";
 					}
 
+					$domain = $_POST["domain"];
+
+					// Validate Domain name
+					if(!validDomain($domain))
+					{
+						$error .= "Domain name ".$domain." is invalid!<br>";
+					}
+
 					if(!strlen($error))
 					{
 						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router);
+						exec("sudo pihole -a domainname ".$domain);
 						$success .= "The DHCP server has been activated";
 					}
 				}
@@ -264,21 +273,6 @@ function validDomain($domain_name)
 				}
 
 				break;
-
-			// Set DNS server domain name
-			case "domainname":
-
-				$domain = $_POST["domain"];
-				if(!validDomain($domain))
-				{
-					$error .= "Domain name ".$domain." is invalid!<br>The domain name has been reset to its previous value";
-				}
-				else
-				{
-					exec("sudo pihole -a domainname ".$domain);
-				}
-				break;
-
 
 			default:
 				// Option not found

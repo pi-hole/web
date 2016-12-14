@@ -48,11 +48,6 @@
 	} else {
 		$piHoleIPv6 = "unknown";
 	}
-	if(isset($setupVars["PIHOLE_DOMAIN"])){
-		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
-	} else {
-		$piHoleDomain = "local";
-	}
 	$hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 ?>
 		<div class="box box-warning">
@@ -88,18 +83,6 @@
 						<input type="text" class="form-control" disabled value="<?php echo $hostname; ?>">
 					</div>
 				</div>
-				<div class="form-group">
-					<label>Pi-Hole domain name</label>
-					<form role="form" method="post">
-					<div class="input-group">
-						<input type="hidden" name="field" value="domainname">
-						<input type="text" class="form-control" name="domain" value="<?php echo $piHoleDomain; ?>">
-						<div class="input-group-btn">
-							<button type="submit" class="btn btn-primary">Save</button>
-						</div>
-					</div>
-					</form>
-				</div>
 			</div>
 		</div>
 <?php
@@ -127,6 +110,11 @@
 		$DHCPstart  = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".201";
 		$DHCPend    = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".251";
 		$DHCProuter = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".1";
+	}
+	if(isset($setupVars["PIHOLE_DOMAIN"])){
+		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
+	} else {
+		$piHoleDomain = "local";
 	}
 ?>
 		<div class="box box-warning">
@@ -159,6 +147,14 @@
 								<input type="text" class="form-control DHCPgroup" name="router" value="<?php echo $DHCProuter; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div><br/>
+					<label>Pi-Hole domain name</label>
+					<div class="col-md-12">
+						<div class="input-group">
+							<div class="input-group-addon">Domain</div>
+								<input type="text" class="form-control DHCPgroup" name="domain" value="<?php echo $piHoleDomain; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
+						</div>
+					</div>
+				<br/>
 <?php if($DHCP) {
 
 	// Read leases file
