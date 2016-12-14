@@ -28,7 +28,7 @@
       <br>
       <div class="row">
         <div class="col-xs-12">
-            <div class="box box-info <?php if(!$wrongpassword){ ?>collapsed-box<?php } ?> box-solid">
+            <div class="box box-<?php if(!$wrongpassword){ ?>info<?php }else{ ?>danger<?php } if(!$wrongpassword){ ?> collapsed-box<?php } ?> box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">Forgot password</h3>
 
@@ -43,28 +43,3 @@
     </form>
 </div>
 <br>
-
-<style type="text/css">
-.protected {
-<?php if($wrongpassword){ ?>
-	animation-name: color;
-	animation-duration: 2s;
-	animation-timing-function: linear;
-	animation-iteration-count: infinite;
-<?php } ?>
-}
-
-@keyframes color {
-  0% {
-    stroke: #000;
-  }
-  50% {
-    stroke: #C00;
-  }
-  100% {
-    stroke: #000;
-  }
-}
-</style>
-
-
