@@ -95,7 +95,7 @@
     <script src="js/other/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="skin-blue sidebar-mini">
+<body class="skin-blue sidebar-mini layout-boxed">
 <!-- JS Warning -->
 <div>
     <link rel="stylesheet" type="text/css" href="css/js-warn.css">
