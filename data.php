@@ -1,14 +1,12 @@
 <?php
     $log = array();
     $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
-    $divide =  $setupVars['IPV6_ADDRESS'] != "" && $setupVars['IPV4_ADDRESS'] != "";
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
     $log = new \SplFileObject('/var/log/pihole.log');
 
     /*******   Public Members ********/
     function getSummaryData() {
-        global $log, $divide;
-        $domains_being_blocked = gravityCount() / ($divide ? 2 : 1);
+        $domains_being_blocked = gravityCount();
 
         $dns_queries_today = countDnsQueries();
 
@@ -231,7 +229,9 @@
 
     /******** Private Members ********/
     function gravityCount() {
-        return exec("grep -c ^ /etc/pihole/gravity.list");
+        $preEventHorizon = exec("grep -c ^ /etc/pihole/list.preEventHorizon");
+        $blacklist = exec("grep -c ^ /etc/pihole/blacklist.txt");
+        return ($preEventHorizon + $blacklist);
     }
 
     function getDnsQueries(\SplFileObject $log) {
