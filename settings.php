@@ -237,6 +237,19 @@
 	} else {
 		$DNSrequiresFQDN = true;
 	}
+
+	if(isset($setupVars["DNS_BOGUS_PRIV"])){
+		if($setupVars["DNS_BOGUS_PRIV"])
+		{
+			$DNSbogusPriv = true;
+		}
+		else
+		{
+			$DNSbogusPriv = false;
+		}
+	} else {
+		$DNSbogusPriv = true;
+	}
 ?>
 		<div class="box box-warning">
 			<div class="box-header with-border">
@@ -272,7 +285,10 @@
 				</div>
 				<div class="col-lg-12">
 					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="DNSrequiresFQDN" <?php if($DNSrequiresFQDN){ ?>checked<?php } ?>> never forward non-FQDNs to upstream servers (may prevent accessing local hostnames if the Pi-Hole is not used as DHCP server)</label></div>
+						<div class="checkbox"><label><input type="checkbox" name="DNSrequiresFQDN" <?php if($DNSrequiresFQDN){ ?>checked<?php } ?>> never forward non-FQDNs to upstream DNS servers (may prevent accessing local hostnames if the Pi-Hole is not used as DHCP server)</label></div>
+					</div>
+					<div class="form-group">
+						<div class="checkbox"><label><input type="checkbox" name="DNSbogusPriv" <?php if($DNSbogusPriv){ ?>checked<?php } ?>> never forward reverse lookups for private IP ranges to upstream DNS servers</label></div>
 					</div>
 				</div>
 			</div>

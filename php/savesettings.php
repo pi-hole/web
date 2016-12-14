@@ -80,11 +80,21 @@ function validDomain($domain_name)
 				// Check if domain-needed is requested
 				if(isset($_POST["DNSrequiresFQDN"]))
 				{
-					$extra = "domain-needed";
+					$extra = "domain-needed ";
 				}
 				else
 				{
-					$extra = "domain-not-needed";
+					$extra = "domain-not-needed ";
+				}
+
+				// Check if domain-needed is requested
+				if(isset($_POST["DNSbogusPriv"]))
+				{
+					$extra .= "bogus-priv";
+				}
+				else
+				{
+					$extra .= "no-bogus-priv";
 				}
 
 				// If there has been no error we can save the new DNS server IPs
