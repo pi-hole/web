@@ -3,6 +3,7 @@
     $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
     $log = new \SplFileObject('/var/log/pihole.log');
+    $gravity = new \SplFileObject('/etc/pihole/list.preEventHorizon');
 
     /*******   Public Members ********/
     function getSummaryData() {
@@ -139,9 +140,10 @@
     }
 
     function getAllQueries($orderBy) {
-        global $log,$setupVars;
+        global $log,$setupVars,$gravity;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueriesAll($log);
+        $gravity_domains = getGravityDomains($gravity);
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 
         if(isset($setupVars["API_QUERY_LOG_SHOW"]))
@@ -185,44 +187,39 @@
             $tmp = $exploded[count($exploded)-4];
             $status = "";
 
-            if (substr($tmp, 0, 5) == "query"){
-              $type = substr($exploded[count($exploded)-4], 6, -1);
-              $domain = $exploded[count($exploded)-3];
-              $client = $exploded[count($exploded)-1];
+            if (substr($tmp, 0, 5) == "query")
+            {
+                $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
+                if(($status === "Pi-holed" && $showblocked) || ($status === "OK" && $showpermitted))
+                {
+                    $type = substr($exploded[count($exploded)-4], 6, -1);
+                    $domain = $exploded[count($exploded)-3];
+                    $client = $exploded[count($exploded)-1];
 
+                    if($orderBy == "orderByClientDomainTime"){
+                      $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d\TH:i:s')] = $status;
+                    }elseif ($orderBy == "orderByClientTimeDomain"){
+                      $allQueries['data'][hasHostName($client)][$time->format('Y-m-d\TH:i:s')][$domain] = $status;
+                    }elseif ($orderBy == "orderByTimeClientDomain"){
+                      $allQueries['data'][$time->format('Y-m-d\TH:i:s')][hasHostName($client)][$domain] = $status;
+                    }elseif ($orderBy == "orderByTimeDomainClient"){
+                      $allQueries['data'][$time->format('Y-m-d\TH:i:s')][$domain][hasHostName($client)] = $status;
+                    }elseif ($orderBy == "orderByDomainClientTime"){
+                      $allQueries['data'][$domain][hasHostName($client)][$time->format('Y-m-d\TH:i:s')] = $status;
+                    }elseif ($orderBy == "orderByDomainTimeClient"){
+                      $allQueries['data'][$domain][$time->format('Y-m-d\TH:i:s')][hasHostName($client)] = $status;
+                    }else{
+                      array_push($allQueries['data'], array(
+                        $time->format('Y-m-d\TH:i:s'),
+                        $type,
+                        $domain,
+                        hasHostName($client),
+                        $status,
+                        ""
+                      ));
+                    }
+                }
             }
-            elseif ((substr($tmp, 0, 9) == "forwarded" || $exploded[count($exploded)-3] == "pi.hole" || $exploded[count($exploded)-3] == $hostname) && $showpermitted){
-              $status="OK";
-            }
-            elseif ((substr($tmp, strlen($tmp) - 12, 12)  == "gravity.list"  && $exploded[count($exploded)-5] != "read") && $showblocked){
-              $status="Pi-holed";
-            }
-
-            if ( $status != ""){
-              if($orderBy == "orderByClientDomainTime"){
-                $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d\TH:i:s')] = $status;
-              }elseif ($orderBy == "orderByClientTimeDomain"){
-                $allQueries['data'][hasHostName($client)][$time->format('Y-m-d\TH:i:s')][$domain] = $status;
-              }elseif ($orderBy == "orderByTimeClientDomain"){
-                $allQueries['data'][$time->format('Y-m-d\TH:i:s')][hasHostName($client)][$domain] = $status;
-              }elseif ($orderBy == "orderByTimeDomainClient"){
-                $allQueries['data'][$time->format('Y-m-d\TH:i:s')][$domain][hasHostName($client)] = $status;
-              }elseif ($orderBy == "orderByDomainClientTime"){
-                $allQueries['data'][$domain][hasHostName($client)][$time->format('Y-m-d\TH:i:s')] = $status;
-              }elseif ($orderBy == "orderByDomainTimeClient"){
-                $allQueries['data'][$domain][$time->format('Y-m-d\TH:i:s')][hasHostName($client)] = $status;
-              }else{
-                array_push($allQueries['data'], array(
-                  $time->format('Y-m-d\TH:i:s'),
-                  $type,
-                  $domain,
-                  hasHostName($client),
-                  $status,
-                  ""
-                ));
-              }
-            }
-
         }
         return $allQueries;
     }
@@ -257,6 +254,18 @@
                 $lines[] = $line;
             }
         }
+        return $lines;
+    }
+
+    function getGravityDomains($gravity){
+        $gravity->rewind();
+        $lines=[];
+        foreach ($gravity as $line) {
+            // Strip newline (and possibly carriage return) from end of string
+            // using rtrim()
+            $lines[rtrim($line)] = true;
+        }
+
         return $lines;
     }
 

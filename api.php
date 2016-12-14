@@ -76,6 +76,10 @@
         ));
     }
 
+    if (isset($_GET['getGravityDomains'])) {
+        $data = array_merge($data, getGravityDomains($gravity));
+    }
+
     function filterArray(&$a) {
 	    $sanArray = array();
 	    foreach ($a as $k=>$v) {
