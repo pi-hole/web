@@ -77,10 +77,20 @@ function validDomain($domain_name)
 					$error .= "Secondary IP (".$secondaryIP.") is invalid!<br>";
 				}
 
+				// Check if domain-needed is requested
+				if(isset($_POST["DNSrequiresFQDN"]))
+				{
+					$extra = "domain-needed";
+				}
+				else
+				{
+					$extra = "domain-not-needed";
+				}
+
 				// If there has been no error we can save the new DNS server IPs
 				if(!strlen($error))
 				{
-					exec("sudo pihole -a setdns ".$primaryIP." ".$secondaryIP);
+					exec("sudo pihole -a setdns ".$primaryIP." ".$secondaryIP." ".$extra);
 					$success .= "The DNS settings have been updated";
 				}
 				else

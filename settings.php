@@ -224,6 +224,19 @@
 	} else {
 		$piHoleDNS2 = "unknown";
 	}
+
+	if(isset($setupVars["DNS_FQDN_REQUIRED"])){
+		if($setupVars["DNS_FQDN_REQUIRED"])
+		{
+			$DNSrequiresFQDN = true;
+		}
+		else
+		{
+			$DNSrequiresFQDN = false;
+		}
+	} else {
+		$DNSrequiresFQDN = true;
+	}
 ?>
 		<div class="box box-warning">
 			<div class="box-header with-border">
@@ -255,6 +268,11 @@
 							<input type="text" name="DNS2IP" class="form-control" data-inputmask="'alias': 'ip'" data-mask
 							<?php if($piHoleDNS2 === "Custom"){ ?>value="<?php echo $setupVars["PIHOLE_DNS_2"]; ?>"<?php } ?>>
 						</div>
+					</div>
+				</div>
+				<div class="col-lg-12">
+					<div class="form-group">
+						<div class="checkbox"><label><input type="checkbox" name="DNSrequiresFQDN" <?php if($DNSrequiresFQDN){ ?>checked<?php } ?>> never forward non-FQDNs to upstream servers (may prevent accessing local hostnames if the Pi-Hole is not used as DHCP server)</label></div>
 					</div>
 				</div>
 			</div>
