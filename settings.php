@@ -284,12 +284,23 @@
 					</div>
 				</div>
 				<div class="col-lg-12">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="DNSrequiresFQDN" <?php if($DNSrequiresFQDN){ ?>checked<?php } ?>> never forward non-FQDNs to upstream DNS servers (may prevent accessing local hostnames if the Pi-Hole is not used as DHCP server)</label></div>
+				<div class="box box-warning collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">Advanced DNS settings</h3>
+						<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
 					</div>
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="DNSbogusPriv" <?php if($DNSbogusPriv){ ?>checked<?php } ?>> never forward reverse lookups for private IP ranges to upstream DNS servers</label></div>
+					<div class="box-body">
+						<div class="col-lg-12">
+							<div class="form-group">
+								<div class="checkbox"><label><input type="checkbox" name="DNSrequiresFQDN" <?php if($DNSrequiresFQDN){ ?>checked<?php } ?>> never forward non-FQDNs</label></div>
+							</div>
+							<div class="form-group">
+								<div class="checkbox"><label><input type="checkbox" name="DNSbogusPriv" <?php if($DNSbogusPriv){ ?>checked<?php } ?>> never forward reverse lookups for private IP ranges</label></div>
+							</div>
+							<p>Note that enabling these two options may increase your privacy slightly, but may also prevent you from being able to access local hostnames if the Pi-Hole is not used as DHCP server</p>
+						</div>
 					</div>
+				</div>
 				</div>
 			</div>
 			<div class="box-footer">
