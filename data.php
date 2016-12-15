@@ -111,13 +111,27 @@
 
     }
 
+    // Check for existance of variable
+    // and test it only if it exists
+    function istrue($argument) {
+        $ret = false;
+        if(isset($argument))
+        {
+            if($argument)
+            {
+                $ret = true;
+            }
+        }
+        return $ret;
+    }
+
     function getQuerySources() {
         global $log;
         $dns_queries = getDnsQueries($log);
         $sources = array();
         foreach($dns_queries as $query) {
             $exploded = explode(" ", $query);
-            $ip = hasHostName(trim($exploded[count($exploded)-1]));
+            $ip = trim($exploded[count($exploded)-1]);
             if (isset($sources[$ip])) {
                 $sources[$ip]++;
             }
@@ -134,6 +148,25 @@
 
         arsort($sources);
         $sources = array_slice($sources, 0, 10);
+
+        if(istrue($setupVars["API_GET_CLIENT_HOSTNAME"]))
+        {
+            foreach ($sources as $key => $value)
+            {
+                $hostname = gethostbyaddr($key);
+                // If we found a hostname for the IP, replace it
+                if($hostname)
+                {
+                    // Generate HOST entry
+                    $sources[$hostname] = $sources[$key];
+                    // Remove IP entry
+                    unset($sources[$key]);
+                }
+            }
+            // Have to repeat the sorting, since we changed the keys
+            arsort($sources);
+        }
+
         return Array(
             'top_sources' => $sources
         );
