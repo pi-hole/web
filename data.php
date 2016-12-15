@@ -193,6 +193,8 @@
             $domain = $exploded[count($exploded)-3];
             $tmp = $exploded[count($exploded)-4];
 
+            setShowBlockedPermitted();
+
             if (substr($tmp, 0, 5) == "query")
             {
                 $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
