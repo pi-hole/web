@@ -5,164 +5,6 @@ function padNumber(num) {
     return ("00" + num).substr(-2,2);
 }
 
-$(document).ready(function() {
-
-    var isMobile = {
-        Windows: function() {
-            return /IEMobile/i.test(navigator.userAgent);
-        },
-        Android: function() {
-            return /Android/i.test(navigator.userAgent);
-        },
-        BlackBerry: function() {
-            return /BlackBerry/i.test(navigator.userAgent);
-        },
-        iOS: function() {
-            return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-        },
-        any: function() {
-            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Windows());
-        }
-    };
-
-    var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
-    timeLineChart = new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: [],
-            datasets: [
-                {
-                    label: "Total DNS Queries",
-                    fill: true,
-                    backgroundColor: "rgba(220,220,220,0.5)",
-                    borderColor: "rgba(0, 166, 90,.8)",
-                    pointBorderColor: "rgba(0, 166, 90,.8)",
-                    pointRadius: 1,
-                    pointHoverRadius: 5,
-                    data: [],
-                    pointHitRadius: 5,
-                    cubicInterpolationMode: "monotone"
-                },
-                {
-                    label: "Blocked DNS Queries",
-                    fill: true,
-                    backgroundColor: "rgba(0,192,239,0.5)",
-                    borderColor: "rgba(0,192,239,1)",
-                    pointBorderColor: "rgba(0,192,239,1)",
-                    pointRadius: 1,
-                    pointHoverRadius: 5,
-                    data: [],
-                    pointHitRadius: 5,
-                    cubicInterpolationMode: "monotone"
-                }
-            ]
-        },
-        options: {
-            tooltips: {
-                enabled: true,
-                mode: "x-axis",
-                callbacks: {
-                    title(tooltipItem, data) {
-                        var label = tooltipItem[0].xLabel;
-                        var time = label.match(/(\d?\d):?(\d?\d?)/);
-                        var h = parseInt(time[1], 10);
-                        var m = parseInt(time[2], 10) || 0;
-                        var from = padNumber(h)+":"+padNumber(m)+":00";
-                        var to = padNumber(h)+":"+padNumber(m+9)+":59";
-                        return "Queries from "+from+" to "+to;
-                    }
-                }
-            },
-            legend: {
-                display: false
-            },
-            scales: {
-                xAxes: [{
-                    type: "time",
-                    time: {
-                        unit: "hour",
-                        displayFormats: {
-                            hour: "HH:mm"
-                        },
-                        tooltipFormat: "HH:mm"
-                    }
-                }],
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            },
-            maintainAspectRatio: false
-        }
-    });
-
-    // Pull in data via AJAX
-
-    updateSummaryData();
-
-    updateQueriesOverTime();
-
-    // Create / load "Query Types" only if authorized
-    if(!!document.getElementById("queryTypeChart"))
-    {
-        ctx = document.getElementById("queryTypeChart").getContext("2d");
-        queryTypeChart = new Chart(ctx, {
-            type: "doughnut",
-            data: {
-                labels: [],
-                datasets: [{ data: [] }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                animation: {
-                    duration: 2000
-                },
-                cutoutPercentage: 0
-            }
-        });
-        updateQueryTypes();
-    }
-
-    // Create / load "Forward Destinations" only if authorized
-    if(document.getElementById("forwardDestinationChart"))
-    {
-        ctx = document.getElementById("forwardDestinationChart").getContext("2d");
-        forwardDestinationChart = new Chart(ctx, {
-            type: "doughnut",
-            data: {
-                labels: [],
-                datasets: [{ data: [] }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                animation: {
-                    duration: 2000
-                },
-                cutoutPercentage: 0
-            }
-        });
-        updateForwardDestinations();
-    }
-
-    // Create / load "Top Domains" and "Top Advertisers" only if authorized
-    if(document.getElementById("domain-frequency")
-       && document.getElementById("ad-frequency"))
-    {
-        updateTopLists();
-    }
-
-    // Create / load "Top Clients" only if authorized
-    if(document.getElementById("client-frequency"))
-    {
-        updateTopClientsChart();
-    }
-});
-
 // Helper function needed for converting the Objects to Arrays
 
 function objectToArray(p){
@@ -365,7 +207,165 @@ function updateTopLists() {
                  percentage + "%\"></div> </div> </td> </tr> ");
         }
 
-        $('#domain-frequency .overlay').remove();
-        $('#ad-frequency .overlay').remove();
+        $("#domain-frequency .overlay").remove();
+        $("#ad-frequency .overlay").remove();
+    });
+
+    $(document).ready(function() {
+
+        var isMobile = {
+            Windows: function() {
+                return /IEMobile/i.test(navigator.userAgent);
+            },
+            Android: function() {
+                return /Android/i.test(navigator.userAgent);
+            },
+            BlackBerry: function() {
+                return /BlackBerry/i.test(navigator.userAgent);
+            },
+            iOS: function() {
+                return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            },
+            any: function() {
+                return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Windows());
+            }
+        };
+
+        var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
+        timeLineChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: "Total DNS Queries",
+                        fill: true,
+                        backgroundColor: "rgba(220,220,220,0.5)",
+                        borderColor: "rgba(0, 166, 90,.8)",
+                        pointBorderColor: "rgba(0, 166, 90,.8)",
+                        pointRadius: 1,
+                        pointHoverRadius: 5,
+                        data: [],
+                        pointHitRadius: 5,
+                        cubicInterpolationMode: "monotone"
+                    },
+                    {
+                        label: "Blocked DNS Queries",
+                        fill: true,
+                        backgroundColor: "rgba(0,192,239,0.5)",
+                        borderColor: "rgba(0,192,239,1)",
+                        pointBorderColor: "rgba(0,192,239,1)",
+                        pointRadius: 1,
+                        pointHoverRadius: 5,
+                        data: [],
+                        pointHitRadius: 5,
+                        cubicInterpolationMode: "monotone"
+                    }
+                ]
+            },
+            options: {
+                tooltips: {
+                    enabled: true,
+                    mode: "x-axis",
+                    callbacks: {
+                        title(tooltipItem, data) {
+                            var label = tooltipItem[0].xLabel;
+                            var time = label.match(/(\d?\d):?(\d?\d?)/);
+                            var h = parseInt(time[1], 10);
+                            var m = parseInt(time[2], 10) || 0;
+                            var from = padNumber(h)+":"+padNumber(m)+":00";
+                            var to = padNumber(h)+":"+padNumber(m+9)+":59";
+                            return "Queries from "+from+" to "+to;
+                        }
+                    }
+                },
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        type: "time",
+                        time: {
+                            unit: "hour",
+                            displayFormats: {
+                                hour: "HH:mm"
+                            },
+                            tooltipFormat: "HH:mm"
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                maintainAspectRatio: false
+            }
+        });
+
+        // Pull in data via AJAX
+
+        updateSummaryData();
+
+        updateQueriesOverTime();
+
+        // Create / load "Query Types" only if authorized
+        if(!!document.getElementById("queryTypeChart"))
+        {
+            ctx = document.getElementById("queryTypeChart").getContext("2d");
+            queryTypeChart = new Chart(ctx, {
+                type: "doughnut",
+                data: {
+                    labels: [],
+                    datasets: [{ data: [] }]
+                },
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    animation: {
+                        duration: 2000
+                    },
+                    cutoutPercentage: 0
+                }
+            });
+            updateQueryTypes();
+        }
+
+        // Create / load "Forward Destinations" only if authorized
+        if(document.getElementById("forwardDestinationChart"))
+        {
+            ctx = document.getElementById("forwardDestinationChart").getContext("2d");
+            forwardDestinationChart = new Chart(ctx, {
+                type: "doughnut",
+                data: {
+                    labels: [],
+                    datasets: [{ data: [] }]
+                },
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    animation: {
+                        duration: 2000
+                    },
+                    cutoutPercentage: 0
+                }
+            });
+            updateForwardDestinations();
+        }
+
+        // Create / load "Top Domains" and "Top Advertisers" only if authorized
+        if(document.getElementById("domain-frequency")
+            && document.getElementById("ad-frequency"))
+        {
+            updateTopLists();
+        }
+
+        // Create / load "Top Clients" only if authorized
+        if(document.getElementById("client-frequency"))
+        {
+            updateTopClientsChart();
+        }
     });
 }
