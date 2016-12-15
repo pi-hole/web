@@ -34,6 +34,34 @@ function validDomain($domain_name)
 			"8.20.247.20" => "Comodo"
 		];
 
+$adlists = [];
+function readAdlists()
+{
+	global $adlists;
+	$adlists = [];
+	$handle = fopen("/etc/pihole/adlists.default", "r");
+	if ($handle)
+	{
+		while (($line = fgets($handle)) !== false)
+		{
+			if(substr($line, 0, 2) === "#h")
+			{
+				// Commented list
+				array_push($adlists, [false,rtrim(substr($line, 1))]);
+			}
+			elseif(substr($line, 0, 1) === "h")
+			{
+				// Active list
+				array_push($adlists, [true,rtrim($line)]);
+			}
+		}
+		fclose($handle);
+	}
+}
+
+	// Read available adlists
+	readAdlists();
+
 	if(isset($_POST["field"]))
 	{
 		$error = "";
@@ -292,6 +320,24 @@ function validDomain($domain_name)
 					$success = "The DHCP server has been deactivated";
 				}
 
+				break;
+
+			case "adlists":
+				foreach ($adlists as $key => $value)
+				{
+					if(isset($_POST["adlist-".$key]))
+					{
+						$action = "enable";
+					}
+					else
+					{
+						$action = "disable";
+					}
+					exec("sudo pihole -a adlist ".$action." ".escapeshellcmd ($value[1]));
+				}
+
+				// Reread available adlists
+				readAdlists();
 				break;
 
 			default:
