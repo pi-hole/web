@@ -379,6 +379,25 @@
 	} else {
 		$queryLog = "all";
 	}
+
+	if(istrue($setupVars["API_GET_UPSTREAM_DNS_HOSTNAME"]))
+	{
+		$resolveForward = true;
+	}
+	else
+	{
+		$resolveForward = false;
+	}
+
+	if(istrue($setupVars["API_GET_CLIENT_HOSTNAME"]))
+	{
+		$resolveClients = true;
+	}
+	else
+	{
+		$resolveClients = false;
+	}
+
 ?>
 		<div class="box box-success">
 			<div class="box-header with-border">
@@ -400,10 +419,28 @@
 					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
 					</div>
 				</div>
+				<h4>Reverse DNS lookup</h4>
+				<p>Try to determine the domain name via querying the Pi-hole for</p>
+				<div class="col-lg-6">
+					<div class="form-group">
+						<div class="checkbox"><label><input type="checkbox" name="resolve-forward" <?php if($resolveForward){ ?>checked<?php } ?>> Forward Destinations</label></div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="form-group">
+						<div class="checkbox"><label><input type="checkbox" name="resolve-clients" <?php if($resolveClients){ ?>checked<?php } ?>> Top Clients</label></div>
+					</div>
+				</div>
 				<h4>Query Log</h4>
-				<div class="form-group">
-					<div class="checkbox"><label><input type="checkbox" name="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show permitted queries</label></div>
-					<div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked queries</label></div>
+				<div class="col-lg-6">
+					<div class="form-group">
+						<div class="checkbox"><label><input type="checkbox" name="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show permitted queries</label></div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="form-group">
+						<div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked queries</label></div>
+					</div>
 				</div>
 			</div>
 			<div class="box-footer">

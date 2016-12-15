@@ -9,6 +9,20 @@ function validIP($address){
 	return !filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false;
 }
 
+// Check for existance of variable
+// and test it only if it exists
+function istrue($argument) {
+	$ret = false;
+	if(isset($argument))
+	{
+		if($argument)
+		{
+			$ret = true;
+		}
+	}
+	return $ret;
+}
+
 // Credit: http://stackoverflow.com/a/4694816/2087442
 function validDomain($domain_name)
 {
@@ -206,6 +220,24 @@ function validDomain($domain_name)
 				{
 					exec("sudo pihole -a setquerylog none");
 					$success .= "No entries will be shown in Query Log";
+				}
+
+				if(isset($_POST["resolve-forward"]))
+				{
+					exec("sudo pihole -a resolve forward true");
+				}
+				else
+				{
+					exec("sudo pihole -a resolve forward false");
+				}
+
+				if(isset($_POST["resolve-clients"]))
+				{
+					exec("sudo pihole -a resolve clients true");
+				}
+				else
+				{
+					exec("sudo pihole -a resolve clients false");
 				}
 
 				break;
