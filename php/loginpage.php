@@ -1,7 +1,7 @@
 <div class="mainbox col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <div style="text-align: center;"><img src="img/DarkVortex.svg" width="<?php if ($boxedlayout) { ?>
+      <div style="text-align: center;"><img src="img/logo.svg" width="<?php if ($boxedlayout) { ?>
                                                                               50%
                                                                             <?php } else { ?>
                                                                               30%
