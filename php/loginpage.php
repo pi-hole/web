@@ -1,45 +1,55 @@
-<div class="row">
-    <div class="col-sm-12">
-        <center><img src="img/DarkVortex.svg" width="20%"></center>
-    </div>
-    <div class="col-sm-12">
-        <center><span class="logo-lg" style="font-size: 25px;"><b>Pi</b>-hole</span></center>
-    </div>
-</div>
-<div class="login-box">
-  <div class="login-box-body">
-    <p class="login-box-msg">Sign in to start your session</p>
-      <?php if($wrongpassword){ ?>
-          <div class="form-group has-error login-box-msg">
-              <label class="control-label"><i class="fa fa-times-circle-o"></i> Wrong password!</label>
-          </div>
+<div class="mainbox col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div style="text-align: center;"><img src="img/DarkVortex.svg" width="20%"></div>
+      <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;"><b>Pi</b>-hole</span></div>
+      <p class="login-box-msg">Sign in to start your session</p>
+      <?php if ($wrongpassword) { ?>
+        <div class="form-group has-error login-box-msg">
+          <label class="control-label"><i class="fa fa-times-circle-o"></i> Wrong password!</label>
+        </div>
       <?php } ?>
+    </div>
 
-    <form action="" method="post">
-      <div class="form-group has-feedback <?php if($wrongpassword){ ?>has-error<?php } ?> ">
-        <input type="password" name="pw" class="form-control" placeholder="Password">
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-      </div>
-      <div class="row">
-        <div class="col-xs-4 col-xs-offset-8">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Log In</button>
+    <div class="panel-body">
+      <form action="" method="post">
+        <div class="form-group has-feedback <?php if ($wrongpassword) { ?>has-error<?php } ?> ">
+          <input type="password" name="pw" class="form-control" placeholder="Password">
+          <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         </div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-xs-12">
-            <div class="box box-<?php if(!$wrongpassword){ ?>info<?php }else{ ?>danger<?php } if(!$wrongpassword){ ?> collapsed-box<?php } ?> box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Forgot password</h3>
+        <div class="row">
+          <div class="col-xs-4 col-xs-offset-8">
+            <button type="submit" href="#" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-log-in"></i>
+              Log in
+            </button>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="box box-<?php if (!$wrongpassword) { ?>info<?php } else { ?>danger<?php }
+            if (!$wrongpassword) { ?> collapsed-box<?php } ?> box-solid">
+              <div class="box-header with-border">
+                <h3 class="box-title">Forgot password</h3>
 
-                    <div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa <?php if($wrongpassword){ ?>fa-minus<?php }else{ ?>fa-plus<?php } ?>"></i></button></div>
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                      class="fa <?php if ($wrongpassword) { ?>fa-minus<?php } else { ?>fa-plus<?php } ?>"></i>
+                  </button>
                 </div>
-                <div class="box-body">
-                    After installing Pi-Hole for the first time, a password is generated and displayed to the user. The password cannot be retrived later on, but it is possible to set a new password (or explicitly disable the password by setting an empty password) using the command <pre>sudo pihole -a -p newpassword</pre>
-                </div>
+              </div>
+              <div class="box-body">
+                After installing Pi-Hole for the first time, a password is generated and displayed to the user. The
+                password cannot be retrived later on, but it is possible to set a new password (or explicitly disable
+                the
+                password by setting an empty password) using the command
+                <pre>sudo pihole -a -p newpassword</pre>
+              </div>
             </div>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+
+    </div>
+  </div>
 </div>
-<br>
