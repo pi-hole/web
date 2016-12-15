@@ -210,8 +210,9 @@ function updateTopLists() {
         $("#domain-frequency .overlay").remove();
         $("#ad-frequency .overlay").remove();
     });
+}
 
-    $(document).ready(function() {
+$(document).ready(function() {
 
         var isMobile = {
             Windows: function() {
@@ -368,4 +369,3 @@ function updateTopLists() {
             updateTopClientsChart();
         }
     });
-}
