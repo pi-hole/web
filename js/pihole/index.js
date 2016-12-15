@@ -311,7 +311,7 @@ $(document).ready(function() {
         updateQueriesOverTime();
 
         // Create / load "Query Types" only if authorized
-        if(!!document.getElementById("queryTypeChart"))
+        if(document.getElementById("queryTypeChart"))
         {
             ctx = document.getElementById("queryTypeChart").getContext("2d");
             queryTypeChart = new Chart(ctx, {
