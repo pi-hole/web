@@ -1,5 +1,5 @@
 // Define global variables
-var timeLineChart, queryTypeChart, forwardDestinationChart, forwardDestinationChart;
+var timeLineChart, queryTypeChart, forwardDestinationChart;
 
 function padNumber(num) {
     return ("00" + num).substr(-2,2);
@@ -127,7 +127,7 @@ $(document).ready(function() {
     }
 
     // Create / load "Forward Destinations" only if authorized
-    if(!!document.getElementById("forwardDestinationChart"))
+    if(document.getElementById("forwardDestinationChart"))
     {
         ctx = document.getElementById("forwardDestinationChart").getContext("2d");
         forwardDestinationChart = new Chart(ctx, {
@@ -150,14 +150,14 @@ $(document).ready(function() {
     }
 
     // Create / load "Top Domains" and "Top Advertisers" only if authorized
-    if(!!document.getElementById("domain-frequency")
-       && !!document.getElementById("ad-frequency"))
+    if(document.getElementById("domain-frequency")
+       && document.getElementById("ad-frequency"))
     {
         updateTopLists();
     }
 
     // Create / load "Top Clients" only if authorized
-    if(!!document.getElementById("client-frequency"))
+    if(document.getElementById("client-frequency"))
     {
         updateTopClientsChart();
     }
@@ -191,11 +191,6 @@ function updateSummaryData(runOnce) {
             $("h3#dns_queries_today").addClass("glow");
         }
         if ($("h3#ads_percentage_today").text() != data.ads_percentage_today) {
-            $("h3#ads_percentage_today").addClass("glow");
-        }
-
-        window.setTimeout(function(){
-            $("h3#ads_blocked_today").text(data.ads_blocked_today);
             $("h3#dns_queries_today").text(data.dns_queries_today);
             $("h3#domains_being_blocked").text(data.domains_being_blocked);
             $("h3#ads_percentage_today").text(data.ads_percentage_today + "%");
@@ -228,12 +223,14 @@ function updateQueriesOverTime() {
         timeLineChart.data.datasets[1].data = [];
         // Add data for each hour that is available
         for (var hour in data.ads_over_time[0]) {
-            var h = parseInt(data.domains_over_time[0][hour]);
-            var d = new Date().setHours(Math.floor(h/6),10*(h%6),0,0);
+            if ({}.hasOwnProperty.call(data.ads_over_time[0], hour)) {
+                var h = parseInt(data.domains_over_time[0][hour]);
+                var d = new Date().setHours(Math.floor(h / 6), 10 * (h % 6), 0, 0);
 
-            timeLineChart.data.labels.push(d);
-            timeLineChart.data.datasets[0].data.push(data.domains_over_time[1][hour]);
-            timeLineChart.data.datasets[1].data.push(data.ads_over_time[1][hour]);
+                timeLineChart.data.labels.push(d);
+                timeLineChart.data.datasets[0].data.push(data.domains_over_time[1][hour]);
+                timeLineChart.data.datasets[1].data.push(data.ads_over_time[1][hour]);
+            }
         }
         $('#queries-over-time .overlay').remove();
         timeLineChart.update();
