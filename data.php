@@ -124,7 +124,10 @@
             }
         }
 
-        resolveIPs($destinations);
+        if(istrue($setupVars["API_GET_UPSTREAM_DNS_HOSTNAME"]))
+        {
+            resolveIPs($destinations);
+        }
 
         return $destinations;
 
