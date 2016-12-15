@@ -115,7 +115,7 @@
         $destinations = array();
         foreach ($forwards as $forward) {
             $exploded = explode(" ", trim($forward));
-            $dest = hasHostName($exploded[count($exploded) - 1]);
+            $dest = $exploded[count($exploded) - 1];
             if (isset($destinations[$dest])) {
                 $destinations[$dest]++;
             }
@@ -123,6 +123,8 @@
                 $destinations[$dest] = 1;
             }
         }
+
+        resolveIPs($destinations);
 
         return $destinations;
 
