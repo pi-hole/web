@@ -92,6 +92,23 @@
         return $queryTypes;
     }
 
+    function resolveIPs(&$array) {
+        foreach ($array as $key => $value)
+        {
+            $hostname = gethostbyaddr($key);
+            // If we found a hostname for the IP, replace it
+            if($hostname)
+            {
+                // Generate HOST entry
+                $array[$hostname] = $array[$key];
+                // Remove IP entry
+                unset($array[$key]);
+            }
+        }
+        // Have to repeat the sorting, since we changed the keys
+        arsort($array);
+    }
+
     function getForwardDestinations() {
         global $log;
         $forwards = getForwards($log);
@@ -151,20 +168,7 @@
 
         if(istrue($setupVars["API_GET_CLIENT_HOSTNAME"]))
         {
-            foreach ($sources as $key => $value)
-            {
-                $hostname = gethostbyaddr($key);
-                // If we found a hostname for the IP, replace it
-                if($hostname)
-                {
-                    // Generate HOST entry
-                    $sources[$hostname] = $sources[$key];
-                    // Remove IP entry
-                    unset($sources[$key]);
-                }
-            }
-            // Have to repeat the sorting, since we changed the keys
-            arsort($sources);
+            resolveIPs($sources);
         }
 
         return Array(
