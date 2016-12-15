@@ -139,61 +139,68 @@
         );
     }
 
-    function getAllQueries($orderBy) {
-        global $log,$setupVars,$gravity;
-        $allQueries = array("data" => array());
-        $dns_queries = getDnsQueriesAll($log);
-        $gravity_domains = getGravityDomains($gravity);
-        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
+    $showBlocked = false;
+    $showPermitted = false;
 
+    function setShowBlockedPermitted()
+    {
+        global $showBlocked, $showPermitted;
         if(isset($setupVars["API_QUERY_LOG_SHOW"]))
         {
             if($setupVars["API_QUERY_LOG_SHOW"] === "all")
             {
-                $showblocked = true;
-                $showpermitted = true;
+                $showBlocked = true;
+                $showPermitted = true;
             }
             elseif($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly")
             {
-                $showblocked = false;
-                $showpermitted = true;
+                $showBlocked = false;
+                $showPermitted = true;
             }
             elseif($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly")
             {
-                $showblocked = true;
-                $showpermitted = false;
+                $showBlocked = true;
+                $showPermitted = false;
             }
             elseif($setupVars["API_QUERY_LOG_SHOW"] === "none")
             {
-                $showblocked = false;
-                $showpermitted = false;
+                $showBlocked = false;
+                $showPermitted = false;
             }
             else
             {
                 // Invalid settings, show everything
-                $showblocked = true;
-                $showpermitted = true;
+                $showBlocked = true;
+                $showPermitted = true;
             }
         }
         else
         {
-            $showblocked = true;
-            $showpermitted = true;
+            $showBlocked = true;
+            $showPermitted = true;
         }
+    }
+
+    function getAllQueries($orderBy) {
+        global $log,$gravity,$showBlocked,$showPermitted;
+        $allQueries = array("data" => array());
+        $dns_queries = getDnsQueriesAll($log);
+        $gravity_domains = getGravityDomains($gravity);
 
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
             $exploded = explode(" ", trim($query));
+            $domain = $exploded[count($exploded)-3];
             $tmp = $exploded[count($exploded)-4];
-            $status = "";
+
+            setShowBlockedPermitted();
 
             if (substr($tmp, 0, 5) == "query")
             {
                 $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
-                if(($status === "Pi-holed" && $showblocked) || ($status === "OK" && $showpermitted))
+                if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))
                 {
                     $type = substr($exploded[count($exploded)-4], 6, -1);
-                    $domain = $exploded[count($exploded)-3];
                     $client = $exploded[count($exploded)-1];
 
                     if($orderBy == "orderByClientDomainTime"){
