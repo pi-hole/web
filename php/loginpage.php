@@ -1,7 +1,12 @@
 <div class="mainbox col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <div style="text-align: center;"><img src="img/DarkVortex.svg" width="50%"></div>
+      <div style="text-align: center;"><img src="img/DarkVortex.svg" width="<?php if ($boxedlayout) { ?>
+                                                                              50%
+                                                                            <?php } else { ?>
+                                                                              30%
+                                                                            <?php } ?>"></div>
+
       <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;"><b>Pi</b>-hole</span></div>
       <p class="login-box-msg">Sign in to start your session</p>
       <?php if ($wrongpassword) { ?>
