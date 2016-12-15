@@ -181,6 +181,7 @@ function objectToArray(p){
 
 // Functions to update data in page
 
+
 function updateSummaryData(runOnce) {
     $.getJSON("api.php?summary", function LoadSummaryData(data) {
         //$("h3.statistic").addClass("glow");
@@ -191,6 +192,11 @@ function updateSummaryData(runOnce) {
             $("h3#dns_queries_today").addClass("glow");
         }
         if ($("h3#ads_percentage_today").text() != data.ads_percentage_today) {
+            $("h3#ads_percentage_today").addClass("glow");
+        }
+
+        window.setTimeout(function(){
+            $("h3#ads_blocked_today").text(data.ads_blocked_today);
             $("h3#dns_queries_today").text(data.dns_queries_today);
             $("h3#domains_being_blocked").text(data.domains_being_blocked);
             $("h3#ads_percentage_today").text(data.ads_percentage_today + "%");
