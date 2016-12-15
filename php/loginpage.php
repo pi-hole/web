@@ -1,11 +1,7 @@
 <div class="mainbox col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <div style="text-align: center;"><img src="img/logo.svg" width="<?php if ($boxedlayout) { ?>
-                                                                              50%
-                                                                            <?php } else { ?>
-                                                                              30%
-                                                                            <?php } ?>"></div>
+      <div style="text-align: center;"><img src="img/logo.svg" width="<?php if ($boxedlayout) { ?>50%<?php } else { ?>30%<?php } ?>"></div><br>
 
       <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;"><b>Pi</b>-hole</span></div>
       <p class="login-box-msg">Sign in to start your session</p>
@@ -24,9 +20,7 @@
         </div>
         <div class="row">
           <div class="col-xs-4 col-xs-offset-8">
-            <button type="submit" href="#" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-log-in"></i>
-              Log in
-            </button>
+            <button type="submit" href="#" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;&nbsp;Log in</button>
           </div>
         </div>
         <br>
