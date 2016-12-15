@@ -28,6 +28,7 @@
             }
             ?>
             <b>Pi-hole Version </b> <span id="piholeVersion"><?php echo $piholeVersion; ?></span><?php if(isset($piholeCommit)) { echo " (".$piholeBranch.", ".$piholeCommit.")"; } ?>
+            <?php if($piholeBranch !== "master" || $webBranch !== "master") { ?><br/><?php } ?>
             <b>Web Interface Version </b> <span id="webVersion"><?php echo $webVersion; ?></span><?php if(isset($webCommit)) { echo " (".$webBranch.", ".$webCommit.")"; } ?>
         </div>
     </footer>
