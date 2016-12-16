@@ -46,7 +46,7 @@ $(document).ready(function() {
     });
     $("#all-queries tbody").on( "click", "button", function () {
         var data = tableApi.row( $(this).parents("tr") ).data();
-        if (data[4] == "Pi-holed")
+        if (data[4] === "Pi-holed")
         {
           add(data[2],"white");
         }
