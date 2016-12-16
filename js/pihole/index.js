@@ -42,7 +42,7 @@ function updateSummaryData(runOnce) {
                 var textData = idx === 3 ? data[header] + "%" : data[header];
                 $("h3#" + header).text(textData);
             });
-            $("h3.statistic.glow").removeClass("glow")
+            $("h3.statistic.glow").removeClass("glow");
         }, 500);
 
         updateSessionTimer();
@@ -134,14 +134,18 @@ function updateTopClientsChart() {
         var clienttable =  $("#client-frequency").find("tbody:last");
         var domain, percentage;
         for (domain in data.top_sources) {
-            // Sanitize domain
-            domain = escapeHtml(domain);
 
-            var url = "<a href=\"queries.php?client="+domain+"\">"+domain+"</a>";
-            percentage = data.top_sources[domain] / data.dns_queries_today * 100;
-            clienttable.append("<tr> <td>" + url +
-                "</td> <td>" + data.top_sources[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
-                percentage + "%\"></div> </div> </td> </tr> ");
+            if ({}.hasOwnProperty.call(data.top_sources, domain)){
+                // Sanitize domain
+                domain = escapeHtml(domain);
+
+                var url = "<a href=\"queries.php?client="+domain+"\">"+domain+"</a>";
+                percentage = data.top_sources[domain] / data.dns_queries_today * 100;
+                clienttable.append("<tr> <td>" + url +
+                    "</td> <td>" + data.top_sources[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
+                    percentage + "%\"></div> </div> </td> </tr> ");
+            }
+
         }
 
         $("#client-frequency .overlay").remove();
@@ -178,29 +182,34 @@ function updateTopLists() {
         var url, domain, percentage;
 
         for (domain in data.top_queries) {
-            // Sanitize domain
-            domain = escapeHtml(domain);
-            if(domain !== "pi.hole")
-            {
-                url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
+            if ({}.hasOwnProperty.call(data.top_queries,domain)){
+                // Sanitize domain
+                domain = escapeHtml(domain);
+                if(domain !== "pi.hole")
+                {
+                    url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
+                }
+                else
+                {
+                    url = domain;
+                }
+                percentage = data.top_queries[domain] / data.dns_queries_today * 100;
+                domaintable.append("<tr> <td>" + url +
+                    "</td> <td>" + data.top_queries[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
+                    percentage + "%\"></div> </div> </td> </tr> ");
             }
-            else
-            {
-                url = domain;
-            }
-            percentage = data.top_queries[domain] / data.dns_queries_today * 100;
-            domaintable.append("<tr> <td>" + url +
-                "</td> <td>" + data.top_queries[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
-                percentage + "%\"></div> </div> </td> </tr> ");
+
         }
         for (domain in data.top_ads) {
-            // Sanitize domain
-            domain = escapeHtml(domain);
-            url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
-            percentage = data.top_ads[domain] / data.ads_blocked_today * 100;
-            adtable.append("<tr> <td>" + url +
-                "</td> <td>" + data.top_ads[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-yellow\" style=\"width: " +
-                 percentage + "%\"></div> </div> </td> </tr> ");
+            if ({}.hasOwnProperty.call(data.top_ads,domain)){
+                // Sanitize domain
+                domain = escapeHtml(domain);
+                url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
+                percentage = data.top_ads[domain] / data.ads_blocked_today * 100;
+                adtable.append("<tr> <td>" + url +
+                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-yellow\" style=\"width: " +
+                    percentage + "%\"></div> </div> </td> </tr> ");
+            }
         }
 
         $("#domain-frequency .overlay").remove();
