@@ -62,10 +62,11 @@ function readAdlists()
 	// Read available adlists
 	readAdlists();
 
+	$error = "";
+	$success = "";
+
 	if(isset($_POST["field"]))
 	{
-		$error = "";
-		$success = "";
 		// Process request
 		switch ($_POST["field"]) {
 			// Set DNS server

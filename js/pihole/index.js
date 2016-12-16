@@ -25,36 +25,32 @@ function objectToArray(p){
 
 
 function updateSummaryData(runOnce) {
+    var setTimer = function(timeInSeconds) {
+        if (!runOnce) {
+            setTimeout(updateSummaryData, timeInSeconds * 1000);
+        }
+    };
     $.getJSON("api.php?summary", function LoadSummaryData(data) {
-        //$("h3.statistic").addClass("glow");
-        if ($("h3#ads_blocked_today").text() != data.ads_blocked_today) {
-            $("h3#ads_blocked_today").addClass("glow");
-        }
-        if ($("h3#dns_queries_today").text() != data.dns_queries_today) {
-            $("h3#dns_queries_today").addClass("glow");
-        }
-        if ($("h3#ads_percentage_today").text() != data.ads_percentage_today) {
-            $("h3#ads_percentage_today").addClass("glow");
-        }
 
-        window.setTimeout(function(){
-            $("h3#ads_blocked_today").text(data.ads_blocked_today);
-            $("h3#dns_queries_today").text(data.dns_queries_today);
-            $("h3#domains_being_blocked").text(data.domains_being_blocked);
-            $("h3#ads_percentage_today").text(data.ads_percentage_today + "%");
+        ["ads_blocked_today", "dns_queries_today", "ads_percentage_today"].forEach(function(today) {
+            var todayElement = $("h3#" + today);
+            todayElement.text() !== data[today] && todayElement.addClass("glow");
+        });
+
+        window.setTimeout(function() {
+            ["ads_blocked_today", "dns_queries_today", "domains_being_blocked", "ads_percentage_today"].forEach(function(header, idx) {
+                var textData = idx === 3 ? data[header] + "%" : data[header];
+                $("h3#" + header).text(textData);
+            });
             $("h3.statistic.glow").removeClass("glow")
         }, 500);
 
         updateSessionTimer();
     }).done(function() {
-        if (runOnce !== true) {
-            setTimeout(updateSummaryData, 10000);
-        }
+        setTimer(10);
     }).fail(function() {
-        if (runOnce !== true) {
-            setTimeout(updateSummaryData, (1000 * 60 * 5));
-        }
-    });;
+        setTimer(300);
+    });
 }
 
 var failures = 0;
