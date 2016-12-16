@@ -209,6 +209,15 @@ function validDomain($domain_name)
 					$success .= "No entries will be shown in Query Log";
 				}
 
+				if(isset($_POST["privacyMode"]))
+				{
+					exec("sudo pihole -a privacymode true");
+				}
+				else
+				{
+					exec("sudo pihole -a privacymode false");
+				}
+
 				break;
 
 			case "webUI":

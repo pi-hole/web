@@ -5,6 +5,13 @@
     $log = new \SplFileObject('/var/log/pihole.log');
     $gravity = new \SplFileObject('/etc/pihole/list.preEventHorizon');
 
+    if(isset($setupVars["API_PRIVACY_MODE"]))
+    {
+        $privacyMode = $setupVars["API_PRIVACY_MODE"];
+    } else {
+        $privacyMode = false;
+    }
+
     /*******   Public Members ********/
     function getSummaryData() {
         $domains_being_blocked = gravityCount();
@@ -52,12 +59,19 @@
     }
 
     function getTopItems() {
-        global $log;
+        global $log,$privacyMode;
         $dns_queries = getDnsQueries($log);
         $ads_blocked = getBlockedQueries($log);
 
         $topAds = topItems($ads_blocked);
-        $topQueries = topItems($dns_queries, $topAds);
+        if(!$privacyMode)
+        {
+            $topQueries = topItems($dns_queries, $topAds);
+        }
+        else
+        {
+            $topQueries = [];
+        }
 
         return Array(
             'top_queries' => $topQueries,
@@ -182,7 +196,7 @@
     }
 
     function getAllQueries($orderBy) {
-        global $log,$gravity,$showBlocked,$showPermitted;
+        global $log,$gravity,$showBlocked,$showPermitted,$privacyMode;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueriesAll($log);
         $gravity_domains = getGravityDomains($gravity);
@@ -198,7 +212,9 @@
             if (substr($tmp, 0, 5) == "query")
             {
                 $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
-                if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))
+                // Display blocked queries if $showBlocked is set
+                // Display permitted queries if $showPermitted is set and $privacyMode is disabled
+                if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted && !$privacyMode))
                 {
                     $type = substr($exploded[count($exploded)-4], 6, -1);
                     $client = $exploded[count($exploded)-1];

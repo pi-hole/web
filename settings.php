@@ -379,6 +379,15 @@
 	} else {
 		$queryLog = "all";
 	}
+
+	// Privacy Mode
+	if(isset($setupVars["API_PRIVACY_MODE"]))
+	{
+		$privacyMode = $setupVars["API_PRIVACY_MODE"];
+	} else {
+		$privacyMode = false;
+	}
+
 ?>
 		<div class="box box-success">
 			<div class="box-header with-border">
@@ -404,6 +413,10 @@
 				<div class="form-group">
 					<div class="checkbox"><label><input type="checkbox" name="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show permitted queries</label></div>
 					<div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked queries</label></div>
+				</div>
+				<h4>Privacy mode</h4>
+				<div class="form-group">
+					<div class="checkbox"><label><input type="checkbox" name="privacyMode" <?php if($privacyMode){ ?>checked<?php } ?>> Don't show query results for permitted requests</label></div>
 				</div>
 			</div>
 			<div class="box-footer">
