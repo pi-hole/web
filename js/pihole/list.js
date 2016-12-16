@@ -26,8 +26,8 @@ $(function(){
 
 // Get PHP info
 var token = $("#token").html();
-var list_type = $("#list-type").html();
-var fullName = list_type === "white" ? "Whitelist" : "Blacklist";
+var listType = $("#list-type").html();
+var fullName = listType === "white" ? "Whitelist" : "Blacklist";
 
 window.onload = refresh(false);
 
@@ -39,7 +39,7 @@ function refresh(fade) {
     $.ajax({
         url: "php/get.php",
         method: "get",
-        data: {"list":list_type},
+        data: {"list":listType},
         success: function(response) {
             list.html("");
             var data = JSON.parse(response);
@@ -83,7 +83,7 @@ function add() {
     $.ajax({
         url: "php/add.php",
         method: "post",
-        data: {"domain":domain.val(), "list":list_type, "token":token},
+        data: {"domain":domain.val(), "list":listType, "token":token},
         success: function(response) {
           if (response.indexOf("not a valid argument") >= 0 ||
               response.indexOf("is not a valid domain") >= 0) {
@@ -124,7 +124,7 @@ function sub(index, entry) {
     $.ajax({
         url: "php/sub.php",
         method: "post",
-        data: {"domain":entry, "list":list_type, "token":token},
+        data: {"domain":entry, "list":listType, "token":token},
         success: function(response) {
             if(response.length !== 0)
                 return;
