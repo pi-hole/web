@@ -25,15 +25,24 @@
     $nproc = shell_exec('nproc');
 
     // Get memory usage
-    $free = shell_exec('free');
-    $free = (string)trim($free);
-    $free_arr = explode("\n", $free);
-    $mem = explode(" ", $free_arr[1]);
-    $mem = array_filter($mem);
-    $mem = array_merge($mem);
-    $used = $mem[2] - $mem[5] - $mem[6];
-    $total = $mem[1];
-    $memory_usage = $used/$total*100;
+    $data = explode("\n", file_get_contents("/proc/meminfo"));
+    $meminfo = array();
+    if(count($data) > 0)
+    {
+        foreach ($data as $line) {
+            list($key, $val) = explode(":", $line);
+            // remove " kB" fron the end of the string and make an integer
+            $meminfo[$key] = intVal(substr(trim($val),0, -3));
+        }
+        $memory_used = $meminfo["MemTotal"]-$meminfo["MemFree"]-$meminfo["Buffers"]-$meminfo["Cached"];
+        $memory_total = $meminfo["MemTotal"];
+        $memory_usage = $memory_used/$memory_total;
+    }
+    else
+    {
+        $memory_usage = -1;
+    }
+
 
     // For session timer
     $maxlifetime = ini_get("session.gc_maxlifetime");
@@ -243,14 +252,21 @@
                     <br/>
                     <?php
                     echo '<a href="#"><i class="fa fa-circle" style="color:';
-                        if ($memory_usage > 75) {
+                        if ($memory_usage > 0.75 || $memory_usage < 0.0) {
                             echo '#FF0000';
                         }
                         else
                         {
                             echo '#7FFF00';
                         }
-                        echo '""></i> Memory usage:&nbsp;&nbsp;' . sprintf("%.1f",$memory_usage) . '%</a>';
+                        if($memory_usage > 0.0)
+                        {
+                            echo '""></i> Memory usage:&nbsp;&nbsp;' . sprintf("%.1f",100.0*$memory_usage) . '%</a>';
+                        }
+                        else
+                        {
+                            echo '""></i> Memory usage:&nbsp;&nbsp; N/A</a>';
+                        }
                     ?>
                 </div>
             </div>
