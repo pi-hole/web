@@ -6,6 +6,25 @@ var token = $("#token").html();
 var listType = $("#list-type").html();
 var fullName = listType === "white" ? "Whitelist" : "Blacklist";
 
+function sub(index, entry) {
+    var domain = $("#"+index);
+    domain.hide("highlight");
+    $.ajax({
+        url: "php/sub.php",
+        method: "post",
+        data: {"domain":entry, "list":listType, "token":token},
+        success: function(response) {
+            if(response.length !== 0){
+                return;
+            }
+            domain.remove();
+        },
+        error: function(jqXHR, exception) {
+            alert("Failed to remove the domain!");
+        }
+    });
+}
+
 function refresh(fade) {
     var list = $("#list");
     if(fade) {
@@ -96,24 +115,7 @@ function add() {
     });
 }
 
-function sub(index, entry) {
-    var domain = $("#"+index);
-    domain.hide("highlight");
-    $.ajax({
-        url: "php/sub.php",
-        method: "post",
-        data: {"domain":entry, "list":listType, "token":token},
-        success: function(response) {
-            if(response.length !== 0){
-                return;
-            }
-            domain.remove();
-        },
-        error: function(jqXHR, exception) {
-            alert("Failed to remove the domain!");
-        }
-    });
-}
+
 
 // Handle enter button for adding domains
 $(document).keypress(function(e) {
