@@ -32,7 +32,7 @@ function refresh(fade) {
 
                     // Handle button
                     $("#list #"+index+"").on("click", "button", function() {
-                        sub(index, entry)
+                        sub(index, entry);
                     });
                 });
             }
