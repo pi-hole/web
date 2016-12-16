@@ -331,13 +331,27 @@ function readAdlists(&$list, $listname)
 					if(isset($_POST["adlist-".$key]) && !$value[0])
 					{
 						// Is not enabled, but should be
-						exec("sudo pihole -a adlist enable ".escapeshellcmd ($value[1]));
+						exec("sudo pihole -a adlist enable default ".escapeshellcmd ($value[1]));
 
 					}
 					elseif(!isset($_POST["adlist-".$key]) && $value[0])
 					{
 						// Is enabled, but shouldn't be
-						exec("sudo pihole -a adlist disable ".escapeshellcmd ($value[1]));
+						exec("sudo pihole -a adlist disable default ".escapeshellcmd ($value[1]));
+					}
+				}
+				foreach ($adlistsuser as $key => $value)
+				{
+					if(isset($_POST["userlist-".$key]) && !$value[0])
+					{
+						// Is not enabled, but should be
+						exec("sudo pihole -a adlist enable user ".escapeshellcmd ($value[1]));
+
+					}
+					elseif(!isset($_POST["userlist-".$key]) && $value[0])
+					{
+						// Is enabled, but shouldn't be
+						exec("sudo pihole -a adlist disable user ".escapeshellcmd ($value[1]));
 					}
 				}
 
@@ -346,7 +360,7 @@ function readAdlists(&$list, $listname)
 					$domains = array_filter(preg_split('/\r\n|[\r\n]/', $_POST["newuserlists"]));
 					foreach($domains as $domain)
 					{
-						exec("sudo pihole -a adlist adduser ".escapeshellcmd($domain));
+						exec("sudo pihole -a adlist add user ".escapeshellcmd($domain));
 					}
 				}
 
