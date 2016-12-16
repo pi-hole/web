@@ -76,7 +76,7 @@ function updateQueriesOverTime() {
                 timeLineChart.data.datasets[1].data.push(data.ads_over_time[1][hour]);
             }
         }
-        $('#queries-over-time .overlay').remove();
+        $("#queries-over-time .overlay").remove();
         timeLineChart.update();
     }).done(function() {
         // Reload graph after 10 minutes
@@ -109,7 +109,7 @@ function updateQueryTypes() {
         var dd = {data: v, backgroundColor: c};
         // and push it at once
         queryTypeChart.data.datasets.push(dd);
-        $('#query-types .overlay').remove();
+        $("#query-types .overlay").remove();
         queryTypeChart.update();
         queryTypeChart.chart.config.options.cutoutPercentage=30;
         queryTypeChart.update();
@@ -144,7 +144,7 @@ function updateTopClientsChart() {
                 percentage + "%\"></div> </div> </td> </tr> ");
         }
 
-        $('#client-frequency .overlay').remove();
+        $("#client-frequency .overlay").remove();
     });
 }
 
@@ -164,7 +164,7 @@ function updateForwardDestinations() {
         var dd = {data: v, backgroundColor: c};
         // and push it at once
         forwardDestinationChart.data.datasets.push(dd);
-        $('#forward-destinations .overlay').remove();
+        $("#forward-destinations .overlay").remove();
         forwardDestinationChart.update();
         forwardDestinationChart.chart.config.options.cutoutPercentage=30;
         forwardDestinationChart.update();
@@ -173,7 +173,7 @@ function updateForwardDestinations() {
 
 function updateTopLists() {
     $.getJSON("api.php?summaryRaw&topItems", function(data) {
-        var domaintable = $('#domain-frequency').find('tbody:last');
+        var domaintable = $("#domain-frequency").find('tbody:last');
         var adtable = $('#ad-frequency').find('tbody:last');
         var url, domain, percentage;
 
