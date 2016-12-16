@@ -29,8 +29,6 @@ var token = $("#token").html();
 var listType = $("#list-type").html();
 var fullName = listType === "white" ? "Whitelist" : "Blacklist";
 
-window.onload = refresh(false);
-
 function refresh(fade) {
     var list = $("#list");
     if(fade) {
@@ -68,6 +66,8 @@ function refresh(fade) {
         }
     });
 }
+
+window.onload = refresh(false);
 
 function add() {
     var domain = $("#domain");
