@@ -12,7 +12,7 @@ function escapeRegex(text) {
 $(document).ready(function() {
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
-            if (data[4] == "Pi-holed") {
+            if (data[4] === "Pi-holed") {
                 $(row).css("color","red");
                 $("td:eq(5)", row).html( "<button style=\"color:green;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
@@ -88,7 +88,7 @@ function add(domain,list) {
     var alSuccess = $("#alSuccess");
     var alFailure = $("#alFailure");
 
-    if(list == "white")
+    if(list === "white")
     {
         alList.html("Whitelist");
     }
