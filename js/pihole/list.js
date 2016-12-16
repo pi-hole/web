@@ -43,14 +43,14 @@ function refresh(fade) {
             var data = JSON.parse(response);
 
             if(data.length === 0) {
-                list.html('<div class="alert alert-info" role="alert">Your ' + fullName + ' is empty!</div>');
+                list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + ' is empty!</div>');
             }
             else {
                 data.forEach(function (entry, index) {
                     list.append(
-                        '<li id="' + index + '" class="list-group-item clearfix">' + entry +
-                        '<button class="btn btn-danger btn-xs pull-right" type="button">' +
-                        '<span class="glyphicon glyphicon-trash"></span></button></li>'
+                        "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
+                        "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
+                        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>"
                     );
 
                     // Handle button
