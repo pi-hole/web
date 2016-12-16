@@ -80,16 +80,16 @@
         $data = array_merge($data, getGravityDomains($gravity));
     }
 
-    function filterArray(&$a) {
-	    $sanArray = array();
-	    foreach ($a as $k=>$v) {
-	        if (is_array($v)) {
-	            $sanArray[htmlspecialchars($k)] = filterArray($v);
+    function filterArray(&$inArray) {
+	    $outArray = array();
+	    foreach ($inArray as $key=>$value) {
+	        if (is_array($value)) {
+	            $outArray[htmlspecialchars($key)] = filterArray($value);
             } else {
-	            $sanArray[htmlspecialchars($k)] = htmlspecialchars($v);
+	            $outArray[htmlspecialchars($key)] = htmlspecialchars($value);
             }
 	    }
-	    return $sanArray;
+	    return $outArray;
     }
 
     $data = filterArray($data);
