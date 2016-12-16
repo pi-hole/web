@@ -43,7 +43,7 @@ function refresh(fade) {
             var data = JSON.parse(response);
 
             if(data.length === 0) {
-                list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + ' is empty!</div>');
+                list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
             }
             else {
                 data.forEach(function (entry, index) {
