@@ -328,15 +328,17 @@ function readAdlists(&$list, $listname)
 			case "adlists":
 				foreach ($adlistsdefault as $key => $value)
 				{
-					if(isset($_POST["adlist-".$key]))
+					if(isset($_POST["adlist-".$key]) && !$value[0])
 					{
-						$action = "enable";
+						// Is not enabled, but should be
+						exec("sudo pihole -a adlist enable ".escapeshellcmd ($value[1]));
+
 					}
-					else
+					elseif(!isset($_POST["adlist-".$key]) && $value[0])
 					{
-						$action = "disable";
+						// Is enabled, but shouldn't be
+						exec("sudo pihole -a adlist disable ".escapeshellcmd ($value[1]));
 					}
-					exec("sudo pihole -a adlist ".$action." ".escapeshellcmd ($value[1]));
 				}
 
 				if(strlen($_POST["newuserlists"]) > 1)

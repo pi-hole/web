@@ -494,7 +494,7 @@
 				<label>User defined lists</label>
 					<?php foreach ($adlistsuser as $key => $value) { ?>
 					<div class="form-group">
-						<div class="checkbox"><label style="word-break: break-word;"><input type="checkbox" name="adlist-<?php echo $key; ?>" <?php if($value[0]){ ?>checked<?php } ?>> <a href="<?php echo htmlentities ($value[1]); ?>" target="_new"><?php echo htmlentities($value[1]); ?></a></label></div>
+						<div class="checkbox"><label style="word-break: break-word;"><input type="checkbox" name="userlist-<?php echo $key; ?>" <?php if($value[0]){ ?>checked<?php } ?>> <a href="<?php echo htmlentities ($value[1]); ?>" target="_new"><?php echo htmlentities($value[1]); ?></a></label></div>
 					</div>
 					<?php } ?>
 					<div class="form-group">
