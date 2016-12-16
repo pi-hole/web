@@ -34,12 +34,13 @@ function validDomain($domain_name)
 			"8.20.247.20" => "Comodo"
 		];
 
-$adlists = [];
-function readAdlists()
+$adlistsdefault = [];
+$adlistsuser = [];
+function readAdlists(&$list, $listname)
 {
-	global $adlists;
-	$adlists = [];
-	$handle = fopen("/etc/pihole/adlists.default", "r");
+	// Reset list
+	$list = [];
+	$handle = @fopen("/etc/pihole/adlists.".$listname, "r");
 	if ($handle)
 	{
 		while (($line = fgets($handle)) !== false)
@@ -47,12 +48,12 @@ function readAdlists()
 			if(substr($line, 0, 2) === "#h")
 			{
 				// Commented list
-				array_push($adlists, [false,rtrim(substr($line, 1))]);
+				array_push($list, [false,rtrim(substr($line, 1))]);
 			}
 			elseif(substr($line, 0, 1) === "h")
 			{
 				// Active list
-				array_push($adlists, [true,rtrim($line)]);
+				array_push($list, [true,rtrim($line)]);
 			}
 		}
 		fclose($handle);
@@ -60,7 +61,8 @@ function readAdlists()
 }
 
 	// Read available adlists
-	readAdlists();
+	readAdlists($adlistsdefault,"default");
+	readAdlists($adlistsuser,"user");
 
 	$error = "";
 	$success = "";
@@ -324,7 +326,7 @@ function readAdlists()
 				break;
 
 			case "adlists":
-				foreach ($adlists as $key => $value)
+				foreach ($adlistsdefault as $key => $value)
 				{
 					if(isset($_POST["adlist-".$key]))
 					{
@@ -338,7 +340,7 @@ function readAdlists()
 				}
 
 				// Reread available adlists
-				readAdlists();
+				readAdlists($adlistsdefault,"default");
 				break;
 
 			default:
