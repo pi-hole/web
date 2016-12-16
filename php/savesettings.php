@@ -34,10 +34,11 @@ function validDomain($domain_name)
 			"8.20.247.20" => "Comodo"
 		];
 
+	$error = "";
+	$success = "";
+
 	if(isset($_POST["field"]))
 	{
-		$error = "";
-		$success = "";
 		// Process request
 		switch ($_POST["field"]) {
 			// Set DNS server

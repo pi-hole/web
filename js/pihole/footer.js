@@ -44,12 +44,14 @@ var webVersion = $("#webVersion").html();
 // Credit for following function: https://gist.github.com/alexey-bass/1115557
 // Modified to discard any possible "v" in the string
 function versionCompare(left, right) {
-    if (typeof left + typeof right !== 'stringstring')
+    if (typeof left + typeof right !== "stringstring")
+    {
         return false;
+    }
 
     // If we are on vDev then we assume that it is always
     // newer than the latest online release, i.e. version
-    // comparion should return 1
+    // comparison should return 1
     if(left === "vDev")
     {
         return 1;
@@ -77,14 +79,14 @@ function versionCompare(left, right) {
 $.getJSON("https://api.github.com/repos/pi-hole/pi-hole/releases/latest", function(json) {
     if(versionCompare(piholeVersion, json.tag_name.slice(1)) < 0) {
         // Alert user
-        $("#piholeVersion").html($("#piholeVersion").text() + '<a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">(Update available!)</a>');
+        $("#piholeVersion").html($("#piholeVersion").text() + "<a class=\"alert-link\" href=\"https://github.com/pi-hole/pi-hole/releases\">(Update available!)</a>");
         $("#alPiholeUpdate").show();
     }
 });
 $.getJSON("https://api.github.com/repos/pi-hole/AdminLTE/releases/latest", function(json) {
     if(versionCompare(webVersion, json.tag_name.slice(1)) < 0) {
         // Alert user
-        $("#webVersion").html($("#webVersion").text() + '<a class="alert-link" href="https://github.com/pi-hole/adminLTE/releases">(Update available!)</a>');
+        $("#webVersion").html($("#webVersion").text() + "<a class=\"alert-link\" href=\"https://github.com/pi-hole/adminLTE/releases\">(Update available!)</a>");
         $("#alWebUpdate").show();
     }
 });
@@ -126,9 +128,14 @@ if(sessionvalidity > 0)
         if(seconds < 10){ seconds = "0" + seconds; }
 
         if(totalseconds > 0)
+        {
             document.getElementById("sessiontimercounter").textContent = minutes + ":" + seconds;
+        }
         else
+        {
             document.getElementById("sessiontimercounter").textContent = "-- : --";
+        }
+
     }, 1000);
 }
 else

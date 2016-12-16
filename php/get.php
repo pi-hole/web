@@ -16,16 +16,16 @@ for($i = sizeof($list)-1; $i >= 0; $i--) {
         unset($list[$i]);
 }
 
-function filterArray(&$a) {
-    $sanArray = array();
-    foreach ($a as $k=>$v) {
-        if (is_array($v)) {
-            $sanArray[htmlspecialchars($k)] = filterArray($v);
+function filterArray(&$inArray) {
+    $outArray = array();
+    foreach ($inArray as $key=>$value) {
+        if (is_array($value)) {
+            $outArray[htmlspecialchars($key)] = filterArray($value);
         } else {
-            $sanArray[htmlspecialchars($k)] = htmlspecialchars($v);
+            $outArray[htmlspecialchars($key)] = htmlspecialchars($value);
         }
     }
-    return $sanArray;
+    return $outArray;
 }
 
 // Protect against XSS attacks
