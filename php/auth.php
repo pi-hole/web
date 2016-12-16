@@ -18,6 +18,7 @@ function check_cors() {
     // Check CORS
     $AUTHORIZED_HOSTNAMES = array(
         'http://' . $_SERVER['SERVER_ADDR'],
+        'http://' . $_SERVER['SERVER_NAME'],
         'http://pi.hole',
         'http://localhost'
     );
