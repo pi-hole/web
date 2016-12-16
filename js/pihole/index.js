@@ -131,7 +131,7 @@ function escapeHtml(text) {
 
 function updateTopClientsChart() {
     $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
-        var clienttable =  $('#client-frequency').find('tbody:last');
+        var clienttable =  $("#client-frequency").find("tbody:last");
         var domain, percentage;
         for (domain in data.top_sources) {
             // Sanitize domain
@@ -173,8 +173,8 @@ function updateForwardDestinations() {
 
 function updateTopLists() {
     $.getJSON("api.php?summaryRaw&topItems", function(data) {
-        var domaintable = $("#domain-frequency").find('tbody:last');
-        var adtable = $('#ad-frequency').find('tbody:last');
+        var domaintable = $("#domain-frequency").find("tbody:last");
+        var adtable = $("#ad-frequency").find("tbody:last");
         var url, domain, percentage;
 
         for (domain in data.top_queries) {
