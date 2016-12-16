@@ -1,29 +1,6 @@
 // IE likes to cache too much :P
 $.ajaxSetup({cache: false});
 
-// Handle enter button for adding domains
-$(document).keypress(function(e) {
-    if(e.which === 13 && $("#domain").is(":focus")) {
-        // Enter was pressed, and the input has focus
-        add();
-    }
-});
-
-// Handle buttons
-$("#btnAdd").on("click", function() {
-    add();
-});
-$("#btnRefresh").on("click", function() {
-    refresh(true);
-});
-
-// Handle hiding of alerts
-$(function(){
-    $("[data-hide]").on("click", function(){
-        $(this).closest("." + $(this).attr("data-hide")).hide();
-    });
-});
-
 // Get PHP info
 var token = $("#token").html();
 var listType = $("#list-type").html();
@@ -137,3 +114,26 @@ function sub(index, entry) {
         }
     });
 }
+
+// Handle enter button for adding domains
+$(document).keypress(function(e) {
+    if(e.which === 13 && $("#domain").is(":focus")) {
+        // Enter was pressed, and the input has focus
+        add();
+    }
+});
+
+// Handle buttons
+$("#btnAdd").on("click", function() {
+    add();
+});
+$("#btnRefresh").on("click", function() {
+    refresh(true);
+});
+
+// Handle hiding of alerts
+$(function(){
+    $("[data-hide]").on("click", function(){
+        $(this).closest("." + $(this).attr("data-hide")).hide();
+    });
+});
