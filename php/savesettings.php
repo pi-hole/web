@@ -339,8 +339,18 @@ function readAdlists(&$list, $listname)
 					exec("sudo pihole -a adlist ".$action." ".escapeshellcmd ($value[1]));
 				}
 
+				if(strlen($_POST["newuserlists"]) > 1)
+				{
+					$domains = array_filter(preg_split('/\r\n|[\r\n]/', $_POST["newuserlists"]));
+					foreach($domains as $domain)
+					{
+						exec("sudo pihole -a adlist adduser ".escapeshellcmd($domain));
+					}
+				}
+
 				// Reread available adlists
 				readAdlists($adlistsdefault,"default");
+				readAdlists($adlistsuser,"user");
 				break;
 
 			default:

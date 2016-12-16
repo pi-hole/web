@@ -9,7 +9,7 @@
 <div id="alDebug" class="alert alert-warning alert-dismissible fade in" role="alert">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4><i class="icon fa fa-warning"></i> Debug</h4>
-    <?php print_r($_POST); ?>
+    <pre><?php print_r($_POST); ?></pre>
 </div>
 <?php } ?>
 
@@ -485,7 +485,7 @@
 			<form role="form" method="post">
 			<div class="box-body">
 				<div class="col-lg-12">
-				<label>Lists maintained by the Pi-hole team</label>
+				<label>Lists maintained by the Pi-hole team (reset on updates)</label>
 					<?php foreach ($adlistsdefault as $key => $value) { ?>
 					<div class="form-group">
 						<div class="checkbox"><label style="word-break: break-word;"><input type="checkbox" name="adlist-<?php echo $key; ?>" <?php if($value[0]){ ?>checked<?php } ?>> <a href="<?php echo htmlentities ($value[1]); ?>" target="_new"><?php echo htmlentities($value[1]); ?></a></label></div>
@@ -497,6 +497,9 @@
 						<div class="checkbox"><label style="word-break: break-word;"><input type="checkbox" name="adlist-<?php echo $key; ?>" <?php if($value[0]){ ?>checked<?php } ?>> <a href="<?php echo htmlentities ($value[1]); ?>" target="_new"><?php echo htmlentities($value[1]); ?></a></label></div>
 					</div>
 					<?php } ?>
+					<div class="form-group">
+						<textarea name="newuserlists" class="form-control" rows="1" placeholder="Enter one URL per line to add new ad lists"></textarea>
+					</div>
 				</div>
 			</div>
 			<div class="box-footer">
