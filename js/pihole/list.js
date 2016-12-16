@@ -71,8 +71,9 @@ window.onload = refresh(false);
 
 function add() {
     var domain = $("#domain");
-    if(domain.val().length === 0)
+    if(domain.val().length === 0){
         return;
+    }
 
     var alInfo = $("#alInfo");
     var alSuccess = $("#alSuccess");
@@ -126,8 +127,9 @@ function sub(index, entry) {
         method: "post",
         data: {"domain":entry, "list":listType, "token":token},
         success: function(response) {
-            if(response.length !== 0)
+            if(response.length !== 0){
                 return;
+            }
             domain.remove();
         },
         error: function(jqXHR, exception) {
