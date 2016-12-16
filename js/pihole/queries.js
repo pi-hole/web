@@ -10,15 +10,15 @@ function escapeRegex(text) {
 }
 
 $(document).ready(function() {
-    tableApi = $('#all-queries').DataTable( {
+    tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
             if (data[4] == "Pi-holed") {
-                $(row).css('color','red');
-                $('td:eq(5)', row).html( '<button style="color:green;"><i class="fa fa-pencil-square-o"></i> Whitelist</button>' );
+                $(row).css("color","red");
+                $("td:eq(5)", row).html( "<button style=\"color:green;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
             else{
-                $(row).css('color','green');
-                $('td:eq(5)', row).html( '<button style="color:red;"><i class="fa fa-ban"></i> Blacklist</button>' );
+                $(row).css("color","green");
+                $("td:eq(5)", row).html( "<button style=\"color:red;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
 
         },
@@ -44,8 +44,8 @@ $(document).ready(function() {
             "defaultContent": ''
         } ]
     });
-    $('#all-queries tbody').on( 'click', 'button', function () {
-        var data = tableApi.row( $(this).parents('tr') ).data();
+    $("#all-queries tbody").on( "click", "button", function () {
+        var data = tableApi.row( $(this).parents("tr") ).data();
         if (data[4] == "Pi-holed")
         {
           add(data[2],"white");
