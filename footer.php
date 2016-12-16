@@ -3,7 +3,6 @@
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-        <div class="pull-right hidden-xs hidden-md" style="text-overflow: clip;">
             <?php
             // Check if on a dev branch
             $piholeBranch = exec("cd /etc/.pihole/ && git rev-parse --abbrev-ref HEAD");
@@ -26,6 +25,7 @@
                 $webVersion = exec("git describe --tags --abbrev=0");
             }
             ?>
+        <div class="pull-right hidden-xs <?php if(isset($piholeCommit) || isset($webCommit)) { ?>hidden-md<?php } ?>">
             <b>Pi-hole Version </b> <span id="piholeVersion"><?php echo $piholeVersion; ?></span><?php if(isset($piholeCommit)) { echo " (".$piholeBranch.", ".$piholeCommit.")"; } ?>
             <b>Web Interface Version </b> <span id="webVersion"><?php echo $webVersion; ?></span><?php if(isset($webCommit)) { echo " (".$webBranch.", ".$webCommit.")"; } ?>
         </div>
