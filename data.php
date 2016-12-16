@@ -110,7 +110,7 @@
     }
 
     function getForwardDestinations() {
-        global $log;
+        global $log, $setupVars;
         $forwards = getForwards($log);
         $destinations = array();
         foreach ($forwards as $forward) {
@@ -148,7 +148,7 @@
     }
 
     function getQuerySources() {
-        global $log;
+        global $log, $setupVars;
         $dns_queries = getDnsQueries($log);
         $sources = array();
         foreach($dns_queries as $query) {
@@ -186,7 +186,7 @@
 
     function setShowBlockedPermitted()
     {
-        global $showBlocked, $showPermitted;
+        global $showBlocked, $showPermitted, $setupVars;
         if(isset($setupVars["API_QUERY_LOG_SHOW"]))
         {
             if($setupVars["API_QUERY_LOG_SHOW"] === "all")
