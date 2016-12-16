@@ -3,8 +3,7 @@
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-        <i class="fa fa-github"></i> <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY">Donate</a></strong> if you found this useful.
-        <div class="pull-right hidden-xs">
+        <div class="pull-right hidden-xs hidden-md" style="text-overflow: clip;">
             <?php
             // Check if on a dev branch
             $piholeBranch = exec("cd /etc/.pihole/ && git rev-parse --abbrev-ref HEAD");
@@ -30,6 +29,7 @@
             <b>Pi-hole Version </b> <span id="piholeVersion"><?php echo $piholeVersion; ?></span><?php if(isset($piholeCommit)) { echo " (".$piholeBranch.", ".$piholeCommit.")"; } ?>
             <b>Web Interface Version </b> <span id="webVersion"><?php echo $webVersion; ?></span><?php if(isset($webCommit)) { echo " (".$webBranch.", ".$webCommit.")"; } ?>
         </div>
+        <div><i class="fa fa-github"></i> <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY">Donate</a></strong> if you found this useful.</div>
     </footer>
 </div>
 <!-- ./wrapper -->
