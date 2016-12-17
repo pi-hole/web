@@ -100,7 +100,7 @@
             if($hostname)
             {
                 // Generate HOST entry
-                $array[$hostname] = $array[$key];
+                $array[$hostname] = $value;
                 // Remove IP entry
                 unset($array[$key]);
             }
