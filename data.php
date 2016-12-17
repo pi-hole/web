@@ -93,6 +93,7 @@
     }
 
     function resolveIPs(&$array) {
+        $hostarray = [];
         foreach ($array as $key => $value)
         {
             $hostname = gethostbyaddr($key);
@@ -100,12 +101,17 @@
             if($hostname)
             {
                 // Generate HOST entry
-                $array[$hostname] = $value;
-                // Remove IP entry
-                unset($array[$key]);
+                $hostarray[$hostname] = $value;
+            }
+            else
+            {
+                // Generate IP entry
+                $hostarray[$key] = $value;
             }
         }
-        // Have to repeat the sorting, since we changed the keys
+        $array = $hostarray;
+
+        // Sort new array
         arsort($array);
     }
 
