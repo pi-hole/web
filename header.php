@@ -377,14 +377,8 @@
     //
     // If auth is required and not set, i.e. no successfully logged in,
     // we show the reduced version of the summary (index) page
-    if(!$auth && (!isset($indexpage) || isset($_GET['login']))){ ?>
-<div class="page-header">
-    <h1>Login required!</h1>
-</div>
-<form action="" method="POST">
-  Password: <input type="password" name="pw">&nbsp;<input type="submit" value="Login">
-</form>
-<?php
+    if(!$auth && (!isset($indexpage) || isset($_GET['login']))){
+        require "php/loginpage.php";
         require "footer.php";
         exit();
     }
