@@ -299,7 +299,7 @@
                 $list = $exploded[4];
                 $is = $exploded[6];
                 // Consider only gravity.list as DNS source (not e.g. hostname.list)
-                if(substr($list, strlen($list) - 12, 12) == "gravity.list" && $is === "is") {
+                if(substr($list, strlen($list) - 12, 12) === "gravity.list" && $is === "is") {
                     $lines[] = $line;
                 };
             }
