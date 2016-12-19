@@ -40,6 +40,8 @@
     }
     else
     {
+        // Nothing can be colder than -273.15 degree Celsius (= 0 Kelvin)
+        // This is the minimum temperature possible (AKA absolute zero)
         $celsius = -273.16;
     }
 
