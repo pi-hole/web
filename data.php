@@ -285,11 +285,22 @@
             $line = preg_replace('/ {2,}/', ' ', $line);
             $exploded = explode(" ", $line);
             if(count($exploded) == 8) {
-                $tmp = $exploded[count($exploded) - 4];
-                $tmp2 = $exploded[count($exploded) - 5];
-                $tmp3 = $exploded[count($exploded) - 3];
-                //filter out bad names and host file reloads:
-                if(substr($tmp, strlen($tmp) - 12, 12) == "gravity.list" && $tmp2 != "read" && $tmp3 != "pi.hole" && $tmp3 != $hostname) {
+                // Structure of data is currently like:
+                // Array
+                // (
+                //     [0] => Dec
+                //     [1] => 19
+                //     [2] => 11:21:51
+                //     [3] => dnsmasq[2584]:
+                //     [4] => /etc/pihole/gravity.list
+                //     [5] => doubleclick.com
+                //     [6] => is
+                //     [7] => ip.of.pi.hole
+                // )
+                $list = $exploded[4];
+                $is = $exploded[6];
+                // Consider only gravity.list as DNS source (not e.g. hostname.list)
+                if(substr($list, strlen($list) - 12, 12) == "gravity.list" && $is === "is") {
                     $lines[] = $line;
                 };
             }
