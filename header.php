@@ -17,6 +17,11 @@
     {
         $temperatureunit = "C";
     }
+    // Override temperature unit setting if it is changed via Settings page
+    if(isset($_POST["tempunit"]))
+    {
+        $temperatureunit = $_POST["tempunit"];
+    }
 
     // Get load
     $loaddata = sys_getloadavg();
@@ -69,7 +74,7 @@
         $boxedlayout = true;
     }
 
-    // Override layout setting if layout is changed via Settings page3
+    // Override layout setting if layout is changed via Settings page
     if(isset($_POST["field"]))
     {
         if($_POST["field"] === "webUI" && isset($_POST["boxedlayout"]))
