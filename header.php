@@ -4,23 +4,30 @@
 
     check_cors();
 
-    $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
-    $output = shell_exec($cmd);
-    $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
-    $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
-
-    if(isset($setupVars['TEMPERATUREUNIT']))
+    if(file_exists("/sys/class/thermal/thermal_zone0/temp"))
     {
-        $temperatureunit = $setupVars['TEMPERATUREUNIT'];
+        $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
+        $output = rtrim(shell_exec($cmd));
+        $celsius = intVal($output);
+        $fahrenheit = round(($celsius*9./5)+32.0);
+
+        if(isset($setupVars['TEMPERATUREUNIT']))
+        {
+            $temperatureunit = $setupVars['TEMPERATUREUNIT'];
+        }
+        else
+        {
+            $temperatureunit = "C";
+        }
+        // Override temperature unit setting if it is changed via Settings page
+        if(isset($_POST["tempunit"]))
+        {
+            $temperatureunit = $_POST["tempunit"];
+        }
     }
     else
     {
-        $temperatureunit = "C";
-    }
-    // Override temperature unit setting if it is changed via Settings page
-    if(isset($_POST["tempunit"]))
-    {
-        $temperatureunit = $_POST["tempunit"];
+        $celsius = -273.16;
     }
 
     // Get load
@@ -229,20 +236,31 @@
                         }
 
                         // CPU Temp
-                        echo '<a href="#" id="temperature"><i class="fa fa-fire" style="color:';
-                        if ($celsius > "45") {
-                            echo '#FF0000';
+                        echo "<a href=\"#\" id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
+                        if ($celsius > 45 || $celsius < -273.15) {
+                            echo "#FF0000";
                         }
                         else
                         {
-                            echo '#3366FF';
+                            echo "#3366FF";
                         }
-                        echo '"></i> Temp:&nbsp;';
-                        if($temperatureunit != "F")
-                            echo $celsius . '&deg;C';
+                        echo "\"></i> Temp:&nbsp;";
+                        if($celsius >= -273.15)
+                        {
+                            if($temperatureunit != "F")
+                            {
+                                echo $celsius . "&deg;C";
+                            }
+                            else
+                            {
+                                echo $fahrenheit . "&deg;F";
+                            }
+                        }
                         else
-                            echo $fahrenheit . '&deg;F';
-                        echo '</a>';
+                        {
+                            echo "N/A";
+                        }
+                        echo "</a>";
                     ?>
                     <br/>
                     <?php
