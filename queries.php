@@ -100,4 +100,4 @@ if(isset($setupVars["API_QUERY_LOG_SHOW"]))
     require "footer.php";
 ?>
 
-<script src="js/pihole/queries.js"></script>
+<script src="scripts/pi-hole/queries.js"></script>

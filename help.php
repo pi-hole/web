@@ -149,4 +149,4 @@
     require "footer.php";
 ?>
 
-<script src="js/pihole/help.js"></script>
+<script src="scripts/pi-hole/help.js"></script>
