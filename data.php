@@ -1,6 +1,7 @@
 <?php
     $log = array();
     $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
     $log = new \SplFileObject('/var/log/pihole.log');
     $gravity = new \SplFileObject('/etc/pihole/list.preEventHorizon');
@@ -144,7 +145,7 @@
 
     function setShowBlockedPermitted()
     {
-        global $showBlocked, $showPermitted;
+        global $showBlocked, $showPermitted, $setupVars;
         if(isset($setupVars["API_QUERY_LOG_SHOW"]))
         {
             if($setupVars["API_QUERY_LOG_SHOW"] === "all")
