@@ -282,7 +282,6 @@
         $lines = [];
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
         foreach ($log as $line) {
-            $line = preg_replace('/ {2,}/', ' ', $line);
             $exploded = explode(" ", $line);
             if(count($exploded) == 8) {
                 // Structure of data is currently like:
