@@ -4,10 +4,23 @@
 
     check_cors();
 
+    // Try to get temperature value from different places (OS dependent)
     if(file_exists("/sys/class/thermal/thermal_zone0/temp"))
     {
-        $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp`))";
-        $output = rtrim(shell_exec($cmd));
+        $output = rtrim(file_get_contents("/sys/class/thermal/thermal_zone0/temp"));
+    }
+    elseif (file_exists("/sys/class/hwmon/hwmon0/temp1_input"))
+    {
+        $output = rtrim(file_get_contents("/sys/class/hwmon/hwmon0/temp1_input"));
+    }
+    else
+    {
+        $output = "";
+    }
+
+    // Test if we succeeded in getting the temperature
+    if(is_numeric($output))
+    {
         $celsius = intVal($output)*1e-3;
         $fahrenheit = ($celsius*9./5)+32.0;
 
