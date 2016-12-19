@@ -80,7 +80,7 @@ function validDomain($domain_name)
 				}
 
 				// Validate secondary IP
-				if (!validIP($secondaryIP) && strlen($secondaryIP) > 0)
+				if (!validIP($secondaryIP) && $secondaryIP != "none" && strlen($secondaryIP) > 0)
 				{
 					$error .= "Secondary IP (".$secondaryIP.") is invalid!<br>";
 				}
