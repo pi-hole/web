@@ -163,7 +163,7 @@
                 $showBlocked = true;
                 $showPermitted = false;
             }
-            elseif($setupVars["API_QUERY_LOG_SHOW"] === "none")
+            elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
             {
                 $showBlocked = false;
                 $showPermitted = false;

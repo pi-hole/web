@@ -205,7 +205,7 @@ function validDomain($domain_name)
 				}
 				else
 				{
-					exec("sudo pihole -a setquerylog none");
+					exec("sudo pihole -a setquerylog nothing");
 					$success .= "No entries will be shown in Query Log";
 				}
 
