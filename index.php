@@ -216,4 +216,4 @@ else
     require "footer.php";
 ?>
 
-<script src="js/pihole/index.js"></script>
+<script src="scripts/pi-hole/index.js"></script>

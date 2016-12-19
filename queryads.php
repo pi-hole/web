@@ -22,4 +22,4 @@
 ?>
 
 
-<script src="js/pihole/queryads.js"></script>
+<script src="scripts/pi-hole/queryads.js"></script>

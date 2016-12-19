@@ -503,8 +503,8 @@
 <?php
     require "footer.php";
 ?>
-<script src="js/other/jquery.inputmask.js"></script>
-<script src="js/other/jquery.inputmask.extensions.js"></script>
-<script src="js/other/jquery.confirm.min.js"></script>
-<script src="js/pihole/settings.js"></script>
+<script src="scripts/vendor/jquery.inputmask.js"></script>
+<script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
+<script src="scripts/vendor/jquery.confirm.min.js"></script>
+<script src="scripts/pi-hole/settings.js"></script>
 

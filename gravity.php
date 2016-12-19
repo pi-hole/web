@@ -24,4 +24,4 @@
 ?>
 
 
-<script src="js/pihole/gravity.js"></script>
+<script src="scripts/pi-hole/gravity.js"></script>
