@@ -236,17 +236,16 @@
                         }
 
                         // CPU Temp
-                        echo "<a href=\"#\" id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
-                        if ($celsius > 45 || $celsius < -273.15) {
-                            echo "#FF0000";
-                        }
-                        else
-                        {
-                            echo "#3366FF";
-                        }
-                        echo "\"></i> Temp:&nbsp;";
-                        if($celsius >= -273.15)
-                        {
+                        if ($celsius >= -273.15) {
+                            echo "<a href=\"#\" id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
+                            if ($celsius > 45) {
+                                echo "#FF0000";
+                            }
+                            else
+                            {
+                                echo "#3366FF";
+                            }
+                            echo "\"></i> Temp:&nbsp;";
                             if($temperatureunit != "F")
                             {
                                 echo round($celsius,1) . "&deg;C";
@@ -255,12 +254,8 @@
                             {
                                 echo round($fahrenheit,1) . "&deg;F";
                             }
+                            echo "</a>";
                         }
-                        else
-                        {
-                            echo "N/A";
-                        }
-                        echo "</a>";
                     ?>
                     <br/>
                     <?php
