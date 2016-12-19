@@ -6,10 +6,10 @@
 
     if(file_exists("/sys/class/thermal/thermal_zone0/temp"))
     {
-        $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
+        $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp`))";
         $output = rtrim(shell_exec($cmd));
-        $celsius = intVal($output);
-        $fahrenheit = round(($celsius*9./5)+32.0);
+        $celsius = intVal($output)*1e-3;
+        $fahrenheit = ($celsius*9./5)+32.0;
 
         if(isset($setupVars['TEMPERATUREUNIT']))
         {
@@ -249,11 +249,11 @@
                         {
                             if($temperatureunit != "F")
                             {
-                                echo $celsius . "&deg;C";
+                                echo round($celsius,1) . "&deg;C";
                             }
                             else
                             {
-                                echo $fahrenheit . "&deg;F";
+                                echo round($fahrenheit,1) . "&deg;F";
                             }
                         }
                         else
