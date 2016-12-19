@@ -280,7 +280,6 @@
     function getBlockedQueries(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
-        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
         foreach ($log as $line) {
             $exploded = explode(" ", $line);
             if(count($exploded) == 8) {
