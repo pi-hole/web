@@ -222,12 +222,14 @@ function validDomain($domain_name)
 				if($_POST["tempunit"] == "F")
 				{
 					exec('sudo pihole -a -f');
-					$success .= "The webUI settings have been updated";
+				}
+				elseif($_POST["tempunit"] == "K")
+				{
+					exec('sudo pihole -a -k');
 				}
 				else
 				{
 					exec('sudo pihole -a -c');
-					$success .= "The webUI settings have been updated";
 				}
 				if(isset($_POST["boxedlayout"]))
 				{
@@ -237,6 +239,7 @@ function validDomain($domain_name)
 				{
 					exec('sudo pihole -a layout traditional');
 				}
+				$success .= "The webUI settings have been updated";
 				break;
 
 			case "reboot":
