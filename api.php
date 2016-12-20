@@ -5,7 +5,7 @@
 
     check_cors();
 
-    include('data.php');
+    include('scripts/pi-hole/php/data.php');
     header('Content-type: application/json');
 
     $data = array();

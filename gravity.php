@@ -1,5 +1,5 @@
 <?php
-    require "header.php";
+    require "scripts/pi-hole/php/header.php";
 ?>
 <!-- Title -->
 <div class="page-header">
@@ -20,7 +20,7 @@
 <pre id="output" style="width: 100%; height: 100%;" hidden="true"></pre>
 
 <?php
-    require "footer.php";
+    require "scripts/pi-hole/php/footer.php";
 ?>
 
 

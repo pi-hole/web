@@ -1,5 +1,5 @@
 <?php
-	require "header.php";
+	require "scripts/pi-hole/php/header.php";
 	require "scripts/pi-hole/php/savesettings.php";
 	// Reread ini file as things might have been changed
 	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
@@ -501,7 +501,7 @@
 </div>
 
 <?php
-    require "footer.php";
+    require "scripts/pi-hole/php/footer.php";
 ?>
 <script src="scripts/vendor/jquery.inputmask.js"></script>
 <script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
