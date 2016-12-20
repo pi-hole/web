@@ -4,18 +4,45 @@
 
     check_cors();
 
-    $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
-    $output = shell_exec($cmd);
-    $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
-    $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
-
-    if(isset($setupVars['TEMPERATUREUNIT']))
+    // Try to get temperature value from different places (OS dependent)
+    if(file_exists("/sys/class/thermal/thermal_zone0/temp"))
     {
-        $temperatureunit = $setupVars['TEMPERATUREUNIT'];
+        $output = rtrim(file_get_contents("/sys/class/thermal/thermal_zone0/temp"));
+    }
+    elseif (file_exists("/sys/class/hwmon/hwmon0/temp1_input"))
+    {
+        $output = rtrim(file_get_contents("/sys/class/hwmon/hwmon0/temp1_input"));
     }
     else
     {
-        $temperatureunit = "C";
+        $output = "";
+    }
+
+    // Test if we succeeded in getting the temperature
+    if(is_numeric($output))
+    {
+        $celsius = intVal($output)*1e-3;
+        $fahrenheit = ($celsius*9./5)+32.0;
+
+        if(isset($setupVars['TEMPERATUREUNIT']))
+        {
+            $temperatureunit = $setupVars['TEMPERATUREUNIT'];
+        }
+        else
+        {
+            $temperatureunit = "C";
+        }
+        // Override temperature unit setting if it is changed via Settings page
+        if(isset($_POST["tempunit"]))
+        {
+            $temperatureunit = $_POST["tempunit"];
+        }
+    }
+    else
+    {
+        // Nothing can be colder than -273.15 degree Celsius (= 0 Kelvin)
+        // This is the minimum temperature possible (AKA absolute zero)
+        $celsius = -273.16;
     }
 
     // Get load
@@ -69,7 +96,7 @@
         $boxedlayout = true;
     }
 
-    // Override layout setting if layout is changed via Settings page3
+    // Override layout setting if layout is changed via Settings page
     if(isset($_POST["field"]))
     {
         if($_POST["field"] === "webUI" && isset($_POST["boxedlayout"]))
@@ -224,20 +251,26 @@
                         }
 
                         // CPU Temp
-                        echo '<a href="#" id="temperature"><i class="fa fa-fire" style="color:';
-                        if ($celsius > "45") {
-                            echo '#FF0000';
+                        if ($celsius >= -273.15) {
+                            echo "<a href=\"#\" id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
+                            if ($celsius > 45) {
+                                echo "#FF0000";
+                            }
+                            else
+                            {
+                                echo "#3366FF";
+                            }
+                            echo "\"></i> Temp:&nbsp;";
+                            if($temperatureunit != "F")
+                            {
+                                echo round($celsius,1) . "&deg;C";
+                            }
+                            else
+                            {
+                                echo round($fahrenheit,1) . "&deg;F";
+                            }
+                            echo "</a>";
                         }
-                        else
-                        {
-                            echo '#3366FF';
-                        }
-                        echo '"></i> Temp:&nbsp;';
-                        if($temperatureunit != "F")
-                            echo $celsius . '&deg;C';
-                        else
-                            echo $fahrenheit . '&deg;F';
-                        echo '</a>';
                     ?>
                     <br/>
                     <?php
