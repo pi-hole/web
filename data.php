@@ -279,14 +279,14 @@
             // (e.g. once in gravity list, once in blacklist)
             if($action && strlen($key) > 0)
             {
+                // $action is true (we want to add) *and* key is not empty
                 $array[$key] = true;
             }
-            elseif(isset($array[$key]))
+            elseif(!$action && isset($array[$key]))
             {
-                // $action is not true (we want to remove) *and* key is set
+                // $action is false (we want to remove) *and* key is set
                 unset($array[$key]);
             }
-            // else: Remove, but not set -> don't have to don anything
         }
     }
 
