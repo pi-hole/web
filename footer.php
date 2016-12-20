@@ -42,7 +42,7 @@
 <script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
 <script src="scripts/vendor/Chart.bundle.min.js"></script>
 
-<script src="scripts/pi-hole/footer.js"></script>
+<script src="scripts/pi-hole/js/footer.js"></script>
 
 </body>
 </html>

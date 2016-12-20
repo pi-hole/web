@@ -55,4 +55,4 @@ function getFullName() {
 require "footer.php";
 ?>
 
-<script src="scripts/pi-hole/list.js"></script>
+<script src="scripts/pi-hole/js/list.js"></script>
