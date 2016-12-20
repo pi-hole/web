@@ -140,7 +140,7 @@
 								<input type="text" class="form-control DHCPgroup" name="to" value="<?php echo $DHCPend; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
-					<label>Router IP address</label>
+					<label>Router (gateway) IP address</label>
 					<div class="col-md-12">
 						<div class="input-group">
 							<div class="input-group-addon">Router</div>
@@ -452,6 +452,7 @@
 				<h4>CPU Temperature Unit</h4>
 				<div class="form-group">
 					<div class="radio"><label><input type="radio" name="tempunit" value="C" <?php if($temperatureunit === "C"){ ?>checked<?php } ?> >Celsius</label></div>
+					<div class="radio"><label><input type="radio" name="tempunit" value="K" <?php if($temperatureunit === "K"){ ?>checked<?php } ?> >Kelvin</label></div>
 					<div class="radio"><label><input type="radio" name="tempunit" value="F" <?php if($temperatureunit === "F"){ ?>checked<?php } ?> >Fahrenheit</label></div>
 				</div>
 			</div>

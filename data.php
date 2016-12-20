@@ -5,6 +5,8 @@
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
     $log = new \SplFileObject('/var/log/pihole.log');
     $gravity = new \SplFileObject('/etc/pihole/list.preEventHorizon');
+    $whitelist = new \SplFileObject('/etc/pihole/whitelist.txt');
+    $blacklist = new \SplFileObject('/etc/pihole/blacklist.txt');
 
     /*******   Public Members ********/
     function getSummaryData() {
@@ -163,7 +165,7 @@
                 $showBlocked = true;
                 $showPermitted = false;
             }
-            elseif($setupVars["API_QUERY_LOG_SHOW"] === "none")
+            elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
             {
                 $showBlocked = false;
                 $showPermitted = false;
@@ -183,10 +185,12 @@
     }
 
     function getAllQueries($orderBy) {
-        global $log,$gravity,$showBlocked,$showPermitted;
+        global $log,$showBlocked,$showPermitted;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueriesAll($log);
-        $gravity_domains = getGravityDomains($gravity);
+
+        // Create empty array for gravity
+        $gravity_domains = getGravity();
 
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
@@ -265,16 +269,41 @@
         return $lines;
     }
 
-    function getGravityDomains($gravity){
-        $gravity->rewind();
-        $lines=[];
-        foreach ($gravity as $line) {
-            // Strip newline (and possibly carriage return) from end of string
-            // using rtrim()
-            $lines[rtrim($line)] = true;
+    function getDomains($file, &$array, $action){
+        $file->rewind();
+        foreach ($file as $line) {
+            // Strip newline (and possibly carriage return) from end of key
+            $key = rtrim($line);
+            // if $action = true -> we want that domain to be ADDED to the list
+            // doesn't harm to do this if it has already been set before
+            // (e.g. once in gravity list, once in blacklist)
+            if($action && strlen($key) > 0)
+            {
+                // $action is true (we want to add) *and* key is not empty
+                $array[$key] = true;
+            }
+            elseif(!$action && isset($array[$key]))
+            {
+                // $action is false (we want to remove) *and* key is set
+                unset($array[$key]);
+            }
         }
+    }
 
-        return $lines;
+    function getGravity() {
+        global $gravity,$whitelist,$blacklist;
+        $domains = [];
+
+        // ADD (true) preEventHorizon domains
+        getDomains($gravity, $domains, true);
+
+        // ADD (true) blacklist domains
+        getDomains($blacklist, $domains, true);
+
+        // REMOVE (false) whitelist domains
+        getDomains($whitelist, $domains, false);
+
+        return $domains;
     }
 
     function getBlockedQueries(\SplFileObject $log) {

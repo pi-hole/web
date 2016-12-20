@@ -282,6 +282,23 @@ $(document).ready(function() {
                             var from = padNumber(h)+":"+padNumber(m)+":00";
                             var to = padNumber(h)+":"+padNumber(m+9)+":59";
                             return "Queries from "+from+" to "+to;
+                        },
+                        label(tooltipItems, data) {
+                            if(tooltipItems.datasetIndex === 1)
+                            {
+                                var percentage = 0.0;
+                                var total = parseInt(data.datasets[0].data[tooltipItems.index]);
+                                var blocked = parseInt(data.datasets[1].data[tooltipItems.index]);
+                                if(total > 0)
+                                {
+                                    percentage = 100.0*blocked/total;
+                                }
+                                return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel + " (" + percentage.toFixed(1) + "%)";
+                            }
+                            else
+                            {
+                                return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
+                            }
                         }
                     }
                 },

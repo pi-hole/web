@@ -65,7 +65,14 @@ function validDomain($domain_name)
 				// Get secondary DNS server IP address
 				if($secondaryDNS === "Custom")
 				{
-					$secondaryIP = $_POST["DNS2IP"];
+					if(strlen($_POST["DNS2IP"]) > 0)
+					{
+						$secondaryIP = $_POST["DNS2IP"];
+					}
+					else
+					{
+						$secondaryIP = "none";
+					}
 				}
 				else
 				{
@@ -73,7 +80,7 @@ function validDomain($domain_name)
 				}
 
 				// Validate secondary IP
-				if (!validIP($secondaryIP) && strlen($secondaryIP) > 0)
+				if (!validIP($secondaryIP) && $secondaryIP != "none" && strlen($secondaryIP) > 0)
 				{
 					$error .= "Secondary IP (".$secondaryIP.") is invalid!<br>";
 				}
@@ -205,7 +212,7 @@ function validDomain($domain_name)
 				}
 				else
 				{
-					exec("sudo pihole -a setquerylog none");
+					exec("sudo pihole -a setquerylog nothing");
 					$success .= "No entries will be shown in Query Log";
 				}
 
@@ -215,12 +222,14 @@ function validDomain($domain_name)
 				if($_POST["tempunit"] == "F")
 				{
 					exec('sudo pihole -a -f');
-					$success .= "The webUI settings have been updated";
+				}
+				elseif($_POST["tempunit"] == "K")
+				{
+					exec('sudo pihole -a -k');
 				}
 				else
 				{
 					exec('sudo pihole -a -c');
-					$success .= "The webUI settings have been updated";
 				}
 				if(isset($_POST["boxedlayout"]))
 				{
@@ -230,6 +239,7 @@ function validDomain($domain_name)
 				{
 					exec('sudo pihole -a layout traditional');
 				}
+				$success .= "The webUI settings have been updated";
 				break;
 
 			case "reboot":
