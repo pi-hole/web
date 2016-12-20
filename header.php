@@ -22,6 +22,7 @@
     if(is_numeric($output))
     {
         $celsius = intVal($output)*1e-3;
+        $kelvin = $celsius + 273.15;
         $fahrenheit = ($celsius*9./5)+32.0;
 
         if(isset($setupVars['TEMPERATUREUNIT']))
@@ -261,13 +262,17 @@
                                 echo "#3366FF";
                             }
                             echo "\"></i> Temp:&nbsp;";
-                            if($temperatureunit != "F")
+                            if($temperatureunit === "F")
                             {
-                                echo round($celsius,1) . "&deg;C";
+                                echo round($fahrenheit,1) . "&deg;F";
+                            }
+                            elseif($temperatureunit === "K")
+                            {
+                                echo round($kelvin,1) . "K";
                             }
                             else
                             {
-                                echo round($fahrenheit,1) . "&deg;F";
+                                echo round($celsius,1) . "&deg;C";
                             }
                             echo "</a>";
                         }
