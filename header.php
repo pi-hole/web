@@ -58,7 +58,7 @@
     if(count($data) > 0)
     {
         foreach ($data as $line) {
-            list($key, $val) = explode(":", $line);
+            @list($key, $val) = explode(":", $line);
             // remove " kB" fron the end of the string and make an integer
             $meminfo[$key] = intVal(substr(trim($val),0, -3));
         }
