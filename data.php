@@ -5,6 +5,8 @@
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
     $log = new \SplFileObject('/var/log/pihole.log');
     $gravity = new \SplFileObject('/etc/pihole/list.preEventHorizon');
+    $whitelist = new \SplFileObject('/etc/pihole/whitelist.txt');
+    $blacklist = new \SplFileObject('/etc/pihole/blacklist.txt');
 
     /*******   Public Members ********/
     function getSummaryData() {
@@ -183,10 +185,15 @@
     }
 
     function getAllQueries($orderBy) {
-        global $log,$gravity,$showBlocked,$showPermitted;
+        global $log,$gravity,$showBlocked,$showPermitted,$whitelist,$blacklist;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueriesAll($log);
-        $gravity_domains = getGravityDomains($gravity);
+        $gravity_domains = getDomains($gravity, true);
+        $whitelist_domains = getDomains($whitelist, false);
+        $blacklist_domains = getDomains($blacklist, true);
+
+        $gravity_domains = array_merge($gravity_domains, $whitelist_domains, $blacklist_domains);
+
 
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
@@ -198,7 +205,9 @@
 
             if (substr($tmp, 0, 5) == "query")
             {
-                $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
+                $status = isset($gravity_domains[$domain]) ?
+                    $gravity_domains[$domain] === true ? "Pi-holed" : "OK"
+                    : "OK";
                 if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))
                 {
                     $type = substr($exploded[count($exploded)-4], 6, -1);
@@ -265,13 +274,13 @@
         return $lines;
     }
 
-    function getGravityDomains($gravity){
-        $gravity->rewind();
+    function getDomains($file, $default_value){
+        $file->rewind();
         $lines=[];
-        foreach ($gravity as $line) {
+        foreach ($file as $line) {
             // Strip newline (and possibly carriage return) from end of string
             // using rtrim()
-            $lines[rtrim($line)] = true;
+            $lines[rtrim($line)] = $default_value;
         }
 
         return $lines;
