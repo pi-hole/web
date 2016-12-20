@@ -58,9 +58,12 @@
     if(count($data) > 0)
     {
         foreach ($data as $line) {
-            @list($key, $val) = explode(":", $line);
-            // remove " kB" fron the end of the string and make an integer
-            $meminfo[$key] = intVal(substr(trim($val),0, -3));
+            $expl = explode(":", $line);
+            if(count($expl) == 2)
+            {
+                // remove " kB" fron the end of the string and make an integer
+                $meminfo[$expl[0]] = intVal(substr(trim($expl[1]),0, -3));
+            }
         }
         $memory_used = $meminfo["MemTotal"]-$meminfo["MemFree"]-$meminfo["Buffers"]-$meminfo["Cached"];
         $memory_total = $meminfo["MemTotal"];
