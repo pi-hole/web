@@ -271,7 +271,6 @@
 
     function getDomains($file, &$array, $action){
         $file->rewind();
-        $lines=[];
         foreach ($file as $line) {
             // Strip newline (and possibly carriage return) from end of key
             $key = rtrim($line);
@@ -280,17 +279,15 @@
             // (e.g. once in gravity list, once in blacklist)
             if($action && strlen($key) > 0)
             {
-                $lines[$key] = true;
+                $array[$key] = true;
             }
-            elseif(isset($lines[$key]))
+            elseif(isset($array[$key]))
             {
                 // $action is not true (we want to remove) *and* key is set
-                unset($lines[$key]);
+                unset($array[$key]);
             }
             // else: Remove, but not set -> don't have to don anything
         }
-
-        return $lines;
     }
 
     function getGravity() {
