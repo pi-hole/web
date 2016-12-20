@@ -1,6 +1,6 @@
 <?php
-    require "php/auth.php";
-    require "php/password.php";
+    require "scripts/pi-hole/php/auth.php";
+    require "scripts/pi-hole/php/password.php";
 
     check_cors();
 
@@ -129,7 +129,7 @@
         <p>To enable Javascript click <a href="http://www.enable-javascript.com/" target="_blank">here</a></p><label for="js-hide">Close</label></div>
 </div>
 <!-- /JS Warning -->
-<script src="scripts/pi-hole/header.js"></script>
+<script src="scripts/pi-hole/js/header.js"></script>
 <!-- Send token to JS -->
 <div id="token" hidden><?php echo $token ?></div>
 <div class="wrapper">
@@ -380,7 +380,7 @@
     // If auth is required and not set, i.e. no successfully logged in,
     // we show the reduced version of the summary (index) page
     if(!$auth && (!isset($indexpage) || isset($_GET['login']))){
-        require "php/loginpage.php";
+        require "scripts/pi-hole/php/loginpage.php";
         require "footer.php";
         exit();
     }

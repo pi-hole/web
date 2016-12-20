@@ -1,7 +1,7 @@
 <?php
     $api = true;
-    require "php/password.php";
-    require "php/auth.php";
+    require "scripts/pi-hole/php/password.php";
+    require "scripts/pi-hole/php/auth.php";
 
     check_cors();
 
