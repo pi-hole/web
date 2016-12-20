@@ -282,7 +282,7 @@
         $lines = [];
         foreach ($log as $line) {
             $exploded = explode(" ", $line);
-            if(count($exploded) == 8) {
+            if(count($exploded) == 8 || count($exploded) == 10) {
                 // Structure of data is currently like:
                 // Array
                 // (
@@ -295,8 +295,22 @@
                 //     [6] => is
                 //     [7] => ip.of.pi.hole
                 // )
-                $list = $exploded[4];
-                $is = $exploded[6];
+                // with extra logging enabled
+                // Array
+                // (
+                //     [0] => Dec
+                //     [1] => 19
+                //     [2] => 11:21:51
+                //     [3] => dnsmasq[2584]:
+                //     [4] => 1 (identifier)
+                //     [5] => 1.2.3.4/12345
+                //     [6] => /etc/pihole/gravity.list
+                //     [7] => doubleclick.com
+                //     [8] => is
+                //     [9] => ip.of.pi.hole
+                // )
+                $list = $exploded[count($exploded)-4];
+                $is = $exploded[count($exploded)-2];
                 // Consider only gravity.list as DNS source (not e.g. hostname.list)
                 if(substr($list, strlen($list) - 12, 12) === "gravity.list" && $is === "is") {
                     $lines[] = $line;
