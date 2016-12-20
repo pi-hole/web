@@ -188,20 +188,22 @@
         global $log,$gravity,$showBlocked,$showPermitted,$whitelist,$blacklist;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueriesAll($log);
-        $gravity_domains = getDomains($gravity);
+
+        $gravity_domains   = getDomains($gravity);
         $whitelist_domains = getDomains($whitelist);
         $blacklist_domains = getDomains($blacklist);
 
-        // Remove whitelisted domains
-        foreach($gravity_domains as $domain) {
-            if(isset($whitelist_domains[$domain])) {
+        // Remove whitelisted domains if they exist in
+        // $gravity_domains
+        foreach($whitelist_domains as $domain) {
+            if(isset($gravity_domains[$domain])) {
                 unset($gravity_domains[$domain]);
             }
         }
 
-        // Add blacklisted domains if they aren't already there
+        // Add blacklisted domains (do not need to check if they are already there)
         foreach($blacklist_domains as $domain) {
-            $gravity_domains[$domain] = null;
+            $gravity_domains[$domain] = true;
         }
 
 
@@ -215,9 +217,7 @@
 
             if (substr($tmp, 0, 5) == "query")
             {
-                $status = isset($gravity_domains[$domain]) ?
-                    $gravity_domains[$domain] === true ? "Pi-holed" : "OK"
-                    : "OK";
+                $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
                 if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))
                 {
                     $type = substr($exploded[count($exploded)-4], 6, -1);
@@ -290,7 +290,7 @@
         foreach ($file as $line) {
             // Strip newline (and possibly carriage return) from end of string
             // using rtrim()
-            $lines[rtrim($line)] = null;
+            $lines[rtrim($line)] = true;
         }
 
         return $lines;
