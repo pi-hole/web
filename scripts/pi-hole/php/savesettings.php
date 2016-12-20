@@ -65,7 +65,14 @@ function validDomain($domain_name)
 				// Get secondary DNS server IP address
 				if($secondaryDNS === "Custom")
 				{
-					$secondaryIP = $_POST["DNS2IP"];
+					if(strlen($_POST["DNS2IP"]) > 0)
+					{
+						$secondaryIP = $_POST["DNS2IP"];
+					}
+					else
+					{
+						$secondaryIP = "none";
+					}
 				}
 				else
 				{
@@ -73,7 +80,7 @@ function validDomain($domain_name)
 				}
 
 				// Validate secondary IP
-				if (!validIP($secondaryIP) && strlen($secondaryIP) > 0)
+				if (!validIP($secondaryIP) && $secondaryIP != "none" && strlen($secondaryIP) > 0)
 				{
 					$error .= "Secondary IP (".$secondaryIP.") is invalid!<br>";
 				}

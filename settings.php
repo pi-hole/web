@@ -140,7 +140,7 @@
 								<input type="text" class="form-control DHCPgroup" name="to" value="<?php echo $DHCPend; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
-					<label>Router IP address</label>
+					<label>Router (gateway) IP address</label>
 					<div class="col-md-12">
 						<div class="input-group">
 							<div class="input-group-addon">Router</div>
