@@ -22,6 +22,7 @@
     if(is_numeric($output))
     {
         $celsius = intVal($output)*1e-3;
+        $kelvin = $celsius + 273.15;
         $fahrenheit = ($celsius*9./5)+32.0;
 
         if(isset($setupVars['TEMPERATUREUNIT']))
@@ -57,9 +58,12 @@
     if(count($data) > 0)
     {
         foreach ($data as $line) {
-            list($key, $val) = explode(":", $line);
-            // remove " kB" fron the end of the string and make an integer
-            $meminfo[$key] = intVal(substr(trim($val),0, -3));
+            $expl = explode(":", trim($line));
+            if(count($expl) == 2)
+            {
+                // remove " kB" from the end of the string and make it an integer
+                $meminfo[$expl[0]] = intVal(substr($expl[1],0, -3));
+            }
         }
         $memory_used = $meminfo["MemTotal"]-$meminfo["MemFree"]-$meminfo["Buffers"]-$meminfo["Cached"];
         $memory_total = $meminfo["MemTotal"];
@@ -261,13 +265,17 @@
                                 echo "#3366FF";
                             }
                             echo "\"></i> Temp:&nbsp;";
-                            if($temperatureunit != "F")
+                            if($temperatureunit === "F")
                             {
-                                echo round($celsius,1) . "&deg;C";
+                                echo round($fahrenheit,1) . "&deg;F";
+                            }
+                            elseif($temperatureunit === "K")
+                            {
+                                echo round($kelvin,1) . "K";
                             }
                             else
                             {
-                                echo round($fahrenheit,1) . "&deg;F";
+                                echo round($celsius,1) . "&deg;C";
                             }
                             echo "</a>";
                         }
