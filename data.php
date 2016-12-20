@@ -185,27 +185,12 @@
     }
 
     function getAllQueries($orderBy) {
-        global $log,$gravity,$showBlocked,$showPermitted,$whitelist,$blacklist;
+        global $log,$showBlocked,$showPermitted;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueriesAll($log);
 
-        $gravity_domains   = getDomains($gravity);
-        $whitelist_domains = getDomains($whitelist);
-        $blacklist_domains = getDomains($blacklist);
-
-        // Remove whitelisted domains if they exist in
-        // $gravity_domains
-        foreach($whitelist_domains as $domain) {
-            if(isset($gravity_domains[$domain])) {
-                unset($gravity_domains[$domain]);
-            }
-        }
-
-        // Add blacklisted domains (do not need to check if they are already there)
-        foreach($blacklist_domains as $domain) {
-            $gravity_domains[$domain] = true;
-        }
-
+        // Create empty array for gravity
+        $gravity_domains = getGravity();
 
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
@@ -284,16 +269,44 @@
         return $lines;
     }
 
-    function getDomains($file){
+    function getDomains($file, &$array, $action){
         $file->rewind();
         $lines=[];
         foreach ($file as $line) {
-            // Strip newline (and possibly carriage return) from end of string
-            // using rtrim()
-            $lines[rtrim($line)] = true;
+            // Strip newline (and possibly carriage return) from end of key
+            $key = rtrim($line);
+            // if $action = true -> we want that domain to be ADDED to the list
+            // doesn't harm to do this if it has already been set before
+            // (e.g. once in gravity list, once in blacklist)
+            if($action && strlen($key) > 0)
+            {
+                $lines[$key] = true;
+            }
+            elseif(isset($lines[$key]))
+            {
+                // $action is not true (we want to remove) *and* key is set
+                unset($lines[$key]);
+            }
+            // else: Remove, but not set -> don't have to don anything
         }
 
         return $lines;
+    }
+
+    function getGravity() {
+        global $gravity,$whitelist,$blacklist;
+        $domains = [];
+
+        // ADD (true) preEventHorizon domains
+        getDomains($gravity, $domains, true);
+
+        // ADD (true) blacklist domains
+        getDomains($blacklist, $domains, true);
+
+        // REMOVE (false) whitelist domains
+        getDomains($whitelist, $domains, false);
+
+        return $domains;
     }
 
     function getBlockedQueries(\SplFileObject $log) {
