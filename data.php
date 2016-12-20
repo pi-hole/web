@@ -188,11 +188,21 @@
         global $log,$gravity,$showBlocked,$showPermitted,$whitelist,$blacklist;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueriesAll($log);
-        $gravity_domains = getDomains($gravity, true);
-        $whitelist_domains = getDomains($whitelist, false);
-        $blacklist_domains = getDomains($blacklist, true);
+        $gravity_domains = getDomains($gravity);
+        $whitelist_domains = getDomains($whitelist);
+        $blacklist_domains = getDomains($blacklist);
 
-        $gravity_domains = array_merge($gravity_domains, $whitelist_domains, $blacklist_domains);
+        // Remove whitelisted domains
+        foreach($gravity_domains as $domain) {
+            if(isset($whitelist_domains[$domain])) {
+                unset($gravity_domains[$domain]);
+            }
+        }
+
+        // Add blacklisted domains if they aren't already there
+        foreach($blacklist_domains as $domain) {
+            $gravity_domains[$domain] = null;
+        }
 
 
         foreach ($dns_queries as $query) {
@@ -274,13 +284,13 @@
         return $lines;
     }
 
-    function getDomains($file, $default_value){
+    function getDomains($file){
         $file->rewind();
         $lines=[];
         foreach ($file as $line) {
             // Strip newline (and possibly carriage return) from end of string
             // using rtrim()
-            $lines[rtrim($line)] = $default_value;
+            $lines[rtrim($line)] = null;
         }
 
         return $lines;
