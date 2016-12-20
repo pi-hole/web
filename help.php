@@ -148,5 +148,3 @@
 <?php
     require "scripts/pi-hole/php/footer.php";
 ?>
-
-<script src="scripts/pi-hole/js/help.js"></script>
