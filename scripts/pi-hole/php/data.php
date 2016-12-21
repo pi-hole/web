@@ -19,7 +19,7 @@
 
     // blacklist.txt is optional and might not be there
     $blackListFile = "/etc/pihole/blacklist.txt";
-    if(file_exists($blacklistFile))
+    if(file_exists($blackListFile))
     {
         $blacklist = new \SplFileObject($blackListFile);
     }
@@ -258,6 +258,7 @@
 
     /******** Private Members ********/
     function gravityCount() {
+        global $blackListFile;
         $preEventHorizon = exec("grep -c ^ /etc/pihole/list.preEventHorizon");
         if(file_exists($blackListFile))
         {
