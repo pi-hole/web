@@ -106,10 +106,17 @@
 	{
 		$DHCP = false;
 		// Try to guess initial settings
-		$DHCPdomain = explode(".",$piHoleIPv4);
-		$DHCPstart  = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".201";
-		$DHCPend    = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".251";
-		$DHCProuter = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".1";
+		if($piHOleIPv4 !== "unknown") {
+			$DHCPdomain = explode(".",$piHoleIPv4);
+			$DHCPstart  = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".201";
+			$DHCPend    = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".251";
+			$DHCProuter = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".1";
+		}
+		else {
+			$DHCPstart  = "0.0.0.0";
+			$DHCPend    = "0.0.0.0";
+			$DHCProuter = "0.0.0.0";
+		}
 	}
 	if(isset($setupVars["PIHOLE_DOMAIN"])){
 		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
