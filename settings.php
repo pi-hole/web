@@ -361,7 +361,7 @@
 	{
 		$excludedDomains = explode(",", $setupVars["API_EXCLUDE_DOMAINS"]);
 	} else {
-		$excludedDomains = "";
+		$excludedDomains = [];
 	}
 
 	// Exluded clients in API Query Log call
@@ -369,7 +369,7 @@
 	{
 		$excludedClients = explode(",", $setupVars["API_EXCLUDE_CLIENTS"]);
 	} else {
-		$excludedClients = "";
+		$excludedClients = [];
 	}
 
 	// Exluded clients

@@ -3,10 +3,22 @@
     $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
-    $log = new \SplFileObject('/var/log/pihole.log');
-    $gravity = new \SplFileObject('/etc/pihole/list.preEventHorizon');
-    $whitelist = new \SplFileObject('/etc/pihole/whitelist.txt');
-    $blacklist = new \SplFileObject('/etc/pihole/blacklist.txt');
+
+    // Check if pihole.log exists and is readable
+    $logListName = checkfile("/var/log/pihole.log");
+    $log = new \SplFileObject($logListName);
+
+    // Check if preEventHorizon exists and is readable
+    $gravityListName = checkfile("/etc/pihole/list.preEventHorizon");
+    $gravity = new \SplFileObject($gravityListName);
+
+    // whitelist.txt is optional and might not be there
+    $whiteListFile = checkfile("/etc/pihole/whitelist.txt");
+    $whitelist = new \SplFileObject($whiteListFile);
+
+    // blacklist.txt is optional and might not be there
+    $blackListFile = checkfile("/etc/pihole/blacklist.txt");
+    $blacklist = new \SplFileObject($blackListFile);
 
     /*******   Public Members ********/
     function getSummaryData() {
@@ -238,8 +250,9 @@
 
     /******** Private Members ********/
     function gravityCount() {
-        $preEventHorizon = exec("grep -c ^ /etc/pihole/list.preEventHorizon");
-        $blacklist = exec("grep -c ^ /etc/pihole/blacklist.txt");
+        global $gravityListName,$blackListFile;
+        $preEventHorizon = exec("grep -c ^ $gravityListName");
+        $blacklist = exec("grep -c ^ $blackListFile");
         return ($preEventHorizon + $blacklist);
     }
 
@@ -255,7 +268,8 @@
     }
 
     function countDnsQueries() {
-        return exec("grep -c \": query\\[\" /var/log/pihole.log");
+        global $logListName;
+        return exec("grep -c \": query\\[\" $logListName");
     }
 
     function getDnsQueriesAll(\SplFileObject $log) {
@@ -327,8 +341,9 @@
     }
 
     function countBlockedQueries() {
+        global $logListName;
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
-        return exec("grep \"gravity.list\" /var/log/pihole.log | grep -v \"pi.hole\" | grep -v \" read \" | grep -v -c \"".$hostname."\"");
+        return exec("grep \"gravity.list\" $logListName | grep -v \"pi.hole\" | grep -v \" read \" | grep -v -c \"".$hostname."\"");
     }
 
     function getForwards(\SplFileObject $log) {
