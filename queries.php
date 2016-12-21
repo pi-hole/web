@@ -101,3 +101,4 @@ if(isset($setupVars["API_QUERY_LOG_SHOW"]))
 ?>
 
 <script src="scripts/pi-hole/js/queries.js"></script>
+<!--PromoWozHere-->
