@@ -113,9 +113,9 @@
 			$DHCProuter = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".1";
 		}
 		else {
-			$DHCPstart  = "0.0.0.0";
-			$DHCPend    = "0.0.0.0";
-			$DHCProuter = "0.0.0.0";
+			$DHCPstart  = "";
+			$DHCPend    = "";
+			$DHCProuter = "";
 		}
 	}
 	if(isset($setupVars["PIHOLE_DOMAIN"])){
