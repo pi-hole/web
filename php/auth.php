@@ -33,8 +33,16 @@ function check_cors() {
 
     // Since the Host header is easily manipulated, we can only check if it's wrong and can't use it
     // to validate that the client is authorized, only unauthorized.
-    if(isset($_SERVER['HTTP_HOST']) && !in_array("http://".$_SERVER['HTTP_HOST'], $AUTHORIZED_HOSTNAMES)) {
-        log_and_die("Failed Host Check: " . $_SERVER['HTTP_HOST'] .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
+    $server_host = $_SERVER['HTTP_HOST'];
+
+    // If HTTP_HOST contains a non-standard port (!= 80) we have to strip the port
+    if(strpos($server_host,":"))
+    {
+        $server_host = parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST);
+    }
+
+    if(isset($_SERVER['HTTP_HOST']) && !in_array("http://".$server_host, $AUTHORIZED_HOSTNAMES)) {
+        log_and_die("Failed Host Check: " . $server_host .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
     }
 
     if(isset($_SERVER['HTTP_ORIGIN'])) {
