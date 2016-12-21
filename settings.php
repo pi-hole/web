@@ -106,7 +106,7 @@
 	{
 		$DHCP = false;
 		// Try to guess initial settings
-		if($piHOleIPv4 !== "unknown") {
+		if($piHoleIPv4 !== "unknown") {
 			$DHCPdomain = explode(".",$piHoleIPv4);
 			$DHCPstart  = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".201";
 			$DHCPend    = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".251";
