@@ -1,5 +1,5 @@
 <?php
-require "scripts/pi-hole/php/header.php";
+require "header.php";
 
 $list = $_GET['l'];
 
@@ -52,7 +52,7 @@ function getFullName() {
 <ul class="list-group" id="list"></ul>
 
 <?php
-require "scripts/pi-hole/php/footer.php";
+require "footer.php";
 ?>
 
-<script src="scripts/pi-hole/js/list.js"></script>
+<script src="js/pihole/list.js"></script>

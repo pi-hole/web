@@ -2,7 +2,7 @@ function eventsource() {
     var alInfo = $("#alInfo");
     var alSuccess = $("#alSuccess");
     var ta = $("#output");
-    var source = new EventSource("scripts/pi-hole/php/gravity.sh.php");
+    var source = new EventSource("php/gravity.sh.php");
 
     ta.html("");
     ta.show();

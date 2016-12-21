@@ -10,7 +10,7 @@ function sub(index, entry) {
     var domain = $("#"+index);
     domain.hide("highlight");
     $.ajax({
-        url: "scripts/pi-hole/php/sub.php",
+        url: "php/sub.php",
         method: "post",
         data: {"domain":entry, "list":listType, "token":token},
         success: function(response) {
@@ -31,7 +31,7 @@ function refresh(fade) {
         list.fadeOut(100);
     }
     $.ajax({
-        url: "scripts/pi-hole/php/get.php",
+        url: "php/get.php",
         method: "get",
         data: {"list":listType},
         success: function(response) {
@@ -78,7 +78,7 @@ function add() {
     alSuccess.hide();
     alFailure.hide();
     $.ajax({
-        url: "scripts/pi-hole/php/add.php",
+        url: "php/add.php",
         method: "post",
         data: {"domain":domain.val(), "list":listType, "token":token},
         success: function(response) {

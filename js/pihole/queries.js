@@ -36,7 +36,7 @@ function add(domain,list) {
     alSuccess.hide();
     alFailure.hide();
     $.ajax({
-        url: "scripts/pi-hole/php/add.php",
+        url: "php/add.php",
         method: "post",
         data: {"domain":domain, "list":list, "token":token},
         success: function(response) {

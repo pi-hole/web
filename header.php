@@ -1,6 +1,6 @@
 <?php
-    require "scripts/pi-hole/php/auth.php";
-    require "scripts/pi-hole/php/password.php";
+    require "php/auth.php";
+    require "php/password.php";
 
     check_cors();
 
@@ -133,13 +133,13 @@
     <meta name="msapplication-TileImage" content="img/logo.svg">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <link href="style/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/vendor/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/vendor/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/vendor/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
 
-    <link href="style/vendor/AdminLTE.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/vendor/skin-blue.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/skin-blue.min.css" rel="stylesheet" type="text/css" />
     <link rel="icon" type="image/png" sizes="160x160" href="img/logo.svg" />
     <style type="text/css">
         .glow { text-shadow: 0px 0px 5px #fff; }
@@ -147,20 +147,20 @@
     </style>
 
     <!--[if lt IE 9]>
-    <script src="scripts/vendor/html5shiv.min.js"></script>
-    <script src="scripts/vendor/respond.min.js"></script>
+    <script src="js/other/html5shiv.min.js"></script>
+    <script src="js/other/respond.min.js"></script>
     <![endif]-->
 </head>
 <body class="skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <!-- JS Warning -->
 <div>
-    <link rel="stylesheet" type="text/css" href="style/vendor/js-warn.css">
+    <link rel="stylesheet" type="text/css" href="css/js-warn.css">
     <input type="checkbox" id="js-hide" />
     <div class="js-warn" id="js-warn-exit"><h1>Javascript Is Disabled</h1><p>Javascript seems to be disabled. This will break some site features.</p>
         <p>To enable Javascript click <a href="http://www.enable-javascript.com/" target="_blank">here</a></p><label for="js-hide">Close</label></div>
 </div>
 <!-- /JS Warning -->
-<script src="scripts/pi-hole/js/header.js"></script>
+<script src="js/pihole/header.js"></script>
 <!-- Send token to JS -->
 <div id="token" hidden><?php echo $token ?></div>
 <div class="wrapper">
@@ -421,7 +421,7 @@
     // If auth is required and not set, i.e. no successfully logged in,
     // we show the reduced version of the summary (index) page
     if(!$auth && (!isset($indexpage) || isset($_GET['login']))){
-        require "scripts/pi-hole/php/loginpage.php";
+        require "php/loginpage.php";
         require "footer.php";
         exit();
     }
