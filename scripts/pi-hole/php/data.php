@@ -5,7 +5,7 @@
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
 
     function checkfile($filename) {
-        if(file_readable($filename))
+        if(is_readable($filename))
         {
             return $filename;
         }
