@@ -264,15 +264,8 @@
     function gravityCount() {
         global $blackListFile;
         $preEventHorizon = exec("grep -c ^ /etc/pihole/list.preEventHorizon");
-        if(file_exists($blackListFile))
-        {
-            $blacklist = exec("grep -c ^ /etc/pihole/blacklist.txt");
-            return ($preEventHorizon + $blacklist);
-        }
-        else
-        {
-            return ($preEventHorizon);
-        }
+        $blacklist = exec("grep -c ^ $blackListFile");
+        return ($preEventHorizon + $blacklist);
     }
 
     function getDnsQueries(\SplFileObject $log) {
