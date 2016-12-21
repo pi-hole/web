@@ -295,7 +295,7 @@
         $log->rewind();
         $lines = [];
         foreach ($log as $line) {
-            if(strpos($line, ": query[") !== false) {
+            if(strpos($line, ": query[A") !== false) {
                 $lines[] = $line;
             }
         }
@@ -303,14 +303,14 @@
     }
 
     function countDnsQueries() {
-        return exec("grep -c \": query\\[\" /var/log/pihole.log");
+        return exec("grep -c \": query\\[A\" /var/log/pihole.log");
     }
 
     function getDnsQueriesAll(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
         foreach ($log as $line) {
-            if(strpos($line, ": query[") || strpos($line, "gravity.list") || strpos($line, ": forwarded") !== false) {
+            if(strpos($line, ": query[A") || strpos($line, "gravity.list") || strpos($line, ": forwarded") !== false) {
                 $lines[] = $line;
             }
         }
