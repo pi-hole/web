@@ -1,8 +1,16 @@
 <?php
+    $api = true;
+    require "php/password.php";
+    require "php/auth.php";
+
+    check_cors();
+
     include('data.php');
     header('Content-type: application/json');
 
     $data = array();
+
+    // Non-Auth
 
     if (isset($_GET['summaryRaw'])) {
         $data = array_merge($data,  getSummaryData());
@@ -21,44 +29,77 @@
         $data = array_merge($data,  getOverTimeData());
     }
 
-    if (isset($_GET['topItems'])) {
+    if (isset($_GET['overTimeData10mins'])) {
+        $data = array_merge($data,  getOverTimeData10mins());
+    }
+
+    // Auth Required
+
+    if (isset($_GET['topItems']) && $auth) {
         $data = array_merge($data,  getTopItems());
     }
 
-    if (isset($_GET['recentItems'])) {
+    if (isset($_GET['recentItems']) && $auth) {
         if (is_numeric($_GET['recentItems'])) {
             $data = array_merge($data,  getRecentItems($_GET['recentItems']));
         }
     }
 
-    if (isset($_GET['getQueryTypes'])) {
+    if (isset($_GET['getQueryTypes']) && $auth) {
         $data = array_merge($data, getIpvType());
     }
 
-    if (isset($_GET['getForwardDestinations'])) {
+    if (isset($_GET['getForwardDestinations']) && $auth) {
         $data = array_merge($data, getForwardDestinations());
     }
 
-    if (isset($_GET['getQuerySources'])) {
+    if (isset($_GET['getQuerySources']) && $auth) {
         $data = array_merge($data, getQuerySources());
     }
 
-    if (isset($_GET['getAllQueries'])) {
-        $data = array_merge($data, getAllQueries());
+    if (isset($_GET['getAllQueries']) && $auth) {
+        $data = array_merge($data, getAllQueries($_GET['getAllQueries']));
     }
 
-    function filterArray(&$a) {
-	    $sanArray = array();
-	    foreach ($a as $k=>$v) {
-	        if (is_array($v)) {
-	            $sanArray[htmlspecialchars($k)] = filterArray($v);
+    if (isset($_GET['enable'], $_GET['token']) && $auth) {
+        check_csrf($_GET['token']);
+        exec('sudo pihole enable');
+        $data = array_merge($data, Array(
+            "status" => "enabled"
+        ));
+    }
+    elseif (isset($_GET['disable'], $_GET['token']) && $auth) {
+        check_csrf($_GET['token']);
+        exec('sudo pihole disable');
+        $data = array_merge($data, Array(
+            "status" => "disabled"
+        ));
+    }
+
+    if (isset($_GET['getGravityDomains'])) {
+        $data = array_merge($data, getGravity());
+    }
+
+    function filterArray(&$inArray) {
+	    $outArray = array();
+	    foreach ($inArray as $key=>$value) {
+	        if (is_array($value)) {
+	            $outArray[htmlspecialchars($key)] = filterArray($value);
             } else {
-	            $sanArray[htmlspecialchars($k)] = htmlspecialchars($v);
+	            $outArray[htmlspecialchars($key)] = htmlspecialchars($value);
             }
 	    }
-	    return $sanArray;
+	    return $outArray;
     }
-    
+
     $data = filterArray($data);
-    echo json_encode($data);
+
+    if(isset($_GET["jsonForceObject"]))
+    {
+        echo json_encode($data, JSON_FORCE_OBJECT);
+    }
+    else
+    {
+        echo json_encode($data);
+    }
 ?>

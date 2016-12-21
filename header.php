@@ -1,16 +1,117 @@
 <?php
-    if (isset($_GET['enable'])) {
-      exec('sudo pihole enable');
-      $refer = $_SERVER['HTTP_REFERER'];
-      header("location:$refer");
-    } elseif (isset($_GET['disable'])) {
-      exec('sudo pihole disable');
-      $refer = $_SERVER['HTTP_REFERER'];
-      header("location:$refer");
+    require "php/auth.php";
+    require "php/password.php";
+
+    check_cors();
+
+    // Try to get temperature value from different places (OS dependent)
+    if(file_exists("/sys/class/thermal/thermal_zone0/temp"))
+    {
+        $output = rtrim(file_get_contents("/sys/class/thermal/thermal_zone0/temp"));
     }
-    $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
-    $output = shell_exec($cmd);
-    $output = str_replace(array("\r\n","\r","\n"),"", $output);
+    elseif (file_exists("/sys/class/hwmon/hwmon0/temp1_input"))
+    {
+        $output = rtrim(file_get_contents("/sys/class/hwmon/hwmon0/temp1_input"));
+    }
+    else
+    {
+        $output = "";
+    }
+
+    // Test if we succeeded in getting the temperature
+    if(is_numeric($output))
+    {
+        $celsius = intVal($output)*1e-3;
+        $kelvin = $celsius + 273.15;
+        $fahrenheit = ($celsius*9./5)+32.0;
+
+        if(isset($setupVars['TEMPERATUREUNIT']))
+        {
+            $temperatureunit = $setupVars['TEMPERATUREUNIT'];
+        }
+        else
+        {
+            $temperatureunit = "C";
+        }
+        // Override temperature unit setting if it is changed via Settings page
+        if(isset($_POST["tempunit"]))
+        {
+            $temperatureunit = $_POST["tempunit"];
+        }
+    }
+    else
+    {
+        // Nothing can be colder than -273.15 degree Celsius (= 0 Kelvin)
+        // This is the minimum temperature possible (AKA absolute zero)
+        $celsius = -273.16;
+    }
+
+    // Get load
+    $loaddata = sys_getloadavg();
+    // Get number of processing units available to PHP
+    // (may be less than the number of online processors)
+    $nproc = shell_exec('nproc');
+
+    // Get memory usage
+    $data = explode("\n", file_get_contents("/proc/meminfo"));
+    $meminfo = array();
+    if(count($data) > 0)
+    {
+        foreach ($data as $line) {
+            $expl = explode(":", trim($line));
+            if(count($expl) == 2)
+            {
+                // remove " kB" from the end of the string and make it an integer
+                $meminfo[$expl[0]] = intVal(substr($expl[1],0, -3));
+            }
+        }
+        $memory_used = $meminfo["MemTotal"]-$meminfo["MemFree"]-$meminfo["Buffers"]-$meminfo["Cached"];
+        $memory_total = $meminfo["MemTotal"];
+        $memory_usage = $memory_used/$memory_total;
+    }
+    else
+    {
+        $memory_usage = -1;
+    }
+
+
+    // For session timer
+    $maxlifetime = ini_get("session.gc_maxlifetime");
+
+    // Generate CSRF token
+    if(empty($_SESSION['token'])) {
+        $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
+    }
+    $token = $_SESSION['token'];
+
+    if(isset($setupVars['WEBUIBOXEDLAYOUT']))
+    {
+        if($setupVars['WEBUIBOXEDLAYOUT'] === "boxed")
+        {
+            $boxedlayout = true;
+        }
+        else
+        {
+            $boxedlayout = false;
+        }
+    }
+    else
+    {
+        $boxedlayout = true;
+    }
+
+    // Override layout setting if layout is changed via Settings page
+    if(isset($_POST["field"]))
+    {
+        if($_POST["field"] === "webUI" && isset($_POST["boxedlayout"]))
+        {
+            $boxedlayout = true;
+        }
+        elseif($_POST["field"] === "webUI" && !isset($_POST["boxedlayout"]))
+        {
+            $boxedlayout = false;
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +120,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'">
     <title>Pi-hole Admin Console</title>
+    <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
+    <meta http-equiv="x-dns-prefetch-control" content="off">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
@@ -28,6 +131,7 @@
     <link rel="icon" type="image/png" sizes="96x96" href="img/logo.svg">
     <meta name="msapplication-TileColor" content="#367fa9">
     <meta name="msapplication-TileImage" content="img/logo.svg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="css/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
@@ -47,7 +151,7 @@
     <script src="js/other/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="skin-blue sidebar-mini">
+<body class="skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <!-- JS Warning -->
 <div>
     <link rel="stylesheet" type="text/css" href="css/js-warn.css">
@@ -57,6 +161,8 @@
 </div>
 <!-- /JS Warning -->
 <script src="js/pihole/header.js"></script>
+<!-- Send token to JS -->
+<div id="token" hidden><?php echo $token ?></div>
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
@@ -100,6 +206,7 @@
                                 <div class="col-xs-4 text-center">
                                     <a href="https://github.com/pi-hole/pi-hole/releases">Updates</a>
                                 </div>
+                                <div class="col-xs-12 text-center" id="sessiontimer">Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></div>
                             </li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
@@ -133,25 +240,75 @@
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="img/logo.svg" sizes="160x160" alt="Pi-hole logo" />
+                    <img src="img/logo.svg" style="width: 45px; height: 67px;" alt="Pi-hole logo" />
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
                     <?php
                         $pistatus = exec('sudo pihole status web');
                         if ($pistatus == "1") {
-                            echo '<a href="#"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
+                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
                         } elseif ($pistatus == "0") {
-                            echo '<a href="#"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
+                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
                         } else {
-                            echo '<a href="#"><i class="fa fa-circle" style="color:#ff9900"></i> Starting</a>';
+                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#ff9900"></i> Starting</a>';
                         }
 
                         // CPU Temp
-                        if ($output > "45") {
-                            echo '<a href="#"><i class="fa fa-fire" style="color:#FF0000"></i> Temp: ' . $output . '</a>';
-                        } else {
-                            echo '<a href="#"><i class="fa fa-fire" style="color:#3366FF"></i> Temp: ' . $output . '</a>';
+                        if ($celsius >= -273.15) {
+                            echo "<a href=\"#\" id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
+                            if ($celsius > 45) {
+                                echo "#FF0000";
+                            }
+                            else
+                            {
+                                echo "#3366FF";
+                            }
+                            echo "\"></i> Temp:&nbsp;";
+                            if($temperatureunit === "F")
+                            {
+                                echo round($fahrenheit,1) . "&deg;F";
+                            }
+                            elseif($temperatureunit === "K")
+                            {
+                                echo round($kelvin,1) . "K";
+                            }
+                            else
+                            {
+                                echo round($celsius,1) . "&deg;C";
+                            }
+                            echo "</a>";
+                        }
+                    ?>
+                    <br/>
+                    <?php
+                    echo '<a href="#"><i class="fa fa-circle" style="color:';
+                        if ($loaddata[0] > $nproc) {
+                            echo '#FF0000';
+                        }
+                        else
+                        {
+                            echo '#7FFF00';
+                        }
+                        echo '""></i> Load:&nbsp;&nbsp;' . $loaddata[0] . '&nbsp;&nbsp;' . $loaddata[1] . '&nbsp;&nbsp;'. $loaddata[2] . '</a>';
+                    ?>
+                    <br/>
+                    <?php
+                    echo '<a href="#"><i class="fa fa-circle" style="color:';
+                        if ($memory_usage > 0.75 || $memory_usage < 0.0) {
+                            echo '#FF0000';
+                        }
+                        else
+                        {
+                            echo '#7FFF00';
+                        }
+                        if($memory_usage > 0.0)
+                        {
+                            echo '""></i> Memory usage:&nbsp;&nbsp;' . sprintf("%.1f",100.0*$memory_usage) . '%</a>';
+                        }
+                        else
+                        {
+                            echo '""></i> Memory usage:&nbsp;&nbsp; N/A</a>';
                         }
                     ?>
                 </div>
@@ -165,6 +322,7 @@
                         <i class="fa fa-home"></i> <span>Main Page</span>
                     </a>
                 </li>
+                <?php if($auth){ ?>
                 <!-- Query Log -->
                 <li>
                     <a href="queries.php">
@@ -183,20 +341,67 @@
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
+                <!-- Run gravity.sh -->
+                <li>
+                    <a href="gravity.php">
+                        <i class="fa fa-arrow-circle-down"></i> <span>Update Lists</span>
+                    </a>
+                </li>
+                <!-- Query adlists -->
+                <li>
+                    <a href="queryads.php">
+                        <i class="fa fa-search"></i> <span>Query adlists</span>
+                    </a>
+                </li>
                 <!-- Toggle -->
                 <?php
                 if ($pistatus == "1") {
-                  echo '                <li><a href="?disable"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
+                  echo '                <li><a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
                 } else {
-                  echo '                <li><a href="?enable"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
+                  echo '                <li><a href="#" id="flip-status"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
                 }
                 ?>
+                <!-- Settings -->
+                <li>
+                    <a href="settings.php">
+                        <i class="fa fa-gears"></i> <span>Settings</span>
+                    </a>
+                </li>
+                <!-- Logout -->
+                <?php
+                // Show Logout button if $auth is set and authorization is required
+                if(strlen($pwhash) > 0) { ?>
+                <li>
+                    <a href="index.php?logout">
+                        <i class="fa fa-user-times"></i> <span>Logout</span>
+                    </a>
+                </li>
+                <?php } ?>
+                <?php } ?>
+                <!-- Login -->
+                <?php
+                // Show Login button if $auth is *not* set and authorization is required
+                if(strlen($pwhash) > 0 && !$auth) { ?>
+                <li>
+                    <a href="index.php?login">
+                        <i class="fa fa-user"></i> <span>Login</span>
+                    </a>
+                </li>
+                <?php } ?>
                 <!-- Donate -->
                 <li>
                     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
                         <i class="fa fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
+                <?php if($auth){ ?>
+                <!-- Help -->
+                <li>
+                    <a href="help.php">
+                        <i class="fa fa-question-circle"></i> <span>Help</span>
+                    </a>
+                </li>
+                <?php } ?>
             </ul>
         </section>
         <!-- /.sidebar -->
@@ -205,3 +410,19 @@
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
+<?php
+    // If password is not equal to the password set
+    // in the setupVars.conf file, then we skip any
+    // content and just complete the page. If no
+    // password is set at all, we keep the current
+    // behavior: everything is always authorized
+    // and will be displayed
+    //
+    // If auth is required and not set, i.e. no successfully logged in,
+    // we show the reduced version of the summary (index) page
+    if(!$auth && (!isset($indexpage) || isset($_GET['login']))){
+        require "php/loginpage.php";
+        require "footer.php";
+        exit();
+    }
+?>
