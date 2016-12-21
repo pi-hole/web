@@ -5,8 +5,28 @@
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
     $log = new \SplFileObject('/var/log/pihole.log');
     $gravity = new \SplFileObject('/etc/pihole/list.preEventHorizon');
-    $whitelist = new \SplFileObject('/etc/pihole/whitelist.txt');
-    $blacklist = new \SplFileObject('/etc/pihole/blacklist.txt');
+
+    // whitelist.txt is optional and might not be there
+    $whiteListFile = "/etc/pihole/whitelist.txt";
+    if(file_exists($whiteListFile))
+    {
+        $whitelist = new \SplFileObject($whiteListFile);
+    }
+    else
+    {
+        $whitelist = new \SplFileObject("/dev/null");
+    }
+
+    // blacklist.txt is optional and might not be there
+    $blackListFile = "/etc/pihole/blacklist.txt";
+    if(file_exists($blacklistFile))
+    {
+        $blacklist = new \SplFileObject($blackListFile);
+    }
+    else
+    {
+        $blacklist = new \SplFileObject("/dev/null");
+    }
 
     /*******   Public Members ********/
     function getSummaryData() {
@@ -239,8 +259,15 @@
     /******** Private Members ********/
     function gravityCount() {
         $preEventHorizon = exec("grep -c ^ /etc/pihole/list.preEventHorizon");
-        $blacklist = exec("grep -c ^ /etc/pihole/blacklist.txt");
-        return ($preEventHorizon + $blacklist);
+        if(file_exists($blackListFile))
+        {
+            $blacklist = exec("grep -c ^ /etc/pihole/blacklist.txt");
+            return ($preEventHorizon + $blacklist);
+        }
+        else
+        {
+            return ($preEventHorizon);
+        }
     }
 
     function getDnsQueries(\SplFileObject $log) {
