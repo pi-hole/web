@@ -3,34 +3,34 @@
     $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
-    $log = new \SplFileObject('/var/log/pihole.log');
-    $gravity = new \SplFileObject('/etc/pihole/list.preEventHorizon');
+
+    function checkfile($filename) {
+        if(file_exists($filename))
+        {
+            return $filename;
+        }
+        else
+        {
+            // substitute dummy file
+            return "/dev/null";
+        }
+    }
+
+    // Check if pihole.log exists and is readable
+    $logListName = checkfile("/var/log/pihole.log");
+    $log = new \SplFileObject($logListName);
+
+    // Check if preEventHorizon exists and is readable
+    $gravityListName = checkfile("/etc/pihole/list.preEventHorizon");
+    $gravity = new \SplFileObject($gravityListName);
 
     // whitelist.txt is optional and might not be there
-    $whiteListFile = "/etc/pihole/whitelist.txt";
-    if(file_exists($whiteListFile))
-    {
-        // open real file
-        $whitelist = new \SplFileObject($whiteListFile);
-    }
-    else
-    {
-        // open empty file
-        $whitelist = new \SplFileObject("/dev/null");
-    }
+    $whiteListFile = checkfile("/etc/pihole/whitelist.txt");
+    $whitelist = new \SplFileObject($whiteListFile);
 
     // blacklist.txt is optional and might not be there
-    $blackListFile = "/etc/pihole/blacklist.txt";
-    if(file_exists($blackListFile))
-    {
-        // open real file
-        $blacklist = new \SplFileObject($blackListFile);
-    }
-    else
-    {
-        // open empty file
-        $blacklist = new \SplFileObject("/dev/null");
-    }
+    $blackListFile = checkfile("/etc/pihole/blacklist.txt");
+    $blacklist = new \SplFileObject($blackListFile);
 
     /*******   Public Members ********/
     function getSummaryData() {
