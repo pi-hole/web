@@ -7,4 +7,16 @@ function is_valid_domain_name($domain_name)
         preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)); //length of each label
 }
 
+function checkfile($filename) {
+    if(is_readable($filename))
+    {
+        return $filename;
+    }
+    else
+    {
+        // substitute dummy file
+        return "/dev/null";
+    }
+}
+
 ?>

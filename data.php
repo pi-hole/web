@@ -1,20 +1,10 @@
 <?php
+    require "php/func.php";
+
     $log = array();
     $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
-
-    function checkfile($filename) {
-        if(is_readable($filename))
-        {
-            return $filename;
-        }
-        else
-        {
-            // substitute dummy file
-            return "/dev/null";
-        }
-    }
 
     // Check if pihole.log exists and is readable
     $logListName = checkfile("/var/log/pihole.log");

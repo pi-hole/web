@@ -7,7 +7,9 @@ $type = $_GET['list'];
 if($type !== "white" && $type !== "black")
     die("Invalid list parameter");
 
-$rawList = file_get_contents("/etc/pihole/${type}list.txt");
+require "func.php";
+
+$rawList = file_get_contents(checkfile("/etc/pihole/${type}list.txt"));
 $list = explode("\n", $rawList);
 
 // Get rid of empty lines
