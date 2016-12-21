@@ -263,7 +263,7 @@
     /******** Private Members ********/
     function gravityCount() {
         global $blackListFile;
-        $preEventHorizon = exec("grep -c ^ /etc/pihole/list.preEventHorizon");
+        $preEventHorizon = exec("grep -c ^ $gravityListName");
         $blacklist = exec("grep -c ^ $blackListFile");
         return ($preEventHorizon + $blacklist);
     }
@@ -280,7 +280,7 @@
     }
 
     function countDnsQueries() {
-        return exec("grep -c \": query\\[\" /var/log/pihole.log");
+        return exec("grep -c \": query\\[\" $logListName");
     }
 
     function getDnsQueriesAll(\SplFileObject $log) {
@@ -353,7 +353,7 @@
 
     function countBlockedQueries() {
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
-        return exec("grep \"gravity.list\" /var/log/pihole.log | grep -v \"pi.hole\" | grep -v \" read \" | grep -v -c \"".$hostname."\"");
+        return exec("grep \"gravity.list\" $logListName | grep -v \"pi.hole\" | grep -v \" read \" | grep -v -c \"".$hostname."\"");
     }
 
     function getForwards(\SplFileObject $log) {
