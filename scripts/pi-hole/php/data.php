@@ -262,7 +262,7 @@
 
     /******** Private Members ********/
     function gravityCount() {
-        global $blackListFile;
+        global $gravityListName,$blackListFile;
         $preEventHorizon = exec("grep -c ^ $gravityListName");
         $blacklist = exec("grep -c ^ $blackListFile");
         return ($preEventHorizon + $blacklist);
@@ -280,6 +280,7 @@
     }
 
     function countDnsQueries() {
+        global $logListName;
         return exec("grep -c \": query\\[\" $logListName");
     }
 
@@ -352,6 +353,7 @@
     }
 
     function countBlockedQueries() {
+        global $logListName;
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
         return exec("grep \"gravity.list\" $logListName | grep -v \"pi.hole\" | grep -v \" read \" | grep -v -c \"".$hostname."\"");
     }
