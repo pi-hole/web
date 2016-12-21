@@ -10,10 +10,12 @@
     $whiteListFile = "/etc/pihole/whitelist.txt";
     if(file_exists($whiteListFile))
     {
+        // open real file
         $whitelist = new \SplFileObject($whiteListFile);
     }
     else
     {
+        // open empty file
         $whitelist = new \SplFileObject("/dev/null");
     }
 
@@ -21,10 +23,12 @@
     $blackListFile = "/etc/pihole/blacklist.txt";
     if(file_exists($blackListFile))
     {
+        // open real file
         $blacklist = new \SplFileObject($blackListFile);
     }
     else
     {
+        // open empty file
         $blacklist = new \SplFileObject("/dev/null");
     }
 
