@@ -1,6 +1,6 @@
 <?php
-	require "header.php";
-	require "php/savesettings.php";
+	require "scripts/pi-hole/php/header.php";
+	require "scripts/pi-hole/php/savesettings.php";
 	// Reread ini file as things might have been changed
 	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 ?>
@@ -140,7 +140,7 @@
 								<input type="text" class="form-control DHCPgroup" name="to" value="<?php echo $DHCPend; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
-					<label>Router IP address</label>
+					<label>Router (gateway) IP address</label>
 					<div class="col-md-12">
 						<div class="input-group">
 							<div class="input-group-addon">Router</div>
@@ -329,7 +329,7 @@
 ?>
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">Query Logging (size of log <?php echo formatSizeUnits(filesize("/var/log/pihole.log")); ?>)</h3>
+				<h3 class="box-title">Query Logging<?php if($piHoleLogging) { ?> (size of log <?php echo formatSizeUnits(filesize("/var/log/pihole.log")); ?>)<?php } ?></h3>
 			</div>
 			<div class="box-body">
 				<p>Current status:
@@ -489,6 +489,7 @@
 				<h4>CPU Temperature Unit</h4>
 				<div class="form-group">
 					<div class="radio"><label><input type="radio" name="tempunit" value="C" <?php if($temperatureunit === "C"){ ?>checked<?php } ?> >Celsius</label></div>
+					<div class="radio"><label><input type="radio" name="tempunit" value="K" <?php if($temperatureunit === "K"){ ?>checked<?php } ?> >Kelvin</label></div>
 					<div class="radio"><label><input type="radio" name="tempunit" value="F" <?php if($temperatureunit === "F"){ ?>checked<?php } ?> >Fahrenheit</label></div>
 				</div>
 			</div>
@@ -538,10 +539,10 @@
 </div>
 
 <?php
-    require "footer.php";
+    require "scripts/pi-hole/php/footer.php";
 ?>
-<script src="js/other/jquery.inputmask.js"></script>
-<script src="js/other/jquery.inputmask.extensions.js"></script>
-<script src="js/other/jquery.confirm.min.js"></script>
-<script src="js/pihole/settings.js"></script>
+<script src="scripts/vendor/jquery.inputmask.js"></script>
+<script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
+<script src="scripts/vendor/jquery.confirm.min.js"></script>
+<script src="scripts/pi-hole/js/settings.js"></script>
 

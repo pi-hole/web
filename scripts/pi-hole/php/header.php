@@ -1,21 +1,49 @@
 <?php
-    require "php/auth.php";
-    require "php/password.php";
+    require "scripts/pi-hole/php/auth.php";
+    require "scripts/pi-hole/php/password.php";
 
     check_cors();
 
-    $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
-    $output = shell_exec($cmd);
-    $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
-    $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
-
-    if(isset($setupVars['TEMPERATUREUNIT']))
+    // Try to get temperature value from different places (OS dependent)
+    if(file_exists("/sys/class/thermal/thermal_zone0/temp"))
     {
-        $temperatureunit = $setupVars['TEMPERATUREUNIT'];
+        $output = rtrim(file_get_contents("/sys/class/thermal/thermal_zone0/temp"));
+    }
+    elseif (file_exists("/sys/class/hwmon/hwmon0/temp1_input"))
+    {
+        $output = rtrim(file_get_contents("/sys/class/hwmon/hwmon0/temp1_input"));
     }
     else
     {
-        $temperatureunit = "C";
+        $output = "";
+    }
+
+    // Test if we succeeded in getting the temperature
+    if(is_numeric($output))
+    {
+        $celsius = intVal($output)*1e-3;
+        $kelvin = $celsius + 273.15;
+        $fahrenheit = ($celsius*9./5)+32.0;
+
+        if(isset($setupVars['TEMPERATUREUNIT']))
+        {
+            $temperatureunit = $setupVars['TEMPERATUREUNIT'];
+        }
+        else
+        {
+            $temperatureunit = "C";
+        }
+        // Override temperature unit setting if it is changed via Settings page
+        if(isset($_POST["tempunit"]))
+        {
+            $temperatureunit = $_POST["tempunit"];
+        }
+    }
+    else
+    {
+        // Nothing can be colder than -273.15 degree Celsius (= 0 Kelvin)
+        // This is the minimum temperature possible (AKA absolute zero)
+        $celsius = -273.16;
     }
 
     // Get load
@@ -25,15 +53,27 @@
     $nproc = shell_exec('nproc');
 
     // Get memory usage
-    $free = shell_exec('free');
-    $free = (string)trim($free);
-    $free_arr = explode("\n", $free);
-    $mem = explode(" ", $free_arr[1]);
-    $mem = array_filter($mem);
-    $mem = array_merge($mem);
-    $used = $mem[2] - $mem[5] - $mem[6];
-    $total = $mem[1];
-    $memory_usage = $used/$total*100;
+    $data = explode("\n", file_get_contents("/proc/meminfo"));
+    $meminfo = array();
+    if(count($data) > 0)
+    {
+        foreach ($data as $line) {
+            $expl = explode(":", trim($line));
+            if(count($expl) == 2)
+            {
+                // remove " kB" from the end of the string and make it an integer
+                $meminfo[$expl[0]] = intVal(substr($expl[1],0, -3));
+            }
+        }
+        $memory_used = $meminfo["MemTotal"]-$meminfo["MemFree"]-$meminfo["Buffers"]-$meminfo["Cached"];
+        $memory_total = $meminfo["MemTotal"];
+        $memory_usage = $memory_used/$memory_total;
+    }
+    else
+    {
+        $memory_usage = -1;
+    }
+
 
     // For session timer
     $maxlifetime = ini_get("session.gc_maxlifetime");
@@ -60,7 +100,7 @@
         $boxedlayout = true;
     }
 
-    // Override layout setting if layout is changed via Settings page3
+    // Override layout setting if layout is changed via Settings page
     if(isset($_POST["field"]))
     {
         if($_POST["field"] === "webUI" && isset($_POST["boxedlayout"]))
@@ -80,6 +120,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'">
     <title>Pi-hole Admin Console</title>
+    <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
+    <meta http-equiv="x-dns-prefetch-control" content="off">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
@@ -91,13 +133,13 @@
     <meta name="msapplication-TileImage" content="img/logo.svg">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="css/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <link href="css/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-    <link href="css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="style/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="style/vendor/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="style/vendor/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+    <link href="style/vendor/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
 
-    <link href="css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
-    <link href="css/skin-blue.min.css" rel="stylesheet" type="text/css" />
+    <link href="style/vendor/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <link href="style/vendor/skin-blue.min.css" rel="stylesheet" type="text/css" />
     <link rel="icon" type="image/png" sizes="160x160" href="img/logo.svg" />
     <style type="text/css">
         .glow { text-shadow: 0px 0px 5px #fff; }
@@ -105,20 +147,20 @@
     </style>
 
     <!--[if lt IE 9]>
-    <script src="js/other/html5shiv.min.js"></script>
-    <script src="js/other/respond.min.js"></script>
+    <script src="scripts/vendor/html5shiv.min.js"></script>
+    <script src="scripts/vendor/respond.min.js"></script>
     <![endif]-->
 </head>
 <body class="skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <!-- JS Warning -->
 <div>
-    <link rel="stylesheet" type="text/css" href="css/js-warn.css">
+    <link rel="stylesheet" type="text/css" href="style/vendor/js-warn.css">
     <input type="checkbox" id="js-hide" />
     <div class="js-warn" id="js-warn-exit"><h1>Javascript Is Disabled</h1><p>Javascript seems to be disabled. This will break some site features.</p>
         <p>To enable Javascript click <a href="http://www.enable-javascript.com/" target="_blank">here</a></p><label for="js-hide">Close</label></div>
 </div>
 <!-- /JS Warning -->
-<script src="js/pihole/header.js"></script>
+<script src="scripts/pi-hole/js/header.js"></script>
 <!-- Send token to JS -->
 <div id="token" hidden><?php echo $token ?></div>
 <div class="wrapper">
@@ -213,20 +255,30 @@
                         }
 
                         // CPU Temp
-                        echo '<a href="#" id="temperature"><i class="fa fa-fire" style="color:';
-                        if ($celsius > "45") {
-                            echo '#FF0000';
+                        if ($celsius >= -273.15) {
+                            echo "<a href=\"#\" id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
+                            if ($celsius > 45) {
+                                echo "#FF0000";
+                            }
+                            else
+                            {
+                                echo "#3366FF";
+                            }
+                            echo "\"></i> Temp:&nbsp;";
+                            if($temperatureunit === "F")
+                            {
+                                echo round($fahrenheit,1) . "&deg;F";
+                            }
+                            elseif($temperatureunit === "K")
+                            {
+                                echo round($kelvin,1) . "K";
+                            }
+                            else
+                            {
+                                echo round($celsius,1) . "&deg;C";
+                            }
+                            echo "</a>";
                         }
-                        else
-                        {
-                            echo '#3366FF';
-                        }
-                        echo '"></i> Temp:&nbsp;';
-                        if($temperatureunit != "F")
-                            echo $celsius . '&deg;C';
-                        else
-                            echo $fahrenheit . '&deg;F';
-                        echo '</a>';
                     ?>
                     <br/>
                     <?php
@@ -243,14 +295,21 @@
                     <br/>
                     <?php
                     echo '<a href="#"><i class="fa fa-circle" style="color:';
-                        if ($memory_usage > 75) {
+                        if ($memory_usage > 0.75 || $memory_usage < 0.0) {
                             echo '#FF0000';
                         }
                         else
                         {
                             echo '#7FFF00';
                         }
-                        echo '""></i> Memory usage:&nbsp;&nbsp;' . sprintf("%.1f",$memory_usage) . '%</a>';
+                        if($memory_usage > 0.0)
+                        {
+                            echo '""></i> Memory usage:&nbsp;&nbsp;' . sprintf("%.1f",100.0*$memory_usage) . '%</a>';
+                        }
+                        else
+                        {
+                            echo '""></i> Memory usage:&nbsp;&nbsp; N/A</a>';
+                        }
                     ?>
                 </div>
             </div>
@@ -361,14 +420,8 @@
     //
     // If auth is required and not set, i.e. no successfully logged in,
     // we show the reduced version of the summary (index) page
-    if(!$auth && (!isset($indexpage) || isset($_GET['login']))){ ?>
-<div class="page-header">
-    <h1>Login required!</h1>
-</div>
-<form action="" method="POST">
-  Password: <input type="password" name="pw">&nbsp;<input type="submit" value="Login">
-</form>
-<?php
+    if(!$auth && (!isset($indexpage) || isset($_GET['login']))){
+        require "scripts/pi-hole/php/loginpage.php";
         require "footer.php";
         exit();
     }

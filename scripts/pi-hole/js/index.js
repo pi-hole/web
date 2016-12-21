@@ -25,36 +25,32 @@ function objectToArray(p){
 
 
 function updateSummaryData(runOnce) {
+    var setTimer = function(timeInSeconds) {
+        if (!runOnce) {
+            setTimeout(updateSummaryData, timeInSeconds * 1000);
+        }
+    };
     $.getJSON("api.php?summary", function LoadSummaryData(data) {
-        //$("h3.statistic").addClass("glow");
-        if ($("h3#ads_blocked_today").text() != data.ads_blocked_today) {
-            $("h3#ads_blocked_today").addClass("glow");
-        }
-        if ($("h3#dns_queries_today").text() != data.dns_queries_today) {
-            $("h3#dns_queries_today").addClass("glow");
-        }
-        if ($("h3#ads_percentage_today").text() != data.ads_percentage_today) {
-            $("h3#ads_percentage_today").addClass("glow");
-        }
 
-        window.setTimeout(function(){
-            $("h3#ads_blocked_today").text(data.ads_blocked_today);
-            $("h3#dns_queries_today").text(data.dns_queries_today);
-            $("h3#domains_being_blocked").text(data.domains_being_blocked);
-            $("h3#ads_percentage_today").text(data.ads_percentage_today + "%");
-            $("h3.statistic.glow").removeClass("glow")
+        ["ads_blocked_today", "dns_queries_today", "ads_percentage_today"].forEach(function(today) {
+            var todayElement = $("h3#" + today);
+            todayElement.text() !== data[today] && todayElement.addClass("glow");
+        });
+
+        window.setTimeout(function() {
+            ["ads_blocked_today", "dns_queries_today", "domains_being_blocked", "ads_percentage_today"].forEach(function(header, idx) {
+                var textData = idx === 3 ? data[header] + "%" : data[header];
+                $("h3#" + header).text(textData);
+            });
+            $("h3.statistic.glow").removeClass("glow");
         }, 500);
 
         updateSessionTimer();
     }).done(function() {
-        if (runOnce !== true) {
-            setTimeout(updateSummaryData, 10000);
-        }
+        setTimer(10);
     }).fail(function() {
-        if (runOnce !== true) {
-            setTimeout(updateSummaryData, (1000 * 60 * 5));
-        }
-    });;
+        setTimer(300);
+    });
 }
 
 var failures = 0;
@@ -80,7 +76,7 @@ function updateQueriesOverTime() {
                 timeLineChart.data.datasets[1].data.push(data.ads_over_time[1][hour]);
             }
         }
-        $('#queries-over-time .overlay').remove();
+        $("#queries-over-time .overlay").remove();
         timeLineChart.update();
     }).done(function() {
         // Reload graph after 10 minutes
@@ -113,7 +109,7 @@ function updateQueryTypes() {
         var dd = {data: v, backgroundColor: c};
         // and push it at once
         queryTypeChart.data.datasets.push(dd);
-        $('#query-types .overlay').remove();
+        $("#query-types .overlay").remove();
         queryTypeChart.update();
         queryTypeChart.chart.config.options.cutoutPercentage=30;
         queryTypeChart.update();
@@ -135,20 +131,24 @@ function escapeHtml(text) {
 
 function updateTopClientsChart() {
     $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
-        var clienttable =  $('#client-frequency').find('tbody:last');
+        var clienttable =  $("#client-frequency").find("tbody:last");
         var domain, percentage;
         for (domain in data.top_sources) {
-            // Sanitize domain
-            domain = escapeHtml(domain);
 
-            var url = "<a href=\"queries.php?client="+domain+"\">"+domain+"</a>";
-            percentage = data.top_sources[domain] / data.dns_queries_today * 100;
-            clienttable.append("<tr> <td>" + url +
-                "</td> <td>" + data.top_sources[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
-                percentage + "%\"></div> </div> </td> </tr> ");
+            if ({}.hasOwnProperty.call(data.top_sources, domain)){
+                // Sanitize domain
+                domain = escapeHtml(domain);
+
+                var url = "<a href=\"queries.php?client="+domain+"\">"+domain+"</a>";
+                percentage = data.top_sources[domain] / data.dns_queries_today * 100;
+                clienttable.append("<tr> <td>" + url +
+                    "</td> <td>" + data.top_sources[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
+                    percentage + "%\"></div> </div> </td> </tr> ");
+            }
+
         }
 
-        $('#client-frequency .overlay').remove();
+        $("#client-frequency .overlay").remove();
     });
 }
 
@@ -168,7 +168,7 @@ function updateForwardDestinations() {
         var dd = {data: v, backgroundColor: c};
         // and push it at once
         forwardDestinationChart.data.datasets.push(dd);
-        $('#forward-destinations .overlay').remove();
+        $("#forward-destinations .overlay").remove();
         forwardDestinationChart.update();
         forwardDestinationChart.chart.config.options.cutoutPercentage=30;
         forwardDestinationChart.update();
@@ -177,34 +177,39 @@ function updateForwardDestinations() {
 
 function updateTopLists() {
     $.getJSON("api.php?summaryRaw&topItems", function(data) {
-        var domaintable = $('#domain-frequency').find('tbody:last');
-        var adtable = $('#ad-frequency').find('tbody:last');
+        var domaintable = $("#domain-frequency").find("tbody:last");
+        var adtable = $("#ad-frequency").find("tbody:last");
         var url, domain, percentage;
 
         for (domain in data.top_queries) {
-            // Sanitize domain
-            domain = escapeHtml(domain);
-            if(domain !== "pi.hole")
-            {
-                url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
+            if ({}.hasOwnProperty.call(data.top_queries,domain)){
+                // Sanitize domain
+                domain = escapeHtml(domain);
+                if(domain !== "pi.hole")
+                {
+                    url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
+                }
+                else
+                {
+                    url = domain;
+                }
+                percentage = data.top_queries[domain] / data.dns_queries_today * 100;
+                domaintable.append("<tr> <td>" + url +
+                    "</td> <td>" + data.top_queries[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
+                    percentage + "%\"></div> </div> </td> </tr> ");
             }
-            else
-            {
-                url = domain;
-            }
-            percentage = data.top_queries[domain] / data.dns_queries_today * 100;
-            domaintable.append("<tr> <td>" + url +
-                "</td> <td>" + data.top_queries[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
-                percentage + "%\"></div> </div> </td> </tr> ");
+
         }
         for (domain in data.top_ads) {
-            // Sanitize domain
-            domain = escapeHtml(domain);
-            url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
-            percentage = data.top_ads[domain] / data.ads_blocked_today * 100;
-            adtable.append("<tr> <td>" + url +
-                "</td> <td>" + data.top_ads[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-yellow\" style=\"width: " +
-                 percentage + "%\"></div> </div> </td> </tr> ");
+            if ({}.hasOwnProperty.call(data.top_ads,domain)){
+                // Sanitize domain
+                domain = escapeHtml(domain);
+                url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
+                percentage = data.top_ads[domain] / data.ads_blocked_today * 100;
+                adtable.append("<tr> <td>" + url +
+                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-yellow\" style=\"width: " +
+                    percentage + "%\"></div> </div> </td> </tr> ");
+            }
         }
 
         $("#domain-frequency .overlay").remove();
@@ -277,6 +282,23 @@ $(document).ready(function() {
                             var from = padNumber(h)+":"+padNumber(m)+":00";
                             var to = padNumber(h)+":"+padNumber(m+9)+":59";
                             return "Queries from "+from+" to "+to;
+                        },
+                        label(tooltipItems, data) {
+                            if(tooltipItems.datasetIndex === 1)
+                            {
+                                var percentage = 0.0;
+                                var total = parseInt(data.datasets[0].data[tooltipItems.index]);
+                                var blocked = parseInt(data.datasets[1].data[tooltipItems.index]);
+                                if(total > 0)
+                                {
+                                    percentage = 100.0*blocked/total;
+                                }
+                                return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel + " (" + percentage.toFixed(1) + "%)";
+                            }
+                            else
+                            {
+                                return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
+                            }
                         }
                     }
                 },

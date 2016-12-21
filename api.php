@@ -1,11 +1,11 @@
 <?php
     $api = true;
-    require "php/password.php";
-    require "php/auth.php";
+    require "scripts/pi-hole/php/password.php";
+    require "scripts/pi-hole/php/auth.php";
 
     check_cors();
 
-    include('data.php');
+    include('scripts/pi-hole/php/data.php');
     header('Content-type: application/json');
 
     $data = array();
@@ -77,19 +77,19 @@
     }
 
     if (isset($_GET['getGravityDomains'])) {
-        $data = array_merge($data, getGravityDomains($gravity));
+        $data = array_merge($data, getGravity());
     }
 
-    function filterArray(&$a) {
-	    $sanArray = array();
-	    foreach ($a as $k=>$v) {
-	        if (is_array($v)) {
-	            $sanArray[htmlspecialchars($k)] = filterArray($v);
+    function filterArray(&$inArray) {
+	    $outArray = array();
+	    foreach ($inArray as $key=>$value) {
+	        if (is_array($value)) {
+	            $outArray[htmlspecialchars($key)] = filterArray($value);
             } else {
-	            $sanArray[htmlspecialchars($k)] = htmlspecialchars($v);
+	            $outArray[htmlspecialchars($key)] = htmlspecialchars($value);
             }
 	    }
-	    return $sanArray;
+	    return $outArray;
     }
 
     $data = filterArray($data);
