@@ -1,6 +1,4 @@
 <?php
-    require "php/func.php";
-
     $log = array();
     $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 
