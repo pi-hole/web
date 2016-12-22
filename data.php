@@ -1,9 +1,24 @@
 <?php
     $log = array();
     $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
-    $log = new \SplFileObject('/var/log/pihole.log');
-    $gravity = new \SplFileObject('/etc/pihole/list.preEventHorizon');
+
+    // Check if pihole.log exists and is readable
+    $logListName = checkfile("/var/log/pihole.log");
+    $log = new \SplFileObject($logListName);
+
+    // Check if preEventHorizon exists and is readable
+    $gravityListName = checkfile("/etc/pihole/list.preEventHorizon");
+    $gravity = new \SplFileObject($gravityListName);
+
+    // whitelist.txt is optional and might not be there
+    $whiteListFile = checkfile("/etc/pihole/whitelist.txt");
+    $whitelist = new \SplFileObject($whiteListFile);
+
+    // blacklist.txt is optional and might not be there
+    $blackListFile = checkfile("/etc/pihole/blacklist.txt");
+    $blacklist = new \SplFileObject($blackListFile);
 
     if(isset($setupVars["API_PRIVACY_MODE"]))
     {
@@ -158,7 +173,7 @@
 
     function setShowBlockedPermitted()
     {
-        global $showBlocked, $showPermitted;
+        global $showBlocked, $showPermitted, $setupVars;
         if(isset($setupVars["API_QUERY_LOG_SHOW"]))
         {
             if($setupVars["API_QUERY_LOG_SHOW"] === "all")
@@ -176,7 +191,7 @@
                 $showBlocked = true;
                 $showPermitted = false;
             }
-            elseif($setupVars["API_QUERY_LOG_SHOW"] === "none")
+            elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
             {
                 $showBlocked = false;
                 $showPermitted = false;
@@ -196,10 +211,12 @@
     }
 
     function getAllQueries($orderBy) {
-        global $log,$gravity,$showBlocked,$showPermitted,$privacyMode;
+        global $log,$showBlocked,$showPermitted,$privacyMode;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueriesAll($log);
-        $gravity_domains = getGravityDomains($gravity);
+
+        // Create empty array for gravity
+        $gravity_domains = getGravity();
 
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
@@ -249,8 +266,9 @@
 
     /******** Private Members ********/
     function gravityCount() {
-        $preEventHorizon = exec("grep -c ^ /etc/pihole/list.preEventHorizon");
-        $blacklist = exec("grep -c ^ /etc/pihole/blacklist.txt");
+        global $gravityListName,$blackListFile;
+        $preEventHorizon = exec("grep -c ^ $gravityListName");
+        $blacklist = exec("grep -c ^ $blackListFile");
         return ($preEventHorizon + $blacklist);
     }
 
@@ -266,7 +284,8 @@
     }
 
     function countDnsQueries() {
-        return exec("grep -c \": query\\[\" /var/log/pihole.log");
+        global $logListName;
+        return exec("grep -c \": query\\[\" $logListName");
     }
 
     function getDnsQueriesAll(\SplFileObject $log) {
@@ -280,16 +299,41 @@
         return $lines;
     }
 
-    function getGravityDomains($gravity){
-        $gravity->rewind();
-        $lines=[];
-        foreach ($gravity as $line) {
-            // Strip newline (and possibly carriage return) from end of string
-            // using rtrim()
-            $lines[rtrim($line)] = true;
+    function getDomains($file, &$array, $action){
+        $file->rewind();
+        foreach ($file as $line) {
+            // Strip newline (and possibly carriage return) from end of key
+            $key = rtrim($line);
+            // if $action = true -> we want that domain to be ADDED to the list
+            // doesn't harm to do this if it has already been set before
+            // (e.g. once in gravity list, once in blacklist)
+            if($action && strlen($key) > 0)
+            {
+                // $action is true (we want to add) *and* key is not empty
+                $array[$key] = true;
+            }
+            elseif(!$action && isset($array[$key]))
+            {
+                // $action is false (we want to remove) *and* key is set
+                unset($array[$key]);
+            }
         }
+    }
 
-        return $lines;
+    function getGravity() {
+        global $gravity,$whitelist,$blacklist;
+        $domains = [];
+
+        // ADD (true) preEventHorizon domains
+        getDomains($gravity, $domains, true);
+
+        // ADD (true) blacklist domains
+        getDomains($blacklist, $domains, true);
+
+        // REMOVE (false) whitelist domains
+        getDomains($whitelist, $domains, false);
+
+        return $domains;
     }
 
     function getBlockedQueries(\SplFileObject $log) {
@@ -313,8 +357,9 @@
     }
 
     function countBlockedQueries() {
+        global $logListName;
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
-        return exec("grep \"gravity.list\" /var/log/pihole.log | grep -v \"pi.hole\" | grep -v \" read \" | grep -v -c \"".$hostname."\"");
+        return exec("grep \"gravity.list\" $logListName | grep -v \"pi.hole\" | grep -v \" read \" | grep -v -c \"".$hostname."\"");
     }
 
     function getForwards(\SplFileObject $log) {

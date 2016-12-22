@@ -20,6 +20,8 @@
         session_unset();
     }
 
+    $wrongpassword = false;
+
     // Test if password is set
     if(strlen($pwhash) > 0)
     {
@@ -31,6 +33,10 @@
             {
                 $_SESSION["hash"] = $pwhash;
                 $auth = true;
+            }
+            else
+            {
+                $wrongpassword = true;
             }
         }
         // Compare auth hash with saved hash

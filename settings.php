@@ -106,10 +106,17 @@
 	{
 		$DHCP = false;
 		// Try to guess initial settings
-		$DHCPdomain = explode(".",$piHoleIPv4);
-		$DHCPstart  = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".201";
-		$DHCPend    = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".251";
-		$DHCProuter = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".1";
+		if($piHoleIPv4 !== "unknown") {
+			$DHCPdomain = explode(".",$piHoleIPv4);
+			$DHCPstart  = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".201";
+			$DHCPend    = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".251";
+			$DHCProuter = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".1";
+		}
+		else {
+			$DHCPstart  = "";
+			$DHCPend    = "";
+			$DHCProuter = "";
+		}
 	}
 	if(isset($setupVars["PIHOLE_DOMAIN"])){
 		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
@@ -140,7 +147,7 @@
 								<input type="text" class="form-control DHCPgroup" name="to" value="<?php echo $DHCPend; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
-					<label>Router IP address</label>
+					<label>Router (gateway) IP address</label>
 					<div class="col-md-12">
 						<div class="input-group">
 							<div class="input-group-addon">Router</div>
@@ -361,7 +368,7 @@
 	{
 		$excludedDomains = explode(",", $setupVars["API_EXCLUDE_DOMAINS"]);
 	} else {
-		$excludedDomains = "";
+		$excludedDomains = [];
 	}
 
 	// Exluded clients in API Query Log call
@@ -369,7 +376,7 @@
 	{
 		$excludedClients = explode(",", $setupVars["API_EXCLUDE_CLIENTS"]);
 	} else {
-		$excludedClients = "";
+		$excludedClients = [];
 	}
 
 	// Exluded clients
@@ -465,6 +472,7 @@
 				<h4>CPU Temperature Unit</h4>
 				<div class="form-group">
 					<div class="radio"><label><input type="radio" name="tempunit" value="C" <?php if($temperatureunit === "C"){ ?>checked<?php } ?> >Celsius</label></div>
+					<div class="radio"><label><input type="radio" name="tempunit" value="K" <?php if($temperatureunit === "K"){ ?>checked<?php } ?> >Kelvin</label></div>
 					<div class="radio"><label><input type="radio" name="tempunit" value="F" <?php if($temperatureunit === "F"){ ?>checked<?php } ?> >Fahrenheit</label></div>
 				</div>
 			</div>

@@ -77,7 +77,7 @@
     }
 
     if (isset($_GET['getGravityDomains'])) {
-        $data = array_merge($data, getGravityDomains($gravity));
+        $data = array_merge($data, getGravity());
     }
 
     function filterArray(&$inArray) {

@@ -4,18 +4,46 @@
 
     check_cors();
 
-    $cmd = "echo $((`cat /sys/class/thermal/thermal_zone0/temp | cut -c1-2`))";
-    $output = shell_exec($cmd);
-    $celsius = str_replace(array("\r\n","\r","\n"),"", $output);
-    $fahrenheit = round(str_replace(["\r\n","\r","\n"],"", $output*9./5)+32);
-
-    if(isset($setupVars['TEMPERATUREUNIT']))
+    // Try to get temperature value from different places (OS dependent)
+    if(file_exists("/sys/class/thermal/thermal_zone0/temp"))
     {
-        $temperatureunit = $setupVars['TEMPERATUREUNIT'];
+        $output = rtrim(file_get_contents("/sys/class/thermal/thermal_zone0/temp"));
+    }
+    elseif (file_exists("/sys/class/hwmon/hwmon0/temp1_input"))
+    {
+        $output = rtrim(file_get_contents("/sys/class/hwmon/hwmon0/temp1_input"));
     }
     else
     {
-        $temperatureunit = "C";
+        $output = "";
+    }
+
+    // Test if we succeeded in getting the temperature
+    if(is_numeric($output))
+    {
+        $celsius = intVal($output)*1e-3;
+        $kelvin = $celsius + 273.15;
+        $fahrenheit = ($celsius*9./5)+32.0;
+
+        if(isset($setupVars['TEMPERATUREUNIT']))
+        {
+            $temperatureunit = $setupVars['TEMPERATUREUNIT'];
+        }
+        else
+        {
+            $temperatureunit = "C";
+        }
+        // Override temperature unit setting if it is changed via Settings page
+        if(isset($_POST["tempunit"]))
+        {
+            $temperatureunit = $_POST["tempunit"];
+        }
+    }
+    else
+    {
+        // Nothing can be colder than -273.15 degree Celsius (= 0 Kelvin)
+        // This is the minimum temperature possible (AKA absolute zero)
+        $celsius = -273.16;
     }
 
     // Get load
@@ -30,9 +58,12 @@
     if(count($data) > 0)
     {
         foreach ($data as $line) {
-            list($key, $val) = explode(":", $line);
-            // remove " kB" fron the end of the string and make an integer
-            $meminfo[$key] = intVal(substr(trim($val),0, -3));
+            $expl = explode(":", trim($line));
+            if(count($expl) == 2)
+            {
+                // remove " kB" from the end of the string and make it an integer
+                $meminfo[$expl[0]] = intVal(substr($expl[1],0, -3));
+            }
         }
         $memory_used = $meminfo["MemTotal"]-$meminfo["MemFree"]-$meminfo["Buffers"]-$meminfo["Cached"];
         $memory_total = $meminfo["MemTotal"];
@@ -69,7 +100,7 @@
         $boxedlayout = true;
     }
 
-    // Override layout setting if layout is changed via Settings page3
+    // Override layout setting if layout is changed via Settings page
     if(isset($_POST["field"]))
     {
         if($_POST["field"] === "webUI" && isset($_POST["boxedlayout"]))
@@ -89,6 +120,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'">
     <title>Pi-hole Admin Console</title>
+    <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
+    <meta http-equiv="x-dns-prefetch-control" content="off">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
@@ -222,20 +255,30 @@
                         }
 
                         // CPU Temp
-                        echo '<a href="#" id="temperature"><i class="fa fa-fire" style="color:';
-                        if ($celsius > "45") {
-                            echo '#FF0000';
+                        if ($celsius >= -273.15) {
+                            echo "<a href=\"#\" id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
+                            if ($celsius > 45) {
+                                echo "#FF0000";
+                            }
+                            else
+                            {
+                                echo "#3366FF";
+                            }
+                            echo "\"></i> Temp:&nbsp;";
+                            if($temperatureunit === "F")
+                            {
+                                echo round($fahrenheit,1) . "&deg;F";
+                            }
+                            elseif($temperatureunit === "K")
+                            {
+                                echo round($kelvin,1) . "K";
+                            }
+                            else
+                            {
+                                echo round($celsius,1) . "&deg;C";
+                            }
+                            echo "</a>";
                         }
-                        else
-                        {
-                            echo '#3366FF';
-                        }
-                        echo '"></i> Temp:&nbsp;';
-                        if($temperatureunit != "F")
-                            echo $celsius . '&deg;C';
-                        else
-                            echo $fahrenheit . '&deg;F';
-                        echo '</a>';
                     ?>
                     <br/>
                     <?php
@@ -377,14 +420,8 @@
     //
     // If auth is required and not set, i.e. no successfully logged in,
     // we show the reduced version of the summary (index) page
-    if(!$auth && (!isset($indexpage) || isset($_GET['login']))){ ?>
-<div class="page-header">
-    <h1>Login required!</h1>
-</div>
-<form action="" method="POST">
-  Password: <input type="password" name="pw">&nbsp;<input type="submit" value="Login">
-</form>
-<?php
+    if(!$auth && (!isset($indexpage) || isset($_GET['login']))){
+        require "php/loginpage.php";
         require "footer.php";
         exit();
     }
