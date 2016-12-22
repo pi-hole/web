@@ -106,10 +106,17 @@
 	{
 		$DHCP = false;
 		// Try to guess initial settings
-		$DHCPdomain = explode(".",$piHoleIPv4);
-		$DHCPstart  = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".201";
-		$DHCPend    = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".251";
-		$DHCProuter = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".1";
+		if($piHoleIPv4 !== "unknown") {
+			$DHCPdomain = explode(".",$piHoleIPv4);
+			$DHCPstart  = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".201";
+			$DHCPend    = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".251";
+			$DHCProuter = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".1";
+		}
+		else {
+			$DHCPstart  = "";
+			$DHCPend    = "";
+			$DHCProuter = "";
+		}
 	}
 	if(isset($setupVars["PIHOLE_DOMAIN"])){
 		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
@@ -361,7 +368,7 @@
 	{
 		$excludedDomains = explode(",", $setupVars["API_EXCLUDE_DOMAINS"]);
 	} else {
-		$excludedDomains = "";
+		$excludedDomains = [];
 	}
 
 	// Exluded clients in API Query Log call
@@ -369,7 +376,7 @@
 	{
 		$excludedClients = explode(",", $setupVars["API_EXCLUDE_CLIENTS"]);
 	} else {
-		$excludedClients = "";
+		$excludedClients = [];
 	}
 
 	// Exluded clients

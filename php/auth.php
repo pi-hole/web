@@ -15,9 +15,12 @@ function log_and_die($message) {
 }
 
 function check_cors() {
+    $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+    $ipv4 = isset($setupVars["IPV4_ADDRESS"]) ? explode("/", $setupVars["IPV4_ADDRESS"])[0] : $_SERVER['SERVER_ADDR'];
+
     // Check CORS
     $AUTHORIZED_HOSTNAMES = array(
-        'http://' . $_SERVER['SERVER_ADDR'],
+        'http://' . $ipv4,
         'http://' . $_SERVER['SERVER_NAME'],
         'http://pi.hole',
         'http://localhost'
@@ -30,8 +33,16 @@ function check_cors() {
 
     // Since the Host header is easily manipulated, we can only check if it's wrong and can't use it
     // to validate that the client is authorized, only unauthorized.
-    if(isset($_SERVER['HTTP_HOST']) && !in_array("http://".$_SERVER['HTTP_HOST'], $AUTHORIZED_HOSTNAMES)) {
-        log_and_die("Failed Host Check: " . $_SERVER['HTTP_HOST'] .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
+    $server_host = $_SERVER['HTTP_HOST'];
+
+    // If HTTP_HOST contains a non-standard port (!= 80) we have to strip the port
+    if(strpos($server_host,":"))
+    {
+        $server_host = parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST);
+    }
+
+    if(isset($_SERVER['HTTP_HOST']) && !in_array("http://".$server_host, $AUTHORIZED_HOSTNAMES)) {
+        log_and_die("Failed Host Check: " . $server_host .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
     }
 
     if(isset($_SERVER['HTTP_ORIGIN'])) {
