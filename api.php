@@ -1,11 +1,11 @@
 <?php
     $api = true;
-    require "scripts/pi-hole/php/password.php";
-    require "scripts/pi-hole/php/auth.php";
+    require "php/password.php";
+    require "php/auth.php";
 
     check_cors();
 
-    include('scripts/pi-hole/php/data.php');
+    include('data.php');
     header('Content-type: application/json');
 
     $data = array();

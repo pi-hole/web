@@ -16,7 +16,7 @@ function eventsource() {
     }
 
     var host = window.location.host;
-    var source = new EventSource("http://"+host+"/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val()+"&"+exact);
+    var source = new EventSource("http://"+host+"/admin/php/queryads.php?domain="+domain.val()+"&"+exact);
 
     // Reset and show field
     ta.empty();

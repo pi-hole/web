@@ -1,6 +1,6 @@
 <?php
     $indexpage = true;
-    require "scripts/pi-hole/php/header.php";
+    require "header.php";
 ?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
@@ -213,7 +213,7 @@ else
 <!-- /.row -->
 <?php } ?>
 <?php
-    require "scripts/pi-hole/php/footer.php";
+    require "footer.php";
 ?>
 
-<script src="scripts/pi-hole/js/index.js"></script>
+<script src="js/pihole/index.js"></script>

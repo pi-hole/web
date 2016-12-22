@@ -1,6 +1,6 @@
 <?php
-	require "scripts/pi-hole/php/header.php";
-	require "scripts/pi-hole/php/savesettings.php";
+	require "header.php";
+	require "php/savesettings.php";
 	// Reread ini file as things might have been changed
 	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 ?>
@@ -106,10 +106,17 @@
 	{
 		$DHCP = false;
 		// Try to guess initial settings
-		$DHCPdomain = explode(".",$piHoleIPv4);
-		$DHCPstart  = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".201";
-		$DHCPend    = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".251";
-		$DHCProuter = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".1";
+		if($piHoleIPv4 !== "unknown") {
+			$DHCPdomain = explode(".",$piHoleIPv4);
+			$DHCPstart  = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".201";
+			$DHCPend    = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".251";
+			$DHCProuter = $DHCPdomain[0].".".$DHCPdomain[1].".".$DHCPdomain[2].".1";
+		}
+		else {
+			$DHCPstart  = "";
+			$DHCPend    = "";
+			$DHCProuter = "";
+		}
 	}
 	if(isset($setupVars["PIHOLE_DOMAIN"])){
 		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
@@ -361,7 +368,7 @@
 	{
 		$excludedDomains = explode(",", $setupVars["API_EXCLUDE_DOMAINS"]);
 	} else {
-		$excludedDomains = "";
+		$excludedDomains = [];
 	}
 
 	// Exluded clients in API Query Log call
@@ -369,7 +376,7 @@
 	{
 		$excludedClients = explode(",", $setupVars["API_EXCLUDE_CLIENTS"]);
 	} else {
-		$excludedClients = "";
+		$excludedClients = [];
 	}
 
 	// Exluded clients
@@ -539,10 +546,10 @@
 </div>
 
 <?php
-    require "scripts/pi-hole/php/footer.php";
+    require "footer.php";
 ?>
-<script src="scripts/vendor/jquery.inputmask.js"></script>
-<script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
-<script src="scripts/vendor/jquery.confirm.min.js"></script>
-<script src="scripts/pi-hole/js/settings.js"></script>
+<script src="js/other/jquery.inputmask.js"></script>
+<script src="js/other/jquery.inputmask.extensions.js"></script>
+<script src="js/other/jquery.confirm.min.js"></script>
+<script src="js/pihole/settings.js"></script>
 
