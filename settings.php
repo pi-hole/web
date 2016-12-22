@@ -172,7 +172,7 @@
 	while(!feof($dhcpleases) && $leasesfile)
 	{
 		$line = explode(" ",trim(fgets($dhcpleases)));
-		if(count($line) > 1)
+		if(count($line) == 5)
 		{
 			array_push($dhcp_leases,["MAC"=>$line[1], "IP"=>$line[2], "NAME"=>$line[3]]);
 		}
