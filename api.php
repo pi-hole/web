@@ -70,7 +70,16 @@
     }
     elseif (isset($_GET['disable'], $_GET['token']) && $auth) {
         check_csrf($_GET['token']);
-        exec('sudo pihole disable');
+        $disable = intval($_GET['disable']);
+        // intval returns the integer value on success, or 0 on failure
+        if($disable > 0)
+        {
+            exec("sudo pihole disable ".$disable."s");
+        }
+        else
+        {
+            exec('sudo pihole disable');
+        }
         $data = array_merge($data, Array(
             "status" => "disabled"
         ));

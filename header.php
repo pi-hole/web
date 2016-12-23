@@ -314,61 +314,114 @@
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
+            <?php
+            $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
+            if($scriptname === "list.php")
+            {
+                if($_GET["l"] === "white")
+                {
+                    $scriptname = "whitelist";
+                }
+                elseif($_GET["l"] === "black")
+                {
+                    $scriptname = "blacklist";
+                }
+            }
+            ?>
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
                 <!-- Home Page -->
-                <li>
+                <li<?php if($scriptname === "index.php"){ ?> class="active"<?php } ?>>
                     <a href="index.php">
                         <i class="fa fa-home"></i> <span>Main Page</span>
                     </a>
                 </li>
                 <?php if($auth){ ?>
                 <!-- Query Log -->
-                <li>
+                <li<?php if($scriptname === "queries.php"){ ?> class="active"<?php } ?>>
                     <a href="queries.php">
                         <i class="fa fa-file-text-o"></i> <span>Query Log</span>
                     </a>
                 </li>
                 <!-- Whitelist -->
-                <li>
+                <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
                     <a href="list.php?l=white">
                         <i class="fa fa-pencil-square-o"></i> <span>Whitelist</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
-                <li>
+                <li<?php if($scriptname === "blacklist"){ ?> class="active"<?php } ?>>
                     <a href="list.php?l=black">
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
-                <!-- Run gravity.sh -->
-                <li>
-                    <a href="gravity.php">
-                        <i class="fa fa-arrow-circle-down"></i> <span>Update Lists</span>
-                    </a>
-                </li>
-                <!-- Query adlists -->
-                <li>
-                    <a href="queryads.php">
-                        <i class="fa fa-search"></i> <span>Query adlists</span>
-                    </a>
-                </li>
-                <!-- Tail pihole.log -->
-                <li>
-                    <a href="taillog.php">
-                        <i class="fa fa-list-ul"></i> <span>Tail pihole.log</span>
-                    </a>
-                </li>
                 <!-- Toggle -->
-                <?php
-                if ($pistatus == "1") {
-                  echo '                <li><a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
-                } else {
-                  echo '                <li><a href="#" id="flip-status"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
-                }
-                ?>
+
+                <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden="true"<?php } ?>>
+                  <a href="#">
+                    <i class="fa fa-stop"></i> <span>Disable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li>
+                        <a href="#" id="pihole-disable-permanently">
+                            <i class="fa fa-stop"></i> <span>Permanently</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="pihole-disable-10s">
+                            <i class="fa fa-clock-o"></i> <span>For 10 seconds</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="pihole-disable-30s">
+                            <i class="fa fa-clock-o"></i> <span>For 30 seconds</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="pihole-disable-5m">
+                            <i class="fa fa-clock-o"></i> <span>For 5 minutes</span>
+                        </a>
+                    </li>
+                  </ul>
+                    <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
+                </li>
+                <li id="pihole-enable" class="treeview"<?php if ($pistatus == "1") { ?> hidden="true"<?php } ?>>
+                    <a href="#"><i class="fa fa-play"></i> <span>Enable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></a>
+                </li>
+                <!-- Tools -->
+                <li class="treeview <?php if($scriptname === "gravity.php" || $scriptname === "queryads.php"){ ?>active<?php } ?>">
+                  <a href="#">
+                    <i class="fa fa-folder"></i> <span>Tools</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <!-- Run gravity.sh -->
+                    <li<?php if($scriptname === "gravity.php"){ ?> class="active"<?php } ?>>
+                        <a href="gravity.php">
+                            <i class="fa fa-arrow-circle-down"></i> <span>Update Lists</span>
+                        </a>
+                    </li>
+                    <!-- Query adlists -->
+                    <li<?php if($scriptname === "queryads.php"){ ?> class="active"<?php } ?>>
+                        <a href="queryads.php">
+                            <i class="fa fa-search"></i> <span>Query adlists</span>
+                        </a>
+                    </li>
+                    <!-- Tail pihole.log -->
+                    <li<?php if($scriptname === "taillog.php"){ ?> class="active"<?php } ?>>
+                        <a href="taillog.php">
+                            <i class="fa fa-list-ul"></i> <span>Tail pihole.log</span>
+                        </a>
+                    </li>
+                  </ul>
+                </li>
                 <!-- Settings -->
-                <li>
+                <li<?php if($scriptname === "settings.php"){ ?> class="active"<?php } ?>>
                     <a href="settings.php">
                         <i class="fa fa-gears"></i> <span>Settings</span>
                     </a>
@@ -402,7 +455,7 @@
                 </li>
                 <?php if($auth){ ?>
                 <!-- Help -->
-                <li>
+                <li<?php if($scriptname === "help.php"){ ?> class="active"<?php } ?>>
                     <a href="help.php">
                         <i class="fa fa-question-circle"></i> <span>Help</span>
                     </a>
