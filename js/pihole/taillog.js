@@ -30,11 +30,11 @@ $(function(){
     reloadData();
 });
 
-$('#chk1').click(function() {
+$("#chk1").click(function() {
     $("#chk2").prop("checked",this.checked);
     scrolling = this.checked;
 });
-$('#chk2').click(function() {
+$("#chk2").click(function() {
     $("#chk1").prop("checked",this.checked);
     scrolling = this.checked;
 });
