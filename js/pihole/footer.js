@@ -34,10 +34,11 @@ function piholeChanged(action)
 function piholeChange(action, duration)
 {
     const token = encodeURIComponent($("#token").html());
+    var btnStatus;
 
     switch(action) {
         case "enable":
-        var btnStatus = $("#flip-status-enable");
+        btnStatus = $("#flip-status-enable");
         btnStatus.html("<i class='fa fa-spinner'> </i>");
         $.getJSON("api.php?enable&token=" + token, (data) => {
             if(data.status === "enabled") {
@@ -48,7 +49,7 @@ function piholeChange(action, duration)
         break;
 
         case "disable":
-        var btnStatus = $("#flip-status-disable");
+        btnStatus = $("#flip-status-disable");
         btnStatus.html("<i class='fa fa-spinner'> </i>");
         $.getJSON("api.php?disable=" + duration + "&token=" + token, (data) => {
             if(data.status === "disabled") {
@@ -72,17 +73,17 @@ $("#pihole-disable-permanently").on("click", (e) => {
 $("#pihole-disable-10s").on("click", (e) => {
     e.preventDefault();
     piholeChange("disable","10");
-    setTimeout(function(){piholeChanged("enabled")},10000);
+    setTimeout(function(){piholeChanged("enabled");},10000);
 });
 $("#pihole-disable-30s").on("click", (e) => {
     e.preventDefault();
     piholeChange("disable","30");
-    setTimeout(function(){piholeChanged("enabled")},30000);
+    setTimeout(function(){piholeChanged("enabled");},30000);
 });
 $("#pihole-disable-5m").on("click", (e) => {
     e.preventDefault();
     piholeChange("disable","300");
-    setTimeout(function(){piholeChanged("enabled")},300000);
+    setTimeout(function(){piholeChanged("enabled");},300000);
 });
 
 var piholeVersion = $("#piholeVersion").html();
