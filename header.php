@@ -359,7 +359,7 @@
                   <a href="#">
                     <i class="fa fa-folder"></i> <span>Tools</span>
                     <span class="pull-right-container">
-                      <i class="fa fa-angle-down pull-right"></i>
+                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
                     </span>
                   </a>
                   <ul class="treeview-menu">
