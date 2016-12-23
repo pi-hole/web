@@ -368,16 +368,39 @@
     function getBlockedQueries(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
-        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
         foreach ($log as $line) {
-            $line = preg_replace('/ {2,}/', ' ', $line);
             $exploded = explode(" ", $line);
-            if(count($exploded) == 8) {
-                $tmp = $exploded[count($exploded) - 4];
-                $tmp2 = $exploded[count($exploded) - 5];
-                $tmp3 = $exploded[count($exploded) - 3];
-                //filter out bad names and host file reloads:
-                if(substr($tmp, strlen($tmp) - 12, 12) == "gravity.list" && $tmp2 != "read" && $tmp3 != "pi.hole" && $tmp3 != $hostname) {
+            if(count($exploded) == 8 || count($exploded) == 10) {
+                // Structure of data is currently like:
+                // Array
+                // (
+                //     [0] => Dec
+                //     [1] => 19
+                //     [2] => 11:21:51
+                //     [3] => dnsmasq[2584]:
+                //     [4] => /etc/pihole/gravity.list
+                //     [5] => doubleclick.com
+                //     [6] => is
+                //     [7] => ip.of.pi.hole
+                // )
+                // with extra logging enabled
+                // Array
+                // (
+                //     [0] => Dec
+                //     [1] => 19
+                //     [2] => 11:21:51
+                //     [3] => dnsmasq[2584]:
+                //     [4] => 1 (identifier)
+                //     [5] => 1.2.3.4/12345
+                //     [6] => /etc/pihole/gravity.list
+                //     [7] => doubleclick.com
+                //     [8] => is
+                //     [9] => ip.of.pi.hole
+                // )
+                $list = $exploded[count($exploded)-4];
+                $is = $exploded[count($exploded)-2];
+                // Consider only gravity.list as DNS source (not e.g. hostname.list)
+                if(substr($list, strlen($list) - 12, 12) === "gravity.list" && $is === "is") {
                     $lines[] = $line;
                 };
             }
@@ -387,8 +410,7 @@
 
     function countBlockedQueries() {
         global $logListName;
-        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
-        return exec("grep \"gravity.list\" $logListName | grep -v \"pi.hole\" | grep -v \" read \" | grep -v -c \"".$hostname."\"");
+        return exec("grep \"gravity.list\" $logListName | grep -c \" is \"");
     }
 
     function getForwards(\SplFileObject $log) {
