@@ -388,7 +388,7 @@
     function countBlockedQueries() {
         global $logListName;
         $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
-        return exec("grep \"gravity.list\" $logListName | grep -v \"pi.hole\" | grep -v \" read \" | grep -v -c \"".$hostname."\"");
+        return exec("grep \"gravity.list\" $logListName | grep -v \"pi.hole\" | grep -v -c \" read \"");
     }
 
     function getForwards(\SplFileObject $log) {
