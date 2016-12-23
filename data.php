@@ -107,13 +107,36 @@
         return $queryTypes;
     }
 
+    function resolveIPs(&$array) {
+        $hostarray = [];
+        foreach ($array as $key => $value)
+        {
+            $hostname = gethostbyaddr($key);
+            // If we found a hostname for the IP, replace it
+            if($hostname)
+            {
+                // Generate HOST entry
+                $hostarray[$hostname] = $value;
+            }
+            else
+            {
+                // Generate IP entry
+                $hostarray[$key] = $value;
+            }
+        }
+        $array = $hostarray;
+
+        // Sort new array
+        arsort($array);
+    }
+
     function getForwardDestinations() {
-        global $log;
+        global $log, $setupVars;
         $forwards = getForwards($log);
         $destinations = array();
         foreach ($forwards as $forward) {
             $exploded = explode(" ", trim($forward));
-            $dest = hasHostName($exploded[count($exploded) - 1]);
+            $dest = $exploded[count($exploded) - 1];
             if (isset($destinations[$dest])) {
                 $destinations[$dest]++;
             }
@@ -122,17 +145,36 @@
             }
         }
 
+        if(istrue($setupVars["API_GET_UPSTREAM_DNS_HOSTNAME"]))
+        {
+            resolveIPs($destinations);
+        }
+
         return $destinations;
 
     }
 
+    // Check for existance of variable
+    // and test it only if it exists
+    function istrue(&$argument) {
+        $ret = false;
+        if(isset($argument))
+        {
+            if($argument)
+            {
+                $ret = true;
+            }
+        }
+        return $ret;
+    }
+
     function getQuerySources() {
-        global $log;
+        global $log, $setupVars;
         $dns_queries = getDnsQueries($log);
         $sources = array();
         foreach($dns_queries as $query) {
             $exploded = explode(" ", $query);
-            $ip = hasHostName(trim($exploded[count($exploded)-1]));
+            $ip = trim($exploded[count($exploded)-1]);
             if (isset($sources[$ip])) {
                 $sources[$ip]++;
             }
@@ -149,6 +191,12 @@
 
         arsort($sources);
         $sources = array_slice($sources, 0, 10);
+
+        if(istrue($setupVars["API_GET_CLIENT_HOSTNAME"]))
+        {
+            resolveIPs($sources);
+        }
+
         return Array(
             'top_sources' => $sources
         );
@@ -199,7 +247,7 @@
     function getAllQueries($orderBy) {
         global $log,$showBlocked,$showPermitted;
         $allQueries = array("data" => array());
-        $dns_queries = getDnsQueriesAll($log);
+        $dns_queries = getDnsQueries($log);
 
         // Create empty array for gravity
         $gravity_domains = getGravity();
@@ -212,36 +260,33 @@
 
             setShowBlockedPermitted();
 
-            if (substr($tmp, 0, 5) == "query")
+            $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
+            if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))
             {
-                $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
-                if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))
-                {
-                    $type = substr($exploded[count($exploded)-4], 6, -1);
-                    $client = $exploded[count($exploded)-1];
+                $type = substr($exploded[count($exploded)-4], 6, -1);
+                $client = $exploded[count($exploded)-1];
 
-                    if($orderBy == "orderByClientDomainTime"){
-                      $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d\TH:i:s')] = $status;
-                    }elseif ($orderBy == "orderByClientTimeDomain"){
-                      $allQueries['data'][hasHostName($client)][$time->format('Y-m-d\TH:i:s')][$domain] = $status;
-                    }elseif ($orderBy == "orderByTimeClientDomain"){
-                      $allQueries['data'][$time->format('Y-m-d\TH:i:s')][hasHostName($client)][$domain] = $status;
-                    }elseif ($orderBy == "orderByTimeDomainClient"){
-                      $allQueries['data'][$time->format('Y-m-d\TH:i:s')][$domain][hasHostName($client)] = $status;
-                    }elseif ($orderBy == "orderByDomainClientTime"){
-                      $allQueries['data'][$domain][hasHostName($client)][$time->format('Y-m-d\TH:i:s')] = $status;
-                    }elseif ($orderBy == "orderByDomainTimeClient"){
-                      $allQueries['data'][$domain][$time->format('Y-m-d\TH:i:s')][hasHostName($client)] = $status;
-                    }else{
-                      array_push($allQueries['data'], array(
-                        $time->format('Y-m-d\TH:i:s'),
-                        $type,
-                        $domain,
-                        hasHostName($client),
-                        $status,
-                        ""
-                      ));
-                    }
+                if($orderBy == "orderByClientDomainTime"){
+                  $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d\TH:i:s')] = $status;
+                }elseif ($orderBy == "orderByClientTimeDomain"){
+                  $allQueries['data'][hasHostName($client)][$time->format('Y-m-d\TH:i:s')][$domain] = $status;
+                }elseif ($orderBy == "orderByTimeClientDomain"){
+                  $allQueries['data'][$time->format('Y-m-d\TH:i:s')][hasHostName($client)][$domain] = $status;
+                }elseif ($orderBy == "orderByTimeDomainClient"){
+                  $allQueries['data'][$time->format('Y-m-d\TH:i:s')][$domain][hasHostName($client)] = $status;
+                }elseif ($orderBy == "orderByDomainClientTime"){
+                  $allQueries['data'][$domain][hasHostName($client)][$time->format('Y-m-d\TH:i:s')] = $status;
+                }elseif ($orderBy == "orderByDomainTimeClient"){
+                  $allQueries['data'][$domain][$time->format('Y-m-d\TH:i:s')][hasHostName($client)] = $status;
+                }else{
+                  array_push($allQueries['data'], array(
+                    $time->format('Y-m-d\TH:i:s'),
+                    $type,
+                    $domain,
+                    hasHostName($client),
+                    $status,
+                    ""
+                  ));
                 }
             }
         }
@@ -260,7 +305,7 @@
         $log->rewind();
         $lines = [];
         foreach ($log as $line) {
-            if(strpos($line, ": query[") !== false) {
+            if(strpos($line, ": query[A") !== false) {
                 $lines[] = $line;
             }
         }
@@ -269,14 +314,14 @@
 
     function countDnsQueries() {
         global $logListName;
-        return exec("grep -c \": query\\[\" $logListName");
+        return exec("grep -c \": query\\[A\" $logListName");
     }
 
     function getDnsQueriesAll(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
         foreach ($log as $line) {
-            if(strpos($line, ": query[") || strpos($line, "gravity.list") || strpos($line, ": forwarded") !== false) {
+            if(strpos($line, ": query[A") || strpos($line, "gravity.list") || strpos($line, ": forwarded") !== false) {
                 $lines[] = $line;
             }
         }
