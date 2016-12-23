@@ -356,15 +356,42 @@
                     </a>
                 </li>
                 <!-- Toggle -->
-                <?php if ($pistatus == "1") { ?>
-                <li>
-                    <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a>
+
+                <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden="true"<?php } ?>>
+                  <a href="#">
+                    <i class="fa fa-stop"></i> <span>Disable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li>
+                        <a href="#" id="pihole-disable-permanently">
+                            <i class="fa fa-stop"></i> <span>Permanently</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="pihole-disable-10s">
+                            <i class="fa fa-clock-o"></i> <span>For 10 seconds</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="pihole-disable-30s">
+                            <i class="fa fa-clock-o"></i> <span>For 30 seconds</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="pihole-disable-5m">
+                            <i class="fa fa-clock-o"></i> <span>For 5 minutes</span>
+                        </a>
+                    </li>
+                  </ul>
+                    <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
-                <?php } else { ?>
-                <li>
-                    <a href="#" id="flip-status"><i class="fa fa-play"></i> <span>Enable</span></a>
+                <li id="pihole-enable" class="treeview"<?php if ($pistatus == "1") { ?> hidden="true"<?php } ?>>
+                    <a href="#"><i class="fa fa-play"></i> <span>Enable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></a>
                 </li>
-                <?php } ?>
+                <!-- Tools -->
                 <li class="treeview <?php if($scriptname === "gravity.php" || $scriptname === "queryads.php"){ ?>active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-folder"></i> <span>Tools</span>
