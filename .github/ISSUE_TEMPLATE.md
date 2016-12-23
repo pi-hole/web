@@ -1,4 +1,4 @@
-**In raising this issue, I confirm the following (please check boxes, eg [X]) Failure to fill the template will close your issue:**
+**In raising this issue, I confirm the following (please check boxes, eg [X] - no spaces) Failure to fill the template will close your issue:**
 
 - [] I have read and understood the [contributors guide](https://github.com/pi-hole/pi-hole/blob/master/CONTRIBUTING.md).
 - [] The issue I am reporting can be *replicated*
@@ -6,16 +6,7 @@
 
 **How familiar are you with the codebase?:**
 
-- [] 1 (very unfamiliar)
-- [] 2
-- [] 3
-- [] 4
-- [] 5
-- [] 6
-- [] 7
-- [] 8
-- [] 9
-- [] 10 (very familiar)
+<replace this text with a number from 1 to 10, with 1 being not familiar, and 10 being very familiar>
 
 ---
 **[FEATURE REQUEST | QUESTION | OTHER]:**
