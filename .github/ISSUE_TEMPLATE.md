@@ -6,7 +6,7 @@
 
 **How familiar are you with the codebase?:**
 
-<replace this text with a number from 1 to 10, with 1 being not familiar, and 10 being very familiar>
+_{replace this text with a number from 1 to 10, with 1 being not familiar, and 10 being very familiar}_
 
 ---
 **[FEATURE REQUEST | QUESTION | OTHER]:**
