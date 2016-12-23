@@ -314,34 +314,48 @@
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
+            <?php
+            $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
+            if($scriptname === "list.php")
+            {
+                if($_GET["l"] === "white")
+                {
+                    $scriptname = "whitelist";
+                }
+                elseif($_GET["l"] === "black")
+                {
+                    $scriptname = "blacklist";
+                }
+            }
+            ?>
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
                 <!-- Home Page -->
-                <li>
+                <li<?php if($scriptname === "index.php"){ ?> class="active"<?php } ?>>
                     <a href="index.php">
                         <i class="fa fa-home"></i> <span>Main Page</span>
                     </a>
                 </li>
                 <?php if($auth){ ?>
                 <!-- Query Log -->
-                <li>
+                <li<?php if($scriptname === "queries.php"){ ?> class="active"<?php } ?>>
                     <a href="queries.php">
                         <i class="fa fa-file-text-o"></i> <span>Query Log</span>
                     </a>
                 </li>
                 <!-- Whitelist -->
-                <li>
+                <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
                     <a href="list.php?l=white">
                         <i class="fa fa-pencil-square-o"></i> <span>Whitelist</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
-                <li>
+                <li<?php if($scriptname === "blacklist"){ ?> class="active"<?php } ?>>
                     <a href="list.php?l=black">
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
-                <li class="treeview">
+                <li class="treeview <?php if($scriptname === "gravity.php" || $scriptname === "queryads.php"){ ?>active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-folder"></i> <span>Tools</span>
                     <span class="pull-right-container">
@@ -350,13 +364,13 @@
                   </a>
                   <ul class="treeview-menu">
                     <!-- Run gravity.sh -->
-                    <li>
+                    <li<?php if($scriptname === "gravity.php"){ ?> class="active"<?php } ?>>
                         <a href="gravity.php">
                             <i class="fa fa-arrow-circle-down"></i> <span>Update Lists</span>
                         </a>
                     </li>
                     <!-- Query adlists -->
-                    <li>
+                    <li<?php if($scriptname === "queryads.php"){ ?> class="active"<?php } ?>>
                         <a href="queryads.php">
                             <i class="fa fa-search"></i> <span>Query adlists</span>
                         </a>
@@ -372,7 +386,7 @@
                 }
                 ?>
                 <!-- Settings -->
-                <li>
+                <li<?php if($scriptname === "settings.php"){ ?> class="active"<?php } ?>>
                     <a href="settings.php">
                         <i class="fa fa-gears"></i> <span>Settings</span>
                     </a>
@@ -406,7 +420,7 @@
                 </li>
                 <?php if($auth){ ?>
                 <!-- Help -->
-                <li>
+                <li<?php if($scriptname === "help.php"){ ?> class="active"<?php } ?>>
                     <a href="help.php">
                         <i class="fa fa-question-circle"></i> <span>Help</span>
                     </a>
