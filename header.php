@@ -353,7 +353,7 @@
                         <i class="fa fa-search"></i> <span>Query adlists</span>
                     </a>
                 </li>
-                <!-- Query adlists -->
+                <!-- Tail pihole.log -->
                 <li>
                     <a href="taillog.php">
                         <i class="fa fa-list-ul"></i> <span>Tail pihole.log</span>
