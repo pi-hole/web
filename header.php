@@ -355,6 +355,14 @@
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
+                <!-- Toggle -->
+                <?php
+                if ($pistatus == "1") {
+                  echo '                <li><a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
+                } else {
+                  echo '                <li><a href="#" id="flip-status"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
+                }
+                ?>
                 <li class="treeview <?php if($scriptname === "gravity.php" || $scriptname === "queryads.php"){ ?>active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-folder"></i> <span>Tools</span>
@@ -377,14 +385,6 @@
                     </li>
                   </ul>
                 </li>
-                <!-- Toggle -->
-                <?php
-                if ($pistatus == "1") {
-                  echo '                <li><a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a></li>';
-                } else {
-                  echo '                <li><a href="#" id="flip-status"><i class="fa fa-play"></i> <span>Enable</span></a></li>';
-                }
-                ?>
                 <!-- Settings -->
                 <li<?php if($scriptname === "settings.php"){ ?> class="active"<?php } ?>>
                     <a href="settings.php">
