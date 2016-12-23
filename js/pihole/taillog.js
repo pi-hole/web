@@ -1,30 +1,29 @@
-var source;
-function eventsource() {
-    var ta = $("#output");
-    source = new EventSource("php/taillog.php");
+var offset, timer, pre;
 
-    ta.html("");
-    ta.show();
+// Check every 200msec for fresh data
+var interval = 200;
 
-    source.addEventListener("message", function(e) {
-        if(e.data.indexOf("Ctrl-C") === -1)
-        {
-            // Hide the "Press Ctrl-C to exit" message
-            ta.append(e.data);
-        }
-
-    }, false);
-
-    // Will be called when script has finished
-    source.addEventListener("error", function(e) {
-        source.close();
-    }, false);
+// Function that asks the API for new data
+function reloadData(){
+  clearTimeout(timer);
+  $.getJSON("api.php?tailLog="+offset, function (data)
+    {
+      offset = data["offset"];
+      pre.append(data["lines"]);
+      console.log(offset);
+    });
+  timer = setTimeout(reloadData, interval);
 }
 
 $(function(){
-    eventsource();
+  // Get offset at first loading of page
+  $.getJSON("api.php?tailLog", function (data)
+    {
+      offset = data["offset"];
+      console.log(offset);
+    });
+  pre = $("#output");
+  // Trigger function that looks for new data
+  reloadData();
 });
 
-$(window).unload(function(){
-  source.close();
-});

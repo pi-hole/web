@@ -6,7 +6,7 @@
     <h1>Output the last lines of the pihole.log file (live)</h1>
 </div>
 
-<pre id="output" style="width: 100%; height: 100%;" hidden="true"></pre>
+<pre id="output" style="width: 100%; height: 100%;"></pre>
 
 <?php
     require "footer.php";
