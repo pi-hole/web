@@ -19,6 +19,7 @@ function piholeChanged(action)
         status.html("<i class='fa fa-circle' style='color:#7FFF00'></i> Active");
         ena.hide();
         dis.show();
+        dis.removeClass("active");
         break;
 
         case "disabled":
