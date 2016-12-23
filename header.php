@@ -353,6 +353,12 @@
                         <i class="fa fa-search"></i> <span>Query adlists</span>
                     </a>
                 </li>
+                <!-- Blacklist -->
+                <li>
+                    <a href="webupdate.php">
+                        <i class="fa fa-laptop"></i> <span>Webupdate (to be removed)</span>
+                    </a>
+                </li>
                 <!-- Toggle -->
                 <?php
                 if ($pistatus == "1") {
