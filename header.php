@@ -341,17 +341,27 @@
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
-                <!-- Run gravity.sh -->
-                <li>
-                    <a href="gravity.php">
-                        <i class="fa fa-arrow-circle-down"></i> <span>Update Lists</span>
-                    </a>
-                </li>
-                <!-- Query adlists -->
-                <li>
-                    <a href="queryads.php">
-                        <i class="fa fa-search"></i> <span>Query adlists</span>
-                    </a>
+                <li class="treeview">
+                  <a href="#">
+                    <i class="fa fa-folder"></i> <span>Tools</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-down pull-right"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <!-- Run gravity.sh -->
+                    <li>
+                        <a href="gravity.php">
+                            <i class="fa fa-arrow-circle-down"></i> <span>Update Lists</span>
+                        </a>
+                    </li>
+                    <!-- Query adlists -->
+                    <li>
+                        <a href="queryads.php">
+                            <i class="fa fa-search"></i> <span>Query adlists</span>
+                        </a>
+                    </li>
+                  </ul>
                 </li>
                 <!-- Toggle -->
                 <?php
