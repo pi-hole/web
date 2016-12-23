@@ -293,6 +293,33 @@
         return $allQueries;
     }
 
+    function tailPiholeLog($param) {
+        // Not using SplFileObject here, since direct
+        // usage of f-streams will be much faster for
+        // files as large as the pihole.log
+        global $logListName;
+        $file = fopen($logListName,"r");
+        $offset = intval($param);
+        if($offset > 0)
+        {
+            // Seeks on the file pointer where we want to continue reading is known
+            fseek($file, $offset);
+            $lines = [];
+            while (!feof($file)) {
+                array_push($lines,fgets($file));
+            }
+            return ["offset" => ftell($file), "lines" => $lines];
+        }
+        else
+        {
+            // Locate the current position of the file read/write pointer
+            fseek($file, -1, SEEK_END);
+            // Add one to skip the very last "\n" in the log file
+            return ["offset" => ftell($file)+1];
+        }
+        fclose($file);
+    }
+
     /******** Private Members ********/
     function gravityCount() {
         global $gravityListName,$blackListFile;

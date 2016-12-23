@@ -89,6 +89,10 @@
         $data = array_merge($data, getGravity());
     }
 
+    if (isset($_GET['tailLog'])) {
+        $data = array_merge($data, tailPiholeLog($_GET['tailLog']));
+    }
+
     function filterArray(&$inArray) {
 	    $outArray = array();
 	    foreach ($inArray as $key=>$value) {

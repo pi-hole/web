@@ -412,6 +412,12 @@
                             <i class="fa fa-search"></i> <span>Query adlists</span>
                         </a>
                     </li>
+                    <!-- Tail pihole.log -->
+                    <li<?php if($scriptname === "taillog.php"){ ?> class="active"<?php } ?>>
+                        <a href="taillog.php">
+                            <i class="fa fa-list-ul"></i> <span>Tail pihole.log</span>
+                        </a>
+                    </li>
                   </ul>
                 </li>
                 <!-- Settings -->
