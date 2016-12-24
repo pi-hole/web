@@ -257,7 +257,7 @@
                         // CPU Temp
                         if ($celsius >= -273.15) {
                             echo "<a href=\"#\" id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
-                            if ($celsius > 45) {
+                            if ($celsius > 60) {
                                 echo "#FF0000";
                             }
                             else
