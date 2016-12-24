@@ -26,7 +26,7 @@ function istrue($argument) {
 // Credit: http://stackoverflow.com/a/4694816/2087442
 function validDomain($domain_name)
 {
-	$validChars = preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domain_name);
+	$validChars = preg_match("/^([_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([a-z\d])*)+$/i", $domain_name);
 	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
 	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
 	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
