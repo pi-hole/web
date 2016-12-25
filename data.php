@@ -83,18 +83,21 @@
         // Sort array in descending order
         arsort($dns_domains);
 
-        // Prepare arrays for Top Items
+        // Prepare arrays and counters for Top Items
         $topDomains = []; $domaincounter = 0;
         $topAds = []; $adcounter = 0;
 
         // Default number of Top Items to show is 10
         $qty = 10;
 
+        // If argument is numeric, the user may want to
+        // see a different number of entries
         if(is_numeric($argument))
         {
             $qty = intval($argument);
         }
 
+        // Process sorted domain names
         foreach ($dns_domains as $key => $value) {
             if(isset($gravity_domains[$key]) && $adcounter < $qty)
             {
