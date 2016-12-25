@@ -40,11 +40,17 @@
 
     function getOverTimeData() {
         global $log;
-        $dns_queries = getDnsQueries($log);
-        $ads_blocked = getBlockedQueries($log);
 
-        $domains_over_time = overTime($dns_queries);
-        $ads_over_time = overTime($ads_blocked);
+        // Get log lines
+        $dns_queries = getDnsQueries($log);
+
+        // Get list of ad domains
+        $gravity_domains = getGravity();
+
+        // Bin log entries separated into Domains and Ads in 1 hour intervals
+        list($domains_over_time, $ads_over_time) = overTime($dns_queries, $gravity_domains);
+
+        // Align arrays
         alignTimeArrays($ads_over_time, $domains_over_time);
         return Array(
             'domains_over_time' => $domains_over_time,
@@ -54,11 +60,17 @@
 
     function getOverTimeData10mins() {
         global $log;
-        $dns_queries = getDnsQueries($log);
-        $ads_blocked = getBlockedQueries($log);
 
-        $domains_over_time = overTime10mins($dns_queries);
-        $ads_over_time = overTime10mins($ads_blocked);
+        // Get log lines
+        $dns_queries = getDnsQueries($log);
+
+        // Get list of ad domains
+        $gravity_domains = getGravity();
+
+        // Bin log entries separated into Domains and Ads in 10 minute intervals
+        list($domains_over_time, $ads_over_time) = overTime10mins($dns_queries, $gravity_domains);
+
+        // Align arrays (in case there have been hours without ad queries)
         alignTimeArrays($ads_over_time, $domains_over_time);
         return Array(
             'domains_over_time' => $domains_over_time,
@@ -527,24 +539,41 @@
         return $array;
     }
 
-    function overTime($entries) {
-        $byTime = array();
+    function overTime($entries, $gravity_domains) {
+        $byTimeDomains = [];
+        $byTimeAds = [];
         foreach ($entries as $entry) {
             $time = date_create(substr($entry, 0, 16));
             $hour = $time->format('G');
 
-            if (isset($byTime[$hour])) {
-                $byTime[$hour]++;
+            $exploded = explode(" ", $entry);
+            $domain = trim($exploded[count($exploded) - 3]);
+
+            if(isset($gravity_domains[$domain]))
+            {
+                if (isset($byTimeAds[$time])) {
+                    $byTimeAds[$time]++;
+                }
+                else {
+                    $byTimeAds[$time] = 1;
+                }
             }
-            else {
-                $byTime[$hour] = 1;
+            else
+            {
+                if (isset($byTimeDomains[$time])) {
+                    $byTimeDomains[$time]++;
+                }
+                else {
+                    $byTimeDomains[$time] = 1;
+                }
             }
         }
-        return $byTime;
+        return [$byTimeDomains,$byTimeAds];
     }
 
-    function overTime10mins($entries) {
-        $byTime = array();
+    function overTime10mins($entries, $gravity_domains) {
+        $byTimeDomains = [];
+        $byTimeAds = [];
         foreach ($entries as $entry) {
             $time = date_create(substr($entry, 0, 16));
             $hour = $time->format('G');
@@ -559,14 +588,29 @@
             // etc.
             $time = ($minute-$minute%10)/10 + 6*$hour;
 
-            if (isset($byTime[$time])) {
-                $byTime[$time]++;
+            $exploded = explode(" ", $entry);
+            $domain = trim($exploded[count($exploded) - 3]);
+
+            if(isset($gravity_domains[$domain]))
+            {
+                if (isset($byTimeAds[$time])) {
+                    $byTimeAds[$time]++;
+                }
+                else {
+                    $byTimeAds[$time] = 1;
+                }
             }
-            else {
-                $byTime[$time] = 1;
+            else
+            {
+                if (isset($byTimeDomains[$time])) {
+                    $byTimeDomains[$time]++;
+                }
+                else {
+                    $byTimeDomains[$time] = 1;
+                }
             }
         }
-        return $byTime;
+        return [$byTimeDomains,$byTimeAds];
     }
 
     function alignTimeArrays(&$times1, &$times2) {
