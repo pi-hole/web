@@ -66,16 +66,50 @@
         );
     }
 
-    function getTopItems() {
-        global $log;
-        $dns_queries = getDnsQueries($log);
-        $ads_blocked = getBlockedQueries($log);
+    function getTopItems($qty=10) {
+        global $log,$setupVars;
 
-        $topAds = topItems($ads_blocked);
-        $topQueries = topItems($dns_queries, $topAds);
+        // Process log file
+        $dns_domains = getDnsQueryDomains($log);
+        // Get list of ad domains
+        $gravity_domains = getGravity();
+
+        // Exclude domains the user doesn't want to see
+        if(isset($setupVars["API_EXCLUDE_DOMAINS"]))
+        {
+            excludeFromList($dns_domains, "API_EXCLUDE_DOMAINS");
+        }
+
+        // Sort array in descending order
+        arsort($dns_domains);
+
+        // Prepare arrays for Top Items
+        $topDomains = []; $domaincounter = 0;
+        $topAds = []; $adcounter = 0;
+
+        foreach ($dns_domains as $key => $value) {
+            if(isset($gravity_domains[$key]) && $adcounter < $qty)
+            {
+                // New entry for Top Ads
+                $topAds[$key] = $value;
+                $adcounter++;
+            }
+            else if($domaincounter < $qty)
+            {
+                // New entry for Top Domains
+                $topDomains[$key] = $value;
+                $domaincounter++;
+            }
+            else
+            {
+                // Already collected enough entries for both lists
+                // Exit loop early
+                break;
+            }
+        }
 
         return Array(
-            'top_queries' => $topQueries,
+            'top_queries' => $topDomains,
             'top_ads' => $topAds,
         );
     }
@@ -186,7 +220,7 @@
         global $setupVars;
         if(isset($setupVars["API_EXCLUDE_CLIENTS"]))
         {
-            $sources = excludeFromList($sources, "API_EXCLUDE_CLIENTS");
+            excludeFromList($sources, "API_EXCLUDE_CLIENTS");
         }
 
         arsort($sources);
@@ -339,6 +373,24 @@
         return $lines;
     }
 
+    function getDnsQueryDomains(\SplFileObject $log) {
+        $log->rewind();
+        $domains = [];
+        foreach ($log as $line) {
+            if(strpos($line, ": query[A") !== false) {
+                $exploded = explode(" ", $line);
+                $domain = trim($exploded[count($exploded) - 3]);
+                if (isset($domains[$domain])) {
+                    $domains[$domain]++;
+                }
+                else {
+                    $domains[$domain] = 1;
+                }
+            }
+        }
+        return $domains;
+    }
+
     function countDnsQueries() {
         global $logListName;
         return exec("grep -c \": query\\[A\" $logListName");
@@ -451,32 +503,7 @@
         return $lines;
     }
 
-    function topItems($queries, $exclude = array(), $qty=10) {
-        $splitQueries = array();
-        foreach ($queries as $query) {
-            $exploded = explode(" ", $query);
-            $domain = trim($exploded[count($exploded) - 3]);
-            if (!isset($exclude[$domain])) {
-                if (isset($splitQueries[$domain])) {
-                    $splitQueries[$domain]++;
-                }
-                else {
-                    $splitQueries[$domain] = 1;
-                }
-            }
-        }
-
-        global $setupVars;
-        if(isset($setupVars["API_EXCLUDE_DOMAINS"]))
-        {
-            $splitQueries = excludeFromList($splitQueries, "API_EXCLUDE_DOMAINS");
-        }
-
-        arsort($splitQueries);
-        return array_slice($splitQueries, 0, $qty);
-    }
-
-    function excludeFromList($array,$key)
+    function excludeFromList(&$array,$key)
     {
         global $setupVars;
         $domains = explode(",",$setupVars[$key]);
