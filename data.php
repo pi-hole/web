@@ -66,7 +66,7 @@
         );
     }
 
-    function getTopItems($qty=10) {
+    function getTopItems($argument) {
         global $log,$setupVars;
 
         // Process log file
@@ -86,6 +86,14 @@
         // Prepare arrays for Top Items
         $topDomains = []; $domaincounter = 0;
         $topAds = []; $adcounter = 0;
+
+        // Default number of Top Items to show is 10
+        $qty = 10;
+
+        if(is_numeric($argument))
+        {
+            $qty = intval($argument);
+        }
 
         foreach ($dns_domains as $key => $value) {
             if(isset($gravity_domains[$key]) && $adcounter < $qty)
