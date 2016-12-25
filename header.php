@@ -21,7 +21,16 @@
     // Test if we succeeded in getting the temperature
     if(is_numeric($output))
     {
-        $celsius = intVal($output)*1e-3;
+        // $output could be either 4-5 digits or 2-3, and we only divide by 1000 if it's 4-5
+        // ex. 39007 vs 39
+        $celsius = intVal($output);
+        
+        // If celsius is greater than 1 degree and is in the 4-5 digit format
+        if($celsius > 1000) {
+            // Use multiplication to get around the division-by-zero error
+            $celsius *= 1e-3;
+        }
+        
         $kelvin = $celsius + 273.15;
         $fahrenheit = ($celsius*9./5)+32.0;
 
