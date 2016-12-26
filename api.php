@@ -93,6 +93,10 @@
         $data = array_merge($data, tailPiholeLog($_GET['tailLog']));
     }
 
+    if (isset($_GET['test'])) {
+        $data = array_merge($data, testAPI($_GET['test']));
+    }
+
     function filterArray(&$inArray) {
 	    $outArray = array();
 	    foreach ($inArray as $key=>$value) {

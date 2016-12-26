@@ -320,6 +320,29 @@
         fclose($file);
     }
 
+    // Fast algorith to count number of lines
+    // of SplFileObject without having to process
+    // ever line in a foreach loop
+    function getSplFileObjectLineNo($file) {
+        $file->seek($file->getSize());
+        return $file->key();
+    }
+
+    function testAPI($arg) {
+        global $logListName,$gravityListName,$blackListFile,$whiteListFile;
+        global $log,$gravity,$blacklist,$whitelist;
+        return [
+            'logListName' => $logListName,
+            'logListLength' => getSplFileObjectLineNo($log),
+            'gravityListName' => $gravityListName,
+            'gravityListLength' => getSplFileObjectLineNo($gravity),
+            'blackListFile' => $blackListFile,
+            'blackListLength' => getSplFileObjectLineNo($blacklist),
+            'whiteListFile' => $logListName,
+            'whiteListLength' => getSplFileObjectLineNo($whitelist),
+               ];
+    }
+
     /******** Private Members ********/
     function gravityCount() {
         global $gravityListName,$blackListFile;
