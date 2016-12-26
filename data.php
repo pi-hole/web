@@ -332,6 +332,7 @@
         global $logListName,$gravityListName,$blackListFile,$whiteListFile;
         global $log,$gravity,$blacklist,$whitelist;
         return [
+            'arg' => $arg,
             'logListName' => $logListName,
             'logListLength' => getSplFileObjectLineNo($log),
             'gravityListName' => $gravityListName,
