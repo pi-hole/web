@@ -338,7 +338,7 @@
             'gravityListLength' => getSplFileObjectLineNo($gravity),
             'blackListFile' => $blackListFile,
             'blackListLength' => getSplFileObjectLineNo($blacklist),
-            'whiteListFile' => $logListName,
+            'whiteListFile' => $whiteListFile,
             'whiteListLength' => getSplFileObjectLineNo($whitelist),
                ];
     }
