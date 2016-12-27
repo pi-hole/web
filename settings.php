@@ -549,7 +549,7 @@
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="adlists">
-				<label>Don't forget to use "Update Lists" afterwards</label>
+				<label>Don't forget to run <a href="gravity.php">Update Lists</a> afterwards</label>
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
