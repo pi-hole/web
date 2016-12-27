@@ -266,13 +266,19 @@
         // Create empty array for gravity
         $gravity_domains = getGravity();
 
+        setShowBlockedPermitted();
+
+        if(!$showBlocked && $privacyMode)
+        {
+            // Nothing to do for us here
+            return [];
+        }
+
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
             $exploded = explode(" ", trim($query));
             $domain = $exploded[count($exploded)-3];
             $tmp = $exploded[count($exploded)-4];
-
-            setShowBlockedPermitted();
 
             $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
             if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))
