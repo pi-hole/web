@@ -20,10 +20,10 @@ function check_cors() {
 
     // Check CORS
     $AUTHORIZED_HOSTNAMES = array(
-        'http://' . $ipv4,
-        'http://' . $_SERVER['SERVER_NAME'],
-        'http://pi.hole',
-        'http://localhost'
+        'http://' . $ipv4 . ':' . $_SERVER['SERVER_PORT'],
+        'http://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'],
+        'http://pi.hole' . ':' . $_SERVER['SERVER_PORT'],
+        'http://localhost'  . ':' . $_SERVER['SERVER_PORT'],
     );
 
     # Allow user set virtual hostnames
