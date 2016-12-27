@@ -8,34 +8,82 @@ $("body").on("click", function(event) {
     }
 });
 
-// Enable/Disable
-$("#flip-status").on("click", (e) => {
-    e.preventDefault();
-    const btnStatus = $("#flip-status");
+function piholeChanged(action)
+{
     const status = $("#status");
-    const text = btnStatus.text().trim();
-    const token = encodeURIComponent($("#token").html());
+    const ena = $("#pihole-enable");
+    const dis = $("#pihole-disable");
 
-    switch(text) {
-        case "Enable":
-            btnStatus.html("<i class='fa fa-spinner'></i> <span>Enabling...</span>");
-            $.getJSON("api.php?enable&token=" + token, (data) => {
-                if(data.status === "enabled") {
-                    btnStatus.html("<i class='fa fa-stop'></i> <span>Disable</span>");
-                    status.html("<i class='fa fa-circle' style='color:#7FFF00'></i> Active");
-                }
-            });
-            break;
-        case "Disable":
-            btnStatus.html("<i class='fa fa-spinner'></i> <span>Disabling...</span>");
-            $.getJSON("api.php?disable&token=" + token, (data) => {
-                if(data.status === "disabled") {
-                    btnStatus.html("<i class='fa fa-play'></i> <span>Enable</span>");
-                    status.html("<i class='fa fa-circle' style='color:#FF0000'></i> Offline");
-                }
-            });
-            break;
+    switch(action) {
+        case "enabled":
+        status.html("<i class='fa fa-circle' style='color:#7FFF00'></i> Active");
+        ena.hide();
+        dis.show();
+        dis.removeClass("active");
+        break;
+
+        case "disabled":
+        status.html("<i class='fa fa-circle' style='color:#FF0000'></i> Offline");
+        ena.show();
+        dis.hide();
+        break;
     }
+
+}
+
+function piholeChange(action, duration)
+{
+    const token = encodeURIComponent($("#token").html());
+    var btnStatus;
+
+    switch(action) {
+        case "enable":
+        btnStatus = $("#flip-status-enable");
+        btnStatus.html("<i class='fa fa-spinner'> </i>");
+        $.getJSON("api.php?enable&token=" + token, (data) => {
+            if(data.status === "enabled") {
+                btnStatus.html("");
+                piholeChanged("enabled");
+            }
+        });
+        break;
+
+        case "disable":
+        btnStatus = $("#flip-status-disable");
+        btnStatus.html("<i class='fa fa-spinner'> </i>");
+        $.getJSON("api.php?disable=" + duration + "&token=" + token, (data) => {
+            if(data.status === "disabled") {
+                btnStatus.html("");
+                piholeChanged("disabled");
+            }
+        });
+        break;
+    }
+}
+
+// Handle Enable/Disable
+$("#pihole-enable").on("click", (e) => {
+    e.preventDefault();
+    piholeChange("enable","");
+});
+$("#pihole-disable-permanently").on("click", (e) => {
+    e.preventDefault();
+    piholeChange("disable","0");
+});
+$("#pihole-disable-10s").on("click", (e) => {
+    e.preventDefault();
+    piholeChange("disable","10");
+    setTimeout(function(){piholeChanged("enabled");},10000);
+});
+$("#pihole-disable-30s").on("click", (e) => {
+    e.preventDefault();
+    piholeChange("disable","30");
+    setTimeout(function(){piholeChanged("enabled");},30000);
+});
+$("#pihole-disable-5m").on("click", (e) => {
+    e.preventDefault();
+    piholeChange("disable","300");
+    setTimeout(function(){piholeChanged("enabled");},300000);
 });
 
 var piholeVersion = $("#piholeVersion").html();
@@ -79,14 +127,14 @@ function versionCompare(left, right) {
 $.getJSON("https://api.github.com/repos/pi-hole/pi-hole/releases/latest", function(json) {
     if(versionCompare(piholeVersion, json.tag_name.slice(1)) < 0) {
         // Alert user
-        $("#piholeVersion").html($("#piholeVersion").text() + '<a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">(Update available!)</a>');
+        $("#piholeVersion").html($("#piholeVersion").text() + "<a class=\"alert-link\" href=\"https://github.com/pi-hole/pi-hole/releases\">(Update available!)</a>");
         $("#alPiholeUpdate").show();
     }
 });
 $.getJSON("https://api.github.com/repos/pi-hole/AdminLTE/releases/latest", function(json) {
     if(versionCompare(webVersion, json.tag_name.slice(1)) < 0) {
         // Alert user
-        $("#webVersion").html($("#webVersion").text() + '<a class="alert-link" href="https://github.com/pi-hole/adminLTE/releases">(Update available!)</a>');
+        $("#webVersion").html($("#webVersion").text() + "<a class=\"alert-link\" href=\"https://github.com/pi-hole/adminLTE/releases\">(Update available!)</a>");
         $("#alWebUpdate").show();
     }
 });

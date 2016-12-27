@@ -1,9 +1,24 @@
 <?php
     $log = array();
     $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+
     $hosts = file_exists("/etc/hosts") ? file("/etc/hosts") : array();
-    $log = new \SplFileObject('/var/log/pihole.log');
-    $gravity = new \SplFileObject('/etc/pihole/list.preEventHorizon');
+
+    // Check if pihole.log exists and is readable
+    $logListName = checkfile("/var/log/pihole.log");
+    $log = new \SplFileObject($logListName);
+
+    // Check if preEventHorizon exists and is readable
+    $gravityListName = checkfile("/etc/pihole/list.preEventHorizon");
+    $gravity = new \SplFileObject($gravityListName);
+
+    // whitelist.txt is optional and might not be there
+    $whiteListFile = checkfile("/etc/pihole/whitelist.txt");
+    $whitelist = new \SplFileObject($whiteListFile);
+
+    // blacklist.txt is optional and might not be there
+    $blackListFile = checkfile("/etc/pihole/blacklist.txt");
+    $blacklist = new \SplFileObject($blackListFile);
 
     /*******   Public Members ********/
     function getSummaryData() {
@@ -92,13 +107,36 @@
         return $queryTypes;
     }
 
+    function resolveIPs(&$array) {
+        $hostarray = [];
+        foreach ($array as $key => $value)
+        {
+            $hostname = gethostbyaddr($key);
+            // If we found a hostname for the IP, replace it
+            if($hostname)
+            {
+                // Generate HOST entry
+                $hostarray[$hostname] = $value;
+            }
+            else
+            {
+                // Generate IP entry
+                $hostarray[$key] = $value;
+            }
+        }
+        $array = $hostarray;
+
+        // Sort new array
+        arsort($array);
+    }
+
     function getForwardDestinations() {
-        global $log;
+        global $log, $setupVars;
         $forwards = getForwards($log);
         $destinations = array();
         foreach ($forwards as $forward) {
             $exploded = explode(" ", trim($forward));
-            $dest = hasHostName($exploded[count($exploded) - 1]);
+            $dest = $exploded[count($exploded) - 1];
             if (isset($destinations[$dest])) {
                 $destinations[$dest]++;
             }
@@ -107,17 +145,36 @@
             }
         }
 
+        if(istrue($setupVars["API_GET_UPSTREAM_DNS_HOSTNAME"]))
+        {
+            resolveIPs($destinations);
+        }
+
         return $destinations;
 
     }
 
+    // Check for existance of variable
+    // and test it only if it exists
+    function istrue(&$argument) {
+        $ret = false;
+        if(isset($argument))
+        {
+            if($argument)
+            {
+                $ret = true;
+            }
+        }
+        return $ret;
+    }
+
     function getQuerySources() {
-        global $log;
+        global $log, $setupVars;
         $dns_queries = getDnsQueries($log);
         $sources = array();
         foreach($dns_queries as $query) {
             $exploded = explode(" ", $query);
-            $ip = hasHostName(trim($exploded[count($exploded)-1]));
+            $ip = trim($exploded[count($exploded)-1]);
             if (isset($sources[$ip])) {
                 $sources[$ip]++;
             }
@@ -134,6 +191,12 @@
 
         arsort($sources);
         $sources = array_slice($sources, 0, 10);
+
+        if(istrue($setupVars["API_GET_CLIENT_HOSTNAME"]))
+        {
+            resolveIPs($sources);
+        }
+
         return Array(
             'top_sources' => $sources
         );
@@ -144,7 +207,7 @@
 
     function setShowBlockedPermitted()
     {
-        global $showBlocked, $showPermitted;
+        global $showBlocked, $showPermitted, $setupVars;
         if(isset($setupVars["API_QUERY_LOG_SHOW"]))
         {
             if($setupVars["API_QUERY_LOG_SHOW"] === "all")
@@ -162,7 +225,7 @@
                 $showBlocked = true;
                 $showPermitted = false;
             }
-            elseif($setupVars["API_QUERY_LOG_SHOW"] === "none")
+            elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
             {
                 $showBlocked = false;
                 $showPermitted = false;
@@ -182,10 +245,12 @@
     }
 
     function getAllQueries($orderBy) {
-        global $log,$gravity,$showBlocked,$showPermitted;
+        global $log,$showBlocked,$showPermitted;
         $allQueries = array("data" => array());
-        $dns_queries = getDnsQueriesAll($log);
-        $gravity_domains = getGravityDomains($gravity);
+        $dns_queries = getDnsQueries($log);
+
+        // Create empty array for gravity
+        $gravity_domains = getGravity();
 
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
@@ -195,46 +260,71 @@
 
             setShowBlockedPermitted();
 
-            if (substr($tmp, 0, 5) == "query")
+            $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
+            if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))
             {
-                $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
-                if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))
-                {
-                    $type = substr($exploded[count($exploded)-4], 6, -1);
-                    $client = $exploded[count($exploded)-1];
+                $type = substr($exploded[count($exploded)-4], 6, -1);
+                $client = $exploded[count($exploded)-1];
 
-                    if($orderBy == "orderByClientDomainTime"){
-                      $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d\TH:i:s')] = $status;
-                    }elseif ($orderBy == "orderByClientTimeDomain"){
-                      $allQueries['data'][hasHostName($client)][$time->format('Y-m-d\TH:i:s')][$domain] = $status;
-                    }elseif ($orderBy == "orderByTimeClientDomain"){
-                      $allQueries['data'][$time->format('Y-m-d\TH:i:s')][hasHostName($client)][$domain] = $status;
-                    }elseif ($orderBy == "orderByTimeDomainClient"){
-                      $allQueries['data'][$time->format('Y-m-d\TH:i:s')][$domain][hasHostName($client)] = $status;
-                    }elseif ($orderBy == "orderByDomainClientTime"){
-                      $allQueries['data'][$domain][hasHostName($client)][$time->format('Y-m-d\TH:i:s')] = $status;
-                    }elseif ($orderBy == "orderByDomainTimeClient"){
-                      $allQueries['data'][$domain][$time->format('Y-m-d\TH:i:s')][hasHostName($client)] = $status;
-                    }else{
-                      array_push($allQueries['data'], array(
-                        $time->format('Y-m-d\TH:i:s'),
-                        $type,
-                        $domain,
-                        hasHostName($client),
-                        $status,
-                        ""
-                      ));
-                    }
+                if($orderBy == "orderByClientDomainTime"){
+                  $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d\TH:i:s')] = $status;
+                }elseif ($orderBy == "orderByClientTimeDomain"){
+                  $allQueries['data'][hasHostName($client)][$time->format('Y-m-d\TH:i:s')][$domain] = $status;
+                }elseif ($orderBy == "orderByTimeClientDomain"){
+                  $allQueries['data'][$time->format('Y-m-d\TH:i:s')][hasHostName($client)][$domain] = $status;
+                }elseif ($orderBy == "orderByTimeDomainClient"){
+                  $allQueries['data'][$time->format('Y-m-d\TH:i:s')][$domain][hasHostName($client)] = $status;
+                }elseif ($orderBy == "orderByDomainClientTime"){
+                  $allQueries['data'][$domain][hasHostName($client)][$time->format('Y-m-d\TH:i:s')] = $status;
+                }elseif ($orderBy == "orderByDomainTimeClient"){
+                  $allQueries['data'][$domain][$time->format('Y-m-d\TH:i:s')][hasHostName($client)] = $status;
+                }else{
+                  array_push($allQueries['data'], array(
+                    $time->format('Y-m-d\TH:i:s'),
+                    $type,
+                    $domain,
+                    hasHostName($client),
+                    $status,
+                    ""
+                  ));
                 }
             }
         }
         return $allQueries;
     }
 
+    function tailPiholeLog($param) {
+        // Not using SplFileObject here, since direct
+        // usage of f-streams will be much faster for
+        // files as large as the pihole.log
+        global $logListName;
+        $file = fopen($logListName,"r");
+        $offset = intval($param);
+        if($offset > 0)
+        {
+            // Seeks on the file pointer where we want to continue reading is known
+            fseek($file, $offset);
+            $lines = [];
+            while (!feof($file)) {
+                array_push($lines,fgets($file));
+            }
+            return ["offset" => ftell($file), "lines" => $lines];
+        }
+        else
+        {
+            // Locate the current position of the file read/write pointer
+            fseek($file, -1, SEEK_END);
+            // Add one to skip the very last "\n" in the log file
+            return ["offset" => ftell($file)+1];
+        }
+        fclose($file);
+    }
+
     /******** Private Members ********/
     function gravityCount() {
-        $preEventHorizon = exec("grep -c ^ /etc/pihole/list.preEventHorizon");
-        $blacklist = exec("grep -c ^ /etc/pihole/blacklist.txt");
+        global $gravityListName,$blackListFile;
+        $preEventHorizon = exec("grep -c ^ $gravityListName");
+        $blacklist = exec("grep -c ^ $blackListFile");
         return ($preEventHorizon + $blacklist);
     }
 
@@ -242,7 +332,7 @@
         $log->rewind();
         $lines = [];
         foreach ($log as $line) {
-            if(strpos($line, ": query[") !== false) {
+            if(strpos($line, ": query[A") !== false) {
                 $lines[] = $line;
             }
         }
@@ -250,45 +340,94 @@
     }
 
     function countDnsQueries() {
-        return exec("grep -c \": query\\[\" /var/log/pihole.log");
+        global $logListName;
+        return exec("grep -c \": query\\[A\" $logListName");
     }
 
     function getDnsQueriesAll(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
         foreach ($log as $line) {
-            if(strpos($line, ": query[") || strpos($line, "gravity.list") || strpos($line, ": forwarded") !== false) {
+            if(strpos($line, ": query[A") || strpos($line, "gravity.list") || strpos($line, ": forwarded") !== false) {
                 $lines[] = $line;
             }
         }
         return $lines;
     }
 
-    function getGravityDomains($gravity){
-        $gravity->rewind();
-        $lines=[];
-        foreach ($gravity as $line) {
-            // Strip newline (and possibly carriage return) from end of string
-            // using rtrim()
-            $lines[rtrim($line)] = true;
+    function getDomains($file, &$array, $action){
+        $file->rewind();
+        foreach ($file as $line) {
+            // Strip newline (and possibly carriage return) from end of key
+            $key = rtrim($line);
+            // if $action = true -> we want that domain to be ADDED to the list
+            // doesn't harm to do this if it has already been set before
+            // (e.g. once in gravity list, once in blacklist)
+            if($action && strlen($key) > 0)
+            {
+                // $action is true (we want to add) *and* key is not empty
+                $array[$key] = true;
+            }
+            elseif(!$action && isset($array[$key]))
+            {
+                // $action is false (we want to remove) *and* key is set
+                unset($array[$key]);
+            }
         }
+    }
 
-        return $lines;
+    function getGravity() {
+        global $gravity,$whitelist,$blacklist;
+        $domains = [];
+
+        // ADD (true) preEventHorizon domains
+        getDomains($gravity, $domains, true);
+
+        // ADD (true) blacklist domains
+        getDomains($blacklist, $domains, true);
+
+        // REMOVE (false) whitelist domains
+        getDomains($whitelist, $domains, false);
+
+        return $domains;
     }
 
     function getBlockedQueries(\SplFileObject $log) {
         $log->rewind();
         $lines = [];
-        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
         foreach ($log as $line) {
-            $line = preg_replace('/ {2,}/', ' ', $line);
             $exploded = explode(" ", $line);
-            if(count($exploded) == 8) {
-                $tmp = $exploded[count($exploded) - 4];
-                $tmp2 = $exploded[count($exploded) - 5];
-                $tmp3 = $exploded[count($exploded) - 3];
-                //filter out bad names and host file reloads:
-                if(substr($tmp, strlen($tmp) - 12, 12) == "gravity.list" && $tmp2 != "read" && $tmp3 != "pi.hole" && $tmp3 != $hostname) {
+            if(count($exploded) == 8 || count($exploded) == 10) {
+                // Structure of data is currently like:
+                // Array
+                // (
+                //     [0] => Dec
+                //     [1] => 19
+                //     [2] => 11:21:51
+                //     [3] => dnsmasq[2584]:
+                //     [4] => /etc/pihole/gravity.list
+                //     [5] => doubleclick.com
+                //     [6] => is
+                //     [7] => ip.of.pi.hole
+                // )
+                // with extra logging enabled
+                // Array
+                // (
+                //     [0] => Dec
+                //     [1] => 19
+                //     [2] => 11:21:51
+                //     [3] => dnsmasq[2584]:
+                //     [4] => 1 (identifier)
+                //     [5] => 1.2.3.4/12345
+                //     [6] => /etc/pihole/gravity.list
+                //     [7] => doubleclick.com
+                //     [8] => is
+                //     [9] => ip.of.pi.hole
+                // )
+                $list = $exploded[count($exploded)-4];
+                $is = $exploded[count($exploded)-2];
+                // Consider only gravity.list as DNS source (not e.g. hostname.list)
+                if(substr($list, strlen($list) - 12, 12) === "gravity.list" && $is === "is") {
                     $lines[] = $line;
                 };
             }
@@ -297,8 +436,8 @@
     }
 
     function countBlockedQueries() {
-        $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
-        return exec("grep \"gravity.list\" /var/log/pihole.log | grep -v \"pi.hole\" | grep -v \" read \" | grep -v -c \"".$hostname."\"");
+        global $logListName;
+        return exec("grep \"gravity.list\" $logListName | grep -c \" is \"");
     }
 
     function getForwards(\SplFileObject $log) {

@@ -23,6 +23,10 @@ if(isset($setupVars["API_QUERY_LOG_SHOW"]))
 	{
 		$showing = "(showing blocked queries only)";
 	}
+	elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
+	{
+		$showing = "(showing no queries at all)";
+	}
 }
 
 ?>

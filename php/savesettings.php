@@ -9,10 +9,24 @@ function validIP($address){
 	return !filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false;
 }
 
+// Check for existance of variable
+// and test it only if it exists
+function istrue(&$argument) {
+	$ret = false;
+	if(isset($argument))
+	{
+		if($argument)
+		{
+			$ret = true;
+		}
+	}
+	return $ret;
+}
+
 // Credit: http://stackoverflow.com/a/4694816/2087442
 function validDomain($domain_name)
 {
-	$validChars = preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domain_name);
+	$validChars = preg_match("/^([_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([a-z\d])*)+$/i", $domain_name);
 	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
 	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
 	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
@@ -95,7 +109,14 @@ function readAdlists(&$list, $listname)
 				// Get secondary DNS server IP address
 				if($secondaryDNS === "Custom")
 				{
-					$secondaryIP = $_POST["DNS2IP"];
+					if(strlen($_POST["DNS2IP"]) > 0)
+					{
+						$secondaryIP = $_POST["DNS2IP"];
+					}
+					else
+					{
+						$secondaryIP = "none";
+					}
 				}
 				else
 				{
@@ -103,7 +124,7 @@ function readAdlists(&$list, $listname)
 				}
 
 				// Validate secondary IP
-				if (!validIP($secondaryIP) && strlen($secondaryIP) > 0)
+				if (!validIP($secondaryIP) && $secondaryIP != "none" && strlen($secondaryIP) > 0)
 				{
 					$error .= "Secondary IP (".$secondaryIP.") is invalid!<br>";
 				}
@@ -235,8 +256,26 @@ function readAdlists(&$list, $listname)
 				}
 				else
 				{
-					exec("sudo pihole -a setquerylog none");
+					exec("sudo pihole -a setquerylog nothing");
 					$success .= "No entries will be shown in Query Log";
+				}
+
+				if(isset($_POST["resolve-forward"]))
+				{
+					exec("sudo pihole -a resolve forward true");
+				}
+				else
+				{
+					exec("sudo pihole -a resolve forward false");
+				}
+
+				if(isset($_POST["resolve-clients"]))
+				{
+					exec("sudo pihole -a resolve clients true");
+				}
+				else
+				{
+					exec("sudo pihole -a resolve clients false");
 				}
 
 				break;
@@ -245,12 +284,14 @@ function readAdlists(&$list, $listname)
 				if($_POST["tempunit"] == "F")
 				{
 					exec('sudo pihole -a -f');
-					$success .= "The webUI settings have been updated";
+				}
+				elseif($_POST["tempunit"] == "K")
+				{
+					exec('sudo pihole -a -k');
 				}
 				else
 				{
 					exec('sudo pihole -a -c');
-					$success .= "The webUI settings have been updated";
 				}
 				if(isset($_POST["boxedlayout"]))
 				{
@@ -260,6 +301,7 @@ function readAdlists(&$list, $listname)
 				{
 					exec('sudo pihole -a layout traditional');
 				}
+				$success .= "The webUI settings have been updated";
 				break;
 
 			case "reboot":
