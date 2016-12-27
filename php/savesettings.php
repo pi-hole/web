@@ -9,10 +9,24 @@ function validIP($address){
 	return !filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false;
 }
 
+// Check for existance of variable
+// and test it only if it exists
+function istrue(&$argument) {
+	$ret = false;
+	if(isset($argument))
+	{
+		if($argument)
+		{
+			$ret = true;
+		}
+	}
+	return $ret;
+}
+
 // Credit: http://stackoverflow.com/a/4694816/2087442
 function validDomain($domain_name)
 {
-	$validChars = preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domain_name);
+	$validChars = preg_match("/^([_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([a-z\d])*)*$/i", $domain_name);
 	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
 	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
 	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
@@ -216,6 +230,7 @@ function validDomain($domain_name)
 					$success .= "No entries will be shown in Query Log";
 				}
 
+
 				if(isset($_POST["privacyMode"]))
 				{
 					exec("sudo pihole -a privacymode true");
@@ -223,6 +238,24 @@ function validDomain($domain_name)
 				else
 				{
 					exec("sudo pihole -a privacymode false");
+				}
+
+				if(isset($_POST["resolve-forward"]))
+				{
+					exec("sudo pihole -a resolve forward true");
+				}
+				else
+				{
+					exec("sudo pihole -a resolve forward false");
+				}
+
+				if(isset($_POST["resolve-clients"]))
+				{
+					exec("sudo pihole -a resolve clients true");
+				}
+				else
+				{
+					exec("sudo pihole -a resolve clients false");
 				}
 
 				break;
