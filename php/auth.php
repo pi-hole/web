@@ -47,15 +47,15 @@ function check_cors() {
 
     if(isset($_SERVER['HTTP_ORIGIN'])) {
         $server_origin = $_SERVER['HTTP_ORIGIN'];
-        
+
         // If HTTP_ORIGIN contains a non-standard port (!= 80) we have to strip the port
         if(strpos($server_origin, ":"))
         {
             $server_origin = parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST);
         }
-        
-        if(!in_array($_SERVER['HTTP_ORIGIN'], $AUTHORIZED_HOSTNAMES)) {
-            log_and_die("Failed CORS: " . $_SERVER['HTTP_ORIGIN'] .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
+
+        if(!in_array("http://".$server_origin, $AUTHORIZED_HOSTNAMES)) {
+            log_and_die("Failed CORS: " . $server_origin .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
         }
         header("Access-Control-Allow-Origin: ${_SERVER['HTTP_ORIGIN']}");
     }
