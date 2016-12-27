@@ -80,12 +80,12 @@ $(document).ready(function() {
 
     if("from" in GETDict)
     {
-        APIstring += "&from="+escapeRegex(GETDict["from"]);
+        APIstring += "&from="+GETDict["from"];
     }
 
     if("until" in GETDict)
     {
-        APIstring += "&until="+escapeRegex(GETDict["until"]);
+        APIstring += "&until="+GETDict["until"];
     }
 
     tableApi = $("#all-queries").DataTable( {
