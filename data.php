@@ -116,7 +116,7 @@
             if($hostname)
             {
                 // Generate HOST entry
-                $hostarray[$hostname] = $value;
+                $hostarray["$hostname|$key"] = $value;
             }
             else
             {
