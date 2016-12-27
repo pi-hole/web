@@ -212,12 +212,26 @@ function validDomain($domain_name)
 				if(isset($_POST["querylog-permitted"]) && isset($_POST["querylog-blocked"]))
 				{
 					exec("sudo pihole -a setquerylog all");
-					$success .= "All entries will be shown in Query Log";
+					if(!isset($_POST["privacyMode"]))
+					{
+						$success .= "All entries will be shown in Query Log";
+					}
+					else
+					{
+						$success .= "Only blocked entries will be shown in Query Log";
+					}
 				}
 				elseif(isset($_POST["querylog-permitted"]))
 				{
 					exec("sudo pihole -a setquerylog permittedonly");
-					$success .= "Only permitted will be shown in Query Log";
+					if(!isset($_POST["privacyMode"]))
+					{
+						$success .= "Only permitted will be shown in Query Log";
+					}
+					else
+					{
+						$success .= "No entries will be shown in Query Log";
+					}
 				}
 				elseif(isset($_POST["querylog-blocked"]))
 				{
@@ -234,6 +248,7 @@ function validDomain($domain_name)
 				if(isset($_POST["privacyMode"]))
 				{
 					exec("sudo pihole -a privacymode true");
+					$success .= " (privacy mode enabled)";
 				}
 				else
 				{
