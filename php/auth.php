@@ -20,16 +20,16 @@ function check_cors() {
 
     // Check CORS
     $AUTHORIZED_HOSTNAMES = array(
-        'http://' . $ipv4,
-        'http://' . $_SERVER['SERVER_NAME'],
-        'http://pi.hole',
-        'http://localhost'
+        $ipv4,
+        $_SERVER["SERVER_NAME"],
+        "pi.hole",
+        "localhost"
     );
 
     # Allow user set virtual hostnames
     $virtual_host = getenv('VIRTUAL_HOST');
     if (! empty($virtual_host))
-        array_push($AUTHORIZED_HOSTNAMES, 'http://' . $virtual_host);
+        array_push($AUTHORIZED_HOSTNAMES, $virtual_host);
 
     // Since the Host header is easily manipulated, we can only check if it's wrong and can't use it
     // to validate that the client is authorized, only unauthorized.
@@ -41,7 +41,7 @@ function check_cors() {
         $server_host = parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST);
     }
 
-    if(isset($_SERVER['HTTP_HOST']) && !in_array("http://".$server_host, $AUTHORIZED_HOSTNAMES)) {
+    if(isset($_SERVER['HTTP_HOST']) && !in_array($server_host, $AUTHORIZED_HOSTNAMES)) {
         log_and_die("Failed Host Check: " . $server_host .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
     }
 
@@ -54,7 +54,7 @@ function check_cors() {
             $server_origin = parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST);
         }
 
-        if(!in_array("http://".$server_origin, $AUTHORIZED_HOSTNAMES)) {
+        if(!in_array($server_origin, $AUTHORIZED_HOSTNAMES)) {
             log_and_die("Failed CORS: " . $server_origin .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
         }
         header("Access-Control-Allow-Origin: ${_SERVER['HTTP_ORIGIN']}");
