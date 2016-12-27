@@ -254,6 +254,23 @@
 
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
+
+            // Check if we want to restrict the time where we want to show queries
+            if(isset($_GET["from"]))
+            {
+                if($time->getTimestamp() <= $_GET["from"])
+                {
+                    continue;
+                }
+            }
+            if(isset($_GET["until"]))
+            {
+                if($time->getTimestamp() >= $_GET["until"])
+                {
+                    continue;
+                }
+            }
+
             $exploded = explode(" ", trim($query));
             $domain = $exploded[count($exploded)-3];
             $tmp = $exploded[count($exploded)-4];
