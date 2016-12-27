@@ -252,24 +252,35 @@
         // Create empty array for gravity
         $gravity_domains = getGravity();
 
+        if(isset($_GET["from"]))
+        {
+            $from = new DateTime($_GET["from"]);
+        }
+        if(isset($_GET["until"]))
+        {
+            $until = new DateTime($_GET["until"]);
+        }
+
         foreach ($dns_queries as $query) {
-            $time = date_create(substr($query, 0, 16));
+            $time = new DateTime(substr($query, 0, 16));
 
             // Check if we want to restrict the time where we want to show queries
-            if(isset($_GET["from"]))
+            if(isset($from))
             {
-                if($time->getTimestamp() <= $_GET["from"])
+                if($time <= $from)
                 {
                     continue;
                 }
             }
-            if(isset($_GET["until"]))
+            if(isset($until))
             {
-                if($time->getTimestamp() >= $_GET["until"])
+                if($time >= $until)
                 {
                     continue;
                 }
             }
+
+           // print_r([$time->getTimestamp(),$_GET["from"],$_GET["until"]]);
 
             $exploded = explode(" ", trim($query));
             $domain = $exploded[count($exploded)-3];
