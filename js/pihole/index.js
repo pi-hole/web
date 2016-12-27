@@ -404,8 +404,8 @@ $(document).ready(function() {
                 //get value by index
                 //var value = timeLineChart.data.datasets[0].data[clickedElementindex];
                 var time = new Date(label);
-                from = time.getHours()+":"+time.getMinutes();
-                until = time.getHours()+":"+padNumber(parseInt(time.getMinutes()+9),2);
+                var from = time.getHours()+":"+time.getMinutes();
+                var until = time.getHours()+":"+padNumber(parseInt(time.getMinutes()+9),2);
                 window.location.href = "queries.php?from="+from+"&until="+until;
             }
             return false;
