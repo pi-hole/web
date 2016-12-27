@@ -23,7 +23,9 @@
     if(isset($setupVars["API_PRIVACY_MODE"]))
     {
         $privacyMode = $setupVars["API_PRIVACY_MODE"];
-    } else {
+    }
+    else
+    {
         $privacyMode = false;
     }
 
@@ -268,7 +270,13 @@
 
         setShowBlockedPermitted();
 
-        if(!$showBlocked && $privacyMode)
+        // Privacy mode?
+        if($privacyMode)
+        {
+            $showPermitted = false;
+        }
+
+        if(!$showBlocked && !$showPermitted)
         {
             // Nothing to do for us here
             return [];
@@ -283,36 +291,30 @@
             $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
             if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))
             {
-                $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
-                // Display blocked queries if $showBlocked is set
-                // Display permitted queries if $showPermitted is set and $privacyMode is disabled
-                if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted && !$privacyMode))
-                {
-                    $type = substr($exploded[count($exploded)-4], 6, -1);
-                    $client = $exploded[count($exploded)-1];
+                $type = substr($exploded[count($exploded)-4], 6, -1);
+                $client = $exploded[count($exploded)-1];
 
-                    if($orderBy == "orderByClientDomainTime"){
-                      $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d\TH:i:s')] = $status;
-                    }elseif ($orderBy == "orderByClientTimeDomain"){
-                      $allQueries['data'][hasHostName($client)][$time->format('Y-m-d\TH:i:s')][$domain] = $status;
-                    }elseif ($orderBy == "orderByTimeClientDomain"){
-                      $allQueries['data'][$time->format('Y-m-d\TH:i:s')][hasHostName($client)][$domain] = $status;
-                    }elseif ($orderBy == "orderByTimeDomainClient"){
-                      $allQueries['data'][$time->format('Y-m-d\TH:i:s')][$domain][hasHostName($client)] = $status;
-                    }elseif ($orderBy == "orderByDomainClientTime"){
-                      $allQueries['data'][$domain][hasHostName($client)][$time->format('Y-m-d\TH:i:s')] = $status;
-                    }elseif ($orderBy == "orderByDomainTimeClient"){
-                      $allQueries['data'][$domain][$time->format('Y-m-d\TH:i:s')][hasHostName($client)] = $status;
-                    }else{
-                      array_push($allQueries['data'], array(
-                        $time->format('Y-m-d\TH:i:s'),
-                        $type,
-                        $domain,
-                        hasHostName($client),
-                        $status,
-                        ""
-                      ));
-                    }
+                if($orderBy == "orderByClientDomainTime"){
+                  $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d\TH:i:s')] = $status;
+                }elseif ($orderBy == "orderByClientTimeDomain"){
+                  $allQueries['data'][hasHostName($client)][$time->format('Y-m-d\TH:i:s')][$domain] = $status;
+                }elseif ($orderBy == "orderByTimeClientDomain"){
+                  $allQueries['data'][$time->format('Y-m-d\TH:i:s')][hasHostName($client)][$domain] = $status;
+                }elseif ($orderBy == "orderByTimeDomainClient"){
+                  $allQueries['data'][$time->format('Y-m-d\TH:i:s')][$domain][hasHostName($client)] = $status;
+                }elseif ($orderBy == "orderByDomainClientTime"){
+                  $allQueries['data'][$domain][hasHostName($client)][$time->format('Y-m-d\TH:i:s')] = $status;
+                }elseif ($orderBy == "orderByDomainTimeClient"){
+                  $allQueries['data'][$domain][$time->format('Y-m-d\TH:i:s')][hasHostName($client)] = $status;
+                }else{
+                  array_push($allQueries['data'], array(
+                    $time->format('Y-m-d\TH:i:s'),
+                    $type,
+                    $domain,
+                    hasHostName($client),
+                    $status,
+                    ""
+                  ));
                 }
             }
         }
