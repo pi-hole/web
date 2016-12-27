@@ -11,7 +11,7 @@ function validIP($address){
 
 // Check for existance of variable
 // and test it only if it exists
-function istrue($argument) {
+function istrue(&$argument) {
 	$ret = false;
 	if(isset($argument))
 	{
