@@ -191,8 +191,7 @@ function updateTopLists() {
     $.getJSON("api.php?summaryRaw&topItems", function(data) {
         var domaintable = $("#domain-frequency").find("tbody:last");
         var adtable = $("#ad-frequency").find("tbody:last");
-        var url, domain, percentage, domainname;
-
+        var url, domain, percentage;
         for (domain in data.top_queries) {
             if ({}.hasOwnProperty.call(data.top_queries,domain)){
                 // Sanitize domain
@@ -210,8 +209,14 @@ function updateTopLists() {
                     "</td> <td>" + data.top_queries[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
                     percentage + "%\"></div> </div> </td> </tr> ");
             }
-
         }
+
+        // Remove table if there are no results (e.g. privacy mode enabled)
+        if(jQuery.isEmptyObject(data.top_queries))
+        {
+            $("#domain-frequency").parent().remove();
+        }
+
         for (domain in data.top_ads) {
             if ({}.hasOwnProperty.call(data.top_ads,domain)){
                 // Sanitize domain

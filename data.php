@@ -20,6 +20,15 @@
     $blackListFile = checkfile("/etc/pihole/blacklist.txt");
     $blacklist = new \SplFileObject($blackListFile);
 
+    if(isset($setupVars["API_PRIVACY_MODE"]))
+    {
+        $privacyMode = $setupVars["API_PRIVACY_MODE"];
+    }
+    else
+    {
+        $privacyMode = false;
+    }
+
     /*******   Public Members ********/
     function getSummaryData() {
         $domains_being_blocked = gravityCount();
@@ -67,12 +76,19 @@
     }
 
     function getTopItems() {
-        global $log;
+        global $log,$privacyMode;
         $dns_queries = getDnsQueries($log);
         $ads_blocked = getBlockedQueries($log);
 
         $topAds = topItems($ads_blocked);
-        $topQueries = topItems($dns_queries, $topAds);
+        if(!$privacyMode)
+        {
+            $topQueries = topItems($dns_queries, $topAds);
+        }
+        else
+        {
+            $topQueries = [];
+        }
 
         return Array(
             'top_queries' => $topQueries,
@@ -245,20 +261,32 @@
     }
 
     function getAllQueries($orderBy) {
-        global $log,$showBlocked,$showPermitted;
+        global $log,$showBlocked,$showPermitted,$privacyMode;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueries($log);
 
         // Create empty array for gravity
         $gravity_domains = getGravity();
 
+        setShowBlockedPermitted();
+
+        // Privacy mode?
+        if($privacyMode)
+        {
+            $showPermitted = false;
+        }
+
+        if(!$showBlocked && !$showPermitted)
+        {
+            // Nothing to do for us here
+            return [];
+        }
+
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
             $exploded = explode(" ", trim($query));
             $domain = $exploded[count($exploded)-3];
             $tmp = $exploded[count($exploded)-4];
-
-            setShowBlockedPermitted();
 
             $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
             if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))

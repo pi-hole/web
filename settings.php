@@ -387,6 +387,14 @@
 		$queryLog = "all";
 	}
 
+	// Privacy Mode
+	if(isset($setupVars["API_PRIVACY_MODE"]))
+	{
+		$privacyMode = $setupVars["API_PRIVACY_MODE"];
+	} else {
+		$privacyMode = false;
+	}
+
 	if(istrue($setupVars["API_GET_UPSTREAM_DNS_HOSTNAME"]))
 	{
 		$resolveForward = true;
@@ -448,6 +456,10 @@
 					<div class="form-group">
 						<div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked queries</label></div>
 					</div>
+				</div>
+				<h4>Privacy mode</h4>
+				<div class="form-group">
+					<div class="checkbox"><label><input type="checkbox" name="privacyMode" <?php if($privacyMode){ ?>checked<?php } ?>> Don't show query results for permitted requests</label></div>
 				</div>
 			</div>
 			<div class="box-footer">
