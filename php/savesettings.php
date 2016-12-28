@@ -59,12 +59,12 @@ function readAdlists(&$list, $listname)
 	{
 		while (($line = fgets($handle)) !== false)
 		{
-			if(substr($line, 0, 2) === "#h")
+			if(substr($line, 0, 2) === "#http")
 			{
 				// Commented list
 				array_push($list, [false,rtrim(substr($line, 1))]);
 			}
-			elseif(substr($line, 0, 1) === "h")
+			elseif(substr($line, 0, 1) === "http")
 			{
 				// Active list
 				array_push($list, [true,rtrim($line)]);
