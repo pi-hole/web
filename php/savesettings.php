@@ -50,7 +50,7 @@ function validDomain($domain_name)
 
 $adlistsdefault = [];
 $adlistsuser = [];
-function readAdlists(&$list, $listname)
+function readAdlists($listname)
 {
 	// Reset list
 	$list = [];
@@ -59,12 +59,12 @@ function readAdlists(&$list, $listname)
 	{
 		while (($line = fgets($handle)) !== false)
 		{
-			if(substr($line, 0, 2) === "#http")
+			if(substr($line, 0, 5) === "#http")
 			{
 				// Commented list
 				array_push($list, [false,rtrim(substr($line, 1))]);
 			}
-			elseif(substr($line, 0, 1) === "http")
+			elseif(substr($line, 0, 4) === "http")
 			{
 				// Active list
 				array_push($list, [true,rtrim($line)]);
@@ -72,11 +72,12 @@ function readAdlists(&$list, $listname)
 		}
 		fclose($handle);
 	}
+	return $list;
 }
 
 	// Read available adlists
-	readAdlists($adlistsdefault,"default");
-	readAdlists($adlistsuser,"user");
+	$adlistsdefault = readAdlists("default");
+	$adlistsuser = readAdlists("user");
 
 	$error = "";
 	$success = "";
@@ -407,8 +408,8 @@ function readAdlists(&$list, $listname)
 				}
 
 				// Reread available adlists
-				readAdlists($adlistsdefault,"default");
-				readAdlists($adlistsuser,"user");
+				$adlistsdefault = readAdlists("default");
+				$adlistsuser = readAdlists("user");
 				break;
 
 			default:
