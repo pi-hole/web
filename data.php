@@ -84,8 +84,6 @@
             $ads_over_time = [1 => 0];
         }
 
-        print_r($domains_over_time);
-
         alignTimeArrays($ads_over_time, $domains_over_time);
         return Array(
             'domains_over_time' => $domains_over_time,
