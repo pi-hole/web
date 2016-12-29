@@ -182,10 +182,10 @@
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-addon">Lease time in hours</div>
-									<input type="text" class="form-control DHCPgroup" name="leasetime" value="<?php echo $DHCPLeaseTime; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
+									<input type="text" class="form-control DHCPgroup" name="leasetime" id="leasetime" value="<?php echo $DHCPLeaseTime; ?>" data-inputmask="'mask': '9', 'repeat': 7, 'greedy' : true" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
 							</div>
 						</div>
-							<p>Hint: 0 = infinite, 24 = one day, 168 = one week, 5208 = one month</p>
+							<p>Hint: 0 = infinite, 24 = one day, 168 = one week, 5208 = one month, 1900920 = one year</p>
 						</div>
 					</div>
 				</div>
