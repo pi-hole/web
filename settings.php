@@ -143,6 +143,7 @@
 					</div>
 					</div>
 					<div class="col-md-6">
+					<label>&nbsp;</label>
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">To</div>
@@ -188,6 +189,7 @@
 						</div>
 					</div>
 				</div>
+				</div>
 <?php if($DHCP) {
 
 	// Read leases file
@@ -204,7 +206,13 @@
 		}
 	}
 	?>
-					<label>DHCP leases</label>
+				<div class="col-lg-12">
+				<div class="box box-warning collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">DHCP leases</h3>
+						<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
+					</div>
+					<div class="box-body">
 					<div class="col-md-12">
 
 						<table id="DHCPLeasesTable" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
@@ -220,8 +228,10 @@
 							</tbody>
 						</table>
 					</div>
-<?php } ?>
+					</div>
 				</div>
+				</div>
+<?php } ?>
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="DHCP">
