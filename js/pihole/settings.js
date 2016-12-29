@@ -81,3 +81,9 @@ $(function(){
         $(this).closest("." + $(this).attr("data-hide")).hide();
     });
 });
+
+// DHCP leases tooltips
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip({"html": true, container : 'body'});
+});
+

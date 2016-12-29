@@ -4,6 +4,12 @@
 	// Reread ini file as things might have been changed
 	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 ?>
+<style type="text/css">
+	.tooltip-inner {
+		max-width: none;
+		white-space: nowrap;
+	}
+</style>
 
 <?php if(isset($debug)){ ?>
 <div id="alDebug" class="alert alert-warning alert-dismissible fade in" role="alert">
@@ -243,7 +249,31 @@
 			{
 				$time = convertseconds($counter-time());
 			}
-			array_push($dhcp_leases,["TIME"=>$time, "MAC"=>$line[1], "IP"=>$line[2], "NAME"=>$line[3]]);
+
+			if(strpos($line[2], ':') !== false)
+			{
+				// IPv6 address
+				$type = 6;
+			}
+			else
+			{
+				// IPv4 lease
+				$type = 4;
+			}
+
+			$host = $line[3];
+			if($host == "*")
+			{
+				$host = "<i>unknown</i>";
+			}
+
+			$clid = $line[4];
+			if($clid == "*")
+			{
+				$clid = "<i>unknown</i>";
+			}
+
+			array_push($dhcp_leases,["TIME"=>$time, "hwaddr"=>$line[1], "IP"=>$line[2], "host"=>$host, "clid"=>$clid, "type"=>$type]);
 		}
 	}
 	?>
@@ -263,7 +293,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach($dhcp_leases as $lease) { ?><tr title="MAC address: <?php echo $lease["MAC"]; ?> - Remaining lease time: <?php echo $lease["TIME"]; ?>"><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["NAME"]; ?></td></tr><?php } ?>
+								<?php foreach($dhcp_leases as $lease) { ?><tr data-placement="auto" data-container="body" data-toggle="tooltip" title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>Hardware address: <?php echo $lease["hwaddr"]; ?><br/>Client ID: <?php echo $lease["clid"]; ?>"><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["host"]; ?></td></tr><?php } ?>
 							</tbody>
 						</table>
 					</div>
@@ -639,4 +669,3 @@
 <script src="js/other/jquery.inputmask.extensions.js"></script>
 <script src="js/other/jquery.confirm.min.js"></script>
 <script src="js/pihole/settings.js"></script>
-
