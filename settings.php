@@ -140,8 +140,10 @@
 				<div class="form-group">
 					<div class="checkbox"><label><input type="checkbox" name="active" <?php if($DHCP){ ?>checked<?php } ?> id="DHCPchk"> DHCP server enabled</label></div>
 				</div>
+					<div class="col-md-12">
+						<label>Range of IP addresses to hand out</label>
+					</div>
 					<div class="col-md-6">
-					<label>Range of IP addresses to hand out</label>
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">From</div>
@@ -150,7 +152,6 @@
 					</div>
 					</div>
 					<div class="col-md-6">
-					<label>&nbsp;</label>
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">To</div>
@@ -254,7 +255,6 @@
 					</div>
 					<div class="box-body">
 					<div class="col-md-12">
-
 						<table id="DHCPLeasesTable" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
 							<thead>
 								<tr>
