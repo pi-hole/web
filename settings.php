@@ -215,7 +215,11 @@
 		if(count($line) == 5)
 		{
 			$counter = intval($line[0]);
-			if($counter <= 315360000) // 10 years in seconds
+			if($counter == 0)
+			{
+				$time = "Infinite";
+			}
+			elseif($counter <= 315360000) // 10 years in seconds
 			{
 				$time = convertseconds($counter);
 			}
