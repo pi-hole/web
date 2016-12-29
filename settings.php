@@ -101,6 +101,12 @@
 		$DHCPstart = $setupVars["DHCP_START"];
 		$DHCPend = $setupVars["DHCP_END"];
 		$DHCProuter = $setupVars["DHCP_ROUTER"];
+		$DHCPleasetime = $setupVars["DHCP_LEASETIME"];
+		if(strlen($DHCPleasetime) < 1)
+		{
+			// Fallback if it was not set before
+			$DHCPleasetime = 24;
+		}
 	}
 	else
 	{
@@ -117,6 +123,7 @@
 			$DHCPend    = "";
 			$DHCProuter = "";
 		}
+		$DHCPleasetime = 24;
 	}
 	if(isset($setupVars["PIHOLE_DOMAIN"])){
 		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
@@ -182,7 +189,7 @@
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-addon">Lease time in hours</div>
-									<input type="text" class="form-control DHCPgroup" name="leasetime" id="leasetime" value="<?php echo $DHCPLeaseTime; ?>" data-inputmask="'mask': '9', 'repeat': 7, 'greedy' : true" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
+									<input type="text" class="form-control DHCPgroup" name="DHCPleasetime" id="leasetime" value="<?php echo $DHCPleasetime; ?>" data-inputmask="'mask': '9', 'repeat': 7, 'greedy' : false" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
 							</div>
 						</div>
 							<p>Hint: 0 = infinite, 24 = one day, 168 = one week, 5208 = one month, 1900920 = one year</p>
