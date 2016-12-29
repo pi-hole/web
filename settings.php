@@ -192,7 +192,7 @@
 									<input type="text" class="form-control DHCPgroup" name="leasetime" id="leasetime" value="<?php echo $DHCPleasetime; ?>" data-inputmask="'mask': '9', 'repeat': 7, 'greedy' : false" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
 							</div>
 						</div>
-							<p>Hint: 0 = infinite, 24 = one day, 168 = one week, 5208 = one month, 1900920 = one year</p>
+							<p>Hint: 0 = infinite, 24 = one day, 168 = one week, 744 = one month, 8760 = one year</p>
 						</div>
 					</div>
 				</div>
@@ -204,12 +204,26 @@
 	$dhcpleases = fopen('/etc/pihole/dhcp.leases', 'r') or $leasesfile = false;
 	$dhcp_leases  = [];
 
+	function convertseconds($seconds) {
+		$t = round($seconds);
+		return sprintf('%02d:%02d:%02d', ($t/3600),($t/60%60), $t%60);
+}
+
 	while(!feof($dhcpleases) && $leasesfile)
 	{
 		$line = explode(" ",trim(fgets($dhcpleases)));
-		if(count($line) > 1)
+		if(count($line) == 5)
 		{
-			array_push($dhcp_leases,["MAC"=>$line[1], "IP"=>$line[2], "NAME"=>$line[3]]);
+			$counter = intval($line[0]);
+			if($counter <= 315360000) // 10 years in seconds
+			{
+				$time = convertseconds($counter);
+			}
+			else // Assume time stamp
+			{
+				$time = convertseconds($counter-time());
+			}
+			array_push($dhcp_leases,["TIME"=>$time, "MAC"=>$line[1], "IP"=>$line[2], "NAME"=>$line[3]]);
 		}
 	}
 	?>
@@ -228,10 +242,11 @@
 									<th>IP address</th>
 									<th>Hostname</th>
 									<th>MAC address</th>
+									<th>Lease valid for</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach($dhcp_leases as $lease) { ?><tr><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["NAME"]; ?></td><td><?php echo $lease["MAC"]; ?></td></tr><?php } ?>
+								<?php foreach($dhcp_leases as $lease) { ?><tr><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["NAME"]; ?></td><td><?php echo $lease["MAC"]; ?></td><td><?php echo $lease["TIME"]; ?></td></tr><?php } ?>
 							</tbody>
 						</table>
 					</div>
