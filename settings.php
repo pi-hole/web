@@ -206,7 +206,22 @@
 
 	function convertseconds($argument) {
 		$seconds = round($argument);
-		return sprintf('%02d:%02d:%02d', ($seconds/3600),($seconds/60%60), $seconds%60);
+		if($seconds < 60)
+		{
+			return sprintf('%ds', $seconds);
+		}
+		elseif($seconds < 3600)
+		{
+			return sprintf('%dm %ds', ($seconds/60), ($seconds%60));
+		}
+		elseif($seconds < 86400)
+		{
+			return sprintf('%dh %dm %ds',  ($seconds/3600%24),($seconds/60%60), ($seconds%60));
+		}
+		else
+		{
+			return sprintf('%dd %dh %dm %ds', ($seconds/86400), ($seconds/3600%24),($seconds/60%60), ($seconds%60));
+		}
 }
 
 	while(!feof($dhcpleases) && $leasesfile)
