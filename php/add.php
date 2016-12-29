@@ -15,7 +15,7 @@ elseif(isset($_POST['pw']) && $_POST['list'] == "white")
 	require("password.php");
 	if(strlen($pwhash) == 0)
 	{
-		log_and_die("No password specified - whitelisting with password not supported");
+		log_and_die("No password set - whitelisting with password not supported");
 	}
 	elseif($wrongpassword)
 	{
