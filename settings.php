@@ -133,35 +133,61 @@
 				<div class="form-group">
 					<div class="checkbox"><label><input type="checkbox" name="active" <?php if($DHCP){ ?>checked<?php } ?> id="DHCPchk"> DHCP server enabled</label></div>
 				</div>
-				<label>Range of IP addresses to hand out</label>
-				<div class="form-group">
 					<div class="col-md-6">
+					<label>Range of IP addresses to hand out</label>
+					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">From</div>
 								<input type="text" class="form-control DHCPgroup" name="from" value="<?php echo $DHCPstart; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
+						</div>
 					</div>
 					</div>
 					<div class="col-md-6">
+					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">To</div>
 								<input type="text" class="form-control DHCPgroup" name="to" value="<?php echo $DHCPend; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
-					<label>Router (gateway) IP address</label>
+					</div>
 					<div class="col-md-12">
+					<label>Router (gateway) IP address</label>
+					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">Router</div>
 								<input type="text" class="form-control DHCPgroup" name="router" value="<?php echo $DHCProuter; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
+					</div>
 					</div><br/>
-					<label>Pi-Hole domain name</label>
-					<div class="col-md-12">
-						<div class="input-group">
-							<div class="input-group-addon">Domain</div>
-								<input type="text" class="form-control DHCPgroup" name="domain" value="<?php echo $piHoleDomain; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
+				<br/>
+				<div class="col-lg-12">
+				<div class="box box-warning collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">Advanced DHCP settings</h3>
+						<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
+					</div>
+					<div class="box-body">
+						<div class="col-md-12">
+						<label>Pi-Hole domain name</label>
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-addon">Domain</div>
+									<input type="text" class="form-control DHCPgroup" name="domain" value="<?php echo $piHoleDomain; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
+							</div>
+						</div>
+						</div><br/>
+						<div class="col-md-12">
+						<label>DHCP lease time</label>
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-addon">Lease time in hours</div>
+									<input type="text" class="form-control DHCPgroup" name="leasetime" value="<?php echo $DHCPLeaseTime; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
+							</div>
+						</div>
+							<p>Hint: 0 = infinite, 24 = one day, 168 = one week, 5208 = one month</p>
 						</div>
 					</div>
-				<br/>
+				</div>
 <?php if($DHCP) {
 
 	// Read leases file
