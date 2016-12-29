@@ -204,9 +204,9 @@
 	$dhcpleases = fopen('/etc/pihole/dhcp.leases', 'r') or $leasesfile = false;
 	$dhcp_leases  = [];
 
-	function convertseconds($seconds) {
-		$t = round($seconds);
-		return sprintf('%02d:%02d:%02d', ($t/3600),($t/60%60), $t%60);
+	function convertseconds($argument) {
+		$seconds = round($argument);
+		return sprintf('%02d:%02d:%02d', ($seconds/3600),($seconds/60%60), $seconds%60);
 }
 
 	while(!feof($dhcpleases) && $leasesfile)
