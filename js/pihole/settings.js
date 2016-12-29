@@ -69,7 +69,7 @@ $(document).ready(function() {
 			"scrollY": "200px",
 			"scrollX" : true
 		});
-	$('#leaseexpand').on( 'click', function () {
+	$('#leaseexpand').on( "click", function () {
 		setTimeout(function(){leasetable.draw();},100);
 		} );
 	}
