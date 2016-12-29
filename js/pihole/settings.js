@@ -62,7 +62,7 @@ $(document).ready(function() {
 	if(document.getElementById("DHCPLeasesTable"))
 	{
 		leasetable = $("#DHCPLeasesTable").DataTable({
-			dom: "<'row'<'col-sm-7'i><'col-sm-5'f>>" +
+			dom: "<'row'<'col-sm-6'i><'col-sm-6'f>>" +
 				"<'row'<'col-sm-12'tr>>",
 			"paging": false,
 			"scrollCollapse": true,
@@ -84,6 +84,6 @@ $(function(){
 
 // DHCP leases tooltips
 $(document).ready(function(){
-    $("[data-toggle="tooltip"]").tooltip({"html": true, container : 'body'});
+    $("[data-toggle=\"tooltip\"]").tooltip({"html": true, container : "body"});
 });
 
