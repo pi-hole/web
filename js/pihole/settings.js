@@ -61,11 +61,12 @@ $(document).ready(function() {
 	if(document.getElementById("DHCPLeasesTable"))
 	{
 		$("#DHCPLeasesTable").DataTable({
-			dom: "<'row'<'col-sm-12'i>>" +
-				"<'row'<'col-sm-12'tr>>" +
-				"<'row'<'col-sm-5'f><'col-sm-7'p>>",
-			"pageLength": 5,
-			"scrollX" : "true"
+			dom: "<'row'<'col-sm-7'i><'col-sm-5'f>>" +
+				"<'row'<'col-sm-12'tr>>",
+			"paging": false,
+			"scrollCollapse": true,
+			"scrollY": "200px",
+			"scrollX" : true
 		});
 	}
 } );

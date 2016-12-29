@@ -260,12 +260,11 @@
 								<tr>
 									<th>IP address</th>
 									<th>Hostname</th>
-									<th>MAC address</th>
 									<th>Lease valid for</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach($dhcp_leases as $lease) { ?><tr><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["NAME"]; ?></td><td><?php echo $lease["MAC"]; ?></td><td><?php echo $lease["TIME"]; ?></td></tr><?php } ?>
+								<?php foreach($dhcp_leases as $lease) { ?><tr title="MAC address: <?php echo $lease["MAC"]; ?>"><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["NAME"]; ?></td><td><?php echo $lease["TIME"]; ?></td></tr><?php } ?>
 							</tbody>
 						</table>
 					</div>
