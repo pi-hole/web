@@ -251,7 +251,7 @@
 				<div class="box box-warning collapsed-box">
 					<div class="box-header with-border">
 						<h3 class="box-title">DHCP leases</h3>
-						<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
+						<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse" id="leaseexpand"><i class="fa fa-plus"></i></button></div>
 					</div>
 					<div class="box-body">
 					<div class="col-md-12">
