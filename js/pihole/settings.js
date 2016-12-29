@@ -64,7 +64,8 @@ $(document).ready(function() {
 			dom: "<'row'<'col-sm-12'i>>" +
 				"<'row'<'col-sm-12'tr>>" +
 				"<'row'<'col-sm-5'f><'col-sm-7'p>>",
-			"pageLength": 5
+			"pageLength": 5,
+			"scrollX" : "true"
 		});
 	}
 } );
