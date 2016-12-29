@@ -29,6 +29,14 @@ if(isset($setupVars["API_QUERY_LOG_SHOW"]))
 	}
 }
 
+if(isset($setupVars["API_PRIVACY_MODE"]))
+{
+	if($setupVars["API_PRIVACY_MODE"])
+	{
+		// Overwrite string from above
+		$showing = "(privacy mode enabled)";
+	}
+}
 ?>
 <!-- Send PHP info to JS -->
 <div id="token" hidden><?php echo $token ?></div>
