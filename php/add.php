@@ -1,7 +1,7 @@
 <?php
 require('auth.php');
 
-if(!isset($_POST['domain'], $_POST['list'], $_POST['token']) || !isset($_POST['domain'], $_POST['list'], $_POST['pw'])) {
+if(!isset($_POST['domain'], $_POST['list'], $_POST['token']) && !isset($_POST['domain'], $_POST['list'], $_POST['pw'])) {
 	log_and_die("Missing POST variables");
 }
 
