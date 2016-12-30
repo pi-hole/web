@@ -20,34 +20,42 @@ function check_cors() {
 
     // Check CORS
     $AUTHORIZED_HOSTNAMES = array(
-        'http://' . $ipv4,
-        'http://' . $_SERVER['SERVER_NAME'],
-        'http://pi.hole',
-        'http://localhost'
+        $ipv4,
+        $_SERVER["SERVER_NAME"],
+        "pi.hole",
+        "localhost"
     );
 
     # Allow user set virtual hostnames
     $virtual_host = getenv('VIRTUAL_HOST');
     if (! empty($virtual_host))
-        array_push($AUTHORIZED_HOSTNAMES, 'http://' . $virtual_host);
+        array_push($AUTHORIZED_HOSTNAMES, $virtual_host);
 
     // Since the Host header is easily manipulated, we can only check if it's wrong and can't use it
     // to validate that the client is authorized, only unauthorized.
     $server_host = $_SERVER['HTTP_HOST'];
 
     // If HTTP_HOST contains a non-standard port (!= 80) we have to strip the port
-    if(strpos($server_host,":"))
+    if(strpos($server_host, ":"))
     {
         $server_host = parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST);
     }
 
-    if(isset($_SERVER['HTTP_HOST']) && !in_array("http://".$server_host, $AUTHORIZED_HOSTNAMES)) {
+    if(isset($_SERVER['HTTP_HOST']) && !in_array($server_host, $AUTHORIZED_HOSTNAMES)) {
         log_and_die("Failed Host Check: " . $server_host .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
     }
 
     if(isset($_SERVER['HTTP_ORIGIN'])) {
-        if(!in_array($_SERVER['HTTP_ORIGIN'], $AUTHORIZED_HOSTNAMES)) {
-            log_and_die("Failed CORS: " . $_SERVER['HTTP_ORIGIN'] .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
+        $server_origin = $_SERVER['HTTP_ORIGIN'];
+
+        // If HTTP_ORIGIN contains a non-standard port (!= 80) we have to strip the port
+        if(strpos($server_origin, ":"))
+        {
+            $server_origin = parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST);
+        }
+
+        if(!in_array($server_origin, $AUTHORIZED_HOSTNAMES)) {
+            log_and_die("Failed CORS: " . $server_origin .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
         }
         header("Access-Control-Allow-Origin: ${_SERVER['HTTP_ORIGIN']}");
     }
@@ -96,5 +104,34 @@ function check_domain() {
             log_and_die($_POST['domain']. ' is not a valid domain');
         }
     }
+}
+
+function list_verify($type) {
+    if(!isset($_POST['domain']) || !isset($_POST['list']) || !(isset($_POST['pw']) || isset($_POST['token']))) {
+        log_and_die("Missing POST variables");
+    }
+
+    if(isset($_POST['token']))
+    {
+        check_cors();
+        check_csrf($_POST['token']);
+    }
+    elseif(isset($_POST['pw']))
+    {
+        require("password.php");
+        if(strlen($pwhash) == 0)
+        {
+            log_and_die("No password set - ${type}listing with password not supported");
+        }
+        elseif($wrongpassword)
+        {
+            log_and_die("Wrong password - ${type}listing of ${_POST['domain']} not permitted");
+        }
+    }
+    else
+    {
+        log_and_die("Not allowed!");
+    }
+    check_domain();
 }
 ?>

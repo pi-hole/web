@@ -20,6 +20,15 @@
     $blackListFile = checkfile("/etc/pihole/blacklist.txt");
     $blacklist = new \SplFileObject($blackListFile);
 
+    if(isset($setupVars["API_PRIVACY_MODE"]))
+    {
+        $privacyMode = $setupVars["API_PRIVACY_MODE"];
+    }
+    else
+    {
+        $privacyMode = false;
+    }
+
     /*******   Public Members ********/
     function getSummaryData() {
         $domains_being_blocked = gravityCount();
@@ -51,6 +60,16 @@
         list($domains_over_time, $ads_over_time) = overTime($dns_queries, $gravity_domains);
 
         // Align arrays
+        $domains_over_time = overTime($dns_queries);
+        $ads_over_time = overTime($ads_blocked);
+
+        // Provide a minimal valid array if there have are no blocked
+        // queries at all. Otherwise the output of the API is inconsistent.
+        if(count($ads_blocked) == 0)
+        {
+            $ads_over_time = [1 => 0];
+        }
+
         alignTimeArrays($ads_over_time, $domains_over_time);
         return Array(
             'domains_over_time' => $domains_over_time,
@@ -71,6 +90,17 @@
         list($domains_over_time, $ads_over_time) = overTime10mins($dns_queries, $gravity_domains);
 
         // Align arrays (in case there have been hours without ad queries)
+
+        $domains_over_time = overTime10mins($dns_queries);
+        $ads_over_time = overTime10mins($ads_blocked);
+
+        // Provide a minimal valid array if there have are no blocked
+        // queries at all. Otherwise the output of the API is inconsistent.
+        if(count($ads_blocked) == 0)
+        {
+            $ads_over_time = [1 => 0];
+        }
+
         alignTimeArrays($ads_over_time, $domains_over_time);
         return Array(
             'domains_over_time' => $domains_over_time,
@@ -79,7 +109,7 @@
     }
 
     function getTopItems($argument) {
-        global $log,$setupVars;
+        global $log,$setupVars,$privacyMode;
 
         // Process log file
         $dns_domains = getDnsQueryDomains($log);
@@ -117,7 +147,7 @@
                 $topAds[$key] = $value;
                 $adcounter++;
             }
-            else if($domaincounter < $qty)
+            else if($domaincounter < $qty && !$privacyMode)
             {
                 // New entry for Top Domains
                 $topDomains[$key] = $value;
@@ -173,7 +203,7 @@
             if($hostname)
             {
                 // Generate HOST entry
-                $hostarray[$hostname] = $value;
+                $hostarray["$hostname|$key"] = $value;
             }
             else
             {
@@ -302,20 +332,32 @@
     }
 
     function getAllQueries($orderBy) {
-        global $log,$showBlocked,$showPermitted;
+        global $log,$showBlocked,$showPermitted,$privacyMode;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueries($log);
 
         // Create empty array for gravity
         $gravity_domains = getGravity();
 
+        setShowBlockedPermitted();
+
+        // Privacy mode?
+        if($privacyMode)
+        {
+            $showPermitted = false;
+        }
+
+        if(!$showBlocked && !$showPermitted)
+        {
+            // Nothing to do for us here
+            return [];
+        }
+
         foreach ($dns_queries as $query) {
             $time = date_create(substr($query, 0, 16));
             $exploded = explode(" ", trim($query));
             $domain = $exploded[count($exploded)-3];
             $tmp = $exploded[count($exploded)-4];
-
-            setShowBlockedPermitted();
 
             $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
             if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))
