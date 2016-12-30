@@ -1,5 +1,5 @@
 <?php
-    require "header.php";
+    require "scripts/pi-hole/php/header.php";
 
 // Generate CSRF token
 if(empty($_SESSION['token'])) {
@@ -29,6 +29,14 @@ if(isset($setupVars["API_QUERY_LOG_SHOW"]))
 	}
 }
 
+if(isset($setupVars["API_PRIVACY_MODE"]))
+{
+	if($setupVars["API_PRIVACY_MODE"])
+	{
+		// Overwrite string from above
+		$showing = "(privacy mode enabled)";
+	}
+}
 ?>
 <!-- Send PHP info to JS -->
 <div id="token" hidden><?php echo $token ?></div>
@@ -97,7 +105,7 @@ if(isset($setupVars["API_QUERY_LOG_SHOW"]))
 <!-- /.row -->
 
 <?php
-    require "footer.php";
+    require "scripts/pi-hole/php/footer.php";
 ?>
 
-<script src="js/pihole/queries.js"></script>
+<script src="scripts/pi-hole/js/queries.js"></script>
