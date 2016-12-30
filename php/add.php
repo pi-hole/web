@@ -7,12 +7,12 @@ $type = $_POST['list'];
 list_verify($type);
 
 switch($type) {
-	case "white":
-		echo exec("sudo pihole -w -q ${_POST['domain']}");
-		break;
-	case "black":
-		echo exec("sudo pihole -b -q ${_POST['domain']}");
-		break;
+    case "white":
+        echo exec("sudo pihole -w -q ${_POST['domain']}");
+        break;
+    case "black":
+        echo exec("sudo pihole -b -q ${_POST['domain']}");
+        break;
 }
 
 ?>
