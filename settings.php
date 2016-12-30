@@ -1,6 +1,6 @@
 <?php
-	require "header.php";
-	require "php/savesettings.php";
+	require "scripts/pi-hole/php/header.php";
+	require "scripts/pi-hole/php/savesettings.php";
 	// Reread ini file as things might have been changed
 	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 ?>
@@ -558,10 +558,10 @@
 </div>
 
 <?php
-    require "footer.php";
+    require "scripts/pi-hole/php/footer.php";
 ?>
-<script src="js/other/jquery.inputmask.js"></script>
-<script src="js/other/jquery.inputmask.extensions.js"></script>
-<script src="js/other/jquery.confirm.min.js"></script>
-<script src="js/pihole/settings.js"></script>
+<script src="scripts/vendor/jquery.inputmask.js"></script>
+<script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
+<script src="scripts/vendor/jquery.confirm.min.js"></script>
+<script src="scripts/pi-hole/js/settings.js"></script>
 

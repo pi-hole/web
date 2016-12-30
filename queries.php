@@ -1,5 +1,5 @@
 <?php
-    require "header.php";
+    require "scripts/pi-hole/php/header.php";
 
 // Generate CSRF token
 if(empty($_SESSION['token'])) {
@@ -105,7 +105,7 @@ if(isset($setupVars["API_PRIVACY_MODE"]))
 <!-- /.row -->
 
 <?php
-    require "footer.php";
+    require "scripts/pi-hole/php/footer.php";
 ?>
 
-<script src="js/pihole/queries.js"></script>
+<script src="scripts/pi-hole/js/queries.js"></script>
