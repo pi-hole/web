@@ -1,15 +1,12 @@
 <?php
 require('auth.php');
 
-if(!isset($_POST['domain'], $_POST['list'], $_POST['token'])) {
-    log_and_die("Missing POST variables");
-}
+$type = $_POST['list'];
 
-check_cors();
-check_csrf($_POST['token']);
-check_domain();
+// All of the verification for list editing
+list_verify($type);
 
-switch($_POST['list']) {
+switch($type) {
     case "white":
         echo exec("sudo pihole -w -q ${_POST['domain']}");
         break;
