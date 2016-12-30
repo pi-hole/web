@@ -116,7 +116,7 @@ function list_verify($type) {
         check_cors();
         check_csrf($_POST['token']);
     }
-    elseif(isset($_POST['pw']) && $_POST['list'] == "white")
+    elseif(isset($_POST['pw']))
     {
         require("password.php");
         if(strlen($pwhash) == 0)
