@@ -1,5 +1,5 @@
 <?php
-    require "header.php";
+    require "scripts/pi-hole/php/header.php";
 
     if(strlen($pwhash) > 0)
     {
@@ -146,7 +146,5 @@
 </div>
 
 <?php
-    require "footer.php";
+    require "scripts/pi-hole/php/footer.php";
 ?>
-
-<script src="js/pihole/help.js"></script>
