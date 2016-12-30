@@ -26,7 +26,7 @@ function istrue(&$argument) {
 // Credit: http://stackoverflow.com/a/4694816/2087442
 function validDomain($domain_name)
 {
-	$validChars = preg_match("/^([_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([a-z\d])*)+$/i", $domain_name);
+	$validChars = preg_match("/^([_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([a-z\d])*)*$/i", $domain_name);
 	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
 	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
 	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
@@ -243,12 +243,26 @@ function readAdlists($listname)
 				if(isset($_POST["querylog-permitted"]) && isset($_POST["querylog-blocked"]))
 				{
 					exec("sudo pihole -a setquerylog all");
-					$success .= "All entries will be shown in Query Log";
+					if(!isset($_POST["privacyMode"]))
+					{
+						$success .= "All entries will be shown in Query Log";
+					}
+					else
+					{
+						$success .= "Only blocked entries will be shown in Query Log";
+					}
 				}
 				elseif(isset($_POST["querylog-permitted"]))
 				{
 					exec("sudo pihole -a setquerylog permittedonly");
-					$success .= "Only permitted will be shown in Query Log";
+					if(!isset($_POST["privacyMode"]))
+					{
+						$success .= "Only permitted will be shown in Query Log";
+					}
+					else
+					{
+						$success .= "No entries will be shown in Query Log";
+					}
 				}
 				elseif(isset($_POST["querylog-blocked"]))
 				{
@@ -259,6 +273,17 @@ function readAdlists($listname)
 				{
 					exec("sudo pihole -a setquerylog nothing");
 					$success .= "No entries will be shown in Query Log";
+				}
+
+
+				if(isset($_POST["privacyMode"]))
+				{
+					exec("sudo pihole -a privacymode true");
+					$success .= " (privacy mode enabled)";
+				}
+				else
+				{
+					exec("sudo pihole -a privacymode false");
 				}
 
 				if(isset($_POST["resolve-forward"]))
