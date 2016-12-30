@@ -22,7 +22,12 @@ elseif(isset($_POST['pw']) && $_POST['list'] == "white")
 		log_and_die("Wrong password - whitelisting of ${_POST['domain']} not permitted");
 	}
 }
+else
+{
+	log_and_die("Not allowed!");
+}
 check_domain();
+
 
 switch($_POST['list']) {
 	case "white":
