@@ -1,5 +1,5 @@
 <?php
-    require "header.php";
+    require "scripts/pi-hole/php/header.php";
 ?>
 <!-- Title -->
 <div class="page-header">
@@ -11,8 +11,8 @@
 <div class="checkbox"><label><input type="checkbox" name="active" checked id="chk2"> Automatic scrolling on update</label></div>
 
 <?php
-    require "footer.php";
+    require "scripts/pi-hole/php/footer.php";
 ?>
 
 
-<script src="js/pihole/taillog.js"></script>
+<script src="scripts/pi-hole/js/taillog.js"></script>

@@ -132,14 +132,22 @@ function escapeHtml(text) {
 function updateTopClientsChart() {
     $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
         var clienttable =  $("#client-frequency").find("tbody:last");
-        var domain, percentage;
+        var domain, percentage, domainname;
         for (domain in data.top_sources) {
 
             if ({}.hasOwnProperty.call(data.top_sources, domain)){
                 // Sanitize domain
                 domain = escapeHtml(domain);
+                if(domain.indexOf("|") > -1)
+                {
+                    domainname = domain.substr(0, domain.indexOf("|"));
+                }
+                else
+                {
+                    domainname = domain;
+                }
 
-                var url = "<a href=\"queries.php?client="+domain+"\">"+domain+"</a>";
+                var url = "<a href=\"queries.php?client="+domain+"\">"+domainname+"</a>";
                 percentage = data.top_sources[domain] / data.dns_queries_today * 100;
                 clienttable.append("<tr> <td>" + url +
                     "</td> <td>" + data.top_sources[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
@@ -162,6 +170,10 @@ function updateForwardDestinations() {
         $.each(data, function(key , value) {
             v.push(value);
             c.push(colors.shift());
+            if(key.indexOf("|") > -1)
+            {
+                key = key.substr(0, key.indexOf("|"));
+            }
             forwardDestinationChart.data.labels.push(key);
         });
         // Build a single dataset with the data to be pushed
@@ -180,7 +192,6 @@ function updateTopLists() {
         var domaintable = $("#domain-frequency").find("tbody:last");
         var adtable = $("#ad-frequency").find("tbody:last");
         var url, domain, percentage;
-
         for (domain in data.top_queries) {
             if ({}.hasOwnProperty.call(data.top_queries,domain)){
                 // Sanitize domain
@@ -198,8 +209,14 @@ function updateTopLists() {
                     "</td> <td>" + data.top_queries[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
                     percentage + "%\"></div> </div> </td> </tr> ");
             }
-
         }
+
+        // Remove table if there are no results (e.g. privacy mode enabled)
+        if(jQuery.isEmptyObject(data.top_queries))
+        {
+            $("#domain-frequency").parent().remove();
+        }
+
         for (domain in data.top_ads) {
             if ({}.hasOwnProperty.call(data.top_ads,domain)){
                 // Sanitize domain

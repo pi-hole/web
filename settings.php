@@ -1,6 +1,6 @@
 <?php
-	require "header.php";
-	require "php/savesettings.php";
+	require "scripts/pi-hole/php/header.php";
+	require "scripts/pi-hole/php/savesettings.php";
 	// Reread ini file as things might have been changed
 	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 ?>
@@ -387,6 +387,14 @@
 		$queryLog = "all";
 	}
 
+	// Privacy Mode
+	if(isset($setupVars["API_PRIVACY_MODE"]))
+	{
+		$privacyMode = $setupVars["API_PRIVACY_MODE"];
+	} else {
+		$privacyMode = false;
+	}
+
 	if(istrue($setupVars["API_GET_UPSTREAM_DNS_HOSTNAME"]))
 	{
 		$resolveForward = true;
@@ -448,6 +456,10 @@
 					<div class="form-group">
 						<div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked queries</label></div>
 					</div>
+				</div>
+				<h4>Privacy mode</h4>
+				<div class="form-group">
+					<div class="checkbox"><label><input type="checkbox" name="privacyMode" <?php if($privacyMode){ ?>checked<?php } ?>> Don't show query results for permitted requests</label></div>
 				</div>
 			</div>
 			<div class="box-footer">
@@ -546,10 +558,10 @@
 </div>
 
 <?php
-    require "footer.php";
+    require "scripts/pi-hole/php/footer.php";
 ?>
-<script src="js/other/jquery.inputmask.js"></script>
-<script src="js/other/jquery.inputmask.extensions.js"></script>
-<script src="js/other/jquery.confirm.min.js"></script>
-<script src="js/pihole/settings.js"></script>
+<script src="scripts/vendor/jquery.inputmask.js"></script>
+<script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
+<script src="scripts/vendor/jquery.confirm.min.js"></script>
+<script src="scripts/pi-hole/js/settings.js"></script>
 
