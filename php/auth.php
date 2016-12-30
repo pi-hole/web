@@ -107,7 +107,7 @@ function check_domain() {
 }
 
 function list_verify($type) {
-    if(!isset($_POST['domain'], $_POST['list']) && !(isset($_POST['pw']) || isset($_POST['token']))) {
+    if(!isset($_POST['domain']) || !isset($_POST['list']) || !(isset($_POST['pw']) || isset($_POST['token']))) {
         log_and_die("Missing POST variables");
     }
 
