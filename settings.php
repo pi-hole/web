@@ -173,37 +173,36 @@
 								<input type="text" class="form-control DHCPgroup" name="router" value="<?php echo $DHCProuter; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
-					</div><br/>
-				<br/>
-				<div class="col-lg-12">
-				<div class="box box-warning collapsed-box">
-					<div class="box-header with-border">
-						<h3 class="box-title">Advanced DHCP settings</h3>
-						<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
 					</div>
-					<div class="box-body">
-						<div class="col-md-12">
-						<label>Pi-Hole domain name</label>
-						<div class="form-group">
-							<div class="input-group">
-								<div class="input-group-addon">Domain</div>
-									<input type="text" class="form-control DHCPgroup" name="domain" value="<?php echo $piHoleDomain; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
+					<div class="col-md-12">
+					<div class="box box-warning collapsed-box">
+						<div class="box-header with-border">
+							<h3 class="box-title">Advanced DHCP settings</h3>
+							<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
+						</div>
+						<div class="box-body">
+							<div class="col-md-12">
+							<label>Pi-Hole domain name</label>
+							<div class="form-group">
+								<div class="input-group">
+									<div class="input-group-addon">Domain</div>
+										<input type="text" class="form-control DHCPgroup" name="domain" value="<?php echo $piHoleDomain; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
+								</div>
+							</div>
+							</div>
+							<div class="col-md-12">
+							<label>DHCP lease time</label>
+							<div class="form-group">
+								<div class="input-group">
+									<div class="input-group-addon">Lease time in hours</div>
+										<input type="text" class="form-control DHCPgroup" name="leasetime" id="leasetime" value="<?php echo $DHCPleasetime; ?>" data-inputmask="'mask': '9', 'repeat': 7, 'greedy' : false" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
+								</div>
+							</div>
+								<p>Hint: 0 = infinite, 24 = one day, 168 = one week, 744 = one month, 8760 = one year</p>
 							</div>
 						</div>
-						</div><br/>
-						<div class="col-md-12">
-						<label>DHCP lease time</label>
-						<div class="form-group">
-							<div class="input-group">
-								<div class="input-group-addon">Lease time in hours</div>
-									<input type="text" class="form-control DHCPgroup" name="leasetime" id="leasetime" value="<?php echo $DHCPleasetime; ?>" data-inputmask="'mask': '9', 'repeat': 7, 'greedy' : false" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
-							</div>
-						</div>
-							<p>Hint: 0 = infinite, 24 = one day, 168 = one week, 744 = one month, 8760 = one year</p>
-						</div>
 					</div>
-				</div>
-				</div>
+					</div>
 <?php if($DHCP) {
 
 	// Read leases file
@@ -277,7 +276,7 @@
 		}
 	}
 	?>
-				<div class="col-lg-12">
+				<div class="col-md-12">
 				<div class="box box-warning collapsed-box">
 					<div class="box-header with-border">
 						<h3 class="box-title">DHCP leases</h3>
