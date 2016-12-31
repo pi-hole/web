@@ -13,6 +13,9 @@ switch($type) {
     case "black":
         exec("sudo pihole -b -q -d ${_POST['domain']}");
         break;
+    case "wild":
+        exec("sudo pihole -wild -q -d ${_POST['domain']}");
+        break;
 }
 
 ?>

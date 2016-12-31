@@ -1,21 +1,55 @@
 <?php
 if(!isset($_GET['list']))
-    die();
+    die("Missing parameter");
 
-$type = $_GET['list'];
-
-if($type !== "white" && $type !== "black")
-    die("Invalid list parameter");
+$listtype = $_GET['list'];
 
 require "func.php";
 
-$rawList = file_get_contents(checkfile("/etc/pihole/${type}list.txt"));
-$list = explode("\n", $rawList);
+switch ($listtype) {
+	case "white":
+		$list = getListContent("white");
+		break;
 
-// Get rid of empty lines
-for($i = sizeof($list)-1; $i >= 0; $i--) {
-    if($list[$i] == "")
-        unset($list[$i]);
+	case "black":
+		$list = array_merge(getListContent("black"),getWildcardListContent());
+		break;
+
+	default:
+		die("Invalid list parameter");
+		break;
+}
+
+
+function getListContent($type) {
+    $rawList = file_get_contents(checkfile("/etc/pihole/${type}list.txt"));
+    $list = explode("\n", $rawList);
+
+    // Get rid of empty lines
+    for($i = sizeof($list)-1; $i >= 0; $i--) {
+        if($list[$i] == "")
+            unset($list[$i]);
+    }
+
+    return $list;
+
+}
+
+function getWildcardListContent() {
+    $rawList = file_get_contents(checkfile("/etc/dnsmasq.d/03-pihole-wildcard.conf"));
+    $wclist = explode("\n", $rawList);
+    $list = [];
+
+    foreach ($wclist as $entry) {
+        $expl = explode("/", $entry);
+        if(count($expl) == 3)
+        {
+            array_push($list,"*${expl[1]}*");
+        }
+    }
+
+    return array_unique($list);
+
 }
 
 function filterArray(&$inArray) {
