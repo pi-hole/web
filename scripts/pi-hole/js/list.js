@@ -57,6 +57,7 @@ function refresh(fade) {
             var data = JSON.parse(response);
 
             if(data.length === 0) {
+                $("h3").hide();
                 list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
             }
             else {
