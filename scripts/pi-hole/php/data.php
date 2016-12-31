@@ -527,7 +527,17 @@
 
     function countBlockedQueries() {
         global $logListName;
-        return exec("grep \"gravity.list\" $logListName | grep -c \" is \"");
+        // Blocked due to gravity entries (ad lists + blacklist)
+        $gravityblocked = intval(exec("grep -c -e \"gravity\.list.*is\" $logListName"));
+
+        // Blocked due to wildcard entries
+        $wildcard_domains = getWildcardListContent();
+        $wildcardblocked = 0;
+        foreach ($wildcard_domains as $domain) {
+            $wildcardblocked += intval(exec("grep -c -e \"config.$domain is\" $logListName"));
+        }
+
+        return  $gravityblocked +$wildcardblocked;
     }
 
     function getForwards(\SplFileObject $log) {
