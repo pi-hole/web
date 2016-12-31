@@ -44,7 +44,7 @@ function getWildcardListContent() {
         $expl = explode("/", $entry);
         if(count($expl) == 3)
         {
-            array_push($list,"*${expl[1]}*");
+            array_push($list,"*${expl[1]}");
         }
     }
 

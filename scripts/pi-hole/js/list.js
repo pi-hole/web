@@ -43,11 +43,24 @@ function refresh(fade) {
             }
             else {
                 data.forEach(function (entry, index) {
-                    list.append(
+                    if(entry.substr(0,1) === "*")
+                    {
+                        // Wildcard entry
+                        // remove leading *
+                        entry = entry.substr(1, entry.length - 1);
+                        list.append(
                         "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
                         "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
-                        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>"
-                    );
+                        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
+                    }
+                    else
+                    {
+                        // Normal entry
+                        list.append(
+                        "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
+                        "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
+                        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
+                    }
 
                     // Handle button
                     $("#list #"+index+"").on("click", "button", function() {
