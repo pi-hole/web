@@ -534,7 +534,7 @@
         $wildcard_domains = getWildcardListContent();
         $wildcardblocked = 0;
         foreach ($wildcard_domains as $domain) {
-            $wildcardblocked += intval(exec("grep -c -e \"config.$domain is\" $logListName"));
+            $wildcardblocked += intval(exec("grep -c -e \"config.*$domain is\" $logListName"));
         }
 
         return  $gravityblocked +$wildcardblocked;
