@@ -49,7 +49,12 @@ function getFullName() {
 </div>
 
 <!-- Domain List -->
+<h3>Exactl blocking</h3>
 <ul class="list-group" id="list"></ul>
+<?php if($list === "black") { ?>
+<h3>Wildcard blocking</h3>
+<ul class="list-group" id="list-wildcard"></ul>
+<?php } ?>
 
 <?php
 require "scripts/pi-hole/php/footer.php";
