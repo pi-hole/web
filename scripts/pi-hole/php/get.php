@@ -22,7 +22,7 @@ switch ($listtype) {
 
 
 function getListContent($type) {
-    $rawList = file_get_contents(checkfile("/etc/pihole/${type}list.txt"));
+    $rawList = file_get_contents(checkfile("/etc/pihole/".$type."list.txt"));
     $list = explode("\n", $rawList);
 
     // Get rid of empty lines

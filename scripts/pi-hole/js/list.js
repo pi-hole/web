@@ -58,7 +58,14 @@ function refresh(fade) {
 
             if(data.length === 0) {
                 $("h3").hide();
-                list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
+                if(listw)
+                {
+                    listw.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
+                }
+                else
+                {
+                    list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
+                }
             }
             else {
                 data.forEach(function (entry, index) {
@@ -74,7 +81,6 @@ function refresh(fade) {
                         // Handle button
                         $("#list-wildcard #"+index+"").on("click", "button", function() {
                             sub(index, entry, "wild");
-                            console.log("wild rm");
                         });
                     }
                     else
