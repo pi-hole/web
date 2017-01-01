@@ -440,7 +440,7 @@
         $log->rewind();
         $lines = [];
         foreach ($log as $line) {
-            $exploded = explode(" ", $line);
+            $exploded = explode(" ", str_replace("  "," ",$line));
             if(count($exploded) == 8 || count($exploded) == 10) {
                 // Structure of data is currently like:
                 // Array
