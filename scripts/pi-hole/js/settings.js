@@ -57,15 +57,21 @@ $("#DHCPchk").click(function() {
 	$("input.DHCPgroup").prop("disabled", !this.checked);
 });
 
+var leasetable;
 $(document).ready(function() {
 	if(document.getElementById("DHCPLeasesTable"))
 	{
-		$("#DHCPLeasesTable").DataTable({
-			dom: "<'row'<'col-sm-12'i>>" +
-				"<'row'<'col-sm-12'tr>>" +
-				"<'row'<'col-sm-5'f><'col-sm-7'p>>",
-			"pageLength": 5
+		leasetable = $("#DHCPLeasesTable").DataTable({
+			dom: "<'row'<'col-sm-6'i><'col-sm-6'f>>" +
+				"<'row'<'col-sm-12'tr>>",
+			"paging": false,
+			"scrollCollapse": true,
+			"scrollY": "200px",
+			"scrollX" : true
 		});
+	$("#leaseexpand").on( "click", function () {
+		setTimeout(function(){leasetable.draw();},100);
+		} );
 	}
 } );
 
@@ -75,3 +81,9 @@ $(function(){
         $(this).closest("." + $(this).attr("data-hide")).hide();
     });
 });
+
+// DHCP leases tooltips
+$(document).ready(function(){
+    $("[data-toggle=\"tooltip\"]").tooltip({"html": true, container : "body"});
+});
+

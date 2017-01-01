@@ -347,10 +347,17 @@ function validDomain($domain_name)
 						$error .= "Domain name ".$domain." is invalid!<br>";
 					}
 
+					$leasetime = $_POST["leasetime"];
+
+					// Validate Lease time length
+					if(!is_numeric($leasetime) || intval($leasetime) < 0)
+					{
+						$error .= "Lease time ".$leasetime." is invalid!<br>";
+					}
+
 					if(!strlen($error))
 					{
-						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router);
-						exec("sudo pihole -a domainname ".$domain);
+						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router." ".$leasetime." ".$domain);
 						$success .= "The DHCP server has been activated";
 					}
 				}
