@@ -60,17 +60,15 @@
         list($domains_over_time, $ads_over_time) = overTime($dns_queries, $gravity_domains);
 
         // Align arrays
-        $domains_over_time = overTime($dns_queries);
-        $ads_over_time = overTime($ads_blocked);
+        alignTimeArrays($ads_over_time, $domains_over_time);
 
         // Provide a minimal valid array if there have are no blocked
         // queries at all. Otherwise the output of the API is inconsistent.
-        if(count($ads_blocked) == 0)
+        if(count($ads_over_time) == 0)
         {
             $ads_over_time = [1 => 0];
         }
 
-        alignTimeArrays($ads_over_time, $domains_over_time);
         return Array(
             'domains_over_time' => $domains_over_time,
             'ads_over_time' => $ads_over_time,
@@ -90,18 +88,15 @@
         list($domains_over_time, $ads_over_time) = overTime10mins($dns_queries, $gravity_domains);
 
         // Align arrays (in case there have been hours without ad queries)
-
-        $domains_over_time = overTime10mins($dns_queries);
-        $ads_over_time = overTime10mins($ads_blocked);
+        alignTimeArrays($ads_over_time, $domains_over_time);
 
         // Provide a minimal valid array if there have are no blocked
         // queries at all. Otherwise the output of the API is inconsistent.
-        if(count($ads_blocked) == 0)
+        if(count($ads_over_time) == 0)
         {
             $ads_over_time = [1 => 0];
         }
 
-        alignTimeArrays($ads_over_time, $domains_over_time);
         return Array(
             'domains_over_time' => $domains_over_time,
             'ads_over_time' => $ads_over_time,
@@ -613,7 +608,7 @@
         return [$byTimeDomains,$byTimeAds];
     }
 
-    function overTime10mins($entries, $gravity_domains) {
+    function overTime10mins($entries, $gravity_domains=[]) {
         $byTimeDomains = [];
         $byTimeAds = [];
         foreach ($entries as $entry) {
