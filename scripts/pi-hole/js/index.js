@@ -407,4 +407,24 @@ $(document).ready(function() {
         {
             updateTopClientsChart();
         }
+
+        $("#queryOverTimeChart").click(function(evt){
+            var activePoints = timeLineChart.getElementAtEvent(evt);
+            if(activePoints.length > 0)
+            {
+                //get the internal index of slice in pie chart
+                var clickedElementindex = activePoints[0]["_index"];
+
+                //get specific label by index
+                var label = timeLineChart.data.labels[clickedElementindex];
+
+                //get value by index
+                //var value = timeLineChart.data.datasets[0].data[clickedElementindex];
+                var time = new Date(label);
+                var from = time.getHours()+":"+time.getMinutes();
+                var until = time.getHours()+":"+padNumber(parseInt(time.getMinutes()+9),2);
+                window.location.href = "queries.php?from="+from+"&until="+until;
+            }
+            return false;
+        });
     });

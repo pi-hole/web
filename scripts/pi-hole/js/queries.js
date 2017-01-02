@@ -71,6 +71,23 @@ function add(domain,list) {
 }
 
 $(document).ready(function() {
+
+    // Do we want to filter queries?
+    var GETDict = {};
+    location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
+
+    var APIstring = "api.php?getAllQueries";
+
+    if("from" in GETDict)
+    {
+        APIstring += "&from="+GETDict["from"];
+    }
+
+    if("until" in GETDict)
+    {
+        APIstring += "&until="+GETDict["until"];
+    }
+
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
             if (data[4] === "Pi-holed") {
@@ -87,7 +104,7 @@ $(document).ready(function() {
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'tr>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": "api.php?getAllQueries",
+        "ajax": APIstring,
         "autoWidth" : false,
         "order" : [[0, "desc"]],
         "columns": [
@@ -117,9 +134,6 @@ $(document).ready(function() {
         }
     } );
 
-    // Do we want to filter queries?
-    var GETDict = {};
-    location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
     if("client" in GETDict)
     {
         // Search in third column (zero indexed)
