@@ -107,10 +107,18 @@
 		$DHCPstart = $setupVars["DHCP_START"];
 		$DHCPend = $setupVars["DHCP_END"];
 		$DHCProuter = $setupVars["DHCP_ROUTER"];
-		$DHCPleasetime = $setupVars["DHCP_LEASETIME"];
-		if(strlen($DHCPleasetime) < 1)
+		// This setting has been added later, we have to check if it exists
+		if(isset($setupVars["DHCP_LEASETIME"]))
 		{
-			// Fallback if it was not set before
+			$DHCPleasetime = $setupVars["DHCP_LEASETIME"];
+			if(strlen($DHCPleasetime) < 1)
+			{
+				// Fallback if empty string
+				$DHCPleasetime = 24;
+			}
+		}
+		else
+		{
 			$DHCPleasetime = 24;
 		}
 	}
