@@ -196,3 +196,11 @@ if(versionCompare(piholeVersion, "v2.9.5") < 1)
 {
 	$("#btnSearchExact").hide();
 }
+
+// Handle Strg + Enter button on Login page
+$(document).keypress(function(e) {
+	if((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
+		$("#loginform").attr("action", "settings.php");
+		$("#loginform").submit();
+	}
+});
