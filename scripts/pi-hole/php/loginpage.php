@@ -21,8 +21,8 @@
         <div class="row">
           <div class="col-xs-8">
           <ul>
-            <li>Return &rarr; Log in and go to Main page</li>
-            <li>Ctrl+Return &rarr; Log in and go to Settings page</li>
+            <li><tt>Return</tt> &rarr; Log in and go to Main page</li>
+            <li><tt>Ctrl+Return</tt> &rarr; Log in and go to Settings page</li>
           </ul>
           </div>
           <div class="col-xs-4">

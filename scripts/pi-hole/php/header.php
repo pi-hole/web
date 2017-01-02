@@ -442,7 +442,7 @@
                 // Show Logout button if $auth is set and authorization is required
                 if(strlen($pwhash) > 0) { ?>
                 <li>
-                    <a href="index.php?logout">
+                    <a href="settings.php?logout">
                         <i class="fa fa-user-times"></i> <span>Logout</span>
                     </a>
                 </li>
