@@ -4,6 +4,12 @@
 	// Reread ini file as things might have been changed
 	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 ?>
+<style type="text/css">
+	.tooltip-inner {
+		max-width: none;
+		white-space: nowrap;
+	}
+</style>
 
 <?php if(isset($debug)){ ?>
 <div id="alDebug" class="alert alert-warning alert-dismissible fade in" role="alert">
@@ -101,6 +107,12 @@
 		$DHCPstart = $setupVars["DHCP_START"];
 		$DHCPend = $setupVars["DHCP_END"];
 		$DHCProuter = $setupVars["DHCP_ROUTER"];
+		$DHCPleasetime = $setupVars["DHCP_LEASETIME"];
+		if(strlen($DHCPleasetime) < 1)
+		{
+			// Fallback if it was not set before
+			$DHCPleasetime = 24;
+		}
 	}
 	else
 	{
@@ -117,6 +129,7 @@
 			$DHCPend    = "";
 			$DHCProuter = "";
 		}
+		$DHCPleasetime = 24;
 	}
 	if(isset($setupVars["PIHOLE_DOMAIN"])){
 		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
@@ -133,35 +146,63 @@
 				<div class="form-group">
 					<div class="checkbox"><label><input type="checkbox" name="active" <?php if($DHCP){ ?>checked<?php } ?> id="DHCPchk"> DHCP server enabled</label></div>
 				</div>
-				<label>Range of IP addresses to hand out</label>
-				<div class="form-group">
+					<div class="col-md-12">
+						<label>Range of IP addresses to hand out</label>
+					</div>
 					<div class="col-md-6">
+					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">From</div>
 								<input type="text" class="form-control DHCPgroup" name="from" value="<?php echo $DHCPstart; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
+						</div>
 					</div>
 					</div>
 					<div class="col-md-6">
+					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">To</div>
 								<input type="text" class="form-control DHCPgroup" name="to" value="<?php echo $DHCPend; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
-					<label>Router (gateway) IP address</label>
+					</div>
 					<div class="col-md-12">
+					<label>Router (gateway) IP address</label>
+					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">Router</div>
 								<input type="text" class="form-control DHCPgroup" name="router" value="<?php echo $DHCProuter; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
-					</div><br/>
-					<label>Pi-Hole domain name</label>
+					</div>
+					</div>
 					<div class="col-md-12">
-						<div class="input-group">
-							<div class="input-group-addon">Domain</div>
-								<input type="text" class="form-control DHCPgroup" name="domain" value="<?php echo $piHoleDomain; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
+					<div class="box box-warning collapsed-box">
+						<div class="box-header with-border">
+							<h3 class="box-title">Advanced DHCP settings</h3>
+							<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
+						</div>
+						<div class="box-body">
+							<div class="col-md-12">
+							<label>Pi-Hole domain name</label>
+							<div class="form-group">
+								<div class="input-group">
+									<div class="input-group-addon">Domain</div>
+										<input type="text" class="form-control DHCPgroup" name="domain" value="<?php echo $piHoleDomain; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
+								</div>
+							</div>
+							</div>
+							<div class="col-md-12">
+							<label>DHCP lease time</label>
+							<div class="form-group">
+								<div class="input-group">
+									<div class="input-group-addon">Lease time in hours</div>
+										<input type="text" class="form-control DHCPgroup" name="leasetime" id="leasetime" value="<?php echo $DHCPleasetime; ?>" data-inputmask="'mask': '9', 'repeat': 7, 'greedy' : false" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
+								</div>
+							</div>
+								<p>Hint: 0 = infinite, 24 = one day, 168 = one week, 744 = one month, 8760 = one year</p>
+							</div>
 						</div>
 					</div>
-				<br/>
+					</div>
 <?php if($DHCP) {
 
 	// Read leases file
@@ -169,33 +210,96 @@
 	$dhcpleases = fopen('/etc/pihole/dhcp.leases', 'r') or $leasesfile = false;
 	$dhcp_leases  = [];
 
+	function convertseconds($argument) {
+		$seconds = round($argument);
+		if($seconds < 60)
+		{
+			return sprintf('%ds', $seconds);
+		}
+		elseif($seconds < 3600)
+		{
+			return sprintf('%dm %ds', ($seconds/60), ($seconds%60));
+		}
+		elseif($seconds < 86400)
+		{
+			return sprintf('%dh %dm %ds',  ($seconds/3600%24),($seconds/60%60), ($seconds%60));
+		}
+		else
+		{
+			return sprintf('%dd %dh %dm %ds', ($seconds/86400), ($seconds/3600%24),($seconds/60%60), ($seconds%60));
+		}
+}
+
 	while(!feof($dhcpleases) && $leasesfile)
 	{
 		$line = explode(" ",trim(fgets($dhcpleases)));
-		if(count($line) > 1)
+		if(count($line) == 5)
 		{
-			array_push($dhcp_leases,["MAC"=>$line[1], "IP"=>$line[2], "NAME"=>$line[3]]);
+			$counter = intval($line[0]);
+			if($counter == 0)
+			{
+				$time = "Infinite";
+			}
+			elseif($counter <= 315360000) // 10 years in seconds
+			{
+				$time = convertseconds($counter);
+			}
+			else // Assume time stamp
+			{
+				$time = convertseconds($counter-time());
+			}
+
+			if(strpos($line[2], ':') !== false)
+			{
+				// IPv6 address
+				$type = 6;
+			}
+			else
+			{
+				// IPv4 lease
+				$type = 4;
+			}
+
+			$host = $line[3];
+			if($host == "*")
+			{
+				$host = "<i>unknown</i>";
+			}
+
+			$clid = $line[4];
+			if($clid == "*")
+			{
+				$clid = "<i>unknown</i>";
+			}
+
+			array_push($dhcp_leases,["TIME"=>$time, "hwaddr"=>$line[1], "IP"=>$line[2], "host"=>$host, "clid"=>$clid, "type"=>$type]);
 		}
 	}
 	?>
-					<label>DHCP leases</label>
+				<div class="col-md-12">
+				<div class="box box-warning collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">DHCP leases</h3>
+						<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse" id="leaseexpand"><i class="fa fa-plus"></i></button></div>
+					</div>
+					<div class="box-body">
 					<div class="col-md-12">
-
 						<table id="DHCPLeasesTable" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
 							<thead>
 								<tr>
 									<th>IP address</th>
 									<th>Hostname</th>
-									<th>MAC address</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach($dhcp_leases as $lease) { ?><tr><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["NAME"]; ?></td><td><?php echo $lease["MAC"]; ?></td></tr><?php } ?>
+								<?php foreach($dhcp_leases as $lease) { ?><tr data-placement="auto" data-container="body" data-toggle="tooltip" title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>"><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["host"]; ?></td></tr><?php } ?>
 							</tbody>
 						</table>
 					</div>
-<?php } ?>
+					</div>
 				</div>
+				</div>
+<?php } ?>
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="DHCP">
@@ -592,8 +696,8 @@
 <?php
     require "scripts/pi-hole/php/footer.php";
 ?>
+
 <script src="scripts/vendor/jquery.inputmask.js"></script>
 <script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
 <script src="scripts/vendor/jquery.confirm.min.js"></script>
 <script src="scripts/pi-hole/js/settings.js"></script>
-

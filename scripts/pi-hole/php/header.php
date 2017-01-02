@@ -24,13 +24,13 @@
         // $output could be either 4-5 digits or 2-3, and we only divide by 1000 if it's 4-5
         // ex. 39007 vs 39
         $celsius = intVal($output);
-        
+
         // If celsius is greater than 1 degree and is in the 4-5 digit format
         if($celsius > 1000) {
             // Use multiplication to get around the division-by-zero error
             $celsius *= 1e-3;
         }
-        
+
         $kelvin = $celsius + 273.15;
         $fahrenheit = ($celsius*9./5)+32.0;
 
@@ -259,8 +259,10 @@
                             echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
                         } elseif ($pistatus == "0") {
                             echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
+                        } elseif ($pistatus == "-1") {
+                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#FF0000"></i> DNS service not running</a>';
                         } else {
-                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#ff9900"></i> Starting</a>';
+                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#ff9900"></i> Unknown</a>';
                         }
 
                         // CPU Temp
