@@ -9,6 +9,16 @@
 		max-width: none;
 		white-space: nowrap;
 	}
+	@-webkit-keyframes Pulse{
+		from {color:#630030;-webkit-text-shadow:0 0 9px #333;}
+		50% {color:#e33100;-webkit-text-shadow:0 0 18px #e33100;}
+		to {color:#630030;-webkit-text-shadow:0 0 9px #333;}
+	}
+	p.lookatme {
+		-webkit-animation-name: Pulse;
+		-webkit-animation-duration: 2s;
+		-webkit-animation-iteration-count: infinite;
+	}
 </style>
 
 <?php if(isset($debug)){ ?>
@@ -152,8 +162,13 @@
 			</div>
 			<div class="box-body">
 				<form role="form" method="post">
-				<div class="form-group">
-					<div class="checkbox"><label><input type="checkbox" name="active" <?php if($DHCP){ ?>checked<?php } ?> id="DHCPchk"> DHCP server enabled</label></div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="checkbox"><label><input type="checkbox" name="active" <?php if($DHCP){ ?>checked<?php } ?> id="DHCPchk"> DHCP server enabled</label></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<p id="dhcpnotice" <?php if(!$DHCP){ ?>hidden<?php } ?>>Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
 				</div>
 					<div class="col-md-12">
 						<label>Range of IP addresses to hand out</label>
