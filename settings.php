@@ -455,6 +455,7 @@
 			</div>
 			<div class="box-footer">
 				<form role="form" method="post">
+				<button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
 				<input type="hidden" name="field" value="Logging">
 				<?php if($piHoleLogging) { ?>
 					<input type="hidden" name="action" value="Disable">
