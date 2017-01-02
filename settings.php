@@ -81,6 +81,7 @@
 						<div class="input-group-addon"><i class="fa fa-plug"></i></div>
 						<input type="text" class="form-control" disabled value="<?php echo $piHoleIPv6; ?>">
 					</div>
+					<?php if (!defined('AF_INET6')){ ?><p style="color: #F00;">Warning: PHP has been compiled without IPv6 support.</p><?php } ?>
 				</div>
 				<div class="form-group">
 					<label>Pi-Hole hostname</label>
