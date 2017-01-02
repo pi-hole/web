@@ -35,7 +35,11 @@ function check_cors() {
     // to validate that the client is authorized, only unauthorized.
     $server_host = $_SERVER['HTTP_HOST'];
 
-    // If HTTP_HOST contains a non-standard port (!= 80) we have to strip the port
+    // Use parse_url if HTTP_HOST contains a colon (:) to get the host name
+    // e.g.
+    // https://pi.hole
+    // pi.hole:8080
+    // However, we don't use parse_url(...) if there is no colon, since it will fail for e.g. "pi.hole"
     if(strpos($server_host, ":"))
     {
         $server_host = parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST);
@@ -48,7 +52,7 @@ function check_cors() {
     if(isset($_SERVER['HTTP_ORIGIN'])) {
         $server_origin = $_SERVER['HTTP_ORIGIN'];
 
-        // If HTTP_ORIGIN contains a non-standard port (!= 80) we have to strip the port
+        // Detect colon in $_SERVER['HTTP_ORIGIN'] (see comment above)
         if(strpos($server_origin, ":"))
         {
             $server_origin = parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST);
