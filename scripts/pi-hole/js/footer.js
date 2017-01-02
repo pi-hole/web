@@ -199,7 +199,7 @@ if(versionCompare(piholeVersion, "v2.9.5") < 1)
 
 // Handle Strg + Enter button on Login page
 $(document).keypress(function(e) {
-	if(e.which === 10 && $("#loginpw").is(":focus")) {
+	if((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
 		$("#loginform").attr("action", "settings.php");
 		$("#loginform").submit();
 	}
