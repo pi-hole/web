@@ -571,8 +571,10 @@
 					</div>
 				</div>
 				<h4>Privacy mode</h4>
-				<div class="form-group">
-					<div class="checkbox"><label><input type="checkbox" name="privacyMode" <?php if($privacyMode){ ?>checked<?php } ?>> Don't show query results for permitted requests</label></div>
+				<div class="col-lg-12">
+					<div class="form-group">
+						<div class="checkbox"><label><input type="checkbox" name="privacyMode" <?php if($privacyMode){ ?>checked<?php } ?>> Don't show query results for permitted requests</label></div>
+					</div>
 				</div>
 			</div>
 			<div class="box-footer">
