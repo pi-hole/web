@@ -1,5 +1,5 @@
 <?php
-    require "header.php";
+    require "scripts/pi-hole/php/header.php";
 
     if(strlen($pwhash) > 0)
     {
@@ -107,7 +107,7 @@
     Change settings which apply to the API as well as the web UI<br>
     Note that Top Clients have to be given as IP addresses
     <h4>Web User Interface</h4>
-    Other settings whioch affect the webUI but not the API of Pi-hole
+    Other settings which affect the webUI but not the API of Pi-hole
     <h4>System Administration</h4>
     Apply system-wide actions like restarting of the server
     </div>
@@ -146,7 +146,5 @@
 </div>
 
 <?php
-    require "footer.php";
+    require "scripts/pi-hole/php/footer.php";
 ?>
-
-<script src="js/pihole/help.js"></script>
