@@ -11,6 +11,14 @@
 	}
 </style>
 
+<?php // Check if ad lists should be updated after saving ...
+if(isset($_POST["submit"])) {
+	if($_POST["submit"] == "saveupdate") {
+	// If that is the case -> refresh to the gravity page and start updating immediately
+?>
+<meta http-equiv="refresh" content="1;url=gravity.php?go">
+<?php }} ?>
+
 <?php if(isset($debug)){ ?>
 <div id="alDebug" class="alert alert-warning alert-dismissible fade in" role="alert">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -665,8 +673,8 @@
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="adlists">
-				<label>Don't forget to run <a href="gravity.php">Update Lists</a> afterwards</label>
-				<button type="submit" class="btn btn-primary pull-right">Save</button>
+				<button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
+				<button type="submit" class="btn btn-primary pull-right" name="submit" value="saveupdate">Save and Update</button>
 			</div>
 			</form>
 		</div>
