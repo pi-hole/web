@@ -36,7 +36,7 @@
     // Auth Required
 
     if (isset($_GET['topItems']) && $auth) {
-        $data = array_merge($data,  getTopItems());
+        $data = array_merge($data,  getTopItems($_GET['topItems']));
     }
 
     if (isset($_GET['recentItems']) && $auth) {

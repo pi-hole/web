@@ -49,20 +49,26 @@
 
     function getOverTimeData() {
         global $log;
-        $dns_queries = getDnsQueries($log);
-        $ads_blocked = getBlockedQueries($log);
 
-        $domains_over_time = overTime($dns_queries);
-        $ads_over_time = overTime($ads_blocked);
+        // Get log lines
+        $dns_queries = getDnsQueries($log);
+
+        // Get list of ad domains
+        $gravity_domains = getGravity();
+
+        // Bin log entries separated into Domains and Ads in 1 hour intervals
+        list($domains_over_time, $ads_over_time) = overTime($dns_queries, $gravity_domains);
+
+        // Align arrays
+        alignTimeArrays($ads_over_time, $domains_over_time);
 
         // Provide a minimal valid array if there have are no blocked
         // queries at all. Otherwise the output of the API is inconsistent.
-        if(count($ads_blocked) == 0)
+        if(count($ads_over_time) == 0)
         {
             $ads_over_time = [1 => 0];
         }
 
-        alignTimeArrays($ads_over_time, $domains_over_time);
         return Array(
             'domains_over_time' => $domains_over_time,
             'ads_over_time' => $ads_over_time,
@@ -71,43 +77,87 @@
 
     function getOverTimeData10mins() {
         global $log;
-        $dns_queries = getDnsQueries($log);
-        $ads_blocked = getBlockedQueries($log);
 
-        $domains_over_time = overTime10mins($dns_queries);
-        $ads_over_time = overTime10mins($ads_blocked);
+        // Get log lines
+        $dns_queries = getDnsQueries($log);
+
+        // Get list of ad domains
+        $gravity_domains = getGravity();
+
+        // Bin log entries separated into Domains and Ads in 10 minute intervals
+        list($domains_over_time, $ads_over_time) = overTime10mins($dns_queries, $gravity_domains);
+
+        // Align arrays (in case there have been hours without ad queries)
+        alignTimeArrays($ads_over_time, $domains_over_time);
 
         // Provide a minimal valid array if there have are no blocked
         // queries at all. Otherwise the output of the API is inconsistent.
-        if(count($ads_blocked) == 0)
+        if(count($ads_over_time) == 0)
         {
             $ads_over_time = [1 => 0];
         }
 
-        alignTimeArrays($ads_over_time, $domains_over_time);
         return Array(
             'domains_over_time' => $domains_over_time,
             'ads_over_time' => $ads_over_time,
         );
     }
 
-    function getTopItems() {
-        global $log,$privacyMode;
-        $dns_queries = getDnsQueries($log);
-        $ads_blocked = getBlockedQueries($log);
+    function getTopItems($argument) {
+        global $log,$setupVars,$privacyMode;
 
-        $topAds = topItems($ads_blocked);
-        if(!$privacyMode)
+        // Process log file
+        $dns_domains = getDnsQueryDomains($log);
+        // Get list of ad domains
+        $gravity_domains = getGravity();
+
+        // Exclude domains the user doesn't want to see
+        if(isset($setupVars["API_EXCLUDE_DOMAINS"]))
         {
-            $topQueries = topItems($dns_queries, $topAds);
+            excludeFromList($dns_domains, "API_EXCLUDE_DOMAINS");
         }
-        else
+
+        // Sort array in descending order
+        arsort($dns_domains);
+
+        // Prepare arrays and counters for Top Items
+        $topDomains = []; $domaincounter = 0;
+        $topAds = []; $adcounter = 0;
+
+        // Default number of Top Items to show is 10
+        $qty = 10;
+
+        // If argument is numeric, the user may want to
+        // see a different number of entries
+        if(is_numeric($argument))
         {
-            $topQueries = [];
+            $qty = intval($argument);
+        }
+
+        // Process sorted domain names
+        foreach ($dns_domains as $key => $value) {
+            if(isset($gravity_domains[$key]) && $adcounter < $qty)
+            {
+                // New entry for Top Ads
+                $topAds[$key] = $value;
+                $adcounter++;
+            }
+            else if($domaincounter < $qty && !$privacyMode)
+            {
+                // New entry for Top Domains
+                $topDomains[$key] = $value;
+                $domaincounter++;
+            }
+            elseif($domaincounter >= $qty && $adcounter >= $qty)
+            {
+                // Already collected enough entries for both lists
+                // Exit loop early
+                break;
+            }
         }
 
         return Array(
-            'top_queries' => $topQueries,
+            'top_queries' => $topDomains,
             'top_ads' => $topAds,
         );
     }
@@ -218,7 +268,7 @@
         global $setupVars;
         if(isset($setupVars["API_EXCLUDE_CLIENTS"]))
         {
-            $sources = excludeFromList($sources, "API_EXCLUDE_CLIENTS");
+            excludeFromList($sources, "API_EXCLUDE_CLIENTS");
         }
 
         arsort($sources);
@@ -285,6 +335,15 @@
         $gravity_domains = getGravity();
         $wildcard_domains = getWildcardListContent();
 
+        if(isset($_GET["from"]))
+        {
+            $from = new DateTime($_GET["from"]);
+        }
+        if(isset($_GET["until"]))
+        {
+            $until = new DateTime($_GET["until"]);
+        }
+
         setShowBlockedPermitted();
 
         // Privacy mode?
@@ -300,7 +359,26 @@
         }
 
         foreach ($dns_queries as $query) {
-            $time = date_create(substr($query, 0, 16));
+            $time = new DateTime(substr($query, 0, 16));
+
+            // Check if we want to restrict the time where we want to show queries
+            if(isset($from))
+            {
+                if($time <= $from)
+                {
+                    continue;
+                }
+            }
+            if(isset($until))
+            {
+                if($time >= $until)
+                {
+                    continue;
+                }
+            }
+
+           // print_r([$time->getTimestamp(),$_GET["from"],$_GET["until"]]);
+
             $exploded = explode(" ", trim($query));
             $domain = $exploded[count($exploded)-3];
             $tmp = $exploded[count($exploded)-4];
@@ -412,6 +490,24 @@
         return $lines;
     }
 
+    function getDnsQueryDomains(\SplFileObject $log) {
+        $log->rewind();
+        $domains = [];
+        foreach ($log as $line) {
+            if(strpos($line, ": query[A") !== false) {
+                $exploded = explode(" ", $line);
+                $domain = trim($exploded[count($exploded) - 3]);
+                if (isset($domains[$domain])) {
+                    $domains[$domain]++;
+                }
+                else {
+                    $domains[$domain] = 1;
+                }
+            }
+        }
+        return $domains;
+    }
+
     function countDnsQueries() {
         global $logListName;
         return exec("grep -c \": query\\[A\" $logListName");
@@ -486,7 +582,7 @@
         $log->rewind();
         $lines = [];
         foreach ($log as $line) {
-            $exploded = explode(" ", $line);
+            $exploded = explode(" ", str_replace("  "," ",$line));
             if(count($exploded) == 8 || count($exploded) == 10) {
                 // Structure of data is currently like:
                 // Array
@@ -551,32 +647,7 @@
         return $lines;
     }
 
-    function topItems($queries, $exclude = array(), $qty=10) {
-        $splitQueries = array();
-        foreach ($queries as $query) {
-            $exploded = explode(" ", $query);
-            $domain = trim($exploded[count($exploded) - 3]);
-            if (!isset($exclude[$domain])) {
-                if (isset($splitQueries[$domain])) {
-                    $splitQueries[$domain]++;
-                }
-                else {
-                    $splitQueries[$domain] = 1;
-                }
-            }
-        }
-
-        global $setupVars;
-        if(isset($setupVars["API_EXCLUDE_DOMAINS"]))
-        {
-            $splitQueries = excludeFromList($splitQueries, "API_EXCLUDE_DOMAINS");
-        }
-
-        arsort($splitQueries);
-        return array_slice($splitQueries, 0, $qty);
-    }
-
-    function excludeFromList($array,$key)
+    function excludeFromList(&$array,$key)
     {
         global $setupVars;
         $domains = explode(",",$setupVars[$key]);
@@ -589,24 +660,41 @@
         return $array;
     }
 
-    function overTime($entries) {
-        $byTime = array();
+    function overTime($entries, $gravity_domains) {
+        $byTimeDomains = [];
+        $byTimeAds = [];
         foreach ($entries as $entry) {
             $time = date_create(substr($entry, 0, 16));
             $hour = $time->format('G');
 
-            if (isset($byTime[$hour])) {
-                $byTime[$hour]++;
+            $exploded = explode(" ", $entry);
+            $domain = trim($exploded[count($exploded) - 3]);
+
+            if(isset($gravity_domains[$domain]))
+            {
+                if (isset($byTimeAds[$time])) {
+                    $byTimeAds[$time]++;
+                }
+                else {
+                    $byTimeAds[$time] = 1;
+                }
             }
-            else {
-                $byTime[$hour] = 1;
+            else
+            {
+                if (isset($byTimeDomains[$time])) {
+                    $byTimeDomains[$time]++;
+                }
+                else {
+                    $byTimeDomains[$time] = 1;
+                }
             }
         }
-        return $byTime;
+        return [$byTimeDomains,$byTimeAds];
     }
 
-    function overTime10mins($entries) {
-        $byTime = array();
+    function overTime10mins($entries, $gravity_domains=[]) {
+        $byTimeDomains = [];
+        $byTimeAds = [];
         foreach ($entries as $entry) {
             $time = date_create(substr($entry, 0, 16));
             $hour = $time->format('G');
@@ -621,14 +709,29 @@
             // etc.
             $time = ($minute-$minute%10)/10 + 6*$hour;
 
-            if (isset($byTime[$time])) {
-                $byTime[$time]++;
+            $exploded = explode(" ", $entry);
+            $domain = trim($exploded[count($exploded) - 3]);
+
+            if(isset($gravity_domains[$domain]))
+            {
+                if (isset($byTimeAds[$time])) {
+                    $byTimeAds[$time]++;
+                }
+                else {
+                    $byTimeAds[$time] = 1;
+                }
             }
-            else {
-                $byTime[$time] = 1;
+            else
+            {
+                if (isset($byTimeDomains[$time])) {
+                    $byTimeDomains[$time]++;
+                }
+                else {
+                    $byTimeDomains[$time] = 1;
+                }
             }
         }
-        return $byTime;
+        return [$byTimeDomains,$byTimeAds];
     }
 
     function alignTimeArrays(&$times1, &$times2) {
