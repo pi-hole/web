@@ -148,7 +148,7 @@
                 $topDomains[$key] = $value;
                 $domaincounter++;
             }
-            else
+            elseif($domaincounter >= $qty && $adcounter >= $qty)
             {
                 // Already collected enough entries for both lists
                 // Exit loop early
