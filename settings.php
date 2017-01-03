@@ -132,9 +132,9 @@
 		{
 			$DHCPleasetime = 24;
 		}
-		if(isset($setupVars["DHCP_IPV6"]))
+		if(isset($setupVars["DHCP_IPv6"]))
 		{
-			$DHCPIPv6 = $setupVars["DHCP_IPV6"];
+			$DHCPIPv6 = $setupVars["DHCP_IPv6"];
 		}
 		else
 		{

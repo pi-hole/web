@@ -358,16 +358,18 @@ function validDomain($domain_name)
 					if(isset($_POST["useIPv6"]))
 					{
 						$ipv6 = "true";
+						$type = "(IPv4 + IPv6)";
 					}
 					else
 					{
 						$ipv6 = "false";
+						$type = "(IPv4)";
 					}
 
 					if(!strlen($error))
 					{
 						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router." ".$leasetime." ".$domain." ".$ipv6);
-						$success .= "The DHCP server has been activated";
+						$success .= "The DHCP server has been activated ".$type;
 					}
 				}
 				else
