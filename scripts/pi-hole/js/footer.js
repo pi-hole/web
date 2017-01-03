@@ -40,7 +40,7 @@ function piholeChange(action, duration)
         case "enable":
         btnStatus = $("#flip-status-enable");
         btnStatus.html("<i class='fa fa-spinner'> </i>");
-        $.getJSON("api.php?enable&token=" + token, (data) => {
+        $.getJSON("api.php?enable&token=" + token, function(data) {
             if(data.status === "enabled") {
                 btnStatus.html("");
                 piholeChanged("enabled");
@@ -51,7 +51,7 @@ function piholeChange(action, duration)
         case "disable":
         btnStatus = $("#flip-status-disable");
         btnStatus.html("<i class='fa fa-spinner'> </i>");
-        $.getJSON("api.php?disable=" + duration + "&token=" + token, (data) => {
+        $.getJSON("api.php?disable=" + duration + "&token=" + token, function(data) {
             if(data.status === "disabled") {
                 btnStatus.html("");
                 piholeChanged("disabled");
