@@ -83,6 +83,9 @@
         $memory_usage = -1;
     }
 
+    // Get disk usage
+    $disk_usage = shell_exec("df -h | grep '/$' | awk {'print $5;'} | sed 's/%//g'");
+
 
     // For session timer
     $maxlifetime = ini_get("session.gc_maxlifetime");
@@ -315,12 +318,30 @@
                         }
                         if($memory_usage > 0.0)
                         {
-                            echo '""></i> Memory usage:&nbsp;&nbsp;' . sprintf("%.1f",100.0*$memory_usage) . '%</a>';
+                            echo '""></i> Memory:&nbsp;&nbsp;' . sprintf("%.1f",100.0*$memory_usage) . '%</a>';
                         }
                         else
                         {
-                            echo '""></i> Memory usage:&nbsp;&nbsp; N/A</a>';
+                            echo '""></i> Memory:&nbsp;&nbsp; N/A</a>';
                         }
+
+                    echo '<a href="#"><i class="fa fa-circle" style="color:';
+                        if ($disk_usage > 80 || $disk_usage < 0) {
+                            echo '#FF0000';
+                        }
+                        else
+                        {
+                            echo '#7FFF00';
+                        }
+                        if($disk_usage > 0.0)
+                        {
+                            echo '""></i> Disk:&nbsp;&nbsp;' . sprintf("%.0f",$disk_usage) . '%</a>';
+                        }
+                        else
+                        {
+                            echo '""></i> Disk:&nbsp;&nbsp; N/A</a>';
+                        }
+
                     ?>
                 </div>
             </div>
