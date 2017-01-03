@@ -83,6 +83,9 @@
         $memory_usage = -1;
     }
 
+    // Get disk usage
+    $disk_usage = shell_exec("df -h | grep '/$' | awk {'print $5;'} | sed 's/%//g'");
+
 
     // For session timer
     $maxlifetime = ini_get("session.gc_maxlifetime");
