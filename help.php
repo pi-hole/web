@@ -22,6 +22,7 @@
         <li>Temp: Current CPU temperature</li>
         <li>Load: load averages for the last minute, 5 minutes and 15 minutes, respectively. A load average of 1 reflects the full workload of a single processor on the system. We show a red icon if the current load exceeds the number of available processors on this machine (which is <?php echo $nproc; ?>)</li>
         <li>Memory: Shows the percentage of memory actually blocked by applications. We show a red icon if the memory usage exceeds 75%</li>
+        <li>Disk: Shows the percentage of disk used (for the main partition "/"). A red icon is shown if the disk usage exceeds 79%</li>
     </ul>
     <h4>Top right: About</h4>
     <ul>
