@@ -1,5 +1,6 @@
 Pi-hole Admin Dashboard
 ============
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/938b4d9e61b7487da77cf63ba05c683d)](https://www.codacy.com/app/Pi-hole/AdminLTE?utm_source=github.com&utm_medium=referral&utm_content=pi-hole/AdminLTE&utm_campaign=badger)
 [![Join the chat at https://gitter.im/pi-hole/AdminLTE](https://badges.gitter.im/pi-hole/AdminLTE.svg)](https://gitter.im/pi-hole/AdminLTE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif "AdminLTE Presentation")](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY "Donate")
