@@ -291,7 +291,7 @@ $(document).ready(function() {
                     enabled: true,
                     mode: "x-axis",
                     callbacks: {
-                        title: function(tooltipItem, data){
+                        title: function(tooltipItem, data) {
                             var label = tooltipItem[0].xLabel;
                             var time = label.match(/(\d?\d):?(\d?\d?)/);
                             var h = parseInt(time[1], 10);
