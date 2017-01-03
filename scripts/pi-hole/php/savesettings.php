@@ -355,9 +355,18 @@ function validDomain($domain_name)
 						$error .= "Lease time ".$leasetime." is invalid!<br>";
 					}
 
+					if(isset($_POST["useIPv6"]))
+					{
+						$ipv6 = "useIPv6";
+					}
+					else
+					{
+						$ipv6 = "noIPv6";
+					}
+
 					if(!strlen($error))
 					{
-						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router." ".$leasetime." ".$domain);
+						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router." ".$leasetime." ".$domain." ".$ipv6);
 						$success .= "The DHCP server has been activated";
 					}
 				}

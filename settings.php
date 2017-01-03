@@ -132,6 +132,15 @@
 		{
 			$DHCPleasetime = 24;
 		}
+		if(isset($setupVars["DHCP_IPV6"]))
+		{
+			$DHCPIPv6 = $setupVars["DHCP_IPV6"];
+		}
+		else
+		{
+			$DHCPIPv6 = true;
+		}
+
 	}
 	else
 	{
@@ -149,6 +158,7 @@
 			$DHCProuter = "";
 		}
 		$DHCPleasetime = 24;
+		$DHCPIPv6 = true;
 	}
 	if(isset($setupVars["PIHOLE_DOMAIN"])){
 		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
@@ -205,6 +215,11 @@
 							<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
 						</div>
 						<div class="box-body">
+							<div class="col-md-12">
+								<div class="form-group">
+									<div class="checkbox"><label><input type="checkbox" name="useIPv6" <?php if($DHCPIPv6){ ?>checked<?php } ?> class="DHCPgroup" <?php if(!$DHCP){ ?>disabled<?php } ?>> Enable IPv6 support (SLAAC + RA)</label></div>
+								</div>
+							</div>
 							<div class="col-md-12">
 							<label>Pi-Hole domain name</label>
 							<div class="form-group">
