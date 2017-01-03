@@ -293,33 +293,33 @@
                     ?>
                     <br/>
                     <?php
-                    echo '<a href="#"><i class="fa fa-circle" style="color:';
+                    echo "<a href=\"#\"><i class=\"fa fa-circle\" style=\"color:";
                         if ($loaddata[0] > $nproc) {
-                            echo '#FF0000';
+                            echo "#FF0000";
                         }
                         else
                         {
-                            echo '#7FFF00';
+                            echo "#7FFF00";
                         }
-                        echo '""></i> Load:&nbsp;&nbsp;' . $loaddata[0] . '&nbsp;&nbsp;' . $loaddata[1] . '&nbsp;&nbsp;'. $loaddata[2] . '</a>';
+                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
                     ?>
                     <br/>
                     <?php
-                    echo '<a href="#"><i class="fa fa-circle" style="color:';
+                    echo "<a href=\"#\"><i class=\"fa fa-circle\" style=\"color:";
                         if ($memory_usage > 0.75 || $memory_usage < 0.0) {
-                            echo '#FF0000';
+                            echo "#FF0000";
                         }
                         else
                         {
-                            echo '#7FFF00';
+                            echo "#7FFF00";
                         }
                         if($memory_usage > 0.0)
                         {
-                            echo '""></i> Memory usage:&nbsp;&nbsp;' . sprintf("%.1f",100.0*$memory_usage) . '%</a>';
+                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "%</a>";
                         }
                         else
                         {
-                            echo '""></i> Memory usage:&nbsp;&nbsp; N/A</a>';
+                            echo "\"></i> Memory usage:&nbsp;&nbsp; N/A</a>";
                         }
                     ?>
                 </div>
