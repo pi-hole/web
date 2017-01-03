@@ -104,6 +104,17 @@
 		</div>
 <?php
 	// Pi-Hole DHCP server
+
+	// Detect IPv6
+	$usingipv6 = false;
+	if(strlen($piHoleIPv6) > 0 && $piHoleIPv6 != "unknown")
+	{
+		if(substr($piHoleIPv6, 0, 4) != "fe80")
+		{
+			$usingipv6 = true;
+		}
+	}
+
 	if(isset($setupVars["DHCP_ACTIVE"]))
 	{
 		if($setupVars["DHCP_ACTIVE"] == 1)
@@ -138,7 +149,7 @@
 		}
 		else
 		{
-			$DHCPIPv6 = true;
+			$DHCPIPv6 = $usingipv6;
 		}
 
 	}
@@ -158,7 +169,7 @@
 			$DHCProuter = "";
 		}
 		$DHCPleasetime = 24;
-		$DHCPIPv6 = true;
+		$DHCPIPv6 = $usingipv6;
 	}
 	if(isset($setupVars["PIHOLE_DOMAIN"])){
 		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
