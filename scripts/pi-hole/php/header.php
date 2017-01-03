@@ -324,6 +324,24 @@
                         {
                             echo '""></i> Memory:&nbsp;&nbsp; N/A</a>';
                         }
+
+                    echo '<a href="#"><i class="fa fa-circle" style="color:';
+                        if ($disk_usage > 80 || $disk_usage < 0) {
+                            echo '#FF0000';
+                        }
+                        else
+                        {
+                            echo '#7FFF00';
+                        }
+                        if($disk_usage > 0.0)
+                        {
+                            echo '""></i> Disk:&nbsp;&nbsp;' . sprintf("%.0f",$disk_usage) . '%</a>';
+                        }
+                        else
+                        {
+                            echo '""></i> Disk:&nbsp;&nbsp; N/A</a>';
+                        }
+
                     ?>
                 </div>
             </div>
