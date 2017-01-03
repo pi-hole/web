@@ -357,11 +357,11 @@ function validDomain($domain_name)
 
 					if(isset($_POST["useIPv6"]))
 					{
-						$ipv6 = "useIPv6";
+						$ipv6 = "true";
 					}
 					else
 					{
-						$ipv6 = "noIPv6";
+						$ipv6 = "false";
 					}
 
 					if(!strlen($error))
