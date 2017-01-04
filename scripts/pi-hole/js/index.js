@@ -291,7 +291,7 @@ $(document).ready(function() {
                     enabled: true,
                     mode: "x-axis",
                     callbacks: {
-                        title(tooltipItem, data) {
+                        title: function(tooltipItem, data) {
                             var label = tooltipItem[0].xLabel;
                             var time = label.match(/(\d?\d):?(\d?\d?)/);
                             var h = parseInt(time[1], 10);
@@ -300,7 +300,7 @@ $(document).ready(function() {
                             var to = padNumber(h)+":"+padNumber(m+9)+":59";
                             return "Queries from "+from+" to "+to;
                         },
-                        label(tooltipItems, data) {
+                        label: function(tooltipItems, data) {
                             if(tooltipItems.datasetIndex === 1)
                             {
                                 var percentage = 0.0;
