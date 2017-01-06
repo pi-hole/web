@@ -34,8 +34,9 @@
     }
 
     // Auth Required
+    $auth = true;
 
-    if (isset($_GET['topItems']) && $auth) {
+    if (isset($_GET['topItems'])) {
         $data = array_merge($data,  getTopItems($_GET['topItems']));
     }
 
