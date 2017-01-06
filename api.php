@@ -123,6 +123,17 @@
 		$data = array_merge($data, $result);
 	}
 
+	if (isset($_GET['getQueryTypes'])) {
+		sendRequestFTL("querytypes");
+		$return = getResponseFTL();
+		$querytypes = [];
+		$querytypes["A (IPv4)"] = explode(" ",$return[0])[1];
+		$querytypes["AAAA (IPv6)"] = explode(" ",$return[1])[1];
+
+		$result = ['querytypes' => $querytypes];
+		$data = array_merge($data, $result);
+	}
+
 	echo json_encode($data);
 
 	disconnectFTL();

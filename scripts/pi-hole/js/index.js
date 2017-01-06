@@ -100,10 +100,10 @@ function updateQueryTypes() {
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
         var v = [], c = [];
         // Collect values and colors, immediately push individual labels
-        $.each(data, function(key , value) {
+        $.each(data.querytypes, function(key , value) {
             v.push(value);
             c.push(colors.shift());
-            queryTypeChart.data.labels.push(key.substr(6,key.length - 7));
+            queryTypeChart.data.labels.push(key);
         });
         // Build a single dataset with the data to be pushed
         var dd = {data: v, backgroundColor: c};
