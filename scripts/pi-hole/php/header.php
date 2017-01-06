@@ -83,15 +83,16 @@
         $memory_usage = -1;
     }
 
+    if($auth) {
+        // For session timer
+        $maxlifetime = ini_get("session.gc_maxlifetime");
 
-    // For session timer
-    $maxlifetime = ini_get("session.gc_maxlifetime");
-
-    // Generate CSRF token
-    if(empty($_SESSION['token'])) {
-        $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
+        // Generate CSRF token
+        if(empty($_SESSION['token'])) {
+            $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
+        }
+        $token = $_SESSION['token'];
     }
-    $token = $_SESSION['token'];
 
     if(isset($setupVars['WEBUIBOXEDLAYOUT']))
     {
@@ -171,7 +172,7 @@
 <!-- /JS Warning -->
 <script src="scripts/pi-hole/js/header.js"></script>
 <!-- Send token to JS -->
-<div id="token" hidden><?php echo $token ?></div>
+<div id="token" hidden><?php if($auth) echo $token; ?></div>
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
@@ -215,7 +216,9 @@
                                 <div class="col-xs-4 text-center">
                                     <a href="https://github.com/pi-hole/pi-hole/releases">Updates</a>
                                 </div>
+                                <?php if($auth) { ?>
                                 <div class="col-xs-12 text-center" id="sessiontimer">Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></div>
+                                <?php } ?>
                             </li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
