@@ -1,7 +1,12 @@
 <?php
 	error_reporting(E_ALL);
+	$api = true;
+	require "scripts/pi-hole/php/password.php";
+	require "scripts/pi-hole/php/auth.php";
+
+	check_cors();
 	require("scripts/pi-hole/php/FTL.php");
-	$socket = connectFTL("127.0.0.1", 4712);
+	$socket = connectFTL("127.0.0.1");
 	header('Content-type: application/json');
 
 	$data = [];
@@ -53,7 +58,7 @@
 		$data = array_merge($data, $result);
 	}
 
-	if (isset($_GET['topItems']))
+	if (isset($_GET['topItems']) && $auth)
 	{
 		sendRequestFTL("top-domains");
 		$return = getResponseFTL();
@@ -79,7 +84,7 @@
 		$data = array_merge($data, $result);
 	}
 
-	if (isset($_GET['topClients']) || isset($_GET['getQuerySources']))
+	if ((isset($_GET['topClients']) || isset($_GET['getQuerySources'])) && $auth)
 	{
 		sendRequestFTL("top-clients");
 		$return = getResponseFTL();
@@ -101,7 +106,7 @@
 		$data = array_merge($data, $result);
 	}
 
-	if (isset($_GET['getForwardDestinations']))
+	if (isset($_GET['getForwardDestinations']) && $auth)
 	{
 		sendRequestFTL("forward-dest");
 		$return = getResponseFTL();
@@ -123,7 +128,7 @@
 		$data = array_merge($data, $result);
 	}
 
-	if (isset($_GET['getQueryTypes']))
+	if (isset($_GET['getQueryTypes']) && $auth)
 	{
 		sendRequestFTL("querytypes");
 		$return = getResponseFTL();
@@ -135,7 +140,7 @@
 		$data = array_merge($data, $result);
 	}
 
-	if (isset($_GET['getAllQueries']))
+	if (isset($_GET['getAllQueries']) && $auth)
 	{
 		sendRequestFTL("getallqueries");
 		$return = getResponseFTL();
@@ -148,6 +153,26 @@
 
 		$result = ['data' => $allQueries];
 		$data = array_merge($data, $result);
+	}
+
+	if (isset($_GET['enable'], $_GET['token']) && $auth) {
+		check_csrf($_GET['token']);
+		exec('sudo pihole enable');
+		$data = array_merge($data, ["status" => "enabled"]);
+	}
+	elseif (isset($_GET['disable'], $_GET['token']) && $auth) {
+		check_csrf($_GET['token']);
+		$disable = intval($_GET['disable']);
+		// intval returns the integer value on success, or 0 on failure
+		if($disable > 0)
+		{
+			exec("sudo pihole disable ".$disable."s");
+		}
+		else
+		{
+			exec('sudo pihole disable');
+		}
+		$data = array_merge($data, ["status" => "disabled"]);
 	}
 
 	echo json_encode($data);

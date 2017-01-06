@@ -1,10 +1,18 @@
 <?php
 
-function connectFTL($address, $port, $quiet=true)
+function connectFTL($address, $port=4711, $quiet=true)
 {
 	if(!$quiet)
 	{
 		echo "Attempting to connect to '$address' on port '$port'...\n";
+	}
+
+	if($address == "127.0.0.1")
+	{
+		// Read port
+		$portfile = file_get_contents("/etc/pihole/FTL.port");
+		if(is_numeric($portfile))
+			$port = intval($portfile);
 	}
 
 	// Create a TCP/IP socket
