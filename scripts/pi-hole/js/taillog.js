@@ -6,7 +6,7 @@ var interval = 200;
 // Function that asks the API for new data
 function reloadData(){
     clearTimeout(timer);
-    $.getJSON("api.php?tailLog="+offset, function (data)
+    $.getJSON("api_PHP.php?tailLog="+offset, function (data)
     {
         offset = data["offset"];
         pre.append(data["lines"]);
@@ -21,7 +21,7 @@ function reloadData(){
 
 $(function(){
     // Get offset at first loading of page
-    $.getJSON("api.php?tailLog", function (data)
+    $.getJSON("api_PHP.php?tailLog", function (data)
     {
         offset = data["offset"];
     });
