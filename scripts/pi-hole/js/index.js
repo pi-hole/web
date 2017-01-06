@@ -167,7 +167,7 @@ function updateForwardDestinations() {
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
         var v = [], c = [];
         // Collect values and colors, immediately push individual labels
-        $.each(data, function(key , value) {
+        $.each(data.forward_destinations, function(key , value) {
             v.push(value);
             c.push(colors.shift());
             if(key.indexOf("|") > -1)

@@ -61,7 +61,11 @@ function getResponseFTL($quiet=true)
 		{
 			break;
 		}
-		$response[] = rtrim($out);
+		$out = rtrim($out);
+		if(strlen($out) > 0)
+		{
+			$response[] = $out;
+		}
 	}
 
 	return $response;

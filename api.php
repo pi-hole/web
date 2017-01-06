@@ -101,6 +101,28 @@
 		$data = array_merge($data, $result);
 	}
 
+	if (isset($_GET['getForwardDestinations']))
+	{
+		sendRequestFTL("forward-dest");
+		$return = getResponseFTL();
+		$forward_dest = [];
+		foreach($return as $line)
+		{
+			$tmp = explode(" ",$line);
+			if(count($tmp) == 4)
+			{
+				$forward_dest[$tmp[3]."|".$tmp[2]] = $tmp[1];
+			}
+			else
+			{
+				$forward_dest[$tmp[2]] = $tmp[1];
+			}
+		}
+
+		$result = ['forward_destinations' => $forward_dest];
+		$data = array_merge($data, $result);
+	}
+
 	echo json_encode($data);
 
 	disconnectFTL();
