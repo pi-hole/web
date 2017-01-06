@@ -119,6 +119,7 @@ $(document).ready(function() {
                 $("td:eq(4)", row).html( "Unknown" );
                 $("td:eq(5)", row).html( "" );
             }
+            $("#recent-queries .overlay").remove();
 
         },
         dom: "<'row'<'col-sm-12'f>>" +

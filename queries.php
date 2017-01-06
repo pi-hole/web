@@ -97,6 +97,9 @@ if(isset($setupVars["API_PRIVACY_MODE"]))
                 </table>
             </div>
        </div>
+       <div class="overlay">
+         <i class="fa fa-refresh fa-spin"></i>
+       </div>
         <!-- /.box-body -->
       </div>
       <!-- /.box -->
