@@ -90,13 +90,34 @@ $(document).ready(function() {
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
-            if (data[4] === "Pi-holed") {
+            if (data[4] === "1")
+            {
                 $(row).css("color","red");
+                $("td:eq(4)", row).html( "Pi-holed" );
                 $("td:eq(5)", row).html( "<button style=\"color:green;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
-            else{
+            else if (data[4] === "2")
+            {
                 $(row).css("color","green");
+                $("td:eq(4)", row).html( "OK (forwarded)" );
                 $("td:eq(5)", row).html( "<button style=\"color:red;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+            }
+            else if (data[4] === "3")
+            {
+                $(row).css("color","green");
+                $("td:eq(4)", row).html( "OK (cached)" );
+                $("td:eq(5)", row).html( "<button style=\"color:red;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+            }
+            else if (data[4] === "4")
+            {
+                $(row).css("color","red");
+                $("td:eq(4)", row).html( "Pi-holed (wildcard)" );
+                $("td:eq(5)", row).html( "" );
+            }
+            else
+            {
+                $("td:eq(4)", row).html( "Unknown" );
+                $("td:eq(5)", row).html( "" );
             }
 
         },
@@ -108,7 +129,7 @@ $(document).ready(function() {
         "autoWidth" : false,
         "order" : [[0, "desc"]],
         "columns": [
-            { "width" : "20%", "type": "date" },
+            { "width" : "20%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD HH:mm:ss z");}else{return data;} }},
             { "width" : "10%" },
             { "width" : "40%" },
             { "width" : "10%" },

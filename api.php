@@ -1,7 +1,7 @@
 <?php
 	error_reporting(E_ALL);
 	require("scripts/pi-hole/php/FTL.php");
-	$socket = connectFTL("127.0.0.1", 4711);
+	$socket = connectFTL("127.0.0.1", 4712);
 	header('Content-type: application/json');
 
 	$data = [];
@@ -123,7 +123,8 @@
 		$data = array_merge($data, $result);
 	}
 
-	if (isset($_GET['getQueryTypes'])) {
+	if (isset($_GET['getQueryTypes']))
+	{
 		sendRequestFTL("querytypes");
 		$return = getResponseFTL();
 		$querytypes = [];
@@ -131,6 +132,21 @@
 		$querytypes["AAAA (IPv6)"] = explode(" ",$return[1])[1];
 
 		$result = ['querytypes' => $querytypes];
+		$data = array_merge($data, $result);
+	}
+
+	if (isset($_GET['getAllQueries']))
+	{
+		sendRequestFTL("getallqueries");
+		$return = getResponseFTL();
+		$allQueries = [];
+		foreach($return as $line)
+		{
+			$tmp = explode(" ",$line);
+			$allQueries[] = $tmp;
+		}
+
+		$result = ['data' => $allQueries];
 		$data = array_merge($data, $result);
 	}
 
