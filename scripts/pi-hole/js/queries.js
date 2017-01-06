@@ -76,15 +76,10 @@ function handleAjaxError( xhr, textStatus, error ) {
     else {
         alert( "An error occured while loading the data. Presumably your log is too large to be processed." );
     }
-    tableApi.fnProcessingIndicator( false );
+    $("#all-queries_processing").hide();
+    tableApi.clear()
+    tableApi.draw();
 }
-
-jQuery.fn.dataTableExt.oApi.fnProcessingIndicator = function ( oSettings, onoff ) {
-    if ( typeof( onoff ) == "undefined" ) {
-        onoff = true;
-    }
-    this.oApi._fnProcessingDisplay( oSettings, onoff );
-};
 
 $(document).ready(function() {
 
