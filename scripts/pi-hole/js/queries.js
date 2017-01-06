@@ -69,6 +69,22 @@ function add(domain,list) {
         }
     });
 }
+function handleAjaxError( xhr, textStatus, error ) {
+    if ( textStatus === "timeout" ) {
+        alert( "The server took too long to send the data." );
+    }
+    else {
+        alert( "An error occured while loading the data. Presumably your log is too large to be processed." );
+    }
+    tableApi.fnProcessingIndicator( false );
+}
+
+jQuery.fn.dataTableExt.oApi.fnProcessingIndicator = function ( oSettings, onoff ) {
+    if ( typeof( onoff ) == "undefined" ) {
+        onoff = true;
+    }
+    this.oApi._fnProcessingDisplay( oSettings, onoff );
+};
 
 $(document).ready(function() {
 
@@ -104,8 +120,9 @@ $(document).ready(function() {
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'tr>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": APIstring,
+        "ajax": {"url": APIstring, "error": handleAjaxError },
         "autoWidth" : false,
+        "processing": true,
         "order" : [[0, "desc"]],
         "columns": [
             { "width" : "20%", "type": "date" },
