@@ -77,7 +77,7 @@ function handleAjaxError( xhr, textStatus, error ) {
         alert( "An error occured while loading the data. Presumably your log is too large to be processed." );
     }
     $("#all-queries_processing").hide();
-    tableApi.clear()
+    tableApi.clear();
     tableApi.draw();
 }
 
