@@ -257,18 +257,18 @@
                     <?php
                         $pistatus = exec('sudo pihole status web');
                         if ($pistatus == "1") {
-                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
+                            echo '<i class="fa fa-circle" style="color:#7FFF00"></i> Active';
                         } elseif ($pistatus == "0") {
-                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
+                            echo '<i class="fa fa-circle" style="color:#FF0000"></i> Offline';
                         } elseif ($pistatus == "-1") {
-                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#FF0000"></i> DNS service not running</a>';
+                            echo '<i class="fa fa-circle" style="color:#FF0000"></i> DNS service not running';
                         } else {
-                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#ff9900"></i> Unknown</a>';
+                            echo '<i class="fa fa-circle" style="color:#ff9900"></i> Unknown';
                         }
 
                         // CPU Temp
                         if ($celsius >= -273.15) {
-                            echo "<a href=\"#\" id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
+                            echo "<i class=\"fa fa-fire\" style=\"color:";
                             if ($celsius > 60) {
                                 echo "#FF0000";
                             }
@@ -289,12 +289,11 @@
                             {
                                 echo round($celsius,1) . "&deg;C";
                             }
-                            echo "</a>";
                         }
                     ?>
                     <br/>
                     <?php
-                    echo "<a href=\"#\"><i class=\"fa fa-circle\" style=\"color:";
+                    echo "<i class=\"fa fa-circle\" style=\"color:";
                         if ($loaddata[0] > $nproc) {
                             echo "#FF0000";
                         }
@@ -302,11 +301,11 @@
                         {
                             echo "#7FFF00";
                         }
-                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
+                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2];
                     ?>
                     <br/>
                     <?php
-                    echo "<a href=\"#\"><i class=\"fa fa-circle\" style=\"color:";
+                    echo "<i class=\"fa fa-circle\" style=\"color:";
                         if ($memory_usage > 0.75 || $memory_usage < 0.0) {
                             echo "#FF0000";
                         }
@@ -316,11 +315,11 @@
                         }
                         if($memory_usage > 0.0)
                         {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "%</a>";
+                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "%";
                         }
                         else
                         {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp; N/A</a>";
+                            echo "\"></i> Memory usage:&nbsp;&nbsp; N/A";
                         }
                     ?>
                 </div>
