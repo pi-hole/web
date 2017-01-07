@@ -105,7 +105,7 @@ function check_domain() {
     if(isset($_POST['domain'])){
         $validDomain = is_valid_domain_name($_POST['domain']);
         if(!$validDomain){
-            log_and_die($_POST['domain']. ' is not a valid domain');
+            log_and_die(htmlspecialchars($_POST['domain']. ' is not a valid domain'));
         }
     }
 }
@@ -126,11 +126,11 @@ function list_verify($type) {
         require("password.php");
         if(strlen($pwhash) == 0)
         {
-            log_and_die("No password set - ".$type."listing with password not supported");
+            log_and_die("No password set - ".htmlspecialchars($type)."listing with password not supported");
         }
         elseif($wrongpassword)
         {
-            log_and_die("Wrong password - ".$type."listing of ${_POST['domain']} not permitted");
+            log_and_die("Wrong password - ".htmlspecialchars($type)."listing of ${_POST['domain']} not permitted");
         }
     }
     else
