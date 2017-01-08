@@ -586,7 +586,7 @@
 				<div class="col-lg-6">
 					<div class="form-group">
 					<label>Top Clients</label>
-					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
+					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address or host name per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
 					</div>
 				</div>
 				<h4>Reverse DNS lookup</h4>
