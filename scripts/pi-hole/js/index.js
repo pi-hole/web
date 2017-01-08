@@ -196,14 +196,7 @@ function updateTopLists() {
             if ({}.hasOwnProperty.call(data.top_queries,domain)){
                 // Sanitize domain
                 domain = escapeHtml(domain);
-                if(domain !== "pi.hole")
-                {
-                    url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
-                }
-                else
-                {
-                    url = domain;
-                }
+                url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
                 percentage = data.top_queries[domain] / data.dns_queries_today * 100;
                 domaintable.append("<tr> <td>" + url +
                     "</td> <td>" + data.top_queries[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
