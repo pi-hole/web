@@ -255,24 +255,6 @@ function validDomain($domain_name)
 					exec("sudo pihole -a privacymode false");
 				}
 
-				if(isset($_POST["resolve-forward"]))
-				{
-					exec("sudo pihole -a resolve forward true");
-				}
-				else
-				{
-					exec("sudo pihole -a resolve forward false");
-				}
-
-				if(isset($_POST["resolve-clients"]))
-				{
-					exec("sudo pihole -a resolve clients true");
-				}
-				else
-				{
-					exec("sudo pihole -a resolve clients false");
-				}
-
 				break;
 
 			case "webUI":

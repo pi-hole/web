@@ -550,24 +550,6 @@
 		$privacyMode = false;
 	}
 
-	if(istrue($setupVars["API_GET_UPSTREAM_DNS_HOSTNAME"]))
-	{
-		$resolveForward = true;
-	}
-	else
-	{
-		$resolveForward = false;
-	}
-
-	if(istrue($setupVars["API_GET_CLIENT_HOSTNAME"]))
-	{
-		$resolveClients = true;
-	}
-	else
-	{
-		$resolveClients = false;
-	}
-
 ?>
 		<div class="box box-success">
 			<div class="box-header with-border">
@@ -587,18 +569,6 @@
 					<div class="form-group">
 					<label>Top Clients</label>
 					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address or host name per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
-					</div>
-				</div>
-				<h4>Reverse DNS lookup</h4>
-				<p>Try to determine the domain name via querying the Pi-hole for</p>
-				<div class="col-lg-6">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="resolve-forward" <?php if($resolveForward){ ?>checked<?php } ?>> Forward Destinations</label></div>
-					</div>
-				</div>
-				<div class="col-lg-6">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="resolve-clients" <?php if($resolveClients){ ?>checked<?php } ?>> Top Clients</label></div>
 					</div>
 				</div>
 				<h4>Query Log</h4>
