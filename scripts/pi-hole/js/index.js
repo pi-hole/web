@@ -175,7 +175,8 @@ function updateForwardDestinations() {
             c.push(colors.shift());
             if(key.indexOf("|") > -1)
             {
-                key = key.substr(0, key.indexOf("|"));
+                var idx = key.indexOf("|");
+                key = key.substr(0, idx)+" ("+key.substr(idx+1, key.length-idx)+")";
             }
             forwardDestinationChart.data.labels.push(key);
         });
