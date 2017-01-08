@@ -105,19 +105,20 @@ $(document).ready(function() {
             {
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed" );
-                $("td:eq(5)", row).html( "<button style=\"color:green;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+                $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
             else if (data[4] === "2")
             {
                 $(row).css("color","green");
                 $("td:eq(4)", row).html( "OK (forwarded)" );
-                $("td:eq(5)", row).html( "<button style=\"color:red;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+                $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
             else if (data[4] === "3")
             {
                 $(row).css("color","green");
                 $("td:eq(4)", row).html( "OK (cached)" );
-                $("td:eq(5)", row).html( "<button style=\"color:red;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+                $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+
             }
             else if (data[4] === "4")
             {
