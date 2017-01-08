@@ -21,6 +21,7 @@ function sub(index, entry) {
         },
         error: function(jqXHR, exception) {
             alert("Failed to remove the domain!");
+            domain.show({queue:true});
         }
     });
 }
