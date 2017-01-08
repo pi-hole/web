@@ -103,9 +103,13 @@ function check_csrf($token) {
 
 function check_domain() {
     if(isset($_POST['domain'])){
-        $validDomain = is_valid_domain_name($_POST['domain']);
-        if(!$validDomain){
-            log_and_die(htmlspecialchars($_POST['domain']. ' is not a valid domain'));
+        $domains = explode(" ",$_POST['domain']);
+        foreach($domains as $domain)
+        {
+            $validDomain = is_valid_domain_name($domain);
+            if(!$validDomain){
+                log_and_die(htmlspecialchars($domain. ' is not a valid domain'));
+            }
         }
     }
 }
