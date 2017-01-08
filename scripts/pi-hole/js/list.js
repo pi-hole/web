@@ -65,9 +65,8 @@ function refresh(fade) {
 
 window.onload = refresh(false);
 
-function add() {
-    var domain = $("#domain");
-    if(domain.val().length === 0){
+function add(domain) {
+    if(domain.length === 0){
         return;
     }
 
@@ -80,7 +79,7 @@ function add() {
     $.ajax({
         url: "scripts/pi-hole/php/add.php",
         method: "post",
-        data: {"domain":domain.val(), "list":listType, "token":token},
+        data: {"domain":domain, "list":listType, "token":token},
         success: function(response) {
           if (response.indexOf("not a valid argument") >= 0 ||
               response.indexOf("is not a valid domain") >= 0) {
@@ -99,7 +98,6 @@ function add() {
             alInfo.delay(1000).fadeOut(2000, function() {
                 alInfo.hide();
             });
-            domain.val("");
             refresh(true);
           }
         },
@@ -113,21 +111,26 @@ function add() {
             });
         }
     });
+    $("#domain").val("");
 }
 
-
+function handleAdd() {
+    $("#domain").val().split(/\s+/).forEach(function (domain) {
+        add(domain);
+    });
+}
 
 // Handle enter button for adding domains
 $(document).keypress(function(e) {
     if(e.which === 13 && $("#domain").is(":focus")) {
         // Enter was pressed, and the input has focus
-        add();
+        handleAdd();
     }
 });
 
 // Handle buttons
 $("#btnAdd").on("click", function() {
-    add();
+    handleAdd();
 });
 $("#btnRefresh").on("click", function() {
     refresh(true);
