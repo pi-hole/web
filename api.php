@@ -142,7 +142,26 @@
 
 	if (isset($_GET['getAllQueries']) && $auth)
 	{
-		sendRequestFTL("getallqueries");
+		if(isset($_GET['from']) && isset($_GET['until']))
+		{
+			// Get limited time interval
+			sendRequestFTL("getallqueries-time ".$_GET['from']." ".$_GET['until']);
+		}
+		else if(isset($_GET['domain']))
+		{
+			// Get specific domain only
+			sendRequestFTL("getallqueries-domain ".$_GET['domain']);
+		}
+		else if(isset($_GET['client']))
+		{
+			// Get specific client only
+			sendRequestFTL("getallqueries-client ".$_GET['client']);
+		}
+		else
+		{
+			// Get all queries
+			sendRequestFTL("getallqueries");
+		}
 		$return = getResponseFTL();
 		$allQueries = [];
 		foreach($return as $line)
