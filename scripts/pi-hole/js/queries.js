@@ -14,7 +14,7 @@ var tableIsLoading=true;
 // shows loading indicator above table
 function setTableLoading(loading){
     // dont progress if queried state is already active
-    if(loading == tableIsLoading){
+    if(loading === tableIsLoading){
         return;
     }
     tableIsLoading=loading;
@@ -39,8 +39,9 @@ function add(row) {
     alDomain.html(rowData[2]);
     var alSuccess = $("#alSuccess");
     var alFailure = $("#alFailure");
-
-    if(rowData[4] == "Pi-holed"){
+  
+    list="unknown";
+    if(rowData[4] === "Pi-holed"){
         list="white";
         alList.html("Whitelist");
     }else{
