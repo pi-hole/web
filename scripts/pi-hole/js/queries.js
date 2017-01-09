@@ -70,11 +70,17 @@ function add(domain,list) {
     });
 }
 function handleAjaxError( xhr, textStatus, error ) {
-    if ( textStatus === "timeout" ) {
+    if ( textStatus === "timeout" )
+    {
         alert( "The server took too long to send the data." );
     }
-    else {
-        alert( "An error occured while loading the data. Maybe FTL is not running." );
+    else if(xhr.responseText.indexOf("Connection refused") >= 0)
+    {
+        alert( "An error occured while loading the data: Connection refused. Is FTL running?" );
+    }
+    else
+    {
+        alert( "An unknown error occured while loading the data." );
     }
     $("#all-queries_processing").hide();
     tableApi.clear();
