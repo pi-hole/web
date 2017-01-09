@@ -61,7 +61,7 @@ if(isset($setupVars["API_PRIVACY_MODE"]))
 </div>
 <div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Failure! Something went wrong.
+    Failure! Something went wrong.<span id="err"></span>
 </div>
 
 <div class="row">

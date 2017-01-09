@@ -107,6 +107,7 @@ function add() {
         },
         error: function(jqXHR, exception) {
             alFailure.show();
+            err.html("");
             alFailure.delay(1000).fadeOut(2000, function() {
                 alFailure.hide();
             });
