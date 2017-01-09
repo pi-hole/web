@@ -161,9 +161,9 @@ function validDomain($domain_name)
 				$first = true;
 				foreach($domains as $domain)
 				{
-					if(!validDomain($domain))
+					if(!validDomain($domain) || validIP($domain))
 					{
-						$error .= "Top Domains/Ads entry ".$domain." is invalid!<br>";
+						$error .= "Top Domains/Ads entry ".$domain." is invalid (use only domains)!<br>";
 					}
 					if(!$first)
 					{
@@ -180,9 +180,9 @@ function validDomain($domain_name)
 				$first = true;
 				foreach($clients as $client)
 				{
-					if(!validIP($client))
+					if(!validDomain($client))
 					{
-						$error .= "Top Clients entry ".$client." is invalid (use only IP addresses)!<br>";
+						$error .= "Top Clients entry ".$client." is invalid!<br>";
 					}
 					if(!$first)
 					{
@@ -253,24 +253,6 @@ function validDomain($domain_name)
 				else
 				{
 					exec("sudo pihole -a privacymode false");
-				}
-
-				if(isset($_POST["resolve-forward"]))
-				{
-					exec("sudo pihole -a resolve forward true");
-				}
-				else
-				{
-					exec("sudo pihole -a resolve forward false");
-				}
-
-				if(isset($_POST["resolve-clients"]))
-				{
-					exec("sudo pihole -a resolve clients true");
-				}
-				else
-				{
-					exec("sudo pihole -a resolve clients false");
 				}
 
 				break;

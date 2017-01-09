@@ -74,6 +74,7 @@ function add() {
     var alInfo = $("#alInfo");
     var alSuccess = $("#alSuccess");
     var alFailure = $("#alFailure");
+    var err = $("#err");
     alInfo.show();
     alSuccess.hide();
     alFailure.hide();
@@ -85,10 +86,11 @@ function add() {
           if (response.indexOf("not a valid argument") >= 0 ||
               response.indexOf("is not a valid domain") >= 0) {
             alFailure.show();
-            alFailure.delay(1000).fadeOut(2000, function() {
+            err.html(response);
+            alFailure.delay(4000).fadeOut(2000, function() {
                 alFailure.hide();
             });
-            alInfo.delay(1000).fadeOut(2000, function() {
+            alInfo.delay(4000).fadeOut(2000, function() {
                 alInfo.hide();
             });
           } else {

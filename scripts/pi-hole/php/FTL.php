@@ -22,7 +22,9 @@ function connectFTL($address, $port=4711, $quiet=true)
 	$result = socket_connect($socket, $address, $port)
 	or die("socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n");
 
-	socket_set_nonblock($socket);
+	// Set timeout to 10 seconds
+	socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, ['sec'=>10]);
+	socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, ['sec'=>10]);
 
 	if(!$quiet)
 	{

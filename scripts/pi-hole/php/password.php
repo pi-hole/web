@@ -21,6 +21,7 @@
     }
 
     $wrongpassword = false;
+    $auth = false;
 
     // Test if password is set
     if(strlen($pwhash) > 0)
