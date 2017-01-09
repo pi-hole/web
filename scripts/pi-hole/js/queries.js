@@ -40,7 +40,7 @@ function add(row) {
     var alSuccess = $("#alSuccess");
     var alFailure = $("#alFailure");
   
-    list="unknown";
+    var list="unknown";
     if(rowData[4] === "Pi-holed"){
         list="white";
         alList.html("Whitelist");
