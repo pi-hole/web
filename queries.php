@@ -96,8 +96,11 @@ if(isset($setupVars["API_PRIVACY_MODE"]))
                     </tfoot>
                 </table>
             </div>
-       </div>
+        </div>
         <!-- /.box-body -->
+        <div class="overlay">
+	    <i class="fa fa-refresh fa-spin"></i>
+	</div>
       </div>
       <!-- /.box -->
     </div>
