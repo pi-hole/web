@@ -55,6 +55,7 @@ $(".confirm-flushlogs").confirm({
 
 $("#DHCPchk").click(function() {
 	$("input.DHCPgroup").prop("disabled", !this.checked);
+	$("#dhcpnotice").prop("hidden", !this.checked).addClass("lookatme");
 });
 
 var leasetable;

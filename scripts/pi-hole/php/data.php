@@ -679,14 +679,12 @@
                     $byTimeAds[$time] = 1;
                 }
             }
-            else
-            {
-                if (isset($byTimeDomains[$time])) {
-                    $byTimeDomains[$time]++;
-                }
-                else {
-                    $byTimeDomains[$time] = 1;
-                }
+
+            if (isset($byTimeDomains[$time])) {
+                $byTimeDomains[$time]++;
+            }
+            else {
+                $byTimeDomains[$time] = 1;
             }
         }
         return [$byTimeDomains,$byTimeAds];
@@ -721,14 +719,12 @@
                     $byTimeAds[$time] = 1;
                 }
             }
-            else
-            {
-                if (isset($byTimeDomains[$time])) {
-                    $byTimeDomains[$time]++;
-                }
-                else {
-                    $byTimeDomains[$time] = 1;
-                }
+
+            if (isset($byTimeDomains[$time])) {
+                $byTimeDomains[$time]++;
+            }
+            else {
+                $byTimeDomains[$time] = 1;
             }
         }
         return [$byTimeDomains,$byTimeAds];

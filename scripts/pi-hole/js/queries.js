@@ -69,6 +69,17 @@ function add(domain,list) {
         }
     });
 }
+function handleAjaxError( xhr, textStatus, error ) {
+    if ( textStatus === "timeout" ) {
+        alert( "The server took too long to send the data." );
+    }
+    else {
+        alert( "An error occured while loading the data. Presumably your log is too large to be processed." );
+    }
+    $("#all-queries_processing").hide();
+    tableApi.clear();
+    tableApi.draw();
+}
 
 $(document).ready(function() {
     var status;
@@ -94,11 +105,11 @@ $(document).ready(function() {
             status = data[4];
             if (status.substr(0,2) === "Pi") {
                 $(row).css("color","red");
-                $("td:eq(5)", row).html( "<button style=\"color:green;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+                $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
             else{
                 $(row).css("color","green");
-                $("td:eq(5)", row).html( "<button style=\"color:red;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+                $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
 
         },
@@ -106,8 +117,9 @@ $(document).ready(function() {
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'tr>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": APIstring,
+        "ajax": {"url": APIstring, "error": handleAjaxError },
         "autoWidth" : false,
+        "processing": true,
         "order" : [[0, "desc"]],
         "columns": [
             { "width" : "20%", "type": "date" },

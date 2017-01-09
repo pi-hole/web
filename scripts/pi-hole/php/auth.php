@@ -35,7 +35,11 @@ function check_cors() {
     // to validate that the client is authorized, only unauthorized.
     $server_host = $_SERVER['HTTP_HOST'];
 
-    // If HTTP_HOST contains a non-standard port (!= 80) we have to strip the port
+    // Use parse_url if HTTP_HOST contains a colon (:) to get the host name
+    // e.g.
+    // https://pi.hole
+    // pi.hole:8080
+    // However, we don't use parse_url(...) if there is no colon, since it will fail for e.g. "pi.hole"
     if(strpos($server_host, ":"))
     {
         $server_host = parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST);
@@ -48,7 +52,7 @@ function check_cors() {
     if(isset($_SERVER['HTTP_ORIGIN'])) {
         $server_origin = $_SERVER['HTTP_ORIGIN'];
 
-        // If HTTP_ORIGIN contains a non-standard port (!= 80) we have to strip the port
+        // Detect colon in $_SERVER['HTTP_ORIGIN'] (see comment above)
         if(strpos($server_origin, ":"))
         {
             $server_origin = parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST);
@@ -99,14 +103,19 @@ function check_csrf($token) {
 
 function check_domain() {
     if(isset($_POST['domain'])){
-        $validDomain = is_valid_domain_name($_POST['domain']);
-        if(!$validDomain){
-            log_and_die($_POST['domain']. ' is not a valid domain');
+        $domains = explode(" ",$_POST['domain']);
+        foreach($domains as $domain)
+        {
+            $validDomain = is_valid_domain_name($domain);
+            if(!$validDomain){
+                log_and_die(htmlspecialchars($domain. ' is not a valid domain'));
+            }
         }
     }
 }
 
 function list_verify($type) {
+    global $pwhash, $wrongpassword;
     if(!isset($_POST['domain']) || !isset($_POST['list']) || !(isset($_POST['pw']) || isset($_POST['token']))) {
         log_and_die("Missing POST variables");
     }
@@ -121,11 +130,11 @@ function list_verify($type) {
         require("password.php");
         if(strlen($pwhash) == 0)
         {
-            log_and_die("No password set - ${type}listing with password not supported");
+            log_and_die("No password set - ".htmlspecialchars($type)."listing with password not supported");
         }
         elseif($wrongpassword)
         {
-            log_and_die("Wrong password - ${type}listing of ${_POST['domain']} not permitted");
+            log_and_die("Wrong password - ".htmlspecialchars($type)."listing of ${_POST['domain']} not permitted");
         }
     }
     else

@@ -83,15 +83,16 @@
         $memory_usage = -1;
     }
 
+    if($auth) {
+        // For session timer
+        $maxlifetime = ini_get("session.gc_maxlifetime");
 
-    // For session timer
-    $maxlifetime = ini_get("session.gc_maxlifetime");
-
-    // Generate CSRF token
-    if(empty($_SESSION['token'])) {
-        $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
+        // Generate CSRF token
+        if(empty($_SESSION['token'])) {
+            $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
+        }
+        $token = $_SESSION['token'];
     }
-    $token = $_SESSION['token'];
 
     if(isset($setupVars['WEBUIBOXEDLAYOUT']))
     {
@@ -171,7 +172,7 @@
 <!-- /JS Warning -->
 <script src="scripts/pi-hole/js/header.js"></script>
 <!-- Send token to JS -->
-<div id="token" hidden><?php echo $token ?></div>
+<div id="token" hidden><?php if($auth) echo $token; ?></div>
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
@@ -249,25 +250,25 @@
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="img/logo.svg" class="img-responsive" alt="Pi-hole logo" />
+                    <img src="img/logo.svg" class="img-responsive" alt="Pi-hole logo" style="display: table; table-layout: fixed; height: 67px;" />
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
                     <?php
                         $pistatus = exec('sudo pihole status web');
                         if ($pistatus == "1") {
-                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
+                            echo '<a id="status"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
                         } elseif ($pistatus == "0") {
-                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
+                            echo '<a id="status"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
                         } elseif ($pistatus == "-1") {
-                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#FF0000"></i> DNS service not running</a>';
+                            echo '<a id="status"><i class="fa fa-circle" style="color:#FF0000"></i> DNS service not running</a>';
                         } else {
-                            echo '<a href="#" id="status"><i class="fa fa-circle" style="color:#ff9900"></i> Unknown</a>';
+                            echo '<a id="status"><i class="fa fa-circle" style="color:#ff9900"></i> Unknown</a>';
                         }
 
                         // CPU Temp
                         if ($celsius >= -273.15) {
-                            echo "<a href=\"#\" id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
+                            echo "<a id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
                             if ($celsius > 60) {
                                 echo "#FF0000";
                             }
@@ -293,33 +294,33 @@
                     ?>
                     <br/>
                     <?php
-                    echo '<a href="#"><i class="fa fa-circle" style="color:';
+                    echo "<a><i class=\"fa fa-circle\" style=\"color:";
                         if ($loaddata[0] > $nproc) {
-                            echo '#FF0000';
+                            echo "#FF0000";
                         }
                         else
                         {
-                            echo '#7FFF00';
+                            echo "#7FFF00";
                         }
-                        echo '""></i> Load:&nbsp;&nbsp;' . $loaddata[0] . '&nbsp;&nbsp;' . $loaddata[1] . '&nbsp;&nbsp;'. $loaddata[2] . '</a>';
+                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
                     ?>
                     <br/>
                     <?php
-                    echo '<a href="#"><i class="fa fa-circle" style="color:';
+                    echo "<a><i class=\"fa fa-circle\" style=\"color:";
                         if ($memory_usage > 0.75 || $memory_usage < 0.0) {
-                            echo '#FF0000';
+                            echo "#FF0000";
                         }
                         else
                         {
-                            echo '#7FFF00';
+                            echo "#7FFF00";
                         }
                         if($memory_usage > 0.0)
                         {
-                            echo '""></i> Memory usage:&nbsp;&nbsp;' . sprintf("%.1f",100.0*$memory_usage) . '%</a>';
+                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "%</a>";
                         }
                         else
                         {
-                            echo '""></i> Memory usage:&nbsp;&nbsp; N/A</a>';
+                            echo "\"></i> Memory usage:&nbsp;&nbsp; N/A</a>";
                         }
                     ?>
                 </div>
@@ -442,7 +443,7 @@
                 // Show Logout button if $auth is set and authorization is required
                 if(strlen($pwhash) > 0) { ?>
                 <li>
-                    <a href="index.php?logout">
+                    <a href="?logout">
                         <i class="fa fa-user-times"></i> <span>Logout</span>
                     </a>
                 </li>

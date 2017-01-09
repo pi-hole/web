@@ -9,6 +9,16 @@
 		max-width: none;
 		white-space: nowrap;
 	}
+	@-webkit-keyframes Pulse{
+		from {color:#630030;-webkit-text-shadow:0 0 9px #333;}
+		50% {color:#e33100;-webkit-text-shadow:0 0 18px #e33100;}
+		to {color:#630030;-webkit-text-shadow:0 0 9px #333;}
+	}
+	p.lookatme {
+		-webkit-animation-name: Pulse;
+		-webkit-animation-duration: 2s;
+		-webkit-animation-iteration-count: infinite;
+	}
 </style>
 
 <?php if(isset($debug)){ ?>
@@ -81,6 +91,7 @@
 						<div class="input-group-addon"><i class="fa fa-plug"></i></div>
 						<input type="text" class="form-control" disabled value="<?php echo $piHoleIPv6; ?>">
 					</div>
+					<?php if (!defined('AF_INET6')){ ?><p style="color: #F00;">Warning: PHP has been compiled without IPv6 support.</p><?php } ?>
 				</div>
 				<div class="form-group">
 					<label>Pi-Hole hostname</label>
@@ -93,6 +104,17 @@
 		</div>
 <?php
 	// Pi-Hole DHCP server
+
+	// Detect IPv6
+	$usingipv6 = false;
+	if(strlen($piHoleIPv6) > 0 && $piHoleIPv6 != "unknown")
+	{
+		if(substr($piHoleIPv6, 0, 4) != "fe80")
+		{
+			$usingipv6 = true;
+		}
+	}
+
 	if(isset($setupVars["DHCP_ACTIVE"]))
 	{
 		if($setupVars["DHCP_ACTIVE"] == 1)
@@ -107,12 +129,29 @@
 		$DHCPstart = $setupVars["DHCP_START"];
 		$DHCPend = $setupVars["DHCP_END"];
 		$DHCProuter = $setupVars["DHCP_ROUTER"];
-		$DHCPleasetime = $setupVars["DHCP_LEASETIME"];
-		if(strlen($DHCPleasetime) < 1)
+		// This setting has been added later, we have to check if it exists
+		if(isset($setupVars["DHCP_LEASETIME"]))
 		{
-			// Fallback if it was not set before
+			$DHCPleasetime = $setupVars["DHCP_LEASETIME"];
+			if(strlen($DHCPleasetime) < 1)
+			{
+				// Fallback if empty string
+				$DHCPleasetime = 24;
+			}
+		}
+		else
+		{
 			$DHCPleasetime = 24;
 		}
+		if(isset($setupVars["DHCP_IPv6"]))
+		{
+			$DHCPIPv6 = $setupVars["DHCP_IPv6"];
+		}
+		else
+		{
+			$DHCPIPv6 = $usingipv6;
+		}
+
 	}
 	else
 	{
@@ -130,6 +169,7 @@
 			$DHCProuter = "";
 		}
 		$DHCPleasetime = 24;
+		$DHCPIPv6 = $usingipv6;
 	}
 	if(isset($setupVars["PIHOLE_DOMAIN"])){
 		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
@@ -143,8 +183,13 @@
 			</div>
 			<div class="box-body">
 				<form role="form" method="post">
-				<div class="form-group">
-					<div class="checkbox"><label><input type="checkbox" name="active" <?php if($DHCP){ ?>checked<?php } ?> id="DHCPchk"> DHCP server enabled</label></div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="checkbox"><label><input type="checkbox" name="active" <?php if($DHCP){ ?>checked<?php } ?> id="DHCPchk"> DHCP server enabled</label></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<p id="dhcpnotice" <?php if(!$DHCP){ ?>hidden<?php } ?>>Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
 				</div>
 					<div class="col-md-12">
 						<label>Range of IP addresses to hand out</label>
@@ -181,6 +226,11 @@
 							<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
 						</div>
 						<div class="box-body">
+							<div class="col-md-12">
+								<div class="form-group">
+									<div class="checkbox"><label><input type="checkbox" name="useIPv6" <?php if($DHCPIPv6){ ?>checked<?php } ?> class="DHCPgroup" <?php if(!$DHCP){ ?>disabled<?php } ?>> Enable IPv6 support (SLAAC + RA)</label></div>
+								</div>
+							</div>
 							<div class="col-md-12">
 							<label>Pi-Hole domain name</label>
 							<div class="form-group">
@@ -403,10 +453,10 @@
 					<div class="box-body">
 						<div class="col-lg-12">
 							<div class="form-group">
-								<div class="checkbox"><label><input type="checkbox" name="DNSrequiresFQDN" <?php if($DNSrequiresFQDN){ ?>checked<?php } ?>> never forward non-FQDNs</label></div>
+								<div class="checkbox"><label><input type="checkbox" name="DNSrequiresFQDN" <?php if($DNSrequiresFQDN){ ?>checked<?php } ?> title="domain-needed"> never forward non-FQDNs</label></div>
 							</div>
 							<div class="form-group">
-								<div class="checkbox"><label><input type="checkbox" name="DNSbogusPriv" <?php if($DNSbogusPriv){ ?>checked<?php } ?>> never forward reverse lookups for private IP ranges</label></div>
+								<div class="checkbox"><label><input type="checkbox" name="DNSbogusPriv" <?php if($DNSbogusPriv){ ?>checked<?php } ?> title="bogus-priv"> never forward reverse lookups for private IP ranges</label></div>
 							</div>
 							<p>Note that enabling these two options may increase your privacy slightly, but may also prevent you from being able to access local hostnames if the Pi-Hole is not used as DHCP server</p>
 						</div>
@@ -455,6 +505,7 @@
 			</div>
 			<div class="box-footer">
 				<form role="form" method="post">
+				<button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
 				<input type="hidden" name="field" value="Logging">
 				<?php if($piHoleLogging) { ?>
 					<input type="hidden" name="action" value="Disable">
@@ -562,8 +613,10 @@
 					</div>
 				</div>
 				<h4>Privacy mode</h4>
-				<div class="form-group">
-					<div class="checkbox"><label><input type="checkbox" name="privacyMode" <?php if($privacyMode){ ?>checked<?php } ?>> Don't show query results for permitted requests</label></div>
+				<div class="col-lg-12">
+					<div class="form-group">
+						<div class="checkbox"><label><input type="checkbox" name="privacyMode" <?php if($privacyMode){ ?>checked<?php } ?>> Don't show query results for permitted requests</label></div>
+					</div>
 				</div>
 			</div>
 			<div class="box-footer">

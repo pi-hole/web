@@ -13,13 +13,19 @@
     </div>
 
     <div class="panel-body">
-      <form action="" method="post">
+      <form action="" id="loginform" method="post">
         <div class="form-group has-feedback <?php if ($wrongpassword) { ?>has-error<?php } ?> ">
-          <input type="password" name="pw" class="form-control" placeholder="Password" autofocus>
+          <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" autofocus>
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         </div>
         <div class="row">
-          <div class="col-xs-4 col-xs-offset-8">
+          <div class="col-xs-8">
+          <ul>
+            <li><tt>Return</tt> &rarr; Log in and go to requested page (<?php echo $scriptname; ?>)</li>
+            <li><tt>Ctrl+Return</tt> &rarr; Log in and go to Settings page</li>
+          </ul>
+          </div>
+          <div class="col-xs-4">
             <button type="submit" href="#" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;&nbsp;Log in</button>
           </div>
         </div>
