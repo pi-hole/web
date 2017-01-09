@@ -74,7 +74,7 @@ function handleAjaxError( xhr, textStatus, error ) {
         alert( "The server took too long to send the data." );
     }
     else {
-        alert( "An error occured while loading the data. Presumably your log is too large to be processed." );
+        alert( "An error occured while loading the data. Maybe FTL is not running." );
     }
     $("#all-queries_processing").hide();
     tableApi.clear();
