@@ -380,7 +380,6 @@
 
             $exploded = explode(" ", trim($query));
             $domain = $exploded[count($exploded)-3];
-            $tmp = $exploded[count($exploded)-4];
 
             $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
             if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))
