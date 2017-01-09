@@ -9,36 +9,53 @@ function escapeRegex(text) {
   return text.replace(/[().]/g, function(m) { return map[m]; });
 }
 
+// stores if the table is already displaying a loading indicator
+var tableIsLoading=true;
+// shows loading indicator above table
+function setTableLoading(loading){
+    // dont progress if queried state is already active
+    if(loading == tableIsLoading){
+        return;
+    }
+    tableIsLoading=loading;
+    if(loading){
+        $("#recent-queries .overlay").show();
+    }else{
+        $("#recent-queries .overlay").hide();
+    }
+}
+
 function refreshData() {
     tableApi.ajax.url("api.php?getAllQueries").load();
 //    updateSessionTimer();
 }
 
-function add(domain,list) {
+function add(row) {
+    var rowData=row.data();
     var token = $("#token").html();
     var alInfo = $("#alInfo");
     var alList = $("#alList");
     var alDomain = $("#alDomain");
-    alDomain.html(domain);
+    alDomain.html(rowData[2]);
     var alSuccess = $("#alSuccess");
     var alFailure = $("#alFailure");
 
-    if(list === "white")
-    {
+    if(rowData[4] == "Pi-holed"){
+        list="white";
         alList.html("Whitelist");
-    }
-    else
-    {
+    }else{
+        list="black";
         alList.html("Blacklist");
     }
 
     alInfo.show();
     alSuccess.hide();
     alFailure.hide();
+    setTableLoading(true);
     $.ajax({
         url: "scripts/pi-hole/php/add.php",
         method: "post",
-        data: {"domain":domain, "list":list, "token":token},
+        data: {"domain":rowData[2], "list":list, "token":token},
         success: function(response) {
             if (response.indexOf("not a valid argument") >= 0 || response.indexOf("is not a valid domain") >= 0)
             {
@@ -47,6 +64,13 @@ function add(domain,list) {
             }
             else
             {
+                // Update the row if the status of the domain changed
+                if(rowData[4] === "Pi-holed"){
+                    rowData[4]="Ok";
+                }else{
+                    rowData[4]="Pi-holed";
+                }
+                row.data(rowData).draw();
                 alSuccess.show();
                 alSuccess.delay(1000).fadeOut(2000, function() { alSuccess.hide(); });
             }
@@ -55,6 +79,7 @@ function add(domain,list) {
                 alList.html("");
                 alDomain.html("");
             });
+            setTableLoading(false);
         },
         error: function(jqXHR, exception) {
             alFailure.show();
@@ -66,6 +91,7 @@ function add(domain,list) {
                 alList.html("");
                 alDomain.html("");
             });
+            setTableLoading(false);
         }
     });
 }
@@ -79,6 +105,7 @@ function handleAjaxError( xhr, textStatus, error ) {
     $("#all-queries_processing").hide();
     tableApi.clear();
     tableApi.draw();
+    setTableLoading(false);
 }
 
 $(document).ready(function() {
@@ -111,6 +138,11 @@ $(document).ready(function() {
             }
 
         },
+        "initComplete": function(settings, json) {
+            // is called if the data is loaded into the table
+            // now hide the loading indicator
+            setTableLoading(false);
+        },
         dom: "<'row'<'col-sm-12'f>>" +
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'tr>>" +
@@ -135,15 +167,9 @@ $(document).ready(function() {
         } ]
     });
     $("#all-queries tbody").on( "click", "button", function () {
-        var data = tableApi.row( $(this).parents("tr") ).data();
-        if (data[4] === "Pi-holed")
-        {
-          add(data[2],"white");
-        }
-        else
-        {
-          add(data[2],"black");
-        }
+        var row = tableApi.row( $(this).parents("tr") );
+        // pass the row object along to later update the whitelist/blacklist button
+        add(row);
     } );
 
     if("client" in GETDict)
