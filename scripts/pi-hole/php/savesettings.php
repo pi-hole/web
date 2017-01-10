@@ -32,6 +32,15 @@ function validDomain($domain_name)
 	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
 }
 
+function validDomainWildcard($domain_name)
+{
+	// There has to be either no or at most one "*" at the beginning of a line
+	$validChars = preg_match("/^((\*)?[_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([a-z\d])*)*$/i", $domain_name);
+	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
+	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
+	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
+}
+
 	$primaryDNSservers = [
 			"8.8.8.8" => "Google",
 			"208.67.222.222" => "OpenDNS",
@@ -161,7 +170,7 @@ function validDomain($domain_name)
 				$first = true;
 				foreach($domains as $domain)
 				{
-					if(!validDomain($domain) || validIP($domain))
+					if(!validDomainWildcard($domain) || validIP($domain))
 					{
 						$error .= "Top Domains/Ads entry ".$domain." is invalid (use only domains)!<br>";
 					}
@@ -180,7 +189,7 @@ function validDomain($domain_name)
 				$first = true;
 				foreach($clients as $client)
 				{
-					if(!validDomain($client))
+					if(!validDomainWildcard($client))
 					{
 						$error .= "Top Clients entry ".$client." is invalid!<br>";
 					}
