@@ -9,8 +9,7 @@ Using **[AdminLTE](https://almsaeedstudio.com)**, this project will create a Web
 
 From this interface, you will be able to see stats on how well your Pi-hole is performing.  You will also be able to update the lists used to block ads.
 
-![Pi-hole Web interface](http://i.imgur.com/5lLAUGo.png)
-![Fully responsive](http://i.imgur.com/fHuWR6E.png)
+![Pi-hole Web interface](http://i.imgur.com/EgGZXbT.png)
 
 ## API
 A read-only API can be accessed at `/admin/api.php`. With either no parameters or `api.php?summary` it returns the following JSON:
