@@ -122,6 +122,12 @@
             $boxedlayout = false;
         }
     }
+
+    if(exec("ps -p `cat /etc/pihole/FTL.pid` -o comm=") === "pihole-FTL")
+    {
+        $FTL = true;
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -255,15 +261,22 @@
                 <div class="pull-left info">
                     <p>Status</p>
                     <?php
-                        $pistatus = exec('sudo pihole status web');
-                        if ($pistatus == "1") {
-                            echo '<a id="status"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
-                        } elseif ($pistatus == "0") {
-                            echo '<a id="status"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
-                        } elseif ($pistatus == "-1") {
-                            echo '<a id="status"><i class="fa fa-circle" style="color:#FF0000"></i> DNS service not running</a>';
-                        } else {
-                            echo '<a id="status"><i class="fa fa-circle" style="color:#ff9900"></i> Unknown</a>';
+                        if($FTL)
+                        {
+                            $pistatus = exec('sudo pihole status web');
+                            if ($pistatus == "1") {
+                                echo '<a id="status"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
+                            } elseif ($pistatus == "0") {
+                                echo '<a id="status"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
+                            } elseif ($pistatus == "-1") {
+                                echo '<a id="status"><i class="fa fa-circle" style="color:#FF0000"></i> DNS service not running</a>';
+                            } else {
+                                echo '<a id="status"><i class="fa fa-circle" style="color:#ff9900"></i> Unknown</a>';
+                            }
+                        }
+                        else
+                        {
+                            echo '<a id="status"><i class="fa fa-circle" style="color:#FF0000"></i> FTL offline</a>';
                         }
 
                         // CPU Temp

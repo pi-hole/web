@@ -661,6 +661,36 @@
 			</div>
 		</div>
 */ ?>
+<?php
+if($FTL)
+{
+	$parts = preg_split('/\s+/',trim(exec("ps -p `cat /etc/pihole/FTL.pid` -o pid,start,vsz,rss,euser,egroup,cputime,%cpu,%mem")));
+	// pid
+	// time the command started. If the process was started less than 24 hours ago, the output format is "HH:MM:SS", else it is "  Mmm dd" (where Mmm is a three-letter month name).
+	// virtual memory size of the process in KiB
+	// resident set size, the non-swapped physical memory that a task has used (inkiloBytes).
+	// effective user name.  This will be the textual user ID, if it can be obtained
+	// effective group ID of the process.  This will be the textual group ID, if it can be obtained
+	// cumulative CPU time, "[DD-]hh:mm:ss" format.  (alias time)
+	// cpu utilization of the process in "##.#" format.  Currently, it is the CPU time used divided by the time the process has been running (cputime/realtime ratio), expressed as a percentage.
+	// ratio of the process's resident set size  to the physical memory on the machine, expressed as a percentage.
+}
+?>
+		<div class="box box-danger">
+			<div class="box-header with-border">
+				<h3 class="box-title">FTL status (<?php if($FTL){ ?>Running, PID: <?php echo $parts[0]; ?><?php }else{ ?>Not running<?php } ?>)</h3>
+			</div>
+			<div class="box-body">
+				<?php if($FTL){ ?>Time FTL started: <?php echo $parts[1]; ?><br>
+				User / Group: <?php echo $parts[4]; ?> / <?php echo $parts[5]; ?><br>
+				Total CPU utilization: <?php echo $parts[7]; ?>%<br>
+				Cumulative CPU time: <?php echo $parts[6]; ?><br>
+				Memory utilization: <?php echo $parts[8]; ?>%<br>
+				Virtual memory size: <?php echo formatSizeUnits(1e3*$parts[2]); ?><br>
+				Resident memory size: <?php echo formatSizeUnits(1e3*$parts[3]); ?><br>
+				<?php } ?>
+			</div>
+		</div>
 		<div class="box box-danger">
 			<div class="box-header with-border">
 				<h3 class="box-title">System Administration</h3>
