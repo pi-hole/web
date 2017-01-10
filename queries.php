@@ -108,4 +108,5 @@ if(isset($setupVars["API_PRIVACY_MODE"]))
     require "scripts/pi-hole/php/footer.php";
 ?>
 
+<script src="scripts/vendor/moment.min.js"></script>
 <script src="scripts/pi-hole/js/queries.js"></script>
