@@ -29,10 +29,18 @@ function getFullName() {
 <div class="form-group input-group">
     <input id="domain" type="text" class="form-control" placeholder="Add a domain (example.com or sub.example.com)">
     <span class="input-group-btn">
+    <?php if($list === "black") { ?>
+        <button id="btnAdd" class="btn btn-default" type="button">Add (exact)</button>
+        <button id="btnAddWildcard" class="btn btn-default" type="button">Add (wildcard)</button>
+    <?php }else{ ?>
         <button id="btnAdd" class="btn btn-default" type="button">Add</button>
+    <?php } ?>
         <button id="btnRefresh" class="btn btn-default" type="button">Refresh</button>
+    }
     </span>
 </div>
+<?php if($list === "white") { ?>
+<p>Note that whitelisting domains which are blocked using the wildcard method won't work.</p><?php } ?>
 
 <!-- Alerts -->
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
@@ -49,7 +57,14 @@ function getFullName() {
 </div>
 
 <!-- Domain List -->
+<?php if($list === "black") { ?>
+<h3>Exact blocking</h3>
+<?php } ?>
 <ul class="list-group" id="list"></ul>
+<?php if($list === "black") { ?>
+<h3>Wildcard blocking</h3>
+<ul class="list-group" id="list-wildcard"></ul>
+<?php } ?>
 
 <?php
 require "scripts/pi-hole/php/footer.php";

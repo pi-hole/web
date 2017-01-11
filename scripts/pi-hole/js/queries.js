@@ -85,6 +85,7 @@ function handleAjaxError( xhr, textStatus, error ) {
 }
 
 $(document).ready(function() {
+    var status;
 
     // Do we want to filter queries?
     var GETDict = {};
@@ -104,9 +105,14 @@ $(document).ready(function() {
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
-            if (data[4] === "Pi-holed") {
+            status = data[4];
+            if (status === "Pi-holed (exact)") {
                 $(row).css("color","red");
                 $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+            }
+            else if (status === "Pi-holed (wildcard)") {
+                $(row).css("color","red");
+                $("td:eq(5)", row).html( "" );
             }
             else{
                 $(row).css("color","green");
@@ -139,7 +145,8 @@ $(document).ready(function() {
     });
     $("#all-queries tbody").on( "click", "button", function () {
         var data = tableApi.row( $(this).parents("tr") ).data();
-        if (data[4] === "Pi-holed")
+        status = data[4];
+        if (status.substr(0,2) === "Pi")
         {
           add(data[2],"white");
         }

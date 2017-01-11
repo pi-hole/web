@@ -6,13 +6,18 @@ var token = $("#token").html();
 var listType = $("#list-type").html();
 var fullName = listType === "white" ? "Whitelist" : "Blacklist";
 
-function sub(index, entry) {
+function sub(index, entry, arg) {
     var domain = $("#"+index);
+    var locallistType = listType;
     domain.hide("highlight");
+    if(arg === "wild")
+    {
+        locallistType = "wild";
+    }
     $.ajax({
         url: "scripts/pi-hole/php/sub.php",
         method: "post",
-        data: {"domain":entry, "list":listType, "token":token},
+        data: {"domain":entry, "list":locallistType, "token":token},
         success: function(response) {
             if(response.length !== 0){
                 return;
@@ -27,9 +32,18 @@ function sub(index, entry) {
 }
 
 function refresh(fade) {
+    var listw;
     var list = $("#list");
+    if(listType === "black")
+    {
+        listw = $("#list-wildcard");
+    }
     if(fade) {
         list.fadeOut(100);
+        if(listw)
+        {
+            listw.fadeOut(100);
+        }
     }
     $.ajax({
         url: "scripts/pi-hole/php/get.php",
@@ -37,26 +51,60 @@ function refresh(fade) {
         data: {"list":listType},
         success: function(response) {
             list.html("");
+            if(listw)
+            {
+                listw.html("");
+            }
             var data = JSON.parse(response);
 
             if(data.length === 0) {
-                list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
+                $("h3").hide();
+                if(listw)
+                {
+                    listw.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
+                }
+                else
+                {
+                    list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
+                }
             }
             else {
+                $("h3").show();
                 data.forEach(function (entry, index) {
-                    list.append(
+                    if(entry.substr(0,1) === "*")
+                    {
+                        // Wildcard entry
+                        // remove leading *
+                        entry = entry.substr(1, entry.length - 1);
+                        listw.append(
                         "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
                         "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
-                        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>"
-                    );
+                        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
+                        // Handle button
+                        $("#list-wildcard #"+index+"").on("click", "button", function() {
+                            sub(index, entry, "wild");
+                        });
+                    }
+                    else
+                    {
+                        // Normal entry
+                        list.append(
+                        "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
+                        "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
+                        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
+                        // Handle button
+                        $("#list #"+index+"").on("click", "button", function() {
+                            sub(index, entry, "exact");
+                        });
+                    }
 
-                    // Handle button
-                    $("#list #"+index+"").on("click", "button", function() {
-                        sub(index, entry);
-                    });
                 });
             }
-            list.fadeIn("fast");
+            list.fadeIn(100);
+            if(listw)
+            {
+                listw.fadeIn(100);
+            }
         },
         error: function(jqXHR, exception) {
             $("#alFailure").show();
@@ -66,10 +114,15 @@ function refresh(fade) {
 
 window.onload = refresh(false);
 
-function add() {
+function add(arg) {
+    var locallistType = listType;
     var domain = $("#domain");
     if(domain.val().length === 0){
         return;
+    }
+    if(arg === "wild")
+    {
+        locallistType = "wild";
     }
 
     var alInfo = $("#alInfo");
@@ -82,7 +135,7 @@ function add() {
     $.ajax({
         url: "scripts/pi-hole/php/add.php",
         method: "post",
-        data: {"domain":domain.val(), "list":listType, "token":token},
+        data: {"domain":domain.val(), "list":locallistType, "token":token},
         success: function(response) {
           if (response.indexOf("not a valid argument") >= 0 ||
               response.indexOf("is not a valid domain") >= 0) {
@@ -125,14 +178,19 @@ function add() {
 $(document).keypress(function(e) {
     if(e.which === 13 && $("#domain").is(":focus")) {
         // Enter was pressed, and the input has focus
-        add();
+        add("exact");
     }
 });
 
 // Handle buttons
 $("#btnAdd").on("click", function() {
-    add();
+    add("exact");
 });
+
+$("#btnAddWildcard").on("click", function() {
+    add("wild");
+});
+
 $("#btnRefresh").on("click", function() {
     refresh(true);
 });
