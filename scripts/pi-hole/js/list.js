@@ -69,6 +69,7 @@ function refresh(fade) {
                 }
             }
             else {
+                $("h3").show();
                 data.forEach(function (entry, index) {
                     if(entry.substr(0,1) === "*")
                     {
