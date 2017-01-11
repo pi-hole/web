@@ -103,9 +103,13 @@ $(document).ready(function() {
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
             status = data[4];
-            if (status.substr(0,2) === "Pi") {
+            if (status === "Pi-holed (exact)") {
                 $(row).css("color","red");
                 $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+            }
+            else if (status === "Pi-holed (wildcard)") {
+                $(row).css("color","red");
+                $("td:eq(5)", row).html( "" );
             }
             else{
                 $(row).css("color","green");
