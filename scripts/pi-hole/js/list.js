@@ -26,6 +26,7 @@ function sub(index, entry, arg) {
         },
         error: function(jqXHR, exception) {
             alert("Failed to remove the domain!");
+            domain.show({queue:true});
         }
     });
 }
@@ -159,6 +160,7 @@ function add(arg) {
         },
         error: function(jqXHR, exception) {
             alFailure.show();
+            err.html("");
             alFailure.delay(1000).fadeOut(2000, function() {
                 alFailure.hide();
             });

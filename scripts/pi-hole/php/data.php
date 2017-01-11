@@ -381,7 +381,6 @@
 
             $exploded = explode(" ", trim($query));
             $domain = $exploded[count($exploded)-3];
-            $tmp = $exploded[count($exploded)-4];
 
             $status = "";
 
