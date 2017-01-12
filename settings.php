@@ -411,6 +411,19 @@
 	} else {
 		$DNSbogusPriv = true;
 	}
+
+	if(isset($setupVars["DNSSEC"])){
+		if($setupVars["DNSSEC"])
+		{
+			$DNSSEC = true;
+		}
+		else
+		{
+			$DNSSEC = false;
+		}
+	} else {
+		$DNSSEC = false;
+	}
 ?>
 		<div class="box box-warning">
 			<div class="box-header with-border">
@@ -459,6 +472,10 @@
 								<div class="checkbox"><label><input type="checkbox" name="DNSbogusPriv" <?php if($DNSbogusPriv){ ?>checked<?php } ?> title="bogus-priv"> never forward reverse lookups for private IP ranges</label></div>
 							</div>
 							<p>Note that enabling these two options may increase your privacy slightly, but may also prevent you from being able to access local hostnames if the Pi-Hole is not used as DHCP server</p>
+							<div class="form-group">
+								<div class="checkbox"><label><input type="checkbox" name="DNSSEC" <?php if($DNSSEC){ ?>checked<?php } ?>> Use DNSSEC</label></div>
+							</div>
+							<p>Validate DNS replies and cache DNSSEC data. When forwarding DNS queries, Pi-hole requests the DNSSEC records needed to  validate the replies. Use Google or Norton DNS servers when activating DNSSEC. Note that the size of your log might increase significantly when enabling DNSSEC. A DNSSEC resolver test can be found <a href="http://dnssec.vs.uni-due.de/" target="_blank">here</a>.</p>
 						</div>
 					</div>
 				</div>
