@@ -134,7 +134,6 @@ function validDomain($domain_name)
 				{
 					exec("sudo pihole -a setdns ".$primaryIP." ".$secondaryIP." ".$extra);
 					$success .= "The DNS settings have been updated";
-					$success = "sudo pihole -a setdns ".$primaryIP." ".$secondaryIP." ".$extra;
 				}
 				else
 				{
