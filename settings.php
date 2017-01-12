@@ -686,8 +686,8 @@ if($FTL)
 				Total CPU utilization: <?php echo $parts[7]; ?>%<br>
 				Cumulative CPU time: <?php echo $parts[6]; ?><br>
 				Memory utilization: <?php echo $parts[8]; ?>%<br>
-				Virtual memory size: <?php echo formatSizeUnits(1e3*$parts[2]); ?><br>
-				Resident memory size: <?php echo formatSizeUnits(1e3*$parts[3]); ?><br>
+				<span title="Virtual memory combines active RAM and inactive memory to form a large range of contiguous addresses.">Virtual memory size: <?php echo formatSizeUnits(1e3*$parts[2]); ?></span><br>
+				<span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Resident memory size: <?php echo formatSizeUnits(1e3*$parts[3]); ?></span><br>
 				<?php } ?>
 			</div>
 		</div>
