@@ -1,10 +1,18 @@
 var exact = "";
+
 function eventsource() {
     var ta = $("#output");
     var domain = $("#domain");
     var q = $("#quiet");
     if(domain.val().length === 0)
     {
+        return;
+    }
+
+    // IE does not support EventSource - exit early
+    if (typeof EventSource !== "function") {
+        ta.show();
+        ta.html("Querying ad lists is not supported with this browser!");
         return;
     }
 
