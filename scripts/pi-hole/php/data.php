@@ -333,6 +333,7 @@
 
         // Create empty array for gravity
         $gravity_domains = getGravity();
+        $wildcard_domains = getWildcardListContent();
 
         if(isset($_GET["from"]))
         {
@@ -380,10 +381,37 @@
 
             $exploded = explode(" ", trim($query));
             $domain = $exploded[count($exploded)-3];
-            $tmp = $exploded[count($exploded)-4];
 
-            $status = isset($gravity_domains[$domain]) ? "Pi-holed" : "OK";
-            if(($status === "Pi-holed" && $showBlocked) || ($status === "OK" && $showPermitted))
+            $status = "";
+
+            if(isset($gravity_domains[$domain]))
+            {
+                if($gravity_domains[$domain] > 0)
+                {
+                    // Exact matching gravity domain
+                    $status = "Pi-holed (exact)";
+                }
+                else
+                {
+                    // Explicitly whitelisted
+                    $status = "OK (whitelisted)";
+                }
+            }
+            else
+            {
+                // Test for wildcard blocking
+                foreach ($wildcard_domains as $entry) {
+                    if(strpos($domain, $entry) !== false)
+                    {
+                        $status = "Pi-holed (wildcard)";
+                    }
+                }
+                if(!strlen($status))
+                {
+                    $status = "OK";
+                }
+            }
+            if((substr($status,0,2) === "Pi" && $showBlocked) || (substr($status,0,2) === "OK" && $showPermitted))
             {
                 $type = substr($exploded[count($exploded)-4], 6, -1);
                 $client = $exploded[count($exploded)-1];
@@ -506,14 +534,31 @@
             if($action && strlen($key) > 0)
             {
                 // $action is true (we want to add) *and* key is not empty
-                $array[$key] = true;
+                $array[$key] = 1;
             }
             elseif(!$action && isset($array[$key]))
             {
                 // $action is false (we want to remove) *and* key is set
-                unset($array[$key]);
+                $array[$key] = -1;
             }
         }
+    }
+
+    function getWildcardListContent() {
+        $rawList = file_get_contents(checkfile("/etc/dnsmasq.d/03-pihole-wildcard.conf"));
+        $wclist = explode("\n", $rawList);
+        $list = [];
+
+        foreach ($wclist as $entry) {
+            $expl = explode("/", $entry);
+            if(count($expl) == 3)
+            {
+                array_push($list,$expl[1]);
+            }
+        }
+
+        return array_unique($list);
+
     }
 
     function getGravity() {
@@ -577,7 +622,17 @@
 
     function countBlockedQueries() {
         global $logListName;
-        return exec("grep \"gravity.list\" $logListName | grep -c \" is \"");
+        // Blocked due to gravity entries (ad lists + blacklist)
+        $gravityblocked = intval(exec("grep -c -e \"gravity\.list.*is\" $logListName"));
+
+        // Blocked due to wildcard entries
+        $wildcard_domains = getWildcardListContent();
+        $wildcardblocked = 0;
+        foreach ($wildcard_domains as $domain) {
+            $wildcardblocked += intval(exec("grep -c -e \"config.*$domain is\" $logListName"));
+        }
+
+        return  $gravityblocked +$wildcardblocked;
     }
 
     function getForwards(\SplFileObject $log) {

@@ -22,6 +22,7 @@ function add(domain,list) {
     alDomain.html(domain);
     var alSuccess = $("#alSuccess");
     var alFailure = $("#alFailure");
+    var err = $("#err");
 
     if(list === "white")
     {
@@ -43,7 +44,8 @@ function add(domain,list) {
             if (response.indexOf("not a valid argument") >= 0 || response.indexOf("is not a valid domain") >= 0)
             {
                 alFailure.show();
-                alFailure.delay(1000).fadeOut(2000, function() { alFailure.hide(); });
+                err.html(response);
+                alFailure.delay(4000).fadeOut(2000, function() { alFailure.hide(); });
             }
             else
             {
@@ -58,6 +60,7 @@ function add(domain,list) {
         },
         error: function(jqXHR, exception) {
             alFailure.show();
+            err.html("");
             alFailure.delay(1000).fadeOut(2000, function() {
                 alFailure.hide();
             });
@@ -88,6 +91,7 @@ function handleAjaxError( xhr, textStatus, error ) {
 }
 
 $(document).ready(function() {
+    var status;
 
     // Do we want to filter queries?
     var GETDict = {};
@@ -118,7 +122,6 @@ $(document).ready(function() {
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
             if (data[4] === "1")
-            {
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed" );
                 $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );

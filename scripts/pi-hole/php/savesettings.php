@@ -121,11 +121,21 @@ function validDomainWildcard($domain_name)
 				// Check if domain-needed is requested
 				if(isset($_POST["DNSbogusPriv"]))
 				{
-					$extra .= "bogus-priv";
+					$extra .= "bogus-priv ";
 				}
 				else
 				{
-					$extra .= "no-bogus-priv";
+					$extra .= "no-bogus-priv ";
+				}
+
+				// Check if DNSSEC is requested
+				if(isset($_POST["DNSSEC"]))
+				{
+					$extra .= "dnssec";
+				}
+				else
+				{
+					$extra .= "no-dnssec";
 				}
 
 				// If there has been no error we can save the new DNS server IPs
