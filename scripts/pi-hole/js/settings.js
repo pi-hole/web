@@ -2,6 +2,17 @@ $(function () {
   $("[data-mask]").inputmask();
 });
 
+$(function(){
+	$("#DNS1IPv4").ipAddress({s:4});
+	$("#DNS2IPv4").ipAddress({s:4});
+	$("#DNS1IPv6").ipAddress({v:6});
+	$("#DNS2IPv6").ipAddress({v:6});
+
+	$("#DHCPfrom").ipAddress({s:4});
+	$("#DHCPto").ipAddress({s:4});
+	$("#DHCProuter").ipAddress({s:4});
+});
+
 $(".confirm-reboot").confirm({
 	text: "Are you sure you want to send a reboot command to your Pi-Hole?",
 	title: "Confirmation required",
