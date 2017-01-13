@@ -6,7 +6,7 @@ if(basename($_SERVER['SCRIPT_FILENAME']) !== "settings.php")
 }
 
 function validIP($address){
-	return !filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false;
+	return !filter_var($address, FILTER_VALIDATE_IP) === false;
 }
 
 // Check for existance of variable
@@ -61,9 +61,13 @@ function validDomain($domain_name)
 				$secondaryDNS = $_POST["secondaryDNS"];
 
 				// Get primary DNS server IP address
-				if($primaryDNS === "Custom")
+				if($primaryDNS === "Customv4")
 				{
-					$primaryIP = $_POST["DNS1IP"];
+					$primaryIP = $_POST["DNS1IPv4"];
+				}
+				elseif($primaryDNS === "Customv6")
+				{
+					$primaryIP = $_POST["DNS1IPv6"];
 				}
 				else
 				{
@@ -77,11 +81,22 @@ function validDomain($domain_name)
 				}
 
 				// Get secondary DNS server IP address
-				if($secondaryDNS === "Custom")
+				if($secondaryDNS === "Customv4")
 				{
-					if(strlen($_POST["DNS2IP"]) > 0)
+					if(strlen($_POST["DNS2IPv4"]) > 0)
 					{
-						$secondaryIP = $_POST["DNS2IP"];
+						$secondaryIP = $_POST["DNS2IPv4"];
+					}
+					else
+					{
+						$secondaryIP = "none";
+					}
+				}
+				elseif($secondaryDNS === "Customv6")
+				{
+					if(strlen($_POST["DNS2IPv6"]) > 0)
+					{
+						$secondaryIP = $_POST["DNS2IPv6"];
 					}
 					else
 					{
