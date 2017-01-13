@@ -3,10 +3,10 @@ $(function () {
 });
 
 $(function(){
-	$("#DNS1IPv4").ipAddress({s:4});
-	$("#DNS2IPv4").ipAddress({s:4});
-	$("#DNS1IPv6").ipAddress({v:6});
-	$("#DNS2IPv6").ipAddress({v:6});
+	$("#custom1val").ipAddress({s:4});
+	$("#custom2val").ipAddress({s:4});
+	$("#custom3val").ipAddress({v:6});
+	$("#custom4val").ipAddress({v:6});
 
 	$("#DHCPfrom").ipAddress({s:4});
 	$("#DHCPto").ipAddress({s:4});

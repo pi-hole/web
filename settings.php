@@ -360,46 +360,41 @@
 
 <?php
 	// DNS settings
-	if(isset($setupVars["PIHOLE_DNS_1"])){
-		if(isset($primaryDNSservers[$setupVars["PIHOLE_DNS_1"]]))
-		{
-			$piHoleDNS1 = $primaryDNSservers[$setupVars["PIHOLE_DNS_1"]];
+	$DNSservers = [];
+	$DNSactive = [];
+	for($i=1;$i<=12;$i++)
+	{
+		if(isset($setupVars["PIHOLE_DNS_".$i])){
+			if(isset($DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]))
+			{
+				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],$DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]];
+				array_push($DNSactive,$setupVars["PIHOLE_DNS_".$i]);
+			}
+			elseif(strpos($setupVars["PIHOLE_DNS_".$i],"."))
+			{
+				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],"CustomIPv4"];
+				if(!isset($custom1))
+				{
+					$custom1 = $setupVars["PIHOLE_DNS_".$i];
+				}
+				else
+				{
+					$custom2 = $setupVars["PIHOLE_DNS_".$i];
+				}
+			}
+			elseif(strpos($setupVars["PIHOLE_DNS_".$i],":"))
+			{
+				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],"CustomIPv6"];
+				if(!isset($custom3))
+				{
+					$custom3 = $setupVars["PIHOLE_DNS_".$i];
+				}
+				else
+				{
+					$custom4 = $setupVars["PIHOLE_DNS_".$i];
+				}
+			}
 		}
-		elseif(strpos($setupVars["PIHOLE_DNS_1"],"."))
-		{
-			$piHoleDNS1 = "Customv4";
-		}
-		elseif(strpos($setupVars["PIHOLE_DNS_1"],":"))
-		{
-			$piHoleDNS1 = "Customv6";
-		}
-		else
-		{
-			$piHoleDNS1 = "unknown";
-		}
-	} else {
-		$piHoleDNS1 = "unknown";
-	}
-
-	if(isset($setupVars["PIHOLE_DNS_2"])){
-		if(isset($secondaryDNSservers[$setupVars["PIHOLE_DNS_2"]]))
-		{
-			$piHoleDNS2 = $secondaryDNSservers[$setupVars["PIHOLE_DNS_2"]];
-		}
-		elseif(strpos($setupVars["PIHOLE_DNS_2"],"."))
-		{
-			$piHoleDNS2 = "Customv4";
-		}
-		elseif(strpos($setupVars["PIHOLE_DNS_2"],":"))
-		{
-			$piHoleDNS2 = "Customv6";
-		}
-		else
-		{
-			$piHoleDNS2 = "unknown";
-		}
-	} else {
-		$piHoleDNS2 = "unknown";
 	}
 
 	if(isset($setupVars["DNS_FQDN_REQUIRED"])){
@@ -448,38 +443,41 @@
 			<div class="box-body">
 				<form role="form" method="post">
 				<div class="col-lg-6">
-					<label>Primary DNS Server</label>
+					<label>Upstream DNS Servers</label>
 					<div class="form-group">
-						<?php foreach ($primaryDNSservers as $key => $value) { ?> <div class="radio"><label><input type="radio" name="primaryDNS" value="<?php echo $value;?>" <?php if($piHoleDNS1 === $value){ ?>checked<?php } ?> ><?php echo $value;?> (<?php echo $key;?>)</label></div> <?php } ?>
-						<label>Custom (IPv4)</label>
-						<div class="input-group">
-							<div class="input-group-addon"><input type="radio" name="primaryDNS" value="Customv4"
-							<?php if($piHoleDNS1 === "Customv4"){ ?>checked<?php } ?>></div>
-							<input type="text" name="DNS1IPv4" class="form-control" id="DNS1IPv4" <?php if($piHoleDNS1 === "Customv4"){ ?>value="<?php echo $setupVars["PIHOLE_DNS_1"]; ?>"<?php } ?>>
-						</div>
-						<label>Custom (IPv6)</label>
-						<div class="input-group">
-							<div class="input-group-addon"><input type="radio" name="primaryDNS" value="Customv6"
-							<?php if($piHoleDNS1 === "Customv6"){ ?>checked<?php } ?>></div>
-							<input type="text" name="DNS1IPv6" class="form-control" id="DNS1IPv6" <?php if($piHoleDNS1 === "Customv6"){ ?>value="<?php echo $setupVars["PIHOLE_DNS_1"]; ?>"<?php } ?>>
-						</div>
+						<?php foreach ($DNSserverslist as $key => $value) { ?>
+						<div class="checkbox">
+							<label title="<?php echo $key;?>">
+							<input type="checkbox" name="DNSserver<?php echo $key;?>" value="true" <?php if(in_array($key,$DNSactive)){ ?>checked<?php } ?> ><?php echo $value;?></label>
+						</div> <?php } ?>
 					</div>
 				</div>
 				<div class="col-lg-6">
-					<label>Secondary DNS Server</label>
+					<label>&nbsp;</label>
 					<div class="form-group">
-						<?php foreach ($secondaryDNSservers as $key => $value) { ?> <div class="radio"><label><input type="radio" name="secondaryDNS" value="<?php echo $value;?>" <?php if($piHoleDNS2 === $value){ ?>checked<?php } ?> ><?php echo $value;?> (<?php echo $key;?>)</label></div> <?php } ?>
-						<label>Custom (IPv4)</label>
+						<label>Custom 1 (IPv4)</label>
 						<div class="input-group">
-							<div class="input-group-addon"><input type="radio" name="secondaryDNS" value="Customv4"
-							<?php if($piHoleDNS2 === "Customv4"){ ?>checked<?php } ?>></div>
-							<input type="text" name="DNS2IPv4" class="form-control" id="DNS2IPv4" <?php if($piHoleDNS2 === "Customv4"){ ?>value="<?php echo $setupVars["PIHOLE_DNS_2"]; ?>"<?php } ?>>
+							<div class="input-group-addon"><input type="checkbox" name="custom1" value="Customv4"
+							<?php if(isset($custom1)){ ?>checked<?php } ?>></div>
+							<input type="text" name="custom1val" class="form-control" id="custom1val" <?php if(isset($custom1)){ ?>value="<?php echo $custom1; ?>"<?php } ?>>
 						</div>
-						<label>Custom (IPv6)</label>
+						<label>Custom 2 (IPv4)</label>
 						<div class="input-group">
-							<div class="input-group-addon"><input type="radio" name="secondaryDNS" value="Customv6"
-							<?php if($piHoleDNS2 === "Customv6"){ ?>checked<?php } ?>></div>
-							<input type="text" name="DNS2IPv6" class="form-control" id="DNS2IPv6" <?php if($piHoleDNS2 === "Customv6"){ ?>value="<?php echo $setupVars["PIHOLE_DNS_2"]; ?>"<?php } ?>>
+							<div class="input-group-addon"><input type="checkbox" name="custom2" value="Customv4"
+							<?php if(isset($custom2)){ ?>checked<?php } ?>></div>
+							<input type="text" name="custom2val" class="form-control" id="custom2val" <?php if(isset($custom2)){ ?>value="<?php echo $custom2; ?>"<?php } ?>>
+						</div>
+						<label>Custom 3 (IPv6)</label>
+						<div class="input-group">
+							<div class="input-group-addon"><input type="checkbox" name="custom3" value="Customv6"
+							<?php if(isset($custom3)){ ?>checked<?php } ?>></div>
+							<input type="text" name="custom3val" class="form-control" id="custom3val" <?php if(isset($custom3)){ ?>value="<?php echo $custom3; ?>"<?php } ?>>
+						</div>
+						<label>Custom 4 (IPv6)</label>
+						<div class="input-group">
+							<div class="input-group-addon"><input type="checkbox" name="custom4" value="Customv6"
+							<?php if(isset($custom4)){ ?>checked<?php } ?>></div>
+							<input type="text" name="custom4val" class="form-control" id="custom4val" <?php if(isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
 						</div>
 					</div>
 				</div>
