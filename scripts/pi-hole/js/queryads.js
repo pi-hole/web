@@ -1,5 +1,30 @@
 var exact = "";
 
+// Credit: http://stackoverflow.com/a/10642418/2087442
+function httpGet(ta,theUrl)
+{
+    if (window.XMLHttpRequest)
+    {
+	// code for IE7+
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+	// code for IE6, IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+	    ta.show();
+            ta.html(xmlhttp.responseText);
+        }
+    }
+    xmlhttp.open("GET", theUrl, false);
+    xmlhttp.send();
+}
+
 function eventsource() {
     var ta = $("#output");
     var domain = $("#domain");
@@ -9,18 +34,17 @@ function eventsource() {
         return;
     }
 
-    // IE does not support EventSource - exit early
-    if (typeof EventSource !== "function") {
-        ta.show();
-        ta.html("Querying ad lists is not supported with this browser!");
-        return;
-    }
-
     var quiet = false;
     if(q.val() === "yes")
     {
         quiet = true;
         exact = "exact";
+    }
+
+    // IE does not support EventSource - load whole content at once
+    if (typeof EventSource !== "function") {
+        httpGet(ta,"/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+"&"+exact);
+        return;
     }
 
     var host = window.location.host;
