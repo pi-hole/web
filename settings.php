@@ -198,7 +198,7 @@
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">From</div>
-								<input type="text" class="form-control DHCPgroup" name="from" value="<?php echo $DHCPstart; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
+								<input type="text" class="form-control DHCPgroup" name="from" id="DHCPfrom" value="<?php echo $DHCPstart; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
 					</div>
@@ -206,7 +206,7 @@
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">To</div>
-								<input type="text" class="form-control DHCPgroup" name="to" value="<?php echo $DHCPend; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
+								<input type="text" class="form-control DHCPgroup" name="to" id="DHCPto" value="<?php echo $DHCPend; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
 					</div>
@@ -215,7 +215,7 @@
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">Router</div>
-								<input type="text" class="form-control DHCPgroup" name="router" value="<?php echo $DHCProuter; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
+								<input type="text" class="form-control DHCPgroup" name="router" id="DHCProuter" value="<?php echo $DHCProuter; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
 					</div>
@@ -360,30 +360,41 @@
 
 <?php
 	// DNS settings
-	if(isset($setupVars["PIHOLE_DNS_1"])){
-		if(isset($primaryDNSservers[$setupVars["PIHOLE_DNS_1"]]))
-		{
-			$piHoleDNS1 = $primaryDNSservers[$setupVars["PIHOLE_DNS_1"]];
+	$DNSservers = [];
+	$DNSactive = [];
+	for($i=1;$i<=12;$i++)
+	{
+		if(isset($setupVars["PIHOLE_DNS_".$i])){
+			if(isset($DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]))
+			{
+				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],$DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]];
+				array_push($DNSactive,$setupVars["PIHOLE_DNS_".$i]);
+			}
+			elseif(strpos($setupVars["PIHOLE_DNS_".$i],"."))
+			{
+				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],"CustomIPv4"];
+				if(!isset($custom1))
+				{
+					$custom1 = $setupVars["PIHOLE_DNS_".$i];
+				}
+				else
+				{
+					$custom2 = $setupVars["PIHOLE_DNS_".$i];
+				}
+			}
+			elseif(strpos($setupVars["PIHOLE_DNS_".$i],":"))
+			{
+				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],"CustomIPv6"];
+				if(!isset($custom3))
+				{
+					$custom3 = $setupVars["PIHOLE_DNS_".$i];
+				}
+				else
+				{
+					$custom4 = $setupVars["PIHOLE_DNS_".$i];
+				}
+			}
 		}
-		else
-		{
-			$piHoleDNS1 = "Custom";
-		}
-	} else {
-		$piHoleDNS1 = "unknown";
-	}
-
-	if(isset($setupVars["PIHOLE_DNS_2"])){
-		if(isset($secondaryDNSservers[$setupVars["PIHOLE_DNS_2"]]))
-		{
-			$piHoleDNS2 = $secondaryDNSservers[$setupVars["PIHOLE_DNS_2"]];
-		}
-		else
-		{
-			$piHoleDNS2 = "Custom";
-		}
-	} else {
-		$piHoleDNS2 = "unknown";
 	}
 
 	if(isset($setupVars["DNS_FQDN_REQUIRED"])){
@@ -432,28 +443,41 @@
 			<div class="box-body">
 				<form role="form" method="post">
 				<div class="col-lg-6">
-					<label>Primary DNS Server</label>
+					<label>Upstream DNS Servers</label>
 					<div class="form-group">
-						<?php foreach ($primaryDNSservers as $key => $value) { ?> <div class="radio"><label><input type="radio" name="primaryDNS" value="<?php echo $value;?>" <?php if($piHoleDNS1 === $value){ ?>checked<?php } ?> ><?php echo $value;?> (<?php echo $key;?>)</label></div> <?php } ?>
-						<label>Custom</label>
-						<div class="input-group">
-							<div class="input-group-addon"><input type="radio" name="primaryDNS" value="Custom"
-							<?php if($piHoleDNS1 === "Custom"){ ?>checked<?php } ?>></div>
-							<input type="text" name="DNS1IP" class="form-control" data-inputmask="'alias': 'ip'" data-mask
-							<?php if($piHoleDNS1 === "Custom"){ ?>value="<?php echo $setupVars["PIHOLE_DNS_1"]; ?>"<?php } ?>>
-						</div>
+						<?php foreach ($DNSserverslist as $key => $value) { ?>
+						<div class="checkbox">
+							<label title="<?php echo $key;?>">
+							<input type="checkbox" name="DNSserver<?php echo $key;?>" value="true" <?php if(in_array($key,$DNSactive)){ ?>checked<?php } ?> ><?php echo $value;?></label>
+						</div> <?php } ?>
 					</div>
 				</div>
 				<div class="col-lg-6">
-					<label>Secondary DNS Server</label>
+					<label>&nbsp;</label>
 					<div class="form-group">
-						<?php foreach ($secondaryDNSservers as $key => $value) { ?> <div class="radio"><label><input type="radio" name="secondaryDNS" value="<?php echo $value;?>" <?php if($piHoleDNS2 === $value){ ?>checked<?php } ?> ><?php echo $value;?> (<?php echo $key;?>)</label></div> <?php } ?>
-						<label>Custom</label>
+						<label>Custom 1 (IPv4)</label>
 						<div class="input-group">
-							<div class="input-group-addon"><input type="radio" name="secondaryDNS" value="Custom"
-							<?php if($piHoleDNS2 === "Custom"){ ?>checked<?php } ?>></div>
-							<input type="text" name="DNS2IP" class="form-control" data-inputmask="'alias': 'ip'" data-mask
-							<?php if($piHoleDNS2 === "Custom"){ ?>value="<?php echo $setupVars["PIHOLE_DNS_2"]; ?>"<?php } ?>>
+							<div class="input-group-addon"><input type="checkbox" name="custom1" value="Customv4"
+							<?php if(isset($custom1)){ ?>checked<?php } ?>></div>
+							<input type="text" name="custom1val" class="form-control" id="custom1val" <?php if(isset($custom1)){ ?>value="<?php echo $custom1; ?>"<?php } ?>>
+						</div>
+						<label>Custom 2 (IPv4)</label>
+						<div class="input-group">
+							<div class="input-group-addon"><input type="checkbox" name="custom2" value="Customv4"
+							<?php if(isset($custom2)){ ?>checked<?php } ?>></div>
+							<input type="text" name="custom2val" class="form-control" id="custom2val" <?php if(isset($custom2)){ ?>value="<?php echo $custom2; ?>"<?php } ?>>
+						</div>
+						<label>Custom 3 (IPv6)</label>
+						<div class="input-group">
+							<div class="input-group-addon"><input type="checkbox" name="custom3" value="Customv6"
+							<?php if(isset($custom3)){ ?>checked<?php } ?>></div>
+							<input type="text" name="custom3val" class="form-control" id="custom3val" <?php if(isset($custom3)){ ?>value="<?php echo $custom3; ?>"<?php } ?>>
+						</div>
+						<label>Custom 4 (IPv6)</label>
+						<div class="input-group">
+							<div class="input-group-addon"><input type="checkbox" name="custom4" value="Customv6"
+							<?php if(isset($custom4)){ ?>checked<?php } ?>></div>
+							<input type="text" name="custom4val" class="form-control" id="custom4val" <?php if(isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
 						</div>
 					</div>
 				</div>
@@ -735,6 +759,6 @@ if($FTL)
 ?>
 
 <script src="scripts/vendor/jquery.inputmask.js"></script>
-<script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
+<script src="scripts/vendor/jquery.input-ip-address-control-1.0.min.js"></script>
 <script src="scripts/vendor/jquery.confirm.min.js"></script>
 <script src="scripts/pi-hole/js/settings.js"></script>

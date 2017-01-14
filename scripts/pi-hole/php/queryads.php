@@ -6,7 +6,10 @@ header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 
 function echoEvent($datatext) {
-    echo "data: ".implode("\ndata: ", explode("\n", $datatext))."\n\n";
+    if(!isset($_GET["IE"]))
+      echo "data: ".implode("\ndata: ", explode("\n", $datatext))."\n\n";
+    else
+      echo $datatext;
 }
 
 // Credit: http://stackoverflow.com/a/4694816/2087442

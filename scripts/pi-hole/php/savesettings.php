@@ -6,7 +6,7 @@ if(basename($_SERVER['SCRIPT_FILENAME']) !== "settings.php")
 }
 
 function validIP($address){
-	return !filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false;
+	return !filter_var($address, FILTER_VALIDATE_IP) === false;
 }
 
 // Check for existance of variable
@@ -41,20 +41,17 @@ function validDomainWildcard($domain_name)
 	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
 }
 
-	$primaryDNSservers = [
-			"8.8.8.8" => "Google",
-			"208.67.222.222" => "OpenDNS",
-			"4.2.2.1" => "Level3",
-			"199.85.126.10" => "Norton",
-			"8.26.56.26" => "Comodo"
-		];
-
-	$secondaryDNSservers = [
-			"8.8.4.4" => "Google",
-			"208.67.220.220" => "OpenDNS",
-			"4.2.2.2" => "Level3",
-			"199.85.127.10" => "Norton",
-			"8.20.247.20" => "Comodo"
+	$DNSserverslist = [
+			"8.8.8.8" => "Google (Primary)",
+			"208.67.222.222" => "OpenDNS (Primary)",
+			"4.2.2.1" => "Level3 (Primary)",
+			"199.85.126.10" => "Norton (Primary)",
+			"8.26.56.26" => "Comodo (Primary)",
+			"8.8.4.4" => "Google (Secondary)",
+			"208.67.220.220" => "OpenDNS (Secondary)",
+			"4.2.2.2" => "Level3 (Secondary)",
+			"199.85.127.10" => "Norton (Secondary)",
+			"8.20.247.20" => "Comodo (Secondary)"
 		];
 
 	$error = "";
@@ -66,46 +63,38 @@ function validDomainWildcard($domain_name)
 		switch ($_POST["field"]) {
 			// Set DNS server
 			case "DNS":
-				$primaryDNS = $_POST["primaryDNS"];
-				$secondaryDNS = $_POST["secondaryDNS"];
 
-				// Get primary DNS server IP address
-				if($primaryDNS === "Custom")
+				$DNSservers = [];
+				// Add selected predefined servers to list
+				foreach ($DNSserverslist as $key => $value)
 				{
-					$primaryIP = $_POST["DNS1IP"];
-				}
-				else
-				{
-					$primaryIP = array_flip($primaryDNSservers)[$primaryDNS];
-				}
-
-				// Validate primary IP
-				if (!validIP($primaryIP))
-				{
-					$error .= "Primary IP (".$primaryIP.") is invalid!<br>";
-				}
-
-				// Get secondary DNS server IP address
-				if($secondaryDNS === "Custom")
-				{
-					if(strlen($_POST["DNS2IP"]) > 0)
+					if(array_key_exists("DNSserver".str_replace(".","_",$key),$_POST))
 					{
-						$secondaryIP = $_POST["DNS2IP"];
-					}
-					else
-					{
-						$secondaryIP = "none";
+						array_push($DNSservers,$key);
 					}
 				}
-				else
+
+				// Test custom server fields
+				for($i=1;$i<=4;$i++)
 				{
-					$secondaryIP = array_flip($secondaryDNSservers)[$secondaryDNS];
+					if(array_key_exists("custom".$i,$_POST))
+					{
+						$IP = $_POST["custom".$i."val"];
+						if(validIP($IP))
+						{
+							array_push($DNSservers,$IP);
+						}
+						else
+						{
+							$error .= "IP (".$IP.") is invalid!<br>";
+						}
+					}
 				}
 
-				// Validate secondary IP
-				if (!validIP($secondaryIP) && $secondaryIP != "none" && strlen($secondaryIP) > 0)
+				// Check if at least one DNS server has been added
+				if(count($DNSservers) < 1)
 				{
-					$error .= "Secondary IP (".$secondaryIP.") is invalid!<br>";
+					$error .= "No DNS server has been selected.<br>";
 				}
 
 				// Check if domain-needed is requested
@@ -141,8 +130,9 @@ function validDomainWildcard($domain_name)
 				// If there has been no error we can save the new DNS server IPs
 				if(!strlen($error))
 				{
-					exec("sudo pihole -a setdns ".$primaryIP." ".$secondaryIP." ".$extra);
-					$success .= "The DNS settings have been updated";
+					$IPs = implode (",", $DNSservers);
+					exec("sudo pihole -a setdns ".$IPs." ".$extra);
+					$success .= "The DNS settings have been updated (using ".count($DNSservers)." DNS servers)";
 				}
 				else
 				{
