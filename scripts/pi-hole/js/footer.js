@@ -10,9 +10,9 @@ $("body").on("click", function(event) {
 
 function piholeChanged(action)
 {
-    const status = $("#status");
-    const ena = $("#pihole-enable");
-    const dis = $("#pihole-disable");
+    var status = $("#status");
+    var ena = $("#pihole-enable");
+    var dis = $("#pihole-disable");
 
     switch(action) {
         case "enabled":
@@ -33,7 +33,7 @@ function piholeChanged(action)
 
 function piholeChange(action, duration)
 {
-    const token = encodeURIComponent($("#token").html());
+    var token = encodeURIComponent($("#token").html());
     var btnStatus;
 
     switch(action) {
@@ -62,25 +62,25 @@ function piholeChange(action, duration)
 }
 
 // Handle Enable/Disable
-$("#pihole-enable").on("click", (e) => {
+$("#pihole-enable").on("click", function(e){
     e.preventDefault();
     piholeChange("enable","");
 });
-$("#pihole-disable-permanently").on("click", (e) => {
+$("#pihole-disable-permanently").on("click", function(e){
     e.preventDefault();
     piholeChange("disable","0");
 });
-$("#pihole-disable-10s").on("click", (e) => {
+$("#pihole-disable-10s").on("click", function(e){
     e.preventDefault();
     piholeChange("disable","10");
     setTimeout(function(){piholeChanged("enabled");},10000);
 });
-$("#pihole-disable-30s").on("click", (e) => {
+$("#pihole-disable-30s").on("click", function(e){
     e.preventDefault();
     piholeChange("disable","30");
     setTimeout(function(){piholeChanged("enabled");},30000);
 });
-$("#pihole-disable-5m").on("click", (e) => {
+$("#pihole-disable-5m").on("click", function(e){
     e.preventDefault();
     piholeChange("disable","300");
     setTimeout(function(){piholeChanged("enabled");},300000);

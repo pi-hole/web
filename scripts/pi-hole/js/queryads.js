@@ -1,4 +1,54 @@
 var exact = "";
+
+function quietfilter(ta,data)
+{
+    var lines = data.split("\n");
+    for(var i = 0;i<lines.length;i++)
+    {
+        if(lines[i].indexOf("results") !== -1 && lines[i].indexOf("0 results") === -1)
+        {
+            var shortstring = lines[i].replace("::: /etc/pihole/","");
+            // Remove "(x results)"
+            shortstring = shortstring.replace(/\(.*/,"");
+            ta.append(shortstring+"\n");
+        }
+    }
+}
+
+// Credit: http://stackoverflow.com/a/10642418/2087442
+function httpGet(ta,quiet,theUrl)
+{
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {
+    // code for IE7+
+        xmlhttp = new XMLHttpRequest();
+    }
+    else
+    {
+    // code for IE6, IE5
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            ta.show();
+            ta.empty();
+            if(!quiet)
+            {
+                ta.append(xmlhttp.responseText);
+            }
+            else
+            {
+                quietfilter(ta,xmlhttp.responseText);
+            }
+        }
+    };
+    xmlhttp.open("GET", theUrl, false);
+    xmlhttp.send();
+}
+
 function eventsource() {
     var ta = $("#output");
     var domain = $("#domain");
@@ -12,11 +62,17 @@ function eventsource() {
     if(q.val() === "yes")
     {
         quiet = true;
-        exact = "exact";
+        exact = "&exact";
+    }
+
+    // IE does not support EventSource - load whole content at once
+    if (typeof EventSource !== "function") {
+        httpGet(ta,quiet,"/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+exact+"&IE");
+        return;
     }
 
     var host = window.location.host;
-    var source = new EventSource("/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+"&"+exact);
+    var source = new EventSource("/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+exact);
 
     // Reset and show field
     ta.empty();
@@ -29,17 +85,7 @@ function eventsource() {
         }
         else
         {
-            var lines = e.data.split("\n");
-            for(var i = 0;i<lines.length;i++)
-            {
-                if(lines[i].indexOf("results") !== -1 && lines[i].indexOf("0 results") === -1)
-                {
-                    var shortstring = lines[i].replace("::: /etc/pihole/","");
-                    // Remove "(x results)"
-                    shortstring = shortstring.replace(/\(.*/,"");
-                    ta.append(shortstring+"\n");
-                }
-            }
+            quietfilter(ta,e.data);
         }
     }, false);
 
