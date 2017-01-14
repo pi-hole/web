@@ -3,6 +3,7 @@ var exact = "";
 // Credit: http://stackoverflow.com/a/10642418/2087442
 function httpGet(ta,theUrl)
 {
+    var xmlhttp;
     if (window.XMLHttpRequest)
     {
 	// code for IE7+
@@ -15,12 +16,12 @@ function httpGet(ta,theUrl)
     }
     xmlhttp.onreadystatechange=function()
     {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
         {
-	    ta.show();
+            ta.show();
             ta.html(xmlhttp.responseText);
         }
-    }
+    };
     xmlhttp.open("GET", theUrl, false);
     xmlhttp.send();
 }
