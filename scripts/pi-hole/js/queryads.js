@@ -1,5 +1,20 @@
 var exact = "";
 
+function quietfilter(ta,data)
+{
+    var lines = data.split("\n");
+    for(var i = 0;i<lines.length;i++)
+    {
+        if(lines[i].indexOf("results") !== -1 && lines[i].indexOf("0 results") === -1)
+        {
+            var shortstring = lines[i].replace("::: /etc/pihole/","");
+            // Remove "(x results)"
+            shortstring = shortstring.replace(/\(.*/,"");
+            ta.append(shortstring+"\n");
+        }
+    }
+}
+
 // Credit: http://stackoverflow.com/a/10642418/2087442
 function httpGet(ta,quiet,theUrl)
 {
@@ -7,12 +22,12 @@ function httpGet(ta,quiet,theUrl)
     if (window.XMLHttpRequest)
     {
     // code for IE7+
-        xmlhttp=new XMLHttpRequest();
+        xmlhttp = new XMLHttpRequest();
     }
     else
     {
     // code for IE6, IE5
-        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
     xmlhttp.onreadystatechange=function()
     {
@@ -32,21 +47,6 @@ function httpGet(ta,quiet,theUrl)
     };
     xmlhttp.open("GET", theUrl, false);
     xmlhttp.send();
-}
-
-function quietfilter(ta,data)
-{
-    var lines = data.split("\n");
-    for(var i = 0;i<lines.length;i++)
-    {
-        if(lines[i].indexOf("results") !== -1 && lines[i].indexOf("0 results") === -1)
-        {
-            var shortstring = lines[i].replace("::: /etc/pihole/","");
-            // Remove "(x results)"
-            shortstring = shortstring.replace(/\(.*/,"");
-            ta.append(shortstring+"\n");
-        }
-    }
 }
 
 function eventsource() {
