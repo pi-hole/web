@@ -13,20 +13,41 @@ if(isset($setupVars["API_QUERY_LOG_SHOW"]))
 {
 	if($setupVars["API_QUERY_LOG_SHOW"] === "all")
 	{
-		$showing = "(showing all queries)";
+		$showing = "(showing all queries";
 	}
 	elseif($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly")
 	{
-		$showing = "(showing permitted queries only)";
+		$showing = "(showing permitted queries only";
 	}
 	elseif($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly")
 	{
-		$showing = "(showing blocked queries only)";
+		$showing = "(showing blocked queries only";
 	}
 	elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
 	{
-		$showing = "(showing no queries at all)";
+		$showing = "(showing no queries at all";
 	}
+}
+
+if(isset($_GET["all"]))
+{
+	$showing .= " within the Pi-hole log)";
+}
+else if(isset($_GET["client"]))
+{
+	$showing .= " for client ".htmlentities($_GET["client"]).")";
+}
+else if(isset($_GET["domain"]))
+{
+	$showing .= " for domain ".htmlentities($_GET["domain"]).")";
+}
+else if(isset($_GET["from"]) && isset($_GET["until"]))
+{
+	$showing .= " within limited time interval)";
+}
+else
+{
+	$showing .= " within recent 10 minutes, <a href=\"?all\">show all</a>)";
 }
 
 if(isset($setupVars["API_PRIVACY_MODE"]))

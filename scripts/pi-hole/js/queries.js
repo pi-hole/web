@@ -99,29 +99,30 @@ $(document).ready(function() {
 
     var APIstring = "api.php?getAllQueries";
 
-    if("from" in GETDict)
+    if("from" in GETDict && "until" in GETDict)
     {
         APIstring += "&from="+GETDict["from"];
-    }
-
-    if("until" in GETDict)
-    {
         APIstring += "&until="+GETDict["until"];
     }
-
-    if("client" in GETDict)
+    else if("client" in GETDict)
     {
         APIstring += "&client="+GETDict["client"];
     }
-
-    if("domain" in GETDict)
+    else if("domain" in GETDict)
     {
         APIstring += "&domain="+GETDict["domain"];
+    }
+    else if(!("all" in GETDict))
+    {
+        var timestamp = Math.floor(Date.now() / 1000);
+        APIstring += "&from="+(timestamp - 600);
+        APIstring += "&until="+(timestamp + 100);
     }
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
             if (data[4] === "1")
+            {
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed" );
                 $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
