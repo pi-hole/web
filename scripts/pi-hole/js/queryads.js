@@ -41,7 +41,7 @@ function quietfilter(ta,data)
     {
         if(lines[i].indexOf("results") !== -1 && lines[i].indexOf("0 results") === -1)
         {
-            var shortstring = lines[i].replace("::: /etc/pihole/","").replace("data: ","");
+            var shortstring = lines[i].replace("::: /etc/pihole/","");
             // Remove "(x results)"
             shortstring = shortstring.replace(/\(.*/,"");
             ta.append(shortstring+"\n");
@@ -62,17 +62,17 @@ function eventsource() {
     if(q.val() === "yes")
     {
         quiet = true;
-        exact = "exact";
+        exact = "&exact";
     }
 
     // IE does not support EventSource - load whole content at once
     if (typeof EventSource !== "function") {
-        httpGet(ta,quiet,"/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+"&"+exact);
+        httpGet(ta,quiet,"/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+exact+"&IE");
         return;
     }
 
     var host = window.location.host;
-    var source = new EventSource("/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+"&"+exact);
+    var source = new EventSource("/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+exact);
 
     // Reset and show field
     ta.empty();
