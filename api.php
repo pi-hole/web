@@ -89,7 +89,7 @@
         $data = array_merge($data, getGravity());
     }
 
-    if (isset($_GET['tailLog'])) {
+    if (isset($_GET['tailLog']) && $auth) {
         $data = array_merge($data, tailPiholeLog($_GET['tailLog']));
     }
 
