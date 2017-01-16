@@ -50,8 +50,8 @@
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
-			$domains_over_time[] = $tmp[1];
-			$ads_over_time[] = $tmp[2];
+			$domains_over_time[$tmp[0]] = $tmp[1];
+			$ads_over_time[$tmp[0]] = $tmp[2];
 		}
 		$result = ['domains_over_time' => $domains_over_time,
 		           'ads_over_time' => $ads_over_time];
