@@ -194,7 +194,17 @@
 		$data = array_merge($data, ["status" => "disabled"]);
 	}
 
-	echo json_encode($data);
+	if(isset($_GET["recentBlocked"]))
+	{
+		sendRequestFTL("recentBlocked");
+		echo getResponseFTL()[0];
+		unset($data);
+	}
+
+	if(isset($data))
+	{
+		echo json_encode($data);
+	}
 
 	disconnectFTL();
 

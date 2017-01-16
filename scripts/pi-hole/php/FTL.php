@@ -80,6 +80,7 @@ function getResponseFTL($quiet=true)
 
 	return $response;
 }
+
 function disconnectFTL($quiet=true)
 {
 	global $socket;
