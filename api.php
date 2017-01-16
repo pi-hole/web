@@ -45,16 +45,16 @@
 		sendRequestFTL("overTime");
 		$return = getResponseFTL();
 
-		$domains_over_time = [];
-		$ads_over_time = [];
+		$domains_over_time = array();
+		$ads_over_time = array();
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
-			$domains_over_time[] = $tmp[1];
-			$ads_over_time[] = $tmp[2];
+			$domains_over_time[$tmp[0]] = $tmp[1];
+			$ads_over_time[$tmp[0]] = $tmp[2];
 		}
-		$result = ['domains_over_time' => $domains_over_time,
-		           'ads_over_time' => $ads_over_time];
+		$result = array('domains_over_time' => $domains_over_time,
+		                'ads_over_time' => $ads_over_time);
 		$data = array_merge($data, $result);
 	}
 
@@ -62,7 +62,7 @@
 	{
 		sendRequestFTL("top-domains");
 		$return = getResponseFTL();
-		$top_queries = [];
+		$top_queries = array();
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
@@ -71,15 +71,15 @@
 
 		sendRequestFTL("top-ads");
 		$return = getResponseFTL();
-		$top_ads = [];
+		$top_ads = array();
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
 			$top_ads[$tmp[2]] = $tmp[1];
 		}
 
-		$result = ['top_queries' => $top_queries,
-		           'top_ads' => $top_ads];
+		$result = array('top_queries' => $top_queries,
+		                'top_ads' => $top_ads);
 
 		$data = array_merge($data, $result);
 	}
@@ -88,7 +88,7 @@
 	{
 		sendRequestFTL("top-clients");
 		$return = getResponseFTL();
-		$top_clients = [];
+		$top_clients = array();
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
@@ -102,7 +102,7 @@
 			}
 		}
 
-		$result = ['top_sources' => $top_clients];
+		$result = array('top_sources' => $top_clients);
 		$data = array_merge($data, $result);
 	}
 
@@ -110,7 +110,7 @@
 	{
 		sendRequestFTL("forward-dest");
 		$return = getResponseFTL();
-		$forward_dest = [];
+		$forward_dest = array();
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
@@ -124,7 +124,7 @@
 			}
 		}
 
-		$result = ['forward_destinations' => $forward_dest];
+		$result = array('forward_destinations' => $forward_dest);
 		$data = array_merge($data, $result);
 	}
 
@@ -132,11 +132,11 @@
 	{
 		sendRequestFTL("querytypes");
 		$return = getResponseFTL();
-		$querytypes = [];
+		$querytypes = array();
 		$querytypes["A (IPv4)"] = explode(" ",$return[0])[1];
 		$querytypes["AAAA (IPv6)"] = explode(" ",$return[1])[1];
 
-		$result = ['querytypes' => $querytypes];
+		$result = array('querytypes' => $querytypes);
 		$data = array_merge($data, $result);
 	}
 
@@ -163,21 +163,21 @@
 			sendRequestFTL("getallqueries");
 		}
 		$return = getResponseFTL();
-		$allQueries = [];
+		$allQueries = array();
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
-			$allQueries[] = $tmp;
+			array_push($allQueries,$tmp);
 		}
 
-		$result = ['data' => $allQueries];
+		$result = array('data' => $allQueries);
 		$data = array_merge($data, $result);
 	}
 
 	if (isset($_GET['enable'], $_GET['token']) && $auth) {
 		check_csrf($_GET['token']);
 		exec('sudo pihole enable');
-		$data = array_merge($data, ["status" => "enabled"]);
+		$data = array_merge($data, array("status" => "enabled"));
 	}
 	elseif (isset($_GET['disable'], $_GET['token']) && $auth) {
 		check_csrf($_GET['token']);
@@ -191,7 +191,7 @@
 		{
 			exec('sudo pihole disable');
 		}
-		$data = array_merge($data, ["status" => "disabled"]);
+		$data = array_merge($data, array("status" => "disabled"));
 	}
 
 	if(isset($_GET["recentBlocked"]))
