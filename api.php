@@ -1,5 +1,5 @@
 <?php
-	error_reporting(E_ALL);
+	// error_reporting(E_ALL);
 	$api = true;
 	require "scripts/pi-hole/php/password.php";
 	require "scripts/pi-hole/php/auth.php";
@@ -223,5 +223,4 @@
 	}
 
 	disconnectFTL();
-
 ?>
