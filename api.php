@@ -60,7 +60,15 @@
 
 	if (isset($_GET['topItems']) && $auth)
 	{
-		sendRequestFTL("top-domains");
+		if(is_numeric($_GET['topItems']))
+		{
+			sendRequestFTL("top-domains ".$_GET['topItems']);
+		}
+		else
+		{
+			sendRequestFTL("top-domains");
+		}
+
 		$return = getResponseFTL();
 		$top_queries = array();
 		foreach($return as $line)
@@ -69,7 +77,15 @@
 			$top_queries[$tmp[2]] = $tmp[1];
 		}
 
-		sendRequestFTL("top-ads");
+		if(is_numeric($_GET['topItems']))
+		{
+			sendRequestFTL("top-ads ".$_GET['topItems']);
+		}
+		else
+		{
+			sendRequestFTL("top-ads");
+		}
+
 		$return = getResponseFTL();
 		$top_ads = array();
 		foreach($return as $line)
