@@ -85,14 +85,24 @@ if($_POST["action"] == "in")
 		$zip = new ZipArchive();
 		$x = $zip->open($source);
 		if ($x === true) {
-			$blacklist = process_zip("blacklist.txt");
-			echo exec("sudo pihole -b -q ".implode(" ", $blacklist));
+			if(isset($_POST["blacklist"]))
+			{
+				$blacklist = process_zip("blacklist.txt");
+				exec("sudo pihole -b -q ".implode(" ", $blacklist));
+			}
 
-			$whitelist = process_zip("whitelist.txt");
-			echo exec("sudo pihole -w -q ".implode(" ", $whitelist));
+			if(isset($_POST["whitelist"]))
+			{
+				$whitelist = process_zip("whitelist.txt");
+				echo exec("sudo pihole -w -q ".implode(" ", $whitelist));
+			}
 
-			$wildlist = process_zip("wildcardblocking.txt");
-			echo exec("sudo pihole -wild -q ".implode(" ", $wildlist));
+			if(isset($_POST["wildlist"]))
+			{
+				$wildlist = process_zip("wildcardblocking.txt");
+				echo exec("sudo pihole -wild -q ".implode(" ", $wildlist));
+			}
+
 			$zip->close();
 		}
 		else
