@@ -754,7 +754,7 @@
 		</div>
 		<div class="box box-danger">
 			<div class="box-header with-border">
-				<h3 class="box-title">Pi-hole takeout</h3>
+				<h3 class="box-title">Pi-hole Takeout</h3>
 			</div>
 			<div class="box-body">
 				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/takeout.php" target="_blank"  enctype="multipart/form-data">
