@@ -25,5 +25,6 @@ A read-only API can be accessed at `/admin/api.php`. With either no parameters o
 There are many more parameters, such as `summaryRaw`, `overTimeData10mins`, ` topClients` or `getQuerySources`, `getQueryTypes`, `getForwardDestinations`, and `getAllQueries`.
 Together with a token it is also possible to enable and disable (also with a set timeout) blocking via the API.
 
-<img src="https://assets.pi-hole.net/static/BStackLogo.png" height="50"><br>
+<hr>
+<img src="https://assets.pi-hole.net/static/BStackLogo.png" height="80"><br>
 We use BrowserStack for multi-platform multi-browser testing.
