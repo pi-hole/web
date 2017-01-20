@@ -751,6 +751,24 @@ if($FTL)
 				</form>
 			</div>
 		</div>
+		<div class="box box-danger">
+			<div class="box-header with-border">
+				<h3 class="box-title">Pi-hole takeout</h3>
+			</div>
+			<div class="box-body">
+				<p>Export your Pi-hole lists as downloadable ZIP file</p>
+				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/takeout.php" target="_blank"  enctype="multipart/form-data">
+					<button type="submit" class="btn btn-default" name="action" value="out">Export</button>
+					<hr>
+					<div class="form-group">
+						<label for="zip_file">File input</label>
+						<input type="file" name="zip_file" id="zip_file">
+						<p class="help-block">Upload only Pi-hole backup files.</p>
+						<button type="submit" class="btn btn-default" name="action" value="in">Import</button>
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
 </div>
 
