@@ -20,9 +20,6 @@ function add_to_zip($path,$name)
 	global $zip;
 	if(file_exists($path.$name))
 		$zip->addFile($path.$name,$name);
-	else
-		// Add empty file with thios filename
-		$zip->addFromString($name, "");
 }
 
 function getWildcardListContent() {
@@ -96,12 +93,11 @@ else
 	$res = $zip->open($archive_file_name, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
 	if ($res !== TRUE) {
-	    exit("cannot open/create $archive_file_name<br>Error: ".$zip->getStatusString()."<br>PHP user: ".exec('whoami')."\n");
+		exit("cannot open/create $archive_file_name<br>Error: ".$zip->getStatusString()."<br>PHP user: ".exec('whoami')."\n");
 	}
 
 	add_to_zip("/etc/pihole/","whitelist.txt");
 	add_to_zip("/etc/pihole/","blacklist.txt");
-	add_to_zip("/etc/pihole/","adlists.default");
 	add_to_zip("/etc/pihole/","adlists.list");
 	add_to_zip("/etc/pihole/","setupVars.conf");
 
