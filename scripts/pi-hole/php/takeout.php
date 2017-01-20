@@ -5,7 +5,7 @@ function process_zip($name)
 	$fp = $zip->getStream($name);
 	if(!$fp)
 	{
-		echo "$name not found in provided ZIP file, skipping...";
+		echo "$name not found in provided ZIP file, skipping...<br>";
 		return;
 	}
 	while (!feof($fp)) {
@@ -27,8 +27,6 @@ function add_to_zip($path,$name)
 
 if($_POST["action"] == "in")
 {
-	print_r($_POST);
-	print_r($_FILES);
 	if($_FILES["zip_file"]["name"])
 	{
 		$filename = $_FILES["zip_file"]["name"];
@@ -37,23 +35,22 @@ if($_POST["action"] == "in")
 
 		$name = explode(".", $filename);
 		$accepted_types = array('application/zip', 'application/x-zip-compressed', 'multipart/x-zip', 'application/x-compressed');
+		$okay = false;
 		foreach($accepted_types as $mime_type) {
 			if($mime_type == $type) {
 				$okay = true;
-				echo "Filetype $mime_type accepted<br>";
 				break;
 			}
 		}
 
 		$continue = strtolower($name[1]) == 'zip' ? true : false;
-		if(!$continue) {
-			$message = "The file you are trying to upload is not a .zip file. Please try again.";
+		if(!$continue || !$okay) {
+			die("The file you are trying to upload is not a .zip file. Please try again.");
 		}
 
 		$zip = new ZipArchive();
 		$x = $zip->open($source);
 		if ($x === true) {
-			echo "File opened successfully<br>";
 			echo process_zip("blacklist.txt");
 			echo process_zip("whitelist.txt");
 			$zip->close();
