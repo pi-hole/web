@@ -1,100 +1,45 @@
 <?php
 
-function message($code)
+if(isset($_GET["in"]))
 {
-    switch ($code)
-        {
-            case 0:
-            return 'No error';
-
-            case 1:
-            return 'Multi-disk zip archives not supported';
-
-            case 2:
-            return 'Renaming temporary file failed';
-
-            case 3:
-            return 'Closing zip archive failed';
-
-            case 4:
-            return 'Seek error';
-
-            case 5:
-            return 'Read error';
-
-            case 6:
-            return 'Write error';
-
-            case 7:
-            return 'CRC error';
-
-            case 8:
-            return 'Containing zip archive was closed';
-
-            case 9:
-            return 'No such file';
-
-            case 10:
-            return 'File already exists';
-
-            case 11:
-            return 'Can\'t open file';
-
-            case 12:
-            return 'Failure to create temporary file';
-
-            case 13:
-            return 'Zlib error';
-
-            case 14:
-            return 'Malloc failure';
-
-            case 15:
-            return 'Entry has been changed';
-
-            case 16:
-            return 'Compression method not supported';
-
-            case 17:
-            return 'Premature EOF';
-
-            case 18:
-            return 'Invalid argument';
-
-            case 19:
-            return 'Not a zip archive';
-
-            case 20:
-            return 'Internal error';
-
-            case 21:
-            return 'Zip archive inconsistent';
-
-            case 22:
-            return 'Can\'t remove file';
-
-            case 23:
-            return 'Entry has been deleted';
-
-            default:
-            return 'An unknown error has occurred('.intval($code).')';
-        }
 }
+else
+{
+	$archive_file_name = "/var/www/html/pi-hole-takeout_".microtime(true).".zip";
+	$zip = new ZipArchive();
+	touch($archive_file_name);
+	$res = $zip->open($archive_file_name, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
-$filename = "/tmp/pi-hole-takeout.zip";
-$zip = zip_open($filename);
+	if ($res !== TRUE) {
+	    exit("cannot open/create $archive_file_name<br>Error: ".$zip->getStatusString()."<br>PHP user: ".exec('whoami')."\n");
+	}
 
-if (!is_resource($zip)) {
-    exit("cannot open/create $filename<br>Error message: ".message($zip)."\n");
+	function add_to_zip($path,$name)
+	{
+		global $zip;
+		if(file_exists($path.$name))
+			$zip->addFile($path.$name,$name);
+		else
+			// Add empty file with thios filename
+			$zip->addFromString($name, "");
+	}
+	add_to_zip("/etc/pihole","/whitelist.txt");
+	add_to_zip("/etc/pihole","/blacklist.txt");
+	// $zip->addFile("/etc/pihole/setupVars.conf");
+	echo "numfiles: " . $zip->numFiles . "<br>";
+	echo "status:" . $zip->status . "<br>";
+	echo "statusSys: " . $zip->statusSys . "<br>";
+	echo "archive_file_name: " . $zip->archive_file_name . "<br>";
+	$zip->close();
+
+	header("Content-type: application/zip");
+	header('Content-Transfer-Encoding: binary');
+	header("Content-Disposition: attachment; filename=pi-hole-takeout.zip");
+	header("Content-length: " . filesize($archive_file_name));
+	header("Pragma: no-cache");
+	header("Expires: 0");
+	ob_end_clean();
+	readfile($archive_file_name);
+	exit;
 }
-
-$zip->addFile("/etc/pihole/whitelist.txt");
-$zip->addFile("/etc/pihole/blacklist.txt");
-$zip->addFile("/etc/pihole/setupVars.conf");
-echo "numfiles: " . $zip->numFiles . "<br>";
-echo "status:" . $zip->status . "<br>";
-echo "statusSys: " . $zip->statusSys . "<br>";
-echo "filename: " . $zip->filename . "<br>";
-$zip->close();
-
 ?>
