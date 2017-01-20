@@ -1,118 +1,226 @@
 <?php
-    $api = true;
-    require "scripts/pi-hole/php/password.php";
-    require "scripts/pi-hole/php/auth.php";
+	// error_reporting(E_ALL);
+	$api = true;
+	require "scripts/pi-hole/php/password.php";
+	require "scripts/pi-hole/php/auth.php";
 
-    check_cors();
+	check_cors();
+	require("scripts/pi-hole/php/FTL.php");
+	$socket = connectFTL("127.0.0.1");
+	header('Content-type: application/json');
 
-    include('scripts/pi-hole/php/data.php');
-    header('Content-type: application/json');
+	$data = [];
 
-    $data = array();
+	if (isset($_GET['summary']) || isset($_GET['summaryRaw']))
+	{
+		sendRequestFTL("stats");
+		$return = getResponseFTL();
 
-    // Non-Auth
+		$stats = [];
+		foreach($return as $line)
+		{
+			$tmp = explode(" ",$line);
 
-    if (isset($_GET['summaryRaw'])) {
-        $data = array_merge($data,  getSummaryData());
-    }
+			if(isset($_GET['summary']))
+			{
+				if($tmp[0] !== "ads_percentage_today")
+				{
+					$stats[$tmp[0]] = number_format($tmp[1]);
+				}
+				else
+				{
+					$stats[$tmp[0]] = number_format($tmp[1], 1, '.', '');
+				}
+			}
+			else
+			{
+				$stats[$tmp[0]] = $tmp[1];
+			}
+		}
+		$data = array_merge($data,$stats);
+	}
 
-    if (isset($_GET['summary']) || !count($_GET)) {
-        $sum = getSummaryData();
-        $sum['ads_blocked_today'] = number_format( $sum['ads_blocked_today']);
-        $sum['dns_queries_today'] = number_format( $sum['dns_queries_today']);
-        $sum['ads_percentage_today'] = number_format( $sum['ads_percentage_today'], 1, '.', '');
-        $sum['domains_being_blocked'] = number_format( $sum['domains_being_blocked']);
-        $data = array_merge($data,  $sum);
-    }
+	if (isset($_GET['overTimeData10mins']))
+	{
+		sendRequestFTL("overTime");
+		$return = getResponseFTL();
 
-    if (isset($_GET['overTimeData'])) {
-        $data = array_merge($data,  getOverTimeData());
-    }
+		$domains_over_time = array();
+		$ads_over_time = array();
+		foreach($return as $line)
+		{
+			$tmp = explode(" ",$line);
+			$domains_over_time[$tmp[0]] = $tmp[1];
+			$ads_over_time[$tmp[0]] = $tmp[2];
+		}
+		$result = array('domains_over_time' => $domains_over_time,
+		                'ads_over_time' => $ads_over_time);
+		$data = array_merge($data, $result);
+	}
 
-    if (isset($_GET['overTimeData10mins'])) {
-        $data = array_merge($data,  getOverTimeData10mins());
-    }
+	if (isset($_GET['topItems']) && $auth)
+	{
+		if(is_numeric($_GET['topItems']))
+		{
+			sendRequestFTL("top-domains ".$_GET['topItems']);
+		}
+		else
+		{
+			sendRequestFTL("top-domains");
+		}
 
-    // Auth Required
+		$return = getResponseFTL();
+		$top_queries = array();
+		foreach($return as $line)
+		{
+			$tmp = explode(" ",$line);
+			$top_queries[$tmp[2]] = $tmp[1];
+		}
 
-    if (isset($_GET['topItems']) && $auth) {
-        $data = array_merge($data,  getTopItems($_GET['topItems']));
-    }
+		if(is_numeric($_GET['topItems']))
+		{
+			sendRequestFTL("top-ads ".$_GET['topItems']);
+		}
+		else
+		{
+			sendRequestFTL("top-ads");
+		}
 
-    if (isset($_GET['recentItems']) && $auth) {
-        if (is_numeric($_GET['recentItems'])) {
-            $data = array_merge($data,  getRecentItems($_GET['recentItems']));
-        }
-    }
+		$return = getResponseFTL();
+		$top_ads = array();
+		foreach($return as $line)
+		{
+			$tmp = explode(" ",$line);
+			$top_ads[$tmp[2]] = $tmp[1];
+		}
 
-    if (isset($_GET['getQueryTypes']) && $auth) {
-        $data = array_merge($data, getIpvType());
-    }
+		$result = array('top_queries' => $top_queries,
+		                'top_ads' => $top_ads);
 
-    if (isset($_GET['getForwardDestinations']) && $auth) {
-        $data = array_merge($data, getForwardDestinations());
-    }
+		$data = array_merge($data, $result);
+	}
 
-    if (isset($_GET['getQuerySources']) && $auth) {
-        $data = array_merge($data, getQuerySources());
-    }
+	if ((isset($_GET['topClients']) || isset($_GET['getQuerySources'])) && $auth)
+	{
+		sendRequestFTL("top-clients");
+		$return = getResponseFTL();
+		$top_clients = array();
+		foreach($return as $line)
+		{
+			$tmp = explode(" ",$line);
+			if(count($tmp) == 4)
+			{
+				$top_clients[$tmp[3]."|".$tmp[2]] = $tmp[1];
+			}
+			else
+			{
+				$top_clients[$tmp[2]] = $tmp[1];
+			}
+		}
 
-    if (isset($_GET['getAllQueries']) && $auth) {
-        $data = array_merge($data, getAllQueries($_GET['getAllQueries']));
-    }
+		$result = array('top_sources' => $top_clients);
+		$data = array_merge($data, $result);
+	}
 
-    if (isset($_GET['enable'], $_GET['token']) && $auth) {
-        check_csrf($_GET['token']);
-        exec('sudo pihole enable');
-        $data = array_merge($data, Array(
-            "status" => "enabled"
-        ));
-    }
-    elseif (isset($_GET['disable'], $_GET['token']) && $auth) {
-        check_csrf($_GET['token']);
-        $disable = intval($_GET['disable']);
-        // intval returns the integer value on success, or 0 on failure
-        if($disable > 0)
-        {
-            exec("sudo pihole disable ".$disable."s");
-        }
-        else
-        {
-            exec('sudo pihole disable');
-        }
-        $data = array_merge($data, Array(
-            "status" => "disabled"
-        ));
-    }
+	if (isset($_GET['getForwardDestinations']) && $auth)
+	{
+		sendRequestFTL("forward-dest");
+		$return = getResponseFTL();
+		$forward_dest = array();
+		foreach($return as $line)
+		{
+			$tmp = explode(" ",$line);
+			if(count($tmp) == 4)
+			{
+				$forward_dest[$tmp[3]."|".$tmp[2]] = $tmp[1];
+			}
+			else
+			{
+				$forward_dest[$tmp[2]] = $tmp[1];
+			}
+		}
 
-    if (isset($_GET['getGravityDomains'])) {
-        $data = array_merge($data, getGravity());
-    }
+		$result = array('forward_destinations' => $forward_dest);
+		$data = array_merge($data, $result);
+	}
 
-    if (isset($_GET['tailLog']) && $auth) {
-        $data = array_merge($data, tailPiholeLog($_GET['tailLog']));
-    }
+	if (isset($_GET['getQueryTypes']) && $auth)
+	{
+		sendRequestFTL("querytypes");
+		$return = getResponseFTL();
+		$querytypes = array();
+		$querytypes["A (IPv4)"] = explode(" ",$return[0])[1];
+		$querytypes["AAAA (IPv6)"] = explode(" ",$return[1])[1];
 
-    function filterArray(&$inArray) {
-	    $outArray = array();
-	    foreach ($inArray as $key=>$value) {
-	        if (is_array($value)) {
-	            $outArray[htmlspecialchars($key)] = filterArray($value);
-            } else {
-	            $outArray[htmlspecialchars($key)] = htmlspecialchars($value);
-            }
-	    }
-	    return $outArray;
-    }
+		$result = array('querytypes' => $querytypes);
+		$data = array_merge($data, $result);
+	}
 
-    $data = filterArray($data);
+	if (isset($_GET['getAllQueries']) && $auth)
+	{
+		if(isset($_GET['from']) && isset($_GET['until']))
+		{
+			// Get limited time interval
+			sendRequestFTL("getallqueries-time ".$_GET['from']." ".$_GET['until']);
+		}
+		else if(isset($_GET['domain']))
+		{
+			// Get specific domain only
+			sendRequestFTL("getallqueries-domain ".$_GET['domain']);
+		}
+		else if(isset($_GET['client']))
+		{
+			// Get specific client only
+			sendRequestFTL("getallqueries-client ".$_GET['client']);
+		}
+		else
+		{
+			// Get all queries
+			sendRequestFTL("getallqueries");
+		}
+		$return = getResponseFTL();
+		$allQueries = array();
+		foreach($return as $line)
+		{
+			$tmp = explode(" ",$line);
+			array_push($allQueries,$tmp);
+		}
 
-    if(isset($_GET["jsonForceObject"]))
-    {
-        echo json_encode($data, JSON_FORCE_OBJECT);
-    }
-    else
-    {
-        echo json_encode($data);
-    }
+		$result = array('data' => $allQueries);
+		$data = array_merge($data, $result);
+	}
+
+	if (isset($_GET['enable'], $_GET['token']) && $auth) {
+		check_csrf($_GET['token']);
+		exec('sudo pihole enable');
+		$data = array_merge($data, array("status" => "enabled"));
+	}
+	elseif (isset($_GET['disable'], $_GET['token']) && $auth) {
+		check_csrf($_GET['token']);
+		$disable = intval($_GET['disable']);
+		// intval returns the integer value on success, or 0 on failure
+		if($disable > 0)
+		{
+			exec("sudo pihole disable ".$disable."s");
+		}
+		else
+		{
+			exec('sudo pihole disable');
+		}
+		$data = array_merge($data, array("status" => "disabled"));
+	}
+
+	if(isset($_GET["recentBlocked"]))
+	{
+		sendRequestFTL("recentBlocked");
+		echo getResponseFTL()[0];
+		unset($data);
+	}
+
+	if(isset($data))
+	{
+		echo json_encode($data);
+	}
+
+	disconnectFTL();
 ?>

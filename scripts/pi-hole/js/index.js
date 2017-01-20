@@ -100,10 +100,10 @@ function updateQueryTypes() {
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
         var v = [], c = [];
         // Collect values and colors, immediately push individual labels
-        $.each(data, function(key , value) {
+        $.each(data.querytypes, function(key , value) {
             v.push(value);
             c.push(colors.shift());
-            queryTypeChart.data.labels.push(key.substr(6,key.length - 7));
+            queryTypeChart.data.labels.push(key);
         });
         // Build a single dataset with the data to be pushed
         var dd = {data: v, backgroundColor: c};
@@ -132,28 +132,28 @@ function escapeHtml(text) {
 function updateTopClientsChart() {
     $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
         var clienttable =  $("#client-frequency").find("tbody:last");
-        var domain, percentage, domainname, domainip;
-        for (domain in data.top_sources) {
+        var client, percentage, clientname, clientip;
+        for (client in data.top_sources) {
 
-            if ({}.hasOwnProperty.call(data.top_sources, domain)){
-                // Sanitize domain
-                domain = escapeHtml(domain);
-                if(domain.indexOf("|") > -1)
+            if ({}.hasOwnProperty.call(data.top_sources, client)){
+                // Sanitize client
+                client = escapeHtml(client);
+                if(client.indexOf("|") > -1)
                 {
-                    var idx = domain.indexOf("|");
-                    domainname = domain.substr(0, idx);
-                    domainip = domain.substr(idx+1, domain.length-idx);
+                    var idx = client.indexOf("|");
+                    clientname = client.substr(0, idx);
+                    clientip = client.substr(idx+1, client.length-idx);
                 }
                 else
                 {
-                    domainname = domain;
-                    domainip = domain;
+                    clientname = client;
+                    clientip = client;
                 }
 
-                var url = "<a href=\"queries.php?client="+domain+"\" title=\""+domainip+"\">"+domainname+"</a>";
-                percentage = data.top_sources[domain] / data.dns_queries_today * 100;
+                var url = "<a href=\"queries.php?client="+clientip+"\" title=\""+clientip+"\">"+clientname+"</a>";
+                percentage = data.top_sources[client] / data.dns_queries_today * 100;
                 clienttable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_sources[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
+                    "</td> <td>" + data.top_sources[client] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
                     percentage + "%\"></div> </div> </td> </tr> ");
             }
 
@@ -170,7 +170,7 @@ function updateForwardDestinations() {
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
         var v = [], c = [];
         // Collect values and colors, immediately push individual labels
-        $.each(data, function(key , value) {
+        $.each(data.forward_destinations, function(key , value) {
             v.push(value);
             c.push(colors.shift());
             if(key.indexOf("|") > -1)
@@ -200,14 +200,7 @@ function updateTopLists() {
             if ({}.hasOwnProperty.call(data.top_queries,domain)){
                 // Sanitize domain
                 domain = escapeHtml(domain);
-                if(domain !== "pi.hole")
-                {
-                    url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
-                }
-                else
-                {
-                    url = domain;
-                }
+                url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
                 percentage = data.top_queries[domain] / data.dns_queries_today * 100;
                 domaintable.append("<tr> <td>" + url +
                     "</td> <td>" + data.top_queries[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
@@ -423,10 +416,8 @@ $(document).ready(function() {
                 var label = timeLineChart.data.labels[clickedElementindex];
 
                 //get value by index
-                //var value = timeLineChart.data.datasets[0].data[clickedElementindex];
-                var time = new Date(label);
-                var from = time.getHours()+":"+time.getMinutes();
-                var until = time.getHours()+":"+padNumber(parseInt(time.getMinutes()+9),2);
+                var from = label/1000;
+                var until = label/1000 + 600;
                 window.location.href = "queries.php?from="+from+"&until="+until;
             }
             return false;

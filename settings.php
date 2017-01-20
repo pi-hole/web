@@ -591,24 +591,6 @@
 		$privacyMode = false;
 	}
 
-	if(istrue($setupVars["API_GET_UPSTREAM_DNS_HOSTNAME"]))
-	{
-		$resolveForward = true;
-	}
-	else
-	{
-		$resolveForward = false;
-	}
-
-	if(istrue($setupVars["API_GET_CLIENT_HOSTNAME"]))
-	{
-		$resolveClients = true;
-	}
-	else
-	{
-		$resolveClients = false;
-	}
-
 ?>
 		<div class="box box-success">
 			<div class="box-header with-border">
@@ -627,19 +609,7 @@
 				<div class="col-lg-6">
 					<div class="form-group">
 					<label>Top Clients</label>
-					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
-					</div>
-				</div>
-				<h4>Reverse DNS lookup</h4>
-				<p>Try to determine the domain name via querying the Pi-hole for</p>
-				<div class="col-lg-6">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="resolve-forward" <?php if($resolveForward){ ?>checked<?php } ?>> Forward Destinations</label></div>
-					</div>
-				</div>
-				<div class="col-lg-6">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="resolve-clients" <?php if($resolveClients){ ?>checked<?php } ?>> Top Clients</label></div>
+					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address or host name per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
 					</div>
 				</div>
 				<h4>Query Log</h4>
@@ -732,6 +702,35 @@
 			</div>
 		</div>
 */ ?>
+<?php
+if($FTL)
+{
+	$parts = preg_split('/\s+/',trim(exec("ps -p `cat /etc/pihole/FTL.pid` -o pid,start,vsz,rss,euser,egroup,cputime,%cpu,%mem")));
+	// pid
+	// time the command started. If the process was started less than 24 hours ago, the output format is "HH:MM:SS", else it is "  Mmm dd" (where Mmm is a three-letter month name).
+	// virtual memory size of the process in KiB
+	// resident set size, the non-swapped physical memory that a task has used (inkiloBytes).
+	// effective user name.  This will be the textual user ID, if it can be obtained
+	// effective group ID of the process.  This will be the textual group ID, if it can be obtained
+	// cumulative CPU time, "[DD-]hh:mm:ss" format.  (alias time)
+	// cpu utilization of the process in "##.#" format.  Currently, it is the CPU time used divided by the time the process has been running (cputime/realtime ratio), expressed as a percentage.
+	// ratio of the process's resident set size  to the physical memory on the machine, expressed as a percentage.
+}
+?>
+		<div class="box box-danger">
+			<div class="box-header with-border">
+				<h3 class="box-title">FTL status (<?php if($FTL){ ?>Running, PID: <?php echo $parts[0]; ?><?php }else{ ?>Not running<?php } ?>)</h3>
+			</div>
+			<div class="box-body">
+				<?php if($FTL){ ?>Time FTL started: <?php echo $parts[1]; ?><br>
+				User / Group: <?php echo $parts[4]; ?> / <?php echo $parts[5]; ?><br>
+				Total CPU utilization: <?php echo $parts[7]; ?>%<br>
+				Total CPU time: <?php echo $parts[6]; ?><br>
+				Memory utilization: <?php echo $parts[8]; ?>%<br>
+				<span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory: <?php echo formatSizeUnits(1e3*$parts[3]); ?></span><br>
+				<?php } ?>
+			</div>
+		</div>
 		<div class="box box-danger">
 			<div class="box-header with-border">
 				<h3 class="box-title">System Administration</h3>
@@ -749,6 +748,42 @@
 				</form>
 				<form role="form" method="post" id="flushlogsform">
 					<input type="hidden" name="field" value="flushlogs">
+				</form>
+			</div>
+		</div>
+		<div class="box box-danger">
+			<div class="box-header with-border">
+				<h3 class="box-title">Pi-hole takeout</h3>
+			</div>
+			<div class="box-body">
+				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/takeout.php" target="_blank"  enctype="multipart/form-data">
+					<div class="col-lg-12">
+						<p>Export your Pi-hole lists as downloadable ZIP file</p>
+						<button type="submit" class="btn btn-default" name="action" value="out">Export</button>
+					<hr>
+					</div>
+					<div class="col-lg-6">
+					<label>Import ...</label>
+						<div class="form-group">
+							<div class="checkbox">
+							<label><input type="checkbox" name="whitelist" value="true" checked> Whitelist</label>
+							</div>
+							<div class="checkbox">
+							<label><input type="checkbox" name="blacklist" value="true" checked> Blacklist (exact)</label>
+							</div>
+							<div class="checkbox">
+							<label><input type="checkbox" name="wildlist" value="true" checked> Blacklist (wildcard)</label>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label for="zip_file">File input</label>
+							<input type="file" name="zip_file" id="zip_file">
+							<p class="help-block">Upload only Pi-hole backup files.</p>
+							<button type="submit" class="btn btn-default" name="action" value="in">Import</button>
+						</div>
+					</div>
 				</form>
 			</div>
 		</div>

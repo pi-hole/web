@@ -73,11 +73,17 @@ function add(domain,list) {
     });
 }
 function handleAjaxError( xhr, textStatus, error ) {
-    if ( textStatus === "timeout" ) {
+    if ( textStatus === "timeout" )
+    {
         alert( "The server took too long to send the data." );
     }
-    else {
-        alert( "An error occured while loading the data. Presumably your log is too large to be processed." );
+    else if(xhr.responseText.indexOf("Connection refused") >= 0)
+    {
+        alert( "An error occured while loading the data: Connection refused. Is FTL running?" );
+    }
+    else
+    {
+        alert( "An unknown error occured while loading the data." );
     }
     $("#all-queries_processing").hide();
     tableApi.clear();
@@ -93,31 +99,59 @@ $(document).ready(function() {
 
     var APIstring = "api.php?getAllQueries";
 
-    if("from" in GETDict)
+    if("from" in GETDict && "until" in GETDict)
     {
         APIstring += "&from="+GETDict["from"];
-    }
-
-    if("until" in GETDict)
-    {
         APIstring += "&until="+GETDict["until"];
+    }
+    else if("client" in GETDict)
+    {
+        APIstring += "&client="+GETDict["client"];
+    }
+    else if("domain" in GETDict)
+    {
+        APIstring += "&domain="+GETDict["domain"];
+    }
+    else if(!("all" in GETDict))
+    {
+        var timestamp = Math.floor(Date.now() / 1000);
+        APIstring += "&from="+(timestamp - 600);
+        APIstring += "&until="+(timestamp + 100);
     }
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
-            status = data[4];
-            if (status === "Pi-holed (exact)") {
+            if (data[4] === "1")
+            {
                 $(row).css("color","red");
+                $("td:eq(4)", row).html( "Pi-holed" );
                 $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
-            else if (status === "Pi-holed (wildcard)") {
-                $(row).css("color","red");
-                $("td:eq(5)", row).html( "" );
-            }
-            else{
+            else if (data[4] === "2")
+            {
                 $(row).css("color","green");
+                $("td:eq(4)", row).html( "OK (forwarded)" );
                 $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
+            else if (data[4] === "3")
+            {
+                $(row).css("color","green");
+                $("td:eq(4)", row).html( "OK (cached)" );
+                $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+
+            }
+            else if (data[4] === "4")
+            {
+                $(row).css("color","red");
+                $("td:eq(4)", row).html( "Pi-holed (wildcard)" );
+                $("td:eq(5)", row).html( "" );
+            }
+            else
+            {
+                $("td:eq(4)", row).html( "Unknown" );
+                $("td:eq(5)", row).html( "" );
+            }
+            $("#recent-queries .overlay").remove();
 
         },
         dom: "<'row'<'col-sm-12'f>>" +
@@ -129,7 +163,7 @@ $(document).ready(function() {
         "processing": true,
         "order" : [[0, "desc"]],
         "columns": [
-            { "width" : "20%", "type": "date" },
+            { "width" : "20%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD HH:mm:ss z");}else{return data;} }},
             { "width" : "10%" },
             { "width" : "40%" },
             { "width" : "10%" },
@@ -145,8 +179,7 @@ $(document).ready(function() {
     });
     $("#all-queries tbody").on( "click", "button", function () {
         var data = tableApi.row( $(this).parents("tr") ).data();
-        status = data[4];
-        if (status.substr(0,2) === "Pi")
+        if (data[4] === "1")
         {
           add(data[2],"white");
         }
@@ -155,20 +188,6 @@ $(document).ready(function() {
           add(data[2],"black");
         }
     } );
-
-    if("client" in GETDict)
-    {
-        // Search in third column (zero indexed)
-        // Use regular expression to only show exact matches, i.e.
-        // don't show 192.168.0.100 when searching for 192.168.0.1
-        // true = use regex, false = don't use smart search
-        tableApi.column(3).search("^"+escapeRegex(GETDict["client"])+"$",true,false);
-    }
-    if("domain" in GETDict)
-    {
-        // Search in second column (zero indexed)
-        tableApi.column(2).search("^"+escapeRegex(GETDict["domain"])+"$",true,false);
-    }
 } );
 
 
