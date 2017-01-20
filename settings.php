@@ -756,15 +756,33 @@ if($FTL)
 				<h3 class="box-title">Pi-hole takeout</h3>
 			</div>
 			<div class="box-body">
-				<p>Export your Pi-hole lists as downloadable ZIP file</p>
 				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/takeout.php" target="_blank"  enctype="multipart/form-data">
-					<button type="submit" class="btn btn-default" name="action" value="out">Export</button>
+					<div class="col-lg-12">
+						<p>Export your Pi-hole lists as downloadable ZIP file</p>
+						<button type="submit" class="btn btn-default" name="action" value="out">Export</button>
 					<hr>
-					<div class="form-group">
-						<label for="zip_file">File input</label>
-						<input type="file" name="zip_file" id="zip_file">
-						<p class="help-block">Upload only Pi-hole backup files.</p>
-						<button type="submit" class="btn btn-default" name="action" value="in">Import</button>
+					</div>
+					<div class="col-lg-6">
+					<label>Import ...</label>
+						<div class="form-group">
+							<div class="checkbox">
+							<label><input type="checkbox" name="whitelist" value="true" checked> Whitelist</label>
+							</div>
+							<div class="checkbox">
+							<label><input type="checkbox" name="blacklist" value="true" checked> Blacklist (exact)</label>
+							</div>
+							<div class="checkbox">
+							<label><input type="checkbox" name="wildlist" value="true" checked> Blacklist (wildcard)</label>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label for="zip_file">File input</label>
+							<input type="file" name="zip_file" id="zip_file">
+							<p class="help-block">Upload only Pi-hole backup files.</p>
+							<button type="submit" class="btn btn-default" name="action" value="in">Import</button>
+						</div>
 					</div>
 				</form>
 			</div>
