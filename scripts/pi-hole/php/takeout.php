@@ -3,17 +3,17 @@ require('func.php');
 function process_zip($name)
 {
 	global $zip;
-	$fp = $zip->getStream($name);
-	if(!$fp)
+	$zippointer = $zip->getStream($name);
+	if(!$zippointer)
 	{
 		echo "$name not found in provided ZIP file, skipping...<br>";
 		return;
 	}
 	$contents = "";
-	while (!feof($fp)) {
-		$contents .= fread($fp, 4096);
+	while (!feof($zippointer)) {
+		$contents .= fread($zippointer, 4096);
 	}
-	fclose($fp);
+	fclose($zippointer);
 	$domains = array_filter(explode("\n",$contents));
 	check_domains($domains);
 	return $domains;
@@ -53,10 +53,8 @@ function getWildcardListContent() {
 
 		return implode("\n",array_unique($list));
 	}
-	else
-	{
-		return "";
-	}
+
+	return "";
 }
 
 if($_POST["action"] == "in")
