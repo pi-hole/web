@@ -103,7 +103,7 @@ else
 	add_to_zip("/etc/pihole/","blacklist.txt");
 	add_to_zip("/etc/pihole/","adlists.default");
 	add_to_zip("/etc/pihole/","adlists.list");
-	// $zip->addFile("/etc/pihole/setupVars.conf");
+	add_to_zip("/etc/pihole/","setupVars.conf");
 
 	$zip->addFromString("wildcardblocking.txt", getWildcardListContent());
 	$zip->close();
