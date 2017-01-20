@@ -25,6 +25,29 @@ function add_to_zip($path,$name)
 		$zip->addFromString($name, "");
 }
 
+function getWildcardListContent() {
+	if(file_exists("/etc/dnsmasq.d/03-pihole-wildcard.conf"))
+	{
+		$rawList = file_get_contents("/etc/dnsmasq.d/03-pihole-wildcard.conf");
+		$wclist = explode("\n", $rawList);
+		$list = [];
+
+		foreach ($wclist as $entry) {
+			$expl = explode("/", $entry);
+			if(count($expl) == 3)
+			{
+				array_push($list,$expl[1]);
+			}
+		}
+
+		return implode("\n",array_unique($list));
+	}
+	else
+	{
+		return "";
+	}
+}
+
 if($_POST["action"] == "in")
 {
 	if($_FILES["zip_file"]["name"])
@@ -81,6 +104,8 @@ else
 	add_to_zip("/etc/pihole/","adlists.default");
 	add_to_zip("/etc/pihole/","adlists.list");
 	// $zip->addFile("/etc/pihole/setupVars.conf");
+
+	$zip->addFromString("wildcardblocking.txt", getWildcardListContent());
 	$zip->close();
 
 	header("Content-type: application/zip");
