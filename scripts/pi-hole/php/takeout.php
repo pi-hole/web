@@ -1,4 +1,5 @@
 <?php
+require('func.php');
 function process_zip($name)
 {
 	global $zip;
@@ -8,11 +9,14 @@ function process_zip($name)
 		echo "$name not found in provided ZIP file, skipping...<br>";
 		return;
 	}
+	$contents = "";
 	while (!feof($fp)) {
-		$contents .= fread($fp, 2);
+		$contents .= fread($fp, 4096);
 	}
 	fclose($fp);
-	return $contents;
+	$domains = array_filter(explode("\n",$contents));
+	check_domains($domains);
+	return $domains;
 }
 
 function add_to_zip($path,$name)
@@ -20,6 +24,16 @@ function add_to_zip($path,$name)
 	global $zip;
 	if(file_exists($path.$name))
 		$zip->addFile($path.$name,$name);
+}
+
+function check_domains($domains)
+{
+	foreach($domains as $domain)
+	{
+		if(!is_valid_domain_name($domain)){
+			log_and_die(htmlspecialchars($domain).' is not a valid domain');
+		}
+	}
 }
 
 function getWildcardListContent() {
@@ -71,8 +85,14 @@ if($_POST["action"] == "in")
 		$zip = new ZipArchive();
 		$x = $zip->open($source);
 		if ($x === true) {
-			echo process_zip("blacklist.txt");
-			echo process_zip("whitelist.txt");
+			$blacklist = process_zip("blacklist.txt");
+			echo exec("sudo pihole -b -q ".implode(" ", $blacklist));
+
+			$whitelist = process_zip("whitelist.txt");
+			echo exec("sudo pihole -w -q ".implode(" ", $whitelist));
+
+			$wildlist = process_zip("wildcardblocking.txt");
+			echo exec("sudo pihole -wild -q ".implode(" ", $wildlist));
 			$zip->close();
 		}
 		else
