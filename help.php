@@ -1,5 +1,5 @@
 <?php
-    require "header.php";
+    require "scripts/pi-hole/php/header.php";
 
     if(strlen($pwhash) > 0)
     {
@@ -19,20 +19,7 @@
     <p>Shows different status messages:</p>
     <ul>
         <li>Status: Current status of the Pi-hole - Active (<i class="fa fa-circle" style="color:#7FFF00"></i>), Offline (<i class="fa fa-circle" style="color:#FF0000"></i>), or Starting (<i class="fa fa-circle" style="color:#ff9900"></i>)</li>
-        <li>Temp: Current CPU temperature
-        <?php
-        if($temperatureunit != "F"){
-        ?>
-        (switch unit to <a href="help.php?tempunit=fahrenheit">Fahrenheit</a>)
-        <?php
-        }
-        else
-        {
-        ?>
-        (switch unit to <a href="help.php?tempunit=celsius">Celsius</a>)
-        <?php
-        }
-        ?></li>
+        <li>Temp: Current CPU temperature</li>
         <li>Load: load averages for the last minute, 5 minutes and 15 minutes, respectively. A load average of 1 reflects the full workload of a single processor on the system. We show a red icon if the current load exceeds the number of available processors on this machine (which is <?php echo $nproc; ?>)</li>
         <li>Memory usage: Shows the percentage of memory actually blocked by applications. We show a red icon if the memory usage exceeds 75%</li>
     </ul>
@@ -106,14 +93,23 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-    <h2>Donate</h2>
-    Keep in mind that Pi-hole is free. If you like Pi-hole, please consider a small donation to help support its development
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-    <h2>Help (this page)</h2>
-    Shows information about what is happening behind the scenes and what can be done with this web user interface (web UI). The Help center will show details concerning the authentication system only if it is enabled
+    <h2>Settings</h2>
+    Change settings for the Pi-Hole
+    <h4>Networking</h4>
+    Displays information about the interfaces of the Pi-Hole. No changes possible
+    <h4>Pi-Hole DHCP Server</h4>
+    Using this setting you can enable/disable the DHCP server of the Pi-Hole. Note that you should disable any other DHCP server on your network to avoid IP addresses being used more than once. You have to give the range of IPs that DHCP will serve and the IP of the local router (gateway). If the DHCP server is active, the current leases are shown on the settings page.
+    <h4>Upstream DNS Servers</h4>
+    Customize used upstream DNS servers + advanced settings
+    <h4>Query Logging</h4>
+    Enabled/disable query logging on your Pi-hole
+    <h4>API</h4>
+    Change settings which apply to the API as well as the web UI<br>
+    Note that Top Clients have to be given as IP addresses
+    <h4>Web User Interface</h4>
+    Other settings which affect the webUI but not the API of Pi-hole
+    <h4>System Administration</h4>
+    Apply system-wide actions like restarting of the server
     </div>
 </div>
 <div class="row">
@@ -132,26 +128,23 @@
 <?php } ?>
 <div class="row">
     <div class="col-md-12">
-    <h2>Footer</h2>
-    Shows the currently installed Pi-hole and Web Interface version. If an update is available, this will be indicated here
+    <h2>Donate</h2>
+    Keep in mind that Pi-hole is free. If you like Pi-hole, please consider a small donation to help support its development
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-    <h2>Emergency help</h2>
-    Depending on your system and how heavily your Pi-hole is used, you may want to flush the log throughout the day by clicking on <a href="#" id="flush">FLUSH</a>. By default, the log if flushed at the end of the day via cron, but a very large log file can slow down the Web interface, so flushing it can be useful.
-    Note that your statistics will be reset and you lose the statistics up to this point.
+    <h2>Help (this page)</h2>
+    Shows information about what is happening behind the scenes and what can be done with this web user interface (web UI). The Help center will show details concerning the authentication system only if it is enabled
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+    <h2>Footer</h2>
+    Shows the currently installed Pi-hole and Web Interface version. If an update is available, this will be indicated here
     </div>
 </div>
 
 <?php
-    // Web based flushing of pi-hole log file
-    if (isset($_GET["flush"]))
-    {
-        exec("sudo pihole -f");
-    }
-
-    require "footer.php";
+    require "scripts/pi-hole/php/footer.php";
 ?>
-
-<script src="js/pihole/help.js"></script>

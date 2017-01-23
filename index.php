@@ -1,10 +1,10 @@
 <?php
     $indexpage = true;
-    require "header.php";
+    require "scripts/pi-hole/php/header.php";
 ?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
-    <div class="col-lg-3 col-xs-6">
+    <div class="col-lg-3 col-xs-12">
         <!-- small box -->
         <div class="small-box bg-aqua">
             <div class="inner">
@@ -17,7 +17,7 @@
         </div>
     </div>
     <!-- ./col -->
-    <div class="col-lg-3 col-xs-6">
+    <div class="col-lg-3 col-xs-12">
         <!-- small box -->
         <div class="small-box bg-green">
             <div class="inner">
@@ -30,7 +30,7 @@
         </div>
     </div>
     <!-- ./col -->
-    <div class="col-lg-3 col-xs-6">
+    <div class="col-lg-3 col-xs-12">
         <!-- small box -->
         <div class="small-box bg-yellow">
             <div class="inner">
@@ -43,11 +43,11 @@
         </div>
     </div>
     <!-- ./col -->
-    <div class="col-lg-3 col-xs-6">
+    <div class="col-lg-3 col-xs-12">
         <!-- small box -->
         <div class="small-box bg-red">
             <div class="inner">
-                <h3 class="statistic" id="domains_being_blocked"><sup style="font-size: 30px">---</sup></h3>
+                <h3 class="statistic" id="domains_being_blocked">---</h3>
                 <p>Domains Being Blocked</p>
             </div>
             <div class="icon">
@@ -117,8 +117,18 @@
     </div>
 </div>
 
+<?php
+if($boxedlayout)
+{
+	$tablelayout = "col-md-6";
+}
+else
+{
+	$tablelayout = "col-md-6 col-lg-4";
+}
+?>
 <div class="row">
-        <div class="col-md-4">
+    <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="domain-frequency">
         <div class="box-header with-border">
           <h3 class="box-title">Top Domains</h3>
@@ -145,7 +155,7 @@
       <!-- /.box -->
     </div>
     <!-- /.col -->
-    <div class="col-md-4">
+    <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="ad-frequency">
         <div class="box-header with-border">
           <h3 class="box-title">Top Advertisers</h3>
@@ -172,7 +182,7 @@
       <!-- /.box -->
     </div>
     <!-- /.col -->
-    <div class="col-md-4">
+    <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="client-frequency">
         <div class="box-header with-border">
           <h3 class="box-title">Top Clients</h3>
@@ -203,7 +213,7 @@
 <!-- /.row -->
 <?php } ?>
 <?php
-    require "footer.php";
+    require "scripts/pi-hole/php/footer.php";
 ?>
 
-<script src="js/pihole/index.js"></script>
+<script src="scripts/pi-hole/js/index.js"></script>

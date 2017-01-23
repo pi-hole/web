@@ -1,11 +1,11 @@
 <?php
     $api = true;
-    require "php/password.php";
-    require "php/auth.php";
+    require "scripts/pi-hole/php/password.php";
+    require "scripts/pi-hole/php/auth.php";
 
     check_cors();
 
-    include('data.php');
+    include('scripts/pi-hole/php/data.php');
     header('Content-type: application/json');
 
     $data = array();
@@ -36,7 +36,7 @@
     // Auth Required
 
     if (isset($_GET['topItems']) && $auth) {
-        $data = array_merge($data,  getTopItems());
+        $data = array_merge($data,  getTopItems($_GET['topItems']));
     }
 
     if (isset($_GET['recentItems']) && $auth) {
@@ -70,22 +70,39 @@
     }
     elseif (isset($_GET['disable'], $_GET['token']) && $auth) {
         check_csrf($_GET['token']);
-        exec('sudo pihole disable');
+        $disable = intval($_GET['disable']);
+        // intval returns the integer value on success, or 0 on failure
+        if($disable > 0)
+        {
+            exec("sudo pihole disable ".$disable."s");
+        }
+        else
+        {
+            exec('sudo pihole disable');
+        }
         $data = array_merge($data, Array(
             "status" => "disabled"
         ));
     }
 
-    function filterArray(&$a) {
-	    $sanArray = array();
-	    foreach ($a as $k=>$v) {
-	        if (is_array($v)) {
-	            $sanArray[htmlspecialchars($k)] = filterArray($v);
+    if (isset($_GET['getGravityDomains'])) {
+        $data = array_merge($data, getGravity());
+    }
+
+    if (isset($_GET['tailLog']) && $auth) {
+        $data = array_merge($data, tailPiholeLog($_GET['tailLog']));
+    }
+
+    function filterArray(&$inArray) {
+	    $outArray = array();
+	    foreach ($inArray as $key=>$value) {
+	        if (is_array($value)) {
+	            $outArray[htmlspecialchars($key)] = filterArray($value);
             } else {
-	            $sanArray[htmlspecialchars($k)] = htmlspecialchars($v);
+	            $outArray[htmlspecialchars($key)] = htmlspecialchars($value);
             }
 	    }
-	    return $sanArray;
+	    return $outArray;
     }
 
     $data = filterArray($data);
