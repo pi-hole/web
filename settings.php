@@ -100,6 +100,7 @@
 						<input type="text" class="form-control" disabled value="<?php echo $hostname; ?>">
 					</div>
 				</div>
+				<p>You are visiting this page via <?php if(check_visitor_ipv6()){?>IPv6<?php }else{ ?>IPv4<?php }?></p>
 			</div>
 		</div>
 <?php
