@@ -51,7 +51,7 @@
                 <li>and others</li>
             </ul>
         </li>
-        <li>Query Types: Shows to which upstream DNS the permitted requests have been forwarded to.</li>
+        <li>Forward Destinations: Shows to which upstream DNS the permitted requests have been forwarded to.</li>
         <li>Top Domains: Ranking of requested sites by number of DNS lookups.</li>
         <li>Top Advertisers: Ranking of requested advertisements by number of DNS lookups.</li>
         <li>Top Clients: Ranking of how many DNS requests each client has made on the local network.</li>
@@ -70,19 +70,9 @@
 <div class="row">
     <div class="col-md-12">
     <h2>White- / Blacklist</h2>
-    <p>Add or remove domains (or subdomains) from the white-/blacklist. If a domain is added to e.g. the whitelist, any possible entry of the same domain will be automatically removed from the blacklist and vice versa. Adding wildcards using the web UI is currently <em>not</em> supported.</p>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-    <h2>Update Lists</h2>
-    <p>Will download any updates from the third-party ad-serving domain lists that we source. By default, this command runs once a week via cron.</p>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-    <h2>Query adlists</h2>
-    This function is useful to find out what list a domain appears on. Since we don't control what the third-parties put on the block lists, you may find that a domain you normally visit stops working. If this is the case, you could run  this command to scan for strings in the list of blocked domains and it will return the list the domain is found on. This proved useful a while back when the Mahakala list was adding apple.com and microsoft.com to their block list.</p>
+    <p>Add or remove domains (or subdomains) from the white-/blacklist. If a domain is added to e.g. the whitelist, any possible entry of the same domain will be automatically removed from the blacklist and vice versa.</p>
+    <p>Wildcard blacklisting is supported (entering <tt>something.de</tt> will block this domain including all subdomains like <tt>a.bb.c.999.something.de</tt>). Note that wildcard whitelisting is <em>not</em> supported.</p>
+    <p>You can white-/blacklist multiple entries at a time if you separate the domains by spaces.</p>
     </div>
 </div>
 <div class="row">
@@ -93,16 +83,34 @@
 </div>
 <div class="row">
     <div class="col-md-12">
+    <h2>Tools &rarr; Update Lists</h2>
+    <p>Will download any updates from the third-party ad-serving domain lists that we source. By default, this command runs once a week via cron (Sunday at 01:59).</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+    <h2>Tools &rarr; Query adlists</h2>
+    This function is useful to find out what list a domain appears on. Since we don't control what the third-parties put on the block lists, you may find that a domain you normally visit stops working. If this is the case, you could run  this command to scan for strings in the list of blocked domains and it will return the list the domain is found on. This proved useful a while back when the Mahakala list was adding <tt>apple.com</tt> and <tt>microsoft.com</tt> to their block list.</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+    <h2>Tools &rarr; Tail pihole.log</h2>
+    Live tailing of the raw Pi-hole log.</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
     <h2>Settings</h2>
     Change settings for the Pi-Hole
     <h4>Networking</h4>
-    Displays information about the interfaces of the Pi-Hole. No changes possible
+    Displays information about the interfaces of the Pi-Hole. No changes possible.
     <h4>Pi-Hole DHCP Server</h4>
-    Using this setting you can enable/disable the DHCP server of the Pi-Hole. Note that you should disable any other DHCP server on your network to avoid IP addresses being used more than once. You have to give the range of IPs that DHCP will serve and the IP of the local router (gateway). If the DHCP server is active, the current leases are shown on the settings page.
+    Using this setting you can enable/disable the DHCP server of the Pi-Hole. Note that you should disable any other DHCP server on your network to avoid IP addresses being used more than once. You have to give the range of IPs that DHCP will serve and the IP of the local router (gateway). If the DHCP server is active, the current leases are shown on the settings page. IPv4 DHCP will always be activated, IPv6 (stateless + statefull) can be enabled.
     <h4>Upstream DNS Servers</h4>
-    Customize used upstream DNS servers + advanced settings
+    Customize used upstream DNS servers + advanced settings for DNS servers. Note that any number of DNS servers may be enabled at a time.
     <h4>Query Logging</h4>
-    Enabled/disable query logging on your Pi-hole
+    Enabled/disable query logging on your Pi-hole + provide option to flush the log
     <h4>API</h4>
     Change settings which apply to the API as well as the web UI<br>
     Note that Top Clients have to be given as IP addresses
