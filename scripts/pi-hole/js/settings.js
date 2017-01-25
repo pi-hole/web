@@ -88,7 +88,7 @@ $(document).ready(function() {
 	{
 		staticleasetable = $("#DHCPStaticLeasesTable").DataTable({
 			dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-12'i>>",
-			"columnDefs": [ { "bSortable": false, targets: -1} ],
+			"columnDefs": [ { "bSortable": false, "orderable": false, targets: -1} ],
 			"paging": false,
 			"scrollCollapse": true,
 			"scrollY": "200px",
