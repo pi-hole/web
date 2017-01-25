@@ -257,8 +257,10 @@
 
 	// Read leases file
 	$leasesfile = true;
-	$dhcpleases = fopen('/etc/pihole/dhcp.leases', 'r') or $leasesfile = false;
-	$dhcp_leases  = [];
+	$dhcpleases = @fopen('/etc/pihole/dhcp.leases', 'r');
+	if(!is_resource($dhcpleases ))
+		$leasesfile = false;
+	$dhcp_leases  = array();
 
 	function convertseconds($argument) {
 		$seconds = round($argument);
@@ -325,9 +327,12 @@
 			array_push($dhcp_leases,["TIME"=>$time, "hwaddr"=>$line[1], "IP"=>$line[2], "host"=>$host, "clid"=>$clid, "type"=>$type]);
 		}
 	}
+
+	readStaticLeasesFile();
+
 	?>
 				<div class="col-md-12">
-				<div class="box box-warning collapsed-box">
+				<div class="box box-warning <?php if(!isset($_POST["addstatic"])){ ?>collapsed-box<?php } ?>">
 					<div class="box-header with-border">
 						<h3 class="box-title">DHCP leases</h3>
 						<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse" id="leaseexpand"><i class="fa fa-plus"></i></button></div>
@@ -359,10 +364,11 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach($static_dhcp_leases as $lease) { ?><tr><td><?php echo $lease["hwaddr"]; ?></td><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["host"]; ?></td><td><button class="btn btn-danger btn-xs" type="button"><span class="glyphicon glyphicon-trash"></span></button></td></tr><?php } ?>
+								<?php foreach($dhcp_static_leases as $lease) { ?><tr><td><?php echo $lease["hwaddr"]; ?></td><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["host"]; ?></td><td><button class="btn btn-danger btn-xs" type="submit" name="removestatic" value="<?php echo $lease["hwaddr"]; ?>"><span class="glyphicon glyphicon-trash"></span></button></td></tr><?php } ?>
 								<tr><td><input type="text" name="AddMAC"></td><td><input type="text" name="AddIP"></td><td><input type="text" name="AddHostname"></td><td><button class="btn btn-success btn-xs" type="submit" name="addstatic"><span class="glyphicon glyphicon-plus"></span></button></td></tr>
 							</tbody>
 						</table>
+						<p>Specifying the MAC address is mandatory. If the IP address is omitted, then it will be generated dynamically. Hoever, the specified host name is used instead of the host name the machine claims to be using. If the host name is omitted, only a static release will be added.</p>
 					</div>
 					</div>
 				</div>

@@ -38,6 +38,34 @@ function validMAC($mac_addr)
   return (preg_match('/([a-fA-F0-9]{2}[:]?){6}/', $mac_addr) == 1);
 }
 
+$dhcp_static_leases = array();
+function readStaticLeasesFile()
+{
+	global $dhcp_static_leases;
+	$dhcp_static_leases = array();
+	$dhcpstatic = @fopen('/etc/dnsmasq.d/04-pihole-static-dhcp.conf', 'r');
+
+	if(!is_resource($dhcpstatic))
+		return false;
+
+	while(!feof($dhcpstatic))
+	{
+		// Remove any possibly existing variable with this name
+		$mac = "";
+		sscanf(trim(fgets($dhcpstatic)),"dhcp-host=%[^,],%[^,],%[^,]",$mac,$one,$two);
+		if(strlen($mac) > 0)
+		{
+			if(validIP($one) && strlen($two) == 0)
+				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>$one, "host"=>""]);
+			elseif(strlen($two) == 0)
+				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>"", "host"=>$one]);
+			else
+				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>$one, "host"=>$two]);
+		}
+	}
+	return true;
+}
+
 	$DNSserverslist = [
 			"8.8.8.8" => "Google (Primary)",
 			"208.67.222.222" => "OpenDNS (Primary)",
@@ -328,18 +356,66 @@ function validMAC($mac_addr)
 					$mac = $_POST["AddMAC"];
 					$ip = $_POST["AddIP"];
 					$hostname = $_POST["AddHostname"];
+
 					if(!validMAC($mac))
 					{
 						$error .= "MAC address (".htmlentities($mac).") is invalid!<br>";
 					}
 					$mac = strtoupper($mac);
-					if(!validIP($ip))
+
+					if(!validIP($ip) && strlen($ip) > 0)
 					{
 						$error .= "IP address (".htmlentities($ip).") is invalid!<br>";
 					}
+
 					if(!validDomain($hostname) && strlen($hostname) > 0)
 					{
 						$error .= "Host name (".htmlentities($hostname).") is invalid!<br>";
+					}
+
+					if(strlen($hostname) == 0 && strlen($ip) == 0)
+					{
+						$error .= "You can not omit both the IP address and the host name!<br>";
+					}
+
+					if(strlen($hostname) == 0)
+						$hostname = "nohost";
+
+					if(strlen($ip) == 0)
+						$ip = "noip";
+
+					// Test if this MAC address is already included
+					readStaticLeasesFile();
+					foreach($dhcp_static_leases as $lease) {
+						if($lease["hwaddr"] === $mac)
+						{
+							$error .= "Static release for MAC address (".htmlentities($mac).") already defined!<br>";
+							break;
+						}
+					}
+
+					if(!strlen($error))
+					{
+						exec("sudo pihole -a addstaticdhcp ".$mac." ".$ip." ".$hostname);
+						$success .= "A new static address has been added";
+					}
+					break;
+				}
+
+				if(isset($_POST["removestatic"]))
+				{
+					$debug = true;
+					$mac = $_POST["removestatic"];
+					if(!validMAC($mac))
+					{
+						$error .= "MAC address (".htmlentities($mac).") is invalid!<br>";
+					}
+					$mac = strtoupper($mac);
+
+					if(!strlen($error))
+					{
+						exec("sudo pihole -a removestaticdhcp ".$mac);
+						$success .= "The static address with MAC address ".htmlentities($mac)." has been added";
 					}
 					break;
 				}
