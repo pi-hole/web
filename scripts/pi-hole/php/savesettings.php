@@ -51,7 +51,7 @@ function readStaticLeasesFile()
 	while(!feof($dhcpstatic))
 	{
 		// Remove any possibly existing variable with this name
-		$mac = "";
+		$mac = ""; $one = ""; $two = "";
 		sscanf(trim(fgets($dhcpstatic)),"dhcp-host=%[^,],%[^,],%[^,]",$mac,$one,$two);
 		if(strlen($mac) > 0)
 		{
