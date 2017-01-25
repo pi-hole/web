@@ -56,14 +56,18 @@ function readStaticLeasesFile()
 		if(strlen($mac) > 0 && validMAC($mac))
 		{
 			if(validIP($one) && strlen($two) == 0)
+				// dhcp-host=mac,IP - no HOST
 				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>$one, "host"=>""]);
 			elseif(strlen($two) == 0)
+				// dhcp-host=mac,hostname - no IP
 				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>"", "host"=>$one]);
 			else
+				// dhcp-host=mac,IP,hostname
 				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>$one, "host"=>$two]);
 		}
 		else if(validIP($one) && validDomain($mac))
 		{
+			// dhcp-host=hostname,IP - no MAC
 			array_push($dhcp_static_leases,["hwaddr"=>"", "IP"=>$one, "host"=>$mac]);
 		}
 	}
