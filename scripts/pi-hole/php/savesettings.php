@@ -53,7 +53,7 @@ function readStaticLeasesFile()
 		// Remove any possibly existing variable with this name
 		$mac = ""; $one = ""; $two = "";
 		sscanf(trim(fgets($dhcpstatic)),"dhcp-host=%[^,],%[^,],%[^,]",$mac,$one,$two);
-		if(strlen($mac) > 0)
+		if(strlen($mac) > 0 && validMAC($mac))
 		{
 			if(validIP($one) && strlen($two) == 0)
 				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>$one, "host"=>""]);
@@ -61,6 +61,10 @@ function readStaticLeasesFile()
 				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>"", "host"=>$one]);
 			else
 				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>$one, "host"=>$two]);
+		}
+		else if(validIP($one) && validDomain($mac))
+		{
+			array_push($dhcp_static_leases,["hwaddr"=>"", "IP"=>$one, "host"=>$mac]);
 		}
 	}
 	return true;

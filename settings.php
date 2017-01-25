@@ -364,7 +364,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach($dhcp_static_leases as $lease) { ?><tr><td><?php echo $lease["hwaddr"]; ?></td><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["host"]; ?></td><td><button class="btn btn-danger btn-xs" type="submit" name="removestatic" value="<?php echo $lease["hwaddr"]; ?>"><span class="glyphicon glyphicon-trash"></span></button></td></tr><?php } ?>
+								<?php foreach($dhcp_static_leases as $lease) { ?><tr><td><?php echo $lease["hwaddr"]; ?></td><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["host"]; ?></td><td><?php if(strlen($lease["hwaddr"]) > 0){ ?><button class="btn btn-danger btn-xs" type="submit" name="removestatic" value="<?php echo $lease["hwaddr"]; ?>"><span class="glyphicon glyphicon-trash"></span></button><?php } ?></td></tr><?php } ?>
 								<tr><td><input type="text" name="AddMAC"></td><td><input type="text" name="AddIP"></td><td><input type="text" name="AddHostname"></td><td><button class="btn btn-success btn-xs" type="submit" name="addstatic"><span class="glyphicon glyphicon-plus"></span></button></td></tr>
 							</tbody>
 						</table>
