@@ -32,6 +32,12 @@ function validDomain($domain_name)
 	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
 }
 
+function validMAC($mac_addr)
+{
+  // Accepted input format: 00:01:02:1A:5F:FF (characters may be lower case)
+  return (preg_match('/([a-fA-F0-9]{2}[:]?){6}/', $mac_addr) == 1);
+}
+
 	$DNSserverslist = [
 			"8.8.8.8" => "Google (Primary)",
 			"208.67.222.222" => "OpenDNS (Primary)",
@@ -315,6 +321,28 @@ function validDomain($domain_name)
 				break;
 
 			case "DHCP":
+
+				if(isset($_POST["addstatic"]))
+				{
+					$debug = true;
+					$mac = $_POST["AddMAC"];
+					$ip = $_POST["AddIP"];
+					$hostname = $_POST["AddHostname"];
+					if(!validMAC($mac))
+					{
+						$error .= "MAC address (".htmlentities($mac).") is invalid!<br>";
+					}
+					$mac = strtoupper($mac);
+					if(!validIP($ip))
+					{
+						$error .= "IP address (".htmlentities($ip).") is invalid!<br>";
+					}
+					if(!validDomain($hostname))
+					{
+						$error .= "Host name (".htmlentities($hostname).") is invalid!<br>";
+					}
+					break;
+				}
 
 				if(isset($_POST["active"]))
 				{

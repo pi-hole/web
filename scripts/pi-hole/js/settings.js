@@ -74,8 +74,7 @@ $(document).ready(function() {
 	if(document.getElementById("DHCPLeasesTable"))
 	{
 		leasetable = $("#DHCPLeasesTable").DataTable({
-			dom: "<'row'<'col-sm-6'i><'col-sm-6'f>>" +
-				"<'row'<'col-sm-12'tr>>",
+			dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-6'i><'col-sm-6'f>>",
 			"paging": false,
 			"scrollCollapse": true,
 			"scrollY": "200px",
@@ -83,6 +82,21 @@ $(document).ready(function() {
 		});
 	$("#leaseexpand").on( "click", function () {
 		setTimeout(function(){leasetable.draw();},100);
+		} );
+	}
+	if(document.getElementById("DHCPStaticLeasesTable"))
+	{
+		staticleasetable = $("#DHCPStaticLeasesTable").DataTable({
+			dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-12'i>>",
+			order: [[1, 'desc']],
+			"columnDefs": [ { "bSortable": false, targets: -1} ],
+			"paging": false,
+			"scrollCollapse": true,
+			"scrollY": "200px",
+			"scrollX" : true
+		});
+	$("#leaseexpand").on( "click", function () {
+		setTimeout(function(){staticleasetable.draw();},100);
 		} );
 	}
 } );

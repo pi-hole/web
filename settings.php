@@ -334,6 +334,7 @@
 					</div>
 					<div class="box-body">
 					<div class="col-md-12">
+						<label>Currently active DHCP leases</label>
 						<table id="DHCPLeasesTable" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
 							<thead>
 								<tr>
@@ -343,6 +344,23 @@
 							</thead>
 							<tbody>
 								<?php foreach($dhcp_leases as $lease) { ?><tr data-placement="auto" data-container="body" data-toggle="tooltip" title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>"><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["host"]; ?></td></tr><?php } ?>
+							</tbody>
+						</table><br>
+					</div>
+					<div class="col-md-12">
+						<label>Static DHCP leases configuration</label>
+						<table id="DHCPStaticLeasesTable" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th>MAC address</th>
+									<th>IP address</th>
+									<th>Hostname</th>
+									<td></td>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach($static_dhcp_leases as $lease) { ?><tr><td><?php echo $lease["hwaddr"]; ?></td><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["host"]; ?></td><td><button class="btn btn-danger btn-xs" type="button"><span class="glyphicon glyphicon-trash"></span></button></td></tr><?php } ?>
+								<tr><td><input type="text" name="AddMAC"></td><td><input type="text" name="AddIP"></td><td><input type="text" name="AddHostname"></td><td><button class="btn btn-success btn-xs" type="submit" name="addstatic"><span class="glyphicon glyphicon-plus"></span></button></td></tr>
 							</tbody>
 						</table>
 					</div>
