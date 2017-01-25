@@ -69,7 +69,7 @@ $("#DHCPchk").click(function() {
 	$("#dhcpnotice").prop("hidden", !this.checked).addClass("lookatme");
 });
 
-var leasetable;
+var leasetable, staticleasetable;
 $(document).ready(function() {
 	if(document.getElementById("DHCPLeasesTable"))
 	{
@@ -88,7 +88,6 @@ $(document).ready(function() {
 	{
 		staticleasetable = $("#DHCPStaticLeasesTable").DataTable({
 			dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-12'i>>",
-			order: [[1, 'desc']],
 			"columnDefs": [ { "bSortable": false, targets: -1} ],
 			"paging": false,
 			"scrollCollapse": true,
