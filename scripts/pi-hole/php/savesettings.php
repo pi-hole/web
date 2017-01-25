@@ -337,7 +337,7 @@ function validMAC($mac_addr)
 					{
 						$error .= "IP address (".htmlentities($ip).") is invalid!<br>";
 					}
-					if(!validDomain($hostname))
+					if(!validDomain($hostname) && strlen($hostname) > 0)
 					{
 						$error .= "Host name (".htmlentities($hostname).") is invalid!<br>";
 					}
