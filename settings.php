@@ -324,7 +324,7 @@
 				$clid = "<i>unknown</i>";
 			}
 
-			array_push($dhcp_leases,["TIME"=>$time, "hwaddr"=>$line[1], "IP"=>$line[2], "host"=>$host, "clid"=>$clid, "type"=>$type]);
+			array_push($dhcp_leases,["TIME"=>$time, "hwaddr"=>strtoupper($line[1]), "IP"=>$line[2], "host"=>$host, "clid"=>$clid, "type"=>$type]);
 		}
 	}
 
