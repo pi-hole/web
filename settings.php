@@ -752,12 +752,13 @@
 				</form>
 			</div>
 		</div>
-		<div class="box box-danger">
+		<div class="box box-danger collapsed-box">
 			<div class="box-header with-border">
-				<h3 class="box-title">Pi-hole Takeout</h3>
+				<h3 class="box-title">Pi-hole Teleporter</h3>
+				<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
 			</div>
 			<div class="box-body">
-				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/takeout.php" target="_blank"  enctype="multipart/form-data">
+				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/teleporter.php" target="_blank"  enctype="multipart/form-data">
 					<div class="col-lg-12">
 						<p>Export your Pi-hole lists as downloadable ZIP file</p>
 						<button type="submit" class="btn btn-default" name="action" value="out">Export</button>

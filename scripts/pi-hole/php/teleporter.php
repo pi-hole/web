@@ -92,13 +92,13 @@ if($_POST["action"] == "in")
 			if(isset($_POST["whitelist"]))
 			{
 				$whitelist = process_zip("whitelist.txt");
-				echo exec("sudo pihole -w -q ".implode(" ", $whitelist));
+				exec("sudo pihole -w -q ".implode(" ", $whitelist));
 			}
 
 			if(isset($_POST["wildlist"]))
 			{
 				$wildlist = process_zip("wildcardblocking.txt");
-				echo exec("sudo pihole -wild -q ".implode(" ", $wildlist));
+				exec("sudo pihole -wild -q ".implode(" ", $wildlist));
 			}
 
 			echo "OK";
