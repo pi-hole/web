@@ -99,7 +99,7 @@
             if (is_array($value)) {
                 $outArray[htmlspecialchars($key)] = filterArray($value);
             } else {
-                $outArray[htmlspecialchars($key)] = !is_int($value) && !is_double($value) ? htmlspecialchars($value) : $value;
+                $outArray[htmlspecialchars($key)] = !is_numeric($value) ? htmlspecialchars($value) : $value;
             }
         }
         return $outArray;
