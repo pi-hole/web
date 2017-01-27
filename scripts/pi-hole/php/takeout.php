@@ -31,7 +31,7 @@ function check_domains($domains)
 	foreach($domains as $domain)
 	{
 		if(!is_valid_domain_name($domain)){
-			log_and_die(htmlspecialchars($domain).' is not a valid domain');
+			die(htmlspecialchars($domain).' is not a valid domain');
 		}
 	}
 }
