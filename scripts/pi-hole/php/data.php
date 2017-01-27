@@ -509,7 +509,7 @@
 
     function countDnsQueries() {
         global $logListName;
-        return exec("grep -c \": query\\[A\" $logListName");
+        return intval(exec("grep -c \": query\\[A\" $logListName"));
     }
 
     function getDnsQueriesAll(\SplFileObject $log) {
