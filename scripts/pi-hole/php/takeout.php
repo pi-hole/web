@@ -143,13 +143,4 @@ else
 	exit;
 }
 
-$zip->addFile("/etc/pihole/whitelist.txt");
-$zip->addFile("/etc/pihole/blacklist.txt");
-$zip->addFile("/etc/pihole/setupVars.conf");
-echo "numfiles: " . $zip->numFiles . "<br>";
-echo "status:" . $zip->status . "<br>";
-echo "statusSys: " . $zip->statusSys . "<br>";
-echo "filename: " . $zip->filename . "<br>";
-$zip->close();
-
 ?>
