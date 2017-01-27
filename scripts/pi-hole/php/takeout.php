@@ -101,6 +101,8 @@ if($_POST["action"] == "in")
 				echo exec("sudo pihole -wild -q ".implode(" ", $wildlist));
 			}
 
+			echo "OK";
+
 			$zip->close();
 		}
 		else
