@@ -117,7 +117,7 @@ if($_POST["action"] == "in")
 }
 else
 {
-	$archive_file_name = "/var/www/html/pi-hole-takeout_".microtime(true).".zip";
+	$archive_file_name = "/var/www/html/pi-hole-teleporter_".microtime(true).".zip";
 	$zip = new ZipArchive();
 	touch($archive_file_name);
 	$res = $zip->open($archive_file_name, ZipArchive::CREATE | ZipArchive::OVERWRITE);
@@ -136,7 +136,7 @@ else
 
 	header("Content-type: application/zip");
 	header('Content-Transfer-Encoding: binary');
-	header("Content-Disposition: attachment; filename=pi-hole-takeout.zip");
+	header("Content-Disposition: attachment; filename=pi-hole-teleporter.zip");
 	header("Content-length: " . filesize($archive_file_name));
 	header("Pragma: no-cache");
 	header("Expires: 0");
