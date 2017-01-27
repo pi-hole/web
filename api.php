@@ -94,15 +94,15 @@
     }
 
     function filterArray(&$inArray) {
-	    $outArray = array();
-	    foreach ($inArray as $key=>$value) {
-	        if (is_array($value)) {
-	            $outArray[htmlspecialchars($key)] = filterArray($value);
+        $outArray = array();
+        foreach ($inArray as $key=>$value) {
+            if (is_array($value)) {
+                $outArray[htmlspecialchars($key)] = filterArray($value);
             } else {
-	            $outArray[htmlspecialchars($key)] = htmlspecialchars($value);
+                $outArray[htmlspecialchars($key)] = !is_int($value) && !is_double($value) ? htmlspecialchars($value) : $value;
             }
-	    }
-	    return $outArray;
+        }
+        return $outArray;
     }
 
     $data = filterArray($data);
