@@ -789,7 +789,7 @@
 					</div>
 				</form>
 			<?php } else { ?>
-				<p>The Pi-hole teleporter can only work properly when the PHP ZIP extension is installed. Please install it.</p>
+				<p>The PHP extension <tt>zip</tt> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.</p>
 			<?php } ?>
 			</div>
 		</div>
