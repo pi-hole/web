@@ -758,6 +758,7 @@
 				<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
 			</div>
 			<div class="box-body">
+			<?php if (extension_loaded('zip')) { ?>
 				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/teleporter.php" target="_blank"  enctype="multipart/form-data">
 					<div class="col-lg-12">
 						<p>Export your Pi-hole lists as downloadable ZIP file</p>
@@ -787,6 +788,9 @@
 						</div>
 					</div>
 				</form>
+			<?php } else { ?>
+				<p>The Pi-hole teleporter can only work properly when the PHP ZIP extension is installed. Please install it.</p>
+			<?php } ?>
 			</div>
 		</div>
 	</div>
