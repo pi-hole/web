@@ -2,6 +2,13 @@ function eventsource() {
     var alInfo = $("#alInfo");
     var alSuccess = $("#alSuccess");
     var ta = $("#output");
+
+    // IE does not support EventSource - exit early
+    if (typeof EventSource !== "function") {
+        ta.show();
+        ta.html("Updating lists of ad-serving domains is not supported with this browser!");
+        return;
+    }
     var source = new EventSource("scripts/pi-hole/php/gravity.sh.php");
 
     ta.html("");
@@ -27,7 +34,7 @@ function eventsource() {
     }, false);
 }
 
-$("#gravityBtn").on("click", () => {
+$("#gravityBtn").on("click", function(){
     $("#gravityBtn").attr("disabled", true);
     eventsource();
 });

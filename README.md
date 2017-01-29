@@ -1,5 +1,6 @@
 Pi-hole Admin Dashboard
 ============
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/938b4d9e61b7487da77cf63ba05c683d)](https://www.codacy.com/app/Pi-hole/AdminLTE?utm_source=github.com&utm_medium=referral&utm_content=pi-hole/AdminLTE&utm_campaign=badger)
 [![Join the chat at https://gitter.im/pi-hole/AdminLTE](https://badges.gitter.im/pi-hole/AdminLTE.svg)](https://gitter.im/pi-hole/AdminLTE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif "AdminLTE Presentation")](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY "Donate")
@@ -8,8 +9,7 @@ Using **[AdminLTE](https://almsaeedstudio.com)**, this project will create a Web
 
 From this interface, you will be able to see stats on how well your Pi-hole is performing.  You will also be able to update the lists used to block ads.
 
-![Pi-hole Web interface](http://i.imgur.com/5lLAUGo.png)
-![Fully responsive](http://i.imgur.com/fHuWR6E.png)
+![Pi-hole Web interface](http://i.imgur.com/EgGZXbT.png)
 
 ## API
 A read-only API can be accessed at `/admin/api.php`. With either no parameters or `api.php?summary` it returns the following JSON:
@@ -22,6 +22,9 @@ A read-only API can be accessed at `/admin/api.php`. With either no parameters o
 }
 ```
 
-There are many more parameters, such as `summaryRaw`, `overTimeData`, `topItems`, `recentItems`, `getQueryTypes`, `getForwardDestinations`, `getQuerySources`, and finally `getAllQueries`.
+There are many more parameters, such as `summaryRaw`, `overTimeData10mins`, ` topClients` or `getQuerySources`, `getQueryTypes`, `getForwardDestinations`, and `getAllQueries`.
+Together with a token it is also possible to enable and disable (also with a set timeout) blocking via the API.
 
-`getAllQueries` can optionally be set with one of these values to return JSON hash ordered as value implies: `orderByClientDomainTime`, `orderByClientTimeDomain`, `orderByTimeClientDomain`, `orderByTimeDomainClient`, `orderByDomainClientTime` or `orderByDomainTimeClient`.
+<hr>
+<img src="https://assets.pi-hole.net/static/BStackLogo.png" height="80"><br>
+We use BrowserStack for multi-platform multi-browser testing.

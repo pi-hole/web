@@ -89,20 +89,20 @@
         $data = array_merge($data, getGravity());
     }
 
-    if (isset($_GET['tailLog'])) {
+    if (isset($_GET['tailLog']) && $auth) {
         $data = array_merge($data, tailPiholeLog($_GET['tailLog']));
     }
 
     function filterArray(&$inArray) {
-	    $outArray = array();
-	    foreach ($inArray as $key=>$value) {
-	        if (is_array($value)) {
-	            $outArray[htmlspecialchars($key)] = filterArray($value);
+        $outArray = array();
+        foreach ($inArray as $key=>$value) {
+            if (is_array($value)) {
+                $outArray[htmlspecialchars($key)] = filterArray($value);
             } else {
-	            $outArray[htmlspecialchars($key)] = htmlspecialchars($value);
+                $outArray[htmlspecialchars($key)] = !is_numeric($value) ? htmlspecialchars($value) : $value;
             }
-	    }
-	    return $outArray;
+        }
+        return $outArray;
     }
 
     $data = filterArray($data);

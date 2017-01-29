@@ -198,7 +198,7 @@
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">From</div>
-								<input type="text" class="form-control DHCPgroup" name="from" value="<?php echo $DHCPstart; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
+								<input type="text" class="form-control DHCPgroup" name="from" id="DHCPfrom" value="<?php echo $DHCPstart; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
 					</div>
@@ -206,7 +206,7 @@
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">To</div>
-								<input type="text" class="form-control DHCPgroup" name="to" value="<?php echo $DHCPend; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
+								<input type="text" class="form-control DHCPgroup" name="to" id="DHCPto" value="<?php echo $DHCPend; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
 					</div>
@@ -215,7 +215,7 @@
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">Router</div>
-								<input type="text" class="form-control DHCPgroup" name="router" value="<?php echo $DHCProuter; ?>" data-inputmask="'alias': 'ip'" data-mask <?php if(!$DHCP){ ?>disabled<?php } ?>>
+								<input type="text" class="form-control DHCPgroup" name="router" id="DHCProuter" value="<?php echo $DHCProuter; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
 					</div>
@@ -360,30 +360,41 @@
 
 <?php
 	// DNS settings
-	if(isset($setupVars["PIHOLE_DNS_1"])){
-		if(isset($primaryDNSservers[$setupVars["PIHOLE_DNS_1"]]))
-		{
-			$piHoleDNS1 = $primaryDNSservers[$setupVars["PIHOLE_DNS_1"]];
+	$DNSservers = [];
+	$DNSactive = [];
+	for($i=1;$i<=12;$i++)
+	{
+		if(isset($setupVars["PIHOLE_DNS_".$i])){
+			if(isset($DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]))
+			{
+				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],$DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]];
+				array_push($DNSactive,$setupVars["PIHOLE_DNS_".$i]);
+			}
+			elseif(strpos($setupVars["PIHOLE_DNS_".$i],"."))
+			{
+				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],"CustomIPv4"];
+				if(!isset($custom1))
+				{
+					$custom1 = $setupVars["PIHOLE_DNS_".$i];
+				}
+				else
+				{
+					$custom2 = $setupVars["PIHOLE_DNS_".$i];
+				}
+			}
+			elseif(strpos($setupVars["PIHOLE_DNS_".$i],":"))
+			{
+				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],"CustomIPv6"];
+				if(!isset($custom3))
+				{
+					$custom3 = $setupVars["PIHOLE_DNS_".$i];
+				}
+				else
+				{
+					$custom4 = $setupVars["PIHOLE_DNS_".$i];
+				}
+			}
 		}
-		else
-		{
-			$piHoleDNS1 = "Custom";
-		}
-	} else {
-		$piHoleDNS1 = "unknown";
-	}
-
-	if(isset($setupVars["PIHOLE_DNS_2"])){
-		if(isset($secondaryDNSservers[$setupVars["PIHOLE_DNS_2"]]))
-		{
-			$piHoleDNS2 = $secondaryDNSservers[$setupVars["PIHOLE_DNS_2"]];
-		}
-		else
-		{
-			$piHoleDNS2 = "Custom";
-		}
-	} else {
-		$piHoleDNS2 = "unknown";
 	}
 
 	if(isset($setupVars["DNS_FQDN_REQUIRED"])){
@@ -411,6 +422,19 @@
 	} else {
 		$DNSbogusPriv = true;
 	}
+
+	if(isset($setupVars["DNSSEC"])){
+		if($setupVars["DNSSEC"])
+		{
+			$DNSSEC = true;
+		}
+		else
+		{
+			$DNSSEC = false;
+		}
+	} else {
+		$DNSSEC = false;
+	}
 ?>
 		<div class="box box-warning">
 			<div class="box-header with-border">
@@ -419,28 +443,41 @@
 			<div class="box-body">
 				<form role="form" method="post">
 				<div class="col-lg-6">
-					<label>Primary DNS Server</label>
+					<label>Upstream DNS Servers</label>
 					<div class="form-group">
-						<?php foreach ($primaryDNSservers as $key => $value) { ?> <div class="radio"><label><input type="radio" name="primaryDNS" value="<?php echo $value;?>" <?php if($piHoleDNS1 === $value){ ?>checked<?php } ?> ><?php echo $value;?> (<?php echo $key;?>)</label></div> <?php } ?>
-						<label>Custom</label>
-						<div class="input-group">
-							<div class="input-group-addon"><input type="radio" name="primaryDNS" value="Custom"
-							<?php if($piHoleDNS1 === "Custom"){ ?>checked<?php } ?>></div>
-							<input type="text" name="DNS1IP" class="form-control" data-inputmask="'alias': 'ip'" data-mask
-							<?php if($piHoleDNS1 === "Custom"){ ?>value="<?php echo $setupVars["PIHOLE_DNS_1"]; ?>"<?php } ?>>
-						</div>
+						<?php foreach ($DNSserverslist as $key => $value) { ?>
+						<div class="checkbox">
+							<label title="<?php echo $key;?>">
+							<input type="checkbox" name="DNSserver<?php echo $key;?>" value="true" <?php if(in_array($key,$DNSactive)){ ?>checked<?php } ?> ><?php echo $value;?></label>
+						</div> <?php } ?>
 					</div>
 				</div>
 				<div class="col-lg-6">
-					<label>Secondary DNS Server</label>
+					<label>&nbsp;</label>
 					<div class="form-group">
-						<?php foreach ($secondaryDNSservers as $key => $value) { ?> <div class="radio"><label><input type="radio" name="secondaryDNS" value="<?php echo $value;?>" <?php if($piHoleDNS2 === $value){ ?>checked<?php } ?> ><?php echo $value;?> (<?php echo $key;?>)</label></div> <?php } ?>
-						<label>Custom</label>
+						<label>Custom 1 (IPv4)</label>
 						<div class="input-group">
-							<div class="input-group-addon"><input type="radio" name="secondaryDNS" value="Custom"
-							<?php if($piHoleDNS2 === "Custom"){ ?>checked<?php } ?>></div>
-							<input type="text" name="DNS2IP" class="form-control" data-inputmask="'alias': 'ip'" data-mask
-							<?php if($piHoleDNS2 === "Custom"){ ?>value="<?php echo $setupVars["PIHOLE_DNS_2"]; ?>"<?php } ?>>
+							<div class="input-group-addon"><input type="checkbox" name="custom1" value="Customv4"
+							<?php if(isset($custom1)){ ?>checked<?php } ?>></div>
+							<input type="text" name="custom1val" class="form-control" id="custom1val" <?php if(isset($custom1)){ ?>value="<?php echo $custom1; ?>"<?php } ?>>
+						</div>
+						<label>Custom 2 (IPv4)</label>
+						<div class="input-group">
+							<div class="input-group-addon"><input type="checkbox" name="custom2" value="Customv4"
+							<?php if(isset($custom2)){ ?>checked<?php } ?>></div>
+							<input type="text" name="custom2val" class="form-control" id="custom2val" <?php if(isset($custom2)){ ?>value="<?php echo $custom2; ?>"<?php } ?>>
+						</div>
+						<label>Custom 3 (IPv6)</label>
+						<div class="input-group">
+							<div class="input-group-addon"><input type="checkbox" name="custom3" value="Customv6"
+							<?php if(isset($custom3)){ ?>checked<?php } ?>></div>
+							<input type="text" name="custom3val" class="form-control" id="custom3val" <?php if(isset($custom3)){ ?>value="<?php echo $custom3; ?>"<?php } ?>>
+						</div>
+						<label>Custom 4 (IPv6)</label>
+						<div class="input-group">
+							<div class="input-group-addon"><input type="checkbox" name="custom4" value="Customv6"
+							<?php if(isset($custom4)){ ?>checked<?php } ?>></div>
+							<input type="text" name="custom4val" class="form-control" id="custom4val" <?php if(isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
 						</div>
 					</div>
 				</div>
@@ -459,6 +496,10 @@
 								<div class="checkbox"><label><input type="checkbox" name="DNSbogusPriv" <?php if($DNSbogusPriv){ ?>checked<?php } ?> title="bogus-priv"> never forward reverse lookups for private IP ranges</label></div>
 							</div>
 							<p>Note that enabling these two options may increase your privacy slightly, but may also prevent you from being able to access local hostnames if the Pi-Hole is not used as DHCP server</p>
+							<div class="form-group">
+								<div class="checkbox"><label><input type="checkbox" name="DNSSEC" <?php if($DNSSEC){ ?>checked<?php } ?>> Use DNSSEC</label></div>
+							</div>
+							<p>Validate DNS replies and cache DNSSEC data. When forwarding DNS queries, Pi-hole requests the DNSSEC records needed to  validate the replies. Use Google or Norton DNS servers when activating DNSSEC. Note that the size of your log might increase significantly when enabling DNSSEC. A DNSSEC resolver test can be found <a href="http://dnssec.vs.uni-due.de/" target="_blank">here</a>.</p>
 						</div>
 					</div>
 				</div>
@@ -711,6 +752,47 @@
 				</form>
 			</div>
 		</div>
+		<div class="box box-danger collapsed-box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Pi-hole Teleporter</h3>
+				<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
+			</div>
+			<div class="box-body">
+			<?php if (extension_loaded('zip')) { ?>
+				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/teleporter.php" target="_blank"  enctype="multipart/form-data">
+					<div class="col-lg-12">
+						<p>Export your Pi-hole lists as downloadable ZIP file</p>
+						<button type="submit" class="btn btn-default" name="action" value="out">Export</button>
+					<hr>
+					</div>
+					<div class="col-lg-6">
+					<label>Import ...</label>
+						<div class="form-group">
+							<div class="checkbox">
+							<label><input type="checkbox" name="whitelist" value="true" checked> Whitelist</label>
+							</div>
+							<div class="checkbox">
+							<label><input type="checkbox" name="blacklist" value="true" checked> Blacklist (exact)</label>
+							</div>
+							<div class="checkbox">
+							<label><input type="checkbox" name="wildlist" value="true" checked> Blacklist (wildcard)</label>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label for="zip_file">File input</label>
+							<input type="file" name="zip_file" id="zip_file">
+							<p class="help-block">Upload only Pi-hole backup files.</p>
+							<button type="submit" class="btn btn-default" name="action" value="in">Import</button>
+						</div>
+					</div>
+				</form>
+			<?php } else { ?>
+				<p>The PHP extension <tt>zip</tt> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.</p>
+			<?php } ?>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -719,6 +801,6 @@
 ?>
 
 <script src="scripts/vendor/jquery.inputmask.js"></script>
-<script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
+<script src="scripts/vendor/jquery.input-ip-address-control-1.0.min.js"></script>
 <script src="scripts/vendor/jquery.confirm.min.js"></script>
 <script src="scripts/pi-hole/js/settings.js"></script>

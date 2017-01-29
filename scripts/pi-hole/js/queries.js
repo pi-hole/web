@@ -22,6 +22,7 @@ function add(domain,list) {
     alDomain.html(domain);
     var alSuccess = $("#alSuccess");
     var alFailure = $("#alFailure");
+    var err = $("#err");
 
     if(list === "white")
     {
@@ -43,7 +44,8 @@ function add(domain,list) {
             if (response.indexOf("not a valid argument") >= 0 || response.indexOf("is not a valid domain") >= 0)
             {
                 alFailure.show();
-                alFailure.delay(1000).fadeOut(2000, function() { alFailure.hide(); });
+                err.html(response);
+                alFailure.delay(4000).fadeOut(2000, function() { alFailure.hide(); });
             }
             else
             {
@@ -58,6 +60,7 @@ function add(domain,list) {
         },
         error: function(jqXHR, exception) {
             alFailure.show();
+            err.html("");
             alFailure.delay(1000).fadeOut(2000, function() {
                 alFailure.hide();
             });
@@ -69,8 +72,20 @@ function add(domain,list) {
         }
     });
 }
+function handleAjaxError( xhr, textStatus, error ) {
+    if ( textStatus === "timeout" ) {
+        alert( "The server took too long to send the data." );
+    }
+    else {
+        alert( "An error occured while loading the data. Presumably your log is too large to be processed." );
+    }
+    $("#all-queries_processing").hide();
+    tableApi.clear();
+    tableApi.draw();
+}
 
 $(document).ready(function() {
+    var status;
 
     // Do we want to filter queries?
     var GETDict = {};
@@ -90,13 +105,18 @@ $(document).ready(function() {
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
-            if (data[4] === "Pi-holed") {
+            status = data[4];
+            if (status === "Pi-holed (exact)") {
                 $(row).css("color","red");
-                $("td:eq(5)", row).html( "<button style=\"color:green;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+                $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+            }
+            else if (status === "Pi-holed (wildcard)") {
+                $(row).css("color","red");
+                $("td:eq(5)", row).html( "" );
             }
             else{
                 $(row).css("color","green");
-                $("td:eq(5)", row).html( "<button style=\"color:red;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+                $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
 
         },
@@ -104,8 +124,9 @@ $(document).ready(function() {
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'tr>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": APIstring,
+        "ajax": {"url": APIstring, "error": handleAjaxError },
         "autoWidth" : false,
+        "processing": true,
         "order" : [[0, "desc"]],
         "columns": [
             { "width" : "20%", "type": "date" },
@@ -124,7 +145,8 @@ $(document).ready(function() {
     });
     $("#all-queries tbody").on( "click", "button", function () {
         var data = tableApi.row( $(this).parents("tr") ).data();
-        if (data[4] === "Pi-holed")
+        status = data[4];
+        if (status.substr(0,2) === "Pi")
         {
           add(data[2],"white");
         }
