@@ -64,8 +64,8 @@ function check_cors() {
         {
             $server_origin = parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST);
         }
-        // Remove "[" ... "]"
-        $server_origin = str_replace(array("[","]"), array("",""), $server_origin);
+        // Remove "[", "]","http://", and "https://"
+        $server_origin = str_replace(array("[","]","http://","https://"), array("","","",""), $server_origin);
 
         if(!in_array($server_origin, $AUTHORIZED_HOSTNAMES)) {
             log_and_die("Failed CORS: " . $server_origin .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
