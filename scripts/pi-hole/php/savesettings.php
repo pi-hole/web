@@ -423,7 +423,7 @@ function readStaticLeasesFile()
 					if(!strlen($error))
 					{
 						exec("sudo pihole -a removestaticdhcp ".$mac);
-						$success .= "The static address with MAC address ".htmlentities($mac)." has been added";
+						$success .= "The static address with MAC address ".htmlentities($mac)." has been removed";
 					}
 					break;
 				}
