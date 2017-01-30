@@ -203,7 +203,7 @@ $(function(){
 });
 
 $(document).ready(function () {
-    if (screen.width < 400) {
+    if (screen.width < 576) {
         $(".input-group-btn").css("display", "initial");
     }
     else {
