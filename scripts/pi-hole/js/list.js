@@ -201,3 +201,12 @@ $(function(){
         $(this).closest("." + $(this).attr("data-hide")).hide();
     });
 });
+
+$(document).ready(function () {
+    if (screen.width < 400) {
+        $(".input-group-btn").css("display", "initial");
+    }
+    else {
+        $(".input-group-btn").css("display", "table-cell");
+    }
+});
