@@ -360,7 +360,6 @@ function readStaticLeasesFile()
 
 				if(isset($_POST["addstatic"]))
 				{
-					$debug = true;
 					$mac = $_POST["AddMAC"];
 					$ip = $_POST["AddIP"];
 					$hostname = $_POST["AddHostname"];
@@ -412,7 +411,6 @@ function readStaticLeasesFile()
 
 				if(isset($_POST["removestatic"]))
 				{
-					$debug = true;
 					$mac = $_POST["removestatic"];
 					if(!validMAC($mac))
 					{
