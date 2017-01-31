@@ -103,6 +103,20 @@
         );
     }
 
+    // Test if variable exists and is positive
+    function ispositive(&$arg)
+    {
+        if(isset($arg))
+        {
+            if($arg > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
     function getTopItems($argument) {
         global $log,$setupVars,$privacyMode;
 
@@ -136,7 +150,7 @@
 
         // Process sorted domain names
         foreach ($dns_domains as $key => $value) {
-            if(isset($gravity_domains[$key]) && $adcounter < $qty)
+            if(ispositive($gravity_domains[$key]) && $adcounter < $qty)
             {
                 // New entry for Top Ads
                 $topAds[$key] = $value;
