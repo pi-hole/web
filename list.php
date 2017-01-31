@@ -35,8 +35,7 @@ function getFullName() {
     <?php }else{ ?>
         <button id="btnAdd" class="btn btn-default" type="button">Add</button>
     <?php } ?>
-        <button id="btnRefresh" class="btn btn-default" type="button">Refresh</button>
-    }
+        <button id="btnRefresh" class="btn btn-default" type="button"><i class="fa fa-refresh"></i></button>
     </span>
 </div>
 <?php if($list === "white") { ?>
