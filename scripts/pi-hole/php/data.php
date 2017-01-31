@@ -683,7 +683,7 @@
             $exploded = explode(" ", $entry);
             $domain = trim($exploded[count($exploded) - 3]);
 
-            if(isset($gravity_domains[$domain]))
+            if(ispositive($gravity_domains[$domain]))
             {
                 if (isset($byTimeAds[$time])) {
                     $byTimeAds[$time]++;
@@ -723,7 +723,7 @@
             $exploded = explode(" ", $entry);
             $domain = trim($exploded[count($exploded) - 3]);
 
-            if(isset($gravity_domains[$domain]))
+            if(ispositive($gravity_domains[$domain]))
             {
                 if (isset($byTimeAds[$time])) {
                     $byTimeAds[$time]++;
