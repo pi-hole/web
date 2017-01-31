@@ -341,9 +341,11 @@
     }
 
     function getAllQueries($orderBy) {
-        global $log,$showBlocked,$showPermitted,$privacyMode;
+        global $log,$showBlocked,$showPermitted,$privacyMode,$setupVars;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueries($log);
+
+        $hostnames=array();
 
         // Create empty array for gravity
         $gravity_domains = getGravity();
@@ -428,7 +430,21 @@
             if((substr($status,0,2) === "Pi" && $showBlocked) || (substr($status,0,2) === "OK" && $showPermitted))
             {
                 $type = substr($exploded[count($exploded)-4], 6, -1);
-                $client = $exploded[count($exploded)-1];
+
+                if(istrue($setupVars["API_GET_CLIENT_HOSTNAME"])) {
+                    $ip = $exploded[count($exploded) - 1];
+
+                    if (isset($hostnames[$ip])) {
+                        $client = $hostnames[$ip];
+                    } else {
+                        $hostnames[$ip] = gethostbyaddr($ip);
+                        $client = $hostnames[$ip];
+                    }
+                }
+                else
+                {
+                    $client = $exploded[count($exploded)-1];
+                }
 
                 if($orderBy == "orderByClientDomainTime"){
                   $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d\TH:i:s')] = $status;
@@ -454,6 +470,7 @@
                 }
             }
         }
+
         return $allQueries;
     }
 
