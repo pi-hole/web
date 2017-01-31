@@ -257,8 +257,10 @@
 
 	// Read leases file
 	$leasesfile = true;
-	$dhcpleases = fopen('/etc/pihole/dhcp.leases', 'r') or $leasesfile = false;
-	$dhcp_leases  = [];
+	$dhcpleases = @fopen('/etc/pihole/dhcp.leases', 'r');
+	if(!is_resource($dhcpleases ))
+		$leasesfile = false;
+	$dhcp_leases  = array();
 
 	function convertseconds($argument) {
 		$seconds = round($argument);
@@ -322,29 +324,54 @@
 				$clid = "<i>unknown</i>";
 			}
 
-			array_push($dhcp_leases,["TIME"=>$time, "hwaddr"=>$line[1], "IP"=>$line[2], "host"=>$host, "clid"=>$clid, "type"=>$type]);
+			array_push($dhcp_leases,["TIME"=>$time, "hwaddr"=>strtoupper($line[1]), "IP"=>$line[2], "host"=>$host, "clid"=>$clid, "type"=>$type]);
 		}
 	}
+
+	readStaticLeasesFile();
+
 	?>
 				<div class="col-md-12">
-				<div class="box box-warning collapsed-box">
+				<div class="box box-warning <?php if(!isset($_POST["addstatic"])){ ?>collapsed-box<?php } ?>">
 					<div class="box-header with-border">
 						<h3 class="box-title">DHCP leases</h3>
 						<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse" id="leaseexpand"><i class="fa fa-plus"></i></button></div>
 					</div>
 					<div class="box-body">
 					<div class="col-md-12">
+						<label>Currently active DHCP leases</label>
 						<table id="DHCPLeasesTable" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
 							<thead>
 								<tr>
+									<th>MAC address</th>
 									<th>IP address</th>
 									<th>Hostname</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach($dhcp_leases as $lease) { ?><tr data-placement="auto" data-container="body" data-toggle="tooltip" title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>"><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["host"]; ?></td></tr><?php } ?>
+								<?php foreach($dhcp_leases as $lease) { ?><tr data-placement="auto" data-container="body" data-toggle="tooltip" title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>"><td><?php echo $lease["hwaddr"]; ?></td><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["host"]; ?></td></tr><?php } ?>
 							</tbody>
+						</table><br>
+					</div>
+					<div class="col-md-12">
+						<label>Static DHCP leases configuration</label>
+						<table id="DHCPStaticLeasesTable" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th>MAC address</th>
+									<th>IP address</th>
+									<th>Hostname</th>
+									<td></td>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach($dhcp_static_leases as $lease) { ?><tr><td><?php echo $lease["hwaddr"]; ?></td><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["host"]; ?></td><td><?php if(strlen($lease["hwaddr"]) > 0){ ?><button class="btn btn-danger btn-xs" type="submit" name="removestatic" value="<?php echo $lease["hwaddr"]; ?>"><span class="glyphicon glyphicon-trash"></span></button><?php } ?></td></tr><?php } ?>
+							</tbody>
+							<tfoot style="display: table-row-group">
+								<tr><td><input type="text" name="AddMAC"></td><td><input type="text" name="AddIP"></td><td><input type="text" name="AddHostname"></td><td><button class="btn btn-success btn-xs" type="submit" name="addstatic"><span class="glyphicon glyphicon-plus"></span></button></td></tr>
+							</tfoot>
 						</table>
+						<p>Specifying the MAC address is mandatory and only one entry per MAC address is allowed. If the IP address is omitted and a host name is given, the IP address will still be generated dynamically and the specified host name will be used. If the host name is omitted, only a static release will be added.</p>
 					</div>
 					</div>
 				</div>
