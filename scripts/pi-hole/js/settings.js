@@ -2,12 +2,13 @@ $(function () {
 	$("[data-mask]").inputmask();
 
 	$("[data-static]").on("click", function(){
-		var mac = $(this).closest("tr").find('#MAC').text();
-		var ip = $(this).closest("tr").find('#IP').text();
-		var host = $(this).closest("tr").find('#HOST').text();
-		$('input[name="AddHostname"]').val(host);
-		$('input[name="AddIP"]').val(ip);
-		$('input[name="AddMAC"]').val(mac);
+		var row = $(this).closest("tr");
+		var mac = row.find("#MAC").text();
+		var ip = row.find("#IP").text();
+		var host = row.find("#HOST").text();
+		$("input[name=\"AddHostname\"]").val(host);
+		$("input[name=\"AddIP\"]").val(ip);
+		$("input[name=\"AddMAC\"]").val(mac);
 	});
 
 	$("#custom1val").ipAddress({s:4});
