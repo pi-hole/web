@@ -498,13 +498,13 @@
 						<div class="input-group">
 							<div class="input-group-addon"><input type="checkbox" name="custom3" value="Customv6"
 							<?php if(isset($custom3)){ ?>checked<?php } ?>></div>
-							<input type="text" name="custom3val" class="form-control" id="custom3val" <?php if(isset($custom3)){ ?>value="<?php echo $custom3; ?>"<?php } ?>>
+							<input type="text" name="custom3val" class="form-control" data-inputmask="'alias': 'ipv6'" data-mask <?php if(isset($custom3)){ ?>value="<?php echo $custom3; ?>"<?php } ?>>
 						</div>
 						<label>Custom 4 (IPv6)</label>
 						<div class="input-group">
 							<div class="input-group-addon"><input type="checkbox" name="custom4" value="Customv6"
 							<?php if(isset($custom4)){ ?>checked<?php } ?>></div>
-							<input type="text" name="custom4val" class="form-control" id="custom4val" <?php if(isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
+							<input type="text" name="custom4val" class="form-control" data-inputmask="'alias': 'ipv6'" data-mask <?php if(isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
 						</div>
 					</div>
 				</div>

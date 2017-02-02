@@ -5,6 +5,8 @@ Copyright (c) 2010 - 2014 Robin Herbots
 Licensed under the MIT license (http://www.opensource.org/licenses/mit-license.php)
 Version: 0.0.0
 
+Modified by DL6ER
+
 Optional extensions on the jquery.inputmask base
 */
 (function ($) {
@@ -22,69 +24,6 @@ Optional extensions on the jquery.inputmask base
         }
     });
     $.extend($.inputmask.defaults.aliases, {
-        'url': {
-            mask: "ir",
-            placeholder: "",
-            separator: "",
-            defaultPrefix: "http://",
-            regex: {
-                urlpre1: new RegExp("[fh]"),
-                urlpre2: new RegExp("(ft|ht)"),
-                urlpre3: new RegExp("(ftp|htt)"),
-                urlpre4: new RegExp("(ftp:|http|ftps)"),
-                urlpre5: new RegExp("(ftp:/|ftps:|http:|https)"),
-                urlpre6: new RegExp("(ftp://|ftps:/|http:/|https:)"),
-                urlpre7: new RegExp("(ftp://|ftps://|http://|https:/)"),
-                urlpre8: new RegExp("(ftp://|ftps://|http://|https://)")
-            },
-            definitions: {
-                'i': {
-                    validator: function (chrs, buffer, pos, strict, opts) {
-                        return true;
-                    },
-                    cardinality: 8,
-                    prevalidator: (function () {
-                        var result = [], prefixLimit = 8;
-                        for (var i = 0; i < prefixLimit; i++) {
-                            result[i] = (function () {
-                                var j = i;
-                                return {
-                                    validator: function (chrs, buffer, pos, strict, opts) {
-                                        if (opts.regex["urlpre" + (j + 1)]) {
-                                            var tmp = chrs, k;
-                                            if (((j + 1) - chrs.length) > 0) {
-                                                tmp = buffer.join('').substring(0, ((j + 1) - chrs.length)) + "" + tmp;
-                                            }
-                                            var isValid = opts.regex["urlpre" + (j + 1)].test(tmp);
-                                            if (!strict && !isValid) {
-                                                pos = pos - j;
-                                                for (k = 0; k < opts.defaultPrefix.length; k++) {
-                                                    buffer[pos] = opts.defaultPrefix[k]; pos++;
-                                                }
-                                                for (k = 0; k < tmp.length - 1; k++) {
-                                                    buffer[pos] = tmp[k]; pos++;
-                                                }
-                                                return { "pos": pos };
-                                            }
-                                            return isValid;
-                                        } else {
-                                            return false;
-                                        }
-                                    }, cardinality: j
-                                };
-                            })();
-                        }
-                        return result;
-                    })()
-                },
-                "r": {
-                    validator: ".",
-                    cardinality: 50
-                }
-            },
-            insertMode: false,
-            autoUnmask: false
-        },
         "ip": { //ip-address mask
             mask: ["[[x]y]z.[[x]y]z.[[x]y]z.x[yz]", "[[x]y]z.[[x]y]z.[[x]y]z.[[x]y][z]"],
             definitions: {
@@ -117,6 +56,17 @@ Optional extensions on the jquery.inputmask base
                     definitionSymbol: "i"
                 }
             }
-        }
+        }//,
+        // "ipv6": { //ip-address mask
+        //     mask: ["[xxxx][:xxxx][:xxxx][:xxxx][:xxxx][:xxxx][:xxxx][:xxxx]"],
+        //     //placeholder: '____:____:____:____:____:____:____:____:____',
+        //     definitions: {
+        //         'x': {
+        //             validator: "[0-9a-f]",
+        //             cardinality: 1,
+        //             casing: "upper" //auto uppercasing
+        //         }
+        //     }
+        // }
     });
 })(jQuery);
