@@ -1,8 +1,16 @@
 $(function () {
-  $("[data-mask]").inputmask();
-});
+	$("[data-mask]").inputmask();
 
-$(function(){
+	$("[data-static]").on("click", function(){
+		var row = $(this).closest("tr");
+		var mac = row.find("#MAC").text();
+		var ip = row.find("#IP").text();
+		var host = row.find("#HOST").text();
+		$("input[name=\"AddHostname\"]").val(host);
+		$("input[name=\"AddIP\"]").val(ip);
+		$("input[name=\"AddMAC\"]").val(mac);
+	});
+
 	$("#custom1val").ipAddress({s:4});
 	$("#custom2val").ipAddress({s:4});
 	$("#custom3val").ipAddress({v:6});
@@ -75,6 +83,7 @@ $(document).ready(function() {
 	{
 		leasetable = $("#DHCPLeasesTable").DataTable({
 			dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-6'i><'col-sm-6'f>>",
+			"columnDefs": [ { "bSortable": false, "orderable": false, targets: -1} ],
 			"paging": false,
 			"scrollCollapse": true,
 			"scrollY": "200px",
