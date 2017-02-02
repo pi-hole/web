@@ -6,6 +6,10 @@ if(basename($_SERVER['SCRIPT_FILENAME']) !== "settings.php")
 }
 
 function validIP($address){
+	if (preg_match('/[.:0]/', $address) && !preg_match('/[1-9a-f]/', $address)) {
+		// Test if address contains either `:` or `0` but not 1-9 or a-f
+		return false;
+	}
 	return !filter_var($address, FILTER_VALIDATE_IP) === false;
 }
 
