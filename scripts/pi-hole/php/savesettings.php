@@ -119,7 +119,7 @@ function readStaticLeasesFile()
 						}
 						else
 						{
-							$error .= "IP (".$IP.") is invalid!<br>";
+							$error .= "IP (".htmlspecialchars($IP).") is invalid!<br>";
 						}
 					}
 				}
@@ -205,7 +205,7 @@ function readStaticLeasesFile()
 				{
 					if(!validDomain($domain))
 					{
-						$error .= "Top Domains/Ads entry ".$domain." is invalid!<br>";
+						$error .= "Top Domains/Ads entry ".htmlspecialchars($domain)." is invalid!<br>";
 					}
 					if(!$first)
 					{
@@ -224,7 +224,7 @@ function readStaticLeasesFile()
 				{
 					if(!validIP($client))
 					{
-						$error .= "Top Clients entry ".$client." is invalid (use only IP addresses)!<br>";
+						$error .= "Top Clients entry ".htmlspecialchars($client)." is invalid (use only IP addresses)!<br>";
 					}
 					if(!$first)
 					{
@@ -366,18 +366,18 @@ function readStaticLeasesFile()
 
 					if(!validMAC($mac))
 					{
-						$error .= "MAC address (".htmlentities($mac).") is invalid!<br>";
+						$error .= "MAC address (".htmlspecialchars($mac).") is invalid!<br>";
 					}
 					$mac = strtoupper($mac);
 
 					if(!validIP($ip) && strlen($ip) > 0)
 					{
-						$error .= "IP address (".htmlentities($ip).") is invalid!<br>";
+						$error .= "IP address (".htmlspecialchars($ip).") is invalid!<br>";
 					}
 
 					if(!validDomain($hostname) && strlen($hostname) > 0)
 					{
-						$error .= "Host name (".htmlentities($hostname).") is invalid!<br>";
+						$error .= "Host name (".htmlspecialchars($hostname).") is invalid!<br>";
 					}
 
 					if(strlen($hostname) == 0 && strlen($ip) == 0)
@@ -396,7 +396,7 @@ function readStaticLeasesFile()
 					foreach($dhcp_static_leases as $lease) {
 						if($lease["hwaddr"] === $mac)
 						{
-							$error .= "Static release for MAC address (".htmlentities($mac).") already defined!<br>";
+							$error .= "Static release for MAC address (".htmlspecialchars($mac).") already defined!<br>";
 							break;
 						}
 					}
@@ -414,14 +414,14 @@ function readStaticLeasesFile()
 					$mac = $_POST["removestatic"];
 					if(!validMAC($mac))
 					{
-						$error .= "MAC address (".htmlentities($mac).") is invalid!<br>";
+						$error .= "MAC address (".htmlspecialchars($mac).") is invalid!<br>";
 					}
 					$mac = strtoupper($mac);
 
 					if(!strlen($error))
 					{
 						exec("sudo pihole -a removestaticdhcp ".$mac);
-						$success .= "The static address with MAC address ".htmlentities($mac)." has been removed";
+						$success .= "The static address with MAC address ".htmlspecialchars($mac)." has been removed";
 					}
 					break;
 				}
@@ -432,21 +432,21 @@ function readStaticLeasesFile()
 					$from = $_POST["from"];
 					if (!validIP($from))
 					{
-						$error .= "From IP (".$from.") is invalid!<br>";
+						$error .= "From IP (".htmlspecialchars($from).") is invalid!<br>";
 					}
 
 					// Validate to IP
 					$to = $_POST["to"];
 					if (!validIP($to))
 					{
-						$error .= "To IP (".$to.") is invalid!<br>";
+						$error .= "To IP (".htmlspecialchars($to).") is invalid!<br>";
 					}
 
 					// Validate router IP
 					$router = $_POST["router"];
 					if (!validIP($router))
 					{
-						$error .= "Router IP (".$router.") is invalid!<br>";
+						$error .= "Router IP (".htmlspecialchars($router).") is invalid!<br>";
 					}
 
 					$domain = $_POST["domain"];
@@ -454,7 +454,7 @@ function readStaticLeasesFile()
 					// Validate Domain name
 					if(!validDomain($domain))
 					{
-						$error .= "Domain name ".$domain." is invalid!<br>";
+						$error .= "Domain name ".htmlspecialchars($domain)." is invalid!<br>";
 					}
 
 					$leasetime = $_POST["leasetime"];
@@ -462,7 +462,7 @@ function readStaticLeasesFile()
 					// Validate Lease time length
 					if(!is_numeric($leasetime) || intval($leasetime) < 0)
 					{
-						$error .= "Lease time ".$leasetime." is invalid!<br>";
+						$error .= "Lease time ".htmlspecialchars($leasetime)." is invalid!<br>";
 					}
 
 					if(isset($_POST["useIPv6"]))
@@ -479,7 +479,7 @@ function readStaticLeasesFile()
 					if(!strlen($error))
 					{
 						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router." ".$leasetime." ".$domain." ".$ipv6);
-						$success .= "The DHCP server has been activated ".$type;
+						$success .= "The DHCP server has been activated ".htmlspecialchars($type);
 					}
 				}
 				else
