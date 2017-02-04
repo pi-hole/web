@@ -11,16 +11,6 @@ $(function () {
 		$("input[name=\"AddMAC\"]").val(mac);
 	});
 
-	$("#custom1val").ipAddress({s:4});
-	$("#custom2val").ipAddress({s:4});
-	$("#custom3val").ipAddress({v:6});
-	$("#custom4val").ipAddress({v:6});
-
-	$("#DHCPfrom").ipAddress({s:4});
-	$("#DHCPto").ipAddress({s:4});
-	$("#DHCProuter").ipAddress({s:4});
-});
-
 $(".confirm-reboot").confirm({
 	text: "Are you sure you want to send a reboot command to your Pi-Hole?",
 	title: "Confirmation required",

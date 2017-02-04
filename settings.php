@@ -198,7 +198,7 @@
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">From</div>
-								<input type="text" class="form-control DHCPgroup" name="from" id="DHCPfrom" value="<?php echo $DHCPstart; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
+								<input type="text" class="form-control DHCPgroup" name="from" data-inputmask="'alias': 'ip'" data-mask value="<?php echo $DHCPstart; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
 					</div>
@@ -206,7 +206,7 @@
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">To</div>
-								<input type="text" class="form-control DHCPgroup" name="to" id="DHCPto" value="<?php echo $DHCPend; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
+								<input type="text" class="form-control DHCPgroup" name="to" data-inputmask="'alias': 'ip'" data-mask value="<?php echo $DHCPend; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
 					</div>
@@ -215,7 +215,7 @@
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon">Router</div>
-								<input type="text" class="form-control DHCPgroup" name="router" id="DHCProuter" value="<?php echo $DHCProuter; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
+								<input type="text" class="form-control DHCPgroup" name="router" data-inputmask="'alias': 'ip'" data-mask value="<?php echo $DHCProuter; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
 						</div>
 					</div>
 					</div>
@@ -487,25 +487,25 @@
 						<div class="input-group">
 							<div class="input-group-addon"><input type="checkbox" name="custom1" value="Customv4"
 							<?php if(isset($custom1)){ ?>checked<?php } ?>></div>
-							<input type="text" name="custom1val" class="form-control" id="custom1val" <?php if(isset($custom1)){ ?>value="<?php echo $custom1; ?>"<?php } ?>>
+							<input type="text" name="custom1val" class="form-control" data-inputmask="'alias': 'ip'" data-mask <?php if(isset($custom1)){ ?>value="<?php echo $custom1; ?>"<?php } ?>>
 						</div>
 						<label>Custom 2 (IPv4)</label>
 						<div class="input-group">
 							<div class="input-group-addon"><input type="checkbox" name="custom2" value="Customv4"
 							<?php if(isset($custom2)){ ?>checked<?php } ?>></div>
-							<input type="text" name="custom2val" class="form-control" id="custom2val" <?php if(isset($custom2)){ ?>value="<?php echo $custom2; ?>"<?php } ?>>
+							<input type="text" name="custom2val" class="form-control" data-inputmask="'alias': 'ip'" data-mask <?php if(isset($custom2)){ ?>value="<?php echo $custom2; ?>"<?php } ?>>
 						</div>
 						<label>Custom 3 (IPv6)</label>
 						<div class="input-group">
 							<div class="input-group-addon"><input type="checkbox" name="custom3" value="Customv6"
 							<?php if(isset($custom3)){ ?>checked<?php } ?>></div>
-							<input type="text" name="custom3val" class="form-control" id="custom3val" <?php if(isset($custom3)){ ?>value="<?php echo $custom3; ?>"<?php } ?>>
+							<input type="text" name="custom3val" class="form-control" data-inputmask="'alias': 'ipv6'" data-mask <?php if(isset($custom3)){ ?>value="<?php echo $custom3; ?>"<?php } ?>>
 						</div>
 						<label>Custom 4 (IPv6)</label>
 						<div class="input-group">
 							<div class="input-group-addon"><input type="checkbox" name="custom4" value="Customv6"
 							<?php if(isset($custom4)){ ?>checked<?php } ?>></div>
-							<input type="text" name="custom4val" class="form-control" id="custom4val" <?php if(isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
+							<input type="text" name="custom4val" class="form-control" data-inputmask="'alias': 'ipv6'" data-mask <?php if(isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
 						</div>
 					</div>
 				</div>
@@ -829,6 +829,6 @@
 ?>
 
 <script src="scripts/vendor/jquery.inputmask.js"></script>
-<script src="scripts/vendor/jquery.input-ip-address-control-1.0.min.js"></script>
+<script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
 <script src="scripts/vendor/jquery.confirm.min.js"></script>
 <script src="scripts/pi-hole/js/settings.js"></script>
