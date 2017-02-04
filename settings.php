@@ -346,10 +346,11 @@
 									<th>MAC address</th>
 									<th>IP address</th>
 									<th>Hostname</th>
+									<td></td>
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach($dhcp_leases as $lease) { ?><tr data-placement="auto" data-container="body" data-toggle="tooltip" title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>"><td><?php echo $lease["hwaddr"]; ?></td><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["host"]; ?></td></tr><?php } ?>
+								<?php foreach($dhcp_leases as $lease) { ?><tr data-placement="auto" data-container="body" data-toggle="tooltip" title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>"><td id="MAC"><?php echo $lease["hwaddr"]; ?></td><td id="IP"><?php echo $lease["IP"]; ?></td><td id="HOST"><?php echo $lease["host"]; ?></td><td><button class="btn btn-warning btn-xs" type="button" id="button" data-static="alert"><span class="glyphicon glyphicon-copy"></span></button></td></tr><?php } ?>
 							</tbody>
 						</table><br>
 					</div>
@@ -368,7 +369,7 @@
 								<?php foreach($dhcp_static_leases as $lease) { ?><tr><td><?php echo $lease["hwaddr"]; ?></td><td><?php echo $lease["IP"]; ?></td><td><?php echo $lease["host"]; ?></td><td><?php if(strlen($lease["hwaddr"]) > 0){ ?><button class="btn btn-danger btn-xs" type="submit" name="removestatic" value="<?php echo $lease["hwaddr"]; ?>"><span class="glyphicon glyphicon-trash"></span></button><?php } ?></td></tr><?php } ?>
 							</tbody>
 							<tfoot style="display: table-row-group">
-								<tr><td><input type="text" name="AddMAC"></td><td><input type="text" name="AddIP"></td><td><input type="text" name="AddHostname"></td><td><button class="btn btn-success btn-xs" type="submit" name="addstatic"><span class="glyphicon glyphicon-plus"></span></button></td></tr>
+								<tr><td><input type="text" name="AddMAC"></td><td><input type="text" name="AddIP"></td><td><input type="text" name="AddHostname" value=""></td><td><button class="btn btn-success btn-xs" type="submit" name="addstatic"><span class="glyphicon glyphicon-plus"></span></button></td></tr>
 							</tfoot>
 						</table>
 						<p>Specifying the MAC address is mandatory and only one entry per MAC address is allowed. If the IP address is omitted and a host name is given, the IP address will still be generated dynamically and the specified host name will be used. If the host name is omitted, only a static release will be added.</p>
