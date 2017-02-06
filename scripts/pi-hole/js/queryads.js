@@ -62,7 +62,7 @@ function eventsource() {
     if(q.val() === "yes")
     {
         quiet = true;
-        exact = "&exact";
+        exact = "exact";
     }
 
     // IE does not support EventSource - load whole content at once
@@ -72,7 +72,7 @@ function eventsource() {
     }
 
     var host = window.location.host;
-    var source = new EventSource("/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+exact);
+    var source = new EventSource("/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+"&"+exact);
 
     // Reset and show field
     ta.empty();
