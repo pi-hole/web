@@ -29,6 +29,12 @@
         $privacyMode = false;
     }
 
+    // Check if time zone is set
+    // https://github.com/pi-hole/AdminLTE/pull/394
+    if (!date_default_timezone_get("date.timezone")) {
+        date_default_timezone_set("UTC");
+    }
+
     /*******   Public Members ********/
     function getSummaryData() {
         $domains_being_blocked = gravityCount();
