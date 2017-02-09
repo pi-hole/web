@@ -77,7 +77,7 @@ if($_POST["action"] == "in")
 
 		$continue = strtolower($name[1]) == 'zip' ? true : false;
 		if(!$continue || !$okay) {
-			die("The file you are trying to upload is not a .zip file. Please try again.");
+			die("The file you are trying to upload is not a .zip file (filename: ".$filename.", type: ".$type."). Please try again.");
 		}
 
 		$zip = new ZipArchive();
