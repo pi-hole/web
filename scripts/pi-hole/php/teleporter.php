@@ -63,7 +63,7 @@ if($_POST["action"] == "in")
 	{
 		$filename = $_FILES["zip_file"]["name"];
 		$source = $_FILES["zip_file"]["tmp_name"];
-		$type = $_FILES["zip_file"]["type"];
+		$type = mime_content_type($source);
 
 		$name = explode(".", $filename);
 		$accepted_types = array('application/zip', 'application/x-zip-compressed', 'multipart/x-zip', 'application/x-compressed');
