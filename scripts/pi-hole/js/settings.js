@@ -10,7 +10,7 @@ $(function () {
 		$("input[name=\"AddIP\"]").val(ip);
 		$("input[name=\"AddMAC\"]").val(mac);
 	});
-
+});
 $(".confirm-reboot").confirm({
 	text: "Are you sure you want to send a reboot command to your Pi-Hole?",
 	title: "Confirmation required",
