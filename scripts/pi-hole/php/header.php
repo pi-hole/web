@@ -405,7 +405,7 @@
                     <a href="#"><i class="fa fa-play"></i> <span>Enable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></a>
                 </li>
                 <!-- Tools -->
-                <li class="treeview <?php if($scriptname === "gravity.php" || $scriptname === "queryads.php"){ ?>active<?php } ?>">
+                <li class="treeview <?php if($scriptname === "gravity.php" || $scriptname === "queryads.php" || $scriptname === "debug.php"){ ?>active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-folder"></i> <span>Tools</span>
                     <span class="pull-right-container">
@@ -429,6 +429,12 @@
                     <li<?php if($scriptname === "taillog.php"){ ?> class="active"<?php } ?>>
                         <a href="taillog.php">
                             <i class="fa fa-list-ul"></i> <span>Tail pihole.log</span>
+                        </a>
+                    </li>
+                    <!-- Generate debug log -->
+                    <li<?php if($scriptname === "debug.php"){ ?> class="active"<?php } ?>>
+                        <a href="debug.php">
+                            <i class="fa fa-ambulance"></i> <span>Generate debug log</span>
                         </a>
                     </li>
                   </ul>
