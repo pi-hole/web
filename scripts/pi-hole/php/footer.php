@@ -29,7 +29,7 @@
             <b>Pi-hole Version </b> <span id="piholeVersion"><?php echo $piholeVersion; ?></span><?php if(isset($piholeCommit)) { echo " (".$piholeBranch.", ".$piholeCommit.")"; } ?>
             <b>Web Interface Version </b> <span id="webVersion"><?php echo $webVersion; ?></span><?php if(isset($webCommit)) { echo " (".$webBranch.", ".$webCommit.")"; } ?>
         </div>
-        <div><i class="fa fa-github"></i> <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY">Donate</a></strong> if you found this useful.</div>
+            <div><a href="https://github.com/pi-hole"><i class="fa fa-github"></i></a> <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY">Donate</a></strong> if you found this useful.</div>
     </footer>
 </div>
 <!-- ./wrapper -->
