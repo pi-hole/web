@@ -1,12 +1,11 @@
 Copyright (C) 2017 Pi-hole, LLC (https://pi-hole.net)
 Pi-hole web interface
 
-This software is licensed under the European Union Public License
-
-This license is available in the 22 official languages of the EU. The English version is included here.
+This software is licensed under the European Union Public License (EUPL)
+The license is available in the 22 official languages of the EU. The English version is included here.
 Please see https://joinup.ec.europa.eu/community/eupl/og_page/eupl for official translations of the other languages.
 
-This license applies to the whole project EXCEPT the files under
+This license applies to the whole project EXCEPT the files located under
  - styles/vendor, and
  - scripts/vendor
 whose licenses are located therein.
