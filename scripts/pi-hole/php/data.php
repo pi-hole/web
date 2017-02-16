@@ -453,20 +453,20 @@
                 }
 
                 if($orderBy == "orderByClientDomainTime"){
-                  $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d\TH:i:s')] = $status;
+                  $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d T H:i:s')] = $status;
                 }elseif ($orderBy == "orderByClientTimeDomain"){
-                  $allQueries['data'][hasHostName($client)][$time->format('Y-m-d\TH:i:s')][$domain] = $status;
+                  $allQueries['data'][hasHostName($client)][$time->format('Y-m-d T H:i:s')][$domain] = $status;
                 }elseif ($orderBy == "orderByTimeClientDomain"){
-                  $allQueries['data'][$time->format('Y-m-d\TH:i:s')][hasHostName($client)][$domain] = $status;
+                  $allQueries['data'][$time->format('Y-m-d T H:i:s')][hasHostName($client)][$domain] = $status;
                 }elseif ($orderBy == "orderByTimeDomainClient"){
-                  $allQueries['data'][$time->format('Y-m-d\TH:i:s')][$domain][hasHostName($client)] = $status;
+                  $allQueries['data'][$time->format('Y-m-d T H:i:s')][$domain][hasHostName($client)] = $status;
                 }elseif ($orderBy == "orderByDomainClientTime"){
-                  $allQueries['data'][$domain][hasHostName($client)][$time->format('Y-m-d\TH:i:s')] = $status;
+                  $allQueries['data'][$domain][hasHostName($client)][$time->format('Y-m-d T H:i:s')] = $status;
                 }elseif ($orderBy == "orderByDomainTimeClient"){
-                  $allQueries['data'][$domain][$time->format('Y-m-d\TH:i:s')][hasHostName($client)] = $status;
+                  $allQueries['data'][$domain][$time->format('Y-m-d T H:i:s')][hasHostName($client)] = $status;
                 }else{
                   array_push($allQueries['data'], array(
-                    $time->format('Y-m-d\TH:i:s'),
+                    $time->format('Y-m-d T H:i:s'),
                     $type,
                     $domain,
                     hasHostName($client),
