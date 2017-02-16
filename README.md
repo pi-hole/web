@@ -22,8 +22,8 @@ A read-only API can be accessed at `/admin/api.php`. With either no parameters o
 }
 ```
 
-There are many more parameters, such as `summaryRaw`, `overTimeData10mins`, ` topClients` or `getQuerySources`, `getQueryTypes`, `getForwardDestinations`, and `getAllQueries`.
-Together with a token it is also possible to enable and disable (also with a set timeout) blocking via the API.
+There are many more parameters, such as `summaryRaw`, `overTimeData10mins`, `topItems`, ` topClients` or `getQuerySources`, `getQueryTypes`, `getForwardDestinations`, and finally `getAllQueries`.
+Together with a token it is also possible to enable and disable (also with a set timeout) blocking via the API
 
 <hr>
 <img src="https://assets.pi-hole.net/static/BStackLogo.png" height="80"><br>
