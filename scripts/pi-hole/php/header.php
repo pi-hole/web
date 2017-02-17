@@ -398,6 +398,11 @@
                             <i class="fa fa-clock-o"></i> <span>For 5 minutes</span>
                         </a>
                     </li>
+                    <li>
+                      <a href="#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal">
+                            <i class="fa fa-clock-o"></i> <span>Custom time</span>
+                      </a>
+                    </li>
                   </ul>
                     <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
