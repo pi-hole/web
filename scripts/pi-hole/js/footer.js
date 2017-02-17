@@ -90,7 +90,7 @@ $("#pihole-disable-custom").on("click", function(e){
     var custVal = $("#customTimeout").val();
     custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
     piholeChange("disable",custVal);
-    setTimeout(function(){piholeChanged("enabled");},300000);
+    setTimeout(function(){piholeChanged("enabled");},custVal * 1000);
 });
 
 var piholeVersion = $("#piholeVersion").html();
