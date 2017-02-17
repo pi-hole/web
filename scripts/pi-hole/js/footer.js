@@ -87,8 +87,8 @@ $("#pihole-disable-5m").on("click", function(e){
 });
 $("#pihole-disable-custom").on("click", function(e){
     e.preventDefault();
-    var custVal = $('#customTimeout').val();
-    custVal = $('#btnMins').hasClass("active") ? custVal * 60 : custVal;
+    var custVal = $("#customTimeout").val();
+    custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
     piholeChange("disable",custVal);
     setTimeout(function(){piholeChanged("enabled");},300000);
 });
