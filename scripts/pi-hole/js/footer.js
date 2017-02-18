@@ -61,10 +61,51 @@ function piholeChange(action, duration)
     }
 }
 
+//The following three functions allow us to display time until pi-hole is enabled after disabling.
+//Works between all pages
+$( document ).ready(function() {
+    var countDownTarget = localStorage.getItem("countDownTarget");
+    if (countDownTarget != null)
+    {
+        setTimeout(countDown,1000);
+    }
+});
+
+function setCountdownTarget(seconds){
+    var target = new Date();
+    target = new Date(target.getTime() + seconds * 1000);
+    localStorage.setItem("countDownTarget", target);
+}
+
+function secondsTimeSpanToHMS(s) {
+    var h = Math.floor(s/3600); //Get whole hours
+    s -= h*3600;
+    var m = Math.floor(s/60); //Get remaining minutes
+    s -= m*60;
+    return h+":"+(m < 10 ? "0"+m : m)+":"+(s < 10 ? "0"+s : s); //zero padding on minutes and seconds
+}
+
+function countDown(){
+    var ena = $("#enableLabel");
+    var target = new Date(localStorage.getItem("countDownTarget"));
+    var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
+
+    if(seconds > 0){
+        setTimeout(countDown,1000);
+        ena.text("Enable (" + secondsTimeSpanToHMS(seconds) + ")");
+    }
+    else
+    {
+        ena.text("Enable");
+        piholeChanged("enabled");
+        localStorage.removeItem("countDownTarget")
+    }
+}
+
 // Handle Enable/Disable
 $("#pihole-enable").on("click", function(e){
     e.preventDefault();
-    localStorage.removeItem("countDownTarget")
+    localStorage.removeItem("countDownTarget");
     piholeChange("enable","");
 });
 $("#pihole-disable-permanently").on("click", function(e){
@@ -91,53 +132,13 @@ $("#pihole-disable-5m").on("click", function(e){
 });
 $("#pihole-disable-custom").on("click", function(e){
     e.preventDefault();
-    var custVal = $('#customTimeout').val();
-    custVal = $('#btnMins').hasClass("active") ? custVal * 60 : custVal;
+    var custVal = $("#customTimeout").val();
+    custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
     piholeChange("disable",custVal);
     setCountdownTarget(custVal);
     setTimeout(countDown,1000);
 });
 
-//The following three functions allow us to display time until pi-hole is enabled after disabling.
-//Works between all pages
-$( document ).ready(function() {
-    var countDownTarget = localStorage.getItem("countDownTarget");
-    if (countDownTarget != null)
-    {
-        setTimeout(countDown,1000);
-    }
-});
-
-function setCountdownTarget(seconds){
-    var target = new Date();
-    target = new Date(target.getTime() + seconds * 1000);
-    localStorage.setItem('countDownTarget', target);
-}
-
-function countDown(){
-    var ena = $("#enableLabel");
-    var target = new Date(localStorage.getItem("countDownTarget"));
-    var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
-
-    if(seconds > 0){
-        setTimeout(countDown,1000);
-        ena.text("Enable (" + secondsTimeSpanToHMS(seconds) + ")");
-    }
-    else
-    {
-        ena.text("Enable");
-        piholeChanged("enabled")
-        localStorage.removeItem("countDownTarget")
-    }
-}
-
-function secondsTimeSpanToHMS(s) {
-    var h = Math.floor(s/3600); //Get whole hours
-    s -= h*3600;
-    var m = Math.floor(s/60); //Get remaining minutes
-    s -= m*60;
-    return h+":"+(m < 10 ? '0'+m : m)+":"+(s < 10 ? '0'+s : s); //zero padding on minutes and seconds
-}
 
 var piholeVersion = $("#piholeVersion").html();
 var webVersion = $("#webVersion").html();
