@@ -64,6 +64,7 @@ function piholeChange(action, duration)
 // Handle Enable/Disable
 $("#pihole-enable").on("click", function(e){
     e.preventDefault();
+    localStorage.removeItem("countDownTarget")
     piholeChange("enable","");
 });
 $("#pihole-disable-permanently").on("click", function(e){
