@@ -63,13 +63,7 @@ function piholeChange(action, duration)
 
 //The following three functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
-$( document ).ready(function() {
-    var countDownTarget = localStorage.getItem("countDownTarget");
-    if (countDownTarget != null)
-    {
-        setTimeout(countDown,1000);
-    }
-});
+
 
 function setCountdownTarget(seconds){
     var target = new Date();
@@ -98,9 +92,17 @@ function countDown(){
     {
         ena.text("Enable");
         piholeChanged("enabled");
-        localStorage.removeItem("countDownTarget")
+        localStorage.removeItem("countDownTarget");
     }
 }
+
+$( document ).ready(function() {
+    var countDownTarget = localStorage.getItem("countDownTarget");
+    if (countDownTarget != null)
+    {
+        setTimeout(countDown,1000);
+    }
+});
 
 // Handle Enable/Disable
 $("#pihole-enable").on("click", function(e){
