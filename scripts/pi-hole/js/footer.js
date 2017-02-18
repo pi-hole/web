@@ -73,6 +73,7 @@ $("#pihole-disable-permanently").on("click", function(e){
 });
 $("#pihole-disable-10s").on("click", function(e){
     e.preventDefault();
+    piholeChange("disable","10");
     setCountdownTarget(10);
     setTimeout(countDown,1000);
 });
