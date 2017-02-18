@@ -92,11 +92,13 @@ function readStaticLeasesFile()
 			"4.2.2.1" => "Level3 (Primary)",
 			"199.85.126.10" => "Norton (Primary)",
 			"8.26.56.26" => "Comodo (Primary)",
+			"84.200.69.80" => "DNS.WATCH (Primary)",
 			"8.8.4.4" => "Google (Secondary)",
 			"208.67.220.220" => "OpenDNS (Secondary)",
 			"4.2.2.2" => "Level3 (Secondary)",
 			"199.85.127.10" => "Norton (Secondary)",
-			"8.20.247.20" => "Comodo (Secondary)"
+			"8.20.247.20" => "Comodo (Secondary)",
+        	"84.200.70.40" => "DNS.WATCH (Secondary)",
 		];
 
 	$error = "";
