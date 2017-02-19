@@ -406,11 +406,16 @@
                             <i class="fa fa-clock-o"></i> <span>For 5 minutes</span>
                         </a>
                     </li>
+                    <li>
+                      <a href="#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal">
+                            <i class="fa fa-clock-o"></i> <span>Custom time</span>
+                      </a>
+                    </li>
                   </ul>
                     <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
                 <li id="pihole-enable" class="treeview"<?php if ($pistatus == "1") { ?> hidden="true"<?php } ?>>
-                    <a href="#"><i class="fa fa-play"></i> <span>Enable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></a>
+                    <a href="#"><i class="fa fa-play"></i> <span id="enableLabel">Enable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></a>
                 </li>
                 <!-- Tools -->
                 <li class="treeview <?php if($scriptname === "gravity.php" || $scriptname === "queryads.php"){ ?>active<?php } ?>">
