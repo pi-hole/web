@@ -106,7 +106,11 @@ function updateQueryTypes() {
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
         var v = [], c = [], k = [];
         // Collect values and colors, and labels
-        $.each(data.querytypes, function(key , value) {
+        if(data.hasOwnProperty("querytypes"))
+            iter = data.querytypes;
+        else
+            iter = data;
+        $.each(iter, function(key , value) {
             v.push(value);
             c.push(colors.shift());
             k.push(key);
@@ -183,9 +187,13 @@ function updateForwardDestinations() {
         var colors = [];
         // Get colors from AdminLTE
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
-        var v = [], c = [], k = [];
+        var v = [], c = [], k = [], iter;
         // Collect values and colors, immediately push individual labels
-        $.each(data.forward_destinations, function(key , value) {
+        if(data.hasOwnProperty("forward_destinations"))
+            iter = data.forward_destinations;
+        else
+            iter = data;
+        $.each(iter, function(key , value) {
             v.push(value);
             c.push(colors.shift());
             if(key.indexOf("|") > -1)
