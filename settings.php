@@ -736,35 +736,6 @@
 			</div>
 		</div>
 */ ?>
-<?php
-if($FTL)
-{
-	$parts = preg_split('/\s+/',trim(exec("ps -p `cat /var/run/pihole-FTL.pid` -o pid,start,vsz,rss,euser,egroup,cputime,%cpu,%mem")));
-	// pid
-	// time the command started. If the process was started less than 24 hours ago, the output format is "HH:MM:SS", else it is "  Mmm dd" (where Mmm is a three-letter month name).
-	// virtual memory size of the process in KiB
-	// resident set size, the non-swapped physical memory that a task has used (inkiloBytes).
-	// effective user name.  This will be the textual user ID, if it can be obtained
-	// effective group ID of the process.  This will be the textual group ID, if it can be obtained
-	// cumulative CPU time, "[DD-]hh:mm:ss" format.  (alias time)
-	// cpu utilization of the process in "##.#" format.  Currently, it is the CPU time used divided by the time the process has been running (cputime/realtime ratio), expressed as a percentage.
-	// ratio of the process's resident set size  to the physical memory on the machine, expressed as a percentage.
-}
-?>
-		<div class="box box-danger">
-			<div class="box-header with-border">
-				<h3 class="box-title">FTL status (<?php if($FTL){ ?>Running, PID: <?php echo $parts[0]; ?><?php }else{ ?>Not running<?php } ?>)</h3>
-			</div>
-			<div class="box-body">
-				<?php if($FTL){ ?>Time FTL started: <?php echo $parts[1]; ?><br>
-				User / Group: <?php echo $parts[4]; ?> / <?php echo $parts[5]; ?><br>
-				Total CPU utilization: <?php echo $parts[7]; ?>%<br>
-				Total CPU time: <?php echo $parts[6]; ?><br>
-				Memory utilization: <?php echo $parts[8]; ?>%<br>
-				<span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory: <?php echo formatSizeUnits(1e3*$parts[3]); ?></span><br>
-				<?php } ?>
-			</div>
-		</div>
 		<div class="box box-danger">
 			<div class="box-header with-border">
 				<h3 class="box-title">System Administration</h3>
@@ -783,6 +754,38 @@ if($FTL)
 				<form role="form" method="post" id="flushlogsform">
 					<input type="hidden" name="field" value="flushlogs">
 				</form>
+			</div>
+		</div>
+<?php
+if($FTL)
+{
+	$parts = preg_split('/\s+/',trim(exec("ps -p `cat /var/run/pihole-FTL.pid` -o pid,start,vsz,rss,euser,egroup,cputime,%cpu,%mem")));
+	// pid
+	// time the command started. If the process was started less than 24 hours ago, the output format is "HH:MM:SS", else it is "  Mmm dd" (where Mmm is a three-letter month name).
+	// virtual memory size of the process in KiB
+	// resident set size, the non-swapped physical memory that a task has used (inkiloBytes).
+	// effective user name.  This will be the textual user ID, if it can be obtained
+	// effective group ID of the process.  This will be the textual group ID, if it can be obtained
+	// cumulative CPU time, "[DD-]hh:mm:ss" format.  (alias time)
+	// cpu utilization of the process in "##.#" format.  Currently, it is the CPU time used divided by the time the process has been running (cputime/realtime ratio), expressed as a percentage.
+	// ratio of the process's resident set size  to the physical memory on the machine, expressed as a percentage.
+}
+?>
+		<div class="box box-danger collapsed-box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Pi-hole FTL (<?php if($FTL){ ?>Running<?php }else{ ?>Not running<?php } ?>)</h3>
+				<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
+			</div>
+			<div class="box-body">
+				<?php if($FTL){ ?>Process identifier (PID): <?php echo $parts[0]; ?><br>
+				Time FTL started: <?php echo $parts[1]; ?><br>
+				User / Group: <?php echo $parts[4]; ?> / <?php echo $parts[5]; ?>
+				<?php if($parts[4] == "root" || $parts[5] == "root"){?><br><span style="color:red">(WARNING: You should not use root as user for running FTL!)</span><?php } ?><br>
+				Total CPU utilization: <?php echo $parts[7]; ?>%<br>
+				Total CPU time: <?php echo $parts[6]; ?><br>
+				Memory utilization: <?php echo $parts[8]; ?>%<br>
+				<span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory: <?php echo formatSizeUnits(1e3*$parts[3]); ?></span><br>
+				<?php } ?>
 			</div>
 		</div>
 		<div class="box box-danger collapsed-box">
