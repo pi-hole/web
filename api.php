@@ -1,10 +1,11 @@
-<!-- Pi-hole: A black hole for Internet advertisements
+<?php
+/* Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. -->
-<?php
+*    Please see LICENSE file for your rights under this license. */
+
     $api = true;
     require "scripts/pi-hole/php/password.php";
     require "scripts/pi-hole/php/auth.php";
