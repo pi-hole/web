@@ -107,9 +107,13 @@ function updateQueryTypes() {
         var v = [], c = [], k = [];
         // Collect values and colors, and labels
         if(data.hasOwnProperty("querytypes"))
+        {
             iter = data.querytypes;
+        }
         else
+        {
             iter = data;
+        }
         $.each(iter, function(key , value) {
             v.push(value);
             c.push(colors.shift());
@@ -190,9 +194,13 @@ function updateForwardDestinations() {
         var v = [], c = [], k = [], iter;
         // Collect values and colors, immediately push individual labels
         if(data.hasOwnProperty("forward_destinations"))
+        {
             iter = data.forward_destinations;
+        }
         else
+        {
             iter = data;
+        }
         $.each(iter, function(key , value) {
             v.push(value);
             c.push(colors.shift());

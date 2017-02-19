@@ -89,7 +89,7 @@ function handleAjaxError( xhr, textStatus, error ) {
     }
     else
     {
-        alert( "An unknown error occured while loading the data." );
+        alert( "An unknown error occured while loading the data.\n"+xhr.responseText );
     }
     $("#all-queries_processing").hide();
     tableApi.clear();
