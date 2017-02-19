@@ -21,7 +21,7 @@ header('Content-type: application/json');
 
 $data = [];
 
-if (isset($_GET['summary']) || isset($_GET['summaryRaw']))
+if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))
 {
 	sendRequestFTL("stats");
 	$return = getResponseFTL();
