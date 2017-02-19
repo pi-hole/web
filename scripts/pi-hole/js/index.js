@@ -104,7 +104,7 @@ function updateQueryTypes() {
         var colors = [];
         // Get colors from AdminLTE
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
-        var v = [], c = [], k = [];
+        var v = [], c = [], k = [], iter;
         // Collect values and colors, and labels
         if(data.hasOwnProperty("querytypes"))
         {
