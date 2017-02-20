@@ -21,10 +21,12 @@ header('Content-type: application/json');
 
 $data = [];
 
+if (isset($_GET['type'])) {
+	$data["type"] = "FTL";
+}
+
 if (isset($_GET['version'])) {
-	$version = array();
-	$version["version"] = "FTL";
-	$data = array_merge($data, $version);
+	$data["version"] = 2;
 }
 
 if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))

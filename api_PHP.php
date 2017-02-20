@@ -24,10 +24,12 @@
 
     // Non-Auth
 
+    if (isset($_GET['type'])) {
+        $data["type"] = "PHP";
+    }
+
     if (isset($_GET['version'])) {
-        $version = array();
-        $version["version"] = "PHP";
-        $data = array_merge($data, $version);
+        $data["version"] = 1;
     }
 
     if (isset($_GET['summaryRaw'])) {
