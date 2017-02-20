@@ -25,7 +25,7 @@ A read-only API can be accessed at `/admin/api.php`. With either no parameters o
 There are many more parameters, such as `summaryRaw`, `overTimeData10mins`, `topItems`, ` topClients` or `getQuerySources`, `getQueryTypes`, `getForwardDestinations`, and finally `getAllQueries`.
 Together with a token it is also possible to enable and disable (also with a set timeout) blocking via the API
 
-The API returns more information (in a slighly different format if `FTL` is running) - it supports a fall-back to the "old" PHP API if `FTL` is not running. Test the version by using the parameter `version`.
+The API returns more information (in a slighly different format if `FTL` is running) - it supports a fall-back to the "old" PHP API if `FTL` is not running. Test the type and/or version of the API by using the parameter `type` and `version`.
 
 <hr>
 <img src="https://assets.pi-hole.net/static/BStackLogo.png" height="80"><br>
