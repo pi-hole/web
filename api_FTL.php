@@ -21,6 +21,12 @@ header('Content-type: application/json');
 
 $data = [];
 
+if (isset($_GET['version'])) {
+	$version = array();
+	$version["version"] = "FTL";
+	$data = array_merge($data, $version);
+}
+
 if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))
 {
 	sendRequestFTL("stats");
@@ -230,7 +236,11 @@ if(isset($_GET["recentBlocked"]))
 	unset($data);
 }
 
-if(isset($data))
+if(isset($_GET["jsonForceObject"]))
+{
+	echo json_encode($data, JSON_FORCE_OBJECT);
+}
+else
 {
 	echo json_encode($data);
 }
