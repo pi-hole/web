@@ -1,5 +1,5 @@
 // Credit: http://stackoverflow.com/a/10642418/2087442
-function httpGet(ta,quiet,theUrl)
+function httpGet(ta,theUrl)
 {
     var xmlhttp;
     if (window.XMLHttpRequest)
@@ -18,14 +18,7 @@ function httpGet(ta,quiet,theUrl)
         {
             ta.show();
             ta.empty();
-            if(!quiet)
-            {
-                ta.append(xmlhttp.responseText);
-            }
-            else
-            {
-                quietfilter(ta,xmlhttp.responseText);
-            }
+            ta.append(xmlhttp.responseText);
         }
     };
     xmlhttp.open("GET", theUrl, false);
