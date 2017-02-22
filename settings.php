@@ -760,6 +760,7 @@
 if($FTL)
 {
 	$parts = preg_split('/\s+/',trim(exec("ps -p `cat /var/run/pihole-FTL.pid` -o pid,start,vsz,rss,euser,egroup,cputime,%cpu,%mem")));
+	$FTLversion = exec("/usr/bin/pihole-FTL version");
 	// pid
 	// time the command started. If the process was started less than 24 hours ago, the output format is "HH:MM:SS", else it is "  Mmm dd" (where Mmm is a three-letter month name).
 	// virtual memory size of the process in KiB
@@ -777,7 +778,8 @@ if($FTL)
 				<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
 			</div>
 			<div class="box-body">
-				<?php if($FTL){ ?>Process identifier (PID): <?php echo $parts[0]; ?><br>
+				<?php if($FTL){ ?>FTL version: <?php echo $FTLversion; ?><br>
+				Process identifier (PID): <?php echo $parts[0]; ?><br>
 				Time FTL started: <?php echo $parts[1]; ?><br>
 				User / Group: <?php echo $parts[4]; ?> / <?php echo $parts[5]; ?>
 				<?php if($parts[4] == "root" || $parts[5] == "root"){?><br><span style="color:red">(WARNING: You should not use root as user for running FTL!)</span><?php } ?><br>
