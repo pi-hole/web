@@ -19,20 +19,26 @@ if(isset($setupVars["API_QUERY_LOG_SHOW"]))
 {
 	if($setupVars["API_QUERY_LOG_SHOW"] === "all")
 	{
-		$showing = "(showing all queries";
+		$showing = "showing all queries";
 	}
 	elseif($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly")
 	{
-		$showing = "(showing permitted queries only";
+		$showing = "showing permitted queries only";
 	}
 	elseif($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly")
 	{
-		$showing = "(showing blocked queries only";
+		$showing = "showing blocked queries only";
 	}
 	elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
 	{
-		$showing = "(showing no queries at all";
+		$showing = "showing no queries at all";
 	}
+}
+else
+{
+	// If filter variable is not set, we
+	// automatically show all queries
+	$showing = "showing all queries";
 }
 
 if(isset($_GET["all"]))
@@ -64,7 +70,11 @@ if(isset($setupVars["API_PRIVACY_MODE"]))
 		$showing .= ", privacy mode enabled";
 	}
 }
-$showing .= ")";
+
+if(strlen($showing) > 0)
+{
+	$showing = "(".$showing.")";
+}
 ?>
 <!-- Send PHP info to JS -->
 <div id="token" hidden><?php echo $token ?></div>
