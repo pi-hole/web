@@ -6,7 +6,8 @@
     <h1>Generate debug log</h1>
 </div>
 
-<p>Once you click this button a debug log will be generated and automatically uploaded if we detect a working internet connection</p>
+<p><input type="checkbox" id="upload" checked> Upload debug log and provide token once finished</p>
+<p>Once you click this button a debug log will be generated and can automatically be uploaded if we detect a working internet connection.</p>
 <button class="btn btn-lg btn-primary btn-block" id="debugBtn">Generate debug log</button>
 <pre id="output" style="width: 100%; height: 100%;" hidden="true"></pre>
 

@@ -27,15 +27,22 @@ function httpGet(ta,theUrl)
 
 function eventsource() {
     var ta = $("#output");
+    var upload = $( "#upload" );
+    var checked = "";
+
+    if(upload.prop("checked"))
+    {
+      checked = "upload";
+    }
 
     // IE does not support EventSource - load whole content at once
     if (typeof EventSource !== "function") {
-        httpGet(ta,"/admin/scripts/pi-hole/php/debug.php?IE");
+        httpGet(ta,"/admin/scripts/pi-hole/php/debug.php?IE&"+checked);
         return;
     }
 
     var host = window.location.host;
-    var source = new EventSource("/admin/scripts/pi-hole/php/debug.php");
+    var source = new EventSource("/admin/scripts/pi-hole/php/debug.php?"+checked);
 
     // Reset and show field
     ta.empty();
