@@ -40,6 +40,7 @@ function piholeChanged(action)
 function piholeChange(action, duration)
 {
     var token = encodeURIComponent($("#token").html());
+    var enaT = $("#enableTimer");
     var btnStatus;
 
     switch(action) {
@@ -61,21 +62,16 @@ function piholeChange(action, duration)
                 if(data.status === "disabled") {
                     btnStatus.html("");
                     piholeChanged("disabled");
+                    enaT.html(new Date().getTime() + duration * 1000);
+                    setTimeout(countDown,100);
                 }
             });
             break;
     }
 }
 
-//The following three functions allow us to display time until pi-hole is enabled after disabling.
+//The following functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
-
-
-function setCountdownTarget(seconds){
-    var target = new Date();
-    target = new Date(target.getTime() + seconds * 1000);
-    localStorage.setItem("countDownTarget", target);
-}
 
 function secondsTimeSpanToHMS(s) {
     var h = Math.floor(s/3600); //Get whole hours
@@ -87,7 +83,8 @@ function secondsTimeSpanToHMS(s) {
 
 function countDown(){
     var ena = $("#enableLabel");
-    var target = new Date(localStorage.getItem("countDownTarget"));
+    var enaT = $("#enableTimer");
+    var target = new Date(parseInt(enaT.html()));
     var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
 
     if(seconds > 0){
@@ -103,10 +100,12 @@ function countDown(){
 }
 
 $( document ).ready(function() {
-    var countDownTarget = localStorage.getItem("countDownTarget");
-    if (countDownTarget != null)
+    var enaT = $("#enableTimer");
+    var target = new Date(parseInt(enaT.html()));
+    var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
+    if (seconds > 0)
     {
-        setTimeout(countDown,1000);
+        setTimeout(countDown,100);
     }
 });
 
@@ -123,28 +122,20 @@ $("#pihole-disable-permanently").on("click", function(e){
 $("#pihole-disable-10s").on("click", function(e){
     e.preventDefault();
     piholeChange("disable","10");
-    setCountdownTarget(10);
-    setTimeout(countDown,1000);
 });
 $("#pihole-disable-30s").on("click", function(e){
     e.preventDefault();
     piholeChange("disable","30");
-    setCountdownTarget(30);
-    setTimeout(countDown,1000);
 });
 $("#pihole-disable-5m").on("click", function(e){
     e.preventDefault();
     piholeChange("disable","300");
-    setCountdownTarget(300);
-    setTimeout(countDown,1000);
 });
 $("#pihole-disable-custom").on("click", function(e){
     e.preventDefault();
     var custVal = $("#customTimeout").val();
     custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
     piholeChange("disable",custVal);
-    setCountdownTarget(custVal);
-    setTimeout(countDown,1000);
 });
 
 
