@@ -30,7 +30,7 @@ function eventsource() {
 
     // IE does not support EventSource - load whole content at once
     if (typeof EventSource !== "function") {
-        httpGet(ta,quiet,"/admin/scripts/pi-hole/php/debug.php?IE");
+        httpGet(ta,"/admin/scripts/pi-hole/php/debug.php?IE");
         return;
     }
 
