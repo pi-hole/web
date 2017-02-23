@@ -72,7 +72,7 @@
         if(isset($_GET["auth"]))
         {
             if($_GET["auth"] !== $pwhash)
-                die("Not autorized!");
+                die("Not authorized!");
         }
         else
         {
@@ -86,7 +86,7 @@
         if(isset($_GET["auth"]))
         {
             if($_GET["auth"] !== $pwhash)
-                die("Not autorized!");
+                die("Not authorized!");
         }
         else
         {
