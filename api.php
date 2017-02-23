@@ -19,6 +19,14 @@
 
     // Non-Auth
 
+    if (isset($_GET['type'])) {
+        $data["type"] = "PHP";
+    }
+
+    if (isset($_GET['version'])) {
+        $data["version"] = 2;
+    }
+
     if (isset($_GET['summaryRaw'])) {
         $data = array_merge($data,  getSummaryData());
     }
