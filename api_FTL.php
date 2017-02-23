@@ -249,31 +249,6 @@ elseif (isset($_GET['disable'], $_GET['token']) && $auth) {
 	$data = array_merge($data, array("status" => "disabled"));
 }
 
-if (isset($_GET['tailLog']) && $auth) {
-	// Not using SplFileObject here, since direct
-	// usage of f-streams will be much faster for
-	// files as large as the pihole.log
-	$file = fopen("/var/log/pihole.log","r");
-	$offset = intval($_GET['tailLog']);
-	if($offset > 0)
-	{
-		// Seeks on the file pointer where we want to continue reading is known
-		fseek($file, $offset);
-		$lines = [];
-		while (!feof($file))
-			array_push($lines,fgets($file));
-		$data = array_merge($data, array("offset" => ftell($file), "lines" => $lines));
-	}
-	else
-	{
-		// Locate the current position of the file read/write pointer
-		fseek($file, -1, SEEK_END);
-		// Add one to skip the very last "\n" in the log file
-		$data = array_merge($data, array("offset" => ftell($file)+1));
-	}
-	fclose($file);
-}
-
 if(isset($_GET["recentBlocked"]))
 {
 	sendRequestFTL("recentBlocked");
