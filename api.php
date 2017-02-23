@@ -9,7 +9,7 @@
 $api = true;
 
 require("scripts/pi-hole/php/FTL.php");
-if(testFTL())
+if(testFTL() && !isset($_GET["PHP"]))
 {
 	require("api_FTL.php");
 }

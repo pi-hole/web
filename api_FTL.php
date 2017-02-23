@@ -52,7 +52,7 @@ if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))
 		}
 		else
 		{
-			$stats[$tmp[0]] = $tmp[1];
+			$stats[$tmp[0]] = intval($tmp[1]);
 		}
 	}
 	$data = array_merge($data,$stats);
@@ -68,8 +68,8 @@ if (isset($_GET['overTimeData10mins']))
 	foreach($return as $line)
 	{
 		$tmp = explode(" ",$line);
-		$domains_over_time[$tmp[0]] = $tmp[1];
-		$ads_over_time[$tmp[0]] = $tmp[2];
+		$domains_over_time[$tmp[0]] = intval($tmp[1]);
+		$ads_over_time[$tmp[0]] = intval($tmp[2]);
 	}
 	$result = array('domains_over_time' => $domains_over_time,
 	                'ads_over_time' => $ads_over_time);
@@ -80,7 +80,7 @@ if (isset($_GET['topItems']) && $auth)
 {
 	if(is_numeric($_GET['topItems']))
 	{
-		sendRequestFTL("top-domains ".$_GET['topItems']);
+		sendRequestFTL("top-domains (".$_GET['topItems'].")");
 	}
 	else
 	{
@@ -92,12 +92,12 @@ if (isset($_GET['topItems']) && $auth)
 	foreach($return as $line)
 	{
 		$tmp = explode(" ",$line);
-		$top_queries[$tmp[2]] = $tmp[1];
+		$top_queries[$tmp[2]] = intval($tmp[1]);
 	}
 
 	if(is_numeric($_GET['topItems']))
 	{
-		sendRequestFTL("top-ads ".$_GET['topItems']);
+		sendRequestFTL("top-ads (".$_GET['topItems'].")");
 	}
 	else
 	{
@@ -109,7 +109,7 @@ if (isset($_GET['topItems']) && $auth)
 	foreach($return as $line)
 	{
 		$tmp = explode(" ",$line);
-		$top_ads[$tmp[2]] = $tmp[1];
+		$top_ads[$tmp[2]] = intval($tmp[1]);
 	}
 
 	$result = array('top_queries' => $top_queries,
@@ -120,7 +120,25 @@ if (isset($_GET['topItems']) && $auth)
 
 if ((isset($_GET['topClients']) || isset($_GET['getQuerySources'])) && $auth)
 {
-	sendRequestFTL("top-clients");
+
+	if(isset($_GET['topClients']))
+	{
+		$number = $_GET['topClients'];
+	}
+	elseif(isset($_GET['getQuerySources']))
+	{
+		$number = $_GET['getQuerySources'];
+	}
+
+	if(is_numeric($number))
+	{
+		sendRequestFTL("top-clients (".$number.")");
+	}
+	else
+	{
+		sendRequestFTL("top-clients");
+	}
+
 	$return = getResponseFTL();
 	$top_clients = array();
 	foreach($return as $line)
@@ -128,11 +146,11 @@ if ((isset($_GET['topClients']) || isset($_GET['getQuerySources'])) && $auth)
 		$tmp = explode(" ",$line);
 		if(count($tmp) == 4)
 		{
-			$top_clients[$tmp[3]."|".$tmp[2]] = $tmp[1];
+			$top_clients[$tmp[3]."|".$tmp[2]] = intval($tmp[1]);
 		}
 		else
 		{
-			$top_clients[$tmp[2]] = $tmp[1];
+			$top_clients[$tmp[2]] = intval($tmp[1]);
 		}
 	}
 
@@ -150,11 +168,11 @@ if (isset($_GET['getForwardDestinations']) && $auth)
 		$tmp = explode(" ",$line);
 		if(count($tmp) == 4)
 		{
-			$forward_dest[$tmp[3]."|".$tmp[2]] = $tmp[1];
+			$forward_dest[$tmp[3]."|".$tmp[2]] = intval($tmp[1]);
 		}
 		else
 		{
-			$forward_dest[$tmp[2]] = $tmp[1];
+			$forward_dest[$tmp[2]] = intval($tmp[1]);
 		}
 	}
 
@@ -170,7 +188,7 @@ if (isset($_GET['getQueryTypes']) && $auth)
 	foreach($return as $ret)
 	{
 		$tmp = explode(": ",$ret);
-		$querytypes[$tmp[0]] = $tmp[1];
+		$querytypes[$tmp[0]] = intval($tmp[1]);
 	}
 
 	$result = array('querytypes' => $querytypes);
@@ -234,7 +252,7 @@ elseif (isset($_GET['disable'], $_GET['token']) && $auth) {
 if(isset($_GET["recentBlocked"]))
 {
 	sendRequestFTL("recentBlocked");
-	echo getResponseFTL()[0];
+	die(getResponseFTL()[0]);
 	unset($data);
 }
 
