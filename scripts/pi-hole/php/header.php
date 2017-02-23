@@ -354,7 +354,7 @@
                 <!-- Home Page -->
                 <li<?php if($scriptname === "index.php"){ ?> class="active"<?php } ?>>
                     <a href="index.php">
-                        <i class="fa fa-home"></i> <span>Main Page</span>
+                        <i class="fa fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
                 <?php if($auth){ ?>
