@@ -72,7 +72,7 @@ $(".api-token").confirm({
 	text: "Make sure that nobody else can scan this code around you. They will have full access to the API without having to know the password. Note that the generation of the QR code will take some time.",
 	title: "Confirmation required",
 	confirm(button) {
-		window.open("scripts/pi-hole/php/API_token.php");
+		window.open("scripts/pi-hole/php/api_token.php");
 	},
 	cancel(button) {
 		// nothing to do
