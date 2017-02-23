@@ -29,7 +29,7 @@
     }
 
     if (isset($_GET['version'])) {
-        $data["version"] = 1;
+        $data["version"] = 2;
     }
 
     if (isset($_GET['summaryRaw'])) {

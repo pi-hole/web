@@ -26,7 +26,7 @@ if (isset($_GET['type'])) {
 }
 
 if (isset($_GET['version'])) {
-	$data["version"] = 2;
+	$data["version"] = 3;
 }
 
 if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))
