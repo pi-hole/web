@@ -445,6 +445,12 @@
                             <i class="fa fa-list-ul"></i> <span>Tail pihole.log</span>
                         </a>
                     </li>
+                    <!-- Webupdater -->
+                    <li<?php if($scriptname === "webupdate.php"){ ?> class="active"<?php } ?>>
+                        <a href="webupdate.php">
+                            <i class="fa fa-laptop"></i> <span>Webupdater</span>
+                        </a>
+                    </li>
                   </ul>
                 </li>
                 <!-- Settings -->
