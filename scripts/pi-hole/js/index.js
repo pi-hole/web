@@ -71,11 +71,21 @@ function updateQueriesOverTime() {
         timeLineChart.data.labels = [];
         timeLineChart.data.datasets[0].data = [];
         timeLineChart.data.datasets[1].data = [];
-        // Add data for each hour that is available
+
+            // Add data for each hour that is available
         for (var hour in data.ads_over_time[0]) {
             if ({}.hasOwnProperty.call(data.ads_over_time[0], hour)) {
-                var h = parseInt(data.domains_over_time[0][hour]);
-                var d = new Date().setHours(Math.floor(h / 6), 10 * (h % 6), 0, 0);
+                if(parseInt(data.ads_over_time[0][0]) < 1200)
+                {
+                    // Fallback - old style
+                    var h = parseInt(data.domains_over_time[0][hour]);
+                    var d = new Date().setHours(Math.floor(h / 6), 10 * (h % 6), 0, 0);
+                }
+                else
+                {
+                    // New style: Get Unix timestamps
+                    var d = new Date(1000*parseInt(data.domains_over_time[0][hour]));
+                }
 
                 timeLineChart.data.labels.push(d);
                 timeLineChart.data.datasets[0].data.push(data.domains_over_time[1][hour]);
