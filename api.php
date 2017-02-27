@@ -81,6 +81,7 @@
         }
         exec('sudo pihole enable');
         $data = array_merge($data, array("status" => "enabled"));
+        unlink("../custom_disable_timer");
     }
     elseif (isset($_GET['disable']) && $auth) {
         if(isset($_GET["auth"]))
@@ -97,11 +98,14 @@
         // intval returns the integer value on success, or 0 on failure
         if($disable > 0)
         {
+            $timestamp = time();
             exec("sudo pihole disable ".$disable."s");
+            file_put_contents("../custom_disable_timer",($timestamp+$disable)*1000);
         }
         else
         {
             exec('sudo pihole disable');
+            unlink("../custom_disable_timer");
         }
         $data = array_merge($data, array("status" => "disabled"));
     }

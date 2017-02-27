@@ -696,6 +696,7 @@
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="API">
+				<button type="button" class="btn btn-primary api-token">Show API token</button>
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
