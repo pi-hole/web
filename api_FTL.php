@@ -68,8 +68,8 @@ if (isset($_GET['overTimeData10mins']))
 	foreach($return as $line)
 	{
 		$tmp = explode(" ",$line);
-		$domains_over_time[$tmp[0]] = intval($tmp[1]);
-		$ads_over_time[$tmp[0]] = intval($tmp[2]);
+		$domains_over_time[intval($tmp[0])] = intval($tmp[1]);
+		$ads_over_time[intval($tmp[0])] = intval($tmp[2]);
 	}
 	$result = array('domains_over_time' => $domains_over_time,
 	                'ads_over_time' => $ads_over_time);

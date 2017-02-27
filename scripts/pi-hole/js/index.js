@@ -75,16 +75,17 @@ function updateQueriesOverTime() {
             // Add data for each hour that is available
         for (var hour in data.ads_over_time[0]) {
             if ({}.hasOwnProperty.call(data.ads_over_time[0], hour)) {
+                var d,h;
+                h = parseInt(data.domains_over_time[0][hour]);
                 if(parseInt(data.ads_over_time[0][0]) < 1200)
                 {
                     // Fallback - old style
-                    var h = parseInt(data.domains_over_time[0][hour]);
-                    var d = new Date().setHours(Math.floor(h / 6), 10 * (h % 6), 0, 0);
+                    d = new Date().setHours(Math.floor(h / 6), 10 * (h % 6), 0, 0);
                 }
                 else
                 {
                     // New style: Get Unix timestamps
-                    var d = new Date(1000*parseInt(data.domains_over_time[0][hour]));
+                    d = new Date(1000*h);
                 }
 
                 timeLineChart.data.labels.push(d);
@@ -350,8 +351,8 @@ $(document).ready(function() {
                             var time = label.match(/(\d?\d):?(\d?\d?)/);
                             var h = parseInt(time[1], 10);
                             var m = parseInt(time[2], 10) || 0;
-                            var from = padNumber(h)+":"+padNumber(m)+":00";
-                            var to = padNumber(h)+":"+padNumber(m+9)+":59";
+                            var from = padNumber(h)+":"+padNumber(m-5)+":00";
+                            var to = padNumber(h)+":"+padNumber(m+4)+":59";
                             return "Queries from "+from+" to "+to;
                         },
                         label: function(tooltipItems, data) {
@@ -473,8 +474,8 @@ $(document).ready(function() {
                 var label = timeLineChart.data.labels[clickedElementindex];
 
                 //get value by index
-                var from = label/1000;
-                var until = label/1000 + 600;
+                var from = label/1000 - 300;
+                var until = label/1000 + 300;
                 window.location.href = "queries.php?from="+from+"&until="+until;
             }
             return false;
