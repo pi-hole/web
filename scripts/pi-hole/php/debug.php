@@ -14,11 +14,11 @@ function echoEvent($datatext) {
 
 if(isset($_GET["upload"]))
 {
-	$proc = popen("sudo pihole -d -a", "r");
+	$proc = popen("sudo pihole -d -a -w", "r");
 }
 else
 {
-	$proc = popen("sudo pihole -d", "r");
+	$proc = popen("sudo pihole -d -w", "r");
 }
 while (!feof($proc)) {
     echoEvent(fread($proc, 4096));
