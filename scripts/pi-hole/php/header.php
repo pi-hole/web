@@ -71,6 +71,12 @@
     // Get number of processing units available to PHP
     // (may be less than the number of online processors)
     $nproc = shell_exec('nproc');
+    if(!is_numeric($nproc))
+    {
+        $cpuinfo = file_get_contents('/proc/cpuinfo');
+        preg_match_all('/^processor/m', $cpuinfo, $matches);
+        $nproc = count($matches[0]);
+    }
 
     // Get memory usage
     $data = explode("\n", file_get_contents("/proc/meminfo"));
