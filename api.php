@@ -7,8 +7,8 @@
 *    Please see LICENSE file for your rights under this license */
 
 $api = true;
-
 require("scripts/pi-hole/php/FTL.php");
+
 if(testFTL() && !isset($_GET["PHP"]))
 {
 	require("api_FTL.php");

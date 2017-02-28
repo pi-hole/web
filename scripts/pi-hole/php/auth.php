@@ -30,7 +30,7 @@ function check_cors() {
     $AUTHORIZED_HOSTNAMES = array(
         $ipv4,
         $ipv6,
-        $_SERVER["SERVER_NAME"],
+        str_replace(array("[","]"), array("",""), $_SERVER["SERVER_NAME"]),
         "pi.hole",
         "localhost"
     );

@@ -68,6 +68,23 @@ $(".confirm-flushlogs").confirm({
 	dialogClass: "modal-dialog modal-mg"
 });
 
+$(".api-token").confirm({
+	text: "Make sure that nobody else can scan this code around you. They will have full access to the API without having to know the password. Note that the generation of the QR code will take some time.",
+	title: "Confirmation required",
+	confirm(button) {
+		window.open("scripts/pi-hole/php/api_token.php");
+	},
+	cancel(button) {
+		// nothing to do
+	},
+	confirmButton: "Yes, show API token",
+	cancelButton: "No, go back",
+	post: true,
+	confirmButtonClass: "btn-danger",
+	cancelButtonClass: "btn-success",
+	dialogClass: "modal-dialog modal-mg"
+});
+
 $("#DHCPchk").click(function() {
 	$("input.DHCPgroup").prop("disabled", !this.checked);
 	$("#dhcpnotice").prop("hidden", !this.checked).addClass("lookatme");
