@@ -65,9 +65,18 @@
 
     // Get load
     $loaddata = sys_getloadavg();
+    foreach ($loaddata as $key => $value) {
+        $loaddata[$key] = round($value, 2);
+    }
     // Get number of processing units available to PHP
     // (may be less than the number of online processors)
     $nproc = shell_exec('nproc');
+    if(!is_numeric($nproc))
+    {
+        $cpuinfo = file_get_contents('/proc/cpuinfo');
+        preg_match_all('/^processor/m', $cpuinfo, $matches);
+        $nproc = count($matches[0]);
+    }
 
     // Get memory usage
     $data = explode("\n", file_get_contents("/proc/meminfo"));
@@ -325,7 +334,7 @@
                         {
                             echo "#7FFF00";
                         }
-                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
+                        echo "\" title=\"Detected $nproc cores\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
                     ?>
                     <br/>
                     <?php
