@@ -76,16 +76,32 @@
         $data = array_merge($data, getAllQueries($_GET['getAllQueries']));
     }
 
-    if (isset($_GET['enable'], $_GET['token']) && $auth) {
-        check_csrf($_GET['token']);
+    if (isset($_GET['enable']) && $auth) {
+        if(isset($_GET["auth"]))
+        {
+            if($_GET["auth"] !== $pwhash)
+                die("Not authorized!");
+        }
+        else
+        {
+            // Skip token validation if explicit auth string is given
+            check_csrf($_GET['token']);
+        }
         exec('sudo pihole enable');
+        $data = array_merge($data, array("status" => "enabled"));
         unlink("../custom_disable_timer");
-        $data = array_merge($data, Array(
-            "status" => "enabled"
-        ));
     }
-    elseif (isset($_GET['disable'], $_GET['token']) && $auth) {
-        check_csrf($_GET['token']);
+    elseif (isset($_GET['disable']) && $auth) {
+        if(isset($_GET["auth"]))
+        {
+            if($_GET["auth"] !== $pwhash)
+                die("Not authorized!");
+        }
+        else
+        {
+            // Skip token validation if explicit auth string is given
+            check_csrf($_GET['token']);
+        }
         $disable = intval($_GET['disable']);
         // intval returns the integer value on success, or 0 on failure
         if($disable > 0)
@@ -99,9 +115,7 @@
             exec('sudo pihole disable');
             unlink("../custom_disable_timer");
         }
-        $data = array_merge($data, Array(
-            "status" => "disabled"
-        ));
+        $data = array_merge($data, array("status" => "disabled"));
     }
 
     if (isset($_GET['getGravityDomains'])) {
