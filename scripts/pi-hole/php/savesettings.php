@@ -183,11 +183,35 @@ function readStaticLeasesFile()
 					$extra .= "no-dnssec";
 				}
 
+				// Check if DNSinterface is set
+				if(isset($_POST["DNSinterface"]))
+				{
+					if($_POST["DNSinterface"] === "single")
+					{
+						$DNSinterface = "single";
+					}
+					elseif($_POST["DNSinterface"] === "all")
+					{
+						$DNSinterface = "all";
+					}
+					else
+					{
+						$DNSinterface = "local";
+					}
+				}
+				else
+				{
+					// Fallback
+					$DNSinterface = "local";
+				}
+				$return .= exec("sudo pihole -a -i ".$DNSinterface." -web");
+
 				// If there has been no error we can save the new DNS server IPs
 				if(!strlen($error))
 				{
 					$IPs = implode (",", $DNSservers);
 					exec("sudo pihole -a setdns ".$IPs." ".$extra);
+					$success .= htmlspecialchars($return)."<br>";
 					$success .= "The DNS settings have been updated (using ".count($DNSservers)." DNS servers)";
 				}
 				else
