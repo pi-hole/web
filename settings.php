@@ -469,6 +469,23 @@
 	} else {
 		$DNSSEC = false;
 	}
+
+	if(isset($setupVars["DNSMASQ_LISTENING"])){
+		if($setupVars["DNSMASQ_LISTENING"] === "single")
+		{
+			$DNSinterface = "single";
+		}
+		elseif($setupVars["DNSMASQ_LISTENING"] === "all")
+		{
+			$DNSinterface = "all";
+		}
+		else
+		{
+			$DNSinterface = "local";
+		}
+	} else {
+		$DNSinterface = "local";
+	}
 ?>
 		<div class="box box-warning">
 			<div class="box-header with-border">
@@ -534,6 +551,20 @@
 								<div class="checkbox"><label><input type="checkbox" name="DNSSEC" <?php if($DNSSEC){ ?>checked<?php } ?>> Use DNSSEC</label></div>
 							</div>
 							<p>Validate DNS replies and cache DNSSEC data. When forwarding DNS queries, Pi-hole requests the DNSSEC records needed to  validate the replies. Use Google or Norton DNS servers when activating DNSSEC. Note that the size of your log might increase significantly when enabling DNSSEC. A DNSSEC resolver test can be found <a href="http://dnssec.vs.uni-due.de/" target="_blank">here</a>.</p>
+
+							<div class="form-group">
+							<label>Interface listening behavior</label>
+								<div class="radio">
+									<label><input type="radio" name="DNSinterface" value="local" <?php if($DNSinterface == "local"){ ?>checked<?php } ?> >Listen on all interfaces, but allow only queries from devices that are at most one hop away (local devices)</label>
+								</div>
+								<div class="radio">
+									<label><input type="radio" name="DNSinterface" value="single" <?php if($DNSinterface == "single"){ ?>checked<?php } ?> >Listen only on interface <?php echo $piHoleInterface; ?></label>
+								</div>
+								<div class="radio">
+									<label><input type="radio" name="DNSinterface" value="all" <?php if($DNSinterface == "all"){ ?>checked<?php } ?> >Listen on all interfaces, permit all origins (make sure your Pi-hole is firewalled!)</label>
+								</div>
+							</div>
+
 						</div>
 					</div>
 				</div>
