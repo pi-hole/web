@@ -91,8 +91,11 @@ function piholeChange(action, duration)
                 if(data.status === "disabled") {
                     btnStatus.html("");
                     piholeChanged("disabled");
-                    enaT.html(new Date().getTime() + duration * 1000);
-                    setTimeout(countDown,100);
+                    if(duration > 0)
+                    {
+                        enaT.html(new Date().getTime() + duration * 1000);
+                        setTimeout(countDown,100);
+                    }
                 }
             });
             break;
