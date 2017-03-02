@@ -1,4 +1,14 @@
 <?php
+/* Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license. */
+
+require "password.php";
+if(!$auth) die("Not authorized");
+
 require('func.php');
 function process_zip($name)
 {
@@ -63,7 +73,7 @@ if($_POST["action"] == "in")
 	{
 		$filename = $_FILES["zip_file"]["name"];
 		$source = $_FILES["zip_file"]["tmp_name"];
-		$type = $_FILES["zip_file"]["type"];
+		$type = mime_content_type($source);
 
 		$name = explode(".", $filename);
 		$accepted_types = array('application/zip', 'application/x-zip-compressed', 'multipart/x-zip', 'application/x-compressed');
@@ -77,7 +87,7 @@ if($_POST["action"] == "in")
 
 		$continue = strtolower($name[1]) == 'zip' ? true : false;
 		if(!$continue || !$okay) {
-			die("The file you are trying to upload is not a .zip file. Please try again.");
+			die("The file you are trying to upload is not a .zip file (filename: ".$filename.", type: ".$type."). Please try again.");
 		}
 
 		$zip = new ZipArchive();

@@ -1,3 +1,9 @@
+/* Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license. */
 // User menu toggle
 $("#dropdown-menu a").on("click", function(event) {
     $(this).parent().toggleClass("open");
@@ -8,6 +14,35 @@ $("body").on("click", function(event) {
     }
 });
 
+//The following functions allow us to display time until pi-hole is enabled after disabling.
+//Works between all pages
+
+function secondsTimeSpanToHMS(s) {
+    var h = Math.floor(s/3600); //Get whole hours
+    s -= h*3600;
+    var m = Math.floor(s/60); //Get remaining minutes
+    s -= m*60;
+    return h+":"+(m < 10 ? "0"+m : m)+":"+(s < 10 ? "0"+s : s); //zero padding on minutes and seconds
+}
+
+function countDown(){
+    var ena = $("#enableLabel");
+    var enaT = $("#enableTimer");
+    var target = new Date(parseInt(enaT.html()));
+    var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
+
+    if(seconds > 0){
+        setTimeout(countDown,1000);
+        ena.text("Enable (" + secondsTimeSpanToHMS(seconds) + ")");
+    }
+    else
+    {
+        ena.text("Enable");
+        piholeChanged("enabled");
+        localStorage.removeItem("countDownTarget");
+    }
+}
+
 function piholeChanged(action)
 {
     var status = $("#status");
@@ -16,17 +51,17 @@ function piholeChanged(action)
 
     switch(action) {
         case "enabled":
-        status.html("<i class='fa fa-circle' style='color:#7FFF00'></i> Active");
-        ena.hide();
-        dis.show();
-        dis.removeClass("active");
-        break;
+            status.html("<i class='fa fa-circle' style='color:#7FFF00'></i> Active");
+            ena.hide();
+            dis.show();
+            dis.removeClass("active");
+            break;
 
         case "disabled":
-        status.html("<i class='fa fa-circle' style='color:#FF0000'></i> Offline");
-        ena.show();
-        dis.hide();
-        break;
+            status.html("<i class='fa fa-circle' style='color:#FF0000'></i> Offline");
+            ena.show();
+            dis.hide();
+            break;
     }
 
 }
@@ -34,36 +69,53 @@ function piholeChanged(action)
 function piholeChange(action, duration)
 {
     var token = encodeURIComponent($("#token").html());
+    var enaT = $("#enableTimer");
     var btnStatus;
 
     switch(action) {
         case "enable":
-        btnStatus = $("#flip-status-enable");
-        btnStatus.html("<i class='fa fa-spinner'> </i>");
-        $.getJSON("api.php?enable&token=" + token, function(data) {
-            if(data.status === "enabled") {
-                btnStatus.html("");
-                piholeChanged("enabled");
-            }
-        });
-        break;
+            btnStatus = $("#flip-status-enable");
+            btnStatus.html("<i class='fa fa-spinner'> </i>");
+            $.getJSON("api.php?enable&token=" + token, function(data) {
+                if(data.status === "enabled") {
+                    btnStatus.html("");
+                    piholeChanged("enabled");
+                }
+            });
+            break;
 
         case "disable":
-        btnStatus = $("#flip-status-disable");
-        btnStatus.html("<i class='fa fa-spinner'> </i>");
-        $.getJSON("api.php?disable=" + duration + "&token=" + token, function(data) {
-            if(data.status === "disabled") {
-                btnStatus.html("");
-                piholeChanged("disabled");
-            }
-        });
-        break;
+            btnStatus = $("#flip-status-disable");
+            btnStatus.html("<i class='fa fa-spinner'> </i>");
+            $.getJSON("api.php?disable=" + duration + "&token=" + token, function(data) {
+                if(data.status === "disabled") {
+                    btnStatus.html("");
+                    piholeChanged("disabled");
+                    if(duration > 0)
+                    {
+                        enaT.html(new Date().getTime() + duration * 1000);
+                        setTimeout(countDown,100);
+                    }
+                }
+            });
+            break;
     }
 }
+
+$( document ).ready(function() {
+    var enaT = $("#enableTimer");
+    var target = new Date(parseInt(enaT.html()));
+    var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
+    if (seconds > 0)
+    {
+        setTimeout(countDown,100);
+    }
+});
 
 // Handle Enable/Disable
 $("#pihole-enable").on("click", function(e){
     e.preventDefault();
+    localStorage.removeItem("countDownTarget");
     piholeChange("enable","");
 });
 $("#pihole-disable-permanently").on("click", function(e){
@@ -73,18 +125,22 @@ $("#pihole-disable-permanently").on("click", function(e){
 $("#pihole-disable-10s").on("click", function(e){
     e.preventDefault();
     piholeChange("disable","10");
-    setTimeout(function(){piholeChanged("enabled");},10000);
 });
 $("#pihole-disable-30s").on("click", function(e){
     e.preventDefault();
     piholeChange("disable","30");
-    setTimeout(function(){piholeChanged("enabled");},30000);
 });
 $("#pihole-disable-5m").on("click", function(e){
     e.preventDefault();
     piholeChange("disable","300");
-    setTimeout(function(){piholeChanged("enabled");},300000);
 });
+$("#pihole-disable-custom").on("click", function(e){
+    e.preventDefault();
+    var custVal = $("#customTimeout").val();
+    custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
+    piholeChange("disable",custVal);
+});
+
 
 var piholeVersion = $("#piholeVersion").html();
 var webVersion = $("#webVersion").html();
@@ -194,15 +250,15 @@ else
 // Hide "exact match" button on queryads.php page if version is 2.9.5 or lower
 if(versionCompare(piholeVersion, "v2.9.5") < 1)
 {
-	$("#btnSearchExact").hide();
+    $("#btnSearchExact").hide();
 }
 
 // Handle Strg + Enter button on Login page
 $(document).keypress(function(e) {
-	if((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
-		$("#loginform").attr("action", "settings.php");
-		$("#loginform").submit();
-	}
+    if((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
+        $("#loginform").attr("action", "settings.php");
+        $("#loginform").submit();
+    }
 });
 
 function testCookies()

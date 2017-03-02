@@ -1,3 +1,9 @@
+<!-- Pi-hole: A black hole for Internet advertisements
+*    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*    Network-wide ad blocking via your own hardware.
+*
+*    This file is copyright under the latest version of the EUPL.
+*    Please see LICENSE file for your rights under this license. -->
 <?php
     require "scripts/pi-hole/php/header.php";
 
@@ -37,8 +43,8 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-    <h2>Main page</h2>
-    <p>On the main page, you can see various Pi-hole statistics:</p>
+    <h2>Dashboard</h2>
+    <p>On the dashboard, you can see various Pi-hole statistics:</p>
     <ul>
         <li>Summary: A summary of statistics showing how many total DNS queries have been blocked today, what percentage of DNS queries have been blocked, and how many domains are in the compiled ad list. This summary is updated every 10 seconds.</li>
         <li>Queries over time: Graph showing DNS queries (total and blocked) over 10 minute time intervals. More information can be acquired by hovering over the lines. This graph is updated every 10 minutes.</li>
@@ -57,7 +63,7 @@
         <li>Top Clients: Ranking of how many DNS requests each client has made on the local network.</li>
     </ul>
     <?php if($authenticationsystem){ ?>
-    <p>Note that the login session does <em>not</em> expire on the main page, as the summary is updated every 10 seconds which refreshes the session.</p>
+    <p>Note that the login session does <em>not</em> expire on the dashboard, as the summary is updated every 10 seconds which refreshes the session.</p>
     <?php } ?>
     </div>
 </div>
@@ -123,7 +129,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Authentication system (currently <?php if($authenticationsystem) { ?>enabled<?php } else { ?>disabled<?php } ?>)</h2>
-    <p>Using the command<pre>sudo pihole -a -p pa22w0rd</pre> where <em>pa22w0rd</em> is the password to be set in this example, one can enable the authentication system of this web interface. Thereafter, a login is required for most pages (the main page will show a limited amount of statistics). Note that the authentication system may be disabled again, by setting an empty password using the command shown above. The Help center will show more details concerning the authentication system only if it is enabled</p>
+    <p>Using the command<pre>sudo pihole -a -p pa22w0rd</pre> where <em>pa22w0rd</em> is the password to be set in this example, one can enable the authentication system of this web interface. Thereafter, a login is required for most pages (the dashboard will show a limited amount of statistics). Note that the authentication system may be disabled again, by setting an empty password using the command shown above. The Help center will show more details concerning the authentication system only if it is enabled</p>
     </div>
 </div>
 <?php if($authenticationsystem) { ?>

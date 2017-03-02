@@ -1,18 +1,22 @@
+/* Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license. */
 $(function () {
-  $("[data-mask]").inputmask();
+	$("[data-mask]").inputmask();
+
+	$("[data-static]").on("click", function(){
+		var row = $(this).closest("tr");
+		var mac = row.find("#MAC").text();
+		var ip = row.find("#IP").text();
+		var host = row.find("#HOST").text();
+		$("input[name=\"AddHostname\"]").val(host);
+		$("input[name=\"AddIP\"]").val(ip);
+		$("input[name=\"AddMAC\"]").val(mac);
+	});
 });
-
-$(function(){
-	$("#custom1val").ipAddress({s:4});
-	$("#custom2val").ipAddress({s:4});
-	$("#custom3val").ipAddress({v:6});
-	$("#custom4val").ipAddress({v:6});
-
-	$("#DHCPfrom").ipAddress({s:4});
-	$("#DHCPto").ipAddress({s:4});
-	$("#DHCProuter").ipAddress({s:4});
-});
-
 $(".confirm-reboot").confirm({
 	text: "Are you sure you want to send a reboot command to your Pi-Hole?",
 	title: "Confirmation required",
@@ -64,18 +68,35 @@ $(".confirm-flushlogs").confirm({
 	dialogClass: "modal-dialog modal-mg"
 });
 
+$(".api-token").confirm({
+	text: "Make sure that nobody else can scan this code around you. They will have full access to the API without having to know the password. Note that the generation of the QR code will take some time.",
+	title: "Confirmation required",
+	confirm(button) {
+		window.open("scripts/pi-hole/php/api_token.php");
+	},
+	cancel(button) {
+		// nothing to do
+	},
+	confirmButton: "Yes, show API token",
+	cancelButton: "No, go back",
+	post: true,
+	confirmButtonClass: "btn-danger",
+	cancelButtonClass: "btn-success",
+	dialogClass: "modal-dialog modal-mg"
+});
+
 $("#DHCPchk").click(function() {
 	$("input.DHCPgroup").prop("disabled", !this.checked);
 	$("#dhcpnotice").prop("hidden", !this.checked).addClass("lookatme");
 });
 
-var leasetable;
+var leasetable, staticleasetable;
 $(document).ready(function() {
 	if(document.getElementById("DHCPLeasesTable"))
 	{
 		leasetable = $("#DHCPLeasesTable").DataTable({
-			dom: "<'row'<'col-sm-6'i><'col-sm-6'f>>" +
-				"<'row'<'col-sm-12'tr>>",
+			dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-6'i><'col-sm-6'f>>",
+			"columnDefs": [ { "bSortable": false, "orderable": false, targets: -1} ],
 			"paging": false,
 			"scrollCollapse": true,
 			"scrollY": "200px",
@@ -83,6 +104,20 @@ $(document).ready(function() {
 		});
 	$("#leaseexpand").on( "click", function () {
 		setTimeout(function(){leasetable.draw();},100);
+		} );
+	}
+	if(document.getElementById("DHCPStaticLeasesTable"))
+	{
+		staticleasetable = $("#DHCPStaticLeasesTable").DataTable({
+			dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-12'i>>",
+			"columnDefs": [ { "bSortable": false, "orderable": false, targets: -1} ],
+			"paging": false,
+			"scrollCollapse": true,
+			"scrollY": "200px",
+			"scrollX" : true
+		});
+	$("#leaseexpand").on( "click", function () {
+		setTimeout(function(){staticleasetable.draw();},100);
 		} );
 	}
 } );

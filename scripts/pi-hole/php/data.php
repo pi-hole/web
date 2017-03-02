@@ -1,4 +1,11 @@
 <?php
+/* Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license. */
+
     $log = array();
     $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 
@@ -27,6 +34,12 @@
     else
     {
         $privacyMode = false;
+    }
+
+    // Check if time zone is set
+    // https://github.com/pi-hole/AdminLTE/pull/394
+    if (!date_default_timezone_get("date.timezone")) {
+        date_default_timezone_set("UTC");
     }
 
     /*******   Public Members ********/
@@ -103,6 +116,20 @@
         );
     }
 
+    // Test if variable exists and is positive
+    function ispositive(&$arg)
+    {
+        if(isset($arg))
+        {
+            if($arg > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
     function getTopItems($argument) {
         global $log,$setupVars,$privacyMode;
 
@@ -136,7 +163,7 @@
 
         // Process sorted domain names
         foreach ($dns_domains as $key => $value) {
-            if(isset($gravity_domains[$key]) && $adcounter < $qty)
+            if(ispositive($gravity_domains[$key]) && $adcounter < $qty)
             {
                 // New entry for Top Ads
                 $topAds[$key] = $value;
@@ -327,9 +354,11 @@
     }
 
     function getAllQueries($orderBy) {
-        global $log,$showBlocked,$showPermitted,$privacyMode;
+        global $log,$showBlocked,$showPermitted,$privacyMode,$setupVars;
         $allQueries = array("data" => array());
         $dns_queries = getDnsQueries($log);
+
+        $hostnames=array();
 
         // Create empty array for gravity
         $gravity_domains = getGravity();
@@ -414,23 +443,37 @@
             if((substr($status,0,2) === "Pi" && $showBlocked) || (substr($status,0,2) === "OK" && $showPermitted))
             {
                 $type = substr($exploded[count($exploded)-4], 6, -1);
-                $client = $exploded[count($exploded)-1];
+
+                if(istrue($setupVars["API_GET_CLIENT_HOSTNAME"])) {
+                    $ip = $exploded[count($exploded) - 1];
+
+                    if (isset($hostnames[$ip])) {
+                        $client = $hostnames[$ip];
+                    } else {
+                        $hostnames[$ip] = gethostbyaddr($ip);
+                        $client = $hostnames[$ip];
+                    }
+                }
+                else
+                {
+                    $client = $exploded[count($exploded)-1];
+                }
 
                 if($orderBy == "orderByClientDomainTime"){
-                  $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d\TH:i:s')] = $status;
+                  $allQueries['data'][hasHostName($client)][$domain][$time->format('Y-m-d T H:i:s')] = $status;
                 }elseif ($orderBy == "orderByClientTimeDomain"){
-                  $allQueries['data'][hasHostName($client)][$time->format('Y-m-d\TH:i:s')][$domain] = $status;
+                  $allQueries['data'][hasHostName($client)][$time->format('Y-m-d T H:i:s')][$domain] = $status;
                 }elseif ($orderBy == "orderByTimeClientDomain"){
-                  $allQueries['data'][$time->format('Y-m-d\TH:i:s')][hasHostName($client)][$domain] = $status;
+                  $allQueries['data'][$time->format('Y-m-d T H:i:s')][hasHostName($client)][$domain] = $status;
                 }elseif ($orderBy == "orderByTimeDomainClient"){
-                  $allQueries['data'][$time->format('Y-m-d\TH:i:s')][$domain][hasHostName($client)] = $status;
+                  $allQueries['data'][$time->format('Y-m-d T H:i:s')][$domain][hasHostName($client)] = $status;
                 }elseif ($orderBy == "orderByDomainClientTime"){
-                  $allQueries['data'][$domain][hasHostName($client)][$time->format('Y-m-d\TH:i:s')] = $status;
+                  $allQueries['data'][$domain][hasHostName($client)][$time->format('Y-m-d T H:i:s')] = $status;
                 }elseif ($orderBy == "orderByDomainTimeClient"){
-                  $allQueries['data'][$domain][$time->format('Y-m-d\TH:i:s')][hasHostName($client)] = $status;
+                  $allQueries['data'][$domain][$time->format('Y-m-d T H:i:s')][hasHostName($client)] = $status;
                 }else{
                   array_push($allQueries['data'], array(
-                    $time->format('Y-m-d\TH:i:s'),
+                    $time->format('Y-m-d T H:i:s'),
                     $type,
                     $domain,
                     hasHostName($client),
@@ -440,6 +483,7 @@
                 }
             }
         }
+
         return $allQueries;
     }
 
@@ -669,7 +713,7 @@
             $exploded = explode(" ", $entry);
             $domain = trim($exploded[count($exploded) - 3]);
 
-            if(isset($gravity_domains[$domain]))
+            if(ispositive($gravity_domains[$domain]))
             {
                 if (isset($byTimeAds[$time])) {
                     $byTimeAds[$time]++;
@@ -709,7 +753,7 @@
             $exploded = explode(" ", $entry);
             $domain = trim($exploded[count($exploded) - 3]);
 
-            if(isset($gravity_domains[$domain]))
+            if(ispositive($gravity_domains[$domain]))
             {
                 if (isset($byTimeAds[$time])) {
                     $byTimeAds[$time]++;

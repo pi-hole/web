@@ -1,3 +1,9 @@
+<!-- Pi-hole: A black hole for Internet advertisements
+*    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*    Network-wide ad blocking via your own hardware.
+*
+*    This file is copyright under the latest version of the EUPL.
+*    Please see LICENSE file for your rights under this license. -->
 <?php
 require "scripts/pi-hole/php/header.php";
 
@@ -35,8 +41,7 @@ function getFullName() {
     <?php }else{ ?>
         <button id="btnAdd" class="btn btn-default" type="button">Add</button>
     <?php } ?>
-        <button id="btnRefresh" class="btn btn-default" type="button">Refresh</button>
-    }
+        <button id="btnRefresh" class="btn btn-default" type="button"><i class="fa fa-refresh"></i></button>
     </span>
 </div>
 <?php if($list === "white") { ?>

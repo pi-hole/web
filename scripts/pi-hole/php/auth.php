@@ -1,4 +1,11 @@
 <?php
+/* Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license. */
+
 require('func.php');
 $ERRORLOG = getenv('PHP_ERROR_LOG');
 if (empty($ERRORLOG)) {
@@ -23,7 +30,7 @@ function check_cors() {
     $AUTHORIZED_HOSTNAMES = array(
         $ipv4,
         $ipv6,
-        $_SERVER["SERVER_NAME"],
+        str_replace(array("[","]"), array("",""), $_SERVER["SERVER_NAME"]),
         "pi.hole",
         "localhost"
     );
@@ -64,8 +71,8 @@ function check_cors() {
         {
             $server_origin = parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST);
         }
-        // Remove "[" ... "]"
-        $server_origin = str_replace(array("[","]"), array("",""), $server_origin);
+        // Remove "[", "]","http://", and "https://"
+        $server_origin = str_replace(array("[","]","http://","https://"), array("","","",""), $server_origin);
 
         if(!in_array($server_origin, $AUTHORIZED_HOSTNAMES)) {
             log_and_die("Failed CORS: " . $server_origin .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));

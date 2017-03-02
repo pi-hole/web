@@ -1,3 +1,9 @@
+/* Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license. */
 // IE likes to cache too much :P
 $.ajaxSetup({cache: false});
 
@@ -200,4 +206,13 @@ $(function(){
     $("[data-hide]").on("click", function(){
         $(this).closest("." + $(this).attr("data-hide")).hide();
     });
+});
+
+$(document).ready(function () {
+    if (screen.width < 576) {
+        $(".input-group-btn").css("display", "initial");
+    }
+    else {
+        $(".input-group-btn").css("display", "table-cell");
+    }
 });

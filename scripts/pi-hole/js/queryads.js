@@ -1,3 +1,9 @@
+/* Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license. */
 var exact = "";
 
 function quietfilter(ta,data)
@@ -62,7 +68,7 @@ function eventsource() {
     if(q.val() === "yes")
     {
         quiet = true;
-        exact = "&exact";
+        exact = "exact";
     }
 
     // IE does not support EventSource - load whole content at once
@@ -72,7 +78,7 @@ function eventsource() {
     }
 
     var host = window.location.host;
-    var source = new EventSource("/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+exact);
+    var source = new EventSource("/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+"&"+exact);
 
     // Reset and show field
     ta.empty();

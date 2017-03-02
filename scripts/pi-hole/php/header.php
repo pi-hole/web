@@ -1,4 +1,12 @@
 <?php
+/* Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license. */ ?>
+
+<?php
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
 
@@ -57,9 +65,18 @@
 
     // Get load
     $loaddata = sys_getloadavg();
+    foreach ($loaddata as $key => $value) {
+        $loaddata[$key] = round($value, 2);
+    }
     // Get number of processing units available to PHP
     // (may be less than the number of online processors)
     $nproc = shell_exec('nproc');
+    if(!is_numeric($nproc))
+    {
+        $cpuinfo = file_get_contents('/proc/cpuinfo');
+        preg_match_all('/^processor/m', $cpuinfo, $matches);
+        $nproc = count($matches[0]);
+    }
 
     // Get memory usage
     $data = explode("\n", file_get_contents("/proc/meminfo"));
@@ -174,6 +191,7 @@
 <script src="scripts/pi-hole/js/header.js"></script>
 <!-- Send token to JS -->
 <div id="token" hidden><?php if($auth) echo $token; ?></div>
+<div id="enableTimer" hidden><?php if(file_exists("../custom_disable_timer")){ echo file_get_contents("../custom_disable_timer"); } ?></div>
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
@@ -303,7 +321,7 @@
                         {
                             echo "#7FFF00";
                         }
-                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
+                        echo "\" title=\"Detected $nproc cores\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
                     ?>
                     <br/>
                     <?php
@@ -346,7 +364,7 @@
                 <!-- Home Page -->
                 <li<?php if($scriptname === "index.php"){ ?> class="active"<?php } ?>>
                     <a href="index.php">
-                        <i class="fa fa-home"></i> <span>Main Page</span>
+                        <i class="fa fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
                 <?php if($auth){ ?>
@@ -398,14 +416,19 @@
                             <i class="fa fa-clock-o"></i> <span>For 5 minutes</span>
                         </a>
                     </li>
+                    <li>
+                      <a href="#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal">
+                            <i class="fa fa-clock-o"></i> <span>Custom time</span>
+                      </a>
+                    </li>
                   </ul>
                     <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
                 <li id="pihole-enable" class="treeview"<?php if ($pistatus == "1") { ?> hidden="true"<?php } ?>>
-                    <a href="#"><i class="fa fa-play"></i> <span>Enable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></a>
+                    <a href="#"><i class="fa fa-play"></i> <span id="enableLabel">Enable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></a>
                 </li>
                 <!-- Tools -->
-                <li class="treeview <?php if($scriptname === "gravity.php" || $scriptname === "queryads.php"){ ?>active<?php } ?>">
+                <li class="treeview <?php if($scriptname === "gravity.php" || $scriptname === "queryads.php" || $scriptname === "debug.php"){ ?>active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-folder"></i> <span>Tools</span>
                     <span class="pull-right-container">
@@ -429,6 +452,12 @@
                     <li<?php if($scriptname === "taillog.php"){ ?> class="active"<?php } ?>>
                         <a href="taillog.php">
                             <i class="fa fa-list-ul"></i> <span>Tail pihole.log</span>
+                        </a>
+                    </li>
+                    <!-- Generate debug log -->
+                    <li<?php if($scriptname === "debug.php"){ ?> class="active"<?php } ?>>
+                        <a href="debug.php">
+                            <i class="fa fa-ambulance"></i> <span>Generate debug log</span>
                         </a>
                     </li>
                   </ul>

@@ -1,3 +1,11 @@
+<?php
+/* Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license. */ ?>
+
 <div class="mainbox col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
   <div class="panel panel-default">
     <div class="panel-heading">
