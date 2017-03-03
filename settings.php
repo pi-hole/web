@@ -493,20 +493,24 @@
 				<form role="form" method="post">
 				<div class="col-lg-6">
 					<label>Upstream DNS Servers</label>
-					<table><tr><th>IPv4 1&nbsp;&nbsp;</th><th>IPv4 2&nbsp;&nbsp;</th><th>IPv6 1&nbsp;&nbsp;</th><th>IPv6 2&nbsp;&nbsp;</th><th>Name</th></tr>
+					<table class="table table-bordered">
+						<tr>
+							<th colspan="2">IPv4</th>
+							<th colspan="2">IPv6</th>
+							<th>Name</th>
+						</tr>
 						<?php foreach ($DNSserverslist as $key => $value) { ?>
 						<tr>
-						<div class="checkbox">
-							<?php if(isset($value["v4p"])) { ?>
-							<td title="<?php echo $value["v4p"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v4p"];?>" value="true" <?php if(in_array($value["v4p"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
-							<?php if(isset($value["v4s"])) { ?>
-							<td title="<?php echo $value["v4s"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v4s"];?>" value="true" <?php if(in_array($value["v4s"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
-							<?php if(isset($value["v6p"])) { ?>
-							<td title="<?php echo $value["v6p"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6p"];?>" value="true" <?php if(in_array($value["v6p"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
-							<?php if(isset($value["v6s"])) { ?>
-							<td title="<?php echo $value["v6s"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6s"];?>" value="true" <?php if(in_array($value["v6s"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<?php if(isset($value["v4_1"])) { ?>
+							<td title="<?php echo $value["v4_1"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v4_1"];?>" value="true" <?php if(in_array($value["v4_1"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<?php if(isset($value["v4_2"])) { ?>
+							<td title="<?php echo $value["v4_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v4_2"];?>" value="true" <?php if(in_array($value["v4_2"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<?php if(isset($value["v6_1"])) { ?>
+							<td title="<?php echo $value["v6_1"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_1"];?>" value="true" <?php if(in_array($value["v6_1"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<?php if(isset($value["v6_2"])) { ?>
+							<td title="<?php echo $value["v6_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_2"];?>" value="true" <?php if(in_array($value["v6_2"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
 							<td><?php echo $key;?></td>
-						</div></tr>
+						</tr>
 						<?php } ?>
 					</table>
 				</div>

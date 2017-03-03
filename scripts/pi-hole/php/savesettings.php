@@ -24,15 +24,14 @@ function validIP($address){
 // Check for existance of variable
 // and test it only if it exists
 function istrue(&$argument) {
-	$ret = false;
 	if(isset($argument))
 	{
 		if($argument)
 		{
-			$ret = true;
+			return true;
 		}
 	}
-	return $ret;
+	return false;
 }
 
 // Credit: http://stackoverflow.com/a/4694816/2087442
@@ -87,7 +86,6 @@ function readStaticLeasesFile()
 }
 
 function isequal(&$argument, &$compareto) {
-	$ret = false;
 	if(isset($argument))
 	{
 		if($argument === $compareto)
@@ -98,24 +96,24 @@ function isequal(&$argument, &$compareto) {
 	return false;
 }
 
-function isinserverlist($ip) {
+function isinserverlist($addr) {
 	global $DNSserverslist;
 	foreach ($DNSserverslist as $key => $value) {
-		if (isequal($value['v4p'],$ip) || isequal($value['v4s'],$ip))
+		if (isequal($value['v4_1'],$addr) || isequal($value['v4_2'],$addr))
 			return true;
-		if (isequal($value['v6p'],$ip) || isequal($value['v6s'],$ip))
+		if (isequal($value['v6_1'],$addr) || isequal($value['v6_2'],$addr))
 			return true;
 	}
 	return false;
 }
 
 	$DNSserverslist = [
-			"Google" => ["v4p" => "8.8.8.8","v4s" => "8.8.4.4", "v6p" => "2001:4860:4860:0:0:0:0:8888", "v6s" => "2001:4860:4860:0:0:0:0:8844"],
-			"OpenDNS" => ["v4p" => "208.67.222.222", "v4s" => "208.67.220.220"],
-			"Level3" => ["v4p" => "4.2.2.1", "v4s" => "4.2.2.2"],
-			"Norton" => ["v4p" => "199.85.126.10", "v4s" => "199.85.127.10"],
-			"Comodo" => ["v4p" => "8.26.56.26", "v4s" => "8.20.247.20"],
-			"DNS.WATCH" => ["v4p" => "84.200.69.80", "v4s" => "84.200.70.40", "v6p" => "2001:1608:10:25:0:0:1c04:b12f", "v6s" => "2001:1608:10:25:0:0:9249:d69b"]
+			"Google" => ["v4_1" => "8.8.8.8","v4_2" => "8.8.4.4", "v6_1" => "2001:4860:4860:0:0:0:0:8888", "v6_2" => "2001:4860:4860:0:0:0:0:8844"],
+			"OpenDNS" => ["v4_1" => "208.67.222.222", "v4_2" => "208.67.220.220"],
+			"Level3" => ["v4_1" => "4.2.2.1", "v4_2" => "4.2.2.2"],
+			"Norton" => ["v4_1" => "199.85.126.10", "v4_2" => "199.85.127.10"],
+			"Comodo" => ["v4_1" => "8.26.56.26", "v4_2" => "8.20.247.20"],
+			"DNS.WATCH" => ["v4_1" => "84.200.69.80", "v4_2" => "84.200.70.40", "v6_1" => "2001:1608:10:25:0:0:1c04:b12f", "v6_2" => "2001:1608:10:25:0:0:9249:d69b"]
 		];
 
 	$error = "";
@@ -132,7 +130,7 @@ function isinserverlist($ip) {
 				// Add selected predefined servers to list
 				foreach ($DNSserverslist as $key => $value)
 				{
-					foreach(["v4p", "v4s", "v6p", "v6s"] as $type)
+					foreach(["v4_1", "v4_2", "v6_1", "v6_2"] as $type)
 					{
 						if(@array_key_exists("DNSserver".str_replace(".","_",$value[$type]),$_POST))
 						{
