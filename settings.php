@@ -396,9 +396,8 @@
 	// DNS settings
 	$DNSservers = [];
 	$DNSactive = [];
-	for($i=1;$i<=12;$i++)
-	{
-		if(isset($setupVars["PIHOLE_DNS_".$i])){
+	$i = 1;
+	while(isset($setupVars["PIHOLE_DNS_".$i])){
 			if(isset($DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]))
 			{
 				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],$DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]];
@@ -428,7 +427,7 @@
 					$custom4 = $setupVars["PIHOLE_DNS_".$i];
 				}
 			}
-		}
+		$i += 1;
 	}
 
 	if(isset($setupVars["DNS_FQDN_REQUIRED"])){
