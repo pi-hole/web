@@ -109,6 +109,8 @@ $(document).ready(function() {
         APIstring += "&until="+GETDict["until"];
     }
 
+    $.fn.dataTable.moment("YYY-MM-DD z HH:MM:SS");
+
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
             status = data[4];
@@ -135,7 +137,7 @@ $(document).ready(function() {
         "processing": true,
         "order" : [[0, "desc"]],
         "columns": [
-            { "width" : "20%", "type": "date" },
+            { "width" : "20%" },
             { "width" : "10%" },
             { "width" : "40%" },
             { "width" : "10%" },
@@ -176,5 +178,3 @@ $(document).ready(function() {
         tableApi.column(2).search("^"+escapeRegex(GETDict["domain"])+"$",true,false);
     }
 } );
-
-
