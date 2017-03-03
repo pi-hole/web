@@ -298,15 +298,15 @@
                             echo "\"></i> Temp:&nbsp;";
                             if($temperatureunit === "F")
                             {
-                                echo round($fahrenheit,1) . "&deg;F";
+                                echo round($fahrenheit,1) . " &deg;F";
                             }
                             elseif($temperatureunit === "K")
                             {
-                                echo round($kelvin,1) . "K";
+                                echo round($kelvin,1) . " K";
                             }
                             else
                             {
-                                echo round($celsius,1) . "&deg;C";
+                                echo round($celsius,1) . " &deg;C";
                             }
                             echo "</a>";
                         }
