@@ -398,36 +398,35 @@
 	$DNSservers = [];
 	$DNSactive = [];
 
-	for($i=1;$i<=12;$i++)
-	{
-		if(isset($setupVars["PIHOLE_DNS_".$i])){
-			if(isinserverlist($setupVars["PIHOLE_DNS_".$i]))
+	$i = 1;
+	while(isset($setupVars["PIHOLE_DNS_".$i])){
+		if(isinserverlist($setupVars["PIHOLE_DNS_".$i]))
+		{
+			array_push($DNSactive,$setupVars["PIHOLE_DNS_".$i]);
+		}
+		elseif(strpos($setupVars["PIHOLE_DNS_".$i],"."))
+		{
+			if(!isset($custom1))
 			{
-				array_push($DNSactive,$setupVars["PIHOLE_DNS_".$i]);
+				$custom1 = $setupVars["PIHOLE_DNS_".$i];
 			}
-			elseif(strpos($setupVars["PIHOLE_DNS_".$i],"."))
+			else
 			{
-				if(!isset($custom1))
-				{
-					$custom1 = $setupVars["PIHOLE_DNS_".$i];
-				}
-				else
-				{
-					$custom2 = $setupVars["PIHOLE_DNS_".$i];
-				}
-			}
-			elseif(strpos($setupVars["PIHOLE_DNS_".$i],":"))
-			{
-				if(!isset($custom3))
-				{
-					$custom3 = $setupVars["PIHOLE_DNS_".$i];
-				}
-				else
-				{
-					$custom4 = $setupVars["PIHOLE_DNS_".$i];
-				}
+				$custom2 = $setupVars["PIHOLE_DNS_".$i];
 			}
 		}
+		elseif(strpos($setupVars["PIHOLE_DNS_".$i],":"))
+		{
+			if(!isset($custom3))
+			{
+				$custom3 = $setupVars["PIHOLE_DNS_".$i];
+			}
+			else
+			{
+				$custom4 = $setupVars["PIHOLE_DNS_".$i];
+			}
+		}
+		$i++;
 	}
 
 	if(isset($setupVars["DNS_FQDN_REQUIRED"])){
