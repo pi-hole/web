@@ -44,6 +44,15 @@ function validDomain($domain_name)
 	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
 }
 
+function validDomainWildcard($domain_name)
+{
+	// There has to be either no or at most one "*" at the beginning of a line
+	$validChars = preg_match("/^((\*)?[_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([a-z\d])*)*$/i", $domain_name);
+	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
+	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
+	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
+}
+
 function validMAC($mac_addr)
 {
   // Accepted input format: 00:01:02:1A:5F:FF (characters may be lower case)
@@ -241,9 +250,9 @@ function readStaticLeasesFile()
 				$first = true;
 				foreach($domains as $domain)
 				{
-					if(!validDomain($domain))
+					if(!validDomainWildcard($domain) || validIP($domain))
 					{
-						$error .= "Top Domains/Ads entry ".htmlspecialchars($domain)." is invalid!<br>";
+						$error .= "Top Domains/Ads entry ".htmlspecialchars($domain)." is invalid (use only domains)!<br>";
 					}
 					if(!$first)
 					{
@@ -260,7 +269,7 @@ function readStaticLeasesFile()
 				$first = true;
 				foreach($clients as $client)
 				{
-					if(!validIP($client))
+					if(!validDomainWildcard($client))
 					{
 						$error .= "Top Clients entry ".htmlspecialchars($client)." is invalid (use only IP addresses)!<br>";
 					}
@@ -333,24 +342,6 @@ function readStaticLeasesFile()
 				else
 				{
 					exec("sudo pihole -a privacymode false");
-				}
-
-				if(isset($_POST["resolve-forward"]))
-				{
-					exec("sudo pihole -a resolve forward true");
-				}
-				else
-				{
-					exec("sudo pihole -a resolve forward false");
-				}
-
-				if(isset($_POST["resolve-clients"]))
-				{
-					exec("sudo pihole -a resolve clients true");
-				}
-				else
-				{
-					exec("sudo pihole -a resolve clients false");
 				}
 
 				break;
