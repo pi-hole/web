@@ -393,42 +393,40 @@
 		</div>
 
 <?php
+
 	// DNS settings
 	$DNSservers = [];
 	$DNSactive = [];
-	for($i=1;$i<=12;$i++)
-	{
-		if(isset($setupVars["PIHOLE_DNS_".$i])){
-			if(isset($DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]))
+
+	$i = 1;
+	while(isset($setupVars["PIHOLE_DNS_".$i])){
+		if(isinserverlist($setupVars["PIHOLE_DNS_".$i]))
+		{
+			array_push($DNSactive,$setupVars["PIHOLE_DNS_".$i]);
+		}
+		elseif(strpos($setupVars["PIHOLE_DNS_".$i],"."))
+		{
+			if(!isset($custom1))
 			{
-				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],$DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]];
-				array_push($DNSactive,$setupVars["PIHOLE_DNS_".$i]);
+				$custom1 = $setupVars["PIHOLE_DNS_".$i];
 			}
-			elseif(strpos($setupVars["PIHOLE_DNS_".$i],"."))
+			else
 			{
-				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],"CustomIPv4"];
-				if(!isset($custom1))
-				{
-					$custom1 = $setupVars["PIHOLE_DNS_".$i];
-				}
-				else
-				{
-					$custom2 = $setupVars["PIHOLE_DNS_".$i];
-				}
-			}
-			elseif(strpos($setupVars["PIHOLE_DNS_".$i],":"))
-			{
-				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],"CustomIPv6"];
-				if(!isset($custom3))
-				{
-					$custom3 = $setupVars["PIHOLE_DNS_".$i];
-				}
-				else
-				{
-					$custom4 = $setupVars["PIHOLE_DNS_".$i];
-				}
+				$custom2 = $setupVars["PIHOLE_DNS_".$i];
 			}
 		}
+		elseif(strpos($setupVars["PIHOLE_DNS_".$i],":"))
+		{
+			if(!isset($custom3))
+			{
+				$custom3 = $setupVars["PIHOLE_DNS_".$i];
+			}
+			else
+			{
+				$custom4 = $setupVars["PIHOLE_DNS_".$i];
+			}
+		}
+		$i++;
 	}
 
 	if(isset($setupVars["DNS_FQDN_REQUIRED"])){
@@ -495,13 +493,26 @@
 				<form role="form" method="post">
 				<div class="col-lg-6">
 					<label>Upstream DNS Servers</label>
-					<div class="form-group">
+					<table class="table table-bordered">
+						<tr>
+							<th colspan="2">IPv4</th>
+							<th colspan="2">IPv6</th>
+							<th>Name</th>
+						</tr>
 						<?php foreach ($DNSserverslist as $key => $value) { ?>
-						<div class="checkbox">
-							<label title="<?php echo $key;?>">
-							<input type="checkbox" name="DNSserver<?php echo $key;?>" value="true" <?php if(in_array($key,$DNSactive)){ ?>checked<?php } ?> ><?php echo $value;?></label>
-						</div> <?php } ?>
-					</div>
+						<tr>
+							<?php if(isset($value["v4_1"])) { ?>
+							<td title="<?php echo $value["v4_1"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v4_1"];?>" value="true" <?php if(in_array($value["v4_1"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<?php if(isset($value["v4_2"])) { ?>
+							<td title="<?php echo $value["v4_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v4_2"];?>" value="true" <?php if(in_array($value["v4_2"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<?php if(isset($value["v6_1"])) { ?>
+							<td title="<?php echo $value["v6_1"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_1"];?>" value="true" <?php if(in_array($value["v6_1"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<?php if(isset($value["v6_2"])) { ?>
+							<td title="<?php echo $value["v6_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_2"];?>" value="true" <?php if(in_array($value["v6_2"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<td><?php echo $key;?></td>
+						</tr>
+						<?php } ?>
+					</table>
 				</div>
 				<div class="col-lg-6">
 					<label>&nbsp;</label>

@@ -24,15 +24,14 @@ function validIP($address){
 // Check for existance of variable
 // and test it only if it exists
 function istrue(&$argument) {
-	$ret = false;
 	if(isset($argument))
 	{
 		if($argument)
 		{
-			$ret = true;
+			return true;
 		}
 	}
-	return $ret;
+	return false;
 }
 
 // Credit: http://stackoverflow.com/a/4694816/2087442
@@ -95,19 +94,35 @@ function readStaticLeasesFile()
 	return true;
 }
 
+function isequal(&$argument, &$compareto) {
+	if(isset($argument))
+	{
+		if($argument === $compareto)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+function isinserverlist($addr) {
+	global $DNSserverslist;
+	foreach ($DNSserverslist as $key => $value) {
+		if (isequal($value['v4_1'],$addr) || isequal($value['v4_2'],$addr))
+			return true;
+		if (isequal($value['v6_1'],$addr) || isequal($value['v6_2'],$addr))
+			return true;
+	}
+	return false;
+}
+
 	$DNSserverslist = [
-			"8.8.8.8" => "Google (Primary)",
-			"208.67.222.222" => "OpenDNS (Primary)",
-			"4.2.2.1" => "Level3 (Primary)",
-			"199.85.126.10" => "Norton (Primary)",
-			"8.26.56.26" => "Comodo (Primary)",
-			"84.200.69.80" => "DNS.WATCH (Primary)",
-			"8.8.4.4" => "Google (Secondary)",
-			"208.67.220.220" => "OpenDNS (Secondary)",
-			"4.2.2.2" => "Level3 (Secondary)",
-			"199.85.127.10" => "Norton (Secondary)",
-			"8.20.247.20" => "Comodo (Secondary)",
-        	"84.200.70.40" => "DNS.WATCH (Secondary)",
+			"Google" => ["v4_1" => "8.8.8.8","v4_2" => "8.8.4.4", "v6_1" => "2001:4860:4860:0:0:0:0:8888", "v6_2" => "2001:4860:4860:0:0:0:0:8844"],
+			"OpenDNS" => ["v4_1" => "208.67.222.222", "v4_2" => "208.67.220.220"],
+			"Level3" => ["v4_1" => "4.2.2.1", "v4_2" => "4.2.2.2"],
+			"Norton" => ["v4_1" => "199.85.126.10", "v4_2" => "199.85.127.10"],
+			"Comodo" => ["v4_1" => "8.26.56.26", "v4_2" => "8.20.247.20"],
+			"DNS.WATCH" => ["v4_1" => "84.200.69.80", "v4_2" => "84.200.70.40", "v6_1" => "2001:1608:10:25:0:0:1c04:b12f", "v6_2" => "2001:1608:10:25:0:0:9249:d69b"]
 		];
 
 	$error = "";
@@ -124,9 +139,12 @@ function readStaticLeasesFile()
 				// Add selected predefined servers to list
 				foreach ($DNSserverslist as $key => $value)
 				{
-					if(array_key_exists("DNSserver".str_replace(".","_",$key),$_POST))
+					foreach(["v4_1", "v4_2", "v6_1", "v6_2"] as $type)
 					{
-						array_push($DNSservers,$key);
+						if(@array_key_exists("DNSserver".str_replace(".","_",$value[$type]),$_POST))
+						{
+							array_push($DNSservers,$value[$type]);
+						}
 					}
 				}
 
@@ -204,7 +222,7 @@ function readStaticLeasesFile()
 					// Fallback
 					$DNSinterface = "local";
 				}
-				$return .= exec("sudo pihole -a -i ".$DNSinterface." -web");
+				exec("sudo pihole -a -i ".$DNSinterface." -web");
 
 				// If there has been no error we can save the new DNS server IPs
 				if(!strlen($error))
