@@ -393,42 +393,40 @@
 		</div>
 
 <?php
+
 	// DNS settings
 	$DNSservers = [];
 	$DNSactive = [];
-	for($i=1;$i<=12;$i++)
-	{
-		if(isset($setupVars["PIHOLE_DNS_".$i])){
-			if(isset($DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]))
+
+	$i = 1;
+	while(isset($setupVars["PIHOLE_DNS_".$i])){
+		if(isinserverlist($setupVars["PIHOLE_DNS_".$i]))
+		{
+			array_push($DNSactive,$setupVars["PIHOLE_DNS_".$i]);
+		}
+		elseif(strpos($setupVars["PIHOLE_DNS_".$i],"."))
+		{
+			if(!isset($custom1))
 			{
-				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],$DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]];
-				array_push($DNSactive,$setupVars["PIHOLE_DNS_".$i]);
+				$custom1 = $setupVars["PIHOLE_DNS_".$i];
 			}
-			elseif(strpos($setupVars["PIHOLE_DNS_".$i],"."))
+			else
 			{
-				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],"CustomIPv4"];
-				if(!isset($custom1))
-				{
-					$custom1 = $setupVars["PIHOLE_DNS_".$i];
-				}
-				else
-				{
-					$custom2 = $setupVars["PIHOLE_DNS_".$i];
-				}
-			}
-			elseif(strpos($setupVars["PIHOLE_DNS_".$i],":"))
-			{
-				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],"CustomIPv6"];
-				if(!isset($custom3))
-				{
-					$custom3 = $setupVars["PIHOLE_DNS_".$i];
-				}
-				else
-				{
-					$custom4 = $setupVars["PIHOLE_DNS_".$i];
-				}
+				$custom2 = $setupVars["PIHOLE_DNS_".$i];
 			}
 		}
+		elseif(strpos($setupVars["PIHOLE_DNS_".$i],":"))
+		{
+			if(!isset($custom3))
+			{
+				$custom3 = $setupVars["PIHOLE_DNS_".$i];
+			}
+			else
+			{
+				$custom4 = $setupVars["PIHOLE_DNS_".$i];
+			}
+		}
+		$i++;
 	}
 
 	if(isset($setupVars["DNS_FQDN_REQUIRED"])){
@@ -495,13 +493,26 @@
 				<form role="form" method="post">
 				<div class="col-lg-6">
 					<label>Upstream DNS Servers</label>
-					<div class="form-group">
+					<table class="table table-bordered">
+						<tr>
+							<th colspan="2">IPv4</th>
+							<th colspan="2">IPv6</th>
+							<th>Name</th>
+						</tr>
 						<?php foreach ($DNSserverslist as $key => $value) { ?>
-						<div class="checkbox">
-							<label title="<?php echo $key;?>">
-							<input type="checkbox" name="DNSserver<?php echo $key;?>" value="true" <?php if(in_array($key,$DNSactive)){ ?>checked<?php } ?> ><?php echo $value;?></label>
-						</div> <?php } ?>
-					</div>
+						<tr>
+							<?php if(isset($value["v4_1"])) { ?>
+							<td title="<?php echo $value["v4_1"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v4_1"];?>" value="true" <?php if(in_array($value["v4_1"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<?php if(isset($value["v4_2"])) { ?>
+							<td title="<?php echo $value["v4_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v4_2"];?>" value="true" <?php if(in_array($value["v4_2"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<?php if(isset($value["v6_1"])) { ?>
+							<td title="<?php echo $value["v6_1"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_1"];?>" value="true" <?php if(in_array($value["v6_1"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<?php if(isset($value["v6_2"])) { ?>
+							<td title="<?php echo $value["v6_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_2"];?>" value="true" <?php if(in_array($value["v6_2"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<td><?php echo $key;?></td>
+						</tr>
+						<?php } ?>
+					</table>
 				</div>
 				<div class="col-lg-6">
 					<label>&nbsp;</label>
@@ -656,24 +667,6 @@
 		$privacyMode = false;
 	}
 
-	if(istrue($setupVars["API_GET_UPSTREAM_DNS_HOSTNAME"]))
-	{
-		$resolveForward = true;
-	}
-	else
-	{
-		$resolveForward = false;
-	}
-
-	if(istrue($setupVars["API_GET_CLIENT_HOSTNAME"]))
-	{
-		$resolveClients = true;
-	}
-	else
-	{
-		$resolveClients = false;
-	}
-
 ?>
 		<div class="box box-success">
 			<div class="box-header with-border">
@@ -692,36 +685,24 @@
 				<div class="col-lg-6">
 					<div class="form-group">
 					<label>Top Clients</label>
-					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
+					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address or host name per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
 					</div>
 				</div>
-				<h4>Reverse DNS lookup</h4>
-				<p>Try to determine the domain name via querying the Pi-hole for</p>
+				<h4>Privacy settings (Statistics / Query Log)</h4>
 				<div class="col-lg-6">
 					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="resolve-forward" <?php if($resolveForward){ ?>checked<?php } ?>> Forward Destinations</label></div>
-					</div>
-				</div>
-				<div class="col-lg-6">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="resolve-clients" <?php if($resolveClients){ ?>checked<?php } ?>> Top Clients</label></div>
-					</div>
-				</div>
-				<h4>Query Log</h4>
-				<div class="col-lg-6">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show permitted queries</label></div>
+						<div class="checkbox"><label><input type="checkbox" name="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show permitted domain entries</label></div>
 					</div>
 				</div>
 				<div class="col-lg-6">
 					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked queries</label></div>
+						<div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked domain entries</label></div>
 					</div>
 				</div>
 				<h4>Privacy mode</h4>
 				<div class="col-lg-12">
 					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="privacyMode" <?php if($privacyMode){ ?>checked<?php } ?>> Don't show query results for permitted requests</label></div>
+						<div class="checkbox"><label><input type="checkbox" name="privacyMode" <?php if($privacyMode){ ?>checked<?php } ?>> Don't show origin of DNS requests in query log</label></div>
 					</div>
 				</div>
 			</div>
@@ -816,6 +797,40 @@
 				<form role="form" method="post" id="flushlogsform">
 					<input type="hidden" name="field" value="flushlogs">
 				</form>
+			</div>
+		</div>
+<?php
+if($FTL)
+{
+	$parts = preg_split('/\s+/',trim(exec("ps -p `cat /var/run/pihole-FTL.pid` -o pid,start,vsz,rss,euser,egroup,cputime,%cpu,%mem")));
+	$FTLversion = exec("/usr/bin/pihole-FTL version");
+	// pid
+	// time the command started. If the process was started less than 24 hours ago, the output format is "HH:MM:SS", else it is "  Mmm dd" (where Mmm is a three-letter month name).
+	// virtual memory size of the process in KiB
+	// resident set size, the non-swapped physical memory that a task has used (inkiloBytes).
+	// effective user name.  This will be the textual user ID, if it can be obtained
+	// effective group ID of the process.  This will be the textual group ID, if it can be obtained
+	// cumulative CPU time, "[DD-]hh:mm:ss" format.  (alias time)
+	// cpu utilization of the process in "##.#" format.  Currently, it is the CPU time used divided by the time the process has been running (cputime/realtime ratio), expressed as a percentage.
+	// ratio of the process's resident set size  to the physical memory on the machine, expressed as a percentage.
+}
+?>
+		<div class="box box-danger collapsed-box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Pi-hole FTL (<?php if($FTL){ ?>Running<?php }else{ ?>Not running<?php } ?>)</h3>
+				<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
+			</div>
+			<div class="box-body">
+				<?php if($FTL){ ?>FTL version: <?php echo $FTLversion; ?><br>
+				Process identifier (PID): <?php echo $parts[0]; ?><br>
+				Time FTL started: <?php echo $parts[1]; ?><br>
+				User / Group: <?php echo $parts[4]; ?> / <?php echo $parts[5]; ?>
+				<?php if($parts[4] == "root" || $parts[5] == "root"){?><br><span style="color:red">(WARNING: You should not use root as user for running FTL!)</span><?php } ?><br>
+				Total CPU utilization: <?php echo $parts[7]; ?>%<br>
+				Total CPU time: <?php echo $parts[6]; ?><br>
+				Memory utilization: <?php echo $parts[8]; ?>%<br>
+				<span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory: <?php echo formatSizeUnits(1e3*$parts[3]); ?></span><br>
+				<?php } ?>
 			</div>
 		</div>
 		<div class="box box-danger collapsed-box">

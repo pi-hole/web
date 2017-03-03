@@ -96,7 +96,7 @@
         </div>
         <div class="box-body">
           <div class="chart">
-            <canvas id="queryTypeChart" width="400" height="200"></canvas>
+            <canvas id="queryTypeChart" width="400" height="150"></canvas>
           </div>
         </div>
         <div class="overlay">
@@ -112,7 +112,7 @@
         </div>
         <div class="box-body">
           <div class="chart">
-            <canvas id="forwardDestinationChart" width="400" height="200"></canvas>
+            <canvas id="forwardDestinationChart" width="400" height="150"></canvas>
           </div>
         </div>
         <div class="overlay">
