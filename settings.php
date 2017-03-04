@@ -397,7 +397,6 @@
 	// DNS settings
 	$DNSservers = [];
 	$DNSactive = [];
-
 	$i = 1;
 	while(isset($setupVars["PIHOLE_DNS_".$i])){
 		if(isinserverlist($setupVars["PIHOLE_DNS_".$i]))

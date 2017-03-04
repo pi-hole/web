@@ -125,6 +125,8 @@ $(document).ready(function() {
         APIstring += "&until="+(timestamp + 100);
     }
 
+    $.fn.dataTable.moment("YYY-MM-DD z HH:MM:SS");
+
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
             if (data[4] === "1")
@@ -193,5 +195,3 @@ $(document).ready(function() {
         }
     } );
 } );
-
-
