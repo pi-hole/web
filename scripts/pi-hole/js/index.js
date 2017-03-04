@@ -71,11 +71,22 @@ function updateQueriesOverTime() {
         timeLineChart.data.labels = [];
         timeLineChart.data.datasets[0].data = [];
         timeLineChart.data.datasets[1].data = [];
-        // Add data for each hour that is available
+
+            // Add data for each hour that is available
         for (var hour in data.ads_over_time[0]) {
             if ({}.hasOwnProperty.call(data.ads_over_time[0], hour)) {
-                var h = parseInt(data.domains_over_time[0][hour]);
-                var d = new Date().setHours(Math.floor(h / 6), 10 * (h % 6), 0, 0);
+                var d,h;
+                h = parseInt(data.domains_over_time[0][hour]);
+                if(parseInt(data.ads_over_time[0][0]) < 1200)
+                {
+                    // Fallback - old style
+                    d = new Date().setHours(Math.floor(h / 6), 10 * (h % 6), 0, 0);
+                }
+                else
+                {
+                    // New style: Get Unix timestamps
+                    d = new Date(1000*h);
+                }
 
                 timeLineChart.data.labels.push(d);
                 timeLineChart.data.datasets[0].data.push(data.domains_over_time[1][hour]);
@@ -104,21 +115,34 @@ function updateQueryTypes() {
         var colors = [];
         // Get colors from AdminLTE
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
-        var v = [], c = [];
-        // Collect values and colors, immediately push individual labels
-        $.each(data, function(key , value) {
+        var v = [], c = [], k = [], iter;
+        // Collect values and colors, and labels
+        if(data.hasOwnProperty("querytypes"))
+        {
+            iter = data.querytypes;
+        }
+        else
+        {
+            iter = data;
+        }
+        $.each(iter, function(key , value) {
             v.push(value);
             c.push(colors.shift());
-            queryTypeChart.data.labels.push(key.substr(6,key.length - 7));
+            k.push(key);
         });
         // Build a single dataset with the data to be pushed
         var dd = {data: v, backgroundColor: c};
         // and push it at once
-        queryTypeChart.data.datasets.push(dd);
+        queryTypeChart.data.datasets[0] = dd;
+        queryTypeChart.data.labels = k;
         $("#query-types .overlay").remove();
         queryTypeChart.update();
-        queryTypeChart.chart.config.options.cutoutPercentage=30;
+        queryTypeChart.chart.config.options.cutoutPercentage=50;
         queryTypeChart.update();
+        // Don't use rotation animation for further updates
+        queryTypeChart.options.animation.duration=0;
+        // Update query types data every 10 seconds
+        setTimeout(updateQueryTypes, 10000);
     });
 }
 
@@ -137,35 +161,39 @@ function escapeHtml(text) {
 
 function updateTopClientsChart() {
     $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
+        // Clear tables before filling them with data
+        $("#client-frequency td").parent().remove();
         var clienttable =  $("#client-frequency").find("tbody:last");
-        var domain, percentage, domainname, domainip;
-        for (domain in data.top_sources) {
+        var client, percentage, clientname, clientip;
+        for (client in data.top_sources) {
 
-            if ({}.hasOwnProperty.call(data.top_sources, domain)){
-                // Sanitize domain
-                domain = escapeHtml(domain);
-                if(domain.indexOf("|") > -1)
+            if ({}.hasOwnProperty.call(data.top_sources, client)){
+                // Sanitize client
+                client = escapeHtml(client);
+                if(client.indexOf("|") > -1)
                 {
-                    var idx = domain.indexOf("|");
-                    domainname = domain.substr(0, idx);
-                    domainip = domain.substr(idx+1, domain.length-idx);
+                    var idx = client.indexOf("|");
+                    clientname = client.substr(0, idx);
+                    clientip = client.substr(idx+1, client.length-idx);
                 }
                 else
                 {
-                    domainname = domain;
-                    domainip = domain;
+                    clientname = client;
+                    clientip = client;
                 }
 
-                var url = "<a href=\"queries.php?client="+domain+"\" title=\""+domainip+"\">"+domainname+"</a>";
-                percentage = data.top_sources[domain] / data.dns_queries_today * 100;
+                var url = "<a href=\"queries.php?client="+clientip+"\" title=\""+clientip+"\">"+clientname+"</a>";
+                percentage = data.top_sources[client] / data.dns_queries_today * 100;
                 clienttable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_sources[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
+                    "</td> <td>" + data.top_sources[client] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
                     percentage + "%\"></div> </div> </td> </tr> ");
             }
 
         }
 
         $("#client-frequency .overlay").remove();
+        // Update top clients list data every 10 seconds
+        setTimeout(updateTopClientsChart, 10000);
     });
 }
 
@@ -174,9 +202,17 @@ function updateForwardDestinations() {
         var colors = [];
         // Get colors from AdminLTE
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
-        var v = [], c = [];
+        var v = [], c = [], k = [], iter;
         // Collect values and colors, immediately push individual labels
-        $.each(data, function(key , value) {
+        if(data.hasOwnProperty("forward_destinations"))
+        {
+            iter = data.forward_destinations;
+        }
+        else
+        {
+            iter = data;
+        }
+        $.each(iter, function(key , value) {
             v.push(value);
             c.push(colors.shift());
             if(key.indexOf("|") > -1)
@@ -184,21 +220,29 @@ function updateForwardDestinations() {
                 var idx = key.indexOf("|");
                 key = key.substr(0, idx)+" ("+key.substr(idx+1, key.length-idx)+")";
             }
-            forwardDestinationChart.data.labels.push(key);
+            k.push(key);
         });
         // Build a single dataset with the data to be pushed
         var dd = {data: v, backgroundColor: c};
         // and push it at once
-        forwardDestinationChart.data.datasets.push(dd);
+        forwardDestinationChart.data.datasets[0] = dd;
+        forwardDestinationChart.data.labels = k;
         $("#forward-destinations .overlay").remove();
         forwardDestinationChart.update();
-        forwardDestinationChart.chart.config.options.cutoutPercentage=30;
+        forwardDestinationChart.chart.config.options.cutoutPercentage=50;
         forwardDestinationChart.update();
+        // Don't use rotation animation for further updates
+        forwardDestinationChart.options.animation.duration=0;
+        // Update forward destinations data every 10 seconds
+        setTimeout(updateForwardDestinations, 10000);
     });
 }
 
 function updateTopLists() {
     $.getJSON("api.php?summaryRaw&topItems", function(data) {
+        // Clear tables before filling them with data
+        $("#domain-frequency td").parent().remove();
+        $("#ad-frequency td").parent().remove();
         var domaintable = $("#domain-frequency").find("tbody:last");
         var adtable = $("#ad-frequency").find("tbody:last");
         var url, domain, percentage;
@@ -206,17 +250,10 @@ function updateTopLists() {
             if ({}.hasOwnProperty.call(data.top_queries,domain)){
                 // Sanitize domain
                 domain = escapeHtml(domain);
-                if(domain !== "pi.hole")
-                {
-                    url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
-                }
-                else
-                {
-                    url = domain;
-                }
+                url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
                 percentage = data.top_queries[domain] / data.dns_queries_today * 100;
                 domaintable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_queries[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
+                    "</td> <td>" + data.top_queries[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-green\" style=\"width: " +
                     percentage + "%\"></div> </div> </td> </tr> ");
             }
         }
@@ -234,13 +271,21 @@ function updateTopLists() {
                 url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
                 percentage = data.top_ads[domain] / data.ads_blocked_today * 100;
                 adtable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"%\"> <div class=\"progress-bar progress-bar-yellow\" style=\"width: " +
+                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.ads_blocked_today + "\"> <div class=\"progress-bar progress-bar-yellow\" style=\"width: " +
                     percentage + "%\"></div> </div> </td> </tr> ");
             }
         }
 
+        // Remove table if there are no results (e.g. privacy mode enabled)
+        if(jQuery.isEmptyObject(data.top_ads))
+        {
+            $("#ad-frequency").parent().remove();
+        }
+
         $("#domain-frequency .overlay").remove();
         $("#ad-frequency .overlay").remove();
+        // Update top lists data every 10 seconds
+        setTimeout(updateTopLists, 10000);
     });
 }
 
@@ -306,8 +351,8 @@ $(document).ready(function() {
                             var time = label.match(/(\d?\d):?(\d?\d?)/);
                             var h = parseInt(time[1], 10);
                             var m = parseInt(time[2], 10) || 0;
-                            var from = padNumber(h)+":"+padNumber(m)+":00";
-                            var to = padNumber(h)+":"+padNumber(m+9)+":59";
+                            var from = padNumber(h)+":"+padNumber(m-5)+":00";
+                            var to = padNumber(h)+":"+padNumber(m+4)+":59";
                             return "Queries from "+from+" to "+to;
                         },
                         label: function(tooltipItems, data) {
@@ -429,10 +474,8 @@ $(document).ready(function() {
                 var label = timeLineChart.data.labels[clickedElementindex];
 
                 //get value by index
-                //var value = timeLineChart.data.datasets[0].data[clickedElementindex];
-                var time = new Date(label);
-                var from = time.getHours()+":"+time.getMinutes();
-                var until = time.getHours()+":"+padNumber(parseInt(time.getMinutes()+9),2);
+                var from = label/1000 - 300;
+                var until = label/1000 + 300;
                 window.location.href = "queries.php?from="+from+"&until="+until;
             }
             return false;

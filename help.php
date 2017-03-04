@@ -48,20 +48,13 @@
     <ul>
         <li>Summary: A summary of statistics showing how many total DNS queries have been blocked today, what percentage of DNS queries have been blocked, and how many domains are in the compiled ad list. This summary is updated every 10 seconds.</li>
         <li>Queries over time: Graph showing DNS queries (total and blocked) over 10 minute time intervals. More information can be acquired by hovering over the lines. This graph is updated every 10 minutes.</li>
-        <li>Query Types: Identifies the types of processed queries:
-            <ul>
-                <li>A: address lookup (most commonly used to map hostnames to an IPv4 address of the host)</li>
-                <li>AAAA: address lookup (most commonly used to map hostnames to an IPv6 address of the host)</li>
-                <li>PTR: most common use is for implementing reverse DNS lookups</li>
-                <li>SRV: Service locator (often used by XMPP, SIP, and LDAP)</li>
-                <li>and others</li>
-            </ul>
-        </li>
+        <li>Query Types: Identifies the types of processed queries</li>
         <li>Forward Destinations: Shows to which upstream DNS the permitted requests have been forwarded to.</li>
         <li>Top Domains: Ranking of requested sites by number of DNS lookups.</li>
         <li>Top Advertisers: Ranking of requested advertisements by number of DNS lookups.</li>
         <li>Top Clients: Ranking of how many DNS requests each client has made on the local network.</li>
     </ul>
+    <p>The Top Domains and Top Advertisers lists may be hidden depending on the privacy Settings on the settings page</p>
     <?php if($authenticationsystem){ ?>
     <p>Note that the login session does <em>not</em> expire on the dashboard, as the summary is updated every 10 seconds which refreshes the session.</p>
     <?php } ?>
@@ -70,7 +63,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Query Log</h2>
-    <p>Shows the recent queries by parsing Pi-hole's log. It is possible to search through the whole list by using the "Search" input field. If the status is reported as "OK", then the DNS request has been permitted. Otherwise ("Pi-holed") it has been blocked. By clicking on the buttons under "Action" the corresponding domains can quickly be added to the white-/blacklist. The status of the action will be reported on this page.</p>
+    <p>Shows the recent queries by parsing Pi-hole's log. It is possible to search through the whole list by using the "Search" input field. If the status is reported as "OK", then the DNS request has been permitted. Otherwise ("Pi-holed") it has been blocked. By clicking on the buttons under "Action" the corresponding domains can quickly be added to the white-/blacklist. The status of the action will be reported on this page. By default, only the recent 10 minutes are shown to enhance the loading speed of the query log page. All domains can be requested by clicking on the corresponding link in the header of the page. Note that the result heavily depends on your privacy settings (see Settings page).</p>
     </div>
 </div>
 <div class="row">
@@ -118,8 +111,12 @@
     <h4>Query Logging</h4>
     Enabled/disable query logging on your Pi-hole + provide option to flush the log
     <h4>API</h4>
-    Change settings which apply to the API as well as the web UI<br>
-    Note that Top Clients have to be given as IP addresses
+    Change settings which apply to the API as well as the web UI
+    <ul>
+      <li>Show permitted domain entries: Toogle permitted queries in Query Log + Top Domains on Main Page</li>
+      <li>Show blockes domain entries: Toogle blocked queries in Query Log + Top Ads on Main Page</li>
+      <li>Privacy mode: Replace IPs in query log with "hidden"</li>
+    </ul>
     <h4>Web User Interface</h4>
     Other settings which affect the webUI but not the API of Pi-hole
     <h4>System Administration</h4>
