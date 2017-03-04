@@ -30,4 +30,6 @@ Please [submit your feature request here](https://discourse.pi-hole.net/c/featur
 
 `<token>`
 
+*If you want to report a security issue privately, please send an email to [adblock@pi-hole.net](adblock@pi-hole.net) rather than report the issue here*
+
 _This template was created based on the work of [`udemy-dl`](https://github.com/nishad/udemy-dl/blob/master/LICENSE)._
