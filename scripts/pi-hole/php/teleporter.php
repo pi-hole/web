@@ -7,7 +7,9 @@
 *  Please see LICENSE file for your rights under this license. */
 
 require "password.php";
-if(!$auth) die("Not authorized");
+if (php_sapi_name() !== "cli") {
+	if(!$auth) die("Not authorized");
+}
 
 require('func.php');
 function process_zip($name)
@@ -83,9 +85,9 @@ function getWildcardListContent() {
 	return "";
 }
 
-if($_POST["action"] == "in")
+if(isset($_POST["action"]))
 {
-	if($_FILES["zip_file"]["name"])
+	if($_FILES["zip_file"]["name"] && $_POST["action"] == "in")
 	{
 		$filename = $_FILES["zip_file"]["name"];
 		$source = $_FILES["zip_file"]["tmp_name"];
@@ -138,7 +140,7 @@ if($_POST["action"] == "in")
 	}
 	else
 	{
-		die("No file transmitted.");
+		die("No file transmitted or parameter error.");
 	}
 }
 else
@@ -168,7 +170,7 @@ else
 	header("Content-length: " . filesize($archive_file_name));
 	header("Pragma: no-cache");
 	header("Expires: 0");
-	ob_end_clean();
+	if(ob_get_length() > 0) ob_end_clean();
 	readfile($archive_file_name);
 	exit;
 }
