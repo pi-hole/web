@@ -36,6 +36,22 @@ function add_to_zip($path,$name)
 		$zip->addFile($path.$name,$name);
 }
 
+function add_dir_to_zip($path)
+{
+	global $zip;
+	if($dir = opendir($path))
+	{
+		while(false !== ($entry = readdir($dir)))
+		{
+			if($entry !== "." && $entry !== "..")
+			{
+				$zip->addFile($path.$entry,$entry);
+			}
+		}
+		closedir($dir);
+	}
+}
+
 function check_domains($domains)
 {
 	foreach($domains as $domain)
@@ -141,6 +157,7 @@ else
 	add_to_zip("/etc/pihole/","blacklist.txt");
 	add_to_zip("/etc/pihole/","adlists.list");
 	add_to_zip("/etc/pihole/","setupVars.conf");
+	add_dir_to_zip("/etc/dnsmasq.d/");
 
 	$zip->addFromString("wildcardblocking.txt", getWildcardListContent());
 	$zip->close();
