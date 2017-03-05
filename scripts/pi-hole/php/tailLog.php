@@ -12,7 +12,15 @@ if(!$auth) die("Not authorized");
 // Not using SplFileObject here, since direct
 // usage of f-streams will be much faster for
 // files as large as the pihole.log
-$file = fopen("/var/log/pihole.log","r");
+if(isset($_GET["FTL"]))
+{
+	$file = fopen("/var/log/pihole-FTL.log","r");
+}
+else
+{
+	$file = fopen("/var/log/pihole.log","r");
+}
+
 if(isset($_GET["offset"]))
 {
 	$offset = intval($_GET['offset']);
