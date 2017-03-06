@@ -483,7 +483,7 @@
 			$DNSinterface = "local";
 		}
 	} else {
-		$DNSinterface = "local";
+		$DNSinterface = "single";
 	}
 ?>
 		<div class="box box-warning">
