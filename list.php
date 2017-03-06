@@ -45,6 +45,7 @@ function getFullName() {
     </span>
 </div>
 <?php if($list === "white") { ?>
+    <p>Note: Whitelisting a subdomain of a wildcard blocked domain is not possible.</p>
 <?php } ?>
 
 <!-- Alerts -->
