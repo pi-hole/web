@@ -821,7 +821,6 @@ if($FTL)
 				Time FTL started: <?php print_r(get_FTL_data("start")); ?><br>
 				User / Group: <?php print_r(get_FTL_data("euser")); ?> / <?php print_r(get_FTL_data("egroup")); ?><br>
 				Total CPU utilization: <?php print_r(get_FTL_data("%cpu")); ?>%<br>
-				Total CPU time: <?php print_r(get_FTL_data("cputime")); ?><br>
 				Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%<br>
 				<span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory: <?php echo formatSizeUnits(1e3*floatval(get_FTL_data("rss"))); ?></span><br>
 				<?php } ?>
