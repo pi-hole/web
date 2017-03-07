@@ -74,7 +74,7 @@
 			{
 				// Convert HEX string to number
 				$hex = hexdec($hexstr);
-				if($hex === 0b0010)
+				if(($hex & 0b0111) === 0b0010)
 				{
 					// Scope global address detected
 					$IPv6connectivity = true;
