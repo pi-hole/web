@@ -140,7 +140,9 @@
         }
     }
 
-    if(strpos(exec("ps -p `cat /var/run/pihole-FTL.pid` -o comm="), "pihole-FTL") !== false)
+    $FTL = false;
+    $FTLpid = file_get_contents("/var/run/pihole-FTL.pid");
+    if (file_exists( "/proc/".$FTLpid ))
     {
         $FTL = true;
     }
