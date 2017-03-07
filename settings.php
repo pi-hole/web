@@ -74,9 +74,9 @@
 				// Convert HEX string to number
 				$hex = hexdec($hexstr);
 				// Global Unicast Address (2000::/3, RFC 4291)
-				$GUA = (($hex & 0b01110000) === 0b00100000);
+				$GUA = (($hex & 0x70) === 0x20);
 				// Unique Local Address   (fc00::/7, RFC 4193)
-				$ULA = (($hex & 0b11111110) === 0b11111100);
+				$ULA = (($hex & 0xfe) === 0xfc);
 				if($GUA || $ULA)
 				{
 					// Scope global address detected
