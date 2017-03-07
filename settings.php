@@ -68,13 +68,16 @@
 	$IPv6connectivity = false;
 	if(isset($setupVars["IPV6_ADDRESS"])){
 		$piHoleIPv6 = $setupVars["IPV6_ADDRESS"];
-			// Test if this address is within 2000::/3 address range (Global Unicast, RFC 4291)
-			sscanf($piHoleIPv6, "%1[0-9a-f]", $hexstr);
-			if(strlen($hexstr) == 1)
+			sscanf($piHoleIPv6, "%2[0-9a-f]", $hexstr);
+			if(strlen($hexstr) == 2)
 			{
 				// Convert HEX string to number
 				$hex = hexdec($hexstr);
-				if(($hex & 0b0111) === 0b0010)
+				// Global Unicast Address (2000::/3, RFC 4291)
+				$GUA = (($hex & 0b01110000) === 0b00100000);
+				// Unique Local Address   (fc00::/7, RFC 4193)
+				$ULA = (($hex & 0b11111110) === 0b11111100);
+				if($GUA || $ULA)
 				{
 					// Scope global address detected
 					$IPv6connectivity = true;
