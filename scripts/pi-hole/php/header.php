@@ -306,15 +306,15 @@
                                 echo "\"></i> Temp:&nbsp;";
                                 if($temperatureunit === "F")
                                 {
-                                    echo round($fahrenheit,1) . "&deg;F";
+                                    echo round($fahrenheit,1) . "&nbsp;&deg;F";
                                 }
                                 elseif($temperatureunit === "K")
                                 {
-                                    echo round($kelvin,1) . "K";
+                                    echo round($kelvin,1) . "&nbsp;K";
                                 }
                                 else
                                 {
-                                    echo round($celsius,1) . "&deg;C";
+                                    echo round($celsius,1) . "&nbsp;&deg;C";
                                 }
                                 echo "</a>";
                             }
@@ -348,7 +348,7 @@
                         }
                         if($memory_usage > 0.0)
                         {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "%</a>";
+                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</a>";
                         }
                         else
                         {
