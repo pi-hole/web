@@ -68,14 +68,13 @@
 	$IPv6connectivity = false;
 	if(isset($setupVars["IPV6_ADDRESS"])){
 		$piHoleIPv6 = $setupVars["IPV6_ADDRESS"];
-			// Get first hextet of IPv6 address
-			sscanf($piHoleIPv6, "%2[0-9a-f]", $hexstr);
-			// Try to analyze it only if we found a prefix
-			if(strlen($hexstr) == 2)
+			// Test if this address is within 2000::/3 address range (Global Unicast, RFC 4291)
+			sscanf($piHoleIPv6, "%1[0-9a-f]", $hexstr);
+			if(strlen($hexstr) == 1)
 			{
 				// Convert HEX string to number
 				$hex = hexdec($hexstr);
-				if($hex == 0x20)
+				if($hex === 0b0010)
 				{
 					// Scope global address detected
 					$IPv6connectivity = true;
