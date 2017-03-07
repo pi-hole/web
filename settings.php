@@ -65,8 +65,22 @@
 	} else {
 		$piHoleIPv4 = "unknown";
 	}
+	$IPv6connectivity = false;
 	if(isset($setupVars["IPV6_ADDRESS"])){
 		$piHoleIPv6 = $setupVars["IPV6_ADDRESS"];
+			// Get first hextet of IPv6 address
+			sscanf($piHoleIPv6, "%2[0-9a-f]", $hexstr);
+			// Try to analyze it only if we found a prefix
+			if(strlen($hexstr) == 2)
+			{
+				// Convert HEX string to number
+				$hex = hexdec($hexstr);
+				if($hex == 0x20)
+				{
+					// Scope global address detected
+					$IPv6connectivity = true;
+				}
+			}
 	} else {
 		$piHoleIPv6 = "unknown";
 	}
@@ -506,9 +520,9 @@
 							<?php if(isset($value["v4_2"])) { ?>
 							<td title="<?php echo $value["v4_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v4_2"];?>" value="true" <?php if(in_array($value["v4_2"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
 							<?php if(isset($value["v6_1"])) { ?>
-							<td title="<?php echo $value["v6_1"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_1"];?>" value="true" <?php if(in_array($value["v6_1"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<td title="<?php echo $value["v6_1"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_1"];?>" value="true" <?php if(in_array($value["v6_1"],$DNSactive) && $IPv6connectivity){ ?>checked<?php } if(!$IPv6connectivity){ ?> disabled <?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
 							<?php if(isset($value["v6_2"])) { ?>
-							<td title="<?php echo $value["v6_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_2"];?>" value="true" <?php if(in_array($value["v6_2"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<td title="<?php echo $value["v6_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_2"];?>" value="true" <?php if(in_array($value["v6_2"],$DNSactive) && $IPv6connectivity){ ?>checked<?php } if(!$IPv6connectivity){ ?> disabled <?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
 							<td><?php echo $key;?></td>
 						</tr>
 						<?php } ?>
