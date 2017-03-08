@@ -193,7 +193,7 @@ function uploadList(el) {
   var data = new FormData();
   data.append("file", el.files[0]);
   data.append("token", token);
-  data.append("list", $(el).data('type'));
+  data.append("list", $(el).data("type"));
 
   var request = new XMLHttpRequest();
   request.onreadystatechange = function () {
@@ -215,7 +215,7 @@ function uploadList(el) {
     }
   };
 
-  request.upload.addEventListener('progress', function (e) {
+  request.upload.addEventListener("progress", function (e) {
     var percentage = Math.ceil(e.loaded / e.total) * 100;
     setProgressBarPercentage(percentage);
 
