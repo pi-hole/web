@@ -56,13 +56,15 @@ function getFullName()
         <input type="file" id="uploadListFile" data-type="<?php echo $list ?>" class="form-control">
 
         <div class="progress" style="display: none;">
-            <div id="uploadProgressBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+            <div id="uploadProgressBar" class="progress-bar progress-bar-striped active" role="progressbar"
+                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
         </div>
     </div>
 </div>
 
 <?php if ($list === "white") { ?>
-    <p>Note that whitelisting domains which are blocked using the wildcard method won't work.</p><?php } ?>
+    <p>Note that whitelisting domains which are blocked using the wildcard method won't work.</p>
+<?php } ?>
 
 <!-- Alerts -->
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
