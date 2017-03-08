@@ -4,17 +4,16 @@
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
-*  Please see LICENSE file for your rights under this license. */ ?>
+*  Please see LICENSE file for your rights under this license. */
 
-<?php
-require('auth.php');
+require_once 'auth.php';
 
 $type = $_POST['list'];
 
 // All of the verification for list editing
 list_verify($type);
 
-switch($type) {
+switch ($type) {
     case "white":
         echo exec("sudo pihole -w -q ${_POST['domain']}");
         break;
@@ -25,5 +24,3 @@ switch($type) {
         echo exec("sudo pihole -wild -q ${_POST['domain']}");
         break;
 }
-
-?>

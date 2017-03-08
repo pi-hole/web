@@ -5,14 +5,19 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 .small-box {
-	-webkit-user-select: none; /* Chrome/Safari */        
-	-moz-user-select: none; /* Firefox */
-	-ms-user-select: none; /* IE10+ */
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
 
-	/* Rules below not implemented in browsers yet */
-	-o-user-select: none;
-	user-select: none;
+    /* Rules below not implemented in browsers yet */
+    -o-user-select: none;
+    user-select: none;
 }
+
 .skin-blue .list-group-item:hover {
-	background: #ddd;
+    background: #ddd;
+}
+
+.black .input-group-btn, .white .input-group-btn {
+    padding-top: 25px;
 }
