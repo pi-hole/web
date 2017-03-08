@@ -65,8 +65,24 @@
 	} else {
 		$piHoleIPv4 = "unknown";
 	}
+	$IPv6connectivity = false;
 	if(isset($setupVars["IPV6_ADDRESS"])){
 		$piHoleIPv6 = $setupVars["IPV6_ADDRESS"];
+			sscanf($piHoleIPv6, "%2[0-9a-f]", $hexstr);
+			if(strlen($hexstr) == 2)
+			{
+				// Convert HEX string to number
+				$hex = hexdec($hexstr);
+				// Global Unicast Address (2000::/3, RFC 4291)
+				$GUA = (($hex & 0x70) === 0x20);
+				// Unique Local Address   (fc00::/7, RFC 4193)
+				$ULA = (($hex & 0xfe) === 0xfc);
+				if($GUA || $ULA)
+				{
+					// Scope global address detected
+					$IPv6connectivity = true;
+				}
+			}
 	} else {
 		$piHoleIPv6 = "unknown";
 	}
@@ -110,17 +126,6 @@
 		</div>
 <?php
 	// Pi-Hole DHCP server
-
-	// Detect IPv6
-	$usingipv6 = false;
-	if(strlen($piHoleIPv6) > 0 && $piHoleIPv6 != "unknown")
-	{
-		if(substr($piHoleIPv6, 0, 4) != "fe80")
-		{
-			$usingipv6 = true;
-		}
-	}
-
 	if(isset($setupVars["DHCP_ACTIVE"]))
 	{
 		if($setupVars["DHCP_ACTIVE"] == 1)
@@ -155,7 +160,7 @@
 		}
 		else
 		{
-			$DHCPIPv6 = $usingipv6;
+			$DHCPIPv6 = false;
 		}
 
 	}
@@ -175,7 +180,7 @@
 			$DHCProuter = "";
 		}
 		$DHCPleasetime = 24;
-		$DHCPIPv6 = $usingipv6;
+		$DHCPIPv6 = false;
 	}
 	if(isset($setupVars["PIHOLE_DOMAIN"])){
 		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
@@ -506,9 +511,9 @@
 							<?php if(isset($value["v4_2"])) { ?>
 							<td title="<?php echo $value["v4_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v4_2"];?>" value="true" <?php if(in_array($value["v4_2"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
 							<?php if(isset($value["v6_1"])) { ?>
-							<td title="<?php echo $value["v6_1"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_1"];?>" value="true" <?php if(in_array($value["v6_1"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<td title="<?php echo $value["v6_1"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_1"];?>" value="true" <?php if(in_array($value["v6_1"],$DNSactive) && $IPv6connectivity){ ?>checked<?php } if(!$IPv6connectivity){ ?> disabled <?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
 							<?php if(isset($value["v6_2"])) { ?>
-							<td title="<?php echo $value["v6_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_2"];?>" value="true" <?php if(in_array($value["v6_2"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<td title="<?php echo $value["v6_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_2"];?>" value="true" <?php if(in_array($value["v6_2"],$DNSactive) && $IPv6connectivity){ ?>checked<?php } if(!$IPv6connectivity){ ?> disabled <?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
 							<td><?php echo $key;?></td>
 						</tr>
 						<?php } ?>
