@@ -56,8 +56,7 @@ function getFullName()
         <input type="file" id="uploadListFile" data-type="<?php echo $list ?>" class="form-control">
 
         <div class="progress" style="display: none;">
-            <div id="uploadProgressBar" class="progress-bar progress-bar-striped active" role="progressbar"
-                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+            <div id="uploadProgressBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
         </div>
     </div>
 </div>
