@@ -168,29 +168,43 @@ function add(arg) {
   });
 }
 
+function setProgressBarPercentage(value) {
+  $("#uploadProgressBar")
+    .attr("aria-valuenow", value)
+    .css("width", value + "%")
+    .text(value + "%")
+    .parent().toggle(value > 0);
+}
+
+// Handle hiding of alerts
+$(function () {
+  $("[data-hide]").on("click", function () {
+    $(this).closest("." + $(this).attr("data-hide")).hide();
+  });
+});
+
 function uploadList(el) {
   setProgressBarPercentage(0);
 
-
-  console.log(el.files);
   if (el.files.length === 0) {
     return;
   }
 
   var data = new FormData();
-  data.append('file', el.files[0]);
-  data.append('token', token);
-  data.append('list', $(el).data('type'));
+  data.append("file", el.files[0]);
+  data.append("token", token);
+  data.append("list", $(el).data('type'));
 
   var request = new XMLHttpRequest();
   request.onreadystatechange = function () {
-    if (request.readyState == 4) {
+    if (request.readyState === 4) {
+      var resp = null;
       try {
-        var resp = JSON.parse(request.response);
+        resp = JSON.parse(request.response);
       } catch (e) {
-        var resp = {
+        resp = {
           status: false,
-          data: 'Unknown error occurred: [' + request.responseText + ']'
+          data: "Unknown error occurred: [" + request.responseText + "]"
         };
       }
 
@@ -205,12 +219,12 @@ function uploadList(el) {
     var percentage = Math.ceil(e.loaded / e.total) * 100;
     setProgressBarPercentage(percentage);
 
-    if (percentage == 100) {
-      $('#uploadProgressBar').text('Processing file');
+    if (percentage === 100) {
+      $("#uploadProgressBar").text("Processing file");
     }
   }, false);
 
-  request.open('POST', 'scripts/pi-hole/php/upload-list.php');
+  request.open("POST", "scripts/pi-hole/php/upload-list.php");
   request.send(data);
 }
 
@@ -237,21 +251,6 @@ $("#btnRefresh").on("click", function () {
 
 $("#uploadListFile").on("change", function () {
   uploadList(this);
-});
-
-function setProgressBarPercentage(value) {
-  $('#uploadProgressBar')
-    .attr('aria-valuenow', value)
-    .css('width', value + '%')
-    .text(value + '%')
-    .parent().toggle(value > 0);
-}
-
-// Handle hiding of alerts
-$(function () {
-  $("[data-hide]").on("click", function () {
-    $(this).closest("." + $(this).attr("data-hide")).hide();
-  });
 });
 
 $(document).ready(function () {
