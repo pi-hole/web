@@ -117,7 +117,8 @@ function updateForwardedOverTime() {
         var timestamps = data.over_time[0];
         var plotdata  = data.over_time[1];
         var labels = [];
-        for (var key in data.forward_destinations)
+        var key, i, j;
+        for (key in data.forward_destinations)
         {
             if (!{}.hasOwnProperty.call(data.forward_destinations, key)) continue;
             if(key.indexOf("|") > -1)
@@ -138,17 +139,16 @@ function updateForwardedOverTime() {
         forwardDestinationChart.data.datasets[0].pointRadius = 0;
         forwardDestinationChart.data.datasets[0].label = labels.shift();
 
-        for (var i = 1; i < plotdata[0].length; i++)
+        for (i = 1; i < plotdata[0].length; i++)
         {
             forwardDestinationChart.data.datasets.push({data: [], backgroundColor: colors.shift(), pointRadius: 0, label: labels});
         }
 
         // Add data for each dataset that is available
-        for (var j in timestamps)
+        for (j in timestamps)
         {
             if (!{}.hasOwnProperty.call(timestamps, j)) continue;
             var sum = 0.0;
-            var key;
             for (key in plotdata[j])
             {
                 if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
