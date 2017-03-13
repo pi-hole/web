@@ -148,21 +148,23 @@ function updateForwardedOverTime() {
         {
             if (!{}.hasOwnProperty.call(timestamps, j)) continue;
             var sum = 0.0;
-            for (var i in plotdata[j])
+            var key;
+            for (key in plotdata[j])
             {
-                sum += plotdata[j][i];
+                if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
+                sum += plotdata[j][key];
             }
             var dd = [];
-            for (var i in plotdata[j])
+            for (key in plotdata[j])
             {
-                if (!{}.hasOwnProperty.call(plotdata[j], i)) continue;
-                var singlepoint = plotdata[j][i];
+                if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
+                var singlepoint = plotdata[j][key];
                 if(singlepoint === 0)
                 {
                     // Don't plot this line
                     singlepoint = NaN;
                 }
-                forwardDestinationChart.data.datasets[i].data.push(singlepoint/sum);
+                forwardDestinationChart.data.datasets[key].data.push(singlepoint/sum);
             }
 
             var d = new Date(1000*parseInt(timestamps[j]));
