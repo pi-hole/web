@@ -111,7 +111,7 @@ function updateQueriesOverTime() {
 }
 
 function updateForwardedOverTime() {
-    $.getJSON("api.php?overTimeDataForwards&getForwardDestinations", function(data) {
+    $.getJSON("api.php?overTimeDataForwards&getForwardDestinationNames", function(data) {
         // convert received objects to arrays
         data.over_time = objectToArray(data.over_time);
         var timestamps = data.over_time[0];
@@ -470,6 +470,8 @@ $(document).ready(function() {
                     }],
                     yAxes: [{
                         ticks: {
+                            mix: 0.0,
+                            max: 1.0,
                             beginAtZero: true
                         },
                         stacked: true

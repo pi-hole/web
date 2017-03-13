@@ -245,5 +245,27 @@ if (isset($_GET['overTimeDataForwards']))
 	$data = array_merge($data, $result);
 }
 
+if (isset($_GET['getForwardDestinationNames']) && $auth)
+{
+	sendRequestFTL("forward-names");
+	$return = getResponseFTL();
+	$forward_dest = array();
+	foreach($return as $line)
+	{
+		$tmp = explode(" ",$line);
+		if(count($tmp) == 4)
+		{
+			$forward_dest[$tmp[3]."|".$tmp[2]] = intval($tmp[1]);
+		}
+		else
+		{
+			$forward_dest[$tmp[2]] = intval($tmp[1]);
+		}
+	}
+
+	$result = array('forward_destinations' => $forward_dest);
+	$data = array_merge($data, $result);
+}
+
 disconnectFTL();
 ?>
