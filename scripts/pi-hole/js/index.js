@@ -110,6 +110,81 @@ function updateQueriesOverTime() {
     });
 }
 
+function updateForwardedOverTime() {
+    $.getJSON("api.php?overTimeDataForwards&getForwardDestinations", function(data) {
+        // convert received objects to arrays
+        data.over_time = objectToArray(data.over_time);
+        var timestamps = data.over_time[0];
+        var plotdata  = data.over_time[1];
+        var labels = [];
+        for (var key in data.forward_destinations)
+        {
+            if(key.indexOf("|") > -1)
+            {
+                var idx = key.indexOf("|");
+                key = key.substr(0, idx)+" ("+key.substr(idx+1, key.length-idx)+")";
+            }
+            labels.push(key);
+        }
+        // Get colors from AdminLTE
+        var colors = [];
+        $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
+        var v = [], c = [], k = [];
+
+        // Collect values and colors, and labels
+
+        forwardDestinationChart.data.datasets[0].backgroundColor = colors.shift();
+        forwardDestinationChart.data.datasets[0].pointRadius = 0;
+        forwardDestinationChart.data.datasets[0].label = labels.shift();
+
+        console.log(labels);
+        for (i = 1; i < plotdata[0].length; i++)
+        {
+            forwardDestinationChart.data.datasets.push({data: [], backgroundColor: colors.shift(), pointRadius: 0, label: labels});
+        }
+
+        // Add data for each dataset that is available
+        console.log(timestamps);
+        for (var j in timestamps)
+        {
+            var sum = 0.0;
+            for (var i in plotdata[j])
+            {
+                sum += plotdata[j][i];
+            }
+            var dd = [];
+            for (var i in plotdata[j])
+            {
+                var singlepoint = plotdata[j][i];
+                console.log([timestamps[j],singlepoint]);
+                if(singlepoint == 0)
+                {
+                    // Don't plot this line
+                    singlepoint = NaN;
+                }
+                forwardDestinationChart.data.datasets[i].data.push(singlepoint/sum);
+            }
+
+            var d = new Date(1000*parseInt(timestamps[j]));
+            forwardDestinationChart.data.labels.push(d);
+        }
+        $("#forward-destinations .overlay").remove();
+        forwardDestinationChart.update();
+    }).done(function() {
+        // Reload graph after 10 minutes
+        failures = 0;
+        setTimeout(updateForwardedOverTime, 600000);
+    }).fail(function() {
+        failures++;
+        if(failures < 5)
+        {
+            // Try again after 1 minute only if this has not failed more
+            // than five times in a row
+            setTimeout(updateForwardedOverTime, 60000);
+        }
+    });
+}
+
 function updateQueryTypes() {
     $.getJSON("api.php?getQueryTypes", function(data) {
         var colors = [];
@@ -197,47 +272,6 @@ function updateTopClientsChart() {
     });
 }
 
-function updateForwardDestinations() {
-    $.getJSON("api.php?getForwardDestinations", function(data) {
-        var colors = [];
-        // Get colors from AdminLTE
-        $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
-        var v = [], c = [], k = [], iter;
-        // Collect values and colors, immediately push individual labels
-        if(data.hasOwnProperty("forward_destinations"))
-        {
-            iter = data.forward_destinations;
-        }
-        else
-        {
-            iter = data;
-        }
-        $.each(iter, function(key , value) {
-            v.push(value);
-            c.push(colors.shift());
-            if(key.indexOf("|") > -1)
-            {
-                var idx = key.indexOf("|");
-                key = key.substr(0, idx)+" ("+key.substr(idx+1, key.length-idx)+")";
-            }
-            k.push(key);
-        });
-        // Build a single dataset with the data to be pushed
-        var dd = {data: v, backgroundColor: c};
-        // and push it at once
-        forwardDestinationChart.data.datasets[0] = dd;
-        forwardDestinationChart.data.labels = k;
-        $("#forward-destinations .overlay").remove();
-        forwardDestinationChart.update();
-        forwardDestinationChart.chart.config.options.cutoutPercentage=50;
-        forwardDestinationChart.update();
-        // Don't use rotation animation for further updates
-        forwardDestinationChart.options.animation.duration=0;
-        // Update forward destinations data every 10 seconds
-        setTimeout(updateForwardDestinations, 10000);
-    });
-}
-
 function updateTopLists() {
     $.getJSON("api.php?summaryRaw&topItems", function(data) {
         // Clear tables before filling them with data
@@ -308,6 +342,10 @@ $(document).ready(function() {
                 return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Windows());
             }
         };
+
+        // Pull in data via AJAX
+
+        updateSummaryData();
 
         var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
         timeLineChart = new Chart(ctx, {
@@ -400,9 +438,41 @@ $(document).ready(function() {
 
         // Pull in data via AJAX
 
-        updateSummaryData();
-
         updateQueriesOverTime();
+
+        var ctx = document.getElementById("forwardDestinationChart").getContext("2d");
+        forwardDestinationChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: [],
+                datasets: [{ data: [] }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: "time",
+                        time: {
+                            unit: "hour",
+                            displayFormats: {
+                                hour: "HH:mm"
+                            },
+                            tooltipFormat: "HH:mm"
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        },
+                        stacked: true
+                    }]
+                },
+                maintainAspectRatio: false
+            }
+        });
+
+        // Pull in data via AJAX
+
+        updateForwardedOverTime();
 
         // Create / load "Query Types" only if authorized
         if(document.getElementById("queryTypeChart"))
@@ -425,29 +495,6 @@ $(document).ready(function() {
                 }
             });
             updateQueryTypes();
-        }
-
-        // Create / load "Forward Destinations" only if authorized
-        if(document.getElementById("forwardDestinationChart"))
-        {
-            ctx = document.getElementById("forwardDestinationChart").getContext("2d");
-            forwardDestinationChart = new Chart(ctx, {
-                type: "doughnut",
-                data: {
-                    labels: [],
-                    datasets: [{ data: [] }]
-                },
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    animation: {
-                        duration: 2000
-                    },
-                    cutoutPercentage: 0
-                }
-            });
-            updateForwardDestinations();
         }
 
         // Create / load "Top Domains" and "Top Advertisers" only if authorized

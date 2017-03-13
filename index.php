@@ -108,7 +108,7 @@
     <div class="col-md-6">
     <div class="box" id="forward-destinations">
         <div class="box-header with-border">
-          <h3 class="box-title">Forward Destinations</h3>
+          <h3 class="box-title">Forward Destinations over Time</h3>
         </div>
         <div class="box-body">
           <div class="chart">
