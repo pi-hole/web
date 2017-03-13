@@ -137,14 +137,12 @@ function updateForwardedOverTime() {
         forwardDestinationChart.data.datasets[0].pointRadius = 0;
         forwardDestinationChart.data.datasets[0].label = labels.shift();
 
-        console.log(labels);
         for (i = 1; i < plotdata[0].length; i++)
         {
             forwardDestinationChart.data.datasets.push({data: [], backgroundColor: colors.shift(), pointRadius: 0, label: labels});
         }
 
         // Add data for each dataset that is available
-        console.log(timestamps);
         for (var j in timestamps)
         {
             var sum = 0.0;
@@ -156,7 +154,6 @@ function updateForwardedOverTime() {
             for (var i in plotdata[j])
             {
                 var singlepoint = plotdata[j][i];
-                console.log([timestamps[j],singlepoint]);
                 if(singlepoint == 0)
                 {
                     // Don't plot this line
@@ -466,7 +463,7 @@ $(document).ready(function() {
                         stacked: true
                     }]
                 },
-                maintainAspectRatio: false
+                maintainAspectRatio: true
             }
         });
 
