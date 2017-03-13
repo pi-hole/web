@@ -137,11 +137,11 @@ function updateForwardedOverTime() {
 
         forwardDestinationChart.data.datasets[0].backgroundColor = colors.shift();
         forwardDestinationChart.data.datasets[0].pointRadius = 0;
-        forwardDestinationChart.data.datasets[0].label = labels.shift();
+        forwardDestinationChart.data.datasets[0].label = labels[0];
 
         for (i = 1; i < plotdata[0].length; i++)
         {
-            forwardDestinationChart.data.datasets.push({data: [], backgroundColor: colors.shift(), pointRadius: 0, label: labels});
+            forwardDestinationChart.data.datasets.push({data: [], backgroundColor: colors.shift(), pointRadius: 0, label: labels[i]});
         }
 
         // Add data for each dataset that is available
