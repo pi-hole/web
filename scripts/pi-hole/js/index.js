@@ -119,6 +119,7 @@ function updateForwardedOverTime() {
         var labels = [];
         for (var key in data.forward_destinations)
         {
+            if (!{}.hasOwnProperty.call(data.forward_destinations, key)) continue;
             if(key.indexOf("|") > -1)
             {
                 var idx = key.indexOf("|");
@@ -137,7 +138,7 @@ function updateForwardedOverTime() {
         forwardDestinationChart.data.datasets[0].pointRadius = 0;
         forwardDestinationChart.data.datasets[0].label = labels.shift();
 
-        for (i = 1; i < plotdata[0].length; i++)
+        for (var i = 1; i < plotdata[0].length; i++)
         {
             forwardDestinationChart.data.datasets.push({data: [], backgroundColor: colors.shift(), pointRadius: 0, label: labels});
         }
@@ -145,6 +146,7 @@ function updateForwardedOverTime() {
         // Add data for each dataset that is available
         for (var j in timestamps)
         {
+            if (!{}.hasOwnProperty.call(timestamps, j)) continue;
             var sum = 0.0;
             for (var i in plotdata[j])
             {
@@ -153,8 +155,9 @@ function updateForwardedOverTime() {
             var dd = [];
             for (var i in plotdata[j])
             {
+                if (!{}.hasOwnProperty.call(plotdata[j], i)) continue;
                 var singlepoint = plotdata[j][i];
-                if(singlepoint == 0)
+                if(singlepoint === 0)
                 {
                     // Don't plot this line
                     singlepoint = NaN;
@@ -437,7 +440,7 @@ $(document).ready(function() {
 
         updateQueriesOverTime();
 
-        var ctx = document.getElementById("forwardDestinationChart").getContext("2d");
+        ctx = document.getElementById("forwardDestinationChart").getContext("2d");
         forwardDestinationChart = new Chart(ctx, {
             type: "line",
             data: {
