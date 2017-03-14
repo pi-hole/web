@@ -6,9 +6,6 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-require "password.php";
-if(!$auth) die("Not authorized");
-
 ob_end_flush();
 ini_set("output_buffering", "0");
 ob_implicit_flush(true);
