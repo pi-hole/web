@@ -841,7 +841,7 @@ if($FTL)
 				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/teleporter.php" target="_blank"  enctype="multipart/form-data">
 					<div class="col-lg-12">
 						<p>Export your Pi-hole lists as downloadable ZIP file</p>
-						<button type="submit" class="btn btn-default" name="action" value="out">Export</button>
+						<button type="submit" class="btn btn-default">Export</button>
 					<hr>
 					</div>
 					<div class="col-lg-6">
