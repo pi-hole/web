@@ -469,6 +469,12 @@
                             <i class="fa fa-list-ul"></i> <span>Tail pihole.log</span>
                         </a>
                     </li>
+                    <!-- Tail pihole-FTL.log -->
+                    <li<?php if($scriptname === "taillog-FTL.php"){ ?> class="active"<?php } ?>>
+                        <a href="taillog-FTL.php">
+                            <i class="fa fa-list-ul"></i> <span>Tail pihole-FTL.log</span>
+                        </a>
+                    </li>
                     <!-- Generate debug log -->
                     <li<?php if($scriptname === "debug.php"){ ?> class="active"<?php } ?>>
                         <a href="debug.php">
