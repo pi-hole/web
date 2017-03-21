@@ -695,7 +695,7 @@
         global $setupVars;
         $domains = explode(",",$setupVars[$key]);
         foreach ($domains as $domain) {
-            foreach($array as $requestedDomain => $notUsedHere)
+            foreach(array_keys($array) as $requestedDomain)
             {
                 if(preg_match("/".$domain."/i", $requestedDomain))
                 {
