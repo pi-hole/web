@@ -228,7 +228,7 @@ function isinserverlist($addr) {
 				if(!strlen($error))
 				{
 					$IPs = implode (",", $DNSservers);
-					exec("sudo pihole -a setdns ".$IPs." ".$extra);
+					$return = exec("sudo pihole -a setdns ".$IPs." ".$extra);
 					$success .= htmlspecialchars($return)."<br>";
 					$success .= "The DNS settings have been updated (using ".count($DNSservers)." DNS servers)";
 				}
