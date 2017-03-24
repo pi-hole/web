@@ -42,12 +42,34 @@ function updateSummaryData(runOnce) {
 
         if("FTLnotrunning" in data)
         {
+            data["ads_blocked_today"] = "No";
+            data["dns_queries_today"] = "FTL";
+            data["ads_percentage_today"] = "power";
+            data["domains_being_blocked"] = "available";
+            // Adjust text
+            $("#temperature").html("<i class=\"fa fa-circle\" style=\"color:#FF0000\"></i> FTL offline");
+            // Show spinner
+            $("#queries-over-time .overlay").show();
+            $("#forward-destinations .overlay").show();
+            $("#query-types .overlay").show();
+            $("#client-frequency .overlay").show();
+            $("#domain-frequency .overlay").show();
+            $("#ad-frequency .overlay").show();
             // Try again in ten seconds
             setTimer(10);
-            data["ads_blocked_today"] = "---";
-            data["dns_queries_today"] = "---";
-            data["domains_being_blocked"] = "---";
-            data["ads_percentage_today"] = "---";
+        }
+        else
+        {
+            if($("#temperature").text().search("FTL offline") > -1)
+            {
+                // FTL was previously offline
+                $("#temperature").text(" ");
+                updateQueriesOverTime();
+                updateForwardedOverTime();
+                updateQueryTypes();
+                updateTopClientsChart();
+                updateTopLists();
+            }
         }
 
         ["ads_blocked_today", "dns_queries_today", "ads_percentage_today"].forEach(function(today) {
@@ -57,7 +79,7 @@ function updateSummaryData(runOnce) {
 
         window.setTimeout(function() {
             ["ads_blocked_today", "dns_queries_today", "domains_being_blocked", "ads_percentage_today"].forEach(function(header, idx) {
-                var textData = (idx === 3 && data[header] !== "---") ? data[header] + "%" : data[header];
+                var textData = (idx === 3 && data[header] !== "power") ? data[header] + "%" : data[header];
                 $("h3#" + header).text(textData);
             });
             $("h3.statistic.glow").removeClass("glow");
@@ -76,12 +98,9 @@ function updateQueriesOverTime() {
 
         if("FTLnotrunning" in data)
         {
-            // Show spinner
-            $("#queries-over-time .overlay").show();
-            // Try again in ten seconds
-            setTimeout(updateQueriesOverTime, 10000);
             return;
         }
+
         // convert received objects to arrays
         data.domains_over_time = objectToArray(data.domains_over_time);
         data.ads_over_time = objectToArray(data.ads_over_time);
@@ -135,12 +154,9 @@ function updateForwardedOverTime() {
 
         if("FTLnotrunning" in data)
         {
-            // Show spinner
-            $("#forward-destinations .overlay").show();
-            // Try again in ten seconds
-            setTimeout(updateForwardedOverTime, 10000);
             return;
         }
+
         // convert received objects to arrays
         data.over_time = objectToArray(data.over_time);
         var timestamps = data.over_time[0];
@@ -228,12 +244,9 @@ function updateQueryTypes() {
 
         if("FTLnotrunning" in data)
         {
-            // Show spinner
-            $("#query-types .overlay").show();
-            // Try again in ten seconds
-            setTimeout(updateQueryTypes, 10000);
             return;
         }
+
         var colors = [];
         // Get colors from AdminLTE
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
@@ -286,12 +299,9 @@ function updateTopClientsChart() {
 
         if("FTLnotrunning" in data)
         {
-            // Show spinner
-            $("#client-frequency .overlay").show();
-            // Try again in ten seconds
-            setTimeout(updateTopClientsChart, 10000);
             return;
         }
+
         // Clear tables before filling them with data
         $("#client-frequency td").parent().remove();
         var clienttable =  $("#client-frequency").find("tbody:last");
@@ -330,15 +340,12 @@ function updateTopClientsChart() {
 
 function updateTopLists() {
     $.getJSON("api.php?summaryRaw&topItems", function(data) {
+
         if("FTLnotrunning" in data)
         {
-            // Show spinner
-            $("#domain-frequency .overlay").show();
-            $("#ad-frequency .overlay").show();
-            // Try again in ten seconds
-            setTimeout(updateTopLists, 10000);
             return;
         }
+
         // Clear tables before filling them with data
         $("#domain-frequency td").parent().remove();
         $("#ad-frequency td").parent().remove();

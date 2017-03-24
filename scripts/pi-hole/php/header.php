@@ -323,7 +323,7 @@
                         }
                         else
                         {
-                            echo '<a><i class="fa fa-circle" style="color:#FF0000"></i> FTL offline</a>';
+                            echo '<a id=\"temperature\"><i class="fa fa-circle" style="color:#FF0000"></i> FTL offline</a>';
                         }
                     ?>
                     <br/>
