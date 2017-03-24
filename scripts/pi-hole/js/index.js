@@ -29,70 +29,6 @@ function objectToArray(p){
 
 // Functions to update data in page
 
-var FTLoffline = false;
-function updateSummaryData(runOnce) {
-    var setTimer = function(timeInSeconds) {
-        if (!runOnce) {
-            setTimeout(updateSummaryData, timeInSeconds * 1000);
-        }
-    };
-    $.getJSON("api.php?summary", function LoadSummaryData(data) {
-
-        updateSessionTimer();
-
-        if("FTLnotrunning" in data)
-        {
-            data["ads_blocked_today"] = "No";
-            data["dns_queries_today"] = "FTL";
-            data["ads_percentage_today"] = "power";
-            data["domains_being_blocked"] = "available";
-            // Adjust text
-            $("#temperature").html("<i class=\"fa fa-circle\" style=\"color:#FF0000\"></i> FTL offline");
-            // Show spinner
-            $("#queries-over-time .overlay").show();
-            $("#forward-destinations .overlay").show();
-            $("#query-types .overlay").show();
-            $("#client-frequency .overlay").show();
-            $("#domain-frequency .overlay").show();
-            $("#ad-frequency .overlay").show();
-
-            FTLoffline = true;
-        }
-        else
-        {
-            if(FTLoffline)
-            {
-                // FTL was previously offline
-                FTLoffline = false;
-                $("#temperature").text(" ");
-                updateQueriesOverTime();
-                updateForwardedOverTime();
-                updateQueryTypes();
-                updateTopClientsChart();
-                updateTopLists();
-            }
-        }
-
-        ["ads_blocked_today", "dns_queries_today", "ads_percentage_today"].forEach(function(today) {
-            var todayElement = $("h3#" + today);
-            todayElement.text() !== data[today] && todayElement.addClass("glow");
-        });
-
-        window.setTimeout(function() {
-            ["ads_blocked_today", "dns_queries_today", "domains_being_blocked", "ads_percentage_today"].forEach(function(header, idx) {
-                var textData = (idx === 3 && data[header] !== "power") ? data[header] + "%" : data[header];
-                $("h3#" + header).text(textData);
-            });
-            $("h3.statistic.glow").removeClass("glow");
-        }, 500);
-
-    }).done(function() {
-        setTimer(1);
-    }).fail(function() {
-        setTimer(300);
-    });
-}
-
 var failures = 0;
 function updateQueriesOverTime() {
     $.getJSON("api.php?overTimeData10mins", function(data) {
@@ -393,6 +329,70 @@ function updateTopLists() {
         $("#ad-frequency .overlay").hide();
         // Update top lists data every 10 seconds
         setTimeout(updateTopLists, 10000);
+    });
+}
+
+var FTLoffline = false;
+function updateSummaryData(runOnce) {
+    var setTimer = function(timeInSeconds) {
+        if (!runOnce) {
+            setTimeout(updateSummaryData, timeInSeconds * 1000);
+        }
+    };
+    $.getJSON("api.php?summary", function LoadSummaryData(data) {
+
+        updateSessionTimer();
+
+        if("FTLnotrunning" in data)
+        {
+            data["ads_blocked_today"] = "Lost";
+            data["dns_queries_today"] = "connection";
+            data["ads_percentage_today"] = "to";
+            data["domains_being_blocked"] = "API";
+            // Adjust text
+            $("#temperature").html("<i class=\"fa fa-circle\" style=\"color:#FF0000\"></i> FTL offline");
+            // Show spinner
+            $("#queries-over-time .overlay").show();
+            $("#forward-destinations .overlay").show();
+            $("#query-types .overlay").show();
+            $("#client-frequency .overlay").show();
+            $("#domain-frequency .overlay").show();
+            $("#ad-frequency .overlay").show();
+
+            FTLoffline = true;
+        }
+        else
+        {
+            if(FTLoffline)
+            {
+                // FTL was previously offline
+                FTLoffline = false;
+                $("#temperature").text(" ");
+                updateQueriesOverTime();
+                updateForwardedOverTime();
+                updateQueryTypes();
+                updateTopClientsChart();
+                updateTopLists();
+            }
+        }
+
+        ["ads_blocked_today", "dns_queries_today", "ads_percentage_today"].forEach(function(today) {
+            var todayElement = $("h3#" + today);
+            todayElement.text() !== data[today] && todayElement.addClass("glow");
+        });
+
+        window.setTimeout(function() {
+            ["ads_blocked_today", "dns_queries_today", "domains_being_blocked", "ads_percentage_today"].forEach(function(header, idx) {
+                var textData = (idx === 3 && data[header] !== "to") ? data[header] + "%" : data[header];
+                $("h3#" + header).text(textData);
+            });
+            $("h3.statistic.glow").removeClass("glow");
+        }, 500);
+
+    }).done(function() {
+        setTimer(1);
+    }).fail(function() {
+        setTimer(300);
     });
 }
 
