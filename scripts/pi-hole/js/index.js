@@ -38,6 +38,18 @@ function updateSummaryData(runOnce) {
     };
     $.getJSON("api.php?summary", function LoadSummaryData(data) {
 
+        updateSessionTimer();
+
+        if("FTLnotrunning" in data)
+        {
+            // Try again in ten seconds
+            setTimer(10);
+            data["ads_blocked_today"] = "---";
+            data["dns_queries_today"] = "---";
+            data["domains_being_blocked"] = "---";
+            data["ads_percentage_today"] = "---";
+        }
+
         ["ads_blocked_today", "dns_queries_today", "ads_percentage_today"].forEach(function(today) {
             var todayElement = $("h3#" + today);
             todayElement.text() !== data[today] && todayElement.addClass("glow");
@@ -45,13 +57,12 @@ function updateSummaryData(runOnce) {
 
         window.setTimeout(function() {
             ["ads_blocked_today", "dns_queries_today", "domains_being_blocked", "ads_percentage_today"].forEach(function(header, idx) {
-                var textData = idx === 3 ? data[header] + "%" : data[header];
+                var textData = (idx === 3 && data[header] !== "---") ? data[header] + "%" : data[header];
                 $("h3#" + header).text(textData);
             });
             $("h3.statistic.glow").removeClass("glow");
         }, 500);
 
-        updateSessionTimer();
     }).done(function() {
         setTimer(10);
     }).fail(function() {
@@ -62,6 +73,15 @@ function updateSummaryData(runOnce) {
 var failures = 0;
 function updateQueriesOverTime() {
     $.getJSON("api.php?overTimeData10mins", function(data) {
+
+        if("FTLnotrunning" in data)
+        {
+            // Show spinner
+            $("#queries-over-time .overlay").show();
+            // Try again in ten seconds
+            setTimeout(updateQueriesOverTime, 10000);
+            return;
+        }
         // convert received objects to arrays
         data.domains_over_time = objectToArray(data.domains_over_time);
         data.ads_over_time = objectToArray(data.ads_over_time);
@@ -93,7 +113,7 @@ function updateQueriesOverTime() {
                 timeLineChart.data.datasets[1].data.push(data.ads_over_time[1][hour]);
             }
         }
-        $("#queries-over-time .overlay").remove();
+        $("#queries-over-time .overlay").hide();
         timeLineChart.update();
     }).done(function() {
         // Reload graph after 10 minutes
@@ -112,6 +132,15 @@ function updateQueriesOverTime() {
 
 function updateForwardedOverTime() {
     $.getJSON("api.php?overTimeDataForwards&getForwardDestinationNames", function(data) {
+
+        if("FTLnotrunning" in data)
+        {
+            // Show spinner
+            $("#forward-destinations .overlay").show();
+            // Try again in ten seconds
+            setTimeout(updateForwardedOverTime, 10000);
+            return;
+        }
         // convert received objects to arrays
         data.over_time = objectToArray(data.over_time);
         var timestamps = data.over_time[0];
@@ -177,7 +206,7 @@ function updateForwardedOverTime() {
             var d = new Date(1000*parseInt(timestamps[j]));
             forwardDestinationChart.data.labels.push(d);
         }
-        $("#forward-destinations .overlay").remove();
+        $("#forward-destinations .overlay").hide();
         forwardDestinationChart.update();
     }).done(function() {
         // Reload graph after 10 minutes
@@ -196,6 +225,15 @@ function updateForwardedOverTime() {
 
 function updateQueryTypes() {
     $.getJSON("api.php?getQueryTypes", function(data) {
+
+        if("FTLnotrunning" in data)
+        {
+            // Show spinner
+            $("#query-types .overlay").show();
+            // Try again in ten seconds
+            setTimeout(updateQueryTypes, 10000);
+            return;
+        }
         var colors = [];
         // Get colors from AdminLTE
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
@@ -219,7 +257,7 @@ function updateQueryTypes() {
         // and push it at once
         queryTypeChart.data.datasets[0] = dd;
         queryTypeChart.data.labels = k;
-        $("#query-types .overlay").remove();
+        $("#query-types .overlay").hide();
         queryTypeChart.update();
         queryTypeChart.chart.config.options.cutoutPercentage=50;
         queryTypeChart.update();
@@ -245,6 +283,15 @@ function escapeHtml(text) {
 
 function updateTopClientsChart() {
     $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
+
+        if("FTLnotrunning" in data)
+        {
+            // Show spinner
+            $("#client-frequency .overlay").show();
+            // Try again in ten seconds
+            setTimeout(updateTopClientsChart, 10000);
+            return;
+        }
         // Clear tables before filling them with data
         $("#client-frequency td").parent().remove();
         var clienttable =  $("#client-frequency").find("tbody:last");
@@ -275,14 +322,23 @@ function updateTopClientsChart() {
 
         }
 
-        $("#client-frequency .overlay").remove();
-        // Update top clients list data every 10 seconds
-        setTimeout(updateTopClientsChart, 10000);
+        $("#client-frequency .overlay").hide();
+        // Update top clients list data every second
+        setTimeout(updateTopClientsChart, 1000);
     });
 }
 
 function updateTopLists() {
     $.getJSON("api.php?summaryRaw&topItems", function(data) {
+        if("FTLnotrunning" in data)
+        {
+            // Show spinner
+            $("#domain-frequency .overlay").show();
+            $("#ad-frequency .overlay").show();
+            // Try again in ten seconds
+            setTimeout(updateTopLists, 10000);
+            return;
+        }
         // Clear tables before filling them with data
         $("#domain-frequency td").parent().remove();
         $("#ad-frequency td").parent().remove();
@@ -325,8 +381,8 @@ function updateTopLists() {
             $("#ad-frequency").parent().remove();
         }
 
-        $("#domain-frequency .overlay").remove();
-        $("#ad-frequency .overlay").remove();
+        $("#domain-frequency .overlay").hide();
+        $("#ad-frequency .overlay").hide();
         // Update top lists data every 10 seconds
         setTimeout(updateTopLists, 10000);
     });
