@@ -17,7 +17,19 @@ check_cors();
 $data = array();
 
 // Common API functions
-if (isset($_GET['enable']) && $auth)
+if (isset($_GET['status']) && $auth)
+{
+	$pistatus = exec('sudo pihole status web');
+	if ($pistatus == "1")
+	{
+		$data = array_merge($data, array("status" => "enabled"));
+	}
+	else
+	{
+		$data = array_merge($data, array("status" => "disabled"));
+	}
+}
+elseif (isset($_GET['enable']) && $auth)
 {
 	if(isset($_GET["auth"]))
 	{
