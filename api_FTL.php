@@ -229,7 +229,7 @@ if(isset($_GET["recentBlocked"]))
 	unset($data);
 }
 
-if (isset($_GET['overTimeDataForwards']))
+if (isset($_GET['overTimeDataForwards']) && $auth)
 {
 	sendRequestFTL("ForwardedoverTime");
 	$return = getResponseFTL();
