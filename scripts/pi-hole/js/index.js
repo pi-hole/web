@@ -64,11 +64,13 @@ function updateSummaryData(runOnce) {
             {
                 // FTL was previously offline
                 $("#temperature").text(" ");
-                updateQueriesOverTime();
-                updateForwardedOverTime();
-                updateQueryTypes();
-                updateTopClientsChart();
-                updateTopLists();
+                window.setTimeout(function() {
+	                updateQueriesOverTime();
+	                updateForwardedOverTime();
+	                updateQueryTypes();
+	                updateTopClientsChart();
+	                updateTopLists();
+	            }, 500);
             }
         }
 
