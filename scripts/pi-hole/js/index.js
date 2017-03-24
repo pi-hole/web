@@ -29,7 +29,7 @@ function objectToArray(p){
 
 // Functions to update data in page
 
-
+var FTLoffline = false;
 function updateSummaryData(runOnce) {
     var setTimer = function(timeInSeconds) {
         if (!runOnce) {
@@ -55,22 +55,21 @@ function updateSummaryData(runOnce) {
             $("#client-frequency .overlay").show();
             $("#domain-frequency .overlay").show();
             $("#ad-frequency .overlay").show();
-            // Try again in ten seconds
-            setTimer(10);
+
+            FTLoffline = true;
         }
         else
         {
-            if($("#temperature").text().search("FTL offline") > -1)
+            if(FTLoffline)
             {
                 // FTL was previously offline
+                FTLoffline = false;
                 $("#temperature").text(" ");
-                window.setTimeout(function() {
-	                updateQueriesOverTime();
-	                updateForwardedOverTime();
-	                updateQueryTypes();
-	                updateTopClientsChart();
-	                updateTopLists();
-	            }, 500);
+                updateQueriesOverTime();
+                updateForwardedOverTime();
+                updateQueryTypes();
+                updateTopClientsChart();
+                updateTopLists();
             }
         }
 
