@@ -64,7 +64,7 @@ function updateSummaryData(runOnce) {
         }, 500);
 
     }).done(function() {
-        setTimer(10);
+        setTimer(1);
     }).fail(function() {
         setTimer(300);
     });
@@ -323,8 +323,8 @@ function updateTopClientsChart() {
         }
 
         $("#client-frequency .overlay").hide();
-        // Update top clients list data every second
-        setTimeout(updateTopClientsChart, 1000);
+        // Update top clients list data every ten seconds
+        setTimeout(updateTopClientsChart, 10000);
     });
 }
 
