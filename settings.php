@@ -94,21 +94,21 @@
 			</div>
 			<div class="box-body">
 				<div class="form-group">
-					<label>Pi-Hole Ethernet Interface</label>
+					<label>Pi-hole Ethernet Interface</label>
 					<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-plug"></i></div>
 						<input type="text" class="form-control" disabled value="<?php echo $piHoleInterface; ?>">
 					</div>
 				</div>
 				<div class="form-group">
-					<label>Pi-Hole IPv4 address</label>
+					<label>Pi-hole IPv4 address</label>
 					<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-plug"></i></div>
 						<input type="text" class="form-control" disabled value="<?php echo $piHoleIPv4; ?>">
 					</div>
 				</div>
 				<div class="form-group">
-					<label>Pi-Hole IPv6 address</label>
+					<label>Pi-hole IPv6 address</label>
 					<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-plug"></i></div>
 						<input type="text" class="form-control" disabled value="<?php echo $piHoleIPv6; ?>">
@@ -116,7 +116,7 @@
 					<?php if (!defined('AF_INET6')){ ?><p style="color: #F00;">Warning: PHP has been compiled without IPv6 support.</p><?php } ?>
 				</div>
 				<div class="form-group">
-					<label>Pi-Hole hostname</label>
+					<label>Pi-hole hostname</label>
 					<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-laptop"></i></div>
 						<input type="text" class="form-control" disabled value="<?php echo $hostname; ?>">
@@ -125,7 +125,7 @@
 			</div>
 		</div>
 <?php
-	// Pi-Hole DHCP server
+	// Pi-hole DHCP server
 	if(isset($setupVars["DHCP_ACTIVE"]))
 	{
 		if($setupVars["DHCP_ACTIVE"] == 1)
@@ -190,7 +190,7 @@
 ?>
 		<div class="box box-warning">
 			<div class="box-header with-border">
-				<h3 class="box-title">Pi-Hole DHCP Server</h3>
+				<h3 class="box-title">Pi-hole DHCP Server</h3>
 			</div>
 			<div class="box-body">
 				<form role="form" method="post">
@@ -243,7 +243,7 @@
 								</div>
 							</div>
 							<div class="col-md-12">
-							<label>Pi-Hole domain name</label>
+							<label>Pi-hole domain name</label>
 							<div class="form-group">
 								<div class="input-group">
 									<div class="input-group-addon">Domain</div>
@@ -562,7 +562,7 @@
 							<div class="form-group">
 								<div class="checkbox"><label><input type="checkbox" name="DNSbogusPriv" <?php if($DNSbogusPriv){ ?>checked<?php } ?> title="bogus-priv"> never forward reverse lookups for private IP ranges</label></div>
 							</div>
-							<p>Note that enabling these two options may increase your privacy slightly, but may also prevent you from being able to access local hostnames if the Pi-Hole is not used as DHCP server</p>
+							<p>Note that enabling these two options may increase your privacy slightly, but may also prevent you from being able to access local hostnames if the Pi-hole is not used as DHCP server</p>
 							<div class="form-group">
 								<div class="checkbox"><label><input type="checkbox" name="DNSSEC" <?php if($DNSSEC){ ?>checked<?php } ?>> Use DNSSEC</label></div>
 							</div>
