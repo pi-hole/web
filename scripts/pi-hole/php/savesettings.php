@@ -400,7 +400,7 @@ function isinserverlist($addr) {
 
 			case "flushlogs":
 				exec("sudo pihole -f");
-				$success = "The Pi-Hole log file has been flushed";
+				$success = "The Pi-hole log file has been flushed";
 				break;
 
 			case "DHCP":
