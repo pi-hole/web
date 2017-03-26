@@ -144,6 +144,7 @@ $("#pihole-disable-custom").on("click", function(e){
 
 var piholeVersion = $("#piholeVersion").html();
 var webVersion = $("#webVersion").html();
+var FTLVersion = $("#FTLVersion").html();
 
 // Credit for following function: https://gist.github.com/alexey-bass/1115557
 // Modified to discard any possible "v" in the string
@@ -183,15 +184,22 @@ function versionCompare(left, right) {
 $.getJSON("https://api.github.com/repos/pi-hole/pi-hole/releases/latest", function(json) {
     if(versionCompare(piholeVersion, json.tag_name.slice(1)) < 0) {
         // Alert user
-        $("#piholeVersion").html($("#piholeVersion").text() + "<a class=\"alert-link\" href=\"https://github.com/pi-hole/pi-hole/releases\">(Update available!)</a>");
+        $("#piholeVersion").html($("#piholeVersion").text() + " <a class=\"alert-link lookatme\" href=\"https://github.com/pi-hole/pi-hole/releases\">(Update available!)</a>");
         $("#alPiholeUpdate").show();
     }
 });
 $.getJSON("https://api.github.com/repos/pi-hole/AdminLTE/releases/latest", function(json) {
     if(versionCompare(webVersion, json.tag_name.slice(1)) < 0) {
         // Alert user
-        $("#webVersion").html($("#webVersion").text() + "<a class=\"alert-link\" href=\"https://github.com/pi-hole/adminLTE/releases\">(Update available!)</a>");
+        $("#webVersion").html($("#webVersion").text() + " <a class=\"alert-link lookatme\" href=\"https://github.com/pi-hole/adminLTE/releases\">(Update available!)</a>");
         $("#alWebUpdate").show();
+    }
+});
+$.getJSON("https://api.github.com/repos/pi-hole/FTL/releases/latest", function(json) {
+    if(versionCompare(FTLVersion, json.tag_name.slice(1)) < 0) {
+        // Alert user
+        $("#FTLVersion").html($("#FTLVersion").text() + " <a class=\"alert-link lookatme\" href=\"https://github.com/pi-hole/FTL/releases\">(Update available!)</a>");
+        $("#alFTLUpdate").show();
     }
 });
 
