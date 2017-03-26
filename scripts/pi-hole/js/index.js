@@ -390,7 +390,7 @@ function updateSummaryData(runOnce) {
         }, 500);
 
     }).done(function() {
-        if(FTLoffline)
+        if(!FTLoffline)
         {
           setTimer(1);
         }
