@@ -392,7 +392,14 @@ function updateSummaryData(runOnce) {
         }, 500);
 
     }).done(function() {
-        setTimer(1);
+        if(!FTLoffline)
+        {
+          setTimer(1);
+        }
+        else
+        {
+          setTimer(10);
+        }
     }).fail(function() {
         setTimer(300);
     });
