@@ -77,7 +77,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Disable / Enable</h2>
-    Disables/enables Pi-Hole blocking completely. You may have to wait a few minutes for the changes to reach all of your devices. The change will be reflected by a changed status (top left)
+    Disables/enables Pi-hole blocking completely. You may have to wait a few minutes for the changes to reach all of your devices. The change will be reflected by a changed status (top left)
     </div>
 </div>
 <div class="row">
@@ -101,11 +101,11 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Settings</h2>
-    Change settings for the Pi-Hole
+    Change settings for the Pi-hole
     <h4>Networking</h4>
-    Displays information about the interfaces of the Pi-Hole. No changes possible.
-    <h4>Pi-Hole DHCP Server</h4>
-    Using this setting you can enable/disable the DHCP server of the Pi-Hole. Note that you should disable any other DHCP server on your network to avoid IP addresses being used more than once. You have to give the range of IPs that DHCP will serve and the IP of the local router (gateway). If the DHCP server is active, the current leases are shown on the settings page. IPv4 DHCP will always be activated, IPv6 (stateless + statefull) can be enabled.
+    Displays information about the interfaces of the Pi-hole. No changes possible.
+    <h4>Pi-hole DHCP Server</h4>
+    Using this setting you can enable/disable the DHCP server of the Pi-hole. Note that you should disable any other DHCP server on your network to avoid IP addresses being used more than once. You have to give the range of IPs that DHCP will serve and the IP of the local router (gateway). If the DHCP server is active, the current leases are shown on the settings page. IPv4 DHCP will always be activated, IPv6 (stateless + statefull) can be enabled.
     <h4>Upstream DNS Servers</h4>
     Customize used upstream DNS servers + advanced settings for DNS servers. Note that any number of DNS servers may be enabled at a time.
     <h4>Query Logging</h4>
