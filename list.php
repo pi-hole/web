@@ -45,7 +45,11 @@ function getFullName() {
     </span>
 </div>
 <?php if($list === "white") { ?>
+    <div class="alert alert-info" role="alert">
     <p>Note: Whitelisting a subdomain of a wildcard blocked domain is not possible.</p>
+    <p>You may notice some domains below that you did not add yourself, these are the domains of the source lists, which we add to the whitelist to prevent one list from blacklisting another.</p>
+    <p>See <a href="https://github.com/pi-hole/pi-hole/blob/master/adlists.default">here</a> for a list of the default source lists</p>
+    </div>
 <?php } ?>
 
 <!-- Alerts -->
