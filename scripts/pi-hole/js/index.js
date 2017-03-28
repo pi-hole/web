@@ -388,7 +388,7 @@ function updateSummaryData(runOnce) {
                 $("#temperature").text(" ");
                 updateQueriesOverTime();
                 updateForwardedOverTime();
-                updateQueryTypes();
+                updateQueriesOverTime();
                 updateTopClientsChart();
                 updateTopLists();
             }
@@ -540,95 +540,100 @@ $(document).ready(function() {
 
         updateQueriesOverTime();
 
-        ctx = document.getElementById("forwardDestinationChart").getContext("2d");
-        forwardDestinationChart = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: [],
-                datasets: [{ data: [] }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: "time",
-                        time: {
-                            unit: "hour",
-                            displayFormats: {
-                                hour: "HH:mm"
-                            },
-                            tooltipFormat: "HH:mm"
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            mix: 0.0,
-                            max: 1.0,
-                            beginAtZero: true,
-                            callback: function(value, index, values) {
-                                return Math.round(value*100) + " %";
-                            }
-                        },
-                        stacked: true
-                    }]
+        // Create / load "Forward Destinations over Time" only if authorized
+        if(document.getElementById("forwardDestinationChart"))
+        {
+            ctx = document.getElementById("forwardDestinationChart").getContext("2d");
+            forwardDestinationChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [{ data: [] }]
                 },
-                maintainAspectRatio: true
-            }
-        });
-
-        // Pull in data via AJAX
-
-        updateForwardedOverTime();
-
-        // Create / load "Query Types" only if authorized
-        ctx = document.getElementById("queryTypeChart").getContext("2d");
-        queryTypeChart = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: [],
-                datasets: [
-                    {
-                        label: "A: IPv4 queries",
-                        pointRadius: 0,
-                        data: []
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: "time",
+                            time: {
+                                unit: "hour",
+                                displayFormats: {
+                                    hour: "HH:mm"
+                                },
+                                tooltipFormat: "HH:mm"
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                mix: 0.0,
+                                max: 1.0,
+                                beginAtZero: true,
+                                callback: function(value, index, values) {
+                                    return Math.round(value*100) + " %";
+                                }
+                            },
+                            stacked: true
+                        }]
                     },
-                    {
-                        label: "AAAA: IPv6 queries",
-                        pointRadius: 0,
-                        data: []
-                    }
-                ]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: "time",
-                        time: {
-                            unit: "hour",
-                            displayFormats: {
-                                hour: "HH:mm"
-                            },
-                            tooltipFormat: "HH:mm"
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            mix: 0.0,
-                            max: 1.0,
-                            beginAtZero: true,
-                            callback: function(value, index, values) {
-                                return Math.round(value*100) + " %";
-                            }
+                    maintainAspectRatio: true
+                }
+            });
+
+            // Pull in data via AJAX
+            updateForwardedOverTime();
+        }
+
+        // Create / load "Query Types over Time" only if authorized
+        if(document.getElementById("queryTypeChart"))
+        {
+            ctx = document.getElementById("queryTypeChart").getContext("2d");
+            queryTypeChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: "A: IPv4 queries",
+                            pointRadius: 0,
+                            data: []
                         },
-                        stacked: true
-                    }]
+                        {
+                            label: "AAAA: IPv6 queries",
+                            pointRadius: 0,
+                            data: []
+                        }
+                    ]
                 },
-                maintainAspectRatio: true
-            }
-        });
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: "time",
+                            time: {
+                                unit: "hour",
+                                displayFormats: {
+                                    hour: "HH:mm"
+                                },
+                                tooltipFormat: "HH:mm"
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                mix: 0.0,
+                                max: 1.0,
+                                beginAtZero: true,
+                                callback: function(value, index, values) {
+                                    return Math.round(value*100) + " %";
+                                }
+                            },
+                            stacked: true
+                        }]
+                    },
+                    maintainAspectRatio: true
+                }
+            });
 
-        // Pull in data via AJAX
-
-        updateQueryTypesOverTime();
+            // Pull in data via AJAX
+            updateQueryTypesOverTime();
+        }
 
         // Create / load "Top Domains" and "Top Advertisers" only if authorized
         if(document.getElementById("domain-frequency")
