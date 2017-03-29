@@ -68,7 +68,7 @@
     <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
-          <h3 class="box-title">Queries over time</h3>
+          <h3 class="box-title">Queries over Time</h3>
         </div>
         <div class="box-body">
           <div class="chart">
@@ -92,7 +92,7 @@
     <div class="col-md-6">
     <div class="box" id="query-types">
         <div class="box-header with-border">
-          <h3 class="box-title">Query Types</h3>
+          <h3 class="box-title">Query Types over Time</h3>
         </div>
         <div class="box-body">
           <div class="chart">

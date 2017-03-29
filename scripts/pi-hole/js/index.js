@@ -86,6 +86,66 @@ function updateQueriesOverTime() {
     });
 }
 
+function updateQueryTypesOverTime() {
+    $.getJSON("api.php?overTimeDataQueryTypes", function(data) {
+
+        if("FTLnotrunning" in data)
+        {
+            return;
+        }
+
+        // convert received objects to arrays
+        data.over_time = objectToArray(data.over_time);
+        var timestamps = data.over_time[0];
+        var plotdata  = data.over_time[1];
+        // Remove possibly already existing data
+        queryTypeChart.data.labels = [];
+        queryTypeChart.data.datasets[0].data = [];
+        queryTypeChart.data.datasets[1].data = [];
+
+        var colors = [];
+        $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
+        queryTypeChart.data.datasets[0].backgroundColor = colors[0];
+        queryTypeChart.data.datasets[1].backgroundColor = colors[1];
+
+            // Add data for each hour that is available
+        for (var j in timestamps) {
+            if ({}.hasOwnProperty.call(timestamps, j)) {
+                var d,h;
+                h = parseInt(timestamps[j]);
+                // New style: Get Unix timestamps
+                d = new Date(1000*h);
+
+                var sum = plotdata[j][0] + plotdata[j][1];
+                var A = 0, AAAA = 0;
+                if(sum > 0)
+                {
+                    A = plotdata[j][0]/sum;
+                    AAAA = plotdata[j][1]/sum;
+                }
+
+                queryTypeChart.data.labels.push(d);
+                queryTypeChart.data.datasets[0].data.push(A);
+                queryTypeChart.data.datasets[1].data.push(AAAA);
+            }
+        }
+        $("#query-types .overlay").hide();
+        queryTypeChart.update();
+    }).done(function() {
+        // Reload graph after 10 minutes
+        failures = 0;
+        setTimeout(updateQueryTypesOverTime, 600000);
+    }).fail(function() {
+        failures++;
+        if(failures < 5)
+        {
+            // Try again after 1 minute only if this has not failed more
+            // than five times in a row
+            setTimeout(updateQueryTypesOverTime, 60000);
+        }
+    });
+}
+
 function updateForwardedOverTime() {
     $.getJSON("api.php?overTimeDataForwards&getForwardDestinationNames", function(data) {
 
@@ -173,48 +233,6 @@ function updateForwardedOverTime() {
             // than five times in a row
             setTimeout(updateForwardedOverTime, 60000);
         }
-    });
-}
-
-function updateQueryTypes() {
-    $.getJSON("api.php?getQueryTypes", function(data) {
-
-        if("FTLnotrunning" in data)
-        {
-            return;
-        }
-
-        var colors = [];
-        // Get colors from AdminLTE
-        $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
-        var v = [], c = [], k = [], iter;
-        // Collect values and colors, and labels
-        if(data.hasOwnProperty("querytypes"))
-        {
-            iter = data.querytypes;
-        }
-        else
-        {
-            iter = data;
-        }
-        $.each(iter, function(key , value) {
-            v.push(value);
-            c.push(colors.shift());
-            k.push(key);
-        });
-        // Build a single dataset with the data to be pushed
-        var dd = {data: v, backgroundColor: c};
-        // and push it at once
-        queryTypeChart.data.datasets[0] = dd;
-        queryTypeChart.data.labels = k;
-        $("#query-types .overlay").hide();
-        queryTypeChart.update();
-        queryTypeChart.chart.config.options.cutoutPercentage=50;
-        queryTypeChart.update();
-        // Don't use rotation animation for further updates
-        queryTypeChart.options.animation.duration=0;
-        // Update query types data every 10 seconds
-        setTimeout(updateQueryTypes, 10000);
     });
 }
 
@@ -370,7 +388,7 @@ function updateSummaryData(runOnce) {
                 $("#temperature").text(" ");
                 updateQueriesOverTime();
                 updateForwardedOverTime();
-                updateQueryTypes();
+                updateQueriesOverTime();
                 updateTopClientsChart();
                 updateTopLists();
             }
@@ -522,63 +540,99 @@ $(document).ready(function() {
 
         updateQueriesOverTime();
 
-        ctx = document.getElementById("forwardDestinationChart").getContext("2d");
-        forwardDestinationChart = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: [],
-                datasets: [{ data: [] }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: "time",
-                        time: {
-                            unit: "hour",
-                            displayFormats: {
-                                hour: "HH:mm"
-                            },
-                            tooltipFormat: "HH:mm"
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            mix: 0.0,
-                            max: 1.0,
-                            beginAtZero: true
-                        },
-                        stacked: true
-                    }]
-                },
-                maintainAspectRatio: true
-            }
-        });
-
-        // Pull in data via AJAX
-
-        updateForwardedOverTime();
-
-        // Create / load "Query Types" only if authorized
-        if(document.getElementById("queryTypeChart"))
+        // Create / load "Forward Destinations over Time" only if authorized
+        if(document.getElementById("forwardDestinationChart"))
         {
-            ctx = document.getElementById("queryTypeChart").getContext("2d");
-            queryTypeChart = new Chart(ctx, {
-                type: "doughnut",
+            ctx = document.getElementById("forwardDestinationChart").getContext("2d");
+            forwardDestinationChart = new Chart(ctx, {
+                type: "line",
                 data: {
                     labels: [],
                     datasets: [{ data: [] }]
                 },
                 options: {
-                    legend: {
-                        display: false
+                    scales: {
+                        xAxes: [{
+                            type: "time",
+                            time: {
+                                unit: "hour",
+                                displayFormats: {
+                                    hour: "HH:mm"
+                                },
+                                tooltipFormat: "HH:mm"
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                mix: 0.0,
+                                max: 1.0,
+                                beginAtZero: true,
+                                callback: function(value, index, values) {
+                                    return Math.round(value*100) + " %";
+                                }
+                            },
+                            stacked: true
+                        }]
                     },
-                    animation: {
-                        duration: 2000
-                    },
-                    cutoutPercentage: 0
+                    maintainAspectRatio: true
                 }
             });
-            updateQueryTypes();
+
+            // Pull in data via AJAX
+            updateForwardedOverTime();
+        }
+
+        // Create / load "Query Types over Time" only if authorized
+        if(document.getElementById("queryTypeChart"))
+        {
+            ctx = document.getElementById("queryTypeChart").getContext("2d");
+            queryTypeChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: "A: IPv4 queries",
+                            pointRadius: 0,
+                            data: []
+                        },
+                        {
+                            label: "AAAA: IPv6 queries",
+                            pointRadius: 0,
+                            data: []
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: "time",
+                            time: {
+                                unit: "hour",
+                                displayFormats: {
+                                    hour: "HH:mm"
+                                },
+                                tooltipFormat: "HH:mm"
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                mix: 0.0,
+                                max: 1.0,
+                                beginAtZero: true,
+                                callback: function(value, index, values) {
+                                    return Math.round(value*100) + " %";
+                                }
+                            },
+                            stacked: true
+                        }]
+                    },
+                    maintainAspectRatio: true
+                }
+            });
+
+            // Pull in data via AJAX
+            updateQueryTypesOverTime();
         }
 
         // Create / load "Top Domains" and "Top Advertisers" only if authorized
