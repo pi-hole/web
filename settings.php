@@ -526,7 +526,33 @@ if(isset($_POST["submit"])) {
 	}
 
 ?>
-		<div class="box box-success">
+        <div class="box box-danger collapsed-box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Pi-Hole's Block Lists</h3>
+                <div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
+            </div>
+            <form role="form" method="post">
+                <div class="box-body">
+                    <div class="col-lg-12">
+                        <label>Lists suggested by the Pi-hole team (reset on updates)</label>
+                        <?php foreach ($adlist as $key => $value) { ?>
+                            <div class="form-group">
+                                <div class="checkbox"><label style="word-break: break-word;"><input type="checkbox" name="adlist-<?php echo $key; ?>" <?php if($value[0]){ ?>checked<?php } ?>> <a href="<?php echo htmlentities ($value[1]); ?>" target="_new"><?php echo htmlentities($value[1]); ?></a></label></div>
+                            </div>
+                        <?php } ?>
+                        <div class="form-group">
+                            <textarea name="newuserlists" class="form-control" rows="1" placeholder="Enter one URL per line to add new ad lists"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <input type="hidden" name="field" value="adlists">
+                    <button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
+                    <button type="submit" class="btn btn-primary pull-right" name="submit" value="saveupdate">Save and Update</button>
+                </div>
+            </form>
+        </div>
+        <div class="box box-success">
 			<div class="box-header with-border">
 				<h3 class="box-title">API</h3>
 			</div>
@@ -646,32 +672,6 @@ if(isset($_POST["submit"])) {
 			</div>
 		</div>
 */ ?>
-		<div class="box box-danger collapsed-box">
-			<div class="box-header with-border">
-				<h3 class="box-title">Pi-Hole's Block Lists</h3>
-				<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
-			</div>
-			<form role="form" method="post">
-			<div class="box-body">
-				<div class="col-lg-12">
-				<label>Lists suggested by the Pi-hole team (reset on updates)</label>
-					<?php foreach ($adlist as $key => $value) { ?>
-					<div class="form-group">
-						<div class="checkbox"><label style="word-break: break-word;"><input type="checkbox" name="adlist-<?php echo $key; ?>" <?php if($value[0]){ ?>checked<?php } ?>> <a href="<?php echo htmlentities ($value[1]); ?>" target="_new"><?php echo htmlentities($value[1]); ?></a></label></div>
-					</div>
-					<?php } ?>
-				    <div class="form-group">
-						<textarea name="newuserlists" class="form-control" rows="1" placeholder="Enter one URL per line to add new ad lists"></textarea>
-					</div>
-				</div>
-			</div>
-			<div class="box-footer">
-				<input type="hidden" name="field" value="adlists">
-				<button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
-				<button type="submit" class="btn btn-primary pull-right" name="submit" value="saveupdate">Save and Update</button>
-			</div>
-			</form>
-		</div>
 		<div class="box box-danger">
 			<div class="box-header with-border">
 				<h3 class="box-title">System Administration</h3>
