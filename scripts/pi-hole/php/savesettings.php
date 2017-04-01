@@ -406,13 +406,13 @@ function readAdlists()
 						// Delete list
 						exec("sudo pihole -a adlist del ".escapeshellcmd($value[1]));
 					}
-					elseif(isset($_POST["adlist-".$key]) && !$value[0])
+					elseif(isset($_POST["adlist-enable-".$key]) && !$value[0])
 					{
 						// Is not enabled, but should be
 						exec("sudo pihole -a adlist enable ".escapeshellcmd($value[1]));
 
 					}
-					elseif(!isset($_POST["adlist-".$key]) && $value[0])
+					elseif(!isset($_POST["adlist-enable-".$key]) && $value[0])
 					{
 						// Is enabled, but shouldn't be
 						exec("sudo pihole -a adlist disable ".escapeshellcmd($value[1]));

@@ -539,11 +539,13 @@ if(isset($_POST["submit"])) {
                             <div class="form-group">
                                 <div class="checkbox">
                                     <label style="word-break: break-word;">
-                                        <input type="checkbox" name="adlist-<?php echo $key; ?>" <?php if($value[0]){ ?>checked<?php } ?>>
+                                        <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if($value[0]){ ?>checked<?php } ?>>
                                         <a href="<?php echo htmlentities ($value[1]); ?>" target="_new"><?php echo htmlentities($value[1]); ?></a>
+                                        <input type="checkbox" name="adlist-del-<?php echo $key; ?>" hidden>
                                         <br>
-                                        <input type="checkbox" name="adlist-del-<?php echo $key; ?>">
-                                        Delete?
+                                        <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
                                     </label>
                                 </div>
                             </div>
