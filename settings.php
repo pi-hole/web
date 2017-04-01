@@ -534,7 +534,7 @@ if(isset($_POST["submit"])) {
             <form role="form" method="post">
                 <div class="box-body">
                     <div class="col-lg-12">
-                        <label>Lists suggested by the Pi-hole team</label>
+                        <label>Lists used to generate Pi-hole's Gravity</label>
                         <?php foreach ($adlist as $key => $value) { ?>
                             <div class="form-group">
                                 <div class="checkbox">
