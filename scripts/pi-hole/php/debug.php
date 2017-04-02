@@ -5,6 +5,18 @@ ob_implicit_flush(true);
 header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 
+require "password.php";
+require "auth.php";
+
+if(!$auth) {
+    die("Unauthorized");
+}
+
+check_cors();
+
+$token = isset($_GET["token"]) ? $_GET["token"] : "";
+check_csrf($token);
+
 function echoEvent($datatext) {
     if(!isset($_GET["IE"]))
       echo "data: ".implode("\ndata: ", explode("\n", $datatext))."\n\n";
