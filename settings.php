@@ -392,6 +392,7 @@
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="DHCP">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
@@ -588,6 +589,7 @@
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="DNS">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
@@ -629,6 +631,7 @@
 				<form role="form" method="post">
 				<button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
 				<input type="hidden" name="field" value="Logging">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<?php if($piHoleLogging) { ?>
 					<input type="hidden" name="action" value="Disable">
 					<button type="submit" class="btn btn-primary pull-right">Disable query logging</button>
@@ -713,6 +716,7 @@
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="API">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="button" class="btn btn-primary api-token">Show API token</button>
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
@@ -764,6 +768,7 @@
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="webUI">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
@@ -795,12 +800,15 @@
 
 				<form role="form" method="post" id="rebootform">
 					<input type="hidden" name="field" value="reboot">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
 				</form>
 				<form role="form" method="post" id="restartdnsform">
 					<input type="hidden" name="field" value="restartdns">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
 				</form>
 				<form role="form" method="post" id="flushlogsform">
 					<input type="hidden" name="field" value="flushlogs">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
 				</form>
 			</div>
 		</div>
@@ -863,6 +871,7 @@ if($FTL)
 							<label for="zip_file">File input</label>
 							<input type="file" name="zip_file" id="zip_file">
 							<p class="help-block">Upload only Pi-hole backup files.</p>
+							<input type="hidden" name="token" value="<?php echo $token ?>">
 							<button type="submit" class="btn btn-default" name="action" value="in">Import</button>
 						</div>
 					</div>
