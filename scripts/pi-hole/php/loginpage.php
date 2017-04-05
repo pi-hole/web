@@ -56,7 +56,7 @@
                 After installing Pi-hole for the first time, a password is generated and displayed to the user. The
                 password cannot be retrieved later on, but it is possible to set a new password (or explicitly disable
                 the password by setting an empty password) using the command
-                <pre>sudo pihole -a -p newpassword</pre>
+                <pre>sudo pihole -a -p</pre>
               </div>
             </div>
           </div>
