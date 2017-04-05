@@ -1,4 +1,4 @@
-<?php /* 
+<?php /*
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
@@ -847,6 +847,7 @@ if($FTL)
 			<div class="box-body">
 			<?php if (extension_loaded('zip')) { ?>
 				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/teleporter.php" target="_blank"  enctype="multipart/form-data">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
 					<div class="col-lg-12">
 						<p>Export your Pi-hole lists as downloadable ZIP file</p>
 						<button type="submit" class="btn btn-default">Export</button>
@@ -871,7 +872,6 @@ if($FTL)
 							<label for="zip_file">File input</label>
 							<input type="file" name="zip_file" id="zip_file">
 							<p class="help-block">Upload only Pi-hole backup files.</p>
-							<input type="hidden" name="token" value="<?php echo $token ?>">
 							<button type="submit" class="btn btn-default" name="action" value="in">Import</button>
 						</div>
 					</div>
