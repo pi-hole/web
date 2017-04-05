@@ -877,7 +877,7 @@ if($FTL)
 					</div>
 				</form>
 			<?php } else { ?>
-				<p>The PHP extension <tt>zip</tt> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.</p>
+				<p>The PHP extension <code>zip</code> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.</p>
 			<?php } ?>
 			</div>
 		</div>
