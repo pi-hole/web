@@ -299,6 +299,29 @@
                         }
 
                         // CPU Temp
+<<<<<<< HEAD
+                        if ($celsius >= -273.15) {
+                            echo "<a id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
+                            if ($celsius > 60) {
+                                echo "#FF0000";
+                            }
+                            else
+                            {
+                                echo "#3366FF";
+                            }
+                            echo "\"></i> Temp:&nbsp;";
+                            if($temperatureunit === "F")
+                            {
+                                echo round($fahrenheit,1) . " &deg;F";
+                            }
+                            elseif($temperatureunit === "K")
+                            {
+                                echo round($kelvin,1) . " K";
+                            }
+                            else
+                            {
+                                echo round($celsius,1) . " &deg;C";
+=======
                         if($FTL)
                         {
                             if ($celsius >= -273.15) {
@@ -324,6 +347,7 @@
                                     echo round($celsius,1) . "&nbsp;&deg;C";
                                 }
                                 echo "</a>";
+>>>>>>> devel
                             }
                         }
                         else
