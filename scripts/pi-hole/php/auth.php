@@ -159,4 +159,12 @@ function list_verify($type) {
     }
     check_domain();
 }
+
+function check_visitor_ipv6()
+{
+    $address = $_SERVER["REMOTE_ADDR"];
+    $ipv4_mapped_ipv6 = strpos($address, "::ffff:");
+    return (strpos($address, ":") !== FALSE) &&
+           ($ipv4_mapped_ipv6 === FALSE || $ipv4_mapped_ipv6 != 0);
+}
 ?>

@@ -38,6 +38,7 @@
         <?php if($authenticationsystem){ ?>
         <li>Session timer: Shows the time remaining until the current login session expires.</li>
         <?php } ?>
+        <li>Display whether you are visiting the Pi-hole admin interface via an IPv4 or IPv6 connection.</li>
     </ul>
     </div>
 </div>

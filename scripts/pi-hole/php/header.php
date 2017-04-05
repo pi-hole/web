@@ -249,6 +249,7 @@
                                     <a href="https://github.com/pi-hole/pi-hole/releases">Updates</a>
                                 </div>
                                 <div class="col-xs-12 text-center" id="sessiontimer">Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></div>
+                                <div class="col-xs-12 text-center">You are visiting this page via <?php if(check_visitor_ipv6()){?>IPv6<?php }else{ ?>IPv4<?php }?></div>
                             </li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
