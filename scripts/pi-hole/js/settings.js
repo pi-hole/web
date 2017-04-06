@@ -134,3 +134,14 @@ $(document).ready(function(){
     $("[data-toggle=\"tooltip\"]").tooltip({"html": true, container : "body"});
 });
 
+// Handle list deletion
+$("button[id^='adlist-btn-']").on("click", function (e) {
+	e.preventDefault();
+
+	var status = $(this).siblings("input[name^='adlist-del-']").is(":checked");
+	var textType = status ? "none" : "line-through";
+
+    $(this).siblings("input[name^='adlist-del-']").prop("checked", !status);
+    $(this).siblings("input[name^='adlist-enable-']").prop("disabled", !status);
+	$(this).siblings("a").css("text-decoration", textType);
+});

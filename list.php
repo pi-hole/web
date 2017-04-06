@@ -30,6 +30,7 @@ function getFullName() {
 <div class="page-header">
     <h1><?php getFullName(); ?></h1>
 </div>
+<?php if($list == "white"){ ?><p>Note that the ad list domains are automatically added to the whitelist so that a list can never get blocked by another list.</p><?php } ?>
 
 <!-- Domain Input -->
 <div class="form-group input-group">
@@ -62,6 +63,7 @@ function getFullName() {
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     Failure! Something went wrong.<br/><span id="err"></span>
 </div>
+
 
 <!-- Domain List -->
 <?php if($list === "black") { ?>

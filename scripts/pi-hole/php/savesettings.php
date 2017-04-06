@@ -125,6 +125,35 @@ function isinserverlist($addr) {
 			"DNS.WATCH" => ["v4_1" => "84.200.69.80", "v4_2" => "84.200.70.40", "v6_1" => "2001:1608:10:25:0:0:1c04:b12f", "v6_2" => "2001:1608:10:25:0:0:9249:d69b"]
 		];
 
+$adlist = [];
+function readAdlists()
+{
+	// Reset list
+	$list = [];
+	$handle = @fopen("/etc/pihole/adlists.list", "r");
+	if ($handle)
+	{
+		while (($line = fgets($handle)) !== false)
+		{
+			if(substr($line, 0, 5) === "#http")
+			{
+				// Commented list
+				array_push($list, [false,rtrim(substr($line, 1))]);
+			}
+			elseif(substr($line, 0, 4) === "http")
+			{
+				// Active list
+				array_push($list, [true,rtrim($line)]);
+			}
+		}
+		fclose($handle);
+	}
+	return $list;
+}
+
+	// Read available adlists
+	$adlist = readAdlists();
+
 	$error = "";
 	$success = "";
 
@@ -534,6 +563,41 @@ function isinserverlist($addr) {
 					exec("sudo pihole -a disabledhcp");
 					$success = "The DHCP server has been deactivated";
 				}
+
+				break;
+
+			case "adlists":
+				foreach ($adlist as $key => $value)
+				{
+					if(isset($_POST["adlist-del-".$key]))
+					{
+						// Delete list
+						exec("sudo pihole -a adlist del ".escapeshellcmd($value[1]));
+					}
+					elseif(isset($_POST["adlist-enable-".$key]) && !$value[0])
+					{
+						// Is not enabled, but should be
+						exec("sudo pihole -a adlist enable ".escapeshellcmd($value[1]));
+
+					}
+					elseif(!isset($_POST["adlist-enable-".$key]) && $value[0])
+					{
+						// Is enabled, but shouldn't be
+						exec("sudo pihole -a adlist disable ".escapeshellcmd($value[1]));
+					}
+				}
+
+				if(strlen($_POST["newuserlists"]) > 1)
+				{
+					$domains = array_filter(preg_split('/\r\n|[\r\n]/', $_POST["newuserlists"]));
+					foreach($domains as $domain)
+					{
+						exec("sudo pihole -a adlist add ".escapeshellcmd($domain));
+					}
+				}
+
+				// Reread available adlists
+				$adlist = readAdlists();
 
 				break;
 
