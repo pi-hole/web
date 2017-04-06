@@ -29,20 +29,21 @@ function eventsource() {
     var ta = $("#output");
     var upload = $( "#upload" );
     var checked = "";
+    var token = encodeURIComponent($("#token").html());
 
     if(upload.prop("checked"))
     {
-      checked = "upload";
+        checked = "upload";
     }
 
     // IE does not support EventSource - load whole content at once
     if (typeof EventSource !== "function") {
-        httpGet(ta,"/admin/scripts/pi-hole/php/debug.php?IE&"+checked);
+        httpGet(ta,"/admin/scripts/pi-hole/php/debug.php?IE&token="+token+"&"+checked);
         return;
     }
 
     var host = window.location.host;
-    var source = new EventSource("/admin/scripts/pi-hole/php/debug.php?"+checked);
+    var source = new EventSource("/admin/scripts/pi-hole/php/debug.php?&token="+token+"&"+checked);
 
     // Reset and show field
     ta.empty();

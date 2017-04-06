@@ -159,6 +159,9 @@ function readAdlists()
 
 	if(isset($_POST["field"]))
 	{
+		// Handle CSRF
+		check_csrf(isset($_POST["token"]) ? $_POST["token"] : "");
+
 		// Process request
 		switch ($_POST["field"]) {
 			// Set DNS server

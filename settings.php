@@ -1,4 +1,4 @@
-<?php /* 
+<?php /*
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
@@ -400,6 +400,7 @@ if(isset($_POST["submit"])) {
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="DHCP">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
@@ -596,6 +597,7 @@ if(isset($_POST["submit"])) {
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="DNS">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
@@ -637,6 +639,7 @@ if(isset($_POST["submit"])) {
 				<form role="form" method="post">
 				<button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
 				<input type="hidden" name="field" value="Logging">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<?php if($piHoleLogging) { ?>
 					<input type="hidden" name="action" value="Disable">
 					<button type="submit" class="btn btn-primary pull-right">Disable query logging</button>
@@ -757,6 +760,7 @@ if(isset($_POST["submit"])) {
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="API">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="button" class="btn btn-primary api-token">Show API token</button>
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
@@ -808,6 +812,7 @@ if(isset($_POST["submit"])) {
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="webUI">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
@@ -839,12 +844,15 @@ if(isset($_POST["submit"])) {
 
 				<form role="form" method="post" id="rebootform">
 					<input type="hidden" name="field" value="reboot">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
 				</form>
 				<form role="form" method="post" id="restartdnsform">
 					<input type="hidden" name="field" value="restartdns">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
 				</form>
 				<form role="form" method="post" id="flushlogsform">
 					<input type="hidden" name="field" value="flushlogs">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
 				</form>
 			</div>
 		</div>
@@ -883,6 +891,7 @@ if($FTL)
 			<div class="box-body">
 			<?php if (extension_loaded('zip')) { ?>
 				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/teleporter.php" target="_blank"  enctype="multipart/form-data">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
 					<div class="col-lg-12">
 						<p>Export your Pi-hole lists as downloadable ZIP file</p>
 						<button type="submit" class="btn btn-default">Export</button>
@@ -912,7 +921,7 @@ if($FTL)
 					</div>
 				</form>
 			<?php } else { ?>
-				<p>The PHP extension <tt>zip</tt> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.</p>
+				<p>The PHP extension <code>zip</code> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.</p>
 			<?php } ?>
 			</div>
 		</div>

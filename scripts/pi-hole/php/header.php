@@ -12,6 +12,12 @@
 
     check_cors();
 
+    // Generate CSRF token
+    if(empty($_SESSION['token'])) {
+        $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
+    }
+    $token = $_SESSION['token'];
+
     // Try to get temperature value from different places (OS dependent)
     if(file_exists("/sys/class/thermal/thermal_zone0/temp"))
     {
@@ -201,6 +207,11 @@
         <p>To enable Javascript click <a href="http://www.enable-javascript.com/" target="_blank">here</a></p><label for="js-hide">Close</label></div>
 </div>
 <!-- /JS Warning -->
+<?php
+if($auth) {
+    echo "<div id='token' hidden>$token</div>";
+}
+?>
 <script src="scripts/pi-hole/js/header.js"></script>
 <!-- Send token to JS -->
 <div id="token" hidden><?php if($auth) echo $token; ?></div>

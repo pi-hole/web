@@ -7,11 +7,13 @@
 *  Please see LICENSE file for your rights under this license. */
 
 require "password.php";
+require "auth.php"; // Also imports func.php
+
 if (php_sapi_name() !== "cli") {
 	if(!$auth) die("Not authorized");
+	check_csrf(isset($_POST["token"]) ? $_POST["token"] : "");
 }
 
-require('func.php');
 function process_zip($name)
 {
 	global $zip;
