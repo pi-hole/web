@@ -842,10 +842,15 @@ readStaticLeasesFile();
 				<h3 class="box-title">System Administration</h3>
 			</div>
 			<div class="box-body">
+				<button type="button" class="btn btn-default confirm-halt">Halt system</button>
 				<button type="button" class="btn btn-default confirm-reboot">Restart system</button>
 				<button type="button" class="btn btn-default confirm-restartdns">Restart DNS server</button>
 				<button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
 
+				<form role="form" method="post" id="haltform">
+					<input type="hidden" name="field" value="halt">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
+				</form>
 				<form role="form" method="post" id="rebootform">
 					<input type="hidden" name="field" value="reboot">
 					<input type="hidden" name="token" value="<?php echo $token ?>">
