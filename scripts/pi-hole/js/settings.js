@@ -17,6 +17,22 @@ $(function () {
 		$("input[name=\"AddMAC\"]").val(mac);
 	});
 });
+$(".confirm-halt").confirm({
+	text: "Are you sure you want to send a halt command to your Pi-Hole?",
+	title: "Confirmation required",
+	confirm(button) {
+		$("#haltform").submit();
+	},
+	cancel(button) {
+		// nothing to do
+	},
+	confirmButton: "Yes, halt",
+	cancelButton: "No, go back",
+	post: true,
+	confirmButtonClass: "btn-danger",
+	cancelButtonClass: "btn-success",
+	dialogClass: "modal-dialog modal-mg" // Bootstrap classes for mid-size modal
+});
 $(".confirm-reboot").confirm({
 	text: "Are you sure you want to send a reboot command to your Pi-Hole?",
 	title: "Confirmation required",
