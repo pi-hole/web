@@ -715,6 +715,7 @@ if(isset($_POST["submit"])) {
                 </div>
                 <div class="box-footer">
                     <input type="hidden" name="field" value="adlists">
+                    <input type="hidden" name="token" value="<?php echo $token ?>">
                     <button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
                     <button type="submit" class="btn btn-primary pull-right" name="submit" value="saveupdate">Save and Update</button>
                 </div>
