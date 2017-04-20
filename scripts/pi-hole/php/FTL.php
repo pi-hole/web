@@ -8,11 +8,14 @@
 
 function testFTL()
 {
-	return (strpos(exec("ps -p `cat /var/run/pihole-FTL.pid` -o comm="), "pihole-FTL") !== false);
+	$ret = shell_exec("pidof pihole-FTL");
+	return intval($ret);
 }
 
 function connectFTL($address, $port=4711, $quiet=true)
 {
+	$timeout = 3;
+
 	if(!$quiet)
 	{
 		echo "Attempting to connect to '$address' on port '$port'...\n";
@@ -30,12 +33,31 @@ function connectFTL($address, $port=4711, $quiet=true)
 	$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)
 	or die("socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n");
 
-	$result = socket_connect($socket, $address, $port)
-	or die("socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n");
+	socket_set_nonblock($socket) or die("Unable to set nonblock on socket\n");
 
-	// Set timeout to 10 seconds
-	socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, ['sec'=>10, 'usec'=>0]);
-	socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, ['sec'=>10, 'usec'=>0]);
+	$time = time();
+	while (!@socket_connect($socket, $address, $port))
+	{
+		$err = socket_last_error($socket);
+		if ($err == 115 || $err == 114)
+		{
+			if ((time() - $time) >= $timeout)
+			{
+				socket_close($socket);
+				die("Connection timed out.\n");
+			}
+			// Wait for 1 millisecond
+			usleep(1000);
+			continue;
+		}
+		die(socket_strerror($err) . "\n");
+	}
+
+	socket_set_block($socket) or die("Unable to set block on socket\n");
+
+	// Set timeout to 3 seconds
+	socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, ['sec'=>$timeout, 'usec'=>0]);
+	socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, ['sec'=>$timeout, 'usec'=>0]);
 
 	if(!$quiet)
 	{
