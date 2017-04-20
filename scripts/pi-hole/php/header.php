@@ -146,12 +146,12 @@
         }
     }
 
-    $FTL = false;
-    $FTLpid = file_get_contents("/var/run/pihole-FTL.pid");
-    if (file_exists( "/proc/".$FTLpid ))
+    function pidofFTL()
     {
-        $FTL = true;
+        return shell_exec("pidof pihole-FTL");
     }
+    $FTLpid = intval(pidofFTL());
+    $FTL = ($FTLpid !== 0 ? true : false);
 
 ?>
 <!DOCTYPE html>

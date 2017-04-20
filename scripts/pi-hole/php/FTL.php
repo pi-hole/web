@@ -8,7 +8,8 @@
 
 function testFTL()
 {
-	return (strpos(exec("ps -p `cat /var/run/pihole-FTL.pid` -o comm="), "pihole-FTL") !== false);
+	$ret = shell_exec("pidof pihole-FTL");
+	return intval($ret);
 }
 
 function connectFTL($address, $port=4711, $quiet=true)
