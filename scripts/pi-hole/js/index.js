@@ -388,7 +388,7 @@ function updateSummaryData(runOnce) {
                 $("#temperature").text(" ");
                 updateQueriesOverTime();
                 updateForwardedOverTime();
-                updateQueriesOverTime();
+                updateQueryTypesOverTime();
                 updateTopClientsChart();
                 updateTopLists();
             }
