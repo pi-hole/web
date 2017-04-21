@@ -272,14 +272,14 @@ if(isset($_POST["submit"])) {
 						</div>
 					</div>
 					</div>
-<?php if($DHCP) {
-
+<?php
+$dhcp_leases = array();
+if($DHCP) {
 	// Read leases file
 	$leasesfile = true;
 	$dhcpleases = @fopen('/etc/pihole/dhcp.leases', 'r');
-	if(!is_resource($dhcpleases ))
+	if(!is_resource($dhcpleases))
 		$leasesfile = false;
-	$dhcp_leases  = array();
 
 	function convertseconds($argument) {
 		$seconds = round($argument);
@@ -299,7 +299,7 @@ if(isset($_POST["submit"])) {
 		{
 			return sprintf('%dd %dh %dm %ds', ($seconds/86400), ($seconds/3600%24),($seconds/60%60), ($seconds%60));
 		}
-}
+	}
 
 	while(!feof($dhcpleases) && $leasesfile)
 	{
@@ -346,10 +346,10 @@ if(isset($_POST["submit"])) {
 			array_push($dhcp_leases,["TIME"=>$time, "hwaddr"=>strtoupper($line[1]), "IP"=>$line[2], "host"=>$host, "clid"=>$clid, "type"=>$type]);
 		}
 	}
+}
 
-	readStaticLeasesFile();
-
-	?>
+readStaticLeasesFile();
+?>
 				<div class="col-md-12">
 				<div class="box box-warning <?php if(!isset($_POST["addstatic"])){ ?>collapsed-box<?php } ?>">
 					<div class="box-header with-border">
@@ -396,7 +396,6 @@ if(isset($_POST["submit"])) {
 					</div>
 				</div>
 				</div>
-<?php } ?>
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="DHCP">
