@@ -71,7 +71,11 @@ if (isset($_GET['overTimeData10mins']))
 
 if (isset($_GET['topItems']) && $auth)
 {
-	if(is_numeric($_GET['topItems']))
+	if($_GET['topItems'] === "audit")
+	{
+		sendRequestFTL("top-domains for audit");
+	}
+	else if(is_numeric($_GET['topItems']))
 	{
 		sendRequestFTL("top-domains (".$_GET['topItems'].")");
 	}
