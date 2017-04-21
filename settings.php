@@ -272,14 +272,14 @@ if(isset($_POST["submit"])) {
 						</div>
 					</div>
 					</div>
-<?php if($DHCP) {
-
+<?php
+$dhcp_leases = array();
+if($DHCP) {
 	// Read leases file
 	$leasesfile = true;
 	$dhcpleases = @fopen('/etc/pihole/dhcp.leases', 'r');
-	if(!is_resource($dhcpleases ))
+	if(!is_resource($dhcpleases))
 		$leasesfile = false;
-	$dhcp_leases  = array();
 
 	function convertseconds($argument) {
 		$seconds = round($argument);
@@ -299,7 +299,7 @@ if(isset($_POST["submit"])) {
 		{
 			return sprintf('%dd %dh %dm %ds', ($seconds/86400), ($seconds/3600%24),($seconds/60%60), ($seconds%60));
 		}
-}
+	}
 
 	while(!feof($dhcpleases) && $leasesfile)
 	{
@@ -346,10 +346,10 @@ if(isset($_POST["submit"])) {
 			array_push($dhcp_leases,["TIME"=>$time, "hwaddr"=>strtoupper($line[1]), "IP"=>$line[2], "host"=>$host, "clid"=>$clid, "type"=>$type]);
 		}
 	}
+}
 
-	readStaticLeasesFile();
-
-	?>
+readStaticLeasesFile();
+?>
 				<div class="col-md-12">
 				<div class="box box-warning <?php if(!isset($_POST["addstatic"])){ ?>collapsed-box<?php } ?>">
 					<div class="box-header with-border">
@@ -391,12 +391,11 @@ if(isset($_POST["submit"])) {
 								<tr><td><input type="text" name="AddMAC"></td><td><input type="text" name="AddIP"></td><td><input type="text" name="AddHostname" value=""></td><td><button class="btn btn-success btn-xs" type="submit" name="addstatic"><span class="glyphicon glyphicon-plus"></span></button></td></tr>
 							</tfoot>
 						</table>
-						<p>Specifying the MAC address is mandatory and only one entry per MAC address is allowed. If the IP address is omitted and a host name is given, the IP address will still be generated dynamically and the specified host name will be used. If the host name is omitted, only a static release will be added.</p>
+						<p>Specifying the MAC address is mandatory and only one entry per MAC address is allowed. If the IP address is omitted and a host name is given, the IP address will still be generated dynamically and the specified host name will be used. If the host name is omitted, only a static lease will be added.</p>
 					</div>
 					</div>
 				</div>
 				</div>
-<?php } ?>
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="DHCP">
