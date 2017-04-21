@@ -89,7 +89,7 @@
   // a password
   if($auth){ ?>
 <div class="row">
-    <div class="hidden-xs hidden-sm col-md-6 col-lg-6">
+    <div class="hidden-xs hidden-sm col-md-12 col-lg-6">
     <div class="box" id="query-types">
         <div class="box-header with-border">
           <h3 class="box-title">Query Types over Time</h3>
@@ -105,7 +105,7 @@
         <!-- /.box-body -->
       </div>
     </div>
-    <div class="hidden-xs hidden-sm col-md-6 col-lg-6">
+    <div class="hidden-xs hidden-sm col-md-12 col-lg-6">
     <div class="box" id="forward-destinations">
         <div class="box-header with-border">
           <h3 class="box-title">Forward Destinations over Time</h3>
