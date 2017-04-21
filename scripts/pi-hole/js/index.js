@@ -208,11 +208,6 @@ function updateForwardedOverTime() {
             {
                 if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
                 var singlepoint = plotdata[j][key];
-                if(singlepoint === 0)
-                {
-                    // Don't plot this line
-                    singlepoint = NaN;
-                }
                 forwardDestinationChart.data.datasets[key].data.push(singlepoint/sum);
             }
 
