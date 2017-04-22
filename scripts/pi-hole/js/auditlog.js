@@ -7,30 +7,6 @@
 // Define global variables
 var timeLineChart, queryTypeChart, forwardDestinationChart;
 
-function padNumber(num) {
-    return ("00" + num).substr(-2,2);
-}
-
-// Helper function needed for converting the Objects to Arrays
-
-function objectToArray(p){
-    var keys = Object.keys(p);
-    keys.sort(function(a, b) {
-        return a - b;
-    });
-
-    var arr = [], idx = [];
-    for (var i = 0; i < keys.length; i++) {
-        arr.push(p[keys[i]]);
-        idx.push(keys[i]);
-    }
-    return [idx,arr];
-}
-
-// Functions to update data in page
-
-var failures = 0;
-
 // Credit: http://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406
 function escapeHtml(text) {
   var map = {
@@ -65,18 +41,29 @@ function updateTopLists() {
                 url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
                 percentage = data.top_queries[domain] / data.dns_queries_today * 100;
                 domaintable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_queries[domain] + "</td> <td> Buttons ... </td> </tr> ");
+                    "</td> <td>" + data.top_queries[domain] + "</td> <td> <button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button> <button style=\"color:orange; white-space: nowrap;\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
             }
         }
 
         for (domain in data.top_ads) {
             if ({}.hasOwnProperty.call(data.top_ads,domain)){
                 // Sanitize domain
-                domain = escapeHtml(domain);
-                url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
-                percentage = data.top_ads[domain] / data.ads_blocked_today * 100;
-                adtable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_ads[domain] + "</td> <td> Buttons ... </td> </tr> ");
+                console.log(domain);
+                console.log();
+                var input = domain.split(" ");
+                var printdomain = escapeHtml(input[0]);
+                if(input.length > 1)
+                {
+                    url = "<a href=\"queries.php?domain="+printdomain+"\">"+printdomain+"</a> (wildcard blocked)";
+                    adtable.append("<tr> <td>" + url +
+                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <button style=\"color:orange; white-space: nowrap;\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
+                }
+                else
+                {
+                    url = "<a href=\"queries.php?domain="+printdomain+"\">"+printdomain+"</a>";
+                    adtable.append("<tr> <td>" + url +
+                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button> <button style=\"color:orange; white-space: nowrap;\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
+                }
             }
         }
 
@@ -87,8 +74,37 @@ function updateTopLists() {
     });
 }
 
+
+function add(domain,list) {
+    var token = $("#token").html();
+    $.ajax({
+        url: "scripts/pi-hole/php/add.php",
+        method: "post",
+        data: {"domain":domain, "list":list, "token":token, "auditlog":1},
+        success: function(response) {
+            setTimeout(updateTopLists, 300);
+        }
+    });
+}
+
 $(document).ready(function() {
 
-        // Pull in data via AJAX
-        updateTopLists();
+    // Pull in data via AJAX
+    updateTopLists();
+
+    $("#domain-frequency tbody").on( "click", "button", function () {
+        var url = ($(this).parents("tr"))[0].innerText.split("	")[0];
+        if($(this).context.innerText === "Blacklist")
+            add(url,"black");
+        else
+            add(url,"audit");
     });
+
+    $("#ad-frequency tbody").on( "click", "button", function () {
+        var url = ($(this).parents("tr"))[0].innerText.split("	")[0].split(" ")[0];
+        if($(this).context.innerText === "Whitelist")
+        add(url,"white");
+        else
+            add(url,"audit");
+    });
+});

@@ -11,7 +11,7 @@
 <div id="token" hidden><?php echo $token ?></div>
 <!-- Title -->
 <div class="page-header">
-    <h1>Audit log</h1>
+    <h1>Audit log (showing live data)</h1>
 </div>
 
 <div class="row">
@@ -28,7 +28,7 @@
                     <tr>
                     <th>Domain</th>
                     <th>Hits</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                     </tr>
                   </tbody>
                 </table>
@@ -55,7 +55,7 @@
                     <tr>
                     <th>Domain</th>
                     <th>Hits</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                     </tr>
                   </tbody>
                 </table>
@@ -67,6 +67,9 @@
         <!-- /.box-body -->
       </div>
       <!-- /.box -->
+    </div>
+    <div class="col-md-12">
+        <p><strong>Important:</strong> Note that black- and whitelisted domains are not automatically applied on this page to avoid restarting the DNS service too often. Instead, go to <a href="http://pi.hole/admin/gravity.php">Update Lists</a> and run the update, to have the new settings become effective.</p>
     </div>
     <!-- /.col -->
 </div>

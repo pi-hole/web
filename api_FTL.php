@@ -92,7 +92,11 @@ if (isset($_GET['topItems']) && $auth)
 		$top_queries[$tmp[2]] = intval($tmp[1]);
 	}
 
-	if(is_numeric($_GET['topItems']))
+	if($_GET['topItems'] === "audit")
+	{
+		sendRequestFTL("top-ads for audit");
+	}
+	else if(is_numeric($_GET['topItems']))
 	{
 		sendRequestFTL("top-ads (".$_GET['topItems'].")");
 	}
@@ -106,7 +110,10 @@ if (isset($_GET['topItems']) && $auth)
 	foreach($return as $line)
 	{
 		$tmp = explode(" ",$line);
-		$top_ads[$tmp[2]] = intval($tmp[1]);
+		if(count($tmp) === 4)
+			$top_ads[$tmp[2]." (".$tmp[3].")"] = intval($tmp[1]);
+		else
+			$top_ads[$tmp[2]] = intval($tmp[1]);
 	}
 
 	$result = array('top_queries' => $top_queries,
