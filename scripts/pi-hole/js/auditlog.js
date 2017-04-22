@@ -47,10 +47,8 @@ function updateTopLists() {
 
         for (domain in data.top_ads) {
             if ({}.hasOwnProperty.call(data.top_ads,domain)){
-                // Sanitize domain
-                console.log(domain);
-                console.log();
                 var input = domain.split(" ");
+                // Sanitize domain
                 var printdomain = escapeHtml(input[0]);
                 if(input.length > 1)
                 {
@@ -95,16 +93,24 @@ $(document).ready(function() {
     $("#domain-frequency tbody").on( "click", "button", function () {
         var url = ($(this).parents("tr"))[0].innerText.split("	")[0];
         if($(this).context.innerText === "Blacklist")
+        {
             add(url,"black");
+        }
         else
+        {
             add(url,"audit");
+        }
     });
 
     $("#ad-frequency tbody").on( "click", "button", function () {
         var url = ($(this).parents("tr"))[0].innerText.split("	")[0].split(" ")[0];
         if($(this).context.innerText === "Whitelist")
-        add(url,"white");
+        {
+            add(url,"white");
+        }
         else
+        {
             add(url,"audit");
+        }
     });
 });
