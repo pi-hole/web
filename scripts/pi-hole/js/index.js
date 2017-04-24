@@ -166,7 +166,7 @@ function updateForwardedOverTime() {
             if(key.indexOf("|") > -1)
             {
                 var idx = key.indexOf("|");
-                key = key.substr(0, idx)+" ("+key.substr(idx+1, key.length-idx)+")";
+                key = key.substr(0, idx);
             }
             labels.push(key);
         }
