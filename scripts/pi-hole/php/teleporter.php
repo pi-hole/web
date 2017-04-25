@@ -148,7 +148,7 @@ if(isset($_POST["action"]))
 else
 {
 	$filename = "pi-hole-teleporter_".date("Y-m-d_h-i-s").".zip";
-	$archive_file_name = "/var/www/html/".$filename;
+	$archive_file_name = "/etc/pihole/".$filename;
 	$zip = new ZipArchive();
 	touch($archive_file_name);
 	$res = $zip->open($archive_file_name, ZipArchive::CREATE | ZipArchive::OVERWRITE);
@@ -174,6 +174,8 @@ else
 	header("Expires: 0");
 	if(ob_get_length() > 0) ob_end_clean();
 	readfile($archive_file_name);
+	ignore_user_abort(true);
+	unlink($archive_file_name);
 	exit;
 }
 
