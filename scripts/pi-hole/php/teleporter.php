@@ -148,7 +148,7 @@ if(isset($_POST["action"]))
 else
 {
 	$filename = "pi-hole-teleporter_".date("Y-m-d_h-i-s").".zip";
-	$archive_file_name = "/etc/pihole/".$filename;
+	$archive_file_name = tempnam("/tmp", "Teleporter");
 	$zip = new ZipArchive();
 	touch($archive_file_name);
 	$res = $zip->open($archive_file_name, ZipArchive::CREATE | ZipArchive::OVERWRITE);
