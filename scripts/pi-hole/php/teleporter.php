@@ -39,7 +39,7 @@ function process_zip($name)
 
 	// Walk array and apply a max string lenght
 	// function to every member of the array of domains
-	array_walk($array, "limit_length");
+	array_walk($domains, "limit_length");
 
 	// Check validity of domains (after possible clipping)
 	check_domains($domains);
