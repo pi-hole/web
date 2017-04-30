@@ -14,6 +14,13 @@ if (php_sapi_name() !== "cli") {
 	check_csrf(isset($_POST["token"]) ? $_POST["token"] : "");
 }
 
+function limit_length(&$item, $key)
+{
+	// limit max length for a domain entry to 253 chars
+	// return only a part of the string if it is longer
+	$item = substr($item, 0, 253);
+}
+
 function process_zip($name)
 {
 	global $zip;
@@ -29,6 +36,12 @@ function process_zip($name)
 	}
 	fclose($zippointer);
 	$domains = array_filter(explode("\n",$contents));
+
+	// Walk array and apply a max string length
+	// function to every member of the array of domains
+	array_walk($domains, "limit_length");
+
+	// Check validity of domains (after possible clipping)
 	check_domains($domains);
 	return $domains;
 }
