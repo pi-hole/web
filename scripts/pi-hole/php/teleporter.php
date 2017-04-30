@@ -37,7 +37,7 @@ function process_zip($name)
 	fclose($zippointer);
 	$domains = array_filter(explode("\n",$contents));
 
-	// Walk array and apply a max string lenght
+	// Walk array and apply a max string length
 	// function to every member of the array of domains
 	array_walk($domains, "limit_length");
 
