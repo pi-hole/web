@@ -16,9 +16,9 @@ if (php_sapi_name() !== "cli") {
 
 function limit_length(&$item, $key)
 {
-	// limit max length for a domain entry to 100 chars
+	// limit max length for a domain entry to 253 chars
 	// return only a part of the string if it is longer
-	$item = substr($item, 0, 100);
+	$item = substr($item, 0, 253);
 }
 
 function process_zip($name)
