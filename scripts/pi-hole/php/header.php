@@ -12,6 +12,12 @@
 
     check_cors();
 
+    // Generate CSRF token
+    if(empty($_SESSION['token'])) {
+        $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
+    }
+    $token = $_SESSION['token'];
+
     // Try to get temperature value from different places (OS dependent)
     if(file_exists("/sys/class/thermal/thermal_zone0/temp"))
     {
@@ -139,9 +145,22 @@
             $boxedlayout = false;
         }
     }
-?>
 
+    function pidofFTL()
+    {
+        return shell_exec("pidof pihole-FTL");
+    }
+    $FTLpid = intval(pidofFTL());
+    $FTL = ($FTLpid !== 0 ? true : false);
+
+?>
 <!DOCTYPE html>
+<!-- Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license. -->
 <html>
 <head>
     <meta charset="UTF-8">
@@ -188,6 +207,11 @@
         <p>To enable Javascript click <a href="http://www.enable-javascript.com/" target="_blank">here</a></p><label for="js-hide">Close</label></div>
 </div>
 <!-- /JS Warning -->
+<?php
+if($auth) {
+    echo "<div id='token' hidden>$token</div>";
+}
+?>
 <script src="scripts/pi-hole/js/header.js"></script>
 <!-- Send token to JS -->
 <div id="token" hidden><?php if($auth) echo $token; ?></div>
@@ -197,9 +221,9 @@
         <!-- Logo -->
         <a href="http://pi-hole.net" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>P</b>H</span>
+            <span class="logo-mini">P<b>h</b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>Pi</b>-hole</span>
+            <span class="logo-lg">Pi-<b>hole</b></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
@@ -273,7 +297,7 @@
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
-                    <?php
+                        <?php
                         $pistatus = exec('sudo pihole status web');
                         if ($pistatus == "1") {
                             echo '<a id="status"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
@@ -286,29 +310,36 @@
                         }
 
                         // CPU Temp
-                        if ($celsius >= -273.15) {
-                            echo "<a id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
-                            if ($celsius > 60) {
-                                echo "#FF0000";
+                        if($FTL)
+                        {
+                            if ($celsius >= -273.15) {
+                                echo "<a id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
+                                if ($celsius > 60) {
+                                    echo "#FF0000";
+                                }
+                                else
+                                {
+                                    echo "#3366FF";
+                                }
+                                echo "\"></i> Temp:&nbsp;";
+                                if($temperatureunit === "F")
+                                {
+                                    echo round($fahrenheit,1) . "&nbsp;&deg;F";
+                                }
+                                elseif($temperatureunit === "K")
+                                {
+                                    echo round($kelvin,1) . "&nbsp;K";
+                                }
+                                else
+                                {
+                                    echo round($celsius,1) . "&nbsp;&deg;C";
+                                }
+                                echo "</a>";
                             }
-                            else
-                            {
-                                echo "#3366FF";
-                            }
-                            echo "\"></i> Temp:&nbsp;";
-                            if($temperatureunit === "F")
-                            {
-                                echo round($fahrenheit,1) . "&deg;F";
-                            }
-                            elseif($temperatureunit === "K")
-                            {
-                                echo round($kelvin,1) . "K";
-                            }
-                            else
-                            {
-                                echo round($celsius,1) . "&deg;C";
-                            }
-                            echo "</a>";
+                        }
+                        else
+                        {
+                            echo '<a id=\"temperature\"><i class="fa fa-circle" style="color:#FF0000"></i> FTL offline</a>';
                         }
                     ?>
                     <br/>
@@ -335,7 +366,7 @@
                         }
                         if($memory_usage > 0.0)
                         {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "%</a>";
+                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</a>";
                         }
                         else
                         {
@@ -452,6 +483,12 @@
                     <li<?php if($scriptname === "taillog.php"){ ?> class="active"<?php } ?>>
                         <a href="taillog.php">
                             <i class="fa fa-list-ul"></i> <span>Tail pihole.log</span>
+                        </a>
+                    </li>
+                    <!-- Tail pihole-FTL.log -->
+                    <li<?php if($scriptname === "taillog-FTL.php"){ ?> class="active"<?php } ?>>
+                        <a href="taillog-FTL.php">
+                            <i class="fa fa-list-ul"></i> <span>Tail pihole-FTL.log</span>
                         </a>
                     </li>
                     <!-- Generate debug log -->

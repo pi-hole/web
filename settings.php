@@ -1,10 +1,10 @@
-<!-- Pi-hole: A black hole for Internet advertisements
+<?php /*
+*    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. -->
-<?php
+*    Please see LICENSE file for your rights under this license. */
 	require "scripts/pi-hole/php/header.php";
 	require "scripts/pi-hole/php/savesettings.php";
 	// Reread ini file as things might have been changed
@@ -27,11 +27,19 @@
 	}
 </style>
 
+<?php // Check if ad lists should be updated after saving ...
+if(isset($_POST["submit"])) {
+	if($_POST["submit"] == "saveupdate") {
+	// If that is the case -> refresh to the gravity page and start updating immediately
+?>
+<meta http-equiv="refresh" content="1;url=gravity.php?go">
+<?php }} ?>
+
 <?php if(isset($debug)){ ?>
 <div id="alDebug" class="alert alert-warning alert-dismissible fade in" role="alert">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4><i class="icon fa fa-warning"></i> Debug</h4>
-    <?php print_r($_POST); ?>
+    <pre><?php print_r($_POST); ?></pre>
 </div>
 <?php } ?>
 
@@ -65,8 +73,24 @@
 	} else {
 		$piHoleIPv4 = "unknown";
 	}
+	$IPv6connectivity = false;
 	if(isset($setupVars["IPV6_ADDRESS"])){
 		$piHoleIPv6 = $setupVars["IPV6_ADDRESS"];
+			sscanf($piHoleIPv6, "%2[0-9a-f]", $hexstr);
+			if(strlen($hexstr) == 2)
+			{
+				// Convert HEX string to number
+				$hex = hexdec($hexstr);
+				// Global Unicast Address (2000::/3, RFC 4291)
+				$GUA = (($hex & 0x70) === 0x20);
+				// Unique Local Address   (fc00::/7, RFC 4193)
+				$ULA = (($hex & 0xfe) === 0xfc);
+				if($GUA || $ULA)
+				{
+					// Scope global address detected
+					$IPv6connectivity = true;
+				}
+			}
 	} else {
 		$piHoleIPv6 = "unknown";
 	}
@@ -78,21 +102,21 @@
 			</div>
 			<div class="box-body">
 				<div class="form-group">
-					<label>Pi-Hole Ethernet Interface</label>
+					<label>Pi-hole Ethernet Interface</label>
 					<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-plug"></i></div>
 						<input type="text" class="form-control" disabled value="<?php echo $piHoleInterface; ?>">
 					</div>
 				</div>
 				<div class="form-group">
-					<label>Pi-Hole IPv4 address</label>
+					<label>Pi-hole IPv4 address</label>
 					<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-plug"></i></div>
 						<input type="text" class="form-control" disabled value="<?php echo $piHoleIPv4; ?>">
 					</div>
 				</div>
 				<div class="form-group">
-					<label>Pi-Hole IPv6 address</label>
+					<label>Pi-hole IPv6 address</label>
 					<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-plug"></i></div>
 						<input type="text" class="form-control" disabled value="<?php echo $piHoleIPv6; ?>">
@@ -100,7 +124,7 @@
 					<?php if (!defined('AF_INET6')){ ?><p style="color: #F00;">Warning: PHP has been compiled without IPv6 support.</p><?php } ?>
 				</div>
 				<div class="form-group">
-					<label>Pi-Hole hostname</label>
+					<label>Pi-hole hostname</label>
 					<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-laptop"></i></div>
 						<input type="text" class="form-control" disabled value="<?php echo $hostname; ?>">
@@ -109,18 +133,7 @@
 			</div>
 		</div>
 <?php
-	// Pi-Hole DHCP server
-
-	// Detect IPv6
-	$usingipv6 = false;
-	if(strlen($piHoleIPv6) > 0 && $piHoleIPv6 != "unknown")
-	{
-		if(substr($piHoleIPv6, 0, 4) != "fe80")
-		{
-			$usingipv6 = true;
-		}
-	}
-
+	// Pi-hole DHCP server
 	if(isset($setupVars["DHCP_ACTIVE"]))
 	{
 		if($setupVars["DHCP_ACTIVE"] == 1)
@@ -155,7 +168,7 @@
 		}
 		else
 		{
-			$DHCPIPv6 = $usingipv6;
+			$DHCPIPv6 = false;
 		}
 
 	}
@@ -175,7 +188,7 @@
 			$DHCProuter = "";
 		}
 		$DHCPleasetime = 24;
-		$DHCPIPv6 = $usingipv6;
+		$DHCPIPv6 = false;
 	}
 	if(isset($setupVars["PIHOLE_DOMAIN"])){
 		$piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
@@ -185,7 +198,7 @@
 ?>
 		<div class="box box-warning">
 			<div class="box-header with-border">
-				<h3 class="box-title">Pi-Hole DHCP Server</h3>
+				<h3 class="box-title">Pi-hole DHCP Server</h3>
 			</div>
 			<div class="box-body">
 				<form role="form" method="post">
@@ -238,7 +251,7 @@
 								</div>
 							</div>
 							<div class="col-md-12">
-							<label>Pi-Hole domain name</label>
+							<label>Pi-hole domain name</label>
 							<div class="form-group">
 								<div class="input-group">
 									<div class="input-group-addon">Domain</div>
@@ -259,14 +272,14 @@
 						</div>
 					</div>
 					</div>
-<?php if($DHCP) {
-
+<?php
+$dhcp_leases = array();
+if($DHCP) {
 	// Read leases file
 	$leasesfile = true;
 	$dhcpleases = @fopen('/etc/pihole/dhcp.leases', 'r');
-	if(!is_resource($dhcpleases ))
+	if(!is_resource($dhcpleases))
 		$leasesfile = false;
-	$dhcp_leases  = array();
 
 	function convertseconds($argument) {
 		$seconds = round($argument);
@@ -286,7 +299,7 @@
 		{
 			return sprintf('%dd %dh %dm %ds', ($seconds/86400), ($seconds/3600%24),($seconds/60%60), ($seconds%60));
 		}
-}
+	}
 
 	while(!feof($dhcpleases) && $leasesfile)
 	{
@@ -333,10 +346,10 @@
 			array_push($dhcp_leases,["TIME"=>$time, "hwaddr"=>strtoupper($line[1]), "IP"=>$line[2], "host"=>$host, "clid"=>$clid, "type"=>$type]);
 		}
 	}
+}
 
-	readStaticLeasesFile();
-
-	?>
+readStaticLeasesFile();
+?>
 				<div class="col-md-12">
 				<div class="box box-warning <?php if(!isset($_POST["addstatic"])){ ?>collapsed-box<?php } ?>">
 					<div class="box-header with-border">
@@ -378,56 +391,55 @@
 								<tr><td><input type="text" name="AddMAC"></td><td><input type="text" name="AddIP"></td><td><input type="text" name="AddHostname" value=""></td><td><button class="btn btn-success btn-xs" type="submit" name="addstatic"><span class="glyphicon glyphicon-plus"></span></button></td></tr>
 							</tfoot>
 						</table>
-						<p>Specifying the MAC address is mandatory and only one entry per MAC address is allowed. If the IP address is omitted and a host name is given, the IP address will still be generated dynamically and the specified host name will be used. If the host name is omitted, only a static release will be added.</p>
+						<p>Specifying the MAC address is mandatory and only one entry per MAC address is allowed. If the IP address is omitted and a host name is given, the IP address will still be generated dynamically and the specified host name will be used. If the host name is omitted, only a static lease will be added.</p>
 					</div>
 					</div>
 				</div>
 				</div>
-<?php } ?>
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="DHCP">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
 		</div>
 
 <?php
+
 	// DNS settings
 	$DNSservers = [];
 	$DNSactive = [];
+
 	$i = 1;
 	while(isset($setupVars["PIHOLE_DNS_".$i])){
-			if(isset($DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]))
+		if(isinserverlist($setupVars["PIHOLE_DNS_".$i]))
+		{
+			array_push($DNSactive,$setupVars["PIHOLE_DNS_".$i]);
+		}
+		elseif(strpos($setupVars["PIHOLE_DNS_".$i],"."))
+		{
+			if(!isset($custom1))
 			{
-				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],$DNSserverslist[$setupVars["PIHOLE_DNS_".$i]]];
-				array_push($DNSactive,$setupVars["PIHOLE_DNS_".$i]);
+				$custom1 = $setupVars["PIHOLE_DNS_".$i];
 			}
-			elseif(strpos($setupVars["PIHOLE_DNS_".$i],"."))
+			else
 			{
-				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],"CustomIPv4"];
-				if(!isset($custom1))
-				{
-					$custom1 = $setupVars["PIHOLE_DNS_".$i];
-				}
-				else
-				{
-					$custom2 = $setupVars["PIHOLE_DNS_".$i];
-				}
+				$custom2 = $setupVars["PIHOLE_DNS_".$i];
 			}
-			elseif(strpos($setupVars["PIHOLE_DNS_".$i],":"))
+		}
+		elseif(strpos($setupVars["PIHOLE_DNS_".$i],":"))
+		{
+			if(!isset($custom3))
 			{
-				$DNSservers[] = [$setupVars["PIHOLE_DNS_".$i],"CustomIPv6"];
-				if(!isset($custom3))
-				{
-					$custom3 = $setupVars["PIHOLE_DNS_".$i];
-				}
-				else
-				{
-					$custom4 = $setupVars["PIHOLE_DNS_".$i];
-				}
+				$custom3 = $setupVars["PIHOLE_DNS_".$i];
 			}
-		$i += 1;
+			else
+			{
+				$custom4 = $setupVars["PIHOLE_DNS_".$i];
+			}
+		}
+		$i++;
 	}
 
 	if(isset($setupVars["DNS_FQDN_REQUIRED"])){
@@ -494,13 +506,26 @@
 				<form role="form" method="post">
 				<div class="col-lg-6">
 					<label>Upstream DNS Servers</label>
-					<div class="form-group">
+					<table class="table table-bordered">
+						<tr>
+							<th colspan="2">IPv4</th>
+							<th colspan="2">IPv6</th>
+							<th>Name</th>
+						</tr>
 						<?php foreach ($DNSserverslist as $key => $value) { ?>
-						<div class="checkbox">
-							<label title="<?php echo $key;?>">
-							<input type="checkbox" name="DNSserver<?php echo $key;?>" value="true" <?php if(in_array($key,$DNSactive)){ ?>checked<?php } ?> ><?php echo $value;?></label>
-						</div> <?php } ?>
-					</div>
+						<tr>
+							<?php if(isset($value["v4_1"])) { ?>
+							<td title="<?php echo $value["v4_1"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v4_1"];?>" value="true" <?php if(in_array($value["v4_1"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<?php if(isset($value["v4_2"])) { ?>
+							<td title="<?php echo $value["v4_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v4_2"];?>" value="true" <?php if(in_array($value["v4_2"],$DNSactive)){ ?>checked<?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<?php if(isset($value["v6_1"])) { ?>
+							<td title="<?php echo $value["v6_1"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_1"];?>" value="true" <?php if(in_array($value["v6_1"],$DNSactive) && $IPv6connectivity){ ?>checked<?php } if(!$IPv6connectivity){ ?> disabled <?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<?php if(isset($value["v6_2"])) { ?>
+							<td title="<?php echo $value["v6_2"];?>"><input type="checkbox" name="DNSserver<?php echo $value["v6_2"];?>" value="true" <?php if(in_array($value["v6_2"],$DNSactive) && $IPv6connectivity){ ?>checked<?php } if(!$IPv6connectivity){ ?> disabled <?php } ?> ></td><?php }else{ ?><td></td><?php } ?>
+							<td><?php echo $key;?></td>
+						</tr>
+						<?php } ?>
+					</table>
 				</div>
 				<div class="col-lg-6">
 					<label>&nbsp;</label>
@@ -545,7 +570,7 @@
 							<div class="form-group">
 								<div class="checkbox"><label><input type="checkbox" name="DNSbogusPriv" <?php if($DNSbogusPriv){ ?>checked<?php } ?> title="bogus-priv"> never forward reverse lookups for private IP ranges</label></div>
 							</div>
-							<p>Note that enabling these two options may increase your privacy slightly, but may also prevent you from being able to access local hostnames if the Pi-Hole is not used as DHCP server</p>
+							<p>Note that enabling these two options may increase your privacy slightly, but may also prevent you from being able to access local hostnames if the Pi-hole is not used as DHCP server</p>
 							<div class="form-group">
 								<div class="checkbox"><label><input type="checkbox" name="DNSSEC" <?php if($DNSSEC){ ?>checked<?php } ?>> Use DNSSEC</label></div>
 							</div>
@@ -571,6 +596,7 @@
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="DNS">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
@@ -612,6 +638,7 @@
 				<form role="form" method="post">
 				<button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
 				<input type="hidden" name="field" value="Logging">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<?php if($piHoleLogging) { ?>
 					<input type="hidden" name="action" value="Disable">
 					<button type="submit" class="btn btn-primary pull-right">Disable query logging</button>
@@ -655,26 +682,45 @@
 		$privacyMode = false;
 	}
 
-	if(istrue($setupVars["API_GET_UPSTREAM_DNS_HOSTNAME"]))
-	{
-		$resolveForward = true;
-	}
-	else
-	{
-		$resolveForward = false;
-	}
-
-	if(istrue($setupVars["API_GET_CLIENT_HOSTNAME"]))
-	{
-		$resolveClients = true;
-	}
-	else
-	{
-		$resolveClients = false;
-	}
-
 ?>
-		<div class="box box-success">
+        <div class="box box-danger collapsed-box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Pi-Hole's Block Lists</h3>
+                <div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
+            </div>
+            <form role="form" method="post">
+                <div class="box-body">
+                    <div class="col-lg-12">
+                        <label>Lists used to generate Pi-hole's Gravity</label>
+                        <?php foreach ($adlist as $key => $value) { ?>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label style="word-break: break-word;">
+                                        <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if($value[0]){ ?>checked<?php } ?>>
+                                        <a href="<?php echo htmlentities ($value[1]); ?>" target="_new"><?php echo htmlentities($value[1]); ?></a>
+                                        <input type="checkbox" name="adlist-del-<?php echo $key; ?>" hidden>
+                                        <br>
+                                        <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </label>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <div class="form-group">
+                            <textarea name="newuserlists" class="form-control" rows="1" placeholder="Enter one URL per line to add new ad lists"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <input type="hidden" name="field" value="adlists">
+                    <input type="hidden" name="token" value="<?php echo $token ?>">
+                    <button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
+                    <button type="submit" class="btn btn-primary pull-right" name="submit" value="saveupdate">Save and Update</button>
+                </div>
+            </form>
+        </div>
+        <div class="box box-success">
 			<div class="box-header with-border">
 				<h3 class="box-title">API</h3>
 			</div>
@@ -691,41 +737,30 @@
 				<div class="col-lg-6">
 					<div class="form-group">
 					<label>Top Clients</label>
-					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
+					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address or host name per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
 					</div>
 				</div>
-				<h4>Reverse DNS lookup</h4>
-				<p>Try to determine the domain name via querying the Pi-hole for</p>
+				<h4>Privacy settings (Statistics / Query Log)</h4>
 				<div class="col-lg-6">
 					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="resolve-forward" <?php if($resolveForward){ ?>checked<?php } ?>> Forward Destinations</label></div>
-					</div>
-				</div>
-				<div class="col-lg-6">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="resolve-clients" <?php if($resolveClients){ ?>checked<?php } ?>> Top Clients</label></div>
-					</div>
-				</div>
-				<h4>Query Log</h4>
-				<div class="col-lg-6">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show permitted queries</label></div>
+						<div class="checkbox"><label><input type="checkbox" name="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show permitted domain entries</label></div>
 					</div>
 				</div>
 				<div class="col-lg-6">
 					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked queries</label></div>
+						<div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked domain entries</label></div>
 					</div>
 				</div>
 				<h4>Privacy mode</h4>
 				<div class="col-lg-12">
 					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="privacyMode" <?php if($privacyMode){ ?>checked<?php } ?>> Don't show query results for permitted requests</label></div>
+						<div class="checkbox"><label><input type="checkbox" name="privacyMode" <?php if($privacyMode){ ?>checked<?php } ?>> Don't show origin of DNS requests in query log</label></div>
 					</div>
 				</div>
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="API">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="button" class="btn btn-primary api-token">Show API token</button>
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
@@ -777,6 +812,7 @@
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="webUI">
+				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
@@ -808,13 +844,43 @@
 
 				<form role="form" method="post" id="rebootform">
 					<input type="hidden" name="field" value="reboot">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
 				</form>
 				<form role="form" method="post" id="restartdnsform">
 					<input type="hidden" name="field" value="restartdns">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
 				</form>
 				<form role="form" method="post" id="flushlogsform">
 					<input type="hidden" name="field" value="flushlogs">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
 				</form>
+			</div>
+		</div>
+<?php
+if($FTL)
+{
+	function get_FTL_data($arg)
+	{
+		global $FTLpid;
+		return trim(exec("ps -p ".$FTLpid." -o ".$arg));
+	}
+	$FTLversion = exec("/usr/bin/pihole-FTL version");
+}
+?>
+		<div class="box box-danger collapsed-box">
+			<div class="box-header with-border">
+				<h3 class="box-title">Pi-hole FTL (<?php if($FTL){ ?>Running<?php }else{ ?>Not running<?php } ?>)</h3>
+				<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
+			</div>
+			<div class="box-body">
+				<?php if($FTL){ ?>FTL version: <?php echo $FTLversion; ?><br>
+				Process identifier (PID): <?php echo $FTLpid; ?><br>
+				Time FTL started: <?php print_r(get_FTL_data("start")); ?><br>
+				User / Group: <?php print_r(get_FTL_data("euser")); ?> / <?php print_r(get_FTL_data("egroup")); ?><br>
+				Total CPU utilization: <?php print_r(get_FTL_data("%cpu")); ?>%<br>
+				Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%<br>
+				<span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory: <?php echo formatSizeUnits(1e3*floatval(get_FTL_data("rss"))); ?></span><br>
+				<?php } ?>
 			</div>
 		</div>
 		<div class="box box-danger collapsed-box">
@@ -825,6 +891,7 @@
 			<div class="box-body">
 			<?php if (extension_loaded('zip')) { ?>
 				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/teleporter.php" target="_blank"  enctype="multipart/form-data">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
 					<div class="col-lg-12">
 						<p>Export your Pi-hole lists as downloadable ZIP file</p>
 						<button type="submit" class="btn btn-default">Export</button>
@@ -854,7 +921,7 @@
 					</div>
 				</form>
 			<?php } else { ?>
-				<p>The PHP extension <tt>zip</tt> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.</p>
+				<p>The PHP extension <code>zip</code> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.</p>
 			<?php } ?>
 			</div>
 		</div>

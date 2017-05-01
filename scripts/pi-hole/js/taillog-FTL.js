@@ -12,7 +12,7 @@ var interval = 200;
 // Function that asks the API for new data
 function reloadData(){
     clearTimeout(timer);
-    $.getJSON("scripts/pi-hole/php/tailLog.php?offset="+offset, function (data)
+    $.getJSON("scripts/pi-hole/php/tailLog.php?FTL&offset="+offset, function (data)
     {
         offset = data["offset"];
         pre.append(data["lines"]);
@@ -27,7 +27,7 @@ function reloadData(){
 
 $(function(){
     // Get offset at first loading of page
-    $.getJSON("scripts/pi-hole/php/tailLog.php", function (data)
+    $.getJSON("scripts/pi-hole/php/tailLog.php?FTL", function (data)
     {
         offset = data["offset"];
     });

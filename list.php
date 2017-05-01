@@ -1,11 +1,11 @@
-<!-- Pi-hole: A black hole for Internet advertisements
+<?php /* 
+*    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. -->
-<?php
-require "scripts/pi-hole/php/header.php";
+*    Please see LICENSE file for your rights under this license. */
+    require "scripts/pi-hole/php/header.php";
 
 $list = $_GET['l'];
 
@@ -30,6 +30,7 @@ function getFullName() {
 <div class="page-header">
     <h1><?php getFullName(); ?></h1>
 </div>
+<?php if($list == "white"){ ?><p>Note that the ad list domains are automatically added to the whitelist so that a list can never get blocked by another list.</p><?php } ?>
 
 <!-- Domain Input -->
 <div class="form-group input-group">
@@ -46,6 +47,7 @@ function getFullName() {
 </div>
 <?php if($list === "white") { ?>
     <p>Note: Whitelisting a subdomain of a wildcard blocked domain is not possible.</p>
+    <p>Some of the domains shown below are domains of the adlists sources, which are automatically added in order to prevent adlists being able to blacklist each other. See <a href="https://github.com/pi-hole/pi-hole/blob/master/adlists.default" target="_blank">here</a> for the default set of adlists.</p>
 <?php } ?>
 
 <!-- Alerts -->
@@ -61,6 +63,7 @@ function getFullName() {
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     Failure! Something went wrong.<br/><span id="err"></span>
 </div>
+
 
 <!-- Domain List -->
 <?php if($list === "black") { ?>

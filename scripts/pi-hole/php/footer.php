@@ -62,10 +62,25 @@
             else {
                 $webVersion = exec("git describe --tags --abbrev=0");
             }
+
+            $FTLVersion = exec("pihole-FTL version");
             ?>
+<style type="text/css">
+	@-webkit-keyframes Pulse{
+		from {color:#630030;-webkit-text-shadow:0 0 9px #333;}
+		50% {color:#e33100;-webkit-text-shadow:0 0 32px #e33100;}
+		to {color:#630030;-webkit-text-shadow:0 0 9px #333;}
+	}
+	a.lookatme {
+		-webkit-animation-name: Pulse;
+		-webkit-animation-duration: 2s;
+		-webkit-animation-iteration-count: infinite;
+	}
+</style>
         <div class="pull-right hidden-xs <?php if(isset($piholeCommit) || isset($webCommit)) { ?>hidden-md<?php } ?>">
             <b>Pi-hole Version </b> <span id="piholeVersion"><?php echo $piholeVersion; ?></span><?php if(isset($piholeCommit)) { echo " (".$piholeBranch.", ".$piholeCommit.")"; } ?>
             <b>Web Interface Version </b> <span id="webVersion"><?php echo $webVersion; ?></span><?php if(isset($webCommit)) { echo " (".$webBranch.", ".$webCommit.")"; } ?>
+            <b>FTL Version </b> <span id="FTLVersion"><?php echo $FTLVersion; ?></span>
         </div>
             <div><a href="https://github.com/pi-hole"><i class="fa fa-github"></i></a> <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY">Donate</a></strong> if you found this useful.</div>
     </footer>

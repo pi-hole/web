@@ -7,3 +7,4 @@ This is a basic checklist for now, We will update it in the future.
 * Submit Pull Requests to the development branch only.
 * Before Submitting your Pull Request, merge `devel` with your new branch and fix any conflicts. (Make sure you don't break anything in development!)
 * Be patient. We will review all submitted pull requests, but our focus is on stability.. please don't be offended if we reject your PR, or it appears we're doing nothing with it! We'll get around to it..
+* Please use the Pi-hole brand: **Pi-hole** (Take a special look at the capitalized 'P' and a low 'h' with a hyphen)

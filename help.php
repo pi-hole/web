@@ -1,10 +1,10 @@
-<!-- Pi-hole: A black hole for Internet advertisements
+<?php /*
+*    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. -->
-<?php
+*    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
 
     if(strlen($pwhash) > 0)
@@ -48,20 +48,13 @@
     <ul>
         <li>Summary: A summary of statistics showing how many total DNS queries have been blocked today, what percentage of DNS queries have been blocked, and how many domains are in the compiled ad list. This summary is updated every 10 seconds.</li>
         <li>Queries over time: Graph showing DNS queries (total and blocked) over 10 minute time intervals. More information can be acquired by hovering over the lines. This graph is updated every 10 minutes.</li>
-        <li>Query Types: Identifies the types of processed queries:
-            <ul>
-                <li>A: address lookup (most commonly used to map hostnames to an IPv4 address of the host)</li>
-                <li>AAAA: address lookup (most commonly used to map hostnames to an IPv6 address of the host)</li>
-                <li>PTR: most common use is for implementing reverse DNS lookups</li>
-                <li>SRV: Service locator (often used by XMPP, SIP, and LDAP)</li>
-                <li>and others</li>
-            </ul>
-        </li>
+        <li>Query Types: Identifies the types of processed queries</li>
         <li>Forward Destinations: Shows to which upstream DNS the permitted requests have been forwarded to.</li>
         <li>Top Domains: Ranking of requested sites by number of DNS lookups.</li>
         <li>Top Advertisers: Ranking of requested advertisements by number of DNS lookups.</li>
         <li>Top Clients: Ranking of how many DNS requests each client has made on the local network.</li>
     </ul>
+    <p>The Top Domains and Top Advertisers lists may be hidden depending on the privacy Settings on the settings page</p>
     <?php if($authenticationsystem){ ?>
     <p>Note that the login session does <em>not</em> expire on the dashboard, as the summary is updated every 10 seconds which refreshes the session.</p>
     <?php } ?>
@@ -70,7 +63,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Query Log</h2>
-    <p>Shows the recent queries by parsing Pi-hole's log. It is possible to search through the whole list by using the "Search" input field. If the status is reported as "OK", then the DNS request has been permitted. Otherwise ("Pi-holed") it has been blocked. By clicking on the buttons under "Action" the corresponding domains can quickly be added to the white-/blacklist. The status of the action will be reported on this page.</p>
+    <p>Shows the recent queries by parsing Pi-hole's log. It is possible to search through the whole list by using the "Search" input field. If the status is reported as "OK", then the DNS request has been permitted. Otherwise ("Pi-holed") it has been blocked. By clicking on the buttons under "Action" the corresponding domains can quickly be added to the white-/blacklist. The status of the action will be reported on this page. By default, only the recent 10 minutes are shown to enhance the loading speed of the query log page. All domains can be requested by clicking on the corresponding link in the header of the page. Note that the result heavily depends on your privacy settings (see Settings page).</p>
     </div>
 </div>
 <div class="row">
@@ -84,7 +77,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Disable / Enable</h2>
-    Disables/enables Pi-Hole blocking completely. You may have to wait a few minutes for the changes to reach all of your devices. The change will be reflected by a changed status (top left)
+    Disables/enables Pi-hole blocking completely. You may have to wait a few minutes for the changes to reach all of your devices. The change will be reflected by a changed status (top left)
     </div>
 </div>
 <div class="row">
@@ -108,18 +101,22 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Settings</h2>
-    Change settings for the Pi-Hole
+    Change settings for the Pi-hole
     <h4>Networking</h4>
-    Displays information about the interfaces of the Pi-Hole. No changes possible.
-    <h4>Pi-Hole DHCP Server</h4>
-    Using this setting you can enable/disable the DHCP server of the Pi-Hole. Note that you should disable any other DHCP server on your network to avoid IP addresses being used more than once. You have to give the range of IPs that DHCP will serve and the IP of the local router (gateway). If the DHCP server is active, the current leases are shown on the settings page. IPv4 DHCP will always be activated, IPv6 (stateless + statefull) can be enabled.
+    Displays information about the interfaces of the Pi-hole. No changes possible.
+    <h4>Pi-hole DHCP Server</h4>
+    Using this setting you can enable/disable the DHCP server of the Pi-hole. Note that you should disable any other DHCP server on your network to avoid IP addresses being used more than once. You have to give the range of IPs that DHCP will serve and the IP of the local router (gateway). If the DHCP server is active, the current leases are shown on the settings page. IPv4 DHCP will always be activated, IPv6 (stateless + statefull) can be enabled.
     <h4>Upstream DNS Servers</h4>
     Customize used upstream DNS servers + advanced settings for DNS servers. Note that any number of DNS servers may be enabled at a time.
     <h4>Query Logging</h4>
     Enabled/disable query logging on your Pi-hole + provide option to flush the log
     <h4>API</h4>
-    Change settings which apply to the API as well as the web UI<br>
-    Note that Top Clients have to be given as IP addresses
+    Change settings which apply to the API as well as the web UI
+    <ul>
+      <li>Show permitted domain entries: Toogle permitted queries in Query Log + Top Domains on Main Page</li>
+      <li>Show blockes domain entries: Toogle blocked queries in Query Log + Top Ads on Main Page</li>
+      <li>Privacy mode: Replace IPs in query log with "hidden"</li>
+    </ul>
     <h4>Web User Interface</h4>
     Other settings which affect the webUI but not the API of Pi-hole
     <h4>System Administration</h4>
@@ -129,7 +126,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Authentication system (currently <?php if($authenticationsystem) { ?>enabled<?php } else { ?>disabled<?php } ?>)</h2>
-    <p>Using the command<pre>sudo pihole -a -p pa22w0rd</pre> where <em>pa22w0rd</em> is the password to be set in this example, one can enable the authentication system of this web interface. Thereafter, a login is required for most pages (the dashboard will show a limited amount of statistics). Note that the authentication system may be disabled again, by setting an empty password using the command shown above. The Help center will show more details concerning the authentication system only if it is enabled</p>
+    <p>Using the command<pre>sudo pihole -a -p</pre> and entering a password to be set, one can enable the authentication system of this web interface. Thereafter, a login is required for most pages (the dashboard will show a limited amount of statistics). Note that the authentication system may be disabled again, by setting an empty password using the command shown above. The Help center will show more details concerning the authentication system only if it is enabled</p>
     </div>
 </div>
 <?php if($authenticationsystem) { ?>
