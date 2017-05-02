@@ -552,7 +552,7 @@ if($auth) {
 						<!-- Blocklist -->
 						<li<?php if($scriptname === "settings.php" && $settingsWidget === "blocklist"){ ?> class="active"<?php } ?>>
 							<a href="settings.php?w=blocklist">
-							<i class="fa fa-files-o"></i> <span>Blocklists</span>
+							<i class="fa fa-ban"></i> <span>Blocklists</span>
 							</a>
 						</li>
 						<!-- API -->
@@ -576,7 +576,7 @@ if($auth) {
 						<!-- Pi-hole FTL -->
 						<li<?php if($scriptname === "settings.php" && $settingsWidget === "ftl"){ ?> class="active"<?php } ?>>
 							<a href="settings.php?w=ftl">
-							<i class="fa fa-rocket"></i> <span>Pi-hole FTL</span>
+							<i class="fa fa-paper-plane"></i> <span>Pi-hole FTL</span>
 							</a>
 						</li>
 						<!-- Pi-hole Teleporter -->
