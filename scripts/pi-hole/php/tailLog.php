@@ -30,7 +30,7 @@ if(isset($_GET["offset"]))
 		fseek($file, $offset);
 		$lines = [];
 		while (!feof($file))
-			array_push($lines,fgets($file));
+			array_push($lines, htmlspecialchars(fgets($file)));
 		die(json_encode(array("offset" => ftell($file), "lines" => $lines)));
 	}
 }
