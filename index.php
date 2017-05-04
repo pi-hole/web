@@ -68,7 +68,7 @@
     <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
-          <h3 class="box-title">Queries over Time</h3>
+          <h3 class="box-title">Queries over last 24 hours</h3>
         </div>
         <div class="box-body">
           <div class="chart">
