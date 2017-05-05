@@ -15,7 +15,7 @@
         <div class="small-box bg-aqua">
             <div class="inner">
                 <h3 class="statistic" id="ads_blocked_today">---</h3>
-                <p>DNS Queries Blocked Today</p>
+                <p>DNS Queries Blocked Over Last 24 Hours</p>
             </div>
             <div class="icon">
                 <i class="ion ion-android-hand"></i>
@@ -28,7 +28,7 @@
         <div class="small-box bg-green">
             <div class="inner">
                 <h3 class="statistic" id="dns_queries_today">---</h3>
-                <p>DNS Queries Today</p>
+                <p>DNS Queries Over Last 24 Hours</p>
             </div>
             <div class="icon">
                 <i class="ion ion-earth"></i>
@@ -41,7 +41,7 @@
         <div class="small-box bg-yellow">
             <div class="inner">
                 <h3 class="statistic" id="ads_percentage_today">---</h3>
-                <p>Of Today's Queries Were Blocked</p>
+                <p>Queries Were Blocked Over Last 24 Hours</p>
             </div>
             <div class="icon">
                 <i class="ion ion-pie-graph"></i>
