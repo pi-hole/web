@@ -164,7 +164,7 @@ else
     <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="ad-frequency">
         <div class="box-header with-border">
-          <h3 class="box-title">Top Advertisers</h3>
+          <h3 class="box-title">Top Blocked Domains</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
