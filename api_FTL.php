@@ -45,7 +45,7 @@ if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))
 		}
 		else
 		{
-			$stats[$tmp[0]] = intval($tmp[1]);
+			$stats[$tmp[0]] = floatval($tmp[1]);
 		}
 	}
 	$data = array_merge($data,$stats);
