@@ -233,6 +233,7 @@ if (isset($_GET['overTimeDataForwards']) && $auth)
 {
 	sendRequestFTL("ForwardedoverTime");
 	$return = getResponseFTL();
+	$over_time = array();
 
 	foreach($return as $line)
 	{
@@ -271,6 +272,7 @@ if (isset($_GET['overTimeDataQueryTypes']) && $auth)
 {
 	sendRequestFTL("QueryTypesoverTime");
 	$return = getResponseFTL();
+	$over_time = array();
 
 	foreach($return as $line)
 	{
