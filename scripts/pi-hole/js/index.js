@@ -186,11 +186,13 @@ function updateForwardedOverTime() {
         // Collect values and colors, and labels
         forwardDestinationChart.data.datasets[0].backgroundColor = colors[0];
         forwardDestinationChart.data.datasets[0].pointRadius = 0;
+        forwardDestinationChart.data.datasets[0].pointHitRadius = 5;
+        forwardDestinationChart.data.datasets[0].pointHoverRadius = 5;
         forwardDestinationChart.data.datasets[0].label = labels[0];
 
         for (i = forwardDestinationChart.data.datasets.length; i < plotdata[0].length; i++)
         {
-            forwardDestinationChart.data.datasets.push({data: [], backgroundColor: colors[i], pointRadius: 0, label: labels[i]});
+            forwardDestinationChart.data.datasets.push({data: [], backgroundColor: colors[i], pointRadius: 0, pointHitRadius: 5, pointHoverRadius: 5, label: labels[i]});
         }
 
         // Add data for each dataset that is available
