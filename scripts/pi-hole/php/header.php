@@ -273,7 +273,7 @@ if($auth) {
 
                                 <!-- PayPal -->
                                 <div>
-                                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
                                         <input type="hidden" name="cmd" value="_s-xclick">
                                         <input type="hidden" name="hosted_button_id" value="3J2L3Z4DHW9UY">
                                         <input style="display: block; margin: 0 auto;" type="image" src="img/donate.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
