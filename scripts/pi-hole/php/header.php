@@ -389,6 +389,10 @@ if($auth) {
                     $scriptname = "blacklist";
                 }
             }
+            if(!$auth && (!isset($indexpage) || isset($_GET['login'])))
+            {
+                $scriptname = "login";
+            }
             ?>
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
@@ -520,7 +524,7 @@ if($auth) {
                 <?php
                 // Show Login button if $auth is *not* set and authorization is required
                 if(strlen($pwhash) > 0 && !$auth) { ?>
-                <li>
+                <li<?php if($scriptname === "login"){ ?> class="active"<?php } ?>>
                     <a href="index.php?login">
                         <i class="fa fa-user"></i> <span>Login</span>
                     </a>
