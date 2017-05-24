@@ -219,7 +219,7 @@ if($auth) {
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
-        <a href="http://pi-hole.net" class="logo">
+        <a href="http://pi-hole.net" class="logo" target="_blank">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">P<b>h</b></span>
             <!-- logo for regular state and mobile devices -->
@@ -251,13 +251,13 @@ if($auth) {
                             <!-- Menu Body -->
                             <li class="user-body">
                                 <div class="col-xs-4 text-center">
-                                    <a href="https://github.com/pi-hole/pi-hole">GitHub</a>
+                                    <a href="https://github.com/pi-hole/pi-hole" target="_blank">GitHub</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/">Details</a>
+                                    <a href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/" target="_blank">Details</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a href="https://github.com/pi-hole/pi-hole/releases">Updates</a>
+                                    <a href="https://github.com/pi-hole/pi-hole/releases" target="_blank">Updates</a>
                                 </div>
                                 <div class="col-xs-12 text-center" id="sessiontimer">Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></div>
                             </li>
@@ -273,7 +273,7 @@ if($auth) {
 
                                 <!-- PayPal -->
                                 <div>
-                                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
                                         <input type="hidden" name="cmd" value="_s-xclick">
                                         <input type="hidden" name="hosted_button_id" value="3J2L3Z4DHW9UY">
                                         <input style="display: block; margin: 0 auto;" type="image" src="img/donate.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
@@ -532,7 +532,7 @@ if($auth) {
                 <?php } ?>
                 <!-- Donate -->
                 <li>
-                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
+                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY" target="_blank">
                         <i class="fa fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
