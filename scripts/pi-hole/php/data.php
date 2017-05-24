@@ -284,11 +284,12 @@
         foreach($dns_queries as $query) {
             $exploded = explode(" ", $query);
             $ip = trim($exploded[count($exploded)-1]);
-            if (isset($sources[$ip])) {
-                $sources[$ip]++;
+            $client = hasHostName($ip);
+            if (isset($sources[$client])) {
+                $sources[$client]++;
             }
             else {
-                $sources[$ip] = 1;
+                $sources[$client] = 1;
             }
         }
 
