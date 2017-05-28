@@ -6,7 +6,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */ ?>
 
-<div class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+<div class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2" style="float:none">
   <div class="panel panel-default">
     <div class="panel-heading">
       <div style="text-align: center;"><img src="img/logo.svg" width="<?php if ($boxedlayout) { ?>50%<?php } else { ?>30%<?php } ?>"></div><br>
