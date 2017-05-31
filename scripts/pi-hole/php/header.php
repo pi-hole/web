@@ -272,14 +272,11 @@ if($auth) {
                                 <div id="alWebUpdate" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
                                     <a class="alert-link" href="https://github.com/pi-hole/AdminLTE/releases">There's an update available for this Web Interface!</a>
                                 </div>
-
                                 <!-- PayPal -->
-                                <div>
-                                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-                                        <input type="hidden" name="cmd" value="_s-xclick">
-                                        <input type="hidden" name="hosted_button_id" value="3J2L3Z4DHW9UY">
-                                        <input style="display: block; margin: 0 auto;" type="image" src="img/donate.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                                    </form>
+                                <div class="text-center">
+                                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY" target="_blank" style="background:transparent">
+                                        <img src="img/donate.gif" alt="Donate">
+                                    </a>
                                 </div>
                             </li>
                         </ul>
