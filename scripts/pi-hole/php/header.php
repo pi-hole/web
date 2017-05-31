@@ -259,7 +259,9 @@ if($auth) {
                                 <div class="col-xs-4 text-center">
                                     <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" target="_blank">Updates</a>
                                 </div>
-                                <div class="col-xs-12 text-center" id="sessiontimer">Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></div>
+                                <div class="col-xs-12 text-center" id="sessiontimer">
+                                    <b>Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></b>
+                                </div>
                             </li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
