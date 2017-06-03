@@ -9,6 +9,7 @@
 <?php
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
+    require "scripts/pi-hole/php/update_checker.php";
 
     check_cors();
 
@@ -264,12 +265,21 @@ if($auth) {
                             <!-- Menu Footer -->
                             <li class="user-footer">
                                 <!-- Update alerts -->
-                                <div id="alPiholeUpdate" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
+                                <?php if($core_update){ ?>
+                                <div id="alPiholeUpdate" class="alert alert-info alert-dismissible fade in" role="alert">
                                     <a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">There's an update available for this Pi-hole!</a>
                                 </div>
-                                <div id="alWebUpdate" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
+                                <?php } ?>
+                                <?php if($web_update){ ?>
+                                <div id="alWebUpdate" class="alert alert-info alert-dismissible fade in" role="alert">
                                     <a class="alert-link" href="https://github.com/pi-hole/AdminLTE/releases">There's an update available for this Web Interface!</a>
                                 </div>
+                                <?php } ?>
+                                <?php if($FTL_update){ ?>
+                                <div id="alFTLUpdate" class="alert alert-info alert-dismissible fade in" role="alert">
+                                    <a class="alert-link" href="https://github.com/pi-hole/AdminLTE/releases">There's an update available for this FTL!</a>
+                                </div>
+                                <?php } ?>
 
                                 <!-- PayPal -->
                                 <div>
