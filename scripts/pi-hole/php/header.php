@@ -273,7 +273,7 @@ if($auth) {
                                     <b>Web Interface Version </b><?php
                                     echo $web_current;
                                     if(isset($web_commit)) { echo "<br>(".$web_branch.", ".$web_commit.")"; }
-                                    if($web_update){ ?> <a class="alert-link lookatme\" href="https://github.com/                        pi-hole/AdminLTE/releases">(Update available!)</a><?php } ?><br>
+                                    if($web_update){ ?> <a class="alert-link lookatme" href="https://github.com/                        pi-hole/AdminLTE/releases">(Update available!)</a><?php } ?><br>
                                     <b>FTL Version </b> <?php
                                     echo $FTL_current;
                                     if($FTL_update){ ?> <a class="alert-link lookatme" href="https://github.com/                        pi-hole/FTL/releases">(Update available!)</a><?php } ?><br><br>
