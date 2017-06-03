@@ -4,16 +4,6 @@
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
-// User menu toggle
-$("#dropdown-menu a").on("click", function(event) {
-    $(this).parent().toggleClass("open");
-});
-$("body").on("click", function(event) {
-    if(!$("#dropdown-menu").is(event.target) && $("#dropdown-menu").has(event.target).length === 0) {
-        $("#dropdown-menu").removeClass("open");
-    }
-});
-
 //The following functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
 

@@ -235,15 +235,15 @@ if($auth) {
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <!-- User Account: style can be found in dropdown.less -->
-                    <li id="dropdown-menu" class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle">
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <img src="img/logo.svg" class="user-image" style="border-radius: initial" sizes="160x160" alt="Pi-hole logo" />
                             <span class="hidden-xs">Pi-hole</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="img/logo.svg" sizes="160x160" alt="User Image" />
+                                <img src="img/logo.svg" sizes="160x160" alt="User Image" style="border-color:transparent" />
                                 <p>
                                     Open Source Ad Blocker
                                     <small>Designed For Raspberry Pi</small>
@@ -252,15 +252,17 @@ if($auth) {
                             <!-- Menu Body -->
                             <li class="user-body">
                                 <div class="col-xs-4 text-center">
-                                    <a href="https://github.com/pi-hole/pi-hole" target="_blank">GitHub</a>
+                                    <a class="btn-link" href="https://github.com/pi-hole/pi-hole" target="_blank">GitHub</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/" target="_blank">Details</a>
+                                    <a class="btn-link" href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/" target="_blank">Details</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a href="https://github.com/pi-hole/pi-hole/releases" target="_blank">Updates</a>
+                                    <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" target="_blank">Updates</a>
                                 </div>
-                                <div class="col-xs-12 text-center" id="sessiontimer">Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></div>
+                                <div class="col-xs-12 text-center" id="sessiontimer">
+                                    <b>Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></b>
+                                </div>
                             </li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
@@ -278,14 +280,11 @@ if($auth) {
                                     echo $FTL_current;
                                     if($FTL_update){ ?> <a class="alert-link lookatme" href="https://github.com/                        pi-hole/FTL/releases">(Update available!)</a><?php } ?><br><br>
                                 </div>
-
                                 <!-- PayPal -->
-                                <div>
-                                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-                                        <input type="hidden" name="cmd" value="_s-xclick">
-                                        <input type="hidden" name="hosted_button_id" value="3J2L3Z4DHW9UY">
-                                        <input style="display: block; margin: 0 auto;" type="image" src="img/donate.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                                    </form>
+                                <div class="text-center">
+                                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY" target="_blank" style="background:transparent">
+                                        <img src="img/donate.gif" alt="Donate">
+                                    </a>
                                 </div>
                             </li>
                         </ul>
