@@ -265,21 +265,19 @@ if($auth) {
                             <!-- Menu Footer -->
                             <li class="user-footer">
                                 <!-- Update alerts -->
-                                <?php if($core_update){ ?>
-                                <div id="alPiholeUpdate" class="alert alert-info alert-dismissible fade in" role="alert">
-                                    <a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">There's an update available for this Pi-hole!</a>
+                                <div>
+                                    <b>Pi-hole Version </b> <?php
+                                    echo $core_current;
+                                    if(isset($core_commit)) { echo "<br>(".$core_branch.", ".$core_commit.")"; }
+                                    if($core_update){ ?> <a class="alert-link lookatme" href="https://github.com/                        pi-hole/pi-hole/releases">(Update available!)</a><?php } ?><br>
+                                    <b>Web Interface Version </b><?php
+                                    echo $web_current;
+                                    if(isset($web_commit)) { echo "<br>(".$web_branch.", ".$web_commit.")"; }
+                                    if($web_update){ ?> <a class="alert-link lookatme\" href="https://github.com/                        pi-hole/AdminLTE/releases">(Update available!)</a><?php } ?><br>
+                                    <b>FTL Version </b> <?php
+                                    echo $FTL_current;
+                                    if($FTL_update){ ?> <a class="alert-link lookatme" href="https://github.com/                        pi-hole/FTL/releases">(Update available!)</a><?php } ?><br><br>
                                 </div>
-                                <?php } ?>
-                                <?php if($web_update){ ?>
-                                <div id="alWebUpdate" class="alert alert-info alert-dismissible fade in" role="alert">
-                                    <a class="alert-link" href="https://github.com/pi-hole/AdminLTE/releases">There's an update available for this Web Interface!</a>
-                                </div>
-                                <?php } ?>
-                                <?php if($FTL_update){ ?>
-                                <div id="alFTLUpdate" class="alert alert-info alert-dismissible fade in" role="alert">
-                                    <a class="alert-link" href="https://github.com/pi-hole/AdminLTE/releases">There's an update available for this FTL!</a>
-                                </div>
-                                <?php } ?>
 
                                 <!-- PayPal -->
                                 <div>
