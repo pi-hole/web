@@ -9,6 +9,7 @@
 <?php
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
+    require "scripts/pi-hole/php/update_checker.php";
 
     check_cors();
 
@@ -264,11 +265,18 @@ if($auth) {
                             <!-- Menu Footer -->
                             <li class="user-footer">
                                 <!-- Update alerts -->
-                                <div id="alPiholeUpdate" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
-                                    <a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">There's an update available for this Pi-hole!</a>
-                                </div>
-                                <div id="alWebUpdate" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
-                                    <a class="alert-link" href="https://github.com/pi-hole/AdminLTE/releases">There's an update available for this Web Interface!</a>
+                                <div>
+                                    <b>Pi-hole Version </b> <?php
+                                    echo $core_current;
+                                    if(isset($core_commit)) { echo "<br>(".$core_branch.", ".$core_commit.")"; }
+                                    if($core_update){ ?> <a class="alert-link lookatme" href="https://github.com/                        pi-hole/pi-hole/releases">(Update available!)</a><?php } ?><br>
+                                    <b>Web Interface Version </b><?php
+                                    echo $web_current;
+                                    if(isset($web_commit)) { echo "<br>(".$web_branch.", ".$web_commit.")"; }
+                                    if($web_update){ ?> <a class="alert-link lookatme" href="https://github.com/                        pi-hole/AdminLTE/releases">(Update available!)</a><?php } ?><br>
+                                    <b>FTL Version </b> <?php
+                                    echo $FTL_current;
+                                    if($FTL_update){ ?> <a class="alert-link lookatme" href="https://github.com/                        pi-hole/FTL/releases">(Update available!)</a><?php } ?><br><br>
                                 </div>
 
                                 <!-- PayPal -->
