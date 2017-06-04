@@ -267,7 +267,7 @@ if($auth) {
                             <!-- Menu Footer -->
                             <li class="user-footer">
                                 <!-- Version Infos -->
-                                <div class="<?php if(!isset($core_commit) && !isset($web_commit)) { ?>hidden-md <?php } ?>hidden-md hidden-lg">
+                                <div class="<?php if(!isset($core_commit) && !isset($web_commit)) { ?>hidden-md <?php } ?>hidden-lg">
                                     <b>Pi-hole Version </b> <?php
                                     echo $core_current;
                                     if(isset($core_commit)) { echo "<br>(".$core_branch.", ".$core_commit.")"; }
