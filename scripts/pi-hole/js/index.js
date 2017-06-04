@@ -264,7 +264,7 @@ function updateTopClientsChart() {
                 // Sanitize client
                 if(escapeHtml(client) !== client)
                 {
-                    // Make a copy with the escaped index
+                    // Make a copy with the escaped index if necessary
                     data.top_sources[escapeHtml(client)] = data.top_sources[client];
                 }
                 client = escapeHtml(client);
@@ -314,7 +314,7 @@ function updateTopLists() {
                 // Sanitize domain
                 if(escapeHtml(domain) !== domain)
                 {
-                    // Make a copy with the escaped index
+                    // Make a copy with the escaped index if necessary
                     data.top_queries[escapeHtml(domain)] = data.top_queries[domain];
                 }
                 domain = escapeHtml(domain);
@@ -337,7 +337,7 @@ function updateTopLists() {
                 // Sanitize domain
                 if(escapeHtml(domain) !== domain)
                 {
-                    // Make a copy with the escaped index
+                    // Make a copy with the escaped index if necessary
                     data.top_ads[escapeHtml(domain)] = data.top_ads[domain];
                 }
                 domain = escapeHtml(domain);
