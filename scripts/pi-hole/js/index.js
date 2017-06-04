@@ -335,6 +335,11 @@ function updateTopLists() {
         for (domain in data.top_ads) {
             if ({}.hasOwnProperty.call(data.top_ads,domain)){
                 // Sanitize domain
+                if(escapeHtml(domain) !== domain)
+                {
+                    // Make a copy with the escaped index
+                    data.top_ads[escapeHtml(domain)] = data.top_ads[domain];
+                }
                 domain = escapeHtml(domain);
                 url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
                 percentage = data.top_ads[domain] / data.ads_blocked_today * 100;
