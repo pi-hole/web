@@ -262,6 +262,7 @@ function updateTopClientsChart() {
 
             if ({}.hasOwnProperty.call(data.top_sources, client)){
                 // Sanitize client
+                data.top_sources[escapeHtml(client)] = data.top_sources[client];
                 client = escapeHtml(client);
                 if(client.indexOf("|") > -1)
                 {
