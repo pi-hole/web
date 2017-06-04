@@ -262,7 +262,11 @@ function updateTopClientsChart() {
 
             if ({}.hasOwnProperty.call(data.top_sources, client)){
                 // Sanitize client
-                data.top_sources[escapeHtml(client)] = data.top_sources[client];
+                if(escapeHtml(client) !== client)
+                {
+                    // Make a copy with the escaped index
+                    data.top_sources[escapeHtml(client)] = data.top_sources[client];
+                }
                 client = escapeHtml(client);
                 if(client.indexOf("|") > -1)
                 {
@@ -308,6 +312,11 @@ function updateTopLists() {
         for (domain in data.top_queries) {
             if ({}.hasOwnProperty.call(data.top_queries,domain)){
                 // Sanitize domain
+                if(escapeHtml(domain) !== domain)
+                {
+                    // Make a copy with the escaped index
+                    data.top_queries[escapeHtml(domain)] = data.top_queries[domain];
+                }
                 domain = escapeHtml(domain);
                 url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
                 percentage = data.top_queries[domain] / data.dns_queries_today * 100;
