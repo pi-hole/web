@@ -42,7 +42,7 @@
     <!-- /.content-wrapper -->
     <footer class="main-footer">
 	<!-- Version Infos -->
-        <div class="pull-right hidden-xs <?php if(isset($core_commit) || isset($web_commit)) { ?>hidden-sm<?php } ?>">
+        <div class="pull-right hidden-xs hidden-sm<?php if(isset($core_commit) || isset($web_commit)) { ?> hidden-md<?php } ?>">
             <b>Pi-hole Version </b> <?php
             echo $core_current;
             if(isset($core_commit)) { echo " (".$core_branch.", ".$core_commit.")"; }
