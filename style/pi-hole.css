@@ -16,3 +16,21 @@
 .skin-blue .list-group-item:hover {
 	background: #ddd;
 }
+@-webkit-keyframes Pulse{
+	from {color:#630030;-webkit-text-shadow:0 0 2px transparent;}
+	50% {color:#e33100;-webkit-text-shadow:0 0 5px #e33100;}
+	to {color:#630030;-webkit-text-shadow:0 0 2px transparent;}
+}
+@keyframes Pulse{
+	from {color:#630030;text-shadow:0 0 2px transparent;}
+	50% {color:#e33100;text-shadow:0 0 5px #e33100;}
+	to {color:#630030;text-shadow:0 0 2px transparent;}
+}
+a.lookatme {
+	-webkit-animation-name: Pulse;
+	animation-name: Pulse;
+	-webkit-animation-duration: 2s;
+	animation-duration: 2s;	
+	-webkit-animation-iteration-count: infinite;
+	animation-iteration-count: infinite;
+}

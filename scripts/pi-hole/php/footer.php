@@ -41,32 +41,21 @@
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-<style type="text/css">
-	@-webkit-keyframes Pulse{
-		from {color:#630030;-webkit-text-shadow:0 0 9px #333;}
-		50% {color:#e33100;-webkit-text-shadow:0 0 32px #e33100;}
-		to {color:#630030;-webkit-text-shadow:0 0 9px #333;}
-	}
-	a.lookatme {
-		-webkit-animation-name: Pulse;
-		-webkit-animation-duration: 2s;
-		-webkit-animation-iteration-count: infinite;
-	}
-</style>
-        <div class="pull-right hidden-xs <?php if(isset($core_commit) || isset($web_commit)) { ?>hidden-md<?php } ?>">
+	<!-- Version Infos -->
+        <div class="pull-right hidden-xs hidden-sm<?php if(isset($core_commit) || isset($web_commit)) { ?> hidden-md<?php } ?>">
             <b>Pi-hole Version </b> <?php
             echo $core_current;
             if(isset($core_commit)) { echo " (".$core_branch.", ".$core_commit.")"; }
-            if($core_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/pi-hole/releases">(Update available!)</a><?php } ?>
+            if($core_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/pi-hole/releases" target="_blank">(Update available!)</a><?php } ?>
             <b>Web Interface Version </b><?php
             echo $web_current;
             if(isset($web_commit)) { echo " (".$web_branch.", ".$web_commit.")"; }
-            if($web_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/AdminLTE/releases">(Update available!)</a><?php } ?>
+            if($web_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/AdminLTE/releases" target="_blank">(Update available!)</a><?php } ?>
             <b>FTL Version </b> <?php
             echo $FTL_current;
-            if($FTL_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/FTL/releases">(Update available!)</a><?php } ?>
+            if($FTL_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/FTL/releases" target="_blank">(Update available!)</a><?php } ?>
         </div>
-            <div><a href="https://github.com/pi-hole" target="_blank"><i class="fa fa-github"></i></a> <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY" target="_blank">Donate</a></strong> if you found this useful.</div>
+        <div style="display: inline-block"><a href="https://github.com/pi-hole" target="_blank"><i class="fa fa-github"></i></a> <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY" target="_blank">Donate</a></strong> if you found this useful.</div>
     </footer>
 </div>
 <!-- ./wrapper -->
