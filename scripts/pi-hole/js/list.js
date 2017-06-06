@@ -209,7 +209,7 @@ $(function(){
 });
 
 // Wrap form-group's buttons to next line when viewed on a small screen
-$(window).on('resize',function() {
+$(window).on("resize",function() {
     if ($(window).width() < 991) {
         $(".form-group.input-group").removeClass("input-group").addClass("input-group-block");
         $(".form-group.input-group-block > input").css("margin-bottom", "5px");
@@ -222,5 +222,5 @@ $(window).on('resize',function() {
     }
 });
 $(document).ready(function() {
-    $(window).trigger('resize');
+    $(window).trigger("resize");
 });
