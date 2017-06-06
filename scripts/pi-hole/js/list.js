@@ -208,11 +208,19 @@ $(function(){
     });
 });
 
-$(document).ready(function () {
-    if (screen.width < 576) {
-        $(".input-group-btn").css("display", "initial");
+// Wrap form-group's buttons to next line when viewed on a small screen
+$(window).on('resize',function() {
+    if ($(window).width() < 991) {
+        $(".form-group.input-group").removeClass("input-group").addClass("input-group-block");
+        $(".form-group.input-group-block > input").css("margin-bottom", "5px");
+        $(".input-group-btn").removeClass("input-group-btn").addClass("input-group-btn-block btn-group");
     }
     else {
-        $(".input-group-btn").css("display", "table-cell");
+        $(".form-group.input-group-block").removeClass("input-group-block").addClass( "input-group" );
+        $(".form-group.input-group > input").css("margin-bottom","");
+        $(".input-group-btn-block").removeClass("input-group-btn-block btn-group").addClass("input-group-btn");
     }
+});
+$(document).ready(function() {
+    $(window).trigger('resize');
 });
