@@ -15,8 +15,6 @@ var end__ = moment();
 var until = moment(end__).utc().valueOf()/1000;
 
 $(function () {
-	//Date range picker with time picker
-	// $("#reservationtime").daterangepicker({timePicker: true, timePickerIncrement: 30, format: "MM/DD/YYYY h:mm A"});
     $("#reservationtime").daterangepicker(
         {
           timePicker: true, timePickerIncrement: 15,
@@ -149,7 +147,6 @@ function updateTopAdsChart() {
         var adtable =  $("#ad-frequency").find("tbody:last");
         var ad, percentage;
         var sum = 0;
-            console.log(data);
         for (ad in data.top_ads) {
             if ({}.hasOwnProperty.call(data.top_ads, ad)){
                 sum += data.top_ads[ad];
