@@ -5,34 +5,31 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-var start__ = moment().subtract(6, 'days');
+var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf()/1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf()/1000;
 
 $(function () {
-	//Date range picker with time picker
-	// $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
-    $('#reservationtime').daterangepicker(
-        {
-          timePicker: true, timePickerIncrement: 15,
-          locale: { format: 'MMMM Do YYYY, h:mm A' },
-          ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-          },
-          startDate: start__, endDate: end__,
-          "opens": "center", "showDropdowns": true
-        },
-        function (startt, endt) {
-          from = moment(startt).utc().valueOf()/1000;
-          until = moment(endt).utc().valueOf()/1000;
-        }
-    );
+    $("#reservationtime").daterangepicker(
+    {
+      timePicker: true, timePickerIncrement: 15,
+      locale: { format: "MMMM Do YYYY, h:mm A" },
+      ranges: {
+        "Today": [moment(), moment()],
+        "Yesterday": [moment().subtract(1, "days"), moment().subtract(1, "days")],
+        "Last 7 Days": [moment().subtract(6, "days"), moment()],
+        "Last 30 Days": [moment().subtract(29, "days"), moment()],
+        "This Month": [moment().startOf("month"), moment().endOf("month")],
+        "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
+      },
+      startDate: start__, endDate: end__,
+      "opens": "center", "showDropdowns": true
+    },
+    function (startt, endt) {
+      from = moment(startt).utc().valueOf()/1000;
+      until = moment(endt).utc().valueOf()/1000;
+    });
 });
 
 var tableApi, statistics;
@@ -44,12 +41,6 @@ function escapeRegex(text) {
     ".": "\\.",
   };
   return text.replace(/[().]/g, function(m) { return map[m]; });
-}
-
-function refreshTableData() {
-    var APIstring = "api_db.php?getAllQueries&from="+from+"&until="+until;
-    statistics = [0,0,0];
-    tableApi.ajax.url(APIstring).load(myCallback);
 }
 
 function add(domain,list) {
@@ -128,19 +119,25 @@ function handleAjaxError( xhr, textStatus, error ) {
     tableApi.draw();
 }
 
-var myCallback = function()
+var reloadCallback = function()
 {
     statistics = [0,0,0,0];
     var data = tableApi.rows().data();
     for (var i = 0; i < data.length; i++) {
         // console.log(data[i]);
         statistics[0]++;
-        if(data[i][4] == 1)
+        if(data[i][4] === 1)
+        {
             statistics[2]++;
-        else if(data[i][4] == 3)
+        }
+        else if(data[i][4] === 3)
+        {
             statistics[1]++;
-        else if(data[i][4] == 4)
+        }
+        else if(data[i][4] === 4)
+        {
             statistics[3]++;
+        }
     }
     $("h3#dns_queries").text(statistics[0]);
     $("h3#ads_blocked_exact").text(statistics[2]);
@@ -153,6 +150,12 @@ var myCallback = function()
     }
     console.log(percent);
     $("h3#ads_percentage_today").text(parseFloat(percent).toFixed(1)+" %");
+};
+
+function refreshTableData() {
+    var APIstring = "api_db.php?getAllQueries&from="+from+"&until="+until;
+    statistics = [0,0,0];
+    tableApi.ajax.url(APIstring).load(reloadCallback);
 }
 
 $(document).ready(function() {
@@ -230,13 +233,6 @@ $(document).ready(function() {
           add(data[2],"black");
         }
     } );
-    // $("#all-queries").on( 'stateLoaded.dt', function (e, settings, data) {
-    //     console.log( data.myCustomValue );
-    //     // "fnDrawCallback": function( oSettings ) {
-    //     //    var rows = tableApi.rows().data();
-    //     //    alert( rows[0] );
-    //     // },
-    // } );
 } );
 
 // Handle "Go" Button

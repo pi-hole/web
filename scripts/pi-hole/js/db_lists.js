@@ -5,25 +5,25 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-var start__ = moment().subtract(6, 'days');
+var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf()/1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf()/1000;
 
 $(function () {
 	//Date range picker with time picker
-	// $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
-    $('#reservationtime').daterangepicker(
+	// $("#reservationtime").daterangepicker({timePicker: true, timePickerIncrement: 30, format: "MM/DD/YYYY h:mm A"});
+    $("#reservationtime").daterangepicker(
         {
           timePicker: true, timePickerIncrement: 15,
-          locale: { format: 'MMMM Do YYYY, h:mm A' },
+          locale: { format: "MMMM Do YYYY, h:mm A" },
           ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            "Today": [moment(), moment()],
+            "Yesterday": [moment().subtract(1, "days"), moment().subtract(1, "days")],
+            "Last 7 Days": [moment().subtract(6, "days"), moment()],
+            "Last 30 Days": [moment().subtract(29, "days"), moment()],
+            "This Month": [moment().startOf("month"), moment().endOf("month")],
+            "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
           },
           startDate: start__, endDate: end__,
           "opens": "center", "showDropdowns": true
@@ -107,7 +107,6 @@ function updateTopDomainsChart() {
         var domaintable =  $("#domain-frequency").find("tbody:last");
         var domain, percentage;
         var sum = 0;
-            console.log(data);
         for (domain in data.top_domains) {
             if ({}.hasOwnProperty.call(data.top_domains, domain)){
                 sum += data.top_domains[domain];
@@ -165,9 +164,7 @@ function updateTopAdsChart() {
                 }
 
                 percentage = data.top_ads[ad] / sum * 100.0;
-                adtable.append("<tr> <td>" + ad +
-                    "</td> <td>" + data.top_ads[ad] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
-                    percentage + "%\"></div> </div> </td> </tr> ");
+                adtable.append("<tr> <td>" + ad + "</td> <td>" + data.top_ads[ad] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " + percentage + "%\"></div> </div> </td> </tr> ");
             }
 
         }
