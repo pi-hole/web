@@ -128,7 +128,6 @@ var reloadCallback = function()
     statistics = [0,0,0,0];
     var data = tableApi.rows().data();
     for (var i = 0; i < data.length; i++) {
-        // console.log(data[i]);
         statistics[0]++;
         if(data[i][4] === 1)
         {
@@ -152,7 +151,6 @@ var reloadCallback = function()
     {
         percent = 100.0*(statistics[2] + statistics[3]) / statistics[0];
     }
-    console.log(percent);
     $("h3#ads_percentage_today").text(parseFloat(percent).toFixed(1)+" %");
 };
 
