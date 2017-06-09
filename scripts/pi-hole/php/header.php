@@ -184,6 +184,7 @@
     <link href="style/vendor/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="style/vendor/daterangepicker.css" rel="stylesheet" type="text/css" />
 
     <link href="style/vendor/AdminLTE.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/skin-blue.min.css" rel="stylesheet" type="text/css" />
@@ -415,6 +416,26 @@ if($auth) {
                     <a href="queries.php">
                         <i class="fa fa-file-text-o"></i> <span>Query Log</span>
                     </a>
+                </li>
+                <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php"){ ?> active<?php } ?>">
+                  <a href="#">
+                    <i class="fa fa-clock-o"></i> <span>Long term data</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li<?php if($scriptname === "db_queries.php"){ ?> class="active"<?php } ?>>
+                        <a href="db_queries.php">
+                            <i class="fa fa-file-text-o"></i> <span>Query Log</span>
+                        </a>
+                    </li>
+                    <li<?php if($scriptname === "db_lists.php"){ ?> class="active"<?php } ?>>
+                        <a href="db_lists.php">
+                            <i class="fa fa-file-text-o"></i> <span>Top Lists</span>
+                        </a>
+                    </li>
+                  </ul>
                 </li>
                 <!-- Whitelist -->
                 <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
