@@ -5,6 +5,10 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
+/*global
+    moment
+*/
+
 var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf()/1000;
 var end__ = moment();
