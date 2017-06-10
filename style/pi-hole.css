@@ -13,6 +13,12 @@
 	-o-user-select: none;
 	user-select: none;
 }
+.small-box h3 {
+	transition-duration: 500ms;
+}
+.small-box h3.glow {
+	text-shadow: 0px 0px 5px #fff;
+}
 .skin-blue .list-group-item:hover {
 	background: #ddd;
 }
