@@ -32,7 +32,7 @@
 	50% {color:#e33100;text-shadow:0 0 5px #e33100;}
 	to {color:#630030;text-shadow:0 0 2px transparent;}
 }
-a.lookatme {
+.lookatme {
 	-webkit-animation-name: Pulse;
 	animation-name: Pulse;
 	-webkit-animation-duration: 2s;
