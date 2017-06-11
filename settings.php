@@ -15,16 +15,6 @@
 		max-width: none;
 		white-space: nowrap;
 	}
-	@-webkit-keyframes Pulse{
-		from {color:#630030;-webkit-text-shadow:0 0 9px #333;}
-		50% {color:#e33100;-webkit-text-shadow:0 0 18px #e33100;}
-		to {color:#630030;-webkit-text-shadow:0 0 9px #333;}
-	}
-	p.lookatme {
-		-webkit-animation-name: Pulse;
-		-webkit-animation-duration: 2s;
-		-webkit-animation-iteration-count: infinite;
-	}
 </style>
 
 <?php // Check if ad lists should be updated after saving ...
