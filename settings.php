@@ -62,22 +62,18 @@ if(isset($_POST["submit"])) {
 <?php
     $includeWidget = "";
 
+    // get requested widget name
     $settingsWidget = $_GET["w"];
+
+    // list of accepted names
+    $allowedWidgets = array("networking", "dhcp", "upstream_dns", "querylogging", "blocklist", "api", "webui", "sysadmin", "ftl", "teleporter");
     
-    $settingsWidgets = array(
-        "networking"    => "scripts/pi-hole/php/settings_networking.php",
-        "dhcp"          => "scripts/pi-hole/php/settings_dhcp.php",
-        "upstream_dns"  => "scripts/pi-hole/php/settings_upstream_dns.php",
-        "querylogging"  => "scripts/pi-hole/php/settings_querylogging.php",
-        "blocklist"     => "scripts/pi-hole/php/settings_blocklist.php",
-        "api"           => "scripts/pi-hole/php/settings_api.php",
-        "webui"         => "scripts/pi-hole/php/settings_webui.php",
-        "sysadmin"      => "scripts/pi-hole/php/settings_sysadmin.php",
-        "ftl"           => "scripts/pi-hole/php/settings_ftl.php",
-        "teleporter"    => "scripts/pi-hole/php/settings_teleporter.php",
-    );
-    
-    $includeWidget = $settingsWidgets[$settingsWidget];
+    // if widget name is specified and it is one of the accepted widgets, inculde it
+    // note that this has the side-effect of showing the entire settings page if an
+    // invalid widget name is specified.
+    if (!empty($settingsWidget) && in_array($settingsWidget, $allowedWidgets)) {
+        $includeWidget = "scripts/pi-hole/php/settings_${settingsWidget}.php";
+    }
     
 ?>
 <div class="row">
