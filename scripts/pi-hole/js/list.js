@@ -61,7 +61,7 @@ function refresh(fade) {
             {
                 listw.html("");
             }
-            var data = JSON.parse(response);
+            var data = JSON.parse(response).sort();
 
             if(data.length === 0) {
                 $("h3").hide();
