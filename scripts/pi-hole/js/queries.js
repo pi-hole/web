@@ -152,6 +152,12 @@ $(document).ready(function() {
                 $("td:eq(4)", row).html( "Pi-holed (wildcard)" );
                 $("td:eq(5)", row).html( "" );
             }
+            else if (data[4] === "5")
+            {
+                $(row).css("color","red");
+                $("td:eq(4)", row).html( "Pi-holed (blacklist)" );
+                $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+            }
             else
             {
                 $("td:eq(4)", row).html( "Unknown" );
@@ -183,7 +189,7 @@ $(document).ready(function() {
     });
     $("#all-queries tbody").on( "click", "button", function () {
         var data = tableApi.row( $(this).parents("tr") ).data();
-        if (data[4] === "1")
+        if (data[4] === "1" || data[4] === "5")
         {
           add(data[2],"white");
         }
