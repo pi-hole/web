@@ -1,3 +1,12 @@
+<?php
+
+    // Ensure this script can only be included from settings.php
+    if(basename($_SERVER['SCRIPT_FILENAME']) !== "settings.php")
+    {
+        die("Direct access to this script is forbidden!");
+    }
+
+?>
         <div class="box box-danger <?php if ($collapse) { ?>collapsed-box<?php } ?>">
             <div class="box-header with-border">
                 <h3 class="box-title">Pi-Hole's Block Lists</h3>

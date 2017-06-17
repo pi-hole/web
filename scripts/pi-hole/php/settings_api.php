@@ -1,4 +1,10 @@
 <?php
+    // Ensure this script can only be included from settings.php
+    if(basename($_SERVER['SCRIPT_FILENAME']) !== "settings.php")
+    {
+        die("Direct access to this script is forbidden!");
+    }
+
     // Excluded domains in API Query Log call
     if(isset($setupVars["API_EXCLUDE_DOMAINS"]))
     {

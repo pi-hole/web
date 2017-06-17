@@ -1,13 +1,20 @@
 <?php
-if($FTL)
-{
-    function get_FTL_data($arg)
+
+    // Ensure this script can only be included from settings.php
+    if(basename($_SERVER['SCRIPT_FILENAME']) !== "settings.php")
     {
-        global $FTLpid;
-        return trim(exec("ps -p ".$FTLpid." -o ".$arg));
+        die("Direct access to this script is forbidden!");
     }
-    $FTLversion = exec("/usr/bin/pihole-FTL version");
-}
+
+    if($FTL)
+    {
+        function get_FTL_data($arg)
+        {
+            global $FTLpid;
+            return trim(exec("ps -p ".$FTLpid." -o ".$arg));
+        }
+        $FTLversion = exec("/usr/bin/pihole-FTL version");
+    }
 ?>
         <div class="box box-danger <?php if ($collapse) { ?>collapsed-box<?php } ?>">
             <div class="box-header with-border">

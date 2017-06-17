@@ -1,5 +1,11 @@
 <?php
 
+    // Ensure this script can only be included from settings.php
+    if(basename($_SERVER['SCRIPT_FILENAME']) !== "settings.php")
+    {
+        die("Direct access to this script is forbidden!");
+    }
+
     // DNS settings
     $DNSservers = [];
     $DNSactive = [];

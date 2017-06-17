@@ -1,3 +1,12 @@
+<?php
+
+    // Ensure this script can only be included from settings.php
+    if(basename($_SERVER['SCRIPT_FILENAME']) !== "settings.php")
+    {
+        die("Direct access to this script is forbidden!");
+    }
+
+?>
         <div class="box box-danger">
             <div class="box-header with-border">
                 <h3 class="box-title">System Administration</h3>
