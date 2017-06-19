@@ -20,7 +20,7 @@ $(function () {
         var minDate = parseInt(data.mintimestamp);
         if(!isNaN(minDate))
         {
-            $('#querytime').data('daterangepicker').minDate = moment.unix(minDate);
+            $("#querytime").data("daterangepicker").minDate = moment.unix(minDate);
         }
     });
 
