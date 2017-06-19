@@ -131,65 +131,33 @@ if (isset($_GET['topAds']) && $auth)
 	$data = array_merge($data, $result);
 }
 
-/*
-
-array(10) {
-  [0]=>
-  int(1496743274)
-  ["TIMESTAMP"]=>
-  int(1496743274)
-  [1]=>
-  int(1)
-  ["TYPE"]=>
-  int(1)
-  [2]=>
-  string(7) "pi.hole"
-  ["DOMAIN"]=>
-  string(7) "pi.hole"
-  [3]=>
-  string(8) "10.8.0.2"
-  ["CLIENT"]=>
-  string(8) "10.8.0.2"
-  [4]=>
-  int(3)
-  ["STATUS"]=>
-  int(3)
+if (isset($_GET['getMinTimestamp']) && $auth)
+{
+	$results = $db->query('SELECT MIN(timestamp) FROM queries');
+	$result = array('mintimestamp' => $results->fetchArray()[0]);
+	$data = array_merge($data, $result);
 }
 
-
-["1496754109","IPv4","pi.hole","10.8.0.2","3"],["1496754164","IPv4","play.google.com","10.8.0.2","2"]
-N=array(14) {
-  [0]=>
-  int(1)
-  ["ID"]=>
-  int(1)
-  [1]=>
-  int(1496743274)
-  ["TIMESTAMP"]=>
-  int(1496743274)
-  [2]=>
-  int(1)
-  ["TYPE"]=>
-  int(1)
-  [3]=>
-  int(3)
-  ["STATUS"]=>
-  int(3)
-  [4]=>
-  string(7) "pi.hole"
-  ["DOMAIN"]=>
-  string(7) "pi.hole"
-  [5]=>
-  string(8) "10.8.0.2"
-  ["CLIENT"]=>
-  string(8) "10.8.0.2"
-  [6]=>
-  NULL
-  ["FORWARD"]=>
-  NULL
+if (isset($_GET['getMaxTimestamp']) && $auth)
+{
+	$results = $db->query('SELECT MAX(timestamp) FROM queries');
+	$result = array('maxtimestamp' => $results->fetchArray()[0]);
+	$data = array_merge($data, $result);
 }
-*/
 
+if (isset($_GET['getQueriesCount']) && $auth)
+{
+	$results = $db->query('SELECT COUNT(timestamp) FROM queries');
+	$result = array('count' => $results->fetchArray()[0]);
+	$data = array_merge($data, $result);
+}
+
+if (isset($_GET['getDBfilesize']) && $auth)
+{
+	$filesize = filesize("/etc/pihole/pihole-FTL.db");
+	$result = array('filesize' => $filesize);
+	$data = array_merge($data, $result);
+}
 
 if(isset($_GET["jsonForceObject"]))
 {

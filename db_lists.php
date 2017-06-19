@@ -33,7 +33,7 @@ $token = $_SESSION['token'];
           <div class="input-group-addon">
             <i class="fa fa-clock-o"></i>
           </div>
-          <input type="text" class="form-control pull-right" id="reservationtime">
+          <input type="text" class="form-control pull-right" id="querytime">
         <span class="input-group-btn">
             <button id="btnGo" class="btn btn-default" type="button">Go!</button>
         </span>

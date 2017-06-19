@@ -15,26 +15,34 @@ var end__ = moment();
 var until = moment(end__).utc().valueOf()/1000;
 
 $(function () {
-    $("#reservationtime").daterangepicker(
+    // Get first time stamp we have valid data for to limit selectable date/time range
+    $.getJSON("api_db.php?getMinTimestamp", function(data) {
+        var minDate = parseInt(data.mintimestamp);
+        if(!isNaN(minDate))
         {
-          timePicker: true, timePickerIncrement: 15,
-          locale: { format: "MMMM Do YYYY, h:mm A" },
-          ranges: {
-            "Today": [moment(), moment()],
-            "Yesterday": [moment().subtract(1, "days"), moment().subtract(1, "days")],
-            "Last 7 Days": [moment().subtract(6, "days"), moment()],
-            "Last 30 Days": [moment().subtract(29, "days"), moment()],
-            "This Month": [moment().startOf("month"), moment().endOf("month")],
-            "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
-          },
-          startDate: start__, endDate: end__,
-          "opens": "center", "showDropdowns": true
-        },
-        function (startt, endt) {
-          from = moment(startt).utc().valueOf()/1000;
-          until = moment(endt).utc().valueOf()/1000;
+            $('#querytime').data('daterangepicker').minDate = moment.unix(minDate);
         }
-    );
+    });
+
+    $("#querytime").daterangepicker(
+    {
+      timePicker: true, timePickerIncrement: 15,
+      locale: { format: "MMMM Do YYYY, h:mm A" },
+      ranges: {
+        "Today": [moment(), moment()],
+        "Yesterday": [moment().subtract(1, "days"), moment().subtract(1, "days")],
+        "Last 7 Days": [moment().subtract(6, "days"), moment()],
+        "Last 30 Days": [moment().subtract(29, "days"), moment()],
+        "This Month": [moment().startOf("month"), moment().endOf("month")],
+        "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
+      },
+      startDate: start__, endDate: end__,
+      "opens": "center", "showDropdowns": true
+    },
+    function (startt, endt) {
+      from = moment(startt).utc().valueOf()/1000;
+      until = moment(endt).utc().valueOf()/1000;
+    });
 });
 
 // Credit: http://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406

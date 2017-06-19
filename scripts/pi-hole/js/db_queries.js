@@ -15,7 +15,16 @@ var end__ = moment();
 var until = moment(end__).utc().valueOf()/1000;
 
 $(function () {
-    $("#reservationtime").daterangepicker(
+    // Get first time stamp we have valid data for to limit selectable date/time range
+    $.getJSON("api_db.php?getMinTimestamp", function(data) {
+        var minDate = parseInt(data.mintimestamp);
+        if(!isNaN(minDate))
+        {
+            $('#querytime').data('daterangepicker').minDate = moment.unix(minDate);
+        }
+    });
+
+    $("#querytime").daterangepicker(
     {
       timePicker: true, timePickerIncrement: 15,
       locale: { format: "MMMM Do YYYY, h:mm A" },
