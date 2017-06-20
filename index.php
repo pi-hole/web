@@ -14,7 +14,7 @@
         <!-- small box -->
         <div class="small-box bg-green">
             <div class="inner">
-                <p>Total queries</p>
+                <p>Total queries (<span id="unique_clients">-</span> clients)</p>
                 <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
             </div>
             <div class="icon">
@@ -28,7 +28,7 @@
         <div class="small-box bg-aqua">
             <div class="inner">
                 <p>Queries Blocked</p>
-                <h3 class="statistic"><span id="ads_blocked_today">---</span> (<span id="ads_percentage_today">---</span>)</h3>
+                <h3 class="statistic"><span id="ads_blocked_today">---</span></h3>
             </div>
             <div class="icon">
                 <i class="ion ion-android-hand"></i>
@@ -40,11 +40,11 @@
         <!-- small box -->
         <div class="small-box bg-yellow">
             <div class="inner">
-                <p>Unique Clients</p>
-                <h3 class="statistic"><span id="unique_clients">---</span></h3>
+                <p>Percent Blocked</p>
+                <h3 class="statistic"><span id="ads_percentage_today">---</span></h3>
             </div>
             <div class="icon">
-                <i class="ion ion-person-stalker"></i>
+                <i class="ion ion-pie-graph"></i>
             </div>
         </div>
     </div>
@@ -53,7 +53,7 @@
         <!-- small box -->
         <div class="small-box bg-red">
             <div class="inner">
-                <p>Domains on Blocklists</p>
+                <p>Domains on Blocklist</p>
                 <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
             </div>
             <div class="icon">
