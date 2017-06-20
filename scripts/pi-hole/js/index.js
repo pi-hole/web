@@ -375,8 +375,8 @@ function updateSummaryData(runOnce) {
 
         if("FTLnotrunning" in data)
         {
-            data["ads_blocked_today"] = "Lost";
-            data["dns_queries_today"] = "connection";
+            data["dns_queries_today"] = "Lost";
+            data["ads_blocked_today"] = "connection";
             data["ads_percentage_today"] = "to";
             data["domains_being_blocked"] = "API";
             // Adjust text
