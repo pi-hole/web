@@ -21,6 +21,11 @@ else
 	$file = fopen("/var/log/pihole.log","r");
 }
 
+if(!$file)
+{
+	die(json_encode(array("offset" => 0, "lines" => array("Failed to open log file. Check permissions!\n"))));
+}
+
 if(isset($_GET["offset"]))
 {
 	$offset = intval($_GET['offset']);

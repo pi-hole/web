@@ -186,11 +186,13 @@ function updateForwardedOverTime() {
         // Collect values and colors, and labels
         forwardDestinationChart.data.datasets[0].backgroundColor = colors[0];
         forwardDestinationChart.data.datasets[0].pointRadius = 0;
+        forwardDestinationChart.data.datasets[0].pointHitRadius = 5;
+        forwardDestinationChart.data.datasets[0].pointHoverRadius = 5;
         forwardDestinationChart.data.datasets[0].label = labels[0];
 
         for (i = forwardDestinationChart.data.datasets.length; i < plotdata[0].length; i++)
         {
-            forwardDestinationChart.data.datasets.push({data: [], backgroundColor: colors[i], pointRadius: 0, label: labels[i]});
+            forwardDestinationChart.data.datasets.push({data: [], backgroundColor: colors[i], pointRadius: 0, pointHitRadius: 5, pointHoverRadius: 5, label: labels[i]});
         }
 
         // Add data for each dataset that is available
@@ -260,6 +262,11 @@ function updateTopClientsChart() {
 
             if ({}.hasOwnProperty.call(data.top_sources, client)){
                 // Sanitize client
+                if(escapeHtml(client) !== client)
+                {
+                    // Make a copy with the escaped index if necessary
+                    data.top_sources[escapeHtml(client)] = data.top_sources[client];
+                }
                 client = escapeHtml(client);
                 if(client.indexOf("|") > -1)
                 {
@@ -305,6 +312,11 @@ function updateTopLists() {
         for (domain in data.top_queries) {
             if ({}.hasOwnProperty.call(data.top_queries,domain)){
                 // Sanitize domain
+                if(escapeHtml(domain) !== domain)
+                {
+                    // Make a copy with the escaped index if necessary
+                    data.top_queries[escapeHtml(domain)] = data.top_queries[domain];
+                }
                 domain = escapeHtml(domain);
                 url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
                 percentage = data.top_queries[domain] / data.dns_queries_today * 100;
@@ -323,6 +335,11 @@ function updateTopLists() {
         for (domain in data.top_ads) {
             if ({}.hasOwnProperty.call(data.top_ads,domain)){
                 // Sanitize domain
+                if(escapeHtml(domain) !== domain)
+                {
+                    // Make a copy with the escaped index if necessary
+                    data.top_ads[escapeHtml(domain)] = data.top_ads[domain];
+                }
                 domain = escapeHtml(domain);
                 url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
                 percentage = data.top_ads[domain] / data.ads_blocked_today * 100;
@@ -546,6 +563,27 @@ $(document).ready(function() {
                     datasets: [{ data: [] }]
                 },
                 options: {
+                    tooltips: {
+                        enabled: true,
+                        mode: "x-axis",
+                        callbacks: {
+                            title: function(tooltipItem, data) {
+                                var label = tooltipItem[0].xLabel;
+                                var time = label.match(/(\d?\d):?(\d?\d?)/);
+                                var h = parseInt(time[1], 10);
+                                var m = parseInt(time[2], 10) || 0;
+                                var from = padNumber(h)+":"+padNumber(m-5)+":00";
+                                var to = padNumber(h)+":"+padNumber(m+4)+":59";
+                                return "Forward destinations from "+from+" to "+to;
+                            },
+                            label: function(tooltipItems, data) {
+                                return data.datasets[tooltipItems.datasetIndex].label + ": " + (100.0*tooltipItems.yLabel).toFixed(1) + "%";
+                            }
+                        }
+                    },
+                    legend: {
+                        display: false
+                    },
                     scales: {
                         xAxes: [{
                             type: "time",
@@ -589,16 +627,41 @@ $(document).ready(function() {
                         {
                             label: "A: IPv4 queries",
                             pointRadius: 0,
+                            pointHitRadius: 5,
+                            pointHoverRadius: 5,
                             data: []
                         },
                         {
                             label: "AAAA: IPv6 queries",
                             pointRadius: 0,
+                            pointHitRadius: 5,
+                            pointHoverRadius: 5,
                             data: []
                         }
                     ]
                 },
                 options: {
+                    tooltips: {
+                        enabled: true,
+                        mode: "x-axis",
+                        callbacks: {
+                            title: function(tooltipItem, data) {
+                                var label = tooltipItem[0].xLabel;
+                                var time = label.match(/(\d?\d):?(\d?\d?)/);
+                                var h = parseInt(time[1], 10);
+                                var m = parseInt(time[2], 10) || 0;
+                                var from = padNumber(h)+":"+padNumber(m-5)+":00";
+                                var to = padNumber(h)+":"+padNumber(m+4)+":59";
+                                return "Query types from "+from+" to "+to;
+                            },
+                            label: function(tooltipItems, data) {
+                                return data.datasets[tooltipItems.datasetIndex].label + ": " + (100.0*tooltipItems.yLabel).toFixed(1) + "%";
+                            }
+                        }
+                    },
+                    legend: {
+                        display: false
+                    },
                     scales: {
                         xAxes: [{
                             type: "time",

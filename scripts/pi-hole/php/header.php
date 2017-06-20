@@ -9,6 +9,7 @@
 <?php
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
+    require "scripts/pi-hole/php/update_checker.php";
 
     check_cors();
 
@@ -219,7 +220,7 @@ if($auth) {
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
-        <a href="http://pi-hole.net" class="logo">
+        <a href="http://pi-hole.net" class="logo" target="_blank">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">P<b>h</b></span>
             <!-- logo for regular state and mobile devices -->
@@ -234,15 +235,15 @@ if($auth) {
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <!-- User Account: style can be found in dropdown.less -->
-                    <li id="dropdown-menu" class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle">
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <img src="img/logo.svg" class="user-image" style="border-radius: initial" sizes="160x160" alt="Pi-hole logo" />
                             <span class="hidden-xs">Pi-hole</span>
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" style="right:0">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="img/logo.svg" sizes="160x160" alt="User Image" />
+                                <img src="img/logo.svg" sizes="160x160" alt="User Image" style="border-color:transparent" />
                                 <p>
                                     Open Source Ad Blocker
                                     <small>Designed For Raspberry Pi</small>
@@ -251,33 +252,39 @@ if($auth) {
                             <!-- Menu Body -->
                             <li class="user-body">
                                 <div class="col-xs-4 text-center">
-                                    <a href="https://github.com/pi-hole/pi-hole">GitHub</a>
+                                    <a class="btn-link" href="https://github.com/pi-hole/pi-hole" target="_blank">GitHub</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/">Details</a>
+                                    <a class="btn-link" href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/" target="_blank">Details</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a href="https://github.com/pi-hole/pi-hole/releases">Updates</a>
+                                    <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" target="_blank">Updates</a>
                                 </div>
-                                <div class="col-xs-12 text-center" id="sessiontimer">Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></div>
+                                <div class="col-xs-12 text-center" id="sessiontimer">
+                                    <b>Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></b>
+                                </div>
                             </li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
-                                <!-- Update alerts -->
-                                <div id="alPiholeUpdate" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
-                                    <a class="alert-link" href="https://github.com/pi-hole/pi-hole/releases">There's an update available for this Pi-hole!</a>
+                                <!-- Version Infos -->
+                                <div class="<?php if(!isset($core_commit) && !isset($web_commit)) { ?>hidden-md <?php } ?>hidden-lg">
+                                    <b>Pi-hole Version </b> <?php
+                                    echo $core_current;
+                                    if(isset($core_commit)) { echo "<br>(".$core_branch.", ".$core_commit.")"; }
+                                    if($core_update){ ?> <a class="alert-link lookatme btn-link" href="https://github.com/pi-hole/pi-hole/releases" target="_blank" style="background:none">(Update available!)</a><?php } ?><br>
+                                    <b>Web Interface Version </b><?php
+                                    echo $web_current;
+                                    if(isset($web_commit)) { echo "<br>(".$web_branch.", ".$web_commit.")"; }
+                                    if($web_update){ ?> <a class="alert-link lookatme btn-link" href="https://github.com/pi-hole/AdminLTE/releases" target="_blank" style="background:none">(Update available!)</a><?php } ?><br>
+                                    <b>FTL Version </b> <?php
+                                    echo $FTL_current;
+                                    if($FTL_update){ ?> <a class="alert-link lookatme btn-link" href="https://github.com/pi-hole/FTL/releases" target="_blank" style="background:none">(Update available!)</a><?php } ?><br><br>
                                 </div>
-                                <div id="alWebUpdate" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
-                                    <a class="alert-link" href="https://github.com/pi-hole/AdminLTE/releases">There's an update available for this Web Interface!</a>
-                                </div>
-
                                 <!-- PayPal -->
-                                <div>
-                                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                                        <input type="hidden" name="cmd" value="_s-xclick">
-                                        <input type="hidden" name="hosted_button_id" value="3J2L3Z4DHW9UY">
-                                        <input style="display: block; margin: 0 auto;" type="image" src="img/donate.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                                    </form>
+                                <div class="text-center">
+                                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY" target="_blank" style="background:none">
+                                        <img src="img/donate.gif" alt="Donate">
+                                    </a>
                                 </div>
                             </li>
                         </ul>
@@ -388,6 +395,10 @@ if($auth) {
                 {
                     $scriptname = "blacklist";
                 }
+            }
+            if(!$auth && (!isset($indexpage) || isset($_GET['login'])))
+            {
+                $scriptname = "login";
             }
             ?>
             <ul class="sidebar-menu">
@@ -520,7 +531,7 @@ if($auth) {
                 <?php
                 // Show Login button if $auth is *not* set and authorization is required
                 if(strlen($pwhash) > 0 && !$auth) { ?>
-                <li>
+                <li<?php if($scriptname === "login"){ ?> class="active"<?php } ?>>
                     <a href="index.php?login">
                         <i class="fa fa-user"></i> <span>Login</span>
                     </a>
@@ -528,7 +539,7 @@ if($auth) {
                 <?php } ?>
                 <!-- Donate -->
                 <li>
-                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY">
+                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY" target="_blank">
                         <i class="fa fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
