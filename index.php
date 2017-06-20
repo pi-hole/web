@@ -12,23 +12,10 @@
 <div class="row">
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-aqua">
-            <div class="inner">
-                <h3 class="statistic" id="ads_blocked_today">---</h3>
-                <p>Queries Blocked Last 24 Hours</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-android-hand"></i>
-            </div>
-        </div>
-    </div>
-    <!-- ./col -->
-    <div class="col-lg-3 col-xs-12">
-        <!-- small box -->
         <div class="small-box bg-green">
             <div class="inner">
-                <h3 class="statistic" id="dns_queries_today">---</h3>
-                <p>Queries Last 24 Hours</p>
+                <p>Total queries</p>
+                <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
             </div>
             <div class="icon">
                 <i class="ion ion-earth"></i>
@@ -38,13 +25,26 @@
     <!-- ./col -->
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-yellow">
+        <div class="small-box bg-aqua">
             <div class="inner">
-                <h3 class="statistic" id="ads_percentage_today">---</h3>
-                <p>Queries Blocked Last 24 Hours</p>
+                <p>Queries Blocked</p>
+                <h3 class="statistic"><span id="ads_blocked_today">---</span> (<span id="ads_percentage_today">---</span>)</h3>
             </div>
             <div class="icon">
-                <i class="ion ion-pie-graph"></i>
+                <i class="ion ion-android-hand"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-12">
+        <!-- small box -->
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <p>Unique Clients</p>
+                <h3 class="statistic"><span id="unique_clients">---</span></h3>
+            </div>
+            <div class="icon">
+                <i class="ion ion-person-stalker"></i>
             </div>
         </div>
     </div>
@@ -53,8 +53,8 @@
         <!-- small box -->
         <div class="small-box bg-red">
             <div class="inner">
-                <h3 class="statistic" id="domains_being_blocked">---</h3>
                 <p>Domains on Blocklists</p>
+                <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
             </div>
             <div class="icon">
                 <i class="ion ion-ios-list"></i>
