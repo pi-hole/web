@@ -375,8 +375,8 @@ function updateSummaryData(runOnce) {
 
         if("FTLnotrunning" in data)
         {
-            data["ads_blocked_today"] = "Lost";
-            data["dns_queries_today"] = "connection";
+            data["dns_queries_today"] = "Lost";
+            data["ads_blocked_today"] = "connection";
             data["ads_percentage_today"] = "to";
             data["domains_being_blocked"] = "API";
             // Adjust text
@@ -406,17 +406,17 @@ function updateSummaryData(runOnce) {
             }
         }
 
-        ["ads_blocked_today", "dns_queries_today", "ads_percentage_today"].forEach(function(today) {
-            var todayElement = $("h3#" + today);
+        ["ads_blocked_today", "dns_queries_today", "ads_percentage_today", "unique_clients"].forEach(function(today) {
+            var todayElement = $("span#" + today);
             todayElement.text() !== data[today] &&
             todayElement.text() !== data[today] + "%" &&
-            todayElement.addClass("glow");
+            $("h3#" + today).addClass("glow");
         });
 
         window.setTimeout(function() {
-            ["ads_blocked_today", "dns_queries_today", "domains_being_blocked", "ads_percentage_today"].forEach(function(header, idx) {
+            ["ads_blocked_today", "dns_queries_today", "domains_being_blocked", "ads_percentage_today", "unique_clients"].forEach(function(header, idx) {
                 var textData = (idx === 3 && data[header] !== "to") ? data[header] + "%" : data[header];
-                $("h3#" + header).text(textData);
+                $("span#" + header).text(textData);
             });
             $("h3.statistic.glow").removeClass("glow");
         }, 500);
