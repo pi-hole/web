@@ -191,7 +191,7 @@
     <link rel="icon" type="image/png" sizes="160x160" href="img/logo.svg" />
     <style type="text/css">
         .glow { text-shadow: 0px 0px 5px #fff; }
-        h3 { transition-duration: 500ms }
+        .small-box span { transition-duration: 500ms }
     </style>
 
     <!--[if lt IE 9]>
