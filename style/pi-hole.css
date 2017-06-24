@@ -13,10 +13,10 @@
 	-o-user-select: none;
 	user-select: none;
 }
-.small-box h3 {
+.small-box span {
 	transition-duration: 500ms;
 }
-.small-box h3.glow {
+.small-box span.glow {
 	text-shadow: 0px 0px 5px #fff;
 }
 .skin-blue .list-group-item:hover {
