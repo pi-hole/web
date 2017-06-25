@@ -175,8 +175,8 @@ $(document).ready(function() {
         "columns": [
             { "width" : "20%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD HH:mm:ss z");}else{return data;} }},
             { "width" : "10%" },
-            { "width" : "40%" },
-            { "width" : "10%" },
+            { "width" : "40%", "render": $.fn.dataTable.render.text() },
+            { "width" : "10%", "render": $.fn.dataTable.render.text() },
             { "width" : "10%" },
             { "width" : "10%" },
         ],
