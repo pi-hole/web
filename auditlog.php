@@ -69,7 +69,7 @@
       <!-- /.box -->
     </div>
     <div class="col-md-12">
-        <p><strong>Important:</strong> Note that black- and whitelisted domains are not automatically applied on this page to avoid restarting the DNS service too often. Instead, click on the Apply button, to have the new settings become effective:</p>
+        <p><strong>Important:</strong> Note that black- and whitelisted domains are not automatically applied on this page to avoid restarting the DNS service too often. Instead, click on this button, to have the new settings become effective:</p>
 
     </div>
     <!-- /.col -->
