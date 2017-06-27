@@ -69,11 +69,19 @@
       <!-- /.box -->
     </div>
     <div class="col-md-12">
-        <p><strong>Important:</strong> Note that black- and whitelisted domains are not automatically applied on this page to avoid restarting the DNS service too often. Instead, go to <a href="http://pi.hole/admin/gravity.php">Update Lists</a> and run the update, to have the new settings become effective.</p>
+        <p><strong>Important:</strong> Note that black- and whitelisted domains are not automatically applied on this page to avoid restarting the DNS service too often. Instead, click on the Apply button, to have the new settings become effective:</p>
+
     </div>
     <!-- /.col -->
 </div>
 <!-- /.row -->
+<div class="container">
+  <div class="row justify-content-md-right">
+    <div class="col-2">
+      <button class="btn btn-lg btn-primary btn-block" id="gravityBtn" disabled="true">Update black-/whitelists</button>
+    </div>
+  </div>
+</div>
 <?php
     require "scripts/pi-hole/php/footer.php";
 ?>
