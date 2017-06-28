@@ -517,11 +517,95 @@ if($auth) {
                   </ul>
                 </li>
                 <!-- Settings -->
-                <li<?php if($scriptname === "settings.php"){ ?> class="active"<?php } ?>>
-                    <a href="settings.php">
+                <?php
+                    if($scriptname === "settings.php")
+                    {
+                        /* check for the widget parameter (w) */
+                        $settingsWidget = $_GET["w"];
+                        if(empty($settingsWidget))
+                        {
+                            /* no widget means all widgets. Resistance is futile! */
+                            $settingsWidget = "all";
+                        }
+                    }
+                ?>
+                <li class="treeview <?php if($scriptname === "settings.php"){ ?>active<?php } ?>">
+                    <a href="#">
                         <i class="fa fa-gears"></i> <span>Settings</span>
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
+                        </span>
                     </a>
+                    <ul class="treeview-menu">
+                        <!-- ALL the settings!!! -->
+                        <li<?php if($scriptname === "settings.php" && $settingsWidget === "all"){ ?> class="active"<?php } ?>>
+                            <a href="settings.php">
+                            <i class="fa fa-gears"></i> <span>All Settings</span>
+                            </a>
+                        </li>
+                        <!-- Networking -->
+                        <li<?php if($scriptname === "settings.php" && $settingsWidget === "networking"){ ?> class="active"<?php } ?>>
+                            <a href="settings.php?w=networking">
+                            <i class="fa fa-plug"></i> <span>Networking</span>
+                            </a>
+                        </li>
+                        <!-- DHCP -->
+                        <li<?php if($scriptname === "settings.php" && $settingsWidget === "dhcp"){ ?> class="active"<?php } ?>>
+                            <a href="settings.php?w=dhcp">
+                            <i class="fa fa-exchange"></i> <span>DHCP</span>
+                            </a>
+                        </li>
+                        <!-- Upstream DNS -->
+                        <li<?php if($scriptname === "settings.php" && $settingsWidget === "upstream_dns"){ ?> class="active"<?php } ?>>
+                            <a href="settings.php?w=upstream_dns">
+                            <i class="fa fa-cloud-upload"></i> <span>Upstream DNS</span>
+                            </a>
+                        </li>
+                        <!-- Query Logging -->
+                        <li<?php if($scriptname === "settings.php" && $settingsWidget === "querylogging"){ ?> class="active"<?php } ?>>
+                            <a href="settings.php?w=querylogging">
+                            <i class="fa fa-file-text"></i> <span>Query Logging</span>
+                            </a>
+                        </li>
+                        <!-- Blocklist -->
+                        <li<?php if($scriptname === "settings.php" && $settingsWidget === "blocklist"){ ?> class="active"<?php } ?>>
+                            <a href="settings.php?w=blocklist">
+                            <i class="fa fa-ban"></i> <span>Blocklists</span>
+                            </a>
+                        </li>
+                        <!-- API -->
+                        <li<?php if($scriptname === "settings.php" && $settingsWidget === "api"){ ?> class="active"<?php } ?>>
+                            <a href="settings.php?w=api">
+                            <i class="fa fa-files-o"></i> <span>API</span>
+                            </a>
+                        </li>
+                        <!-- Web User Interface -->
+                        <li<?php if($scriptname === "settings.php" && $settingsWidget === "webui"){ ?> class="active"<?php } ?>>
+                            <a href="settings.php?w=webui">
+                            <i class="fa fa-check-square-o"></i> <span>Web User Interface</span>
+                            </a>
+                        </li>
+                        <!-- System Administration -->
+                        <li<?php if($scriptname === "settings.php" && $settingsWidget === "sysadmin"){ ?> class="active"<?php } ?>>
+                            <a href="settings.php?w=sysadmin">
+                            <i class="fa fa-flash"></i> <span>System Administration</span>
+                            </a>
+                        </li>
+                        <!-- Pi-hole FTL -->
+                        <li<?php if($scriptname === "settings.php" && $settingsWidget === "ftl"){ ?> class="active"<?php } ?>>
+                            <a href="settings.php?w=ftl">
+                            <i class="fa fa-paper-plane"></i> <span>Pi-hole FTL</span>
+                            </a>
+                        </li>
+                        <!-- Pi-hole Teleporter -->
+                        <li<?php if($scriptname === "settings.php" && $settingsWidget === "teleporter"){ ?> class="active"<?php } ?>>
+                            <a href="settings.php?w=teleporter">
+                            <i class="fa fa-rocket"></i> <span>Pi-hole Teleporter</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
+                                
                 <!-- Logout -->
                 <?php
                 // Show Logout button if $auth is set and authorization is required
