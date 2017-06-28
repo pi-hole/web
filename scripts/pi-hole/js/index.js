@@ -410,7 +410,7 @@ function updateSummaryData(runOnce) {
             var todayElement = $("span#" + today);
             todayElement.text() !== data[today] &&
             todayElement.text() !== data[today] + "%" &&
-            $("h3#" + today).addClass("glow");
+            $("span#" + today).addClass("glow");
         });
 
         window.setTimeout(function() {
@@ -418,7 +418,7 @@ function updateSummaryData(runOnce) {
                 var textData = (idx === 3 && data[header] !== "to") ? data[header] + "%" : data[header];
                 $("span#" + header).text(textData);
             });
-            $("h3.statistic.glow").removeClass("glow");
+            $("span.glow").removeClass("glow");
         }, 500);
 
     }).done(function() {
