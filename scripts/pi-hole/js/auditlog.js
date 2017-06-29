@@ -67,8 +67,8 @@ function updateTopLists() {
 
         $("#domain-frequency .overlay").hide();
         $("#ad-frequency .overlay").hide();
-        // Update top lists data every 10 seconds
-        setTimeout(updateTopLists, 10000);
+        // Update top lists data every second
+        setTimeout(updateTopLists, 1000);
     });
 }
 
@@ -78,10 +78,7 @@ function add(domain,list) {
     $.ajax({
         url: "scripts/pi-hole/php/add.php",
         method: "post",
-        data: {"domain":domain, "list":list, "token":token, "auditlog":1},
-        success: function(response) {
-            setTimeout(updateTopLists, 300);
-        }
+        data: {"domain":domain, "list":list, "token":token, "auditlog":1}
     });
 }
 
