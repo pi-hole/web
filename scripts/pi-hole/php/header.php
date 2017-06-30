@@ -184,6 +184,7 @@
     <link href="style/vendor/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="style/vendor/daterangepicker.css" rel="stylesheet" type="text/css" />
 
     <link href="style/vendor/AdminLTE.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/skin-blue.min.css" rel="stylesheet" type="text/css" />
@@ -191,7 +192,7 @@
     <link rel="icon" type="image/png" sizes="160x160" href="img/logo.svg" />
     <style type="text/css">
         .glow { text-shadow: 0px 0px 5px #fff; }
-        h3 { transition-duration: 500ms }
+        .small-box span { transition-duration: 500ms }
     </style>
 
     <!--[if lt IE 9]>
@@ -416,6 +417,26 @@ if($auth) {
                         <i class="fa fa-file-text-o"></i> <span>Query Log</span>
                     </a>
                 </li>
+                <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php"){ ?> active<?php } ?>">
+                  <a href="#">
+                    <i class="fa fa-clock-o"></i> <span>Long term data</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li<?php if($scriptname === "db_queries.php"){ ?> class="active"<?php } ?>>
+                        <a href="db_queries.php">
+                            <i class="fa fa-file-text-o"></i> <span>Query Log</span>
+                        </a>
+                    </li>
+                    <li<?php if($scriptname === "db_lists.php"){ ?> class="active"<?php } ?>>
+                        <a href="db_lists.php">
+                            <i class="fa fa-file-text-o"></i> <span>Top Lists</span>
+                        </a>
+                    </li>
+                  </ul>
+                </li>
                 <!-- Whitelist -->
                 <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
                     <a href="list.php?l=white">
@@ -470,7 +491,7 @@ if($auth) {
                     <a href="#"><i class="fa fa-play"></i> <span id="enableLabel">Enable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></a>
                 </li>
                 <!-- Tools -->
-                <li class="treeview <?php if($scriptname === "gravity.php" || $scriptname === "queryads.php" || $scriptname === "debug.php"){ ?>active<?php } ?>">
+                <li class="treeview <?php if($scriptname === "gravity.php" || $scriptname === "queryads.php" || $scriptname === "debug.php" || $scriptname === "auditlog.php"){ ?>active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-folder"></i> <span>Tools</span>
                     <span class="pull-right-container">
@@ -488,6 +509,12 @@ if($auth) {
                     <li<?php if($scriptname === "queryads.php"){ ?> class="active"<?php } ?>>
                         <a href="queryads.php">
                             <i class="fa fa-search"></i> <span>Query adlists</span>
+                        </a>
+                    </li>
+                    <!-- Audit log -->
+                    <li<?php if($scriptname === "auditlog.php"){ ?> class="active"<?php } ?>>
+                        <a href="auditlog.php">
+                            <i class="fa fa-balance-scale"></i> <span>Audit log</span>
                         </a>
                     </li>
                     <!-- Tail pihole.log -->

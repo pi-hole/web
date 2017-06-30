@@ -4,7 +4,48 @@
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
-var tableApi;
+
+/*global
+    moment
+*/
+
+var start__ = moment().subtract(6, "days");
+var from = moment(start__).utc().valueOf()/1000;
+var end__ = moment();
+var until = moment(end__).utc().valueOf()/1000;
+
+$(function () {
+    // Get first time stamp we have valid data for to limit selectable date/time range
+    $.getJSON("api_db.php?getMinTimestamp", function(data) {
+        var minDate = parseInt(data.mintimestamp);
+        if(!isNaN(minDate))
+        {
+            $("#querytime").data("daterangepicker").minDate = moment.unix(minDate);
+        }
+    });
+
+    $("#querytime").daterangepicker(
+    {
+      timePicker: true, timePickerIncrement: 15,
+      locale: { format: "MMMM Do YYYY, h:mm A" },
+      ranges: {
+        "Today": [moment(), moment()],
+        "Yesterday": [moment().subtract(1, "days"), moment().subtract(1, "days")],
+        "Last 7 Days": [moment().subtract(6, "days"), moment()],
+        "Last 30 Days": [moment().subtract(29, "days"), moment()],
+        "This Month": [moment().startOf("month"), moment().endOf("month")],
+        "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
+      },
+      startDate: start__, endDate: end__,
+      "opens": "center", "showDropdowns": true
+    },
+    function (startt, endt) {
+      from = moment(startt).utc().valueOf()/1000;
+      until = moment(endt).utc().valueOf()/1000;
+    });
+});
+
+var tableApi, statistics;
 
 function escapeRegex(text) {
   var map = {
@@ -13,11 +54,6 @@ function escapeRegex(text) {
     ".": "\\.",
   };
   return text.replace(/[().]/g, function(m) { return map[m]; });
-}
-
-function refreshData() {
-    tableApi.ajax.url("api.php?getAllQueries").load();
-//    updateSessionTimer();
 }
 
 function add(domain,list) {
@@ -96,87 +132,97 @@ function handleAjaxError( xhr, textStatus, error ) {
     tableApi.draw();
 }
 
+var reloadCallback = function()
+{
+    statistics = [0,0,0,0];
+    var data = tableApi.rows().data();
+    for (var i = 0; i < data.length; i++) {
+        statistics[0]++;
+        if(data[i][4] === 1)
+        {
+            statistics[2]++;
+        }
+        else if(data[i][4] === 3)
+        {
+            statistics[1]++;
+        }
+        else if(data[i][4] === 4)
+        {
+            statistics[3]++;
+        }
+    }
+    $("h3#dns_queries").text(statistics[0]);
+    $("h3#ads_blocked_exact").text(statistics[2]);
+    $("h3#ads_wildcard_blocked").text(statistics[3]);
+
+    var percent = 0.0;
+    if(statistics[2] + statistics[3] > 0)
+    {
+        percent = 100.0*(statistics[2] + statistics[3]) / statistics[0];
+    }
+    $("h3#ads_percentage_today").text(parseFloat(percent).toFixed(1)+" %");
+};
+
+function refreshTableData() {
+    var APIstring = "api_db.php?getAllQueries&from="+from+"&until="+until;
+    statistics = [0,0,0];
+    tableApi.ajax.url(APIstring).load(reloadCallback);
+}
+
 $(document).ready(function() {
     var status;
 
-    // Do we want to filter queries?
-    var GETDict = {};
-    location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
-
-    var APIstring = "api.php?getAllQueries";
-
-    if("from" in GETDict && "until" in GETDict)
-    {
-        APIstring += "&from="+GETDict["from"];
-        APIstring += "&until="+GETDict["until"];
-    }
-    else if("client" in GETDict)
-    {
-        APIstring += "&client="+GETDict["client"];
-    }
-    else if("domain" in GETDict)
-    {
-        APIstring += "&domain="+GETDict["domain"];
-    }
-    else if(!("all" in GETDict))
-    {
-        var timestamp = Math.floor(Date.now() / 1000);
-        APIstring += "&from="+(timestamp - 600);
-        APIstring += "&until="+(timestamp + 100);
-    }
-
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
-            if (data[4] === "1")
+            if (data[4] === 1)
             {
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed" );
                 $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+                // statistics[2]++;
             }
-            else if (data[4] === "2")
+            else if (data[4] === 2)
             {
                 $(row).css("color","green");
                 $("td:eq(4)", row).html( "OK (forwarded)" );
                 $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
-            else if (data[4] === "3")
+            else if (data[4] === 3)
             {
                 $(row).css("color","green");
                 $("td:eq(4)", row).html( "OK (cached)" );
                 $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+                // statistics[1]++;
 
             }
-            else if (data[4] === "4")
+            else if (data[4] === 4)
             {
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed (wildcard)" );
                 $("td:eq(5)", row).html( "" );
-            }
-            else if (data[4] === "5")
-            {
-                $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed (blacklist)" );
-                $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+                // statistics[3]++;
             }
             else
             {
-                $("td:eq(4)", row).html( "Unknown" );
+                $("td:eq(4)", row).html( "Unknown ("+data[4]+")" );
                 $("td:eq(5)", row).html( "" );
             }
+            // statistics[0]++;
         },
         dom: "<'row'<'col-sm-12'f>>" +
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'tr>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": {"url": APIstring, "error": handleAjaxError },
+        "ajax": {"url": "api_db.php?getAllQueries=empty", "error": handleAjaxError },
         "autoWidth" : false,
         "processing": true,
+        "deferRender": true,
         "order" : [[0, "desc"]],
         "columns": [
             { "width" : "20%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD HH:mm:ss z");}else{return data;} }},
             { "width" : "10%" },
-            { "width" : "40%", "render": $.fn.dataTable.render.text() },
-            { "width" : "10%", "render": $.fn.dataTable.render.text() },
+            { "width" : "40%" },
+            { "width" : "10%" },
             { "width" : "10%" },
             { "width" : "10%" },
         ],
@@ -189,7 +235,7 @@ $(document).ready(function() {
     });
     $("#all-queries tbody").on( "click", "button", function () {
         var data = tableApi.row( $(this).parents("tr") ).data();
-        if (data[4] === "1" || data[4] === "5")
+        if (data[4] === "1")
         {
           add(data[2],"white");
         }
@@ -200,4 +246,7 @@ $(document).ready(function() {
     } );
 } );
 
-
+// Handle "Go" Button
+$("#btnGo").on("click", function() {
+    refreshTableData();
+});

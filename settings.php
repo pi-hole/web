@@ -9,6 +9,10 @@
 	require "scripts/pi-hole/php/savesettings.php";
 	// Reread ini file as things might have been changed
 	$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+
+function command_exist($cmd) {
+	return !empty(shell_exec(sprintf("which %s", escapeshellarg($cmd))));
+}
 ?>
 <style type="text/css">
 	.tooltip-inner {
@@ -922,7 +926,8 @@ if($FTL)
 				</form>
 			<?php } else { ?>
 				<p>The PHP extension <code>zip</code> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.</p>
-			<?php } ?>
+				<?php if(command_exist("apt-get") && command_exist("sudo")) { ?><p>Try:</p><pre>sudo apt-get install php-zip</pre><?php }
+			} ?>
 			</div>
 		</div>
 	</div>
