@@ -27,7 +27,7 @@ $(function () {
     $("#querytime").daterangepicker(
     {
       timePicker: true, timePickerIncrement: 15,
-      locale: { format: "MMMM Do YYYY, h:mm A" },
+      locale: { format: "MMMM Do YYYY, HH:mm" },
       ranges: {
         "Today": [moment(), moment()],
         "Yesterday": [moment().subtract(1, "days"), moment().subtract(1, "days")],
