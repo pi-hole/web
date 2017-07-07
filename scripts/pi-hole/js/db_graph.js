@@ -253,3 +253,21 @@ $("#querytime").on("apply.daterangepicker", function(ev, picker) {
     $("#queries-over-time").show();
     updateQueriesOverTime();
 });
+
+$("#queryOverTimeChart").click(function(evt){
+    var activePoints = timeLineChart.getElementAtEvent(evt);
+    if(activePoints.length > 0)
+    {
+        //get the internal index in the chart
+        var clickedElementindex = activePoints[0]["_index"];
+
+        //get specific label by index
+        var label = timeLineChart.data.labels[clickedElementindex];
+
+        //get value by index
+        var from = label/1000;
+        var until = label/1000 + 600;
+        window.location.href = "db_queries.php?from="+from+"&until="+until;
+    }
+    return false;
+});

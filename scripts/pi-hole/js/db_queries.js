@@ -13,6 +13,20 @@ var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf()/1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf()/1000;
+var instantquery = false;
+
+// Do we want to filter queries?
+var GETDict = {};
+location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
+
+if("from" in GETDict && "until" in GETDict)
+{
+    from = parseInt(GETDict["from"]);
+    until = parseInt(GETDict["until"]);
+    start__ = moment(1000*from);
+    end__ = moment(1000*until);
+    instantquery = true;
+}
 
 $(function () {
     // Get first time stamp we have valid data for to limit selectable date/time range
@@ -24,7 +38,7 @@ $(function () {
         }
     });
 
-    $("#querytime").daterangepicker(
+    drp = $("#querytime").daterangepicker(
     {
       timePicker: true, timePickerIncrement: 15,
       locale: { format: "MMMM Do YYYY, HH:mm" },
@@ -175,6 +189,16 @@ function refreshTableData() {
 $(document).ready(function() {
     var status;
 
+    var APIstring;
+    if(instantquery)
+    {
+        APIstring = "api_db.php?getAllQueries&from="+from+"&until="+until;
+    }
+    else
+    {
+        APIstring = "api_db.php?getAllQueries=empty";
+    }
+
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
             if (data[4] === 1)
@@ -216,7 +240,7 @@ $(document).ready(function() {
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'tr>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": {"url": "api_db.php?getAllQueries=empty", "error": handleAjaxError },
+        "ajax": {"url": APIstring, "error": handleAjaxError },
         "autoWidth" : false,
         "processing": true,
         "deferRender": true,
@@ -234,7 +258,8 @@ $(document).ready(function() {
             "targets": -1,
             "data": null,
             "defaultContent": ""
-        } ]
+        } ],
+        "initComplete": reloadCallback
     });
     $("#all-queries tbody").on( "click", "button", function () {
         var data = tableApi.row( $(this).parents("tr") ).data();
