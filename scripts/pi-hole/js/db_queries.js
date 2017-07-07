@@ -38,7 +38,7 @@ $(function () {
         }
     });
 
-    drp = $("#querytime").daterangepicker(
+    $("#querytime").daterangepicker(
     {
       timePicker: true, timePickerIncrement: 15,
       locale: { format: "MMMM Do YYYY, HH:mm" },
