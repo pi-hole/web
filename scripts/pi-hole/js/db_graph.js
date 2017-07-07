@@ -50,11 +50,6 @@ $(function () {
 
 });
 
-$('#querytime').on('apply.daterangepicker', function(ev, picker) {
-    $("#queries-over-time").show();
-    updateQueriesOverTime();
-});
-
 // Credit: http://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406
 function escapeHtml(text) {
   var map = {
@@ -106,15 +101,15 @@ function updateQueriesOverTime() {
         timeLineChart.data.datasets[0].data = [];
         timeLineChart.data.datasets[1].data = [];
 
-        dates = [];
+        var dates = [], hour;
 
-        for (var hour in data.domains_over_time[0]) {
+        for (hour in data.domains_over_time[0]) {
             if ({}.hasOwnProperty.call(data.domains_over_time[0], hour)) {
                 dates.push(parseInt(data.domains_over_time[0][hour]));
             }
         }
 
-        for (var hour in data.ads_over_time[0]) {
+        for (hour in data.ads_over_time[0]) {
             if ({}.hasOwnProperty.call(data.ads_over_time[0], hour)) {
                 if(!dates.includes(parseInt(data.ads_over_time[0][hour])))
                 {
@@ -164,6 +159,7 @@ function updateQueriesOverTime() {
     });
 }
 
+/* global Chart */
 $(document).ready(function() {
     var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
     timeLineChart = new Chart(ctx, {
@@ -241,13 +237,13 @@ $(document).ready(function() {
                     display: false,
                     time: {
                         displayFormats: {
-                           'minute': 'HH:mm',
-                           'hour': 'HH:mm',
-                           'day': 'HH:mm',
-                           'week': 'MMM DD HH:mm',
-                           'month': 'MMM DD',
-                           'quarter': 'MMM DD',
-                           'year': 'MMM DD'
+                           "minute": "HH:mm",
+                           "hour": "HH:mm",
+                           "day": "HH:mm",
+                           "week": "MMM DD HH:mm",
+                           "month": "MMM DD",
+                           "quarter": "MMM DD",
+                           "year": "MMM DD"
                         }
                     }
                 }],
@@ -260,4 +256,9 @@ $(document).ready(function() {
             maintainAspectRatio: false
         }
     });
+});
+
+$("#querytime").on("apply.daterangepicker", function(ev, picker) {
+    $("#queries-over-time").show();
+    updateQueriesOverTime();
 });

@@ -48,10 +48,6 @@ $(function () {
     });
 });
 
-$('#querytime').on('apply.daterangepicker', function(ev, picker) {
-    refreshTableData();
-});
-
 var tableApi, statistics;
 
 function escapeRegex(text) {
@@ -252,4 +248,8 @@ $(document).ready(function() {
         }
     } );
 } );
+
+$("#querytime").on("apply.daterangepicker", function(ev, picker) {
+    refreshTableData();
+});
 
