@@ -235,7 +235,7 @@ if($auth) {
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li class="dropdown"><a style="pointer-events:none;"><tt><?php echo gethostname(); ?></tt></a></li>
+                    <li><a style="pointer-events:none;"><samp><?php echo gethostname(); ?></samp></a></li>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <img src="img/logo.svg" class="user-image" style="border-radius: initial" sizes="160x160" alt="Pi-hole logo" />
