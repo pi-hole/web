@@ -187,23 +187,23 @@ if (isset($_GET['getGraphData']) && $auth)
 
 
 	// Count permitted queries in intervals
-	$results = $db->query('SELECT (timestamp/'.$interval.')*'.$interval.' interval, COUNT(*) FROM queries WHERE status == 2 or status == 3'.$limit.' GROUP by interval ORDER by interval');
+	$results = $db->query('SELECT (timestamp/'.$interval.')*'.$interval.' interval, COUNT(*) FROM queries WHERE (status == 1 OR status == 4 OR status == 5)'.$limit.' GROUP by interval ORDER by interval');
 	$addomains = array();
 	while ($row = $results->fetchArray())
 	{
 		$addomains[$row[0]] = intval($row[1]);
 	}
-	$result = array('ads' => $addomains);
+	$result = array('ads_over_time' => $addomains);
 	$data = array_merge($data, $result);
 
 	// Count blocked queries in intervals
-	$results = $db->query('SELECT (timestamp/'.$interval.')*'.$interval.' interval, COUNT(*) FROM queries WHERE status == 1 or status == 4 or status == 5'.$limit.' GROUP by interval ORDER by interval');
-	$addomains = array();
+	$results = $db->query('SELECT (timestamp/'.$interval.')*'.$interval.' interval, COUNT(*) FROM queries WHERE (status == 2 OR status == 3)'.$limit.' GROUP by interval ORDER by interval');
+	$domains = array();
 	while ($row = $results->fetchArray())
 	{
-		$addomains[$row[0]] = intval($row[1]);
+		$domains[$row[0]] = intval($row[1]);
 	}
-	$result = array('domains' => $addomains);
+	$result = array('domains_over_time' => $domains);
 	$data = array_merge($data, $result);
 }
 
