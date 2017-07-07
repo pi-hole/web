@@ -38,6 +38,7 @@ $(function () {
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()]
       },
+        maxDate: end__,
       startDate: start__, endDate: end__,
       "opens": "center", "showDropdowns": true
     },
