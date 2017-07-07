@@ -46,6 +46,13 @@ $(function () {
       from = moment(startt).utc().valueOf()/1000;
       until = moment(endt).utc().valueOf()/1000;
     });
+
+
+});
+
+$('#querytime').on('apply.daterangepicker', function(ev, picker) {
+    $("#queries-over-time").show();
+    updateQueriesOverTime();
 });
 
 // Credit: http://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406
@@ -156,12 +163,6 @@ function updateQueriesOverTime() {
         timeLineChart.update();
     });
 }
-
-// Handle "Go" Button
-$("#btnGo").on("click", function() {
-    $("#queries-over-time").show();
-    updateQueriesOverTime();
-});
 
 $(document).ready(function() {
     var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
