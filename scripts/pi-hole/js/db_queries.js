@@ -38,6 +38,7 @@ $(function () {
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()]
       },
+        maxDate: end__,
       startDate: start__, endDate: end__,
       "opens": "center", "showDropdowns": true
     },
@@ -45,6 +46,10 @@ $(function () {
       from = moment(startt).utc().valueOf()/1000;
       until = moment(endt).utc().valueOf()/1000;
     });
+});
+
+$('#querytime').on('apply.daterangepicker', function(ev, picker) {
+    refreshTableData();
 });
 
 var tableApi, statistics;
@@ -248,7 +253,3 @@ $(document).ready(function() {
     } );
 } );
 
-// Handle "Go" Button
-$("#btnGo").on("click", function() {
-    refreshTableData();
-});
