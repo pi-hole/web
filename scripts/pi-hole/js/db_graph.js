@@ -236,8 +236,18 @@ $(document).ready(function() {
             scales: {
                 xAxes: [{
                     type: "time",
-                    unit: "hour",
-                    display: false
+                    display: false,
+                    time: {
+                        displayFormats: {
+                           'minute': 'HH:mm',
+                           'hour': 'HH:mm',
+                           'day': 'HH:mm',
+                           'week': 'MMM DD HH:mm',
+                           'month': 'MMM DD',
+                           'quarter': 'MMM DD',
+                           'year': 'MMM DD'
+                        }
+                    }
                 }],
                 yAxes: [{
                     ticks: {
