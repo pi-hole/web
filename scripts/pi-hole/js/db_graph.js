@@ -121,7 +121,7 @@ function updateQueriesOverTime() {
         dates.sort(compareNumbers);
 
         // Add data for each hour that is available
-        for (var hour in dates) {
+        for (hour in dates) {
             if ({}.hasOwnProperty.call(dates, hour)) {
                 var d, dom = 0, ads = 0;
                 d = new Date(1000*dates[hour]);
@@ -141,15 +141,6 @@ function updateQueriesOverTime() {
                 timeLineChart.data.labels.push(d);
                 timeLineChart.data.datasets[0].data.push(dom);
                 timeLineChart.data.datasets[1].data.push(ads);
-            }
-        }
-
-        for (var hour in data.ads_over_time[0]) {
-            if ({}.hasOwnProperty.call(data.ads_over_time[0], hour)) {
-                if(!dates.includes(parseInt(data.ads_over_time[0][hour])))
-                {
-                    dates.push(parseInt(data.ads_over_time[0][hour]));
-                }
             }
         }
 
