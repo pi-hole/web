@@ -262,8 +262,6 @@ function updateForwardedOverTime() {
         }
         $("#forward-destinations .overlay").hide();
         forwardDestinationChart.update();
-        // Don't use rotation animation for further updates
-        forwardDestinationChart.options.animation.duration=0;
     }).done(function() {
         // Reload graph after 10 minutes
         failures = 0;
@@ -311,6 +309,8 @@ function updateForwardDestinationsPie() {
         forwardDestinationPieChart.update();
         forwardDestinationPieChart.chart.config.options.cutoutPercentage=50;
         forwardDestinationPieChart.update();
+        // Don't use rotation animation for further updates
+        forwardDestinationPieChart.options.animation.duration=0;
     }).done(function() {
         // Reload graph after one minute
         setTimeout(updateForwardDestinationsPie, 60000);
