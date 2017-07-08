@@ -181,6 +181,8 @@ function updateQueryTypesPie() {
         queryTypePieChart.update();
         queryTypePieChart.chart.config.options.cutoutPercentage=50;
         queryTypePieChart.update();
+        // Don't use rotation animation for further updates
+        queryTypePieChart.options.animation.duration=0;
     }).done(function() {
         // Reload graph after minute
         setTimeout(updateQueryTypesPie, 60000);
@@ -259,6 +261,8 @@ function updateForwardedOverTime() {
         }
         $("#forward-destinations .overlay").hide();
         forwardDestinationChart.update();
+        // Don't use rotation animation for further updates
+        queryTypePieChart.options.animation.duration=0;
     }).done(function() {
         // Reload graph after 10 minutes
         failures = 0;
