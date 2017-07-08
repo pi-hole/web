@@ -417,7 +417,7 @@ if($auth) {
                         <i class="fa fa-file-text-o"></i> <span>Query Log</span>
                     </a>
                 </li>
-                <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php"){ ?> active<?php } ?>">
+                <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php"){ ?> active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-clock-o"></i> <span>Long term data</span>
                     <span class="pull-right-container">
@@ -425,6 +425,11 @@ if($auth) {
                     </span>
                   </a>
                   <ul class="treeview-menu">
+                    <li<?php if($scriptname === "db_graph.php"){ ?> class="active"<?php } ?>>
+                        <a href="db_graph.php">
+                            <i class="fa fa-file-text-o"></i> <span>Graphics</span>
+                        </a>
+                    </li>
                     <li<?php if($scriptname === "db_queries.php"){ ?> class="active"<?php } ?>>
                         <a href="db_queries.php">
                             <i class="fa fa-file-text-o"></i> <span>Query Log</span>

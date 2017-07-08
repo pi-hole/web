@@ -15,15 +15,6 @@ var end__ = moment();
 var until = moment(end__).utc().valueOf()/1000;
 
 $(function () {
-    // Get first time stamp we have valid data for to limit selectable date/time range
-    $.getJSON("api_db.php?getMinTimestamp", function(data) {
-        var minDate = parseInt(data.mintimestamp);
-        if(!isNaN(minDate))
-        {
-            $("#querytime").data("daterangepicker").minDate = moment.unix(minDate);
-        }
-    });
-
     $("#querytime").daterangepicker(
     {
       timePicker: true, timePickerIncrement: 15,
@@ -38,7 +29,6 @@ $(function () {
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()]
       },
-      startDate: start__, endDate: end__,
       "opens": "center", "showDropdowns": true
     },
     function (startt, endt) {
@@ -184,8 +174,7 @@ function updateTopAdsChart() {
     });
 }
 
-// Handle "Go" Button
-$("#btnGo").on("click", function() {
+$("#querytime").on("apply.daterangepicker", function(ev, picker) {
     updateTopClientsChart();
     updateTopDomainsChart();
     updateTopAdsChart();
