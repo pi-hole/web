@@ -279,7 +279,7 @@ function updateForwardedOverTime() {
 }
 
 function updateForwardDestinationsPie() {
-    $.getJSON("api.php?getForwardDestinations", function(data) {
+    $.getJSON("api.php?getForwardDestinations=unsorted", function(data) {
 
         if("FTLnotrunning" in data)
         {
