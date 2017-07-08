@@ -164,7 +164,14 @@ if ((isset($_GET['topClients']) || isset($_GET['getQuerySources'])) && $auth)
 
 if (isset($_GET['getForwardDestinations']) && $auth)
 {
-	sendRequestFTL("forward-dest");
+	if($_GET['getForwardDestinations'] === "unsorted")
+	{
+		sendRequestFTL("forward-dest unsorted");
+	}
+	else
+	{
+		sendRequestFTL("forward-dest");
+	}
 	$return = getResponseFTL();
 	$forward_dest = array();
 	foreach($return as $line)
