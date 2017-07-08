@@ -265,7 +265,7 @@ $(document).ready(function() {
 
     if(instantquery)
     {
-        daterange.val(start__.format("MMMM Do YYYY, HH:mm") + ' - ' + end__.format("MMMM Do YYYY, HH:mm"));
+        daterange.val(start__.format("MMMM Do YYYY, HH:mm") + " - " + end__.format("MMMM Do YYYY, HH:mm"));
     }
 } );
 
