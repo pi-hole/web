@@ -5,8 +5,9 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 // Define global variables
+/* global Chart */
 var timeLineChart, queryTypeChart, forwardDestinationChart;
-var forwardDestinationPieChart, forwardDestinationPieChart;
+var queryTypePieChart, forwardDestinationPieChart;
 
 function padNumber(num) {
     return ("00" + num).substr(-2,2);
