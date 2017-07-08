@@ -14,6 +14,7 @@ var from = moment(start__).utc().valueOf()/1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf()/1000;
 var instantquery = false;
+var daterange;
 
 // Do we want to filter queries?
 var GETDict = {};
@@ -29,16 +30,7 @@ if("from" in GETDict && "until" in GETDict)
 }
 
 $(function () {
-    // Get first time stamp we have valid data for to limit selectable date/time range
-    $.getJSON("api_db.php?getMinTimestamp", function(data) {
-        var minDate = parseInt(data.mintimestamp);
-        if(!isNaN(minDate))
-        {
-            $("#querytime").data("daterangepicker").minDate = moment.unix(minDate);
-        }
-    });
-
-    $("#querytime").daterangepicker(
+    daterange = $("#querytime").daterangepicker(
     {
       timePicker: true, timePickerIncrement: 15,
       locale: { format: "MMMM Do YYYY, HH:mm" },
@@ -52,8 +44,6 @@ $(function () {
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()]
       },
-        maxDate: end__,
-      startDate: start__, endDate: end__,
       "opens": "center", "showDropdowns": true
     },
     function (startt, endt) {
@@ -272,6 +262,11 @@ $(document).ready(function() {
           add(data[2],"black");
         }
     } );
+
+    if(instantquery)
+    {
+        daterange.val(start__.format("MMMM Do YYYY, HH:mm") + ' - ' + end__.format("MMMM Do YYYY, HH:mm"));
+    }
 } );
 
 $("#querytime").on("apply.daterangepicker", function(ev, picker) {
