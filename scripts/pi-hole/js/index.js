@@ -262,7 +262,7 @@ function updateForwardedOverTime() {
         $("#forward-destinations .overlay").hide();
         forwardDestinationChart.update();
         // Don't use rotation animation for further updates
-        queryTypePieChart.options.animation.duration=0;
+        forwardDestinationChart.options.animation.duration=0;
     }).done(function() {
         // Reload graph after 10 minutes
         failures = 0;
