@@ -34,9 +34,6 @@ $token = $_SESSION['token'];
             <i class="fa fa-clock-o"></i>
           </div>
           <input type="text" class="form-control pull-right" id="querytime">
-        <span class="input-group-btn">
-            <button id="btnGo" class="btn btn-default" type="button">Go!</button>
-        </span>
         </div>
         <!-- /.input group -->
       </div>

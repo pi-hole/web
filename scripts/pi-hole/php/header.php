@@ -235,7 +235,7 @@ if($auth) {
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <!-- User Account: style can be found in dropdown.less -->
+                    <li><a style="pointer-events:none;"><samp><?php echo gethostname(); ?></samp></a></li>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <img src="img/logo.svg" class="user-image" style="border-radius: initial" sizes="160x160" alt="Pi-hole logo" />
@@ -417,7 +417,7 @@ if($auth) {
                         <i class="fa fa-file-text-o"></i> <span>Query Log</span>
                     </a>
                 </li>
-                <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php"){ ?> active<?php } ?>">
+                <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php"){ ?> active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-clock-o"></i> <span>Long term data</span>
                     <span class="pull-right-container">
@@ -425,6 +425,11 @@ if($auth) {
                     </span>
                   </a>
                   <ul class="treeview-menu">
+                    <li<?php if($scriptname === "db_graph.php"){ ?> class="active"<?php } ?>>
+                        <a href="db_graph.php">
+                            <i class="fa fa-file-text-o"></i> <span>Graphics</span>
+                        </a>
+                    </li>
                     <li<?php if($scriptname === "db_queries.php"){ ?> class="active"<?php } ?>>
                         <a href="db_queries.php">
                             <i class="fa fa-file-text-o"></i> <span>Query Log</span>
@@ -491,7 +496,7 @@ if($auth) {
                     <a href="#"><i class="fa fa-play"></i> <span id="enableLabel">Enable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></a>
                 </li>
                 <!-- Tools -->
-                <li class="treeview <?php if($scriptname === "gravity.php" || $scriptname === "queryads.php" || $scriptname === "debug.php" || $scriptname === "auditlog.php"){ ?>active<?php } ?>">
+                <li class="treeview <?php if(in_array($scriptname, array("gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php"))){ ?>active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-folder"></i> <span>Tools</span>
                     <span class="pull-right-container">

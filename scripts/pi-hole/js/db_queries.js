@@ -13,30 +13,37 @@ var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf()/1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf()/1000;
+var instantquery = false;
+var daterange;
+
+// Do we want to filter queries?
+var GETDict = {};
+location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
+
+if("from" in GETDict && "until" in GETDict)
+{
+    from = parseInt(GETDict["from"]);
+    until = parseInt(GETDict["until"]);
+    start__ = moment(1000*from);
+    end__ = moment(1000*until);
+    instantquery = true;
+}
 
 $(function () {
-    // Get first time stamp we have valid data for to limit selectable date/time range
-    $.getJSON("api_db.php?getMinTimestamp", function(data) {
-        var minDate = parseInt(data.mintimestamp);
-        if(!isNaN(minDate))
-        {
-            $("#querytime").data("daterangepicker").minDate = moment.unix(minDate);
-        }
-    });
-
-    $("#querytime").daterangepicker(
+    daterange = $("#querytime").daterangepicker(
     {
       timePicker: true, timePickerIncrement: 15,
-      locale: { format: "MMMM Do YYYY, h:mm A" },
+      locale: { format: "MMMM Do YYYY, HH:mm" },
       ranges: {
-        "Today": [moment(), moment()],
-        "Yesterday": [moment().subtract(1, "days"), moment().subtract(1, "days")],
+        "Today": [moment().startOf("day"), moment()],
+        "Yesterday": [moment().subtract(1, "days").startOf("day"), moment().subtract(1, "days").endOf("day")],
         "Last 7 Days": [moment().subtract(6, "days"), moment()],
         "Last 30 Days": [moment().subtract(29, "days"), moment()],
-        "This Month": [moment().startOf("month"), moment().endOf("month")],
-        "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
+        "This Month": [moment().startOf("month"), moment()],
+        "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")],
+        "This Year": [moment().startOf("year"), moment()],
+        "All Time": [moment(0), moment()]
       },
-      startDate: start__, endDate: end__,
       "opens": "center", "showDropdowns": true
     },
     function (startt, endt) {
@@ -172,6 +179,16 @@ function refreshTableData() {
 $(document).ready(function() {
     var status;
 
+    var APIstring;
+    if(instantquery)
+    {
+        APIstring = "api_db.php?getAllQueries&from="+from+"&until="+until;
+    }
+    else
+    {
+        APIstring = "api_db.php?getAllQueries=empty";
+    }
+
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
             if (data[4] === 1)
@@ -213,7 +230,7 @@ $(document).ready(function() {
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'tr>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": {"url": "api_db.php?getAllQueries=empty", "error": handleAjaxError },
+        "ajax": {"url": APIstring, "error": handleAjaxError },
         "autoWidth" : false,
         "processing": true,
         "deferRender": true,
@@ -231,7 +248,8 @@ $(document).ready(function() {
             "targets": -1,
             "data": null,
             "defaultContent": ""
-        } ]
+        } ],
+        "initComplete": reloadCallback
     });
     $("#all-queries tbody").on( "click", "button", function () {
         var data = tableApi.row( $(this).parents("tr") ).data();
@@ -244,9 +262,14 @@ $(document).ready(function() {
           add(data[2],"black");
         }
     } );
+
+    if(instantquery)
+    {
+        daterange.val(start__.format("MMMM Do YYYY, HH:mm") + " - " + end__.format("MMMM Do YYYY, HH:mm"));
+    }
 } );
 
-// Handle "Go" Button
-$("#btnGo").on("click", function() {
+$("#querytime").on("apply.daterangepicker", function(ev, picker) {
     refreshTableData();
 });
+

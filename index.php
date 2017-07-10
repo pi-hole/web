@@ -90,9 +90,44 @@
   if($auth){ ?>
 <div class="row">
     <div class="col-md-12 col-lg-6">
+    <div class="box" id="query-types-pie">
+        <div class="box-header with-border">
+          <h3 class="box-title">Query Types (integrated)</h3>
+        </div>
+        <div class="box-body">
+          <div class="chart">
+            <canvas id="queryTypePieChart" width="400" height="150"></canvas>
+          </div>
+        </div>
+        <div class="overlay">
+          <i class="fa fa-refresh fa-spin"></i>
+        </div>
+        <!-- /.box-body -->
+      </div>
+    </div>
+    <div class="col-md-12 col-lg-6">
+    <div class="box" id="forward-destinations-pie">
+        <div class="box-header with-border">
+          <h3 class="box-title">Forward Destinations (integrated)</h3>
+        </div>
+        <div class="box-body">
+          <div class="chart">
+            <canvas id="forwardDestinationPieChart" width="400" height="150"></canvas>
+          </div>
+        </div>
+        <div class="overlay">
+          <i class="fa fa-refresh fa-spin"></i>
+        </div>
+        <!-- /.box-body -->
+      </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-lg-6">
     <div class="box" id="query-types">
         <div class="box-header with-border">
-          <h3 class="box-title">Query Types over Time</h3>
+          <h3 class="box-title">Query Types (over time)</h3>
         </div>
         <div class="box-body">
           <div class="chart">
@@ -108,7 +143,7 @@
     <div class="col-md-12 col-lg-6">
     <div class="box" id="forward-destinations">
         <div class="box-header with-border">
-          <h3 class="box-title">Forward Destinations over Time</h3>
+          <h3 class="box-title">Forward Destinations (over time)</h3>
         </div>
         <div class="box-body">
           <div class="chart">
