@@ -45,11 +45,6 @@ $("#gravityBtn").on("click", function(){
     eventsource();
 });
 
-$("#gravityBtn").on("click", () => {
-    $("#gravityBtn").attr("disabled", true);
-    eventsource();
-});
-
 // Handle hiding of alerts
 $(function(){
     $("[data-hide]").on("click", function(){

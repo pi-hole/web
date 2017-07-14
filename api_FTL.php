@@ -45,7 +45,7 @@ if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))
 		}
 		else
 		{
-			$stats[$tmp[0]] = intval($tmp[1]);
+			$stats[$tmp[0]] = floatval($tmp[1]);
 		}
 	}
 	$data = array_merge($data,$stats);
@@ -233,6 +233,7 @@ if (isset($_GET['overTimeDataForwards']) && $auth)
 {
 	sendRequestFTL("ForwardedoverTime");
 	$return = getResponseFTL();
+	$over_time = array();
 
 	foreach($return as $line)
 	{
@@ -271,6 +272,7 @@ if (isset($_GET['overTimeDataQueryTypes']) && $auth)
 {
 	sendRequestFTL("QueryTypesoverTime");
 	$return = getResponseFTL();
+	$over_time = array();
 
 	foreach($return as $line)
 	{
