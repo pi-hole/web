@@ -27,6 +27,9 @@
     $blackListFile = checkfile("/etc/pihole/blacklist.txt");
     $blacklist = new \SplFileObject($blackListFile);
 
+    // speedtst DB
+    $dbSpeedtest ='../speedtest/speedtest.db';
+
     if(isset($setupVars["API_PRIVACY_MODE"]))
     {
         $privacyMode = $setupVars["API_PRIVACY_MODE"];
@@ -115,6 +118,43 @@
             'ads_over_time' => $ads_over_time,
         );
     }
+
+
+    function getSpeedData24hrs(){
+      if(!file_exists($dbFile)){
+          echo json_encode(array("error"=>"Unable to load data"));
+          exit;
+      }
+
+      $db = new SQLite3($dbFile);
+      if(!$db) {
+          echo json_encode($db->lastErrorMsg());
+      } else {
+          //  echo "Opened database successfully\n";
+      }
+
+      $sql =<<<EOF
+            SELECT * from speedtest  order by id desc;
+EOF;
+
+      $dbResults = $db->query($sql);
+
+      $data= array();
+
+
+      if(!empty($dbResults)){
+          while($row = $dbResults->fetchArray(SQLITE3_ASSOC) ) {
+            array_push($data, $row);
+          }
+          echo json_encode(array_reverse(array_slice($data,0,24)));
+      }
+      else{
+          echo json_encode(array("message"=>"No results"));
+      }
+
+      $db->close();
+    }
+
 
     // Test if variable exists and is positive
     function ispositive(&$arg)

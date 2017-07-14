@@ -45,6 +45,12 @@
         $data = array_merge($data,  getOverTimeData10mins());
     }
 
+    if (isset($_GET['getSpeedData24hrs']))
+    {
+        $data =  array_merge($data, getQuerySources());
+    }
+
+
     // Auth Required
 
     if (isset($_GET['topItems']) && $auth) {
@@ -76,6 +82,7 @@
     if (isset($_GET['getGravityDomains'])) {
         $data = array_merge($data, getGravity());
     }
+
 
     function filterArray(&$inArray) {
         $outArray = array();
