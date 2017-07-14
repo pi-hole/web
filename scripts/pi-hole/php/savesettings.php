@@ -417,6 +417,21 @@ function readAdlists()
 				{
 					exec('sudo pihole -a layout traditional');
 				}
+				// todo Save Speedtest Status
+				if(isset($_POST["speedtestenable"])){
+
+				}
+				else {
+					// # code...
+				}
+				// todo Save Speedtest Schedule
+				if(isset($_POST["speedtestschedule"])){
+
+				}
+				else {
+					// # code...
+				}
+
 				$success .= "The webUI settings have been updated";
 				break;
 
