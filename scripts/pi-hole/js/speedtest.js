@@ -1,5 +1,5 @@
 
-var speedlabels = [],downloadspeed=[], uploadspeed=[] ,speeddata = [];
+var speedlabels = [],downloadspeed=[], uploadspeed=[] ,speeddata = [], serverPing =[];
 
 function updateSpeedTestData()
 {
@@ -13,7 +13,7 @@ function updateSpeedTestData()
 	}
 
 	var jsonData = $.ajax({
-		url: 'api.php?getSpeedData24hrs',
+		url: 'api.php?getSpeedData24hrs&PHP',
 		dataType: 'json',
 	}).done(function (results) {
 
@@ -23,6 +23,8 @@ function updateSpeedTestData()
 					speedlabels.push(new Date(packet.start_time).formatMMDDYYYY());
 					uploadspeed.push(parseFloat(packet.upload));
 					downloadspeed.push(parseFloat(packet.download));
+					serverPing.push(parseFloat(packet.server_ping));
+
 				}
 			  speedChart.update();
 			});
@@ -46,18 +48,30 @@ var speedChart = new Chart(speedChartctx, {
   		datasets: [{
   			label: 'Download Mbps',
   			data: downloadspeed,
-  			backgroundColor: 'rgba(75, 192, 192, 0.2)',
+  			backgroundColor: 'rgba(75, 192, 192, 0.1)',
   			borderColor:'rgba(75, 192, 192, 1)',
   			borderWidth: 1,
-  			cubicInterpolationMode: 'monotone'
+  			cubicInterpolationMode: 'monotone',
+        yAxisID: "y-axis-1",
   		},
   		{
   			label: 'Upload Mbps',
   			data: uploadspeed,
-  			backgroundColor: 'rgba(255, 99, 132, 0.2)',
+  			backgroundColor: 'rgba(255, 99, 132, 0.1)',
   			borderColor: 'rgba(255,99,132,1)',
-  			borderWidth: 1
+  			borderWidth: 1,
+        yAxisID: "y-axis-1",
+  		},
+      {
+  			label: 'Ping ms',
+  			data: serverPing,
+  			backgroundColor: 'rgba(69,237,33,0.0)',
+  			borderColor: 'rgba(69,237,33,1)',
+  			borderWidth: 1,
+        borderDash: [5, 5],
+        yAxisID: "y-axis-2",
   		}
+
 		]
 	},
 	options: {
@@ -68,11 +82,32 @@ var speedChart = new Chart(speedChartctx, {
 			},
 		scales: {
 			yAxes: [{
-				ticks: {
-					beginAtZero:true
-				}
-			}]
-		}
+                  type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                  display: true,
+                  position: "left",
+                  id: "y-axis-1",
+              },
+              {
+                  type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                  display: true,
+                  position: "right",
+                  id: "y-axis-2",
+              }
+            ],
+      xAxes: [
+              {
+                  display: true,
+                  scaleLabel: {
+                      display: false
+                  }
+              }
+            ]
+		       },
+    tooltips: {
+      enabled : true,
+        mode: "x-axis",
+        intersect: false,
+    }
 	}
 });
 updateSpeedTestData();

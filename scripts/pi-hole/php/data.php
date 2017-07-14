@@ -28,7 +28,7 @@
     $blacklist = new \SplFileObject($blackListFile);
 
     // speedtst DB
-    $dbSpeedtest ='../speedtest/speedtest.db';
+    $dbSpeedtest ="scripts/pi-hole/speedtest/speedtest.db";
 
     if(isset($setupVars["API_PRIVACY_MODE"]))
     {
@@ -120,17 +120,19 @@
     }
 
 
-    function getSpeedData24hrs(){
-      if(!file_exists($dbFile)){
-          echo json_encode(array("error"=>"Unable to load data"));
-          exit;
+    function getSpeedData24hrs($dbSpeedtest){
+
+      // return array("test"=>$dbSpeedtest);
+
+      if(!file_exists($dbSpeedtest)){
+          return array("error"=>"No DB");
       }
 
-      $db = new SQLite3($dbFile);
+      $db = new SQLite3($dbSpeedtest);
       if(!$db) {
-          echo json_encode($db->lastErrorMsg());
+          return array("error"=>"Unable to open DB");
       } else {
-          //  echo "Opened database successfully\n";
+          // return array("status"=>"success");
       }
 
       $sql =<<<EOF
@@ -139,19 +141,18 @@ EOF;
 
       $dbResults = $db->query($sql);
 
-      $data= array();
+      $dataFromSpeedDB= array();
 
 
       if(!empty($dbResults)){
           while($row = $dbResults->fetchArray(SQLITE3_ASSOC) ) {
-            array_push($data, $row);
+            array_push($dataFromSpeedDB, $row);
           }
-          echo json_encode(array_reverse(array_slice($data,0,24)));
+          return(array_reverse(array_slice($dataFromSpeedDB,0,24)));
       }
       else{
-          echo json_encode(array("message"=>"No results"));
+         return array("error"=>"No Results");
       }
-
       $db->close();
     }
 

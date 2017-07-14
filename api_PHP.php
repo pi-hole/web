@@ -47,7 +47,7 @@
 
     if (isset($_GET['getSpeedData24hrs']))
     {
-        $data =  array_merge($data, getQuerySources());
+        $data = array_merge($data,  getSpeedData24hrs($dbSpeedtest));
     }
 
 
