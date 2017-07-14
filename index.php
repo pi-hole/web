@@ -64,15 +64,33 @@
     <!-- ./col -->
 </div>
 
+
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
+    <div class="box" id="queries-over-time">
+        <div class="box-header with-border">
+		<h3 class="box-title">Speedtest results over last 24 hours</h3>
+        </div>
+        <div class="box-body">
+          <div class="chart">
+		<canvas id="speedtestChart" width="400" height="250"></canvas>
+	  </div>
+        </div>
+        <div class="overlay">
+          <i class="fa fa-refresh fa-spin"></i>
+        </div>
+        <!-- /.box-body -->
+      </div>
+    </div>
+
+ <div class="col-md-6">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
           <h3 class="box-title">Queries over last 24 hours</h3>
         </div>
         <div class="box-body">
           <div class="chart">
-            <canvas id="queryOverTimeChart" width="800" height="250"></canvas>
+            <canvas id="queryOverTimeChart" width="400" height="250"></canvas>
           </div>
         </div>
         <div class="overlay">
@@ -223,3 +241,4 @@ else
 ?>
 
 <script src="scripts/pi-hole/js/index.js"></script>
+<script src="scripts/pi-hole/js/speedtest.js"></script>
