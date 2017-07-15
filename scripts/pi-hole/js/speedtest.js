@@ -8,8 +8,12 @@ function updateSpeedTestData()
 		  "July", "Aug", "Sept", "Oct", "Nov", "Dec"
 		];
 
-	Date.prototype.formatMMDDYYYY = function() {
-		  return  (this.getHours() <= 12 ? this.getHours() : this.getHours()-12 )+":"+ (this.getMinutes() < 10 ? "0"+this.getMinutes() : this.getMinutes())+" "+(this.getHours() < 12 ? "AM" : "PM"  );
+	function formatDate(itemdate)
+	{
+		var testtime = new Date(itemdate);
+		formattedtime = ("0" + testtime.getHours()).slice(-2)   + ":" +
+    ("0" + testtime.getMinutes()).slice(-2);
+		return formattedtime;
 	}
 
 	var jsonData = $.ajax({
@@ -18,9 +22,9 @@ function updateSpeedTestData()
 	}).done(function (results) {
 
 			results.forEach(function(packet) {
-			if(speedlabels.indexOf(new Date(packet.start_time).formatMMDDYYYY()) === -1 )
+			if(speedlabels.indexOf(formatDate(packet.start_time)) === -1 )
 				{
-					speedlabels.push(new Date(packet.start_time).formatMMDDYYYY());
+					speedlabels.push(formatDate(packet.start_time));
 					uploadspeed.push(parseFloat(packet.upload));
 					downloadspeed.push(parseFloat(packet.download));
 					serverPing.push(parseFloat(packet.server_ping));
