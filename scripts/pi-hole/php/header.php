@@ -422,6 +422,13 @@ if($auth) {
                         <i class="fa fa-file-text-o"></i> <span>Query Log</span>
                     </a>
                 </li>
+                <!-- Speedtest -->
+                <li<?php if($scriptname === "speedtest.php"){ ?> class="active"<?php } ?>>
+                    <a href="speetest.php">
+                        <i class="fa fa-tachometer"></i> <span>Speedtest</span>
+                    </a>
+                </li>
+
                 <!-- Whitelist -->
                 <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
                     <a href="list.php?l=white">

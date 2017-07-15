@@ -118,8 +118,17 @@
             'ads_over_time' => $ads_over_time,
         );
     }
-
     function getAllSpeedTestData($dbSpeedtest)
+    {
+      $data = getSpeedTestData($dbSpeedtest);
+      $newarr = array();
+      foreach ($data as  $array) {
+          array_push($newarr,array_values($array));
+      }
+        return  array('data' => $newarr );
+    }
+
+    function getSpeedTestData($dbSpeedtest)
     {
             if(!file_exists($dbSpeedtest)){
                 return array("error"=>"No DB");
@@ -155,7 +164,7 @@ EOF;
 
 
     function getSpeedData24hrs($dbSpeedtest){
-      $dataFromSpeedDB = getAllSpeedTestData($dbSpeedtest);
+      $dataFromSpeedDB = getSpeedTestData($dbSpeedtest);
       return(array_reverse(array_slice($dataFromSpeedDB,0,24)));
     }
 
