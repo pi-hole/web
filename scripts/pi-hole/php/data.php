@@ -121,6 +121,8 @@
     function getAllSpeedTestData($dbSpeedtest)
     {
       $data = getSpeedTestData($dbSpeedtest);
+      if($data['errr'])
+        return [];
       $newarr = array();
       foreach ($data as  $array) {
           array_push($newarr,array_values($array));
@@ -165,7 +167,7 @@ EOF;
 
     function getSpeedData24hrs($dbSpeedtest){
       $dataFromSpeedDB = getSpeedTestData($dbSpeedtest);
-      return(array_reverse(array_slice($dataFromSpeedDB,0,24)));
+      return(array_reverse(array_slice($dataFromSpeedDB,0,23)));
     }
 
 
