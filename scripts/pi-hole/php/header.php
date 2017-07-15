@@ -154,6 +154,7 @@
     $FTLpid = intval(pidofFTL());
     $FTL = ($FTLpid !== 0 ? true : false);
 
+    $speedtestshedule="";
 
     if(isset($setupVars["SPEEDTESTSCHEDULE"]))
   	{
