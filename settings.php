@@ -777,14 +777,12 @@ readStaticLeasesFile();
 		$temperatureunit = "C";
 	}
 
-	if(isset($setupVars["ENABLESPEEDTEST"]))
+
+	if(isset($setupVars["SPEEDTESTSCHEDULE"]))
 	{
-		$speedteststatus = $setupVars["ENABLESPEEDTEST"];
-		if(isset($setupVars["SPEEDTESTSCHEDULE"]))
-		{
-			$speedtestshedule = $setupVars["SPEEDTESTSCHEDULE"];
-		}
+		$speedtestshedule = $setupVars["SPEEDTESTSCHEDULE"];
 	}
+
 	// Use $boxedlayout value determined in header.php
 ?>
 		<div class="box box-success">
@@ -808,6 +806,19 @@ readStaticLeasesFile();
 					</div>
 				</div>
 */ ?>
+				<h4>Speedtest</h4>
+				<div class="form-group">
+						<label>Speedtest Schedule</label>
+						<select name="speedtestschedule" class="form-control" >
+							<option value="0" <?php if($speedtestshedule == 0) {?> selected <?php } ?>>Disabled</option>
+							<option value="1" <?php if($speedtestshedule == 1) {?> selected <?php } ?>>Every 1 Hour</option>
+							<option value="2" <?php if($speedtestshedule == 2) {?> selected <?php } ?>>Every 2 Hours</option>
+							<option value="6" <?php if($speedtestshedule == 6) {?> selected <?php } ?>>Every 6 Hours</option>
+							<option value="12" <?php if($speedtestshedule == 12) {?> selected <?php } ?>>Every 12 Hours</option>
+							<option value="24" <?php if($speedtestshedule == 24) {?> selected <?php } ?>>Every 24 Hours</option>
+						</select>
+				</div>
+
 				<h4>Interface appearance</h4>
 				<div class="form-group">
 					<div class="checkbox"><label><input type="checkbox" name="boxedlayout" value="yes" <?php if($boxedlayout){ ?>checked<?php } ?> >Use boxed layout (helpful when working on large screens)</label></div>
@@ -819,18 +830,7 @@ readStaticLeasesFile();
 					<div class="radio"><label><input type="radio" name="tempunit" value="F" <?php if($temperatureunit === "F"){ ?>checked<?php } ?> >Fahrenheit</label></div>
 				</div>
 
-				<h4>Speedtest</h4>
-				<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="speedtestenable" value="yes" <?php if($speedteststatus){ ?>checked<?php } ?> >Enable Speedtest (This will cost you more bandwidth usage)</label></div>
-						<label>Speedtest Schedule</label>
-						<select name="speedtestschedule" class="form-control" >
-							<option value="1" <?php if($speedtestshedule == 1) {?> selected <?php } ?>>Every 1 Hour</option>
-							<option value="2" <?php if($speedtestshedule == 2) {?> selected <?php } ?>>Every 2 Hours</option>
-							<option value="6" <?php if($speedtestshedule == 6) {?> selected <?php } ?>>Every 6 Hours</option>
-							<option value="12" <?php if($speedtestshedule == 12) {?> selected <?php } ?>>Every 12 Hours</option>
-							<option value="24" <?php if($speedtestshedule == 24) {?> selected <?php } ?>>Every 24 Hours</option>
-						</select>
-				</div>
+
 			</div>
 			<div class="box-footer">
 				<input type="hidden" name="field" value="webUI">

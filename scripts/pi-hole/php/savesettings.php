@@ -417,16 +417,10 @@ function readAdlists()
 				{
 					exec('sudo pihole -a layout traditional');
 				}
-				// todo Save Speedtest Status
-				if(isset($_POST["speedtestenable"])){
 
-				}
-				else {
-					// # code...
-				}
 				// todo Save Speedtest Schedule
 				if(isset($_POST["speedtestschedule"])){
-
+						exec('sudo pihole -a -s '.$_POST["speedtestschedule"]);
 				}
 				else {
 					// # code...
