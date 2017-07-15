@@ -66,25 +66,8 @@
 
 
 <div class="row">
-  <?php  if($auth && $speedtestshedule){ ?>
-    <div class="col-md-6">
-    <div class="box" id="queries-over-time">
-        <div class="box-header with-border">
-		<h3 class="box-title">Speedtest results over last 24 hours</h3>
-        </div>
-        <div class="box-body">
-          <div class="chart">
-		<canvas id="speedtestChart" width="400" height="250"></canvas>
-	  </div>
-        </div>
-        <div class="overlay">
-          <i class="fa fa-refresh fa-spin"></i>
-        </div>
-        <!-- /.box-body -->
-      </div>
-    </div>
- <?php } ?>
- <div class="col-md-<?php  if($auth && $speedtestshedule) { echo "6"; } else { echo "12"; } ?>">
+
+ <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
           <h3 class="box-title">Queries over last 24 hours</h3>
@@ -100,6 +83,24 @@
         <!-- /.box-body -->
       </div>
     </div>
+    <?php  if($auth && $speedtestshedule){ ?>
+      <div class="col-md-12">
+      <div class="box" id="queries-over-time">
+          <div class="box-header with-border">
+      <h3 class="box-title">Speedtest results over last 24 hours</h3>
+          </div>
+          <div class="box-body">
+            <div class="chart">
+      <canvas id="speedtestChart" width="400" height="250"></canvas>
+      </div>
+          </div>
+          <div class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>
+          </div>
+          <!-- /.box-body -->
+        </div>
+      </div>
+   <?php } ?>
 </div>
 <?php
   // If the user is logged in, then we show the more detailed index page.
