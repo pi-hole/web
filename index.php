@@ -66,6 +66,7 @@
 
 
 <div class="row">
+  <?php  if($auth && $speedtestshedule){ ?>
     <div class="col-md-6">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
@@ -82,8 +83,8 @@
         <!-- /.box-body -->
       </div>
     </div>
-
- <div class="col-md-6">
+ <?php } ?>
+ <div class="col-md-<?php  if($auth && $speedtestshedule) { echo "6"; } else { echo "12"; } ?>">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
           <h3 class="box-title">Queries over last 24 hours</h3>

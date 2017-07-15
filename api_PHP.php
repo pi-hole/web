@@ -44,14 +44,18 @@
     if (isset($_GET['overTimeData10mins'])) {
         $data = array_merge($data,  getOverTimeData10mins());
     }
+    // Auth Required
 
-    if (isset($_GET['getSpeedData24hrs']))
+
+    if (isset($_GET['getSpeedData24hrs'])  && $auth)
     {
         $data = array_merge($data,  getSpeedData24hrs($dbSpeedtest));
     }
 
-
-    // Auth Required
+    if (isset($_GET['getAllSpeedTestData'])  && $auth)
+    {
+        $data = array_merge($data,  getAllSpeedTestData($dbSpeedtest));
+    }
 
     if (isset($_GET['topItems']) && $auth) {
         $data = array_merge($data,  getTopItems($_GET['topItems']));

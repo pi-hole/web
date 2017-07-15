@@ -119,41 +119,44 @@
         );
     }
 
+    function getAllSpeedTestData($dbSpeedtest)
+    {
+            if(!file_exists($dbSpeedtest)){
+                return array("error"=>"No DB");
+            }
 
-    function getSpeedData24hrs($dbSpeedtest){
+            $db = new SQLite3($dbSpeedtest);
+            if(!$db) {
+                return array("error"=>"Unable to open DB");
+            } else {
+                // return array("status"=>"success");
+            }
 
-      // return array("test"=>$dbSpeedtest);
-
-      if(!file_exists($dbSpeedtest)){
-          return array("error"=>"No DB");
-      }
-
-      $db = new SQLite3($dbSpeedtest);
-      if(!$db) {
-          return array("error"=>"Unable to open DB");
-      } else {
-          // return array("status"=>"success");
-      }
-
-      $sql =<<<EOF
-            SELECT * from speedtest  order by id desc;
+            $sql =<<<EOF
+                  SELECT * from speedtest  order by id desc;
 EOF;
 
-      $dbResults = $db->query($sql);
+            $dbResults = $db->query($sql);
 
-      $dataFromSpeedDB= array();
+            $dataFromSpeedDB= array();
 
 
-      if(!empty($dbResults)){
-          while($row = $dbResults->fetchArray(SQLITE3_ASSOC) ) {
-            array_push($dataFromSpeedDB, $row);
-          }
-          return(array_reverse(array_slice($dataFromSpeedDB,0,24)));
-      }
-      else{
-         return array("error"=>"No Results");
-      }
-      $db->close();
+            if(!empty($dbResults)){
+                while($row = $dbResults->fetchArray(SQLITE3_ASSOC) ) {
+                  array_push($dataFromSpeedDB, $row);
+                }
+                return($dataFromSpeedDB);
+            }
+            else{
+               return array("error"=>"No Results");
+            }
+            $db->close();
+    }
+
+
+    function getSpeedData24hrs($dbSpeedtest){
+      $dataFromSpeedDB = getAllSpeedTestData($dbSpeedtest);
+      return(array_reverse(array_slice($dataFromSpeedDB,0,24)));
     }
 
 

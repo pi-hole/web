@@ -154,6 +154,12 @@
     $FTLpid = intval(pidofFTL());
     $FTL = ($FTLpid !== 0 ? true : false);
 
+
+    if(isset($setupVars["SPEEDTESTSCHEDULE"]))
+  	{
+  		$speedtestshedule = $setupVars["SPEEDTESTSCHEDULE"];
+  	}
+
 ?>
 <!DOCTYPE html>
 <!-- Pi-hole: A black hole for Internet advertisements

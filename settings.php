@@ -778,10 +778,7 @@ readStaticLeasesFile();
 	}
 
 
-	if(isset($setupVars["SPEEDTESTSCHEDULE"]))
-	{
-		$speedtestshedule = $setupVars["SPEEDTESTSCHEDULE"];
-	}
+	
 
 	// Use $boxedlayout value determined in header.php
 ?>
