@@ -776,9 +776,13 @@ readStaticLeasesFile();
 	{
 		$temperatureunit = "C";
 	}
-
-
-	
+	// Fix for select for not population on save
+	if(isset($setupVars["SPEEDTESTSCHEDULE"]))
+	{
+			$speedtestshedule = $setupVars["SPEEDTESTSCHEDULE"];
+	}else {
+			$speedtestshedule  = false;
+	}
 
 	// Use $boxedlayout value determined in header.php
 ?>
