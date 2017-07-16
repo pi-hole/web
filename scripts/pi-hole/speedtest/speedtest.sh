@@ -283,4 +283,4 @@ sep="$quote$sep$quote"
 printf "$quote$start$sep$stop$sep$from$sep$from_ip$sep$server$sep$server_dist$sep$server_ping$sep$download$sep$upload$sep$share_url$quote\n"
 
 ##Save SQLITE3
-sqlite3 /opt/pihole/speedtest.db  "insert into speedtest values (NULL, '${start}', '${stop}', '${from}', '${from_ip}', '${server}', ${server_dist}, ${server_ping}, ${download}, ${upload}, '${share_url}');"
+sqlite3 /etc/pihole/speedtest.db  "insert into speedtest values (NULL, '${start}', '${stop}', '${from}', '${from_ip}', '${server}', ${server_dist}, ${server_ping}, ${download}, ${upload}, '${share_url}');"
