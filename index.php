@@ -75,7 +75,7 @@ else
 	$tablelayout = "col-md-6 col-lg-4";
   $maincollayout = "col-md-12 col-lg-6";
 }
-if(!$auth){
+if(!$auth || !$speedtestshedule){
   $maincollayout = "col-md-12 col-lg-12";
 }
 ?>
