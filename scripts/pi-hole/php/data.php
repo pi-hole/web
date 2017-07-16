@@ -28,7 +28,7 @@
     $blacklist = new \SplFileObject($blackListFile);
 
     // speedtst DB
-    $dbSpeedtest ="/opt/pihole/speedtest.db";
+    $dbSpeedtest ="/etc/pihole/speedtest.db";
 
     if(isset($setupVars["API_PRIVACY_MODE"]))
     {
