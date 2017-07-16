@@ -10,10 +10,7 @@ function updateSpeedTestData()
 
 	function formatDate(itemdate)
 	{
-		var testtime = new Date(itemdate);
-		formattedtime = ("0" + testtime.getHours()).slice(-2)   + ":" +
-    ("0" + testtime.getMinutes()).slice(-2);
-		return formattedtime;
+		return moment(itemdate).format("HH:mm");
 	}
 
 	var jsonData = $.ajax({

@@ -194,7 +194,7 @@ if [[ $header == true ]]; then
 else
     mkdir -p $(dirname $log)
 
-    start=$(date +"%Y-%m-%d %H:%M:%S %:z")
+    start=$(date +"%Y-%m-%d %H:%M:%S")
 
     if [[ $last == true && -f "$log" ]]; then
         # Reuse existing results (useful for debugging)
@@ -208,7 +208,7 @@ else
         mdebug "Exit code: $status"
     fi
 
-    stop=$(date +"%Y-%m-%d %H:%M:%S %:z")
+    stop=$(date +"%Y-%m-%d %H:%M:%S")
 
     # Was speedtest-cli successful?
     if [[ $status -ne 0 ]]; then
