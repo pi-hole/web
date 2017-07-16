@@ -28,7 +28,7 @@
     $blacklist = new \SplFileObject($blackListFile);
 
     // speedtst DB
-    $dbSpeedtest ="scripts/pi-hole/speedtest/speedtest.db";
+    $dbSpeedtest ="/opt/pihole/speedtest.db";
 
     if(isset($setupVars["API_PRIVACY_MODE"]))
     {
@@ -133,9 +133,10 @@
     function getSpeedTestData($dbSpeedtest)
     {
             if(!file_exists($dbSpeedtest)){
-                return array("error"=>"No DB");
+                // create db of not exists
+                exec('sudo pihole -a -sn');
+                return array();
             }
-
             $db = new SQLite3($dbSpeedtest);
             if(!$db) {
                 return array("error"=>"Unable to open DB");
