@@ -252,3 +252,4 @@ if(!$auth || !$speedtestshedule){
 
 <script src="scripts/pi-hole/js/index.js"></script>
 <script src="scripts/pi-hole/js/speedtest.js"></script>
+<script src="scripts/vendor/moment.min.js"></script>
