@@ -426,6 +426,16 @@ function readAdlists()
 					// # code...
 				}
 
+				if(isset($_POST["speedtestdays"])){
+						exec('sudo pihole -a -sd '.$_POST["speedtestdays"]);
+				}
+				else {
+					// # code...
+				}
+
+
+
+
 				$success .= "The webUI settings have been updated";
 				break;
 

@@ -120,7 +120,7 @@
     }
     function getAllSpeedTestData($dbSpeedtest)
     {
-      $data = getSpeedTestData($dbSpeedtest);
+      $data = getSpeedTestData($dbSpeedtest,-1);
       if($data['errr'])
         return [];
       $newarr = array();
@@ -130,7 +130,7 @@
         return  array('data' => $newarr );
     }
 
-    function getSpeedTestData($dbSpeedtest)
+    function getSpeedTestData($dbSpeedtest,$durationdays="1")
     {
             if(!file_exists($dbSpeedtest)){
                 // create db of not exists
@@ -144,9 +144,18 @@
                 // return array("status"=>"success");
             }
 
-            $sql =<<<EOF
-                  SELECT * from speedtest  order by id desc;
-EOF;
+            $curdate = date('Y-m-d H:i:s');
+            $date = new DateTime();
+            $date->modify('-'.$durationdays.' day');
+            $start_date =$date->format('Y-m-d H:i:s');
+
+            if($durationdays == -1)
+            {
+                $sql ="SELECT * from speedtest order by id asc";
+            }
+            else{
+              $sql ="SELECT * from speedtest where start_time between '${start_date}' and  '${curdate}'  order by id asc;";
+            }
 
             $dbResults = $db->query($sql);
 
@@ -167,8 +176,17 @@ EOF;
 
 
     function getSpeedData24hrs($dbSpeedtest){
-      $dataFromSpeedDB = getSpeedTestData($dbSpeedtest);
-      return(array_reverse(array_slice($dataFromSpeedDB,0,23)));
+      global $log, $setupVars;
+      if(isset($setupVars["SPEEDTEST_CHART_DAYS"]))
+      {
+        $dataFromSpeedDB = getSpeedTestData($dbSpeedtest,$setupVars["SPEEDTEST_CHART_DAYS"]);
+      }
+      else{
+        $dataFromSpeedDB = getSpeedTestData($dbSpeedtest);
+      }
+
+
+      return $dataFromSpeedDB;
     }
 
 

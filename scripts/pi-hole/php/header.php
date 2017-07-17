@@ -155,12 +155,17 @@
     $FTL = ($FTLpid !== 0 ? true : false);
 
 
-
     if(isset($setupVars["SPEEDTESTSCHEDULE"]))
   	{
   		  $speedtestshedule = $setupVars["SPEEDTESTSCHEDULE"];
   	}else {
   	    $speedtestshedule  = false;
+  	}
+    if(isset($setupVars["SPEEDTEST_CHART_DAYS"]))
+  	{
+  		  $speedtestdays = $setupVars["SPEEDTEST_CHART_DAYS"]." Days";
+  	}else {
+  	    $speedtestdays  = "24 Hours";
   	}
 
 ?>

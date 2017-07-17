@@ -10,7 +10,7 @@ function updateSpeedTestData()
 
 	function formatDate(itemdate)
 	{
-		return moment(itemdate).format("HH:mm");
+		return moment(itemdate).format("Do HH:mm");
 	}
 
 	var jsonData = $.ajax({
@@ -19,6 +19,7 @@ function updateSpeedTestData()
 	}).done(function (results) {
 
 			results.forEach(function(packet) {
+				// console.log(speedlabels.indexOf(formatDate(packet.start_time)));
 			if(speedlabels.indexOf(formatDate(packet.start_time)) === -1 )
 				{
 					speedlabels.push(formatDate(packet.start_time));
@@ -27,8 +28,9 @@ function updateSpeedTestData()
 					serverPing.push(parseFloat(packet.server_ping));
 
 				}
-			  speedChart.update();
+
 			});
+			speedChart.update();
 			speeddata = results;
 	});
 }
@@ -97,10 +99,17 @@ var speedChart = new Chart(speedChartctx, {
             ],
       xAxes: [
               {
+									// type :'time',
                   display: true,
                   scaleLabel: {
-                      display: false
-                  }
+                      display: true
+                  },
+									ticks: {
+							        // autoSkip: true,
+							        maxTicksLimit: 10,
+											maxRotation: 0,
+        							minRotation: 0
+							    }
               }
             ]
 		       },
