@@ -40,6 +40,10 @@
 ###
 ### Copyright: 2014-2017 Henrik Bengtsson
 ### License: GPL (>= 2.1) (https://www.gnu.org/licenses/gpl.html)
+readonly setupVars="/etc/pihole/setupVars.conf"
+
+source "${setupVars}"
+
 call="$0 $*"
 
 SPEEDTEST_CSV_VERSION="2.0.1"
@@ -201,10 +205,26 @@ else
         mdebug "Reusing existing results: $log"
     else
         # Query Speedtest
-	cmd="speedtest-cli --no-pre-allocate $opts"
+        # Test for no-pre-allocate
+        pre_allocate=`speedtest-cli --help | grep "no-pre-allocate"| wc -l`
+        if [[ "${pre_allocate}" -ge 1 ]]; then
+            opts="$opts --no-pre-allocate"
+        fi
+
+        # Test for custom server
+        if [[ "${SPEEDTEST_SERVER}" =~ ^[0-9]+$ ]]; then
+          if [[ "${SPEEDTEST_SERVER}" -ge 1 ]]; then
+            # echo "Using custom server $SPEEDTEST_SERVER"
+            opts="$opts --server $SPEEDTEST_SERVER"
+          fi
+        fi
+
+        cmd="speedtest-cli $opts"
+        # echo $cmd
+        # exit
         mdebug "Querying Speedtest using '$cmd'"
         $cmd > $log
-	status=$?
+	      status=$?
         mdebug "Exit code: $status"
     fi
 

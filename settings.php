@@ -791,6 +791,13 @@ readStaticLeasesFile();
 			$speedtestdays  = "1";
 	}
 
+	if(isset($setupVars["SPEEDTEST_SERVER"]))
+	{
+			$speedtestserver = $setupVars["SPEEDTEST_SERVER"];
+	}else {
+			$speedtestserver  = "";
+	}
+
 	// Use $boxedlayout value determined in header.php
 ?>
 		<div class="box box-success">
@@ -836,6 +843,25 @@ readStaticLeasesFile();
 							<option value="30" <?php if($speedtestdays == 30) {?> selected <?php } ?>>30 Days</option>
 						</select>
 				</div>
+				<h4>Custom Speedtest server </h4>
+
+				<div class="form-group col-md-12">
+					<p > <span class="text-danger"> Expert only!!!</span>. Get list of supported servers <a href="https://www.speedtest.net/speedtest-servers.php" target="_blank"> here</a></p>
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-addon">Speedtest.net Server</div>
+								<input type="number" class="form-control" name="speedtestserver" value="<?php if($speedtestserver) { echo $speedtestserver; } ?>"  placeholder="Keep this blank to autoselect" />
+						</div>
+					</div>
+				</div>
+				<h4>Flush Speedtest history </h4>
+				<div class="form-group col-md-12">
+
+					<div class="form-group">
+						<div class="checkbox text-danger" ><label><input type="checkbox"  name="clearspeedtests" value="yes"> Flush Speedtest history</label></div>
+					</div>
+				</div>
+
 
 
 				<h4>Interface appearance</h4>
