@@ -836,7 +836,7 @@ readStaticLeasesFile();
 				<div class="form-group col-md-6">
 						<label>Speedtest Display Range</label>
 						<select name="speedtestdays" class="form-control" >
-							<option value="0" <?php if($speedtestdays == 1) {?> selected <?php } ?>>1 Day</option>
+							<option value="1" <?php if($speedtestdays == 1) {?> selected <?php } ?>>1 Day</option>
 							<option value="2" <?php if($speedtestdays == 2) {?> selected <?php } ?>>2 Days</option>
 							<option value="4" <?php if($speedtestdays == 4) {?> selected <?php } ?>>4 Days</option>
 							<option value="7" <?php if($speedtestdays == 7) {?> selected <?php } ?>>7 Days</option>
