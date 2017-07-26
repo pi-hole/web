@@ -9,7 +9,6 @@
 <?php
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
-    require "scripts/pi-hole/php/update_checker.php";
 
     check_cors();
 

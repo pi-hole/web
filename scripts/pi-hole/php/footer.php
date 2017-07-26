@@ -39,6 +39,14 @@
             </div>
         </div>
     </div>
+<?php
+  // Flushes the system write buffers of PHP. This attempts to push everything we have so far all the way to the client's browser.
+  flush();
+  // Run update checker
+  //  - determines local branch each time,
+  //  - determines local and remote version every 30 minutes
+  require "scripts/pi-hole/php/update_checker.php";
+?>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
 	<!-- Version Infos -->
