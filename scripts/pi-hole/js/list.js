@@ -143,8 +143,7 @@ function add(arg) {
         method: "post",
         data: {"domain":domain.val(), "list":locallistType, "token":token},
         success: function(response) {
-          if (response.indexOf("not a valid argument") >= 0 ||
-              response.indexOf("is not a valid domain") >= 0) {
+          if (response.indexOf("] Pi-hole blocking is ") === -1) {
             alFailure.show();
             err.html(response);
             alFailure.delay(4000).fadeOut(2000, function() {
