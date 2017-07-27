@@ -119,7 +119,8 @@ function check_csrf($token) {
 
 function check_domain() {
     if(isset($_POST['domain'])){
-        $domains = explode(" ",$_POST['domain']);
+        // Due to PREG_SPLIT_NO_EMPTY, only non-empty pieces will be returned by preg_split()
+        $domains = preg_split('\s+', $_POST['domain'], null, PREG_SPLIT_NO_EMPTY);
         foreach($domains as $domain)
         {
             $validDomain = is_valid_domain_name($domain);
