@@ -39,50 +39,31 @@
             </div>
         </div>
     </div>
+<?php
+  // Flushes the system write buffers of PHP. This attempts to push everything we have so far all the way to the client's browser.
+  flush();
+  // Run update checker
+  //  - determines local branch each time,
+  //  - determines local and remote version every 30 minutes
+  require "scripts/pi-hole/php/update_checker.php";
+?>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-            <?php
-            // Check if on a dev branch
-            $piholeBranch = exec("cd /etc/.pihole/ && git rev-parse --abbrev-ref HEAD");
-            $webBranch = exec("git rev-parse --abbrev-ref HEAD");
-
-            // Use vDev if not on master
-            if($piholeBranch !== "master") {
-                $piholeVersion = "vDev";
-                $piholeCommit = exec("cd /etc/.pihole/ && git describe --long --dirty --tags");
-            }
-            else {
-                $piholeVersion = exec("cd /etc/.pihole/ && git describe --tags --abbrev=0");
-            }
-
-            if($webBranch !== "master") {
-                $webVersion = "vDev";
-                $webCommit = exec("git describe --long --dirty --tags");
-            }
-            else {
-                $webVersion = exec("git describe --tags --abbrev=0");
-            }
-
-            $FTLVersion = exec("pihole-FTL version");
-            ?>
-<style type="text/css">
-	@-webkit-keyframes Pulse{
-		from {color:#630030;-webkit-text-shadow:0 0 9px #333;}
-		50% {color:#e33100;-webkit-text-shadow:0 0 32px #e33100;}
-		to {color:#630030;-webkit-text-shadow:0 0 9px #333;}
-	}
-	a.lookatme {
-		-webkit-animation-name: Pulse;
-		-webkit-animation-duration: 2s;
-		-webkit-animation-iteration-count: infinite;
-	}
-</style>
-        <div class="pull-right hidden-xs <?php if(isset($piholeCommit) || isset($webCommit)) { ?>hidden-md<?php } ?>">
-            <b>Pi-hole Version </b> <span id="piholeVersion"><?php echo $piholeVersion; ?></span><?php if(isset($piholeCommit)) { echo " (".$piholeBranch.", ".$piholeCommit.")"; } ?>
-            <b>Web Interface Version </b> <span id="webVersion"><?php echo $webVersion; ?></span><?php if(isset($webCommit)) { echo " (".$webBranch.", ".$webCommit.")"; } ?>
-            <b>FTL Version </b> <span id="FTLVersion"><?php echo $FTLVersion; ?></span>
+	<!-- Version Infos -->
+        <div class="pull-right hidden-xs hidden-sm<?php if(isset($core_commit) || isset($web_commit)) { ?> hidden-md<?php } ?>">
+            <b>Pi-hole Version </b> <?php
+            echo $core_current;
+            if(isset($core_commit)) { echo " (".$core_branch.", ".$core_commit.")"; }
+            if($core_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/pi-hole/releases" target="_blank">(Update available!)</a><?php } ?>
+            <b>Web Interface Version </b><?php
+            echo $web_current;
+            if(isset($web_commit)) { echo " (".$web_branch.", ".$web_commit.")"; }
+            if($web_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/AdminLTE/releases" target="_blank">(Update available!)</a><?php } ?>
+            <b>FTL Version </b> <?php
+            echo $FTL_current;
+            if($FTL_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/FTL/releases" target="_blank">(Update available!)</a><?php } ?>
         </div>
-            <div><a href="https://github.com/pi-hole"><i class="fa fa-github"></i></a> <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY">Donate</a></strong> if you found this useful.</div>
+        <div style="display: inline-block"><a href="https://github.com/pi-hole" target="_blank"><i class="fa fa-github"></i></a> <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY" target="_blank">Donate</a></strong> if you found this useful.</div>
     </footer>
 </div>
 <!-- ./wrapper -->

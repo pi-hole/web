@@ -21,6 +21,11 @@ else
 	$file = fopen("/var/log/pihole.log","r");
 }
 
+if(!$file)
+{
+	die(json_encode(array("offset" => 0, "lines" => array("Failed to open log file. Check permissions!\n"))));
+}
+
 if(isset($_GET["offset"]))
 {
 	$offset = intval($_GET['offset']);
@@ -30,7 +35,7 @@ if(isset($_GET["offset"]))
 		fseek($file, $offset);
 		$lines = [];
 		while (!feof($file))
-			array_push($lines,fgets($file));
+			array_push($lines, htmlspecialchars(fgets($file)));
 		die(json_encode(array("offset" => ftell($file), "lines" => $lines)));
 	}
 }
