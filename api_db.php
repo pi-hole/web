@@ -17,19 +17,11 @@ $data = array();
 // Needs package php5-sqlite, e.g.
 //    sudo apt-get install php5-sqlite
 
-class FTLDB extends SQLite3
-{
-	function __construct()
-	{
-		$this->open("/etc/pihole/pihole-FTL.db", SQLITE3_OPEN_READONLY);
-	}
-}
-
 function SQLite3_connect($trytoreconnect)
 {
 	try {
 		// connect to database
-		return new FTLDB;
+		return new SQLite3('/etc/pihole/pihole-FTL.db', SQLITE3_OPEN_READWRITE);
 	}
 	catch (Exception $exception) {
 		// sqlite3 throws an exception when it is unable to connect, try to reconnect after 3 seconds
