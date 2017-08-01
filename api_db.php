@@ -21,7 +21,7 @@ function SQLite3_connect($trytoreconnect)
 {
 	try {
 		// connect to database
-		return new SQLite3('/etc/pihole/pihole-FTL.db', SQLITE3_OPEN_READWRITE);
+		return new SQLite3('/etc/pihole/pihole-FTL.db', SQLITE3_OPEN_READONLY);
 	}
 	catch (Exception $exception) {
 		// sqlite3 throws an exception when it is unable to connect, try to reconnect after 3 seconds
