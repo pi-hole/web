@@ -14,6 +14,29 @@ if (php_sapi_name() !== "cli") {
 	check_csrf(isset($_POST["token"]) ? $_POST["token"] : "");
 }
 
+function archive_add_file($path,$name)
+{
+	global $archive;
+	if(file_exists($path.$name))
+		$archive[$name] = file_get_contents($path.$name);
+}
+
+function archive_add_directory($path)
+{
+	global $zip;
+	if($dir = opendir($path))
+	{
+		while(false !== ($entry = readdir($dir)))
+		{
+			if($entry !== "." && $entry !== "..")
+			{
+				archive_add_file($path,$entry);
+			}
+		}
+		closedir($dir);
+	}
+}
+
 function limit_length(&$item, $key)
 {
 	// limit max length for a domain entry to 253 chars
@@ -44,29 +67,6 @@ function process_zip($name)
 	// Check validity of domains (after possible clipping)
 	check_domains($domains);
 	return $domains;
-}
-
-function add_to_zip($path,$name)
-{
-	global $zip;
-	if(file_exists($path.$name))
-		$zip->addFile($path.$name,$name);
-}
-
-function add_dir_to_zip($path)
-{
-	global $zip;
-	if($dir = opendir($path))
-	{
-		while(false !== ($entry = readdir($dir)))
-		{
-			if($entry !== "." && $entry !== "..")
-			{
-				$zip->addFile($path.$entry,$entry);
-			}
-		}
-		closedir($dir);
-	}
 }
 
 function check_domains($domains)
@@ -109,7 +109,7 @@ if(isset($_POST["action"]))
 		$type = mime_content_type($source);
 
 		$name = explode(".", $filename);
-		$accepted_types = array('application/zip', 'application/x-zip-compressed', 'multipart/x-zip', 'application/x-compressed');
+		$accepted_types = array('application/gzip', 'application/tar', 'application/x-compressed');
 		$okay = false;
 		foreach($accepted_types as $mime_type) {
 			if($mime_type == $type) {
@@ -118,9 +118,9 @@ if(isset($_POST["action"]))
 			}
 		}
 
-		$continue = strtolower($name[1]) == 'zip' ? true : false;
+		$continue = strtolower($name[1]) == 'tar' && strtolower($name[1]) == 'gz' ? true : false;
 		if(!$continue || !$okay) {
-			die("The file you are trying to upload is not a .zip file (filename: ".$filename.", type: ".$type."). Please try again.");
+			die("The file you are trying to upload is not a .tar.gz file (filename: ".$filename.", type: ".$type."). Please try again.");
 		}
 
 		$zip = new ZipArchive();
@@ -160,24 +160,27 @@ if(isset($_POST["action"]))
 }
 else
 {
-	$filename = "pi-hole-teleporter_".date("Y-m-d_h-i-s").".zip";
-	$archive_file_name = tempnam("/tmp", "Teleporter");
-	$zip = new ZipArchive();
-	touch($archive_file_name);
-	$res = $zip->open($archive_file_name, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+	$tarname = "pi-hole-teleporter_".date("Y-m-d_h-i-s").".tar";
+	$filename = $tarname.".gz";
+	// $archive_file_name = tempnam("/tmp", "Teleporter");
+	$archive_file_name = sys_get_temp_dir() ."/". $tarname;
+	// touch($archive_file_name);
+	$archive = new PharData($archive_file_name);
 
-	if ($res !== TRUE) {
-		exit("cannot open/create $archive_file_name<br>Error: ".$zip->getStatusString()."<br>PHP user: ".exec('whoami')."\n");
+	if ($archive->isWritable() !== TRUE) {
+		exit("cannot open/create $archive_file_name<br>PHP user: ".exec('whoami')."\n");
 	}
 
-	add_to_zip("/etc/pihole/","whitelist.txt");
-	add_to_zip("/etc/pihole/","blacklist.txt");
-	add_to_zip("/etc/pihole/","adlists.list");
-	add_to_zip("/etc/pihole/","setupVars.conf");
-	add_dir_to_zip("/etc/dnsmasq.d/");
+	archive_add_file("/etc/pihole/","whitelist.txt");
+	archive_add_file("/etc/pihole/","blacklist.txt");
+	archive_add_file("/etc/pihole/","adlists.list");
+	archive_add_file("/etc/pihole/","setupVars.conf");
+	archive_add_directory("/etc/dnsmasq.d/");
 
-	$zip->addFromString("wildcardblocking.txt", getWildcardListContent());
-	$zip->close();
+	$archive["wildcardblocking.txt"] = getWildcardListContent();
+	$archive->compress(Phar::GZ); // Creates a gziped copy
+	unlink($archive_file_name); // Unlink original tar file as it is not needed anymore
+	$archive_file_name .= ".gz"; // Append ".gz" extension to ".tar"
 
 	header("Content-type: application/zip");
 	header('Content-Transfer-Encoding: binary');
