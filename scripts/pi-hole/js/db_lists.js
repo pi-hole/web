@@ -108,7 +108,7 @@ function updateTopDomainsChart() {
         $("#domain-frequency td").parent().remove();
         var domaintable =  $("#domain-frequency").find("tbody:last");
         var domain, percentage;
-        let sum = 0;
+        var sum = 0;
         for (domain in data.top_domains) {
             if ({}.hasOwnProperty.call(data.top_domains, domain)){
                 sum += data.top_domains[domain];
