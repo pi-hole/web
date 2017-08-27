@@ -20,6 +20,7 @@ function echoEvent($datatext) {
 }
 
 // Credit: http://stackoverflow.com/a/4694816/2087442
+ini_set("pcre.recursion_limit", 1500);
 function is_valid_domain_name($domain_name)
 {
     return (preg_match("/^((-|_)*[a-z\d]((-|_)*[a-z\d])*(-|_)*)(\.(-|_)*([a-z\d]((-|_)*[a-z\d])*))*$/i", $domain_name) // Valid chars check
@@ -47,6 +48,10 @@ else
 if(isset($_GET["exact"]))
 {
     $exact = "-exact";
+}
+elseif(isset($_GET["bp"]))
+{
+    $exact = "-bp";
 }
 else
 {
