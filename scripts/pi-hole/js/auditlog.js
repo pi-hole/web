@@ -89,9 +89,10 @@ $(document).ready(function() {
 
     $("#domain-frequency tbody").on( "click", "button", function () {
         var url = ($(this).parents("tr"))[0].innerText.split("	")[0];
-        if($(this).context.innerText === "Blacklist")
+        if($(this).context.innerText === " Blacklist")
         {
             add(url,"black");
+            $("#gravityBtn").prop("disabled", false);
         }
         else
         {
@@ -101,13 +102,19 @@ $(document).ready(function() {
 
     $("#ad-frequency tbody").on( "click", "button", function () {
         var url = ($(this).parents("tr"))[0].innerText.split("	")[0].split(" ")[0];
-        if($(this).context.innerText === "Whitelist")
+        if($(this).context.innerText === " Whitelist")
         {
             add(url,"white");
+            $("#gravityBtn").prop("disabled", false);
         }
         else
         {
             add(url,"audit");
         }
     });
+});
+
+
+$("#gravityBtn").on("click", function() {
+    window.location.replace("gravity.php?go");
 });
