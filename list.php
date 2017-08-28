@@ -11,7 +11,7 @@ $list = $_GET['l'];
 
 if($list !== "white" && $list !== "black"){
     echo "Invalid list parameter";
-    require "footer.php";
+    require "scripts/pi-hole/php/footer.php";
     die();
 }
 

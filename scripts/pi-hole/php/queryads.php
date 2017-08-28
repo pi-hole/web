@@ -20,11 +20,12 @@ function echoEvent($datatext) {
 }
 
 // Credit: http://stackoverflow.com/a/4694816/2087442
+ini_set("pcre.recursion_limit", 1500);
 function is_valid_domain_name($domain_name)
 {
-    return (preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domain_name) //valid chars check
-            && preg_match("/^.{1,253}$/", $domain_name) //overall length check
-            && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)   ); //length of each label
+    return (preg_match("/^((-|_)*[a-z\d]((-|_)*[a-z\d])*(-|_)*)(\.(-|_)*([a-z\d]((-|_)*[a-z\d])*))*$/i", $domain_name) // Valid chars check
+            && preg_match("/^.{1,253}$/", $domain_name) // Overall length check
+            && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)   ); // Length of each label
 }
 
 // Test if domain is set
@@ -47,6 +48,10 @@ else
 if(isset($_GET["exact"]))
 {
     $exact = "-exact";
+}
+elseif(isset($_GET["bp"]))
+{
+    $exact = "-bp";
 }
 else
 {

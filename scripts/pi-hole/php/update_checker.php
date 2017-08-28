@@ -42,14 +42,14 @@ $FTL_current = exec("pihole-FTL version");
 $versionfile = "../versions";
 
 $check_version = false;
+$date = date_create();
+$timestamp = date_timestamp_get($date);
 
 // Check version if version buffer file does not exist
 if(is_readable($versionfile))
 {
 	// Obtain latest time stamp from buffer file
 	$versions = explode(",",file_get_contents($versionfile));
-	$date = date_create();
-	$timestamp = date_timestamp_get($date);
 
 	// Is last check for updates older than 30 minutes?
 	if($timestamp >= intval($versions[0]) + 1800)
