@@ -13,7 +13,7 @@
 </div>
 
 <div class="checkbox"><label><input type="checkbox" name="active" checked id="chk1"> Automatic scrolling on update</label></div>
-<pre id="output" style="width: 100%; height: 100%;"></pre>
+<pre id="output" style="width: 100%; height: 100%; max-height:650px; overflow-y:scroll;"></pre>
 <div class="checkbox"><label><input type="checkbox" name="active" checked id="chk2"> Automatic scrolling on update</label></div>
 
 <?php
