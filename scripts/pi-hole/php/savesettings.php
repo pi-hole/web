@@ -420,6 +420,11 @@ function readAdlists()
 				$success .= "The webUI settings have been updated";
 				break;
 
+			case "halt":
+				exec("sudo pihole -a halt");
+				$success = "The system will halt in 5 seconds...";
+				break;
+
 			case "reboot":
 				exec("sudo pihole -a reboot");
 				$success = "The system will reboot in 5 seconds...";
