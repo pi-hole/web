@@ -17,16 +17,16 @@ $(function () {
 		$("input[name=\"AddMAC\"]").val(mac);
 	});
 });
-$(".confirm-halt").confirm({
-	text: "Are you sure you want to send a halt command to your Pi-Hole?",
+$(".confirm-poweroff").confirm({
+	text: "Are you sure you want to send a poweroff command to your Pi-Hole?",
 	title: "Confirmation required",
 	confirm(button) {
-		$("#haltform").submit();
+		$("#poweroffform").submit();
 	},
 	cancel(button) {
 		// nothing to do
 	},
-	confirmButton: "Yes, halt",
+	confirmButton: "Yes, poweroff",
 	cancelButton: "No, go back",
 	post: true,
 	confirmButtonClass: "btn-danger",
