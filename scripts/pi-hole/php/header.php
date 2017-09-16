@@ -153,6 +153,11 @@
     $FTLpid = intval(pidofFTL());
     $FTL = ($FTLpid !== 0 ? true : false);
 
+    $uptime = shell_exec('uptime');
+    $uptime = explode(' up ', $uptime);
+    $uptime = explode(',', $uptime[1]);
+    $uptime = $uptime[0].', '.$uptime[1];
+
 ?>
 <!DOCTYPE html>
 <!-- Pi-hole: A black hole for Internet advertisements
@@ -382,6 +387,8 @@ if($auth) {
                             echo "\"></i> Memory usage:&nbsp;&nbsp; N/A</a>";
                         }
                     ?>
+                    <br/>
+                    <a id="uptime"><i class="fa fa-circle" style="color:#7FFF00"></i> Uptime: <?php echo $uptime; ?></a>
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
