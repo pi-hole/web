@@ -388,7 +388,7 @@ if($auth) {
                         }
                     ?>
                     <br/>
-                    <a id="uptime"><i class="fa fa-circle" style="color:#7FFF00"></i> Uptime: <?php echo $uptime; ?></a>
+                    <a id="uptime" title="Note that the update is not updated automatically"><i class="fa fa-circle" style="color:#7FFF00"></i> Uptime: <?php echo $uptime; ?></a>
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
