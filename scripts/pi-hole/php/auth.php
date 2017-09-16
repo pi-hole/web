@@ -146,7 +146,7 @@ function list_verify($type) {
         require("password.php");
         if(strlen($pwhash) == 0)
         {
-            log_and_die("No password set - ".htmlspecialchars($type)."listing with password not supported");
+            log_and_die("No password set - ".htmlspecialchars($type)."listing without password not supported");
         }
         elseif($wrongpassword)
         {
