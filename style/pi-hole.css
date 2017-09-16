@@ -5,7 +5,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 .small-box {
-	-webkit-user-select: none; /* Chrome/Safari */        
+	-webkit-user-select: none; /* Chrome/Safari */
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+ */
 
@@ -30,7 +30,7 @@ a.lookatme {
 	-webkit-animation-name: Pulse;
 	animation-name: Pulse;
 	-webkit-animation-duration: 2s;
-	animation-duration: 2s;	
+	animation-duration: 2s;
 	-webkit-animation-iteration-count: infinite;
 	animation-iteration-count: infinite;
 }
@@ -39,4 +39,18 @@ a.lookatme {
 }
 #all-queries tbody {
 	word-wrap: break-word;
+}
+
+.user-panel {
+	padding: 0px;
+	padding-left: 10px;
+}
+
+.pull-left.image {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.pull-left.info p {
+	margin-bottom: 4px;
 }
