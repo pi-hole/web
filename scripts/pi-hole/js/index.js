@@ -118,17 +118,9 @@ function updateQueryTypesOverTime() {
                 // New style: Get Unix timestamps
                 d = new Date(1000*h);
 
-                var sum = plotdata[j][0] + plotdata[j][1];
-                var A = 0, AAAA = 0;
-                if(sum > 0)
-                {
-                    A = plotdata[j][0]/sum;
-                    AAAA = plotdata[j][1]/sum;
-                }
-
                 queryTypeChart.data.labels.push(d);
-                queryTypeChart.data.datasets[0].data.push(A);
-                queryTypeChart.data.datasets[1].data.push(AAAA);
+                queryTypeChart.data.datasets[0].data.push(1e-2*plotdata[j][0]);
+                queryTypeChart.data.datasets[1].data.push(1e-2*plotdata[j][1]);
             }
         }
         $("#query-types .overlay").hide();
@@ -243,18 +235,10 @@ function updateForwardedOverTime() {
         for (j in timestamps)
         {
             if (!{}.hasOwnProperty.call(timestamps, j)) continue;
-            var sum = 0.0;
             for (key in plotdata[j])
             {
                 if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
-                sum += plotdata[j][key];
-            }
-            var dd = [];
-            for (key in plotdata[j])
-            {
-                if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
-                var singlepoint = plotdata[j][key];
-                forwardDestinationChart.data.datasets[key].data.push(singlepoint/sum);
+                forwardDestinationChart.data.datasets[key].data.push(1e-2*plotdata[j][key]);
             }
 
             var d = new Date(1000*parseInt(timestamps[j]));
@@ -822,6 +806,19 @@ $(document).ready(function() {
                     display: true,
                     position: "right"
                 },
+                tooltips: {
+                    enabled: true,
+                    callbacks: {
+                        title: function(tooltipItem, data) {
+                            return "Query types";
+                        },
+                        label: function(tooltipItems, data) {
+                            var dataset = data.datasets[tooltipItems.datasetIndex];
+                            var label = data.labels[tooltipItems.index];
+                            return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
+                        }
+                    }
+                },
                 animation: {
                     duration: 2000
                 },
@@ -846,6 +843,19 @@ $(document).ready(function() {
                 legend: {
                     display: true,
                     position: "right"
+                },
+                tooltips: {
+                    enabled: true,
+                    callbacks: {
+                        title: function(tooltipItem, data) {
+                            return "Forward destinations";
+                        },
+                        label: function(tooltipItems, data) {
+                            var dataset = data.datasets[tooltipItems.datasetIndex];
+                            var label = data.labels[tooltipItems.index];
+                            return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
+                        }
+                    }
                 },
                 animation: {
                     duration: 2000
