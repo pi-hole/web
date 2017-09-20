@@ -118,17 +118,9 @@ function updateQueryTypesOverTime() {
                 // New style: Get Unix timestamps
                 d = new Date(1000*h);
 
-                var sum = plotdata[j][0] + plotdata[j][1];
-                var A = 0, AAAA = 0;
-                if(sum > 0)
-                {
-                    A = plotdata[j][0]/sum;
-                    AAAA = plotdata[j][1]/sum;
-                }
-
                 queryTypeChart.data.labels.push(d);
-                queryTypeChart.data.datasets[0].data.push(A);
-                queryTypeChart.data.datasets[1].data.push(AAAA);
+                queryTypeChart.data.datasets[0].data.push(plotdata[j][0]);
+                queryTypeChart.data.datasets[1].data.push(plotdata[j][1]);
             }
         }
         $("#query-types .overlay").hide();
