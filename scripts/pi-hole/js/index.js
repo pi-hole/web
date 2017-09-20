@@ -119,8 +119,8 @@ function updateQueryTypesOverTime() {
                 d = new Date(1000*h);
 
                 queryTypeChart.data.labels.push(d);
-                queryTypeChart.data.datasets[0].data.push(plotdata[j][0]);
-                queryTypeChart.data.datasets[1].data.push(plotdata[j][1]);
+                queryTypeChart.data.datasets[0].data.push(1e-2*plotdata[j][0]);
+                queryTypeChart.data.datasets[1].data.push(1e-2*plotdata[j][1]);
             }
         }
         $("#query-types .overlay").hide();
@@ -235,18 +235,10 @@ function updateForwardedOverTime() {
         for (j in timestamps)
         {
             if (!{}.hasOwnProperty.call(timestamps, j)) continue;
-            var sum = 0.0;
             for (key in plotdata[j])
             {
                 if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
-                sum += plotdata[j][key];
-            }
-            var dd = [];
-            for (key in plotdata[j])
-            {
-                if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
-                var singlepoint = plotdata[j][key];
-                forwardDestinationChart.data.datasets[key].data.push(singlepoint/sum);
+                forwardDestinationChart.data.datasets[key].data.push(1e-2*plotdata[j][key]);
             }
 
             var d = new Date(1000*parseInt(timestamps[j]));
