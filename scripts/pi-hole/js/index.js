@@ -806,6 +806,19 @@ $(document).ready(function() {
                     display: true,
                     position: "right"
                 },
+                tooltips: {
+                    enabled: true,
+                    callbacks: {
+                        title: function(tooltipItem, data) {
+                            return "Query types";
+                        },
+                        label: function(tooltipItems, data) {
+                            var dataset = data.datasets[tooltipItems.datasetIndex];
+                            var label = data.labels[tooltipItems.index];
+                            return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
+                        }
+                    }
+                },
                 animation: {
                     duration: 2000
                 },
@@ -830,6 +843,19 @@ $(document).ready(function() {
                 legend: {
                     display: true,
                     position: "right"
+                },
+                tooltips: {
+                    enabled: true,
+                    callbacks: {
+                        title: function(tooltipItem, data) {
+                            return "Forward destinations";
+                        },
+                        label: function(tooltipItems, data) {
+                            var dataset = data.datasets[tooltipItems.datasetIndex];
+                            var label = data.labels[tooltipItems.index];
+                            return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
+                        }
+                    }
                 },
                 animation: {
                     duration: 2000
