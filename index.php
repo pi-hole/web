@@ -158,6 +158,25 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+    <div class="box" id="clients">
+        <div class="box-header with-border">
+          <h3 class="box-title">Clients (over time)</h3>
+        </div>
+        <div class="box-body">
+          <div class="chart">
+            <canvas id="clientsChart" width="400" height="50"></canvas>
+          </div>
+        </div>
+        <div class="overlay">
+          <i class="fa fa-refresh fa-spin"></i>
+        </div>
+        <!-- /.box-body -->
+      </div>
+    </div>
+</div>
+
 <?php
 if($boxedlayout)
 {
