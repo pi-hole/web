@@ -119,6 +119,14 @@ function validDomain($domain_name)
 					$extra .= "no-bogus-priv";
 				}
 
+				// Check if Conditional Forwarding is requested
+				if(isset($_POST["conditionalForwarding"]))
+				{
+					$addressArray = explode(".", $_POST["conditionalForwardingIP"]);
+					$reverseAddress = $addressArray[2].".".$addressArray[1].".".$addressArray[0].".in-addr.arpa";
+					$extra .= " conditional_forwarding ".$_POST["conditionalForwardingIP"]." ".$_POST["conditionalForwardingDomain"]." $reverseAddress";
+				}
+
 				// If there has been no error we can save the new DNS server IPs
 				if(!strlen($error))
 				{
