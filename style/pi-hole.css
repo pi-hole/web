@@ -40,3 +40,6 @@ a.lookatme {
 #all-queries tbody {
 	word-wrap: break-word;
 }
+.main-header .logo {
+  height: 51px;
+}
