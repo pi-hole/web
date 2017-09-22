@@ -303,5 +303,44 @@ if (isset($_GET['overTimeDataQueryTypes']) && $auth)
 	$data = array_merge($data, $result);
 }
 
+if (isset($_GET['getClientNames']) && $auth)
+{
+	sendRequestFTL("client-names");
+	$return = getResponseFTL();
+	$forward_dest = array();
+	foreach($return as $line)
+	{
+		$tmp = explode(" ",$line);
+		if(count($tmp) == 4)
+		{
+			$forward_dest[$tmp[3]."|".$tmp[2]] = floatval($tmp[1]);
+		}
+		else
+		{
+			$forward_dest[$tmp[2]] = floatval($tmp[1]);
+		}
+	}
+
+	$result = array('clients' => $forward_dest);
+	$data = array_merge($data, $result);
+}
+
+if (isset($_GET['overTimeDataClients']) && $auth)
+{
+	sendRequestFTL("ClientsoverTime");
+	$return = getResponseFTL();
+	$over_time = array();
+
+	foreach($return as $line)
+	{
+		$tmp = explode(" ",$line);
+		for ($i=0; $i < count($tmp)-1; $i++) {
+			$over_time[intval($tmp[0])][$i] = floatval($tmp[$i+1]);
+		}
+	}
+	$result = array('over_time' => $over_time);
+	$data = array_merge($data, $result);
+}
+
 disconnectFTL();
 ?>
