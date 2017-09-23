@@ -190,13 +190,13 @@ $(document).ready(function() {
             var api = this.api();
             // Query type IPv4 / IPv6
             api.$('td:eq(1)').click( function () { api.search( this.innerHTML ).draw(); $('#resetButton').show(); } );
-            api.$("td:eq(1)").css("cursor","zoom-in");
+            api.$("td:eq(1)").css("cursor","pointer");
             // Domain
             api.$('td:eq(2)').click( function () { api.search( this.innerHTML ).draw(); $('#resetButton').show(); } );
-            api.$("td:eq(2)").css("cursor","zoom-in");
+            api.$("td:eq(2)").css("cursor","pointer");
             // Client
             api.$('td:eq(3)').click( function () { api.search( this.innerHTML ).draw(); $('#resetButton').show(); } );
-            api.$("td:eq(3)").css("cursor","zoom-in");
+            api.$("td:eq(3)").css("cursor","pointer");
         }
     });
 
