@@ -728,7 +728,7 @@ $(document).ready(function() {
                             var m = parseInt(time[2], 10) || 0;
                             var from = padNumber(h)+":"+padNumber(m-5)+":00";
                             var to = padNumber(h)+":"+padNumber(m+4)+":59";
-                            return "Client activity from "+from+" to "+to;
+                            return "Forward destinations from "+from+" to "+to;
                         },
                         label: function(tooltipItems, data) {
                             return data.datasets[tooltipItems.datasetIndex].label + ": " + (100.0*tooltipItems.yLabel).toFixed(1) + "%";
