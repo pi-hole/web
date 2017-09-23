@@ -185,7 +185,16 @@ $(document).ready(function() {
             "targets": -1,
             "data": null,
             "defaultContent": ""
-        } ]
+        } ],
+        "initComplete": function () {
+            var api = this.api();
+            // Query type IPv4 / IPv6
+            api.$('td:eq(1)').click( function () { api.search( this.innerHTML ).draw(); } );
+            // Domain
+            api.$('td:eq(2)').click( function () { api.search( this.innerHTML ).draw(); } );
+            // Client
+            api.$('td:eq(3)').click( function () { api.search( this.innerHTML ).draw(); } );
+        }
     });
     $("#all-queries tbody").on( "click", "button", function () {
         var data = tableApi.row( $(this).parents("tr") ).data();
