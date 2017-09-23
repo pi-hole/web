@@ -196,6 +196,7 @@ $(document).ready(function() {
             api.$('td:eq(3)').click( function () { api.search( this.innerHTML ).draw(); } );
         }
     });
+
     $("#all-queries tbody").on( "click", "button", function () {
         var data = tableApi.row( $(this).parents("tr") ).data();
         if (data[4] === "1" || data[4] === "5")
@@ -207,6 +208,8 @@ $(document).ready(function() {
           add(data[2],"black");
         }
     } );
+
+    $('#resetButton').click( function () { tableApi.search("").draw(); } );
 } );
 
 
