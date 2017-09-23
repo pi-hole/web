@@ -98,6 +98,8 @@ function updateQueryTypesOverTime() {
 
         // convert received objects to arrays
         data.over_time = objectToArray(data.over_time);
+        // remove last data point since it not representative
+        data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
         var plotdata  = data.over_time[1];
         // Remove possibly already existing data
@@ -192,6 +194,8 @@ function updateForwardedOverTime() {
 
         // convert received objects to arrays
         data.over_time = objectToArray(data.over_time);
+        // remove last data point since it not representative
+        data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
         var plotdata  = data.over_time[1];
         var labels = [];
@@ -272,6 +276,8 @@ function updateClientsOverTime() {
 
         // convert received objects to arrays
         data.over_time = objectToArray(data.over_time);
+        // remove last data point since it not representative
+        data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
         var plotdata  = data.over_time[1];
         var labels = [];
@@ -318,7 +324,7 @@ function updateClientsOverTime() {
             for (key in plotdata[j])
             {
                 if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
-                clientsChart.data.datasets[key].data.push(1e-2*plotdata[j][key]);
+                clientsChart.data.datasets[key].data.push(plotdata[j][key]);
             }
 
             var d = new Date(1000*parseInt(timestamps[j]));
@@ -788,7 +794,7 @@ $(document).ready(function() {
                             return "Forward destinations from "+from+" to "+to;
                         },
                         label: function(tooltipItems, data) {
-                            return data.datasets[tooltipItems.datasetIndex].label + ": " + (100.0*tooltipItems.yLabel).toFixed(1) + "%";
+                            return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
                         }
                     }
                 },
@@ -808,12 +814,7 @@ $(document).ready(function() {
                     }],
                     yAxes: [{
                         ticks: {
-                            mix: 0.0,
-                            max: 1.0,
-                            beginAtZero: true,
-                            callback: function(value, index, values) {
-                                return Math.round(value*100) + " %";
-                            }
+                            beginAtZero: true
                         },
                         stacked: true
                     }]
