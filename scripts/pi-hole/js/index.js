@@ -657,7 +657,7 @@ $(document).ready(function() {
                         var m = parseInt(time[2], 10) || 0;
                         var from = padNumber(h)+":"+padNumber(m-5)+":00";
                         var to = padNumber(h)+":"+padNumber(m+4)+":59";
-                        return "Queries from "+from+" to "+to;
+                        return "Forward destinations from "+from+" to "+to;
                     },
                     label: function(tooltipItems, data) {
                         if(tooltipItems.datasetIndex === 1)
@@ -766,7 +766,7 @@ $(document).ready(function() {
         });
 
         // Pull in data via AJAX
-        updateClientsOverTime();
+        updateForwardedOverTime();
     }
 
     // Create / load "Top Clients over Time" only if authorized
@@ -791,7 +791,7 @@ $(document).ready(function() {
                             var m = parseInt(time[2], 10) || 0;
                             var from = padNumber(h)+":"+padNumber(m-5)+":00";
                             var to = padNumber(h)+":"+padNumber(m+4)+":59";
-                            return "Forward destinations from "+from+" to "+to;
+                            return "Client activity from "+from+" to "+to;
                         },
                         label: function(tooltipItems, data) {
                             return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
@@ -824,7 +824,7 @@ $(document).ready(function() {
         });
 
         // Pull in data via AJAX
-        updateForwardedOverTime();
+        updateClientsOverTime();
     }
 
     // Create / load "Query Types over Time" only if authorized
