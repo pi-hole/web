@@ -189,11 +189,11 @@ $(document).ready(function() {
         "initComplete": function () {
             var api = this.api();
             // Query type IPv4 / IPv6
-            api.$('td:eq(1)').click( function () { api.search( this.innerHTML ).draw(); } );
+            api.$('td:eq(1)').click( function () { api.search( this.innerHTML ).draw(); $('#resetButton').show(); } );
             // Domain
-            api.$('td:eq(2)').click( function () { api.search( this.innerHTML ).draw(); } );
+            api.$('td:eq(2)').click( function () { api.search( this.innerHTML ).draw(); $('#resetButton').show(); } );
             // Client
-            api.$('td:eq(3)').click( function () { api.search( this.innerHTML ).draw(); } );
+            api.$('td:eq(3)').click( function () { api.search( this.innerHTML ).draw(); $('#resetButton').show(); } );
         }
     });
 
@@ -209,7 +209,7 @@ $(document).ready(function() {
         }
     } );
 
-    $('#resetButton').click( function () { tableApi.search("").draw(); } );
+    $('#resetButton').click( function () { tableApi.search("").draw(); $('#resetButton').hide(); } );
 } );
 
 
