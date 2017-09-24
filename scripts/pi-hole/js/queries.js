@@ -170,6 +170,7 @@ $(document).ready(function() {
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         "ajax": {"url": APIstring, "error": handleAjaxError },
         "autoWidth" : false,
+	"scrollX": "100%",
         "processing": true,
         "order" : [[0, "desc"]],
         "columns": [
