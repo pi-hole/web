@@ -134,7 +134,7 @@ if(strlen($showing) > 0)
                     </tfoot>
                 </table>
             </div>
-          <button type="button" id="resetButton" hidden="true">Clear Filters</button>
+          <button type="button" id="resetButton" hidden="true" style="color: red; font-weight: bold;">Clear Filters</button>
        </div>
         <!-- /.box-body -->
       </div>
