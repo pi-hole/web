@@ -188,6 +188,7 @@ $(document).ready(function() {
             "defaultContent": ""
         } ]
     });
+
     $("#all-queries tbody").on( "click", "button", function () {
         var data = tableApi.row( $(this).parents("tr") ).data();
         if (data[4] === "1" || data[4] === "5")
@@ -199,6 +200,9 @@ $(document).ready(function() {
           add(data[2],"black");
         }
     } );
-} );
 
+    // Make table responsive (DataTables modifies the DOM such that we can't add
+    // this class to the element because it doesn't exist until runtime)
+    $("#all-queries").parent().addClass("table-responsive");
+} );
 

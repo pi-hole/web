@@ -110,31 +110,29 @@ if(strlen($showing) > 0)
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <div class="table-responsive">
-                <table id="all-queries" class="display table table-striped table-bordered" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Domain</th>
-                            <th>Client</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Domain</th>
-                            <th>Client</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-       </div>
+            <table id="all-queries" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Domain</th>
+                        <th>Client</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Domain</th>
+                        <th>Client</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
         <!-- /.box-body -->
       </div>
       <!-- /.box -->

@@ -35,9 +35,6 @@ a.lookatme {
 	-webkit-animation-iteration-count: infinite;
 	animation-iteration-count: infinite;
 }
-#all-queries {
-	table-layout: fixed;
-}
 #all-queries tbody {
 	word-wrap: break-word;
 }
