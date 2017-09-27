@@ -201,8 +201,8 @@ $(document).ready(function() {
         }
     } );
 
-    // Make table responsive (DataTables modifies the DOM such that we can't add
-    // this class to the element because it doesn't exist until runtime)
+    // Make table responsive (DataTables modifies the DOM such that we can't add this
+    // class to the element in the static file because it doesn't exist until runtime)
     $("#all-queries").parent().addClass("table-responsive");
 } );
 
