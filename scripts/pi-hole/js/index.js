@@ -272,17 +272,27 @@ function updateForwardDestinationsPie() {
         var colors = [];
         // Get colors from AdminLTE
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
-        var v = [], c = [], k = [];
-        // Collect values and colors, immediately push individual labels
+        var v = [], c = [], k = [], values = [];
+
+        // Collect values and colors
         $.each(data.forward_destinations, function(key , value) {
-            v.push(value);
-            c.push(colors.shift());
             if(key.indexOf("|") > -1)
             {
                 key = key.substr(0, key.indexOf("|"));
             }
-            k.push(key);
+            values.push([key, value, colors.shift()]);
         });
+
+        // Sort data ASC accorwing to 2nd column, keep already assigned labels and colors
+        values = values.sort(function(a,b) { return b[1] - a[1]; });
+
+        // Split data into individual arrays for the graphs
+        $.each(values, function(key , value) {
+            k.push(value[0]);
+            v.push(value[1]);
+            c.push(value[2]);
+        });
+
         // Build a single dataset with the data to be pushed
         var dd = {data: v, backgroundColor: c};
         // and push it at once
