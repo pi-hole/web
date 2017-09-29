@@ -974,7 +974,7 @@ $(document).ready(function() {
                     }
                 },
                 animation: {
-                    duration: 2000
+                    duration: 750
                 },
                 cutoutPercentage: 0
             }
@@ -1012,7 +1012,7 @@ $(document).ready(function() {
                     }
                 },
                 animation: {
-                    duration: 2000
+                    duration: 750
                 },
                 cutoutPercentage: 0
             }
