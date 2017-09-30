@@ -501,6 +501,13 @@ readStaticLeasesFile();
 	} else {
 		$DNSinterface = "single";
 	}
+	if(isset($setupVars["CONDITIONAL_FORWARDING"]) && ($setupVars["CONDITIONAL_FORWARDING"] == 1)){
+		$conditionalForwarding = true;
+		$conditionalForwardingDomain = $setupVars["CONDITIONAL_FORWARDING_DOMAIN"];
+		$conditionalForwardingIP = $setupVars["CONDITIONAL_FORWARDING_IP"];
+	} else {
+		$conditionalForwarding = false;
+	}
 ?>
 		<div class="box box-warning">
 			<div class="box-header with-border">
@@ -593,6 +600,25 @@ readStaticLeasesFile();
 								</div>
 							</div>
 
+							<label>Conditional Forwarding</label>
+							<p>If you would like for your home network hostnames to be resolved by a different device please activate and provide the following information.</p>
+							<table class="table table-bordered">
+							<tr>
+								<th>&nbsp;</th>
+								<th>Address</th>
+								<th>Domain</th>
+							</tr>
+							<tr>
+							<div class="input-group">
+								<td>
+								<input type="checkbox" name="conditionalForwarding" value="conditionalForwarding"
+								<?php if(isset($conditionalForwarding) && ($conditionalForwarding == true)){ ?>checked<?php } ?>></td>
+								<td><input type="text" name="conditionalForwardingIP" class="form-control" data-inputmask="'alias': 'ip'" data-mask <?php if(isset($conditionalForwardingIP)){ ?>value="<?php echo $conditionalForwardingIP; ?>"<?php } ?>></td>
+								<td><input type="text" name="conditionalForwardingDomain" class="form-control" data-mask <?php if(isset($conditionalForwardingDomain)){ ?>value="<?php echo $conditionalForwardingDomain; ?>"<?php } ?>></td>
+							</div>
+							</tr>
+							</table>
+						
 						</div>
 					</div>
 				</div>
