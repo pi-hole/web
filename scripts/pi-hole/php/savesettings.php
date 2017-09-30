@@ -233,6 +233,14 @@ function readAdlists()
 					$extra .= "no-dnssec";
 				}
 
+				// Check if Conditional Forwarding is requested
+				if(isset($_POST["conditionalForwarding"]))
+				{
+					$addressArray = explode(".", $_POST["conditionalForwardingIP"]);
+					$reverseAddress = $addressArray[2].".".$addressArray[1].".".$addressArray[0].".in-addr.arpa";
+					$extra .= " conditional_forwarding ".$_POST["conditionalForwardingIP"]." ".$_POST["conditionalForwardingDomain"]." $reverseAddress";
+				}
+
 				// Check if DNSinterface is set
 				if(isset($_POST["DNSinterface"]))
 				{
@@ -535,10 +543,23 @@ function readAdlists()
 
 					$domain = $_POST["domain"];
 
+					// Validate conditional forwarding IP
+					$to = $_POST["conditionalForwardingIP"];
+					if (!validIP(conditionalForwardingIP))
+					{
+						$error .= "Conditional forwarding IP (".htmlspecialchars(conditionalForwardingIP).") is invalid!<br>";
+					}
+
 					// Validate Domain name
 					if(!validDomain($domain))
 					{
 						$error .= "Domain name ".htmlspecialchars($domain)." is invalid!<br>";
+					}
+
+					// Validate conditional forwarding domain name
+					if(!validDomain(conditionalForwardingDomain))
+					{
+						$error .= "Conditional forwarding domain name ".htmlspecialchars(conditionalForwardingDomain)." is invalid!<br>";
 					}
 
 					$leasetime = $_POST["leasetime"];
