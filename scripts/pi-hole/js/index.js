@@ -229,6 +229,7 @@ function updateForwardedOverTime() {
         forwardDestinationChart.data.datasets[0].pointHitRadius = 5;
         forwardDestinationChart.data.datasets[0].pointHoverRadius = 5;
         forwardDestinationChart.data.datasets[0].label = labels[0];
+        forwardDestinationChart.data.datasets[0].cubicInterpolationMode = "monotone";
 
         for (i = forwardDestinationChart.data.datasets.length; i < plotdata[0].length; i++)
         {
@@ -314,7 +315,7 @@ function updateClientsOverTime() {
 
         for (i = clientsChart.data.datasets.length; i < plotdata[0].length; i++)
         {
-            clientsChart.data.datasets.push({data: [], backgroundColor: colors[i], pointRadius: 0, pointHitRadius: 5, pointHoverRadius: 5, label: labels[i]});
+            clientsChart.data.datasets.push({data: [], backgroundColor: colors[i], pointRadius: 0, pointHitRadius: 5, pointHoverRadius: 5, label: labels[i], cubicInterpolationMode: "monotone" });
         }
 
         // Add data for each dataset that is available
@@ -851,14 +852,16 @@ $(document).ready(function() {
                         pointRadius: 0,
                         pointHitRadius: 5,
                         pointHoverRadius: 5,
-                        data: []
+                        data: [],
+                        cubicInterpolationMode: "monotone"
                     },
                     {
                         label: "AAAA: IPv6 queries",
                         pointRadius: 0,
                         pointHitRadius: 5,
                         pointHoverRadius: 5,
-                        data: []
+                        data: [],
+                        cubicInterpolationMode: "monotone"
                     }
                 ]
             },
