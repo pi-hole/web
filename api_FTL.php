@@ -12,7 +12,8 @@ if(!isset($api))
 	die("Direct call to api_FTL.php is not allowed!");
 }
 
-$socket = connectFTL("127.0.0.1");
+// $FTL_IP is defined in api.php
+$socket = connectFTL($FTL_IP);
 
 if (isset($_GET['type'])) {
 	$data["type"] = "FTL";
