@@ -6,10 +6,19 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-function testFTL()
+function testFTL($address)
 {
-	$ret = shell_exec("pidof pihole-FTL");
-	return intval($ret);
+	if($address === "127.0.0.1")
+	{
+		$ret = shell_exec("pidof pihole-FTL");
+		return intval($ret);
+	}
+	else
+	{
+		// We cannot relly test for a distant FTL instance
+		// in the same way, so we return true here
+		return true;
+	}
 }
 
 function connectFTL($address, $port=4711, $quiet=true)
