@@ -13,12 +13,12 @@ function testFTL($address)
 		$ret = shell_exec("pidof pihole-FTL");
 		return intval($ret);
 	}
-	else
-	{
-		// We cannot relly test for a distant FTL instance
-		// in the same way, so we return true here
-		return true;
-	}
+	// We cannot relly test for a distant FTL instance
+	// in the same way, so for any other IP address
+	// we simply return true here and rely on the API
+	// socket connection itself to fail if there is nothing
+	// on that address
+	return true;
 }
 
 function connectFTL($address, $port=4711, $quiet=true)
