@@ -141,6 +141,7 @@ if(isset($_POST["action"]))
 			}
 		}
 
+		unlink($fullfilename);
 		echo "OK";
 	}
 	else
