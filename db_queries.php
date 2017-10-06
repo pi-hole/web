@@ -99,7 +99,7 @@ $token = $_SESSION['token'];
     <div class="col-md-12">
       <div class="box" id="recent-queries">
         <div class="box-header with-border">
-          <h3 class="box-title">Recent Queries <?php echo $showing; ?></h3>
+          <h3 class="box-title">Recent Queries</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">

@@ -119,7 +119,7 @@ function check_csrf($token) {
 
 function check_domain() {
     if(isset($_POST['domain'])){
-        $domains = explode(" ",$_POST['domain']);
+        $domains = preg_split('\s+', $_POST['domain']);
         foreach($domains as $domain)
         {
             $validDomain = is_valid_domain_name($domain);
@@ -146,7 +146,7 @@ function list_verify($type) {
         require("password.php");
         if(strlen($pwhash) == 0)
         {
-            log_and_die("No password set - ".htmlspecialchars($type)."listing with password not supported");
+            log_and_die("No password set - ".htmlspecialchars($type)."listing without password not supported");
         }
         elseif($wrongpassword)
         {

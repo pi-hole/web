@@ -11,17 +11,16 @@
     </div>
     <!-- Modal for custom disable time -->
     <div class="modal fade" id="customDisableModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">Custom disable timeout</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-3"><input id="customTimeout" class="form-control" type="number" value="60"></div>
-                        <div class="col-sm-9">
-                            <div class="btn-group" data-toggle="buttons">
+                    <div class="input-group">
+                        <input id="customTimeout" class="form-control" type="number" value="60">
+                            <div class="input-group-btn" data-toggle="buttons">
                                 <label class="btn btn-default">
                                     <input type="radio"/> Secs
                                 </label>
@@ -29,7 +28,6 @@
                                     <input type="radio"  /> Mins
                                 </label>
                             </div>
-                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -4,6 +4,7 @@
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
+
 .small-box {
 	-webkit-user-select: none; /* Chrome/Safari */        
 	-moz-user-select: none; /* Firefox */
@@ -33,4 +34,13 @@ a.lookatme {
 	animation-duration: 2s;	
 	-webkit-animation-iteration-count: infinite;
 	animation-iteration-count: infinite;
+}
+#all-queries {
+	table-layout: fixed;
+}
+#all-queries tbody {
+	word-wrap: break-word;
+}
+.main-header>.navbar {
+  height: 50px;
 }

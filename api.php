@@ -17,7 +17,7 @@ check_cors();
 $data = array();
 
 // Common API functions
-if (isset($_GET['status']) && $auth)
+if (isset($_GET['status']))
 {
 	$pistatus = exec('sudo pihole status web');
 	if ($pistatus == "1")

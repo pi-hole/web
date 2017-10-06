@@ -118,17 +118,9 @@ function updateQueryTypesOverTime() {
                 // New style: Get Unix timestamps
                 d = new Date(1000*h);
 
-                var sum = plotdata[j][0] + plotdata[j][1];
-                var A = 0, AAAA = 0;
-                if(sum > 0)
-                {
-                    A = plotdata[j][0]/sum;
-                    AAAA = plotdata[j][1]/sum;
-                }
-
                 queryTypeChart.data.labels.push(d);
-                queryTypeChart.data.datasets[0].data.push(A);
-                queryTypeChart.data.datasets[1].data.push(AAAA);
+                queryTypeChart.data.datasets[0].data.push(1e-2*plotdata[j][0]);
+                queryTypeChart.data.datasets[1].data.push(1e-2*plotdata[j][1]);
             }
         }
         $("#query-types .overlay").hide();
@@ -243,18 +235,10 @@ function updateForwardedOverTime() {
         for (j in timestamps)
         {
             if (!{}.hasOwnProperty.call(timestamps, j)) continue;
-            var sum = 0.0;
             for (key in plotdata[j])
             {
                 if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
-                sum += plotdata[j][key];
-            }
-            var dd = [];
-            for (key in plotdata[j])
-            {
-                if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
-                var singlepoint = plotdata[j][key];
-                forwardDestinationChart.data.datasets[key].data.push(singlepoint/sum);
+                forwardDestinationChart.data.datasets[key].data.push(1e-2*plotdata[j][key]);
             }
 
             var d = new Date(1000*parseInt(timestamps[j]));
@@ -288,17 +272,27 @@ function updateForwardDestinationsPie() {
         var colors = [];
         // Get colors from AdminLTE
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
-        var v = [], c = [], k = [];
-        // Collect values and colors, immediately push individual labels
+        var v = [], c = [], k = [], values = [];
+
+        // Collect values and colors
         $.each(data.forward_destinations, function(key , value) {
-            v.push(value);
-            c.push(colors.shift());
             if(key.indexOf("|") > -1)
             {
                 key = key.substr(0, key.indexOf("|"));
             }
-            k.push(key);
+            values.push([key, value, colors.shift()]);
         });
+
+        // Sort data ASC accorwing to 2nd column, keep already assigned labels and colors
+        values = values.sort(function(a,b) { return b[1] - a[1]; });
+
+        // Split data into individual arrays for the graphs
+        $.each(values, function(key , value) {
+            k.push(value[0]);
+            v.push(value[1]);
+            c.push(value[2]);
+        });
+
         // Build a single dataset with the data to be pushed
         var dd = {data: v, backgroundColor: c};
         // and push it at once
@@ -822,8 +816,21 @@ $(document).ready(function() {
                     display: true,
                     position: "right"
                 },
+                tooltips: {
+                    enabled: true,
+                    callbacks: {
+                        title: function(tooltipItem, data) {
+                            return "Query types";
+                        },
+                        label: function(tooltipItems, data) {
+                            var dataset = data.datasets[tooltipItems.datasetIndex];
+                            var label = data.labels[tooltipItems.index];
+                            return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
+                        }
+                    }
+                },
                 animation: {
-                    duration: 2000
+                    duration: 750
                 },
                 cutoutPercentage: 0
             }
@@ -847,8 +854,21 @@ $(document).ready(function() {
                     display: true,
                     position: "right"
                 },
+                tooltips: {
+                    enabled: true,
+                    callbacks: {
+                        title: function(tooltipItem, data) {
+                            return "Forward destinations";
+                        },
+                        label: function(tooltipItems, data) {
+                            var dataset = data.datasets[tooltipItems.datasetIndex];
+                            var label = data.labels[tooltipItems.index];
+                            return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
+                        }
+                    }
+                },
                 animation: {
-                    duration: 2000
+                    duration: 750
                 },
                 cutoutPercentage: 0
             }
