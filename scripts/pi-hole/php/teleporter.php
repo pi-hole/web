@@ -107,13 +107,13 @@ if(isset($_POST["action"]))
 
 		$continue = strtolower($name[1]) == 'tar' && strtolower($name[2]) == 'gz' ? true : false;
 		if(!$continue || !$okay) {
-			die("The file you are trying to upload is not a .tar.gz file (filename: ".htmlspecialchars($filename).", type: ".htmlspecialchars($type)."). Please try again.");
+			die("The file you are trying to upload is not a .tar.gz file (filename: ".htmlentities($filename).", type: ".htmlentities($type)."). Please try again.");
 		}
 
 		$fullfilename = sys_get_temp_dir().$filename;
-		if(!move_uploaded_file($_FILES["zip_file"]["tmp_name"], $fullfilename))
+		if(!move_uploaded_file($source, $fullfilename))
 		{
-			die("Failed moving ".$_FILES["zip_file"]["tmp_name"]." to ".$fullfilename);
+			die("Failed moving ".htmlentities($source)." to ".htmlentities($fullfilename));
 		}
 
 		$archive = new PharData($fullfilename);
@@ -157,7 +157,7 @@ else
 	$archive = new PharData($archive_file_name);
 
 	if ($archive->isWritable() !== TRUE) {
-		exit("cannot open/create $archive_file_name<br>PHP user: ".exec('whoami')."\n");
+		exit("cannot open/create ".htmlentities($archive_file_name)".<br>\nPHP user: ".exec('whoami')."\n");
 	}
 
 	archive_add_file("/etc/pihole/","whitelist.txt");
