@@ -33,7 +33,7 @@ if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))
 	{
 		$tmp = explode(" ",$line);
 
-		if($tmp[0] === "domains_being_blocked" || $tmp[0] === "status")
+		if(($tmp[0] === "domains_being_blocked" && !is_numeric($tmp[1])) || $tmp[0] === "status")
 		{
 			$stats[$tmp[0]] = $tmp[1];
 			continue;
