@@ -23,7 +23,6 @@ function archive_add_file($path,$name)
 
 function archive_add_directory($path)
 {
-	global $zip;
 	if($dir = opendir($path))
 	{
 		while(false !== ($entry = readdir($dir)))
@@ -108,16 +107,16 @@ if(isset($_POST["action"]))
 
 		$continue = strtolower($name[1]) == 'tar' && strtolower($name[2]) == 'gz' ? true : false;
 		if(!$continue || !$okay) {
-			die("The file you are trying to upload is not a .tar.gz file (filename: ".$filename.", type: ".$type."). Please try again.");
+			die("The file you are trying to upload is not a .tar.gz file (filename: ".htmlspecialchars($filename).", type: ".htmlspecialchars($type)."). Please try again.");
 		}
 
-		$filename = "/tmp/".$filename;
-		if(!move_uploaded_file($_FILES["zip_file"]["tmp_name"], $filename))
+		$fullfilename = sys_get_temp_dir().$filename;
+		if(!move_uploaded_file($_FILES["zip_file"]["tmp_name"], $fullfilename))
 		{
-			die("Failed moving ".$_FILES["zip_file"]["tmp_name"]." to ".$filename);
+			die("Failed moving ".$_FILES["zip_file"]["tmp_name"]." to ".$fullfilename);
 		}
 
-		$archive = new PharData($filename);
+		$archive = new PharData($fullfilename);
 
 		foreach($archive as $file)
 		{
@@ -153,9 +152,7 @@ else
 {
 	$tarname = "pi-hole-teleporter_".date("Y-m-d_h-i-s").".tar";
 	$filename = $tarname.".gz";
-	// $archive_file_name = tempnam("/tmp", "Teleporter");
 	$archive_file_name = sys_get_temp_dir() ."/". $tarname;
-	// touch($archive_file_name);
 	$archive = new PharData($archive_file_name);
 
 	if ($archive->isWritable() !== TRUE) {
