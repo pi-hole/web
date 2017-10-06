@@ -601,7 +601,7 @@ readStaticLeasesFile();
 							</div>
 
 							<label>Conditional Forwarding</label>
-							<p>If not configured as your DHCP server, Pi-Hole won't able to determine the names of devices on your local network and the Top Clients list will only show IP addresses.  One solution for this is to configure Pi-Hole to use your home router, but just for what's inside your home.  To configure this we will need to know the IP address of your router and a name for your local network.</p>
+							<p>If not configured as your DHCP server, Pi-Hole won't able to determine the names of devices on your local network and the Top Clients list will only show IP addresses.  One solution for this is to configure Pi-Hole to request this from your home router, but just for what's inside your home.  To configure this we will need to know the IP address of your router and a name for your local network.</p>
 							<p>Note: The local domain name must match the domain name specified in your router.</p>
 							<table class="table table-bordered">
 							<tr>
