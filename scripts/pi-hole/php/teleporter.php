@@ -44,20 +44,8 @@ function limit_length(&$item, $key)
 	$item = substr($item, 0, 253);
 }
 
-function process_zip($name)
+function process_file($contents)
 {
-	global $zip;
-	$zippointer = $zip->getStream($name);
-	if(!$zippointer)
-	{
-		echo "$name not found in provided ZIP file, skipping...<br>";
-		return;
-	}
-	$contents = "";
-	while (!feof($zippointer)) {
-		$contents .= fread($zippointer, 4096);
-	}
-	fclose($zippointer);
 	$domains = array_filter(explode("\n",$contents));
 
 	// Walk array and apply a max string length
@@ -109,7 +97,7 @@ if(isset($_POST["action"]))
 		$type = mime_content_type($source);
 
 		$name = explode(".", $filename);
-		$accepted_types = array('application/gzip', 'application/tar', 'application/x-compressed');
+		$accepted_types = array('application/gzip', 'application/tar', 'application/x-compressed', 'application/x-gzip');
 		$okay = false;
 		foreach($accepted_types as $mime_type) {
 			if($mime_type == $type) {
@@ -118,40 +106,43 @@ if(isset($_POST["action"]))
 			}
 		}
 
-		$continue = strtolower($name[1]) == 'tar' && strtolower($name[1]) == 'gz' ? true : false;
+		$continue = strtolower($name[1]) == 'tar' && strtolower($name[2]) == 'gz' ? true : false;
 		if(!$continue || !$okay) {
 			die("The file you are trying to upload is not a .tar.gz file (filename: ".$filename.", type: ".$type."). Please try again.");
 		}
 
-		$zip = new ZipArchive();
-		$x = $zip->open($source);
-		if ($x === true) {
-			if(isset($_POST["blacklist"]))
+		$filename = "/tmp/".$filename;
+		if(!move_uploaded_file($_FILES["zip_file"]["tmp_name"], $filename))
+		{
+			die("Failed moving ".$_FILES["zip_file"]["tmp_name"]." to ".$filename);
+		}
+
+		$archive = new PharData($filename);
+
+		foreach($archive as $file)
+		{
+			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.txt")
 			{
-				$blacklist = process_zip("blacklist.txt");
+				$blacklist = process_file(file_get_contents($file));
+				echo "Processing blacklist.txt<br>\n";
 				exec("sudo pihole -b -q ".implode(" ", $blacklist));
 			}
-
-			if(isset($_POST["whitelist"]))
+			if(isset($_POST["whitelist"]) && $file->getFilename() === "whitelist.txt")
 			{
-				$whitelist = process_zip("whitelist.txt");
+				$whitelist = process_file(file_get_contents($file));
+				echo "Processing whitelist.txt<br>\n";
 				exec("sudo pihole -w -q ".implode(" ", $whitelist));
 			}
 
-			if(isset($_POST["wildlist"]))
+			if(isset($_POST["wildlist"]) && $file->getFilename() === "wildcardblocking.txt")
 			{
-				$wildlist = process_zip("wildcardblocking.txt");
+				$wildlist = process_file(file_get_contents($file));
+				echo "Processing wildcardblocking.txt<br>\n";
 				exec("sudo pihole -wild -q ".implode(" ", $wildlist));
 			}
-
-			echo "OK";
-
-			$zip->close();
 		}
-		else
-		{
-			die("Error opening uploaded archive!");
-		}
+
+		echo "OK";
 	}
 	else
 	{
