@@ -157,7 +157,7 @@ else
 	$archive = new PharData($archive_file_name);
 
 	if ($archive->isWritable() !== TRUE) {
-		exit("cannot open/create ".htmlentities($archive_file_name)".<br>\nPHP user: ".exec('whoami')."\n");
+		exit("cannot open/create ".htmlentities($archive_file_name)."<br>\nPHP user: ".exec('whoami')."\n");
 	}
 
 	archive_add_file("/etc/pihole/","whitelist.txt");
