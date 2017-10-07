@@ -118,29 +118,38 @@ if(isset($_POST["action"]))
 
 		$archive = new PharData($fullfilename);
 
+		$importedsomething = false;
+
 		foreach($archive as $file)
 		{
 			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.txt")
 			{
 				$blacklist = process_file(file_get_contents($file));
 				echo "Processing blacklist.txt<br>\n";
-				exec("sudo pihole -b --nuke");
-				exec("sudo pihole -b -q ".implode(" ", $blacklist));
+				exec("sudo pihole -b -nr --nuke");
+				exec("sudo pihole -b -q -nr ".implode(" ", $blacklist));
+				$importedsomething = true;
 			}
 			if(isset($_POST["whitelist"]) && $file->getFilename() === "whitelist.txt")
 			{
 				$whitelist = process_file(file_get_contents($file));
 				echo "Processing whitelist.txt<br>\n";
-				exec("sudo pihole -w --nuke");
-				exec("sudo pihole -w -q ".implode(" ", $whitelist));
+				exec("sudo pihole -w -nr --nuke");
+				exec("sudo pihole -w -q -nr ".implode(" ", $whitelist));
+				$importedsomething = true;
 			}
 
 			if(isset($_POST["wildlist"]) && $file->getFilename() === "wildcardblocking.txt")
 			{
 				$wildlist = process_file(file_get_contents($file));
 				echo "Processing wildcardblocking.txt<br>\n";
-				exec("sudo pihole -wild --nuke");
-				exec("sudo pihole -wild -q ".implode(" ", $wildlist));
+				exec("sudo pihole -wild -nr --nuke");
+				exec("sudo pihole -wild -q -nr ".implode(" ", $wildlist));
+				$importedsomething = true;
+			}
+			if($importedsomething)
+			{
+				exec("sudo pihole restartdns");
 			}
 		}
 
