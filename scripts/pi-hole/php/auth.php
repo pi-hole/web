@@ -131,7 +131,7 @@ function check_domain() {
 }
 
 function list_verify($type) {
-    global $pwhash, $wrongpassword;
+    global $pwhash, $wrongpassword, $auth;
     if(!isset($_POST['domain']) || !isset($_POST['list']) || !(isset($_POST['pw']) || isset($_POST['token']))) {
         log_and_die("Missing POST variables");
     }
