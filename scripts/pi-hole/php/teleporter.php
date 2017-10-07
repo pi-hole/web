@@ -124,12 +124,14 @@ if(isset($_POST["action"]))
 			{
 				$blacklist = process_file(file_get_contents($file));
 				echo "Processing blacklist.txt<br>\n";
+				exec("sudo pihole -b --nuke");
 				exec("sudo pihole -b -q ".implode(" ", $blacklist));
 			}
 			if(isset($_POST["whitelist"]) && $file->getFilename() === "whitelist.txt")
 			{
 				$whitelist = process_file(file_get_contents($file));
 				echo "Processing whitelist.txt<br>\n";
+				exec("sudo pihole -w --nuke");
 				exec("sudo pihole -w -q ".implode(" ", $whitelist));
 			}
 
@@ -137,6 +139,7 @@ if(isset($_POST["action"]))
 			{
 				$wildlist = process_file(file_get_contents($file));
 				echo "Processing wildcardblocking.txt<br>\n";
+				exec("sudo pihole -wild --nuke");
 				exec("sudo pihole -wild -q ".implode(" ", $wildlist));
 			}
 		}
