@@ -144,11 +144,7 @@ function list_verify($type) {
     elseif(isset($_POST['pw']))
     {
         require("password.php");
-        if(strlen($pwhash) == 0)
-        {
-            log_and_die("No password set - ".htmlspecialchars($type)."listing without password not supported");
-        }
-        elseif($wrongpassword)
+        if($wrongpassword || !$auth)
         {
             log_and_die("Wrong password - ".htmlspecialchars($type)."listing of ${_POST['domain']} not permitted");
         }
