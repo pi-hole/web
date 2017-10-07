@@ -110,7 +110,7 @@ if(isset($_POST["action"]))
 			die("The file you are trying to upload is not a .tar.gz file (filename: ".htmlentities($filename).", type: ".htmlentities($type)."). Please try again.");
 		}
 
-		$fullfilename = sys_get_temp_dir().$filename;
+		$fullfilename = sys_get_temp_dir()."/".$filename;
 		if(!move_uploaded_file($source, $fullfilename))
 		{
 			die("Failed moving ".htmlentities($source)." to ".htmlentities($fullfilename));
