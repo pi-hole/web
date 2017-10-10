@@ -7,7 +7,7 @@
 // Define global variables
 /* global Chart */
 var timeLineChart, queryTypeChart, forwardDestinationChart;
-var queryTypePieChart, forwardDestinationPieChart;
+var queryTypePieChart, forwardDestinationPieChart, clientsChart;
 
 function padNumber(num) {
     return ("00" + num).substr(-2,2);
@@ -98,6 +98,8 @@ function updateQueryTypesOverTime() {
 
         // convert received objects to arrays
         data.over_time = objectToArray(data.over_time);
+        // remove last data point since it not representative
+        data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
         var plotdata  = data.over_time[1];
         // Remove possibly already existing data
@@ -192,6 +194,8 @@ function updateForwardedOverTime() {
 
         // convert received objects to arrays
         data.over_time = objectToArray(data.over_time);
+        // remove last data point since it not representative
+        data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
         var plotdata  = data.over_time[1];
         var labels = [];
@@ -225,6 +229,7 @@ function updateForwardedOverTime() {
         forwardDestinationChart.data.datasets[0].pointHitRadius = 5;
         forwardDestinationChart.data.datasets[0].pointHoverRadius = 5;
         forwardDestinationChart.data.datasets[0].label = labels[0];
+        forwardDestinationChart.data.datasets[0].cubicInterpolationMode = "monotone";
 
         for (i = forwardDestinationChart.data.datasets.length; i < plotdata[0].length; i++)
         {
@@ -257,6 +262,88 @@ function updateForwardedOverTime() {
             // Try again after 1 minute only if this has not failed more
             // than five times in a row
             setTimeout(updateForwardedOverTime, 60000);
+        }
+    });
+}
+
+
+function updateClientsOverTime() {
+    $.getJSON("api.php?overTimeDataClients&getClientNames", function(data) {
+
+        if("FTLnotrunning" in data)
+        {
+            return;
+        }
+
+        // convert received objects to arrays
+        data.over_time = objectToArray(data.over_time);
+        // remove last data point since it not representative
+        data.over_time[0].splice(-1,1);
+        var timestamps = data.over_time[0];
+        var plotdata  = data.over_time[1];
+        var labels = [];
+        var key, i, j;
+        for (key in data.clients)
+        {
+            if (!{}.hasOwnProperty.call(data.clients, key)) continue;
+            if(key.indexOf("|") > -1)
+            {
+                var idx = key.indexOf("|");
+                key = key.substr(0, idx);
+            }
+            labels.push(key);
+        }
+        // Get colors from AdminLTE
+        var colors = [];
+        $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
+        var v = [], c = [], k = [];
+
+        // Remove possibly already existing data
+        clientsChart.data.labels = [];
+        clientsChart.data.datasets[0].data = [];
+        for (i = 1; i < clientsChart.data.datasets.length; i++)
+        {
+            clientsChart.data.datasets[i].data = [];
+        }
+
+        // Collect values and colors, and labels
+        clientsChart.data.datasets[0].backgroundColor = colors[0];
+        clientsChart.data.datasets[0].pointRadius = 0;
+        clientsChart.data.datasets[0].pointHitRadius = 5;
+        clientsChart.data.datasets[0].pointHoverRadius = 5;
+        clientsChart.data.datasets[0].label = labels[0];
+
+        for (i = clientsChart.data.datasets.length; i < plotdata[0].length; i++)
+        {
+            clientsChart.data.datasets.push({data: [], backgroundColor: colors[i], pointRadius: 0, pointHitRadius: 5, pointHoverRadius: 5, label: labels[i], cubicInterpolationMode: "monotone" });
+        }
+
+        // Add data for each dataset that is available
+        for (j in timestamps)
+        {
+            if (!{}.hasOwnProperty.call(timestamps, j)) continue;
+            for (key in plotdata[j])
+            {
+                if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
+                clientsChart.data.datasets[key].data.push(plotdata[j][key]);
+            }
+
+            var d = new Date(1000*parseInt(timestamps[j]));
+            clientsChart.data.labels.push(d);
+        }
+        $("#clients .overlay").hide();
+        clientsChart.update();
+    }).done(function() {
+        // Reload graph after 10 minutes
+        failures = 0;
+        setTimeout(updateClientsOverTime, 600000);
+    }).fail(function() {
+        failures++;
+        if(failures < 5)
+        {
+            // Try again after 1 minute only if this has not failed more
+            // than five times in a row
+            setTimeout(updateClientsOverTime, 60000);
         }
     });
 }
@@ -581,7 +668,7 @@ $(document).ready(function() {
                         var m = parseInt(time[2], 10) || 0;
                         var from = padNumber(h)+":"+padNumber(m-5)+":00";
                         var to = padNumber(h)+":"+padNumber(m+4)+":59";
-                        return "Queries from "+from+" to "+to;
+                        return "Forward destinations from "+from+" to "+to;
                     },
                     label: function(tooltipItems, data) {
                         if(tooltipItems.datasetIndex === 1)
@@ -693,6 +780,64 @@ $(document).ready(function() {
         updateForwardedOverTime();
     }
 
+    // Create / load "Top Clients over Time" only if authorized
+    if(document.getElementById("clientsChart"))
+    {
+        ctx = document.getElementById("clientsChart").getContext("2d");
+        clientsChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: [],
+                datasets: [{ data: [] }]
+            },
+            options: {
+                tooltips: {
+                    enabled: true,
+                    mode: "x-axis",
+                    callbacks: {
+                        title: function(tooltipItem, data) {
+                            var label = tooltipItem[0].xLabel;
+                            var time = label.match(/(\d?\d):?(\d?\d?)/);
+                            var h = parseInt(time[1], 10);
+                            var m = parseInt(time[2], 10) || 0;
+                            var from = padNumber(h)+":"+padNumber(m-5)+":00";
+                            var to = padNumber(h)+":"+padNumber(m+4)+":59";
+                            return "Client activity from "+from+" to "+to;
+                        },
+                        label: function(tooltipItems, data) {
+                            return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
+                        }
+                    }
+                },
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        type: "time",
+                        time: {
+                            unit: "hour",
+                            displayFormats: {
+                                hour: "HH:mm"
+                            },
+                            tooltipFormat: "HH:mm"
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        },
+                        stacked: true
+                    }]
+                },
+                maintainAspectRatio: true
+            }
+        });
+
+        // Pull in data via AJAX
+        updateClientsOverTime();
+    }
+
     // Create / load "Query Types over Time" only if authorized
     if(document.getElementById("queryTypeChart"))
     {
@@ -707,14 +852,16 @@ $(document).ready(function() {
                         pointRadius: 0,
                         pointHitRadius: 5,
                         pointHoverRadius: 5,
-                        data: []
+                        data: [],
+                        cubicInterpolationMode: "monotone"
                     },
                     {
                         label: "AAAA: IPv6 queries",
                         pointRadius: 0,
                         pointHitRadius: 5,
                         pointHoverRadius: 5,
-                        data: []
+                        data: [],
+                        cubicInterpolationMode: "monotone"
                     }
                 ]
             },
