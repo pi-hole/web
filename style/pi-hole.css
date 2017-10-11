@@ -46,3 +46,6 @@ a.lookatme {
 	color: red;
 	font-weight: bold;
 }
+.dataTables_scroll {
+	-webkit-overflow-scrolling: touch;
+}
