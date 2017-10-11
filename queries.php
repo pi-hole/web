@@ -1,4 +1,4 @@
-<?php /* 
+<?php /*
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
@@ -132,6 +132,7 @@ if(strlen($showing) > 0)
                     </tr>
                 </tfoot>
             </table>
+            <button type="button" id="resetButton" hidden="true">Clear Filters</button>
         </div>
         <!-- /.box-body -->
       </div>

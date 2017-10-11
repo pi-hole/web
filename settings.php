@@ -898,11 +898,11 @@ if($FTL)
 				<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
 			</div>
 			<div class="box-body">
-			<?php if (extension_loaded('zip')) { ?>
+			<?php if (extension_loaded('Phar')) { ?>
 				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/teleporter.php" target="_blank"  enctype="multipart/form-data">
 					<input type="hidden" name="token" value="<?php echo $token ?>">
 					<div class="col-lg-12">
-						<p>Export your Pi-hole lists as downloadable ZIP file</p>
+						<p>Export your Pi-hole lists as downloadable archive</p>
 						<button type="submit" class="btn btn-default">Export</button>
 					<hr>
 					</div>
@@ -930,9 +930,8 @@ if($FTL)
 					</div>
 				</form>
 			<?php } else { ?>
-				<p>The PHP extension <code>zip</code> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.</p>
-				<?php if(command_exist("apt-get") && command_exist("sudo")) { ?><p>Try:</p><pre>sudo apt-get install php-zip</pre><?php }
-			} ?>
+				<p>The PHP extension <code>Phar</code> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.
+			<?php } ?>
 			</div>
 		</div>
 	</div>
