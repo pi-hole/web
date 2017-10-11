@@ -313,7 +313,7 @@ function updateClientsOverTime() {
         clientsChart.data.datasets[0].pointHoverRadius = 5;
         clientsChart.data.datasets[0].label = labels[0];
 
-        for (i = clientsChart.data.datasets.length; i < plotdata[0].length; i++)
+        for (i = clientsChart.data.datasets.length; plotdata.length && i < plotdata[0].length; i++)
         {
             clientsChart.data.datasets.push({data: [], backgroundColor: colors[i], pointRadius: 0, pointHitRadius: 5, pointHoverRadius: 5, label: labels[i], cubicInterpolationMode: "monotone" });
         }
