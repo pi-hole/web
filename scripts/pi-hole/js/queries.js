@@ -226,7 +226,6 @@ $(document).ready(function() {
     } );
 
     $('#resetButton').click( function () { tableApi.search("").draw(); $('#resetButton').hide(); } );
-} );
 
     // Make table responsive (DataTables modifies the DOM such that we can't add this
     // class to the element in the static file because it doesn't exist until runtime)
