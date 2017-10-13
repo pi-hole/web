@@ -51,8 +51,8 @@ if(is_readable($versionfile))
 	// Obtain latest time stamp from buffer file
 	$versions = explode(",",file_get_contents($versionfile));
 
-	// Is last check for updates older than 30 minutes?
-	if($timestamp >= intval($versions[0]) + 1800)
+	// Is last check for updates older than 48 hours?
+	if($timestamp >= intval($versions[0]) + 172800)
 	{
 		// Yes: Retrieve new/updated version data
 		$check_version = true;
