@@ -161,3 +161,9 @@ $("button[id^='adlist-btn-']").on("click", function (e) {
     $(this).siblings("input[name^='adlist-enable-']").prop("disabled", !status);
 	$(this).siblings("a").css("text-decoration", textType);
 });
+
+// Javascript to go to specified tab on save or hyperlink
+$(function () {
+   var activeTab = $('[href=' + location.hash + ']');
+   activeTab && activeTab.tab('show');
+});
