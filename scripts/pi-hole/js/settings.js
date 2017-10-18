@@ -167,3 +167,7 @@ $(function () {
    var activeTab = $('[href=' + location.hash + ']');
    activeTab && activeTab.tab('show');
 });
+// Change hash for save and reload
+$('.nav-tabs a').on('shown.bs.tab', function (e) {
+    window.location.hash = e.target.hash;
+})
