@@ -231,8 +231,8 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
     <div class="col-md-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
-                <li><a data-toggle="tab" href="#dns">DNS</a></li>
+                <li class="active"><a data-toggle="tab" href="#dns">DNS</a></li>
+                <li><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
                 <li><a data-toggle="tab" href="#querylogging">Logging</a></li>
                 <li><a data-toggle="tab" href="#blocklists">Block Lists</a></li>
                 <li><a data-toggle="tab" href="#api">API</a></li>
@@ -242,7 +242,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                 <li><a data-toggle="tab" href="#sysadmin">System</a></li>
             </ul>
             <div class="tab-content">
-                <div id="piholedhcp" class="tab-pane fade in active">
+                <div id="piholedhcp" class="tab-pane fade in">
                     <?php
                     // Pi-hole DHCP server
                     if (isset($setupVars["DHCP_ACTIVE"])) {
@@ -572,7 +572,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                     </div>
 
                 </div>
-                <div id="dns" class="tab-pane fade">
+                <div id="dns" class="tab-pane fade in active">
                     <form role="form" method="post">
                         <div class="row">
                             <div class="col-md-6">

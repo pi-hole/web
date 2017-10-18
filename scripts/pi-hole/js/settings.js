@@ -164,10 +164,11 @@ $("button[id^='adlist-btn-']").on("click", function (e) {
 
 // Javascript to go to specified tab on save or hyperlink
 $(function () {
-   var activeTab = $('[href=' + location.hash + ']');
-   activeTab && activeTab.tab('show');
+   var activeTab = $("[href=" + location.hash + "]");
+   activeTab && activeTab.tab("show");
 });
 // Change hash for save and reload
-$('.nav-tabs a').on('shown.bs.tab', function (e) {
+$(".nav-tabs a").on("shown.bs.tab", function (e) {
     window.location.hash = e.target.hash;
-})
+    window.scrollTo(0, 0);
+});
