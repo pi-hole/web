@@ -63,8 +63,23 @@ if(isset($_POST["submit"])) {
 </div>
 <?php } ?>
 
-<div class="row">
-	<div class="col-md-6">
+<div class="row justify-content-md-center">
+	<div class="col-md-12">
+		<div class="nav-tabs-custom">
+			<ul class="nav nav-tabs">
+				<li class="active"><a data-toggle="tab" href="#networking">Networking</a></li>
+				<li><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
+				<li><a data-toggle="tab" href="#dns">DNS</a></li>
+				<li><a data-toggle="tab" href="#querylogging">Logging</a></li>
+				<li><a data-toggle="tab" href="#blocklists">Block Lists</a></li>
+				<li><a data-toggle="tab" href="#api">API</a></li>
+				<li><a data-toggle="tab" href="#web">Web Interface</a></li>
+				<li><a data-toggle="tab" href="#ftl">FTL</a></li>
+				<li><a data-toggle="tab" href="#teleporter">Teleporter</a></li>
+				<li><a data-toggle="tab" href="#sysadmin">System</a></li>
+			</ul>
+			<div class="tab-content">
+				<div id="networking" class="tab-pane fade in active">
 <?php
 	// Networking
 	if(isset($setupVars["PIHOLE_INTERFACE"])){
@@ -100,11 +115,6 @@ if(isset($_POST["submit"])) {
 	}
 	$hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 ?>
-		<div class="box box-warning">
-			<div class="box-header with-border">
-				<h3 class="box-title">Networking</h3>
-			</div>
-			<div class="box-body">
 				<div class="form-group">
 					<label>Pi-hole Ethernet Interface</label>
 					<div class="input-group">
@@ -135,7 +145,7 @@ if(isset($_POST["submit"])) {
 					</div>
 				</div>
 			</div>
-		</div>
+			<div id="piholedhcp" class="tab-pane fade">
 <?php
 	// Pi-hole DHCP server
 	if(isset($setupVars["DHCP_ACTIVE"]))
@@ -200,49 +210,43 @@ if(isset($_POST["submit"])) {
 		$piHoleDomain = "local";
 	}
 ?>
-		<div class="box box-warning">
-			<div class="box-header with-border">
-				<h3 class="box-title">Pi-hole DHCP Server</h3>
-			</div>
-			<div class="box-body">
+			<div class="row">
 				<form role="form" method="post">
 				<div class="col-md-6">
 					<div class="form-group">
 						<div class="checkbox"><label><input type="checkbox" name="active" <?php if($DHCP){ ?>checked<?php } ?> id="DHCPchk"> DHCP server enabled</label></div>
 					</div>
-				</div>
-				<div class="col-md-6">
 					<p id="dhcpnotice" <?php if(!$DHCP){ ?>hidden<?php } ?>>Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
 				</div>
-					<div class="col-md-12">
-						<label>Range of IP addresses to hand out</label>
+				<div class="col-md-12">
+					<label>Range of IP addresses to hand out</label>
+				</div>
+				<div class="col-md-6">
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-addon">From</div>
+							<input type="text" class="form-control DHCPgroup" name="from" data-inputmask="'alias': 'ip'" data-mask value="<?php echo $DHCPstart; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
 					</div>
-					<div class="col-md-6">
-					<div class="form-group">
-						<div class="input-group">
-							<div class="input-group-addon">From</div>
-								<input type="text" class="form-control DHCPgroup" name="from" data-inputmask="'alias': 'ip'" data-mask value="<?php echo $DHCPstart; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
-						</div>
+				</div>
+				</div>
+				<div class="col-md-6">
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-addon">To</div>
+							<input type="text" class="form-control DHCPgroup" name="to" data-inputmask="'alias': 'ip'" data-mask value="<?php echo $DHCPend; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
 					</div>
+				</div>
+				</div>
+				<div class="col-md-12">
+				<label>Router (gateway) IP address</label>
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-addon">Router</div>
+							<input type="text" class="form-control DHCPgroup" name="router" data-inputmask="'alias': 'ip'" data-mask value="<?php echo $DHCProuter; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
 					</div>
-					<div class="col-md-6">
-					<div class="form-group">
-						<div class="input-group">
-							<div class="input-group-addon">To</div>
-								<input type="text" class="form-control DHCPgroup" name="to" data-inputmask="'alias': 'ip'" data-mask value="<?php echo $DHCPend; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
-						</div>
-					</div>
-					</div>
-					<div class="col-md-12">
-					<label>Router (gateway) IP address</label>
-					<div class="form-group">
-						<div class="input-group">
-							<div class="input-group-addon">Router</div>
-								<input type="text" class="form-control DHCPgroup" name="router" data-inputmask="'alias': 'ip'" data-mask value="<?php echo $DHCProuter; ?>" <?php if(!$DHCP){ ?>disabled<?php } ?>>
-						</div>
-					</div>
-					</div>
-					<div class="col-md-12">
+				</div>
+				</div>
+				<div class="col-md-12">
 					<div class="box box-warning collapsed-box">
 						<div class="box-header with-border">
 							<h3 class="box-title">Advanced DHCP settings</h3>
@@ -275,7 +279,7 @@ if(isset($_POST["submit"])) {
 							</div>
 						</div>
 					</div>
-					</div>
+				</div>
 <?php
 $dhcp_leases = array();
 if($DHCP) {
@@ -399,18 +403,15 @@ readStaticLeasesFile();
 					</div>
 					</div>
 				</div>
-				</div>
-			</div>
-			<div class="box-footer">
 				<input type="hidden" name="field" value="DHCP">
 				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
+				</form>
 			</div>
-			</form>
-		</div>
-
+			</div>
+			</div>
+			<div id="dns" class="tab-pane fade">
 <?php
-
 	// DNS settings
 	$DNSservers = [];
 	$DNSactive = [];
@@ -502,11 +503,7 @@ readStaticLeasesFile();
 		$DNSinterface = "single";
 	}
 ?>
-		<div class="box box-warning">
-			<div class="box-header with-border">
-				<h3 class="box-title">Upstream DNS Servers</h3>
-			</div>
-			<div class="box-body">
+			<div class="row">
 				<form role="form" method="post">
 				<div class="col-lg-6">
 					<label>Upstream DNS Servers</label>
@@ -596,17 +593,14 @@ readStaticLeasesFile();
 						</div>
 					</div>
 				</div>
-				</div>
-			</div>
-			<div class="box-footer">
 				<input type="hidden" name="field" value="DNS">
 				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
 			</form>
-		</div>
-	</div>
-	<div class="col-md-6">
+			</div>
+			</div>
+			<div id="querylogging" class="tab-pane fade">
 <?php
 	// Query logging
 	if(isset($setupVars["QUERY_LOGGING"]))
@@ -623,11 +617,6 @@ readStaticLeasesFile();
 		$piHoleLogging = true;
 	}
 ?>
-		<div class="box box-primary">
-			<div class="box-header with-border">
-				<h3 class="box-title">Query Logging<?php if($piHoleLogging) { ?> (size of log <?php echo formatSizeUnits(filesize("/var/log/pihole.log")); ?>)<?php } ?></h3>
-			</div>
-			<div class="box-body">
 				<p>Current status:
 				<?php if($piHoleLogging) { ?>
 					Enabled (recommended)
@@ -637,8 +626,6 @@ readStaticLeasesFile();
 				<?php if($piHoleLogging) { ?>
 					<p>Note that disabling will render graphs on the web user interface useless</p>
 				<?php } ?>
-			</div>
-			<div class="box-footer">
 				<form role="form" method="post">
 				<button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
 				<input type="hidden" name="field" value="Logging">
@@ -652,7 +639,39 @@ readStaticLeasesFile();
 				<?php } ?>
 				</form>
 			</div>
-		</div>
+			<div id="blocklists" class="tab-pane fade">
+
+            <form role="form" method="post">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <label>Lists used to generate Pi-hole's Gravity</label>
+                        <?php foreach ($adlist as $key => $value) { ?>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label style="word-break: break-word;">
+                                        <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if($value[0]){ ?>checked<?php } ?>>
+                                        <a href="<?php echo htmlentities ($value[1]); ?>" target="_new"><?php echo htmlentities($value[1]); ?></a>
+                                        <input type="checkbox" name="adlist-del-<?php echo $key; ?>" hidden>
+                                        <br>
+                                        <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </label>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <div class="form-group">
+                            <textarea name="newuserlists" class="form-control" rows="1" placeholder="Enter one URL per line to add new ad lists"></textarea>
+                        </div>
+                    <input type="hidden" name="field" value="adlists">
+                    <input type="hidden" name="token" value="<?php echo $token ?>">
+                    <button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
+                    <button type="submit" class="btn btn-primary pull-right" name="submit" value="saveupdate">Save and Update</button>
+                    </div>
+                </div>
+            </form>
+			</div>
+			<div id="api" class="tab-pane fade">
 <?php
 	// Excluded domains in API Query Log call
 	if(isset($setupVars["API_EXCLUDE_DOMAINS"]))
@@ -687,89 +706,51 @@ readStaticLeasesFile();
 	}
 
 ?>
-        <div class="box box-danger collapsed-box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Pi-Hole's Block Lists</h3>
-                <div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
-            </div>
-            <form role="form" method="post">
-                <div class="box-body">
-                    <div class="col-lg-12">
-                        <label>Lists used to generate Pi-hole's Gravity</label>
-                        <?php foreach ($adlist as $key => $value) { ?>
-                            <div class="form-group">
-                                <div class="checkbox">
-                                    <label style="word-break: break-word;">
-                                        <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if($value[0]){ ?>checked<?php } ?>>
-                                        <a href="<?php echo htmlentities ($value[1]); ?>" target="_new"><?php echo htmlentities($value[1]); ?></a>
-                                        <input type="checkbox" name="adlist-del-<?php echo $key; ?>" hidden>
-                                        <br>
-                                        <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
-                                            <span class="glyphicon glyphicon-trash"></span>
-                                        </button>
-                                    </label>
-                                </div>
-                            </div>
-                        <?php } ?>
-                        <div class="form-group">
-                            <textarea name="newuserlists" class="form-control" rows="1" placeholder="Enter one URL per line to add new ad lists"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="box-footer">
-                    <input type="hidden" name="field" value="adlists">
-                    <input type="hidden" name="token" value="<?php echo $token ?>">
-                    <button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
-                    <button type="submit" class="btn btn-primary pull-right" name="submit" value="saveupdate">Save and Update</button>
-                </div>
-            </form>
-        </div>
-        <div class="box box-success">
-			<div class="box-header with-border">
-				<h3 class="box-title">API</h3>
-			</div>
 			<form role="form" method="post">
-			<div class="box-body">
+			<div class="row">
+			<div class="col-lg-12">
 				<h4>Top Lists</h4>
 				<p>Exclude the following domains from being shown in</p>
-				<div class="col-lg-6">
-					<div class="form-group">
-					<label>Top Domains / Top Advertisers</label>
-					<textarea name="domains" class="form-control" rows="4" placeholder="Enter one domain per line"><?php foreach ($excludedDomains as $domain) { echo $domain."\n"; } ?></textarea>
-					</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="form-group">
+				<label>Top Domains / Top Advertisers</label>
+				<textarea name="domains" class="form-control" rows="4" placeholder="Enter one domain per line"><?php foreach ($excludedDomains as $domain) { echo $domain."\n"; } ?></textarea>
 				</div>
-				<div class="col-lg-6">
-					<div class="form-group">
-					<label>Top Clients</label>
-					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address or host name per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
-					</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="form-group">
+				<label>Top Clients</label>
+				<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address or host name per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
 				</div>
+			</div>
+			<div class="col-lg-12">
 				<h4>Privacy settings (Statistics / Query Log)</h4>
+			</div>
 				<div class="col-lg-6">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show permitted domain entries</label></div>
-					</div>
+				<div class="form-group">
+					<div class="checkbox"><label><input type="checkbox" name="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show permitted domain entries</label></div>
 				</div>
-				<div class="col-lg-6">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked domain entries</label></div>
-					</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="form-group">
+					<div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked domain entries</label></div>
 				</div>
+			</div>
+			<div class="col-lg-12">
 				<h4>Privacy mode</h4>
-				<div class="col-lg-12">
 					<div class="form-group">
 						<div class="checkbox"><label><input type="checkbox" name="privacyMode" <?php if($privacyMode){ ?>checked<?php } ?>> Don't show origin of DNS requests in query log</label></div>
 					</div>
-				</div>
-			</div>
-			<div class="box-footer">
 				<input type="hidden" name="field" value="API">
 				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="button" class="btn btn-primary api-token">Show API token</button>
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
 			</div>
+			</div>
 			</form>
-		</div>
+			</div>
+			<div id="web" class="tab-pane fade">
 <?php
 	// CPU temperature unit
 	if(isset($setupVars["TEMPERATUREUNIT"]))
@@ -782,12 +763,9 @@ readStaticLeasesFile();
 	}
 	// Use $boxedlayout value determined in header.php
 ?>
-		<div class="box box-success">
-			<div class="box-header with-border">
-				<h3 class="box-title">Web User Interface</h3>
-			</div>
 			<form role="form" method="post">
-			<div class="box-body">
+			<div class="row">
+			<div class="col-lg-12">
 <?php /*
 				<h4>Query Log Page</h4>
 				<div class="col-lg-6">
@@ -813,58 +791,13 @@ readStaticLeasesFile();
 					<div class="radio"><label><input type="radio" name="tempunit" value="K" <?php if($temperatureunit === "K"){ ?>checked<?php } ?> >Kelvin</label></div>
 					<div class="radio"><label><input type="radio" name="tempunit" value="F" <?php if($temperatureunit === "F"){ ?>checked<?php } ?> >Fahrenheit</label></div>
 				</div>
-			</div>
-			<div class="box-footer">
 				<input type="hidden" name="field" value="webUI">
 				<input type="hidden" name="token" value="<?php echo $token ?>">
 				<button type="submit" class="btn btn-primary pull-right">Save</button>
-			</div>
+			</div></div>
 			</form>
-		</div>
-<?php /*
-		<div class="box box-info">
-			<div class="box-header with-border">
-				<h3 class="box-title">Blocking Page</h3>
 			</div>
-			<div class="box-body">
-				<p>Show page with details if a site is blocked</p>
-				<div class="form-group">
-					<div class="radio"><label><input type="radio" name="blockingPage" value="Yes" <?php if($pishowBlockPage){ ?>checked<?php } ?> disabled>Yes</label></div>
-					<div class="radio"><label><input type="radio" name="blockingPage" value="No" <?php if(!$pishowBlockPage){ ?>checked<?php } ?> disabled>No</label></div>
-					<p>If Yes: Hide content for in page ads?</p>
-					<div class="checkbox"><label><input type="checkbox" <?php if($pishowBlockPageInpage) { ?>checked<?php } ?> disabled>Enabled (recommended)</label></div>
-				</div>
-			</div>
-		</div>
-*/ ?>
-		<div class="box box-danger">
-			<div class="box-header with-border">
-				<h3 class="box-title">System Administration</h3>
-			</div>
-			<div class="box-body">
-				<button type="button" class="btn btn-default confirm-poweroff">Power off system</button>
-				<button type="button" class="btn btn-default confirm-reboot">Restart system</button>
-				<button type="button" class="btn btn-default confirm-restartdns">Restart DNS server</button>
-				<button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
-
-				<form role="form" method="post" id="poweroffform">
-					<input type="hidden" name="field" value="poweroff">
-					<input type="hidden" name="token" value="<?php echo $token ?>">
-				</form>
-				<form role="form" method="post" id="rebootform">
-					<input type="hidden" name="field" value="reboot">
-					<input type="hidden" name="token" value="<?php echo $token ?>">
-				</form>
-				<form role="form" method="post" id="restartdnsform">
-					<input type="hidden" name="field" value="restartdns">
-					<input type="hidden" name="token" value="<?php echo $token ?>">
-				</form>
-				<form role="form" method="post" id="flushlogsform">
-					<input type="hidden" name="field" value="flushlogs">
-					<input type="hidden" name="token" value="<?php echo $token ?>">
-				</form>
-			</div>
-		</div>
+			<div id="ftl" class="tab-pane fade">
 <?php
 if($FTL)
 {
@@ -876,28 +809,24 @@ if($FTL)
 	$FTLversion = exec("/usr/bin/pihole-FTL version");
 }
 ?>
-		<div class="box box-danger collapsed-box">
-			<div class="box-header with-border">
-				<h3 class="box-title">Pi-hole FTL (<?php if($FTL){ ?>Running<?php }else{ ?>Not running<?php } ?>)</h3>
-				<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
+			<div class="row"><div class="col-lg-12">
+				<?php if($FTL){ ?><pre>
+FTL version: <?php echo $FTLversion; ?>
+
+Process identifier (PID): <?php echo $FTLpid; ?>
+
+Time FTL started: <?php print_r(get_FTL_data("start")); ?>
+
+User / Group: <?php print_r(get_FTL_data("euser")); ?> / <?php print_r(get_FTL_data("egroup")); ?>
+
+Total CPU utilization: <?php print_r(get_FTL_data("%cpu")); ?>%
+Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%
+<span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory: <?php echo formatSizeUnits(1e3*floatval(get_FTL_data("rss"))); ?></span>
+</pre><?php } ?>
+			</div></div>
 			</div>
-			<div class="box-body">
-				<?php if($FTL){ ?>FTL version: <?php echo $FTLversion; ?><br>
-				Process identifier (PID): <?php echo $FTLpid; ?><br>
-				Time FTL started: <?php print_r(get_FTL_data("start")); ?><br>
-				User / Group: <?php print_r(get_FTL_data("euser")); ?> / <?php print_r(get_FTL_data("egroup")); ?><br>
-				Total CPU utilization: <?php print_r(get_FTL_data("%cpu")); ?>%<br>
-				Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%<br>
-				<span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory: <?php echo formatSizeUnits(1e3*floatval(get_FTL_data("rss"))); ?></span><br>
-				<?php } ?>
-			</div>
-		</div>
-		<div class="box box-danger collapsed-box">
-			<div class="box-header with-border">
-				<h3 class="box-title">Pi-hole Teleporter</h3>
-				<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
-			</div>
-			<div class="box-body">
+			<div id="teleporter" class="tab-pane fade">
+			<div class="row"><div class="col-lg-12">
 			<?php if (extension_loaded('Phar')) { ?>
 				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/teleporter.php" target="_blank"  enctype="multipart/form-data">
 					<input type="hidden" name="token" value="<?php echo $token ?>">
@@ -932,6 +861,35 @@ if($FTL)
 			<?php } else { ?>
 				<p>The PHP extension <code>Phar</code> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.
 			<?php } ?>
+			</div></div>
+			</div>
+			<div id="sysadmin" class="tab-pane fade">
+				<div class="row"><div class="col-lg-12">
+				<p>Danger area!</p>
+				<button type="button" class="btn btn-default confirm-poweroff">Power off system</button>
+				<button type="button" class="btn btn-default confirm-reboot">Restart system</button>
+				<button type="button" class="btn btn-default confirm-restartdns">Restart DNS server</button>
+				<button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
+
+				<form role="form" method="post" id="poweroffform">
+					<input type="hidden" name="field" value="poweroff">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
+				</form>
+				<form role="form" method="post" id="rebootform">
+					<input type="hidden" name="field" value="reboot">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
+				</form>
+				<form role="form" method="post" id="restartdnsform">
+					<input type="hidden" name="field" value="restartdns">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
+				</form>
+				<form role="form" method="post" id="flushlogsform">
+					<input type="hidden" name="field" value="flushlogs">
+					<input type="hidden" name="token" value="<?php echo $token ?>">
+				</form>
+			</div></div>
+			</div>
+
 			</div>
 		</div>
 	</div>
