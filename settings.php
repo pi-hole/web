@@ -242,6 +242,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                 <li><a data-toggle="tab" href="#sysadmin">System</a></li>
             </ul>
             <div class="tab-content">
+                <!-- ######################################################### DHCP ######################################################### -->
                 <div id="piholedhcp" class="tab-pane fade in">
                     <?php
                     // Pi-hole DHCP server
@@ -572,6 +573,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                     </div>
 
                 </div>
+                <!-- ######################################################### DNS ######################################################### -->
                 <div id="dns" class="tab-pane fade in active">
                     <form role="form" method="post">
                         <div class="row">
@@ -768,6 +770,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         </div>
                     </form>
                 </div>
+                <!-- ######################################################### Query Logging ######################################################### -->
                 <div id="querylogging" class="tab-pane fade">
                     <div class="box">
                         <div class="box-body">
@@ -797,6 +800,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         </div>
                     </div>
                 </div>
+                <!-- ######################################################### Blocklists ######################################################### -->
                 <div id="blocklists" class="tab-pane fade">
 
                     <form role="form" method="post">
@@ -838,6 +842,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         </div>
                     </form>
                 </div>
+                <!-- ######################################################### API ######################################################### -->
                 <div id="api" class="tab-pane fade">
                     <form role="form" method="post">
                         <div class="row">
@@ -897,6 +902,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         </div>
                     </form>
                 </div>
+                <!-- ######################################################### Web interface ######################################################### -->
                 <div id="web" class="tab-pane fade">
                     <?php
                     // CPU temperature unit
@@ -951,6 +957,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         </div>
                     </form>
                 </div>
+                <!-- ######################################################### FTL ######################################################### -->
                 <div id="ftl" class="tab-pane fade">
                     <?php
                     if ($FTL) {
@@ -983,6 +990,7 @@ Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%
                         </div>
                     </div>
                 </div>
+                <!-- ######################################################### Teleporter ######################################################### -->
                 <div id="teleporter" class="tab-pane fade">
                     <div class="row">
                         <div class="col-lg-12">
@@ -1035,6 +1043,7 @@ Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%
                         </div>
                     </div>
                 </div>
+                <!-- ######################################################### System admin ######################################################### -->
                 <div id="sysadmin" class="tab-pane fade">
 
                     <div class="row">
