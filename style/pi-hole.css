@@ -6,6 +6,7 @@
 *  Please see LICENSE file for your rights under this license. */
 
 .small-box {
+	cursor: default;
 	-webkit-user-select: none; /* Chrome/Safari */
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+ */
