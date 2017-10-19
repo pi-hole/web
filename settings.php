@@ -373,15 +373,6 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                     </div>
                                     <div class="box-body">
                                         <div class="col-md-12">
-                                            <div class="form-group">
-                                                <div class="checkbox"><label><input type="checkbox" name="useIPv6"
-                                                                                    <?php if ($DHCPIPv6){ ?>checked<?php } ?>
-                                                                                    class="DHCPgroup"
-                                                                                    <?php if (!$DHCP){ ?>disabled<?php } ?>>
-                                                        Enable IPv6 support (SLAAC + RA)</label></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
                                             <label>Pi-hole domain name</label>
                                             <div class="form-group">
                                                 <div class="input-group">
@@ -407,6 +398,15 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                             <p>Hint: 0 = infinite, 24 = one day, 168 = one week, 744 = one month,
                                                 8760 =
                                                 one year</p>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div class="checkbox"><label><input type="checkbox" name="useIPv6"
+                                                                                    <?php if ($DHCPIPv6){ ?>checked<?php } ?>
+                                                                                    class="DHCPgroup"
+                                                                                    <?php if (!$DHCP){ ?>disabled<?php } ?>>
+                                                        Enable IPv6 support (SLAAC + RA)</label></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -708,7 +708,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                                       <?php if ($DNSinterface == "all"){ ?>checked<?php } ?> ><strong>Listen on all interfaces, permit all origins</strong></label>
                                                     </div>
                                                 </div>
-                                                <p>Note that the last option should not be used on devices which are directly connected to the Internet. This option is safe if your Pi-hole is located within your local network, i.e. protected behind your router, and you have not forwarded port 53 to this device. In virtually all other cases you have to make sure that your Pi-hole is properly firewalled.
+                                                <p>Note that the last option should not be used on devices which are directly connected to the Internet. This option is safe if your Pi-hole is located within your local network, i.e. protected behind your router, and you have not forwarded port 53 to this device. In virtually all other cases you have to make sure that your Pi-hole is properly firewalled.</p>
                                             </div>
                                         </div>
                                     </div>
