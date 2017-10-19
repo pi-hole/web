@@ -115,7 +115,7 @@ $(document).ready(function() {
 			"columnDefs": [ { "bSortable": false, "orderable": false, targets: -1} ],
 			"paging": false,
 			"scrollCollapse": true,
-			"scrollY": "500px",
+			"scrollY": "200px",
 			"scrollX" : true
 		});
 	}
@@ -127,7 +127,7 @@ $(document).ready(function() {
 			"paging": false,
 			"scrollCollapse": true,
 			"scrollY": "200px",
-			"scrollX" : "100%"
+			"scrollX" : true
 		});
 	}
     //call draw() on each table... they don't render properly with scrollX and scrollY set... ¯\_(ツ)_/¯
