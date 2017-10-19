@@ -974,19 +974,18 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         <div class="col-lg-12">
                             <?php if ($FTL) { ?>
                                 <pre>
-                                FTL version: <?php echo $FTLversion; ?>
+FTL version: <?php echo $FTLversion; ?>
 
-                                Process identifier (PID): <?php echo $FTLpid; ?>
+Process identifier (PID): <?php echo $FTLpid; ?>
 
-                                Time FTL started: <?php print_r(get_FTL_data("start")); ?>
+Time FTL started: <?php print_r(get_FTL_data("start")); ?>
 
-                                User / Group: <?php print_r(get_FTL_data("euser")); ?>
-                                / <?php print_r(get_FTL_data("egroup")); ?>
+User / Group: <?php print_r(get_FTL_data("euser")); ?> / <?php print_r(get_FTL_data("egroup")); ?>
 
-                                Total CPU utilization: <?php print_r(get_FTL_data("%cpu")); ?>%
+Total CPU utilization: <?php print_r(get_FTL_data("%cpu")); ?>%
 Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%
 <span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory: <?php echo formatSizeUnits(1e3 * floatval(get_FTL_data("rss"))); ?></span>
-                                </pre><?php } ?>
+</pre><?php } ?>
                         </div>
                     </div>
                 </div>
