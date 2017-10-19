@@ -578,7 +578,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                     <form role="form" method="post">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="box">
+                                <div class="box box-warning">
                                     <div class="box-header">
                                         <h1 class="box-title">Upstream DNS Servers</h1>
                                     </div>
@@ -685,8 +685,35 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                     </div>
                                 </div>
                             </div>
-
-
+                            <div class="col-md-6">
+                                <div class="box box-warning">
+                                    <div class="box-header">
+                                        <h1 class="box-title">Interface listening behavior</h1>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="DNSinterface" value="local"
+                                                                      <?php if ($DNSinterface == "local"){ ?>checked<?php } ?> ><strong>Listen on all interfaces</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="DNSinterface" value="single"
+                                                                      <?php if ($DNSinterface == "single"){ ?>checked<?php } ?> ><strong>Listen only on interface <?php echo $piHoleInterface; ?></strong>
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="DNSinterface" value="all"
+                                                                      <?php if ($DNSinterface == "all"){ ?>checked<?php } ?> ><strong>Listen on all interfaces, permit all origins</strong></label>
+                                                    </div>
+                                                </div>
+                                                <p>Note that the last option should not be used on devices which are directly connected to the Internet. This option is safe if your Pi-hole is located within your local network, i.e. protected behind your router, and you have not forwarded port 53 to this device. In virtually all other cases you have to make sure that your Pi-hole is properly firewalled.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
@@ -734,31 +761,6 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                 resolver test can be found <a
                                                         href="http://dnssec.vs.uni-due.de/"
                                                         target="_blank">here</a>.</p>
-
-                                            <div class="form-group">
-                                                <label>Interface listening behavior</label>
-                                                <div class="radio">
-                                                    <label><input type="radio" name="DNSinterface" value="local"
-                                                                  <?php if ($DNSinterface == "local"){ ?>checked<?php } ?> >Listen
-                                                        on all interfaces, but allow only queries from devices
-                                                        that are at
-                                                        most one hop away (local devices)</label>
-                                                </div>
-                                                <div class="radio">
-                                                    <label><input type="radio" name="DNSinterface"
-                                                                  value="single"
-                                                                  <?php if ($DNSinterface == "single"){ ?>checked<?php } ?> >Listen
-                                                        only on interface <?php echo $piHoleInterface; ?>
-                                                    </label>
-                                                </div>
-                                                <div class="radio">
-                                                    <label><input type="radio" name="DNSinterface" value="all"
-                                                                  <?php if ($DNSinterface == "all"){ ?>checked<?php } ?> >Listen
-                                                        on all interfaces, permit all origins (make sure your
-                                                        Pi-hole is
-                                                        firewalled!)</label>
-                                                </div>
-                                            </div>
 
                                         </div>
                                     </div>
