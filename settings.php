@@ -294,7 +294,6 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         $piHoleDomain = "local";
                     }
                     ?>
-
                     <div class="row">
                         <!--DHCP Settings Box-->
                         <div class="col-md-6">
@@ -484,84 +483,87 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                     <h3 class="box-title">DHCP leases</h3>
                                 </div>
                                 <div class="box-body">
-                                    <div class="col-md-12">
-                                        <label>Currently active DHCP leases</label>
-                                        <table id="DHCPLeasesTable"
-                                               class="table table-striped table-bordered dt-responsive nowrap"
-                                               cellspacing="0" width="100%">
-                                            <thead>
-                                            <tr>
-                                                <th>MAC address</th>
-                                                <th>IP address</th>
-                                                <th>Hostname</th>
-                                                <td></td>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php foreach ($dhcp_leases as $lease) { ?>
-                                            <tr data-placement="auto" data-container="body"
-                                                data-toggle="tooltip"
-                                                title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>">
-                                                <td id="MAC"><?php echo $lease["hwaddr"]; ?></td>
-                                                <td id="IP"><?php echo $lease["IP"]; ?></td>
-                                                <td id="HOST"><?php echo $lease["host"]; ?></td>
-                                                <td>
-                                                    <button class="btn btn-warning btn-xs" type="button"
-                                                            id="button"
-                                                            data-static="alert"><span
-                                                                class="glyphicon glyphicon-copy"></span>
-                                                    </button>
-                                                </td></tr><?php } ?>
-                                            </tbody>
-                                        </table>
-                                        <br>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label>Static DHCP leases configuration</label>
-                                        <table id="DHCPStaticLeasesTable"
-                                               class="table table-striped table-bordered dt-responsive nowrap"
-                                               cellspacing="0" width="100%">
-                                            <thead>
-                                            <tr>
-                                                <th>MAC address</th>
-                                                <th>IP address</th>
-                                                <th>Hostname</th>
-                                                <td></td>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php foreach ($dhcp_static_leases as $lease) { ?>
+                                    <div clas="row">
+                                        <div class="col-md-12">
+                                            <label>Currently active DHCP leases</label>
+                                            <table id="DHCPLeasesTable"
+                                                   class="table table-striped table-bordered dt-responsive nowrap"
+                                                   cellspacing="0" width="100%">
+                                                <thead>
                                                 <tr>
-                                                <td><?php echo $lease["hwaddr"]; ?></td>
-                                                <td><?php echo $lease["IP"]; ?></td>
-                                                <td><?php echo $lease["host"]; ?></td>
-                                                <td><?php if (strlen($lease["hwaddr"]) > 0) { ?>
-                                                    <button class="btn btn-danger btn-xs" type="submit"
-                                                            name="removestatic"
-                                                            value="<?php echo $lease["hwaddr"]; ?>"><span
-                                                                    class="glyphicon glyphicon-trash"></span>
-                                                        </button><?php } ?></td></tr><?php } ?>
-                                            </tbody>
-                                            <tfoot style="display: table-row-group">
-                                            <tr>
-                                                <td><input type="text" name="AddMAC"></td>
-                                                <td><input type="text" name="AddIP"></td>
-                                                <td><input type="text" name="AddHostname" value=""></td>
-                                                <td>
-                                                    <button class="btn btn-success btn-xs" type="submit"
-                                                            name="addstatic"><span
-                                                                class="glyphicon glyphicon-plus"></span>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            </tfoot>
-                                        </table>
-                                        <p>Specifying the MAC address is mandatory and only one entry per MAC
-                                            address is allowed. If the IP address is omitted and a host name is
-                                            given, the IP address will still be generated dynamically and the
-                                            specified host name will be used. If the host name is omitted, only
-                                            a
-                                            static lease will be added.</p>
+                                                    <th>MAC address</th>
+                                                    <th>IP address</th>
+                                                    <th>Hostname</th>
+                                                    <td></td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php foreach ($dhcp_leases as $lease) { ?>
+                                                <tr data-placement="auto" data-container="body"
+                                                    data-toggle="tooltip"
+                                                    title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>">
+                                                    <td id="MAC"><?php echo $lease["hwaddr"]; ?></td>
+                                                    <td id="IP"><?php echo $lease["IP"]; ?></td>
+                                                    <td id="HOST"><?php echo $lease["host"]; ?></td>
+                                                    <td>
+                                                        <button class="btn btn-warning btn-xs" type="button"
+                                                                id="button"
+                                                                data-static="alert"><span
+                                                                    class="glyphicon glyphicon-copy"></span>
+                                                        </button>
+                                                    </td></tr><?php } ?>
+                                                </tbody>
+                                            </table>
+                                            <br>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <label>Static DHCP leases configuration</label>
+                                            <table id="DHCPStaticLeasesTable"
+                                                   class="table table-striped table-bordered dt-responsive nowrap"
+                                                   cellspacing="0" width="100%">
+                                                <thead>
+                                                <tr>
+                                                    <th>MAC address</th>
+                                                    <th>IP address</th>
+                                                    <th>Hostname</th>
+                                                    <td></td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php foreach ($dhcp_static_leases as $lease) { ?>
+                                                    <tr>
+                                                    <td><?php echo $lease["hwaddr"]; ?></td>
+                                                    <td><?php echo $lease["IP"]; ?></td>
+                                                    <td><?php echo $lease["host"]; ?></td>
+                                                    <td><?php if (strlen($lease["hwaddr"]) > 0) { ?>
+                                                        <button class="btn btn-danger btn-xs" type="submit"
+                                                                name="removestatic"
+                                                                value="<?php echo $lease["hwaddr"]; ?>"><span
+                                                                        class="glyphicon glyphicon-trash"></span>
+                                                            </button><?php } ?></td></tr><?php } ?>
+                                                </tbody>
+                                                <tfoot style="display: table-row-group">
+                                                <tr>
+                                                    <td><input type="text" name="AddMAC"></td>
+                                                    <td><input type="text" name="AddIP"></td>
+                                                    <td><input type="text" name="AddHostname" value=""></td>
+                                                    <td>
+                                                        <button class="btn btn-success btn-xs" type="submit"
+                                                                name="addstatic"><span
+                                                                    class="glyphicon glyphicon-plus"></span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                </tfoot>
+                                            </table>
+                                            <p>Specifying the MAC address is mandatory and only one entry per MAC
+                                                address is allowed. If the IP address is omitted and a host name is
+                                                given, the IP address will still be generated dynamically and the
+                                                specified host name will be used. If the host name is omitted, only
+                                                a
+                                                static lease will be added.</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -696,19 +698,30 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                 <div class="form-group">
                                                     <div class="radio">
                                                         <label><input type="radio" name="DNSinterface" value="local"
-                                                                      <?php if ($DNSinterface == "local"){ ?>checked<?php } ?> ><strong>Listen on all interfaces</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
+                                                                      <?php if ($DNSinterface == "local"){ ?>checked<?php } ?> ><strong>Listen
+                                                                on all interfaces</strong><br>Allows only queries from
+                                                            devices that are at most one hop away (local
+                                                            devices)</label>
                                                     </div>
                                                     <div class="radio">
                                                         <label><input type="radio" name="DNSinterface" value="single"
-                                                                      <?php if ($DNSinterface == "single"){ ?>checked<?php } ?> ><strong>Listen only on interface <?php echo $piHoleInterface; ?></strong>
+                                                                      <?php if ($DNSinterface == "single"){ ?>checked<?php } ?> ><strong>Listen
+                                                                only on
+                                                                interface <?php echo $piHoleInterface; ?></strong>
                                                         </label>
                                                     </div>
                                                     <div class="radio">
                                                         <label><input type="radio" name="DNSinterface" value="all"
-                                                                      <?php if ($DNSinterface == "all"){ ?>checked<?php } ?> ><strong>Listen on all interfaces, permit all origins</strong></label>
+                                                                      <?php if ($DNSinterface == "all"){ ?>checked<?php } ?> ><strong>Listen
+                                                                on all interfaces, permit all origins</strong></label>
                                                     </div>
                                                 </div>
-                                                <p>Note that the last option should not be used on devices which are directly connected to the Internet. This option is safe if your Pi-hole is located within your local network, i.e. protected behind your router, and you have not forwarded port 53 to this device. In virtually all other cases you have to make sure that your Pi-hole is properly firewalled.</p>
+                                                <p>Note that the last option should not be used on devices which are
+                                                    directly connected to the Internet. This option is safe if your
+                                                    Pi-hole is located within your local network, i.e. protected behind
+                                                    your router, and you have not forwarded port 53 to this device. In
+                                                    virtually all other cases you have to make sure that your Pi-hole is
+                                                    properly firewalled.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -976,18 +989,19 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         <div class="col-lg-12">
                             <?php if ($FTL) { ?>
                                 <pre>
-FTL version: <?php echo $FTLversion; ?>
+                                FTL version: <?php echo $FTLversion; ?>
 
-Process identifier (PID): <?php echo $FTLpid; ?>
+                                Process identifier (PID): <?php echo $FTLpid; ?>
 
-Time FTL started: <?php print_r(get_FTL_data("start")); ?>
+                                Time FTL started: <?php print_r(get_FTL_data("start")); ?>
 
-User / Group: <?php print_r(get_FTL_data("euser")); ?> / <?php print_r(get_FTL_data("egroup")); ?>
+                                User / Group: <?php print_r(get_FTL_data("euser")); ?>
+                                / <?php print_r(get_FTL_data("egroup")); ?>
 
-Total CPU utilization: <?php print_r(get_FTL_data("%cpu")); ?>%
+                                Total CPU utilization: <?php print_r(get_FTL_data("%cpu")); ?>%
 Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%
 <span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory: <?php echo formatSizeUnits(1e3 * floatval(get_FTL_data("rss"))); ?></span>
-</pre><?php } ?>
+                                </pre><?php } ?>
                         </div>
                     </div>
                 </div>
@@ -1101,17 +1115,24 @@ Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%
                                     <h3 class="box-title">Danger Zone!</h3><br/>
                                 </div>
                                 <div class="box-body">
-                                    <p><button type="button" class="btn btn-warning confirm-restartdns">Restart DNS
-                                        server
-                                    </button>
-                                    <p><button type="button" class="btn btn-warning confirm-flushlogs">Flush logs
-                                    </button></p>
-                                    <p><button type="button" class="btn btn-danger confirm-poweroff">Power off
-                                        system
-                                    </button></p>
-                                    <p><button type="button" class="btn btn-danger confirm-reboot">Restart
-                                        system
-                                    </button></p>
+                                    <p>
+                                        <button type="button" class="btn btn-warning confirm-restartdns">Restart DNS
+                                            server
+                                        </button>
+                                    <p>
+                                        <button type="button" class="btn btn-warning confirm-flushlogs">Flush logs
+                                        </button>
+                                    </p>
+                                    <p>
+                                        <button type="button" class="btn btn-danger confirm-poweroff">Power off
+                                            system
+                                        </button>
+                                    </p>
+                                    <p>
+                                        <button type="button" class="btn btn-danger confirm-reboot">Restart
+                                            system
+                                        </button>
+                                    </p>
 
                                     <form role="form" method="post" id="poweroffform">
                                         <input type="hidden" name="field" value="poweroff">

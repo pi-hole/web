@@ -115,12 +115,9 @@ $(document).ready(function() {
 			"columnDefs": [ { "bSortable": false, "orderable": false, targets: -1} ],
 			"paging": false,
 			"scrollCollapse": true,
-			"scrollY": "200px",
+			"scrollY": "500px",
 			"scrollX" : true
 		});
-	$("#leaseexpand").on( "click", function () {
-		setTimeout(function(){leasetable.draw();},100);
-		} );
 	}
 	if(document.getElementById("DHCPStaticLeasesTable"))
 	{
@@ -130,12 +127,15 @@ $(document).ready(function() {
 			"paging": false,
 			"scrollCollapse": true,
 			"scrollY": "200px",
-			"scrollX" : true
+			"scrollX" : "100%"
 		});
-	$("#leaseexpand").on( "click", function () {
-		setTimeout(function(){staticleasetable.draw();},100);
-		} );
 	}
+    //call draw() on each table... they don't render properly with scrollX and scrollY set... ¯\_(ツ)_/¯
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        leasetable.draw();
+        staticleasetable.draw();
+    });
+
 } );
 
 // Handle hiding of alerts
