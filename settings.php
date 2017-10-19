@@ -783,22 +783,22 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                             <?php if ($piHoleLogging) { ?>
                                 <p>Note that disabling will render graphs on the web user interface useless</p>
                             <?php } ?>
-                            <form role="form" method="post">
-                                <button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
-                                <input type="hidden" name="field" value="Logging">
-                                <input type="hidden" name="token" value="<?php echo $token ?>">
-                                <?php if ($piHoleLogging) { ?>
-                                    <input type="hidden" name="action" value="Disable">
-                                    <button type="submit" class="btn btn-primary pull-right">Disable query logging
-                                    </button>
-                                <?php } else { ?>
-                                    <input type="hidden" name="action" value="Enable">
-                                    <button type="submit" class="btn btn-primary pull-right">Enable query logging
-                                    </button>
-                                <?php } ?>
-                            </form>
                         </div>
                     </div>
+                    <form role="form" method="post">
+                        <button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
+                        <input type="hidden" name="field" value="Logging">
+                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                        <?php if ($piHoleLogging) { ?>
+                            <input type="hidden" name="action" value="Disable">
+                            <button type="submit" class="btn btn-primary pull-right">Disable query logging
+                            </button>
+                        <?php } else { ?>
+                            <input type="hidden" name="action" value="Enable">
+                            <button type="submit" class="btn btn-primary pull-right">Enable query logging
+                            </button>
+                        <?php } ?>
+                    </form>
                 </div>
                 <!-- ######################################################### Blocklists ######################################################### -->
                 <div id="blocklists" class="tab-pane fade">
