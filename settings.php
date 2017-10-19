@@ -1099,17 +1099,17 @@ Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%
                                     <h3 class="box-title">Danger Zone!</h3><br/>
                                 </div>
                                 <div class="box-body">
-                                    <button type="button" class="btn btn-danger confirm-poweroff">Power off
-                                        system
-                                    </button>
-                                    <button type="button" class="btn btn-warning confirm-reboot">Restart
-                                        system
-                                    </button>
-                                    <button type="button" class="btn btn-warning confirm-restartdns">Restart DNS
+                                    <p><button type="button" class="btn btn-warning confirm-restartdns">Restart DNS
                                         server
                                     </button>
-                                    <button type="button" class="btn btn-warning confirm-flushlogs">Flush logs
-                                    </button>
+                                    <p><button type="button" class="btn btn-warning confirm-flushlogs">Flush logs
+                                    </button></p>
+                                    <p><button type="button" class="btn btn-danger confirm-poweroff">Power off
+                                        system
+                                    </button></p>
+                                    <p><button type="button" class="btn btn-danger confirm-reboot">Restart
+                                        system
+                                    </button></p>
 
                                     <form role="form" method="post" id="poweroffform">
                                         <input type="hidden" name="field" value="poweroff">
