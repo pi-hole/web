@@ -231,19 +231,85 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
     <div class="col-md-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#dns">DNS</a></li>
+                <li class="active"><a data-toggle="tab" href="#blocklists">Block Lists</a></li>
+                <li><a data-toggle="tab" href="#dns">DNS</a></li>
                 <li><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
-                <li><a data-toggle="tab" href="#querylogging">Logging</a></li>
-                <li><a data-toggle="tab" href="#blocklists">Block Lists</a></li>
                 <li><a data-toggle="tab" href="#api">API</a></li>
                 <li><a data-toggle="tab" href="#web">Web Interface</a></li>
-                <li><a data-toggle="tab" href="#ftl">FTL</a></li>
                 <li><a data-toggle="tab" href="#teleporter">Teleporter</a></li>
                 <li><a data-toggle="tab" href="#sysadmin">System</a></li>
             </ul>
             <div class="tab-content">
+                <!-- ######################################################### Blocklists ######################################################### -->
+                <div id="blocklists" class="tab-pane fade in active">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Lists used to generate Pi-hole's Gravity</h3>
+                        </div>
+                        <div class="box-body">
+                            <form role="form" method="post">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>Enabled</th>
+                                                <th>List</th>
+                                                <th>Delete</th>
+                                                <td></td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach ($adlist as $key => $value) { ?>
+                                                <div class="form-group">
+                                                    <tr>
+                                                        <td>
+                                                            <div class="checkbox">
+                                                                <label style="word-break: break-word;">
+                                                                    <input type="checkbox"
+                                                                           name="adlist-enable-<?php echo $key; ?>"
+                                                                           <?php if ($value[0]){ ?>checked<?php } ?>>
+                                                                </label>
+                                                            </div>
+                                                        <td>
+                                                            <a href="<?php echo htmlentities($value[1]); ?>"
+                                                               target="_new"><?php echo htmlentities($value[1]); ?></a>
+                                                        </td>
+                                                        <td>
+                                                            <input type="checkbox" name="adlist-del-<?php echo $key; ?>"
+                                                                   hidden>
+                                                            <br>
+                                                            <button class="btn btn-danger btn-xs"
+                                                                    id="adlist-btn-<?php echo $key; ?>">
+                                                                <span class="glyphicon glyphicon-trash"></span>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </div>
+                                            <?php } ?>
+                                            </tbody>
+                                        </table>
+                                        <div class="form-group">
+                                <textarea name="newuserlists" class="form-control" rows="1"
+                                          placeholder="Enter one URL per line to add new ad lists"></textarea>
+                                        </div>
+                                        <input type="hidden" name="field" value="adlists">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <button type="submit" class="btn btn-primary" name="submit" value="save">Save
+                                        </button>
+                                        <button type="submit" class="btn btn-primary pull-right" name="submit"
+                                                value="saveupdate">
+                                            Save and Update
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <!-- ######################################################### DHCP ######################################################### -->
-                <div id="piholedhcp" class="tab-pane fade in">
+                <div id="piholedhcp" class="tab-pane fade">
                     <?php
                     // Pi-hole DHCP server
                     if (isset($setupVars["DHCP_ACTIVE"])) {
@@ -576,7 +642,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 
                 </div>
                 <!-- ######################################################### DNS ######################################################### -->
-                <div id="dns" class="tab-pane fade in active">
+                <div id="dns" class="tab-pane fade">
                     <form role="form" method="post">
                         <div class="row">
                             <div class="col-md-6">
@@ -785,78 +851,6 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         </div>
                     </form>
                 </div>
-                <!-- ######################################################### Query Logging ######################################################### -->
-                <div id="querylogging" class="tab-pane fade">
-                    <div class="box">
-                        <div class="box-body">
-                            <p>Current status:
-                                <?php if ($piHoleLogging) { ?>
-                                    Enabled (recommended)
-                                <?php } else { ?>
-                                    Disabled
-                                <?php } ?></p>
-                            <?php if ($piHoleLogging) { ?>
-                                <p>Note that disabling will render graphs on the web user interface useless</p>
-                            <?php } ?>
-                        </div>
-                    </div>
-                    <form role="form" method="post">
-                        <button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
-                        <input type="hidden" name="field" value="Logging">
-                        <input type="hidden" name="token" value="<?php echo $token ?>">
-                        <?php if ($piHoleLogging) { ?>
-                            <input type="hidden" name="action" value="Disable">
-                            <button type="submit" class="btn btn-primary pull-right">Disable query logging
-                            </button>
-                        <?php } else { ?>
-                            <input type="hidden" name="action" value="Enable">
-                            <button type="submit" class="btn btn-primary pull-right">Enable query logging
-                            </button>
-                        <?php } ?>
-                    </form>
-                </div>
-                <!-- ######################################################### Blocklists ######################################################### -->
-                <div id="blocklists" class="tab-pane fade">
-
-                    <form role="form" method="post">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <label>Lists used to generate Pi-hole's Gravity</label>
-                                <?php foreach ($adlist as $key => $value) { ?>
-                                    <div class="form-group">
-                                        <div class="checkbox">
-                                            <label style="word-break: break-word;">
-                                                <input type="checkbox" name="adlist-enable-<?php echo $key; ?>"
-                                                       <?php if ($value[0]){ ?>checked<?php } ?>>
-                                                <a href="<?php echo htmlentities($value[1]); ?>"
-                                                   target="_new"><?php echo htmlentities($value[1]); ?></a>
-                                                <input type="checkbox" name="adlist-del-<?php echo $key; ?>"
-                                                       hidden>
-                                                <br>
-                                                <button class="btn btn-danger btn-xs"
-                                                        id="adlist-btn-<?php echo $key; ?>">
-                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                </button>
-                                            </label>
-                                        </div>
-                                    </div>
-                                <?php } ?>
-                                <div class="form-group">
-                                <textarea name="newuserlists" class="form-control" rows="1"
-                                          placeholder="Enter one URL per line to add new ad lists"></textarea>
-                                </div>
-                                <input type="hidden" name="field" value="adlists">
-                                <input type="hidden" name="token" value="<?php echo $token ?>">
-                                <button type="submit" class="btn btn-primary" name="submit" value="save">Save
-                                </button>
-                                <button type="submit" class="btn btn-primary pull-right" name="submit"
-                                        value="saveupdate">
-                                    Save and Update
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
                 <!-- ######################################################### API ######################################################### -->
                 <div id="api" class="tab-pane fade">
                     <form role="form" method="post">
@@ -972,39 +966,6 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         </div>
                     </form>
                 </div>
-                <!-- ######################################################### FTL ######################################################### -->
-                <div id="ftl" class="tab-pane fade">
-                    <?php
-                    if ($FTL) {
-                        function get_FTL_data($arg)
-                        {
-                            global $FTLpid;
-                            return trim(exec("ps -p " . $FTLpid . " -o " . $arg));
-                        }
-
-                        $FTLversion = exec("/usr/bin/pihole-FTL version");
-                    }
-                    ?>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <?php if ($FTL) { ?>
-                                <pre>
-                                FTL version: <?php echo $FTLversion; ?>
-
-                                Process identifier (PID): <?php echo $FTLpid; ?>
-
-                                Time FTL started: <?php print_r(get_FTL_data("start")); ?>
-
-                                User / Group: <?php print_r(get_FTL_data("euser")); ?>
-                                / <?php print_r(get_FTL_data("egroup")); ?>
-
-                                Total CPU utilization: <?php print_r(get_FTL_data("%cpu")); ?>%
-Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%
-<span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory: <?php echo formatSizeUnits(1e3 * floatval(get_FTL_data("rss"))); ?></span>
-                                </pre><?php } ?>
-                        </div>
-                    </div>
-                </div>
                 <!-- ######################################################### Teleporter ######################################################### -->
                 <div id="teleporter" class="tab-pane fade">
                     <div class="row">
@@ -1064,75 +1025,176 @@ Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%
                     <div class="row">
                         <div class="col-md-6">
                             <div class="box">
-                                <div class="box-head with-border">
-
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Network Information</h3>
                                 </div>
                                 <div class="box-body">
+                                    <div class="col-md-12">
+                                        <table class="table table-striped">
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">Pi-hole Ethernet Interface:</th>
+                                                <td><?php echo $piHoleInterface; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Pi-hole IPv4 address:</th>
+                                                <td><?php echo $piHoleIPv4; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Pi-hole IPv6 address:</th>
+                                                <td><?php echo $piHoleIPv6; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Pi-hole hostname</th>
+                                                <td><?php echo $hostname; ?></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
 
-                                    <div class="form-group">
-                                        <label>Pi-hole Ethernet Interface</label>
-                                        <div class="input-group">
-                                            <div class="input-group-addon"><i class="fa fa-plug"></i></div>
-                                            <input type="text" class="form-control" disabled
-                                                   value="<?php echo $piHoleInterface; ?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Pi-hole IPv4 address</label>
-                                        <div class="input-group">
-                                            <div class="input-group-addon"><i class="fa fa-plug"></i></div>
-                                            <input type="text" class="form-control" disabled
-                                                   value="<?php echo $piHoleIPv4; ?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Pi-hole IPv6 address</label>
-                                        <div class="input-group">
-                                            <div class="input-group-addon"><i class="fa fa-plug"></i></div>
-                                            <input type="text" class="form-control" disabled
-                                                   value="<?php echo $piHoleIPv6; ?>">
-                                        </div>
-                                        <?php if (!defined('AF_INET6')) { ?><p style="color: #F00;">Warning: PHP
-                                            has been
-                                            compiled
-                                            without IPv6 support.</p><?php } ?>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Pi-hole hostname</label>
-                                        <div class="input-group">
-                                            <div class="input-group-addon"><i class="fa fa-laptop"></i></div>
-                                            <input type="text" class="form-control" disabled
-                                                   value="<?php echo $hostname; ?>">
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
 
+                        <?php
+                        if ($FTL) {
+                            function get_FTL_data($arg)
+                            {
+                                global $FTLpid;
+                                return trim(exec("ps -p " . $FTLpid . " -o " . $arg));
+                            }
+
+                            $FTLversion = exec("/usr/bin/pihole-FTL version");
+                        }
+                        ?>
                         <div class="col-md-6">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">FTL Information</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="col-lg-12">
+                                        <table class="table table-striped">
+                                            <tbody>
+                                            <tr>
+                                                <th scope="row">FTL version:</th>
+                                                <td><?php echo $FTLversion; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Process identifier (PID):</th>
+                                                <td><?php echo $FTLpid; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Time FTL started:</th>
+                                                <td><?php print_r(get_FTL_data("start")); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">User / Group:</th>
+                                                <td><?php print_r(get_FTL_data("euser")); ?>
+                                                    / <?php print_r(get_FTL_data("egroup")); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Total CPU utilization:</th>
+                                                <td><?php print_r(get_FTL_data("%cpu")); ?>%</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Memory utilization:</th>
+                                                <td>
+                                                    <?php print_r(get_FTL_data("%mem")); ?>%
+                                                </td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <th scope="row"><span
+                                                            title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory:</span>
+                                                </th>
+                                                <td>
+
+                                                    <?php echo formatSizeUnits(1e3 * floatval(get_FTL_data("rss"))); ?></td>
+
+                                                </td>
+                                            </tr
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Logging</h3>
+                                </div>
+                                <div class="box-body">
+                                    <p>Current status:
+                                        <?php if ($piHoleLogging) { ?>
+                                            Enabled (recommended)
+                                        <?php } else { ?>
+                                            Disabled
+                                        <?php } ?></p>
+                                    <?php if ($piHoleLogging) { ?>
+                                        <p>Note that disabling will render graphs on the web user interface useless</p>
+                                    <?php } ?>
+
+                                    <form role="form" method="post">
+                                        <div class="col-md-4">
+                                            <button type="button"
+                                                    class="btn btn-default confirm-flushlogs form-control">Flush logs
+                                            </button>
+                                        </div>
+                                        <input type="hidden" name="field" value="Logging">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <div class="col-md-4 pull-right">
+                                            <?php if ($piHoleLogging) { ?>
+                                                <input type="hidden" name="action" value="Disable">
+                                                <button type="submit" class="btn btn-primary form-control">
+                                                    Disable query
+                                                    logging
+                                                </button>
+                                            <?php } else { ?>
+                                                <input type="hidden" name="action" value="Enable">
+                                                <button type="submit" class="btn btn-primary form-control">
+                                                    Enable
+                                                    query
+                                                    logging
+                                                </button>
+                                            <?php } ?>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-12">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Danger Zone!</h3><br/>
                                 </div>
                                 <div class="box-body">
-                                    <p>
-                                        <button type="button" class="btn btn-warning confirm-restartdns">Restart DNS
-                                            server
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn btn-warning confirm-restartdns form-control">
+                                            Restart Dnsmasq
                                         </button>
-                                    <p>
-                                        <button type="button" class="btn btn-warning confirm-flushlogs">Flush logs
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn btn-danger confirm-poweroff form-control">Power
+                                            off system
                                         </button>
-                                    </p>
-                                    <p>
-                                        <button type="button" class="btn btn-danger confirm-poweroff">Power off
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn btn-danger confirm-reboot form-control">Restart
                                             system
                                         </button>
-                                    </p>
-                                    <p>
-                                        <button type="button" class="btn btn-danger confirm-reboot">Restart
-                                            system
-                                        </button>
-                                    </p>
+                                    </div>
+
 
                                     <form role="form" method="post" id="poweroffform">
                                         <input type="hidden" name="field" value="poweroff">
@@ -1144,10 +1206,6 @@ Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%
                                     </form>
                                     <form role="form" method="post" id="restartdnsform">
                                         <input type="hidden" name="field" value="restartdns">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
-                                    </form>
-                                    <form role="form" method="post" id="flushlogsform">
-                                        <input type="hidden" name="field" value="flushlogs">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
                                     </form>
                                 </div>
