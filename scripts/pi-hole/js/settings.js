@@ -131,7 +131,7 @@ $(document).ready(function() {
 		});
 	}
     //call draw() on each table... they don't render properly with scrollX and scrollY set... ¯\_(ツ)_/¯
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $("a[data-toggle=\"tab\"]").on("shown.bs.tab", function (e) {
         leasetable.draw();
         staticleasetable.draw();
     });
