@@ -152,14 +152,21 @@ $(document).ready(function(){
 
 // Handle list deletion
 $("button[id^='adlist-btn-']").on("click", function (e) {
+	var idstring = $(this).context.id;
+	var id = parseInt(idstring.replace(/[^0-9\.]/g, ''), 10);
 	e.preventDefault();
 
-	var status = $(this).siblings("input[name^='adlist-del-']").is(":checked");
+	var status = $("input[id='adlist-del-"+id+"']").is(":checked");
 	var textType = status ? "none" : "line-through";
+	console.log("idstring: "+idstring);
+	console.log("id: "+id);
+	console.log("status: "+status);
+	console.log("textType: "+textType);
 
-    $(this).siblings("input[name^='adlist-del-']").prop("checked", !status);
-    $(this).siblings("input[name^='adlist-enable-']").prop("disabled", !status);
-	$(this).siblings("a").css("text-decoration", textType);
+	$("input[name='adlist-del-"+id+"']").prop("checked", !status);
+	$("input[name='adlist-enable-"+id+"']").prop("disabled", !status);
+	$("button[id='adlist-btn-"+id+"']").prop("disabled", true);
+	$("a[id='adlist-text-"+id+"']").css("text-decoration", textType);
 });
 
 // Javascript to go to specified tab on save or hyperlink
