@@ -1056,6 +1056,19 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                     </div>
                                 </div>
                             </div>
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Logging</h3>
+                                </div>
+                                <div class="box-body">
+                                    <p>Current status:
+                                        <?php if ($piHoleLogging) { ?>
+                                            Enabled (recommended)
+                                        <?php } else { ?>
+                                            Disabled
+                                        <?php } ?></p>
+                                </div>
+                            </div>
                         </div>
                         <?php
                         if ($FTL) {
@@ -1121,67 +1134,53 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                             </div>
                         </div>
                     </div>
-                    <form role="form" method="post">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="box">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">Logging</h3>
-                                    </div>
-                                    <div class="box-body">
-                                        <p>Current status:
-                                            <?php if ($piHoleLogging) { ?>
-                                                Enabled (recommended)
-                                            <?php } else { ?>
-                                                Disabled
-                                            <?php } ?></p>
-                                        <?php if ($piHoleLogging) { ?>
-                                            <p>Note that disabling will render graphs on the web user interface useless</p>
-                                        <?php } ?>
-                                    </div>
-                                    <div class="box-footer clearfix">
-                                        <div class="col-md-4">
-                                            <button type="button" class="btn btn-danger confirm-flushlogs form-control">Flush logs</button>
-                                        </div>
-                                        <input type="hidden" name="field" value="Logging">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
-                                        <div class="col-md-4 pull-right">
-                                            <?php if ($piHoleLogging) { ?>
-                                                <input type="hidden" name="action" value="Disable">
-                                                <button type="submit" class="btn btn-warning form-control">Disable query logging</button>
-                                            <?php } else { ?>
-                                                <input type="hidden" name="action" value="Enable">
-                                                <button type="submit" class="btn btn-success form-control">Enable query logging</button>
-                                            <?php } ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
                     <div class="row">
-
                         <div class="col-md-12">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Danger Zone!</h3><br/>
                                 </div>
                                 <div class="box-body">
-                                    <div class="col-md-4">
-                                        <button type="button" class="btn btn-warning confirm-restartdns form-control">
-                                            Restart dnsmasq
-                                        </button>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-danger confirm-flushlogs form-control">Flush logs</button>
+                                        </div>
+                                        <div class="col-md-4 pull-right">
+                                            <?php if ($piHoleLogging) { ?>
+                                                <button type="button" class="btn btn-warning confirm-disablelogging form-control">Disable query logging</button>
+                                            <?php } else { ?>
+                                                <form role="form" method="post">
+                                                    <input type="hidden" name="action" value="Enable">
+                                                    <input type="hidden" name="field" value="Logging">
+                                                    <input type="hidden" name="token" value="<?php echo $token ?>">
+                                                    <button type="submit" class="btn btn-success form-control">Enable query logging</button>
+                                                </form>
+                                            <?php } ?>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <button type="button" class="btn btn-danger confirm-poweroff form-control">Power
-                                            off system
-                                        </button>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-warning confirm-restartdns form-control">
+                                                Restart dnsmasq
+                                            </button>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-danger confirm-poweroff form-control">Power
+                                                off system
+                                            </button>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-danger confirm-reboot form-control">Restart
+                                                system
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <button type="button" class="btn btn-danger confirm-reboot form-control">Restart
-                                            system
-                                        </button>
-                                    </div>
+                                    <form role="form" method="post" id="disablelogsform">
+                                        <input type="hidden" name="field" value="Logging">
+                                         <input type="hidden" name="action" value="Disable">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                    </form>
                                     <form role="form" method="post" id="poweroffform">
                                         <input type="hidden" name="field" value="poweroff">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
