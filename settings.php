@@ -952,22 +952,30 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                 <!-- ######################################################### Teleporter ######################################################### -->
                 <div id="teleporter" class="tab-pane fade">
                     <div class="row">
-                        <div class="col-lg-12">
-                            <div class="box box-warning">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Teleporter</h3>
-                                </div>
-                                <div class="box-body">
-                                <?php if (extension_loaded('Phar')) { ?>
-                                    <form role="form" method="post" id="takeoutform"
-                                          action="scripts/pi-hole/php/teleporter.php"
-                                          target="_blank" enctype="multipart/form-data">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                        <?php if (extension_loaded('Phar')) { ?>
+                        <form role="form" method="post" id="takeoutform"
+                              action="scripts/pi-hole/php/teleporter.php"
+                              target="_blank" enctype="multipart/form-data">
+                            <input type="hidden" name="token" value="<?php echo $token ?>">
+                            <div class="col-lg-6">
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Teleporter Export</h3>
+                                    </div>
+                                    <div class="box-body">
                                         <div class="col-lg-12">
                                             <p>Export your Pi-hole lists as downloadable archive</p>
                                             <button type="submit" class="btn btn-default">Export</button>
-                                            <hr>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Teleporter Import</h3>
+                                    </div>
+                                    <div class="box-body">
                                         <div class="col-lg-6">
                                             <label>Import ...</label>
                                             <div class="form-group">
@@ -998,12 +1006,22 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                 </button>
                                             </div>
                                         </div>
-                                    </form>
-                                <?php } else { ?>
-                                    <p>The PHP extension <code>Phar</code> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.</p><?php } ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <?php } else { ?>
+                        <div class="col-lg-12">
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Teleporter</h3>
+                                </div>
+                                <div class="box-body">
+                                    <p>The PHP extension <code>Phar</code> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.</p>
                                 </div>
                             </div>
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <!-- ######################################################### System admin ######################################################### -->
