@@ -1136,25 +1136,25 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         </div>
                     </div>
 
-                    <div class="row">
-
-                        <div class="col-md-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Logging</h3>
-                                </div>
-                                <div class="box-body">
-                                    <p>Current status:
+                    <form role="form" method="post">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Logging</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <p>Current status:
+                                            <?php if ($piHoleLogging) { ?>
+                                                Enabled (recommended)
+                                            <?php } else { ?>
+                                                Disabled
+                                            <?php } ?></p>
                                         <?php if ($piHoleLogging) { ?>
-                                            Enabled (recommended)
-                                        <?php } else { ?>
-                                            Disabled
-                                        <?php } ?></p>
-                                    <?php if ($piHoleLogging) { ?>
-                                        <p>Note that disabling will render graphs on the web user interface useless</p>
-                                    <?php } ?>
-
-                                    <form role="form" method="post">
+                                            <p>Note that disabling will render graphs on the web user interface useless</p>
+                                        <?php } ?>
+                                    </div>
+                                    <div class="box-footer clearfix">
                                         <div class="col-md-4">
                                             <button type="button"
                                                     class="btn btn-default confirm-flushlogs form-control">Flush logs
@@ -1178,11 +1178,11 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                 </button>
                                             <?php } ?>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                     <div class="row">
 
                         <div class="col-md-12">
