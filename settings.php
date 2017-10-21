@@ -1156,26 +1156,17 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                     </div>
                                     <div class="box-footer clearfix">
                                         <div class="col-md-4">
-                                            <button type="button"
-                                                    class="btn btn-default confirm-flushlogs form-control">Flush logs
-                                            </button>
+                                            <button type="button" class="btn btn-danger confirm-flushlogs form-control">Flush logs</button>
                                         </div>
                                         <input type="hidden" name="field" value="Logging">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
                                         <div class="col-md-4 pull-right">
                                             <?php if ($piHoleLogging) { ?>
                                                 <input type="hidden" name="action" value="Disable">
-                                                <button type="submit" class="btn btn-primary form-control">
-                                                    Disable query
-                                                    logging
-                                                </button>
+                                                <button type="submit" class="btn btn-warning form-control">Disable query logging</button>
                                             <?php } else { ?>
                                                 <input type="hidden" name="action" value="Enable">
-                                                <button type="submit" class="btn btn-primary form-control">
-                                                    Enable
-                                                    query
-                                                    logging
-                                                </button>
+                                                <button type="submit" class="btn btn-success form-control">Enable query logging</button>
                                             <?php } ?>
                                         </div>
                                     </div>
@@ -1193,7 +1184,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                 <div class="box-body">
                                     <div class="col-md-4">
                                         <button type="button" class="btn btn-warning confirm-restartdns form-control">
-                                            Restart Dnsmasq
+                                            Restart dnsmasq
                                         </button>
                                     </div>
                                     <div class="col-md-4">
