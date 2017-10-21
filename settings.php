@@ -235,8 +235,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                 <li><a data-toggle="tab" href="#blocklists">Block Lists</a></li>
                 <li><a data-toggle="tab" href="#dns">DNS</a></li>
                 <li><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
-                <li><a data-toggle="tab" href="#api">API</a></li>
-                <li><a data-toggle="tab" href="#web">Web Interface</a></li>
+                <li><a data-toggle="tab" href="#api">API / Web interface</a></li>
                 <li><a data-toggle="tab" href="#teleporter">Teleporter</a></li>
             </ul>
             <div class="tab-content">
@@ -838,11 +837,20 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         </div>
                     </form>
                 </div>
-                <!-- ######################################################### API ######################################################### -->
+                <!-- ######################################################### API and Web ######################################################### -->
+                <?php
+                // CPU temperature unit
+                if (isset($setupVars["TEMPERATUREUNIT"])) {
+                    $temperatureunit = $setupVars["TEMPERATUREUNIT"];
+                } else {
+                    $temperatureunit = "C";
+                }
+                // Use $boxedlayout value determined in header.php
+                ?>
                 <div id="api" class="tab-pane fade">
                     <form role="form" method="post">
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-lg-6 col-md-12">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
                                         <h3 class="box-title">API settings</h3>
@@ -904,23 +912,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
-                <!-- ######################################################### Web interface ######################################################### -->
-                <div id="web" class="tab-pane fade">
-                    <?php
-                    // CPU temperature unit
-                    if (isset($setupVars["TEMPERATUREUNIT"])) {
-                        $temperatureunit = $setupVars["TEMPERATUREUNIT"];
-                    } else {
-                        $temperatureunit = "C";
-                    }
-                    // Use $boxedlayout value determined in header.php
-                    ?>
-                    <form role="form" method="post">
-                        <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-lg-6 col-md-12">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
                                         <h3 class="box-title">Web interface settings</h3>
