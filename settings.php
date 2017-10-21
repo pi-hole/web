@@ -265,6 +265,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                     <tr>
                                                         <td>
                                                             <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if ($value[0]){ ?>checked<?php } ?>>
+                                                        </td>
                                                         <td>
                                                             <a href="<?php echo htmlentities($value[1]); ?>" target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value[1]); ?></a>
                                                         </td>
@@ -284,7 +285,8 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         </div>
                                         <input type="hidden" name="field" value="adlists">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
-
+                                    </div>
+                                    <div class="box-footer clearfix">
                                         <button type="submit" class="btn btn-primary" name="submit" value="save" id="blockinglistsave">Save</button>
                                         <button type="submit" class="btn btn-primary pull-right" name="submit" id="blockinglistsaveupdate" value="saveupdate">Save and Update</button>
                                     </div>
