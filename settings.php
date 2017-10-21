@@ -231,17 +231,17 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
     <div class="col-md-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#blocklists">Block Lists</a></li>
+                <li class="active"><a data-toggle="tab" href="#sysadmin">System</a></li>
+                <li><a data-toggle="tab" href="#blocklists">Block Lists</a></li>
                 <li><a data-toggle="tab" href="#dns">DNS</a></li>
                 <li><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
                 <li><a data-toggle="tab" href="#api">API</a></li>
                 <li><a data-toggle="tab" href="#web">Web Interface</a></li>
                 <li><a data-toggle="tab" href="#teleporter">Teleporter</a></li>
-                <li><a data-toggle="tab" href="#sysadmin">System</a></li>
             </ul>
             <div class="tab-content">
                 <!-- ######################################################### Blocklists ######################################################### -->
-                <div id="blocklists" class="tab-pane fade in active">
+                <div id="blocklists" class="tab-pane fade">
                     <form role="form" method="post">
                         <div class="row">
                             <div class="col-md-12">
@@ -1032,8 +1032,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                     </div>
                 </div>
                 <!-- ######################################################### System admin ######################################################### -->
-                <div id="sysadmin" class="tab-pane fade">
-
+                <div id="sysadmin" class="tab-pane fade in active">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="box">
@@ -1063,12 +1062,9 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                             </tbody>
                                         </table>
                                     </div>
-
-
                                 </div>
                             </div>
                         </div>
-
                         <?php
                         if ($FTL) {
                             function get_FTL_data($arg)
@@ -1116,8 +1112,6 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                     <?php print_r(get_FTL_data("%mem")); ?>%
                                                 </td>
                                             </tr>
-
-
                                             <tr>
                                                 <th scope="row"><span
                                                             title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory:</span>
@@ -1135,7 +1129,6 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                             </div>
                         </div>
                     </div>
-
                     <form role="form" method="post">
                         <div class="row">
                             <div class="col-md-12">
@@ -1197,8 +1190,6 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                             system
                                         </button>
                                     </div>
-
-
                                     <form role="form" method="post" id="poweroffform">
                                         <input type="hidden" name="field" value="poweroff">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
