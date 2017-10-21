@@ -265,25 +265,15 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                 <div class="form-group">
                                                     <tr>
                                                         <td>
-                                                            <div class="checkbox">
-                                                                <label style="word-break: break-word;">
-                                                                    <input type="checkbox"
-                                                                           name="adlist-enable-<?php echo $key; ?>"
-                                                                           <?php if ($value[0]){ ?>checked<?php } ?>>
-                                                                </label>
-                                                            </div>
+                                                            <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if ($value[0]){ ?>checked<?php } ?>>
                                                         <td>
-                                                            <a href="<?php echo htmlentities($value[1]); ?>"
-                                                               target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value[1]); ?></a>
+                                                            <a href="<?php echo htmlentities($value[1]); ?>" target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value[1]); ?></a>
                                                         </td>
                                                         <td>
-                                                            <input type="checkbox" name="adlist-del-<?php echo $key; ?>"
-                                                                   hidden>
-                                                            <br>
-                                                            <button class="btn btn-danger btn-xs"
-                                                                    id="adlist-btn-<?php echo $key; ?>">
+                                                            <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
                                                                 <span class="glyphicon glyphicon-trash"></span>
                                                             </button>
+                                                            <input type="checkbox" name="adlist-del-<?php echo $key; ?>" hidden>
                                                         </td>
                                                     </tr>
                                                 </div>
@@ -291,17 +281,12 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                             </tbody>
                                         </table>
                                         <div class="form-group">
-                                <textarea name="newuserlists" class="form-control" rows="1"
-                                          placeholder="Enter one URL per line to add new ad lists"></textarea>
+                                            <textarea name="newuserlists" class="form-control" rows="1" placeholder="Enter one URL per line to add new ad lists"></textarea>
                                         </div>
                                         <input type="hidden" name="field" value="adlists">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
-                                        <button type="submit" class="btn btn-primary" name="submit" value="save" id="blockinglistsave">Save
-                                        </button>
-                                        <button type="submit" class="btn btn-primary pull-right" name="submit" id="blockinglistsaveupdate"
-                                                value="saveupdate">
-                                            Save and Update
-                                        </button>
+                                        <button type="submit" class="btn btn-primary" name="submit" value="save" id="blockinglistsave">Save</button>
+                                        <button type="submit" class="btn btn-primary pull-right" name="submit" id="blockinglistsaveupdate" value="saveupdate">Save and Update</button>
                                     </div>
                                 </div>
                             </form>
