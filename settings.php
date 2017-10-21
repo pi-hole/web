@@ -957,7 +957,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                               action="scripts/pi-hole/php/teleporter.php"
                               target="_blank" enctype="multipart/form-data">
                             <input type="hidden" name="token" value="<?php echo $token ?>">
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 col-md-12">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
                                         <h3 class="box-title">Teleporter Export</h3>
@@ -970,13 +970,13 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 col-md-12">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
                                         <h3 class="box-title">Teleporter Import</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-6 col-md-12">
                                             <label>Import ...</label>
                                             <div class="form-group">
                                                 <div class="checkbox">
@@ -996,7 +996,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-6 col-md-12">
                                             <div class="form-group">
                                                 <label for="zip_file">File input</label>
                                                 <input type="file" name="zip_file" id="zip_file">
