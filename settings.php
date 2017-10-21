@@ -274,7 +274,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                             </div>
                                                         <td>
                                                             <a href="<?php echo htmlentities($value[1]); ?>"
-                                                               target="_new"><?php echo htmlentities($value[1]); ?></a>
+                                                               target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value[1]); ?></a>
                                                         </td>
                                                         <td>
                                                             <input type="checkbox" name="adlist-del-<?php echo $key; ?>"
