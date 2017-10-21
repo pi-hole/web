@@ -242,14 +242,14 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
             <div class="tab-content">
                 <!-- ######################################################### Blocklists ######################################################### -->
                 <div id="blocklists" class="tab-pane fade in active">
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Lists used to generate Pi-hole's Gravity</h3>
-                        </div>
-                        <div class="box-body">
-                            <form role="form" method="post">
-                                <div class="row">
-                                    <div class="col-md-12">
+                    <form role="form" method="post">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Lists used to generate Pi-hole's Gravity</h3>
+                                    </div>
+                                    <div class="box-body">
                                         <table class="table table-striped">
                                             <thead>
                                             <tr>
@@ -284,13 +284,14 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         </div>
                                         <input type="hidden" name="field" value="adlists">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
+
                                         <button type="submit" class="btn btn-primary" name="submit" value="save" id="blockinglistsave">Save</button>
                                         <button type="submit" class="btn btn-primary pull-right" name="submit" id="blockinglistsaveupdate" value="saveupdate">Save and Update</button>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <!-- ######################################################### DHCP ######################################################### -->
                 <div id="piholedhcp" class="tab-pane fade">
