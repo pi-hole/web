@@ -84,6 +84,23 @@ $(".confirm-flushlogs").confirm({
 	dialogClass: "modal-dialog modal-mg"
 });
 
+$(".confirm-disablelogging").confirm({
+	text: "Note that disabling query logging will render graphs on the web user interface useless. Are you sure you want to disable your logging?",
+	title: "Confirmation required",
+	confirm(button) {
+		$("#disablelogsform").submit();
+	},
+	cancel(button) {
+		// nothing to do
+	},
+	confirmButton: "Yes, disable logs",
+	cancelButton: "No, go back",
+	post: true,
+	confirmButtonClass: "btn-danger",
+	cancelButtonClass: "btn-success",
+	dialogClass: "modal-dialog modal-mg"
+});
+
 $(".api-token").confirm({
 	text: "Make sure that nobody else can scan this code around you. They will have full access to the API without having to know the password. Note that the generation of the QR code will take some time.",
 	title: "Confirmation required",
