@@ -947,6 +947,8 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         </div>
                                         <input type="hidden" name="field" value="webUI">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
+                                    </div>
+                                    <div class="box-footer clearfix">
                                         <button type="submit" class="btn btn-primary pull-right">Save</button>
                                     </div>
                                 </div>
