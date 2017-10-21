@@ -296,9 +296,9 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         </div>
                                         <input type="hidden" name="field" value="adlists">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
-                                        <button type="submit" class="btn btn-primary" name="submit" value="save">Save
+                                        <button type="submit" class="btn btn-primary" name="submit" value="save" id="blockinglistsave">Save
                                         </button>
-                                        <button type="submit" class="btn btn-primary pull-right" name="submit"
+                                        <button type="submit" class="btn btn-primary pull-right" name="submit" id="blockinglistsaveupdate"
                                                 value="saveupdate">
                                             Save and Update
                                         </button>
