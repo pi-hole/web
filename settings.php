@@ -893,12 +893,14 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                                                     <?php if ($privacyMode){ ?>checked<?php } ?>>
                                                         Don't
                                                         show origin of DNS requests in query log</label></div>
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="box-footer clearfix">
                                         <input type="hidden" name="field" value="API">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
                                         <button type="button" class="btn btn-primary api-token">Show API token</button>
                                         <button type="submit" class="btn btn-primary pull-right">Save</button>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
