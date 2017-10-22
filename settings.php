@@ -633,7 +633,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="box box-warning">
-                                    <div class="box-header">
+                                    <div class="box-header with-border">
                                         <h1 class="box-title">Upstream DNS Servers</h1>
                                     </div>
                                     <div class="box-body">
@@ -741,7 +741,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                             </div>
                             <div class="col-md-6">
                                 <div class="box box-warning">
-                                    <div class="box-header">
+                                    <div class="box-header with-border">
                                         <h1 class="box-title">Interface listening behavior</h1>
                                     </div>
                                     <div class="box-body">
