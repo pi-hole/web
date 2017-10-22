@@ -354,60 +354,56 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                     <h3 class="box-title">DHCP Settings</h3>
                                 </div>
                                 <div class="box-body">
-                                    <div role="form" method="post">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div class="checkbox"><label><input type="checkbox" name="active"
-                                                                                        <?php if ($DHCP){ ?>checked<?php } ?>
-                                                                                        id="DHCPchk"> DHCP server
-                                                            enabled</label></div>
-                                                </div>
-                                                <p id="dhcpnotice" <?php if (!$DHCP){ ?>hidden<?php } ?>>Make sure your
-                                                    router's DHCP
-                                                    server is disabled when using the Pi-hole DHCP server!</p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div class="checkbox"><label><input type="checkbox" name="active"
+                                                                                    <?php if ($DHCP){ ?>checked<?php } ?>
+                                                                                    id="DHCPchk"> DHCP server
+                                                        enabled</label></div>
                                             </div>
-
+                                            <p id="dhcpnotice" <?php if (!$DHCP){ ?>hidden<?php } ?>>Make sure your
+                                                router's DHCP
+                                                server is disabled when using the Pi-hole DHCP server!</p>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <label>Range of IP addresses to hand out</label>
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-
-                                                    <div class="input-group">
-                                                        <div class="input-group-addon">From</div>
-                                                        <input type="text" class="form-control DHCPgroup" name="from"
-                                                               data-inputmask="'alias': 'ip'" data-mask
-                                                               value="<?php echo $DHCPstart; ?>"
-                                                               <?php if (!$DHCP){ ?>disabled<?php } ?>>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <div class="input-group-addon">To</div>
-                                                        <input type="text" class="form-control DHCPgroup" name="to"
-                                                               data-inputmask="'alias': 'ip'" data-mask
-                                                               value="<?php echo $DHCPend; ?>"
-                                                               <?php if (!$DHCP){ ?>disabled<?php } ?>>
-                                                    </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <label>Range of IP addresses to hand out</label>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">From</div>
+                                                    <input type="text" class="form-control DHCPgroup" name="from"
+                                                           data-inputmask="'alias': 'ip'" data-mask
+                                                           value="<?php echo $DHCPstart; ?>"
+                                                           <?php if (!$DHCP){ ?>disabled<?php } ?>>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label>Router (gateway) IP address</label>
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <div class="input-group-addon">Router</div>
-                                                        <input type="text" class="form-control DHCPgroup" name="router"
-                                                               data-inputmask="'alias': 'ip'" data-mask
-                                                               value="<?php echo $DHCProuter; ?>"
-                                                               <?php if (!$DHCP){ ?>disabled<?php } ?>>
-                                                    </div>
+                                        <div class="col-xs-6">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">To</div>
+                                                    <input type="text" class="form-control DHCPgroup" name="to"
+                                                           data-inputmask="'alias': 'ip'" data-mask
+                                                           value="<?php echo $DHCPend; ?>"
+                                                           <?php if (!$DHCP){ ?>disabled<?php } ?>>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>Router (gateway) IP address</label>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">Router</div>
+                                                    <input type="text" class="form-control DHCPgroup" name="router"
+                                                           data-inputmask="'alias': 'ip'" data-mask
+                                                           value="<?php echo $DHCProuter; ?>"
+                                                           <?php if (!$DHCP){ ?>disabled<?php } ?>>
                                                 </div>
                                             </div>
                                         </div>
@@ -417,12 +413,12 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         </div>
                         <!--Advanced DHCP Settings Box-->
                         <div class="col-md-6">
-                            <div class="col-md-12">
-                                <div class="box box-warning">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">Advanced DHCP settings</h3>
-                                    </div>
-                                    <div class="box-body">
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Advanced DHCP settings</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <label>Pi-hole domain name</label>
                                             <div class="form-group">
@@ -434,6 +430,8 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <label>DHCP lease time</label>
                                             <div class="form-group">
@@ -450,6 +448,8 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                 8760 =
                                                 one year</p>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <div class="checkbox"><label><input type="checkbox" name="useIPv6"
@@ -535,7 +535,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                     <h3 class="box-title">DHCP leases</h3>
                                 </div>
                                 <div class="box-body">
-                                    <div clas="row">
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <label>Currently active DHCP leases</label>
                                             <table id="DHCPLeasesTable"
@@ -568,7 +568,6 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                             </table>
                                             <br>
                                         </div>
-
                                         <div class="col-md-12">
                                             <label>Static DHCP leases configuration</label>
                                             <table id="DHCPStaticLeasesTable"
@@ -857,51 +856,63 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         <h3 class="box-title">API settings</h3>
                                     </div>
                                     <div class="box-body">
-                                        <h4>Top Lists</h4>
-                                        <p>Exclude the following domains from being shown in</p>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label>Top Domains / Top Advertisers</label>
-                                                <textarea name="domains" class="form-control" rows="4"
-                                                          placeholder="Enter one domain per line"><?php foreach ($excludedDomains as $domain) {
-                                                        echo $domain . "\n";
-                                                    } ?></textarea>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4>Top Lists</h4>
+                                                <p>Exclude the following domains from being shown in</p>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label>Top Clients</label>
-                                                <textarea name="clients" class="form-control" rows="4"
-                                                          placeholder="Enter one IP address or host name per line"><?php foreach ($excludedClients as $client) {
-                                                        echo $client . "\n";
-                                                    } ?></textarea>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Top Domains / Top Advertisers</label>
+                                                    <textarea name="domains" class="form-control" rows="4"
+                                                              placeholder="Enter one domain per line"><?php foreach ($excludedDomains as $domain) {
+                                                            echo $domain . "\n";
+                                                        } ?></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Top Clients</label>
+                                                    <textarea name="clients" class="form-control" rows="4"
+                                                              placeholder="Enter one IP address or host name per line"><?php foreach ($excludedClients as $client) {
+                                                            echo $client . "\n";
+                                                        } ?></textarea>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-12">
-                                            <h4>Privacy settings (Statistics / Query Log)</h4>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <div class="checkbox"><label><input type="checkbox"
-                                                                                    name="querylog-permitted"
-                                                                                    <?php if ($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>>
-                                                        Show permitted domain entries</label></div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <h4>Privacy settings (Statistics / Query Log)</h4>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <div class="checkbox"><label><input type="checkbox" name="querylog-blocked"
-                                                                                    <?php if ($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>>
-                                                        Show blocked domain entries</label></div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <div class="checkbox"><label><input type="checkbox"
+                                                                                        name="querylog-permitted"
+                                                                                        <?php if ($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>>
+                                                            Show permitted domain entries</label></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <div class="checkbox"><label><input type="checkbox" name="querylog-blocked"
+                                                                                        <?php if ($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>>
+                                                            Show blocked domain entries</label></div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-12">
-                                            <h4>Privacy mode</h4>
-                                            <div class="form-group">
-                                                <div class="checkbox"><label><input type="checkbox" name="privacyMode"
-                                                                                    <?php if ($privacyMode){ ?>checked<?php } ?>>
-                                                        Don't
-                                                        show origin of DNS requests in query log</label></div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <h4>Privacy mode</h4>
+                                                <div class="form-group">
+                                                    <div class="checkbox"><label><input type="checkbox" name="privacyMode"
+                                                                                        <?php if ($privacyMode){ ?>checked<?php } ?>>
+                                                            Don't
+                                                            show origin of DNS requests in query log</label></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -919,27 +930,31 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         <h3 class="box-title">Web interface settings</h3>
                                     </div>
                                     <div class="box-body">
-                                        <h4>Interface appearance</h4>
-                                        <div class="form-group">
-                                            <div class="checkbox"><label><input type="checkbox" name="boxedlayout"
-                                                                                value="yes"
-                                                                                <?php if ($boxedlayout){ ?>checked<?php } ?> >Use
-                                                    boxed layout (helpful when working on large screens)</label></div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4>Interface appearance</h4>
+                                                <div class="form-group">
+                                                    <div class="checkbox"><label><input type="checkbox" name="boxedlayout"
+                                                                                        value="yes"
+                                                                                        <?php if ($boxedlayout){ ?>checked<?php } ?> >Use
+                                                            boxed layout (helpful when working on large screens)</label></div>
+                                                </div>
+                                                <h4>CPU Temperature Unit</h4>
+                                                <div class="form-group">
+                                                    <div class="radio"><label><input type="radio" name="tempunit" value="C"
+                                                                                     <?php if ($temperatureunit === "C"){ ?>checked<?php } ?> >Celsius</label>
+                                                    </div>
+                                                    <div class="radio"><label><input type="radio" name="tempunit" value="K"
+                                                                                     <?php if ($temperatureunit === "K"){ ?>checked<?php } ?> >Kelvin</label>
+                                                    </div>
+                                                    <div class="radio"><label><input type="radio" name="tempunit" value="F"
+                                                                                     <?php if ($temperatureunit === "F"){ ?>checked<?php } ?> >Fahrenheit</label>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="field" value="webUI">
+                                                <input type="hidden" name="token" value="<?php echo $token ?>">
+                                            </div>
                                         </div>
-                                        <h4>CPU Temperature Unit</h4>
-                                        <div class="form-group">
-                                            <div class="radio"><label><input type="radio" name="tempunit" value="C"
-                                                                             <?php if ($temperatureunit === "C"){ ?>checked<?php } ?> >Celsius</label>
-                                            </div>
-                                            <div class="radio"><label><input type="radio" name="tempunit" value="K"
-                                                                             <?php if ($temperatureunit === "K"){ ?>checked<?php } ?> >Kelvin</label>
-                                            </div>
-                                            <div class="radio"><label><input type="radio" name="tempunit" value="F"
-                                                                             <?php if ($temperatureunit === "F"){ ?>checked<?php } ?> >Fahrenheit</label>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="field" value="webUI">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
                                     </div>
                                     <div class="box-footer clearfix">
                                         <button type="submit" class="btn btn-primary pull-right">Save</button>
@@ -963,9 +978,11 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         <h3 class="box-title">Teleporter Export</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div class="col-lg-12">
-                                            <p>Export your Pi-hole lists as downloadable archive</p>
-                                            <button type="submit" class="btn btn-default">Export</button>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <p>Export your Pi-hole lists as downloadable archive</p>
+                                                <button type="submit" class="btn btn-default">Export</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -976,34 +993,36 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         <h3 class="box-title">Teleporter Import</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div class="col-lg-6 col-md-12">
-                                            <label>Import ...</label>
-                                            <div class="form-group">
-                                                <div class="checkbox">
-                                                    <label><input type="checkbox" name="whitelist" value="true"
-                                                                  checked>
-                                                        Whitelist</label>
-                                                </div>
-                                                <div class="checkbox">
-                                                    <label><input type="checkbox" name="blacklist" value="true"
-                                                                  checked>
-                                                        Blacklist (exact)</label>
-                                                </div>
-                                                <div class="checkbox">
-                                                    <label><input type="checkbox" name="wildlist" value="true"
-                                                                  checked>
-                                                        Blacklist (wildcard)</label>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-12">
+                                                <label>Import ...</label>
+                                                <div class="form-group">
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="whitelist" value="true"
+                                                                      checked>
+                                                            Whitelist</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="blacklist" value="true"
+                                                                      checked>
+                                                            Blacklist (exact)</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="wildlist" value="true"
+                                                                      checked>
+                                                            Blacklist (wildcard)</label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-12">
-                                            <div class="form-group">
-                                                <label for="zip_file">File input</label>
-                                                <input type="file" name="zip_file" id="zip_file">
-                                                <p class="help-block">Upload only Pi-hole backup files.</p>
-                                                <button type="submit" class="btn btn-default" name="action"
-                                                        value="in">Import
-                                                </button>
+                                            <div class="col-lg-6 col-md-12">
+                                                <div class="form-group">
+                                                    <label for="zip_file">File input</label>
+                                                    <input type="file" name="zip_file" id="zip_file">
+                                                    <p class="help-block">Upload only Pi-hole backup files.</p>
+                                                    <button type="submit" class="btn btn-default" name="action"
+                                                            value="in">Import
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1033,27 +1052,29 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                     <h3 class="box-title">Network Information</h3>
                                 </div>
                                 <div class="box-body">
-                                    <div class="col-md-12">
-                                        <table class="table table-striped">
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">Pi-hole Ethernet Interface:</th>
-                                                <td><?php echo $piHoleInterface; ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Pi-hole IPv4 address:</th>
-                                                <td><?php echo $piHoleIPv4; ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Pi-hole IPv6 address:</th>
-                                                <td><?php echo $piHoleIPv6; ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Pi-hole hostname</th>
-                                                <td><?php echo $hostname; ?></td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table class="table table-striped">
+                                                <tbody>
+                                                <tr>
+                                                    <th scope="row">Pi-hole Ethernet Interface:</th>
+                                                    <td><?php echo $piHoleInterface; ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Pi-hole IPv4 address:</th>
+                                                    <td><?php echo $piHoleIPv4; ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Pi-hole IPv6 address:</th>
+                                                    <td><?php echo $piHoleIPv6; ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Pi-hole hostname</th>
+                                                    <td><?php echo $hostname; ?></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1088,48 +1109,48 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                     <h3 class="box-title">FTL Information</h3>
                                 </div>
                                 <div class="box-body">
-                                    <div class="col-lg-12">
-                                        <table class="table table-striped">
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">FTL version:</th>
-                                                <td><?php echo $FTLversion; ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Process identifier (PID):</th>
-                                                <td><?php echo $FTLpid; ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Time FTL started:</th>
-                                                <td><?php print_r(get_FTL_data("start")); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">User / Group:</th>
-                                                <td><?php print_r(get_FTL_data("euser")); ?>
-                                                    / <?php print_r(get_FTL_data("egroup")); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Total CPU utilization:</th>
-                                                <td><?php print_r(get_FTL_data("%cpu")); ?>%</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Memory utilization:</th>
-                                                <td>
-                                                    <?php print_r(get_FTL_data("%mem")); ?>%
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row"><span
-                                                            title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory:</span>
-                                                </th>
-                                                <td>
-
-                                                    <?php echo formatSizeUnits(1e3 * floatval(get_FTL_data("rss"))); ?></td>
-
-                                                </td>
-                                            </tr
-                                            </tbody>
-                                        </table>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <table class="table table-striped">
+                                                <tbody>
+                                                <tr>
+                                                    <th scope="row">FTL version:</th>
+                                                    <td><?php echo $FTLversion; ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Process identifier (PID):</th>
+                                                    <td><?php echo $FTLpid; ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Time FTL started:</th>
+                                                    <td><?php print_r(get_FTL_data("start")); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">User / Group:</th>
+                                                    <td><?php print_r(get_FTL_data("euser")); ?>
+                                                        / <?php print_r(get_FTL_data("egroup")); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Total CPU utilization:</th>
+                                                    <td><?php print_r(get_FTL_data("%cpu")); ?>%</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Memory utilization:</th>
+                                                    <td>
+                                                        <?php print_r(get_FTL_data("%mem")); ?>%
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row"><span
+                                                                title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory:</span>
+                                                    </th>
+                                                    <td>
+                                                        <?php echo formatSizeUnits(1e3 * floatval(get_FTL_data("rss"))); ?></td>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
