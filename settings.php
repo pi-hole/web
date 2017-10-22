@@ -345,6 +345,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                         $piHoleDomain = "local";
                     }
                     ?>
+                    <form role="form" method="post">
                     <div class="row">
                         <!--DHCP Settings Box-->
                         <div class="col-md-6">
