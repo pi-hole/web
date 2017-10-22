@@ -1077,19 +1077,6 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Logging</h3>
-                                </div>
-                                <div class="box-body">
-                                    <p>Current status:
-                                        <?php if ($piHoleLogging) { ?>
-                                            Enabled (recommended)
-                                        <?php } else { ?>
-                                            Disabled
-                                        <?php } ?></p>
-                                </div>
-                            </div>
                         </div>
                         <?php
                         if ($FTL) {
