@@ -847,9 +847,9 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                 // Use $boxedlayout value determined in header.php
                 ?>
                 <div id="api" class="tab-pane fade">
-                    <form role="form" method="post">
-                        <div class="row">
-                            <div class="col-lg-6 col-md-12">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12">
+                            <form role="form" method="post">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
                                         <h3 class="box-title">API settings</h3>
@@ -922,8 +922,10 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         <button type="submit" class="btn btn-primary pull-right">Save</button>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-6 col-md-12">
+                            </form>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <form role="form" method="post">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
                                         <h3 class="box-title">Web interface settings</h3>
@@ -959,9 +961,9 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         <button type="submit" class="btn btn-primary pull-right">Save</button>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
                 <!-- ######################################################### Teleporter ######################################################### -->
                 <div id="teleporter" class="tab-pane fade">
