@@ -255,7 +255,6 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                                 <th>Enabled</th>
                                                 <th>List</th>
                                                 <th>Delete</th>
-                                                <td></td>
                                             </tr>
                                             </thead>
                                             <tbody>
