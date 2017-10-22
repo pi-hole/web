@@ -249,7 +249,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         <h3 class="box-title">Lists used to generate Pi-hole's Gravity</h3>
                                     </div>
                                     <div class="box-body">
-                                        <table class="table table-striped">
+                                        <table class="table table-striped table-bordered dt-responsive nowrap">
                                             <thead>
                                             <tr>
                                                 <th>Enabled</th>
@@ -1053,7 +1053,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <table class="table table-striped">
+                                            <table class="table table-striped table-bordered dt-responsive nowrap">
                                                 <tbody>
                                                 <tr>
                                                     <th scope="row">Pi-hole Ethernet Interface:</th>
@@ -1110,7 +1110,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <table class="table table-striped">
+                                            <table class="table table-striped table-bordered dt-responsive nowrap">
                                                 <tbody>
                                                 <tr>
                                                     <th scope="row">FTL version:</th>
