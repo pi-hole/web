@@ -787,46 +787,47 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         <h3 class="box-title">Advanced DNS settings</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div class="col-lg-12">
-                                            <div class="form-group">
-                                                <div class="checkbox"><label><input type="checkbox"
-                                                                                    name="DNSrequiresFQDN"
-                                                                                    <?php if ($DNSrequiresFQDN){ ?>checked<?php } ?>
-                                                                                    title="domain-needed"> never
-                                                        forward
-                                                        non-FQDNs</label></div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <div class="checkbox"><label><input type="checkbox"
+                                                                                        name="DNSrequiresFQDN"
+                                                                                        <?php if ($DNSrequiresFQDN){ ?>checked<?php } ?>
+                                                                                        title="domain-needed"> never
+                                                            forward
+                                                            non-FQDNs</label></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="checkbox"><label><input type="checkbox"
+                                                                                        name="DNSbogusPriv"
+                                                                                        <?php if ($DNSbogusPriv){ ?>checked<?php } ?>
+                                                                                        title="bogus-priv"> never
+                                                            forward
+                                                            reverse lookups for private IP ranges</label></div>
+                                                </div>
+                                                <p>Note that enabling these two options may increase your privacy
+                                                    slightly, but
+                                                    may also prevent you from being able to access local hostnames
+                                                    if the
+                                                    Pi-hole is not used as DHCP server</p>
+                                                <div class="form-group">
+                                                    <div class="checkbox"><label><input type="checkbox"
+                                                                                        name="DNSSEC"
+                                                                                        <?php if ($DNSSEC){ ?>checked<?php } ?>>
+                                                            Use DNSSEC</label></div>
+                                                </div>
+                                                <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
+                                                    queries,
+                                                    Pi-hole requests the DNSSEC records needed to validate the
+                                                    replies. Use
+                                                    Google or Norton DNS servers when activating DNSSEC. Note that
+                                                    the size of
+                                                    your log might increase significantly when enabling DNSSEC. A
+                                                    DNSSEC
+                                                    resolver test can be found <a
+                                                            href="http://dnssec.vs.uni-due.de/"
+                                                            target="_blank">here</a>.</p>
                                             </div>
-                                            <div class="form-group">
-                                                <div class="checkbox"><label><input type="checkbox"
-                                                                                    name="DNSbogusPriv"
-                                                                                    <?php if ($DNSbogusPriv){ ?>checked<?php } ?>
-                                                                                    title="bogus-priv"> never
-                                                        forward
-                                                        reverse lookups for private IP ranges</label></div>
-                                            </div>
-                                            <p>Note that enabling these two options may increase your privacy
-                                                slightly, but
-                                                may also prevent you from being able to access local hostnames
-                                                if the
-                                                Pi-hole is not used as DHCP server</p>
-                                            <div class="form-group">
-                                                <div class="checkbox"><label><input type="checkbox"
-                                                                                    name="DNSSEC"
-                                                                                    <?php if ($DNSSEC){ ?>checked<?php } ?>>
-                                                        Use DNSSEC</label></div>
-                                            </div>
-                                            <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
-                                                queries,
-                                                Pi-hole requests the DNSSEC records needed to validate the
-                                                replies. Use
-                                                Google or Norton DNS servers when activating DNSSEC. Note that
-                                                the size of
-                                                your log might increase significantly when enabling DNSSEC. A
-                                                DNSSEC
-                                                resolver test can be found <a
-                                                        href="http://dnssec.vs.uni-due.de/"
-                                                        target="_blank">here</a>.</p>
-
                                         </div>
                                     </div>
                                 </div>
