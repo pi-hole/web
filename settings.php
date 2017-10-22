@@ -1145,7 +1145,8 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         <div class="col-md-4">
                                             <button type="button" class="btn btn-warning confirm-restartdns form-control">Restart dnsmasq</button>
                                         </div>
-                                        <div class="col-md-4 pull-right">
+                                        <p class="hidden-md hidden-lg"></p>
+                                        <div class="col-md-4 col-md-offset-4">
                                             <?php if ($piHoleLogging) { ?>
                                                 <button type="button" class="btn btn-warning confirm-disablelogging form-control">Disable query logging</button>
                                             <?php } else { ?>
@@ -1163,11 +1164,13 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                                         <div class="col-md-4">
                                             <button type="button" class="btn btn-danger confirm-flushlogs form-control">Flush logs</button>
                                         </div>
+                                        <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
                                             <button type="button" class="btn btn-danger confirm-poweroff form-control">Power
                                                 off system
                                             </button>
                                         </div>
+                                        <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
                                             <button type="button" class="btn btn-danger confirm-reboot form-control">Restart
                                                 system
