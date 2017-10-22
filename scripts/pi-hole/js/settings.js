@@ -199,3 +199,17 @@ $(".nav-tabs a").on("shown.bs.tab", function (e) {
     window.location.hash = e.target.hash;
     window.scrollTo(0, 0);
 });
+
+// Auto dismissal for info and error notifications
+$(document).ready(function(){
+    var alInfo = $("#alInfo");
+    var alError = $("#alError");
+    if(alInfo.length)
+    {
+        alInfo.delay(1000).fadeOut(2000, function() { alInfo.hide(); });
+    }
+    if(alError.length)
+    {
+        alError.delay(1000).fadeOut(2000, function() { alError.hide(); });
+    }
+});
