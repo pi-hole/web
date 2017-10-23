@@ -13,6 +13,7 @@ require("scripts/pi-hole/php/password.php");
 require("scripts/pi-hole/php/auth.php");
 check_cors();
 
+$FTL_IP = "127.0.0.1";
 
 $data = array();
 
@@ -74,7 +75,7 @@ elseif (isset($_GET['disable']) && $auth)
 }
 
 // Other API functions
-if(!testFTL() && !isset($_GET["PHP"]))
+if(!testFTL($FTL_IP) && !isset($_GET["PHP"]))
 {
 	$data = array_merge($data, array("FTLnotrunning" => true));
 }
