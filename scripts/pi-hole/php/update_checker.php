@@ -1,8 +1,25 @@
 <?php
 
-$versions = explode(" ", file_get_contents("/etc/pihole/localversions"));
-$branches = explode(" ", file_get_contents("/etc/pihole/localbranches"));
-$GitHubversions = explode(" ", file_get_contents("/etc/pihole/GitHubVersions"));
+$localversions = "/etc/pihole/localversions";
+$localbranches = "/etc/pihole/localbranches";
+$GitHubVersions = "/etc/pihole/GitHubVersions";
+
+if(!is_readable($localversions) || !is_readable($localbranches) || !is_readable($GitHubVersions))
+{
+	$core_branch = "master";
+	$core_current = "N/A";
+	$core_update = false;
+	$web_branch = "master";
+	$web_current = "N/A";
+	$web_update = false;
+	$FTL_current = "N/A";
+	$FTL_update = false;
+	goto endofupdatecheck;
+}
+
+$versions = explode(" ", file_get_contents($localversions));
+$branches = explode(" ", file_get_contents($localbranches));
+$GitHubversions = explode(" ", file_get_contents($GitHubVersions));
 
 /********** Get Pi-hole core branch / version / commit **********/
 // Check if on a dev branch
@@ -61,5 +78,7 @@ else
 // This logic allows the local core version to be newer than the upstream version
 // The update indicator is only shown if the upstream version is NEWER
 $FTL_update = (version_compare($FTL_current, $FTL_latest) < 0);
+
+endofupdatecheck:
 
 ?>
