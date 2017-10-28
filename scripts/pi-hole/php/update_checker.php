@@ -1,90 +1,37 @@
 <?php
-// Allow file_get_contents to read remote sources via URL
-ini_set("allow_url_fopen", 1);
 
-// Function that grabs latest tag from GitHub
-function get_github_version($url)
-{
-	// Have to fake the user agent to be able to query from Github's API
-	$context = stream_context_create(array("http" => array("user_agent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")));
-
-	$json = file_get_contents($url, false, $context);
-	$result = json_decode($json);
-
-	return $result->tag_name;
-}
+$versions = explode(" ", file_get_contents("/etc/pihole/localversions"));
+$branches = explode(" ", file_get_contents("/etc/pihole/localbranches"));
+$GitHubversions = explode(" ", file_get_contents("/etc/pihole/GitHubVersions"));
 
 /********** Get Pi-hole core branch / version / commit **********/
 // Check if on a dev branch
-$core_branch = exec("cd /etc/.pihole/ && git rev-parse --abbrev-ref HEAD");
+$core_branch = $branches[0];
 if($core_branch !== "master") {
     $core_current = "vDev";
-    $core_commit = exec("cd /etc/.pihole/ && git describe --long --dirty --tags");
+    $core_commit = $versions[0];
 }
 else {
-    $core_current = exec("cd /etc/.pihole/ && git describe --tags --abbrev=0");
+    $core_current = explode("-",$versions[0])[0];
 }
 
 /********** Get Pi-hole web branch / version / commit **********/
-$web_branch = exec("git rev-parse --abbrev-ref HEAD");
+$web_branch = $branches[1];
 if($web_branch !== "master") {
     $web_current = "vDev";
-    $web_commit = exec("git describe --long --dirty --tags");
+    $web_commit = $versions[1];
 }
 else {
-    $web_current = exec("git describe --tags --abbrev=0");
+    $web_current = explode("-",$versions[1])[0];
 }
 
 /********** Get Pi-hole FTL version (not a git repository) **********/
-$FTL_current = exec("pihole-FTL version");
+$FTL_current = $versions[2];
 
-// can write only in the root web dir, i.e. /var/www/html
-$versionfile = "../versions";
-
-$check_version = false;
-$date = date_create();
-$timestamp = date_timestamp_get($date);
-
-// Check version if version buffer file does not exist
-if(is_readable($versionfile))
-{
-	// Obtain latest time stamp from buffer file
-	$versions = explode(",",file_get_contents($versionfile));
-
-	// Is last check for updates older than 48 hours?
-	if($timestamp >= intval($versions[0]) + 172800)
-	{
-		// Yes: Retrieve new/updated version data
-		$check_version = true;
-	}
-	else
-	{
-		// No: We can use the buffered data
-		$check_version = false;
-	}
-}
-else
-{
-	// No buffer file or not readable: Request version data
-	$check_version = true;
-}
-
-// Get data from GitHub if requested
-if($check_version){
-	$core_latest = get_github_version("https://api.github.com/repos/pi-hole/pi-hole/releases/latest");
-	$web_latest = get_github_version("https://api.github.com/repos/pi-hole/AdminLTE/releases/latest");
-	$FTL_latest = get_github_version("https://api.github.com/repos/pi-hole/FTL/releases/latest");
-
-	// Save to buffer file
-	file_put_contents($versionfile, array($timestamp,",",$core_latest,",",$web_latest,",",$FTL_latest));
-}
-else
-{
-	// Use data from buffer file
-	$core_latest = $versions[1];
-	$web_latest = $versions[2];
-	$FTL_latest = $versions[3];
-}
+// Get data from GitHub
+$core_latest = $GitHubversions[1];
+$web_latest = $GitHubversions[2];
+$FTL_latest = $GitHubversions[3];
 
 // Core version comparison
 if($core_current !== "vDev")
