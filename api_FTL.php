@@ -33,6 +33,12 @@ if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))
 	{
 		$tmp = explode(" ",$line);
 
+		if(($tmp[0] === "domains_being_blocked" && !is_numeric($tmp[1])) || $tmp[0] === "status")
+		{
+			$stats[$tmp[0]] = $tmp[1];
+			continue;
+		}
+
 		if(isset($_GET['summary']))
 		{
 			if($tmp[0] !== "ads_percentage_today")
