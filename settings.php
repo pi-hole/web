@@ -256,35 +256,37 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                         <h3 class="box-title">Lists used to generate Pi-hole's Gravity</h3>
                                     </div>
                                     <div class="box-body">
-                                        <table class="table table-striped table-bordered dt-responsive nowrap">
-                                            <thead>
-                                            <tr>
-                                                <th>Enabled</th>
-                                                <th>List</th>
-                                                <th>Delete</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php foreach ($adlist as $key => $value) { ?>
-                                                <div class="form-group">
-                                                    <tr>
-                                                        <td>
-                                                            <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if ($value[0]){ ?>checked<?php } ?>>
-                                                        </td>
-                                                        <td>
-                                                            <a href="<?php echo htmlentities($value[1]); ?>" target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value[1]); ?></a>
-                                                        </td>
-                                                        <td>
-                                                            <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
-                                                                <span class="glyphicon glyphicon-trash"></span>
-                                                            </button>
-                                                            <input type="checkbox" name="adlist-del-<?php echo $key; ?>" hidden>
-                                                        </td>
-                                                    </tr>
-                                                </div>
-                                            <?php } ?>
-                                            </tbody>
-                                        </table>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered dt-responsive nowrap">
+                                                <thead>
+                                                <tr>
+                                                    <th>Enabled</th>
+                                                    <th>List</th>
+                                                    <th>Delete</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php foreach ($adlist as $key => $value) { ?>
+                                                    <div class="form-group">
+                                                        <tr>
+                                                            <td>
+                                                                <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if ($value[0]){ ?>checked<?php } ?>>
+                                                            </td>
+                                                            <td>
+                                                                <a href="<?php echo htmlentities($value[1]); ?>" target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value[1]); ?></a>
+                                                            </td>
+                                                            <td>
+                                                                <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
+                                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                                </button>
+                                                                <input type="checkbox" name="adlist-del-<?php echo $key; ?>" hidden>
+                                                            </td>
+                                                        </tr>
+                                                    </div>
+                                                <?php } ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                         <div class="form-group">
                                             <textarea name="newuserlists" class="form-control" rows="1" placeholder="Enter one URL per line to add new ad lists"></textarea>
                                         </div>
