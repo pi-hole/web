@@ -227,20 +227,27 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 
 ?>
 
+<?php 
+if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", "api", "teleporter"))) { 
+    $tab = $_GET['tab'];
+} else {
+    $tab = "sysadmin";
+}
+?>
 <div class="row justify-content-md-center">
     <div class="col-md-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#sysadmin">System</a></li>
-                <li><a data-toggle="tab" href="#blocklists">Block Lists</a></li>
-                <li><a data-toggle="tab" href="#dns">DNS</a></li>
-                <li><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
-                <li><a data-toggle="tab" href="#api">API / Web interface</a></li>
-                <li><a data-toggle="tab" href="#teleporter">Teleporter</a></li>
+                <li<?php if($tab === "sysadmin"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#sysadmin">System</a></li>
+                <li<?php if($tab === "blocklists"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#blocklists">Block Lists</a></li>
+                <li<?php if($tab === "dns"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#dns">DNS</a></li>
+                <li<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
+                <li<?php if($tab === "api"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#api">API / Web interface</a></li>
+                <li<?php if($tab === "teleporter"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#teleporter">Teleporter</a></li>
             </ul>
             <div class="tab-content">
                 <!-- ######################################################### Blocklists ######################################################### -->
-                <div id="blocklists" class="tab-pane fade">
+                <div id="blocklists" class="tab-pane fade<?php if($tab === "blocklists"){ ?> in active<?php } ?>">
                     <form role="form" method="post">
                         <div class="row">
                             <div class="col-md-12">
@@ -294,7 +301,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                     </form>
                 </div>
                 <!-- ######################################################### DHCP ######################################################### -->
-                <div id="piholedhcp" class="tab-pane fade">
+                <div id="piholedhcp" class="tab-pane fade<?php if($tab === "piholedhcp"){ ?> in active<?php } ?>">
                     <?php
                     // Pi-hole DHCP server
                     if (isset($setupVars["DHCP_ACTIVE"])) {
@@ -627,7 +634,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 
                 </div>
                 <!-- ######################################################### DNS ######################################################### -->
-                <div id="dns" class="tab-pane fade">
+                <div id="dns" class="tab-pane fade<?php if($tab === "dns"){ ?> in active<?php } ?>">
                     <form role="form" method="post">
                         <div class="row">
                             <div class="col-md-6">
@@ -847,7 +854,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                 }
                 // Use $boxedlayout value determined in header.php
                 ?>
-                <div id="api" class="tab-pane fade">
+                <div id="api" class="tab-pane fade<?php if($tab === "api"){ ?> in active<?php } ?>">
                     <div class="row">
                         <div class="col-lg-6 col-md-12">
                             <form role="form" method="post">
@@ -967,7 +974,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                     </div>
                 </div>
                 <!-- ######################################################### Teleporter ######################################################### -->
-                <div id="teleporter" class="tab-pane fade">
+                <div id="teleporter" class="tab-pane fade<?php if($tab === "teleporter"){ ?> in active<?php } ?>">
                     <div class="row">
                         <?php if (extension_loaded('Phar')) { ?>
                         <form role="form" method="post" id="takeoutform"
@@ -1046,7 +1053,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
                     </div>
                 </div>
                 <!-- ######################################################### System admin ######################################################### -->
-                <div id="sysadmin" class="tab-pane fade in active">
+                <div id="sysadmin" class="tab-pane fade<?php if($tab === "sysadmin"){ ?> in active<?php } ?>">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="box">
