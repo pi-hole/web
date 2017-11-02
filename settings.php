@@ -378,7 +378,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                         <div class="col-xs-12">
                                             <label>Range of IP addresses to hand out</label>
                                         </div>
-                                        <div class="col-xs-6">
+                                        <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <div class="input-group-addon">From</div>
@@ -389,7 +389,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-xs-6">
+                                        <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <div class="input-group-addon">To</div>
@@ -637,14 +637,14 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                 <div id="dns" class="tab-pane fade<?php if($tab === "dns"){ ?> in active<?php } ?>">
                     <form role="form" method="post">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-lg-6">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
                                         <h1 class="box-title">Upstream DNS Servers</h1>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-sm-6">
                                                 <table class="table table-bordered">
                                                     <tr>
                                                         <th colspan="2">IPv4</th>
@@ -692,7 +692,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                     <?php } ?>
                                                 </table>
                                             </div>
-                                            <div class="col-lg-6">
+                                            <div class="col-sm-6">
                                                 <label>&nbsp;</label>
                                                 <div class="form-group">
                                                     <label>Custom 1 (IPv4)</label>
@@ -745,7 +745,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-lg-6">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
                                         <h1 class="box-title">Interface listening behavior</h1>
@@ -856,7 +856,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                 ?>
                 <div id="api" class="tab-pane fade<?php if($tab === "api"){ ?> in active<?php } ?>">
                     <div class="row">
-                        <div class="col-lg-6 col-md-12">
+                        <div class="col-md-6">
                             <form role="form" method="post">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
@@ -870,7 +870,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-lg-6">
+                                            <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                                                 <div class="form-group">
                                                     <label>Top Domains / Top Advertisers</label>
                                                     <textarea name="domains" class="form-control" rows="4"
@@ -879,7 +879,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                         } ?></textarea>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6">
+                                            <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                                                 <div class="form-group">
                                                     <label>Top Clients</label>
                                                     <textarea name="clients" class="form-control" rows="4"
@@ -932,7 +932,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                 </div>
                             </form>
                         </div>
-                        <div class="col-lg-6 col-md-12">
+                        <div class="col-md-6">
                             <form role="form" method="post">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
