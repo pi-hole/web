@@ -266,8 +266,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <?php foreach ($adlist as $key => $value) { ?>
-                                                    <div class="form-group">
+                                                    <?php foreach ($adlist as $key => $value) { ?>
                                                         <tr>
                                                             <td>
                                                                 <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if ($value[0]){ ?>checked<?php } ?>>
@@ -282,8 +281,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                                 <input type="checkbox" name="adlist-del-<?php echo $key; ?>" hidden>
                                                             </td>
                                                         </tr>
-                                                    </div>
-                                                <?php } ?>
+                                                    <?php } ?>
                                                 </tbody>
                                             </table>
                                         </div>
