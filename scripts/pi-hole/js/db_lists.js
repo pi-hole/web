@@ -90,7 +90,7 @@ function updateTopClientsChart() {
                 var url = clientname;
                 percentage = data.top_sources[client] / sum * 100.0;
                 clienttable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_sources[client] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
+                    "</td> <td>" + data.top_sources[client] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + sum + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
                     percentage + "%\"></div> </div> </td> </tr> ");
             }
 
@@ -128,7 +128,7 @@ function updateTopDomainsChart() {
 
                 percentage = data.top_domains[domain] / sum * 100.0;
                 domaintable.append("<tr> <td>" + domain +
-                    "</td> <td>" + data.top_domains[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
+                    "</td> <td>" + data.top_domains[domain] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + sum + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
                     percentage + "%\"></div> </div> </td> </tr> ");
             }
 
@@ -165,7 +165,7 @@ function updateTopAdsChart() {
                 }
 
                 percentage = data.top_ads[ad] / sum * 100.0;
-                adtable.append("<tr> <td>" + ad + "</td> <td>" + data.top_ads[ad] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " + percentage + "%\"></div> </div> </td> </tr> ");
+                adtable.append("<tr> <td>" + ad + "</td> <td>" + data.top_ads[ad] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + sum + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " + percentage + "%\"></div> </div> </td> </tr> ");
             }
 
         }

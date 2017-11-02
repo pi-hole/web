@@ -17,19 +17,28 @@ $data = array();
 // Needs package php5-sqlite, e.g.
 //    sudo apt-get install php5-sqlite
 
-$db = new SQLite3('/etc/pihole/pihole-FTL.db');
-if(!$db)
-	die("Cannot access database");
+function SQLite3_connect($trytoreconnect)
+{
+	try {
+		// connect to database
+		return new SQLite3('/etc/pihole/pihole-FTL.db', SQLITE3_OPEN_READONLY);
+	}
+	catch (Exception $exception) {
+		// sqlite3 throws an exception when it is unable to connect, try to reconnect after 3 seconds
+		if($trytoreconnect)
+		{
+			sleep(3);
+			$db = SQLite3_connect(false);
+		}
+	}
+}
 
-// Long-Term API functions
-// if (isset($_GET['test']))
-// {
-// 	// $results = $db->query('SELECT * FROM QUERIES order by TIMESTAMP ASC LIMIT 2');
-// 	$results = $db->query('SELECT TIMESTAMP,TYPE,DOMAIN,CLIENT,STATUS FROM QUERIES order by TIMESTAMP ASC');
-// 	echo "N=".$result->numColumns;
-// 	while ($row = $results->fetchArray())
-// 		var_dump($row);
-// }
+$db = SQLite3_connect(true);
+
+if(!$db)
+{
+	die("Error connecting to database");
+}
 
 if (isset($_GET['getAllQueries']) && $auth)
 {

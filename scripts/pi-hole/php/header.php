@@ -353,7 +353,7 @@ if($auth) {
                     ?>
                     <br/>
                     <?php
-                    echo "<a><i class=\"fa fa-circle\" style=\"color:";
+                    echo "<a title=\"Detected $nproc cores\"><i class=\"fa fa-circle\" style=\"color:";
                         if ($loaddata[0] > $nproc) {
                             echo "#FF0000";
                         }
@@ -361,7 +361,7 @@ if($auth) {
                         {
                             echo "#7FFF00";
                         }
-                        echo "\" title=\"Detected $nproc cores\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
+                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
                     ?>
                     <br/>
                     <?php
@@ -420,10 +420,10 @@ if($auth) {
                 </li>
                 <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php"){ ?> active<?php } ?>">
                   <a href="#">
-                    <i class="fa fa-clock-o"></i> <span>Long term data</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
                     </span>
+                    <i class="fa fa-clock-o"></i> <span>Long term data</span>
                   </a>
                   <ul class="treeview-menu">
                     <li<?php if($scriptname === "db_graph.php"){ ?> class="active"<?php } ?>>
@@ -459,10 +459,10 @@ if($auth) {
 
                 <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden="true"<?php } ?>>
                   <a href="#">
-                    <i class="fa fa-stop"></i> <span>Disable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
                     </span>
+                    <i class="fa fa-stop"></i> <span>Disable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span>
                   </a>
                   <ul class="treeview-menu">
                     <li>
@@ -499,10 +499,10 @@ if($auth) {
                 <!-- Tools -->
                 <li class="treeview <?php if(in_array($scriptname, array("gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php"))){ ?>active<?php } ?>">
                   <a href="#">
-                    <i class="fa fa-folder"></i> <span>Tools</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
                     </span>
+                    <i class="fa fa-folder"></i> <span>Tools</span>
                   </a>
                   <ul class="treeview-menu">
                     <!-- Run gravity.sh -->

@@ -12,7 +12,8 @@ if(!isset($api))
 	die("Direct call to api_FTL.php is not allowed!");
 }
 
-$socket = connectFTL("127.0.0.1");
+// $FTL_IP is defined in api.php
+$socket = connectFTL($FTL_IP);
 
 if (isset($_GET['type'])) {
 	$data["type"] = "FTL";
@@ -31,6 +32,12 @@ if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))
 	foreach($return as $line)
 	{
 		$tmp = explode(" ",$line);
+
+		if(($tmp[0] === "domains_being_blocked" && !is_numeric($tmp[1])) || $tmp[0] === "status")
+		{
+			$stats[$tmp[0]] = $tmp[1];
+			continue;
+		}
 
 		if(isset($_GET['summary']))
 		{
@@ -179,11 +186,11 @@ if (isset($_GET['getForwardDestinations']) && $auth)
 		$tmp = explode(" ",$line);
 		if(count($tmp) == 4)
 		{
-			$forward_dest[$tmp[3]."|".$tmp[2]] = intval($tmp[1]);
+			$forward_dest[$tmp[3]."|".$tmp[2]] = floatval($tmp[1]);
 		}
 		else
 		{
-			$forward_dest[$tmp[2]] = intval($tmp[1]);
+			$forward_dest[$tmp[2]] = floatval($tmp[1]);
 		}
 	}
 
@@ -199,7 +206,7 @@ if (isset($_GET['getQueryTypes']) && $auth)
 	foreach($return as $ret)
 	{
 		$tmp = explode(": ",$ret);
-		$querytypes[$tmp[0]] = intval($tmp[1]);
+		$querytypes[$tmp[0]] = floatval($tmp[1]);
 	}
 
 	$result = array('querytypes' => $querytypes);
@@ -257,7 +264,7 @@ if (isset($_GET['overTimeDataForwards']) && $auth)
 	{
 		$tmp = explode(" ",$line);
 		for ($i=0; $i < count($tmp)-1; $i++) {
-			$over_time[intval($tmp[0])][$i] = intval($tmp[$i+1]);
+			$over_time[intval($tmp[0])][$i] = floatval($tmp[$i+1]);
 		}
 	}
 	$result = array('over_time' => $over_time);
@@ -274,11 +281,11 @@ if (isset($_GET['getForwardDestinationNames']) && $auth)
 		$tmp = explode(" ",$line);
 		if(count($tmp) == 4)
 		{
-			$forward_dest[$tmp[3]."|".$tmp[2]] = intval($tmp[1]);
+			$forward_dest[$tmp[3]."|".$tmp[2]] = floatval($tmp[1]);
 		}
 		else
 		{
-			$forward_dest[$tmp[2]] = intval($tmp[1]);
+			$forward_dest[$tmp[2]] = floatval($tmp[1]);
 		}
 	}
 
@@ -296,7 +303,46 @@ if (isset($_GET['overTimeDataQueryTypes']) && $auth)
 	{
 		$tmp = explode(" ",$line);
 		for ($i=0; $i < count($tmp)-1; $i++) {
-			$over_time[intval($tmp[0])][$i] = intval($tmp[$i+1]);
+			$over_time[intval($tmp[0])][$i] = floatval($tmp[$i+1]);
+		}
+	}
+	$result = array('over_time' => $over_time);
+	$data = array_merge($data, $result);
+}
+
+if (isset($_GET['getClientNames']) && $auth)
+{
+	sendRequestFTL("client-names");
+	$return = getResponseFTL();
+	$forward_dest = array();
+	foreach($return as $line)
+	{
+		$tmp = explode(" ",$line);
+		if(count($tmp) == 4)
+		{
+			$forward_dest[$tmp[3]."|".$tmp[2]] = floatval($tmp[1]);
+		}
+		else
+		{
+			$forward_dest[$tmp[2]] = floatval($tmp[1]);
+		}
+	}
+
+	$result = array('clients' => $forward_dest);
+	$data = array_merge($data, $result);
+}
+
+if (isset($_GET['overTimeDataClients']) && $auth)
+{
+	sendRequestFTL("ClientsoverTime");
+	$return = getResponseFTL();
+	$over_time = array();
+
+	foreach($return as $line)
+	{
+		$tmp = explode(" ",$line);
+		for ($i=0; $i < count($tmp)-1; $i++) {
+			$over_time[intval($tmp[0])][$i] = floatval($tmp[$i+1]);
 		}
 	}
 	$result = array('over_time' => $over_time);
