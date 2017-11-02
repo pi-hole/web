@@ -262,7 +262,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                 <tr>
                                                     <th>Enabled</th>
                                                     <th>List</th>
-                                                    <th>Delete</th>
+                                                    <th style="width:1%">Delete</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -274,7 +274,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                             <td>
                                                                 <a href="<?php echo htmlentities($value[1]); ?>" target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value[1]); ?></a>
                                                             </td>
-                                                            <td>
+                                                            <td class="text-center">
                                                                 <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
                                                                     <span class="glyphicon glyphicon-trash"></span>
                                                                 </button>
