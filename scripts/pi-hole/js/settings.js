@@ -186,17 +186,9 @@ $("button[id^='adlist-btn-']").on("click", function (e) {
 
 });
 
-// Javascript to go to specified tab on save or hyperlink
-$(function () {
-   if(location.hash.length > 0)
-   {
-     var activeTab = $("[href=" + location.hash + "]");
-     activeTab && activeTab.tab("show");
-   }
-});
-// Change hash for save and reload
+// Change "?tab=" parameter in URL for save and reload
 $(".nav-tabs a").on("shown.bs.tab", function (e) {
-    window.location.hash = e.target.hash;
+    window.history.pushState("", "", "?tab=" + e.target.hash.substring(1));
     window.scrollTo(0, 0);
 });
 
