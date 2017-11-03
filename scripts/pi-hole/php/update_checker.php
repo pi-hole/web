@@ -46,9 +46,9 @@ else
 	$FTL_current = $versions[2];
 
 	// Get data from GitHub
-	$core_latest = $GitHubversions[1];
-	$web_latest = $GitHubversions[2];
-	$FTL_latest = $GitHubversions[3];
+	$core_latest = $GitHubversions[0];
+	$web_latest = $GitHubversions[1];
+	$FTL_latest = $GitHubversions[2];
 
 	// Core version comparison
 	if($core_current !== "vDev")
