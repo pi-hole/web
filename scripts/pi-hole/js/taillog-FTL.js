@@ -20,7 +20,7 @@ function reloadData(){
 
     if(scrolling)
     {
-        window.scrollTo(0,document.body.scrollHeight);
+	pre.scrollTop(pre[0].scrollHeight)
     }
     timer = setTimeout(reloadData, interval);
 }
