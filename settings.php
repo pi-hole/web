@@ -856,19 +856,19 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                             <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                                                 <div class="form-group">
                                                     <label>Top Domains / Top Advertisers</label>
-                                                    <textarea name="domains" class="form-control" rows="4"
-                                                              placeholder="Enter one domain per line"><?php foreach ($excludedDomains as $domain) {
-                                                            echo $domain . "\n";
-                                                        } ?></textarea>
+                                                    <textarea name="domains" class="form-control" placeholder="Enter one domain per line"
+                                                              rows="4"><?php foreach ($excludedDomains as $domain) {
+                                                                             echo $domain . "\n"; }
+                                                                       ?></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                                                 <div class="form-group">
                                                     <label>Top Clients</label>
-                                                    <textarea name="clients" class="form-control" rows="4"
-                                                              placeholder="Enter one IP address or host name per line"><?php foreach ($excludedClients as $client) {
-                                                            echo $client . "\n";
-                                                        } ?></textarea>
+                                                    <textarea name="clients" class="form-control" placeholder="Enter one IP address or host name per line"
+                                                              rows="4"><?php foreach ($excludedClients as $client) {
+                                                                             echo $client . "\n"; }
+                                                                       ?></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -880,17 +880,20 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="form-group">
-                                                    <div class="checkbox"><label><input type="checkbox"
-                                                                                        name="querylog-permitted"
-                                                                                        <?php if ($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>>
-                                                            Show permitted domain entries</label></div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="querylog-permitted"
+                                                                      <?php if ($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php }
+                                                                      ?>>Show permitted domain entries</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
                                                 <div class="form-group">
-                                                    <div class="checkbox"><label><input type="checkbox" name="querylog-blocked"
-                                                                                        <?php if ($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>>
-                                                            Show blocked domain entries</label></div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="querylog-blocked"
+                                                                      <?php if ($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php }
+                                                                      ?>>Show blocked domain entries</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -898,10 +901,11 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                             <div class="col-lg-12">
                                                 <h4>Privacy mode</h4>
                                                 <div class="form-group">
-                                                    <div class="checkbox"><label><input type="checkbox" name="privacyMode"
-                                                                                        <?php if ($privacyMode){ ?>checked<?php } ?>>
-                                                            Don't
-                                                            show origin of DNS requests in query log</label></div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="privacyMode"
+                                                                      <?php if ($privacyMode){ ?>checked<?php }
+                                                                      ?>>Don't show origin of DNS requests in query log</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -926,21 +930,28 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                             <div class="col-md-12">
                                                 <h4>Interface appearance</h4>
                                                 <div class="form-group">
-                                                    <div class="checkbox"><label><input type="checkbox" name="boxedlayout"
-                                                                                        value="yes"
-                                                                                        <?php if ($boxedlayout){ ?>checked<?php } ?> >Use
-                                                            boxed layout (helpful when working on large screens)</label></div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="boxedlayout" value="yes"
+                                                                      <?php if ($boxedlayout){ ?>checked<?php }
+                                                                      ?>>Use boxed layout (helpful when working on large screens)</label>
+                                                    </div>
                                                 </div>
                                                 <h4>CPU Temperature Unit</h4>
                                                 <div class="form-group">
-                                                    <div class="radio"><label><input type="radio" name="tempunit" value="C"
-                                                                                     <?php if ($temperatureunit === "C"){ ?>checked<?php } ?> >Celsius</label>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="tempunit" value="C"
+                                                                      <?php if ($temperatureunit === "C"){ ?>checked<?php }
+                                                                      ?>>Celsius</label>
                                                     </div>
-                                                    <div class="radio"><label><input type="radio" name="tempunit" value="K"
-                                                                                     <?php if ($temperatureunit === "K"){ ?>checked<?php } ?> >Kelvin</label>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="tempunit" value="K"
+                                                                      <?php if ($temperatureunit === "K"){ ?>checked<?php }
+                                                                      ?>>Kelvin</label>
                                                     </div>
-                                                    <div class="radio"><label><input type="radio" name="tempunit" value="F"
-                                                                                     <?php if ($temperatureunit === "F"){ ?>checked<?php } ?> >Fahrenheit</label>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="tempunit" value="F"
+                                                                      <?php if ($temperatureunit === "F"){ ?>checked<?php }
+                                                                      ?>>Fahrenheit</label>
                                                     </div>
                                                 </div>
                                                 <input type="hidden" name="field" value="webUI">
