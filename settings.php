@@ -648,43 +648,43 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                         <th>Name</th>
                                                     </tr>
                                                     <?php foreach ($DNSserverslist as $key => $value) { ?>
-                                                        <tr>
-                                                            <?php if (isset($value["v4_1"])) { ?>
-                                                            <td title="<?php echo $value["v4_1"]; ?>"><input
-                                                                        type="checkbox"
-                                                                        name="DNSserver<?php echo $value["v4_1"]; ?>"
-                                                                        value="true"
-                                                                        <?php if (in_array($value["v4_1"], $DNSactive)){ ?>checked<?php } ?> >
-                                                                </td><?php } else { ?>
-                                                                <td></td><?php } ?>
-                                                            <?php if (isset($value["v4_2"])) { ?>
-                                                            <td title="<?php echo $value["v4_2"]; ?>"><input
-                                                                        type="checkbox"
-                                                                        name="DNSserver<?php echo $value["v4_2"]; ?>"
-                                                                        value="true"
-                                                                        <?php if (in_array($value["v4_2"], $DNSactive)){ ?>checked<?php } ?> >
-                                                                </td><?php } else { ?>
-                                                                <td></td><?php } ?>
-                                                            <?php if (isset($value["v6_1"])) { ?>
-                                                            <td title="<?php echo $value["v6_1"]; ?>"><input
-                                                                        type="checkbox"
-                                                                        name="DNSserver<?php echo $value["v6_1"]; ?>"
-                                                                        value="true"
-                                                                        <?php if (in_array($value["v6_1"], $DNSactive) && $IPv6connectivity){ ?>checked<?php }
-                                                                if (!$IPv6connectivity) { ?> disabled <?php } ?> >
-                                                                </td><?php } else { ?>
-                                                                <td></td><?php } ?>
-                                                            <?php if (isset($value["v6_2"])) { ?>
-                                                            <td title="<?php echo $value["v6_2"]; ?>"><input
-                                                                        type="checkbox"
-                                                                        name="DNSserver<?php echo $value["v6_2"]; ?>"
-                                                                        value="true"
-                                                                        <?php if (in_array($value["v6_2"], $DNSactive) && $IPv6connectivity){ ?>checked<?php }
-                                                                if (!$IPv6connectivity) { ?> disabled <?php } ?> >
-                                                                </td><?php } else { ?>
-                                                                <td></td><?php } ?>
-                                                            <td><?php echo $key; ?></td>
-                                                        </tr>
+                                                    <tr>
+                                                    <?php if (isset($value["v4_1"])) { ?>
+                                                        <td title="<?php echo $value["v4_1"]; ?>">
+                                                            <input type="checkbox" name="DNSserver<?php echo $value["v4_1"]; ?>" value="true"
+                                                                   <?php if (in_array($value["v4_1"], $DNSactive)){ ?>checked<?php } ?>>
+                                                        </td>
+                                                    <?php } else { ?>
+                                                        <td></td>
+                                                    <?php } ?>
+                                                    <?php if (isset($value["v4_2"])) { ?>
+                                                        <td title="<?php echo $value["v4_2"]; ?>">
+                                                            <input type="checkbox" name="DNSserver<?php echo $value["v4_2"]; ?>" value="true"
+                                                                   <?php if (in_array($value["v4_2"], $DNSactive)){ ?>checked<?php } ?>>
+                                                        </td>
+                                                    <?php } else { ?>
+                                                        <td></td>
+                                                    <?php } ?>
+                                                    <?php if (isset($value["v6_1"])) { ?>
+                                                        <td title="<?php echo $value["v6_1"]; ?>">
+                                                            <input type="checkbox" name="DNSserver<?php echo $value["v6_1"]; ?>" value="true"
+                                                                   <?php if (in_array($value["v6_1"], $DNSactive) && $IPv6connectivity){ ?>checked<?php }
+                                                                         if (!$IPv6connectivity) { ?> disabled <?php } ?>>
+                                                        </td>
+                                                    <?php } else { ?>
+                                                        <td></td>
+                                                    <?php } ?>
+                                                    <?php if (isset($value["v6_2"])) { ?>
+                                                        <td title="<?php echo $value["v6_2"]; ?>">
+                                                            <input type="checkbox" name="DNSserver<?php echo $value["v6_2"]; ?>" value="true"
+                                                                   <?php if (in_array($value["v6_2"], $DNSactive) && $IPv6connectivity){ ?>checked<?php }
+                                                                if (!$IPv6connectivity) { ?> disabled <?php } ?>>
+                                                        </td>
+                                                    <?php } else { ?>
+                                                        <td></td>
+                                                    <?php } ?>
+                                                        <td><?php echo $key; ?></td>
+                                                    </tr>
                                                     <?php } ?>
                                                 </table>
                                             </div>
@@ -693,10 +693,9 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                 <div class="form-group">
                                                     <label>Custom 1 (IPv4)</label>
                                                     <div class="input-group">
-                                                        <div class="input-group-addon"><input type="checkbox"
-                                                                                              name="custom1"
-                                                                                              value="Customv4"
-                                                                                              <?php if (isset($custom1)){ ?>checked<?php } ?>>
+                                                        <div class="input-group-addon">
+                                                            <input type="checkbox" name="custom1" value="Customv4"
+                                                                   <?php if (isset($custom1)){ ?>checked<?php } ?>>
                                                         </div>
                                                         <input type="text" name="custom1val" class="form-control"
                                                                data-inputmask="'alias': 'ip'" data-mask
@@ -704,10 +703,9 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                     </div>
                                                     <label>Custom 2 (IPv4)</label>
                                                     <div class="input-group">
-                                                        <div class="input-group-addon"><input type="checkbox"
-                                                                                              name="custom2"
-                                                                                              value="Customv4"
-                                                                                              <?php if (isset($custom2)){ ?>checked<?php } ?>>
+                                                        <div class="input-group-addon">
+                                                            <input type="checkbox" name="custom2" value="Customv4"
+                                                                   <?php if (isset($custom2)){ ?>checked<?php } ?>>
                                                         </div>
                                                         <input type="text" name="custom2val" class="form-control"
                                                                data-inputmask="'alias': 'ip'" data-mask
@@ -715,10 +713,9 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                     </div>
                                                     <label>Custom 3 (IPv6)</label>
                                                     <div class="input-group">
-                                                        <div class="input-group-addon"><input type="checkbox"
-                                                                                              name="custom3"
-                                                                                              value="Customv6"
-                                                                                              <?php if (isset($custom3)){ ?>checked<?php } ?>>
+                                                        <div class="input-group-addon">
+                                                            <input type="checkbox" name="custom3" value="Customv6"
+                                                                   <?php if (isset($custom3)){ ?>checked<?php } ?>>
                                                         </div>
                                                         <input type="text" name="custom3val" class="form-control"
                                                                data-inputmask="'alias': 'ipv6'" data-mask
@@ -726,10 +723,9 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                     </div>
                                                     <label>Custom 4 (IPv6)</label>
                                                     <div class="input-group">
-                                                        <div class="input-group-addon"><input type="checkbox"
-                                                                                              name="custom4"
-                                                                                              value="Customv6"
-                                                                                              <?php if (isset($custom4)){ ?>checked<?php } ?>>
+                                                        <div class="input-group-addon">
+                                                            <input type="checkbox" name="custom4" value="Customv6"
+                                                                   <?php if (isset($custom4)){ ?>checked<?php } ?>>
                                                         </div>
                                                         <input type="text" name="custom4val" class="form-control"
                                                                data-inputmask="'alias': 'ipv6'" data-mask
@@ -752,30 +748,29 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                 <div class="form-group">
                                                     <div class="radio">
                                                         <label><input type="radio" name="DNSinterface" value="local"
-                                                                      <?php if ($DNSinterface == "local"){ ?>checked<?php } ?> ><strong>Listen
-                                                                on all interfaces</strong><br>Allows only queries from
-                                                            devices that are at most one hop away (local
-                                                            devices)</label>
+                                                                      <?php if ($DNSinterface == "local"){ ?>checked<?php } ?>>
+                                                               <strong>Listen on all interfaces</strong>
+                                                               <br>Allows only queries from devices that are at most one hop away (local devices)</label>
                                                     </div>
                                                     <div class="radio">
                                                         <label><input type="radio" name="DNSinterface" value="single"
-                                                                      <?php if ($DNSinterface == "single"){ ?>checked<?php } ?> ><strong>Listen
-                                                                only on
-                                                                interface <?php echo $piHoleInterface; ?></strong>
+                                                                      <?php if ($DNSinterface == "single"){ ?>checked<?php } ?>>
+                                                               <strong>Listen only on interface <?php echo $piHoleInterface; ?></strong>
                                                         </label>
                                                     </div>
                                                     <div class="radio">
                                                         <label><input type="radio" name="DNSinterface" value="all"
-                                                                      <?php if ($DNSinterface == "all"){ ?>checked<?php } ?> ><strong>Listen
-                                                                on all interfaces, permit all origins</strong></label>
+                                                                      <?php if ($DNSinterface == "all"){ ?>checked<?php } ?>>
+                                                               <strong>Listen on all interfaces, permit all origins</strong>
+                                                        </label>
                                                     </div>
                                                 </div>
                                                 <p>Note that the last option should not be used on devices which are
-                                                    directly connected to the Internet. This option is safe if your
-                                                    Pi-hole is located within your local network, i.e. protected behind
-                                                    your router, and you have not forwarded port 53 to this device. In
-                                                    virtually all other cases you have to make sure that your Pi-hole is
-                                                    properly firewalled.</p>
+                                                   directly connected to the Internet. This option is safe if your
+                                                   Pi-hole is located within your local network, i.e. protected behind
+                                                   your router, and you have not forwarded port 53 to this device. In
+                                                   virtually all other cases you have to make sure that your Pi-hole is
+                                                   properly firewalled.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -792,43 +787,35 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="form-group">
-                                                    <div class="checkbox"><label><input type="checkbox"
-                                                                                        name="DNSrequiresFQDN"
-                                                                                        <?php if ($DNSrequiresFQDN){ ?>checked<?php } ?>
-                                                                                        title="domain-needed"> never
-                                                            forward
-                                                            non-FQDNs</label></div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="DNSrequiresFQDN" title="domain-needed"
+                                                                      <?php if ($DNSrequiresFQDN){ ?>checked<?php }
+                                                                      ?>>never forward non-FQDNs</label>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <div class="checkbox"><label><input type="checkbox"
-                                                                                        name="DNSbogusPriv"
-                                                                                        <?php if ($DNSbogusPriv){ ?>checked<?php } ?>
-                                                                                        title="bogus-priv"> never
-                                                            forward
-                                                            reverse lookups for private IP ranges</label></div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="DNSbogusPriv" title="bogus-priv"
+                                                                      <?php if ($DNSbogusPriv){ ?>checked<?php }
+                                                                      ?>>never forward reverse lookups for private IP ranges</label>
+                                                    </div>
                                                 </div>
                                                 <p>Note that enabling these two options may increase your privacy
-                                                    slightly, but
-                                                    may also prevent you from being able to access local hostnames
-                                                    if the
-                                                    Pi-hole is not used as DHCP server</p>
+                                                   slightly, but may also prevent you from being able to access
+                                                   local hostnames if the Pi-hole is not used as DHCP server</p>
                                                 <div class="form-group">
-                                                    <div class="checkbox"><label><input type="checkbox"
-                                                                                        name="DNSSEC"
-                                                                                        <?php if ($DNSSEC){ ?>checked<?php } ?>>
-                                                            Use DNSSEC</label></div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="DNSSEC"
+                                                                      <?php if ($DNSSEC){ ?>checked<?php }
+                                                                      ?>>Use DNSSEC</label>
+                                                    </div>
                                                 </div>
                                                 <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
-                                                    queries,
-                                                    Pi-hole requests the DNSSEC records needed to validate the
-                                                    replies. Use
-                                                    Google or Norton DNS servers when activating DNSSEC. Note that
-                                                    the size of
-                                                    your log might increase significantly when enabling DNSSEC. A
-                                                    DNSSEC
-                                                    resolver test can be found <a
-                                                            href="http://dnssec.vs.uni-due.de/"
-                                                            target="_blank">here</a>.</p>
+                                                   queries, Pi-hole requests the DNSSEC records needed to validate
+                                                   the replies. Use Google or Norton DNS servers when activating
+                                                   DNSSEC. Note that the size of your log might increase significantly
+                                                   when enabling DNSSEC. A DNSSEC resolver test can be found
+                                                   <a href="http://dnssec.vs.uni-due.de/" target="_blank">here</a>.</p>
                                             </div>
                                         </div>
                                     </div>
