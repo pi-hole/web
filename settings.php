@@ -1082,17 +1082,6 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                 </div>
                             </div>
                         </div>
-                        <?php
-                        if ($FTL) {
-                            function get_FTL_data($arg)
-                            {
-                                global $FTLpid;
-                                return trim(exec("ps -p " . $FTLpid . " -o " . $arg));
-                            }
-
-                            $FTLversion = exec("/usr/bin/pihole-FTL version");
-                        }
-                        ?>
                         <div class="col-md-6">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -1101,6 +1090,16 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-lg-12">
+                                            <?php
+                                            if ($FTL) {
+                                                function get_FTL_data($arg)
+                                                {
+                                                    global $FTLpid;
+                                                    return trim(exec("ps -p " . $FTLpid . " -o " . $arg));
+                                                }
+
+                                                $FTLversion = exec("/usr/bin/pihole-FTL version");
+                                            ?>
                                             <table class="table table-striped table-bordered dt-responsive nowrap">
                                                 <tbody>
                                                     <tr>
@@ -1135,6 +1134,9 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                     </tr>
                                                 </tbody>
                                             </table>
+                                            <?php } else { ?>
+                                            <div>The FTL service is offline!</div>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
