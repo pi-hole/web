@@ -28,7 +28,17 @@ function eventsource() {
             alSuccess.show();
         }
 
-        ta.append(e.data);
+        // Detect ${OVER}
+        if(e.data.indexOf("<------") !== -1)
+        {
+            ta.text(ta.text().substring(0, ta.text().lastIndexOf("\n")) + "\n");
+            var new_string = e.data.replace("<------", "");
+            ta.append(new_string);
+        }
+        else
+        {
+            ta.append(e.data);
+        }
 
     }, false);
 

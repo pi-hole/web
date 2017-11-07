@@ -17,6 +17,22 @@ $(function () {
 		$("input[name=\"AddMAC\"]").val(mac);
 	});
 });
+$(".confirm-poweroff").confirm({
+	text: "Are you sure you want to send a poweroff command to your Pi-Hole?",
+	title: "Confirmation required",
+	confirm(button) {
+		$("#poweroffform").submit();
+	},
+	cancel(button) {
+		// nothing to do
+	},
+	confirmButton: "Yes, poweroff",
+	cancelButton: "No, go back",
+	post: true,
+	confirmButtonClass: "btn-danger",
+	cancelButtonClass: "btn-success",
+	dialogClass: "modal-dialog modal-mg" // Bootstrap classes for mid-size modal
+});
 $(".confirm-reboot").confirm({
 	text: "Are you sure you want to send a reboot command to your Pi-Hole?",
 	title: "Confirmation required",
@@ -68,6 +84,23 @@ $(".confirm-flushlogs").confirm({
 	dialogClass: "modal-dialog modal-mg"
 });
 
+$(".confirm-disablelogging").confirm({
+	text: "Note that disabling query logging will render graphs on the web user interface useless. Are you sure you want to disable your logging?",
+	title: "Confirmation required",
+	confirm(button) {
+		$("#disablelogsform").submit();
+	},
+	cancel(button) {
+		// nothing to do
+	},
+	confirmButton: "Yes, disable logs",
+	cancelButton: "No, go back",
+	post: true,
+	confirmButtonClass: "btn-danger",
+	cancelButtonClass: "btn-success",
+	dialogClass: "modal-dialog modal-mg"
+});
+
 $(".api-token").confirm({
 	text: "Make sure that nobody else can scan this code around you. They will have full access to the API without having to know the password. Note that the generation of the QR code will take some time.",
 	title: "Confirmation required",
@@ -102,9 +135,6 @@ $(document).ready(function() {
 			"scrollY": "200px",
 			"scrollX" : true
 		});
-	$("#leaseexpand").on( "click", function () {
-		setTimeout(function(){leasetable.draw();},100);
-		} );
 	}
 	if(document.getElementById("DHCPStaticLeasesTable"))
 	{
@@ -116,10 +146,13 @@ $(document).ready(function() {
 			"scrollY": "200px",
 			"scrollX" : true
 		});
-	$("#leaseexpand").on( "click", function () {
-		setTimeout(function(){staticleasetable.draw();},100);
-		} );
 	}
+    //call draw() on each table... they don't render properly with scrollX and scrollY set... ¯\_(ツ)_/¯
+    $("a[data-toggle=\"tab\"]").on("shown.bs.tab", function (e) {
+        leasetable.draw();
+        staticleasetable.draw();
+    });
+
 } );
 
 // Handle hiding of alerts
@@ -136,12 +169,39 @@ $(document).ready(function(){
 
 // Handle list deletion
 $("button[id^='adlist-btn-']").on("click", function (e) {
+	var id = parseInt($(this).context.id.replace(/[^0-9\.]/g, ""), 10);
 	e.preventDefault();
 
-	var status = $(this).siblings("input[name^='adlist-del-']").is(":checked");
+	var status = $("input[name=\"adlist-del-"+id+"\"]").is(":checked");
 	var textType = status ? "none" : "line-through";
 
-    $(this).siblings("input[name^='adlist-del-']").prop("checked", !status);
-    $(this).siblings("input[name^='adlist-enable-']").prop("disabled", !status);
-	$(this).siblings("a").css("text-decoration", textType);
+	// Check hidden delete box (or reset)
+	$("input[name=\"adlist-del-"+id+"\"]").prop("checked", !status);
+	// Untick and disable check box (or reset)
+	$("input[name=\"adlist-enable-"+id+"\"]").prop("checked", status).prop("disabled", !status);
+	// Strink through text (or reset)
+	$("a[id=\"adlist-text-"+id+"\"]").css("text-decoration", textType);
+	// Highlight that the button has to be clicked in order to make the change live
+	$("button[id=\"blockinglistsaveupdate\"]").addClass("btn-danger").css("font-weight", "bold");
+
+});
+
+// Change "?tab=" parameter in URL for save and reload
+$(".nav-tabs a").on("shown.bs.tab", function (e) {
+    window.history.pushState("", "", "?tab=" + e.target.hash.substring(1));
+    window.scrollTo(0, 0);
+});
+
+// Auto dismissal for info and error notifications
+$(document).ready(function(){
+    var alInfo = $("#alInfo");
+    var alError = $("#alError");
+    if(alInfo.length)
+    {
+        alInfo.delay(3000).fadeOut(2000, function() { alInfo.hide(); });
+    }
+    if(alError.length)
+    {
+        alError.delay(3000).fadeOut(2000, function() { alError.hide(); });
+    }
 });

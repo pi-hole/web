@@ -61,7 +61,7 @@ function refresh(fade) {
             {
                 listw.html("");
             }
-            var data = JSON.parse(response);
+            var data = JSON.parse(response).sort();
 
             if(data.length === 0) {
                 $("h3").hide();
@@ -143,8 +143,7 @@ function add(arg) {
         method: "post",
         data: {"domain":domain.val(), "list":locallistType, "token":token},
         success: function(response) {
-          if (response.indexOf("not a valid argument") >= 0 ||
-              response.indexOf("is not a valid domain") >= 0) {
+          if (response.indexOf("] Pi-hole blocking is ") === -1) {
             alFailure.show();
             err.html(response);
             alFailure.delay(4000).fadeOut(2000, function() {
@@ -208,11 +207,19 @@ $(function(){
     });
 });
 
-$(document).ready(function () {
-    if (screen.width < 576) {
-        $(".input-group-btn").css("display", "initial");
+// Wrap form-group's buttons to next line when viewed on a small screen
+$(window).on("resize",function() {
+    if ($(window).width() < 991) {
+        $(".form-group.input-group").removeClass("input-group").addClass("input-group-block");
+        $(".form-group.input-group-block > input").css("margin-bottom", "5px");
+        $(".form-group.input-group-block > .input-group-btn").removeClass("input-group-btn").addClass("btn-block text-center");
     }
     else {
-        $(".input-group-btn").css("display", "table-cell");
+        $(".form-group.input-group-block").removeClass("input-group-block").addClass( "input-group" );
+        $(".form-group.input-group > input").css("margin-bottom","");
+        $(".form-group.input-group > .btn-block.text-center").removeClass("btn-block text-center").addClass("input-group-btn");
     }
+});
+$(document).ready(function() {
+    $(window).trigger("resize");
 });
