@@ -49,3 +49,9 @@ a.lookatme {
 .dataTables_scroll {
 	-webkit-overflow-scrolling: touch;
 }
+.pagination-scroll {
+	display: inline-flex;
+	overflow: auto;
+	width: 100%;
+}
+

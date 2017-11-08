@@ -188,6 +188,9 @@ $(document).ready(function() {
             "defaultContent": ""
         } ],
         "initComplete": function () {
+            // Make pagination scrollable
+            $(".pagination").addClass("pagination-scroll");
+
             var api = this.api();
             // Query type IPv4 / IPv6
             api.$('td:eq(1)').click( function () { api.search( this.innerHTML ).draw(); $('#resetButton').show(); } );
