@@ -11,17 +11,16 @@
     </div>
     <!-- Modal for custom disable time -->
     <div class="modal fade" id="customDisableModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">Custom disable timeout</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-3"><input id="customTimeout" class="form-control" type="number" value="60"></div>
-                        <div class="col-sm-9">
-                            <div class="btn-group" data-toggle="buttons">
+                    <div class="input-group">
+                        <input id="customTimeout" class="form-control" type="number" value="60">
+                            <div class="input-group-btn" data-toggle="buttons">
                                 <label class="btn btn-default">
                                     <input type="radio"/> Secs
                                 </label>
@@ -29,7 +28,6 @@
                                     <input type="radio"  /> Mins
                                 </label>
                             </div>
-                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -39,6 +37,14 @@
             </div>
         </div>
     </div>
+<?php
+  // Flushes the system write buffers of PHP. This attempts to push everything we have so far all the way to the client's browser.
+  flush();
+  // Run update checker
+  //  - determines local branch each time,
+  //  - determines local and remote version every 30 minutes
+  require "scripts/pi-hole/php/update_checker.php";
+?>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
 	<!-- Version Infos -->
@@ -55,7 +61,7 @@
             echo $FTL_current;
             if($FTL_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/FTL/releases" target="_blank">(Update available!)</a><?php } ?>
         </div>
-        <div style="display: inline-block"><a href="https://github.com/pi-hole" target="_blank"><i class="fa fa-github"></i></a> <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY" target="_blank">Donate</a></strong> if you found this useful.</div>
+        <div style="display: inline-block"><strong><a href="https://pi-hole.net/donate" target="_blank"><i class="fa fa-heart"></i> Donate</a></strong> if you found this useful.</div>
     </footer>
 </div>
 <!-- ./wrapper -->

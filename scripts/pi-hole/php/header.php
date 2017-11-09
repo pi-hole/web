@@ -9,7 +9,6 @@
 <?php
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
-    require "scripts/pi-hole/php/update_checker.php";
 
     check_cors();
 
@@ -184,6 +183,7 @@
     <link href="style/vendor/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="style/vendor/daterangepicker.css" rel="stylesheet" type="text/css" />
 
     <link href="style/vendor/AdminLTE.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/skin-blue.min.css" rel="stylesheet" type="text/css" />
@@ -191,7 +191,7 @@
     <link rel="icon" type="image/png" sizes="160x160" href="img/logo.svg" />
     <style type="text/css">
         .glow { text-shadow: 0px 0px 5px #fff; }
-        h3 { transition-duration: 500ms }
+        .small-box span { transition-duration: 500ms }
     </style>
 
     <!--[if lt IE 9]>
@@ -234,7 +234,7 @@ if($auth) {
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <!-- User Account: style can be found in dropdown.less -->
+                    <li><a style="pointer-events:none;"><samp><?php echo gethostname(); ?></samp></a></li>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <img src="img/logo.svg" class="user-image" style="border-radius: initial" sizes="160x160" alt="Pi-hole logo" />
@@ -252,10 +252,10 @@ if($auth) {
                             <!-- Menu Body -->
                             <li class="user-body">
                                 <div class="col-xs-4 text-center">
-                                    <a class="btn-link" href="https://github.com/pi-hole/pi-hole" target="_blank">GitHub</a>
+                                    <a class="btn-link" href="https://github.com/pi-hole" target="_blank">GitHub</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a class="btn-link" href="http://jacobsalmela.com/block-millions-ads-network-wide-with-a-raspberry-pi-hole-2-0/" target="_blank">Details</a>
+                                    <a class="btn-link" href="https://pi-hole.net" target="_blank">Website</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
                                     <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" target="_blank">Updates</a>
@@ -267,6 +267,7 @@ if($auth) {
                             <!-- Menu Footer -->
                             <li class="user-footer">
                                 <!-- Version Infos -->
+                                <?php /*
                                 <div class="<?php if(!isset($core_commit) && !isset($web_commit)) { ?>hidden-md <?php } ?>hidden-lg">
                                     <b>Pi-hole Version </b> <?php
                                     echo $core_current;
@@ -280,6 +281,7 @@ if($auth) {
                                     echo $FTL_current;
                                     if($FTL_update){ ?> <a class="alert-link lookatme btn-link" href="https://github.com/pi-hole/FTL/releases" target="_blank" style="background:none">(Update available!)</a><?php } ?><br><br>
                                 </div>
+                                */ ?>
                                 <!-- PayPal -->
                                 <div class="text-center">
                                     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY" target="_blank" style="background:none">
@@ -351,7 +353,7 @@ if($auth) {
                     ?>
                     <br/>
                     <?php
-                    echo "<a><i class=\"fa fa-circle\" style=\"color:";
+                    echo "<a title=\"Detected $nproc cores\"><i class=\"fa fa-circle\" style=\"color:";
                         if ($loaddata[0] > $nproc) {
                             echo "#FF0000";
                         }
@@ -359,7 +361,7 @@ if($auth) {
                         {
                             echo "#7FFF00";
                         }
-                        echo "\" title=\"Detected $nproc cores\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
+                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
                     ?>
                     <br/>
                     <?php
@@ -416,6 +418,31 @@ if($auth) {
                         <i class="fa fa-file-text-o"></i> <span>Query Log</span>
                     </a>
                 </li>
+                <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php"){ ?> active<?php } ?>">
+                  <a href="#">
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
+                    </span>
+                    <i class="fa fa-clock-o"></i> <span>Long term data</span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li<?php if($scriptname === "db_graph.php"){ ?> class="active"<?php } ?>>
+                        <a href="db_graph.php">
+                            <i class="fa fa-file-text-o"></i> <span>Graphics</span>
+                        </a>
+                    </li>
+                    <li<?php if($scriptname === "db_queries.php"){ ?> class="active"<?php } ?>>
+                        <a href="db_queries.php">
+                            <i class="fa fa-file-text-o"></i> <span>Query Log</span>
+                        </a>
+                    </li>
+                    <li<?php if($scriptname === "db_lists.php"){ ?> class="active"<?php } ?>>
+                        <a href="db_lists.php">
+                            <i class="fa fa-file-text-o"></i> <span>Top Lists</span>
+                        </a>
+                    </li>
+                  </ul>
+                </li>
                 <!-- Whitelist -->
                 <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
                     <a href="list.php?l=white">
@@ -432,10 +459,10 @@ if($auth) {
 
                 <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden="true"<?php } ?>>
                   <a href="#">
-                    <i class="fa fa-stop"></i> <span>Disable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
                     </span>
+                    <i class="fa fa-stop"></i> <span>Disable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span>
                   </a>
                   <ul class="treeview-menu">
                     <li>
@@ -470,12 +497,12 @@ if($auth) {
                     <a href="#"><i class="fa fa-play"></i> <span id="enableLabel">Enable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></a>
                 </li>
                 <!-- Tools -->
-                <li class="treeview <?php if($scriptname === "gravity.php" || $scriptname === "queryads.php" || $scriptname === "debug.php"){ ?>active<?php } ?>">
+                <li class="treeview <?php if(in_array($scriptname, array("gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php"))){ ?>active<?php } ?>">
                   <a href="#">
-                    <i class="fa fa-folder"></i> <span>Tools</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
                     </span>
+                    <i class="fa fa-folder"></i> <span>Tools</span>
                   </a>
                   <ul class="treeview-menu">
                     <!-- Run gravity.sh -->
@@ -488,6 +515,12 @@ if($auth) {
                     <li<?php if($scriptname === "queryads.php"){ ?> class="active"<?php } ?>>
                         <a href="queryads.php">
                             <i class="fa fa-search"></i> <span>Query adlists</span>
+                        </a>
+                    </li>
+                    <!-- Audit log -->
+                    <li<?php if($scriptname === "auditlog.php"){ ?> class="active"<?php } ?>>
+                        <a href="auditlog.php">
+                            <i class="fa fa-balance-scale"></i> <span>Audit log</span>
                         </a>
                     </li>
                     <!-- Tail pihole.log -->
