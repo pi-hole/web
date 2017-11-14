@@ -76,6 +76,40 @@ if(strlen($showing) > 0)
 	$showing = "(".$showing.")";
 }
 ?>
+<style type="text/css">
+.vertical-alignment-helper {
+    display: table;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.vertical-alignment-helper > .vertical-align-center {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.vertical-alignment-helper > .vertical-align-center > .modal-content {
+    width: 250px;
+    margin-left: auto;
+    margin-right: auto;
+    word-break: break-word;
+    pointer-events: all;
+}
+
+.alSpinner {
+    top: 0.1em;
+    left: 0.1em;
+    width: 0.8em;
+    height: 0.8em;
+    border-radius: 50%;
+    border: 4px solid silver;
+    border-right-color: transparent;
+    -webkit-animation: fa-spin 1s infinite linear;
+    animation: fa-spin 1s infinite linear;
+}
+</style>
+
 <!-- Send PHP info to JS -->
 <div id="token" hidden><?php echo $token ?></div>
 
@@ -88,18 +122,35 @@ if(strlen($showing) > 0)
 </div>
 -->
 
-<!-- Alerts -->
-<div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Adding <span id="alDomain"></span> to the <span id="alList"></span>...
-</div>
-<div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden="true">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Success!
-</div>
-<div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden="true">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Failure! Something went wrong.<span id="err"></span>
+<!-- Alert Modal -->
+<div id="alertModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <span class="fa-stack fa-2x" style="margin-bottom: 10px">
+                        <div class="alProcessing">
+                            <i class="fa-stack-2x alSpinner"></i>
+                        </div>
+                        <div class="alSuccess" style="display: none">
+                            <i class="fa fa-circle fa-stack-2x text-green"></i>
+                            <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+                        </div>
+                        <div class="alFailure" style="display: none">
+                            <i class="fa fa-circle fa-stack-2x text-red"></i>
+                            <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                        </div>
+                    </span>
+                    <div class="alProcessing">Adding <span id="alDomain"></span> to the <span id="alList"></span>...</div>
+                    <div class="alSuccess text-bold text-green" style="display: none"><span id="alDomain"></span> successfully added to the <span id="alList"></list></div>
+                    <div class="alFailure text-bold text-red" style="display: none">
+                        <span id="alNetErr">Timeout or Network Connection Error!</span>
+                        <span id="alCustomErr"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row">
