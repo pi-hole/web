@@ -32,14 +32,12 @@ function add(domain,list) {
     var alDomain = "#alDomain";
 
     // Run only if the Modal is closed (multiple running interlock)
-    if (alertModal.css("display") == "none") {
-        if(list === "white")
-        {
-            var listtype = "Whitelist";
-        }
-        else
-        {
-            var listtype = "Blacklist";
+    if (alertModal.css("display") === "none") {
+        var listtype;
+        if (list === "white") {
+            listtype = "Whitelist";
+        } else {
+            listtype = "Blacklist";
         }
         alProcessing.children(alDomain).html(domain);
         alProcessing.children(alList).html(listtype);
@@ -61,7 +59,7 @@ function add(domain,list) {
                         alNetworkErr.hide();
                         alCustomErr.html(response.replace("[✗]", ""));
                         alFailure.fadeIn(1000);
-                        setTimeout(function(){ alertModal.modal("hide") }, 3000);
+                        setTimeout(function() { alertModal.modal("hide"); }, 3000);
                     }
                     else
                     {
@@ -69,7 +67,7 @@ function add(domain,list) {
                         alSuccess.children(alDomain).html(domain);
                         alSuccess.children(alList).html(listtype);
                         alSuccess.fadeIn(1000);
-                        setTimeout(function(){ alertModal.modal("hide") }, 2000);
+                        setTimeout(function() { alertModal.modal("hide"); }, 2000);
                     }
                 },
                 error: function(jqXHR, exception) {
@@ -77,7 +75,7 @@ function add(domain,list) {
                     alProcessing.hide();
                     alNetworkErr.show();
                     alFailure.fadeIn(1000);
-                    setTimeout(function(){ alertModal.modal("hide") }, 3000);
+                    setTimeout(function() { alertModal.modal("hide"); }, 3000);
                 }
             });
         });
@@ -89,7 +87,7 @@ function add(domain,list) {
             alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
             alCustomErr.html("");
         });
-    };
+    }
 }
 
 function handleAjaxError( xhr, textStatus, error ) {
