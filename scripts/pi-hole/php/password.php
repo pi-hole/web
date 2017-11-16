@@ -40,6 +40,13 @@
             if($postinput == $pwhash)
             {
                 $_SESSION["hash"] = $pwhash;
+
+                // Login successful, redirect the user to the homepage to discard the POST request
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['QUERY_STRING'] === 'login') {
+                    header('Location: index.php');
+                    exit();
+                }
+
                 $auth = true;
             }
             else
