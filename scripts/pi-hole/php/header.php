@@ -165,7 +165,6 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'">
     <title>Pi-hole Admin Console</title>
     <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
     <meta http-equiv="x-dns-prefetch-control" content="off">
@@ -182,7 +181,6 @@
 
     <link href="style/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/vendor/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
 
     <link href="style/vendor/AdminLTE.min.css" rel="stylesheet" type="text/css" />
