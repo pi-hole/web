@@ -17,9 +17,7 @@
                 <h3 class="statistic" id="ads_blocked_today">---</h3>
                 <p>Queries Blocked Last 24 Hours</p>
             </div>
-            <div class="icon">
-                <i class="ion ion-android-hand"></i>
-            </div>
+           <span class="icon fa fa-hand-paper-o"></span>
         </div>
     </div>
     <!-- ./col -->
@@ -30,9 +28,7 @@
                 <h3 class="statistic" id="dns_queries_today">---</h3>
                 <p>Queries Last 24 Hours</p>
             </div>
-            <div class="icon">
-                <i class="ion ion-earth"></i>
-            </div>
+			<span class="icon fa fa-globe"></span>
         </div>
     </div>
     <!-- ./col -->
@@ -43,9 +39,7 @@
                 <h3 class="statistic" id="ads_percentage_today">---</h3>
                 <p>Queries Blocked Last 24 Hours</p>
             </div>
-            <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-            </div>
+            <span class="icon fa fa-pie-chart"></span>
         </div>
     </div>
     <!-- ./col -->
@@ -56,9 +50,7 @@
                 <h3 class="statistic" id="domains_being_blocked">---</h3>
                 <p>Domains on Blocklists</p>
             </div>
-            <div class="icon">
-                <i class="ion ion-ios-list"></i>
-            </div>
+           <span class="icon fa fa-list-ul"></span>
         </div>
     </div>
     <!-- ./col -->
