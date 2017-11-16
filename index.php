@@ -17,7 +17,7 @@
                 <h3 class="statistic" id="ads_blocked_today">---</h3>
                 <p>Queries Blocked Last 24 Hours</p>
             </div>
-           <span class="icon fa fa-hand-paper"></span>
+           <span class="icon fa fa-hand-paper-o"></span>
         </div>
     </div>
     <!-- ./col -->
@@ -29,7 +29,6 @@
                 <p>Queries Last 24 Hours</p>
             </div>
 			<span class="icon fa fa-globe"></span>
-            </div>
         </div>
     </div>
     <!-- ./col -->
