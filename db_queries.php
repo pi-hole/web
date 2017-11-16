@@ -48,7 +48,7 @@ $token = $_SESSION['token'];
                 <h3 class="statistic" id="ads_blocked_exact">---</h3>
                 <p>Queries Blocked</p>
             </div>
-            <span class="icon fa fa-paper-hand-o"></span>
+            <span class="icon fa fa-hand-paper-o"></span>
         </div>
     </div>
     <!-- ./col -->
@@ -59,7 +59,7 @@ $token = $_SESSION['token'];
                 <h3 class="statistic" id="ads_wildcard_blocked">---</h3>
                 <p>Queries Blocked (Wildcards)</p>
             </div>
-            <span class="icon fa fa-paper-hand-o"></span>
+             <span class="icon fa fa-hand-paper-o"></span>
         </div>
     </div>
     <!-- ./col -->
@@ -81,9 +81,7 @@ $token = $_SESSION['token'];
                 <h3 class="statistic" id="ads_percentage_today">---</h3>
                 <p>Queries Blocked</p>
             </div>
-            <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-            </div>
+            <span class="icon fa fa-pie-chart"></span>
         </div>
     </div>
     <!-- ./col -->
