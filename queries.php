@@ -93,7 +93,7 @@ if(strlen($showing) > 0)
     width: 250px;
     margin-left: auto;
     margin-right: auto;
-    word-break: break-word;
+    word-wrap: break-word;
     pointer-events: all;
 }
 
@@ -142,7 +142,7 @@ if(strlen($showing) > 0)
                         </div>
                     </span>
                     <div class="alProcessing">Adding <span id="alDomain"></span> to the <span id="alList"></span>...</div>
-                    <div class="alSuccess text-bold text-green" style="display: none"><span id="alDomain"></span> successfully added to the <span id="alList"></list></div>
+                    <div class="alSuccess text-bold text-green" style="display: none"><span id="alDomain"></span> successfully added to the <span id="alList"></span></div>
                     <div class="alFailure text-bold text-red" style="display: none">
                         <span id="alNetErr">Timeout or Network Connection Error!</span>
                         <span id="alCustomErr"></span>
