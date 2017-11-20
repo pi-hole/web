@@ -31,63 +31,65 @@ function add(domain,list) {
     var alList = "#alList";
     var alDomain = "#alDomain";
 
-    // Run only if the Modal is closed (multiple running interlock)
-    if (alertModal.css("display") === "none") {
-        var listtype;
-        if (list === "white") {
-            listtype = "Whitelist";
-        } else {
-            listtype = "Blacklist";
-        }
-        alProcessing.children(alDomain).html(domain);
-        alProcessing.children(alList).html(listtype);
-        alertModal.modal("show");
+    // Exit the function here if the Modal is already shown (multiple running interlock)
+    if (alertModal.css("display") !== "none") {
+        return;
+    }
 
-        // add Domain to List after Modal has faded in
-        alertModal.one("shown.bs.modal", function() {
-            $.ajax({
-                url: "scripts/pi-hole/php/add.php",
-                method: "post",
-                data: {"domain":domain, "list":list, "token":token},
-                success: function(response) {
-                    alProcessing.hide();
-                    if (response.indexOf("not a valid argument") >= 0 ||
-                        response.indexOf("is not a valid domain") >= 0 ||
-                        response.indexOf("Wrong token") >= 0)
-                    {
-                        // Failure
-                        alNetworkErr.hide();
-                        alCustomErr.html(response.replace("[✗]", ""));
-                        alFailure.fadeIn(1000);
-                        setTimeout(function() { alertModal.modal("hide"); }, 3000);
-                    }
-                    else
-                    {
-                        // Success
-                        alSuccess.children(alDomain).html(domain);
-                        alSuccess.children(alList).html(listtype);
-                        alSuccess.fadeIn(1000);
-                        setTimeout(function() { alertModal.modal("hide"); }, 2000);
-                    }
-                },
-                error: function(jqXHR, exception) {
-                    // Network Error
-                    alProcessing.hide();
-                    alNetworkErr.show();
+    var listtype;
+    if (list === "white") {
+        listtype = "Whitelist";
+    } else {
+        listtype = "Blacklist";
+    }
+    alProcessing.children(alDomain).html(domain);
+    alProcessing.children(alList).html(listtype);
+    alertModal.modal("show");
+
+    // add Domain to List after Modal has faded in
+    alertModal.one("shown.bs.modal", function() {
+        $.ajax({
+            url: "scripts/pi-hole/php/add.php",
+            method: "post",
+            data: {"domain":domain, "list":list, "token":token},
+            success: function(response) {
+                alProcessing.hide();
+                if (response.indexOf("not a valid argument") >= 0 ||
+                    response.indexOf("is not a valid domain") >= 0 ||
+                    response.indexOf("Wrong token") >= 0)
+                {
+                    // Failure
+                    alNetworkErr.hide();
+                    alCustomErr.html(response.replace("[✗]", ""));
                     alFailure.fadeIn(1000);
                     setTimeout(function() { alertModal.modal("hide"); }, 3000);
                 }
-            });
+                else
+                {
+                    // Success
+                    alSuccess.children(alDomain).html(domain);
+                    alSuccess.children(alList).html(listtype);
+                    alSuccess.fadeIn(1000);
+                    setTimeout(function() { alertModal.modal("hide"); }, 2000);
+                }
+            },
+            error: function(jqXHR, exception) {
+                // Network Error
+                alProcessing.hide();
+                alNetworkErr.show();
+                alFailure.fadeIn(1000);
+                setTimeout(function() { alertModal.modal("hide"); }, 3000);
+            }
         });
+    });
         
-        // Reset Modal after it has faded out
-        alertModal.one("hidden.bs.modal", function() {
-            alProcessing.show();
-            alSuccess.add(alFailure).hide();
-            alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
-            alCustomErr.html("");
-        });
-    }
+    // Reset Modal after it has faded out
+    alertModal.one("hidden.bs.modal", function() {
+        alProcessing.show();
+        alSuccess.add(alFailure).hide();
+        alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
+        alCustomErr.html("");
+    });
 }
 
 function handleAjaxError( xhr, textStatus, error ) {
