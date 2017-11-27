@@ -555,6 +555,12 @@ function readAdlists()
 
 					$domain = $_POST["domain"];
 
+					//   Validate Domain name
+					if(!validDomain($domain))
+					{
+						$error .= "Domain name ".htmlspecialchars($domain)." is invalid!<br>";
+					}
+					
 					$leasetime = $_POST["leasetime"];
 
 					// Validate Lease time length
