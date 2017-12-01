@@ -247,10 +247,12 @@ function readAdlists()
 					{
 						$error .= "Conditional forwarding domain name (".htmlspecialchars($_POST["conditionalForwardingDomain"]).") is invalid!<br>";
 					}
-
-					$addressArray = explode(".", $_POST["conditionalForwardingIP"]);
-					$reverseAddress = $addressArray[2].".".$addressArray[1].".".$addressArray[0].".in-addr.arpa";
-					$extra .= " conditional_forwarding ".$_POST["conditionalForwardingIP"]." ".$_POST["conditionalForwardingDomain"]." $reverseAddress";
+					if(!$error)
+					{
+						$addressArray = explode(".", $_POST["conditionalForwardingIP"]);
+						$reverseAddress = $addressArray[2].".".$addressArray[1].".".$addressArray[0].".in-addr.arpa";
+						$extra .= " conditional_forwarding ".$_POST["conditionalForwardingIP"]." ".$_POST["conditionalForwardingDomain"]." $reverseAddress";
+					}
 				}
 
 				// Check if DNSinterface is set
