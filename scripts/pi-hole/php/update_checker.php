@@ -42,8 +42,15 @@ else
 	    $web_current = explode("-",$versions[1])[0];
 	}
 
-	/********** Get Pi-hole FTL version (not a git repository) **********/
-	$FTL_current = $versions[2];
+	/********** Get Pi-hole FTL (not a git repository) **********/
+	$FTL_branch = $branches[2];
+	if($FTL_branch !== "master") {
+	    $FTL_current = "vDev";
+	    $FTL_commit = $versions[2];
+	}
+	else {
+	    $FTL_current = explode("-",$versions[2])[0];
+	}
 
 	// Get data from GitHub
 	$core_latest = $GitHubversions[0];
@@ -77,7 +84,15 @@ else
 	// FTL version comparison
 	// This logic allows the local core version to be newer than the upstream version
 	// The update indicator is only shown if the upstream version is NEWER
-	$FTL_update = (version_compare($FTL_current, $FTL_latest) < 0);
+	if($FTL_current !== "vDev")
+	{
+		$FTL_update = (version_compare($FTL_current, $FTL_latest) < 0);
+	}
+	else
+	{
+		$FTL_update = false;
+	}
+
 }
 
 ?>
