@@ -839,23 +839,23 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                         ?>>Use Conditional Forwarding</label>
                                                     </div>
                                                     <div class="input-group">
-	                                                    <table class="table table-bordered">
-		                                                    <tr>
-			                                                    <th>IP of your router</th>
-			                                                    <th>Local domain name</th>
-			                                                  </tr>
-			                                                  <tr>
-				                                                  <div class="input-group">
-					                                                  <td>
-						                                                  <input type="text" name="conditionalForwardingIP" class="form-control" data-inputmask="'alias': 'ip'" data-mask 
-						                                                  <?php if(isset($conditionalForwardingIP)){ ?>value="<?php echo $conditionalForwardingIP; ?>"<?php } ?>>
-							                                                </td>
-						                                                  <td><input type="text" name="conditionalForwardingDomain" class="form-control" data-mask 
-							                                                <?php if(isset($conditionalForwardingDomain)){ ?>value="<?php echo $conditionalForwardingDomain; ?>"<?php } ?>>
-						                                                </td>
-						                                              </div>
-						                                            </tr>
-						                                          </table>
+                                                      <table class="table table-bordered">
+                                                        <tr>
+                                                          <th>IP of your router</th>
+                                                          <th>Local domain name</th>
+                                                        </tr>
+                                                        <tr>
+                                                          <div class="input-group">
+                                                            <td>
+                                                              <input type="text" name="conditionalForwardingIP" class="form-control" data-inputmask="'alias': 'ip'" data-mask 
+                                                              <?php if(isset($conditionalForwardingIP)){ ?>value="<?php echo $conditionalForwardingIP; ?>"<?php } ?>>
+                                                            </td>
+                                                            <td><input type="text" name="conditionalForwardingDomain" class="form-control" data-mask 
+                                                              <?php if(isset($conditionalForwardingDomain)){ ?>value="<?php echo $conditionalForwardingDomain; ?>"<?php } ?>>
+                                                            </td>
+                                                          </div>
+                                                        </tr>
+                                                      </table>
                                                     </div>
                                                 </div>
                                             </div>
