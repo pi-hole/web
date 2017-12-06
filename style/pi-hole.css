@@ -53,5 +53,6 @@ a.lookatme {
 	display: inline-flex;
 	overflow: auto;
 	width: 100%;
+	-webkit-overflow-scrolling: touch;
 }
 
