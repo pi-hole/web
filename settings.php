@@ -1217,3 +1217,4 @@ require "scripts/pi-hole/php/footer.php";
 <script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
 <script src="scripts/vendor/jquery.confirm.min.js"></script>
 <script src="scripts/pi-hole/js/settings.js"></script>
+    
