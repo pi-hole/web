@@ -994,7 +994,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                 <!-- ######################################################### Speedtest ######################################################### -->
                 <div id="speedtest" class="tab-pane fade<?php if($tab === "speedtest"){ ?> in active<?php } ?>">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <form role="form" method="post">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
@@ -1055,7 +1055,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                 </div>
                             </form>
                         </div>
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
                                         <h3 class="box-title">Live Speedtest from speedtest.net (Results not logged)</h3>
@@ -1068,7 +1068,8 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                     </div>
                                 </div>
                             </div>        
-                        </div>
+                        </div> -->
+
                     </div>
                 </div>
 
