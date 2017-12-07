@@ -106,7 +106,7 @@ if(!$auth || !$speedtestshedule){
          </div>
          <div class="box-body">
            <div class="chart">
-             <canvas id="queryOverTimeChart" width="400" height="250"></canvas>
+             <canvas id="queryOverTimeChart" width="400" height="140"></canvas>
            </div>
          </div>
          <div class="overlay">
@@ -124,7 +124,7 @@ if(!$auth || !$speedtestshedule){
         </div>
         <div class="box-body">
           <div class="chart">
-          <canvas id="speedtestChart" width="400" height="250"></canvas>
+          <canvas id="speedtestChart" width="400" height="140"></canvas>
         </div>
         <div class="overlay">
           <i class="fa fa-refresh fa-spin"></i>
@@ -133,7 +133,7 @@ if(!$auth || !$speedtestshedule){
       </div>
     </div>
  <?php } ?>
-
+ </div>
 </div>
 <?php
   // If the user is logged in, then we show the more detailed index page.

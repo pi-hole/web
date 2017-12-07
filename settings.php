@@ -228,7 +228,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 ?>
 
 <?php 
-if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", "api", "teleporter"))) { 
+if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", "api", "teleporter","speedtest"))) { 
     $tab = $_GET['tab'];
 } else {
     $tab = "sysadmin";
@@ -244,6 +244,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                 <li<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
                 <li<?php if($tab === "api"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#api">API / Web interface</a></li>
                 <li<?php if($tab === "teleporter"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#teleporter">Teleporter</a></li>
+                <li<?php if($tab === "speedtest"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#speedtest">Speedtest</a></li>
             </ul>
             <div class="tab-content">
                 <!-- ######################################################### Blocklists ######################################################### -->
@@ -835,6 +836,29 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                 } else {
                     $temperatureunit = "C";
                 }
+
+                // Fix for select for not population on save
+                if(isset($setupVars["SPEEDTESTSCHEDULE"]))
+                {
+                        $speedtestshedule = $setupVars["SPEEDTESTSCHEDULE"];
+                }else {
+                        $speedtestshedule  = false;
+                }
+
+                if(isset($setupVars["SPEEDTEST_CHART_DAYS"]))
+                {
+                        $speedtestdays = $setupVars["SPEEDTEST_CHART_DAYS"];
+                }else {
+                        $speedtestdays  = "1";
+                }
+
+                if(isset($setupVars["SPEEDTEST_SERVER"]))
+                {
+                        $speedtestserver = $setupVars["SPEEDTEST_SERVER"];
+                }else {
+                        $speedtestserver  = "";
+                }
+
                 // Use $boxedlayout value determined in header.php
                 ?>
                 <div id="api" class="tab-pane fade<?php if($tab === "api"){ ?> in active<?php } ?>">
@@ -967,6 +991,89 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                         </div>
                     </div>
                 </div>
+                <!-- ######################################################### Speedtest ######################################################### -->
+                <div id="speedtest" class="tab-pane fade<?php if($tab === "speedtest"){ ?> in active<?php } ?>">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form role="form" method="post">
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Speedtest settings</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                            <h4>Speedtest</h4>
+                                            <div class="form-group col-md-6">
+                                                    <label>Speedtest Schedule</label>
+                                                    <select name="speedtestschedule" class="form-control" >
+                                                        <option value="0" <?php if($speedtestshedule == 0) {?> selected <?php } ?>>Disabled</option>
+                                                        <option value="1" <?php if($speedtestshedule == 1) {?> selected <?php } ?>>Every 1 Hour</option>
+                                                        <option value="2" <?php if($speedtestshedule == 2) {?> selected <?php } ?>>Every 2 Hours</option>
+                                                        <option value="6" <?php if($speedtestshedule == 6) {?> selected <?php } ?>>Every 6 Hours</option>
+                                                        <option value="12" <?php if($speedtestshedule == 12) {?> selected <?php } ?>>Every 12 Hours</option>
+                                                        <option value="24" <?php if($speedtestshedule == 24) {?> selected <?php } ?>>Every 24 Hours</option>
+                                                    </select>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                    <label>Speedtest Display Range</label>
+                                                    <select name="speedtestdays" class="form-control" >
+                                                        <option value="1" <?php if($speedtestdays == 1) {?> selected <?php } ?>>1 Day</option>
+                                                        <option value="2" <?php if($speedtestdays == 2) {?> selected <?php } ?>>2 Days</option>
+                                                        <option value="4" <?php if($speedtestdays == 4) {?> selected <?php } ?>>4 Days</option>
+                                                        <option value="7" <?php if($speedtestdays == 7) {?> selected <?php } ?>>7 Days</option>
+                                                        <option value="30" <?php if($speedtestdays == 30) {?> selected <?php } ?>>30 Days</option>
+                                                    </select>
+                                            </div>
+                                            <h4>Custom Speedtest server </h4>
+
+                                            <div class="form-group col-md-12">
+                                                <p > <span class="text-danger"> Expert only!!!</span>. Get list of supported servers <a href="https://www.speedtest.net/speedtest-servers.php" target="_blank"> here</a></p>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">Speedtest.net Server</div>
+                                                            <input type="number" class="form-control" name="speedtestserver" value="<?php if($speedtestserver) { echo $speedtestserver; } ?>"  placeholder="Keep this blank to autoselect" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h4>Flush Speedtest history </h4>
+                                            <div class="form-group col-md-12">
+
+                                                <div class="form-group">
+                                                    <div class="checkbox text-danger" ><label><input type="checkbox"  name="clearspeedtests" value="yes"> Flush Speedtest history</label></div>
+                                                </div>
+                                            </div>
+                                                
+                                                <input type="hidden" name="field" value="webUI">
+                                                <input type="hidden" name="token" value="<?php echo $token ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-footer clearfix">
+                                        <button type="submit" class="btn btn-primary pull-right">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                        <h3 class="box-title">Speedtest settings</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <iframe width="100%" height="650px" frameborder="0" src="http://pihole.speedtestcustom.com"></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>        
+                        </div>
+                    </div>
+                </div>
+
+
+
                 <!-- ######################################################### Teleporter ######################################################### -->
                 <div id="teleporter" class="tab-pane fade<?php if($tab === "teleporter"){ ?> in active<?php } ?>">
                     <div class="row">
@@ -1206,279 +1313,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                 </div>
             </div>
         </div>
-        <div class="box box-success">
-			<div class="box-header with-border">
-				<h3 class="box-title">API</h3>
-			</div>
-			<form role="form" method="post">
-			<div class="box-body">
-				<h4>Top Lists</h4>
-				<p>Exclude the following domains from being shown in</p>
-				<div class="col-lg-6">
-					<div class="form-group">
-					<label>Top Domains / Top Advertisers</label>
-					<textarea name="domains" class="form-control" rows="4" placeholder="Enter one domain per line"><?php foreach ($excludedDomains as $domain) { echo $domain."\n"; } ?></textarea>
-					</div>
-				</div>
-				<div class="col-lg-6">
-					<div class="form-group">
-					<label>Top Clients</label>
-					<textarea name="clients" class="form-control" rows="4" placeholder="Enter one IP address or host name per line"><?php foreach ($excludedClients as $client) { echo $client."\n"; } ?></textarea>
-					</div>
-				</div>
-				<h4>Privacy settings (Statistics / Query Log)</h4>
-				<div class="col-lg-6">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show permitted domain entries</label></div>
-					</div>
-				</div>
-				<div class="col-lg-6">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked domain entries</label></div>
-					</div>
-				</div>
-				<h4>Privacy mode</h4>
-				<div class="col-lg-12">
-					<div class="form-group">
-						<div class="checkbox"><label><input type="checkbox" name="privacyMode" <?php if($privacyMode){ ?>checked<?php } ?>> Don't show origin of DNS requests in query log</label></div>
-					</div>
-				</div>
-			</div>
-			<div class="box-footer">
-				<input type="hidden" name="field" value="API">
-				<input type="hidden" name="token" value="<?php echo $token ?>">
-				<button type="button" class="btn btn-primary api-token">Show API token</button>
-				<button type="submit" class="btn btn-primary pull-right">Save</button>
-			</div>
-			</form>
-		</div>
-<?php
-	// CPU temperature unit
-	if(isset($setupVars["TEMPERATUREUNIT"]))
-	{
-		$temperatureunit = $setupVars["TEMPERATUREUNIT"];
-	}
-	else
-	{
-		$temperatureunit = "C";
-	}
-	// Fix for select for not population on save
-	if(isset($setupVars["SPEEDTESTSCHEDULE"]))
-	{
-			$speedtestshedule = $setupVars["SPEEDTESTSCHEDULE"];
-	}else {
-			$speedtestshedule  = false;
-	}
-
-	if(isset($setupVars["SPEEDTEST_CHART_DAYS"]))
-	{
-			$speedtestdays = $setupVars["SPEEDTEST_CHART_DAYS"];
-	}else {
-			$speedtestdays  = "1";
-	}
-
-	if(isset($setupVars["SPEEDTEST_SERVER"]))
-	{
-			$speedtestserver = $setupVars["SPEEDTEST_SERVER"];
-	}else {
-			$speedtestserver  = "";
-	}
-
-	// Use $boxedlayout value determined in header.php
-?>
-		<div class="box box-success">
-			<div class="box-header with-border">
-				<h3 class="box-title">Web User Interface</h3>
-			</div>
-			<form role="form" method="post">
-			<div class="box-body">
-<?php /*
-				<h4>Query Log Page</h4>
-				<div class="col-lg-6">
-					<div class="form-group">
-						<label>Default value for <em>Show XX entries</em></label>
-						<select class="form-control" disabled>
-							<option>10</option>
-							<option>25</option>
-							<option>50</option>
-							<option>100</option>
-							<option>All</option>
-						</select>
-					</div>
-				</div>
-*/ ?>
-				<h4>Speedtest</h4>
-				<div class="form-group col-md-6">
-						<label>Speedtest Schedule</label>
-						<select name="speedtestschedule" class="form-control" >
-							<option value="0" <?php if($speedtestshedule == 0) {?> selected <?php } ?>>Disabled</option>
-							<option value="1" <?php if($speedtestshedule == 1) {?> selected <?php } ?>>Every 1 Hour</option>
-							<option value="2" <?php if($speedtestshedule == 2) {?> selected <?php } ?>>Every 2 Hours</option>
-							<option value="6" <?php if($speedtestshedule == 6) {?> selected <?php } ?>>Every 6 Hours</option>
-							<option value="12" <?php if($speedtestshedule == 12) {?> selected <?php } ?>>Every 12 Hours</option>
-							<option value="24" <?php if($speedtestshedule == 24) {?> selected <?php } ?>>Every 24 Hours</option>
-						</select>
-				</div>
-				<div class="form-group col-md-6">
-						<label>Speedtest Display Range</label>
-						<select name="speedtestdays" class="form-control" >
-							<option value="1" <?php if($speedtestdays == 1) {?> selected <?php } ?>>1 Day</option>
-							<option value="2" <?php if($speedtestdays == 2) {?> selected <?php } ?>>2 Days</option>
-							<option value="4" <?php if($speedtestdays == 4) {?> selected <?php } ?>>4 Days</option>
-							<option value="7" <?php if($speedtestdays == 7) {?> selected <?php } ?>>7 Days</option>
-							<option value="30" <?php if($speedtestdays == 30) {?> selected <?php } ?>>30 Days</option>
-						</select>
-				</div>
-				<h4>Custom Speedtest server </h4>
-
-				<div class="form-group col-md-12">
-					<p > <span class="text-danger"> Expert only!!!</span>. Get list of supported servers <a href="https://www.speedtest.net/speedtest-servers.php" target="_blank"> here</a></p>
-					<div class="form-group">
-						<div class="input-group">
-							<div class="input-group-addon">Speedtest.net Server</div>
-								<input type="number" class="form-control" name="speedtestserver" value="<?php if($speedtestserver) { echo $speedtestserver; } ?>"  placeholder="Keep this blank to autoselect" />
-						</div>
-					</div>
-				</div>
-				<h4>Flush Speedtest history </h4>
-				<div class="form-group col-md-12">
-
-					<div class="form-group">
-						<div class="checkbox text-danger" ><label><input type="checkbox"  name="clearspeedtests" value="yes"> Flush Speedtest history</label></div>
-					</div>
-				</div>
-
-
-
-				<h4>Interface appearance</h4>
-				<div class="form-group">
-					<div class="checkbox"><label><input type="checkbox" name="boxedlayout" value="yes" <?php if($boxedlayout){ ?>checked<?php } ?> >Use boxed layout (helpful when working on large screens)</label></div>
-				</div>
-				<h4>CPU Temperature Unit</h4>
-				<div class="form-group">
-					<div class="radio"><label><input type="radio" name="tempunit" value="C" <?php if($temperatureunit === "C"){ ?>checked<?php } ?> >Celsius</label></div>
-					<div class="radio"><label><input type="radio" name="tempunit" value="K" <?php if($temperatureunit === "K"){ ?>checked<?php } ?> >Kelvin</label></div>
-					<div class="radio"><label><input type="radio" name="tempunit" value="F" <?php if($temperatureunit === "F"){ ?>checked<?php } ?> >Fahrenheit</label></div>
-				</div>
-
-
-			</div>
-			<div class="box-footer">
-				<input type="hidden" name="field" value="webUI">
-				<input type="hidden" name="token" value="<?php echo $token ?>">
-				<button type="submit" class="btn btn-primary pull-right">Save</button>
-			</div>
-			</form>
-		</div>
-<?php /*
-		<div class="box box-info">
-			<div class="box-header with-border">
-				<h3 class="box-title">Blocking Page</h3>
-			</div>
-			<div class="box-body">
-				<p>Show page with details if a site is blocked</p>
-				<div class="form-group">
-					<div class="radio"><label><input type="radio" name="blockingPage" value="Yes" <?php if($pishowBlockPage){ ?>checked<?php } ?> disabled>Yes</label></div>
-					<div class="radio"><label><input type="radio" name="blockingPage" value="No" <?php if(!$pishowBlockPage){ ?>checked<?php } ?> disabled>No</label></div>
-					<p>If Yes: Hide content for in page ads?</p>
-					<div class="checkbox"><label><input type="checkbox" <?php if($pishowBlockPageInpage) { ?>checked<?php } ?> disabled>Enabled (recommended)</label></div>
-				</div>
-			</div>
-		</div>
-*/ ?>
-		<div class="box box-danger">
-			<div class="box-header with-border">
-				<h3 class="box-title">System Administration</h3>
-			</div>
-			<div class="box-body">
-				<button type="button" class="btn btn-default confirm-reboot">Restart system</button>
-				<button type="button" class="btn btn-default confirm-restartdns">Restart DNS server</button>
-				<button type="button" class="btn btn-default confirm-flushlogs">Flush logs</button>
-
-				<form role="form" method="post" id="rebootform">
-					<input type="hidden" name="field" value="reboot">
-					<input type="hidden" name="token" value="<?php echo $token ?>">
-				</form>
-				<form role="form" method="post" id="restartdnsform">
-					<input type="hidden" name="field" value="restartdns">
-					<input type="hidden" name="token" value="<?php echo $token ?>">
-				</form>
-				<form role="form" method="post" id="flushlogsform">
-					<input type="hidden" name="field" value="flushlogs">
-					<input type="hidden" name="token" value="<?php echo $token ?>">
-				</form>
-			</div>
-		</div>
-<?php
-if($FTL)
-{
-	function get_FTL_data($arg)
-	{
-		global $FTLpid;
-		return trim(exec("ps -p ".$FTLpid." -o ".$arg));
-	}
-	$FTLversion = exec("/usr/bin/pihole-FTL version");
-}
-?>
-		<div class="box box-danger collapsed-box">
-			<div class="box-header with-border">
-				<h3 class="box-title">Pi-hole FTL (<?php if($FTL){ ?>Running<?php }else{ ?>Not running<?php } ?>)</h3>
-				<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
-			</div>
-			<div class="box-body">
-				<?php if($FTL){ ?>FTL version: <?php echo $FTLversion; ?><br>
-				Process identifier (PID): <?php echo $FTLpid; ?><br>
-				Time FTL started: <?php print_r(get_FTL_data("start")); ?><br>
-				User / Group: <?php print_r(get_FTL_data("euser")); ?> / <?php print_r(get_FTL_data("egroup")); ?><br>
-				Total CPU utilization: <?php print_r(get_FTL_data("%cpu")); ?>%<br>
-				Memory utilization: <?php print_r(get_FTL_data("%mem")); ?>%<br>
-				<span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory: <?php echo formatSizeUnits(1e3*floatval(get_FTL_data("rss"))); ?></span><br>
-				<?php } ?>
-			</div>
-		</div>
-		<div class="box box-danger collapsed-box">
-			<div class="box-header with-border">
-				<h3 class="box-title">Pi-hole Teleporter</h3>
-				<div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>
-			</div>
-			<div class="box-body">
-			<?php if (extension_loaded('zip')) { ?>
-				<form role="form" method="post" id="takeoutform" action="scripts/pi-hole/php/teleporter.php" target="_blank"  enctype="multipart/form-data">
-					<input type="hidden" name="token" value="<?php echo $token ?>">
-					<div class="col-lg-12">
-						<p>Export your Pi-hole lists as downloadable ZIP file</p>
-						<button type="submit" class="btn btn-default">Export</button>
-					<hr>
-					</div>
-					<div class="col-lg-6">
-					<label>Import ...</label>
-						<div class="form-group">
-							<div class="checkbox">
-							<label><input type="checkbox" name="whitelist" value="true" checked> Whitelist</label>
-							</div>
-							<div class="checkbox">
-							<label><input type="checkbox" name="blacklist" value="true" checked> Blacklist (exact)</label>
-							</div>
-							<div class="checkbox">
-							<label><input type="checkbox" name="wildlist" value="true" checked> Blacklist (wildcard)</label>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-6">
-						<div class="form-group">
-							<label for="zip_file">File input</label>
-							<input type="file" name="zip_file" id="zip_file">
-							<p class="help-block">Upload only Pi-hole backup files.</p>
-							<button type="submit" class="btn btn-default" name="action" value="in">Import</button>
-						</div>
-					</div>
-				</form>
-			<?php } else { ?>
-				<p>The PHP extension <code>zip</code> is not loaded. Please ensure it is installed and loaded if you want to use the Pi-hole teleporter.</p>
-			<?php } ?>
-			</div>
-		</div>
-	</div>
+    </div>
 </div>
 
 <?php
