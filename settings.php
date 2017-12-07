@@ -1058,7 +1058,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                         <div class="col-md-6">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
-                                        <h3 class="box-title">Speedtest settings</h3>
+                                        <h3 class="box-title">Live Speedtest from speedtest.net (Results not logged)</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="row">
