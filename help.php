@@ -70,7 +70,7 @@
     <div class="col-md-12">
     <h2>White- / Blacklist</h2>
     <p>Add or remove domains (or subdomains) from the white-/blacklist. If a domain is added to e.g. the whitelist, any possible entry of the same domain will be automatically removed from the blacklist and vice versa.</p>
-    <p>Wildcard blacklisting is supported (entering <tt>something.de</tt> will block this domain including all subdomains like <tt>a.bb.c.999.something.de</tt>). Note that wildcard whitelisting is <em>not</em> supported.</p>
+    <p>Wildcard blacklisting is supported (entering <samp>something.de</samp> will block this domain including all subdomains like <samp>a.bb.c.999.something.de</samp>). Note that wildcard whitelisting is <em>not</em> supported.</p>
     <p>You can white-/blacklist multiple entries at a time if you separate the domains by spaces.</p>
     </div>
 </div>
@@ -89,7 +89,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Tools &rarr; Query adlists</h2>
-    This function is useful to find out what list a domain appears on. Since we don't control what the third-parties put on the block lists, you may find that a domain you normally visit stops working. If this is the case, you could run  this command to scan for strings in the list of blocked domains and it will return the list the domain is found on. This proved useful a while back when the Mahakala list was adding <tt>apple.com</tt> and <tt>microsoft.com</tt> to their block list.</p>
+    This function is useful to find out what list a domain appears on. Since we don't control what the third-parties put on the block lists, you may find that a domain you normally visit stops working. If this is the case, you could run  this command to scan for strings in the list of blocked domains and it will return the list the domain is found on. This proved useful a while back when the Mahakala list was adding <samp>apple.com</samp> and <samp>microsoft.com</samp> to their block list.</p>
     </div>
 </div>
 <div class="row">

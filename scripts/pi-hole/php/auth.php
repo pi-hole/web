@@ -119,7 +119,7 @@ function check_csrf($token) {
 
 function check_domain() {
     if(isset($_POST['domain'])){
-        $domains = explode(" ",$_POST['domain']);
+        $domains = preg_split('\s+', $_POST['domain']);
         foreach($domains as $domain)
         {
             $validDomain = is_valid_domain_name($domain);
@@ -131,7 +131,7 @@ function check_domain() {
 }
 
 function list_verify($type) {
-    global $pwhash, $wrongpassword;
+    global $pwhash, $wrongpassword, $auth;
     if(!isset($_POST['domain']) || !isset($_POST['list']) || !(isset($_POST['pw']) || isset($_POST['token']))) {
         log_and_die("Missing POST variables");
     }
@@ -144,11 +144,7 @@ function list_verify($type) {
     elseif(isset($_POST['pw']))
     {
         require("password.php");
-        if(strlen($pwhash) == 0)
-        {
-            log_and_die("No password set - ".htmlspecialchars($type)."listing with password not supported");
-        }
-        elseif($wrongpassword)
+        if($wrongpassword || !$auth)
         {
             log_and_die("Wrong password - ".htmlspecialchars($type)."listing of ${_POST['domain']} not permitted");
         }
