@@ -10,11 +10,6 @@ require "scripts/pi-hole/php/savesettings.php";
 // Reread ini file as things might have been changed
 $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 
-function command_exist($cmd)
-{
-    return !empty(shell_exec(sprintf("which %s", escapeshellarg($cmd))));
-}
-
 ?>
 <style type="text/css">
     .tooltip-inner {
@@ -227,8 +222,8 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 
 ?>
 
-<?php 
-if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", "api", "teleporter"))) { 
+<?php
+if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", "api", "teleporter"))) {
     $tab = $_GET['tab'];
 } else {
     $tab = "sysadmin";
