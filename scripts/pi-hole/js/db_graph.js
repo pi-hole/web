@@ -182,7 +182,7 @@ $(document).ready(function() {
                     title: function(tooltipItem, data) {
                         var label = tooltipItem[0].xLabel;
                         var time = new Date(label);
-                        var date = time.getFullYear()+"-"+padNumber(time.getMonth())+"-"+padNumber(time.getDate());
+                        var date = time.getFullYear()+"-"+padNumber(time.getMonth()+1)+"-"+padNumber(time.getDate());
                         var h = time.getHours();
                         var m = time.getMinutes();
                         var from = padNumber(h)+":"+padNumber(m)+":00";
