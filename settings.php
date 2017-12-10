@@ -1177,6 +1177,11 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                             <button type="button" class="btn btn-danger confirm-reboot form-control">Restart system</button>
                                         </div>
                                     </div>
+
+                                    <form role="form" method="post" id="flushlogsform">
+                                        <input type="hidden" name="field" value="flushlogs">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                    </form>
                                     <form role="form" method="post" id="disablelogsform">
                                         <input type="hidden" name="field" value="Logging">
                                         <input type="hidden" name="action" value="Disable">
