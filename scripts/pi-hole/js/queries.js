@@ -170,6 +170,7 @@ $(document).ready(function() {
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         "ajax": {"url": APIstring, "error": handleAjaxError },
         "autoWidth" : false,
+        "scrollX": "100%",
         "processing": true,
         "order" : [[0, "desc"]],
         "columns": [
@@ -187,6 +188,9 @@ $(document).ready(function() {
             "defaultContent": ""
         } ],
         "initComplete": function () {
+            // Make pagination scrollable
+            $(".pagination").addClass("pagination-scroll");
+
             var api = this.api();
             // Query type IPv4 / IPv6
             api.$('td:eq(1)').click( function () { api.search( this.innerHTML ).draw(); $('#resetButton').show(); } );
@@ -225,6 +229,9 @@ $(document).ready(function() {
     } );
 
     $('#resetButton').click( function () { tableApi.search("").draw(); $('#resetButton').hide(); } );
-} );
 
+    // Make table responsive (DataTables modifies the DOM such that we can't add this
+    // class to the element in the static file because it doesn't exist until runtime)
+    $("#all-queries").parent().addClass("table-responsive");
+} );
 

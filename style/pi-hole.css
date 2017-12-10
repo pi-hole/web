@@ -36,9 +36,6 @@ a.lookatme {
 	-webkit-animation-iteration-count: infinite;
 	animation-iteration-count: infinite;
 }
-#all-queries {
-	table-layout: fixed;
-}
 #all-queries tbody {
 	word-wrap: break-word;
 }
@@ -50,3 +47,13 @@ a.lookatme {
 	color: red;
 	font-weight: bold;
 }
+.dataTables_scroll {
+	-webkit-overflow-scrolling: touch;
+}
+.pagination-scroll {
+	display: inline-flex;
+	overflow: auto;
+	width: 100%;
+	-webkit-overflow-scrolling: touch;
+}
+
