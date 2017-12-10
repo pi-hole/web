@@ -201,13 +201,13 @@ $(document).ready(function() {
             else if (data[4] === 2)
             {
                 $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK (forwarded)" );
+                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(forwarded)" );
                 $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
             else if (data[4] === 3)
             {
                 $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK (cached)" );
+                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(cached)" );
                 $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
                 // statistics[1]++;
 
@@ -215,20 +215,20 @@ $(document).ready(function() {
             else if (data[4] === 4)
             {
                 $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed (wildcard)" );
+                $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)" );
                 $("td:eq(5)", row).html( "" );
                 // statistics[3]++;
             }
             else
             {
-                $("td:eq(4)", row).html( "Unknown ("+data[4]+")" );
+                $("td:eq(4)", row).html( "Unknown <br class='hidden-lg'>("+data[4]+")" );
                 $("td:eq(5)", row).html( "" );
             }
             // statistics[0]++;
         },
         dom: "<'row'<'col-sm-12'f>>" +
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
-             "<'row'<'col-sm-12'tr>>" +
+             "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         "ajax": {"url": APIstring, "error": handleAjaxError },
         "autoWidth" : false,
@@ -236,12 +236,12 @@ $(document).ready(function() {
         "deferRender": true,
         "order" : [[0, "desc"]],
         "columns": [
-            { "width" : "20%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD HH:mm:ss z");}else{return data;} }},
+            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
             { "width" : "10%" },
             { "width" : "40%" },
+            { "width" : "20%" },
             { "width" : "10%" },
-            { "width" : "10%" },
-            { "width" : "10%" },
+            { "width" : "5%" },
         ],
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "columnDefs": [ {
