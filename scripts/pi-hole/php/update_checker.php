@@ -3,8 +3,10 @@
 $localversions = "/etc/pihole/localversions";
 $localbranches = "/etc/pihole/localbranches";
 $GitHubVersions = "/etc/pihole/GitHubVersions";
+$GitHubPreRelease = "/etc/pihole/GitHubPreRelease";
 
-if(!is_readable($localversions) || !is_readable($localbranches) || !is_readable($GitHubVersions))
+if(!is_readable($localversions)  || !is_readable($localbranches) ||
+   !is_readable($GitHubVersions) || !is_readable($GitHubPreRelease))
 {
 	$core_branch = "master";
 	$core_current = "N/A";
@@ -20,6 +22,7 @@ else
 	$versions = explode(" ", file_get_contents($localversions));
 	$branches = explode(" ", file_get_contents($localbranches));
 	$GitHubversions = explode(" ", file_get_contents($GitHubVersions));
+	$GitHubpreRelease = explode(" ", file_get_contents($GitHubPreRelease));
 
 	/********** Get Pi-hole core branch / version / commit **********/
 	// Check if on a dev branch
@@ -63,6 +66,7 @@ else
 		// This logic allows the local core version to be newer than the upstream version
 		// The update indicator is only shown if the upstream version is NEWER
 		$core_update = (version_compare($core_current, $core_latest) < 0);
+		// isset($setupVars["USE_BETA"])
 	}
 	else
 	{

@@ -1042,6 +1042,13 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                     </div>
                 </div>
                 <!-- ######################################################### System admin ######################################################### -->
+<?php
+if (isset($setupVars["USE_BETA"])) {
+    $useBeta = $setupVars["USE_BETA"];
+} else {
+    $useBeta = false;
+}
+?>
                 <div id="sysadmin" class="tab-pane fade<?php if($tab === "sysadmin"){ ?> in active<?php } ?>">
                     <div class="row">
                         <div class="col-md-6">
@@ -1076,6 +1083,27 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                     </div>
                                 </div>
                             </div>
+                            <div class="box">
+                                <form role="form" method="post">
+                                <input type="hidden" name="field" value="betaversions">
+                                <input type="hidden" name="token" value="<?php echo $token ?>">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Pi-hole beta version notifications</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="checkbox">
+                                                <label><input type="checkbox" name="betaversions" value="true" <?php if($useBeta) { ?>checked<?php } ?>>Notify on availability of Pi-hole beta releases</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="submit" class="btn btn-primary pull-right">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
                         </div>
                         <div class="col-md-6">
                             <div class="box">

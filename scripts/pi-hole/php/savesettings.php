@@ -610,6 +610,19 @@ function readAdlists()
 
 				break;
 
+			case "betaversions":
+				if(isset($_POST["betaversions"]))
+				{
+					exec("sudo pihole -a beta true");
+					$success = "You will be notified about Pi-hole beta releases. Thank you for participating in making Pi-hole an even better software!";
+				}
+				else
+				{
+					exec("sudo pihole -a beta false");
+					$success = "You will not be notified about Pi-hole beta releases.";
+				}
+				break;
+
 			default:
 				// Option not found
 				$debug = true;
