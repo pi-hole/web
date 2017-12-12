@@ -5,6 +5,13 @@ $localbranches = "/etc/pihole/localbranches";
 $GitHubVersions = "/etc/pihole/GitHubVersions";
 $GitHubPreRelease = "/etc/pihole/GitHubPreRelease";
 
+// Do we want to notify on availability of beta versions?
+if (isset($setupVars["USE_BETA"])) {
+    $useBeta = $setupVars["USE_BETA"];
+} else {
+    $useBeta = false;
+}
+
 if(!is_readable($localversions)  || !is_readable($localbranches) ||
    !is_readable($GitHubVersions) || !is_readable($GitHubPreRelease))
 {
@@ -59,6 +66,9 @@ else
 	$core_latest = $GitHubversions[0];
 	$web_latest = $GitHubversions[1];
 	$FTL_latest = $GitHubversions[2];
+	$core_beta = $GitHubpreRelease[0];
+	$web_beta = $GitHubpreRelease[1];
+	$FTL_beta = $GitHubpreRelease[2];
 
 	// Core version comparison
 	if($core_current !== "vDev")
@@ -66,7 +76,10 @@ else
 		// This logic allows the local core version to be newer than the upstream version
 		// The update indicator is only shown if the upstream version is NEWER
 		$core_update = (version_compare($core_current, $core_latest) < 0);
-		// isset($setupVars["USE_BETA"])
+
+		// If the most recent version is a beta version but the user doesn't want to see
+		// beta notifications, we don't display the update available notification
+		if(!$useBeta && $core_beta === "true") $core_update = false;
 	}
 	else
 	{
@@ -79,6 +92,10 @@ else
 		// This logic allows the local core version to be newer than the upstream version
 		// The update indicator is only shown if the upstream version is NEWER
 		$web_update = (version_compare($web_current, $web_latest) < 0);
+
+		// If the most recent version is a beta version but the user doesn't want to see
+		// beta notifications, we don't display the update available notification
+		if(!$useBeta && $web_beta === "true") $web_update = false;
 	}
 	else
 	{
@@ -91,6 +108,10 @@ else
 	if($FTL_current !== "vDev")
 	{
 		$FTL_update = (version_compare($FTL_current, $FTL_latest) < 0);
+
+		// If the most recent version is a beta version but the user doesn't want to see
+		// beta notifications, we don't display the update available notification
+		if(!$useBeta && $FTL_beta === "true") $FTL_update = false;
 	}
 	else
 	{
