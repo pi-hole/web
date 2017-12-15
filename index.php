@@ -81,50 +81,16 @@ else
     <!-- ./col -->
 </div>
 
-<?php
-if($boxedlayout)
-{
-	$tablelayout = "col-md-6";
-  $maincollayout = "col-md-12 col-lg-12";
-}
-else
-{
-	$tablelayout = "col-md-6 col-lg-4";
-  $maincollayout = "col-md-12 col-lg-6";
-}
-if(!$auth || !$speedtestshedule){
-  $maincollayout = "col-md-12 col-lg-12";
-}
-?>
-
 <div class="row">
-
-  <div class="<?php echo $maincollayout; ?>">
-     <div class="box" id="queries-over-time">
-         <div class="box-header with-border">
-           <h3 class="box-title">Queries over last 24 hours</h3>
-         </div>
-         <div class="box-body">
-           <div class="chart">
-             <canvas id="queryOverTimeChart" width="400" height="140"></canvas>
-           </div>
-         </div>
-         <div class="overlay">
-           <i class="fa fa-refresh fa-spin"></i>
-         </div>
-         <!-- /.box-body -->
-       </div>
-     </div>
-
-  <?php  if($auth && $speedtestshedule){ ?>
-    <div class="<?php echo $maincollayout; ?>">
+    <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
-		<h3 class="box-title">Speedtest results over last <?php echo $speedtestdays; ?></h3>
+          <h3 class="box-title">Queries over last 24 hours</h3>
         </div>
         <div class="box-body">
           <div class="chart">
-          <canvas id="speedtestChart" width="400" height="140"></canvas>
+            <canvas id="queryOverTimeChart" width="800" height="140"></canvas>
+          </div>
         </div>
         <div class="overlay">
           <i class="fa fa-refresh fa-spin"></i>
@@ -132,8 +98,6 @@ if(!$auth || !$speedtestshedule){
         <!-- /.box-body -->
       </div>
     </div>
- <?php } ?>
- </div>
 </div>
 <?php
   // If the user is logged in, then we show the more detailed index page.
@@ -141,6 +105,27 @@ if(!$auth || !$speedtestshedule){
   // show since the API will respect the privacy of the user if he defines
   // a password
   if($auth){ ?>
+
+<?php  if($speedtestshedule){ ?>
+  <div class="row">
+    <div class="col-md-12">
+    <div class="box" id="queries-over-time">
+        <div class="box-header with-border">
+          <h3 class="box-title">Speedtest results over last <?php echo $speedtestdays; ?></h3>
+        </div>
+        <div class="box-body">
+          <div class="chart">
+          <canvas id="speedtestChart" width="800" height="140"></canvas>
+          </div>
+        </div>
+        <div class="overlay">
+          <i class="fa fa-refresh fa-spin"></i>
+        </div>
+        <!-- /.box-body -->
+      </div>
+    </div>
+  </div>
+ <?php } ?>
 
 <div class="row">
     <div class="col-md-12">
@@ -256,7 +241,16 @@ if(!$auth || !$speedtestshedule){
 </div>
 <?php } ?>
 
-
+<?php
+if($boxedlayout)
+{
+	$tablelayout = "col-md-6";
+}
+else
+{
+	$tablelayout = "col-md-6 col-lg-4";
+}
+?>
 <div class="row">
     <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="domain-frequency">
