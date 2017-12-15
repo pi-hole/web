@@ -180,7 +180,6 @@
 
     <link href="style/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/vendor/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/daterangepicker.css" rel="stylesheet" type="text/css" />
 

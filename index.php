@@ -17,9 +17,7 @@
                 <p>Total queries (<span id="unique_clients">-</span> clients)</p>
                 <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
             </div>
-            <div class="icon">
-                <i class="ion ion-earth"></i>
-            </div>
+            <span class="icon fa fa-globe"></span>
         </div>
     </div>
     <!-- ./col -->
@@ -30,9 +28,7 @@
                 <p>Queries Blocked</p>
                 <h3 class="statistic"><span id="ads_blocked_today">---</span></h3>
             </div>
-            <div class="icon">
-                <i class="ion ion-android-hand"></i>
-            </div>
+            <span class="icon fa fa-hand-paper-o"></span>
         </div>
     </div>
     <!-- ./col -->
@@ -43,9 +39,7 @@
                 <p>Percent Blocked</p>
                 <h3 class="statistic"><span id="ads_percentage_today">---</span></h3>
             </div>
-            <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-            </div>
+            <span class="icon fa fa-pie-chart"></span>
         </div>
     </div>
 <?php
@@ -73,9 +67,7 @@ else
                 <p>Domains on Blocklist</p>
                 <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
             </div>
-            <div class="icon">
-                <i class="ion ion-ios-list"></i>
-            </div>
+           <span class="icon fa fa-list-ul"></span>
         </div>
     </div>
     <!-- ./col -->

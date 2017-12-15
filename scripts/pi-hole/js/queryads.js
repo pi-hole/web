@@ -73,12 +73,12 @@ function eventsource() {
 
     // IE does not support EventSource - load whole content at once
     if (typeof EventSource !== "function") {
-        httpGet(ta,quiet,"/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+exact+"&IE");
+        httpGet(ta,quiet,"scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+exact+"&IE");
         return;
     }
 
     var host = window.location.host;
-    var source = new EventSource("/admin/scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+"&"+exact);
+    var source = new EventSource("scripts/pi-hole/php/queryads.php?domain="+domain.val().toLowerCase()+"&"+exact);
 
     // Reset and show field
     ta.empty();
