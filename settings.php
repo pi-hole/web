@@ -10,11 +10,6 @@ require "scripts/pi-hole/php/savesettings.php";
 // Reread ini file as things might have been changed
 $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 
-function command_exist($cmd)
-{
-    return !empty(shell_exec(sprintf("which %s", escapeshellarg($cmd))));
-}
-
 ?>
 <style type="text/css">
     .tooltip-inner {
@@ -227,8 +222,8 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 
 ?>
 
-<?php 
-if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", "api", "teleporter"))) { 
+<?php
+if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", "api", "teleporter"))) {
     $tab = $_GET['tab'];
 } else {
     $tab = "sysadmin";
@@ -1182,6 +1177,11 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                             <button type="button" class="btn btn-danger confirm-reboot form-control">Restart system</button>
                                         </div>
                                     </div>
+
+                                    <form role="form" method="post" id="flushlogsform">
+                                        <input type="hidden" name="field" value="flushlogs">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                    </form>
                                     <form role="form" method="post" id="disablelogsform">
                                         <input type="hidden" name="field" value="Logging">
                                         <input type="hidden" name="action" value="Disable">
