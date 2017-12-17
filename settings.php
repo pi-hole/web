@@ -1010,6 +1010,7 @@ if (in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", 
                                                         <option value="0" <?php if($speedtestshedule == 0) {?> selected <?php } ?>>Disabled</option>
                                                         <option value="1" <?php if($speedtestshedule == 1) {?> selected <?php } ?>>Every 1 Hour</option>
                                                         <option value="2" <?php if($speedtestshedule == 2) {?> selected <?php } ?>>Every 2 Hours</option>
+                                                        <option value="4" <?php if($speedtestshedule == 4) {?> selected <?php } ?>>Every 4 Hours</option>
                                                         <option value="6" <?php if($speedtestshedule == 6) {?> selected <?php } ?>>Every 6 Hours</option>
                                                         <option value="12" <?php if($speedtestshedule == 12) {?> selected <?php } ?>>Every 12 Hours</option>
                                                         <option value="24" <?php if($speedtestshedule == 24) {?> selected <?php } ?>>Every 24 Hours</option>
