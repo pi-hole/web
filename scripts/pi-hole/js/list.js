@@ -141,7 +141,7 @@ function add(arg) {
     $.ajax({
         url: "scripts/pi-hole/php/add.php",
         method: "post",
-        data: {"domain":domain.val(), "list":locallistType, "token":token},
+        data: {"domain":domain.val().trim(), "list":locallistType, "token":token},
         success: function(response) {
           if (response.indexOf("] Pi-hole blocking is ") === -1) {
             alFailure.show();
