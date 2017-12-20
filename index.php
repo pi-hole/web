@@ -111,7 +111,7 @@ else
     <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
-          <h3 class="box-title">Speedtest results over last <?php echo $speedtestdays; ?></h3>
+          <h3 class="box-title">Speedtest results over last <?php echo htmlspecialchars($speedtestdays); ?></h3>
         </div>
         <div class="box-body">
           <div class="chart">
