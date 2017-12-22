@@ -14,16 +14,30 @@ check_cors();
 
 $data = array();
 
+// Get posible non-standard location of FTL's database
+$FTLsettings = parse_ini_file("/etc/pihole/pihole-FTL.conf");
+if(isset($FTLsettings["DBFILE"]))
+{
+	$DBFILE = $FTLsettings["DBFILE"];
+}
+else
+{
+	$DBFILE = "/etc/pihole/pihole-FTL.db";
+}
+
 // Needs package php5-sqlite, e.g.
 //    sudo apt-get install php5-sqlite
 
 function SQLite3_connect($trytoreconnect)
 {
-	try {
+	global $DBFILE;
+	try
+	{
 		// connect to database
-		return new SQLite3('/etc/pihole/pihole-FTL.db', SQLITE3_OPEN_READONLY);
+		return new SQLite3($DBFILE, SQLITE3_OPEN_READONLY);
 	}
-	catch (Exception $exception) {
+	catch (Exception $exception)
+	{
 		// sqlite3 throws an exception when it is unable to connect, try to reconnect after 3 seconds
 		if($trytoreconnect)
 		{
@@ -33,8 +47,14 @@ function SQLite3_connect($trytoreconnect)
 	}
 }
 
-$db = SQLite3_connect(true);
-
+if(strlen($DBFILE) > 0)
+{
+	$db = SQLite3_connect(true);
+}
+else
+{
+	die("No database available");
+}
 if(!$db)
 {
 	die("Error connecting to database");
