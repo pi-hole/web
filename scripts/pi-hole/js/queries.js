@@ -185,6 +185,11 @@ $(document).ready(function() {
             else if (data[5] === "4")
             {
                 $("td:eq(5)", row).css("color","red");
+                $("td:eq(5)", row).html( "ABANDONED" );
+            }
+            else if (data[5] === "5")
+            {
+                $("td:eq(5)", row).css("color","red");
                 $("td:eq(5)", row).html( "?" );
             }
             else
