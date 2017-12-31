@@ -177,10 +177,15 @@ $(document).ready(function() {
                 $("td:eq(5)", row).css("color","orange");
                 $("td:eq(5)", row).html( "INSECURE" );
             }
-            else if (data[5] === "5")
+            else if (data[5] === "3")
             {
                 $("td:eq(5)", row).css("color","red");
                 $("td:eq(5)", row).html( "BOGUS" );
+            }
+            else if (data[5] === "4")
+            {
+                $("td:eq(5)", row).css("color","red");
+                $("td:eq(5)", row).html( "?" );
             }
             else
             {
