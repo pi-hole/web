@@ -194,6 +194,7 @@ $(document).ready(function() {
             }
             else
             {
+                $("td:eq(5)", row).css("color","black");
                 $("td:eq(5)", row).html( "-" );
             }
         },
