@@ -288,6 +288,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     </div>
                                     <div class="box-footer clearfix">
                                         <button type="submit" class="btn btn-primary" name="submit" value="save" id="blockinglistsave">Save</button>
+                                        <span><strong>Important: </strong>Save and Update when you're done!</span>
                                         <button type="submit" class="btn btn-primary pull-right" name="submit" id="blockinglistsaveupdate" value="saveupdate">Save and Update</button>
                                     </div>
                                 </div>
