@@ -94,16 +94,33 @@ if (isset($_GET['topClients']) && $auth)
 	{
 		$limit = "WHERE timestamp <= ".$_GET["until"];
 	}
-	$results = $db->query('SELECT client,count(client) FROM queries '.$limit.' GROUP by client order by count(client) desc limit 10');
+	$results = $db->query('SELECT client,count(client) FROM queries '.$limit.' GROUP by client order by count(client) desc limit 20');
 
 	$clients = array();
 
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
 		{
-			$clients[$row[0]] = intval($row[1]);
-			// var_dump($row);
+			// Convert client to lower case
+			$c = strtolower($row[0]);
+			if(array_key_exists($c, $clients))
+			{
+				// Entry already exists, add to it (might appear multiple times due to mixed capitalization in the database)
+				$clients[$c] += intval($row[1]);
+			}
+			else
+			{
+				// Entry does not yet exist
+				$clients[$c] = intval($row[1]);
+			}
 		}
+
+	// Sort by number of hits
+	arsort($clients);
+
+	// Extract only the first ten entries
+	$clients = array_slice($clients, 0, 10);
+
 	$result = array('top_sources' => $clients);
 	$data = array_merge($data, $result);
 }
@@ -124,15 +141,33 @@ if (isset($_GET['topDomains']) && $auth)
 	{
 		$limit = " AND timestamp <= ".$_GET["until"];
 	}
-	$results = $db->query('SELECT domain,count(domain) FROM queries WHERE (STATUS == 2 OR STATUS == 3)'.$limit.' GROUP by domain order by count(domain) desc limit 10');
+	$results = $db->query('SELECT domain,count(domain) FROM queries WHERE (STATUS == 2 OR STATUS == 3)'.$limit.' GROUP by domain order by count(domain) desc limit 20');
 
 	$domains = array();
 
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
 		{
-			$domains[$row[0]] = intval($row[1]);
+			// Convert client to lower case
+			$c = strtolower($row[0]);
+			if(array_key_exists($c, $domains))
+			{
+				// Entry already exists, add to it (might appear multiple times due to mixed capitalization in the database)
+				$domains[$c] += intval($row[1]);
+			}
+			else
+			{
+				// Entry does not yet exist
+				$domains[$c] = intval($row[1]);
+			}
 		}
+
+	// Sort by number of hits
+	arsort($domains);
+
+	// Extract only the first ten entries
+	$domains = array_slice($domains, 0, 10);
+
 	$result = array('top_domains' => $domains);
 	$data = array_merge($data, $result);
 }
