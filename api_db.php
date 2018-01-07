@@ -12,6 +12,9 @@ require("scripts/pi-hole/php/password.php");
 require("scripts/pi-hole/php/auth.php");
 check_cors();
 
+// Set maximum execution time to 10 minutes
+ini_set("max_execution_time","600");
+
 $data = array();
 
 // Get posible non-standard location of FTL's database
