@@ -274,7 +274,7 @@ if (isset($_GET['getGraphData']) && $auth)
 	}
 
 	// Count permitted queries in intervals
-	$results = $db->query('SELECT (timestamp/'.$interval.')*'.$interval.' interval, COUNT(*) FROM queries WHERE (status == 2 OR status == 3)'.$limit.' GROUP by interval ORDER by interval');
+	$results = $db->query('SELECT (timestamp/'.$interval.')*'.$interval.' interval, COUNT(*) FROM queries WHERE (status != 0 )'.$limit.' GROUP by interval ORDER by interval');
 
 	$domains = array();
 
