@@ -94,15 +94,25 @@ if (isset($_GET['topClients']) && $auth)
 	{
 		$limit = "WHERE timestamp <= ".$_GET["until"];
 	}
-	$results = $db->query('SELECT LOWER(client),count(LOWER(client)) FROM queries '.$limit.' GROUP by LOWER(client) order by count(LOWER(client)) desc limit 10');
+	$results = $db->query('SELECT client,count(client) FROM queries '.$limit.' GROUP by client order by count(client) desc limit 10');
 
 	$clients = array();
 
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
 		{
-			$clients[$row[0]] = intval($row[1]);
-			// var_dump($row);
+			// Convert client to lower case
+			$c = strtolower($row[0]);
+			if(array_key_exists($c, $clients))
+			{
+				// Entry already exists, add to it (might appear multiple times due to mixed capitalization in the database)
+				$clients[$c] += intval($row[1]);
+			}
+			else
+			{
+				// Entry does not yet exist
+				$clients[$c] = intval($row[1]);
+			}
 		}
 	$result = array('top_sources' => $clients);
 	$data = array_merge($data, $result);
