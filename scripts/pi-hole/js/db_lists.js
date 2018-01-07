@@ -14,6 +14,9 @@ var from = moment(start__).utc().valueOf()/1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf()/1000;
 
+var timeoutWarning = $("#timeoutWarning");
+var listsStillLoading = 0;
+
 $(function () {
     $("#querytime").daterangepicker(
     {
@@ -97,6 +100,10 @@ function updateTopClientsChart() {
         }
 
         $("#client-frequency .overlay").hide();
+
+        listsStillLoading--;
+        if(listsStillLoading == 0)
+            timeoutWarning.hide();
     });
 }
 
@@ -135,6 +142,10 @@ function updateTopDomainsChart() {
         }
 
         $("#domain-frequency .overlay").hide();
+
+        listsStillLoading--;
+        if(listsStillLoading == 0)
+            timeoutWarning.hide();
     });
 }
 
@@ -171,10 +182,16 @@ function updateTopAdsChart() {
         }
 
         $("#ad-frequency .overlay").hide();
+
+        listsStillLoading--;
+        if(listsStillLoading == 0)
+            timeoutWarning.hide();
     });
 }
 
 $("#querytime").on("apply.daterangepicker", function(ev, picker) {
+    timeoutWarning.show();
+    listsStillLoading = 3;
     updateTopClientsChart();
     updateTopDomainsChart();
     updateTopAdsChart();

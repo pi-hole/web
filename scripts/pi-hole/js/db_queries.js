@@ -16,6 +16,8 @@ var until = moment(end__).utc().valueOf()/1000;
 var instantquery = false;
 var daterange;
 
+var timeoutWarning = $("#timeoutWarning");
+
 // Do we want to filter queries?
 var GETDict = {};
 location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
@@ -141,6 +143,7 @@ function handleAjaxError( xhr, textStatus, error ) {
 
 var reloadCallback = function()
 {
+    timeoutWarning.hide();
     statistics = [0,0,0,0];
     var data = tableApi.rows().data();
     for (var i = 0; i < data.length; i++) {
@@ -171,6 +174,7 @@ var reloadCallback = function()
 };
 
 function refreshTableData() {
+    timeoutWarning.show();
     var APIstring = "api_db.php?getAllQueries&from="+from+"&until="+until;
     statistics = [0,0,0];
     tableApi.ajax.url(APIstring).load(reloadCallback);
