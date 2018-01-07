@@ -94,7 +94,7 @@ if (isset($_GET['topClients']) && $auth)
 	{
 		$limit = "WHERE timestamp <= ".$_GET["until"];
 	}
-	$results = $db->query('SELECT client,count(client) FROM queries '.$limit.' GROUP by client order by count(client) desc limit 10');
+	$results = $db->query('SELECT LOWER(client),count(LOWER(client)) FROM queries '.$limit.' GROUP by LOWER(client) order by count(LOWER(client)) desc limit 10');
 
 	$clients = array();
 
