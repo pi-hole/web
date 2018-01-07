@@ -144,7 +144,7 @@ function updateTopDomainsChart() {
         $("#domain-frequency .overlay").hide();
 
         listsStillLoading--;
-        if(listsStillLoading == 0)
+        if(listsStillLoading === 0)
             timeoutWarning.hide();
     });
 }
@@ -184,7 +184,7 @@ function updateTopAdsChart() {
         $("#ad-frequency .overlay").hide();
 
         listsStillLoading--;
-        if(listsStillLoading == 0)
+        if(listsStillLoading === 0)
             timeoutWarning.hide();
     });
 }
