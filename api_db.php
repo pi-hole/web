@@ -94,12 +94,13 @@ if (isset($_GET['topClients']) && $auth)
 	{
 		$limit = "WHERE timestamp <= ".$_GET["until"];
 	}
-	$results = $db->query('SELECT client,count(client) FROM queries '.$limit.' GROUP by client order by count(client) desc limit 10');
+	$results = $db->query('SELECT client,count(client) FROM queries '.$limit.' GROUP by client order by count(client) desc limit 20');
 
 	$clients = array();
+	$num = 0;
 
 	if(!is_bool($results))
-		while ($row = $results->fetchArray())
+		while (($row = $results->fetchArray()) && $num < 10)
 		{
 			// Convert client to lower case
 			$c = strtolower($row[0]);
@@ -112,6 +113,8 @@ if (isset($_GET['topClients']) && $auth)
 			{
 				// Entry does not yet exist
 				$clients[$c] = intval($row[1]);
+				// Increase number of clients
+				$num++;
 			}
 		}
 	$result = array('top_sources' => $clients);
