@@ -137,14 +137,28 @@ if (isset($_GET['topDomains']) && $auth)
 	{
 		$limit = " AND timestamp <= ".$_GET["until"];
 	}
-	$results = $db->query('SELECT domain,count(domain) FROM queries WHERE (STATUS == 2 OR STATUS == 3)'.$limit.' GROUP by domain order by count(domain) desc limit 10');
+	$results = $db->query('SELECT domain,count(domain) FROM queries WHERE (STATUS == 2 OR STATUS == 3)'.$limit.' GROUP by domain order by count(domain) desc limit 20');
 
 	$domains = array();
+	$num = 0;
 
 	if(!is_bool($results))
-		while ($row = $results->fetchArray())
+		while (($row = $results->fetchArray()) && $num < 10)
 		{
-			$domains[$row[0]] = intval($row[1]);
+			// Convert client to lower case
+			$c = strtolower($row[0]);
+			if(array_key_exists($c, $domains))
+			{
+				// Entry already exists, add to it (might appear multiple times due to mixed capitalization in the database)
+				$domains[$c] += intval($row[1]);
+			}
+			else
+			{
+				// Entry does not yet exist
+				$domains[$c] = intval($row[1]);
+				// Increase number of domains
+				$num++;
+			}
 		}
 	$result = array('top_domains' => $domains);
 	$data = array_merge($data, $result);
