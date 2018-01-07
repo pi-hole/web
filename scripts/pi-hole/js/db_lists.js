@@ -102,7 +102,7 @@ function updateTopClientsChart() {
         $("#client-frequency .overlay").hide();
 
         listsStillLoading--;
-        if(listsStillLoading == 0)
+        if(listsStillLoading === 0)
             timeoutWarning.hide();
     });
 }
