@@ -97,10 +97,9 @@ if (isset($_GET['topClients']) && $auth)
 	$results = $db->query('SELECT client,count(client) FROM queries '.$limit.' GROUP by client order by count(client) desc limit 20');
 
 	$clients = array();
-	$num = 0;
 
 	if(!is_bool($results))
-		while (($row = $results->fetchArray()) && $num < 10)
+		while ($row = $results->fetchArray())
 		{
 			// Convert client to lower case
 			$c = strtolower($row[0]);
@@ -113,10 +112,15 @@ if (isset($_GET['topClients']) && $auth)
 			{
 				// Entry does not yet exist
 				$clients[$c] = intval($row[1]);
-				// Increase number of clients
-				$num++;
 			}
 		}
+
+	// Sort by number of hits
+	arsort($clients);
+
+	// Extract only the first ten entries
+	$clients = array_slice($clients, 0, 10);
+
 	$result = array('top_sources' => $clients);
 	$data = array_merge($data, $result);
 }
@@ -140,10 +144,9 @@ if (isset($_GET['topDomains']) && $auth)
 	$results = $db->query('SELECT domain,count(domain) FROM queries WHERE (STATUS == 2 OR STATUS == 3)'.$limit.' GROUP by domain order by count(domain) desc limit 20');
 
 	$domains = array();
-	$num = 0;
 
 	if(!is_bool($results))
-		while (($row = $results->fetchArray()) && $num < 10)
+		while ($row = $results->fetchArray())
 		{
 			// Convert client to lower case
 			$c = strtolower($row[0]);
@@ -156,10 +159,15 @@ if (isset($_GET['topDomains']) && $auth)
 			{
 				// Entry does not yet exist
 				$domains[$c] = intval($row[1]);
-				// Increase number of domains
-				$num++;
 			}
 		}
+
+	// Sort by number of hits
+	arsort($domains);
+
+	// Extract only the first ten entries
+	$domains = array_slice($domains, 0, 10);
+
 	$result = array('top_domains' => $domains);
 	$data = array_merge($data, $result);
 }
