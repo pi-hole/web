@@ -320,9 +320,9 @@ function readAdlists()
 				$first = true;
 				foreach($clients as $client)
 				{
-					if(!validIP($domain))
+					if(!validDomainWildcard($client) && !validIP($client))
 					{
-						$error .= "Top Clients entry ".htmlspecialchars($client)." is invalid (use only IP addresses)!<br>";
+						$error .= "Top Clients entry ".htmlspecialchars($client)." is invalid (use only host names and IP addresses)!<br>";
 					}
 					if(!$first)
 					{
