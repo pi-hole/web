@@ -176,6 +176,7 @@ else
 	archive_add_file("/etc/pihole/","blacklist.txt");
 	archive_add_file("/etc/pihole/","adlists.list");
 	archive_add_file("/etc/pihole/","setupVars.conf");
+	archive_add_file("/etc/pihole/","auditlog.list");
 	archive_add_directory("/etc/dnsmasq.d/");
 
 	$archive["wildcardblocking.txt"] = getWildcardListContent();
