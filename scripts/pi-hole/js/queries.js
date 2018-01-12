@@ -135,37 +135,66 @@ $(document).ready(function() {
             {
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed" );
-                $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+                $("td:eq(6)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
             else if (data[4] === "2")
             {
                 $(row).css("color","green");
                 $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(forwarded)" );
-                $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+                $("td:eq(6)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
             else if (data[4] === "3")
             {
                 $(row).css("color","green");
                 $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(cached)" );
-                $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
-
+                $("td:eq(6)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
             else if (data[4] === "4")
             {
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)" );
-                $("td:eq(5)", row).html( "" );
+                $("td:eq(6)", row).html( "" );
             }
             else if (data[4] === "5")
             {
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(blacklist)" );
-                $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+                $("td:eq(6)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
             else
             {
                 $("td:eq(4)", row).html( "Unknown" );
-                $("td:eq(5)", row).html( "" );
+                $("td:eq(6)", row).html( "" );
+            }
+            if (data[5] === "1")
+            {
+                $("td:eq(5)", row).css("color","green");
+                $("td:eq(5)", row).html( "SECURE" );
+            }
+            else if (data[5] === "2")
+            {
+                $("td:eq(5)", row).css("color","orange");
+                $("td:eq(5)", row).html( "INSECURE" );
+            }
+            else if (data[5] === "3")
+            {
+                $("td:eq(5)", row).css("color","red");
+                $("td:eq(5)", row).html( "BOGUS" );
+            }
+            else if (data[5] === "4")
+            {
+                $("td:eq(5)", row).css("color","red");
+                $("td:eq(5)", row).html( "ABANDONED" );
+            }
+            else if (data[5] === "5")
+            {
+                $("td:eq(5)", row).css("color","red");
+                $("td:eq(5)", row).html( "?" );
+            }
+            else
+            {
+                $("td:eq(5)", row).css("color","black");
+                $("td:eq(5)", row).html( "-" );
             }
         },
         dom: "<'row'<'col-sm-12'f>>" +
@@ -179,10 +208,11 @@ $(document).ready(function() {
         "columns": [
             { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
             { "width" : "10%" },
-            { "width" : "40%", "render": $.fn.dataTable.render.text() },
-            { "width" : "20%", "render": $.fn.dataTable.render.text() },
+            { "width" : "37%", "render": $.fn.dataTable.render.text() },
+            { "width" : "8%", "render": $.fn.dataTable.render.text() },
             { "width" : "10%" },
             { "width" : "5%" },
+            { "width" : "10%" }
         ],
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "columnDefs": [ {
@@ -195,22 +225,22 @@ $(document).ready(function() {
             // Query type IPv4 / IPv6
             api.$("td:eq(1)").click( function () { if(autofilter()){ api.search( this.innerHTML ).draw(); $("#resetButton").show(); }});
             api.$("td:eq(1)").hover(
-              function () { this.title="Click to show only "+this.innerHTML+" queries"; this.style.color="#72afd2" },
-              function () { this.style.color="" }
+              function () { this.title="Click to show only "+this.innerHTML+" queries"; this.style.color="#72afd2"; },
+              function () { this.style.color=""; }
             );
             api.$("td:eq(1)").css("cursor","pointer");
             // Domain
             api.$("td:eq(2)").click( function () { if(autofilter()){ api.search( this.innerHTML ).draw(); $("#resetButton").show(); }});
             api.$("td:eq(2)").hover(
-              function () { this.title="Click to show only queries with domain "+this.innerHTML; this.style.color="#72afd2" },
-              function () { this.style.color="" }
+              function () { this.title="Click to show only queries with domain "+this.innerHTML; this.style.color="#72afd2"; },
+              function () { this.style.color=""; }
             );
             api.$("td:eq(2)").css("cursor","pointer");
             // Client
             api.$("td:eq(3)").click( function () { if(autofilter()){ api.search( this.innerHTML ).draw(); $("#resetButton").show(); }});
             api.$("td:eq(3)").hover(
-              function () { this.title="Click to show only queries made by "+this.innerHTML; this.style.color="#72afd2" },
-              function () { this.style.color="" }
+              function () { this.title="Click to show only queries made by "+this.innerHTML; this.style.color="#72afd2"; },
+              function () { this.style.color=""; }
             );
             api.$("td:eq(3)").css("cursor","pointer");
         }

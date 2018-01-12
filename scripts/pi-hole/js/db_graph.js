@@ -14,6 +14,8 @@ var from = moment(start__).utc().valueOf()/1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf()/1000;
 
+var timeoutWarning = $("#timeoutWarning");
+
 $(function () {
     $("#querytime").daterangepicker(
     {
@@ -80,6 +82,7 @@ function compareNumbers(a, b) {
 
 function updateQueriesOverTime() {
     $("#queries-over-time .overlay").show();
+    timeoutWarning.show();
     $.getJSON("api_db.php?getGraphData&from="+from+"&until="+until, function(data) {
 
         // convert received objects to arrays
@@ -135,6 +138,7 @@ function updateQueriesOverTime() {
 
         timeLineChart.options.scales.xAxes[0].display=true;
         $("#queries-over-time .overlay").hide();
+        timeoutWarning.hide();
         timeLineChart.update();
     });
 }
