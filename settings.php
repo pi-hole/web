@@ -786,14 +786,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="DNSrequiresFQDN" title="domain-needed"
                                                                       <?php if ($DNSrequiresFQDN){ ?>checked<?php }
-                                                                      ?>>never forward non-FQDNs</label>
+                                                                      ?>>Never forward non-FQDNs</label>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="DNSbogusPriv" title="bogus-priv"
                                                                       <?php if ($DNSbogusPriv){ ?>checked<?php }
-                                                                      ?>>never forward reverse lookups for private IP ranges</label>
+                                                                      ?>>Never forward reverse lookups for private IP ranges</label>
                                                     </div>
                                                 </div>
                                                 <p>Note that enabling these two options may increase your privacy
@@ -1068,7 +1068,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <td><?php echo $piHoleIPv6; ?></td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Pi-hole hostname</th>
+                                                    <th scope="row">Pi-hole hostname:</th>
                                                     <td><?php echo $hostname; ?></td>
                                                 </tr>
                                                 </tbody>
