@@ -819,14 +819,15 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
                                                    <a href="http://dnssec.vs.uni-due.de/" target="_blank">here</a>.</p>
                                                 <label>Conditional Forwarding</label>
-                                                <p>If not configured as your DHCP server Pi-Hole won't able to
-                                                   determine the names of devices on your local network and tables
-                                                   such as Top Clients will only show IP addresses.  One solution
-                                                   for this is to configure Pi-Hole to forward these requests to
-                                                   your home router, but just for what's inside your home.  To
-                                                   configure this we will need to know the IP address of your
-                                                   router and the name of your local network.</p>
-                                                <p>Note: The local domain name must match the domain name specified in your router.</p>
+                                                <p>If not configured as your DHCP server, Pi-hole won't able to
+                                                   determine the names of devices on your local network.  As a
+                                                   result, tables such as Top Clients will only show IP addresses.</p>
+                                                <p>One solution for this is to configure Pi-hole to forward these
+	                                                 requests to your home router, but only for devices on your
+	                                                 home network.  To configure this we will need to know the IP
+	                                                 address of your router and the name of your local network.</p>
+                                                <p>Note: The local domain name must match the domain name specified
+	                                                 in your router, likely found within the DHCP settings.</p>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="conditionalForwarding" value="conditionalForwarding"
