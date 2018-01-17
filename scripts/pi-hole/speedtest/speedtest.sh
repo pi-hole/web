@@ -40,6 +40,8 @@
 ###
 ### Copyright: 2014-2017 Henrik Bengtsson
 ### License: GPL (>= 2.1) (https://www.gnu.org/licenses/gpl.html)
+
+
 readonly setupVars="/etc/pihole/setupVars.conf"
 
 source "${setupVars}"
@@ -87,6 +89,7 @@ last=false
 version=false
 help=false
 header_units=true
+retry=false
 
 # Character for separating values
 sep="\t"
@@ -102,6 +105,8 @@ while [[ $# > 0 ]]; do
 	header_units=true
     elif [[ "$opt" == "--no-header-units" ]]; then
 	header_units=false
+    elif [[ "$opt" == "--retry" ]]; then
+	retry=true
     elif [[ "$opt" == "--quote" ]]; then
 	quote=$2
 	shift
@@ -230,10 +235,27 @@ else
 
     stop=$(date +"%Y-%m-%d %H:%M:%S")
 
+    last=$(tail -c 2 /tmp/$user/speedtest-csv.log)
+
+    # temp fix for failed run
+    if [[ $last  != "g" ]]; then
+        echo "Connection Failed";
+        if [ $retry = false ]; then
+            echo "Retry after 30 sec  "
+            sleep 30
+            retry_cmd="--retry"
+            self_path="/var/www/html/admin/scripts/pi-hole/speedtest/speedtest.sh"
+            $self_path $retry_cmd
+        else
+            echo "Retry failed aborting"
+        fi
+        exit;
+    fi
+
     # Was speedtest-cli successful?
     if [[ $status -ne 0 ]]; then
 	mecho "ERROR: '$cmd' failed (exit code $status)."
-	mecho $(cat /tmp/$user/speedtest-csv.log)
+	mecho $(cat /tmp/$user/speedtest-csv.log > /tmp/csv-error.log)
 	exit $status
     fi
 
