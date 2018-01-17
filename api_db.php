@@ -251,9 +251,11 @@ if (isset($_GET['getGraphData']) && $auth)
 {
 	$limit = "";
 
+	$duration = 0;
 	if(isset($_GET["from"]) && isset($_GET["until"]))
 	{
 		$limit = " AND timestamp >= ".intval($_GET["from"])." AND timestamp <= ".intval($_GET["until"]);
+		$duration = intval($_GET["until"]) - intval($_GET["from"]);
 	}
 	elseif(isset($_GET["from"]) && !isset($_GET["until"]))
 	{
@@ -264,7 +266,31 @@ if (isset($_GET['getGraphData']) && $auth)
 		$limit = " AND timestamp <= ".intval($_GET["until"]);
 	}
 
-	$interval = 600;
+	if($duration < 3600)
+	{
+		// Selected range is less/equal one hour - use 1min intervals
+		$interval = 60;
+	}
+	elseif($duration < 86400)
+	{
+		// Selected range is less/equal one day - use 10min intervals
+		$interval = 600;
+	}
+	elseif($duration < 604800)
+	{
+		// Selected range is less/equal one week - use 1h intervals
+		$interval = 3600;
+	}
+	elseif($duration < 2592000)
+	{
+		// Selected range is less/equal one month - use 6h intervals
+		$interval = 21600;
+	}
+	else
+	{
+		// Selected range is larger than one month - use 24h intervals
+		$interval = 86400;
+	}
 
 	if(isset($_GET["interval"]))
 	{
