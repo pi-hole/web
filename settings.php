@@ -345,7 +345,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                     if (isset($setupVars["PIHOLE_DOMAIN"])) {
                         $piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
                     } else {
-                        $piHoleDomain = "local";
+                        $piHoleDomain = "lan";
                     }
                     ?>
                     <form role="form" method="post">
