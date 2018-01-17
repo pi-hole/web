@@ -50,3 +50,8 @@ a.lookatme {
 	color: red;
 	font-weight: bold;
 }
+
+/* This allows a better view on "higher" resolutions i.e. 1920x1080+ */
+.layout-boxed .wrapper {
+	max-width: 95%;
+}
