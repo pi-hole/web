@@ -278,7 +278,12 @@ function readAdlists()
 				if($_POST["action"] === "Disable")
 				{
 					exec("sudo pihole -l off");
-					$success .= "Logging has been disabled";
+					$success .= "Logging has been disabled and logs have been flushed";
+				}
+				elseif($_POST["action"] === "Disable-noflush")
+				{
+					exec("sudo pihole -l off noflush");
+					$success .= "Logging has been disabled, your logs have <strong>not</strong> been flushed";
 				}
 				else
 				{
