@@ -6,6 +6,8 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
+    require('func.php');
+
     // Start a new PHP session (or continue an existing one)
     session_start();
 
@@ -37,7 +39,7 @@
         if(isset($_POST["pw"]))
         {
             $postinput = hash('sha256',hash('sha256',$_POST["pw"]));
-            if($postinput == $pwhash)
+            if(hash_equals($pwhash, $postinput))
             {
                 $_SESSION["hash"] = $pwhash;
 
@@ -57,13 +59,13 @@
         // Compare auth hash with saved hash
         else if (isset($_SESSION["hash"]))
         {
-            if($_SESSION["hash"] == $pwhash)
+            if(hash_equals($pwhash, $_SESSION["hash"]))
                 $auth = true;
         }
         // API can use the hash to get data without logging in via plain-text password
         else if (isset($api) && isset($_GET["auth"]))
         {
-            if($_GET["auth"] == $pwhash)
+            if(hash_equals($pwhash, $_GET["auth"]))
                 $auth = true;
         }
         else

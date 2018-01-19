@@ -92,26 +92,6 @@ function check_csrf($token) {
         session_start();
     }
 
-    // Credit: http://php.net/manual/en/function.hash-equals.php#119576
-    if(!function_exists('hash_equals')) {
-        function hash_equals($known_string, $user_string) {
-            $ret = 0;
-
-            if (strlen($known_string) !== strlen($user_string)) {
-                $user_string = $known_string;
-                $ret = 1;
-            }
-
-            $res = $known_string ^ $user_string;
-
-            for ($i = strlen($res) - 1; $i >= 0; --$i) {
-                $ret |= ord($res[$i]);
-            }
-
-            return !$ret;
-        }
-    }
-
     if(!isset($_SESSION['token']) || empty($token) || !hash_equals($_SESSION['token'], $token)) {
         log_and_die("Wrong token");
     }
