@@ -146,7 +146,7 @@ function list_verify($type) {
         require("password.php");
         if($wrongpassword || !$auth)
         {
-            log_and_die("Wrong password - ".htmlspecialchars($type)."listing of ${_POST['domain']} not permitted");
+            log_and_die("Wrong password - ".htmlspecialchars($type)."listing of ".htmlspecialchars($_POST['domain'])." not permitted");
         }
     }
     else
