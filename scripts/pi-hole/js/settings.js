@@ -85,7 +85,7 @@ $(".confirm-flushlogs").confirm({
 });
 
 $(".confirm-disablelogging").confirm({
-	text: "Note that disabling query logging will render graphs on the web user interface useless. Are you sure you want to disable your logging?",
+	text: "Note that disabling query logging will render graphs on the web user interface useless. Are you sure you want to disable logging and flush your Pi-hole logs?",
 	title: "Confirmation required",
 	confirm(button) {
 		$("#disablelogsform").submit();
@@ -93,10 +93,27 @@ $(".confirm-disablelogging").confirm({
 	cancel(button) {
 		// nothing to do
 	},
-	confirmButton: "Yes, disable logs",
+	confirmButton: "Yes, disable logs and flush my logs",
 	cancelButton: "No, go back",
 	post: true,
 	confirmButtonClass: "btn-danger",
+	cancelButtonClass: "btn-success",
+	dialogClass: "modal-dialog modal-mg"
+});
+
+$(".confirm-disablelogging-noflush").confirm({
+	text: "Note that disabling query logging will render graphs on the web user interface useless after this point. Are you sure you want to disable logging?",
+	title: "Confirmation required",
+	confirm(button) {
+		$("#disablelogsform-noflush").submit();
+	},
+	cancel(button) {
+		// nothing to do
+	},
+	confirmButton: "Yes, disable logs",
+	cancelButton: "No, go back",
+	post: true,
+	confirmButtonClass: "btn-warning",
 	cancelButtonClass: "btn-success",
 	dialogClass: "modal-dialog modal-mg"
 });

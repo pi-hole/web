@@ -1149,7 +1149,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     <div class="row">
                                         <div class="col-md-4">
                                             <?php if ($piHoleLogging) { ?>
-                                                <button type="button" class="btn btn-warning confirm-disablelogging form-control">Disable query logging</button>
+                                                <button type="button" class="btn btn-warning confirm-disablelogging-noflush form-control">Disable query logging</button>
                                             <?php } else { ?>
                                                 <form role="form" method="post">
                                                     <input type="hidden" name="action" value="Enable">
@@ -1160,7 +1160,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             <?php } ?>
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
-                                        <div class="col-md-4 col-md-offset-4">
+                                        <div class="col-md-4">
+                                            <?php if ($piHoleLogging) { ?>
+                                                <button type="button" class="btn btn-danger confirm-disablelogging form-control">Disable query logging and flush logs</button>
+                                            <?php } ?>
+                                        </div>
+                                        <p class="hidden-md hidden-lg"></p>
+                                        <div class="col-md-4">
                                             <button type="button" class="btn btn-warning confirm-restartdns form-control">Restart dnsmasq</button>
                                         </div>
                                     </div>
@@ -1186,6 +1192,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     <form role="form" method="post" id="disablelogsform">
                                         <input type="hidden" name="field" value="Logging">
                                         <input type="hidden" name="action" value="Disable">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                    </form>
+                                    <form role="form" method="post" id="disablelogsform-noflush">
+                                        <input type="hidden" name="field" value="Logging">
+                                        <input type="hidden" name="action" value="Disable-noflush">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
                                     </form>
                                     <form role="form" method="post" id="poweroffform">
