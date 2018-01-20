@@ -110,35 +110,33 @@ if(strlen($showing) > 0)
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <div class="table-responsive">
-                <table id="all-queries" class="display table table-striped table-bordered" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Domain</th>
-                            <th>Client</th>
-                            <th>Status</th>
-                            <th>DNSSEC</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Domain</th>
-                            <th>Client</th>
-                            <th>Status</th>
-                            <th>DNSSEC</th>
-                            <th>Action</th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-          <label><input type="checkbox" id="autofilter" checked="true">&nbsp;Apply filtering on click on Type, Domain, and Clients</label><br/>
-          <button type="button" id="resetButton" hidden="true">Clear Filters</button>
-       </div>
+            <table id="all-queries" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Domain</th>
+                        <th>Client</th>
+                        <th>Status</th>
+                        <th>DNSSEC</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Domain</th>
+                        <th>Client</th>
+                        <th>Status</th>
+                        <th>DNSSEC</th>
+                        <th>Action</th>
+                    </tr>
+                </tfoot>
+            </table>
+            <label><input type="checkbox" id="autofilter" checked="true">&nbsp;Apply filtering on click on Type, Domain, and Clients</label><br/>
+            <button type="button" id="resetButton" hidden="true">Clear Filters</button>
+        </div>
         <!-- /.box-body -->
       </div>
       <!-- /.box -->
