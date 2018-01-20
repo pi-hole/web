@@ -71,8 +71,8 @@ if (isset($_GET['getAllQueries']) && $auth)
 		$from = intval($_GET["from"]);
 		$until = intval($_GET["until"]);
 		$stmt = $db->prepare("SELECT timestamp, type, domain, client, status FROM queries WHERE timestamp >= :from AND timestamp <= :until ORDER BY timestamp ASC");
-		$stmt->bindValue(":from", $from);
-		$stmt->bindValue(":until", $until);
+		$stmt->bindValue(":from", intval($from), SQLITE3_INTEGER);
+		$stmt->bindValue(":until", intval($until), SQLITE3_INTEGER);
 		$results = $stmt->execute();
 		if(!is_bool($results))
 			while ($row = $results->fetchArray())
@@ -101,8 +101,8 @@ if (isset($_GET['topClients']) && $auth)
 		$limit = "WHERE timestamp <= :until";
 	}
 	$stmt = $db->prepare('SELECT client,count(client) FROM queries '.$limit.' GROUP by client order by count(client) desc limit 20');
-	$stmt->bindValue(":from", $_GET['from']);
-	$stmt->bindValue(":until", $_GET['until']);
+	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
+	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
 
 	$clients = array();
@@ -151,8 +151,8 @@ if (isset($_GET['topDomains']) && $auth)
 		$limit = " AND timestamp <= :until";
 	}
 	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE (STATUS == 2 OR STATUS == 3)'.$limit.' GROUP by domain order by count(domain) desc limit 20');
-	$stmt->bindValue(":from", $_GET['from']);
-	$stmt->bindValue(":until", $_GET['until']);
+	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
+	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
 
 	$domains = array();
@@ -201,8 +201,8 @@ if (isset($_GET['topAds']) && $auth)
 		$limit = " AND timestamp <= :until";
 	}
 	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE (STATUS == 1 OR STATUS == 4)'.$limit.' GROUP by domain order by count(domain) desc limit 10');
-	$stmt->bindValue(":from", $_GET['from']);
-	$stmt->bindValue(":until", $_GET['until']);
+	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
+	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
 
 	$addomains = array();
@@ -287,9 +287,9 @@ if (isset($_GET['getGraphData']) && $auth)
 
 	// Count permitted queries in intervals
 	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status != 0 )'.$limit.' GROUP by interval ORDER by interval');
-	$stmt->bindValue(":from", intval($_GET['from']));
-	$stmt->bindValue(":until", intval($_GET['until']));
-	$stmt->bindValue(":interval", $interval);
+	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
+	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
+	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
 	$results = $stmt->execute();
 
 	$domains = array();
@@ -304,9 +304,9 @@ if (isset($_GET['getGraphData']) && $auth)
 
 	// Count blocked queries in intervals
 	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status == 1 OR status == 4 OR status == 5)'.$limit.' GROUP by interval ORDER by interval');
-	$stmt->bindValue(":from", intval($_GET['from']));
-	$stmt->bindValue(":until", intval($_GET['until']));
-	$stmt->bindValue(":interval", $interval);
+	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
+	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
+	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
 	$results = $stmt->execute();
 
 	$addomains = array();
