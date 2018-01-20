@@ -6,7 +6,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-require('func.php');
+require_once('func.php');
 $ERRORLOG = getenv('PHP_ERROR_LOG');
 if (empty($ERRORLOG)) {
     $ERRORLOG = '/var/log/lighttpd/error.log';

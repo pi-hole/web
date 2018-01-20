@@ -6,7 +6,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-    require('func.php');
+    require_once('func.php');
 
     // Start a new PHP session (or continue an existing one)
     session_start();
