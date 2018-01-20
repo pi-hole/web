@@ -85,3 +85,33 @@ a.lookatme {
 	color: red;
 	font-weight: bold;
 }
+
+.vertical-alignment-helper {
+    display: table;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+.vertical-alignment-helper > .vertical-align-center {
+    display: table-cell;
+    vertical-align: middle;
+}
+.vertical-alignment-helper > .vertical-align-center > .modal-content {
+    width: 250px;
+    margin-left: auto;
+    margin-right: auto;
+    word-wrap: break-word;
+    pointer-events: all;
+}
+
+.alSpinner {
+    top: 0.1em;
+    left: 0.1em;
+    width: 0.8em;
+    height: 0.8em;
+    border-radius: 50%;
+    border: 4px solid silver;
+    border-right-color: transparent;
+    -webkit-animation: fa-spin 1s infinite linear;
+    animation: fa-spin 1s infinite linear;
+}

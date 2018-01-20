@@ -22,62 +22,76 @@ function refreshData() {
 
 function add(domain,list) {
     var token = $("#token").html();
-    var alInfo = $("#alInfo");
-    var alList = $("#alList");
-    var alDomain = $("#alDomain");
-    alDomain.html(domain);
-    var alSuccess = $("#alSuccess");
-    var alFailure = $("#alFailure");
-    var err = $("#err");
+    var alertModal = $("#alertModal");
+    var alProcessing = alertModal.find(".alProcessing");
+    var alSuccess = alertModal.find(".alSuccess");
+    var alFailure = alertModal.find(".alFailure");
+    var alNetworkErr = alertModal.find(".alFailure #alNetErr");
+    var alCustomErr = alertModal.find(".alFailure #alCustomErr");
+    var alList = "#alList";
+    var alDomain = "#alDomain";
 
-    if(list === "white")
-    {
-        alList.html("Whitelist");
-    }
-    else
-    {
-        alList.html("Blacklist");
+    // Exit the function here if the Modal is already shown (multiple running interlock)
+    if (alertModal.css("display") !== "none") {
+        return;
     }
 
-    alInfo.show();
-    alSuccess.hide();
-    alFailure.hide();
-    $.ajax({
-        url: "scripts/pi-hole/php/add.php",
-        method: "post",
-        data: {"domain":domain, "list":list, "token":token},
-        success: function(response) {
-            if (response.indexOf("not a valid argument") >= 0 || response.indexOf("is not a valid domain") >= 0)
-            {
-                alFailure.show();
-                err.html(response);
-                alFailure.delay(4000).fadeOut(2000, function() { alFailure.hide(); });
+    var listtype;
+    if (list === "white") {
+        listtype = "Whitelist";
+    } else {
+        listtype = "Blacklist";
+    }
+    alProcessing.children(alDomain).html(domain);
+    alProcessing.children(alList).html(listtype);
+    alertModal.modal("show");
+
+    // add Domain to List after Modal has faded in
+    alertModal.one("shown.bs.modal", function() {
+        $.ajax({
+            url: "scripts/pi-hole/php/add.php",
+            method: "post",
+            data: {"domain":domain, "list":list, "token":token},
+            success: function(response) {
+                alProcessing.hide();
+                if (response.indexOf("not a valid argument") >= 0 ||
+                    response.indexOf("is not a valid domain") >= 0 ||
+                    response.indexOf("Wrong token") >= 0)
+                {
+                    // Failure
+                    alNetworkErr.hide();
+                    alCustomErr.html(response.replace("[✗]", ""));
+                    alFailure.fadeIn(1000);
+                    setTimeout(function() { alertModal.modal("hide"); }, 3000);
+                }
+                else
+                {
+                    // Success
+                    alSuccess.children(alDomain).html(domain);
+                    alSuccess.children(alList).html(listtype);
+                    alSuccess.fadeIn(1000);
+                    setTimeout(function() { alertModal.modal("hide"); }, 2000);
+                }
+            },
+            error: function(jqXHR, exception) {
+                // Network Error
+                alProcessing.hide();
+                alNetworkErr.show();
+                alFailure.fadeIn(1000);
+                setTimeout(function() { alertModal.modal("hide"); }, 3000);
             }
-            else
-            {
-                alSuccess.show();
-                alSuccess.delay(1000).fadeOut(2000, function() { alSuccess.hide(); });
-            }
-            alInfo.delay(1000).fadeOut(2000, function() {
-                alInfo.hide();
-                alList.html("");
-                alDomain.html("");
-            });
-        },
-        error: function(jqXHR, exception) {
-            alFailure.show();
-            err.html("");
-            alFailure.delay(1000).fadeOut(2000, function() {
-                alFailure.hide();
-            });
-            alInfo.delay(1000).fadeOut(2000, function() {
-                alInfo.hide();
-                alList.html("");
-                alDomain.html("");
-            });
-        }
+        });
+    });
+        
+    // Reset Modal after it has faded out
+    alertModal.one("hidden.bs.modal", function() {
+        alProcessing.show();
+        alSuccess.add(alFailure).hide();
+        alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
+        alCustomErr.html("");
     });
 }
+
 function handleAjaxError( xhr, textStatus, error ) {
     if ( textStatus === "timeout" )
     {
