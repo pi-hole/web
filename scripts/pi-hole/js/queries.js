@@ -145,8 +145,10 @@ $(document).ready(function() {
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
+            var blocked = false;
             if (data[4] === "1")
             {
+                blocked = true;
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed" );
                 $("td:eq(6)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
@@ -165,12 +167,14 @@ $(document).ready(function() {
             }
             else if (data[4] === "4")
             {
+                blocked = true;
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)" );
                 $("td:eq(6)", row).html( "" );
             }
             else if (data[4] === "5")
             {
+                blocked = true;
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(blacklist)" );
                 $("td:eq(6)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
@@ -211,24 +215,24 @@ $(document).ready(function() {
                 $("td:eq(5)", row).html( "-" );
             }
 
-            // Check for existance of sixth column
-            if(data.length > 5)
+            // Check for existance of sixth column and display only if not Pi-holed
+            if(data.length > 5 && !blocked)
             {
                 if (data[6] === "1")
                 {
-                    $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (NODATA)");
+                    $("td:eq(2)", row).html(data[2] + " (NODATA)");
                 }
                 else if (data[6] === "2")
                 {
-                    $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (NXDOMAIN)");
+                    $("td:eq(2)", row).html(data[2] + " (NXDOMAIN)");
                 }
                 else if (data[6] === "3")
                 {
-                    $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (CNAME)");
+                    $("td:eq(2)", row).html(data[2] + " (CNAME)");
                 }
                 else if (data[6] === "4")
                 {
-                    $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (IP)");
+                    $("td:eq(2)", row).html(data[2] + " (IP)");
                 }
             }
         },
