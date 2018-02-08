@@ -220,7 +220,7 @@ $(document).ready(function() {
             {
                 if (data[6] === "1")
                 {
-                    $("td:eq(2)", row).html(data[2] + " (NODATA)");
+                    $("td:eq(2)", row).html(data[2] + " (NODATA-" + data[1] + ")");
                 }
                 else if (data[6] === "2")
                 {
