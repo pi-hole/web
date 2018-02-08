@@ -82,7 +82,7 @@ function add(domain,list) {
             }
         });
     });
-        
+
     // Reset Modal after it has faded out
     alertModal.one("hidden.bs.modal", function() {
         alProcessing.show();
@@ -210,6 +210,23 @@ $(document).ready(function() {
                 $("td:eq(5)", row).css("color","black");
                 $("td:eq(5)", row).html( "-" );
             }
+
+            // Check for existance of sixth column
+            if(data.length > 5)
+            {
+	            if (data[6] === "1")
+	            {
+	                $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (NODATA)");
+	            }
+	            else if (data[6] === "2")
+	            {
+	                $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (NXDOMAIN)");
+	            }
+	            else if (data[6] === "3")
+	            {
+	                $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (CNAME)");
+	            }
+	    }
         },
         dom: "<'row'<'col-sm-12'f>>" +
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
