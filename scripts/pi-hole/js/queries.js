@@ -214,19 +214,19 @@ $(document).ready(function() {
             // Check for existance of sixth column
             if(data.length > 5)
             {
-	            if (data[6] === "1")
-	            {
-	                $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (NODATA)");
-	            }
-	            else if (data[6] === "2")
-	            {
-	                $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (NXDOMAIN)");
-	            }
-	            else if (data[6] === "3")
-	            {
-	                $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (CNAME)");
-	            }
-	    }
+                if (data[6] === "1")
+                {
+                    $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (NODATA)");
+                }
+                else if (data[6] === "2")
+                {
+                    $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (NXDOMAIN)");
+                }
+                else if (data[6] === "3")
+                {
+                    $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (CNAME)");
+                }
+            }
         },
         dom: "<'row'<'col-sm-12'f>>" +
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
