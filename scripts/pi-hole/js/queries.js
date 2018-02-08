@@ -226,6 +226,10 @@ $(document).ready(function() {
                 {
                     $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (CNAME)");
                 }
+                else if (data[6] === "4")
+                {
+                    $("td:eq(2)", row).html($("td:eq(2)", row).html()+" (IP)");
+                }
             }
         },
         dom: "<'row'<'col-sm-12'f>>" +
