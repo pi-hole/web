@@ -82,7 +82,7 @@ function add(domain,list) {
             }
         });
     });
-        
+
     // Reset Modal after it has faded out
     alertModal.one("hidden.bs.modal", function() {
         alProcessing.show();
@@ -122,27 +122,25 @@ $(document).ready(function() {
     location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
 
     var APIstring = "api.php?getAllQueries";
-    var options = "";
 
     if("from" in GETDict && "until" in GETDict)
     {
-        options += "&from="+GETDict["from"];
+        APIstring += "&from="+GETDict["from"];
         APIstring += "&until="+GETDict["until"];
     }
     else if("client" in GETDict)
     {
-        options += "&client="+GETDict["client"];
+        APIstring += "&client="+GETDict["client"];
     }
     else if("domain" in GETDict)
     {
-        options += "&domain="+GETDict["domain"];
+        APIstring += "&domain="+GETDict["domain"];
     }
     // If we don't ask filtering and also not for all queries, just request the most recent 100 queries
     else if(!("all" in GETDict))
     {
         APIstring += "=100";
     }
-    APIstring += options;
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
