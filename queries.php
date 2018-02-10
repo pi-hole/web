@@ -59,7 +59,7 @@ else if(isset($_GET["from"]) && isset($_GET["until"]))
 }
 else
 {
-	$showing .= " within recent 10 minutes, <a href=\"?all\">show all</a>";
+	$showing .= ", most recent 100, <a href=\"?all\">show all</a>";
 }
 
 if(isset($setupVars["API_PRIVACY_MODE"]))

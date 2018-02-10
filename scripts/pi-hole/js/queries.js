@@ -122,26 +122,27 @@ $(document).ready(function() {
     location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
 
     var APIstring = "api.php?getAllQueries";
+    var options = "";
 
     if("from" in GETDict && "until" in GETDict)
     {
-        APIstring += "&from="+GETDict["from"];
+        options += "&from="+GETDict["from"];
         APIstring += "&until="+GETDict["until"];
     }
     else if("client" in GETDict)
     {
-        APIstring += "&client="+GETDict["client"];
+        options += "&client="+GETDict["client"];
     }
     else if("domain" in GETDict)
     {
-        APIstring += "&domain="+GETDict["domain"];
+        options += "&domain="+GETDict["domain"];
     }
+    // If we don't ask filtering and also not for all queries, just request the most recent 100 queries
     else if(!("all" in GETDict))
     {
-        var timestamp = Math.floor(Date.now() / 1000);
-        APIstring += "&from="+(timestamp - 600);
-        APIstring += "&until="+(timestamp + 100);
+        APIstring += "=100";
     }
+    APIstring += options;
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
