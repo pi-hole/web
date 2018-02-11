@@ -58,7 +58,7 @@ else
     $exact = "";
 }
 
-$proc = popen("sudo pihole -q ".$url." ".$exact, 'r');
+$proc = popen("sudo pihole -q -adlist ".$url." ".$exact, 'r');
 while (!feof($proc)) {
     echoEvent(fread($proc, 4096));
 }
