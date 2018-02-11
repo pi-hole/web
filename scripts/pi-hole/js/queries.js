@@ -242,9 +242,13 @@ $(document).ready(function() {
             if(!blocked)
             {
               if(data.length > 7)
+              {
                 $("td:eq(2)", row).html($("td:eq(2)", row).html() + "TTL " + data[7] + ")");
+              }
               else
+              {
                 $("td:eq(2)", row).html($("td:eq(2)", row).html() + ")");
+              }
             }
         },
         dom: "<'row'<'col-sm-12'f>>" +
