@@ -216,24 +216,35 @@ $(document).ready(function() {
             }
 
             // Check for existance of sixth column and display only if not Pi-holed
-            if(data.length > 5 && !blocked)
+            if(data.length > 6 && !blocked)
             {
                 if (data[6] === "1")
                 {
-                    $("td:eq(2)", row).html(data[2] + " (NODATA-" + data[1] + ")");
+                    $("td:eq(2)", row).html(data[2] + " (NODATA-" + data[1] + ", ");
                 }
                 else if (data[6] === "2")
                 {
-                    $("td:eq(2)", row).html(data[2] + " (NXDOMAIN)");
+                    $("td:eq(2)", row).html(data[2] + " (NXDOMAIN, ");
                 }
                 else if (data[6] === "3")
                 {
-                    $("td:eq(2)", row).html(data[2] + " (CNAME)");
+                    $("td:eq(2)", row).html(data[2] + " (CNAME, ");
                 }
                 else if (data[6] === "4")
                 {
-                    $("td:eq(2)", row).html(data[2] + " (IP)");
+                    $("td:eq(2)", row).html(data[2] + " (IP, ");
                 }
+                // else
+                // {
+                //   $("td:eq(2)", row).html(data[2] + " (" + data[6] + ", ");
+                // }
+            }
+            if(!blocked)
+            {
+              if(data.length > 7)
+                $("td:eq(2)", row).html($("td:eq(2)", row).html() + "TTL " + data[7] + ")");
+              else
+                $("td:eq(2)", row).html($("td:eq(2)", row).html() + ")");
             }
         },
         dom: "<'row'<'col-sm-12'f>>" +
