@@ -16,8 +16,8 @@ function reloadData(){
     {
         pre.append(data["lines"]);
 
-        if(scrolling && offset != data["offset"]) {
-            pre.scrollTop(pre[0].scrollHeight)
+        if(scrolling && offset !== data["offset"]) {
+            pre.scrollTop(pre[0].scrollHeight);
         }
 
         offset = data["offset"];
