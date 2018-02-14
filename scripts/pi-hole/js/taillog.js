@@ -14,14 +14,15 @@ function reloadData(){
     clearTimeout(timer);
     $.getJSON("scripts/pi-hole/php/tailLog.php?offset="+offset, function (data)
     {
-        offset = data["offset"];
         pre.append(data["lines"]);
+
+        if(scrolling && offset !== data["offset"]) {
+            pre.scrollTop(pre[0].scrollHeight);
+        }
+
+        offset = data["offset"];
     });
 
-    if(scrolling)
-    {
-        window.scrollTo(0,document.body.scrollHeight);
-    }
     timer = setTimeout(reloadData, interval);
 }
 
