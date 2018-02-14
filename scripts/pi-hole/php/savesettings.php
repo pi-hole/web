@@ -123,7 +123,7 @@ function isinserverlist($addr) {
 			"Norton" => ["v4_1" => "199.85.126.10", "v4_2" => "199.85.127.10"],
 			"Comodo" => ["v4_1" => "8.26.56.26", "v4_2" => "8.20.247.20"],
 			"DNS.WATCH" => ["v4_1" => "84.200.69.80", "v4_2" => "84.200.70.40", "v6_1" => "2001:1608:10:25:0:0:1c04:b12f", "v6_2" => "2001:1608:10:25:0:0:9249:d69b"],
-			"Quad9" => ["v4_1" => "9.9.9.9", "v6_1" => "2620:fe::fe"]
+			"Quad9" => ["v4_1" => "9.9.9.9", "v4_2" => "149.112.112.112", "v6_1" => "2620:fe::fe"]
 		];
 
 $adlist = [];
@@ -278,7 +278,12 @@ function readAdlists()
 				if($_POST["action"] === "Disable")
 				{
 					exec("sudo pihole -l off");
-					$success .= "Logging has been disabled";
+					$success .= "Logging has been disabled and logs have been flushed";
+				}
+				elseif($_POST["action"] === "Disable-noflush")
+				{
+					exec("sudo pihole -l off noflush");
+					$success .= "Logging has been disabled, your logs have <strong>not</strong> been flushed";
 				}
 				else
 				{
@@ -320,9 +325,9 @@ function readAdlists()
 				$first = true;
 				foreach($clients as $client)
 				{
-					if(!validDomainWildcard($client))
+					if(!validDomainWildcard($client) && !validIP($client))
 					{
-						$error .= "Top Clients entry ".htmlspecialchars($client)." is invalid (use only IP addresses)!<br>";
+						$error .= "Top Clients entry ".htmlspecialchars($client)." is invalid (use only host names and IP addresses)!<br>";
 					}
 					if(!$first)
 					{

@@ -288,6 +288,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     </div>
                                     <div class="box-footer clearfix">
                                         <button type="submit" class="btn btn-primary" name="submit" value="save" id="blockinglistsave">Save</button>
+                                        <span><strong>Important: </strong>Save and Update when you're done!</span>
                                         <button type="submit" class="btn btn-primary pull-right" name="submit" id="blockinglistsaveupdate" value="saveupdate">Save and Update</button>
                                     </div>
                                 </div>
@@ -344,7 +345,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                     if (isset($setupVars["PIHOLE_DOMAIN"])) {
                         $piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
                     } else {
-                        $piHoleDomain = "local";
+                        $piHoleDomain = "lan";
                     }
                     ?>
                     <form role="form" method="post">
@@ -785,14 +786,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="DNSrequiresFQDN" title="domain-needed"
                                                                       <?php if ($DNSrequiresFQDN){ ?>checked<?php }
-                                                                      ?>>never forward non-FQDNs</label>
+                                                                      ?>>Never forward non-FQDNs</label>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="DNSbogusPriv" title="bogus-priv"
                                                                       <?php if ($DNSbogusPriv){ ?>checked<?php }
-                                                                      ?>>never forward reverse lookups for private IP ranges</label>
+                                                                      ?>>Never forward reverse lookups for private IP ranges</label>
                                                     </div>
                                                 </div>
                                                 <p>Note that enabling these two options may increase your privacy
@@ -807,7 +808,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 </div>
                                                 <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
                                                    queries, Pi-hole requests the DNSSEC records needed to validate
-                                                   the replies. Use Google or Norton DNS servers when activating
+                                                   the replies. Use Google, Norton, DNS.WATCH or Quad9 DNS servers when activating
                                                    DNSSEC. Note that the size of your log might increase significantly
                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
                                                    <a href="http://dnssec.vs.uni-due.de/" target="_blank">here</a>.</p>
@@ -1067,7 +1068,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <td><?php echo $piHoleIPv6; ?></td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Pi-hole hostname</th>
+                                                    <th scope="row">Pi-hole hostname:</th>
                                                     <td><?php echo $hostname; ?></td>
                                                 </tr>
                                                 </tbody>
@@ -1148,7 +1149,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     <div class="row">
                                         <div class="col-md-4">
                                             <?php if ($piHoleLogging) { ?>
-                                                <button type="button" class="btn btn-warning confirm-disablelogging form-control">Disable query logging</button>
+                                                <button type="button" class="btn btn-warning confirm-disablelogging-noflush form-control">Disable query logging</button>
                                             <?php } else { ?>
                                                 <form role="form" method="post">
                                                     <input type="hidden" name="action" value="Enable">
@@ -1159,7 +1160,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             <?php } ?>
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
-                                        <div class="col-md-4 col-md-offset-4">
+                                        <div class="col-md-4">
+                                            <?php if ($piHoleLogging) { ?>
+                                                <button type="button" class="btn btn-danger confirm-disablelogging form-control">Disable query logging and flush logs</button>
+                                            <?php } ?>
+                                        </div>
+                                        <p class="hidden-md hidden-lg"></p>
+                                        <div class="col-md-4">
                                             <button type="button" class="btn btn-warning confirm-restartdns form-control">Restart dnsmasq</button>
                                         </div>
                                     </div>
@@ -1185,6 +1192,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     <form role="form" method="post" id="disablelogsform">
                                         <input type="hidden" name="field" value="Logging">
                                         <input type="hidden" name="action" value="Disable">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                    </form>
+                                    <form role="form" method="post" id="disablelogsform-noflush">
+                                        <input type="hidden" name="field" value="Logging">
+                                        <input type="hidden" name="action" value="Disable-noflush">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
                                     </form>
                                     <form role="form" method="post" id="poweroffform">

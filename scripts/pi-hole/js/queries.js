@@ -22,62 +22,76 @@ function refreshData() {
 
 function add(domain,list) {
     var token = $("#token").html();
-    var alInfo = $("#alInfo");
-    var alList = $("#alList");
-    var alDomain = $("#alDomain");
-    alDomain.html(domain);
-    var alSuccess = $("#alSuccess");
-    var alFailure = $("#alFailure");
-    var err = $("#err");
+    var alertModal = $("#alertModal");
+    var alProcessing = alertModal.find(".alProcessing");
+    var alSuccess = alertModal.find(".alSuccess");
+    var alFailure = alertModal.find(".alFailure");
+    var alNetworkErr = alertModal.find(".alFailure #alNetErr");
+    var alCustomErr = alertModal.find(".alFailure #alCustomErr");
+    var alList = "#alList";
+    var alDomain = "#alDomain";
 
-    if(list === "white")
-    {
-        alList.html("Whitelist");
-    }
-    else
-    {
-        alList.html("Blacklist");
+    // Exit the function here if the Modal is already shown (multiple running interlock)
+    if (alertModal.css("display") !== "none") {
+        return;
     }
 
-    alInfo.show();
-    alSuccess.hide();
-    alFailure.hide();
-    $.ajax({
-        url: "scripts/pi-hole/php/add.php",
-        method: "post",
-        data: {"domain":domain, "list":list, "token":token},
-        success: function(response) {
-            if (response.indexOf("not a valid argument") >= 0 || response.indexOf("is not a valid domain") >= 0)
-            {
-                alFailure.show();
-                err.html(response);
-                alFailure.delay(4000).fadeOut(2000, function() { alFailure.hide(); });
+    var listtype;
+    if (list === "white") {
+        listtype = "Whitelist";
+    } else {
+        listtype = "Blacklist";
+    }
+    alProcessing.children(alDomain).html(domain);
+    alProcessing.children(alList).html(listtype);
+    alertModal.modal("show");
+
+    // add Domain to List after Modal has faded in
+    alertModal.one("shown.bs.modal", function() {
+        $.ajax({
+            url: "scripts/pi-hole/php/add.php",
+            method: "post",
+            data: {"domain":domain, "list":list, "token":token},
+            success: function(response) {
+                alProcessing.hide();
+                if (response.indexOf("not a valid argument") >= 0 ||
+                    response.indexOf("is not a valid domain") >= 0 ||
+                    response.indexOf("Wrong token") >= 0)
+                {
+                    // Failure
+                    alNetworkErr.hide();
+                    alCustomErr.html(response.replace("[✗]", ""));
+                    alFailure.fadeIn(1000);
+                    setTimeout(function() { alertModal.modal("hide"); }, 3000);
+                }
+                else
+                {
+                    // Success
+                    alSuccess.children(alDomain).html(domain);
+                    alSuccess.children(alList).html(listtype);
+                    alSuccess.fadeIn(1000);
+                    setTimeout(function() { alertModal.modal("hide"); }, 2000);
+                }
+            },
+            error: function(jqXHR, exception) {
+                // Network Error
+                alProcessing.hide();
+                alNetworkErr.show();
+                alFailure.fadeIn(1000);
+                setTimeout(function() { alertModal.modal("hide"); }, 3000);
             }
-            else
-            {
-                alSuccess.show();
-                alSuccess.delay(1000).fadeOut(2000, function() { alSuccess.hide(); });
-            }
-            alInfo.delay(1000).fadeOut(2000, function() {
-                alInfo.hide();
-                alList.html("");
-                alDomain.html("");
-            });
-        },
-        error: function(jqXHR, exception) {
-            alFailure.show();
-            err.html("");
-            alFailure.delay(1000).fadeOut(2000, function() {
-                alFailure.hide();
-            });
-            alInfo.delay(1000).fadeOut(2000, function() {
-                alInfo.hide();
-                alList.html("");
-                alDomain.html("");
-            });
-        }
+        });
+    });
+        
+    // Reset Modal after it has faded out
+    alertModal.one("hidden.bs.modal", function() {
+        alProcessing.show();
+        alSuccess.add(alFailure).hide();
+        alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
+        alCustomErr.html("");
     });
 }
+
 function handleAjaxError( xhr, textStatus, error ) {
     if ( textStatus === "timeout" )
     {
@@ -135,54 +149,84 @@ $(document).ready(function() {
             {
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed" );
-                $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+                $("td:eq(6)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
             else if (data[4] === "2")
             {
                 $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK (forwarded)" );
-                $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(forwarded)" );
+                $("td:eq(6)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
             else if (data[4] === "3")
             {
                 $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK (cached)" );
-                $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
-
+                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(cached)" );
+                $("td:eq(6)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
             else if (data[4] === "4")
             {
                 $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed (wildcard)" );
-                $("td:eq(5)", row).html( "" );
+                $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)" );
+                $("td:eq(6)", row).html( "" );
             }
             else if (data[4] === "5")
             {
                 $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed (blacklist)" );
-                $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+                $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(blacklist)" );
+                $("td:eq(6)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
             else
             {
                 $("td:eq(4)", row).html( "Unknown" );
-                $("td:eq(5)", row).html( "" );
+                $("td:eq(6)", row).html( "" );
+            }
+            if (data[5] === "1")
+            {
+                $("td:eq(5)", row).css("color","green");
+                $("td:eq(5)", row).html( "SECURE" );
+            }
+            else if (data[5] === "2")
+            {
+                $("td:eq(5)", row).css("color","orange");
+                $("td:eq(5)", row).html( "INSECURE" );
+            }
+            else if (data[5] === "3")
+            {
+                $("td:eq(5)", row).css("color","red");
+                $("td:eq(5)", row).html( "BOGUS" );
+            }
+            else if (data[5] === "4")
+            {
+                $("td:eq(5)", row).css("color","red");
+                $("td:eq(5)", row).html( "ABANDONED" );
+            }
+            else if (data[5] === "5")
+            {
+                $("td:eq(5)", row).css("color","red");
+                $("td:eq(5)", row).html( "?" );
+            }
+            else
+            {
+                $("td:eq(5)", row).css("color","black");
+                $("td:eq(5)", row).html( "-" );
             }
         },
         dom: "<'row'<'col-sm-12'f>>" +
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
-             "<'row'<'col-sm-12'tr>>" +
+             "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         "ajax": {"url": APIstring, "error": handleAjaxError },
         "autoWidth" : false,
         "processing": true,
         "order" : [[0, "desc"]],
         "columns": [
-            { "width" : "20%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD HH:mm:ss z");}else{return data;} }},
+            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
             { "width" : "10%" },
-            { "width" : "40%", "render": $.fn.dataTable.render.text() },
-            { "width" : "10%", "render": $.fn.dataTable.render.text() },
+            { "width" : "37%", "render": $.fn.dataTable.render.text() },
+            { "width" : "8%", "render": $.fn.dataTable.render.text() },
             { "width" : "10%" },
-            { "width" : "10%" },
+            { "width" : "5%" },
+            { "width" : "10%" }
         ],
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "columnDefs": [ {

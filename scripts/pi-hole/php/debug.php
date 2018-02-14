@@ -18,10 +18,12 @@ $token = isset($_GET["token"]) ? $_GET["token"] : "";
 check_csrf($token);
 
 function echoEvent($datatext) {
+    $data = htmlspecialchars($datatext);
+
     if(!isset($_GET["IE"]))
-      echo "data: ".implode("\ndata: ", explode("\n", $datatext))."\n\n";
+      echo "data: ".implode("\ndata: ", explode("\n", $data))."\n\n";
     else
-      echo $datatext;
+      echo $data;
 }
 
 if(isset($_GET["upload"]))
