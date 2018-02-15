@@ -44,12 +44,12 @@ else
 
 	/********** Get Pi-hole FTL (not a git repository) **********/
 	$FTL_branch = $branches[2];
-	if($FTL_branch !== "master") {
+	if(substr($versions[2], 0, 4) === "vDev") {
 	    $FTL_current = "vDev";
 	    $FTL_commit = $versions[2];
 	}
 	else {
-	    $FTL_current = explode("-",$versions[2])[0];
+	    $FTL_current = $versions[2];
 	}
 
 	// Get data from GitHub

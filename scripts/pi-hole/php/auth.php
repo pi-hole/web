@@ -6,7 +6,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-require('func.php');
+require_once('func.php');
 $ERRORLOG = getenv('PHP_ERROR_LOG');
 if (empty($ERRORLOG)) {
     $ERRORLOG = '/var/log/lighttpd/error.log';
@@ -92,26 +92,6 @@ function check_csrf($token) {
         session_start();
     }
 
-    // Credit: http://php.net/manual/en/function.hash-equals.php#119576
-    if(!function_exists('hash_equals')) {
-        function hash_equals($known_string, $user_string) {
-            $ret = 0;
-
-            if (strlen($known_string) !== strlen($user_string)) {
-                $user_string = $known_string;
-                $ret = 1;
-            }
-
-            $res = $known_string ^ $user_string;
-
-            for ($i = strlen($res) - 1; $i >= 0; --$i) {
-                $ret |= ord($res[$i]);
-            }
-
-            return !$ret;
-        }
-    }
-
     if(!isset($_SESSION['token']) || empty($token) || !hash_equals($_SESSION['token'], $token)) {
         log_and_die("Wrong token");
     }
@@ -119,7 +99,7 @@ function check_csrf($token) {
 
 function check_domain() {
     if(isset($_POST['domain'])){
-        $domains = preg_split('\s+', $_POST['domain']);
+        $domains = preg_split('/\s+/', $_POST['domain']);
         foreach($domains as $domain)
         {
             $validDomain = is_valid_domain_name($domain);
@@ -146,7 +126,7 @@ function list_verify($type) {
         require("password.php");
         if($wrongpassword || !$auth)
         {
-            log_and_die("Wrong password - ".htmlspecialchars($type)."listing of ${_POST['domain']} not permitted");
+            log_and_die("Wrong password - ".htmlspecialchars($type)."listing of ".htmlspecialchars($_POST['domain'])." not permitted");
         }
     }
     else

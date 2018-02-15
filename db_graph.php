@@ -22,7 +22,6 @@ $token = $_SESSION['token'];
     <h1>Compute graphical statistics from the Pi-hole query database</h1>
 </div>
 
-
 <div class="row">
     <div class="col-md-12">
 <!-- Date Input -->
@@ -39,6 +38,11 @@ $token = $_SESSION['token'];
       </div>
     </div>
 </div>
+
+<div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden="true">
+    Depending on how large of a range you specified, the request may time out while Pi-hole tries to retrieve all the data.<br/><span id="err"></span>
+</div>
+
 <div class="row">
     <div class="col-md-12">
     <div class="box" id="queries-over-time">

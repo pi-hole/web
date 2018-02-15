@@ -39,6 +39,11 @@ $token = $_SESSION['token'];
       </div>
     </div>
 </div>
+
+<div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden="true">
+    Depending on how large of a range you specified, the request may time out while Pi-hole tries to retrieve all the data.<br/><span id="err"></span>
+</div>
+
 <!-- Small boxes (Stat box) -->
 <div class="row">
     <div class="col-lg-3 col-xs-12">
@@ -103,31 +108,29 @@ $token = $_SESSION['token'];
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <div class="table-responsive">
-                <table id="all-queries" class="display table table-striped table-bordered" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Domain</th>
-                            <th>Client</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Domain</th>
-                            <th>Client</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-       </div>
+            <table id="all-queries" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Domain</th>
+                        <th>Client</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Domain</th>
+                        <th>Client</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
         <!-- /.box-body -->
       </div>
       <!-- /.box -->
