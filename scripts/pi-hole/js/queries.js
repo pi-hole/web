@@ -211,31 +211,27 @@ $(document).ready(function() {
             }
             else
             {
-                $("td:eq(6)", row).css("color","black");
                 $("td:eq(6)", row).html( "-" );
             }
 
             // Check for existance of sixth column and display only if not Pi-holed
             if(data.length > 6 && !blocked)
             {
+                $("td:eq(5)", row).css("color","black");
                 if (data[6] === "1")
                 {
-                    $("td:eq(5)", row).css("color","black");
                     $("td:eq(5)", row).html("NODATA-" + data[1]);
                 }
                 else if (data[6] === "2")
                 {
-                    $("td:eq(5)", row).css("color","black");
                     $("td:eq(5)", row).html("NXDOMAIN");
                 }
                 else if (data[6] === "3")
                 {
-                    $("td:eq(5)", row).css("color","green");
                     $("td:eq(5)", row).html("CNAME");
                 }
                 else if (data[6] === "4")
                 {
-                    $("td:eq(5)", row).css("color","green");
                     $("td:eq(5)", row).html("IP");
                 }
                 else
@@ -245,6 +241,7 @@ $(document).ready(function() {
             }
             else
             {
+                $("td:eq(5)", row).css("color","black");
                 $("td:eq(5)", row).html("-");
             }
 
