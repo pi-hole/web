@@ -135,6 +135,7 @@ if(strlen($showing) > 0)
                         <th>Domain</th>
                         <th>Client</th>
                         <th>Status</th>
+                        <th>Reply</th>
                         <th>DNSSEC</th>
                         <th>Action</th>
                     </tr>
@@ -146,6 +147,7 @@ if(strlen($showing) > 0)
                         <th>Domain</th>
                         <th>Client</th>
                         <th>Status</th>
+                        <th>Reply</th>
                         <th>DNSSEC</th>
                         <th>Action</th>
                     </tr>
