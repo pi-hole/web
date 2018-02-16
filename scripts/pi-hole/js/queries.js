@@ -220,35 +220,24 @@ $(document).ready(function() {
             {
                 if (data[6] === "1")
                 {
-                    $("td:eq(2)", row).html(data[2] + " (NODATA-" + data[1] + ", ");
+                    $("td:eq(2)", row).html(data[2] + " <span style=\"color:orange;\">(NODATA-" + data[1] + ")</span>");
                 }
                 else if (data[6] === "2")
                 {
-                    $("td:eq(2)", row).html(data[2] + " (NXDOMAIN, ");
+                    $("td:eq(2)", row).html(data[2] + " <span style=\"color:red;\">(NXDOMAIN)</span>");
                 }
                 else if (data[6] === "3")
                 {
-                    $("td:eq(2)", row).html(data[2] + " (CNAME, ");
+                    $("td:eq(2)", row).html(data[2] + " (CNAME)");
                 }
                 else if (data[6] === "4")
                 {
-                    $("td:eq(2)", row).html(data[2] + " (IP, ");
+                    $("td:eq(2)", row).html(data[2] + " (IP)");
                 }
                 // else
                 // {
                 //   $("td:eq(2)", row).html(data[2] + " (" + data[6] + ", ");
                 // }
-            }
-            if(!blocked)
-            {
-              if(data.length > 7)
-              {
-                $("td:eq(2)", row).html($("td:eq(2)", row).html() + "TTL " + data[7] + ")");
-              }
-              else
-              {
-                $("td:eq(2)", row).html($("td:eq(2)", row).html() + ")");
-              }
             }
         },
         dom: "<'row'<'col-sm-12'f>>" +
