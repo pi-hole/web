@@ -234,6 +234,28 @@ function readAdlists()
 					$extra .= "no-dnssec";
 				}
 
+				// Check if Conditional Forwarding is requested
+				if(isset($_POST["conditionalForwarding"]))
+				{
+					// Validate conditional forwarding IP
+					if (!validIP($_POST["conditionalForwardingIP"]))
+					{
+						$error .= "Conditional forwarding IP (".htmlspecialchars($_POST["conditionalForwardingIP"]).") is invalid!<br>";
+					}
+
+					// Validate conditional forwarding domain name
+					if(!validDomain($_POST["conditionalForwardingDomain"]))
+					{
+						$error .= "Conditional forwarding domain name (".htmlspecialchars($_POST["conditionalForwardingDomain"]).") is invalid!<br>";
+					}
+					if(!$error)
+					{
+						$addressArray = explode(".", $_POST["conditionalForwardingIP"]);
+						$reverseAddress = $addressArray[2].".".$addressArray[1].".".$addressArray[0].".in-addr.arpa";
+						$extra .= " conditional_forwarding ".$_POST["conditionalForwardingIP"]." ".$_POST["conditionalForwardingDomain"]." $reverseAddress";
+					}
+				}
+				
 				// Check if DNSinterface is set
 				if(isset($_POST["DNSinterface"]))
 				{
