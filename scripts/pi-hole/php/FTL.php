@@ -138,4 +138,30 @@ function disconnectFTL($quiet=true)
 		echo "OK.\n\n";
 	}
 }
+
+$clients = [];
+function resolveHostname($c)
+{
+	if(array_key_exists($c, $clients))
+	{
+		// Entry already exists
+		$c = $clients[$c];
+	}
+	else
+	{
+		if(filter_var($c, FILTER_VALIDATE_IP))
+		{
+			// Get host name of client and convert to lower case
+			$c = strtolower(gethostbyaddr($c));
+		}
+		else
+		{
+			// This is already a host name
+			$c = strtolower($c);
+		}
+		// Buffer result
+		$clients[$c] = $c;
+	}
+	return $c;
+}
 ?>
