@@ -30,7 +30,6 @@ function getFullName() {
 <div class="page-header">
     <h1><?php getFullName(); ?></h1>
 </div>
-<?php if($list == "white"){ ?><p>Note that the ad list domains are automatically added to the whitelist so that a list can never get blocked by another list.</p><?php } ?>
 
 <!-- Domain Input -->
 <div class="form-group input-group">
@@ -46,8 +45,7 @@ function getFullName() {
     </span>
 </div>
 <?php if($list === "white") { ?>
-    <p>Note: Whitelisting a subdomain of a wildcard blocked domain is not possible.</p>
-    <p>Some of the domains shown below are domains of the adlists sources, which are automatically added in order to prevent adlists being able to blacklist each other. See <a href="https://github.com/pi-hole/pi-hole/blob/master/adlists.default" target="_blank">here</a> for the default set of adlists.</p>
+    <p>Note: Whitelisting a subdomain of a wildcard blocked domain is not possible.</p>    
 <?php } ?>
 
 <!-- Alerts -->
