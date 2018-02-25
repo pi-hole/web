@@ -82,7 +82,7 @@ function add(domain,list) {
             }
         });
     });
-        
+
     // Reset Modal after it has faded out
     alertModal.one("hidden.bs.modal", function() {
         alProcessing.show();
@@ -145,71 +145,106 @@ $(document).ready(function() {
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
+            var blocked = false;
             if (data[4] === "1")
             {
+                blocked = true;
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed" );
-                $("td:eq(6)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+                $("td:eq(7)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
             else if (data[4] === "2")
             {
                 $(row).css("color","green");
                 $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(forwarded)" );
-                $("td:eq(6)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+                $("td:eq(7)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
             else if (data[4] === "3")
             {
                 $(row).css("color","green");
                 $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(cached)" );
-                $("td:eq(6)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+                $("td:eq(7)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
             else if (data[4] === "4")
             {
+                blocked = true;
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)" );
-                $("td:eq(6)", row).html( "" );
+                $("td:eq(7)", row).html( "" );
             }
             else if (data[4] === "5")
             {
+                blocked = true;
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(blacklist)" );
-                $("td:eq(6)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+                $("td:eq(7)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
             else
             {
                 $("td:eq(4)", row).html( "Unknown" );
-                $("td:eq(6)", row).html( "" );
+                $("td:eq(7)", row).html( "" );
             }
             if (data[5] === "1")
             {
-                $("td:eq(5)", row).css("color","green");
-                $("td:eq(5)", row).html( "SECURE" );
+                $("td:eq(6)", row).css("color","green");
+                $("td:eq(6)", row).html( "SECURE" );
             }
             else if (data[5] === "2")
             {
-                $("td:eq(5)", row).css("color","orange");
-                $("td:eq(5)", row).html( "INSECURE" );
+                $("td:eq(6)", row).css("color","orange");
+                $("td:eq(6)", row).html( "INSECURE" );
             }
             else if (data[5] === "3")
             {
-                $("td:eq(5)", row).css("color","red");
-                $("td:eq(5)", row).html( "BOGUS" );
+                $("td:eq(6)", row).css("color","red");
+                $("td:eq(6)", row).html( "BOGUS" );
             }
             else if (data[5] === "4")
             {
-                $("td:eq(5)", row).css("color","red");
-                $("td:eq(5)", row).html( "ABANDONED" );
+                $("td:eq(6)", row).css("color","red");
+                $("td:eq(6)", row).html( "ABANDONED" );
             }
             else if (data[5] === "5")
             {
-                $("td:eq(5)", row).css("color","red");
-                $("td:eq(5)", row).html( "?" );
+                $("td:eq(6)", row).css("color","red");
+                $("td:eq(6)", row).html( "?" );
+            }
+            else
+            {
+                $("td:eq(6)", row).html( "-" );
+            }
+
+            // Check for existance of sixth column and display only if not Pi-holed
+            if(data.length > 6 && !blocked)
+            {
+                $("td:eq(5)", row).css("color","black");
+                if (data[6] === "1")
+                {
+                    $("td:eq(5)", row).html("NODATA-" + data[1]);
+                }
+                else if (data[6] === "2")
+                {
+                    $("td:eq(5)", row).html("NXDOMAIN");
+                }
+                else if (data[6] === "3")
+                {
+                    $("td:eq(5)", row).html("CNAME");
+                }
+                else if (data[6] === "4")
+                {
+                    $("td:eq(5)", row).html("IP");
+                }
+                else
+                {
+                    $("td:eq(5)", row).html("? ("+data[6]+")");
+                }
             }
             else
             {
                 $("td:eq(5)", row).css("color","black");
-                $("td:eq(5)", row).html( "-" );
+                $("td:eq(5)", row).html("-");
             }
+
         },
         dom: "<'row'<'col-sm-12'f>>" +
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
@@ -221,11 +256,12 @@ $(document).ready(function() {
         "order" : [[0, "desc"]],
         "columns": [
             { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
-            { "width" : "10%" },
-            { "width" : "37%", "render": $.fn.dataTable.render.text() },
+            { "width" : "4%" },
+            { "width" : "36%", "render": $.fn.dataTable.render.text() },
             { "width" : "8%", "render": $.fn.dataTable.render.text() },
             { "width" : "10%" },
-            { "width" : "5%" },
+            { "width" : "8%" },
+            { "width" : "4%" },
             { "width" : "10%" }
         ],
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
