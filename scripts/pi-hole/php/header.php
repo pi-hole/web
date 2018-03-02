@@ -445,7 +445,7 @@ if($auth) {
                 <!-- Whitelist -->
                 <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
                     <a href="list.php?l=white">
-                        <i class="fa fa-pencil-square-o"></i> <span>Whitelist</span>
+                        <i class="fa fa-check-circle-o "></i> <span>Whitelist</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
