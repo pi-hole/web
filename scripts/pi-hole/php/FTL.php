@@ -146,7 +146,7 @@ function resolveHostname($clientip)
 	{
 		// Entry already exists
 		$clientname = $clients[$clientip];
-		return $clientname;
+		return $clientname."|".$clientip;
 	}
 
 	if(filter_var($clientip, FILTER_VALIDATE_IP))
@@ -161,6 +161,6 @@ function resolveHostname($clientip)
 	}
 	// Buffer result
 	$clients[$clientname] = $clientip;
-	return $clientname;
+	return $clientname."|".$clientip;
 }
 ?>
