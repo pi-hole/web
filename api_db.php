@@ -16,6 +16,30 @@ check_cors();
 ini_set("max_execution_time","600");
 
 $data = array();
+$clients = [];
+function resolveOnlyHostname($clientip)
+{
+	if(array_key_exists($clientip, $clients))
+	{
+		// Entry already exists
+		$clientname = $clients[$clientip];
+		return $clientname;
+	}
+
+	if(filter_var($clientip, FILTER_VALIDATE_IP))
+	{
+		// Get host name of client and convert to lower case
+		$clientname = strtolower(gethostbyaddr($clientip));
+	}
+	else
+	{
+		// This is already a host name
+		$clientname = strtolower($clientip);
+	}
+	// Buffer result
+	$clients[$clientname] = $clientip;
+	return $clientname;
+}
 
 // Get posible non-standard location of FTL's database
 $FTLsettings = parse_ini_file("/etc/pihole/pihole-FTL.conf");
@@ -78,27 +102,7 @@ if (isset($_GET['getAllQueries']) && $auth)
 		if(!is_bool($results))
 			while ($row = $results->fetchArray())
 			{
-				$c = $row[3];
-				if(array_key_exists($row[3], $clients))
-				{
-					// Entry already exists
-					$c = $clients[$row[3]];
-				}
-				else
-				{
-					if(filter_var($row[3], FILTER_VALIDATE_IP))
-					{
-						// Get host name of client and convert to lower case
-						$c = strtolower(gethostbyaddr($row[3]));
-					}
-					else
-					{
-						// This is already a host name
-						$c = strtolower($row[3]);
-					}
-					// Buffer result
-					$clients[$row[3]] = $c;
-				}
+				$c = resolveOnlyHostname($row[3]);
 				$allQueries[] = [$row[0],$row[1] == 1 ? "IPv4" : "IPv6",$row[2],$c,$row[4]];
 			}
 	}
@@ -132,16 +136,9 @@ if (isset($_GET['topClients']) && $auth)
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
 		{
-			if(filter_var($row[0], FILTER_VALIDATE_IP))
-			{
-				// Get host name of client and convert to lower case
-				$c = strtolower(gethostbyaddr($row[0]));
-			}
-			else
-			{
-				// This is already a host name
-				$c = strtolower($row[0]);
-			}
+
+			$c = resolveOnlyHostname($row[0]);
+
 			if(array_key_exists($c, $clients))
 			{
 				// Entry already exists, add to it (might appear multiple times due to mixed capitalization in the database)
