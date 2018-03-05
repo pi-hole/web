@@ -98,7 +98,6 @@ if (isset($_GET['getAllQueries']) && $auth)
 		$stmt->bindValue(":from", intval($from), SQLITE3_INTEGER);
 		$stmt->bindValue(":until", intval($until), SQLITE3_INTEGER);
 		$results = $stmt->execute();
-		$clients = array();
 		if(!is_bool($results))
 			while ($row = $results->fetchArray())
 			{
