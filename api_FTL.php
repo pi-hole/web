@@ -155,7 +155,7 @@ if ((isset($_GET['topClients']) || isset($_GET['getQuerySources'])) && $auth)
 	foreach($return as $line)
 	{
 		$tmp = explode(" ",$line);
-		$top_clients[resolveHostname($tmp[2])] = intval($tmp[1]);
+		$top_clients[resolveHostname($tmp[2],true)] = intval($tmp[1]);
 	}
 
 	$result = array('top_sources' => $top_clients);
@@ -177,7 +177,7 @@ if (isset($_GET['getForwardDestinations']) && $auth)
 	foreach($return as $line)
 	{
 		$tmp = explode(" ",$line);
-		$forward_dest[resolveHostname($tmp[2])] = floatval($tmp[1]);
+		$forward_dest[resolveHostname($tmp[2],true)] = floatval($tmp[1]);
 	}
 
 	$result = array('forward_destinations' => $forward_dest);
@@ -226,7 +226,7 @@ if (isset($_GET['getAllQueries']) && $auth)
 	foreach($return as $line)
 	{
 		$tmp = explode(" ",$line);
-		$tmp[3] = resolveHostname($tmp[3]);
+		$tmp[3] = resolveHostname($tmp[3],false);
 		array_push($allQueries,$tmp);
 	}
 

@@ -139,17 +139,19 @@ function disconnectFTL($quiet=true)
 	}
 }
 
-$clients = [];
-function resolveHostname($clientip)
+$clients = array();
+function resolveHostname($clientip, $printIP)
 {
 	if(array_key_exists($clientip, $clients))
 	{
 		// Entry already exists
 		$clientname = $clients[$clientip];
-		return $clientname."|".$clientip;
+		if($printIP)
+			return $clientname."|".$clientip;
+		return $clientname;
 	}
 
-	if(filter_var($clientip, FILTER_VALIDATE_IP))
+	else if(filter_var($clientip, FILTER_VALIDATE_IP))
 	{
 		// Get host name of client and convert to lower case
 		$clientname = strtolower(gethostbyaddr($clientip));
@@ -161,6 +163,9 @@ function resolveHostname($clientip)
 	}
 	// Buffer result
 	$clients[$clientname] = $clientip;
-	return $clientname."|".$clientip;
+
+	if($printIP)
+		return $clientname."|".$clientip;
+	return $clientname;
 }
 ?>
