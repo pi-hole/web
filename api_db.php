@@ -131,7 +131,7 @@ if (isset($_GET['topClients']) && $auth)
 	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
 
-	$clients = array();
+	$clientnums = array();
 
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
@@ -139,25 +139,25 @@ if (isset($_GET['topClients']) && $auth)
 
 			$c = resolveOnlyHostname($row[0]);
 
-			if(array_key_exists($c, $clients))
+			if(array_key_exists($c, $clientnums))
 			{
 				// Entry already exists, add to it (might appear multiple times due to mixed capitalization in the database)
-				$clients[$c] += intval($row[1]);
+				$clientnums[$c] += intval($row[1]);
 			}
 			else
 			{
 				// Entry does not yet exist
-				$clients[$c] = intval($row[1]);
+				$clientnums[$c] = intval($row[1]);
 			}
 		}
 
 	// Sort by number of hits
-	arsort($clients);
+	arsort($clientnums);
 
 	// Extract only the first ten entries
-	$clients = array_slice($clients, 0, 10);
+	$clientnums = array_slice($clientnums, 0, 10);
 
-	$result = array('top_sources' => $clients);
+	$result = array('top_sources' => $clientnums);
 	$data = array_merge($data, $result);
 }
 
