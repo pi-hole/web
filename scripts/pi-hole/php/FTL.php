@@ -142,10 +142,12 @@ function disconnectFTL($quiet=true)
 $clients = array();
 function resolveHostname($clientip, $printIP)
 {
+	global $clients;
+	$ipaddr = strtolower($clientip);
 	if(array_key_exists($clientip, $clients))
 	{
 		// Entry already exists
-		$clientname = $clients[$clientip];
+		$clientname = $clients[$ipaddr];
 		if($printIP)
 			return $clientname."|".$clientip;
 		return $clientname;
@@ -154,15 +156,15 @@ function resolveHostname($clientip, $printIP)
 	else if(filter_var($clientip, FILTER_VALIDATE_IP))
 	{
 		// Get host name of client and convert to lower case
-		$clientname = strtolower(gethostbyaddr($clientip));
+		$clientname = strtolower(gethostbyaddr($ipaddr));
 	}
 	else
 	{
 		// This is already a host name
-		$clientname = strtolower($clientip);
+		$clientname = $ipaddr;
 	}
 	// Buffer result
-	$clients[$clientname] = $clientip;
+	$clients[$ipaddr] = $clientname;
 
 	if($printIP)
 		return $clientname."|".$clientip;
