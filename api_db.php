@@ -16,28 +16,35 @@ check_cors();
 ini_set("max_execution_time","600");
 
 $data = array();
-$clients = [];
-function resolveOnlyHostname($clientip)
+$clients = array();
+function resolveHostname($clientip, $printIP)
 {
+	global $clients;
+	$ipaddr = strtolower($clientip);
 	if(array_key_exists($clientip, $clients))
 	{
 		// Entry already exists
-		$clientname = $clients[$clientip];
+		$clientname = $clients[$ipaddr];
+		if($printIP)
+			return $clientname."|".$clientip;
 		return $clientname;
 	}
 
-	if(filter_var($clientip, FILTER_VALIDATE_IP))
+	else if(filter_var($clientip, FILTER_VALIDATE_IP))
 	{
 		// Get host name of client and convert to lower case
-		$clientname = strtolower(gethostbyaddr($clientip));
+		$clientname = strtolower(gethostbyaddr($ipaddr));
 	}
 	else
 	{
 		// This is already a host name
-		$clientname = strtolower($clientip);
+		$clientname = $ipaddr;
 	}
 	// Buffer result
-	$clients[$clientname] = $clientip;
+	$clients[$ipaddr] = $clientname;
+
+	if($printIP)
+		return $clientname."|".$clientip;
 	return $clientname;
 }
 
@@ -101,7 +108,7 @@ if (isset($_GET['getAllQueries']) && $auth)
 		if(!is_bool($results))
 			while ($row = $results->fetchArray())
 			{
-				$c = resolveOnlyHostname($row[3]);
+				$c = resolveHostname($row[3],false);
 				$allQueries[] = [$row[0],$row[1] == 1 ? "IPv4" : "IPv6",$row[2],$c,$row[4]];
 			}
 	}
@@ -136,7 +143,7 @@ if (isset($_GET['topClients']) && $auth)
 		while ($row = $results->fetchArray())
 		{
 
-			$c = resolveOnlyHostname($row[0]);
+			$c = resolveHostname($row[0],false);
 
 			if(array_key_exists($c, $clientnums))
 			{
