@@ -115,6 +115,31 @@ else
         <div class="box-body">
           <div class="chart">
             <canvas id="clientsChart" width="800" height="140"></canvas>
+		<style>
+                canvas{
+                        -moz-user-select: none;
+                        -webkit-user-select: none;
+                        -ms-user-select: none;
+                }
+                #chartjs-tooltip {
+                        opacity: 1;
+                        position: absolute;
+                        background: rgba(0, 0, 0, .7);
+                        color: white;
+                        border-radius: 3px;
+                        -webkit-transition: all .1s ease;
+                        transition: all .1s ease;
+                        pointer-events: none;
+                        -webkit-transform: translate(-50%, 0);
+                        transform: translate(-50%, 0);
+                }
+                .chartjs-tooltip-key {
+                        display: inline-block;
+                        width: 20px;
+                        height: 10px;
+                        margin-right: 10px;
+                }
+        </style>
           </div>
         </div>
         <div class="overlay">
