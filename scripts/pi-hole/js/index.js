@@ -1088,12 +1088,17 @@ var customTooltips = function(tooltip) {
 
         // Display, position, and set styles for font
         var position = this._chart.canvas.getBoundingClientRect();
+        var width = tooltip.caretX;
+        // Prevent compression of the tooltip at the right edge of the screen
+        if($(document).width() - tooltip.caretX < 400)
+        {
+        	width = $(document).width()-400;
+        }
         tooltipEl.style.opacity = 1;
-        tooltipEl.style.left = position.left + tooltip.caretX + "px";
+        tooltipEl.style.left = position.left + width + "px";
         tooltipEl.style.top = position.top + tooltip.caretY + 'px';
         tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
         tooltipEl.style.fontSize = tooltip.bodyFontSize + 'px';
         tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
         tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
-
 };
