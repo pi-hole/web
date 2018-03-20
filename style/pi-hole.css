@@ -116,7 +116,7 @@ a.lookatme {
     animation: fa-spin 1s infinite linear;
 }
 
-canvas{
+.extratooltipcanvas{
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;

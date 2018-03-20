@@ -114,7 +114,7 @@ else
         </div>
         <div class="box-body">
           <div class="chart">
-            <canvas id="clientsChart" width="800" height="140"></canvas>
+            <canvas id="clientsChart" width="800" height="140" class="extratooltipcanvas"></canvas>
           </div>
         </div>
         <div class="overlay">
