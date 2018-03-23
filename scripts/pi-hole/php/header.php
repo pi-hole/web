@@ -374,7 +374,7 @@ if($auth) {
                         }
                         if($memory_usage > 0.0)
                         {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</a>";
+                            echo "\"></i> Memory Usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</a>";
                         }
                         else
                         {
@@ -422,7 +422,7 @@ if($auth) {
                     <span class="pull-right-container">
                       <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
                     </span>
-                    <i class="fa fa-clock-o"></i> <span>Long term data</span>
+                    <i class="fa fa-clock-o"></i> <span>Long Term Data</span>
                   </a>
                   <ul class="treeview-menu">
                     <li<?php if($scriptname === "db_graph.php"){ ?> class="active"<?php } ?>>
@@ -471,22 +471,22 @@ if($auth) {
                     </li>
                     <li>
                         <a href="#" id="pihole-disable-10s">
-                            <i class="fa fa-clock-o"></i> <span>For 10 seconds</span>
+                            <i class="fa fa-clock-o"></i> <span>10 Seconds</span>
                         </a>
                     </li>
                     <li>
                         <a href="#" id="pihole-disable-30s">
-                            <i class="fa fa-clock-o"></i> <span>For 30 seconds</span>
+                            <i class="fa fa-clock-o"></i> <span>30 Seconds</span>
                         </a>
                     </li>
                     <li>
                         <a href="#" id="pihole-disable-5m">
-                            <i class="fa fa-clock-o"></i> <span>For 5 minutes</span>
+                            <i class="fa fa-clock-o"></i> <span>5 Minutes</span>
                         </a>
                     </li>
                     <li>
                       <a href="#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal">
-                            <i class="fa fa-clock-o"></i> <span>Custom time</span>
+                            <i class="fa fa-clock-o"></i> <span>Custom Time</span>
                       </a>
                     </li>
                   </ul>
@@ -513,13 +513,13 @@ if($auth) {
                     <!-- Query adlists -->
                     <li<?php if($scriptname === "queryads.php"){ ?> class="active"<?php } ?>>
                         <a href="queryads.php">
-                            <i class="fa fa-search"></i> <span>Query adlists</span>
+                            <i class="fa fa-search"></i> <span>Query Ad Lists</span>
                         </a>
                     </li>
                     <!-- Audit log -->
                     <li<?php if($scriptname === "auditlog.php"){ ?> class="active"<?php } ?>>
                         <a href="auditlog.php">
-                            <i class="fa fa-balance-scale"></i> <span>Audit log</span>
+                            <i class="fa fa-balance-scale"></i> <span>Audit Log</span>
                         </a>
                     </li>
                     <!-- Tail pihole.log -->
