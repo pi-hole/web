@@ -244,7 +244,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                 <li<?php if($tab === "blocklists"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#blocklists">Block Lists</a></li>
                 <li<?php if($tab === "dns"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#dns">DNS</a></li>
                 <li<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
-                <li<?php if($tab === "api"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#api">API / Web interface</a></li>
+                <li<?php if($tab === "api"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#api">API / Web UI</a></li>
                 <li<?php if($tab === "teleporter"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#teleporter">Teleporter</a></li>
             </ul>
             <div class="tab-content">
@@ -255,7 +255,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             <div class="col-md-12">
                                 <div class="box">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Lists used to generate Pi-hole's Gravity</h3>
+                                        <h3 class="box-title">Lists Used to Generate Pi-hole's Gravity</h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="table-responsive">
@@ -370,11 +370,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="active" id="DHCPchk"
                                                                       <?php if ($DHCP){ ?>checked<?php }
-                                                                      ?>>DHCP server enabled</label>
+                                                                      ?>><strong>DHCP server enabled</strong></label>
                                                     </div>
                                                 </div>
                                                 <p id="dhcpnotice" <?php if (!$DHCP){ ?>hidden<?php }
-                                                                   ?>>Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
+                                                                   ?>>Make sure your router's DHCP server is disabled when using Pi-hole's DHCP server!</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -406,7 +406,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label>Router (gateway) IP address</label>
+                                                <label>Router (Gateway) IP address</label>
                                                 <div class="form-group">
                                                     <div class="input-group">
                                                         <div class="input-group-addon">Router</div>
@@ -425,12 +425,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             <div class="col-md-6">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Advanced DHCP settings</h3>
+                                        <h3 class="box-title">Advanced DHCP Settings</h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label>Pi-hole domain name</label>
+                                                <label>Pi-hole local domain name</label>
                                                 <div class="form-group">
                                                     <div class="input-group">
                                                         <div class="input-group-addon">Domain</div>
@@ -464,7 +464,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <label><input type="checkbox" name="useIPv6" class="DHCPgroup"
                                                                       <?php if ($DHCPIPv6){ ?>checked<?php };
                                                                             if (!$DHCP){ ?> disabled<?php }
-                                                                      ?>>Enable IPv6 support (SLAAC + RA)</label>
+                                                                      ?>><strong>Enable IPv6 support (SLAAC + RA)</strong></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -743,7 +743,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             <div class="col-lg-6">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
-                                        <h1 class="box-title">Interface listening behavior</h1>
+                                        <h1 class="box-title">Interface Listening Behavior</h1>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
@@ -753,7 +753,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <label><input type="radio" name="DNSinterface" value="local"
                                                                       <?php if ($DNSinterface == "local"){ ?>checked<?php } ?>>
                                                                <strong>Listen on all interfaces</strong>
-                                                               <br>Allows only queries from devices that are at most one hop away (local devices)</label>
+                                                               <br>Allows only queries from devices that are at most one hop away (local devices).</label>
                                                     </div>
                                                     <div class="radio">
                                                         <label><input type="radio" name="DNSinterface" value="single"
@@ -793,24 +793,24 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="DNSrequiresFQDN" title="domain-needed"
                                                                       <?php if ($DNSrequiresFQDN){ ?>checked<?php }
-                                                                      ?>>Never forward non-FQDNs</label>
+                                                                      ?>><strong>Never forward non-FQDNs</strong></label>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="DNSbogusPriv" title="bogus-priv"
                                                                       <?php if ($DNSbogusPriv){ ?>checked<?php }
-                                                                      ?>>Never forward reverse lookups for private IP ranges</label>
+                                                                      ?>><strong>Never forward reverse lookups for private IP ranges</strong></label>
                                                     </div>
                                                 </div>
                                                 <p>Note that enabling these two options may increase your privacy
                                                    slightly, but may also prevent you from being able to access
-                                                   local hostnames if the Pi-hole is not used as DHCP server</p>
+                                                   local hostnames if the Pi-hole is not used as DHCP server.</p>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="DNSSEC"
                                                                       <?php if ($DNSSEC){ ?>checked<?php }
-                                                                      ?>>Use DNSSEC</label>
+                                                                      ?>><strong>Use DNSSEC</strong></label>
                                                     </div>
                                                 </div>
                                                 <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
@@ -882,13 +882,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             <form role="form" method="post">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">API settings</h3>
+                                        <h3 class="box-title">API Settings</h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <h4>Top Lists</h4>
-                                                <p>Exclude the following domains from being shown in</p>
+                                                <p>Exclude the following domains from being shown in statistics.</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -913,7 +913,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <h4>Privacy settings (Statistics / Query Log)</h4>
+                                                <h4>Privacy Settings (Statistics / Query Log)</h4>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -922,7 +922,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="querylog-permitted"
                                                                       <?php if ($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php }
-                                                                      ?>>Show permitted domain entries</label>
+                                                                      ?>><strong>Show permitted domain entries</strong></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -931,7 +931,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="querylog-blocked"
                                                                       <?php if ($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php }
-                                                                      ?>>Show blocked domain entries</label>
+                                                                      ?>><strong>Show blocked domain entries</strong></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -943,7 +943,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="privacyMode"
                                                                       <?php if ($privacyMode){ ?>checked<?php }
-                                                                      ?>>Don't show origin of DNS requests in query log</label>
+                                                                      ?>><strong>Don't show origin of DNS requests in query log</strong></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -962,35 +962,35 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             <form role="form" method="post">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Web interface settings</h3>
+                                        <h3 class="box-title">Web UI Settings</h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h4>Interface appearance</h4>
+                                                <h4>Interface Appearance</h4>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="boxedlayout" value="yes"
                                                                       <?php if ($boxedlayout){ ?>checked<?php }
-                                                                      ?>>Use boxed layout (helpful when working on large screens)</label>
+                                                                      ?>><strong>Use boxed layout (helpful when working on large screens)</strong></label>
                                                     </div>
                                                 </div>
-                                                <h4>CPU Temperature Unit</h4>
+                                                <h4>CPU Temperature Display Units</h4>
                                                 <div class="form-group">
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="tempunit" value="F"
+                                                                      <?php if ($temperatureunit === "F"){ ?>checked<?php }
+                                                                      ?>><strong>Fahrenheit</strong></label>
+                                                    </div>
                                                     <div class="radio">
                                                         <label><input type="radio" name="tempunit" value="C"
                                                                       <?php if ($temperatureunit === "C"){ ?>checked<?php }
-                                                                      ?>>Celsius</label>
+                                                                      ?>><strong>Celsius</strong></label>
                                                     </div>
                                                     <div class="radio">
                                                         <label><input type="radio" name="tempunit" value="K"
                                                                       <?php if ($temperatureunit === "K"){ ?>checked<?php }
-                                                                      ?>>Kelvin</label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="tempunit" value="F"
-                                                                      <?php if ($temperatureunit === "F"){ ?>checked<?php }
-                                                                      ?>>Fahrenheit</label>
+                                                                      ?>><strong>Kelvin</strong></label>
                                                     </div>
                                                 </div>
                                                 <input type="hidden" name="field" value="webUI">
@@ -1022,8 +1022,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <p>Export your Pi-hole lists as downloadable archive</p>
-                                                <button type="submit" class="btn btn-default">Export</button>
+                                                <p>Export your Pi-hole lists, dnsmasq settings, and DHCP reservations to a backup archive.</p>
+                                                <button type="submit" class="btn btn-default">Download</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1037,32 +1037,32 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-lg-6 col-md-12">
-                                                <label>Import ...</label>
+                                                <p>Import the following lists:</p>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="whitelist" value="true"
-                                                                      checked>
-                                                            Whitelist</label>
+                                                                      checked><strong>
+                                                            Whitelist</strong></label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="blacklist" value="true"
-                                                                      checked>
-                                                            Blacklist (exact)</label>
+                                                                      checked><strong>
+                                                            Blacklist (exact)</strong></label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="wildlist" value="true"
-                                                                      checked>
-                                                            Blacklist (wildcard)</label>
+                                                                      checked><strong>
+                                                            Blacklist (wildcard)</strong></label>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6 col-md-12">
                                                 <div class="form-group">
-                                                    <label for="zip_file">File input</label>
-                                                    <input type="file" name="zip_file" id="zip_file">
-                                                    <p class="help-block">Upload only Pi-hole backup files.</p>
+                                                    <p for="zip_file">Backup archive to upload:</p>
+                                                    <strong><input type="file" name="zip_file" id="zip_file"></strong>
+                                                    <p class="help-block">Upload only Pi-hole backup archives.</p>
                                                     <button type="submit" class="btn btn-default" name="action"
-                                                            value="in">Import
+                                                            value="in">Upload
                                                     </button>
                                                 </div>
                                             </div>
@@ -1186,7 +1186,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                         <div class="col-md-12">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Danger Zone!</h3><br/>
+                                    <h3 class="box-title">Danger Zone - Use with Caution!</h3><br/>
                                 </div>
                                 <div class="box-body">
                                     <div class="row">
