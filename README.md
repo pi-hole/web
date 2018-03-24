@@ -139,7 +139,7 @@ While we are primarily reachable on our <a href="https://discourse.pi-hole.net/"
 
 ## The ability to easily manage and configure Pi-hole features
 <p align="center">
-<img src="https://pi-hole.github.io/graphics/Screenshots/dashboard-pihole-repo.png" alt="Settings"></a>
+<img src="https://pi-hole.github.io/graphics/Screenshots/dashboard-settings.gif" alt="Settings"></a>
 </p>
 
 ## ... and all the main features of the Command Line Interface!
