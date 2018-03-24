@@ -591,7 +591,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <?php foreach ($dhcp_static_leases as $lease) { ?>
                                                         <tr>
                                                             <td><?php echo $lease["hwaddr"]; ?></td>
-                                                            <td><?php echo $lease["IP"]; ?></td>
+                                                            <td data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
                                                             <td><?php echo $lease["host"]; ?></td>
                                                             <td><?php if (strlen($lease["hwaddr"]) > 0) { ?>
                                                                 <button class="btn btn-danger btn-xs" type="submit" name="removestatic"
