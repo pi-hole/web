@@ -176,6 +176,13 @@ if (isset($setupVars["DNSMASQ_LISTENING"])) {
 } else {
     $DNSinterface = "single";
 }
+if (isset($setupVars["CONDITIONAL_FORWARDING"]) && ($setupVars["CONDITIONAL_FORWARDING"] == 1)) {
+    $conditionalForwarding = true;
+    $conditionalForwardingDomain = $setupVars["CONDITIONAL_FORWARDING_DOMAIN"];
+    $conditionalForwardingIP = $setupVars["CONDITIONAL_FORWARDING_IP"];
+} else {
+    $conditionalForwarding = false;
+}
 ?>
 
 <?php
@@ -555,7 +562,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <tr data-placement="auto" data-container="body" data-toggle="tooltip"
                                                             title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>">
                                                             <td id="MAC"><?php echo $lease["hwaddr"]; ?></td>
-                                                            <td id="IP"><?php echo $lease["IP"]; ?></td>
+                                                            <td id="IP" data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
                                                             <td id="HOST"><?php echo $lease["host"]; ?></td>
                                                             <td>
                                                                 <button class="btn btn-warning btn-xs" type="button" id="button" data-static="alert">
@@ -812,6 +819,42 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                    DNSSEC. Note that the size of your log might increase significantly
                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
                                                    <a href="http://dnssec.vs.uni-due.de/" target="_blank">here</a>.</p>
+                                                <label>Conditional Forwarding</label>
+                                                <p>If not configured as your DHCP server, Pi-hole won't able to
+                                                   determine the names of devices on your local network.  As a
+                                                   result, tables such as Top Clients will only show IP addresses.</p>
+                                                <p>One solution for this is to configure Pi-hole to forward these
+	                                                 requests to your home router, but only for devices on your
+	                                                 home network.  To configure this we will need to know the IP
+	                                                 address of your router and the name of your local network.</p>
+                                                <p>Note: The local domain name must match the domain name specified
+	                                                 in your router, likely found within the DHCP settings.</p>
+                                                <div class="form-group">
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="conditionalForwarding" value="conditionalForwarding"
+                                                        <?php if(isset($conditionalForwarding) && ($conditionalForwarding == true)){ ?>checked<?php }
+                                                        ?>>Use Conditional Forwarding</label>
+                                                    </div>
+                                                    <div class="input-group">
+                                                      <table class="table table-bordered">
+                                                        <tr>
+                                                          <th>IP of your router</th>
+                                                          <th>Local domain name</th>
+                                                        </tr>
+                                                        <tr>
+                                                          <div class="input-group">
+                                                            <td>
+                                                              <input type="text" name="conditionalForwardingIP" class="form-control" data-inputmask="'alias': 'ip'" data-mask 
+                                                              <?php if(isset($conditionalForwardingIP)){ ?>value="<?php echo $conditionalForwardingIP; ?>"<?php } ?>>
+                                                            </td>
+                                                            <td><input type="text" name="conditionalForwardingDomain" class="form-control" data-mask 
+                                                              <?php if(isset($conditionalForwardingDomain)){ ?>value="<?php echo $conditionalForwardingDomain; ?>"<?php } ?>>
+                                                            </td>
+                                                          </div>
+                                                        </tr>
+                                                      </table>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
