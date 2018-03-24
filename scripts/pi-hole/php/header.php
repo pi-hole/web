@@ -461,7 +461,7 @@ if($auth) {
                     <span class="pull-right-container">
                       <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
                     </span>
-                    <i class="fa fa-stop"></i> <span>Disable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span>
+                    <i class="fa fa-stop"></i> <span>Disable&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
                   </a>
                   <ul class="treeview-menu">
                     <li>
