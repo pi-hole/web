@@ -374,7 +374,7 @@ if($auth) {
                         }
                         if($memory_usage > 0.0)
                         {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</a>";
+                            echo "\"></i> Memory Usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</a>";
                         }
                         else
                         {
@@ -422,7 +422,7 @@ if($auth) {
                     <span class="pull-right-container">
                       <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
                     </span>
-                    <i class="fa fa-clock-o"></i> <span>Long term data</span>
+                    <i class="fa fa-clock-o"></i> <span>Long Term Data</span>
                   </a>
                   <ul class="treeview-menu">
                     <li<?php if($scriptname === "db_graph.php"){ ?> class="active"<?php } ?>>
@@ -445,7 +445,7 @@ if($auth) {
                 <!-- Whitelist -->
                 <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
                     <a href="list.php?l=white">
-                        <i class="fa fa-check-circle-o "></i> <span>Whitelist</span>
+                        <i class="fa fa-pencil-square-o"></i> <span>Whitelist</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
@@ -461,7 +461,7 @@ if($auth) {
                     <span class="pull-right-container">
                       <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
                     </span>
-                    <i class="fa fa-stop"></i> <span>Disable&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
+                    <i class="fa fa-stop"></i> <span>Disable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span>
                   </a>
                   <ul class="treeview-menu">
                     <li>
@@ -471,29 +471,29 @@ if($auth) {
                     </li>
                     <li>
                         <a href="#" id="pihole-disable-10s">
-                            <i class="fa fa-clock-o"></i> <span>For 10 seconds</span>
+                            <i class="fa fa-clock-o"></i> <span>10 Seconds</span>
                         </a>
                     </li>
                     <li>
                         <a href="#" id="pihole-disable-30s">
-                            <i class="fa fa-clock-o"></i> <span>For 30 seconds</span>
+                            <i class="fa fa-clock-o"></i> <span>30 Seconds</span>
                         </a>
                     </li>
                     <li>
                         <a href="#" id="pihole-disable-5m">
-                            <i class="fa fa-clock-o"></i> <span>For 5 minutes</span>
+                            <i class="fa fa-clock-o"></i> <span>5 Minutes</span>
                         </a>
                     </li>
                     <li>
                       <a href="#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal">
-                            <i class="fa fa-clock-o"></i> <span>Custom time</span>
+                            <i class="fa fa-clock-o"></i> <span>Custom Time</span>
                       </a>
                     </li>
                   </ul>
                     <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
                 <li id="pihole-enable" class="treeview"<?php if ($pistatus == "1") { ?> hidden="true"<?php } ?>>
-                    <a href="#"><i class="fa fa-play"></i> <span id="enableLabel">Enable&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></span></a>
+                    <a href="#"><i class="fa fa-play"></i> <span id="enableLabel">Enable</span>&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></a>
                 </li>
                 <!-- Tools -->
                 <li class="treeview <?php if(in_array($scriptname, array("gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php"))){ ?>active<?php } ?>">
@@ -513,13 +513,13 @@ if($auth) {
                     <!-- Query adlists -->
                     <li<?php if($scriptname === "queryads.php"){ ?> class="active"<?php } ?>>
                         <a href="queryads.php">
-                            <i class="fa fa-search"></i> <span>Query adlists</span>
+                            <i class="fa fa-search"></i> <span>Query Ad Lists</span>
                         </a>
                     </li>
                     <!-- Audit log -->
                     <li<?php if($scriptname === "auditlog.php"){ ?> class="active"<?php } ?>>
                         <a href="auditlog.php">
-                            <i class="fa fa-balance-scale"></i> <span>Audit log</span>
+                            <i class="fa fa-balance-scale"></i> <span>Audit Log</span>
                         </a>
                     </li>
                     <!-- Tail pihole.log -->
