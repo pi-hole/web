@@ -234,7 +234,7 @@ else
     <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="domain-frequency">
         <div class="box-header with-border">
-          <h3 class="box-title">Top Domains</h3>
+          <h3 class="box-title">Top Permitted Domains</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
