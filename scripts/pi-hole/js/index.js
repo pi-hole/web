@@ -868,7 +868,7 @@ $(document).ready(function() {
                     mode: "x-axis",
                     custom: customTooltips,
                     itemSort: function(a, b) {
-                        return b.yLabel - a.yLabel
+                        return b.yLabel - a.yLabel;
                     },
                     callbacks: {
                         title: function(tooltipItem, data) {
