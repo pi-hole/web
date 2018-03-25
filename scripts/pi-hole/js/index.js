@@ -68,7 +68,7 @@ var customTooltips = function(tooltip) {
                         var style = "background:" + colors.backgroundColor;
                         style += "; border-color:" + colors.borderColor;
                         style += "; border-width: 2px";
-                        var span = "<span class="chartjs-tooltip-key" style="" + style + ""></span>";
+                        var span = "<span class=\"chartjs-tooltip-key\" style=\"" + style +  "\"></span>";
                         var num = body[0].split(": ");
                         if(num[1] > 0)
                         {
