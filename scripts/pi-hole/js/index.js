@@ -1032,11 +1032,11 @@ $(document).ready(function() {
 
 var customTooltips = function(tooltip) {
         // Tooltip Element
-        var tooltipEl = document.getElementById('chartjs-tooltip');
+        var tooltipEl = document.getElementById("chartjs-tooltip");
         if (!tooltipEl) {
-                tooltipEl = document.createElement('div');
-                tooltipEl.id = 'chartjs-tooltip';
-                tooltipEl.innerHTML = '<table></table>';
+                tooltipEl = document.createElement("div");
+                tooltipEl.id = "chartjs-tooltip";
+                tooltipEl.innerHTML = "<table></table>";
                 document.body.appendChild(tooltipEl);
         }
         // Hide if no tooltip
@@ -1045,11 +1045,11 @@ var customTooltips = function(tooltip) {
                 return;
         }
         // Set caret Position
-        tooltipEl.classList.remove('above', 'below', 'no-transform');
+        tooltipEl.classList.remove("above", "below", "no-transform");
         if (tooltip.yAlign) {
                 tooltipEl.classList.add(tooltip.yAlign);
         } else {
-                tooltipEl.classList.add('above');
+                tooltipEl.classList.add("above");
         }
         function getBody(bodyItem) {
                 return bodyItem.lines;
@@ -1058,31 +1058,31 @@ var customTooltips = function(tooltip) {
         if (tooltip.body) {
                 var titleLines = tooltip.title || [];
                 var bodyLines = tooltip.body.map(getBody);
-                var innerHtml = '<thead>';
+                var innerHtml = "<thead>";
                 titleLines.forEach(function(title) {
-                        innerHtml += '<tr><th>' + title + '</th></tr>';
+                        innerHtml += "<tr><th>" + title + "</th></tr>";
                 });
-                innerHtml += '</thead><tbody>';
+                innerHtml += "</thead><tbody>";
                 var printed = 0;
                 bodyLines.forEach(function(body, i) {
                         var colors = tooltip.labelColors[i];
-                        var style = 'background:' + colors.backgroundColor;
-                        style += '; border-color:' + colors.borderColor;
-                        style += '; border-width: 2px';
-                        var span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
-                        var num = body[0].split(': ');
+                        var style = "background:" + colors.backgroundColor;
+                        style += "; border-color:" + colors.borderColor;
+                        style += "; border-width: 2px";
+                        var span = "<span class="chartjs-tooltip-key" style="" + style + ""></span>";
+                        var num = body[0].split(": ");
                         if(num[1] > 0)
                         {
-                            innerHtml += '<tr><td>' + span + body + '</td></tr>';
+                            innerHtml += "<tr><td>" + span + body + "</td></tr>";
                             printed++;
                         }
                 });
                 if(printed < 1)
                 {
-                    innerHtml += '<tr><td>No activity recorded</td></tr>';
+                    innerHtml += "<tr><td>No activity recorded</td></tr>";
                 }
-                innerHtml += '</tbody>';
-                var tableRoot = tooltipEl.querySelector('table');
+                innerHtml += "</tbody>";
+                var tableRoot = tooltipEl.querySelector("table");
                 tableRoot.innerHTML = innerHtml;
         }
 
@@ -1096,9 +1096,9 @@ var customTooltips = function(tooltip) {
         }
         tooltipEl.style.opacity = 1;
         tooltipEl.style.left = position.left + width + "px";
-        tooltipEl.style.top = position.top + tooltip.caretY + 'px';
+        tooltipEl.style.top = position.top + tooltip.caretY + "px";
         tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
-        tooltipEl.style.fontSize = tooltip.bodyFontSize + 'px';
+        tooltipEl.style.fontSize = tooltip.bodyFontSize + "px";
         tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
-        tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
+        tooltipEl.style.padding = tooltip.yPadding + "px " + tooltip.xPadding + "px";
 };
