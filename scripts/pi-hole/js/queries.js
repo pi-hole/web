@@ -218,7 +218,11 @@ $(document).ready(function() {
             if(data.length > 6 && !blocked)
             {
                 $("td:eq(5)", row).css("color","black");
-                if (data[6] === "1")
+                if (data[6] === "0")
+                {
+                    $("td:eq(5)", row).html("N/A");
+                }
+                else if (data[6] === "1")
                 {
                     $("td:eq(5)", row).html("NODATA-" + data[1]);
                 }
