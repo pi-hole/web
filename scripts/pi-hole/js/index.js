@@ -35,8 +35,8 @@ var customTooltips = function(tooltip) {
         if (!tooltipEl) {
                 tooltipEl = document.createElement("div");
                 tooltipEl.id = "chartjs-tooltip";
-                tooltipEl.innerHTML = "<table></table>";
                 document.body.appendChild(tooltipEl);
+                $("#chartjs-tooltip").html("<table></table>");
         }
         // Hide if no tooltip
         if (tooltip.opacity === 0) {
@@ -57,7 +57,7 @@ var customTooltips = function(tooltip) {
         if (tooltip.body) {
                 var titleLines = tooltip.title || [];
                 var bodyLines = tooltip.body.map(getBody);
-                var innerHtml = "<thead>";
+                var innerHtml = "<table><thead>";
                 titleLines.forEach(function(title) {
                         innerHtml += "<tr><th>" + title + "</th></tr>";
                 });
@@ -80,9 +80,8 @@ var customTooltips = function(tooltip) {
                 {
                     innerHtml += "<tr><td>No activity recorded</td></tr>";
                 }
-                innerHtml += "</tbody>";
-                var tableRoot = tooltipEl.querySelector("table");
-                tableRoot.innerHTML = innerHtml;
+                innerHtml += "</tbody></table>";
+                $("#chartjs-tooltip").html(innerHtml);
         }
 
         // Display, position, and set styles for font
