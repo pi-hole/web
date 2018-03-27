@@ -115,3 +115,7 @@ a.lookatme {
     -webkit-animation: fa-spin 1s infinite linear;
     animation: fa-spin 1s infinite linear;
 }
+
+#MAC {
+    text-transform:lowercase;
+}
