@@ -74,10 +74,32 @@ if (isset($_GET['getAllQueries']) && $auth)
 		$stmt->bindValue(":from", intval($from), SQLITE3_INTEGER);
 		$stmt->bindValue(":until", intval($until), SQLITE3_INTEGER);
 		$results = $stmt->execute();
+		$clients = array();
 		if(!is_bool($results))
 			while ($row = $results->fetchArray())
 			{
-				$allQueries[] = [$row[0],$row[1] == 1 ? "IPv4" : "IPv6",$row[2],$row[3],$row[4]];
+				$c = $row[3];
+				if(array_key_exists($row[3], $clients))
+				{
+					// Entry already exists
+					$c = $clients[$row[3]];
+				}
+				else
+				{
+					if(filter_var($row[3], FILTER_VALIDATE_IP))
+					{
+						// Get host name of client and convert to lower case
+						$c = strtolower(gethostbyaddr($row[3]));
+					}
+					else
+					{
+						// This is already a host name
+						$c = strtolower($row[3]);
+					}
+					// Buffer result
+					$clients[$row[3]] = $c;
+				}
+				$allQueries[] = [$row[0],$row[1] == 1 ? "IPv4" : "IPv6",$row[2],$c,$row[4]];
 			}
 	}
 	$result = array('data' => $allQueries);
@@ -110,8 +132,16 @@ if (isset($_GET['topClients']) && $auth)
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
 		{
-			// Convert client to lower case
-			$c = strtolower($row[0]);
+			if(filter_var($row[0], FILTER_VALIDATE_IP))
+			{
+				// Get host name of client and convert to lower case
+				$c = strtolower(gethostbyaddr($row[0]));
+			}
+			else
+			{
+				// This is already a host name
+				$c = strtolower($row[0]);
+			}
 			if(array_key_exists($c, $clients))
 			{
 				// Entry already exists, add to it (might appear multiple times due to mixed capitalization in the database)

@@ -136,11 +136,10 @@ $(document).ready(function() {
     {
         APIstring += "&domain="+GETDict["domain"];
     }
+    // If we don't ask filtering and also not for all queries, just request the most recent 100 queries
     else if(!("all" in GETDict))
     {
-        var timestamp = Math.floor(Date.now() / 1000);
-        APIstring += "&from="+(timestamp - 600);
-        APIstring += "&until="+(timestamp + 100);
+        APIstring += "=100";
     }
 
     tableApi = $("#all-queries").DataTable( {
