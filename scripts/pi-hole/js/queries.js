@@ -224,7 +224,7 @@ $(document).ready(function() {
                 }
                 else if (data[6] === "1")
                 {
-                    $("td:eq(5)", row).html("NODATA-" + data[1]);
+                    $("td:eq(5)", row).html("NODATA");
                 }
                 else if (data[6] === "2")
                 {
@@ -247,6 +247,11 @@ $(document).ready(function() {
             {
                 $("td:eq(5)", row).css("color","black");
                 $("td:eq(5)", row).html("-");
+            }
+            if(data.length > 7 && data[7] > 0)
+            {
+                var content = $("td:eq(5)", row).html();
+                $("td:eq(5)", row).html(content + " (" + (0.1*data[7]).toFixed(1)+"ms)");
             }
 
         },
