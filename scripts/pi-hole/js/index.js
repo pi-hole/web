@@ -36,7 +36,7 @@ var customTooltips = function(tooltip) {
                 tooltipEl = document.createElement("div");
                 tooltipEl.id = "chartjs-tooltip";
                 document.body.appendChild(tooltipEl);
-                $("#chartjs-tooltip").html("<table></table>");
+                $(tooltipEl).html("<table></table>");
         }
         // Hide if no tooltip
         if (tooltip.opacity === 0) {
@@ -81,7 +81,7 @@ var customTooltips = function(tooltip) {
                     innerHtml += "<tr><td>No activity recorded</td></tr>";
                 }
                 innerHtml += "</tbody></table>";
-                $("#chartjs-tooltip").html(innerHtml);
+                $(tooltipEl).html(innerHtml);
         }
 
         // Display, position, and set styles for font
