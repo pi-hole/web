@@ -184,8 +184,12 @@ function updateQueryTypesPie() {
                 $(this).toggleClass("strike");
                 var index = $(this).index();
                 var ci = e.view.queryTypePieChart;
-                var curr = ci.data.datasets[0]._meta[3].data[index];
-                curr.hidden = !curr.hidden;
+                var meta = ci.data.datasets[0]._meta;
+                for(let i in meta)
+                {
+                    var curr = meta[i].data[index];
+                    curr.hidden = !curr.hidden;
+                }
                 ci.update();
         });
     }).done(function() {
@@ -408,8 +412,12 @@ function updateForwardDestinationsPie() {
                 $(this).toggleClass("strike");
                 var index = $(this).index();
                 var ci = e.view.forwardDestinationPieChart;
-                var curr = ci.data.datasets[0]._meta[3].data[index];
-                curr.hidden = !curr.hidden;
+                var meta = ci.data.datasets[0]._meta;
+                for(let i in meta)
+                {
+                    var curr = meta[i].data[index];
+                    curr.hidden = !curr.hidden;
+                }
                 ci.update();
         });
     }).done(function() {
