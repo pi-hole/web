@@ -187,8 +187,11 @@ function updateQueryTypesPie() {
                 var meta = ci.data.datasets[0]._meta;
                 for(let i in meta)
                 {
-                    var curr = meta[i].data[index];
-                    curr.hidden = !curr.hidden;
+                    if ({}.hasOwnProperty.call(meta, i))
+                    {
+                        var curr = meta[i].data[index];
+                        curr.hidden = !curr.hidden;
+                    }
                 }
                 ci.update();
         });
@@ -415,8 +418,11 @@ function updateForwardDestinationsPie() {
                 var meta = ci.data.datasets[0]._meta;
                 for(let i in meta)
                 {
-                    var curr = meta[i].data[index];
-                    curr.hidden = !curr.hidden;
+                    if ({}.hasOwnProperty.call(meta, i))
+                    {
+                        var curr = meta[i].data[index];
+                        curr.hidden = !curr.hidden;
+                    }
                 }
                 ci.update();
         });
