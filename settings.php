@@ -844,10 +844,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <tr>
                                                           <div class="input-group">
                                                             <td>
-                                                              <input type="text" name="conditionalForwardingIP" class="form-control" data-inputmask="'alias': 'ip'" data-mask 
+                                                              <input type="text" name="conditionalForwardingIP" class="form-control" data-inputmask="'alias': 'ip'" data-mask
                                                               <?php if(isset($conditionalForwardingIP)){ ?>value="<?php echo $conditionalForwardingIP; ?>"<?php } ?>>
                                                             </td>
-                                                            <td><input type="text" name="conditionalForwardingDomain" class="form-control" data-mask 
+                                                            <td><input type="text" name="conditionalForwardingDomain" class="form-control" data-mask
                                                               <?php if(isset($conditionalForwardingDomain)){ ?>value="<?php echo $conditionalForwardingDomain; ?>"<?php } ?>>
                                                             </td>
                                                           </div>
@@ -908,43 +908,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                               rows="4"><?php foreach ($excludedClients as $client) {
                                                                              echo $client . "\n"; }
                                                                        ?></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <h4>Privacy settings (Statistics / Query Log)</h4>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="querylog-permitted"
-                                                                      <?php if ($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php }
-                                                                      ?>>Show permitted domain entries</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="querylog-blocked"
-                                                                      <?php if ($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php }
-                                                                      ?>>Show blocked domain entries</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <h4>Privacy mode</h4>
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="privacyMode"
-                                                                      <?php if ($privacyMode){ ?>checked<?php }
-                                                                      ?>>Don't show origin of DNS requests in query log</label>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
