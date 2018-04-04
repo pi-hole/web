@@ -488,6 +488,12 @@ function updateTopClientsChart() {
 
         }
 
+        // Remove table if there are no results (e.g. privacy mode enabled)
+        if(jQuery.isEmptyObject(data.top_sources))
+        {
+            $("#client-frequency").parent().remove();
+        }
+
         $("#client-frequency .overlay").hide();
         // Update top clients list data every ten seconds
         setTimeout(updateTopClientsChart, 10000);
