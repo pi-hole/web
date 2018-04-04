@@ -115,3 +115,31 @@ a.lookatme {
     -webkit-animation: fa-spin 1s infinite linear;
     animation: fa-spin 1s infinite linear;
 }
+
+.chart-legend {
+    height:250px;
+    overflow:auto;
+}
+
+.chart-legend ul {
+    list-style-type: none;
+}
+
+.chart-legend li {
+    cursor:pointer;
+}
+
+.chart-legend li span {
+    display: inline-block;
+    width: 20px;
+    height: 12px;
+    margin-right: 5px;
+}
+
+.strike {
+    text-decoration: line-through !important;
+}
+
+.float-left{
+    float:left;
+}
