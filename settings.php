@@ -1004,7 +1004,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="radio">
                                                         <label><input type="radio" name="privacylevel" value="0"
                                                                       <?php if ($privacylevel === 0){ ?>checked<?php }
-                                                                      ?>>Show everything: Record everything<br>Gives maximum amount of statistics</label>
+                                                                      ?>>Show everything and record everything<br>Gives maximum amount of statistics</label>
                                                     </div>
                                                     <div class="radio">
                                                         <label><input type="radio" name="privacylevel" value="1"
