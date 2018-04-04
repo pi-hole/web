@@ -256,7 +256,7 @@ function readAdlists()
 						$extra .= " conditional_forwarding ".$_POST["conditionalForwardingIP"]." ".$_POST["conditionalForwardingDomain"]." $reverseAddress";
 					}
 				}
-				
+
 				// Check if DNSinterface is set
 				if(isset($_POST["DNSinterface"]))
 				{
@@ -635,7 +635,19 @@ function readAdlists()
 
 				// Reread available adlists
 				$adlist = readAdlists();
+				break;
 
+			case "privacyLevel":
+				$level = intval($_POST["privacylevel"]);
+				if($level >= 0 && $level <= 3)
+				{
+					exec("sudo pihole -a privacylevel ".$level);
+					$success .= "The privacy level has been updated";
+				}
+				else
+				{
+					$error .= "Invalid privacy level (".$level.")!";
+				}
 				break;
 
 			default:

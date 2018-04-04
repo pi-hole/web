@@ -9,6 +9,15 @@ require "scripts/pi-hole/php/header.php";
 require "scripts/pi-hole/php/savesettings.php";
 // Reread ini file as things might have been changed
 $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+$piholeFTLConfFile = "/etc/pihole/pihole-FTL.conf";
+if(is_readable($piholeFTLConfFile))
+{
+	$piholeFTLConf = parse_ini_file($piholeFTLConfFile);
+}
+else
+{
+	$piholeFTLConf = array();
+}
 
 ?>
 <style type="text/css">
@@ -230,7 +239,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 ?>
 
 <?php
-if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", "api", "teleporter"))) {
+if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", "api", "privacy", "teleporter"))) {
     $tab = $_GET['tab'];
 } else {
     $tab = "sysadmin";
@@ -245,6 +254,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                 <li<?php if($tab === "dns"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#dns">DNS</a></li>
                 <li<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
                 <li<?php if($tab === "api"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#api">API / Web interface</a></li>
+                <li<?php if($tab === "privacy"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#privacy">Privacy</a></li>
                 <li<?php if($tab === "teleporter"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#teleporter">Teleporter</a></li>
             </ul>
             <div class="tab-content">
@@ -874,7 +884,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                 } else {
                     $temperatureunit = "C";
                 }
-                // Use $boxedlayout value determined in header.php
                 ?>
                 <div id="api" class="tab-pane fade<?php if($tab === "api"){ ?> in active<?php } ?>">
                     <div class="row">
@@ -963,6 +972,64 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     </div>
                                     <div class="box-footer clearfix">
                                         <button type="submit" class="btn btn-primary pull-right">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- ######################################################### Privacy (may be expanded further later on) ######################################################### -->
+                <?php
+                // Get privacy level from piholeFTL config array
+                if (isset($piholeFTLConf["PRIVACYLEVEL"])) {
+                    $privacylevel = intval($piholeFTLConf["PRIVACYLEVEL"]);
+                } else {
+                    $privacylevel = 0;
+                }
+                ?>
+                <div id="privacy" class="tab-pane fade<?php if($tab === "privacy"){ ?> in active<?php } ?>">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form role="form" method="post">
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Privacy settings</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4>DNS resolver privacy level</h4>
+                                                <p>Specify if DNS queries should be anonymized, available options are:
+                                                <div class="form-group">
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="privacylevel" value="0"
+                                                                      <?php if ($privacylevel === 0){ ?>checked<?php }
+                                                                      ?>>Show everything: Record everything<br>Gives maximum amount of statistics</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="privacylevel" value="1"
+                                                                      <?php if ($privacylevel === 1){ ?>checked<?php }
+                                                                      ?>>Hide domains: Display and store all domains as "hidden"<br>This disables the Top Domains and Top Ads tables on the dashboard</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="privacylevel" value="2"
+                                                                      <?php if ($privacylevel === 2){ ?>checked<?php }
+                                                                      ?>>Hide domains and clients: Display and store all domains as "hidden" and all clients as "::1"<br>This disables all tables on the dashboard</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="privacylevel" value="3"
+                                                                      <?php if ($privacylevel === 3){ ?>checked<?php }
+                                                                      ?>>Paranoia mode: This disables basically everything except the live anonymous stastics<br>No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists.</label>
+                                                    </div>
+                                                </div>
+                                                <p>The privacy level may be changed at any time without having to restart the DNS resolver. However, note that queries with (partially) hidden details cannot be disclosed with a subsequent reduction of the privacy level.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-footer clearfix">
+                                        <input type="hidden" name="field" value="privacyLevel">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <button type="submit" class="btn btn-primary pull-right">Apply</button>
                                     </div>
                                 </div>
                             </form>
