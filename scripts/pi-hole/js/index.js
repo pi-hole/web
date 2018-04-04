@@ -294,6 +294,13 @@ function updateClientsOverTime() {
 
         // convert received objects to arrays
         data.over_time = objectToArray(data.over_time);
+
+        // Remove graph if there are no results (e.g. privacy mode enabled)
+        if(jQuery.isEmptyObject(data.over_time))
+        {
+            $("#clients").parent().remove();
+            return;
+        }
         // remove last data point since it not representative
         data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
@@ -488,6 +495,13 @@ function updateTopClientsChart() {
 
         }
 
+        // Remove table if there are no results (e.g. privacy mode enabled)
+        if(jQuery.isEmptyObject(data.top_sources))
+        {
+            $("#client-frequency").parent().remove();
+            return;
+        }
+
         $("#client-frequency .overlay").hide();
         // Update top clients list data every ten seconds
         setTimeout(updateTopClientsChart, 10000);
@@ -529,6 +543,7 @@ function updateTopLists() {
         if(jQuery.isEmptyObject(data.top_queries))
         {
             $("#domain-frequency").parent().remove();
+            return;
         }
 
         for (domain in data.top_ads) {
@@ -552,6 +567,7 @@ function updateTopLists() {
         if(jQuery.isEmptyObject(data.top_ads))
         {
             $("#ad-frequency").parent().remove();
+            return;
         }
 
         $("#domain-frequency .overlay").hide();
