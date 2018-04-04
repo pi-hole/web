@@ -1014,7 +1014,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="radio">
                                                         <label><input type="radio" name="privacylevel" value="2"
                                                                       <?php if ($privacylevel === 2){ ?>checked<?php }
-                                                                      ?>>Hide domains and clients: Display and store all domains as "hidden" and all clients as "::1"<br>This disables all tables on the dashboard</label>
+                                                                      ?>>Hide domains and clients: Display and store all domains as "hidden" and all clients as "0.0.0.0"<br>This disables all tables on the dashboard</label>
                                                     </div>
                                                     <div class="radio">
                                                         <label><input type="radio" name="privacylevel" value="3"
