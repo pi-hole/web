@@ -309,7 +309,7 @@ if (isset($_GET['getClientNames']) && $auth)
 	foreach($return as $line)
 	{
 		$tmp = explode(" ",$line);
-		$forward_dest[resolveHostname($tmp[2])] = floatval($tmp[1]);
+		$forward_dest[resolveHostname($tmp[2],true)] = floatval($tmp[1]);
 	}
 
 	$result = array('clients' => $forward_dest);

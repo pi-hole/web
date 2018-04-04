@@ -140,7 +140,7 @@ function disconnectFTL($quiet=true)
 }
 
 $clients = array();
-function resolveHostname($clientip, $printIP)
+function resolveHostname($clientip, $printIP = false)
 {
 	global $clients;
 	$ipaddr = strtolower($clientip);
