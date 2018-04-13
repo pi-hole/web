@@ -230,6 +230,10 @@ if (isset($_GET['getAllQueries']) && $auth)
 		// Get specific client only
 		sendRequestFTL("getallqueries-client ".$_GET['client']);
 	}
+	else if(is_numeric($_GET['getAllQueries']))
+	{
+		sendRequestFTL("getallqueries (".$_GET['getAllQueries'].")");
+	}
 	else
 	{
 		// Get all queries

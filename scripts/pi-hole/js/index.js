@@ -255,6 +255,23 @@ function updateQueryTypesPie() {
         queryTypePieChart.update();
         // Don't use rotation animation for further updates
         queryTypePieChart.options.animation.duration=0;
+        // Generate legend in separate div
+        $("#query-types-legend").html(queryTypePieChart.generateLegend());
+        $("#query-types-legend > ul > li").on("click",function(e){
+                $(this).toggleClass("strike");
+                var index = $(this).index();
+                var ci = e.view.queryTypePieChart;
+                var meta = ci.data.datasets[0]._meta;
+                for(let i in meta)
+                {
+                    if ({}.hasOwnProperty.call(meta, i))
+                    {
+                        var curr = meta[i].data[index];
+                        curr.hidden = !curr.hidden;
+                    }
+                }
+                ci.update();
+        });
     }).done(function() {
         // Reload graph after minute
         setTimeout(updateQueryTypesPie, 60000);
@@ -469,6 +486,23 @@ function updateForwardDestinationsPie() {
         forwardDestinationPieChart.update();
         // Don't use rotation animation for further updates
         forwardDestinationPieChart.options.animation.duration=0;
+        // Generate legend in separate div
+        $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
+        $("#forward-destinations-legend > ul > li").on("click",function(e){
+                $(this).toggleClass("strike");
+                var index = $(this).index();
+                var ci = e.view.forwardDestinationPieChart;
+                var meta = ci.data.datasets[0]._meta;
+                for(let i in meta)
+                {
+                    if ({}.hasOwnProperty.call(meta, i))
+                    {
+                        var curr = meta[i].data[index];
+                        curr.hidden = !curr.hidden;
+                    }
+                }
+                ci.update();
+        });
     }).done(function() {
         // Reload graph after one minute
         setTimeout(updateForwardDestinationsPie, 60000);
@@ -1041,8 +1075,7 @@ $(document).ready(function() {
             },
             options: {
                 legend: {
-                    display: true,
-                    position: "right"
+                    display: false
                 },
                 tooltips: {
                     enabled: true,
@@ -1079,8 +1112,7 @@ $(document).ready(function() {
             },
             options: {
                 legend: {
-                    display: true,
-                    position: "right"
+                    display: false
                 },
                 tooltips: {
                     enabled: true,

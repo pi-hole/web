@@ -132,8 +132,11 @@ else
           <h3 class="box-title">Query Types (integrated)</h3>
         </div>
         <div class="box-body">
-          <div class="chart">
-            <canvas id="queryTypePieChart" width="400" height="150"></canvas>
+          <div class="float-left" style="width:50%">
+            <canvas id="queryTypePieChart" width="120" height="120"></canvas>
+          </div>
+          <div class="float-left" style="width:50%">
+            <div id="query-types-legend" class="chart-legend"></div>
           </div>
         </div>
         <div class="overlay">
@@ -148,8 +151,11 @@ else
           <h3 class="box-title">Forward Destinations (integrated)</h3>
         </div>
         <div class="box-body">
-          <div class="chart">
-            <canvas id="forwardDestinationPieChart" width="400" height="150"></canvas>
+          <div class="float-left" style="width:50%">
+            <canvas id="forwardDestinationPieChart" width="120" height="120"></canvas>
+          </div>
+          <div class="float-left" style="width:50%">
+            <div id="forward-destinations-legend" class="chart-legend"></div>
           </div>
         </div>
         <div class="overlay">
