@@ -92,6 +92,11 @@ var customTooltips = function(tooltip) {
         {
                 width = $(document).width()-400;
         }
+        // Prevent tooltip disapearing behind the sidebar
+        if(tooltip.caretX < 100)
+        {
+            width = 100;
+        }
         tooltipEl.style.opacity = 1;
         tooltipEl.style.left = position.left + width + "px";
         tooltipEl.style.top = position.top + tooltip.caretY + "px";
