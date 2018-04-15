@@ -17,7 +17,7 @@ function connectFTL($address, $port=4711)
 	}
 
 	// Open Internet socket connection
-	$socket = @fsockopen($address, $port, $timeout = 1.0);
+	$socket = @fsockopen($address, $port, $errno, $errstr, 1.0);
 
 	return $socket;
 }
