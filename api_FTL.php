@@ -317,14 +317,17 @@ else
 	{
 		sendRequestFTL("client-names");
 		$return = getResponseFTL();
-		$forward_dest = array();
+		$client_names = array();
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
-			$forward_dest[resolveHostname($tmp[2],true)] = floatval($tmp[1]);
+			if(count($tmp) > 2 && strlen($tmp[3]) > 0)
+				$client_names[$tmp[3]."|".$tmp[2]] = floatval($tmp[1]);
+			else
+				$client_names[$tmp[2]] = floatval($tmp[1]);
 		}
 
-		$result = array('clients' => $forward_dest);
+		$result = array('clients' => $client_names);
 		$data = array_merge($data, $result);
 	}
 
