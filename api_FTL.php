@@ -242,7 +242,6 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
-			$tmp[3] = resolveHostname($tmp[3],false);
 			array_push($allQueries,$tmp);
 		}
 
