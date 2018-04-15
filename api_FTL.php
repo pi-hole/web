@@ -123,7 +123,7 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
-			if(count($tmp) === 4)
+			if(count($tmp) > 3)
 				$top_ads[$tmp[2]." (".$tmp[3].")"] = intval($tmp[1]);
 			else
 				$top_ads[$tmp[2]] = intval($tmp[1]);
@@ -161,7 +161,7 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
-			if(count($tmp) > 2 && strlen($tmp[3]) > 0)
+			if(count($tmp) > 3 && strlen($tmp[3]) > 0)
 				$top_clients[$tmp[3]."|".$tmp[2]] = intval($tmp[1]);
 			else
 				$top_clients[$tmp[2]] = intval($tmp[1]);
@@ -186,7 +186,7 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
-			if(count($tmp) > 2 && strlen($tmp[3]) > 0)
+			if(count($tmp) > 3 && strlen($tmp[3]) > 0)
 				$forward_dest[$tmp[3]."|".$tmp[2]] = floatval($tmp[1]);
 			else
 				$forward_dest[$tmp[2]] = floatval($tmp[1]);
@@ -282,7 +282,7 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
-			if(count($tmp) == 4)
+			if(count($tmp) > 3)
 			{
 				$forward_dest[$tmp[3]."|".$tmp[2]] = floatval($tmp[1]);
 			}
@@ -321,7 +321,7 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
-			if(count($tmp) > 2 && strlen($tmp[3]) > 0)
+			if(count($tmp) > 3 && strlen($tmp[3]) > 0)
 				$client_names[$tmp[3]."|".$tmp[2]] = floatval($tmp[1]);
 			else
 				$client_names[$tmp[2]] = floatval($tmp[1]);
