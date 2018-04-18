@@ -760,8 +760,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             <input type="checkbox" name="localDNS" value="yes"
                                                                    <?php if ($localDNS){ ?>checked<?php } ?>>
                                                         </div>
-                                                        <input type="text" placeholder="127.0.0.1" class="form-control" disabled style="background: white; width: 25%;">
-                                                        <input type="text" name="localDNSport" class="form-control" placeholder="port" style="width: 75%"
+                                                        <input type="text" placeholder="127.0.0.1" class="form-control" disabled style="background: white; width: 50%; text-align: right;">
+                                                        <input type="text" name="localDNSport" class="form-control" placeholder="port" style="width: 50%"
                                                                <?php if ($localDNS){ ?>value="<?php echo $localDNS; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
