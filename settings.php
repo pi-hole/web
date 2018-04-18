@@ -205,6 +205,16 @@ if (isset($setupVars["QUERY_LOGGING"])) {
 } else {
     $piHoleLogging = true;
 }
+
+if (isset($setupVars["LOCAL_RECURSIVE"])) {
+    if($setupVars["LOCAL_RECURSIVE"]) {
+        $localrecursive = $setupVars["LOCAL_RECURSIVE"];
+    } else {
+        $localrecursive = false;
+    }
+} else {
+    $localrecursive = false;
+}
 ?>
 
 <?php
@@ -743,6 +753,16 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <input type="text" name="custom4val" class="form-control"
                                                                data-inputmask="'alias': 'ipv6'" data-mask
                                                                <?php if (isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
+                                                    </div>
+                                                    <label>Local recursive server (see <a href="https://github.com/pi-hole/pi-hole/wiki/Pi-hole-as-recursive-DNS-server">here</a>)</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">
+                                                            <input type="checkbox" name="localrecursive" value="yes"
+                                                                   <?php if ($localrecursive){ ?>checked<?php } ?>>
+                                                        </div>
+                                                        <input type="text" placeholder="127.0.0.1" class="form-control" disabled style="background: white; width: 25%;">
+                                                        <input type="text" name="localrecursiveport" class="form-control" placeholder="port" style="width: 75%"
+                                                               <?php if ($localrecursive){ ?>value="<?php echo $localrecursive; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
