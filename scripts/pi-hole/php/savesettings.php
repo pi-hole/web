@@ -200,20 +200,12 @@ function readAdlists()
 				}
 				$DNSservercount = count($DNSservers);
 
-				if(isset($_POST["localDNS"]))
+				if(isset($_POST["localDNS"]) && isset($_POST["localDNSport"]) &&
+				   is_numeric($_POST["localDNSport"]))
 				{
-					if(isset($_POST["localDNSport"]) &&
-					   is_numeric($_POST["localDNSport"]))
-					{
-						// Save port and modify dnsmasq.d config file
-						exec("sudo pihole -a localdnsport ".intval($_POST["localDNSport"]));
-						$DNSservercount++;
-					}
-					else if(isset($localdns))
-					{
-						// Remove entry without valid port
-						exec("sudo pihole -a localdnsport 0");
-					}
+					// Save port and modify dnsmasq.d config file
+					exec("sudo pihole -a localdnsport ".intval($_POST["localDNSport"]));
+					$DNSservercount++;
 				}
 				else
 				{

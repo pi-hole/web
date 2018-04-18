@@ -206,14 +206,10 @@ if (isset($setupVars["QUERY_LOGGING"])) {
     $piHoleLogging = true;
 }
 
-if (isset($setupVars["LOCAL_DNS_PORT"])) {
-    if($setupVars["LOCAL_DNS_PORT"]) {
-        $localDNS = $setupVars["LOCAL_DNS_PORT"];
-    } else {
-        $localDNS = false;
-    }
-} else {
-    $localDNS = false;
+$localDNS = false;
+if(isset($setupVars["LOCAL_DNS_PORT"]) && is_numeric($setupVars["LOCAL_DNS_PORT"]))
+{
+    $localDNS = intval($setupVars["LOCAL_DNS_PORT"]);
 }
 ?>
 
