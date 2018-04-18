@@ -198,9 +198,23 @@ function readAdlists()
 						}
 					}
 				}
+				$DNSservercount = count($DNSservers);
 
+				if(isset($_POST["localDNS"]) && isset($_POST["localDNSport"]) &&
+				   is_numeric($_POST["localDNSport"]))
+				{
+					// Save port and modify dnsmasq.d config file
+					exec("sudo pihole -a localdnsport ".intval($_POST["localDNSport"]));
+					$DNSservercount++;
+				}
+				else
+				{
+					// Remove possible entry if unticked
+
+					exec("sudo pihole -a localdnsport 0");
+				}
 				// Check if at least one DNS server has been added
-				if(count($DNSservers) < 1)
+				if($DNSservercount < 1)
 				{
 					$error .= "No DNS server has been selected.<br>";
 				}
@@ -286,7 +300,7 @@ function readAdlists()
 					$IPs = implode (",", $DNSservers);
 					$return = exec("sudo pihole -a setdns ".$IPs." ".$extra);
 					$success .= htmlspecialchars($return)."<br>";
-					$success .= "The DNS settings have been updated (using ".count($DNSservers)." DNS servers)";
+					$success .= "The DNS settings have been updated (using ".$DNSservercount." DNS servers)";
 				}
 				else
 				{
