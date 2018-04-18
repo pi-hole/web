@@ -200,32 +200,31 @@ function readAdlists()
 				}
 				$DNSservercount = count($DNSservers);
 
-				// Check if at least one DNS server has been added
-				if(isset($_POST["localrecursive"]))
+				if(isset($_POST["localDNS"]))
 				{
-					if(isset($_POST["localrecursiveport"]) &&
-					   is_numeric($_POST["localrecursiveport"]))
+					if(isset($_POST["localDNSport"]) &&
+					   is_numeric($_POST["localDNSport"]))
 					{
 						// Save port and modify dnsmasq.d config file
-						exec("sudo pihole -a localrecursivedns ".intval($_POST["localrecursiveport"]));
+						exec("sudo pihole -a localdnsport ".intval($_POST["localDNSport"]));
 						$DNSservercount++;
 					}
-					else if(isset($localrecursive))
+					else if(isset($localdns))
 					{
 						// Remove entry without valid port
-						exec("sudo pihole -a localrecursivedns 0");
+						exec("sudo pihole -a localdnsport 0");
 					}
 				}
 				else
 				{
 					// Remove possible entry if unticked
 
-					exec("sudo pihole -a localrecursivedns 0");
-					// Check if at least one DNS server has been added
-					if($DNSservercount < 1)
-					{
-						$error .= "No DNS server has been selected.<br>";
-					}
+					exec("sudo pihole -a localdnsport 0");
+				}
+				// Check if at least one DNS server has been added
+				if($DNSservercount < 1)
+				{
+					$error .= "No DNS server has been selected.<br>";
 				}
 
 				// Check if domain-needed is requested

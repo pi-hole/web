@@ -206,14 +206,14 @@ if (isset($setupVars["QUERY_LOGGING"])) {
     $piHoleLogging = true;
 }
 
-if (isset($setupVars["LOCAL_RECURSIVE"])) {
-    if($setupVars["LOCAL_RECURSIVE"]) {
-        $localrecursive = $setupVars["LOCAL_RECURSIVE"];
+if (isset($setupVars["LOCAL_DNS_PORT"])) {
+    if($setupVars["LOCAL_DNS_PORT"]) {
+        $localDNS = $setupVars["LOCAL_DNS_PORT"];
     } else {
-        $localrecursive = false;
+        $localDNS = false;
     }
 } else {
-    $localrecursive = false;
+    $localDNS = false;
 }
 ?>
 
@@ -754,15 +754,15 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                                data-inputmask="'alias': 'ipv6'" data-mask
                                                                <?php if (isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
                                                     </div>
-                                                    <label>Local recursive server (see <a href="https://github.com/pi-hole/pi-hole/wiki/Pi-hole-as-recursive-DNS-server">here</a>)</label>
+                                                    <label>Local DNS server on custom port</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon">
-                                                            <input type="checkbox" name="localrecursive" value="yes"
-                                                                   <?php if ($localrecursive){ ?>checked<?php } ?>>
+                                                            <input type="checkbox" name="localDNS" value="yes"
+                                                                   <?php if ($localDNS){ ?>checked<?php } ?>>
                                                         </div>
                                                         <input type="text" placeholder="127.0.0.1" class="form-control" disabled style="background: white; width: 25%;">
-                                                        <input type="text" name="localrecursiveport" class="form-control" placeholder="port" style="width: 75%"
-                                                               <?php if ($localrecursive){ ?>value="<?php echo $localrecursive; ?>"<?php } ?>>
+                                                        <input type="text" name="localDNSport" class="form-control" placeholder="port" style="width: 75%"
+                                                               <?php if ($localDNS){ ?>value="<?php echo $localDNS; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
