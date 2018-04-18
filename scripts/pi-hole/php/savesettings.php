@@ -203,7 +203,7 @@ function readAdlists()
 				   is_numeric($_POST["localDNSport"]))
 				{
 					// Save port and modify dnsmasq.d config file
-					array_push($DNSServers,"127.0.0.1");
+					array_push($DNSservers,"127.0.0.1");
 					exec("sudo pihole -a localdnsport ".intval($_POST["localDNSport"]));
 				}
 				else
