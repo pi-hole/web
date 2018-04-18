@@ -205,6 +205,12 @@ if (isset($setupVars["QUERY_LOGGING"])) {
 } else {
     $piHoleLogging = true;
 }
+
+$localDNS = false;
+if(isset($setupVars["LOCAL_DNS_PORT"]) && is_numeric($setupVars["LOCAL_DNS_PORT"]))
+{
+    $localDNS = intval($setupVars["LOCAL_DNS_PORT"]);
+}
 ?>
 
 <?php
@@ -743,6 +749,16 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <input type="text" name="custom4val" class="form-control"
                                                                data-inputmask="'alias': 'ipv6'" data-mask
                                                                <?php if (isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
+                                                    </div>
+                                                    <label>Local DNS server on custom port</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">
+                                                            <input type="checkbox" name="localDNS" value="yes"
+                                                                   <?php if ($localDNS){ ?>checked<?php } ?>>
+                                                        </div>
+                                                        <input type="text" placeholder="127.0.0.1" class="form-control" disabled style="background: white; width: 50%; text-align: right;">
+                                                        <input type="text" name="localDNSport" class="form-control" placeholder="port" style="width: 50%"
+                                                               <?php if ($localDNS){ ?>value="<?php echo $localDNS; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
