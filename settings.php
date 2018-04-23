@@ -271,7 +271,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             <div class="col-md-12">
                                 <div class="box">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Lists used to generate Pi-hole's Gravity</h3>
+                                        <h3 class="box-title">Lists used to generate Pi-hole's Gravity: <?php echo count($adlist); ?></h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="table-responsive">
