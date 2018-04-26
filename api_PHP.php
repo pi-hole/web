@@ -52,6 +52,11 @@
         $data = array_merge($data,  getSpeedData24hrs($dbSpeedtest));
     }
 
+    if (isset($_GET['getLastSpeedtestResult'])  && $auth)
+    {
+        $data = array_merge($data,  getLastSpeedtestResult($dbSpeedtest));
+    }
+
     if (isset($_GET['getAllSpeedTestData'])  && $auth)
     {
         $data = array_merge($data,  getAllSpeedTestData($dbSpeedtest));
