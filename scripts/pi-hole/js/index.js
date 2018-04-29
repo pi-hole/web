@@ -450,7 +450,7 @@ function updateClientsOverTime() {
 }
 
 function updateForwardDestinationsPie() {
-    $.getJSON("api.php?getForwardDestinations=unsorted", function(data) {
+    $.getJSON("api.php?getForwardDestinations", function(data) {
 
         if("FTLnotrunning" in data)
         {
@@ -470,9 +470,6 @@ function updateForwardDestinationsPie() {
             }
             values.push([key, value, colors.shift()]);
         });
-
-        // Sort data ASC accorwing to 2nd column, keep already assigned labels and colors
-        values = values.sort(function(a,b) { return b[1] - a[1]; });
 
         // Split data into individual arrays for the graphs
         $.each(values, function(key , value) {

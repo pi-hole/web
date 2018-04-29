@@ -148,7 +148,7 @@ else
     <div class="col-md-12 col-lg-6">
     <div class="box" id="forward-destinations-pie">
         <div class="box-header with-border">
-          <h3 class="box-title">Forward Destinations (integrated)</h3>
+          <h3 class="box-title">Queries answered by (integrated)</h3>
         </div>
         <div class="box-body">
           <div class="float-left" style="width:50%">
