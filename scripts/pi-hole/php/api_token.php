@@ -11,6 +11,9 @@ if($auth)
     require_once("../../vendor/qrcode.php");
     $qr = QRCode::getMinimumQRCode($pwhash, QR_ERROR_CORRECT_LEVEL_Q);
     $qr->printHTML("10px");
+    print("Raw API Token: ");
+    print($pwhash); 
+
   }
   else
   {
