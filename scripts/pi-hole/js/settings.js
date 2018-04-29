@@ -68,7 +68,7 @@ $(".confirm-restartdns").confirm({
 });
 
 $(".confirm-flushlogs").confirm({
-	text: "By default, the log is flushed at the end of the day via cron, but a very large log file can slow down the Web interface, so flushing it can be useful. Note that your statistics will be reset and you lose the statistics up to this point. Are you sure you want to flush your logs?",
+	text: "Are you sure you want to flush your logs?",
 	title: "Confirmation required",
 	confirm(button) {
 		$("#flushlogsform").submit();
@@ -85,7 +85,7 @@ $(".confirm-flushlogs").confirm({
 });
 
 $(".confirm-disablelogging").confirm({
-	text: "Note that disabling query logging will render graphs on the web user interface useless. Are you sure you want to disable logging and flush your Pi-hole logs?",
+	text: "Are you sure you want to disable logging and flush your Pi-hole logs?",
 	title: "Confirmation required",
 	confirm(button) {
 		$("#disablelogsform").submit();
@@ -102,7 +102,7 @@ $(".confirm-disablelogging").confirm({
 });
 
 $(".confirm-disablelogging-noflush").confirm({
-	text: "Note that disabling query logging will render graphs on the web user interface useless after this point. Are you sure you want to disable logging?",
+	text: "Are you sure you want to disable logging?",
 	title: "Confirmation required",
 	confirm(button) {
 		$("#disablelogsform-noflush").submit();
