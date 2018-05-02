@@ -18,8 +18,8 @@ function gravity_last_update($raw = false){
 		$date_file_created_unix = filemtime($gravitylist);
 		$date_file_created = date_create("@".$date_file_created_unix);
 		$date_now = date_create("now");
-	    $gravitydiff = date_diff($date_file_created,$date_now);
-	    if($raw){
+		$gravitydiff = date_diff($date_file_created,$date_now);
+		if($raw){
 			$output = array(
 				"file_exists"=> true,
 				"absolute" => $date_file_created_unix,
@@ -31,12 +31,12 @@ function gravity_last_update($raw = false){
 			);
 		}else{
 			if($gravitydiff->d > 1){
-		        $output = $gravitydiff->format("Blocking list updated %a days, %H:%I ago");
-		    }elseif($gravitydiff->d == 1){
-		        $output = $gravitydiff->format("Blocking list updated one day, %H:%I ago");
-		    }else{
-		        $output = $gravitydiff->format("Blocking list updated %H:%I ago");
-		    }
+				$output = $gravitydiff->format("Blocking list updated %a days, %H:%I ago");
+			}elseif($gravitydiff->d == 1){
+				$output = $gravitydiff->format("Blocking list updated one day, %H:%I ago");
+			}else{
+				$output = $gravitydiff->format("Blocking list updated %H:%I ago");
+			}
 		}
 	}else{
 		if($raw){
