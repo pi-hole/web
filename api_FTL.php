@@ -31,6 +31,7 @@ else
 
 	if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))
 	{
+		require_once("scripts/pi-hole/php/gravity.php");
 		sendRequestFTL("stats");
 		$return = getResponseFTL();
 
@@ -61,6 +62,7 @@ else
 				$stats[$tmp[0]] = floatval($tmp[1]);
 			}
 		}
+		$stats['gravity_last_updated'] = gravity_last_update(true);
 		$data = array_merge($data,$stats);
 	}
 

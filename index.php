@@ -7,6 +7,7 @@
 *    Please see LICENSE file for your rights under this license. */
     $indexpage = true;
     require "scripts/pi-hole/php/header.php";
+    require_once("scripts/pi-hole/php/gravity.php"); 
 ?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
@@ -48,27 +49,10 @@
             </div>
         </div>
     </div>
-<?php
-$gravitylist = "/etc/pihole/gravity.list";
-if (file_exists($gravitylist))
-{
-    $gravitydiff = date_diff(date_create("@".filemtime($gravitylist)),date_create("now"));
-    if($gravitydiff->d > 1)
-        $gravitydate = $gravitydiff->format("Blocking list updated %a days, %H:%I ago");
-    elseif($gravitydiff->d == 1)
-        $gravitydate = $gravitydiff->format("Blocking list updated one day, %H:%I ago");
-    else
-        $gravitydate = $gravitydiff->format("Blocking list updated %H:%I ago");
-}
-else
-{
-    $gravitydate = "Blocking list not found";
-}
-?>
     <!-- ./col -->
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-red" title="<?php echo $gravitydate; ?>">
+        <div class="small-box bg-red" title="<?php echo gravity_last_update(); ?>">
             <div class="inner">
                 <p>Domains on Blocklist</p>
                 <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
@@ -229,11 +213,11 @@ else
 <?php
 if($boxedlayout)
 {
-	$tablelayout = "col-md-6";
+  $tablelayout = "col-md-6";
 }
 else
 {
-	$tablelayout = "col-md-6 col-lg-4";
+  $tablelayout = "col-md-6 col-lg-4";
 }
 ?>
 <div class="row">
