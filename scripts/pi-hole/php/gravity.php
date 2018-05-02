@@ -8,7 +8,7 @@
 
 function gravity_last_update($raw = false){
     /*
-    @walter-exit | April 23rd, 2018:
+    @walter-exit <walter@exclusive-it.nl> | April 23rd, 2018:
     Checks when the gravity list was last updated, if it exists at all.
     Returns the info in human-readable format for use on the dashboard,
     or raw for use by the API.
