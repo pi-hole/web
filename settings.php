@@ -128,13 +128,13 @@ $i = 1;
 while (isset($setupVars["PIHOLE_DNS_" . $i])) {
     if (isinserverlist($setupVars["PIHOLE_DNS_" . $i])) {
         array_push($DNSactive, $setupVars["PIHOLE_DNS_" . $i]);
-    } elseif (strpos($setupVars["PIHOLE_DNS_" . $i], ".")) {
+    } elseif (strpos($setupVars["PIHOLE_DNS_" . $i], ".") !== false) {
         if (!isset($custom1)) {
             $custom1 = $setupVars["PIHOLE_DNS_" . $i];
         } else {
             $custom2 = $setupVars["PIHOLE_DNS_" . $i];
         }
-    } elseif (strpos($setupVars["PIHOLE_DNS_" . $i], ":")) {
+    } elseif (strpos($setupVars["PIHOLE_DNS_" . $i], ":") !== false) {
         if (!isset($custom3)) {
             $custom3 = $setupVars["PIHOLE_DNS_" . $i];
         } else {
@@ -717,7 +717,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                                    <?php if (isset($custom1)){ ?>checked<?php } ?>>
                                                         </div>
                                                         <input type="text" name="custom1val" class="form-control"
-                                                               data-inputmask="'alias': 'ip'" data-mask
                                                                <?php if (isset($custom1)){ ?>value="<?php echo $custom1; ?>"<?php } ?>>
                                                     </div>
                                                     <label>Custom 2 (IPv4)</label>
@@ -727,7 +726,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                                    <?php if (isset($custom2)){ ?>checked<?php } ?>>
                                                         </div>
                                                         <input type="text" name="custom2val" class="form-control"
-                                                               data-inputmask="'alias': 'ip'" data-mask
                                                                <?php if (isset($custom2)){ ?>value="<?php echo $custom2; ?>"<?php } ?>>
                                                     </div>
                                                     <label>Custom 3 (IPv6)</label>
@@ -737,7 +735,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                                    <?php if (isset($custom3)){ ?>checked<?php } ?>>
                                                         </div>
                                                         <input type="text" name="custom3val" class="form-control"
-                                                               data-inputmask="'alias': 'ipv6'" data-mask
                                                                <?php if (isset($custom3)){ ?>value="<?php echo $custom3; ?>"<?php } ?>>
                                                     </div>
                                                     <label>Custom 4 (IPv6)</label>
@@ -747,7 +744,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                                    <?php if (isset($custom4)){ ?>checked<?php } ?>>
                                                         </div>
                                                         <input type="text" name="custom4val" class="form-control"
-                                                               data-inputmask="'alias': 'ipv6'" data-mask
                                                                <?php if (isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
                                                     </div>
                                                     <label>Local DNS server on custom port</label>
