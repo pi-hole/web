@@ -213,9 +213,6 @@ function readAdlists()
 				}
 				$DNSservercount = count($DNSservers);
 
-				// Remove possibly existing localdnsport setting
-				exec("sudo pihole -a localdnsport 0");
-
 				// Check if at least one DNS server has been added
 				if($DNSservercount < 1)
 				{
