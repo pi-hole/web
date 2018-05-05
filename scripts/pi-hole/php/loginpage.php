@@ -25,6 +25,7 @@
       <form action="" id="loginform" method="post">
         <div class="form-group has-feedback <?php if ($wrongpassword) { ?>has-error<?php } ?> ">
           <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" autofocus>
+          <input type="checkbox" id="logincookie" name="cook" class="form=control"> Remember me for 7 days (sets cookie)
           <span class="fa fa-key form-control-feedback"></span>
         </div>
         <div class="row">
