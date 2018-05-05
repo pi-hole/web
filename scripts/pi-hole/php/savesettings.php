@@ -187,32 +187,32 @@ function readAdlists()
 				{
 					if(array_key_exists("custom".$i,$_POST))
 					{
-						$IP = $_POST["custom".$i."val"];
-						if(validIP($IP))
+						$exploded = explode("#", $_POST["custom".$i."val"], 2);
+						$IP = $exploded[0];
+						if(count($exploded) > 1)
 						{
-							array_push($DNSservers,$IP);
+							$port = $exploded[1];
 						}
 						else
 						{
+							$port = "53";
+						}
+						if(!validIP($IP))
+						{
 							$error .= "IP (".htmlspecialchars($IP).") is invalid!<br>";
+						}
+						elseif(!is_numeric($port))
+						{
+							$error .= "Port (".htmlspecialchars($port).") is invalid!<br>";
+						}
+						else
+						{
+							array_push($DNSservers,$IP."#".$port);
 						}
 					}
 				}
 				$DNSservercount = count($DNSservers);
 
-				if(isset($_POST["localDNS"]) && isset($_POST["localDNSport"]) &&
-				   is_numeric($_POST["localDNSport"]))
-				{
-					// Save port and modify dnsmasq.d config file
-					exec("sudo pihole -a localdnsport ".intval($_POST["localDNSport"]));
-					$DNSservercount++;
-				}
-				else
-				{
-					// Remove possible entry if unticked
-
-					exec("sudo pihole -a localdnsport 0");
-				}
 				// Check if at least one DNS server has been added
 				if($DNSservercount < 1)
 				{
