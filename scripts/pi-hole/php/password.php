@@ -58,7 +58,7 @@
                 // Login successful, redirect the user to the homepage to discard the POST request
                 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['QUERY_STRING'] === 'login') {
                     // Set persistent cookie if selected
-                    if (isset($_POST['cook']))
+                    if (isset($_POST['persistentlogin']))
                     {
                         setcookie('persistentlogin', $pwhash, time()+60*60*24*7);
                     }
