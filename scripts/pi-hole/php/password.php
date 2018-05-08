@@ -28,7 +28,7 @@
     if(isset($_GET["logout"]))
     {
         session_unset();
-        setcookie('sesshash', '');
+        setcookie('persistentlogin', '');
 	    header('Location: index.php');
         exit();
     }
@@ -40,12 +40,12 @@
     if(strlen($pwhash) > 0)
     {
         // Check for and authorize from persistent cookie 
-        if (isset($_COOKIE["sesshash"]))
+        if (isset($_COOKIE["persistentlogin"]))
         {
-            if ($pwhash = $_COOKIE["sesshash"])
+            if ($pwhash = $_COOKIE["persistentlogin"])
                 $auth = true;
 		// Refresh cookie with new expiry
-                setcookie('sesshash', $pwhash, time()+60*60*24*7);
+                setcookie('persistentlogin', $pwhash, time()+60*60*24*7);
         }
         // Compare doubly hashes password input with saved hash
         else if(isset($_POST["pw"]))
@@ -60,7 +60,7 @@
                     // Set persistent cookie if selected
                     if (isset($_POST['cook']))
                     {
-                        setcookie('sesshash', $pwhash, time()+60*60*24*7);
+                        setcookie('persistentlogin', $pwhash, time()+60*60*24*7);
                     }
                     header('Location: index.php');
                     exit();
