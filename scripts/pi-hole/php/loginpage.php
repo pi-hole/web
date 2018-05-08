@@ -25,7 +25,6 @@
       <form action="" id="loginform" method="post">
         <div class="form-group has-feedback <?php if ($wrongpassword) { ?>has-error<?php } ?> ">
           <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" autofocus>
-          <input type="checkbox" id="logincookie" name="persistentlogin" class="form=control"> Remember me for 7 days
           <span class="fa fa-key form-control-feedback"></span>
         </div>
         <div class="row">
@@ -36,6 +35,9 @@
           </ul>
           </div>
           <div class="col-xs-4">
+            <div class="form-group">
+            <div class="checkbox pull-right"><label><input type="checkbox" id="logincookie" name="persistentlogin">Remember me for 7 days</label></div>
+            </div>
             <button type="submit" href="#" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;&nbsp;Log in</button>
           </div>
         </div>
