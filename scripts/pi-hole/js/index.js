@@ -617,7 +617,6 @@ function updateTopLists() {
         if(jQuery.isEmptyObject(data.top_queries))
         {
             $("#domain-frequency").parent().remove();
-            return;
         }
 
         for (domain in data.top_ads) {
@@ -641,7 +640,6 @@ function updateTopLists() {
         if(jQuery.isEmptyObject(data.top_ads))
         {
             $("#ad-frequency").parent().remove();
-            return;
         }
 
         $("#domain-frequency .overlay").hide();
