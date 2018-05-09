@@ -46,7 +46,9 @@
 	    {	$auth = true;
 		// Refresh cookie with new expiry
                 setcookie('persistentlogin', $pwhash, time()+60*60*24*7);
+	    }
 	    else 
+	    {
 		// Invalid cookie 
 		$auth = false;
 		setcookie('persistentlogin', '');
