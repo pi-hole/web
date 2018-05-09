@@ -43,9 +43,14 @@
         if (isset($_COOKIE["persistentlogin"]))
         {
             if ($pwhash = $_COOKIE["persistentlogin"])
-                $auth = true;
+	    {	$auth = true;
 		// Refresh cookie with new expiry
                 setcookie('persistentlogin', $pwhash, time()+60*60*24*7);
+	    else 
+		// Invalid cookie 
+		$auth = false;
+		setcookie('persistentlogin', '');
+	    }
         }
         // Compare doubly hashes password input with saved hash
         else if(isset($_POST["pw"]))
