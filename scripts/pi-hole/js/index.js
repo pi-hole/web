@@ -535,8 +535,8 @@ function updateTopClientsChart() {
 
         // Clear tables before filling them with data
         $("#client-frequency td").parent().remove();
-        var clienttable =  $("#client-frequency").find("tbody:last");
-        var client, percentage, clientname, clientip;
+        var clienttable = $("#client-frequency").find("tbody:last");
+        var client, percentage, clientname, clientip, idx;
         for (client in data.top_sources) {
 
             if ({}.hasOwnProperty.call(data.top_sources, client)){
@@ -549,7 +549,7 @@ function updateTopClientsChart() {
                 client = escapeHtml(client);
                 if(client.indexOf("|") > -1)
                 {
-                    var idx = client.indexOf("|");
+                    idx = client.indexOf("|");
                     clientname = client.substr(0, idx);
                     clientip = client.substr(idx+1, client.length-idx);
                 }
@@ -569,8 +569,7 @@ function updateTopClientsChart() {
 
         // Clear tables before filling them with data
         $("#client-frequency-blocked td").parent().remove();
-        var clientblockedtable =  $("#client-frequency-blocked").find("tbody:last");
-        var client, percentage, clientname, clientip;
+        var clientblockedtable = $("#client-frequency-blocked").find("tbody:last");
         for (client in data.top_sources_blocked) {
 
             if ({}.hasOwnProperty.call(data.top_sources_blocked, client)){
@@ -583,7 +582,7 @@ function updateTopClientsChart() {
                 client = escapeHtml(client);
                 if(client.indexOf("|") > -1)
                 {
-                    var idx = client.indexOf("|");
+                    idx = client.indexOf("|");
                     clientname = client.substr(0, idx);
                     clientip = client.substr(idx+1, client.length-idx);
                 }
