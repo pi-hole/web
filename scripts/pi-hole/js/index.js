@@ -536,7 +536,7 @@ function updateTopClientsChart() {
         // Clear tables before filling them with data
         $("#client-frequency td").parent().remove();
         var clienttable = $("#client-frequency").find("tbody:last");
-        var client, percentage, clientname, clientip, idx;
+        var client, percentage, clientname, clientip, idx, url;
         for (client in data.top_sources) {
 
             if ({}.hasOwnProperty.call(data.top_sources, client)){
@@ -559,7 +559,7 @@ function updateTopClientsChart() {
                     clientip = client;
                 }
 
-                var url = "<a href=\"queries.php?client="+clientip+"\" title=\""+clientip+"\">"+clientname+"</a>";
+                url = "<a href=\"queries.php?client="+clientip+"\" title=\""+clientip+"\">"+clientname+"</a>";
                 percentage = data.top_sources[client] / data.dns_queries_today * 100;
                 clienttable.append("<tr> <td>" + url +
                     "</td> <td>" + data.top_sources[client] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
@@ -592,7 +592,7 @@ function updateTopClientsChart() {
                     clientip = client;
                 }
 
-                var url = "<a href=\"queries.php?client="+clientip+"\" title=\""+clientip+"\">"+clientname+"</a>";
+                url = "<a href=\"queries.php?client="+clientip+"\" title=\""+clientip+"\">"+clientname+"</a>";
                 percentage = data.top_sources_blocked[client] / data.dns_queries_today * 100;
                 clientblockedtable.append("<tr> <td>" + url +
                     "</td> <td>" + data.top_sources_blocked[client] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
