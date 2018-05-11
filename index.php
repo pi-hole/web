@@ -7,7 +7,7 @@
 *    Please see LICENSE file for your rights under this license. */
     $indexpage = true;
     require "scripts/pi-hole/php/header.php";
-    require_once("scripts/pi-hole/php/gravity.php"); 
+    require_once("scripts/pi-hole/php/gravity.php");
 ?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
@@ -217,7 +217,7 @@ if($boxedlayout)
 }
 else
 {
-  $tablelayout = "col-md-6 col-lg-4";
+  $tablelayout = "col-md-6 col-lg-6";
 }
 ?>
 <div class="row">
@@ -278,7 +278,35 @@ else
     <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="client-frequency">
         <div class="box-header with-border">
-          <h3 class="box-title">Top Clients</h3>
+          <h3 class="box-title">Top Clients (total)</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                    <th>Client</th>
+                    <th>Requests</th>
+                    <th>Frequency</th>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="overlay">
+          <i class="fa fa-refresh fa-spin"></i>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </div>
+    <!-- /.col -->
+    <!-- /.col -->
+    <div class="<?php echo $tablelayout; ?>">
+      <div class="box" id="client-frequency-blocked">
+        <div class="box-header with-border">
+          <h3 class="box-title">Top Clients (blocked only)</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
