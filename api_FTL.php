@@ -31,6 +31,7 @@ else
 
 	if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))
 	{
+		require_once("scripts/pi-hole/php/gravity.php");
 		sendRequestFTL("stats");
 		$return = getResponseFTL();
 
@@ -61,6 +62,7 @@ else
 				$stats[$tmp[0]] = floatval($tmp[1]);
 			}
 		}
+		$stats['gravity_last_updated'] = gravity_last_update(true);
 		$data = array_merge($data,$stats);
 	}
 
@@ -168,6 +170,38 @@ else
 		}
 
 		$result = array('top_sources' => $top_clients);
+		$data = array_merge($data, $result);
+	}
+
+	if (isset($_GET['topClientsBlocked']) && $auth)
+	{
+
+		if(isset($_GET['topClientsBlocked']))
+		{
+			$number = $_GET['topClientsBlocked'];
+		}
+
+		if(is_numeric($number))
+		{
+			sendRequestFTL("top-clients blocked (".$number.")");
+		}
+		else
+		{
+			sendRequestFTL("top-clients blocked");
+		}
+
+		$return = getResponseFTL();
+		$top_clients = array();
+		foreach($return as $line)
+		{
+			$tmp = explode(" ",$line);
+			if(count($tmp) > 3 && strlen($tmp[3]) > 0)
+				$top_clients[$tmp[3]."|".$tmp[2]] = intval($tmp[1]);
+			else
+				$top_clients[$tmp[2]] = intval($tmp[1]);
+		}
+
+		$result = array('top_sources_blocked' => $top_clients);
 		$data = array_merge($data, $result);
 	}
 

@@ -13,6 +13,7 @@
     }
 
     include('scripts/pi-hole/php/data.php');
+    include_once('scripts/pi-hole/php/gravity.php');
 
     // Non-Auth
 
@@ -34,6 +35,7 @@
         $sum['dns_queries_today'] = number_format( $sum['dns_queries_today']);
         $sum['ads_percentage_today'] = number_format( $sum['ads_percentage_today'], 1, '.', '');
         $sum['domains_being_blocked'] = number_format( $sum['domains_being_blocked']);
+        $sum['gravity_last_updated'] = gravity_last_update(true);
         $data = array_merge($data,  $sum);
     }
 
