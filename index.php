@@ -274,6 +274,8 @@ else
       </div>
       <!-- /.box -->
     </div>
+</div>
+<div class="row">
     <!-- /.col -->
     <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="client-frequency">
