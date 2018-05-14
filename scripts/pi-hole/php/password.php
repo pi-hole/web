@@ -29,7 +29,7 @@
     {
         session_unset();
         setcookie('persistentlogin', '');
-	    header('Location: index.php');
+        header('Location: index.php');
         exit();
     }
 
@@ -43,16 +43,16 @@
         if (isset($_COOKIE["persistentlogin"]))
         {
             if ($pwhash = $_COOKIE["persistentlogin"])
-	    {	$auth = true;
+            { $auth = true;
 		// Refresh cookie with new expiry
                 setcookie('persistentlogin', $pwhash, time()+60*60*24*7);
-	    }
-	    else 
-	    {
-		// Invalid cookie 
-		$auth = false;
-		setcookie('persistentlogin', '');
-	    }
+            }
+            else
+            {
+                // Invalid cookie
+                $auth = false;
+                setcookie('persistentlogin', '');
+            }
         }
         // Compare doubly hashes password input with saved hash
         else if(isset($_POST["pw"]))
