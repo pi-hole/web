@@ -43,8 +43,9 @@
         if (isset($_COOKIE["persistentlogin"]))
         {
             if ($pwhash = $_COOKIE["persistentlogin"])
-            { $auth = true;
-		// Refresh cookie with new expiry
+            {
+                $auth = true;
+                // Refresh cookie with new expiry
                 setcookie('persistentlogin', $pwhash, time()+60*60*24*7);
             }
             else
