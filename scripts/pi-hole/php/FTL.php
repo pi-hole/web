@@ -37,7 +37,7 @@ function getResponseFTL()
 
 	while(true)
 	{
-		$out = fgets($socket, 128);
+		$out = fgets($socket);
 		if(strrpos($out,"---EOM---") !== false)
 			break;
 
