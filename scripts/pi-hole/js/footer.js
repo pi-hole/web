@@ -66,9 +66,11 @@ function piholeChange(action, duration)
         case "enable":
             btnStatus = $("#flip-status-enable");
             btnStatus.html("<i class='fa fa-spinner'> </i>");
+            btnStatus.css("zIndex", 0);
             $.getJSON("api.php?enable&token=" + token, function(data) {
                 if(data.status === "enabled") {
                     btnStatus.html("");
+                    btnStatus.css("zIndex", -1);
                     piholeChanged("enabled");
                 }
             });
@@ -77,9 +79,11 @@ function piholeChange(action, duration)
         case "disable":
             btnStatus = $("#flip-status-disable");
             btnStatus.html("<i class='fa fa-spinner'> </i>");
+            btnStatus.css("zIndex", 0);
             $.getJSON("api.php?disable=" + duration + "&token=" + token, function(data) {
                 if(data.status === "disabled") {
                     btnStatus.html("");
+                    btnStatus.css("zIndex", -1);
                     piholeChanged("disabled");
                     if(duration > 0)
                     {
