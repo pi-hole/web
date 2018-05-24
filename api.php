@@ -75,14 +75,7 @@ elseif (isset($_GET['disable']) && $auth)
 }
 
 // Other API functions
-if(!isset($_GET["PHP"]))
-{
-	require("api_FTL.php");
-}
-else
-{
-	require("api_PHP.php");
-}
+require("api_FTL.php");
 
 if(isset($_GET["jsonForceObject"]))
 {
