@@ -739,6 +739,11 @@ function updateSummaryData(runOnce) {
             $("span#" + today).addClass("glow");
         });
 
+        if(data.hasOwnProperty("dns_queries_all_types"))
+        {
+            $("#total_queries").prop("title", "only A + AAAA queries (" + data["dns_queries_all_types"] + " in total)");
+        }
+
         window.setTimeout(function() {
             ["ads_blocked_today", "dns_queries_today", "domains_being_blocked", "ads_percentage_today", "unique_clients"].forEach(function(header, idx) {
                 var textData = (idx === 3 && data[header] !== "to") ? data[header] + "%" : data[header];
