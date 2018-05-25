@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-green">
+        <div class="small-box bg-green" id="total_queries" title="only A + AAAA queries">
             <div class="inner">
                 <p>Total queries (<span id="unique_clients">-</span> clients)</p>
                 <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
