@@ -452,6 +452,21 @@ function readAdlists()
 				{
 					exec('sudo pihole -a -c');
 				}
+        $adminemail = trim($_POST["adminemail"])
+        // If we didn't get an email, don't try to save it
+        if(strlen($adminemail) == 0 || !isset($adminemail))
+        {
+          $adminemail = 'noadminemail'
+        }
+        // Make sure that any email we did get is valid, otherwise error
+        elseif (!filter_var($adminemail, FILTER_VALIDATE_EMAIL)) {
+          $error  .= "Administrator email address (".htmlspecialchars($adminemail).") is invalid!<br>";
+        }
+        // Save the email after we've validated it
+        else
+				{
+					exec('sudo pihole -a -e '.$adminemail);
+				}
 				if(isset($_POST["boxedlayout"]))
 				{
 					exec('sudo pihole -a layout boxed');
