@@ -452,6 +452,19 @@ function readAdlists()
 				{
 					exec('sudo pihole -a -c');
 				}
+				$adminemail = trim($_POST["adminemail"]);
+				if(strlen($adminemail) == 0 || !isset($adminemail))
+				{
+					$adminemail = 'noadminemail';
+				}
+				elseif(!filter_var($adminemail, FILTER_VALIDATE_EMAIL))
+				{
+					$error .= "Administrator email address (".htmlspecialchars($adminemail).") is invalid!<br>";
+				}
+				else
+				{
+					exec('sudo pihole -a -e '.$adminemail);
+				}
 				if(isset($_POST["boxedlayout"]))
 				{
 					exec('sudo pihole -a layout boxed');
