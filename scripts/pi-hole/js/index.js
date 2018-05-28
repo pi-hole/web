@@ -386,12 +386,7 @@ function updateClientsOverTime() {
         for (key in data.clients)
         {
             if (!{}.hasOwnProperty.call(data.clients, key)) continue;
-            if(key.indexOf("|") > -1)
-            {
-                var idx = key.indexOf("|");
-                key = key.substr(0, idx);
-            }
-            labels.push(key);
+            labels.push(data.clients[key]);
         }
         // Get colors from AdminLTE
         var colors = [];
