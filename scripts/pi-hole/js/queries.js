@@ -267,10 +267,10 @@ $(document).ready(function() {
             { "width" : "4%" },
             { "width" : "36%", "render": $.fn.dataTable.render.text() },
             { "width" : "8%", "render": $.fn.dataTable.render.text() },
-            { "width" : "10%" },
-            { "width" : "8%" },
-            { "width" : "4%" },
-            { "width" : "10%" }
+            { "width" : "10%", "orderData": 4 },
+            { "width" : "8%", "orderData": 6 },
+            { "width" : "4%", "orderData": 5 },
+            { "width" : "10%", "orderData": 4 }
         ],
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "columnDefs": [ {

@@ -354,10 +354,8 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
-			if(count($tmp) > 3 && strlen($tmp[3]) > 0)
-				$client_names[$tmp[3]."|".$tmp[2]] = floatval($tmp[1]);
-			else
-				$client_names[$tmp[2]] = floatval($tmp[1]);
+			// returned data is in format: "ID count hostname"
+			$client_names[intval($tmp[0])] = $tmp[2];
 		}
 
 		$result = array('clients' => $client_names);
