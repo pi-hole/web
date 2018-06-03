@@ -282,7 +282,7 @@ $(document).ready(function() {
             // Receive previous state from client's local storage area
             var data = localStorage.getItem("query_log_table");
             // Return if not available
-            if(data === null) return null;
+            if(data === null){ return null; }
             // Ensure that we always start on the first page (most recent query)
             data = JSON.parse(data);
             data["start"] = 0;
