@@ -273,6 +273,23 @@ $(document).ready(function() {
             { "width" : "10%", "orderData": 4 }
         ],
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        "stateSave": true,
+        stateSaveCallback: function(settings, data) {
+            // Store current state in client's local storage area
+            localStorage.setItem("query_log_table", JSON.stringify(data));
+        },
+        stateLoadCallback: function(settings) {
+            // Receive previous state from client's local storage area
+            var data = localStorage.getItem("query_log_table");
+            // Return if not available
+            if(data === null) return null;
+            // Ensure that we always start on the first page (most recent query)
+            data = JSON.parse(data);
+            data["start"] = 0;
+            console.log(data);
+            // Apply loaded state to table
+            return data;
+        },
         "columnDefs": [ {
             "targets": -1,
             "data": null,
