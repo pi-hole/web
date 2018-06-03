@@ -146,51 +146,51 @@ $(document).ready(function() {
         "rowCallback": function( row, data, index ){
             var blocked = false;
 
-            $dnssec_status = "";
+            var dnssec_status = "";
             if (data[5] === "1")
             {
-                $dnssec_status = "<br><span style=\"color:green\">SECURE</span>";
+                dnssec_status = "<br><span style=\"color:green\">SECURE</span>";
             }
             else if (data[5] === "2")
             {
-                $dnssec_status = "<br><span style=\"color:orange\">INSECURE</span>";
+                dnssec_status = "<br><span style=\"color:orange\">INSECURE</span>";
             }
             else if (data[5] === "3")
             {
-                $dnssec_status = "<br><span style=\"color:red\">BOGUS</span>";
+                dnssec_status = "<br><span style=\"color:red\">BOGUS</span>";
             }
             else if (data[5] === "4")
             {
-                $dnssec_status = "<br><span style=\"color:red\">ABANDONED</span>";
+                dnssec_status = "<br><span style=\"color:red\">ABANDONED</span>";
             }
             else if (data[5] === "5")
             {
-                $dnssec_status = "<br><span style=\"color:red\">?</span>";
+                dnssec_status = "<br><span style=\"color:red\">?</span>";
             }
             if (data[4] === "1")
             {
                 blocked = true;
                 $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed"+$dnssec_status );
+                $("td:eq(4)", row).html( "Pi-holed"+dnssec_status );
                 $("td:eq(6)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
             else if (data[4] === "2")
             {
                 $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(forwarded)"+$dnssec_status );
+                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(forwarded)"+dnssec_status );
                 $("td:eq(6)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
             else if (data[4] === "3")
             {
                 $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(cached)"+$dnssec_status );
+                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(cached)"+dnssec_status );
                 $("td:eq(6)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
             else if (data[4] === "4")
             {
                 blocked = true;
                 $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)"+$dnssec_status );
+                $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)"+dnssec_status );
                 $("td:eq(6)", row).html( "" );
             }
             else if (data[4] === "5")
