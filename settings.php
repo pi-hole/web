@@ -19,6 +19,13 @@ else
 	$piholeFTLConf = array();
 }
 
+// Handling of PHP internal errors
+$last_error = error_get_last();
+if($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR)
+{
+	$error .= "PHP error (".htmlspecialchars($last_error["type"])."): ".htmlspecialchars($last_error["message"])." in ".htmlspecialchars($last_error["file"]).":".htmlspecialchars($last_error["line"]);
+}
+
 ?>
 <style type="text/css">
 	.tooltip-inner {
