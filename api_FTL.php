@@ -353,9 +353,7 @@ else
 		$client_names = array();
 		foreach($return as $line)
 		{
-			$tmp = explode(" ",$line);
-			// returned data is in format: "ID count hostname"
-			$client_names[intval($tmp[0])] = $tmp[2];
+			$client_names[] = $line;
 		}
 
 		$result = array('clients' => $client_names);
