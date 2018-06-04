@@ -290,23 +290,6 @@ else
 		unset($data);
 	}
 
-	if (isset($_GET['overTimeDataForwards']) && $auth)
-	{
-		sendRequestFTL("ForwardedoverTime");
-		$return = getResponseFTL();
-		$over_time = array();
-
-		foreach($return as $line)
-		{
-			$tmp = explode(" ",$line);
-			for ($i=0; $i < count($tmp)-1; $i++) {
-				$over_time[intval($tmp[0])][$i] = floatval($tmp[$i+1]);
-			}
-		}
-		$result = array('over_time' => $over_time);
-		$data = array_merge($data, $result);
-	}
-
 	if (isset($_GET['getForwardDestinationNames']) && $auth)
 	{
 		sendRequestFTL("forward-names");
