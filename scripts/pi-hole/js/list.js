@@ -42,7 +42,7 @@ function refresh(fade) {
     var list = $("#list");
     if(listType === "black")
     {
-        listw = $("#list-wildcard");
+        listw = $("#list-regex");
     }
     if(fade) {
         list.fadeOut(100);
@@ -61,7 +61,7 @@ function refresh(fade) {
             {
                 listw.html("");
             }
-            var data = JSON.parse(response).sort();
+            var data = JSON.parse(response);
 
             if(data.length === 0) {
                 $("h3").hide();
@@ -74,37 +74,52 @@ function refresh(fade) {
                     list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
                 }
             }
-            else {
+            else
+            {
                 $("h3").show();
-                data.forEach(function (entry, index) {
-                    if(entry.substr(0,1) === "*")
-                    {
-                        // Wildcard entry
-                        // remove leading *
-                        entry = entry.substr(1, entry.length - 1);
+                data[0] = data[0].sort();
+                data[0].forEach(function (entry, index) {
+                    // Whitelist entry or Blacklist (exact entry) are in the zero-th
+                    // array returned by get.php
+                    list.append(
+                    "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
+                    "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
+                    "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
+                    // Handle button
+                    $("#list #"+index+"").on("click", "button", function() {
+                        sub(index, entry, "exact");
+                    });
+                });
+
+                // Add regex domains if present in returned list data
+                if(data.length === 2)
+                {
+                    data[1] = data[1].sort();
+                    data[1].forEach(function (entry, index) {
+                        // Whitelist entry or Blacklist (exact entry) are in the zero-th
+                        // array returned by get.php
                         listw.append(
                         "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
                         "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
                         "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
                         // Handle button
-                        $("#list-wildcard #"+index+"").on("click", "button", function() {
+                        $("#list-regex #"+index+"").on("click", "button", function() {
                             sub(index, entry, "wild");
                         });
+                    });
+                }
+
+
+/*
+                        // Blacklist: exact + wildcard array
+                        entry = entry.substr(1, entry.length - 1);
+
+            if(data.length === 2)
+            {
                     }
                     else
                     {
-                        // Normal entry
-                        list.append(
-                        "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
-                        "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
-                        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
-                        // Handle button
-                        $("#list #"+index+"").on("click", "button", function() {
-                            sub(index, entry, "exact");
-                        });
-                    }
-
-                });
+*/
             }
             list.fadeIn(100);
             if(listw)

@@ -1,4 +1,4 @@
-<?php /* 
+<?php /*
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
@@ -44,9 +44,6 @@ function getFullName() {
         <button id="btnRefresh" class="btn btn-default" type="button"><i class="fa fa-refresh"></i></button>
     </span>
 </div>
-<?php if($list === "white") { ?>
-    <p>Note: Whitelisting a subdomain of a wildcard blocked domain is not possible.</p>    
-<?php } ?>
 
 <!-- Alerts -->
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
@@ -69,8 +66,8 @@ function getFullName() {
 <?php } ?>
 <ul class="list-group" id="list"></ul>
 <?php if($list === "black") { ?>
-<h3>Wildcard blocking</h3>
-<ul class="list-group" id="list-wildcard"></ul>
+<h3>Regex blocking</h3>
+<ul class="list-group" id="list-regex"></ul>
 <?php } ?>
 
 <?php
