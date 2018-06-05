@@ -52,11 +52,11 @@ Sending a donation using our links below is **extremely helpful** in offsetting 
 ### Alternative support
 If you'd rather not [donate](https://pi-hole.net/donate/) (_which is okay!_), there are other ways you can help support us:
 
+- [Patreon](https://patreon.com/pihole) _Become a patron for rewards_
 - [Digital Ocean](http://www.digitalocean.com/?refcode=344d234950e1) _affiliate link_
 - [UNIXstickers.com](http://unixstickers.refr.cc/jacobs) _save $5 when you spend $9 using our affiliate link_
 - [Pi-hole Swag Store](https://pi-hole.net/shop/) _affiliate link_
 - [Amazon](http://www.amazon.com/exec/obidos/redirect-home/pihole09-20) _affiliate link_
-- [Ho-ost](https://clients.ho-ost.com/aff.php?aff=19) _save 50% with our affiliate link_
 - [DNS Made Easy](https://cp.dnsmadeeasy.com/u/133706) _affiliate link_
 - [Vultr](http://www.vultr.com/?ref=7190426) _affiliate link_
 - Spreading the word about our software, and how you have benefited from it
