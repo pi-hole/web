@@ -353,7 +353,11 @@ else
 		$client_names = array();
 		foreach($return as $line)
 		{
-			$client_names[] = $line;
+			$tmp = explode(" ", $line);
+			$client_names[] = array(
+				"name" => $tmp[0],
+				"ip" => $tmp[1]
+			);
 		}
 
 		$result = array('clients' => $client_names);
