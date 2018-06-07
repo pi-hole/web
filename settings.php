@@ -23,7 +23,7 @@ else
 $last_error = error_get_last();
 if($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR)
 {
-	$error .= "PHP error (".htmlspecialchars($last_error["type"])."): ".htmlspecialchars($last_error["message"])." in ".htmlspecialchars($last_error["file"]).":".htmlspecialchars($last_error["line"]);
+	$error .= "There was a problem applying your settings.<br>Debugging information:<br>PHP error (".htmlspecialchars($last_error["type"])."): ".htmlspecialchars($last_error["message"])." in ".htmlspecialchars($last_error["file"]).":".htmlspecialchars($last_error["line"]);
 }
 
 ?>
