@@ -73,6 +73,18 @@ elseif (isset($_GET['disable']) && $auth)
 	}
 	$data = array_merge($data, array("status" => "disabled"));
 }
+elseif (isset($_GET['updatecheck']))
+{
+	// Determine if updates are available for Pi-hole
+	// using the same script that we use for the footer
+	// on the dashboard (update notifications are
+	// suppressed if on development branches)
+	require "scripts/pi-hole/php/update_checker.php";
+	$updates = array("core_update" => $core_update,
+	                 "web_update" => $web_update,
+	                 "FTL_update" => $FTL_update);
+	$data = array_merge($data, $updates);
+}
 
 // Other API functions
 require("api_FTL.php");
