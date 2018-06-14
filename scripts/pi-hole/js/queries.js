@@ -190,7 +190,7 @@ $(document).ready(function() {
             {
                 blocked = true;
                 $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)"+dnssec_status );
+                $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)");
                 $("td:eq(6)", row).html( "" );
             }
             else if (data[4] === "5")
