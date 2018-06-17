@@ -22,9 +22,9 @@ switch ($listtype) {
         break;
 
     case "black":
-        $exact = array(getListContent("blacklist.txt"));
-        $regex = array(getListContent("regex.list"));
-        $list = array_merge($exact, $regex);
+        $exact = getListContent("blacklist.txt");
+        $regex = getListContent("regex.list");
+        $list = array($exact, $regex);
         break;
 
     default:

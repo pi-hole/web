@@ -108,18 +108,6 @@ function refresh(fade) {
                         });
                     });
                 }
-
-
-/*
-                        // Blacklist: exact + wildcard array
-                        entry = entry.substr(1, entry.length - 1);
-
-            if(data.length === 2)
-            {
-                    }
-                    else
-                    {
-*/
             }
             list.fadeIn(100);
             if(listw)
