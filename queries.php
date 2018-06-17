@@ -140,7 +140,6 @@ if(strlen($showing) > 0)
                         <th>Client</th>
                         <th>Status</th>
                         <th>Reply</th>
-                        <th>DNSSEC</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -152,7 +151,6 @@ if(strlen($showing) > 0)
                         <th>Client</th>
                         <th>Status</th>
                         <th>Reply</th>
-                        <th>DNSSEC</th>
                         <th>Action</th>
                     </tr>
                 </tfoot>
