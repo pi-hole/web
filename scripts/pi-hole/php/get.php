@@ -44,7 +44,10 @@ function getListContent($listname) {
             unset($list[$i]);
     }
 
-    return $list;
+    // Re-index list after possible unset() activity
+    $newlist = array_values($list);
+
+    return $newlist;
 
 }
 

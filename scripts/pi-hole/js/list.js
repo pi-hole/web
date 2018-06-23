@@ -146,7 +146,8 @@ function add(arg) {
         method: "post",
         data: {"domain":domain.val().trim(), "list":locallistType, "token":token},
         success: function(response) {
-          if (response.indexOf("] Pi-hole blocking is ") === -1) {
+          if (locallistType !== "wild" && response.indexOf("] Pi-hole blocking is ") === -1 ||
+              locallistType === "wild" && response.length > 1) {
             alFailure.show();
             err.html(response);
             alFailure.delay(4000).fadeOut(2000, function() {

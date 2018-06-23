@@ -34,12 +34,10 @@ switch($type) {
         }
         break;
     case "wild":
-        if(!isset($_POST["auditlog"]))
-            echo exec("sudo pihole -wild -q ${_POST['domain']}");
-        else
+        if(file_put_contents($regexfile, $_POST['domain']."\n", FILE_APPEND) === FALSE)
         {
-            echo exec("sudo pihole -wild -q -n ${_POST['domain']}");
-            echo exec("sudo pihole -a audit ${_POST['domain']}");
+            $err = error_get_last()["message"];
+            echo "Unable to add regex \"".htmlspecialchars($_POST['domain'])."\" to ${regexfile}<br>Error message: $err";
         }
     case "audit":
         echo exec("sudo pihole -a audit ${_POST['domain']}");

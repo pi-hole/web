@@ -22,7 +22,24 @@ switch($type) {
         exec("sudo pihole -b -q -d ${_POST['domain']}");
         break;
     case "wild":
-        exec("sudo pihole -wild -q -d ${_POST['domain']}");
+        if(($list = file_get_contents($regexfile)) === FALSE)
+        {
+            $err = error_get_last()["message"];
+            echo "Unable to read ${regexfile}<br>Error message: $err";
+        }
+
+        // Replace regex with empty line ...
+        $list = str_replace($_POST['domain'], '', $list);
+        // ... and remove all empty lines from the file
+        $tmp = explode("\n", $list);
+        $tmp = array_filter($tmp);
+        $list = implode("\n", $tmp);
+
+        if(file_put_contents($regexfile, $list) === FALSE)
+        {
+            $err = error_get_last()["message"];
+            echo "Unable to remove regex \"".htmlspecialchars($_POST['domain'])."\" from ${regexfile}<br>Error message: $err";
+        }
         break;
 }
 
