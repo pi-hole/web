@@ -40,6 +40,13 @@ switch($type) {
             $err = error_get_last()["message"];
             echo "Unable to remove regex \"".htmlspecialchars($_POST['domain'])."\" from ${regexfile}<br>Error message: $err";
         }
+        else
+        {
+            // Send SIGHUP to pihole-FTL using a frontend command
+            // to force reloading of the regex domains
+            // This will also wipe the resolver's cache
+            echo exec("sudo pihole restartdns reload");
+        }
         break;
 }
 

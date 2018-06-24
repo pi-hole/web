@@ -39,6 +39,13 @@ switch($type) {
             $err = error_get_last()["message"];
             echo "Unable to add regex \"".htmlspecialchars($_POST['domain'])."\" to ${regexfile}<br>Error message: $err";
         }
+        else
+        {
+            // Send SIGHUP to pihole-FTL using a frontend command
+            // to force reloading of the regex domains
+            // This will also wipe the resolver's cache
+            echo exec("sudo pihole restartdns reload");
+        }
     case "audit":
         echo exec("sudo pihole -a audit ${_POST['domain']}");
         break;
