@@ -34,7 +34,7 @@ switch($type) {
         }
         break;
     case "wild":
-        if(file_put_contents($regexfile, $_POST['domain']."\n", FILE_APPEND) === FALSE)
+        if(file_put_contents($regexfile, "\n".$_POST['domain'], FILE_APPEND) === FALSE)
         {
             $err = error_get_last()["message"];
             echo "Unable to add regex \"".htmlspecialchars($_POST['domain'])."\" to ${regexfile}<br>Error message: $err";

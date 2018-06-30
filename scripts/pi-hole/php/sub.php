@@ -34,8 +34,6 @@ switch($type) {
         $tmp = explode("\n", $list);
         $tmp = array_filter($tmp);
         $list = implode("\n", $tmp);
-        // ... and add a newline to the end
-        $list .= "\n";
 
         if(file_put_contents($regexfile, $list) === FALSE)
         {
