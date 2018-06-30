@@ -14,6 +14,23 @@ $type = $_POST['list'];
 // All of the verification for list editing
 list_verify($type);
 
+function add_regex($regex)
+{
+    global $regexfile;
+    if(file_put_contents($regexfile, "\n".$regex, FILE_APPEND) === FALSE)
+    {
+        $err = error_get_last()["message"];
+        echo "Unable to add regex \"".htmlspecialchars($_POST['domain'])."\" to ${regexfile}<br>Error message: $err";
+    }
+    else
+    {
+        // Send SIGHUP to pihole-FTL using a frontend command
+        // to force reloading of the regex domains
+        // This will also wipe the resolver's cache
+        echo exec("sudo pihole restartdns reload");
+    }
+}
+
 switch($type) {
     case "white":
         if(!isset($_POST["auditlog"]))
@@ -34,18 +51,12 @@ switch($type) {
         }
         break;
     case "wild":
-        if(file_put_contents($regexfile, "\n".$_POST['domain'], FILE_APPEND) === FALSE)
-        {
-            $err = error_get_last()["message"];
-            echo "Unable to add regex \"".htmlspecialchars($_POST['domain'])."\" to ${regexfile}<br>Error message: $err";
-        }
-        else
-        {
-            // Send SIGHUP to pihole-FTL using a frontend command
-            // to force reloading of the regex domains
-            // This will also wipe the resolver's cache
-            echo exec("sudo pihole restartdns reload");
-        }
+        // Escape "." so it won't be interpreted as the wildcard character
+        $domain = str_replace(".","\.",$_POST['domain']);
+        // Add regex filter for legacy wildcard behavior
+        add_regex("((^)|(\.))".$domain."$");
+    case "regex":
+        add_regex($_POST['domain']);
     case "audit":
         echo exec("sudo pihole -a audit ${_POST['domain']}");
         break;

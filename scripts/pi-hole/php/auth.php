@@ -139,7 +139,7 @@ function list_verify($type) {
     // valid domain for regex expressions
     // Regex filters are validated by FTL
     // on import and skipped if invalid
-    if($_POST['list'] !== "wild")
+    if($_POST['list'] !== "regex")
     {
         check_domain();
     }

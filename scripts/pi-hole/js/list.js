@@ -126,12 +126,14 @@ window.onload = refresh(false);
 function add(arg) {
     var locallistType = listType;
     var domain = $("#domain");
+    var wild = false;
     if(domain.val().length === 0){
         return;
     }
-    if(arg === "wild")
+    if(arg === "wild" || arg === "regex")
     {
-        locallistType = "wild";
+        locallistType = arg;
+        wild = true;
     }
 
     var alInfo = $("#alInfo");
@@ -146,8 +148,8 @@ function add(arg) {
         method: "post",
         data: {"domain":domain.val().trim(), "list":locallistType, "token":token},
         success: function(response) {
-          if (locallistType !== "wild" && response.indexOf("] Pi-hole blocking is ") === -1 ||
-              locallistType === "wild" && response.length > 1) {
+          if (!wild && response.indexOf("] Pi-hole blocking is ") === -1 ||
+               wild && response.length > 1) {
             alFailure.show();
             err.html(response);
             alFailure.delay(4000).fadeOut(2000, function() {
@@ -198,6 +200,10 @@ $("#btnAdd").on("click", function() {
 
 $("#btnAddWildcard").on("click", function() {
     add("wild");
+});
+
+$("#btnAddRegex").on("click", function() {
+    add("regex");
 });
 
 $("#btnRefresh").on("click", function() {

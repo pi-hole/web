@@ -37,7 +37,8 @@ function getFullName() {
     <span class="input-group-btn">
     <?php if($list === "black") { ?>
         <button id="btnAdd" class="btn btn-default" type="button">Add (exact)</button>
-        <button id="btnAddWildcard" class="btn btn-default" type="button">Add (regex)</button>
+        <button id="btnAddWildcard" class="btn btn-default" type="button">Add (wildcard)</button>
+        <button id="btnAddRegex" class="btn btn-default" type="button">Add (regex)</button>
     <?php }else{ ?>
         <button id="btnAdd" class="btn btn-default" type="button">Add</button>
     <?php } ?>
@@ -66,7 +67,7 @@ function getFullName() {
 <?php } ?>
 <ul class="list-group" id="list"></ul>
 <?php if($list === "black") { ?>
-<h3>Regex blocking</h3>
+<h3>Regex &amp; Wildcard blocking</h3>
 <ul class="list-group" id="list-regex"></ul>
 <?php } ?>
 
