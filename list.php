@@ -67,7 +67,7 @@ function getFullName() {
 <?php } ?>
 <ul class="list-group" id="list"></ul>
 <?php if($list === "black") { ?>
-<h3>Regex &amp; Wildcard blocking</h3>
+<h3><a href="https://docs.pi-hole.net/ftldns/regex/" target="_blank" title="Click for Pi-hole Regex documentation">Regex</a> &amp; Wildcard blocking</h3>
 <ul class="list-group" id="list-regex"></ul>
 <?php } ?>
 
