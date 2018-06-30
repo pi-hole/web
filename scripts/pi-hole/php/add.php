@@ -55,8 +55,10 @@ switch($type) {
         $domain = str_replace(".","\.",$_POST['domain']);
         // Add regex filter for legacy wildcard behavior
         add_regex("((^)|(\.))".$domain."$");
+        break;
     case "regex":
         add_regex($_POST['domain']);
+        break;
     case "audit":
         echo exec("sudo pihole -a audit ${_POST['domain']}");
         break;
