@@ -20,7 +20,7 @@ function add_regex($regex)
     if(file_put_contents($regexfile, "\n".$regex, FILE_APPEND) === FALSE)
     {
         $err = error_get_last()["message"];
-        echo "Unable to add regex \"".htmlspecialchars($_POST['domain'])."\" to ${regexfile}<br>Error message: $err";
+        echo "Unable to add regex \"".htmlspecialchars($regex)."\" to ${regexfile}<br>Error message: $err";
     }
     else
     {
