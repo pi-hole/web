@@ -13,13 +13,14 @@ var listType = $("#list-type").html();
 var fullName = listType === "white" ? "Whitelist" : "Blacklist";
 
 function sub(index, entry, arg) {
-    var domain = $("#"+index);
+    var domain = $("#list #"+index);
     var locallistType = listType;
-    domain.hide("highlight");
-    if(arg === "wild")
+    if(arg === "regex")
     {
-        locallistType = "wild";
+        locallistType = "regex";
+        domain = $("#list-regex #"+index);
     }
+    domain.hide("highlight");
     $.ajax({
         url: "scripts/pi-hole/php/sub.php",
         method: "post",
@@ -104,7 +105,7 @@ function refresh(fade) {
                         "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
                         // Handle button
                         $("#list-regex #"+index+"").on("click", "button", function() {
-                            sub(index, entry, "wild");
+                            sub(index, entry, "regex");
                         });
                     });
                 }

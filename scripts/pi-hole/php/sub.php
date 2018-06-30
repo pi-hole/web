@@ -21,7 +21,7 @@ switch($type) {
     case "black":
         exec("sudo pihole -b -q -d ${_POST['domain']}");
         break;
-    case "wild":
+    case "regex":
         if(($list = file_get_contents($regexfile)) === FALSE)
         {
             $err = error_get_last()["message"];
