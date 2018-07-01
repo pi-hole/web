@@ -123,7 +123,8 @@ function isinserverlist($addr) {
 			"Norton" => ["v4_1" => "199.85.126.10", "v4_2" => "199.85.127.10"],
 			"Comodo" => ["v4_1" => "8.26.56.26", "v4_2" => "8.20.247.20"],
 			"DNS.WATCH" => ["v4_1" => "84.200.69.80", "v4_2" => "84.200.70.40", "v6_1" => "2001:1608:10:25:0:0:1c04:b12f", "v6_2" => "2001:1608:10:25:0:0:9249:d69b"],
-			"Quad9" => ["v4_1" => "9.9.9.9", "v4_2" => "149.112.112.112", "v6_1" => "2620:fe::fe"]
+			"Quad9" => ["v4_1" => "9.9.9.9", "v4_2" => "149.112.112.112", "v6_1" => "2620:fe::fe"],
+			"Cloudflare" => ["v4_1" => "1.1.1.1", "v4_2" => "1.0.0.1", "v6_1" => "2606:4700:4700::1111", "v6_2" => "2606:4700:4700::1001"]
 		];
 
 $adlist = [];
@@ -186,20 +187,34 @@ function readAdlists()
 				{
 					if(array_key_exists("custom".$i,$_POST))
 					{
-						$IP = $_POST["custom".$i."val"];
-						if(validIP($IP))
+						$exploded = explode("#", $_POST["custom".$i."val"], 2);
+						$IP = $exploded[0];
+						if(count($exploded) > 1)
 						{
-							array_push($DNSservers,$IP);
+							$port = $exploded[1];
 						}
 						else
 						{
+							$port = "53";
+						}
+						if(!validIP($IP))
+						{
 							$error .= "IP (".htmlspecialchars($IP).") is invalid!<br>";
+						}
+						elseif(!is_numeric($port))
+						{
+							$error .= "Port (".htmlspecialchars($port).") is invalid!<br>";
+						}
+						else
+						{
+							array_push($DNSservers,$IP."#".$port);
 						}
 					}
 				}
+				$DNSservercount = count($DNSservers);
 
 				// Check if at least one DNS server has been added
-				if(count($DNSservers) < 1)
+				if($DNSservercount < 1)
 				{
 					$error .= "No DNS server has been selected.<br>";
 				}
@@ -234,6 +249,28 @@ function readAdlists()
 					$extra .= "no-dnssec";
 				}
 
+				// Check if Conditional Forwarding is requested
+				if(isset($_POST["conditionalForwarding"]))
+				{
+					// Validate conditional forwarding IP
+					if (!validIP($_POST["conditionalForwardingIP"]))
+					{
+						$error .= "Conditional forwarding IP (".htmlspecialchars($_POST["conditionalForwardingIP"]).") is invalid!<br>";
+					}
+
+					// Validate conditional forwarding domain name
+					if(!validDomain($_POST["conditionalForwardingDomain"]))
+					{
+						$error .= "Conditional forwarding domain name (".htmlspecialchars($_POST["conditionalForwardingDomain"]).") is invalid!<br>";
+					}
+					if(!$error)
+					{
+						$addressArray = explode(".", $_POST["conditionalForwardingIP"]);
+						$reverseAddress = $addressArray[2].".".$addressArray[1].".".$addressArray[0].".in-addr.arpa";
+						$extra .= " conditional_forwarding ".$_POST["conditionalForwardingIP"]." ".$_POST["conditionalForwardingDomain"]." $reverseAddress";
+					}
+				}
+
 				// Check if DNSinterface is set
 				if(isset($_POST["DNSinterface"]))
 				{
@@ -261,9 +298,9 @@ function readAdlists()
 				if(!strlen($error))
 				{
 					$IPs = implode (",", $DNSservers);
-					$return = exec("sudo pihole -a setdns ".$IPs." ".$extra);
+					$return = exec("sudo pihole -a setdns \"".$IPs."\" ".$extra);
 					$success .= htmlspecialchars($return)."<br>";
-					$success .= "The DNS settings have been updated (using ".count($DNSservers)." DNS servers)";
+					$success .= "The DNS settings have been updated (using ".$DNSservercount." DNS servers)";
 				}
 				else
 				{
@@ -414,6 +451,19 @@ function readAdlists()
 				else
 				{
 					exec('sudo pihole -a -c');
+				}
+				$adminemail = trim($_POST["adminemail"]);
+				if(strlen($adminemail) == 0 || !isset($adminemail))
+				{
+					$adminemail = 'noadminemail';
+				}
+				elseif(!filter_var($adminemail, FILTER_VALIDATE_EMAIL))
+				{
+					$error .= "Administrator email address (".htmlspecialchars($adminemail).") is invalid!<br>";
+				}
+				else
+				{
+					exec('sudo pihole -a -e '.$adminemail);
 				}
 				if(isset($_POST["boxedlayout"]))
 				{
@@ -612,7 +662,19 @@ function readAdlists()
 
 				// Reread available adlists
 				$adlist = readAdlists();
+				break;
 
+			case "privacyLevel":
+				$level = intval($_POST["privacylevel"]);
+				if($level >= 0 && $level <= 3)
+				{
+					exec("sudo pihole -a privacylevel ".$level);
+					$success .= "The privacy level has been updated";
+				}
+				else
+				{
+					$error .= "Invalid privacy level (".$level.")!";
+				}
 				break;
 
 			default:

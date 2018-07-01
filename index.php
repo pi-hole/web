@@ -7,12 +7,13 @@
 *    Please see LICENSE file for your rights under this license. */
     $indexpage = true;
     require "scripts/pi-hole/php/header.php";
+    require_once("scripts/pi-hole/php/gravity.php");
 ?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-green">
+        <div class="small-box bg-green" id="total_queries" title="only A + AAAA queries">
             <div class="inner">
                 <p>Total queries (<span id="unique_clients">-</span> clients)</p>
                 <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
@@ -48,27 +49,10 @@
             </div>
         </div>
     </div>
-<?php
-$gravitylist = "/etc/pihole/gravity.list";
-if (file_exists($gravitylist))
-{
-    $gravitydiff = date_diff(date_create("@".filemtime($gravitylist)),date_create("now"));
-    if($gravitydiff->d > 1)
-        $gravitydate = $gravitydiff->format("Blocking list updated %a days, %H:%I ago");
-    elseif($gravitydiff->d == 1)
-        $gravitydate = $gravitydiff->format("Blocking list updated one day, %H:%I ago");
-    else
-        $gravitydate = $gravitydiff->format("Blocking list updated %H:%I ago");
-}
-else
-{
-    $gravitydate = "Blocking list not found";
-}
-?>
     <!-- ./col -->
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-red" title="<?php echo $gravitydate; ?>">
+        <div class="small-box bg-red" title="<?php echo gravity_last_update(); ?>">
             <div class="inner">
                 <p>Domains on Blocklist</p>
                 <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
@@ -114,7 +98,7 @@ else
         </div>
         <div class="box-body">
           <div class="chart">
-            <canvas id="clientsChart" width="800" height="140"></canvas>
+            <canvas id="clientsChart" width="800" height="140" class="extratooltipcanvas"></canvas>
           </div>
         </div>
         <div class="overlay">
@@ -129,11 +113,14 @@ else
     <div class="col-md-12 col-lg-6">
     <div class="box" id="query-types-pie">
         <div class="box-header with-border">
-          <h3 class="box-title">Query Types (integrated)</h3>
+          <h3 class="box-title">Query Types</h3>
         </div>
         <div class="box-body">
-          <div class="chart">
-            <canvas id="queryTypePieChart" width="400" height="150"></canvas>
+          <div class="float-left" style="width:50%">
+            <canvas id="queryTypePieChart" width="120" height="120"></canvas>
+          </div>
+          <div class="float-left" style="width:50%">
+            <div id="query-types-legend" class="chart-legend"></div>
           </div>
         </div>
         <div class="overlay">
@@ -145,11 +132,14 @@ else
     <div class="col-md-12 col-lg-6">
     <div class="box" id="forward-destinations-pie">
         <div class="box-header with-border">
-          <h3 class="box-title">Forward Destinations (integrated)</h3>
+          <h3 class="box-title">Queries answered by</h3>
         </div>
         <div class="box-body">
-          <div class="chart">
-            <canvas id="forwardDestinationPieChart" width="400" height="150"></canvas>
+          <div class="float-left" style="width:50%">
+            <canvas id="forwardDestinationPieChart" width="120" height="120"></canvas>
+          </div>
+          <div class="float-left" style="width:50%">
+            <div id="forward-destinations-legend" class="chart-legend"></div>
           </div>
         </div>
         <div class="overlay">
@@ -223,18 +213,18 @@ else
 <?php
 if($boxedlayout)
 {
-	$tablelayout = "col-md-6";
+  $tablelayout = "col-md-6";
 }
 else
 {
-	$tablelayout = "col-md-6 col-lg-4";
+  $tablelayout = "col-md-6 col-lg-6";
 }
 ?>
 <div class="row">
     <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="domain-frequency">
         <div class="box-header with-border">
-          <h3 class="box-title">Top Domains</h3>
+          <h3 class="box-title">Top Permitted Domains</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
@@ -284,11 +274,41 @@ else
       </div>
       <!-- /.box -->
     </div>
+</div>
+<div class="row">
     <!-- /.col -->
     <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="client-frequency">
         <div class="box-header with-border">
-          <h3 class="box-title">Top Clients</h3>
+          <h3 class="box-title">Top Clients (total)</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                    <th>Client</th>
+                    <th>Requests</th>
+                    <th>Frequency</th>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="overlay">
+          <i class="fa fa-refresh fa-spin"></i>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </div>
+    <!-- /.col -->
+    <!-- /.col -->
+    <div class="<?php echo $tablelayout; ?>">
+      <div class="box" id="client-frequency-blocked">
+        <div class="box-header with-border">
+          <h3 class="box-title">Top Clients (blocked only)</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">

@@ -24,9 +24,13 @@
     }
 
     // If the user wants to log out, we free all session variables currently registered
+    // and delete any persistent cookie.
     if(isset($_GET["logout"]))
     {
         session_unset();
+        setcookie('persistentlogin', '');
+        header('Location: index.php');
+        exit();
     }
 
     $wrongpassword = false;
@@ -35,8 +39,24 @@
     // Test if password is set
     if(strlen($pwhash) > 0)
     {
+        // Check for and authorize from persistent cookie 
+        if (isset($_COOKIE["persistentlogin"]))
+        {
+            if ($pwhash === $_COOKIE["persistentlogin"])
+            {
+                $auth = true;
+                // Refresh cookie with new expiry
+                setcookie('persistentlogin', $pwhash, time()+60*60*24*7);
+            }
+            else
+            {
+                // Invalid cookie
+                $auth = false;
+                setcookie('persistentlogin', '');
+            }
+        }
         // Compare doubly hashes password input with saved hash
-        if(isset($_POST["pw"]))
+        else if(isset($_POST["pw"]))
         {
             $postinput = hash('sha256',hash('sha256',$_POST["pw"]));
             if(hash_equals($pwhash, $postinput))
@@ -45,6 +65,11 @@
 
                 // Login successful, redirect the user to the homepage to discard the POST request
                 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['QUERY_STRING'] === 'login') {
+                    // Set persistent cookie if selected
+                    if (isset($_POST['persistentlogin']))
+                    {
+                        setcookie('persistentlogin', $pwhash, time()+60*60*24*7);
+                    }
                     header('Location: index.php');
                     exit();
                 }
