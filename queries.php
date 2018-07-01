@@ -38,7 +38,7 @@ else
 {
 	// If filter variable is not set, we
 	// automatically show all queries
-	$showing = "showing queries";
+	$showing = "showing";
 }
 
 $showall = false;
