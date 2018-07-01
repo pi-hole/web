@@ -29,6 +29,83 @@ function objectToArray(p){
     return [idx,arr];
 }
 
+var customTooltips = function(tooltip) {
+        // Tooltip Element
+        var tooltipEl = document.getElementById("chartjs-tooltip");
+        if (!tooltipEl) {
+                tooltipEl = document.createElement("div");
+                tooltipEl.id = "chartjs-tooltip";
+                document.body.appendChild(tooltipEl);
+                $(tooltipEl).html("<table></table>");
+        }
+        // Hide if no tooltip
+        if (tooltip.opacity === 0) {
+                tooltipEl.style.opacity = 0;
+                return;
+        }
+        // Set caret Position
+        tooltipEl.classList.remove("above", "below", "no-transform");
+        if (tooltip.yAlign) {
+                tooltipEl.classList.add(tooltip.yAlign);
+        } else {
+                tooltipEl.classList.add("above");
+        }
+        function getBody(bodyItem) {
+                return bodyItem.lines;
+        }
+        // Set Text
+        if (tooltip.body) {
+                var titleLines = tooltip.title || [];
+                var bodyLines = tooltip.body.map(getBody);
+                var innerHtml = "<table><thead>";
+                titleLines.forEach(function(title) {
+                        innerHtml += "<tr><th>" + title + "</th></tr>";
+                });
+                innerHtml += "</thead><tbody>";
+                var printed = 0;
+                bodyLines.forEach(function(body, i) {
+                        var colors = tooltip.labelColors[i];
+                        var style = "background:" + colors.backgroundColor;
+                        style += "; border-color:" + colors.borderColor;
+                        style += "; border-width: 2px";
+                        var span = "<span class=\"chartjs-tooltip-key\" style=\"" + style +  "\"></span>";
+                        var num = body[0].split(": ");
+                        if(num[1] > 0)
+                        {
+                            innerHtml += "<tr><td>" + span + body + "</td></tr>";
+                            printed++;
+                        }
+                });
+                if(printed < 1)
+                {
+                    innerHtml += "<tr><td>No activity recorded</td></tr>";
+                }
+                innerHtml += "</tbody></table>";
+                $(tooltipEl).html(innerHtml);
+        }
+
+        // Display, position, and set styles for font
+        var position = this._chart.canvas.getBoundingClientRect();
+        var width = tooltip.caretX;
+        // Prevent compression of the tooltip at the right edge of the screen
+        if($(document).width() - tooltip.caretX < 400)
+        {
+                width = $(document).width()-400;
+        }
+        // Prevent tooltip disapearing behind the sidebar
+        if(tooltip.caretX < 100)
+        {
+            width = 100;
+        }
+        tooltipEl.style.opacity = 1;
+        tooltipEl.style.left = position.left + width + "px";
+        tooltipEl.style.top = position.top + tooltip.caretY + "px";
+        tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
+        tooltipEl.style.fontSize = tooltip.bodyFontSize + "px";
+        tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
+        tooltipEl.style.padding = tooltip.yPadding + "px " + tooltip.xPadding + "px";
+};
+
 // Functions to update data in page
 
 var failures = 0;
@@ -178,6 +255,23 @@ function updateQueryTypesPie() {
         queryTypePieChart.update();
         // Don't use rotation animation for further updates
         queryTypePieChart.options.animation.duration=0;
+        // Generate legend in separate div
+        $("#query-types-legend").html(queryTypePieChart.generateLegend());
+        $("#query-types-legend > ul > li").on("click",function(e){
+                $(this).toggleClass("strike");
+                var index = $(this).index();
+                var ci = e.view.queryTypePieChart;
+                var meta = ci.data.datasets[0]._meta;
+                for(let i in meta)
+                {
+                    if ({}.hasOwnProperty.call(meta, i))
+                    {
+                        var curr = meta[i].data[index];
+                        curr.hidden = !curr.hidden;
+                    }
+                }
+                ci.update();
+        });
     }).done(function() {
         // Reload graph after minute
         setTimeout(updateQueryTypesPie, 60000);
@@ -277,6 +371,13 @@ function updateClientsOverTime() {
 
         // convert received objects to arrays
         data.over_time = objectToArray(data.over_time);
+
+        // Remove graph if there are no results (e.g. privacy mode enabled)
+        if(jQuery.isEmptyObject(data.over_time))
+        {
+            $("#clients").parent().remove();
+            return;
+        }
         // remove last data point since it not representative
         data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
@@ -392,6 +493,23 @@ function updateForwardDestinationsPie() {
         forwardDestinationPieChart.update();
         // Don't use rotation animation for further updates
         forwardDestinationPieChart.options.animation.duration=0;
+        // Generate legend in separate div
+        $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
+        $("#forward-destinations-legend > ul > li").on("click",function(e){
+                $(this).toggleClass("strike");
+                var index = $(this).index();
+                var ci = e.view.forwardDestinationPieChart;
+                var meta = ci.data.datasets[0]._meta;
+                for(let i in meta)
+                {
+                    if ({}.hasOwnProperty.call(meta, i))
+                    {
+                        var curr = meta[i].data[index];
+                        curr.hidden = !curr.hidden;
+                    }
+                }
+                ci.update();
+        });
     }).done(function() {
         // Reload graph after one minute
         setTimeout(updateForwardDestinationsPie, 60000);
@@ -454,6 +572,13 @@ function updateTopClientsChart() {
 
         }
 
+        // Remove table if there are no results (e.g. privacy mode enabled)
+        if(jQuery.isEmptyObject(data.top_sources))
+        {
+            $("#client-frequency").parent().remove();
+            return;
+        }
+
         $("#client-frequency .overlay").hide();
         // Update top clients list data every ten seconds
         setTimeout(updateTopClientsChart, 10000);
@@ -495,6 +620,7 @@ function updateTopLists() {
         if(jQuery.isEmptyObject(data.top_queries))
         {
             $("#domain-frequency").parent().remove();
+            return;
         }
 
         for (domain in data.top_ads) {
@@ -518,6 +644,7 @@ function updateTopLists() {
         if(jQuery.isEmptyObject(data.top_ads))
         {
             $("#ad-frequency").parent().remove();
+            return;
         }
 
         $("#domain-frequency .overlay").hide();
@@ -792,8 +919,12 @@ $(document).ready(function() {
             },
             options: {
                 tooltips: {
-                    enabled: true,
+                    enabled: false,
                     mode: "x-axis",
+                    custom: customTooltips,
+                    itemSort: function(a, b) {
+                        return b.yLabel - a.yLabel;
+                    },
                     callbacks: {
                         title: function(tooltipItem, data) {
                             var label = tooltipItem[0].xLabel;
@@ -960,8 +1091,7 @@ $(document).ready(function() {
             },
             options: {
                 legend: {
-                    display: true,
-                    position: "right"
+                    display: false
                 },
                 tooltips: {
                     enabled: true,
@@ -998,8 +1128,7 @@ $(document).ready(function() {
             },
             options: {
                 legend: {
-                    display: true,
-                    position: "right"
+                    display: false
                 },
                 tooltips: {
                     enabled: true,

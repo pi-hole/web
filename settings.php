@@ -9,6 +9,15 @@ require "scripts/pi-hole/php/header.php";
 require "scripts/pi-hole/php/savesettings.php";
 // Reread ini file as things might have been changed
 $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
+$piholeFTLConfFile = "/etc/pihole/pihole-FTL.conf";
+if(is_readable($piholeFTLConfFile))
+{
+	$piholeFTLConf = parse_ini_file($piholeFTLConfFile);
+}
+else
+{
+	$piholeFTLConf = array();
+}
 
 ?>
 <style type="text/css">
@@ -119,18 +128,20 @@ $i = 1;
 while (isset($setupVars["PIHOLE_DNS_" . $i])) {
     if (isinserverlist($setupVars["PIHOLE_DNS_" . $i])) {
         array_push($DNSactive, $setupVars["PIHOLE_DNS_" . $i]);
-    } elseif (strpos($setupVars["PIHOLE_DNS_" . $i], ".")) {
-        if (!isset($custom1)) {
-            $custom1 = $setupVars["PIHOLE_DNS_" . $i];
-        } else {
-            $custom2 = $setupVars["PIHOLE_DNS_" . $i];
-        }
-    } elseif (strpos($setupVars["PIHOLE_DNS_" . $i], ":")) {
-        if (!isset($custom3)) {
-            $custom3 = $setupVars["PIHOLE_DNS_" . $i];
-        } else {
-            $custom4 = $setupVars["PIHOLE_DNS_" . $i];
-        }
+    } elseif ($setupVars["PIHOLE_DNS_" . $i] != "127.0.0.1") {
+        if (strpos($setupVars["PIHOLE_DNS_" . $i], ".")) {
+            if (!isset($custom1)) {
+                $custom1 = $setupVars["PIHOLE_DNS_" . $i];
+            } else {
+                $custom2 = $setupVars["PIHOLE_DNS_" . $i];
+            }
+        } elseif (strpos($setupVars["PIHOLE_DNS_" . $i], ":")) {
+            if (!isset($custom3)) {
+              $custom3 = $setupVars["PIHOLE_DNS_" . $i];
+            } else {
+                $custom4 = $setupVars["PIHOLE_DNS_" . $i];
+              }
+          }
     }
     $i++;
 }
@@ -176,6 +187,13 @@ if (isset($setupVars["DNSMASQ_LISTENING"])) {
 } else {
     $DNSinterface = "single";
 }
+if (isset($setupVars["CONDITIONAL_FORWARDING"]) && ($setupVars["CONDITIONAL_FORWARDING"] == 1)) {
+    $conditionalForwarding = true;
+    $conditionalForwardingDomain = $setupVars["CONDITIONAL_FORWARDING_DOMAIN"];
+    $conditionalForwardingIP = $setupVars["CONDITIONAL_FORWARDING_IP"];
+} else {
+    $conditionalForwarding = false;
+}
 ?>
 
 <?php
@@ -188,6 +206,12 @@ if (isset($setupVars["QUERY_LOGGING"])) {
     }
 } else {
     $piHoleLogging = true;
+}
+
+$localDNS = false;
+if(isset($setupVars["LOCAL_DNS_PORT"]) && is_numeric($setupVars["LOCAL_DNS_PORT"]))
+{
+    $localDNS = intval($setupVars["LOCAL_DNS_PORT"]);
 }
 ?>
 
@@ -223,7 +247,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 ?>
 
 <?php
-if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", "api", "teleporter"))) {
+if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", "api", "privacy", "teleporter"))) {
     $tab = $_GET['tab'];
 } else {
     $tab = "sysadmin";
@@ -238,6 +262,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                 <li<?php if($tab === "dns"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#dns">DNS</a></li>
                 <li<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
                 <li<?php if($tab === "api"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#api">API / Web interface</a></li>
+                <li<?php if($tab === "privacy"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#privacy">Privacy</a></li>
                 <li<?php if($tab === "teleporter"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#teleporter">Teleporter</a></li>
             </ul>
             <div class="tab-content">
@@ -555,7 +580,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <tr data-placement="auto" data-container="body" data-toggle="tooltip"
                                                             title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>">
                                                             <td id="MAC"><?php echo $lease["hwaddr"]; ?></td>
-                                                            <td id="IP"><?php echo $lease["IP"]; ?></td>
+                                                            <td id="IP" data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
                                                             <td id="HOST"><?php echo $lease["host"]; ?></td>
                                                             <td>
                                                                 <button class="btn btn-warning btn-xs" type="button" id="button" data-static="alert">
@@ -584,7 +609,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <?php foreach ($dhcp_static_leases as $lease) { ?>
                                                         <tr>
                                                             <td><?php echo $lease["hwaddr"]; ?></td>
-                                                            <td><?php echo $lease["IP"]; ?></td>
+                                                            <td data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
                                                             <td><?php echo $lease["host"]; ?></td>
                                                             <td><?php if (strlen($lease["hwaddr"]) > 0) { ?>
                                                                 <button class="btn btn-danger btn-xs" type="submit" name="removestatic"
@@ -727,6 +752,16 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                                data-inputmask="'alias': 'ipv6'" data-mask
                                                                <?php if (isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
                                                     </div>
+                                                    <label>Local DNS server on custom port</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">
+                                                            <input type="checkbox" name="localDNS" value="yes"
+                                                                   <?php if ($localDNS){ ?>checked<?php } ?>>
+                                                        </div>
+                                                        <input type="text" placeholder="127.0.0.1" class="form-control" disabled style="background: white; width: 50%; text-align: right;">
+                                                        <input type="text" name="localDNSport" class="form-control" placeholder="port" style="width: 50%"
+                                                               <?php if ($localDNS){ ?>value="<?php echo $localDNS; ?>"<?php } ?>>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -812,6 +847,42 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                    DNSSEC. Note that the size of your log might increase significantly
                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
                                                    <a href="http://dnssec.vs.uni-due.de/" target="_blank">here</a>.</p>
+                                                <label>Conditional Forwarding</label>
+                                                <p>If not configured as your DHCP server, Pi-hole won't able to
+                                                   determine the names of devices on your local network.  As a
+                                                   result, tables such as Top Clients will only show IP addresses.</p>
+                                                <p>One solution for this is to configure Pi-hole to forward these
+	                                                 requests to your home router, but only for devices on your
+	                                                 home network.  To configure this we will need to know the IP
+	                                                 address of your router and the name of your local network.</p>
+                                                <p>Note: The local domain name must match the domain name specified
+	                                                 in your router, likely found within the DHCP settings.</p>
+                                                <div class="form-group">
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="conditionalForwarding" value="conditionalForwarding"
+                                                        <?php if(isset($conditionalForwarding) && ($conditionalForwarding == true)){ ?>checked<?php }
+                                                        ?>>Use Conditional Forwarding</label>
+                                                    </div>
+                                                    <div class="input-group">
+                                                      <table class="table table-bordered">
+                                                        <tr>
+                                                          <th>IP of your router</th>
+                                                          <th>Local domain name</th>
+                                                        </tr>
+                                                        <tr>
+                                                          <div class="input-group">
+                                                            <td>
+                                                              <input type="text" name="conditionalForwardingIP" class="form-control" data-inputmask="'alias': 'ip'" data-mask
+                                                              <?php if(isset($conditionalForwardingIP)){ ?>value="<?php echo $conditionalForwardingIP; ?>"<?php } ?>>
+                                                            </td>
+                                                            <td><input type="text" name="conditionalForwardingDomain" class="form-control" data-mask
+                                                              <?php if(isset($conditionalForwardingDomain)){ ?>value="<?php echo $conditionalForwardingDomain; ?>"<?php } ?>>
+                                                            </td>
+                                                          </div>
+                                                        </tr>
+                                                      </table>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -831,7 +902,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                 } else {
                     $temperatureunit = "C";
                 }
-                // Use $boxedlayout value determined in header.php
                 ?>
                 <div id="api" class="tab-pane fade<?php if($tab === "api"){ ?> in active<?php } ?>">
                     <div class="row">
@@ -869,39 +939,19 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-lg-12">
-                                                <h4>Privacy settings (Statistics / Query Log)</h4>
+                                            <div class="col-md-12">
+                                            <h4>Query Log</h4>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="querylog-permitted"
-                                                                      <?php if ($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php }
-                                                                      ?>>Show permitted domain entries</label>
-                                                    </div>
+                                                    <div class="checkbox"><label><input type="checkbox" name="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show permitted domain entries</label></div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
                                                 <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="querylog-blocked"
-                                                                      <?php if ($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php }
-                                                                      ?>>Show blocked domain entries</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <h4>Privacy mode</h4>
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="privacyMode"
-                                                                      <?php if ($privacyMode){ ?>checked<?php }
-                                                                      ?>>Don't show origin of DNS requests in query log</label>
-                                                    </div>
+                                                    <div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked domain entries</label></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -957,6 +1007,64 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     </div>
                                     <div class="box-footer clearfix">
                                         <button type="submit" class="btn btn-primary pull-right">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- ######################################################### Privacy (may be expanded further later on) ######################################################### -->
+                <?php
+                // Get privacy level from piholeFTL config array
+                if (isset($piholeFTLConf["PRIVACYLEVEL"])) {
+                    $privacylevel = intval($piholeFTLConf["PRIVACYLEVEL"]);
+                } else {
+                    $privacylevel = 0;
+                }
+                ?>
+                <div id="privacy" class="tab-pane fade<?php if($tab === "privacy"){ ?> in active<?php } ?>">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form role="form" method="post">
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Privacy settings</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4>DNS resolver privacy level</h4>
+                                                <p>Specify if DNS queries should be anonymized, available options are:
+                                                <div class="form-group">
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="privacylevel" value="0"
+                                                                      <?php if ($privacylevel === 0){ ?>checked<?php }
+                                                                      ?>>Show everything and record everything<br>Gives maximum amount of statistics</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="privacylevel" value="1"
+                                                                      <?php if ($privacylevel === 1){ ?>checked<?php }
+                                                                      ?>>Hide domains: Display and store all domains as "hidden"<br>This disables the Top Domains and Top Ads tables on the dashboard</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="privacylevel" value="2"
+                                                                      <?php if ($privacylevel === 2){ ?>checked<?php }
+                                                                      ?>>Hide domains and clients: Display and store all domains as "hidden" and all clients as "0.0.0.0"<br>This disables all tables on the dashboard</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="privacylevel" value="3"
+                                                                      <?php if ($privacylevel === 3){ ?>checked<?php }
+                                                                      ?>>Paranoia mode: This disables basically everything except the live anonymous stastics<br>No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists.</label>
+                                                    </div>
+                                                </div>
+                                                <p>The privacy level may be changed at any time without having to restart the DNS resolver. However, note that queries with (partially) hidden details cannot be disclosed with a subsequent reduction of the privacy level.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-footer clearfix">
+                                        <input type="hidden" name="field" value="privacyLevel">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <button type="submit" class="btn btn-primary pull-right">Apply</button>
                                     </div>
                                 </div>
                             </form>
