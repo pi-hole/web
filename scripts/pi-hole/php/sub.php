@@ -28,12 +28,10 @@ switch($type) {
             echo "Unable to read ${regexfile}<br>Error message: $err";
         }
 
-        // Replace regex with empty line ...
-        $list = str_replace($_POST['domain'], '', $list);
-        // ... and remove all empty lines from the file
-        $tmp = explode("\n", $list);
-        $tmp = array_filter($tmp);
-        $list = implode("\n", $tmp);
+        // Remove the regex and any empty lines from the list
+        $list = explode("\n", $list);
+        $list = array_diff($list, array($_POST['domain'], ""));
+        $list = implode("\n", $list);
 
         if(file_put_contents($regexfile, $list) === FALSE)
         {
