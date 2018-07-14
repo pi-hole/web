@@ -14,14 +14,14 @@ if (php_sapi_name() !== "cli") {
 	check_csrf(isset($_POST["token"]) ? $_POST["token"] : "");
 }
 
-function archive_add_file($path,$name)
+function archive_add_file($path,$name,$subdir="")
 {
 	global $archive;
 	if(file_exists($path.$name))
-		$archive[$name] = file_get_contents($path.$name);
+		$archive[$subdir.$name] = file_get_contents($path.$name);
 }
 
-function archive_add_directory($path)
+function archive_add_directory($path,$subdir="")
 {
 	if($dir = opendir($path))
 	{
@@ -29,7 +29,7 @@ function archive_add_directory($path)
 		{
 			if($entry !== "." && $entry !== "..")
 			{
-				archive_add_file($path,$entry);
+				archive_add_file($path,$entry,$subdir);
 			}
 		}
 		closedir($dir);
@@ -161,7 +161,7 @@ else
 	archive_add_file("/etc/pihole/","setupVars.conf");
 	archive_add_file("/etc/pihole/","auditlog.list");
 	archive_add_file("/etc/pihole/","regex.list");
-	archive_add_directory("/etc/dnsmasq.d/");
+	archive_add_directory("/etc/dnsmasq.d/","dnsmasq.d/");
 
 	$archive->compress(Phar::GZ); // Creates a gziped copy
 	unlink($archive_file_name); // Unlink original tar file as it is not needed anymore
