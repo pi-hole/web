@@ -130,6 +130,17 @@ if(isset($_POST["action"]))
 				exec("sudo pihole --regex -q -nr ".implode(" ", $regexlist));
 				$importedsomething = true;
 			}
+
+			// Also try to import legacy wildcard list if found
+			if(isset($_POST["regexlist"]) && $file->getFilename() === "wildcardblocking.txt")
+			{
+				$wildlist = process_file(file_get_contents($file));
+				echo "Processing wildcardblocking.txt (".count($wildlist)." entries)<br>\n";
+				exec("sudo pihole --wild -nr --nuke");
+				exec("sudo pihole --wild -q -nr ".implode(" ", $wildlist));
+				$importedsomething = true;
+			}
+
 			if($importedsomething)
 			{
 				exec("sudo pihole restartdns");
