@@ -108,7 +108,7 @@ if(isset($_POST["action"]))
 			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.txt")
 			{
 				$blacklist = process_file(file_get_contents($file));
-				echo "Processing blacklist.txt<br>\n";
+				echo "Processing blacklist.txt (".count($blacklist)." entries)<br>\n";
 				exec("sudo pihole -b -nr --nuke");
 				exec("sudo pihole -b -q -nr ".implode(" ", $blacklist));
 				$importedsomething = true;
@@ -116,7 +116,7 @@ if(isset($_POST["action"]))
 			if(isset($_POST["whitelist"]) && $file->getFilename() === "whitelist.txt")
 			{
 				$whitelist = process_file(file_get_contents($file));
-				echo "Processing whitelist.txt<br>\n";
+				echo "Processing whitelist.txt (".count($whitelist)." entries)<br>\n";
 				exec("sudo pihole -w -nr --nuke");
 				exec("sudo pihole -w -q -nr ".implode(" ", $whitelist));
 				$importedsomething = true;
@@ -125,7 +125,7 @@ if(isset($_POST["action"]))
 			if(isset($_POST["regexlist"]) && $file->getFilename() === "regex.list")
 			{
 				$regexlist = process_file(file_get_contents($file),false);
-				echo "Processing regex.list<br>\n";
+				echo "Processing regex.list (".count($regexlist)." entries)<br>\n";
 				exec("sudo pihole --regex -nr --nuke");
 				exec("sudo pihole --regex -q -nr ".implode(" ", $regexlist));
 				$importedsomething = true;
