@@ -66,27 +66,6 @@ function check_domains($domains)
 	}
 }
 
-function getWildcardListContent() {
-	if(file_exists("/etc/dnsmasq.d/03-pihole-wildcard.conf"))
-	{
-		$rawList = file_get_contents("/etc/dnsmasq.d/03-pihole-wildcard.conf");
-		$wclist = explode("\n", $rawList);
-		$list = [];
-
-		foreach ($wclist as $entry) {
-			$expl = explode("/", $entry);
-			if(count($expl) == 3)
-			{
-				array_push($list,$expl[1]);
-			}
-		}
-
-		return implode("\n",array_unique($list));
-	}
-
-	return "";
-}
-
 if(isset($_POST["action"]))
 {
 	if($_FILES["zip_file"]["name"] && $_POST["action"] == "in")
@@ -177,9 +156,9 @@ else
 	archive_add_file("/etc/pihole/","adlists.list");
 	archive_add_file("/etc/pihole/","setupVars.conf");
 	archive_add_file("/etc/pihole/","auditlog.list");
+	archive_add_file("/etc/pihole/","regex.list");
 	archive_add_directory("/etc/dnsmasq.d/");
 
-	$archive["wildcardblocking.txt"] = getWildcardListContent();
 	$archive->compress(Phar::GZ); // Creates a gziped copy
 	unlink($archive_file_name); // Unlink original tar file as it is not needed anymore
 	$archive_file_name .= ".gz"; // Append ".gz" extension to ".tar"
