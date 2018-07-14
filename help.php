@@ -70,7 +70,7 @@
     <div class="col-md-12">
     <h2>White- / Blacklist</h2>
     <p>Add or remove domains (or subdomains) from the white-/blacklist. If a domain is added to e.g. the whitelist, any possible entry of the same domain will be automatically removed from the blacklist and vice versa.</p>
-    <p>Wildcard blacklisting is supported (entering <samp>something.de</samp> will block this domain including all subdomains like <samp>a.bb.c.999.something.de</samp>). Note that wildcard whitelisting is <em>not</em> supported.</p>
+    <p>Regex blacklisting is supported (entering <samp>^example</samp> will block any domain starting with <samp>example</samp>, see also our <a href="https://docs.pi-hole.net/ftldns/regex/" target="_blank">Regex documentation</a>). You can still whitelist specific domains even if they fall under a regex pattern.</p>
     <p>You can white-/blacklist multiple entries at a time if you separate the domains by spaces.</p>
     </div>
 </div>
