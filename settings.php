@@ -1096,9 +1096,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             Blacklist (exact)</label>
                                                     </div>
                                                     <div class="checkbox">
-                                                        <label><input type="checkbox" name="wildlist" value="true"
+                                                        <label><input type="checkbox" name="regexlist" value="true"
                                                                       checked>
-                                                            Blacklist (wildcard)</label>
+                                                            Regex filters</label>
                                                     </div>
                                                 </div>
                                             </div>

@@ -43,7 +43,7 @@ function limit_length(&$item, $key)
 	$item = substr($item, 0, 253);
 }
 
-function process_file($contents)
+function process_file($contents,$check=True)
 {
 	$domains = array_filter(explode("\n",$contents));
 
@@ -51,8 +51,12 @@ function process_file($contents)
 	// function to every member of the array of domains
 	array_walk($domains, "limit_length");
 
-	// Check validity of domains (after possible clipping)
-	check_domains($domains);
+	// Check validity of domains (don't do it for regex filters)
+	if($check)
+	{
+		check_domains($domains);
+	}
+
 	return $domains;
 }
 
@@ -118,12 +122,12 @@ if(isset($_POST["action"]))
 				$importedsomething = true;
 			}
 
-			if(isset($_POST["wildlist"]) && $file->getFilename() === "wildcardblocking.txt")
+			if(isset($_POST["regexlist"]) && $file->getFilename() === "regex.list")
 			{
-				$wildlist = process_file(file_get_contents($file));
-				echo "Processing wildcardblocking.txt<br>\n";
-				exec("sudo pihole -wild -nr --nuke");
-				exec("sudo pihole -wild -q -nr ".implode(" ", $wildlist));
+				$regexlist = process_file(file_get_contents($file),false);
+				echo "Processing regex.list<br>\n";
+				exec("sudo pihole --regex -nr --nuke");
+				exec("sudo pihole --regex -q -nr ".implode(" ", $regexlist));
 				$importedsomething = true;
 			}
 			if($importedsomething)
