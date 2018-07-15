@@ -48,7 +48,7 @@ var customTooltips = function(tooltip) {
 
         // Limit rendering to once every 50ms. This gives the DOM time to react,
         // and avoids "lag" caused by not giving the DOM time to reapply CSS.
-        var now = Date.now()
+        var now = Date.now();
         if(now - lastTooltipTime < 50) {
             return;
         }
