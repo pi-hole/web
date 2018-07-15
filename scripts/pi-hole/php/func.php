@@ -45,10 +45,10 @@ if(!function_exists('hash_equals')) {
    }
 }
 
-function add_regex($regex)
+function add_regex($regex, $mode=FILE_APPEND, $append="\n")
 {
     global $regexfile;
-    if(file_put_contents($regexfile, "\n".$regex, FILE_APPEND) === FALSE)
+    if(file_put_contents($regexfile, $append.$regex, $mode) === FALSE)
     {
         $err = error_get_last()["message"];
         echo "Unable to add regex \"".htmlspecialchars($regex)."\" to ${regexfile}<br>Error message: $err";

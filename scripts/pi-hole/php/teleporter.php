@@ -113,6 +113,7 @@ if(isset($_POST["action"]))
 				exec("sudo pihole -b -q -nr ".implode(" ", $blacklist));
 				$importedsomething = true;
 			}
+
 			if(isset($_POST["whitelist"]) && $file->getFilename() === "whitelist.txt")
 			{
 				$whitelist = process_file(file_get_contents($file));
@@ -124,10 +125,11 @@ if(isset($_POST["action"]))
 
 			if(isset($_POST["regexlist"]) && $file->getFilename() === "regex.list")
 			{
-				$regexlist = process_file(file_get_contents($file),false);
+				$regexraw = file_get_contents($file);
+				$regexlist = process_file($regexraw,false);
 				echo "Processing regex.list (".count($regexlist)." entries)<br>\n";
-				exec("sudo pihole --regex -nr --nuke");
-				exec("sudo pihole --regex -q -nr ".implode(" ", $regexlist));
+				// NULL = overwrite (or create) the regex filter file
+				add_regex($regexraw, NULL,"");
 				$importedsomething = true;
 			}
 
