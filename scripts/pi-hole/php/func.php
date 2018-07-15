@@ -45,4 +45,21 @@ if(!function_exists('hash_equals')) {
    }
 }
 
+function add_regex($regex)
+{
+    global $regexfile;
+    if(file_put_contents($regexfile, "\n".$regex, FILE_APPEND) === FALSE)
+    {
+        $err = error_get_last()["message"];
+        echo "Unable to add regex \"".htmlspecialchars($regex)."\" to ${regexfile}<br>Error message: $err";
+    }
+    else
+    {
+        // Send SIGHUP to pihole-FTL using a frontend command
+        // to force reloading of the regex domains
+        // This will also wipe the resolver's cache
+        echo exec("sudo pihole restartdns reload");
+    }
+}
+
 ?>
