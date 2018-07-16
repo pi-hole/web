@@ -275,9 +275,11 @@ $(document).ready(function() {
             var data = localStorage.getItem("query_log_table");
             // Return if not available
             if(data === null){ return null; }
-            // Ensure that we always start on the first page (most recent query)
             data = JSON.parse(data);
+            // Always start on the first page to show most recent queries
             data["start"] = 0;
+            // Always start with empty search field
+            data["search"]["search"] = "";
             // Apply loaded state to table
             return data;
         },
