@@ -29,6 +29,8 @@ function objectToArray(p){
     return [idx,arr];
 }
 
+var lastTooltipTime = 0;
+
 var customTooltips = function(tooltip) {
         // Tooltip Element
         var tooltipEl = document.getElementById("chartjs-tooltip");
@@ -43,6 +45,15 @@ var customTooltips = function(tooltip) {
                 tooltipEl.style.opacity = 0;
                 return;
         }
+
+        // Limit rendering to once every 50ms. This gives the DOM time to react,
+        // and avoids "lag" caused by not giving the DOM time to reapply CSS.
+        var now = Date.now();
+        if(now - lastTooltipTime < 50) {
+            return;
+        }
+        lastTooltipTime = now;
+
         // Set caret Position
         tooltipEl.classList.remove("above", "below", "no-transform");
         if (tooltip.yAlign) {
@@ -99,7 +110,7 @@ var customTooltips = function(tooltip) {
         }
         tooltipEl.style.opacity = 1;
         tooltipEl.style.left = position.left + width + "px";
-        tooltipEl.style.top = position.top + tooltip.caretY + "px";
+        tooltipEl.style.top = position.top + tooltip.caretY + window.scrollY + "px";
         tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
         tooltipEl.style.fontSize = tooltip.bodyFontSize + "px";
         tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
