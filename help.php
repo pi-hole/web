@@ -82,14 +82,14 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-    <h2>Tools &rarr; Update Lists</h2>
-    <p>Will download any updates from the third-party ad-serving domain lists that we source. By default, this command runs once a week via cron (Sunday at 01:59).</p>
+    <h2>Tools &rarr; Update Gravity</h2>
+    <p>Will download any updates from the third-party blocklists that we source. By default, this command runs once a week via cron (Sunday).</p>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-    <h2>Tools &rarr; Query adlists</h2>
-    This function is useful to find out what list a domain appears on. Since we don't control what the third-parties put on the block lists, you may find that a domain you normally visit stops working. If this is the case, you could run  this command to scan for strings in the list of blocked domains and it will return the list the domain is found on. This proved useful a while back when the Mahakala list was adding <samp>apple.com</samp> and <samp>microsoft.com</samp> to their block list.</p>
+    <h2>Tools &rarr; Query Lists</h2>
+    This function is useful to find out what list a domain appears on. Since we don't control what the third-parties put on the blocklists, you may find that a domain you normally visit stops working. If this is the case, you could run  this command to scan for strings in the list of blocked domains and it will return the list the domain is found on. This proved useful a while back when the Mahakala list was adding <samp>apple.com</samp> and <samp>microsoft.com</samp> to their block list.</p>
     </div>
 </div>
 <div class="row">
@@ -102,26 +102,20 @@
     <div class="col-md-12">
     <h2>Settings</h2>
     Change settings for the Pi-hole
-    <h4>Networking</h4>
-    Displays information about the interfaces of the Pi-hole. No changes possible.
-    <h4>Pi-hole DHCP Server</h4>
-    Using this setting you can enable/disable the DHCP server of the Pi-hole. Note that you should disable any other DHCP server on your network to avoid IP addresses being used more than once. You have to give the range of IPs that DHCP will serve and the IP of the local router (gateway). If the DHCP server is active, the current leases are shown on the settings page. IPv4 DHCP will always be activated, IPv6 (stateless + statefull) can be enabled.
-    <h4>Upstream DNS Servers</h4>
+    <h4>System</h4>
+    Displays network and other system information of Pi-hole. At the bottom there is a "Danger Zone" with actions such as disable query logging and reboot.
+    <h4>Blocklists</h4>
+    View and edit the blocklists sourced for blocked domains.
+    <h4>DNS</h4>
     Customize used upstream DNS servers + advanced settings for DNS servers. Note that any number of DNS servers may be enabled at a time.
-    <h4>Query Logging</h4>
-    Enabled/disable query logging on your Pi-hole + provide option to flush the log
-    <h4>API</h4>
-    Change settings which apply to the API as well as the web UI
-    <ul>
-      <li>Show permitted domain entries: Toogle permitted queries in Query Log + Top Domains on Main Page</li>
-      <li>Show blockes domain entries: Toogle blocked queries in Query Log + Top Ads on Main Page</li>
-      <li>Privacy mode: Replace IPs in query log with "hidden"</li>
-    </ul>
-    <h4>Web User Interface</h4>
-    Other settings which affect the webUI but not the API of Pi-hole
-    <h4>System Administration</h4>
-    Apply system-wide actions like restarting of the server
-    </div>
+    <h4>DHCP</h4>
+    Using this setting you can enable/disable the DHCP server of the Pi-hole. Note that you should disable any other DHCP server on your network to avoid IP addresses being used more than once. You have to give the range of IPs that DHCP will serve and the IP of the local router (gateway). If the DHCP server is active, the current leases are shown on the settings page. IPv4 DHCP will always be activated, IPv6 (stateless + statefull) can be enabled.
+    <h4>API / Web Interface</h4>
+    Change settings which apply to the API as well as the web interface
+    <h4>Privacy</h4>
+    Set the privacy level for queries. Note that decreasing the privacy level will not disclose previously hidden query data.
+    <h4>Teleporter</h4>
+    Import and export Pi-hole settings.
 </div>
 <div class="row">
     <div class="col-md-12">
