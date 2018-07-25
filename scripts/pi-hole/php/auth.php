@@ -11,6 +11,7 @@ $ERRORLOG = getenv('PHP_ERROR_LOG');
 if (empty($ERRORLOG)) {
     $ERRORLOG = '/var/log/lighttpd/error.log';
 }
+$regexfile = "/etc/pihole/regex.list";
 
 function pi_log($message) {
     error_log(date('Y-m-d H:i:s') . ': ' . $message . "\n", 3, $GLOBALS['ERRORLOG']);
@@ -133,6 +134,14 @@ function list_verify($type) {
     {
         log_and_die("Not allowed!");
     }
-    check_domain();
+
+    // Don't check if the added item is a
+    // valid domain for regex expressions
+    // Regex filters are validated by FTL
+    // on import and skipped if invalid
+    if($_POST['list'] !== "regex")
+    {
+        check_domain();
+    }
 }
 ?>

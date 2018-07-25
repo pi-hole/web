@@ -19,33 +19,19 @@ else
 	$piholeFTLConf = array();
 }
 
+// Handling of PHP internal errors
+$last_error = error_get_last();
+if($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR)
+{
+	$error .= "There was a problem applying your settings.<br>Debugging information:<br>PHP error (".htmlspecialchars($last_error["type"])."): ".htmlspecialchars($last_error["message"])." in ".htmlspecialchars($last_error["file"]).":".htmlspecialchars($last_error["line"]);
+}
+
 ?>
 <style type="text/css">
-    .tooltip-inner {
-        max-width: none;
-        white-space: nowrap;
-    }
-
-    @-webkit-keyframes Pulse {
-        from {
-            color: #630030;
-            -webkit-text-shadow: 0 0 9px #333;
-        }
-        50% {
-            color: #e33100;
-            -webkit-text-shadow: 0 0 18px #e33100;
-        }
-        to {
-            color: #630030;
-            -webkit-text-shadow: 0 0 9px #333;
-        }
-    }
-
-    p.lookatme {
-        -webkit-animation-name: Pulse;
-        -webkit-animation-duration: 2s;
-        -webkit-animation-iteration-count: infinite;
-    }
+	.tooltip-inner {
+		max-width: none;
+		white-space: nowrap;
+	}
 </style>
 
 <?php // Check if ad lists should be updated after saving ...
@@ -880,6 +866,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                 } else {
                     $temperatureunit = "C";
                 }
+
+                // Administrator email address
+                if (isset($setupVars["ADMIN_EMAIL"])) {
+                    $adminemail = $setupVars["ADMIN_EMAIL"];
+                } else {
+                    $adminemail = "";
+                }
                 ?>
                 <div id="api" class="tab-pane fade<?php if($tab === "api"){ ?> in active<?php } ?>">
                     <div class="row">
@@ -978,6 +971,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                                       ?>>Fahrenheit</label>
                                                     </div>
                                                 </div>
+                                                <h4>Administrator Email Address</h4>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="adminemail"
+                                                               value="<?php echo htmlspecialchars($adminemail); ?>">
+                                                    </div>
+                                                </div>
                                                 <input type="hidden" name="field" value="webUI">
                                                 <input type="hidden" name="token" value="<?php echo $token ?>">
                                             </div>
@@ -1036,6 +1036,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     </div>
                                                 </div>
                                                 <p>The privacy level may be changed at any time without having to restart the DNS resolver. However, note that queries with (partially) hidden details cannot be disclosed with a subsequent reduction of the privacy level.</p>
+                                                <?php if($privacylevel > 0 && $piHoleLogging){ ?>
+                                                <p class="lookatme">Warning: Pi-hole's query logging is activated. Although the dashboard will hide the requested details, all queries are still fully logged to the pihole.log file.</p>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     </div>
@@ -1093,9 +1096,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             Blacklist (exact)</label>
                                                     </div>
                                                     <div class="checkbox">
-                                                        <label><input type="checkbox" name="wildlist" value="true"
+                                                        <label><input type="checkbox" name="regexlist" value="true"
                                                                       checked>
-                                                            Blacklist (wildcard)</label>
+                                                            Regex filters</label>
                                                     </div>
                                                 </div>
                                             </div>

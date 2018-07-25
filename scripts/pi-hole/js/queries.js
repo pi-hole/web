@@ -145,72 +145,65 @@ $(document).ready(function() {
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
             var blocked = false;
+
+            var dnssec_status = "";
+            if (data[5] === "1")
+            {
+                dnssec_status = "<br><span style=\"color:green\">SECURE</span>";
+            }
+            else if (data[5] === "2")
+            {
+                dnssec_status = "<br><span style=\"color:orange\">INSECURE</span>";
+            }
+            else if (data[5] === "3")
+            {
+                dnssec_status = "<br><span style=\"color:red\">BOGUS</span>";
+            }
+            else if (data[5] === "4")
+            {
+                dnssec_status = "<br><span style=\"color:red\">ABANDONED</span>";
+            }
+            else if (data[5] === "5")
+            {
+                dnssec_status = "<br><span style=\"color:red\">?</span>";
+            }
             if (data[4] === "1")
             {
                 blocked = true;
                 $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed" );
-                $("td:eq(7)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+                $("td:eq(4)", row).html( "Pi-holed"+dnssec_status );
+                $("td:eq(6)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
             else if (data[4] === "2")
             {
                 $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(forwarded)" );
-                $("td:eq(7)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(forwarded)"+dnssec_status );
+                $("td:eq(6)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
             else if (data[4] === "3")
             {
                 $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(cached)" );
-                $("td:eq(7)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
+                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(cached)"+dnssec_status );
+                $("td:eq(6)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
             }
             else if (data[4] === "4")
             {
                 blocked = true;
                 $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)" );
-                $("td:eq(7)", row).html( "" );
+                $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)");
+                $("td:eq(6)", row).html( "" );
             }
             else if (data[4] === "5")
             {
                 blocked = true;
                 $(row).css("color","red");
                 $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(blacklist)" );
-                $("td:eq(7)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
+                $("td:eq(6)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
             }
             else
             {
                 $("td:eq(4)", row).html( "Unknown" );
-                $("td:eq(7)", row).html( "" );
-            }
-            if (data[5] === "1")
-            {
-                $("td:eq(6)", row).css("color","green");
-                $("td:eq(6)", row).html( "SECURE" );
-            }
-            else if (data[5] === "2")
-            {
-                $("td:eq(6)", row).css("color","orange");
-                $("td:eq(6)", row).html( "INSECURE" );
-            }
-            else if (data[5] === "3")
-            {
-                $("td:eq(6)", row).css("color","red");
-                $("td:eq(6)", row).html( "BOGUS" );
-            }
-            else if (data[5] === "4")
-            {
-                $("td:eq(6)", row).css("color","red");
-                $("td:eq(6)", row).html( "ABANDONED" );
-            }
-            else if (data[5] === "5")
-            {
-                $("td:eq(6)", row).css("color","red");
-                $("td:eq(6)", row).html( "?" );
-            }
-            else
-            {
-                $("td:eq(6)", row).html( "-" );
+                $("td:eq(6)", row).html( "" );
             }
 
             // Check for existance of sixth column and display only if not Pi-holed
@@ -267,12 +260,29 @@ $(document).ready(function() {
             { "width" : "4%" },
             { "width" : "36%", "render": $.fn.dataTable.render.text() },
             { "width" : "8%", "render": $.fn.dataTable.render.text() },
-            { "width" : "10%" },
-            { "width" : "8%" },
-            { "width" : "4%" },
-            { "width" : "10%" }
+            { "width" : "14%", "orderData": 4 },
+            { "width" : "8%", "orderData": 6 },
+            { "width" : "10%", "orderData": 4 }
         ],
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        "stateSave": true,
+        stateSaveCallback: function(settings, data) {
+            // Store current state in client's local storage area
+            localStorage.setItem("query_log_table", JSON.stringify(data));
+        },
+        stateLoadCallback: function(settings) {
+            // Receive previous state from client's local storage area
+            var data = localStorage.getItem("query_log_table");
+            // Return if not available
+            if(data === null){ return null; }
+            data = JSON.parse(data);
+            // Always start on the first page to show most recent queries
+            data["start"] = 0;
+            // Always start with empty search field
+            data["search"]["search"] = "";
+            // Apply loaded state to table
+            return data;
+        },
         "columnDefs": [ {
             "targets": -1,
             "data": null,

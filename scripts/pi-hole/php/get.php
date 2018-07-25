@@ -12,51 +12,42 @@ if(!isset($_GET['list']))
 
 $listtype = $_GET['list'];
 
+$basedir = "/etc/pihole/";
+
 require "func.php";
 
 switch ($listtype) {
-	case "white":
-		$list = getListContent("white");
-		break;
+    case "white":
+        $list = array(getListContent("whitelist.txt"));
+        break;
 
-	case "black":
-		$list = array_merge(getListContent("black"),getWildcardListContent());
-		break;
+    case "black":
+        $exact = getListContent("blacklist.txt");
+        $regex = getListContent("regex.list");
+        $list = array($exact, $regex);
+        break;
 
-	default:
-		die("Invalid list parameter");
-		break;
+    default:
+        die("Invalid list parameter");
+        break;
 }
 
 
-function getListContent($type) {
-    $rawList = file_get_contents(checkfile("/etc/pihole/".$type."list.txt"));
+function getListContent($listname) {
+    global $basedir;
+    $rawList = file_get_contents(checkfile($basedir.$listname));
     $list = explode("\n", $rawList);
 
     // Get rid of empty lines
     for($i = sizeof($list)-1; $i >= 0; $i--) {
-        if($list[$i] == "")
+        if(strlen($list[$i]) < 1)
             unset($list[$i]);
     }
 
-    return $list;
+    // Re-index list after possible unset() activity
+    $newlist = array_values($list);
 
-}
-
-function getWildcardListContent() {
-    $rawList = file_get_contents(checkfile("/etc/dnsmasq.d/03-pihole-wildcard.conf"));
-    $wclist = explode("\n", $rawList);
-    $list = [];
-
-    foreach ($wclist as $entry) {
-        $expl = explode("/", $entry);
-        if(count($expl) == 3)
-        {
-            array_push($list,"*${expl[1]}");
-        }
-    }
-
-    return array_unique($list);
+    return $newlist;
 
 }
 

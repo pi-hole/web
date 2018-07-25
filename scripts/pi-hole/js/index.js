@@ -29,6 +29,8 @@ function objectToArray(p){
     return [idx,arr];
 }
 
+var lastTooltipTime = 0;
+
 var customTooltips = function(tooltip) {
         // Tooltip Element
         var tooltipEl = document.getElementById("chartjs-tooltip");
@@ -43,6 +45,15 @@ var customTooltips = function(tooltip) {
                 tooltipEl.style.opacity = 0;
                 return;
         }
+
+        // Limit rendering to once every 50ms. This gives the DOM time to react,
+        // and avoids "lag" caused by not giving the DOM time to reapply CSS.
+        var now = Date.now();
+        if(now - lastTooltipTime < 50) {
+            return;
+        }
+        lastTooltipTime = now;
+
         // Set caret Position
         tooltipEl.classList.remove("above", "below", "no-transform");
         if (tooltip.yAlign) {
@@ -99,7 +110,7 @@ var customTooltips = function(tooltip) {
         }
         tooltipEl.style.opacity = 1;
         tooltipEl.style.left = position.left + width + "px";
-        tooltipEl.style.top = position.top + tooltip.caretY + "px";
+        tooltipEl.style.top = position.top + tooltip.caretY + window.scrollY + "px";
         tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
         tooltipEl.style.fontSize = tooltip.bodyFontSize + "px";
         tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
@@ -386,12 +397,16 @@ function updateClientsOverTime() {
         for (key in data.clients)
         {
             if (!{}.hasOwnProperty.call(data.clients, key)) continue;
-            if(key.indexOf("|") > -1)
+            var clientname;
+            if(data.clients[key].name.length > 0)
             {
-                var idx = key.indexOf("|");
-                key = key.substr(0, idx);
+                clientname = data.clients[key].name;
             }
-            labels.push(key);
+            else
+            {
+                clientname = data.clients[key].ip;
+            }
+            labels.push(clientname);
         }
         // Get colors from AdminLTE
         var colors = [];
@@ -654,7 +669,6 @@ function updateTopLists() {
         if(jQuery.isEmptyObject(data.top_queries))
         {
             $("#domain-frequency").parent().remove();
-            return;
         }
 
         for (domain in data.top_ads) {
@@ -678,7 +692,6 @@ function updateTopLists() {
         if(jQuery.isEmptyObject(data.top_ads))
         {
             $("#ad-frequency").parent().remove();
-            return;
         }
 
         $("#domain-frequency .overlay").hide();
@@ -738,6 +751,11 @@ function updateSummaryData(runOnce) {
             todayElement.text() !== data[today] + "%" &&
             $("span#" + today).addClass("glow");
         });
+
+        if(data.hasOwnProperty("dns_queries_all_types"))
+        {
+            $("#total_queries").prop("title", "only A + AAAA queries (" + data["dns_queries_all_types"] + " in total)");
+        }
 
         window.setTimeout(function() {
             ["ads_blocked_today", "dns_queries_today", "domains_being_blocked", "ads_percentage_today", "unique_clients"].forEach(function(header, idx) {
