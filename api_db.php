@@ -325,13 +325,38 @@ if (isset($_GET['getGraphData']) && $auth)
 	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
 	$results = $stmt->execute();
 
-	$domains = array();
+	// Parse the DB result into graph data, filling in missing sections with zero
+	function parseDBData($results, $interval) {
+		$data = array();
+		$min = null;
+		$max = null;
 
-	if(!is_bool($results))
-		while ($row = $results->fetchArray())
-		{
-			$domains[$row[0]] = intval($row[1]);
+		if(!is_bool($results)) {
+			// Read in the data
+			while($row = $results->fetchArray()) {
+				// Get min and max timestamps
+				if($min === null || $min > $row[0])
+					$min = $row[0];
+
+				if($max === null || $max < $row[0])
+					$max = $row[0];
+
+				// Get the non-zero graph data
+				$data[$row[0]] = intval($row[1]);
+			}
+
+			// Fill the missing intervals with zero
+			for($i = $min; $i < $max; $i += $interval) {
+				if(!array_key_exists($i, $data))
+					$data[$i] = 0;
+			}
 		}
+
+		return $data;
+	}
+
+	$domains = parseDBData($results, $interval);
+
 	$result = array('domains_over_time' => $domains);
 	$data = array_merge($data, $result);
 
@@ -342,13 +367,8 @@ if (isset($_GET['getGraphData']) && $auth)
 	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
 	$results = $stmt->execute();
 
-	$addomains = array();
+	$addomains = parseDBData($results, $interval);
 
-	if(!is_bool($results))
-		while ($row = $results->fetchArray())
-		{
-			$addomains[$row[0]] = intval($row[1]);
-		}
 	$result = array('ads_over_time' => $addomains);
 	$data = array_merge($data, $result);
 }
