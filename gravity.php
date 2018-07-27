@@ -9,7 +9,7 @@
 ?>
 <!-- Title -->
 <div class="page-header">
-    <h1>Update list of ad-serving domains / blacklist / whitelist</h1>
+    <h1>Update Gravity (list of blocked domains)</h1>
 </div>
 
 <!-- Alerts -->
@@ -22,7 +22,7 @@
     Success!
 </div>
 
-<button class="btn btn-lg btn-primary btn-block" id="gravityBtn">Update Lists</button>
+<button class="btn btn-lg btn-primary btn-block" id="gravityBtn">Update</button>
 <pre id="output" style="width: 100%; height: 100%;" hidden="true"></pre>
 
 <?php

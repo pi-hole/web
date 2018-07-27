@@ -236,7 +236,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li<?php if($tab === "sysadmin"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#sysadmin">System</a></li>
-                <li<?php if($tab === "blocklists"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#blocklists">Block Lists</a></li>
+                <li<?php if($tab === "blocklists"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#blocklists">Blocklists</a></li>
                 <li<?php if($tab === "dns"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#dns">DNS</a></li>
                 <li<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
                 <li<?php if($tab === "api"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#api">API / Web interface</a></li>
@@ -251,7 +251,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             <div class="col-md-12">
                                 <div class="box">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Lists used to generate Pi-hole's Gravity: <?php echo count($adlist); ?></h3>
+                                        <h3 class="box-title">Blocklists used to generate Pi-hole's Gravity: <?php echo count($adlist); ?></h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="table-responsive">
@@ -284,7 +284,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             </table>
                                         </div>
                                         <div class="form-group">
-                                            <textarea name="newuserlists" class="form-control" rows="1" placeholder="Enter one URL per line to add new ad lists"></textarea>
+                                            <textarea name="newuserlists" class="form-control" rows="1" placeholder="Enter one URL per line to add new blocklists"></textarea>
                                         </div>
                                         <input type="hidden" name="field" value="adlists">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
