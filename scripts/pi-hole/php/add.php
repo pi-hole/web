@@ -37,7 +37,7 @@ switch($type) {
         // Escape "." so it won't be interpreted as the wildcard character
         $domain = str_replace(".","\.",$_POST['domain']);
         // Add regex filter for legacy wildcard behavior
-        add_regex("\.?".$domain."$");
+        add_regex("(^|\.)".$domain."$");
         break;
     case "regex":
         add_regex($_POST['domain']);
