@@ -38,9 +38,9 @@ function getListContent($listname) {
     $rawList = file_get_contents(checkfile($basedir.$listname));
     $list = explode("\n", $rawList);
 
-    // Get rid of empty lines
+    // Get rid of empty lines and comments
     for($i = sizeof($list)-1; $i >= 0; $i--) {
-        if(strlen($list[$i]) < 1)
+        if(strlen($list[$i]) < 1 || $list[$i][0] === '#')
             unset($list[$i]);
     }
 
