@@ -504,13 +504,13 @@ if($auth) {
                     <!-- Run gravity.sh -->
                     <li<?php if($scriptname === "gravity.php"){ ?> class="active"<?php } ?>>
                         <a href="gravity.php">
-                            <i class="fa fa-arrow-circle-down"></i> <span>Update Lists</span>
+                            <i class="fa fa-arrow-circle-down"></i> <span>Update Gravity</span>
                         </a>
                     </li>
-                    <!-- Query adlists -->
+                    <!-- Query Lists -->
                     <li<?php if($scriptname === "queryads.php"){ ?> class="active"<?php } ?>>
                         <a href="queryads.php">
-                            <i class="fa fa-search"></i> <span>Query adlists</span>
+                            <i class="fa fa-search"></i> <span>Query Lists</span>
                         </a>
                     </li>
                     <!-- Audit log -->

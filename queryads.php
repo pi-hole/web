@@ -9,7 +9,7 @@
 ?>
 <!-- Title -->
 <div class="page-header">
-    <h1>Find Ad Domain In Lists</h1>
+    <h1>Find Blocked Domain In Lists</h1>
 </div>
 <!-- Domain Input -->
 <div class="form-group input-group">
