@@ -175,3 +175,7 @@
 .float-left{
     float:left;
 }
+
+.regexerror{
+	background-color: #ffcccc;
+}
