@@ -73,23 +73,33 @@ elseif (isset($_GET['disable']) && $auth)
 	}
 	$data = array_merge($data, array("status" => "disabled"));
 }
+elseif (isset($_GET['versions']))
+{
+	// Determine if updates are available for Pi-hole
+	// using the same script that we use for the footer
+	// on the dashboard (update notifications are
+	// suppressed if on development branches)
+	require "scripts/pi-hole/php/update_checker.php";
+	$updates = array("core_update" => $core_update,
+	                 "web_update" => $web_update,
+	                 "FTL_update" => $FTL_update);
+	$current = array("core_current" => $core_current,
+	                 "web_current" => $web_current,
+	                 "FTL_current" => $FTL_current);
+	$latest = array("core_latest" => $core_latest,
+	                "web_latest" => $web_latest,
+	                "FTL_latest" => $FTL_latest);
+	$branches = array("core_branch" => $core_branch,
+	                  "web_branch" => $web_branch,
+	                  "FTL_branch" => $FTL_branch);
+	$data = array_merge($data, $updates);
+	$data = array_merge($data, $current);
+	$data = array_merge($data, $latest);
+	$data = array_merge($data, $branches);
+}
 
 // Other API functions
-if(!testFTL($FTL_IP) && !isset($_GET["PHP"]))
-{
-	$data = array_merge($data, array("FTLnotrunning" => true));
-}
-else
-{
-	if(!isset($_GET["PHP"]))
-	{
-		require("api_FTL.php");
-	}
-	else
-	{
-		require("api_PHP.php");
-	}
-}
+require("api_FTL.php");
 
 if(isset($_GET["jsonForceObject"]))
 {

@@ -29,6 +29,94 @@ function objectToArray(p){
     return [idx,arr];
 }
 
+var lastTooltipTime = 0;
+
+var customTooltips = function(tooltip) {
+        // Tooltip Element
+        var tooltipEl = document.getElementById("chartjs-tooltip");
+        if (!tooltipEl) {
+                tooltipEl = document.createElement("div");
+                tooltipEl.id = "chartjs-tooltip";
+                document.body.appendChild(tooltipEl);
+                $(tooltipEl).html("<table></table>");
+        }
+        // Hide if no tooltip
+        if (tooltip.opacity === 0) {
+                tooltipEl.style.opacity = 0;
+                return;
+        }
+
+        // Limit rendering to once every 50ms. This gives the DOM time to react,
+        // and avoids "lag" caused by not giving the DOM time to reapply CSS.
+        var now = Date.now();
+        if(now - lastTooltipTime < 50) {
+            return;
+        }
+        lastTooltipTime = now;
+
+        // Set caret Position
+        tooltipEl.classList.remove("above", "below", "no-transform");
+        if (tooltip.yAlign) {
+                tooltipEl.classList.add(tooltip.yAlign);
+        } else {
+                tooltipEl.classList.add("above");
+        }
+        function getBody(bodyItem) {
+                return bodyItem.lines;
+        }
+        // Set Text
+        if (tooltip.body) {
+                var titleLines = tooltip.title || [];
+                var bodyLines = tooltip.body.map(getBody);
+                var innerHtml = "<table><thead>";
+                titleLines.forEach(function(title) {
+                        innerHtml += "<tr><th>" + title + "</th></tr>";
+                });
+                innerHtml += "</thead><tbody>";
+                var printed = 0;
+                bodyLines.forEach(function(body, i) {
+                        var colors = tooltip.labelColors[i];
+                        var style = "background:" + colors.backgroundColor;
+                        style += "; border-color:" + colors.borderColor;
+                        style += "; border-width: 2px";
+                        var span = "<span class=\"chartjs-tooltip-key\" style=\"" + style +  "\"></span>";
+                        var num = body[0].split(": ");
+                        if(num[1] > 0)
+                        {
+                            innerHtml += "<tr><td>" + span + body + "</td></tr>";
+                            printed++;
+                        }
+                });
+                if(printed < 1)
+                {
+                    innerHtml += "<tr><td>No activity recorded</td></tr>";
+                }
+                innerHtml += "</tbody></table>";
+                $(tooltipEl).html(innerHtml);
+        }
+
+        // Display, position, and set styles for font
+        var position = this._chart.canvas.getBoundingClientRect();
+        var width = tooltip.caretX;
+        // Prevent compression of the tooltip at the right edge of the screen
+        if($(document).width() - tooltip.caretX < 400)
+        {
+                width = $(document).width()-400;
+        }
+        // Prevent tooltip disapearing behind the sidebar
+        if(tooltip.caretX < 100)
+        {
+            width = 100;
+        }
+        tooltipEl.style.opacity = 1;
+        tooltipEl.style.left = position.left + width + "px";
+        tooltipEl.style.top = position.top + tooltip.caretY + window.scrollY + "px";
+        tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
+        tooltipEl.style.fontSize = tooltip.bodyFontSize + "px";
+        tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
+        tooltipEl.style.padding = tooltip.yPadding + "px " + tooltip.xPadding + "px";
+};
+
 // Functions to update data in page
 
 var failures = 0;
@@ -178,6 +266,23 @@ function updateQueryTypesPie() {
         queryTypePieChart.update();
         // Don't use rotation animation for further updates
         queryTypePieChart.options.animation.duration=0;
+        // Generate legend in separate div
+        $("#query-types-legend").html(queryTypePieChart.generateLegend());
+        $("#query-types-legend > ul > li").on("click",function(e){
+                $(this).toggleClass("strike");
+                var index = $(this).index();
+                var ci = e.view.queryTypePieChart;
+                var meta = ci.data.datasets[0]._meta;
+                for(let i in meta)
+                {
+                    if ({}.hasOwnProperty.call(meta, i))
+                    {
+                        var curr = meta[i].data[index];
+                        curr.hidden = !curr.hidden;
+                    }
+                }
+                ci.update();
+        });
     }).done(function() {
         // Reload graph after minute
         setTimeout(updateQueryTypesPie, 60000);
@@ -266,7 +371,6 @@ function updateForwardedOverTime() {
     });
 }
 
-
 function updateClientsOverTime() {
     $.getJSON("api.php?overTimeDataClients&getClientNames", function(data) {
 
@@ -277,6 +381,13 @@ function updateClientsOverTime() {
 
         // convert received objects to arrays
         data.over_time = objectToArray(data.over_time);
+
+        // Remove graph if there are no results (e.g. privacy mode enabled)
+        if(jQuery.isEmptyObject(data.over_time))
+        {
+            $("#clients").parent().remove();
+            return;
+        }
         // remove last data point since it not representative
         data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
@@ -286,12 +397,16 @@ function updateClientsOverTime() {
         for (key in data.clients)
         {
             if (!{}.hasOwnProperty.call(data.clients, key)) continue;
-            if(key.indexOf("|") > -1)
+            var clientname;
+            if(data.clients[key].name.length > 0)
             {
-                var idx = key.indexOf("|");
-                key = key.substr(0, idx);
+                clientname = data.clients[key].name;
             }
-            labels.push(key);
+            else
+            {
+                clientname = data.clients[key].ip;
+            }
+            labels.push(clientname);
         }
         // Get colors from AdminLTE
         var colors = [];
@@ -349,7 +464,7 @@ function updateClientsOverTime() {
 }
 
 function updateForwardDestinationsPie() {
-    $.getJSON("api.php?getForwardDestinations=unsorted", function(data) {
+    $.getJSON("api.php?getForwardDestinations", function(data) {
 
         if("FTLnotrunning" in data)
         {
@@ -370,9 +485,6 @@ function updateForwardDestinationsPie() {
             values.push([key, value, colors.shift()]);
         });
 
-        // Sort data ASC accorwing to 2nd column, keep already assigned labels and colors
-        values = values.sort(function(a,b) { return b[1] - a[1]; });
-
         // Split data into individual arrays for the graphs
         $.each(values, function(key , value) {
             k.push(value[0]);
@@ -392,6 +504,23 @@ function updateForwardDestinationsPie() {
         forwardDestinationPieChart.update();
         // Don't use rotation animation for further updates
         forwardDestinationPieChart.options.animation.duration=0;
+        // Generate legend in separate div
+        $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
+        $("#forward-destinations-legend > ul > li").on("click",function(e){
+                $(this).toggleClass("strike");
+                var index = $(this).index();
+                var ci = e.view.forwardDestinationPieChart;
+                var meta = ci.data.datasets[0]._meta;
+                for(let i in meta)
+                {
+                    if ({}.hasOwnProperty.call(meta, i))
+                    {
+                        var curr = meta[i].data[index];
+                        curr.hidden = !curr.hidden;
+                    }
+                }
+                ci.update();
+        });
     }).done(function() {
         // Reload graph after one minute
         setTimeout(updateForwardDestinationsPie, 60000);
@@ -412,7 +541,7 @@ function escapeHtml(text) {
 }
 
 function updateTopClientsChart() {
-    $.getJSON("api.php?summaryRaw&getQuerySources", function(data) {
+    $.getJSON("api.php?summaryRaw&getQuerySources&topClientsBlocked", function(data) {
 
         if("FTLnotrunning" in data)
         {
@@ -421,8 +550,8 @@ function updateTopClientsChart() {
 
         // Clear tables before filling them with data
         $("#client-frequency td").parent().remove();
-        var clienttable =  $("#client-frequency").find("tbody:last");
-        var client, percentage, clientname, clientip;
+        var clienttable = $("#client-frequency").find("tbody:last");
+        var client, percentage, clientname, clientip, idx, url;
         for (client in data.top_sources) {
 
             if ({}.hasOwnProperty.call(data.top_sources, client)){
@@ -435,7 +564,7 @@ function updateTopClientsChart() {
                 client = escapeHtml(client);
                 if(client.indexOf("|") > -1)
                 {
-                    var idx = client.indexOf("|");
+                    idx = client.indexOf("|");
                     clientname = client.substr(0, idx);
                     clientip = client.substr(idx+1, client.length-idx);
                 }
@@ -445,16 +574,61 @@ function updateTopClientsChart() {
                     clientip = client;
                 }
 
-                var url = "<a href=\"queries.php?client="+clientip+"\" title=\""+clientip+"\">"+clientname+"</a>";
+                url = "<a href=\"queries.php?client="+clientip+"\" title=\""+clientip+"\">"+clientname+"</a>";
                 percentage = data.top_sources[client] / data.dns_queries_today * 100;
                 clienttable.append("<tr> <td>" + url +
                     "</td> <td>" + data.top_sources[client] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
                     percentage + "%\"></div> </div> </td> </tr> ");
             }
+        }
 
+        // Clear tables before filling them with data
+        $("#client-frequency-blocked td").parent().remove();
+        var clientblockedtable = $("#client-frequency-blocked").find("tbody:last");
+        for (client in data.top_sources_blocked) {
+
+            if ({}.hasOwnProperty.call(data.top_sources_blocked, client)){
+                // Sanitize client
+                if(escapeHtml(client) !== client)
+                {
+                    // Make a copy with the escaped index if necessary
+                    data.top_sources_blocked[escapeHtml(client)] = data.top_sources_blocked[client];
+                }
+                client = escapeHtml(client);
+                if(client.indexOf("|") > -1)
+                {
+                    idx = client.indexOf("|");
+                    clientname = client.substr(0, idx);
+                    clientip = client.substr(idx+1, client.length-idx);
+                }
+                else
+                {
+                    clientname = client;
+                    clientip = client;
+                }
+
+                url = "<a href=\"queries.php?client="+clientip+"\" title=\""+clientip+"\">"+clientname+"</a>";
+                percentage = data.top_sources_blocked[client] / data.ads_blocked_today * 100;
+                clientblockedtable.append("<tr> <td>" + url +
+                    "</td> <td>" + data.top_sources_blocked[client] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + data.dns_queries_today + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
+                    percentage + "%\"></div> </div> </td> </tr> ");
+            }
+        }
+
+        // Remove table if there are no results (e.g. privacy mode enabled)
+        if(jQuery.isEmptyObject(data.top_sources))
+        {
+            $("#client-frequency").parent().remove();
+        }
+
+        // Remove table if there are no results (e.g. privacy mode enabled)
+        if(jQuery.isEmptyObject(data.top_sources_blocked))
+        {
+            $("#client-frequency-blocked").parent().remove();
         }
 
         $("#client-frequency .overlay").hide();
+        $("#client-frequency-blocked .overlay").hide();
         // Update top clients list data every ten seconds
         setTimeout(updateTopClientsChart, 10000);
     });
@@ -577,6 +751,11 @@ function updateSummaryData(runOnce) {
             todayElement.text() !== data[today] + "%" &&
             $("span#" + today).addClass("glow");
         });
+
+        if(data.hasOwnProperty("dns_queries_all_types"))
+        {
+            $("#total_queries").prop("title", "only A + AAAA queries (" + data["dns_queries_all_types"] + " in total)");
+        }
 
         window.setTimeout(function() {
             ["ads_blocked_today", "dns_queries_today", "domains_being_blocked", "ads_percentage_today", "unique_clients"].forEach(function(header, idx) {
@@ -792,8 +971,12 @@ $(document).ready(function() {
             },
             options: {
                 tooltips: {
-                    enabled: true,
+                    enabled: false,
                     mode: "x-axis",
+                    custom: customTooltips,
+                    itemSort: function(a, b) {
+                        return b.yLabel - a.yLabel;
+                    },
                     callbacks: {
                         title: function(tooltipItem, data) {
                             var label = tooltipItem[0].xLabel;
@@ -960,8 +1143,7 @@ $(document).ready(function() {
             },
             options: {
                 legend: {
-                    display: true,
-                    position: "right"
+                    display: false
                 },
                 tooltips: {
                     enabled: true,
@@ -998,8 +1180,7 @@ $(document).ready(function() {
             },
             options: {
                 legend: {
-                    display: true,
-                    position: "right"
+                    display: false
                 },
                 tooltips: {
                     enabled: true,

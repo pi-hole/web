@@ -13,13 +13,14 @@ var listType = $("#list-type").html();
 var fullName = listType === "white" ? "Whitelist" : "Blacklist";
 
 function sub(index, entry, arg) {
-    var domain = $("#"+index);
+    var domain = $("#list #"+index);
     var locallistType = listType;
-    domain.hide("highlight");
-    if(arg === "wild")
+    if(arg === "regex")
     {
-        locallistType = "wild";
+        locallistType = "regex";
+        domain = $("#list-regex #"+index);
     }
+    domain.hide("highlight");
     $.ajax({
         url: "scripts/pi-hole/php/sub.php",
         method: "post",
@@ -42,7 +43,7 @@ function refresh(fade) {
     var list = $("#list");
     if(listType === "black")
     {
-        listw = $("#list-wildcard");
+        listw = $("#list-regex");
     }
     if(fade) {
         list.fadeOut(100);
@@ -61,7 +62,7 @@ function refresh(fade) {
             {
                 listw.html("");
             }
-            var data = JSON.parse(response).sort();
+            var data = JSON.parse(response);
 
             if(data.length === 0) {
                 $("h3").hide();
@@ -74,37 +75,40 @@ function refresh(fade) {
                     list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
                 }
             }
-            else {
+            else
+            {
                 $("h3").show();
-                data.forEach(function (entry, index) {
-                    if(entry.substr(0,1) === "*")
-                    {
-                        // Wildcard entry
-                        // remove leading *
-                        entry = entry.substr(1, entry.length - 1);
+                data[0] = data[0].sort();
+                data[0].forEach(function (entry, index) {
+                    // Whitelist entry or Blacklist (exact entry) are in the zero-th
+                    // array returned by get.php
+                    list.append(
+                    "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
+                    "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
+                    "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
+                    // Handle button
+                    $("#list #"+index+"").on("click", "button", function() {
+                        sub(index, entry, "exact");
+                    });
+                });
+
+                // Add regex domains if present in returned list data
+                if(data.length === 2)
+                {
+                    data[1] = data[1].sort();
+                    data[1].forEach(function (entry, index) {
+                        // Whitelist entry or Blacklist (exact entry) are in the zero-th
+                        // array returned by get.php
                         listw.append(
                         "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
                         "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
                         "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
                         // Handle button
-                        $("#list-wildcard #"+index+"").on("click", "button", function() {
-                            sub(index, entry, "wild");
+                        $("#list-regex #"+index+"").on("click", "button", function() {
+                            sub(index, entry, "regex");
                         });
-                    }
-                    else
-                    {
-                        // Normal entry
-                        list.append(
-                        "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
-                        "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
-                        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
-                        // Handle button
-                        $("#list #"+index+"").on("click", "button", function() {
-                            sub(index, entry, "exact");
-                        });
-                    }
-
-                });
+                    });
+                }
             }
             list.fadeIn(100);
             if(listw)
@@ -123,12 +127,14 @@ window.onload = refresh(false);
 function add(arg) {
     var locallistType = listType;
     var domain = $("#domain");
+    var wild = false;
     if(domain.val().length === 0){
         return;
     }
-    if(arg === "wild")
+    if(arg === "wild" || arg === "regex")
     {
-        locallistType = "wild";
+        locallistType = arg;
+        wild = true;
     }
 
     var alInfo = $("#alInfo");
@@ -143,7 +149,8 @@ function add(arg) {
         method: "post",
         data: {"domain":domain.val().trim(), "list":locallistType, "token":token},
         success: function(response) {
-          if (response.indexOf("] Pi-hole blocking is ") === -1) {
+          if (!wild && response.indexOf("] Pi-hole blocking is ") === -1 ||
+               wild && response.length > 1) {
             alFailure.show();
             err.html(response);
             alFailure.delay(4000).fadeOut(2000, function() {
@@ -194,6 +201,10 @@ $("#btnAdd").on("click", function() {
 
 $("#btnAddWildcard").on("click", function() {
     add("wild");
+});
+
+$("#btnAddRegex").on("click", function() {
+    add("regex");
 });
 
 $("#btnRefresh").on("click", function() {

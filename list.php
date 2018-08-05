@@ -1,4 +1,4 @@
-<?php /* 
+<?php /*
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
@@ -30,7 +30,6 @@ function getFullName() {
 <div class="page-header">
     <h1><?php getFullName(); ?></h1>
 </div>
-<?php if($list == "white"){ ?><p>Note that the ad list domains are automatically added to the whitelist so that a list can never get blocked by another list.</p><?php } ?>
 
 <!-- Domain Input -->
 <div class="form-group input-group">
@@ -39,16 +38,13 @@ function getFullName() {
     <?php if($list === "black") { ?>
         <button id="btnAdd" class="btn btn-default" type="button">Add (exact)</button>
         <button id="btnAddWildcard" class="btn btn-default" type="button">Add (wildcard)</button>
+        <button id="btnAddRegex" class="btn btn-default" type="button">Add (regex)</button>
     <?php }else{ ?>
         <button id="btnAdd" class="btn btn-default" type="button">Add</button>
     <?php } ?>
         <button id="btnRefresh" class="btn btn-default" type="button"><i class="fa fa-refresh"></i></button>
     </span>
 </div>
-<?php if($list === "white") { ?>
-    <p>Note: Whitelisting a subdomain of a wildcard blocked domain is not possible.</p>
-    <p>Some of the domains shown below are domains of the adlists sources, which are automatically added in order to prevent adlists being able to blacklist each other. See <a href="https://github.com/pi-hole/pi-hole/blob/master/adlists.default" target="_blank">here</a> for the default set of adlists.</p>
-<?php } ?>
 
 <!-- Alerts -->
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
@@ -71,8 +67,8 @@ function getFullName() {
 <?php } ?>
 <ul class="list-group" id="list"></ul>
 <?php if($list === "black") { ?>
-<h3>Wildcard blocking</h3>
-<ul class="list-group" id="list-wildcard"></ul>
+<h3><a href="https://docs.pi-hole.net/ftldns/regex/overview/" target="_blank" title="Click for Pi-hole Regex documentation">Regex</a> &amp; Wildcard blocking</h3>
+<ul class="list-group" id="list-regex"></ul>
 <?php } ?>
 
 <?php

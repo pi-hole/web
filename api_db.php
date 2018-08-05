@@ -16,6 +16,37 @@ check_cors();
 ini_set("max_execution_time","600");
 
 $data = array();
+$clients = array();
+function resolveHostname($clientip, $printIP)
+{
+	global $clients;
+	$ipaddr = strtolower($clientip);
+	if(array_key_exists($clientip, $clients))
+	{
+		// Entry already exists
+		$clientname = $clients[$ipaddr];
+		if($printIP)
+			return $clientname."|".$clientip;
+		return $clientname;
+	}
+
+	else if(filter_var($clientip, FILTER_VALIDATE_IP))
+	{
+		// Get host name of client and convert to lower case
+		$clientname = strtolower(gethostbyaddr($ipaddr));
+	}
+	else
+	{
+		// This is already a host name
+		$clientname = $ipaddr;
+	}
+	// Buffer result
+	$clients[$ipaddr] = $clientname;
+
+	if($printIP)
+		return $clientname."|".$clientip;
+	return $clientname;
+}
 
 // Get posible non-standard location of FTL's database
 $FTLsettings = parse_ini_file("/etc/pihole/pihole-FTL.conf");
@@ -77,7 +108,8 @@ if (isset($_GET['getAllQueries']) && $auth)
 		if(!is_bool($results))
 			while ($row = $results->fetchArray())
 			{
-				$allQueries[] = [$row[0],$row[1] == 1 ? "IPv4" : "IPv6",$row[2],$row[3],$row[4]];
+				$c = resolveHostname($row[3],false);
+				$allQueries[] = [$row[0],$row[1] == 1 ? "IPv4" : "IPv6",$row[2],$c,$row[4]];
 			}
 	}
 	$result = array('data' => $allQueries);
@@ -105,32 +137,33 @@ if (isset($_GET['topClients']) && $auth)
 	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
 
-	$clients = array();
+	$clientnums = array();
 
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
 		{
-			// Convert client to lower case
-			$c = strtolower($row[0]);
-			if(array_key_exists($c, $clients))
+
+			$c = resolveHostname($row[0],false);
+
+			if(array_key_exists($c, $clientnums))
 			{
 				// Entry already exists, add to it (might appear multiple times due to mixed capitalization in the database)
-				$clients[$c] += intval($row[1]);
+				$clientnums[$c] += intval($row[1]);
 			}
 			else
 			{
 				// Entry does not yet exist
-				$clients[$c] = intval($row[1]);
+				$clientnums[$c] = intval($row[1]);
 			}
 		}
 
 	// Sort by number of hits
-	arsort($clients);
+	arsort($clientnums);
 
 	// Extract only the first ten entries
-	$clients = array_slice($clients, 0, 10);
+	$clientnums = array_slice($clientnums, 0, 10);
 
-	$result = array('top_sources' => $clients);
+	$result = array('top_sources' => $clientnums);
 	$data = array_merge($data, $result);
 }
 
@@ -292,13 +325,38 @@ if (isset($_GET['getGraphData']) && $auth)
 	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
 	$results = $stmt->execute();
 
-	$domains = array();
+	// Parse the DB result into graph data, filling in missing sections with zero
+	function parseDBData($results, $interval) {
+		$data = array();
+		$min = null;
+		$max = null;
 
-	if(!is_bool($results))
-		while ($row = $results->fetchArray())
-		{
-			$domains[$row[0]] = intval($row[1]);
+		if(!is_bool($results)) {
+			// Read in the data
+			while($row = $results->fetchArray()) {
+				// Get min and max timestamps
+				if($min === null || $min > $row[0])
+					$min = $row[0];
+
+				if($max === null || $max < $row[0])
+					$max = $row[0];
+
+				// Get the non-zero graph data
+				$data[$row[0]] = intval($row[1]);
+			}
+
+			// Fill the missing intervals with zero
+			for($i = $min; $i < $max; $i += $interval) {
+				if(!array_key_exists($i, $data))
+					$data[$i] = 0;
+			}
 		}
+
+		return $data;
+	}
+
+	$domains = parseDBData($results, $interval);
+
 	$result = array('domains_over_time' => $domains);
 	$data = array_merge($data, $result);
 
@@ -309,13 +367,8 @@ if (isset($_GET['getGraphData']) && $auth)
 	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
 	$results = $stmt->execute();
 
-	$addomains = array();
+	$addomains = parseDBData($results, $interval);
 
-	if(!is_bool($results))
-		while ($row = $results->fetchArray())
-		{
-			$addomains[$row[0]] = intval($row[1]);
-		}
 	$result = array('ads_over_time' => $addomains);
 	$data = array_merge($data, $result);
 }
