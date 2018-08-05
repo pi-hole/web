@@ -173,7 +173,7 @@ function add(arg) {
                 alInfo.hide();
             });
             domain.val("");
-            setTimeout(function(){ refresh(true) }, 1000);
+            setTimeout(function(){ refresh(true); }, 1000);
           }
         },
         error: function(jqXHR, exception) {
