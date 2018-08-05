@@ -95,7 +95,6 @@ function refresh(fade) {
                 // Add regex domains if present in returned list data
                 if(data.length > 1)
                 {
-                    data[1] = data[1].sort();
                     data[1].forEach(function (entry, index) {
                         // Whitelist entry or Blacklist (exact entry) are in the zero-th
                         // array returned by get.php
@@ -174,7 +173,7 @@ function add(arg) {
                 alInfo.hide();
             });
             domain.val("");
-            refresh(true);
+            setTimeout(function(){ refresh(true) }, 1000);
           }
         },
         error: function(jqXHR, exception) {
