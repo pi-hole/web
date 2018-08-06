@@ -1032,7 +1032,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="radio">
                                                         <label><input type="radio" name="privacylevel" value="3"
                                                                       <?php if ($privacylevel === 3){ ?>checked<?php }
-                                                                      ?>>Paranoia mode: This disables basically everything except the live anonymous stastics<br>No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists.</label>
+                                                                      ?>>Paranoia mode: This disables basically everything except the live anonymous statistics<br>No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists.</label>
                                                     </div>
                                                 </div>
                                                 <p>The privacy level may be changed at any time without having to restart the DNS resolver. However, note that queries with (partially) hidden details cannot be disclosed with a subsequent reduction of the privacy level.</p>
