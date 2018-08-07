@@ -161,16 +161,16 @@ var reloadCallback = function()
             statistics[3]++;
         }
     }
-    $("h3#dns_queries").text(statistics[0]);
-    $("h3#ads_blocked_exact").text(statistics[2]);
-    $("h3#ads_wildcard_blocked").text(statistics[3]);
+    $("h3#dns_queries").text(statistics[0].toLocaleString());
+    $("h3#ads_blocked_exact").text(statistics[2].toLocaleString());
+    $("h3#ads_wildcard_blocked").text(statistics[3].toLocaleString());
 
     var percent = 0.0;
     if(statistics[2] + statistics[3] > 0)
     {
         percent = 100.0*(statistics[2] + statistics[3]) / statistics[0];
     }
-    $("h3#ads_percentage_today").text(parseFloat(percent).toFixed(1)+" %");
+    $("h3#ads_percentage_today").text(parseFloat(percent).toFixed(1).toLocaleString()+" %");
 };
 
 function refreshTableData() {

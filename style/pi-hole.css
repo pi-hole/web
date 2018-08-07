@@ -15,6 +15,12 @@
 	-o-user-select: none;
 	user-select: none;
 }
+.small-box span {
+	transition-duration: 500ms;
+}
+.small-box span.glow {
+	text-shadow: 0px 0px 5px #fff;
+}
 .skin-blue .list-group-item:hover {
 	background: #ddd;
 }
@@ -28,7 +34,7 @@
 	50% {color:#e33100;text-shadow:0 0 5px #e33100;}
 	to {color:#630030;text-shadow:0 0 2px transparent;}
 }
-a.lookatme {
+.lookatme {
 	-webkit-animation-name: Pulse;
 	animation-name: Pulse;
 	-webkit-animation-duration: 2s;
@@ -114,4 +120,58 @@ a.lookatme {
     border-right-color: transparent;
     -webkit-animation: fa-spin 1s infinite linear;
     animation: fa-spin 1s infinite linear;
+}
+
+.extratooltipcanvas{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+#chartjs-tooltip {
+    opacity: 1;
+    position: absolute;
+    background: rgba(0, 0, 0, .7);
+    color: white;
+    border-radius: 3px;
+    -webkit-transition: all .1s ease;
+    transition: all .1s ease;
+    pointer-events: none;
+    -webkit-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+
+.chartjs-tooltip-key {
+    display: inline-block;
+    width: 20px;
+    height: 10px;
+    margin-right: 10px;
+}
+
+.chart-legend {
+    height:250px;
+    overflow:auto;
+}
+
+.chart-legend ul {
+    list-style-type: none;
+}
+
+.chart-legend li {
+    cursor:pointer;
+}
+
+.chart-legend li span {
+    display: inline-block;
+    width: 20px;
+    height: 12px;
+    margin-right: 5px;
+}
+
+.strike {
+    text-decoration: line-through !important;
+}
+
+.float-left{
+    float:left;
 }

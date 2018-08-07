@@ -14,14 +14,14 @@ if (php_sapi_name() !== "cli") {
 	check_csrf(isset($_POST["token"]) ? $_POST["token"] : "");
 }
 
-function archive_add_file($path,$name)
+function archive_add_file($path,$name,$subdir="")
 {
 	global $archive;
 	if(file_exists($path.$name))
-		$archive[$name] = file_get_contents($path.$name);
+		$archive[$subdir.$name] = file_get_contents($path.$name);
 }
 
-function archive_add_directory($path)
+function archive_add_directory($path,$subdir="")
 {
 	if($dir = opendir($path))
 	{
@@ -29,7 +29,7 @@ function archive_add_directory($path)
 		{
 			if($entry !== "." && $entry !== "..")
 			{
-				archive_add_file($path,$entry);
+				archive_add_file($path,$entry,$subdir);
 			}
 		}
 		closedir($dir);
@@ -43,7 +43,7 @@ function limit_length(&$item, $key)
 	$item = substr($item, 0, 253);
 }
 
-function process_file($contents)
+function process_file($contents,$check=True)
 {
 	$domains = array_filter(explode("\n",$contents));
 
@@ -51,8 +51,12 @@ function process_file($contents)
 	// function to every member of the array of domains
 	array_walk($domains, "limit_length");
 
-	// Check validity of domains (after possible clipping)
-	check_domains($domains);
+	// Check validity of domains (don't do it for regex filters)
+	if($check)
+	{
+		check_domains($domains);
+	}
+
 	return $domains;
 }
 
@@ -64,27 +68,6 @@ function check_domains($domains)
 			die(htmlspecialchars($domain).' is not a valid domain');
 		}
 	}
-}
-
-function getWildcardListContent() {
-	if(file_exists("/etc/dnsmasq.d/03-pihole-wildcard.conf"))
-	{
-		$rawList = file_get_contents("/etc/dnsmasq.d/03-pihole-wildcard.conf");
-		$wclist = explode("\n", $rawList);
-		$list = [];
-
-		foreach ($wclist as $entry) {
-			$expl = explode("/", $entry);
-			if(count($expl) == 3)
-			{
-				array_push($list,$expl[1]);
-			}
-		}
-
-		return implode("\n",array_unique($list));
-	}
-
-	return "";
 }
 
 if(isset($_POST["action"]))
@@ -125,28 +108,41 @@ if(isset($_POST["action"]))
 			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.txt")
 			{
 				$blacklist = process_file(file_get_contents($file));
-				echo "Processing blacklist.txt<br>\n";
+				echo "Processing blacklist.txt (".count($blacklist)." entries)<br>\n";
 				exec("sudo pihole -b -nr --nuke");
 				exec("sudo pihole -b -q -nr ".implode(" ", $blacklist));
 				$importedsomething = true;
 			}
+
 			if(isset($_POST["whitelist"]) && $file->getFilename() === "whitelist.txt")
 			{
 				$whitelist = process_file(file_get_contents($file));
-				echo "Processing whitelist.txt<br>\n";
+				echo "Processing whitelist.txt (".count($whitelist)." entries)<br>\n";
 				exec("sudo pihole -w -nr --nuke");
 				exec("sudo pihole -w -q -nr ".implode(" ", $whitelist));
 				$importedsomething = true;
 			}
 
-			if(isset($_POST["wildlist"]) && $file->getFilename() === "wildcardblocking.txt")
+			if(isset($_POST["regexlist"]) && $file->getFilename() === "regex.list")
 			{
-				$wildlist = process_file(file_get_contents($file));
-				echo "Processing wildcardblocking.txt<br>\n";
-				exec("sudo pihole -wild -nr --nuke");
-				exec("sudo pihole -wild -q -nr ".implode(" ", $wildlist));
+				$regexraw = file_get_contents($file);
+				$regexlist = process_file($regexraw,false);
+				echo "Processing regex.list (".count($regexlist)." entries)<br>\n";
+				// NULL = overwrite (or create) the regex filter file
+				add_regex($regexraw, NULL,"");
 				$importedsomething = true;
 			}
+
+			// Also try to import legacy wildcard list if found
+			if(isset($_POST["regexlist"]) && $file->getFilename() === "wildcardblocking.txt")
+			{
+				$wildlist = process_file(file_get_contents($file));
+				echo "Processing wildcardblocking.txt (".count($wildlist)." entries)<br>\n";
+				exec("sudo pihole --wild -nr --nuke");
+				exec("sudo pihole --wild -q -nr ".implode(" ", $wildlist));
+				$importedsomething = true;
+			}
+
 			if($importedsomething)
 			{
 				exec("sudo pihole restartdns");
@@ -177,9 +173,9 @@ else
 	archive_add_file("/etc/pihole/","adlists.list");
 	archive_add_file("/etc/pihole/","setupVars.conf");
 	archive_add_file("/etc/pihole/","auditlog.list");
-	archive_add_directory("/etc/dnsmasq.d/");
+	archive_add_file("/etc/pihole/","regex.list");
+	archive_add_directory("/etc/dnsmasq.d/","dnsmasq.d/");
 
-	$archive["wildcardblocking.txt"] = getWildcardListContent();
 	$archive->compress(Phar::GZ); // Creates a gziped copy
 	unlink($archive_file_name); // Unlink original tar file as it is not needed anymore
 	$archive_file_name .= ".gz"; // Append ".gz" extension to ".tar"

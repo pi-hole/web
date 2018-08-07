@@ -19,47 +19,49 @@ if(isset($setupVars["API_QUERY_LOG_SHOW"]))
 {
 	if($setupVars["API_QUERY_LOG_SHOW"] === "all")
 	{
-		$showing = "showing all queries";
+		$showing = "showing";
 	}
 	elseif($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly")
 	{
-		$showing = "showing permitted queries only";
+		$showing = "showing permitted";
 	}
 	elseif($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly")
 	{
-		$showing = "showing blocked queries only";
+		$showing = "showing blocked";
 	}
 	elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
 	{
-		$showing = "showing no queries at all";
+		$showing = "showing no queries (due to setting)";
 	}
 }
 else
 {
 	// If filter variable is not set, we
 	// automatically show all queries
-	$showing = "showing all queries";
+	$showing = "showing";
 }
 
+$showall = false;
 if(isset($_GET["all"]))
 {
-	$showing .= " within the Pi-hole log";
+	$showing .= " all queries within the Pi-hole log";
 }
 else if(isset($_GET["client"]))
 {
-	$showing .= " for client ".htmlentities($_GET["client"]);
+	$showing .= " queries for client ".htmlentities($_GET["client"]);
 }
 else if(isset($_GET["domain"]))
 {
-	$showing .= " for domain ".htmlentities($_GET["domain"]);
+	$showing .= " queries for domain ".htmlentities($_GET["domain"]);
 }
-else if(isset($_GET["from"]) && isset($_GET["until"]))
+else if(isset($_GET["from"]) || isset($_GET["until"]))
 {
-	$showing .= " within limited time interval";
+	$showing .= " queries within specified time interval";
 }
 else
 {
-	$showing .= " within recent 10 minutes, <a href=\"?all\">show all</a>";
+	$showing .= " up to 100 queries";
+	$showall = true;
 }
 
 if(isset($setupVars["API_PRIVACY_MODE"]))
@@ -74,6 +76,8 @@ if(isset($setupVars["API_PRIVACY_MODE"]))
 if(strlen($showing) > 0)
 {
 	$showing = "(".$showing.")";
+	if($showall)
+		$showing .= ", <a href=\"?all\">show all</a>";
 }
 ?>
 <!-- Send PHP info to JS -->
@@ -135,7 +139,7 @@ if(strlen($showing) > 0)
                         <th>Domain</th>
                         <th>Client</th>
                         <th>Status</th>
-                        <th>DNSSEC</th>
+                        <th>Reply</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -146,7 +150,7 @@ if(strlen($showing) > 0)
                         <th>Domain</th>
                         <th>Client</th>
                         <th>Status</th>
-                        <th>DNSSEC</th>
+                        <th>Reply</th>
                         <th>Action</th>
                     </tr>
                 </tfoot>
