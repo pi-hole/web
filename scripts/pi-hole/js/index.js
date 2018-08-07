@@ -1205,4 +1205,7 @@ $(document).ready(function() {
         // Pull in data via AJAX
         updateForwardDestinationsPie();
     }
+
+    // Deprecation warning
+    $("#myModal").modal();
 });

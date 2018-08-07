@@ -203,6 +203,28 @@
     <div class="js-warn" id="js-warn-exit"><h1>Javascript Is Disabled</h1><p>Javascript seems to be disabled. This will break some site features.</p>
         <p>To enable Javascript click <a href="http://www.enable-javascript.com/" target="_blank">here</a></p><label for="js-hide">Close</label></div>
 </div>
+<!-- Modal box -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Important: Deprecation notification</h4>
+      </div>
+      <div class="modal-body">
+        <p>As of August, 6, 2018, we officially released Pi-hole v4.0. This mean that the code you have checked out using <code>pihole checkout FTLDNS</code> is no longer maintained.</p>
+        <p>Please switch back to Pi-hole's main branches using<br><code>sudo pihole checkout master</code><br><code>sudo pihole -up</code><br>to continue receiving updates and security patches.</p>
+        <p>Your Pi-hole team</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 <!-- /JS Warning -->
 <?php
 if($auth) {
