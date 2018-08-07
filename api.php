@@ -102,7 +102,7 @@ elseif (isset($_GET['versions']))
 
 // Other API functions
 require("api_FTL.php");
-
+require("api_speedtest.php");
 if(isset($_GET["jsonForceObject"]))
 {
 	echo json_encode($data, JSON_FORCE_OBJECT);
