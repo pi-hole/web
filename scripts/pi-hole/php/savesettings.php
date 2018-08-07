@@ -440,7 +440,7 @@ function readAdlists()
 				break;
 
             case "speedtest":
-                // todo Save Speedtest Schedule
+
                 if (isset($_POST["speedtestschedule"])) {
                     exec('sudo pihole -a -s ' . $_POST["speedtestschedule"]);
                 } else {
@@ -467,7 +467,7 @@ function readAdlists()
                     // # code...
                 }
 
-
+                $success .= "The Speedtest settings have been updated";
                 break;
 
 			case "webUI":
