@@ -439,6 +439,37 @@ function readAdlists()
 
 				break;
 
+            case "speedtest":
+                // todo Save Speedtest Schedule
+                if (isset($_POST["speedtestschedule"])) {
+                    exec('sudo pihole -a -s ' . $_POST["speedtestschedule"]);
+                } else {
+                    // # code...
+                }
+
+                if (isset($_POST["clearspeedtests"])) {
+                    if ($_POST["clearspeedtests"] == "yes")
+                        exec('sudo pihole -a -sc');
+                } else {
+                    // # code...
+                }
+
+                if (isset($_POST["speedtestserver"]) && is_numeric($_POST["speedtestserver"])) {
+                    exec('sudo pihole -a -ss ' . $_POST["speedtestserver"]);
+                } else {
+                    exec('sudo pihole -a -ss');
+                }
+
+
+                if (isset($_POST["speedtestdays"])) {
+                    exec('sudo pihole -a -sd ' . $_POST["speedtestdays"]);
+                } else {
+                    // # code...
+                }
+
+
+                break;
+
 			case "webUI":
 				if($_POST["tempunit"] == "F")
 				{
@@ -473,40 +504,6 @@ function readAdlists()
 				{
 					exec('sudo pihole -a layout traditional');
 				}
-
-				// todo Save Speedtest Schedule
-				if(isset($_POST["speedtestschedule"])){
-						exec('sudo pihole -a -s '.$_POST["speedtestschedule"]);
-				}
-				else {
-					// # code...
-				}
-
-				if(isset($_POST["clearspeedtests"])){
-					if($_POST["clearspeedtests"]=="yes")
-						exec('sudo pihole -a -sc');
-				}
-				else {
-					// # code...
-				}
-
-				if(isset($_POST["speedtestserver"]) && is_numeric($_POST["speedtestserver"])){
-						exec('sudo pihole -a -ss '.$_POST["speedtestserver"]);
-				}
-				else {
-						exec('sudo pihole -a -ss');
-				}
-
-
-
-				if(isset($_POST["speedtestdays"])){
-						exec('sudo pihole -a -sd '.$_POST["speedtestdays"]);
-				}
-				else {
-					// # code...
-				}
-
-
 
 
 				$success .= "The webUI settings have been updated";

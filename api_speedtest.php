@@ -12,8 +12,7 @@ if(!isset($api))
     die("Direct call to api_PHP.php is not allowed!");
 }
 
-
-$data = array();
+//$data = array();
 
 $dbSpeedtest ="/etc/pihole/speedtest.db";
 
