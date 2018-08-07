@@ -1036,7 +1036,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
 
-                                        <h3 class="box-title">Speedtest settings</h3>
+                                        <h3 class="box-title">Privacy settings</h3>
 
                                         <div class="box-body">
                                             <div class="row">
