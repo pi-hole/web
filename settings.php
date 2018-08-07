@@ -1341,6 +1341,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                         <div class="col-md-12">
                             <form role="form" method="post">
                                 <input type="hidden" name="field" value="speedtest">
+                                <input type="hidden" name="token" value="<?php echo $token ?>">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
 
