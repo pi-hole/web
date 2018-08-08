@@ -8,6 +8,19 @@
     $indexpage = true;
     require "scripts/pi-hole/php/header.php";
     require_once("scripts/pi-hole/php/gravity.php");
+
+    function getinterval()
+    {
+        global $piholeFTLConf;
+        if(isset($piholeFTLConf["MAXLOGAGE"]))
+        {
+             return round(floatval($piholeFTLConf["MAXLOGAGE"]), 1);
+        }
+        else
+        {
+             return "24";
+        }
+    }
 ?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
@@ -69,7 +82,7 @@
     <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
-          <h3 class="box-title">Queries over last 24 hours</h3>
+          <h3 class="box-title">Queries over last <?php echo getinterval(); ?> hours</h3>
         </div>
         <div class="box-body">
           <div class="chart">
