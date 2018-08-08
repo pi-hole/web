@@ -16,7 +16,7 @@ function escapeRegex(text) {
 }
 
 function refreshData() {
-    tableApi.ajax.url("api.php?getAllSpeedTestData&PHP").load();
+    tableApi.ajax.url("api.php?getAllSpeedTestData&_="+Date.now()).load();
 //    updateSessionTimer();
 }
 
