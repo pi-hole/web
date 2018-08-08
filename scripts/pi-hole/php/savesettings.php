@@ -137,12 +137,17 @@ function readAdlists()
 	{
 		while (($line = fgets($handle)) !== false)
 		{
-			if(substr($line, 0, 5) === "#http")
+			if(substr($line, 0, 1) === "#")
 			{
-				// Commented list
-				array_push($list, [false,rtrim(substr($line, 1))]);
+				// Comments start either with "##" or "# "
+				if(substr($line, 1, 1) !== "#" &&
+			           substr($line, 1, 1) !== " ")
+				{
+					// Commented list
+					array_push($list, [false,rtrim(substr($line, 1))]);
+				}
 			}
-			elseif(substr($line, 0, 4) === "http")
+			elseif(strlen($line) > 1)
 			{
 				// Active list
 				array_push($list, [true,rtrim($line)]);
