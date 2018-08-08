@@ -152,6 +152,16 @@
     $FTLpid = intval(pidofFTL());
     $FTL = ($FTLpid !== 0 ? true : false);
 
+    $piholeFTLConfFile = "/etc/pihole/pihole-FTL.conf";
+    if(is_readable($piholeFTLConfFile))
+    {
+        $piholeFTLConf = parse_ini_file($piholeFTLConfFile);
+    }
+    else
+    {
+        $piholeFTLConf = array();
+    }
+
 ?>
 <!DOCTYPE html>
 <!-- Pi-hole: A black hole for Internet advertisements

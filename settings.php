@@ -9,7 +9,6 @@ require "scripts/pi-hole/php/header.php";
 require "scripts/pi-hole/php/savesettings.php";
 // Reread ini file as things might have been changed
 $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
-$piholeFTLConfFile = "/etc/pihole/pihole-FTL.conf";
 if(is_readable($piholeFTLConfFile))
 {
 	$piholeFTLConf = parse_ini_file($piholeFTLConfFile);
