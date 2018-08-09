@@ -213,9 +213,9 @@ $(document).ready(function() {
             $("td:eq(6)", row).html(buttontext);
 
             // Check for existence of sixth column and display only if not Pi-holed
+            var replytext;
             if(data.length > 6 && !blocked)
             {
-                var replytext;
                 switch(data[6])
                 {
                 case "0":
