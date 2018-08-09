@@ -233,6 +233,21 @@ $(document).ready(function() {
                 case "4":
                     replytext = "IP";
                     break;
+                case "5":
+                    replytext = "DOMAIN";
+                    break;
+                case "6":
+                    replytext = "SERVFAIL";
+                    break;
+                case "7":
+                    replytext = "REFUSED";
+                    break;
+                case "8":
+                    replytext = "NOTIMP";
+                    break;
+                case "9":
+                    replytext = "upstream error";
+                    break;
                 default:
                     replytext = "? ("+data[6]+")";
                 }
