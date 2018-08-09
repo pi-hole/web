@@ -237,15 +237,18 @@ $(document).ready(function() {
                     replytext = "DOMAIN";
                     break;
                 case "6":
-                    replytext = "SERVFAIL";
+                    replytext = "RRNAME";
                     break;
                 case "7":
-                    replytext = "REFUSED";
+                    replytext = "SERVFAIL";
                     break;
                 case "8":
-                    replytext = "NOTIMP";
+                    replytext = "REFUSED";
                     break;
                 case "9":
+                    replytext = "NOTIMP";
+                    break;
+                case "10":
                     replytext = "upstream error";
                     break;
                 default:
