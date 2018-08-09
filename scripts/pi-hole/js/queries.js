@@ -230,6 +230,22 @@ $(document).ready(function() {
                 {
                     $("td:eq(5)", row).html("IP");
                 }
+                else if (data[6] === "5")
+                {
+                    $("td:eq(5)", row).html("SERVFAIL");
+                }
+                else if (data[6] === "6")
+                {
+                    $("td:eq(5)", row).html("REFUSED");
+                }
+                else if (data[6] === "7")
+                {
+                    $("td:eq(5)", row).html("NOTIMP");
+                }
+                else if (data[6] === "8")
+                {
+                    $("td:eq(5)", row).html("upstream error");
+                }
                 else
                 {
                     $("td:eq(5)", row).html("? ("+data[6]+")");
