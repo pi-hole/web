@@ -82,7 +82,7 @@ var customTooltips = function(tooltip) {
                         var span = "<span class=\"chartjs-tooltip-key\" style=\"" + style +  "\"></span>";
                         var num = body[0].split(": ");
                         // remove percent symbol from amount to allow numeric comparison
-                        var number = num[1].replace(/%/i,'');
+                        var number = num[1].replace(/%/i,"");
                         if(number > 0)
                         {
                             innerHtml += "<tr><td>" + span + body + "</td></tr>";
