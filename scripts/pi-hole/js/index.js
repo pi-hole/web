@@ -79,7 +79,7 @@ var customTooltips = function(tooltip) {
                         var style = "background:" + colors.backgroundColor;
                         style += "; border-color:" + colors.borderColor;
                         style += "; border-width: 2px";
-                        var span = "<span class=\"chartjs-tooltip-key\" style=\"" + style +  "\"></span>";
+                        var span = "<span class=\"chartjs-tooltip-key\" style=\"" + style + "\"></span>";
                         var num = body[0].split(": ");
                         if(num[1] > 0)
                         {
@@ -189,7 +189,7 @@ function updateQueryTypesOverTime() {
         // remove last data point since it not representative
         data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
-        var plotdata  = data.over_time[1];
+        var plotdata = data.over_time[1];
         // Remove possibly already existing data
         queryTypeChart.data.labels = [];
         queryTypeChart.data.datasets[0].data = [];
@@ -307,7 +307,9 @@ function updateForwardedOverTime() {
         var key, i, j;
         for (key in data.forward_destinations)
         {
-            if (!{}.hasOwnProperty.call(data.forward_destinations, key)) continue;
+            if (!{}.hasOwnProperty.call(data.forward_destinations, key)) {
+                continue;
+            }
             if(key.indexOf("|") > -1)
             {
                 var idx = key.indexOf("|");
@@ -344,10 +346,14 @@ function updateForwardedOverTime() {
         // Add data for each dataset that is available
         for (j in timestamps)
         {
-            if (!{}.hasOwnProperty.call(timestamps, j)) continue;
+            if (!{}.hasOwnProperty.call(timestamps, j)) {
+                continue;
+            }
             for (key in plotdata[j])
             {
-                if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
+                if (!{}.hasOwnProperty.call(plotdata[j], key)) {
+                    continue;
+                }
                 forwardDestinationChart.data.datasets[key].data.push(1e-2*plotdata[j][key]);
             }
 
@@ -396,7 +402,9 @@ function updateClientsOverTime() {
         var key, i, j;
         for (key in data.clients)
         {
-            if (!{}.hasOwnProperty.call(data.clients, key)) continue;
+            if (!{}.hasOwnProperty.call(data.clients, key)) {
+                continue;
+            }
             var clientname;
             if(data.clients[key].name.length > 0)
             {
@@ -436,10 +444,14 @@ function updateClientsOverTime() {
         // Add data for each dataset that is available
         for (j in timestamps)
         {
-            if (!{}.hasOwnProperty.call(timestamps, j)) continue;
+            if (!{}.hasOwnProperty.call(timestamps, j)) {
+                continue;
+            }
             for (key in plotdata[j])
             {
-                if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
+                if (!{}.hasOwnProperty.call(plotdata[j], key)) {
+                continue;
+            }
                 clientsChart.data.datasets[key].data.push(plotdata[j][key]);
             }
 
@@ -730,19 +742,16 @@ function updateSummaryData(runOnce) {
 
             FTLoffline = true;
         }
-        else
+        else if(FTLoffline)
         {
-            if(FTLoffline)
-            {
-                // FTL was previously offline
-                FTLoffline = false;
-                $("#temperature").text(" ");
-                updateQueriesOverTime();
-                updateForwardedOverTime();
-                updateQueryTypesOverTime();
-                updateTopClientsChart();
-                updateTopLists();
-            }
+            // FTL was previously offline
+            FTLoffline = false;
+            $("#temperature").text(" ");
+            updateQueriesOverTime();
+            updateForwardedOverTime();
+            updateQueryTypesOverTime();
+            updateTopClientsChart();
+            updateTopLists();
         }
 
         ["ads_blocked_today", "dns_queries_today", "ads_percentage_today", "unique_clients"].forEach(function(today) {
