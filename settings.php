@@ -1099,6 +1099,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                                       checked>
                                                             Regex filters</label>
                                                     </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="auditlog" value="true"
+                                                                      checked>
+                                                            Audit log</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6 col-md-12">
