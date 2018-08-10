@@ -81,7 +81,9 @@ var customTooltips = function(tooltip) {
                         style += "; border-width: 2px";
                         var span = "<span class=\"chartjs-tooltip-key\" style=\"" + style +  "\"></span>";
                         var num = body[0].split(": ");
-                        if(num[1] > 0)
+                        // remove percent symbol from amount to allow numeric comparison
+                        var number = num[1].replace(/%/i,"");
+                        if(number > 0)
                         {
                             innerHtml += "<tr><td>" + span + body + "</td></tr>";
                             printed++;
@@ -1146,7 +1148,8 @@ $(document).ready(function() {
                     display: false
                 },
                 tooltips: {
-                    enabled: true,
+                    enabled: false,
+                    custom: customTooltips,
                     callbacks: {
                         title: function(tooltipItem, data) {
                             return "Query types";
@@ -1183,7 +1186,8 @@ $(document).ready(function() {
                     display: false
                 },
                 tooltips: {
-                    enabled: true,
+                    enabled: false,
+                    custom: customTooltips,
                     callbacks: {
                         title: function(tooltipItem, data) {
                             return "Forward destinations";
