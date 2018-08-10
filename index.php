@@ -149,10 +149,10 @@
         </div>
         <div class="box-body">
           <div class="float-left" style="width:50%">
-            <canvas id="forwardDestinationPieChart" width="120" height="120"></canvas>
+            <canvas id="forwardDestinationPieChart" width="120" height="120" class="extratooltipcanvas"></canvas>
           </div>
           <div class="float-left" style="width:50%">
-            <div id="forward-destinations-legend" class="chart-legend"></div>
+            <div id="forward-destinations-legend" class="chart-legend" class="extratooltipcanvas"></div>
           </div>
         </div>
         <div class="overlay">
