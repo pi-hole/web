@@ -81,7 +81,9 @@ var customTooltips = function(tooltip) {
                         style += "; border-width: 2px";
                         var span = "<span class=\"chartjs-tooltip-key\" style=\"" + style +  "\"></span>";
                         var num = body[0].split(": ");
-                        if(num[1] > 0)
+                        // remove percent symbol from amount to allow numeric comparison
+                        var number = num[1].replace(/%/i,'');
+                        if(number > 0)
                         {
                             innerHtml += "<tr><td>" + span + body + "</td></tr>";
                             printed++;
@@ -92,86 +94,6 @@ var customTooltips = function(tooltip) {
                     innerHtml += "<tr><td>No activity recorded</td></tr>";
                 }
                 innerHtml += "</tbody></table>";
-                $(tooltipEl).html(innerHtml);
-        }
-
-        // Display, position, and set styles for font
-        var position = this._chart.canvas.getBoundingClientRect();
-        var width = tooltip.caretX;
-        // Prevent compression of the tooltip at the right edge of the screen
-        if($(document).width() - tooltip.caretX < 400)
-        {
-                width = $(document).width()-400;
-        }
-        // Prevent tooltip disapearing behind the sidebar
-        if(tooltip.caretX < 100)
-        {
-            width = 100;
-        }
-        tooltipEl.style.opacity = 1;
-        tooltipEl.style.left = position.left + width + "px";
-        tooltipEl.style.top = position.top + tooltip.caretY + window.scrollY + "px";
-        tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
-        tooltipEl.style.fontSize = tooltip.bodyFontSize + "px";
-        tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
-        tooltipEl.style.padding = tooltip.yPadding + "px " + tooltip.xPadding + "px";
-};
-
-var customPieTooltips = function(tooltip) {
-        // Tooltip Element
-        var tooltipEl = document.getElementById("chartjs-tooltip");
-        if (!tooltipEl) {
-             tooltipEl = document.createElement("div");
-                tooltipEl.id = "chartjs-tooltip";
-                document.body.appendChild(tooltipEl);
-                $(tooltipEl).html("<table></table>");
-        }
-        // Hide if no tooltip
-        if (tooltip.opacity === 0) {
-                tooltipEl.style.opacity = 0;
-                return;
-        }
-
-        // Limit rendering to once every 50ms. This gives the DOM time to react,
-        // and avoids "lag" caused by not giving the DOM time to reapply CSS.
-        var now = Date.now();
-        if(now - lastTooltipTime < 50) {
-            return;
-        }
-        lastTooltipTime = now;
-
-        // Set caret Position
-        tooltipEl.classList.remove("above", "below", "no-transform");
-        if (tooltip.yAlign) {
-                tooltipEl.classList.add(tooltip.yAlign);
-        } else {
-                tooltipEl.classList.add("above");
-        }
-        function getBody(bodyItem) {
-                return bodyItem.lines;
-        }
-        // Set Text
-        if (tooltip.body) {
-                var titleLines = tooltip.title || [];
-                var bodyLines = tooltip.body.map(getBody);
-                var innerHtml = "<table><thead>";
-                titleLines.forEach(function(title) {
-                        innerHtml += "<tr><th>" + title + "</th></tr>";
-                });
-                innerHtml += "</thead><tbody>";
-                var printed = 0;
-                bodyLines.forEach(function(body, i) {
-                        var colors = tooltip.labelColors[i];
-                        var style = "background:" + colors.backgroundColor;
-                        style += "; border-color:" + colors.borderColor;
-                        style += "; border-width: 2px";
-                        var span = "<span class=\"chartjs-tooltip-key\" style=\"" + style +  "\"></span>";
-                        var num = body[0].split(": ");
-                        innerHtml += "<tr><td>" + span + body + "</td></tr>";
-                        printed++;
-
-                });
-                 innerHtml += "</tbody></table>";
                 $(tooltipEl).html(innerHtml);
         }
 
@@ -1227,7 +1149,7 @@ $(document).ready(function() {
                 },
                 tooltips: {
                     enabled: false,
-                    custom: customPieTooltips,
+                    custom: customTooltips,
                     callbacks: {
                         title: function(tooltipItem, data) {
                             return "Query types";
@@ -1265,7 +1187,7 @@ $(document).ready(function() {
                 },
                 tooltips: {
                     enabled: false,
-                    custom: customPieTooltips,
+                    custom: customTooltips,
                     callbacks: {
                         title: function(tooltipItem, data) {
                             return "Forward destinations";
