@@ -15,14 +15,15 @@ function padNumber(num) {
 
 // Helper function needed for converting the Objects to Arrays
 
-function objectToArray(p){
+function objectToArray(p) {
     var keys = Object.keys(p);
     keys.sort(function(a, b) {
         return a - b;
     });
 
     var arr = [], idx = [];
-    for (var i = 0; i < keys.length; i++) {
+    for (var i = 0; i < keys.length; i++)
+    {
         arr.push(p[keys[i]]);
         idx.push(keys[i]);
     }
@@ -34,14 +35,16 @@ var lastTooltipTime = 0;
 var customTooltips = function(tooltip) {
         // Tooltip Element
         var tooltipEl = document.getElementById("chartjs-tooltip");
-        if (!tooltipEl) {
+        if (!tooltipEl)
+        {
                 tooltipEl = document.createElement("div");
                 tooltipEl.id = "chartjs-tooltip";
                 document.body.appendChild(tooltipEl);
                 $(tooltipEl).html("<table></table>");
         }
         // Hide if no tooltip
-        if (tooltip.opacity === 0) {
+        if (tooltip.opacity === 0)
+        {
                 tooltipEl.style.opacity = 0;
                 return;
         }
@@ -49,14 +52,16 @@ var customTooltips = function(tooltip) {
         // Limit rendering to once every 50ms. This gives the DOM time to react,
         // and avoids "lag" caused by not giving the DOM time to reapply CSS.
         var now = Date.now();
-        if(now - lastTooltipTime < 50) {
+        if(now - lastTooltipTime < 50)
+        {
             return;
         }
         lastTooltipTime = now;
 
         // Set caret Position
         tooltipEl.classList.remove("above", "below", "no-transform");
-        if (tooltip.yAlign) {
+        if (tooltip.yAlign)
+        {
                 tooltipEl.classList.add(tooltip.yAlign);
         } else {
                 tooltipEl.classList.add("above");
@@ -65,7 +70,8 @@ var customTooltips = function(tooltip) {
                 return bodyItem.lines;
         }
         // Set Text
-        if (tooltip.body) {
+        if (tooltip.body)
+        {
                 var titleLines = tooltip.title || [];
                 var bodyLines = tooltip.body.map(getBody);
                 var innerHtml = "<table><thead>";
@@ -79,7 +85,7 @@ var customTooltips = function(tooltip) {
                         var style = "background:" + colors.backgroundColor;
                         style += "; border-color:" + colors.borderColor;
                         style += "; border-width: 2px";
-                        var span = "<span class=\"chartjs-tooltip-key\" style=\"" + style +  "\"></span>";
+                        var span = "<span class=\"chartjs-tooltip-key\" style=\"" + style + "\"></span>";
                         var num = body[0].split(": ");
                         // remove percent symbol from amount to allow numeric comparison
                         var number = num[1].replace(/%/i,"");
@@ -141,8 +147,10 @@ function updateQueriesOverTime() {
         timeLineChart.data.datasets[1].data = [];
 
             // Add data for each hour that is available
-        for (var hour in data.ads_over_time[0]) {
-            if ({}.hasOwnProperty.call(data.ads_over_time[0], hour)) {
+        for (var hour in data.ads_over_time[0])
+        {
+            if ({}.hasOwnProperty.call(data.ads_over_time[0], hour))
+            {
                 var d,h;
                 h = parseInt(data.domains_over_time[0][hour]);
                 if(parseInt(data.ads_over_time[0][0]) < 1200)
@@ -191,7 +199,7 @@ function updateQueryTypesOverTime() {
         // remove last data point since it not representative
         data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
-        var plotdata  = data.over_time[1];
+        var plotdata = data.over_time[1];
         // Remove possibly already existing data
         queryTypeChart.data.labels = [];
         queryTypeChart.data.datasets[0].data = [];
@@ -203,8 +211,10 @@ function updateQueryTypesOverTime() {
         queryTypeChart.data.datasets[1].backgroundColor = colors[1];
 
             // Add data for each hour that is available
-        for (var j in timestamps) {
-            if ({}.hasOwnProperty.call(timestamps, j)) {
+        for (var j in timestamps)
+        {
+            if ({}.hasOwnProperty.call(timestamps, j))
+            {
                 var d,h;
                 h = parseInt(timestamps[j]);
                 // New style: Get Unix timestamps
@@ -309,7 +319,10 @@ function updateForwardedOverTime() {
         var key, i, j;
         for (key in data.forward_destinations)
         {
-            if (!{}.hasOwnProperty.call(data.forward_destinations, key)) continue;
+            if (!{}.hasOwnProperty.call(data.forward_destinations, key))
+            {
+                continue;
+            }
             if(key.indexOf("|") > -1)
             {
                 var idx = key.indexOf("|");
@@ -346,10 +359,16 @@ function updateForwardedOverTime() {
         // Add data for each dataset that is available
         for (j in timestamps)
         {
-            if (!{}.hasOwnProperty.call(timestamps, j)) continue;
+            if (!{}.hasOwnProperty.call(timestamps, j))
+            {
+                continue;
+            }
             for (key in plotdata[j])
             {
-                if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
+                if (!{}.hasOwnProperty.call(plotdata[j], key))
+                {
+                    continue;
+                }
                 forwardDestinationChart.data.datasets[key].data.push(1e-2*plotdata[j][key]);
             }
 
@@ -398,7 +417,10 @@ function updateClientsOverTime() {
         var key, i, j;
         for (key in data.clients)
         {
-            if (!{}.hasOwnProperty.call(data.clients, key)) continue;
+            if (!{}.hasOwnProperty.call(data.clients, key))
+            {
+                continue;
+            }
             var clientname;
             if(data.clients[key].name.length > 0)
             {
@@ -438,10 +460,16 @@ function updateClientsOverTime() {
         // Add data for each dataset that is available
         for (j in timestamps)
         {
-            if (!{}.hasOwnProperty.call(timestamps, j)) continue;
+            if (!{}.hasOwnProperty.call(timestamps, j))
+            {
+                continue;
+            }
             for (key in plotdata[j])
             {
-                if (!{}.hasOwnProperty.call(plotdata[j], key)) continue;
+                if (!{}.hasOwnProperty.call(plotdata[j], key))
+            {
+                continue;
+            }
                 clientsChart.data.datasets[key].data.push(plotdata[j][key]);
             }
 
@@ -587,7 +615,8 @@ function updateTopClientsChart() {
         // Clear tables before filling them with data
         $("#client-frequency-blocked td").parent().remove();
         var clientblockedtable = $("#client-frequency-blocked").find("tbody:last");
-        for (client in data.top_sources_blocked) {
+        for (client in data.top_sources_blocked)
+        {
 
             if ({}.hasOwnProperty.call(data.top_sources_blocked, client)){
                 // Sanitize client
@@ -650,7 +679,8 @@ function updateTopLists() {
         var domaintable = $("#domain-frequency").find("tbody:last");
         var adtable = $("#ad-frequency").find("tbody:last");
         var url, domain, percentage;
-        for (domain in data.top_queries) {
+        for (domain in data.top_queries)
+        {
             if ({}.hasOwnProperty.call(data.top_queries,domain)){
                 // Sanitize domain
                 if(escapeHtml(domain) !== domain)
@@ -673,7 +703,8 @@ function updateTopLists() {
             $("#domain-frequency").parent().remove();
         }
 
-        for (domain in data.top_ads) {
+        for (domain in data.top_ads)
+        {
             if ({}.hasOwnProperty.call(data.top_ads,domain)){
                 // Sanitize domain
                 if(escapeHtml(domain) !== domain)
@@ -706,7 +737,8 @@ function updateTopLists() {
 var FTLoffline = false;
 function updateSummaryData(runOnce) {
     var setTimer = function(timeInSeconds) {
-        if (!runOnce) {
+        if (!runOnce)
+        {
             setTimeout(updateSummaryData, timeInSeconds * 1000);
         }
     };
@@ -732,19 +764,16 @@ function updateSummaryData(runOnce) {
 
             FTLoffline = true;
         }
-        else
+        else if(FTLoffline)
         {
-            if(FTLoffline)
-            {
-                // FTL was previously offline
-                FTLoffline = false;
-                $("#temperature").text(" ");
-                updateQueriesOverTime();
-                updateForwardedOverTime();
-                updateQueryTypesOverTime();
-                updateTopClientsChart();
-                updateTopLists();
-            }
+            // FTL was previously offline
+            FTLoffline = false;
+            $("#temperature").text(" ");
+            updateQueriesOverTime();
+            updateForwardedOverTime();
+            updateQueryTypesOverTime();
+            updateTopClientsChart();
+            updateTopLists();
         }
 
         ["ads_blocked_today", "dns_queries_today", "ads_percentage_today", "unique_clients"].forEach(function(today) {
