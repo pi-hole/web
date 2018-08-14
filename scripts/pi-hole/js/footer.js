@@ -183,6 +183,13 @@ $(document).keypress(function(e) {
     }
 });
 
+// Submit the login form directly when the remember me checkbox was checked
+$("#logincookie").on("change", function() {
+    if ($("#loginpw").val()) {
+        $("#loginform").submit();
+    }
+});
+
 function testCookies()
 {
     if (navigator.cookieEnabled)
