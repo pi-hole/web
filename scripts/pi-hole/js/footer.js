@@ -185,7 +185,7 @@ $(document).keypress(function(e) {
 
 // Submit the login form directly when the remember me checkbox was checked
 $("#logincookie").on("change", function() {
-    if ($("#loginpw").val()) {
+    if ($("#loginpw").val() && this.checked) {
         $("#loginform").submit();
     }
 });
