@@ -281,7 +281,7 @@ function updateQueryTypesPie() {
         // Generate legend in separate div
         $("#query-types-legend").html(queryTypePieChart.generateLegend());
         $("#query-types-legend > ul > li").on("mousedown", function(e){
-            if(e.which == 2) // which == 2 is middle mouse button
+            if(e.which === 2) // which == 2 is middle mouse button
             {
                 $(this).toggleClass("strike");
                 var index = $(this).index();
@@ -297,7 +297,7 @@ function updateQueryTypesPie() {
                 }
                 ci.update();
             }
-            else if(e.which == 1) // which == 1 is left mouse button
+            else if(e.which === 1) // which == 1 is left mouse button
             {
                 window.open("queries.php?querytype="+$(this).index(), "_self");
             }
@@ -544,7 +544,7 @@ function updateForwardDestinationsPie() {
         // Generate legend in separate div
         $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
         $("#forward-destinations-legend > ul > li").on("mousedown",function(e){
-            if(e.which == 2) // which == 2 is middle mouse button
+            if(e.which === 2) // which == 2 is middle mouse button
             {
                 $(this).toggleClass("strike");
                 var index = $(this).index();
@@ -560,7 +560,7 @@ function updateForwardDestinationsPie() {
                 }
                 ci.update();
             }
-            else if(e.which == 1) // which == 1 is left mouse button
+            else if(e.which === 1) // which == 1 is left mouse button
             {
                 var obj = encodeURIComponent(e.target.innerText);
                 window.open("queries.php?forwarddest="+obj, "_self");
