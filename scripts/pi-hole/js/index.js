@@ -299,7 +299,7 @@ function updateQueryTypesPie() {
             }
             else if(e.which === 1) // which == 1 is left mouse button
             {
-                window.open("queries.php?querytype="+$(this).index(), "_self");
+                window.open("queries.php?querytype="+($(this).index()+1), "_self");
             }
         });
     }).done(function() {
