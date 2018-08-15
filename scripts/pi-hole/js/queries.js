@@ -136,6 +136,14 @@ $(document).ready(function() {
     {
         APIstring += "&domain="+GETDict["domain"];
     }
+    else if("querytype" in GETDict)
+    {
+        APIstring += "&querytype="+GETDict["querytype"];
+    }
+    else if("forwarddest" in GETDict)
+    {
+        APIstring += "&forwarddest="+GETDict["forwarddest"];
+    }
     // If we don't ask filtering and also not for all queries, just request the most recent 100 queries
     else if(!("all" in GETDict))
     {
