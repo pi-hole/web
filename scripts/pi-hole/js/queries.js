@@ -194,7 +194,7 @@ $(document).ready(function() {
                 blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
-                buttontext = "";
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
                 break;
             case "5":
                 blocked = true;
