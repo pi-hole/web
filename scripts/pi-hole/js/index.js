@@ -463,9 +463,10 @@ function updateClientsOverTime() {
         {
             clientsChart.data.datasets.push({
                 data: [],
+                // If we ran out of colors, make a random one
                 backgroundColor: i < colors.length
                     ? colors[i]
-                    : '#' + parseInt("" + Math.random() * 0xffffff, 10).toString(16).padStart(6, "0"),
+                    : "#" + parseInt("" + Math.random() * 0xffffff, 10).toString(16).padStart(6, "0"),
                 pointRadius: 0,
                 pointHitRadius: 5,
                 pointHoverRadius: 5,
