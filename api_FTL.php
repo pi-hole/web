@@ -262,6 +262,16 @@ else
 			// Get specific client only
 			sendRequestFTL("getallqueries-client ".$_GET['client']);
 		}
+		else if(isset($_GET['querytype']))
+		{
+			// Get specific query type only
+			sendRequestFTL("getallqueries-qtype ".$_GET['querytype']);
+		}
+		else if(isset($_GET['forwarddest']))
+		{
+			// Get specific forward destination only
+			sendRequestFTL("getallqueries-forward ".$_GET['forwarddest']);
+		}
 		else if(is_numeric($_GET['getAllQueries']))
 		{
 			sendRequestFTL("getallqueries (".$_GET['getAllQueries'].")");
