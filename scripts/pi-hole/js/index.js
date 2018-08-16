@@ -461,7 +461,17 @@ function updateClientsOverTime() {
 
         for (i = clientsChart.data.datasets.length; plotdata.length && i < plotdata[0].length; i++)
         {
-            clientsChart.data.datasets.push({data: [], backgroundColor: colors[i], pointRadius: 0, pointHitRadius: 5, pointHoverRadius: 5, label: labels[i], cubicInterpolationMode: "monotone" });
+            clientsChart.data.datasets.push({
+                data: [],
+                backgroundColor: i < colors.length
+                    ? colors[i]
+                    : '#' + parseInt("" + Math.random() * 0xffffff, 10).toString(16).padStart(6, "0"),
+                pointRadius: 0,
+                pointHitRadius: 5,
+                pointHoverRadius: 5,
+                label: labels[i],
+                cubicInterpolationMode: "monotone"
+            });
         }
 
         // Add data for each dataset that is available
