@@ -245,6 +245,21 @@ else
 		$data = array_merge($data, $result);
 	}
 
+	if (isset($_GET['getCacheInfo']) && $auth)
+	{
+		sendRequestFTL("cacheinfo");
+		$return = getResponseFTL();
+		$querytypes = array();
+		foreach($return as $ret)
+		{
+			$tmp = explode(": ",$ret);
+			$querytypes[$tmp[0]] = floatval($tmp[1]);
+		}
+
+		$result = array('cacheinfo' => $querytypes);
+		$data = array_merge($data, $result);
+	}
+
 	if (isset($_GET['getAllQueries']) && $auth)
 	{
 		if(isset($_GET['from']) && isset($_GET['until']))
