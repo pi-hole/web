@@ -196,7 +196,7 @@ function readAdlists()
 				{
 					if(array_key_exists("custom".$i,$_POST))
 					{
-						$exploded = explode("#", str_replace(" ","",$_POST["custom".$i."val"]), 2);
+						$exploded = explode("#", trim($_POST["custom".$i."val"]," "), 2);
 						$IP = $exploded[0];
 						if(count($exploded) > 1)
 						{
@@ -369,7 +369,7 @@ function readAdlists()
 
 				$clientlist = "";
 				$first = true;
-				foreach(str_replace(" ","",$clients) as $client)
+				foreach(trim($clients," ") as $client)
 				{
 					if(!validDomainWildcard($client) && !validIP($client))
 					{
@@ -509,9 +509,9 @@ function readAdlists()
 
 				if(isset($_POST["addstatic"]))
 				{
-					$mac = str_replace(" ","",$_POST["AddMAC"]);
-					$ip = str_replace(" ","",$_POST["AddIP"]);
-					$hostname = str_replace(" ","",$_POST["AddHostname"]);
+					$mac = trim($_POST["AddMAC"]," ");
+					$ip = trim($_POST["AddIP"]," ");
+					$hostname = trim($_POST["AddHostname"]," ");
 
 					if(!validMAC($mac))
 					{
@@ -560,7 +560,7 @@ function readAdlists()
 
 				if(isset($_POST["removestatic"]))
 				{
-					$mac = str_replace(" ","",$_POST["removestatic"]);
+					$mac = trim($_POST["removestatic"]," ");
 					if(!validMAC($mac))
 					{
 						$error .= "MAC address (".htmlspecialchars($mac).") is invalid!<br>";
@@ -578,27 +578,27 @@ function readAdlists()
 				if(isset($_POST["active"]))
 				{
 					// Validate from IP
-					$from = str_replace(" ","",$_POST["from"]);
+					$from = trim($_POST["from"]," ");
 					if (!validIP($from))
 					{
 						$error .= "From IP (".htmlspecialchars($from).") is invalid!<br>";
 					}
 
 					// Validate to IP
-					$to = str_replace(" ","",$_POST["to"]);
+					$to = trim($_POST["to"]," ");
 					if (!validIP($to))
 					{
 						$error .= "To IP (".htmlspecialchars($to).") is invalid!<br>";
 					}
 
 					// Validate router IP
-					$router = str_replace(" ","",$_POST["router"]);
+					$router = trim($_POST["router"]," ");
 					if (!validIP($router))
 					{
 						$error .= "Router IP (".htmlspecialchars($router).") is invalid!<br>";
 					}
 
-					$domain = str_replace(" ","",$_POST["domain"]);
+					$domain = trim($_POST["domain"]," ");
 
 					// Validate Domain name
 					if(!validDomain($domain))
@@ -606,7 +606,7 @@ function readAdlists()
 						$error .= "Domain name ".htmlspecialchars($domain)." is invalid!<br>";
 					}
 
-					$leasetime = str_replace(" ","",$_POST["leasetime"]);
+					$leasetime = trim($_POST["leasetime"]," ");
 
 					// Validate Lease time length
 					if(!is_numeric($leasetime) || intval($leasetime) < 0)
