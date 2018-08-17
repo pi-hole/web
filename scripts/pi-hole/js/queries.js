@@ -206,7 +206,7 @@ $(document).ready(function() {
                 blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(external)";
-                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
+                buttontext = "" ;
                 break;
             default:
                 blocked = false;
