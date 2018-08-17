@@ -183,7 +183,7 @@ $(document).ready(function() {
             case "1":
                 blocked = true;
                 color = "red";
-                fieldtext = "Pi-holed"+dnssec_status;
+                fieldtext = "Blocked (gravity)";
                 buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>";
                 break;
             case "2":
@@ -201,14 +201,20 @@ $(document).ready(function() {
             case "4":
                 blocked = true;
                 color = "red";
-                fieldtext = "Pi-holed <br class='hidden-lg'>(wildcard)";
-                buttontext = "";
+                fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
                 break;
             case "5":
                 blocked = true;
                 color = "red";
-                fieldtext = "Pi-holed <br class='hidden-lg'>(blacklist)";
+                fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
                 buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
+                break;
+            case "6":
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external)";
+                buttontext = "" ;
                 break;
             default:
                 blocked = false;
