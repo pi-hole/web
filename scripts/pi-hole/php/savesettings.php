@@ -675,7 +675,7 @@ function readAdlists()
 
 			case "privacyLevel":
 				$level = intval($_POST["privacylevel"]);
-				if($level >= 0 && $level <= 3)
+				if($level >= 0 && $level <= 4)
 				{
 					exec("sudo pihole -a privacylevel ".$level);
 					$success .= "The privacy level has been updated";
