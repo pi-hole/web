@@ -195,40 +195,56 @@ $(document).ready(function() {
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
-            if (data[4] === 1)
-            {
-                $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed" );
-                $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
-                // statistics[2]++;
-            }
-            else if (data[4] === 2)
-            {
-                $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(forwarded)" );
-                $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
-            }
-            else if (data[4] === 3)
-            {
-                $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(cached)" );
-                $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
-                // statistics[1]++;
+            var blocked, fieldtext, buttontext, color;
 
-            }
-            else if (data[4] === 4)
+            switch (data[4])
             {
-                $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)" );
-                $("td:eq(5)", row).html( "" );
-                // statistics[3]++;
+              case 1:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked (gravity)";
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>";
+                break;
+              case 2:
+                blocked = false;
+                color = "green";
+                fieldtext = "OK <br class='hidden-lg'>(forwarded)";
+                buttontext = "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
+                break;
+              case 3:
+                blocked = false;
+                color = "green";
+                fieldtext = "OK <br class='hidden-lg'>(cached)";
+                buttontext = "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
+                break;
+              case 4:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
+                break;
+              case 5:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
+                break;
+              case 6:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external)";
+                buttontext = "" ;
+                break;
+              default:
+                blocked = false;
+                color = "black";
+                fieldtext = "Unknown";
+                buttontext = "";
             }
-            else
-            {
-                $("td:eq(4)", row).html( "Unknown <br class='hidden-lg'>("+data[4]+")" );
-                $("td:eq(5)", row).html( "" );
-            }
-            // statistics[0]++;
+
+            $(row).css("color", color);
+            $("td:eq(4)", row).html(fieldtext);
+            $("td:eq(5)", row).html(buttontext);
         },
         dom: "<'row'<'col-sm-12'f>>" +
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
