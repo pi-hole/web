@@ -1031,7 +1031,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="radio">
                                                         <label><input type="radio" name="privacylevel" value="3"
                                                                       <?php if ($privacylevel === 3){ ?>checked<?php }
-                                                                      ?>>Paranoia mode: This disables basically everything except the live anonymous statistics<br>No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists.</label>
+                                                                      ?>>Anonymous mode: This disables basically everything except the live anonymous statistics<br>No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists.</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="privacylevel" value="4"
+                                                                      <?php if ($privacylevel === 4){ ?>checked<?php }
+                                                            ?>>No Statistics mode: This disables all statistics processing. Even the query counters will not be available.<br>Additionally, you can disable logging to the file <code>/var/log/pihole.log</code> using <code>sudo pihole logging off</code>.</label>
                                                     </div>
                                                 </div>
                                                 <p>The privacy level may be changed at any time without having to restart the DNS resolver. However, note that queries with (partially) hidden details cannot be disclosed with a subsequent reduction of the privacy level.</p>
