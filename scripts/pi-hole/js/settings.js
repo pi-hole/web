@@ -161,7 +161,7 @@ function loadCacheInfo()
         }
         else
         {
-            $("#cache-live-freed").parent("tr").removeClass("lookatme")
+            $("#cache-live-freed").parent("tr").removeClass("lookatme");
         }
 
         // Update cache info every 10 seconds
