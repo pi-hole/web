@@ -42,39 +42,37 @@ $token = $_SESSION['token'];
 
 <div class="row">
     <div class="col-md-12">
-        <div class="form-group">
         <label>Query status:</label>
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="type_gravity" checked>Blocked (exact)</label>
-                    </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_gravity" checked>Blocked (exact)</label>
             </div>
-                <div class="col-md-2">
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="type_forwarded" checked>OK (forwarded)</label>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="type_cached" checked>OK (cached)</label>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="type_regex" checked>Blocked (regex/wildcard)</label>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="type_blacklist" checked>Blocked (blacklist)</label>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="type_external" checked>Blocked (external)</label>
-                    </div>
-                </div>
+        </div>
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_forwarded" checked>OK (forwarded)</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_cached" checked>OK (cached)</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_regex" checked>Blocked (regex/wildcard)</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_blacklist" checked>Blocked (blacklist)</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_external" checked>Blocked (external)</label>
             </div>
         </div>
     </div>

@@ -168,7 +168,6 @@ function getQueryTypes()
     {
         queryType += 1 << 5;
     }
-    console.log(queryType);
     return queryType;
 }
 
@@ -209,7 +208,7 @@ function refreshTableData() {
     var APIstring = "api_db.php?getAllQueries&from="+from+"&until="+until;
     // Check if query type filtering is enabled
     var queryType = getQueryTypes();
-    if(queryType != 63) // 63 (0b00111111) = all possible query types are selected
+    if(queryType !== 63) // 63 (0b00111111) = all possible query types are selected
     {
         APIstring += "&types="+queryType;
     }
@@ -231,7 +230,7 @@ $(document).ready(function() {
     }
     // Check if query type filtering is enabled
     var queryType = getQueryTypes();
-    if(queryType != 63) // 63 (0b00111111) = all possible query types are selected
+    if(queryType !== 63) // 63 (0b00111111) = all possible query types are selected
     {
         APIstring += "&types="+queryType;
     }
