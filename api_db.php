@@ -101,7 +101,61 @@ if (isset($_GET['getAllQueries']) && $auth)
 	{
 		$from = intval($_GET["from"]);
 		$until = intval($_GET["until"]);
-		$stmt = $db->prepare("SELECT timestamp, type, domain, client, status FROM queries WHERE timestamp >= :from AND timestamp <= :until ORDER BY timestamp ASC");
+		$dbquery = "SELECT timestamp, type, domain, client, status FROM queries WHERE timestamp >= :from AND timestamp <= :until ";
+		if(isset($_GET["types"]))
+		{
+			$types = intval($_GET["types"]);
+			$typestr = "";
+			if($types & 1) // GRAVITY
+			{
+				$typestr = "1";
+			}
+			if($types & 2) // FORWARDED
+			{
+				if(strlen($typestr) > 0)
+				{
+					$typestr .= ",";
+				}
+				$typestr .= "2";
+			}
+			if($types & 4) // CACHED
+			{
+				if(strlen($typestr) > 0)
+				{
+					$typestr .= ",";
+				}
+				$typestr .= "3";
+			}
+			if($types & 8) // REGEX/WILDCARD
+			{
+				if(strlen($typestr) > 0)
+				{
+					$typestr .= ",";
+				}
+				$typestr .= "4";
+			}
+			if($types & 16) // BLACKLIST
+			{
+				if(strlen($typestr) > 0)
+				{
+					$typestr .= ",";
+				}
+				$typestr .= "5";
+			}
+			if($types & 32) // EXTERNAL
+			{
+				if(strlen($typestr) > 0)
+				{
+					$typestr .= ",";
+				}
+				$typestr .= "6";
+			}
+
+			// Append selector to DB query
+			$dbquery .= "AND status IN (".$typestr.") ";
+		}
+		$dbquery .= "ORDER BY timestamp ASC";
+		$stmt = $db->prepare($dbquery);
 		$stmt->bindValue(":from", intval($from), SQLITE3_INTEGER);
 		$stmt->bindValue(":until", intval($until), SQLITE3_INTEGER);
 		$results = $stmt->execute();

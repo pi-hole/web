@@ -130,15 +130,46 @@ function handleAjaxError( xhr, textStatus, error ) {
     }
     else if(xhr.responseText.indexOf("Connection refused") >= 0)
     {
-        alert( "An error occured while loading the data: Connection refused. Is FTL running?" );
+        alert( "An error occurred while loading the data: Connection refused. Is FTL running?" );
     }
     else
     {
-        alert( "An unknown error occured while loading the data.\n"+xhr.responseText );
+        alert( "An unknown error occurred while loading the data.\n"+xhr.responseText );
     }
     $("#all-queries_processing").hide();
     tableApi.clear();
     tableApi.draw();
+}
+
+function getQueryTypes()
+{
+    var queryType = 0;
+    if($("#type_gravity").prop("checked"))
+    {
+        queryType = 1;
+    }
+    if($("#type_forwarded").prop("checked"))
+    {
+        queryType += 1 << 1;
+    }
+    if($("#type_cached").prop("checked"))
+    {
+        queryType += 1 << 2;
+    }
+    if($("#type_regex").prop("checked"))
+    {
+        queryType += 1 << 3;
+    }
+    if($("#type_blacklist").prop("checked"))
+    {
+        queryType += 1 << 4;
+    }
+    if($("#type_external").prop("checked"))
+    {
+        queryType += 1 << 5;
+    }
+    console.log(queryType);
+    return queryType;
 }
 
 var reloadCallback = function()
@@ -176,6 +207,12 @@ var reloadCallback = function()
 function refreshTableData() {
     timeoutWarning.show();
     var APIstring = "api_db.php?getAllQueries&from="+from+"&until="+until;
+    // Check if query type filtering is enabled
+    var queryType = getQueryTypes();
+    if(queryType != 63) // 63 (0b00111111) = all possible query types are selected
+    {
+        APIstring += "&types="+queryType;
+    }
     statistics = [0,0,0];
     tableApi.ajax.url(APIstring).load(reloadCallback);
 }
@@ -191,6 +228,12 @@ $(document).ready(function() {
     else
     {
         APIstring = "api_db.php?getAllQueries=empty";
+    }
+    // Check if query type filtering is enabled
+    var queryType = getQueryTypes();
+    if(queryType != 63) // 63 (0b00111111) = all possible query types are selected
+    {
+        APIstring += "&types="+queryType;
     }
 
     tableApi = $("#all-queries").DataTable( {
