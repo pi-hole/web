@@ -102,7 +102,7 @@ function check_csrf($token) {
     }
 
     if(!hash_equals($_SESSION['token'], $token)) {
-        log_and_die("Wrong token! Check if cookies are enabled on your system.");
+        log_and_die("Wrong token! Please re-login on the Pi-hole dashboard.");
     }
 }
 
