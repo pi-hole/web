@@ -249,14 +249,14 @@ else
 	{
 		sendRequestFTL("cacheinfo");
 		$return = getResponseFTL();
-		$querytypes = array();
+		$cacheinfo = array();
 		foreach($return as $ret)
 		{
 			$tmp = explode(": ",$ret);
-			$querytypes[$tmp[0]] = floatval($tmp[1]);
+			$cacheinfo[$tmp[0]] = floatval($tmp[1]);
 		}
 
-		$result = array('cacheinfo' => $querytypes);
+		$result = array('cacheinfo' => $cacheinfo);
 		$data = array_merge($data, $result);
 	}
 
