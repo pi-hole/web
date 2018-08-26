@@ -14,7 +14,7 @@ $listtype = $_GET['list'];
 
 $basedir = "/etc/pihole/";
 
-require "func.php";
+require_once "func.php";
 
 switch ($listtype) {
     case "white":
