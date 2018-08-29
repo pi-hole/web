@@ -309,9 +309,22 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             $DHCP = false;
                         }
                         // Read setings from config file
-                        $DHCPstart = $setupVars["DHCP_START"];
-                        $DHCPend = $setupVars["DHCP_END"];
-                        $DHCProuter = $setupVars["DHCP_ROUTER"];
+                        if (isset($setupVars["DHCP_START"])) {
+                            $DHCPstart = $setupVars["DHCP_START"];
+                        } else {
+                            $DHCPstart = "";
+                        }
+                        if (isset($setupVars["DHCP_END"])) {
+                            $DHCPend = $setupVars["DHCP_END"];
+                        } else {
+                            $DHCPend = ""; 
+                        }
+                        if (isset($setupVars["DHCP_ROUTER"])) {
+                            $DHCProuter = $setupVars["DHCP_ROUTER"];
+                        } else {
+                            $DHCProuter = "";
+                        }
+                        
                         // This setting has been added later, we have to check if it exists
                         if (isset($setupVars["DHCP_LEASETIME"])) {
                             $DHCPleasetime = $setupVars["DHCP_LEASETIME"];
