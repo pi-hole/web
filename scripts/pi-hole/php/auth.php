@@ -93,8 +93,16 @@ function check_csrf($token) {
         session_start();
     }
 
-    if(!isset($_SESSION['token']) || empty($token) || !hash_equals($_SESSION['token'], $token)) {
-        log_and_die("Wrong token");
+    if(!isset($_SESSION['token'])) {
+        log_and_die("Session expired! Please re-login on the Pi-hole dashboard.");
+    }
+
+    if(empty($token)) {
+        log_and_die("Empty token! Check if cookies are enabled on your system.");
+    }
+
+    if(!hash_equals($_SESSION['token'], $token)) {
+        log_and_die("Wrong token! Please re-login on the Pi-hole dashboard.");
     }
 }
 
