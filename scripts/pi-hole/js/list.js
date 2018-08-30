@@ -93,16 +93,21 @@ function refresh(fade) {
                 });
 
                 // Add regex domains if present in returned list data
-                if(data.length === 2)
+                if(data.length > 1)
                 {
-                    data[1] = data[1].sort();
                     data[1].forEach(function (entry, index) {
                         // Whitelist entry or Blacklist (exact entry) are in the zero-th
                         // array returned by get.php
+                        var color = "", error = "";
+                        if(data.length > 2 && data[2][index] !== "OK")
+                        {
+                            color = "regexerror";
+                            error = "<br><strong>Error:&nbsp;" + data[2][index] + "</strong>";
+                        }
                         listw.append(
-                        "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
+                        "<li id=\"" + index + "\" class=\"list-group-item clearfix " + color + "\">" + entry +
                         "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
-                        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
+                        "<span class=\"glyphicon glyphicon-trash\"></span></button>" + error + "</li>");
                         // Handle button
                         $("#list-regex #"+index+"").on("click", "button", function() {
                             sub(index, entry, "regex");
@@ -168,7 +173,7 @@ function add(arg) {
                 alInfo.hide();
             });
             domain.val("");
-            refresh(true);
+            setTimeout(function(){ refresh(true); }, 1000);
           }
         },
         error: function(jqXHR, exception) {

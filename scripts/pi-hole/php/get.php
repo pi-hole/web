@@ -24,7 +24,8 @@ switch ($listtype) {
     case "black":
         $exact = getListContent("blacklist.txt");
         $regex = getListContent("regex.list");
-        $list = array($exact, $regex);
+        $regexchecklist = getListContent("regex.checklist");
+        $list = array($exact, $regex, $regexchecklist);
         break;
 
     default:
@@ -36,6 +37,10 @@ switch ($listtype) {
 function getListContent($listname) {
     global $basedir;
     $rawList = file_get_contents(checkfile($basedir.$listname));
+    // Return early if list file is not readable
+    if($rawList === False)
+      return array();
+
     $list = explode("\n", $rawList);
 
     // Get rid of empty lines and comments
