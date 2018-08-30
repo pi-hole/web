@@ -710,7 +710,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
-                                            <div class="col-sm-6">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Custom 1 (IPv4)</label>
                                                     <div class="input-group">
@@ -732,7 +732,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Custom 3 (IPv6)</label>
                                                     <div class="input-group">
