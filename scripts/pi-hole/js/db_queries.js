@@ -210,7 +210,6 @@ function refreshTableData() {
     var queryType = getQueryTypes();
     if(queryType !== "1,2,3,4,5,6")
     {
-        console.log(queryType);
         APIstring += "&types="+queryType;
     }
     statistics = [0,0,0];
