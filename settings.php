@@ -1254,8 +1254,27 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         </th>
                                                         <td><?php echo formatSizeUnits(1e3 * floatval(get_FTL_data("rss"))); ?></td>
                                                     </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span title="Size of the DNS domain cache">DNS cache size:</span>
+                                                        </th>
+                                                        <td id="cache-size">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span title="Number of cache insertions">DNS cache insertions:</span>
+                                                        </th>
+                                                        <td id="cache-inserted">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span title="Number of cache entries that had to be removed although they are not expired (increase cache size to reduce this number)">DNS cache evictions:</span>
+                                                        </th>
+                                                        <td id="cache-live-freed">&nbsp;</td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
+                                            See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" target="_blank">DNS cache documentation</a>.
                                             <?php } else { ?>
                                             <div>The FTL service is offline!</div>
                                             <?php } ?>
