@@ -698,7 +698,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     </tr>
                                                     <?php } ?>
                                                 </table>
-                                                <p>ECS (Extended Client Subnet) defines a mechanism for recursive resolvers to send partial client IP address information to authoritative DNS name servers. Content Delivery Networks (CDNs) and latency-sensitive services use this to give accurate geo-located responses when responding to name lookups coming through public DNS resolvers. See <a href="https://tools.ietf.org/html/rfc7871" target="_blank">RFC 7871</a> for further details.</p>
+                                                <p>ECS (Extended Client Subnet) defines a mechanism for recursive resolvers to send partial client IP address information to authoritative DNS name servers. Content Delivery Networks (CDNs) and latency-sensitive services use this to give geo-located responses when responding to name lookups coming through public DNS resolvers. <em>Note that ECS may result in reduced privacy.</em></p>
                                             </div>
                                         </div>
                                     </div>
