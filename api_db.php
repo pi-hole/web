@@ -104,55 +104,20 @@ if (isset($_GET['getAllQueries']) && $auth)
 		$dbquery = "SELECT timestamp, type, domain, client, status FROM queries WHERE timestamp >= :from AND timestamp <= :until ";
 		if(isset($_GET["types"]))
 		{
-			$types = intval($_GET["types"]);
-			$typestr = "";
-			if($types & 1) // GRAVITY
+			$types = $_GET["types"];
+			if(preg_match("/^[0-9]+(?:,[0-9]+)*$/", $types) === 1)
 			{
-				$typestr = "1";
+				// Append selector to DB query. The used regex ensures
+				// that only numbers, separated by commas are accepted
+				// to avoid code injection and other malicious things
+				// We accept only valid lists like "1,2,3"
+				// We reject ",2,3", "1,2," and similar arguments
+				$dbquery .= "AND status IN (".$types.") ";
 			}
-			if($types & 2) // FORWARDED
+			else
 			{
-				if(strlen($typestr) > 0)
-				{
-					$typestr .= ",";
-				}
-				$typestr .= "2";
+				die("Error. Selector types specified using an invalid format.");
 			}
-			if($types & 4) // CACHED
-			{
-				if(strlen($typestr) > 0)
-				{
-					$typestr .= ",";
-				}
-				$typestr .= "3";
-			}
-			if($types & 8) // REGEX/WILDCARD
-			{
-				if(strlen($typestr) > 0)
-				{
-					$typestr .= ",";
-				}
-				$typestr .= "4";
-			}
-			if($types & 16) // BLACKLIST
-			{
-				if(strlen($typestr) > 0)
-				{
-					$typestr .= ",";
-				}
-				$typestr .= "5";
-			}
-			if($types & 32) // EXTERNAL
-			{
-				if(strlen($typestr) > 0)
-				{
-					$typestr .= ",";
-				}
-				$typestr .= "6";
-			}
-
-			// Append selector to DB query
-			$dbquery .= "AND status IN (".$typestr.") ";
 		}
 		$dbquery .= "ORDER BY timestamp ASC";
 		$stmt = $db->prepare($dbquery);

@@ -143,32 +143,32 @@ function handleAjaxError( xhr, textStatus, error ) {
 
 function getQueryTypes()
 {
-    var queryType = 0;
+    var queryType = [];
     if($("#type_gravity").prop("checked"))
     {
-        queryType = 1;
+        queryType.push(1);
     }
     if($("#type_forwarded").prop("checked"))
     {
-        queryType += 1 << 1;
+        queryType.push(2);
     }
     if($("#type_cached").prop("checked"))
     {
-        queryType += 1 << 2;
+        queryType.push(3);
     }
     if($("#type_regex").prop("checked"))
     {
-        queryType += 1 << 3;
+        queryType.push(4);
     }
     if($("#type_blacklist").prop("checked"))
     {
-        queryType += 1 << 4;
+        queryType.push(5);
     }
     if($("#type_external").prop("checked"))
     {
-        queryType += 1 << 5;
+        queryType.push(6);
     }
-    return queryType;
+    return queryType.join(",");
 }
 
 var reloadCallback = function()
@@ -208,8 +208,9 @@ function refreshTableData() {
     var APIstring = "api_db.php?getAllQueries&from="+from+"&until="+until;
     // Check if query type filtering is enabled
     var queryType = getQueryTypes();
-    if(queryType !== 63) // 63 (0b00111111) = all possible query types are selected
+    if(queryType !== "1,2,3,4,5,6")
     {
+        console.log(queryType);
         APIstring += "&types="+queryType;
     }
     statistics = [0,0,0];
