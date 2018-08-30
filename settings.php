@@ -317,14 +317,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                         if (isset($setupVars["DHCP_END"])) {
                             $DHCPend = $setupVars["DHCP_END"];
                         } else {
-                            $DHCPend = ""; 
+                            $DHCPend = "";
                         }
                         if (isset($setupVars["DHCP_ROUTER"])) {
                             $DHCProuter = $setupVars["DHCP_ROUTER"];
                         } else {
                             $DHCProuter = "";
                         }
-                        
+
                         // This setting has been added later, we have to check if it exists
                         if (isset($setupVars["DHCP_LEASETIME"])) {
                             $DHCPleasetime = $setupVars["DHCP_LEASETIME"];
@@ -651,7 +651,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-12">
                                                 <table class="table table-bordered">
                                                     <tr>
                                                         <th colspan="2">IPv4</th>
@@ -699,8 +699,18 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <?php } ?>
                                                 </table>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h1 class="box-title">Upstream DNS Servers</h1>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
                                             <div class="col-sm-6">
-                                                <label>&nbsp;</label>
                                                 <div class="form-group">
                                                     <label>Custom 1 (IPv4)</label>
                                                     <div class="input-group">
@@ -720,6 +730,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <input type="text" name="custom2val" class="form-control"
                                                                <?php if (isset($custom2)){ ?>value="<?php echo $custom2; ?>"<?php } ?>>
                                                     </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
                                                     <label>Custom 3 (IPv6)</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon">
