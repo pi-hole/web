@@ -834,7 +834,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 </div>
                                                 <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
                                                    queries, Pi-hole requests the DNSSEC records needed to validate
-                                                   the replies. If a domain fails validation or the upstream does
+                                                   the replies. If a domain fails validation or the upstream does not
                                                    support DNSSEC, this setting can cause issues resolving domains.
                                                    Use Google, Norton, DNS.WATCH, Quad9, or another DNS
                                                    server which supports DNSSEC when activating DNSSEC. Note that
