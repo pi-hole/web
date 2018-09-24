@@ -206,7 +206,7 @@
     <div class="col-md-12 col-lg-6">
     <div class="box" id="forward-destinations">
         <div class="box-header with-border">
-          <h3 class="box-title">Forward Destinations (over time)</h3>
+          <h3 class="box-title">Upstreams (over time)</h3>
         </div>
         <div class="box-body">
           <div class="chart">
