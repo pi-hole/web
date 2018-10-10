@@ -216,7 +216,7 @@ if($auth) {
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
-        <a href="http://pi-hole.net" class="logo" target="_blank">
+        <a href="index.php" class="logo" target="_blank">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">P<b>h</b></span>
             <!-- logo for regular state and mobile devices -->
