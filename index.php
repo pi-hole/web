@@ -15,7 +15,7 @@
         <!-- small box -->
         <div class="small-box bg-green" id="total_queries" title="only A + AAAA queries">
             <div class="inner">
-                <p>Total queries (<span id="unique_clients">-</span> clients)</p>
+                <p>Total Queries (<span id="unique_clients">-</span> clients)</p>
                 <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
             </div>
             <div class="icon">
@@ -69,7 +69,7 @@
     <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
-          <h3 class="box-title">Queries over last 24 hours</h3>
+          <h3 class="box-title">Queries (Last 24 Hours)</h3>
         </div>
         <div class="box-body">
           <div class="chart">
@@ -94,7 +94,7 @@
     <div class="col-md-12">
     <div class="box" id="clients">
         <div class="box-header with-border">
-          <h3 class="box-title">Clients (over time)</h3>
+          <h3 class="box-title">Clients (Last 24 Hours)</h3>
         </div>
         <div class="box-body">
           <div class="chart">
