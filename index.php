@@ -8,6 +8,19 @@
     $indexpage = true;
     require "scripts/pi-hole/php/header.php";
     require_once("scripts/pi-hole/php/gravity.php");
+
+    function getinterval()
+    {
+        global $piholeFTLConf;
+        if(isset($piholeFTLConf["MAXLOGAGE"]))
+        {
+             return round(floatval($piholeFTLConf["MAXLOGAGE"]), 1);
+        }
+        else
+        {
+             return "24";
+        }
+    }
 ?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
@@ -69,7 +82,7 @@
     <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
-          <h3 class="box-title">Queries (Last 24 Hours)</h3>
+          <h3 class="box-title">Queries (Last 24 Hours)<?php echo getinterval(); ?> hours</h3>
         </div>
         <div class="box-body">
           <div class="chart">
@@ -136,10 +149,10 @@
         </div>
         <div class="box-body">
           <div class="float-left" style="width:50%">
-            <canvas id="forwardDestinationPieChart" width="120" height="120"></canvas>
+            <canvas id="forwardDestinationPieChart" width="120" height="120" class="extratooltipcanvas"></canvas>
           </div>
           <div class="float-left" style="width:50%">
-            <div id="forward-destinations-legend" class="chart-legend"></div>
+            <div id="forward-destinations-legend" class="chart-legend" class="extratooltipcanvas"></div>
           </div>
         </div>
         <div class="overlay">
@@ -193,7 +206,7 @@
     <div class="col-md-12 col-lg-6">
     <div class="box" id="forward-destinations">
         <div class="box-header with-border">
-          <h3 class="box-title">Forward Destinations (over time)</h3>
+          <h3 class="box-title">Upstreams (over time)</h3>
         </div>
         <div class="box-body">
           <div class="chart">

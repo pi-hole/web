@@ -40,6 +40,44 @@ $token = $_SESSION['token'];
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-12">
+        <label>Query status:</label>
+    </div>
+    <div class="form-group">
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_gravity" checked>Blocked (exact)</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_forwarded" checked>OK (forwarded)</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_cached" checked>OK (cached)</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_regex" checked>Blocked (regex/wildcard)</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_blacklist" checked>Blocked (blacklist)</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_external" checked>Blocked (external)</label>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden="true">
     Depending on how large of a range you specified, the request may time out while Pi-hole tries to retrieve all the data.<br/><span id="err"></span>
 </div>

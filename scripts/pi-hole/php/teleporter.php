@@ -143,6 +143,14 @@ if(isset($_POST["action"]))
 				$importedsomething = true;
 			}
 
+			if(isset($_POST["auditlog"]) && $file->getFilename() === "auditlog.list")
+			{
+				$auditlog = process_file(file_get_contents($file));
+				echo "Processing auditlog.list (".count($auditlog)." entries)<br>\n";
+				exec("sudo pihole -a clearaudit");
+				exec("sudo pihole -a audit ".implode(" ",$auditlog));
+			}
+
 			if($importedsomething)
 			{
 				exec("sudo pihole restartdns");

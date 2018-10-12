@@ -136,6 +136,14 @@ $(document).ready(function() {
     {
         APIstring += "&domain="+GETDict["domain"];
     }
+    else if("querytype" in GETDict)
+    {
+        APIstring += "&querytype="+GETDict["querytype"];
+    }
+    else if("forwarddest" in GETDict)
+    {
+        APIstring += "&forwarddest="+GETDict["forwarddest"];
+    }
     // If we don't ask filtering and also not for all queries, just request the most recent 100 queries
     else if(!("all" in GETDict))
     {
@@ -144,102 +152,130 @@ $(document).ready(function() {
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
-            var blocked = false;
 
-            var dnssec_status = "";
-            if (data[5] === "1")
+            // DNSSEC status
+            var dnssec_status;
+            switch (data[5])
             {
+            case "1":
                 dnssec_status = "<br><span style=\"color:green\">SECURE</span>";
-            }
-            else if (data[5] === "2")
-            {
+                break;
+            case "2":
                 dnssec_status = "<br><span style=\"color:orange\">INSECURE</span>";
-            }
-            else if (data[5] === "3")
-            {
+                break;
+            case "3":
                 dnssec_status = "<br><span style=\"color:red\">BOGUS</span>";
-            }
-            else if (data[5] === "4")
-            {
+                break;
+            case "4":
                 dnssec_status = "<br><span style=\"color:red\">ABANDONED</span>";
-            }
-            else if (data[5] === "5")
-            {
+                break;
+            case "5":
                 dnssec_status = "<br><span style=\"color:red\">?</span>";
-            }
-            if (data[4] === "1")
-            {
-                blocked = true;
-                $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed"+dnssec_status );
-                $("td:eq(6)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
-            }
-            else if (data[4] === "2")
-            {
-                $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(forwarded)"+dnssec_status );
-                $("td:eq(6)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
-            }
-            else if (data[4] === "3")
-            {
-                $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(cached)"+dnssec_status );
-                $("td:eq(6)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
-            }
-            else if (data[4] === "4")
-            {
-                blocked = true;
-                $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)");
-                $("td:eq(6)", row).html( "" );
-            }
-            else if (data[4] === "5")
-            {
-                blocked = true;
-                $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(blacklist)" );
-                $("td:eq(6)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
-            }
-            else
-            {
-                $("td:eq(4)", row).html( "Unknown" );
-                $("td:eq(6)", row).html( "" );
+                break;
+            default: // No DNSSEC
+                dnssec_status = "";
             }
 
-            // Check for existance of sixth column and display only if not Pi-holed
+            // Query status
+            var blocked, fieldtext, buttontext, color;
+            switch (data[4])
+            {
+            case "1":
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked (gravity)";
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>";
+                break;
+            case "2":
+                blocked = false;
+                color = "green";
+                fieldtext = "OK <br class='hidden-lg'>(forwarded)"+dnssec_status;
+                buttontext = "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
+                break;
+            case "3":
+                blocked = false;
+                color = "green";
+                fieldtext = "OK <br class='hidden-lg'>(cached)"+dnssec_status;
+                buttontext = "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
+                break;
+            case "4":
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
+                break;
+            case "5":
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
+                break;
+            case "6":
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external)";
+                buttontext = "" ;
+                break;
+            default:
+                blocked = false;
+                color = "black";
+                fieldtext = "Unknown";
+                buttontext = "";
+            }
+            $(row).css("color", color);
+            $("td:eq(4)", row).html(fieldtext);
+            $("td:eq(6)", row).html(buttontext);
+
+            // Check for existence of sixth column and display only if not Pi-holed
+            var replytext;
             if(data.length > 6 && !blocked)
             {
-                $("td:eq(5)", row).css("color","black");
-                if (data[6] === "0")
+                switch(data[6])
                 {
-                    $("td:eq(5)", row).html("N/A");
-                }
-                else if (data[6] === "1")
-                {
-                    $("td:eq(5)", row).html("NODATA");
-                }
-                else if (data[6] === "2")
-                {
-                    $("td:eq(5)", row).html("NXDOMAIN");
-                }
-                else if (data[6] === "3")
-                {
-                    $("td:eq(5)", row).html("CNAME");
-                }
-                else if (data[6] === "4")
-                {
-                    $("td:eq(5)", row).html("IP");
-                }
-                else
-                {
-                    $("td:eq(5)", row).html("? ("+data[6]+")");
+                case "0":
+                    replytext = "N/A";
+                    break;
+                case "1":
+                    replytext = "NODATA";
+                    break;
+                case "2":
+                    replytext = "NXDOMAIN";
+                    break;
+                case "3":
+                    replytext = "CNAME";
+                    break;
+                case "4":
+                    replytext = "IP";
+                    break;
+                case "5":
+                    replytext = "DOMAIN";
+                    break;
+                case "6":
+                    replytext = "RRNAME";
+                    break;
+                case "7":
+                    replytext = "SERVFAIL";
+                    break;
+                case "8":
+                    replytext = "REFUSED";
+                    break;
+                case "9":
+                    replytext = "NOTIMP";
+                    break;
+                case "10":
+                    replytext = "upstream error";
+                    break;
+                default:
+                    replytext = "? ("+data[6]+")";
                 }
             }
             else
             {
-                $("td:eq(5)", row).css("color","black");
-                $("td:eq(5)", row).html("-");
+                replytext = "-";
             }
+            $("td:eq(5)", row).css("color","black");
+            $("td:eq(5)", row).html(replytext);
+
             if(data.length > 7 && data[7] > 0)
             {
                 var content = $("td:eq(5)", row).html();
@@ -316,7 +352,7 @@ $(document).ready(function() {
 
     $("#all-queries tbody").on( "click", "button", function () {
         var data = tableApi.row( $(this).parents("tr") ).data();
-        if (data[4] === "1" || data[4] === "5")
+        if (data[4] === "1" || data[4] === "4" || data[4] === "5")
         {
           add(data[2],"white");
         }

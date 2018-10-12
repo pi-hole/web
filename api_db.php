@@ -101,7 +101,26 @@ if (isset($_GET['getAllQueries']) && $auth)
 	{
 		$from = intval($_GET["from"]);
 		$until = intval($_GET["until"]);
-		$stmt = $db->prepare("SELECT timestamp, type, domain, client, status FROM queries WHERE timestamp >= :from AND timestamp <= :until ORDER BY timestamp ASC");
+		$dbquery = "SELECT timestamp, type, domain, client, status FROM queries WHERE timestamp >= :from AND timestamp <= :until ";
+		if(isset($_GET["types"]))
+		{
+			$types = $_GET["types"];
+			if(preg_match("/^[0-9]+(?:,[0-9]+)*$/", $types) === 1)
+			{
+				// Append selector to DB query. The used regex ensures
+				// that only numbers, separated by commas are accepted
+				// to avoid code injection and other malicious things
+				// We accept only valid lists like "1,2,3"
+				// We reject ",2,3", "1,2," and similar arguments
+				$dbquery .= "AND status IN (".$types.") ";
+			}
+			else
+			{
+				die("Error. Selector types specified using an invalid format.");
+			}
+		}
+		$dbquery .= "ORDER BY timestamp ASC";
+		$stmt = $db->prepare($dbquery);
 		$stmt->bindValue(":from", intval($from), SQLITE3_INTEGER);
 		$stmt->bindValue(":until", intval($until), SQLITE3_INTEGER);
 		$results = $stmt->execute();

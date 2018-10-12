@@ -117,14 +117,16 @@ function isinserverlist($addr) {
 }
 
 	$DNSserverslist = [
-			"Google" => ["v4_1" => "8.8.8.8","v4_2" => "8.8.4.4", "v6_1" => "2001:4860:4860:0:0:0:0:8888", "v6_2" => "2001:4860:4860:0:0:0:0:8844"],
-			"OpenDNS" => ["v4_1" => "208.67.222.222", "v4_2" => "208.67.220.220", "v6_1" => "2620:0:ccc::2", "v6_2" => "2620:0:ccd::2"],
+			"Google (ECS)" => ["v4_1" => "8.8.8.8","v4_2" => "8.8.4.4", "v6_1" => "2001:4860:4860:0:0:0:0:8888", "v6_2" => "2001:4860:4860:0:0:0:0:8844"],
+			"OpenDNS (ECS)" => ["v4_1" => "208.67.222.222", "v4_2" => "208.67.220.220", "v6_1" => "2620:0:ccc::2", "v6_2" => "2620:0:ccd::2"],
 			"Level3" => ["v4_1" => "4.2.2.1", "v4_2" => "4.2.2.2"],
 			"Norton" => ["v4_1" => "199.85.126.10", "v4_2" => "199.85.127.10"],
 			"Comodo" => ["v4_1" => "8.26.56.26", "v4_2" => "8.20.247.20"],
 			"DNS.WATCH" => ["v4_1" => "84.200.69.80", "v4_2" => "84.200.70.40", "v6_1" => "2001:1608:10:25:0:0:1c04:b12f", "v6_2" => "2001:1608:10:25:0:0:9249:d69b"],
-			"Quad9" => ["v4_1" => "9.9.9.9", "v4_2" => "149.112.112.112", "v6_1" => "2620:fe::fe"],
-			"Cloudflare" => ["v4_1" => "1.1.1.1", "v4_2" => "1.0.0.1", "v6_1" => "2606:4700:4700::1111", "v6_2" => "2606:4700:4700::1001"]
+			"Quad9 (filtered, DNSSEC)" => ["v4_1" => "9.9.9.9", "v4_2" => "149.112.112.112", "v6_1" => "2620:fe::fe", "v6_2" => "2620:fe::9"],
+			"Quad9 (unfiltered, no DNSSEC)" => ["v4_1" => "9.9.9.10", "v4_2" => "149.112.112.10", "v6_1" => "2620:fe::10", "v6_2" => "2620:fe::fe:10"],
+			"Quad9 (filtered + ECS)" => ["v4_1" => "9.9.9.11", "v4_2" => "149.112.112.11", "v6_1" => "2620:fe::11"],
+			"Cloudflare (ECS)" => ["v4_1" => "1.1.1.1", "v4_2" => "1.0.0.1", "v6_1" => "2606:4700:4700::1111", "v6_2" => "2606:4700:4700::1001"]
 		];
 
 $adlist = [];
@@ -137,12 +139,21 @@ function readAdlists()
 	{
 		while (($line = fgets($handle)) !== false)
 		{
-			if(substr($line, 0, 5) === "#http")
+			if(strlen($line) < 3)
 			{
-				// Commented list
-				array_push($list, [false,rtrim(substr($line, 1))]);
+				continue;
 			}
-			elseif(substr($line, 0, 4) === "http")
+			elseif($line[0] === "#")
+			{
+				// Comments start either with "##" or "# "
+				if($line[1] !== "#" &&
+			           $line[1] !== " ")
+				{
+					// Commented list
+					array_push($list, [false,rtrim(substr($line, 1))]);
+				}
+			}
+			else
 			{
 				// Active list
 				array_push($list, [true,rtrim($line)]);
@@ -666,7 +677,7 @@ function readAdlists()
 
 			case "privacyLevel":
 				$level = intval($_POST["privacylevel"]);
-				if($level >= 0 && $level <= 3)
+				if($level >= 0 && $level <= 4)
 				{
 					exec("sudo pihole -a privacylevel ".$level);
 					$success .= "The privacy level has been updated";
