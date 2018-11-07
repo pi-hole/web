@@ -130,33 +130,33 @@ if (isset($_GET['getAllQueries']) && $auth)
 				$c = resolveHostname($row[3],false);
 
 				// Convert query type ID to name
-                // Names taken from FTL's query type names
+				// Names taken from FTL's query type names
 				switch($row[1]) {
-                    case 1:
-                        $query_type = "A";
-                        break;
-                    case 2:
-                        $query_type = "AAAA";
-                        break;
-                    case 3:
-                        $query_type = "ANY";
-                        break;
-                    case 4:
-                        $query_type = "SRV";
-                        break;
-                    case 5:
-                        $query_type = "SOA";
-                        break;
-                    case 6:
-                        $query_type = "PTR";
-                        break;
-                    case 7:
-                        $query_type = "TXT";
-                        break;
-                    default:
-                        $query_type = "UNKN";
-                        break;
-                }
+					case 1:
+						$query_type = "A";
+						break;
+					case 2:
+						$query_type = "AAAA";
+						break;
+					case 3:
+						$query_type = "ANY";
+						break;
+					case 4:
+						$query_type = "SRV";
+						break;
+					case 5:
+						$query_type = "SOA";
+						break;
+					case 6:
+						$query_type = "PTR";
+						break;
+					case 7:
+						$query_type = "TXT";
+						break;
+					default:
+						$query_type = "UNKN";
+						break;
+				}
 
 				$allQueries[] = [$row[0], $query_type, $row[2], $c, $row[4]];
 			}
