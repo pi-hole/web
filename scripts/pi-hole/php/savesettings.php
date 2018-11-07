@@ -63,7 +63,15 @@ function readStaticLeasesFile()
 {
 	global $dhcp_static_leases;
 	$dhcp_static_leases = array();
-	$dhcpstatic = @fopen('/etc/dnsmasq.d/04-pihole-static-dhcp.conf', 'r');
+	try
+	{
+		$dhcpstatic = @fopen('/etc/dnsmasq.d/04-pihole-static-dhcp.conf', 'r');
+	}
+	catch(Exception $e)
+	{
+		echo "Warning: Failed to read /etc/dnsmasq.d/04-pihole-static-dhcp.conf, this is not an error";
+		return false;
+	}
 
 	if(!is_resource($dhcpstatic))
 		return false;
