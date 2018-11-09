@@ -1315,7 +1315,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
-                                            <button type="button" class="btn btn-warning confirm-restartdns form-control">Restart dnsmasq</button>
+                                            <button type="button" class="btn btn-warning confirm-restartdns form-control">Restart DNS resolver</button>
                                         </div>
                                     </div>
                                     <br/>
