@@ -348,8 +348,9 @@ else
 </div>
 <!-- /.row -->
 <?php } ?>
+
+<script src="scripts/pi-hole/js/index.js"></script>
+
 <?php
     require "scripts/pi-hole/php/footer.php";
 ?>
-
-<script src="scripts/pi-hole/js/index.js"></script>
