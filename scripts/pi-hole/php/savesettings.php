@@ -687,8 +687,25 @@ function readAdlists()
 				$level = intval($_POST["privacylevel"]);
 				if($level >= 0 && $level <= 4)
 				{
+					// Check if privacylevel is already set
+					if (isset($piholeFTLConf["PRIVACYLEVEL"])) {
+						$privacylevel = intval($piholeFTLConf["PRIVACYLEVEL"]);
+					} else {
+						$privacylevel = 0;
+					}
+
+					// Store privacy level
 					exec("sudo pihole -a privacylevel ".$level);
-					$success .= "The privacy level has been updated";
+
+					if($privacylevel > $level)
+					{
+						exec("sudo pihole -a restartdns");
+						$success .= "The privacy level has been decreased and the DNS resolver has been restarted";
+					}
+					else
+					{
+						$success .= "The privacy level has been increased";
+					}
 				}
 				else
 				{
