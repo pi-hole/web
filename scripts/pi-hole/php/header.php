@@ -230,8 +230,6 @@ if($auth) {
 <script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
 <script src="scripts/vendor/Chart.bundle.min.js"></script>
 
-<script src="scripts/pi-hole/js/footer.js"></script>
-
 <!-- Send token to JS -->
 <div id="token" hidden><?php if($auth) echo $token; ?></div>
 <div id="enableTimer" hidden><?php if(file_exists("../custom_disable_timer")){ echo file_get_contents("../custom_disable_timer"); } ?></div>

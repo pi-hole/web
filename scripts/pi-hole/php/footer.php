@@ -66,5 +66,6 @@
     </footer>
 </div>
 <!-- ./wrapper -->
+<script src="scripts/pi-hole/js/footer.js"></script>
 </body>
 </html>
