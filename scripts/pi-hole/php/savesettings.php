@@ -702,9 +702,13 @@ function readAdlists()
 						exec("sudo pihole -a restartdns");
 						$success .= "The privacy level has been decreased and the DNS resolver has been restarted";
 					}
-					else
+					elseif($privacylevel < $level)
 					{
 						$success .= "The privacy level has been increased";
+					}
+					else
+					{
+						$success .= "The privacy level has been not been changed";
 					}
 				}
 				else
