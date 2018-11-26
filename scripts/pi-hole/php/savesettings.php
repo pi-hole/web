@@ -635,9 +635,18 @@ function readAdlists()
 						$type = "(IPv4)";
 					}
 
+					if(isset($_POST["DHCP_rapid_commit"]))
+					{
+						$rapidcommit = "true";
+					}
+					else
+					{
+						$rapidcommit = "false";
+					}
+
 					if(!strlen($error))
 					{
-						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router." ".$leasetime." ".$domain." ".$ipv6);
+						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router." ".$leasetime." ".$domain." ".$ipv6." ".$rapidcommit);
 						$success .= "The DHCP server has been activated ".htmlspecialchars($type);
 					}
 				}
