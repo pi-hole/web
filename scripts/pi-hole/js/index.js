@@ -1264,4 +1264,31 @@ $(document).ready(function() {
         // Pull in data via AJAX
         updateForwardDestinationsPie();
     }
+
+    // Check if site was accessed over pi.hole
+    // If not: Show warning (but don't do it if the user decided earlier to hide this warning)
+    if(location.host !== "pi.hole" && localStorage.getItem("hostname-warning") !== "hidden")
+    {
+        $("#hostname-warning").attr("hidden", false);
+    }
 });
+
+$(".confirm-hidewarning").confirm({
+    text: "This warning is displayed because you visited this page over "+location.host+" and not <a href=\"http://pi.hole/admin\">pi.hole/admin</a>.<br>You can hide this warning on this client if this is okay.",
+    title: "Confirmation required",
+    confirm(button) {
+        localStorage.setItem("hostname-warning", "hidden");
+        $("#hostname-warning").attr("hidden", true);
+    },
+    cancel(button) {
+        // nothing to do
+    },
+    confirmButton: "Permanently hide this warning",
+    cancelButton: "Go back",
+    post: true,
+    confirmButtonClass: "btn-danger",
+    cancelButtonClass: "btn-success",
+    dialogClass: "modal-dialog modal-mg" // Bootstrap classes for mid-size modal
+});
+
+$(".confirm-hidewarning").show();

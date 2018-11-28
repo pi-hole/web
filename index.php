@@ -77,6 +77,19 @@
     </div>
     <!-- ./col -->
 </div>
+<!-- Hostname warning box -->
+<div class="row" hidden="true" id="hostname-warning">
+    <div class="col-lg-12">
+        <!-- small box -->
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h4><strong>Warning:</strong> Your client may not be configured to use your Pi-hole as DNS resolver&nbsp;
+                <button type="button" class="btn btn-danger btn-xs pull-right confirm-hidewarning">Click here for further information</button></h4>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+</div>
 
 <div class="row">
     <div class="col-md-12">
@@ -352,4 +365,5 @@ else
     require "scripts/pi-hole/php/footer.php";
 ?>
 
+<script src="scripts/vendor/jquery.confirm.min.js"></script>
 <script src="scripts/pi-hole/js/index.js"></script>
