@@ -20,20 +20,20 @@ if (!$api) {
 switch($type) {
     case "white":
         if(!isset($_POST["auditlog"]))
-            echo exec("sudo pihole -w ${_POST['domain']}");
+            echo shell_exec("sudo pihole -w ${_POST['domain']}");
         else
         {
-            echo exec("sudo pihole -w -n ${_POST['domain']}");
-            echo exec("sudo pihole -a audit ${_POST['domain']}");
+            echo shell_exec("sudo pihole -w -n ${_POST['domain']}");
+            echo shell_exec("sudo pihole -a audit ${_POST['domain']}");
         }
         break;
     case "black":
         if(!isset($_POST["auditlog"]))
-            echo exec("sudo pihole -b ${_POST['domain']}");
+            echo shell_exec("sudo pihole -b ${_POST['domain']}");
         else
         {
-            echo exec("sudo pihole -b -n ${_POST['domain']}");
-            echo exec("sudo pihole -a audit ${_POST['domain']}");
+            echo shell_exec("sudo pihole -b -n ${_POST['domain']}");
+            echo shell_exec("sudo pihole -a audit ${_POST['domain']}");
         }
         break;
     case "wild":

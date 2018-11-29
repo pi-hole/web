@@ -57,7 +57,7 @@ function getFullName() {
 </div>
 <div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Failure! Something went wrong.<br/><span id="err"></span>
+    Failure! Something went wrong, see output below:<br/><br/><pre><span id="err"></span></pre>
 </div>
 
 
