@@ -59,7 +59,7 @@ function updateTopClientsChart() {
 
         // Clear tables before filling them with data
         $("#client-frequency td").parent().remove();
-        var clienttable =  $("#client-frequency").find("tbody:last");
+        var clienttable = $("#client-frequency").find("tbody:last");
         var client, percentage, clientname, clientip;
         var sum = 0;
         for (client in data.top_sources) {
@@ -113,7 +113,7 @@ function updateTopDomainsChart() {
 
         // Clear tables before filling them with data
         $("#domain-frequency td").parent().remove();
-        var domaintable =  $("#domain-frequency").find("tbody:last");
+        var domaintable = $("#domain-frequency").find("tbody:last");
         var domain, percentage;
         var sum = 0;
         for (domain in data.top_domains) {
@@ -155,7 +155,7 @@ function updateTopAdsChart() {
 
         // Clear tables before filling them with data
         $("#ad-frequency td").parent().remove();
-        var adtable =  $("#ad-frequency").find("tbody:last");
+        var adtable = $("#ad-frequency").find("tbody:last");
         var ad, percentage;
         var sum = 0;
         for (ad in data.top_ads) {

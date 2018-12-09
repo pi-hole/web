@@ -140,6 +140,35 @@ $("#DHCPchk").click(function() {
 	$("#dhcpnotice").prop("hidden", !this.checked).addClass("lookatme");
 });
 
+function loadCacheInfo()
+{
+    $.getJSON("api.php?getCacheInfo", function(data) {
+        if("FTLnotrunning" in data)
+        {
+            return;
+        }
+
+        // Fill table with obtained values
+        $("#cache-size").text(parseInt(data["cacheinfo"]["cache-size"]));
+        $("#cache-inserted").text(parseInt(data["cacheinfo"]["cache-inserted"]));
+
+        // Highlight early cache removals when present
+        var cachelivefreed = parseInt(data["cacheinfo"]["cache-live-freed"]);
+        $("#cache-live-freed").text(cachelivefreed);
+        if(cachelivefreed > 0)
+        {
+            $("#cache-live-freed").parent("tr").addClass("lookatme");
+        }
+        else
+        {
+            $("#cache-live-freed").parent("tr").removeClass("lookatme");
+        }
+
+        // Update cache info every 10 seconds
+        setTimeout(loadCacheInfo, 10000);
+    });
+}
+
 var leasetable, staticleasetable;
 $(document).ready(function() {
 	if(document.getElementById("DHCPLeasesTable"))
@@ -169,6 +198,8 @@ $(document).ready(function() {
         leasetable.draw();
         staticleasetable.draw();
     });
+
+    loadCacheInfo();
 
 } );
 

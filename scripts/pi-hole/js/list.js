@@ -140,23 +140,35 @@ function add(arg) {
     var alInfo = $("#alInfo");
     var alSuccess = $("#alSuccess");
     var alFailure = $("#alFailure");
+    var alWarning = $("#alWarning");
     var err = $("#err");
+    var warn = $("#warn");
     alInfo.show();
     alSuccess.hide();
     alFailure.hide();
+    alWarning.hide();
     $.ajax({
         url: "scripts/pi-hole/php/add.php",
         method: "post",
         data: {"domain":domain.val().trim(), "list":locallistType, "token":token},
         success: function(response) {
-          if (!wild && response.indexOf("] Pi-hole blocking is ") === -1 ||
+          if (!wild && response.indexOf(" already exists in ") !== -1) {
+            alWarning.show();
+            warn.html(response);
+            alWarning.delay(8000).fadeOut(2000, function() {
+                alWarning.hide();
+            });
+            alInfo.delay(8000).fadeOut(2000, function() {
+                alInfo.hide();
+            });
+          } else if (!wild && response.indexOf("] Pi-hole blocking is ") === -1 ||
                wild && response.length > 1) {
             alFailure.show();
             err.html(response);
-            alFailure.delay(4000).fadeOut(2000, function() {
+            alFailure.delay(8000).fadeOut(2000, function() {
                 alFailure.hide();
             });
-            alInfo.delay(4000).fadeOut(2000, function() {
+            alInfo.delay(8000).fadeOut(2000, function() {
                 alInfo.hide();
             });
           } else {

@@ -116,6 +116,7 @@
     Set the privacy level for queries. Note that decreasing the privacy level will not disclose previously hidden query data.
     <h4>Teleporter</h4>
     Import and export Pi-hole settings.
+    </div>
 </div>
 <div class="row">
     <div class="col-md-12">

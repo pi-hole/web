@@ -9,7 +9,6 @@ require "scripts/pi-hole/php/header.php";
 require "scripts/pi-hole/php/savesettings.php";
 // Reread ini file as things might have been changed
 $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
-$piholeFTLConfFile = "/etc/pihole/pihole-FTL.conf";
 if(is_readable($piholeFTLConfFile))
 {
 	$piholeFTLConf = parse_ini_file($piholeFTLConfFile);
@@ -310,9 +309,22 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             $DHCP = false;
                         }
                         // Read setings from config file
-                        $DHCPstart = $setupVars["DHCP_START"];
-                        $DHCPend = $setupVars["DHCP_END"];
-                        $DHCProuter = $setupVars["DHCP_ROUTER"];
+                        if (isset($setupVars["DHCP_START"])) {
+                            $DHCPstart = $setupVars["DHCP_START"];
+                        } else {
+                            $DHCPstart = "";
+                        }
+                        if (isset($setupVars["DHCP_END"])) {
+                            $DHCPend = $setupVars["DHCP_END"];
+                        } else {
+                            $DHCPend = "";
+                        }
+                        if (isset($setupVars["DHCP_ROUTER"])) {
+                            $DHCProuter = $setupVars["DHCP_ROUTER"];
+                        } else {
+                            $DHCProuter = "";
+                        }
+
                         // This setting has been added later, we have to check if it exists
                         if (isset($setupVars["DHCP_LEASETIME"])) {
                             $DHCPleasetime = $setupVars["DHCP_LEASETIME"];
@@ -639,7 +651,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-12">
                                                 <table class="table table-bordered">
                                                     <tr>
                                                         <th colspan="2">IPv4</th>
@@ -686,9 +698,20 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     </tr>
                                                     <?php } ?>
                                                 </table>
+                                                <p>ECS (Extended Client Subnet) defines a mechanism for recursive resolvers to send partial client IP address information to authoritative DNS name servers. Content Delivery Networks (CDNs) and latency-sensitive services use this to give geo-located responses when responding to name lookups coming through public DNS resolvers. <em>Note that ECS may result in reduced privacy.</em></p>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <label>&nbsp;</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h1 class="box-title">Upstream DNS Servers</h1>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Custom 1 (IPv4)</label>
                                                     <div class="input-group">
@@ -708,6 +731,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <input type="text" name="custom2val" class="form-control"
                                                                <?php if (isset($custom2)){ ?>value="<?php echo $custom2; ?>"<?php } ?>>
                                                     </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
                                                     <label>Custom 3 (IPv6)</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon">
@@ -807,8 +834,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 </div>
                                                 <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
                                                    queries, Pi-hole requests the DNSSEC records needed to validate
-                                                   the replies. Use Google, Norton, DNS.WATCH or Quad9 DNS servers when activating
-                                                   DNSSEC. Note that the size of your log might increase significantly
+                                                   the replies. If a domain fails validation or the upstream does not
+                                                   support DNSSEC, this setting can cause issues resolving domains.
+                                                   Use Google, Cloudflare, DNS.WATCH, Quad9, or another DNS
+                                                   server which supports DNSSEC when activating DNSSEC. Note that
+                                                   the size of your log might increase significantly
                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
                                                    <a href="http://dnssec.vs.uni-due.de/" target="_blank">here</a>.</p>
                                                 <label>Conditional Forwarding</label>
@@ -1032,10 +1062,15 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="radio">
                                                         <label><input type="radio" name="privacylevel" value="3"
                                                                       <?php if ($privacylevel === 3){ ?>checked<?php }
-                                                                      ?>>Paranoia mode: This disables basically everything except the live anonymous stastics<br>No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists.</label>
+                                                                      ?>>Anonymous mode: This disables basically everything except the live anonymous statistics<br>No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists.</label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label><input type="radio" name="privacylevel" value="4"
+                                                                      <?php if ($privacylevel === 4){ ?>checked<?php }
+                                                            ?>>No Statistics mode: This disables all statistics processing. Even the query counters will not be available.<br><strong>Note that regex blocking is not available when query analyzing is disabled.</strong><br>Additionally, you can disable logging to the file <code>/var/log/pihole.log</code> using <code>sudo pihole logging off</code>.</label>
                                                     </div>
                                                 </div>
-                                                <p>The privacy level may be changed at any time without having to restart the DNS resolver. However, note that queries with (partially) hidden details cannot be disclosed with a subsequent reduction of the privacy level.</p>
+                                                <p>The privacy level may be increased at any time without having to restart the DNS resolver. However, note that the DNS resolver needs to be restarted when lowering the privacy level. This restarting is automatically done when saving.</p>
                                                 <?php if($privacylevel > 0 && $piHoleLogging){ ?>
                                                 <p class="lookatme">Warning: Pi-hole's query logging is activated. Although the dashboard will hide the requested details, all queries are still fully logged to the pihole.log file.</p>
                                                 <?php } ?>
@@ -1099,6 +1134,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <label><input type="checkbox" name="regexlist" value="true"
                                                                       checked>
                                                             Regex filters</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="auditlog" value="true"
+                                                                      checked>
+                                                            Audit log</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1217,8 +1257,27 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         </th>
                                                         <td><?php echo formatSizeUnits(1e3 * floatval(get_FTL_data("rss"))); ?></td>
                                                     </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span title="Size of the DNS domain cache">DNS cache size:</span>
+                                                        </th>
+                                                        <td id="cache-size">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span title="Number of cache insertions">DNS cache insertions:</span>
+                                                        </th>
+                                                        <td id="cache-inserted">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span title="Number of cache entries that had to be removed although they are not expired (increase cache size to reduce this number)">DNS cache evictions:</span>
+                                                        </th>
+                                                        <td id="cache-live-freed">&nbsp;</td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
+                                            See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" target="_blank">DNS cache documentation</a>.
                                             <?php } else { ?>
                                             <div>The FTL service is offline!</div>
                                             <?php } ?>
@@ -1256,7 +1315,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
-                                            <button type="button" class="btn btn-warning confirm-restartdns form-control">Restart dnsmasq</button>
+                                            <button type="button" class="btn btn-warning confirm-restartdns form-control">Restart DNS resolver</button>
                                         </div>
                                     </div>
                                     <br/>
