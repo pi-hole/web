@@ -1383,11 +1383,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
     </div>
 </div>
 
-<?php
-require "scripts/pi-hole/php/footer.php";
-?>
-
 <script src="scripts/vendor/jquery.inputmask.js"></script>
 <script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
 <script src="scripts/vendor/jquery.confirm.min.js"></script>
 <script src="scripts/pi-hole/js/settings.js"></script>
+
+<?php
+require "scripts/pi-hole/php/footer.php";
+?>
