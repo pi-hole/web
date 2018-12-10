@@ -1081,10 +1081,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="radio">
                                                         <label><input type="radio" name="privacylevel" value="4"
                                                                       <?php if ($privacylevel === 4){ ?>checked<?php }
-                                                            ?>>No Statistics mode: This disables all statistics processing. Even the query counters will not be available.<br>Additionally, you can disable logging to the file <code>/var/log/pihole.log</code> using <code>sudo pihole logging off</code>.</label>
+                                                            ?>>No Statistics mode: This disables all statistics processing. Even the query counters will not be available.<br><strong>Note that regex blocking is not available when query analyzing is disabled.</strong><br>Additionally, you can disable logging to the file <code>/var/log/pihole.log</code> using <code>sudo pihole logging off</code>.</label>
                                                     </div>
                                                 </div>
-                                                <p>The privacy level may be changed at any time without having to restart the DNS resolver. However, note that queries with (partially) hidden details cannot be disclosed with a subsequent reduction of the privacy level.</p>
+                                                <p>The privacy level may be increased at any time without having to restart the DNS resolver. However, note that the DNS resolver needs to be restarted when lowering the privacy level. This restarting is automatically done when saving.</p>
                                                 <?php if($privacylevel > 0 && $piHoleLogging){ ?>
                                                 <p class="lookatme">Warning: Pi-hole's query logging is activated. Although the dashboard will hide the requested details, all queries are still fully logged to the pihole.log file.</p>
                                                 <?php } ?>
@@ -1329,7 +1329,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
-                                            <button type="button" class="btn btn-warning confirm-restartdns form-control">Restart dnsmasq</button>
+                                            <button type="button" class="btn btn-warning confirm-restartdns form-control">Restart DNS resolver</button>
                                         </div>
                                     </div>
                                     <br/>

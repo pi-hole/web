@@ -23,7 +23,8 @@ function echoEvent($datatext) {
 ini_set("pcre.recursion_limit", 1500);
 function is_valid_domain_name($domain_name)
 {
-    return (preg_match("/^((-|_)*[a-z\d]((-|_)*[a-z\d])*(-|_)*)(\.(-|_)*([a-z\d]((-|_)*[a-z\d])*))*$/i", $domain_name) // Valid chars check
+    return ($domain_name[0] !== '-' // Don't allow domains to appear as command line options
+            && preg_match("/^((-|_)*[a-z\d]((-|_)*[a-z\d])*(-|_)*)(\.(-|_)*([a-z\d]((-|_)*[a-z\d])*))*$/i", $domain_name) // Valid chars check
             && preg_match("/^.{1,253}$/", $domain_name) // Overall length check
             && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)   ); // Length of each label
 }
