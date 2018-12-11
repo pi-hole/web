@@ -99,6 +99,35 @@ elseif (isset($_GET['versions']))
 	$data = array_merge($data, $latest);
 	$data = array_merge($data, $branches);
 }
+elseif (isset($_GET['list']))
+{
+	if (isset($_GET['add']))
+	{
+		if (!$auth)
+			die("Not authorized!");
+
+		// Set POST parameters and invoke script to add domain to list
+		$_POST['domain'] = $_GET['add'];
+		$_POST['list'] = $_GET['list'];
+		require("scripts/pi-hole/php/add.php");
+	}
+	elseif (isset($_GET['sub']))
+	{
+		if (!$auth)
+			die("Not authorized!");
+
+		// Set POST parameters and invoke script to remove domain from list
+		$_POST['domain'] = $_GET['sub'];
+		$_POST['list'] = $_GET['list'];
+		require("scripts/pi-hole/php/sub.php");
+	}
+	else
+	{
+		require("scripts/pi-hole/php/get.php");
+	}
+
+	return;
+}
 
 // Other API functions
 require("api_FTL.php");

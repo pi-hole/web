@@ -165,6 +165,15 @@
   	}else {
   	    $speedtestdays  = "24 Hours";
   	}
+    $piholeFTLConfFile = "/etc/pihole/pihole-FTL.conf";
+    if(is_readable($piholeFTLConfFile))
+    {
+        $piholeFTLConf = parse_ini_file($piholeFTLConfFile);
+    }
+    else
+    {
+        $piholeFTLConf = array();
+    }
 
 ?>
 <!DOCTYPE html>
