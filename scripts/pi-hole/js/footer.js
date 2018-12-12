@@ -15,24 +15,6 @@ function secondsTimeSpanToHMS(s) {
     return h+":"+(m < 10 ? "0"+m : m)+":"+(s < 10 ? "0"+s : s); //zero padding on minutes and seconds
 }
 
-function countDown(){
-    var ena = $("#enableLabel");
-    var enaT = $("#enableTimer");
-    var target = new Date(parseInt(enaT.html()));
-    var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
-
-    if(seconds > 0){
-        setTimeout(countDown,1000);
-        ena.text("Enable (" + secondsTimeSpanToHMS(seconds) + ")");
-    }
-    else
-    {
-        ena.text("Enable");
-        piholeChanged("enabled");
-        localStorage.removeItem("countDownTarget");
-    }
-}
-
 function piholeChanged(action)
 {
     var status = $("#status");
@@ -54,6 +36,24 @@ function piholeChanged(action)
             break;
     }
 
+}
+
+function countDown(){
+    var ena = $("#enableLabel");
+    var enaT = $("#enableTimer");
+    var target = new Date(parseInt(enaT.html()));
+    var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
+
+    if(seconds > 0){
+        setTimeout(countDown,1000);
+        ena.text("Enable (" + secondsTimeSpanToHMS(seconds) + ")");
+    }
+    else
+    {
+        ena.text("Enable");
+        piholeChanged("enabled");
+        localStorage.removeItem("countDownTarget");
+    }
 }
 
 function piholeChange(action, duration)

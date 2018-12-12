@@ -4,33 +4,34 @@
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
-*  Please see LICENSE file for your rights under this license. */ ?>
-
-<?php
-require('auth.php');
+*  Please see LICENSE file for your rights under this license. */
+require_once('auth.php');
 
 $type = $_POST['list'];
 
-// All of the verification for list editing
-list_verify($type);
+// Perform all of the verification for list editing
+// when NOT invoked and authenticated from API
+if (!$api) {
+    list_verify($type);
+}
 
 switch($type) {
     case "white":
         if(!isset($_POST["auditlog"]))
-            echo exec("sudo pihole -w -q ${_POST['domain']}");
+            echo shell_exec("sudo pihole -w ${_POST['domain']}");
         else
         {
-            echo exec("sudo pihole -w -q -n ${_POST['domain']}");
-            echo exec("sudo pihole -a audit ${_POST['domain']}");
+            echo shell_exec("sudo pihole -w -n ${_POST['domain']}");
+            echo shell_exec("sudo pihole -a audit ${_POST['domain']}");
         }
         break;
     case "black":
         if(!isset($_POST["auditlog"]))
-            echo exec("sudo pihole -b -q ${_POST['domain']}");
+            echo shell_exec("sudo pihole -b ${_POST['domain']}");
         else
         {
-            echo exec("sudo pihole -b -q -n ${_POST['domain']}");
-            echo exec("sudo pihole -a audit ${_POST['domain']}");
+            echo shell_exec("sudo pihole -b -n ${_POST['domain']}");
+            echo shell_exec("sudo pihole -a audit ${_POST['domain']}");
         }
         break;
     case "wild":

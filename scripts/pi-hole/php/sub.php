@@ -7,12 +7,15 @@
 *  Please see LICENSE file for your rights under this license. */ ?>
 
 <?php
-require('auth.php');
+require_once('auth.php');
 
 $type = $_POST['list'];
 
-// All of the verification for list editing
-list_verify($type);
+// Perform all of the verification for list editing
+// when NOT invoked and authenticated from API
+if (!$api) {
+    list_verify($type);
+}
 
 switch($type) {
     case "white":

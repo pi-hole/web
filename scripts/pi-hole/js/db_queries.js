@@ -130,15 +130,45 @@ function handleAjaxError( xhr, textStatus, error ) {
     }
     else if(xhr.responseText.indexOf("Connection refused") >= 0)
     {
-        alert( "An error occured while loading the data: Connection refused. Is FTL running?" );
+        alert( "An error occurred while loading the data: Connection refused. Is FTL running?" );
     }
     else
     {
-        alert( "An unknown error occured while loading the data.\n"+xhr.responseText );
+        alert( "An unknown error occurred while loading the data.\n"+xhr.responseText );
     }
     $("#all-queries_processing").hide();
     tableApi.clear();
     tableApi.draw();
+}
+
+function getQueryTypes()
+{
+    var queryType = [];
+    if($("#type_gravity").prop("checked"))
+    {
+        queryType.push(1);
+    }
+    if($("#type_forwarded").prop("checked"))
+    {
+        queryType.push(2);
+    }
+    if($("#type_cached").prop("checked"))
+    {
+        queryType.push(3);
+    }
+    if($("#type_regex").prop("checked"))
+    {
+        queryType.push(4);
+    }
+    if($("#type_blacklist").prop("checked"))
+    {
+        queryType.push(5);
+    }
+    if($("#type_external").prop("checked"))
+    {
+        queryType.push(6);
+    }
+    return queryType.join(",");
 }
 
 var reloadCallback = function()
@@ -176,6 +206,12 @@ var reloadCallback = function()
 function refreshTableData() {
     timeoutWarning.show();
     var APIstring = "api_db.php?getAllQueries&from="+from+"&until="+until;
+    // Check if query type filtering is enabled
+    var queryType = getQueryTypes();
+    if(queryType !== "1,2,3,4,5,6")
+    {
+        APIstring += "&types="+queryType;
+    }
     statistics = [0,0,0];
     tableApi.ajax.url(APIstring).load(reloadCallback);
 }
@@ -192,43 +228,65 @@ $(document).ready(function() {
     {
         APIstring = "api_db.php?getAllQueries=empty";
     }
+    // Check if query type filtering is enabled
+    var queryType = getQueryTypes();
+    if(queryType !== 63) // 63 (0b00111111) = all possible query types are selected
+    {
+        APIstring += "&types="+queryType;
+    }
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
-            if (data[4] === 1)
-            {
-                $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed" );
-                $("td:eq(5)", row).html( "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" );
-                // statistics[2]++;
-            }
-            else if (data[4] === 2)
-            {
-                $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(forwarded)" );
-                $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
-            }
-            else if (data[4] === 3)
-            {
-                $(row).css("color","green");
-                $("td:eq(4)", row).html( "OK <br class='hidden-lg'>(cached)" );
-                $("td:eq(5)", row).html( "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>" );
-                // statistics[1]++;
+            var blocked, fieldtext, buttontext, color;
 
-            }
-            else if (data[4] === 4)
+            switch (data[4])
             {
-                $(row).css("color","red");
-                $("td:eq(4)", row).html( "Pi-holed <br class='hidden-lg'>(wildcard)" );
-                $("td:eq(5)", row).html( "" );
-                // statistics[3]++;
+              case 1:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked (gravity)";
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>";
+                break;
+              case 2:
+                blocked = false;
+                color = "green";
+                fieldtext = "OK <br class='hidden-lg'>(forwarded)";
+                buttontext = "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
+                break;
+              case 3:
+                blocked = false;
+                color = "green";
+                fieldtext = "OK <br class='hidden-lg'>(cached)";
+                buttontext = "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
+                break;
+              case 4:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
+                break;
+              case 5:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
+                break;
+              case 6:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external)";
+                buttontext = "" ;
+                break;
+              default:
+                blocked = false;
+                color = "black";
+                fieldtext = "Unknown";
+                buttontext = "";
             }
-            else
-            {
-                $("td:eq(4)", row).html( "Unknown <br class='hidden-lg'>("+data[4]+")" );
-                $("td:eq(5)", row).html( "" );
-            }
-            // statistics[0]++;
+
+            $(row).css("color", color);
+            $("td:eq(4)", row).html(fieldtext);
+            $("td:eq(5)", row).html(buttontext);
         },
         dom: "<'row'<'col-sm-12'f>>" +
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
@@ -257,7 +315,7 @@ $(document).ready(function() {
     });
     $("#all-queries tbody").on( "click", "button", function () {
         var data = tableApi.row( $(this).parents("tr") ).data();
-        if (data[4] === "1")
+        if (data[4] === 1 || data[4] === 4 || data[5] === 5)
         {
           add(data[2],"white");
         }

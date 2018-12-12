@@ -245,6 +245,21 @@ else
 		$data = array_merge($data, $result);
 	}
 
+	if (isset($_GET['getCacheInfo']) && $auth)
+	{
+		sendRequestFTL("cacheinfo");
+		$return = getResponseFTL();
+		$cacheinfo = array();
+		foreach($return as $ret)
+		{
+			$tmp = explode(": ",$ret);
+			$cacheinfo[$tmp[0]] = floatval($tmp[1]);
+		}
+
+		$result = array('cacheinfo' => $cacheinfo);
+		$data = array_merge($data, $result);
+	}
+
 	if (isset($_GET['getAllQueries']) && $auth)
 	{
 		if(isset($_GET['from']) && isset($_GET['until']))
@@ -261,6 +276,16 @@ else
 		{
 			// Get specific client only
 			sendRequestFTL("getallqueries-client ".$_GET['client']);
+		}
+		else if(isset($_GET['querytype']))
+		{
+			// Get specific query type only
+			sendRequestFTL("getallqueries-qtype ".$_GET['querytype']);
+		}
+		else if(isset($_GET['forwarddest']))
+		{
+			// Get specific forward destination only
+			sendRequestFTL("getallqueries-forward ".$_GET['forwarddest']);
 		}
 		else if(is_numeric($_GET['getAllQueries']))
 		{
