@@ -36,7 +36,7 @@ switch($type) {
         $list = array_diff($list, array($_POST['domain'], ""));
         $list = implode("\n", $list);
 
-        if(file_put_contents($regexfile, $list) === FALSE)
+        if(file_put_contents($regexfile, $list."\n") === FALSE)
         {
             $err = error_get_last()["message"];
             echo "Unable to remove regex \"".htmlspecialchars($_POST['domain'])."\" from ${regexfile}<br>Error message: $err";
