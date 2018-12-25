@@ -30,6 +30,21 @@ if (isset($_GET['status']))
 		$data = array_merge($data, array("status" => "disabled"));
 	}
 }
+elseif (isset($_GET['restartdns']) && $auth)
+{
+    if (isset($_GET["auth"])) {
+        if ($_GET["auth"] !== $pwhash)
+            die("Not authorized!");
+    } else {
+        // Skip token validation if explicit auth string is provided
+        check_csrf($_GET['token']);
+    }
+    exec('sudo pihole restartdns', $output, $ret);
+    if ($ret !== 0)
+        $data = array_merge($data, array("restartdns" => "fail"));
+    else
+        $data = array_merge($data, array("restartdns" => "success"));
+}
 elseif (isset($_GET['enable']) && $auth)
 {
 	if(isset($_GET["auth"]))
