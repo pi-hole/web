@@ -98,17 +98,24 @@ $(document).ready(function() {
                  // This client has never sent a query to Pi-hole, color light-red
                  color = "#FFBFAA";
              }
+             // Set determined background color
              $(row).css("background-color", color);
 
+             // Insert "Never" into Last Query field when we have
+             // never seen a query from this device
              if(data["lastQuery"] === 0)
              {
                  $("td:eq(5)", row).html("Never");
              }
 
+             // Set hostname to "N/A" if not available
              if(data["name"].length < 1)
              {
                  $("td:eq(3)", row).html("N/A");
              }
+
+             // Set number of queries to localized string (add thousand separators)
+             $("td:eq(6)", row).html(data["numQueries"].toLocaleString());
         },
         dom: "<'row'<'col-sm-12'f>>" +
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
