@@ -99,9 +99,7 @@ if(isset($_GET["network"]) && $auth)
 	$network = array();
 	$results = $db->query('SELECT * FROM network');
 
-	if(!is_bool($results))
-		$result = $results;
-	while($res = $results->fetchArray(SQLITE3_ASSOC))
+	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
 		array_push($network, $res);
 
 	$data = array_merge($data, array('network' => $network));
