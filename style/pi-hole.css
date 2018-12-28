@@ -175,3 +175,13 @@
 .float-left{
     float:left;
 }
+
+.fa-icon {
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar-toggle:before {
+    font-weight: 900;
+    font-family: "Font Awesome 5 Free";
+}
