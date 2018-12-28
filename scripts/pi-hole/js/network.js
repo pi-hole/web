@@ -73,7 +73,7 @@ $(document).ready(function() {
     tableApi = $("#network-entries").DataTable( {
         "rowCallback": function( row, data, index )
         {
-             var color, lastQuery = parseInt(data["lastQuery"]);
+             var color, mark, lastQuery = parseInt(data["lastQuery"]);
              if(lastQuery > 0)
              {
                  var diff = getTimestamp()-lastQuery;
@@ -85,21 +85,25 @@ $(document).ready(function() {
                      var lightgreen = [0xE7, 0xFF, 0xDE];
                      var lightyellow = [0xFF, 0xFF, 0xDF];
                      color = rgbToHex(mixColors(ratio, lightgreen, lightyellow));
+                     mark = "&#x2714;";
                  }
                  else
                  {
                      // Last query was longer than 24 hours ago
                      // Color: light-orange
                      color = "#FFEDD9";
+                     mark = "<strong>?</strong>";
                  }
              }
              else
              {
                  // This client has never sent a query to Pi-hole, color light-red
                  color = "#FFBFAA";
+                 mark = "&#x2718;";
              }
              // Set determined background color
              $(row).css("background-color", color);
+             $("td:eq(7)", row).html(mark);
 
              // Insert "Never" into Last Query field when we have
              // never seen a query from this device
@@ -127,12 +131,13 @@ $(document).ready(function() {
         "order" : [[5, "desc"]],
         "columns": [
             {data: "ip", "width" : "10%", "render": $.fn.dataTable.render.text() },
-            {data: "hwaddr",  "width" : "10%", "render": $.fn.dataTable.render.text() },
-            {data: "interface",  "width" : "10%", "render": $.fn.dataTable.render.text() },
-            {data: "name",  "width" : "10%", "render": $.fn.dataTable.render.text() },
+            {data: "hwaddr",  "width" : "5%", "render": $.fn.dataTable.render.text() },
+            {data: "interface",  "width" : "4%", "render": $.fn.dataTable.render.text() },
+            {data: "name",  "width" : "16%", "render": $.fn.dataTable.render.text() },
             {data: "firstSeen",  "width" : "10%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
             {data: "lastQuery",  "width" : "10%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
-            {data: "numQueries",  "width" : "10%", "render": $.fn.dataTable.render.text() }
+            {data: "numQueries",  "width" : "9%", "render": $.fn.dataTable.render.text() },
+            {data: "", "width" : "6%" }
         ],
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "stateSave": true,

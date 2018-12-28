@@ -34,6 +34,7 @@ $token = $_SESSION['token'];
                         <th>First seen</th>
                         <th>Last Query</th>
                         <th>Number of queries</th>
+                        <th>Uses Pi-hole</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -45,6 +46,7 @@ $token = $_SESSION['token'];
                         <th>First seen</th>
                         <th>Last Query</th>
                         <th>Number of queries</th>
+                        <th>Uses Pi-hole</th>
                     </tr>
                 </tfoot>
             </table>
