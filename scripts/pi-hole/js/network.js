@@ -162,8 +162,21 @@ $(document).ready(function() {
             "targets": -1,
             "data": null,
             "defaultContent": ""
-        } ]
+        } ],
+        "initComplete": function () {
+            var api = this.api();
+            // Client -> jump to Query Log on click
+            api.$("td:eq(0)").click( function () { openInNewTab("/admin/queries.php?client="+this.innerHTML) });
+            api.$("td:eq(0)").hover(
+              function () { this.title="Click to show queries made by "+this.innerHTML; this.style.color="#72afd2"; },
+              function () { this.style.color=""; }
+            );
+            api.$("td:eq(0)").css("cursor","pointer");
+        }
     });
 } );
 
-
+function openInNewTab(url) {
+  var win = window.open(url, '_blank');
+  win.focus();
+}
