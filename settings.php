@@ -340,6 +340,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                         } else {
                             $DHCPIPv6 = false;
                         }
+                        if (isset($setupVars["DHCP_rapid_commit"])) {
+                            $DHCP_rapid_commit = $setupVars["DHCP_rapid_commit"];
+                        } else {
+                            $DHCP_rapid_commit = false;
+                        }
 
                     } else {
                         $DHCP = false;
@@ -356,6 +361,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                         }
                         $DHCPleasetime = 24;
                         $DHCPIPv6 = false;
+                        $DHCP_rapid_commit = false;
                     }
                     if (isset($setupVars["PIHOLE_DOMAIN"])) {
                         $piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
@@ -473,6 +479,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                                       <?php if ($DHCPIPv6){ ?>checked<?php };
                                                                             if (!$DHCP){ ?> disabled<?php }
                                                                       ?>>Enable IPv6 support (SLAAC + RA)</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="DHCP_rapid_commit" class="DHCPgroup"
+                                                                      <?php if ($DHCP_rapid_commit){ ?>checked<?php };
+                                                                            if (!$DHCP){ ?> disabled<?php }
+                                                                      ?>>Enable DHCP rapid commit (fast address assignment)</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -836,7 +850,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                    queries, Pi-hole requests the DNSSEC records needed to validate
                                                    the replies. If a domain fails validation or the upstream does not
                                                    support DNSSEC, this setting can cause issues resolving domains.
-                                                   Use Google, Norton, DNS.WATCH, Quad9, or another DNS
+                                                   Use Google, Cloudflare, DNS.WATCH, Quad9, or another DNS
                                                    server which supports DNSSEC when activating DNSSEC. Note that
                                                    the size of your log might increase significantly
                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
@@ -1067,10 +1081,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="radio">
                                                         <label><input type="radio" name="privacylevel" value="4"
                                                                       <?php if ($privacylevel === 4){ ?>checked<?php }
-                                                            ?>>No Statistics mode: This disables all statistics processing. Even the query counters will not be available.<br>Additionally, you can disable logging to the file <code>/var/log/pihole.log</code> using <code>sudo pihole logging off</code>.</label>
+                                                            ?>>No Statistics mode: This disables all statistics processing. Even the query counters will not be available.<br><strong>Note that regex blocking is not available when query analyzing is disabled.</strong><br>Additionally, you can disable logging to the file <code>/var/log/pihole.log</code> using <code>sudo pihole logging off</code>.</label>
                                                     </div>
                                                 </div>
-                                                <p>The privacy level may be changed at any time without having to restart the DNS resolver. However, note that queries with (partially) hidden details cannot be disclosed with a subsequent reduction of the privacy level.</p>
+                                                <p>The privacy level may be increased at any time without having to restart the DNS resolver. However, note that the DNS resolver needs to be restarted when lowering the privacy level. This restarting is automatically done when saving.</p>
                                                 <?php if($privacylevel > 0 && $piHoleLogging){ ?>
                                                 <p class="lookatme">Warning: Pi-hole's query logging is activated. Although the dashboard will hide the requested details, all queries are still fully logged to the pihole.log file.</p>
                                                 <?php } ?>
@@ -1315,7 +1329,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
-                                            <button type="button" class="btn btn-warning confirm-restartdns form-control">Restart dnsmasq</button>
+                                            <button type="button" class="btn btn-warning confirm-restartdns form-control">Restart DNS resolver</button>
                                         </div>
                                     </div>
                                     <br/>
@@ -1369,11 +1383,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
     </div>
 </div>
 
-<?php
-require "scripts/pi-hole/php/footer.php";
-?>
-
 <script src="scripts/vendor/jquery.inputmask.js"></script>
 <script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
 <script src="scripts/vendor/jquery.confirm.min.js"></script>
 <script src="scripts/pi-hole/js/settings.js"></script>
+
+<?php
+require "scripts/pi-hole/php/footer.php";
+?>

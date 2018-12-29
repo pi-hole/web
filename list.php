@@ -57,7 +57,11 @@ function getFullName() {
 </div>
 <div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Failure! Something went wrong.<br/><span id="err"></span>
+    Failure! Something went wrong, see output below:<br/><br/><pre><span id="err"></span></pre>
+</div>
+<div id="alWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden="true">
+    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    At least one domain was already present, see output below:<br/><br/><pre><span id="warn"></span></pre>
 </div>
 
 
@@ -71,8 +75,8 @@ function getFullName() {
 <ul class="list-group" id="list-regex"></ul>
 <?php } ?>
 
+<script src="scripts/pi-hole/js/list.js"></script>
+
 <?php
 require "scripts/pi-hole/php/footer.php";
 ?>
-
-<script src="scripts/pi-hole/js/list.js"></script>

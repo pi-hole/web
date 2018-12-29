@@ -904,7 +904,7 @@ $(document).ready(function() {
                         var m = parseInt(time[2], 10) || 0;
                         var from = padNumber(h)+":"+padNumber(m-5)+":00";
                         var to = padNumber(h)+":"+padNumber(m+4)+":59";
-                        return "Forward destinations from "+from+" to "+to;
+                        return "Upstreams from "+from+" to "+to;
                     },
                     label: function(tooltipItems, data) {
                         if(tooltipItems.datasetIndex === 1)

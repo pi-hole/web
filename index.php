@@ -24,7 +24,7 @@
 ?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
-    <div class="col-lg-3 col-xs-12">
+    <div class="col-lg-3 col-sm-6">
         <!-- small box -->
         <div class="small-box bg-green" id="total_queries" title="only A + AAAA queries">
             <div class="inner">
@@ -37,7 +37,7 @@
         </div>
     </div>
     <!-- ./col -->
-    <div class="col-lg-3 col-xs-12">
+    <div class="col-lg-3 col-sm-6">
         <!-- small box -->
         <div class="small-box bg-aqua">
             <div class="inner">
@@ -50,7 +50,7 @@
         </div>
     </div>
     <!-- ./col -->
-    <div class="col-lg-3 col-xs-12">
+    <div class="col-lg-3 col-sm-6">
         <!-- small box -->
         <div class="small-box bg-yellow">
             <div class="inner">
@@ -63,7 +63,7 @@
         </div>
     </div>
     <!-- ./col -->
-    <div class="col-lg-3 col-xs-12">
+    <div class="col-lg-3 col-sm-6">
         <!-- small box -->
         <div class="small-box bg-red" title="<?php echo gravity_last_update(); ?>">
             <div class="inner">
@@ -206,7 +206,7 @@
     <div class="col-md-12 col-lg-6">
     <div class="box" id="forward-destinations">
         <div class="box-header with-border">
-          <h3 class="box-title">Forward Destinations (over time)</h3>
+          <h3 class="box-title">Upstreams (over time)</h3>
         </div>
         <div class="box-body">
           <div class="chart">
@@ -348,8 +348,9 @@ else
 </div>
 <!-- /.row -->
 <?php } ?>
+
+<script src="scripts/pi-hole/js/index.js"></script>
+
 <?php
     require "scripts/pi-hole/php/footer.php";
 ?>
-
-<script src="scripts/pi-hole/js/index.js"></script>

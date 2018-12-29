@@ -63,7 +63,15 @@ function readStaticLeasesFile()
 {
 	global $dhcp_static_leases;
 	$dhcp_static_leases = array();
-	$dhcpstatic = @fopen('/etc/dnsmasq.d/04-pihole-static-dhcp.conf', 'r');
+	try
+	{
+		$dhcpstatic = @fopen('/etc/dnsmasq.d/04-pihole-static-dhcp.conf', 'r');
+	}
+	catch(Exception $e)
+	{
+		echo "Warning: Failed to read /etc/dnsmasq.d/04-pihole-static-dhcp.conf, this is not an error";
+		return false;
+	}
 
 	if(!is_resource($dhcpstatic))
 		return false;
@@ -126,7 +134,7 @@ function isinserverlist($addr) {
 			"Quad9 (filtered, DNSSEC)" => ["v4_1" => "9.9.9.9", "v4_2" => "149.112.112.112", "v6_1" => "2620:fe::fe", "v6_2" => "2620:fe::9"],
 			"Quad9 (unfiltered, no DNSSEC)" => ["v4_1" => "9.9.9.10", "v4_2" => "149.112.112.10", "v6_1" => "2620:fe::10", "v6_2" => "2620:fe::fe:10"],
 			"Quad9 (filtered + ECS)" => ["v4_1" => "9.9.9.11", "v4_2" => "149.112.112.11", "v6_1" => "2620:fe::11"],
-			"Cloudflare (ECS)" => ["v4_1" => "1.1.1.1", "v4_2" => "1.0.0.1", "v6_1" => "2606:4700:4700::1111", "v6_2" => "2606:4700:4700::1001"]
+			"Cloudflare" => ["v4_1" => "1.1.1.1", "v4_2" => "1.0.0.1", "v6_1" => "2606:4700:4700::1111", "v6_2" => "2606:4700:4700::1001"]
 		];
 
 $adlist = [];
@@ -468,13 +476,13 @@ function readAdlists()
 				{
 					$adminemail = 'noadminemail';
 				}
-				elseif(!filter_var($adminemail, FILTER_VALIDATE_EMAIL))
+				elseif(!filter_var($adminemail, FILTER_VALIDATE_EMAIL) || strpos($adminemail, "'") !== false)
 				{
 					$error .= "Administrator email address (".htmlspecialchars($adminemail).") is invalid!<br>";
 				}
 				else
 				{
-					exec('sudo pihole -a -e '.$adminemail);
+					exec('sudo pihole -a -e \''.$adminemail.'\'');
 				}
 				if(isset($_POST["boxedlayout"]))
 				{
@@ -627,9 +635,18 @@ function readAdlists()
 						$type = "(IPv4)";
 					}
 
+					if(isset($_POST["DHCP_rapid_commit"]))
+					{
+						$rapidcommit = "true";
+					}
+					else
+					{
+						$rapidcommit = "false";
+					}
+
 					if(!strlen($error))
 					{
-						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router." ".$leasetime." ".$domain." ".$ipv6);
+						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router." ".$leasetime." ".$domain." ".$ipv6." ".$rapidcommit);
 						$success .= "The DHCP server has been activated ".htmlspecialchars($type);
 					}
 				}
@@ -679,8 +696,29 @@ function readAdlists()
 				$level = intval($_POST["privacylevel"]);
 				if($level >= 0 && $level <= 4)
 				{
+					// Check if privacylevel is already set
+					if (isset($piholeFTLConf["PRIVACYLEVEL"])) {
+						$privacylevel = intval($piholeFTLConf["PRIVACYLEVEL"]);
+					} else {
+						$privacylevel = 0;
+					}
+
+					// Store privacy level
 					exec("sudo pihole -a privacylevel ".$level);
-					$success .= "The privacy level has been updated";
+
+					if($privacylevel > $level)
+					{
+						exec("sudo pihole -a restartdns");
+						$success .= "The privacy level has been decreased and the DNS resolver has been restarted";
+					}
+					elseif($privacylevel < $level)
+					{
+						$success .= "The privacy level has been increased";
+					}
+					else
+					{
+						$success .= "The privacy level has been not been changed";
+					}
 				}
 				else
 				{

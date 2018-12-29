@@ -220,6 +220,16 @@ if($auth) {
 }
 ?>
 <script src="scripts/pi-hole/js/header.js"></script>
+
+<script src="scripts/vendor/jquery.min.js"></script>
+<script src="scripts/vendor/jquery-ui.min.js"></script>
+<script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="scripts/vendor/app.min.js"></script>
+
+<script src="scripts/vendor/jquery.dataTables.min.js"></script>
+<script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
+<script src="scripts/vendor/Chart.bundle.min.js"></script>
+
 <!-- Send token to JS -->
 <div id="token" hidden><?php if($auth) echo $token; ?></div>
 <div id="enableTimer" hidden><?php if(file_exists("../custom_disable_timer")){ echo file_get_contents("../custom_disable_timer"); } ?></div>
