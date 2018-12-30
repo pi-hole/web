@@ -120,6 +120,20 @@ $(document).ready(function() {
 
              // Set number of queries to localized string (add thousand separators)
              $("td:eq(6)", row).html(data["numQueries"].toLocaleString());
+
+            // Client -> jump to Query Log on click
+            $("td:eq(0)", row).click( function () { openInNewTab("/admin/queries.php?client="+this.innerHTML) });
+            $("td:eq(0)", row).css("cursor","pointer");
+            $("td:eq(0)", row).hover(
+              function () { this.title="Click to show recent queries made by "+this.innerHTML; this.style.color="#72afd2"; },
+              function () { this.style.color=""; } );
+
+            // MAC + Vendor field if available
+            if(data["macVendor"].length > 0)
+            {
+                 $("td:eq(1)", row).html(data["hwaddr"]+"<br/>"+data["macVendor"]);
+            }
+
         },
         dom: "<'row'<'col-sm-12'f>>" +
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
@@ -131,11 +145,11 @@ $(document).ready(function() {
         "order" : [[5, "desc"]],
         "columns": [
             {data: "ip", "width" : "10%", "render": $.fn.dataTable.render.text() },
-            {data: "hwaddr",  "width" : "5%", "render": $.fn.dataTable.render.text() },
+            {data: "hwaddr",  "width" : "10%", "render": $.fn.dataTable.render.text() },
             {data: "interface",  "width" : "4%", "render": $.fn.dataTable.render.text() },
-            {data: "name",  "width" : "16%", "render": $.fn.dataTable.render.text() },
-            {data: "firstSeen",  "width" : "10%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
-            {data: "lastQuery",  "width" : "10%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
+            {data: "name",  "width" : "15%", "render": $.fn.dataTable.render.text() },
+            {data: "firstSeen",  "width" : "8%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
+            {data: "lastQuery",  "width" : "8%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
             {data: "numQueries",  "width" : "9%", "render": $.fn.dataTable.render.text() },
             {data: "", "width" : "6%" }
         ],
@@ -162,17 +176,7 @@ $(document).ready(function() {
             "targets": -1,
             "data": null,
             "defaultContent": ""
-        } ],
-        "initComplete": function () {
-            var api = this.api();
-            // Client -> jump to Query Log on click
-            api.$("td:eq(0)").click( function () { openInNewTab("/admin/queries.php?client="+this.innerHTML) });
-            api.$("td:eq(0)").hover(
-              function () { this.title="Click to show queries made by "+this.innerHTML; this.style.color="#72afd2"; },
-              function () { this.style.color=""; }
-            );
-            api.$("td:eq(0)").css("cursor","pointer");
-        }
+        } ]
     });
 } );
 
