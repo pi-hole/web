@@ -28,7 +28,7 @@ $token = $_SESSION['token'];
                 <thead>
                     <tr>
                         <th>IP address</th>
-                        <th>MAC address</th>
+                        <th>Hardware address</th>
                         <th>Interface</th>
                         <th>Hostname</th>
                         <th>First seen</th>
@@ -40,7 +40,7 @@ $token = $_SESSION['token'];
                 <tfoot>
                     <tr>
                         <th>IP address</th>
-                        <th>MAC address</th>
+                        <th>Hardware address</th>
                         <th>Interface</th>
                         <th>Hostname</th>
                         <th>First seen</th>
