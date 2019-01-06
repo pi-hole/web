@@ -6,18 +6,13 @@
 *  Please see LICENSE file for your rights under this license.  */
 var tableApi;
 
-function escapeRegex(text) {
-  var map = {
-    "(": "\\(",
-    ")": "\\)",
-    ".": "\\.",
-  };
-  return text.replace(/[().]/g, function(m) { return map[m]; });
-}
-
 function refreshData() {
     tableApi.ajax.url("api_db.php?network").load();
-//    updateSessionTimer();
+}
+
+function openInNewTab(url) {
+  var win = window.open(url, "_blank");
+  win.focus();
 }
 
 function handleAjaxError( xhr, textStatus, error ) {
@@ -38,21 +33,17 @@ function handleAjaxError( xhr, textStatus, error ) {
     tableApi.draw();
 }
 
-function autofilter(){
-   return document.getElementById("autofilter").checked;
-}
-
 function getTimestamp(){
   if (!Date.now)
   {
-    Date.now = function() { return new Date().getTime(); }
+    Date.now = function() { return new Date().getTime(); };
   }
   return Math.floor(Date.now() / 1000);
 }
 
 function valueToHex(c) {
     var hex = Math.round(c).toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
+    return hex.length === 1 ? "0" + hex : hex;
 }
 
 function rgbToHex(values) {
@@ -122,7 +113,7 @@ $(document).ready(function() {
              $("td:eq(6)", row).html(data["numQueries"].toLocaleString());
 
             // Client -> jump to Query Log on click
-            $("td:eq(0)", row).click( function () { openInNewTab("/admin/queries.php?client="+this.innerHTML) });
+            $("td:eq(0)", row).click( function () { openInNewTab("/admin/queries.php?client="+this.innerHTML); } );
             $("td:eq(0)", row).css("cursor","pointer");
             $("td:eq(0)", row).hover(
               function () { this.title="Click to show recent queries made by "+this.innerHTML; this.style.color="#72afd2"; },
@@ -145,12 +136,12 @@ $(document).ready(function() {
         "order" : [[5, "desc"]],
         "columns": [
             {data: "ip", "width" : "10%", "render": $.fn.dataTable.render.text() },
-            {data: "hwaddr",  "width" : "10%", "render": $.fn.dataTable.render.text() },
-            {data: "interface",  "width" : "4%", "render": $.fn.dataTable.render.text() },
-            {data: "name",  "width" : "15%", "render": $.fn.dataTable.render.text() },
-            {data: "firstSeen",  "width" : "8%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
-            {data: "lastQuery",  "width" : "8%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
-            {data: "numQueries",  "width" : "9%", "render": $.fn.dataTable.render.text() },
+            {data: "hwaddr", "width" : "10%", "render": $.fn.dataTable.render.text() },
+            {data: "interface", "width" : "4%", "render": $.fn.dataTable.render.text() },
+            {data: "name", "width" : "15%", "render": $.fn.dataTable.render.text() },
+            {data: "firstSeen", "width" : "8%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
+            {data: "lastQuery", "width" : "8%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
+            {data: "numQueries", "width" : "9%", "render": $.fn.dataTable.render.text() },
             {data: "", "width" : "6%" }
         ],
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
@@ -179,8 +170,3 @@ $(document).ready(function() {
         } ]
     });
 } );
-
-function openInNewTab(url) {
-  var win = window.open(url, '_blank');
-  win.focus();
-}
