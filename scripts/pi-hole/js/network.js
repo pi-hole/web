@@ -6,8 +6,10 @@
 *  Please see LICENSE file for your rights under this license.  */
 var tableApi;
 
+var APIstring = "api_db.php?network";
+
 function refreshData() {
-    tableApi.ajax.url("api_db.php?network").load();
+    tableApi.ajax.url(APIstring).load();
 }
 
 function openInNewTab(url) {
@@ -60,7 +62,6 @@ function mixColors(ratio, rgb1, rgb2)
 }
 
 $(document).ready(function() {
-    var APIstring = "api_db.php?network";
     tableApi = $("#network-entries").DataTable( {
         "rowCallback": function( row, data, index )
         {

@@ -559,16 +559,16 @@ if($auth) {
                     </li>
                   </ul>
                 </li>
+                <!-- Network -->
+                <li<?php if($scriptname === "network.php"){ ?> class="active"<?php } ?>>
+                    <a href="network.php">
+                        <i class="fa fas fa-network-wired"></i> <span>Network</span>
+                    </a>
+                </li>
                 <!-- Settings -->
                 <li<?php if($scriptname === "settings.php"){ ?> class="active"<?php } ?>>
                     <a href="settings.php">
                         <i class="fa fas fa-cogs"></i> <span>Settings</span>
-                    </a>
-                </li>
-                <!-- Settings -->
-                <li<?php if($scriptname === "network.php"){ ?> class="active"<?php } ?>>
-                    <a href="network.php">
-                        <i class="fa fas fa-network-wired"></i> <span>Network</span>
                     </a>
                 </li>
                 <!-- Logout -->
