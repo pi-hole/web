@@ -176,9 +176,9 @@
     float:left;
 }
 
-.fa-icon {
-    width: 20px;
-    text-align: center-5px;
+.fa-paypal-icon {
+    width: 18px;
+    margin-left: 2px;
 }
 
 .sidebar-toggle:before {

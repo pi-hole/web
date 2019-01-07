@@ -595,7 +595,7 @@ if($auth) {
                 <!-- Donate -->
                 <li>
                     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY" target="_blank">
-                        <i class="fa-icon fab fa-paypal"></i> <span>Donate</span>
+                        <i class="fa-paypal-icon fab fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
                 <?php if($auth){ ?>
