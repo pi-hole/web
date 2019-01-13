@@ -58,6 +58,99 @@ function validMAC($mac_addr)
   return (preg_match('/([a-fA-F0-9]{2}[:]?){6}/', $mac_addr) == 1);
 }
 
+$dns_cnames = array();
+$dns_cnames_filename = '/etc/dnsmasq.d/05-pihole-cname.conf'; # Also defined in pihole cname.php
+function readCNAMEFile() {
+	global $dns_cnames_filename;
+	try
+	{
+		$cnames = @fopen($dns_cnames_filename, 'r');
+	}
+	catch(Exception $e)
+	{
+		echo "Warning: Failed to read ". $dns_cnames_filename .", this is not an error";
+		return false;
+	}
+
+	try
+	{
+		if(!is_resource($cnames)) {
+			return false;
+		}
+
+		$result = array();
+		while(!feof($cnames))
+		{
+			// cname=alias,hostname
+			// cname=alias1,alias2,alias3,hostname
+			$line = strtolower(trim(fgets($cnames)));
+			if (substr($line,0,6) !== "cname=") continue;
+			$parts = explode(",", substr($line,6));
+			$partCount = count($parts);
+			if ($partCount < 2) continue;
+
+			$hostname = trim($parts[$partCount-1]);
+			$aliases = array_slice($parts, 0, $partCount-1);
+
+			$existing = &findCNAMEHostnameEntry($result, $hostname);
+			if ($existing !== false) {
+				foreach($aliases as $alias) {
+					addCNAMEAlias($existing, $alias);
+				}
+			} else {
+				array_push($result, ["host"=>$hostname, "aliases"=>$aliases]);
+			}
+		}
+
+        uasort($result, function ($left, $right) {
+            return strnatcmp($left["host"], $right["host"]);
+        });
+		foreach($result as &$host) {
+			uasort($host["aliases"], 'strnatcmp');
+		}
+
+		return $result;
+	}
+	finally
+	{
+		fclose($cnames);
+	}
+}
+
+function addCNAMEAlias(&$entry, $alias) {
+	$eAlias = &$entry["aliases"];
+	$alias = strtolower(trim($alias));
+	if (strlen($alias) < 1) {
+		return;
+	}
+	if (array_search($alias, $eAlias) === false) {
+		array_push($eAlias, $alias);
+	}
+}
+
+function &findCNAMEHostnameEntry(&$cnames, $hostname) {
+	$key = array_search($hostname, array_column($cnames, "host"));
+	if ($key === false) {
+		$entry = false;
+	} else {
+		$entry = &$cnames[$key];
+	}
+	return $entry;
+}
+
+function readCNAMEs(){
+	global $dns_cnames;
+	$dns_cnames = array();
+
+	$cnames = readCNAMEFile();
+	if ($cnames === false) {
+		return false;
+	}
+	$dns_cnames = $cnames;
+
+	return true;
+}
+
 $dhcp_static_leases = array();
 function readStaticLeasesFile()
 {
@@ -187,7 +280,6 @@ function readAdlists()
 		switch ($_POST["field"]) {
 			// Set DNS server
 			case "DNS":
-
 				$DNSservers = [];
 				// Add selected predefined servers to list
 				foreach ($DNSserverslist as $key => $value)
@@ -326,6 +418,36 @@ function readAdlists()
 					$error .= "The settings have been reset to their previous values";
 				}
 
+				break;
+
+			case "CNAME":
+				global $dns_cnames;
+				if(isset($_POST["removecname"]))
+				{
+					// hostname,alias
+					$parts = explode(",", $_POST["removecname"]);
+					if (count($parts) != 2) {
+						break;
+					}
+
+					$removeCnameFromHost = escapeshellarg($parts[0]);
+					$removeCnameAlias = escapeshellarg($parts[1]);
+					exec("sudo pihole -a removecname $removeCnameFromHost $removeCnameAlias");
+					break;
+				}
+
+				if(isset($_POST["addcname"]))
+				{
+					$newCnameAliases = explode(",", $_POST["AddCNameAliases"]);
+					if (count($newCnameAliases) < 1) {
+						break;
+					}
+
+					$newCnameAliases = escapeshellarg($_POST["AddCNameAliases"]);
+					$newCnameHostname = escapeshellarg($_POST["AddCNameHostname"]);
+					exec("sudo pihole -a addcname $newCnameHostname $newCnameAliases");
+					break;
+				}
 				break;
 
 			// Set query logging

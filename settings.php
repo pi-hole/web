@@ -224,7 +224,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 ?>
 
 <?php
-if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", "api", "privacy", "teleporter"))) {
+if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "cnames", "piholedhcp", "api", "privacy", "teleporter"))) {
     $tab = $_GET['tab'];
 } else {
     $tab = "sysadmin";
@@ -237,6 +237,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                 <li<?php if($tab === "sysadmin"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#sysadmin">System</a></li>
                 <li<?php if($tab === "blocklists"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#blocklists">Blocklists</a></li>
                 <li<?php if($tab === "dns"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#dns">DNS</a></li>
+                <li<?php if($tab === "cnames"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#cnames">CNAMEs</a></li>
                 <li<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
                 <li<?php if($tab === "api"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#api">API / Web interface</a></li>
                 <li<?php if($tab === "privacy"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#privacy">Privacy</a></li>
@@ -881,6 +882,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
                                 <input type="hidden" name="field" value="DNS">
                                 <input type="hidden" name="token" value="<?php echo $token ?>">
                                 <button type="submit" class="btn btn-primary pull-right">Save</button>
@@ -888,6 +894,66 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                         </div>
                     </form>
                 </div>
+
+                <!-- ######################################################### CNAMEs ######################################################### -->
+                <div id="cnames" class="tab-pane fade<?php if($tab === "cnames"){ ?> in active<?php } ?>">
+                    <form role="form" method="post">
+                        <input type="hidden" name="field" value="CNAME">
+                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">CNAME records</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <table id="DNSCNAMETable" class="table table-striped table-bordered dt-responsive nowrap"
+                                                        cellspacing="0" width="100%">
+                                            <thead>
+                                                <th>Hostname</th>
+                                                <th>CNAME(s)</th>
+                                                <td></td>
+                                            </thead>
+                                            <tbody>
+<?php readCNAMEs();
+        foreach ($dns_cnames as $cname)
+        foreach ($cname["aliases"] as $alias) {
+?>
+                                            <tr>
+                                                <td><?php echo htmlspecialchars($cname["host"]); ?></td>
+                                                <td><?php echo htmlspecialchars(trim($alias)); ?></td>
+                                                <td>
+                                                    <button class="btn btn-danger btn-xs" type="submit" name="removecname"
+                                                            value="<?php printf("%s,%s", htmlspecialchars(trim($cname["host"])), htmlspecialchars(trim($alias))); ?>">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+<?php } ?>
+                                            </tbody>
+                                            <tfoot style="display: table-row-group">
+                                                <tr>
+                                                    <td><input type="text" name="AddCNameHostname"></td>
+                                                    <td><input type="text" name="AddCNameAliases"></td>
+                                                    <td>
+                                                        <button class="btn btn-success btn-xs" type="submit" name="addcname">
+                                                            <span class="glyphicon glyphicon-plus"></span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td colspan="2"><p>You can separate multiple CNAMEs with a comma (alias1,alias2,...)</p></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- ######################################################### API and Web ######################################################### -->
                 <?php
                 // CPU temperature unit
