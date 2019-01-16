@@ -4,16 +4,15 @@
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
-*  Please see LICENSE file for your rights under this license. */ ?>
+*  Please see LICENSE file for your rights under this license. */
 
-<?php
 require_once('auth.php');
 
 $type = $_POST['list'];
 
 // Perform all of the verification for list editing
 // when NOT invoked and authenticated from API
-if (!$api) {
+if (empty($api)) {
     list_verify($type);
 }
 
