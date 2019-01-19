@@ -560,7 +560,7 @@ function readAdlists()
 						}
 						if($ip !== "noip" && $lease["IP"] === $ip)
 						{
-							$error .= "Static release for IP address (".htmlspecialchars($ip).") already defined!<br>";
+							$error .= "Static lease for IP address (".htmlspecialchars($ip).") already defined!<br>";
 							break;
 						}
 					}
