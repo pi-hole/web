@@ -378,15 +378,18 @@ if (isset($_GET['getGraphData']) && $auth)
 			$interval = $q;
 	}
 
+	$from = intval($_GET['from']);
+	$until = intval($_GET['until']);
+
 	// Count permitted queries in intervals
 	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status != 0 )'.$limit.' GROUP by interval ORDER by interval');
-	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
-	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
+	$stmt->bindValue(":from", $from, SQLITE3_INTEGER);
+	$stmt->bindValue(":until", $until, SQLITE3_INTEGER);
 	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
 	$results = $stmt->execute();
 
 	// Parse the DB result into graph data, filling in missing sections with zero
-	function parseDBData($results, $interval) {
+	function parseDBData($results, $interval, $from, $until) {
 		$data = array();
 		$min = null;
 		$max = null;
@@ -406,7 +409,7 @@ if (isset($_GET['getGraphData']) && $auth)
 			}
 
 			// Fill the missing intervals with zero
-			for($i = $min; $i < $max; $i += $interval) {
+			for($i = min($min,$from); $i < max($max,$until); $i += $interval) {
 				if(!array_key_exists($i, $data))
 					$data[$i] = 0;
 			}
@@ -415,19 +418,19 @@ if (isset($_GET['getGraphData']) && $auth)
 		return $data;
 	}
 
-	$domains = parseDBData($results, $interval);
+	$domains = parseDBData($results, $interval, $from, $until);
 
 	$result = array('domains_over_time' => $domains);
 	$data = array_merge($data, $result);
 
 	// Count blocked queries in intervals
 	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status == 1 OR status == 4 OR status == 5)'.$limit.' GROUP by interval ORDER by interval');
-	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
-	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
+	$stmt->bindValue(":from", $from, SQLITE3_INTEGER);
+	$stmt->bindValue(":until", $until, SQLITE3_INTEGER);
 	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
 	$results = $stmt->execute();
 
-	$addomains = parseDBData($results, $interval);
+	$addomains = parseDBData($results, $interval, $from, $until);
 
 	$result = array('ads_over_time' => $addomains);
 	$data = array_merge($data, $result);
