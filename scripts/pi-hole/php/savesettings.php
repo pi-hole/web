@@ -558,6 +558,11 @@ function readAdlists()
 							$error .= "Static release for MAC address (".htmlspecialchars($mac).") already defined!<br>";
 							break;
 						}
+						if($ip !== "noip" && $lease["IP"] === $ip)
+						{
+							$error .= "Static lease for IP address (".htmlspecialchars($ip).") already defined!<br>";
+							break;
+						}
 					}
 
 					if(!strlen($error))
