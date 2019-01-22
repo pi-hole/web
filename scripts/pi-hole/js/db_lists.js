@@ -17,6 +17,8 @@ var until = moment(end__).utc().valueOf()/1000;
 var timeoutWarning = $("#timeoutWarning");
 var listsStillLoading = 0;
 
+var dateformat = "MMMM Do YYYY, HH:mm";
+
 $(function () {
     $("#querytime").daterangepicker(
     {
@@ -32,7 +34,8 @@ $(function () {
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()]
       },
-      "opens": "center", "showDropdowns": true
+      "opens": "center", "showDropdowns": true,
+      "autoUpdateInput": false
     },
     function (startt, endt) {
       from = moment(startt).utc().valueOf()/1000;
@@ -190,6 +193,7 @@ function updateTopAdsChart() {
 }
 
 $("#querytime").on("apply.daterangepicker", function(ev, picker) {
+    $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
     timeoutWarning.show();
     listsStillLoading = 3;
     updateTopClientsChart();

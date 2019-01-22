@@ -18,6 +18,8 @@ var daterange;
 
 var timeoutWarning = $("#timeoutWarning");
 
+var dateformat = "MMMM Do YYYY, HH:mm";
+
 // Do we want to filter queries?
 var GETDict = {};
 location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
@@ -46,7 +48,8 @@ $(function () {
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()]
       },
-      "opens": "center", "showDropdowns": true
+      "opens": "center", "showDropdowns": true,
+      "autoUpdateInput": false
     },
     function (startt, endt) {
       from = moment(startt).utc().valueOf()/1000;
@@ -332,6 +335,7 @@ $(document).ready(function() {
 } );
 
 $("#querytime").on("apply.daterangepicker", function(ev, picker) {
+    $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
     refreshTableData();
 });
 
