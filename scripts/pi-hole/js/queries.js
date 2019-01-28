@@ -170,7 +170,7 @@ $(document).ready(function() {
                 dnssec_status = "<br><span style=\"color:red\">ABANDONED</span>";
                 break;
             case "5":
-                dnssec_status = "<br><span style=\"color:red\">?</span>";
+                dnssec_status = "<br><span style=\"color:red\">UNKNOWN</span>";
                 break;
             default: // No DNSSEC
                 dnssec_status = "";
