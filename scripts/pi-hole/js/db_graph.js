@@ -23,6 +23,7 @@ $(function () {
     {
       timePicker: true, timePickerIncrement: 15,
       locale: { format: dateformat },
+      startDate: start__, endDate: end__,
       ranges: {
         "Today": [moment().startOf("day"), moment()],
         "Yesterday": [moment().subtract(1, "days").startOf("day"), moment().subtract(1, "days").endOf("day")],
