@@ -75,8 +75,8 @@ function getFullName() {
 <ul class="list-group" id="list-regex"></ul>
 <?php } ?>
 
+<script src="scripts/pi-hole/js/list.js"></script>
+
 <?php
 require "scripts/pi-hole/php/footer.php";
 ?>
-
-<script src="scripts/pi-hole/js/list.js"></script>

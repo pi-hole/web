@@ -16,9 +16,8 @@
 <pre id="output" style="width: 100%; height: 100%; max-height:650px; overflow-y:scroll;"></pre>
 <div class="checkbox"><label><input type="checkbox" name="active" checked id="chk2"> Automatic scrolling on update</label></div>
 
+<script src="scripts/pi-hole/js/taillog.js"></script>
+
 <?php
     require "scripts/pi-hole/php/footer.php";
 ?>
-
-
-<script src="scripts/pi-hole/js/taillog.js"></script>
