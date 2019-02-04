@@ -278,7 +278,19 @@ $(document).ready(function() {
               case 6:
                 blocked = true;
                 color = "red";
-                fieldtext = "Blocked <br class='hidden-lg'>(external)";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
+                buttontext = "" ;
+                break;
+              case 7:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
+                buttontext = "" ;
+                break;
+              case 8:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
                 buttontext = "" ;
                 break;
               default:
