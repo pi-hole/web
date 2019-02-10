@@ -139,14 +139,12 @@ function updateQueriesOverTime() {
         // convert received objects to arrays
         data.domains_over_time = objectToArray(data.domains_over_time);
         data.ads_over_time = objectToArray(data.ads_over_time);
-        // remove last data point since it not representative
-        data.ads_over_time[0].splice(-1,1);
         // Remove possibly already existing data
         timeLineChart.data.labels = [];
         timeLineChart.data.datasets[0].data = [];
         timeLineChart.data.datasets[1].data = [];
 
-            // Add data for each hour that is available
+        // Add data for each hour that is available
         for (var hour in data.ads_over_time[0])
         {
             if ({}.hasOwnProperty.call(data.ads_over_time[0], hour))
@@ -186,61 +184,6 @@ function updateQueriesOverTime() {
     });
 }
 
-function updateQueryTypesOverTime() {
-    $.getJSON("api.php?overTimeDataQueryTypes", function(data) {
-
-        if("FTLnotrunning" in data)
-        {
-            return;
-        }
-
-        // convert received objects to arrays
-        data.over_time = objectToArray(data.over_time);
-        // remove last data point since it not representative
-        data.over_time[0].splice(-1,1);
-        var timestamps = data.over_time[0];
-        var plotdata = data.over_time[1];
-        // Remove possibly already existing data
-        queryTypeChart.data.labels = [];
-        queryTypeChart.data.datasets[0].data = [];
-        queryTypeChart.data.datasets[1].data = [];
-
-        var colors = [];
-        $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
-        queryTypeChart.data.datasets[0].backgroundColor = colors[0];
-        queryTypeChart.data.datasets[1].backgroundColor = colors[1];
-
-            // Add data for each hour that is available
-        for (var j in timestamps)
-        {
-            if ({}.hasOwnProperty.call(timestamps, j))
-            {
-                var d,h;
-                h = parseInt(timestamps[j]);
-                // New style: Get Unix timestamps
-                d = new Date(1000*h);
-
-                queryTypeChart.data.labels.push(d);
-                queryTypeChart.data.datasets[0].data.push(1e-2*plotdata[j][0]);
-                queryTypeChart.data.datasets[1].data.push(1e-2*plotdata[j][1]);
-            }
-        }
-        $("#query-types .overlay").hide();
-        queryTypeChart.update();
-    }).done(function() {
-        // Reload graph after 10 minutes
-        failures = 0;
-        setTimeout(updateQueryTypesOverTime, 600000);
-    }).fail(function() {
-        failures++;
-        if(failures < 5)
-        {
-            // Try again after 1 minute only if this has not failed more
-            // than five times in a row
-            setTimeout(updateQueryTypesOverTime, 60000);
-        }
-    });
-}
 function updateQueryTypesPie() {
     $.getJSON("api.php?getQueryTypes", function(data) {
 
@@ -308,97 +251,6 @@ function updateQueryTypesPie() {
     });
 }
 
-function updateForwardedOverTime() {
-    $.getJSON("api.php?overTimeDataForwards&getForwardDestinationNames", function(data) {
-
-        if("FTLnotrunning" in data)
-        {
-            return;
-        }
-
-        // convert received objects to arrays
-        data.over_time = objectToArray(data.over_time);
-        // remove last data point since it not representative
-        data.over_time[0].splice(-1,1);
-        var timestamps = data.over_time[0];
-        var plotdata  = data.over_time[1];
-        var labels = [];
-        var key, i, j;
-        for (key in data.forward_destinations)
-        {
-            if (!{}.hasOwnProperty.call(data.forward_destinations, key))
-            {
-                continue;
-            }
-            if(key.indexOf("|") > -1)
-            {
-                var idx = key.indexOf("|");
-                key = key.substr(0, idx);
-            }
-            labels.push(key);
-        }
-        // Get colors from AdminLTE
-        var colors = [];
-        $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
-        var v = [], c = [], k = [];
-
-        // Remove possibly already existing data
-        forwardDestinationChart.data.labels = [];
-        forwardDestinationChart.data.datasets[0].data = [];
-        for (i = 1; i < forwardDestinationChart.data.datasets.length; i++)
-        {
-            forwardDestinationChart.data.datasets[i].data = [];
-        }
-
-        // Collect values and colors, and labels
-        forwardDestinationChart.data.datasets[0].backgroundColor = colors[0];
-        forwardDestinationChart.data.datasets[0].pointRadius = 0;
-        forwardDestinationChart.data.datasets[0].pointHitRadius = 5;
-        forwardDestinationChart.data.datasets[0].pointHoverRadius = 5;
-        forwardDestinationChart.data.datasets[0].label = labels[0];
-        forwardDestinationChart.data.datasets[0].cubicInterpolationMode = "monotone";
-
-        for (i = forwardDestinationChart.data.datasets.length; i < plotdata[0].length; i++)
-        {
-            forwardDestinationChart.data.datasets.push({data: [], backgroundColor: colors[i], pointRadius: 0, pointHitRadius: 5, pointHoverRadius: 5, label: labels[i]});
-        }
-
-        // Add data for each dataset that is available
-        for (j in timestamps)
-        {
-            if (!{}.hasOwnProperty.call(timestamps, j))
-            {
-                continue;
-            }
-            for (key in plotdata[j])
-            {
-                if (!{}.hasOwnProperty.call(plotdata[j], key))
-                {
-                    continue;
-                }
-                forwardDestinationChart.data.datasets[key].data.push(1e-2*plotdata[j][key]);
-            }
-
-            var d = new Date(1000*parseInt(timestamps[j]));
-            forwardDestinationChart.data.labels.push(d);
-        }
-        $("#forward-destinations .overlay").hide();
-        forwardDestinationChart.update();
-    }).done(function() {
-        // Reload graph after 10 minutes
-        failures = 0;
-        setTimeout(updateForwardedOverTime, 600000);
-    }).fail(function() {
-        failures++;
-        if(failures < 5)
-        {
-            // Try again after 1 minute only if this has not failed more
-            // than five times in a row
-            setTimeout(updateForwardedOverTime, 60000);
-        }
-    });
-}
-
 function updateClientsOverTime() {
     $.getJSON("api.php?overTimeDataClients&getClientNames", function(data) {
 
@@ -416,8 +268,6 @@ function updateClientsOverTime() {
             $("#clients").parent().remove();
             return;
         }
-        // remove last data point since it not representative
-        data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
         var plotdata  = data.over_time[1];
         var labels = [];
@@ -796,8 +646,6 @@ function updateSummaryData(runOnce) {
             FTLoffline = false;
             $("#temperature").text(" ");
             updateQueriesOverTime();
-            updateForwardedOverTime();
-            updateQueryTypesOverTime();
             updateTopClientsChart();
             updateTopLists();
         }
