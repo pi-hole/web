@@ -165,9 +165,9 @@ if(strlen($showing) > 0)
 </div>
 <!-- /.row -->
 
+<script src="scripts/vendor/moment.min.js"></script>
+<script src="scripts/pi-hole/js/queries.js"></script>
+
 <?php
     require "scripts/pi-hole/php/footer.php";
 ?>
-
-<script src="scripts/vendor/moment.min.js"></script>
-<script src="scripts/pi-hole/js/queries.js"></script>

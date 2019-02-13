@@ -341,6 +341,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                         } else {
                             $DHCPIPv6 = false;
                         }
+                        if (isset($setupVars["DHCP_rapid_commit"])) {
+                            $DHCP_rapid_commit = $setupVars["DHCP_rapid_commit"];
+                        } else {
+                            $DHCP_rapid_commit = false;
+                        }
 
                     } else {
                         $DHCP = false;
@@ -357,6 +362,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                         }
                         $DHCPleasetime = 24;
                         $DHCPIPv6 = false;
+                        $DHCP_rapid_commit = false;
                     }
                     if (isset($setupVars["PIHOLE_DOMAIN"])) {
                         $piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
@@ -474,6 +480,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                                       <?php if ($DHCPIPv6){ ?>checked<?php };
                                                             if (!$DHCP){ ?> disabled<?php }
                                                             ?>>Enable IPv6 support (SLAAC + RA)</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="DHCP_rapid_commit" class="DHCPgroup"
+                                                                      <?php if ($DHCP_rapid_commit){ ?>checked<?php };
+                                                                            if (!$DHCP){ ?> disabled<?php }
+                                                                      ?>>Enable DHCP rapid commit (fast address assignment)</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1474,11 +1488,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
     </div>
 </div>
 
-<?php
-require "scripts/pi-hole/php/footer.php";
-?>
-
 <script src="scripts/vendor/jquery.inputmask.js"></script>
 <script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
 <script src="scripts/vendor/jquery.confirm.min.js"></script>
 <script src="scripts/pi-hole/js/settings.js"></script>
+
+<?php
+require "scripts/pi-hole/php/footer.php";
+?>

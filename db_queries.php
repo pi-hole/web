@@ -176,11 +176,10 @@ $token = $_SESSION['token'];
 </div>
 <!-- /.row -->
 
+<script src="scripts/vendor/moment.min.js"></script>
+<script src="scripts/vendor/daterangepicker.js"></script>
+<script src="scripts/pi-hole/js/db_queries.js"></script>
 
 <?php
     require "scripts/pi-hole/php/footer.php";
 ?>
-
-<script src="scripts/vendor/moment.min.js"></script>
-<script src="scripts/vendor/daterangepicker.js"></script>
-<script src="scripts/pi-hole/js/db_queries.js"></script>
