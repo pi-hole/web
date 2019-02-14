@@ -82,8 +82,9 @@
     </div>
   </div>
 </div>
+
+<script src="scripts/pi-hole/js/auditlog.js"></script>
+
 <?php
     require "scripts/pi-hole/php/footer.php";
 ?>
-
-<script src="scripts/pi-hole/js/auditlog.js"></script>
