@@ -170,7 +170,7 @@ $(document).ready(function() {
                 dnssec_status = "<br><span style=\"color:red\">ABANDONED</span>";
                 break;
             case "5":
-                dnssec_status = "<br><span style=\"color:red\">UNKNOWN</span>";
+                dnssec_status = "<br><span style=\"color:orange\">UNKNOWN</span>";
                 break;
             default: // No DNSSEC
                 dnssec_status = "";
@@ -231,7 +231,7 @@ $(document).ready(function() {
             default:
                 blocked = false;
                 color = "black";
-                fieldtext = "Unknown";
+                fieldtext = "Unknown ("+parseInt(data[4])+")";
                 buttontext = "";
             }
             $(row).css("color", color);
@@ -278,7 +278,7 @@ $(document).ready(function() {
                     replytext = "upstream error";
                     break;
                 default:
-                    replytext = "? ("+data[6]+")";
+                    replytext = "? ("+parseInt(data[6])+")";
                 }
             }
             else
