@@ -139,6 +139,8 @@ function updateQueriesOverTime() {
         // convert received objects to arrays
         data.domains_over_time = objectToArray(data.domains_over_time);
         data.ads_over_time = objectToArray(data.ads_over_time);
+        // remove last data point since it not representative
+        data.ads_over_time[0].splice(-1,1);
         // Remove possibly already existing data
         timeLineChart.data.labels = [];
         timeLineChart.data.datasets[0].data = [];
@@ -268,6 +270,8 @@ function updateClientsOverTime() {
             $("#clients").parent().remove();
             return;
         }
+        // remove last data point since it not representative
+        data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
         var plotdata  = data.over_time[1];
         var labels = [];
