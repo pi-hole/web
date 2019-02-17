@@ -170,7 +170,7 @@ $(document).ready(function() {
                 dnssec_status = "<br><span style=\"color:red\">ABANDONED</span>";
                 break;
             case "5":
-                dnssec_status = "<br><span style=\"color:red\">UNKNOWN</span>";
+                dnssec_status = "<br><span style=\"color:orange\">UNKNOWN</span>";
                 break;
             default: // No DNSSEC
                 dnssec_status = "";
@@ -213,13 +213,25 @@ $(document).ready(function() {
             case "6":
                 blocked = true;
                 color = "red";
-                fieldtext = "Blocked <br class='hidden-lg'>(external)";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
+                buttontext = "" ;
+                break;
+            case "7":
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
+                buttontext = "" ;
+                break;
+            case "8":
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
                 buttontext = "" ;
                 break;
             default:
                 blocked = false;
                 color = "black";
-                fieldtext = "Unknown";
+                fieldtext = "Unknown ("+parseInt(data[4])+")";
                 buttontext = "";
             }
             $(row).css("color", color);
@@ -266,7 +278,7 @@ $(document).ready(function() {
                     replytext = "upstream error";
                     break;
                 default:
-                    replytext = "? ("+data[6]+")";
+                    replytext = "? ("+parseInt(data[6])+")";
                 }
             }
             else
