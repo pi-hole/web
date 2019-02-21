@@ -32,6 +32,7 @@ function check_cors() {
         $ipv4,
         $ipv6,
         str_replace(array("[","]"), array("",""), $_SERVER["SERVER_NAME"]),
+        str_replace(array("[","]"), array("",""), $_SERVER["SERVER_NAME"]). ".",
         "pi.hole",
         "localhost"
     );
