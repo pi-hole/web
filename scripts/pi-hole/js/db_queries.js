@@ -170,7 +170,9 @@ function getQueryTypes()
     }
     if($("#type_external").prop("checked"))
     {
-        queryType.push(6);
+        // Multiple IDs correspond to this status
+        // We request queries with all of them
+        queryType.push([6,7,8]);
     }
     return queryType.join(",");
 }
