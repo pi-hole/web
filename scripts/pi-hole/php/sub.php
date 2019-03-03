@@ -10,10 +10,16 @@ require_once('auth.php');
 
 $type = $_POST['list'];
 
-// Perform all of the verification for list editing
+// Perform all of the authentication for list editing
 // when NOT invoked and authenticated from API
 if (empty($api)) {
     list_verify($type);
+}
+
+// Don't check if the added item is a valid domain for regex expressions. Regex
+// filters are validated by FTL on import and skipped if invalid
+if($type !== "regex") {
+    check_domain();
 }
 
 switch($type) {
