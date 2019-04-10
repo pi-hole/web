@@ -30,6 +30,45 @@ function objectToArray(p) {
     return [idx,arr];
 }
 
+// Helper function to restrict the clients over time to only the
+// top N clients that most frequently query.  Any client not in the
+// top N will be grouped under "other".
+function topN(data, n) {
+    // Break early if there's nothing to do
+    if (data.clients.length <= n) {
+        return data;
+    }
+
+    // Get a total for each client across the time-series
+    const countByClient = Object.values(data.over_time).reduce((counts, timeslice) => {
+        // Add each entry to the previous sum
+        return counts.map((c, i) => c + timeslice[i]);
+    });
+
+    // Keep track of the indexes, so we can sort by know which client the count is for.
+    const countWithIdx = countByClient.map((c, i) => ({ count: c, idx: i }));
+
+    // Now sort, descending by count
+    const orderByCount = countWithIdx.sort((a, b) => b.count - a.count);
+
+    // Compute the 'other' counts, anything greater than N in the list
+    // gets combined into a single entry per timeslice
+    const otherCounts = Object.keys(data.over_time).reduce((obj, key) => {
+        const sumForTime = orderByCount.slice(n).reduce((sum, e) => data.over_time[key][e.idx] + sum, 0);
+        return Object.assign(obj, { [key]: sumForTime });
+    }, {});
+
+    // Rebuild the data object containing only what we want
+    const clients = [...orderByCount.slice(0, n).map((e) => data.clients[e.idx]), { name: "other", ip: "0.0.0.0" }];
+    // Each timeslice needs to be updated
+    const over_time = Object.keys(data.over_time).reduce((obj, key) => {
+        const topClients = orderByCount.slice(0, n).map((e) => data.over_time[key][e.idx]);
+        return Object.assign(obj, { [key]: [...topClients, otherCounts[key]] });
+    }, {});
+
+    return { clients, over_time };
+}
+
 var lastTooltipTime = 0;
 
 var customTooltips = function(tooltip) {
@@ -260,6 +299,9 @@ function updateClientsOverTime() {
         {
             return;
         }
+
+        // Reduce the data to the top 20 clients
+        data = topN(data, 20);
 
         // convert received objects to arrays
         data.over_time = objectToArray(data.over_time);
