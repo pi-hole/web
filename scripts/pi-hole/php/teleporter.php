@@ -182,6 +182,7 @@ else
 	archive_add_file("/etc/pihole/","setupVars.conf");
 	archive_add_file("/etc/pihole/","auditlog.list");
 	archive_add_file("/etc/pihole/","regex.list");
+	archive_add_file("/etc/pihole/","dhcp.leases");
 	archive_add_directory("/etc/dnsmasq.d/","dnsmasq.d/");
 
 	$archive->compress(Phar::GZ); // Creates a gziped copy
