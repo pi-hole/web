@@ -62,9 +62,10 @@ function refresh(fade) {
                 data.forEach(function (entry, index)
                 {
                     var used = entry.enabled === "1" ? "used" : "not-used";
+                    var comment = entry.comment.length > 0 ? "&nbsp;-&nbsp;" + entry.comment : "";
                     // Whitelist entry or Blacklist (exact entry)
                     list.append(
-                    "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" + entry.domain +
+                    "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" + entry.domain + comment +
                     "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
                     "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
                     // Handle button
@@ -77,9 +78,10 @@ function refresh(fade) {
                 data2.forEach(function (entry, index)
                 {
                     var used = entry.enabled === "1" ? "used" : "not-used";
+                    var comment = entry.comment.length > 0 ? "(" + entry.comment + ")" : "";
                     // Regex entry
                     listw.append(
-                    "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" + entry.filter +
+                    "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" + entry.filter + comment +
                     "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
                     "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
                     // Handle button
