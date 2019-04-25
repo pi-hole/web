@@ -63,9 +63,14 @@ function refresh(fade) {
                 {
                     var used = entry.enabled === "1" ? "used" : "not-used";
                     var comment = entry.comment.length > 0 ? "&nbsp;-&nbsp;" + entry.comment : "";
+                    var time = new Date(parseInt(entry.date_added)*1000);
+                    var added = "Added: " + time.toLocaleString();
+                    console.log(time);
                     // Whitelist entry or Blacklist (exact entry)
                     list.append(
-                    "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" + entry.domain + comment +
+                    "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" +
+                    "<span title=\"" + added + "\" data-toggle=\"tooltip\" data-placement=\"right\">" +
+                    entry.domain + comment + "</span>" +
                     "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
                     "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
                     // Handle button
@@ -78,10 +83,14 @@ function refresh(fade) {
                 data2.forEach(function (entry, index)
                 {
                     var used = entry.enabled === "1" ? "used" : "not-used";
-                    var comment = entry.comment.length > 0 ? "(" + entry.comment + ")" : "";
+                    var comment = entry.comment.length > 0 ? "&nbsp;-&nbsp;" + entry.comment : "";
+                    var time = new Date(parseInt(entry.date_added)*1000);
+                    var added = "Added: " + time.toLocaleString();
                     // Regex entry
                     listw.append(
-                    "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" + entry.filter + comment +
+                    "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" +
+                    "<span title=\"" + added + "\" data-toggle=\"tooltip\" data-placement=\"right\">" +
+                    entry.filter + comment + "</span>" +
                     "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
                     "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
                     // Handle button
