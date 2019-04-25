@@ -16,43 +16,24 @@ if (empty($api)) {
     list_verify($type);
 }
 
-// Don't check if the added item is a valid domain for regex expressions. Regex
-// filters are validated by FTL on import and skipped if invalid
+// Don't check if the added item is a valid domain for regex expressions.
+// Regex filters are validated by FTL on import and skipped if invalid
 if($type !== "regex") {
     check_domain();
 }
 
+// Escape shell metacharacters
+$domain = escapeshellcmd($_POST['domain']);
+
 switch($type) {
     case "white":
-        exec("sudo pihole -w -q -d ${_POST['domain']}");
+        exec("sudo pihole -w -q -d ".$domain);
         break;
     case "black":
-        exec("sudo pihole -b -q -d ${_POST['domain']}");
+        exec("sudo pihole -b -q -d ".$domain);
         break;
     case "regex":
-        if(($list = file_get_contents($regexfile)) === FALSE)
-        {
-            $err = error_get_last()["message"];
-            echo "Unable to read ${regexfile}<br>Error message: $err";
-        }
-
-        // Remove the regex and any empty lines from the list
-        $list = explode("\n", $list);
-        $list = array_diff($list, array($_POST['domain'], ""));
-        $list = implode("\n", $list);
-
-        if(file_put_contents($regexfile, $list."\n") === FALSE)
-        {
-            $err = error_get_last()["message"];
-            echo "Unable to remove regex \"".htmlspecialchars($_POST['domain'])."\" from ${regexfile}<br>Error message: $err";
-        }
-        else
-        {
-            // Send SIGHUP to pihole-FTL using a frontend command
-            // to force reloading of the regex domains
-            // This will also wipe the resolver's cache
-            echo exec("sudo pihole restartdns reload");
-        }
+        exec("sudo pihole --regex -q -d ".$domain);
         break;
 }
 

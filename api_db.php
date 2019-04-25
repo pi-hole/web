@@ -48,7 +48,7 @@ function resolveHostname($clientip, $printIP)
 	return $clientname;
 }
 
-// Get posible non-standard location of FTL's database
+// Get possible non-standard location of FTL's database
 $FTLsettings = parse_ini_file("/etc/pihole/pihole-FTL.conf");
 if(isset($FTLsettings["DBFILE"]))
 {

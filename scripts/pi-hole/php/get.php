@@ -11,57 +11,100 @@ if(!isset($_GET['list']))
 
 $listtype = $_GET['list'];
 
-$basedir = "/etc/pihole/";
+require_once("func.php");
 
-require_once "func.php";
-
-switch ($listtype) {
-    case "white":
-        $list = array(getListContent("whitelist.txt"));
-        break;
-
-    case "black":
-        $exact = getListContent("blacklist.txt");
-        $regex = getListContent("regex.list");
-        $list = array($exact, $regex);
-        break;
-
-    default:
-        die("Invalid list parameter");
-        break;
+// Get possible non-standard location of FTL's database
+$FTLsettings = parse_ini_file("/etc/pihole/pihole-FTL.conf");
+if(isset($FTLsettings["GRAVITYDB"]))
+{
+	$GRAVITYDB = $FTLsettings["GRAVITYDB"];
+}
+else
+{
+	$GRAVITYDB = "/etc/pihole/gravity.db";
 }
 
+function SQLite3_connect($dbfile, $trytoreconnect)
+{
+	try
+	{
+		// connect to database
+		return new SQLite3($dbfile, SQLITE3_OPEN_READONLY);
+	}
+	catch (Exception $exception)
+	{
+		// sqlite3 throws an exception when it is unable to connect, try to reconnect after 3 seconds
+		if($trytoreconnect)
+		{
+			sleep(3);
+			$db = SQLite3_connect($dbfile, false);
+		}
+	}
+}
 
-function getListContent($listname) {
-    global $basedir;
-    $rawList = file_get_contents(checkfile($basedir.$listname));
-    $list = explode("\n", $rawList);
+if(strlen($GRAVITYDB) > 0)
+{
+	$db = SQLite3_connect($GRAVITYDB, true);
 
-    // Get rid of empty lines and comments
-    for($i = sizeof($list)-1; $i >= 0; $i--) {
-        if(strlen($list[$i]) < 1 || $list[$i][0] === '#')
-            unset($list[$i]);
-    }
+	// Check if we successfully opened the database
+	if(!$db)
+	{
+		die("Error connecting to database");
+	}
+}
+else
+{
+	die("No database available");
+}
 
-    // Re-index list after possible unset() activity
-    $newlist = array_values($list);
+function getTableContent($listname) {
+	global $db;
+	$entries = array();
+	$results = $db->query("SELECT * FROM $listname");
 
-    return $newlist;
+	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
+	{
+		array_push($entries, $res);
+	}
 
+	return array($listname => $entries);
 }
 
 function filterArray(&$inArray) {
-    $outArray = array();
-    foreach ($inArray as $key=>$value) {
-        if (is_array($value)) {
-            $outArray[htmlspecialchars($key)] = filterArray($value);
-        } else {
-            $outArray[htmlspecialchars($key)] = htmlspecialchars($value);
-        }
-    }
-    return $outArray;
+	$outArray = array();
+	foreach ($inArray as $key => $value)
+	{
+		if (is_array($value))
+		{
+			$outArray[htmlspecialchars($key)] = filterArray($value);
+		}
+		else
+		{
+			$outArray[htmlspecialchars($key)] = htmlspecialchars($value);
+		}
+	}
+	return $outArray;
 }
 
+switch ($listtype)
+{
+	case "white":
+		$list = getTableContent("whitelist");
+		break;
+
+	case "black":
+		$exact = getTableContent("blacklist");
+		$regex = getTableContent("regex");
+		$list = array_merge($exact, $regex);
+		break;
+
+	default:
+		die("Invalid list parameter");
+		break;
+}
 // Protect against XSS attacks
-$list = filterArray($list);
-echo json_encode(array_values($list));
+$output = filterArray($list);
+
+// Return results
+header('Content-type: application/json');
+echo json_encode($output);

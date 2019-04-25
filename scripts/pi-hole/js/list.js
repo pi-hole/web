@@ -12,6 +12,96 @@ var token = $("#token").html();
 var listType = $("#list-type").html();
 var fullName = listType === "white" ? "Whitelist" : "Blacklist";
 
+function refresh(fade) {
+    var listw;
+    var list = $("#list");
+    if(listType === "black")
+    {
+        listw = $("#list-regex");
+    }
+    if(fade) {
+        list.fadeOut(100);
+        if(listw)
+        {
+            listw.fadeOut(100);
+        }
+    }
+    $.ajax({
+        url: "scripts/pi-hole/php/get.php",
+        method: "get",
+        data: {"list":listType},
+        success: function(response) {
+            list.html("");
+            if(listw)
+            {
+                listw.html("");
+            }
+
+            if((listType === "black" &&
+               response.blacklist.length === 0 &&
+               response.regex.length === 0) ||
+               (listType === "white" &&
+               response.whitelist.length === 0))
+            {
+                $("h3").hide();
+                list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
+            }
+            else
+            {
+                $("h3").show();
+                if(listType === "white")
+                {
+                    data = response.whitelist.sort();
+                    data2 = []; // No regex data, use empty array
+                }
+                else if(listType === "black")
+                {
+                    data = response.blacklist.sort();
+                    data2 = response.regex.sort();
+                }
+                data.forEach(function (entry, index)
+                {
+                    var used = entry.enabled === "1" ? "used" : "not-used";
+                    // Whitelist entry or Blacklist (exact entry)
+                    list.append(
+                    "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" + entry.domain +
+                    "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
+                    "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
+                    // Handle button
+                    $("#list #"+index+"").on("click", "button", function() {
+                        sub(index, entry.domain, "exact");
+                    });
+                });
+
+                // Add regex domains if present in returned list data
+                data2.forEach(function (entry, index)
+                {
+                    var used = entry.enabled === "1" ? "used" : "not-used";
+                    // Regex entry
+                    listw.append(
+                    "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" + entry.filter +
+                    "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
+                    "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
+                    // Handle button
+                    $("#list-regex #"+index+"").on("click", "button", function() {
+                        sub(index, entry.filter, "regex");
+                    });
+                });
+            }
+            list.fadeIn(100);
+            if(listw)
+            {
+                listw.fadeIn(100);
+            }
+        },
+        error: function(jqXHR, exception) {
+            $("#alFailure").show();
+        }
+    });
+}
+
+window.onload = refresh(false);
+
 function sub(index, entry, arg) {
     var domain = $("#list #"+index);
     var locallistType = listType;
@@ -37,92 +127,6 @@ function sub(index, entry, arg) {
         }
     });
 }
-
-function refresh(fade) {
-    var listw;
-    var list = $("#list");
-    if(listType === "black")
-    {
-        listw = $("#list-regex");
-    }
-    if(fade) {
-        list.fadeOut(100);
-        if(listw)
-        {
-            listw.fadeOut(100);
-        }
-    }
-    $.ajax({
-        url: "scripts/pi-hole/php/get.php",
-        method: "get",
-        data: {"list":listType},
-        success: function(response) {
-            list.html("");
-            if(listw)
-            {
-                listw.html("");
-            }
-            var data = JSON.parse(response);
-
-            if(data.length === 0) {
-                $("h3").hide();
-                if(listw)
-                {
-                    listw.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
-                }
-                else
-                {
-                    list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
-                }
-            }
-            else
-            {
-                $("h3").show();
-                data[0] = data[0].sort();
-                data[0].forEach(function (entry, index) {
-                    // Whitelist entry or Blacklist (exact entry) are in the zero-th
-                    // array returned by get.php
-                    list.append(
-                    "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
-                    "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
-                    "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
-                    // Handle button
-                    $("#list #"+index+"").on("click", "button", function() {
-                        sub(index, entry, "exact");
-                    });
-                });
-
-                // Add regex domains if present in returned list data
-                if(data.length === 2)
-                {
-                    data[1] = data[1].sort();
-                    data[1].forEach(function (entry, index) {
-                        // Whitelist entry or Blacklist (exact entry) are in the zero-th
-                        // array returned by get.php
-                        listw.append(
-                        "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
-                        "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
-                        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
-                        // Handle button
-                        $("#list-regex #"+index+"").on("click", "button", function() {
-                            sub(index, entry, "regex");
-                        });
-                    });
-                }
-            }
-            list.fadeIn(100);
-            if(listw)
-            {
-                listw.fadeIn(100);
-            }
-        },
-        error: function(jqXHR, exception) {
-            $("#alFailure").show();
-        }
-    });
-}
-
-window.onload = refresh(false);
 
 function add(arg) {
     var locallistType = listType;
@@ -161,7 +165,7 @@ function add(arg) {
             alInfo.delay(8000).fadeOut(2000, function() {
                 alInfo.hide();
             });
-          } else if (!wild && response.indexOf("] Pi-hole blocking is ") === -1 ||
+          } else if (!wild && response.indexOf("DONE") === -1 ||
                wild && response.length > 1) {
             alFailure.show();
             err.html(response);

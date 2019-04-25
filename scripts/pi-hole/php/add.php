@@ -22,36 +22,36 @@ if($type !== "regex") {
     check_domain();
 }
 
+// Escape shell metacharacters
+$domains = escapeshellcmd($_POST['domain']);
+
 switch($type) {
     case "white":
         if(!isset($_POST["auditlog"]))
-            echo shell_exec("sudo pihole -w ${_POST['domain']}");
+            echo shell_exec("sudo pihole -w --web ".$domains);
         else
         {
-            echo shell_exec("sudo pihole -w -n ${_POST['domain']}");
-            echo shell_exec("sudo pihole -a audit ${_POST['domain']}");
+            echo shell_exec("sudo pihole -w --web -n ".$domains);
+            echo shell_exec("sudo pihole -a audit ".$domains);
         }
         break;
     case "black":
         if(!isset($_POST["auditlog"]))
-            echo shell_exec("sudo pihole -b ${_POST['domain']}");
+            echo shell_exec("sudo pihole -b --web ".$domains);
         else
         {
-            echo shell_exec("sudo pihole -b -n ${_POST['domain']}");
-            echo shell_exec("sudo pihole -a audit ${_POST['domain']}");
+            echo shell_exec("sudo pihole -b --web -n ".$domains);
+            echo shell_exec("sudo pihole -a audit ".$domains);
         }
         break;
-    case "wild":
-        // Escape "." so it won't be interpreted as the wildcard character
-        $domain = str_replace(".","\.",$_POST['domain']);
-        // Add regex filter for legacy wildcard behavior
-        add_regex("(^|\.)".$domain."$");
-        break;
     case "regex":
-        add_regex($_POST['domain']);
+        echo shell_exec("sudo pihole --regex --web ".$domains);
+        break;
+    case "wild":
+        echo shell_exec("sudo pihole --wild --web ".$domains);
         break;
     case "audit":
-        echo exec("sudo pihole -a audit ${_POST['domain']}");
+        echo exec("sudo pihole -a audit ".$domain);
         break;
 }
 
