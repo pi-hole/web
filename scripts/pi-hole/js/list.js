@@ -12,6 +12,25 @@ var token = $("#token").html();
 var listType = $("#list-type").html();
 var fullName = listType === "white" ? "Whitelist" : "Blacklist";
 
+function addListEntry(entry, index, list, button, type)
+{
+    var used = entry.enabled === "1" ? "used" : "not-used";
+    var comment = entry.comment.length > 0 ? "&nbsp;-&nbsp;" + entry.comment : "";
+    var time = new Date(parseInt(entry.date_added)*1000);
+    var added = "Added: " + time.toLocaleString();
+    list.append(
+        "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" +
+        "<span title=\"" + added + "\" data-toggle=\"tooltip\" data-placement=\"right\">" +
+        entry.domain + comment + "</span>" +
+        "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
+        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>"
+    );
+    // Handle button
+    $(button+" #"+index).on("click", "button", function() {
+        sub(index, entry.domain, type);
+    });
+}
+
 function refresh(fade) {
     var listw;
     var list = $("#list");
@@ -61,42 +80,13 @@ function refresh(fade) {
                 }
                 data.forEach(function (entry, index)
                 {
-                    var used = entry.enabled === "1" ? "used" : "not-used";
-                    var comment = entry.comment.length > 0 ? "&nbsp;-&nbsp;" + entry.comment : "";
-                    var time = new Date(parseInt(entry.date_added)*1000);
-                    var added = "Added: " + time.toLocaleString();
-                    console.log(time);
-                    // Whitelist entry or Blacklist (exact entry)
-                    list.append(
-                    "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" +
-                    "<span title=\"" + added + "\" data-toggle=\"tooltip\" data-placement=\"right\">" +
-                    entry.domain + comment + "</span>" +
-                    "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
-                    "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
-                    // Handle button
-                    $("#list #"+index+"").on("click", "button", function() {
-                        sub(index, entry.domain, "exact");
-                    });
+                    addListEntry(entry, index, list, "#list", "exact");
                 });
 
                 // Add regex domains if present in returned list data
                 data2.forEach(function (entry, index)
                 {
-                    var used = entry.enabled === "1" ? "used" : "not-used";
-                    var comment = entry.comment.length > 0 ? "&nbsp;-&nbsp;" + entry.comment : "";
-                    var time = new Date(parseInt(entry.date_added)*1000);
-                    var added = "Added: " + time.toLocaleString();
-                    // Regex entry
-                    listw.append(
-                    "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" +
-                    "<span title=\"" + added + "\" data-toggle=\"tooltip\" data-placement=\"right\">" +
-                    entry.filter + comment + "</span>" +
-                    "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
-                    "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
-                    // Handle button
-                    $("#list-regex #"+index+"").on("click", "button", function() {
-                        sub(index, entry.filter, "regex");
-                    });
+                    addListEntry(entry, index, listw, "#list-regex", "regex");
                 });
             }
             list.fadeIn(100);
@@ -167,7 +157,7 @@ function add(arg) {
         method: "post",
         data: {"domain":domain.val().trim(), "list":locallistType, "token":token},
         success: function(response) {
-          if (!wild && response.indexOf(" already exists in ") !== -1) {
+          if (response.indexOf(" already exists in ") !== -1) {
             alWarning.show();
             warn.html(response);
             alWarning.delay(8000).fadeOut(2000, function() {
@@ -176,8 +166,7 @@ function add(arg) {
             alInfo.delay(8000).fadeOut(2000, function() {
                 alInfo.hide();
             });
-          } else if (!wild && response.indexOf("DONE") === -1 ||
-               wild && response.length > 1) {
+          } else if (response.indexOf("DONE") === -1) {
             alFailure.show();
             err.html(response);
             alFailure.delay(8000).fadeOut(2000, function() {

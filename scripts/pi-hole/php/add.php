@@ -31,7 +31,7 @@ switch($type) {
             echo shell_exec("sudo pihole -w --web ".$domains);
         else
         {
-            echo shell_exec("sudo pihole -w --web -n ".$domains);
+            echo shell_exec("sudo pihole -w --web ".$domains);
             echo shell_exec("sudo pihole -a audit ".$domains);
         }
         break;
@@ -40,7 +40,7 @@ switch($type) {
             echo shell_exec("sudo pihole -b --web ".$domains);
         else
         {
-            echo shell_exec("sudo pihole -b --web -n ".$domains);
+            echo shell_exec("sudo pihole -b --web ".$domains);
             echo shell_exec("sudo pihole -a audit ".$domains);
         }
         break;
