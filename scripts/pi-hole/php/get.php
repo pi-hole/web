@@ -13,18 +13,8 @@ $listtype = $_GET['list'];
 
 require_once("func.php");
 
-// Get possible non-standard location of FTL's database
-$FTLsettings = parse_ini_file("/etc/pihole/pihole-FTL.conf");
-if(isset($FTLsettings["GRAVITYDB"]))
-{
-	$GRAVITYDB = $FTLsettings["GRAVITYDB"];
-}
-else
-{
-	$GRAVITYDB = "/etc/pihole/gravity.db";
-}
-
 require("database.php");
+$GRAVITYDB = getGravityDBFilename();
 $db = SQLite3_connect($GRAVITYDB);
 
 function getTableContent($listname) {

@@ -6,8 +6,23 @@
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license */
 
+function getGravityDBFilename()
+{
+	// Get possible non-standard location of FTL's database
+	$FTLsettings = parse_ini_file("/etc/pihole/pihole-FTL.conf");
+	if(isset($FTLsettings["GRAVITYDB"]))
+	{
+		return $FTLsettings["GRAVITYDB"];
+	}
+	else
+	{
+		return "/etc/pihole/gravity.db";
+	}
+}
+
 function SQLite3_connect_try($filename, $mode, $trytoreconnect)
-{	try
+{
+	try
 	{
 		// connect to database
 		return new SQLite3($filename, $mode);

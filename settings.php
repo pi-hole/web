@@ -266,10 +266,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <?php foreach ($adlist as $key => $value) { ?>
                                                         <tr>
                                                             <td>
-                                                                <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if ($value[0]){ ?>checked<?php } ?>>
+                                                                <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if ($value["enabled"] === 1){ ?>checked<?php } ?>>
                                                             </td>
                                                             <td>
-                                                                <a href="<?php echo htmlentities($value[1]); ?>" target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value[1]); ?></a>
+                                                                <a href="<?php echo htmlentities($value["address"]); ?>" target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value["address"]); ?></a>
                                                             </td>
                                                             <td class="text-center">
                                                                 <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
