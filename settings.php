@@ -257,8 +257,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             <table class="table table-striped table-bordered dt-responsive nowrap">
                                                 <thead>
                                                 <tr>
-                                                    <th>Enabled</th>
+                                                    <th style="width:1%">Enabled</th>
                                                     <th>List</th>
+                                                    <th>Date added</th>
+                                                    <th>Comment</th>
                                                     <th style="width:1%">Delete</th>
                                                 </tr>
                                                 </thead>
@@ -270,6 +272,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             </td>
                                                             <td>
                                                                 <a href="<?php echo htmlentities($value["address"]); ?>" target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value["address"]); ?></a>
+                                                            </td>
+                                                            <td>
+                                                                <?php echo date(DateTime::RFC2822, intval($value["date_added"])); ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php echo htmlentities($value["comment"]); ?>
                                                             </td>
                                                             <td class="text-center">
                                                                 <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
