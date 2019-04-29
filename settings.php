@@ -259,7 +259,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 <tr>
                                                     <th style="width:1%">Enabled</th>
                                                     <th>List</th>
-                                                    <th>Date added</th>
+                                                    <th>Added</th>
+                                                    <th>Last modified</th>
                                                     <th>Comment</th>
                                                     <th style="width:1%">Delete</th>
                                                 </tr>
@@ -275,6 +276,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             </td>
                                                             <td>
                                                                 <?php echo date(DateTime::RFC2822, intval($value["date_added"])); ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php echo date(DateTime::RFC2822, intval($value["date_modified"])); ?>
                                                             </td>
                                                             <td>
                                                                 <?php echo htmlentities($value["comment"]); ?>
