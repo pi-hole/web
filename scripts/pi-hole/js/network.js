@@ -143,7 +143,7 @@ $(document).ready(function() {
             {data: "firstSeen", "width" : "8%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
             {data: "lastQuery", "width" : "8%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
             {data: "numQueries", "width" : "9%", "render": $.fn.dataTable.render.text() },
-            {data: "", "width" : "6%" }
+            {data: "", "width" : "6%", "orderable" : false }
         ],
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "stateSave": true,
