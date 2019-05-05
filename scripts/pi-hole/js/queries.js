@@ -116,6 +116,7 @@ function autofilter(){
 
 $(document).ready(function() {
     var status;
+    var dataIndex = 0;
 
     // Do we want to filter queries?
     var GETDict = {};
@@ -152,7 +153,6 @@ $(document).ready(function() {
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
-
             // DNSSEC status
             var dnssec_status;
             switch (data[5])
@@ -293,24 +293,39 @@ $(document).ready(function() {
                 var content = $("td:eq(5)", row).html();
                 $("td:eq(5)", row).html(content + " (" + (0.1*data[7]).toFixed(1)+"ms)");
             }
-
+            var timestamp = Math.floor(parseFloat(data[0])/1e6);
+            $("td:eq(0)", row).html(moment.unix(timestamp).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z"));
         },
         dom: "<'row'<'col-sm-12'f>>" +
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": {"url": APIstring, "error": handleAjaxError },
+        "ajax": {
+            "url": APIstring,
+            "error": handleAjaxError,
+            "dataSrc": function(data){
+                var new_data = new Array();
+                for(obj of data.data)
+                {
+                    obj[0] *= parseInt(1e6);
+                    obj[0] += dataIndex++;
+                    new_data.push(obj);
+                }
+                return new_data;
+            }
+        },
         "autoWidth" : false,
         "processing": true,
         "order" : [[0, "desc"]],
         "columns": [
-            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
+            { "width" : "15%"},
             { "width" : "4%" },
             { "width" : "36%", "render": $.fn.dataTable.render.text() },
             { "width" : "8%", "render": $.fn.dataTable.render.text() },
             { "width" : "14%", "orderData": 4 },
             { "width" : "8%", "orderData": 6 },
-            { "width" : "10%", "orderData": 4 }
+            { "width" : "10%", "orderData": 4 },
+            { "width" : "0%", "searchable": false }
         ],
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "stateSave": true,
@@ -359,6 +374,9 @@ $(document).ready(function() {
               function () { this.style.color=""; }
             );
             api.$("td:eq(3)").css("cursor","pointer");
+        },
+        "createdRow": function(row, data, dataIndex){
+            $("td:eq(7)", row).html(dataIndex);
         }
     });
 
@@ -376,5 +394,3 @@ $(document).ready(function() {
 
     $("#resetButton").click( function () { tableApi.search("").draw(); $("#resetButton").hide(); } );
 } );
-
-
