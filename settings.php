@@ -295,7 +295,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             </table>
                                         </div>
                                         <div class="form-group">
-                                            <input name="newuserlists" class="form-control" placeholder="Enter URL to add a new blocklists"></input>
+                                            <input name="newuserlists" class="form-control" placeholder="Enter a URL to add a new blocklist">
                                         </div>
                                         <input type="hidden" name="field" value="adlists">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
