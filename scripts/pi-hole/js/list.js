@@ -16,11 +16,13 @@ function addListEntry(entry, index, list, button, type)
 {
     var used = entry.enabled === "1" ? "used" : "not-used";
     var comment = entry.comment.length > 0 ? "&nbsp;-&nbsp;" + entry.comment : "";
-    var time = new Date(parseInt(entry.date_added)*1000);
-    var added = "Added: " + time.toLocaleString();
+    var date_added = new Date(parseInt(entry.date_added)*1000);
+    var date_modified = new Date(parseInt(entry.date_modified)*1000);
+    var tooltip = "Added: " + date_added.toLocaleString() +
+                  "\nModified: " + date_modified.toLocaleString();
     list.append(
         "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" +
-        "<span title=\"" + added + "\" data-toggle=\"tooltip\" data-placement=\"right\">" +
+        "<span title=\"" + tooltip + "\" data-toggle=\"tooltip\" data-placement=\"right\">" +
         entry.domain + comment + "</span>" +
         "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
         "<span class=\"glyphicon glyphicon-trash\"></span></button></li>"
