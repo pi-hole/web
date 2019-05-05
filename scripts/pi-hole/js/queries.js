@@ -324,8 +324,7 @@ $(document).ready(function() {
             { "width" : "8%", "render": $.fn.dataTable.render.text() },
             { "width" : "14%", "orderData": 4 },
             { "width" : "8%", "orderData": 6 },
-            { "width" : "10%", "orderData": 4 },
-            { "width" : "0%", "searchable": false }
+            { "width" : "10%", "orderData": 4 }
         ],
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "stateSave": true,
@@ -374,9 +373,6 @@ $(document).ready(function() {
               function () { this.style.color=""; }
             );
             api.$("td:eq(3)").css("cursor","pointer");
-        },
-        "createdRow": function(row, data, dataIndex){
-            $("td:eq(7)", row).html(dataIndex);
         }
     });
 
