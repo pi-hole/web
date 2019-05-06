@@ -224,6 +224,7 @@ function refreshTableData() {
 
 $(document).ready(function() {
     var status;
+    var dataIndex = 0;
 
     var APIstring;
     if(instantquery)
@@ -244,7 +245,6 @@ $(document).ready(function() {
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
             var blocked, fieldtext, buttontext, color;
-
             switch (data[4])
             {
               case 1:
@@ -310,13 +310,26 @@ $(document).ready(function() {
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": {"url": APIstring, "error": handleAjaxError },
+        "ajax": {
+            "url": APIstring,
+            "error": handleAjaxError,
+            "dataSrc": function(data){
+                var new_data = new Array();
+                for(obj of data.data)
+                {
+                    obj[0] *= parseInt(1e6);
+                    obj[0] += dataIndex++;
+                    new_data.push(obj);
+                }
+                return new_data;
+            }
+        },
         "autoWidth" : false,
         "processing": true,
         "deferRender": true,
         "order" : [[0, "desc"]],
         "columns": [
-            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
+            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(Math.floor(data/1e6)).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
             { "width" : "10%" },
             { "width" : "40%" },
             { "width" : "20%" },
@@ -353,4 +366,3 @@ $("#querytime").on("apply.daterangepicker", function(ev, picker) {
     $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
     refreshTableData();
 });
-
