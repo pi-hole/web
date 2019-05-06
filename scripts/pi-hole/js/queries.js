@@ -293,8 +293,7 @@ $(document).ready(function() {
                 var content = $("td:eq(5)", row).html();
                 $("td:eq(5)", row).html(content + " (" + (0.1*data[7]).toFixed(1)+"ms)");
             }
-            var timestamp = Math.floor(parseFloat(data[0])/1e6);
-            $("td:eq(0)", row).html(moment.unix(timestamp).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z"));
+
         },
         dom: "<'row'<'col-sm-12'f>>" +
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
@@ -318,7 +317,7 @@ $(document).ready(function() {
         "processing": true,
         "order" : [[0, "desc"]],
         "columns": [
-            { "width" : "15%"},
+            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(Math.floor(data/1e6)).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
             { "width" : "4%" },
             { "width" : "36%", "render": $.fn.dataTable.render.text() },
             { "width" : "8%", "render": $.fn.dataTable.render.text() },
