@@ -313,16 +313,7 @@ $(document).ready(function() {
         "ajax": {
             "url": APIstring,
             "error": handleAjaxError,
-            "dataSrc": function(data){
-                var new_data = new Array();
-                for(obj of data.data)
-                {
-                    obj[0] *= parseInt(1e6);
-                    obj[0] += dataIndex++;
-                    new_data.push(obj);
-                }
-                return new_data;
-            }
+            "dataSrc": function(data){ return data.data.map(function(x){ x[0] = x[0]*1e6+(dataIndex++); return x; }); }
         },
         "autoWidth" : false,
         "processing": true,
