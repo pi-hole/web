@@ -116,7 +116,6 @@ function autofilter(){
 
 $(document).ready(function() {
     var status;
-    var dataIndex = 0;
 
     // Do we want to filter queries?
     var GETDict = {};
@@ -302,7 +301,13 @@ $(document).ready(function() {
         "ajax": {
             "url": APIstring,
             "error": handleAjaxError,
-            "dataSrc": function(data){ return data.data.map(function(x){ x[0] = x[0]*1e6+(dataIndex++); return x; }); }
+            "dataSrc": function(data){
+                var dataIndex = 0;
+                return data.data.map(function(x){
+                    x[0] = x[0] * 1e6 + (dataIndex++);
+                    return x;
+                });
+            }
         },
         "autoWidth" : false,
         "processing": true,
