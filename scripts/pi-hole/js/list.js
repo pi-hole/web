@@ -12,29 +12,24 @@ var token = $("#token").html();
 var listType = $("#list-type").html();
 var fullName = listType === "white" ? "Whitelist" : "Blacklist";
 
-function sub(index, entry, arg) {
-    var domain = $("#list #"+index);
-    var locallistType = listType;
-    if(arg === "regex")
-    {
-        locallistType = "regex";
-        domain = $("#list-regex #"+index);
-    }
-    domain.hide("highlight");
-    $.ajax({
-        url: "scripts/pi-hole/php/sub.php",
-        method: "post",
-        data: {"domain":entry, "list":locallistType, "token":token},
-        success: function(response) {
-            if(response.length !== 0){
-                return;
-            }
-            domain.remove();
-        },
-        error: function(jqXHR, exception) {
-            alert("Failed to remove the domain!");
-            domain.show({queue:true});
-        }
+function addListEntry(entry, index, list, button, type)
+{
+    var used = entry.enabled === "1" ? "used" : "not-used";
+    var comment = entry.comment.length > 0 ? "&nbsp;-&nbsp;" + entry.comment : "";
+    var date_added = new Date(parseInt(entry.date_added)*1000);
+    var date_modified = new Date(parseInt(entry.date_modified)*1000);
+    var tooltip = "Added: " + date_added.toLocaleString() +
+                  "\nModified: " + date_modified.toLocaleString();
+    list.append(
+        "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" +
+        "<span title=\"" + tooltip + "\" data-toggle=\"tooltip\" data-placement=\"right\">" +
+        entry.domain + comment + "</span>" +
+        "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
+        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>"
+    );
+    // Handle button
+    $(button+" #"+index).on("click", "button", function() {
+        sub(index, entry.domain, type);
     });
 }
 
@@ -62,53 +57,39 @@ function refresh(fade) {
             {
                 listw.html("");
             }
-            var data = JSON.parse(response);
 
-            if(data.length === 0) {
+            if((listType === "black" &&
+               response.blacklist.length === 0 &&
+               response.regex.length === 0) ||
+               (listType === "white" &&
+               response.whitelist.length === 0))
+            {
                 $("h3").hide();
-                if(listw)
-                {
-                    listw.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
-                }
-                else
-                {
-                    list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
-                }
+                list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
             }
             else
             {
                 $("h3").show();
-                data[0] = data[0].sort();
-                data[0].forEach(function (entry, index) {
-                    // Whitelist entry or Blacklist (exact entry) are in the zero-th
-                    // array returned by get.php
-                    list.append(
-                    "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
-                    "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
-                    "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
-                    // Handle button
-                    $("#list #"+index+"").on("click", "button", function() {
-                        sub(index, entry, "exact");
-                    });
+                if(listType === "white")
+                {
+                    data = response.whitelist.sort();
+                    data2 = []; // No regex data, use empty array
+                }
+                else if(listType === "black")
+                {
+                    data = response.blacklist.sort();
+                    data2 = response.regex.sort();
+                }
+                data.forEach(function (entry, index)
+                {
+                    addListEntry(entry, index, list, "#list", "exact");
                 });
 
                 // Add regex domains if present in returned list data
-                if(data.length === 2)
+                data2.forEach(function (entry, index)
                 {
-                    data[1] = data[1].sort();
-                    data[1].forEach(function (entry, index) {
-                        // Whitelist entry or Blacklist (exact entry) are in the zero-th
-                        // array returned by get.php
-                        listw.append(
-                        "<li id=\"" + index + "\" class=\"list-group-item clearfix\">" + entry +
-                        "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
-                        "<span class=\"glyphicon glyphicon-trash\"></span></button></li>");
-                        // Handle button
-                        $("#list-regex #"+index+"").on("click", "button", function() {
-                            sub(index, entry, "regex");
-                        });
-                    });
-                }
+                    addListEntry(entry, index, listw, "#list-regex", "regex");
+                });
             }
             list.fadeIn(100);
             if(listw)
@@ -123,6 +104,32 @@ function refresh(fade) {
 }
 
 window.onload = refresh(false);
+
+function sub(index, entry, arg) {
+    var domain = $("#list #"+index);
+    var locallistType = listType;
+    if(arg === "regex")
+    {
+        locallistType = "regex";
+        domain = $("#list-regex #"+index);
+    }
+    domain.hide("highlight");
+    $.ajax({
+        url: "scripts/pi-hole/php/sub.php",
+        method: "post",
+        data: {"domain":entry, "list":locallistType, "token":token},
+        success: function(response) {
+            if(response.length !== 0){
+                return;
+            }
+            domain.remove();
+        },
+        error: function(jqXHR, exception) {
+            alert("Failed to remove the domain!");
+            domain.show({queue:true});
+        }
+    });
+}
 
 function add(arg) {
     var locallistType = listType;
@@ -152,7 +159,7 @@ function add(arg) {
         method: "post",
         data: {"domain":domain.val().trim(), "list":locallistType, "token":token},
         success: function(response) {
-          if (!wild && response.indexOf(" already exists in ") !== -1) {
+          if (response.indexOf(" already exists in ") !== -1) {
             alWarning.show();
             warn.html(response);
             alWarning.delay(8000).fadeOut(2000, function() {
@@ -161,8 +168,7 @@ function add(arg) {
             alInfo.delay(8000).fadeOut(2000, function() {
                 alInfo.hide();
             });
-          } else if (!wild && response.indexOf("] Pi-hole blocking is ") === -1 ||
-               wild && response.length > 1) {
+          } else if (response.indexOf("DONE") === -1) {
             alFailure.show();
             err.html(response);
             alFailure.delay(8000).fadeOut(2000, function() {
