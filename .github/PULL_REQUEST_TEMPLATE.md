@@ -2,15 +2,15 @@
 
 `{Please ensure that your pull request is for the 'devel' branch!}`
 
-- [] I have read and understood the [contributors guide](https://github.com/pi-hole/AdminLTE/blob/master/CONTRIBUTING.md), as well as this entire template.
-- [] I have made only one major change in my proposed changes.
-- [] I have commented my proposed changes within the code.
-- [] I have tested my proposed changes.
-- [] I am willing to help maintain this change if there are issues with it later.
-- [] I give this submission freely and claim no ownership.
-- [] It is compatible with the [EUPL 1.2 license](https://opensource.org/licenses/EUPL-1.1)
-- [] I have squashed any insignificant commits. ([`git rebase`](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html))
-- [] I have Signed Off all commits. ([`git commit --signoff`](https://git-scm.com/docs/git-commit#git-commit---signoff))
+- [ ] I have read and understood the [contributors guide](https://github.com/pi-hole/AdminLTE/blob/master/CONTRIBUTING.md), as well as this entire template.
+- [ ] I have made only one major change in my proposed changes.
+- [ ] I have commented my proposed changes within the code.
+- [ ] I have tested my proposed changes.
+- [ ] I am willing to help maintain this change if there are issues with it later.
+- [ ] I give this submission freely and claim no ownership.
+- [ ] It is compatible with the [EUPL 1.2 license](https://opensource.org/licenses/EUPL-1.1)
+- [ ] I have squashed any insignificant commits. ([`git rebase`](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html))
+- [ ] I have Signed Off all commits. ([`git commit --signoff`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---signoff))
 
 ---
 
