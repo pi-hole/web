@@ -18,6 +18,8 @@ var daterange;
 
 var timeoutWarning = $("#timeoutWarning");
 
+var dateformat = "MMMM Do YYYY, HH:mm";
+
 // Do we want to filter queries?
 var GETDict = {};
 location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
@@ -47,7 +49,8 @@ $(function () {
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()]
       },
-      "opens": "center", "showDropdowns": true
+      "opens": "center", "showDropdowns": true,
+      "autoUpdateInput": false
     },
     function (startt, endt) {
       from = moment(startt).utc().valueOf()/1000;
@@ -167,7 +170,9 @@ function getQueryTypes()
     }
     if($("#type_external").prop("checked"))
     {
-        queryType.push(6);
+        // Multiple IDs correspond to this status
+        // We request queries with all of them
+        queryType.push([6,7,8]);
     }
     return queryType.join(",");
 }
@@ -275,7 +280,19 @@ $(document).ready(function() {
               case 6:
                 blocked = true;
                 color = "red";
-                fieldtext = "Blocked <br class='hidden-lg'>(external)";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
+                buttontext = "" ;
+                break;
+              case 7:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
+                buttontext = "" ;
+                break;
+              case 8:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
                 buttontext = "" ;
                 break;
               default:
@@ -333,6 +350,7 @@ $(document).ready(function() {
 } );
 
 $("#querytime").on("apply.daterangepicker", function(ev, picker) {
+    $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
     refreshTableData();
 });
 
