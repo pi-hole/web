@@ -4,9 +4,8 @@
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
-*  Please see LICENSE file for your rights under this license. */ ?>
+*  Please see LICENSE file for your rights under this license. */
 
-<?php
 if(!isset($_GET['list']))
     die("Missing parameter");
 

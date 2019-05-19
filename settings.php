@@ -401,7 +401,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="input-group">
                                                         <div class="input-group-addon">From</div>
                                                         <input type="text" class="form-control DHCPgroup" name="from"
-                                                               data-inputmask="'alias': 'ip'" data-mask
                                                                value="<?php echo $DHCPstart; ?>"
                                                                <?php if (!$DHCP){ ?>disabled<?php } ?>>
                                                     </div>
@@ -412,7 +411,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="input-group">
                                                         <div class="input-group-addon">To</div>
                                                         <input type="text" class="form-control DHCPgroup" name="to"
-                                                               data-inputmask="'alias': 'ip'" data-mask
                                                                value="<?php echo $DHCPend; ?>"
                                                                <?php if (!$DHCP){ ?>disabled<?php } ?>>
                                                     </div>
@@ -426,7 +424,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="input-group">
                                                         <div class="input-group-addon">Router</div>
                                                         <input type="text" class="form-control DHCPgroup" name="router"
-                                                               data-inputmask="'alias': 'ip'" data-mask
                                                                value="<?php echo $DHCProuter; ?>"
                                                                <?php if (!$DHCP){ ?>disabled<?php } ?>>
                                                     </div>
@@ -465,7 +462,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <input type="text" class="form-control DHCPgroup"
                                                                name="leasetime"
                                                                id="leasetime" value="<?php echo $DHCPleasetime; ?>"
-                                                               data-inputmask="'mask': '9', 'repeat': 7, 'greedy' : false"
                                                                data-mask <?php if (!$DHCP){ ?>disabled<?php } ?>>
                                                     </div>
                                                 </div>
@@ -857,9 +853,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
                                                    <a href="http://dnssec.vs.uni-due.de/" target="_blank">here</a>.</p>
                                                 <label>Conditional Forwarding</label>
-                                                <p>If not configured as your DHCP server, Pi-hole won't able to
-                                                    determine the names of devices on your local network.  As a
-                                                    result, tables such as Top Clients will only show IP addresses.</p>
+                                                <p>If not configured as your DHCP server, Pi-hole won't be able to
+                                                   determine the names of devices on your local network.  As a
+                                                   result, tables such as Top Clients will only show IP addresses.</p>
                                                 <p>One solution for this is to configure Pi-hole to forward these
                                                     requests to your home router, but only for devices on your
                                                     home network.  To configure this we will need to know the IP
@@ -873,23 +869,23 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             ?>>Use Conditional Forwarding</label>
                                                     </div>
                                                     <div class="input-group">
-                                                        <table class="table table-bordered">
-                                                            <tr>
-                                                                <th>IP of your router</th>
-                                                                <th>Local domain name</th>
-                                                            </tr>
-                                                            <tr>
-                                                                <div class="input-group">
-                                                                    <td>
-                                                                        <input type="text" name="conditionalForwardingIP" class="form-control" data-inputmask="'alias': 'ip'" data-mask
-                                                                               <?php if(isset($conditionalForwardingIP)){ ?>value="<?php echo $conditionalForwardingIP; ?>"<?php } ?>>
-                                                                    </td>
-                                                                    <td><input type="text" name="conditionalForwardingDomain" class="form-control" data-mask
-                                                                               <?php if(isset($conditionalForwardingDomain)){ ?>value="<?php echo $conditionalForwardingDomain; ?>"<?php } ?>>
-                                                                    </td>
-                                                                </div>
-                                                            </tr>
-                                                        </table>
+                                                      <table class="table table-bordered">
+                                                        <tr>
+                                                          <th>IP of your router</th>
+                                                          <th>Local domain name</th>
+                                                        </tr>
+                                                        <tr>
+                                                          <div class="input-group">
+                                                            <td>
+                                                              <input type="text" name="conditionalForwardingIP" class="form-control"
+                                                              <?php if(isset($conditionalForwardingIP)){ ?>value="<?php echo $conditionalForwardingIP; ?>"<?php } ?>>
+                                                            </td>
+                                                            <td><input type="text" name="conditionalForwardingDomain" class="form-control" data-mask
+                                                              <?php if(isset($conditionalForwardingDomain)){ ?>value="<?php echo $conditionalForwardingDomain; ?>"<?php } ?>>
+                                                            </td>
+                                                          </div>
+                                                        </tr>
+                                                      </table>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1488,8 +1484,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
     </div>
 </div>
 
-<script src="scripts/vendor/jquery.inputmask.js"></script>
-<script src="scripts/vendor/jquery.inputmask.extensions.js"></script>
 <script src="scripts/vendor/jquery.confirm.min.js"></script>
 <script src="scripts/pi-hole/js/settings.js"></script>
 
