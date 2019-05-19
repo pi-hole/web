@@ -450,7 +450,7 @@ if($auth) {
                 <!-- Speedtest -->
                 <li<?php if($scriptname === "speedtest.php"){ ?> class="active"<?php } ?>>
                     <a href="speedtest.php">
-                        <i class="fa fa-tachometer"></i> <span>Speedtest</span>
+                        <i class="fa fa-tachometer-alt"></i> <span>Speedtest</span>
                     </a>
                 </li>
 
