@@ -6,7 +6,9 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-ob_end_flush();
+while (ob_get_level() > 0) {
+    ob_end_flush();
+}
 ini_set("output_buffering", "0");
 ob_implicit_flush(true);
 header('Content-Type: text/event-stream');

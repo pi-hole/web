@@ -203,7 +203,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <link href="style/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/vendor/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="style/vendor/font-awesome-5.6.3/css/all.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/daterangepicker.css" rel="stylesheet" type="text/css" />
@@ -444,13 +444,13 @@ if($auth) {
                 <!-- Query Log -->
                 <li<?php if($scriptname === "queries.php"){ ?> class="active"<?php } ?>>
                     <a href="queries.php">
-                        <i class="fa fa-file-text-o"></i> <span>Query Log</span>
+                        <i class="fa fa-file-alt"></i> <span>Query Log</span>
                     </a>
                 </li>
                 <!-- Speedtest -->
                 <li<?php if($scriptname === "speedtest.php"){ ?> class="active"<?php } ?>>
                     <a href="speedtest.php">
-                        <i class="fa fa-tachometer"></i> <span>Speedtest</span>
+                        <i class="fa fa-tachometer-alt"></i> <span>Speedtest</span>
                     </a>
                 </li>
 
@@ -459,22 +459,22 @@ if($auth) {
                     <span class="pull-right-container">
                       <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
                     </span>
-                    <i class="fa fa-clock-o"></i> <span>Long term data</span>
+                    <i class="fa fa-clock"></i> <span>Long term data</span>
                   </a>
                   <ul class="treeview-menu">
                     <li<?php if($scriptname === "db_graph.php"){ ?> class="active"<?php } ?>>
                         <a href="db_graph.php">
-                            <i class="fa fa-file-text-o"></i> <span>Graphics</span>
+                            <i class="fa fa-file-alt"></i> <span>Graphics</span>
                         </a>
                     </li>
                     <li<?php if($scriptname === "db_queries.php"){ ?> class="active"<?php } ?>>
                         <a href="db_queries.php">
-                            <i class="fa fa-file-text-o"></i> <span>Query Log</span>
+                            <i class="fa fa-file-alt"></i> <span>Query Log</span>
                         </a>
                     </li>
                     <li<?php if($scriptname === "db_lists.php"){ ?> class="active"<?php } ?>>
                         <a href="db_lists.php">
-                            <i class="fa fa-file-text-o"></i> <span>Top Lists</span>
+                            <i class="fa fa-file-alt"></i> <span>Top Lists</span>
                         </a>
                     </li>
                   </ul>
@@ -482,7 +482,7 @@ if($auth) {
                 <!-- Whitelist -->
                 <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
                     <a href="list.php?l=white">
-                        <i class="fa fa-check-circle-o "></i> <span>Whitelist</span>
+                        <i class="fa fa-check-circle "></i> <span>Whitelist</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
@@ -508,22 +508,22 @@ if($auth) {
                     </li>
                     <li>
                         <a href="#" id="pihole-disable-10s">
-                            <i class="fa fa-clock-o"></i> <span>For 10 seconds</span>
+                            <i class="fa fa-clock"></i> <span>For 10 seconds</span>
                         </a>
                     </li>
                     <li>
                         <a href="#" id="pihole-disable-30s">
-                            <i class="fa fa-clock-o"></i> <span>For 30 seconds</span>
+                            <i class="fa fa-clock"></i> <span>For 30 seconds</span>
                         </a>
                     </li>
                     <li>
                         <a href="#" id="pihole-disable-5m">
-                            <i class="fa fa-clock-o"></i> <span>For 5 minutes</span>
+                            <i class="fa fas fa-clock"></i> <span>For 5 minutes</span>
                         </a>
                     </li>
                     <li>
                       <a href="#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal">
-                            <i class="fa fa-clock-o"></i> <span>Custom time</span>
+                            <i class="fa fa-clock"></i> <span>Custom time</span>
                       </a>
                     </li>
                   </ul>
@@ -579,10 +579,16 @@ if($auth) {
                     </li>
                   </ul>
                 </li>
+                <!-- Network -->
+                <li<?php if($scriptname === "network.php"){ ?> class="active"<?php } ?>>
+                    <a href="network.php">
+                        <i class="fa fa-network-wired"></i> <span>Network</span>
+                    </a>
+                </li>
                 <!-- Settings -->
                 <li<?php if($scriptname === "settings.php"){ ?> class="active"<?php } ?>>
                     <a href="settings.php">
-                        <i class="fa fa-gears"></i> <span>Settings</span>
+                        <i class="fa fa-cogs"></i> <span>Settings</span>
                     </a>
                 </li>
                 <!-- Logout -->
@@ -602,14 +608,14 @@ if($auth) {
                 if(strlen($pwhash) > 0 && !$auth) { ?>
                 <li<?php if($scriptname === "login"){ ?> class="active"<?php } ?>>
                     <a href="index.php?login">
-                        <i class="fa fa-user"></i> <span>Login</span>
+                        <i class="fa far fa-user"></i> <span>Login</span>
                     </a>
                 </li>
                 <?php } ?>
                 <!-- Donate -->
                 <li>
                     <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY" target="_blank">
-                        <i class="fa fa-paypal"></i> <span>Donate</span>
+                        <i class="fa-paypal-icon fab fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
                 <?php if($auth){ ?>
