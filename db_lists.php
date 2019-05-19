@@ -75,7 +75,7 @@ else
             </div>
         </div>
         <div class="overlay" hidden>
-          <i class="fa fa-refresh fa-spin"></i>
+          <i class="fa fa-sync fa-spin"></i>
         </div>
         <!-- /.box-body -->
       </div>
@@ -102,7 +102,7 @@ else
             </div>
         </div>
         <div class="overlay" hidden>
-          <i class="fa fa-refresh fa-spin"></i>
+          <i class="fa fa-sync fa-spin"></i>
         </div>
         <!-- /.box-body -->
       </div>
@@ -129,7 +129,7 @@ else
             </div>
         </div>
         <div class="overlay" hidden>
-          <i class="fa fa-refresh fa-spin"></i>
+          <i class="fa fa-sync fa-spin"></i>
         </div>
         <!-- /.box-body -->
       </div>
