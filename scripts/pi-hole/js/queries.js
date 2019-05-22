@@ -152,7 +152,6 @@ $(document).ready(function() {
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
-
             // DNSSEC status
             var dnssec_status;
             switch (data[5])
@@ -299,12 +298,22 @@ $(document).ready(function() {
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": {"url": APIstring, "error": handleAjaxError },
+        "ajax": {
+            "url": APIstring,
+            "error": handleAjaxError,
+            "dataSrc": function(data){
+                var dataIndex = 0;
+                return data.data.map(function(x){
+                    x[0] = x[0] * 1e6 + (dataIndex++);
+                    return x;
+                });
+            }
+        },
         "autoWidth" : false,
         "processing": true,
         "order" : [[0, "desc"]],
         "columns": [
-            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
+            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(Math.floor(data/1e6)).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
             { "width" : "4%" },
             { "width" : "36%", "render": $.fn.dataTable.render.text() },
             { "width" : "8%", "render": $.fn.dataTable.render.text() },
@@ -376,5 +385,3 @@ $(document).ready(function() {
 
     $("#resetButton").click( function () { tableApi.search("").draw(); $("#resetButton").hide(); } );
 } );
-
-
