@@ -5,8 +5,6 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 $(function () {
-	$("[data-mask]").inputmask();
-
 	$("[data-static]").on("click", function(){
 		var row = $(this).closest("tr");
 		var mac = row.find("#MAC").text();
