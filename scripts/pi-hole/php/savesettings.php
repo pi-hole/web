@@ -738,7 +738,7 @@ function readAdlists()
 			// Flush network table
 			case "flusharp":
 				exec("sudo pihole arpflush quiet", $output);
-				$error = implode($output, "<br>");
+				$error = implode("<br>", $output);
 				if(strlen($error) == 0)
 				{
 					$success .= "The network table has been flushed";
