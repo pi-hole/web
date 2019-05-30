@@ -735,6 +735,15 @@ function readAdlists()
 					$error .= "Invalid privacy level (".$level.")!";
 				}
 				break;
+			// Flush network table
+			case "flusharp":
+				exec("sudo pihole arpflush quiet", $output);
+				$error = implode($output, "<br>");
+				if(strlen($error) == 0)
+				{
+					$success .= "The network table has been flushed";
+				}
+				break;
 
 			default:
 				// Option not found
