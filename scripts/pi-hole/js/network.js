@@ -105,7 +105,7 @@ $(document).ready(function() {
              }
 
              // Set hostname to "N/A" if not available
-             if(data["name"].length < 1)
+             if(!data["name"] || data["name"].length < 1)
              {
                  $("td:eq(3)", row).html("N/A");
              }
@@ -121,7 +121,7 @@ $(document).ready(function() {
               function () { this.style.color=""; } );
 
             // MAC + Vendor field if available
-            if(data["macVendor"].length > 0)
+            if(data["macVendor"] && data["macVendor"].length > 0)
             {
                  $("td:eq(1)", row).html(data["hwaddr"]+"<br/>"+data["macVendor"]);
             }
@@ -136,7 +136,7 @@ $(document).ready(function() {
         "processing": true,
         "order" : [[5, "desc"]],
         "columns": [
-            {data: "ip", "width" : "10%", "render": $.fn.dataTable.render.text() },
+            {data: "ip", "type": "ip-address", "width" : "10%", "render": $.fn.dataTable.render.text() },
             {data: "hwaddr", "width" : "10%", "render": $.fn.dataTable.render.text() },
             {data: "interface", "width" : "4%", "render": $.fn.dataTable.render.text() },
             {data: "name", "width" : "15%", "render": $.fn.dataTable.render.text() },
