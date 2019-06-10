@@ -71,7 +71,16 @@ if(isset($_GET["network"]) && $auth)
 	$results = $db->query('SELECT * FROM network');
 
 	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
+	{
+		$id = $res["id"];
+		$ipaddr = array();
+		$ips = $db->query("SELECT ip FROM network_addresses WHERE id = $id");
+		while($ips !== false && $ip = $ips->fetchArray(SQLITE3_ASSOC))
+			array_push($ipaddr,$ip["ip"]);
+		if(count($ipaddr) > 0)
+			$res["ip"] = $ipaddr;
 		array_push($network, $res);
+	}
 
 	$data = array_merge($data, array('network' => $network));
 }
