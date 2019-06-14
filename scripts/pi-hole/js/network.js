@@ -8,6 +8,9 @@ var tableApi;
 
 var APIstring = "api_db.php?network";
 
+// How many IPs do we show at most per device?
+var MAXIPDISPLAY = 3;
+
 function refreshData() {
     tableApi.ajax.url(APIstring).load();
 }
@@ -113,12 +116,15 @@ $(document).ready(function() {
              // Set number of queries to localized string (add thousand separators)
              $("td:eq(6)", row).html(data["numQueries"].toLocaleString());
 
-            // Client -> jump to Query Log on click
-            $("td:eq(0)", row).click( function () { openInNewTab("/admin/queries.php?client="+this.innerHTML); } );
-            $("td:eq(0)", row).css("cursor","pointer");
-            $("td:eq(0)", row).hover(
-              function () { this.title="Click to show recent queries made by "+this.innerHTML; this.style.color="#72afd2"; },
-              function () { this.style.color=""; } );
+            var ips = data["ip"];
+            var shortips = ips;
+            if(ips.length > MAXIPDISPLAY)
+            {
+                shortips = ips.slice(0,MAXIPDISPLAY-1);
+                shortips.push("...");
+            }
+            $("td:eq(0)", row).html(shortips.join("<br>"));
+            $("td:eq(0)", row).hover(function () { this.title=ips.join("\n");});
 
             // MAC + Vendor field if available
             if(data["macVendor"] && data["macVendor"].length > 0)
