@@ -74,7 +74,7 @@ if(isset($_GET["network"]) && $auth)
 	{
 		$id = $res["id"];
 		$ipaddr = array();
-		$ips = $db->query("SELECT ip FROM network_addresses WHERE id = $id");
+		$ips = $db->query("SELECT ip FROM network_addresses WHERE network_id = $id");
 		while($ips !== false && $ip = $ips->fetchArray(SQLITE3_ASSOC))
 			array_push($ipaddr,$ip["ip"]);
 		if(count($ipaddr) > 0)
