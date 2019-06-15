@@ -404,9 +404,16 @@ if (isset($_GET['getGraphData']) && $auth)
 				if($max === null || $max < $row[0])
 					$max = $row[0];
 
-				// Get the non-zero graph data
+				// $data[timestamp] = value_in_this_interval
 				$data[$row[0]] = intval($row[1]);
 			}
+
+			// Fall back to $from and $until if we read
+			// no data in the fetchArray while loop above
+			if($min === null)
+				$min = $from;
+			if($max === null)
+				$max = $until;
 
 			// Fill the missing intervals with zero
 			for($i = min($min,$from); $i < max($max,$until); $i += $interval) {
