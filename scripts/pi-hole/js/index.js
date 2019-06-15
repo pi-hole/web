@@ -261,15 +261,16 @@ function updateClientsOverTime() {
             return;
         }
 
-        // convert received objects to arrays
-        data.over_time = objectToArray(data.over_time);
-
         // Remove graph if there are no results (e.g. privacy mode enabled)
         if(jQuery.isEmptyObject(data.over_time))
         {
             $("#clients").parent().remove();
             return;
         }
+
+        // convert received objects to arrays
+        data.over_time = objectToArray(data.over_time);
+
         // remove last data point since it not representative
         data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
