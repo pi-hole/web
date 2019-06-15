@@ -73,10 +73,17 @@ if(isset($_GET["network"]) && $auth)
 	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
 	{
 		$id = $res["id"];
+		// Backup IP column of this request in case we want to reuse it further down
+		$resip = $res["ip"];
+		// Empty array for holding the IP addresses
 		$res["ip"] = array();
+		// Get IP addresses for this device
 		$ips = $db->query("SELECT ip FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC");
 		while($ips !== false && $ip = $ips->fetchArray(SQLITE3_ASSOC))
 			array_push($res["ip"],$ip["ip"]);
+		// If the network_addresses table does not contain any IPs for this client, we use the IP stored in the network table
+		if(count($res) < 1)
+			array_push($res["ip"],$resip);
 		array_push($network, $res);
 	}
 
