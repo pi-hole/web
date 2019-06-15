@@ -73,12 +73,10 @@ if(isset($_GET["network"]) && $auth)
 	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
 	{
 		$id = $res["id"];
-		$ipaddr = array();
+		$res["ip"] = array();
 		$ips = $db->query("SELECT ip FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC");
 		while($ips !== false && $ip = $ips->fetchArray(SQLITE3_ASSOC))
-			array_push($ipaddr,$ip["ip"]);
-		if(count($ipaddr) > 0)
-			$res["ip"] = $ipaddr;
+			array_push($res["ip"],$ip["ip"]);
 		array_push($network, $res);
 	}
 
