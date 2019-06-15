@@ -82,7 +82,7 @@ if(isset($_GET["network"]) && $auth)
 		while($ips !== false && $ip = $ips->fetchArray(SQLITE3_ASSOC))
 			array_push($res["ip"],$ip["ip"]);
 		// If the network_addresses table does not contain any IPs for this client, we use the IP stored in the network table
-		if(count($res) < 1)
+		if(count($res["ip"]) < 1)
 			array_push($res["ip"],$resip);
 		array_push($network, $res);
 	}
