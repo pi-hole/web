@@ -868,11 +868,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                    determine the names of devices on your local network.  As a
                                                    result, tables such as Top Clients will only show IP addresses.</p>
                                                 <p>One solution for this is to configure Pi-hole to forward these
-	                                                 requests to your home router, but only for devices on your
+	                                                 requests to your DHCP server (most likely your router), but only for devices on your
 	                                                 home network.  To configure this we will need to know the IP
-	                                                 address of your router and the name of your local network.</p>
+	                                                 address of your DHCP server and the name of your local network.</p>
                                                 <p>Note: The local domain name must match the domain name specified
-	                                                 in your router, likely found within the DHCP settings.</p>
+                                                        in your DHCP server, likely found within the DHCP settings.</p>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="conditionalForwarding" value="conditionalForwarding"
