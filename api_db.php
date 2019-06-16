@@ -382,6 +382,13 @@ if (isset($_GET['getGraphData']) && $auth)
 	$from = intval((intval($_GET['from'])/$interval)*$interval);
 	$until = intval((intval($_GET['until'])/$interval)*$interval);
 
+	// Count permitted queries in intervals
+	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status != 0 )'.$limit.' GROUP by interval ORDER by interval');
+	$stmt->bindValue(":from", $from, SQLITE3_INTEGER);
+	$stmt->bindValue(":until", $until, SQLITE3_INTEGER);
+	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
+	$results = $stmt->execute();
+
 	// Parse the DB result into graph data, filling in missing interval sections with zero
 	function parseDBData($results, $interval, $from, $until) {
 		$data = array();
@@ -403,13 +410,6 @@ if (isset($_GET['getGraphData']) && $auth)
 
 		return $data;
 	}
-
-	// Count permitted queries in intervals
-	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status != 0 )'.$limit.' GROUP by interval ORDER by interval');
-	$stmt->bindValue(":from", $from, SQLITE3_INTEGER);
-	$stmt->bindValue(":until", $until, SQLITE3_INTEGER);
-	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
-	$results = $stmt->execute();
 
 	$domains = parseDBData($results, $interval, $from, $until);
 
