@@ -378,45 +378,24 @@ if (isset($_GET['getGraphData']) && $auth)
 			$interval = $q;
 	}
 
-	$from = intval($_GET['from']);
-	$until = intval($_GET['until']);
+	// Round $from and $until to match the requested $interval
+	$from = intval((intval($_GET['from'])/$interval)*$interval);
+	$until = intval((intval($_GET['until'])/$interval)*$interval);
 
-	// Count permitted queries in intervals
-	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status != 0 )'.$limit.' GROUP by interval ORDER by interval');
-	$stmt->bindValue(":from", $from, SQLITE3_INTEGER);
-	$stmt->bindValue(":until", $until, SQLITE3_INTEGER);
-	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
-	$results = $stmt->execute();
-
-	// Parse the DB result into graph data, filling in missing sections with zero
+	// Parse the DB result into graph data, filling in missing interval sections with zero
 	function parseDBData($results, $interval, $from, $until) {
 		$data = array();
-		$min = null;
-		$max = null;
 
 		if(!is_bool($results)) {
 			// Read in the data
 			while($row = $results->fetchArray()) {
-				// Get min and max timestamps
-				if($min === null || $min > $row[0])
-					$min = $row[0];
-
-				if($max === null || $max < $row[0])
-					$max = $row[0];
-
 				// $data[timestamp] = value_in_this_interval
 				$data[$row[0]] = intval($row[1]);
 			}
 
-			// Fall back to $from and $until if we read
-			// no data in the fetchArray while loop above
-			if($min === null)
-				$min = $from;
-			if($max === null)
-				$max = $until;
-
 			// Fill the missing intervals with zero
-			for($i = min($min,$from); $i < max($max,$until); $i += $interval) {
+			// Advance in steps of interval
+			for($i = $from; $i < $until; $i += $interval) {
 				if(!array_key_exists($i, $data))
 					$data[$i] = 0;
 			}
@@ -424,6 +403,13 @@ if (isset($_GET['getGraphData']) && $auth)
 
 		return $data;
 	}
+
+	// Count permitted queries in intervals
+	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status != 0 )'.$limit.' GROUP by interval ORDER by interval');
+	$stmt->bindValue(":from", $from, SQLITE3_INTEGER);
+	$stmt->bindValue(":until", $until, SQLITE3_INTEGER);
+	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
+	$results = $stmt->execute();
 
 	$domains = parseDBData($results, $interval, $from, $until);
 
