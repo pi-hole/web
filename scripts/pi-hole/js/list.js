@@ -14,7 +14,8 @@ var fullName = listType === "white" ? "Whitelist" : "Blacklist";
 
 function addListEntry(entry, index, list, button, type)
 {
-    var used = entry.enabled === "1" ? "used" : "not-used";
+    var used = (entry.enabled === "1" && entry.group_enabled === "1") ? "used" : "not-used";
+    var groupmessage = entry.group_enabled === "1" ? "" : "(disabled due to group)";
     var comment = entry.comment.length > 0 ? "&nbsp;-&nbsp;" + entry.comment : "";
     var date_added = new Date(parseInt(entry.date_added)*1000);
     var date_modified = new Date(parseInt(entry.date_modified)*1000);
@@ -23,7 +24,7 @@ function addListEntry(entry, index, list, button, type)
     list.append(
         "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" +
         "<span title=\"" + tooltip + "\" data-toggle=\"tooltip\" data-placement=\"right\">" +
-        entry.domain + comment + "</span>" +
+        entry.domain + comment + " " + groupmessage + "</span>" +
         "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
         "<span class=\"glyphicon glyphicon-trash\"></span></button></li>"
     );

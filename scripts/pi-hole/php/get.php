@@ -20,7 +20,7 @@ $db = SQLite3_connect($GRAVITYDB);
 function getTableContent($listname) {
 	global $db;
 	$entries = array();
-	$results = $db->query("SELECT * FROM $listname");
+	$results = $db->query("SELECT a.*,b.enabled AS group_enabled FROM $listname a INNER JOIN domain_groups b ON b.id = a.group_id");
 
 	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
 	{
