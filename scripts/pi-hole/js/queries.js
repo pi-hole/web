@@ -350,21 +350,45 @@ $(document).ready(function() {
             // Query type IPv4 / IPv6
             api.$("td:eq(1)").click( function () { if(autofilter()){ api.search( this.innerHTML ).draw(); $("#resetButton").show(); }});
             api.$("td:eq(1)").hover(
-              function () { this.title="Click to show only "+this.innerHTML+" queries"; this.style.color="#72afd2"; },
+              function () {
+                  if(autofilter()) {
+                      this.title = "Click to show only " + this.innerHTML + " queries";
+                      this.style.color = "#72afd2";
+                  } else {
+                      this.title = "";
+                      this.style.color = "";
+                  }
+              },
               function () { this.style.color=""; }
             );
             api.$("td:eq(1)").css("cursor","pointer");
             // Domain
             api.$("td:eq(2)").click( function () { if(autofilter()){ api.search( this.innerHTML ).draw(); $("#resetButton").show(); }});
             api.$("td:eq(2)").hover(
-              function () { this.title="Click to show only queries with domain "+this.innerHTML; this.style.color="#72afd2"; },
+              function () {
+                  if(autofilter()) {
+                      this.title = "Click to show only queries with domain " + this.innerHTML;
+                      this.style.color = "#72afd2";
+                  } else {
+                      this.title = "";
+                      this.style.color = "";
+                  }
+              },
               function () { this.style.color=""; }
             );
             api.$("td:eq(2)").css("cursor","pointer");
             // Client
             api.$("td:eq(3)").click( function () { if(autofilter()){ api.search( this.innerHTML ).draw(); $("#resetButton").show(); }});
             api.$("td:eq(3)").hover(
-              function () { this.title="Click to show only queries made by "+this.innerHTML; this.style.color="#72afd2"; },
+              function () {
+                  if(autofilter()) {
+                      this.title = "Click to show only queries made by " + this.innerHTML;
+                      this.style.color = "#72afd2";
+                  } else {
+                      this.title = "";
+                      this.style.color = "";
+                  }
+              },
               function () { this.style.color=""; }
             );
             api.$("td:eq(3)").css("cursor","pointer");
