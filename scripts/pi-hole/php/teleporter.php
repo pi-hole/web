@@ -8,17 +8,41 @@
 
 require "password.php";
 require "auth.php"; // Also imports func.php
+require "database.php";
 
 if (php_sapi_name() !== "cli") {
 	if(!$auth) die("Not authorized");
 	check_csrf(isset($_POST["token"]) ? $_POST["token"] : "");
 }
 
+$db = SQLite3_connect(getGravityDBFilename());
+
 function archive_add_file($path,$name,$subdir="")
 {
 	global $archive;
 	if(file_exists($path.$name))
 		$archive[$subdir.$name] = file_get_contents($path.$name);
+}
+
+/**
+ * Add the contents of a table to the archive
+ *
+ * @param $name string The name of the file in the archive to save the table to
+ * @param $table string The table to export
+ * @param $column string The column on the table to export
+ */
+function archive_add_table($name, $table, $column)
+{
+	global $archive, $db;
+
+	$results = $db->query("SELECT $column FROM $table");
+	$content = "";
+
+	while($row = $results->fetchArray()) {
+		$content .= $row[0]."\n";
+	}
+
+	$archive[$name] = $content;
 }
 
 function archive_add_directory($path,$subdir="")
@@ -125,11 +149,12 @@ if(isset($_POST["action"]))
 
 			if(isset($_POST["regexlist"]) && $file->getFilename() === "regex.list")
 			{
-				$regexraw = file_get_contents($file);
-				$regexlist = process_file($regexraw,false);
+				$regexlist = process_file(file_get_contents($file),false);
 				echo "Processing regex.list (".count($regexlist)." entries)<br>\n";
-				// NULL = overwrite (or create) the regex filter file
-				add_regex($regexraw, NULL,"");
+
+				$escapedRegexlist = array_map("escapeshellcmd", $regexlist);
+				exec("sudo pihole --regex -nr --nuke");
+				exec("sudo pihole --regex -q -nr ".implode(" ", $escapedRegexlist));
 				$importedsomething = true;
 			}
 
@@ -176,19 +201,19 @@ else
 		exit("cannot open/create ".htmlentities($archive_file_name)."<br>\nPHP user: ".exec('whoami')."\n");
 	}
 
-	archive_add_file("/etc/pihole/","whitelist.txt");
-	archive_add_file("/etc/pihole/","blacklist.txt");
-	archive_add_file("/etc/pihole/","adlists.list");
+	archive_add_table("whitelist.txt", "whitelist", "domain");
+	archive_add_table("blacklist.txt", "blacklist", "domain");
+	archive_add_table("regex.list", "regex", "domain");
+	archive_add_table("adlists.list", "adlist", "address");
 	archive_add_file("/etc/pihole/","setupVars.conf");
 	archive_add_file("/etc/pihole/","auditlog.list");
-	archive_add_file("/etc/pihole/","regex.list");
 	archive_add_directory("/etc/dnsmasq.d/","dnsmasq.d/");
 
 	$archive->compress(Phar::GZ); // Creates a gziped copy
 	unlink($archive_file_name); // Unlink original tar file as it is not needed anymore
 	$archive_file_name .= ".gz"; // Append ".gz" extension to ".tar"
 
-	header("Content-type: application/zip");
+	header("Content-type: application/gzip");
 	header('Content-Transfer-Encoding: binary');
 	header("Content-Disposition: attachment; filename=".$filename);
 	header("Content-length: " . filesize($archive_file_name));
