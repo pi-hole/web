@@ -174,7 +174,7 @@ function readAdlists()
 	$db = SQLite3_connect(getGravityDBFilename());
 	if ($db)
 	{
-		$results = $db->query("SELECT * FROM adlists");
+		$results = $db->query("SELECT * FROM adlist");
 
 		while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
 		{
