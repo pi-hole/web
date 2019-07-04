@@ -82,19 +82,19 @@ $(".confirm-flushlogs").confirm({
 	dialogClass: "modal-dialog modal-mg"
 });
 
-$(".confirm-disablelogging").confirm({
-	text: "Are you sure you want to disable logging and flush your Pi-hole logs?",
+$(".confirm-flusharp").confirm({
+	text: "Are you sure you want to flush your network table?",
 	title: "Confirmation required",
 	confirm(button) {
-		$("#disablelogsform").submit();
+		$("#flusharpform").submit();
 	},
 	cancel(button) {
 		// nothing to do
 	},
-	confirmButton: "Yes, disable logs and flush my logs",
+	confirmButton: "Yes, flush my network table",
 	cancelButton: "No, go back",
 	post: true,
-	confirmButtonClass: "btn-danger",
+	confirmButtonClass: "btn-warning",
 	cancelButtonClass: "btn-success",
 	dialogClass: "modal-dialog modal-mg"
 });
