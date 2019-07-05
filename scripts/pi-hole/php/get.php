@@ -20,14 +20,18 @@ $db = SQLite3_connect($GRAVITYDB);
 function getTableContent($listname) {
 	global $db;
 	$entries = array();
-	$results = $db->query("SELECT a.*,b.enabled AS group_enabled FROM $listname a INNER JOIN domain_groups b ON b.id = a.group_id");
+	$querystr = implode(" ",array("SELECT DISTINCT ${listname}.*,\"group\".enabled as group_enabled",
+	                              "FROM $listname",
+	                              "LEFT JOIN ${listname}_by_group ON ${listname}_by_group.whitelist_id = ${listname}.id",
+	                              "LEFT JOIN \"group\" ON \"group\".id = ${listname}_by_group.group_id;"));
+	$results = $db->query($querystr);
 
 	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
 	{
 		array_push($entries, $res);
 	}
 
-	return array($listname => $entries);
+	return array($listname => $entries, "querystring" => $querystr);
 }
 
 function filterArray(&$inArray) {
