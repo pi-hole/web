@@ -51,7 +51,7 @@ switch($type) {
         echo shell_exec("sudo pihole --wild --web ".$domains);
         break;
     case "audit":
-        echo exec("sudo pihole -a audit ".$domain);
+        echo shell_exec("sudo pihole -a audit ".$domains);
         break;
 }
 
