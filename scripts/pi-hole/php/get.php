@@ -20,10 +20,11 @@ $db = SQLite3_connect($GRAVITYDB);
 function getTableContent($listname) {
 	global $db;
 	$entries = array();
-	$querystr = implode(" ",array("SELECT DISTINCT ${listname}.*,\"group\".enabled as group_enabled",
+	$querystr = implode(" ",array("SELECT ${listname}.*,\"group\".enabled as group_enabled",
 	                              "FROM $listname",
 	                              "LEFT JOIN ${listname}_by_group ON ${listname}_by_group.whitelist_id = ${listname}.id",
-	                              "LEFT JOIN \"group\" ON \"group\".id = ${listname}_by_group.group_id;"));
+	                              "LEFT JOIN \"group\" ON \"group\".id = ${listname}_by_group.group_id",
+	                              "GROUP BY domain;"));
 	$results = $db->query($querystr);
 
 	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
