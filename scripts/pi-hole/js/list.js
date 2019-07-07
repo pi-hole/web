@@ -14,8 +14,17 @@ var fullName = listType === "white" ? "Whitelist" : "Blacklist";
 
 function addListEntry(entry, index, list, button, type)
 {
-    var used = entry.enabled === "1" ? "used" : "not-used";
+    var disabled = [];
+    if(entry.enabled === "0")
+       disabled.push("individual");
+    // For entry.group_enabled we either get "0" (= disabled by a group),
+    // "1" (= enabled by a group), or "" (= not managed by a group)
+    if(entry.group_enabled === "0")
+        disabled.push("group");
+
+    var used = disabled.length === 0 ? "used" : "not-used";
     var comment = entry.comment.length > 0 ? "&nbsp;-&nbsp;" + entry.comment : "";
+    var disabled_message = disabled.length > 0 ? "&nbsp;-&nbsp;disabled due to " + disabled.join(" + ") + " setting" : "";
     var date_added = new Date(parseInt(entry.date_added)*1000);
     var date_modified = new Date(parseInt(entry.date_modified)*1000);
     var tooltip = "Added: " + date_added.toLocaleString() +
@@ -23,7 +32,7 @@ function addListEntry(entry, index, list, button, type)
     list.append(
         "<li id=\"" + index + "\" class=\"list-group-item " + used + " clearfix\">" +
         "<span title=\"" + tooltip + "\" data-toggle=\"tooltip\" data-placement=\"right\">" +
-        entry.domain + comment + "</span>" +
+        entry.domain + comment + disabled_message + "</span>" +
         "<button class=\"btn btn-danger btn-xs pull-right\" type=\"button\">" +
         "<span class=\"glyphicon glyphicon-trash\"></span></button></li>"
     );
