@@ -32,7 +32,7 @@ function getTableContent($listname) {
 		array_push($entries, $res);
 	}
 
-	return array($listname => $entries, "querystring" => $querystr);
+	return array($listname => $entries);
 }
 
 function filterArray(&$inArray) {
