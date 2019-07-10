@@ -581,6 +581,7 @@ function readAdlists()
 						if($lease["host"] === $hostname)
 						{
 							$error .= "Static lease for hostname (".htmlspecialchars($hostname).") already defined!<br>";
+							break;
 						}
 					}
 
