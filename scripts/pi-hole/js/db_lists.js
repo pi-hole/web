@@ -59,7 +59,7 @@ function escapeHtml(text) {
 
 function updateTopClientsChart() {
     $("#client-frequency .overlay").show();
-    $.getJSON("api_db.php?topClients&from="+from+"&until="+until, function(data) {
+    $.getJSON("api_db.php?topClients", {from: from, until: until, limit: $("#querylimit").val()}, function(data) {
 
         // Clear tables before filling them with data
         $("#client-frequency td").parent().remove();
@@ -113,7 +113,7 @@ function updateTopClientsChart() {
 
 function updateTopDomainsChart() {
     $("#domain-frequency .overlay").show();
-    $.getJSON("api_db.php?topDomains&from="+from+"&until="+until, function(data) {
+    $.getJSON("api_db.php?topDomains", {from: from, until: until, limit: $("#querylimit").val()}, function(data) {
 
         // Clear tables before filling them with data
         $("#domain-frequency td").parent().remove();
@@ -155,7 +155,7 @@ function updateTopDomainsChart() {
 
 function updateTopAdsChart() {
     $("#ad-frequency .overlay").show();
-    $.getJSON("api_db.php?topAds&from="+from+"&until="+until, function(data) {
+    $.getJSON("api_db.php?topAds", {from: from, until: until, limit: $("#querylimit").val()}, function(data) {
 
         // Clear tables before filling them with data
         $("#ad-frequency td").parent().remove();
@@ -194,10 +194,21 @@ function updateTopAdsChart() {
 }
 
 $("#querytime").on("apply.daterangepicker", function(ev, picker) {
-    $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
+    callUpdate();
+});
+
+
+$("#submit").click(function(){
+    callUpdate()
+});
+
+function callUpdate(){
+    var picker = $('#querytime').data('daterangepicker');
+
+    $("#querytime").val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
     timeoutWarning.show();
     listsStillLoading = 3;
     updateTopClientsChart();
     updateTopDomainsChart();
     updateTopAdsChart();
-});
+}

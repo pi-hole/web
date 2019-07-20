@@ -24,8 +24,8 @@ $token = $_SESSION['token'];
 
 
 <div class="row">
-    <div class="col-md-12">
-<!-- Date Input -->
+  <div class="col-md-12 form-inline" style="margin-bottom:15px">
+      <!-- Date Input -->
       <div class="form-group">
         <label>Date and time range:</label>
 
@@ -33,10 +33,22 @@ $token = $_SESSION['token'];
           <div class="input-group-addon">
             <i class="far fa-clock"></i>
           </div>
-          <input type="text" class="form-control pull-right" id="querytime" value="Click to select date and time range">
+          <input type="text" class="form-control pull-right" id="querytime" value="Click to select date and time range" size="40">
         </div>
         <!-- /.input group -->
       </div>
+    
+      <!-- Limit Input -->
+
+      <div class="form-group">
+        <label>Limit results:</label>
+        <input type="text" class="form-control" id="querylimit" value="10" size="5">
+      </div>
+
+      <div class="form-group">
+        <button id="submit" class="btn btn-default">Submit</button>
+      </div>
+      
     </div>
 </div>
 

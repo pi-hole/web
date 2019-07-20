@@ -156,6 +156,23 @@ if (isset($_GET['getAllQueries']) && $auth)
 	$data = array_merge($data, $result);
 }
 
+
+
+
+$limitValue = 10;
+if(isset($_GET['limit'])){
+	$limitValue = (int)$_GET['limit'];
+}
+
+$limitClause = '';
+$limitClause2x = '';
+if($limitValue != 0){
+	$limitClause = ' LIMIT ' . $limitValue;
+	//Some queries needs more DB results because of case-sesitive behaviour
+	$limitClause2x = ' LIMIT ' . $limitValue * 2;
+}
+
+
 if (isset($_GET['topClients']) && $auth)
 {
 	// $from = intval($_GET["from"]);
@@ -172,7 +189,12 @@ if (isset($_GET['topClients']) && $auth)
 	{
 		$limit = "WHERE timestamp <= :until";
 	}
-	$stmt = $db->prepare('SELECT client,count(client) FROM queries '.$limit.' GROUP by client order by count(client) desc limit 20');
+	$stmt = $db->prepare('SELECT client,count(client) 
+						FROM queries '
+						.$limit
+						.' GROUP by client '
+						.' ORDER by count(client) desc ' 
+						. $limitClause2x);
 	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
 	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
@@ -200,8 +222,10 @@ if (isset($_GET['topClients']) && $auth)
 	// Sort by number of hits
 	arsort($clientnums);
 
-	// Extract only the first ten entries
-	$clientnums = array_slice($clientnums, 0, 10);
+	// Extract only the first entries
+	if($limitValue){
+		$clientnums = array_slice($clientnums, 0, $limitValue);
+	}
 
 	$result = array('top_sources' => $clientnums);
 	$data = array_merge($data, $result);
@@ -223,7 +247,16 @@ if (isset($_GET['topDomains']) && $auth)
 	{
 		$limit = " AND timestamp <= :until";
 	}
-	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE (STATUS == 2 OR STATUS == 3)'.$limit.' GROUP by domain order by count(domain) desc limit 20');
+
+	$sql = 'SELECT domain,count(domain) 
+			FROM queries 
+			WHERE (STATUS == 2 OR STATUS == 3)' . $limit
+			. ' GROUP BY domain'
+			. ' ORDER BY count(domain) desc'
+			. $limitClause2x;
+
+
+	$stmt = $db->prepare($sql);
 	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
 	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
@@ -250,8 +283,10 @@ if (isset($_GET['topDomains']) && $auth)
 	// Sort by number of hits
 	arsort($domains);
 
-	// Extract only the first ten entries
-	$domains = array_slice($domains, 0, 10);
+	// Extract only the first entries
+	if($limitValue){
+		$domains = array_slice($domains, 0, $limitValue);
+	}
 
 	$result = array('top_domains' => $domains);
 	$data = array_merge($data, $result);
@@ -273,7 +308,17 @@ if (isset($_GET['topAds']) && $auth)
 	{
 		$limit = " AND timestamp <= :until";
 	}
-	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE (STATUS == 1 OR STATUS == 4)'.$limit.' GROUP by domain order by count(domain) desc limit 10');
+
+
+	$sql = 'SELECT domain,count(domain) 
+			FROM queries 
+			WHERE (STATUS == 1 OR STATUS == 4)' . $limit
+			. ' GROUP by domain '
+			. ' ORDER by count(domain) desc'
+			. $limitClause;
+
+
+	$stmt = $db->prepare($sql);
 	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
 	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
