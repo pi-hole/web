@@ -151,15 +151,10 @@ function sub(index, entry, arg) {
     });
 }
 
-function add(arg) {
-    var locallistType = listType;
+function add(type) {
     var domain = $("#domain");
     if(domain.val().length === 0){
         return;
-    }
-    if(arg === "wild")
-    {
-        locallistType = listType+"_wild";
     }
 
     var alInfo = $("#alInfo");
@@ -175,7 +170,7 @@ function add(arg) {
     $.ajax({
         url: "scripts/pi-hole/php/add.php",
         method: "post",
-        data: {"domain":domain.val().trim(), "list":locallistType, "token":token},
+        data: {"domain":domain.val().trim(), "list":type, "token":token},
         success: function(response) {
           if (response.indexOf(" already exists in ") !== -1) {
             alWarning.show();
@@ -232,15 +227,15 @@ $(document).keypress(function(e) {
 
 // Handle buttons
 $("#btnAdd").on("click", function() {
-    add("exact");
+    add(listType);
 });
 
 $("#btnAddWildcard").on("click", function() {
-    add("wild");
+    add(listType+"_wild");
 });
 
 $("#btnAddRegex").on("click", function() {
-    add("regex");
+    add(listType+"_regex");
 });
 
 $("#btnRefresh").on("click", function() {
