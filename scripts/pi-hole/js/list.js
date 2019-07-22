@@ -119,13 +119,16 @@ function refresh(fade) {
 window.onload = refresh(false);
 
 function sub(index, entry, arg) {
-    var domain = $("#list #"+index);
+    var list = "#list";
+    var heading = "#h3-exact";
     var locallistType = listType;
     if(arg === "black_regex" || arg === "white_regex")
     {
+        list = "#list-regex";
+        heading = "#h3-regex";
         locallistType = arg;
-        domain = $("#list-regex #"+index);
     }
+    var domain = $(list+" #"+index);
     domain.hide("highlight");
     $.ajax({
         url: "scripts/pi-hole/php/sub.php",
@@ -136,6 +139,10 @@ function sub(index, entry, arg) {
                 return;
             }
             domain.remove();
+            if($(list+" li").length < 1)
+            {
+                $(heading).hide();
+            }
         },
         error: function(jqXHR, exception) {
             alert("Failed to remove the domain!");
