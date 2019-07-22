@@ -75,7 +75,6 @@ function refresh(fade) {
             }
             else
             {
-                $("h3").show();
                 if(listType === "white")
                 {
                     data = response.whitelist.sort();
@@ -86,12 +85,20 @@ function refresh(fade) {
                     data = response.blacklist.sort();
                     data2 = response.regex_blacklist.sort();
                 }
+
+                if(data.length > 0)
+                {
+                    $("#h3-exact").show();
+                }
+                if(data2.length > 0)
+                {
+                    $("#h3-regex").show();
+                }
+
                 data.forEach(function (entry, index)
                 {
                     addListEntry(entry, index, list, "#list", "exact");
                 });
-
-                // Add regex domains if present in returned list data
                 data2.forEach(function (entry, index)
                 {
                     addListEntry(entry, index, listw, "#list-regex", listType+"_regex");
