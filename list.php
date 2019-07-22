@@ -35,13 +35,9 @@ function getFullName() {
 <div class="form-group input-group">
     <input id="domain" type="text" class="form-control" placeholder="Add a domain (example.com or sub.example.com)">
     <span class="input-group-btn">
-    <?php if($list === "black") { ?>
         <button id="btnAdd" class="btn btn-default" type="button">Add (exact)</button>
         <button id="btnAddWildcard" class="btn btn-default" type="button">Add (wildcard)</button>
         <button id="btnAddRegex" class="btn btn-default" type="button">Add (regex)</button>
-    <?php }else{ ?>
-        <button id="btnAdd" class="btn btn-default" type="button">Add</button>
-    <?php } ?>
         <button id="btnRefresh" class="btn btn-default" type="button"><i class="fa fa-sync"></i></button>
     </span>
 </div>
@@ -66,14 +62,10 @@ function getFullName() {
 
 
 <!-- Domain List -->
-<?php if($list === "black") { ?>
 <h3>Exact blocking</h3>
-<?php } ?>
 <ul class="list-group" id="list"></ul>
-<?php if($list === "black") { ?>
 <h3><a href="https://docs.pi-hole.net/ftldns/regex/overview/" target="_blank" title="Click for Pi-hole Regex documentation">Regex</a> &amp; Wildcard blocking</h3>
 <ul class="list-group" id="list-regex"></ul>
-<?php } ?>
 
 <script src="scripts/pi-hole/js/list.js"></script>
 

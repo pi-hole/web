@@ -44,11 +44,17 @@ switch($type) {
             echo shell_exec("sudo pihole -a audit ".$domains);
         }
         break;
-    case "regex":
+    case "black_regex":
         echo shell_exec("sudo pihole --regex --web ".$domains);
         break;
-    case "wild":
+    case "white_regex":
+        echo shell_exec("sudo pihole --whiteregex --web ".$domains);
+        break;
+    case "black_wild":
         echo shell_exec("sudo pihole --wild --web ".$domains);
+        break;
+    case "white_wild":
+        echo shell_exec("sudo pihole --whitewild --web ".$domains);
         break;
     case "audit":
         echo shell_exec("sudo pihole -a audit ".$domains);

@@ -43,12 +43,8 @@ function addListEntry(entry, index, list, button, type)
 }
 
 function refresh(fade) {
-    var listw;
     var list = $("#list");
-    if(listType === "black")
-    {
-        listw = $("#list-regex");
-    }
+    var listw = $("#list-regex");
     if(fade) {
         list.fadeOut(100);
         if(listw)
@@ -69,9 +65,10 @@ function refresh(fade) {
 
             if((listType === "black" &&
                response.blacklist.length === 0 &&
-               response.regex.length === 0) ||
+               response.regex_blacklist.length === 0) ||
                (listType === "white" &&
-               response.whitelist.length === 0))
+               response.whitelist.length === 0 &&
+               response.regex_whitelist.length === 0))
             {
                 $("h3").hide();
                 list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
@@ -82,12 +79,12 @@ function refresh(fade) {
                 if(listType === "white")
                 {
                     data = response.whitelist.sort();
-                    data2 = []; // No regex data, use empty array
+                    data2 = response.regex_whitelist.sort();
                 }
                 else if(listType === "black")
                 {
                     data = response.blacklist.sort();
-                    data2 = response.regex.sort();
+                    data2 = response.regex_blacklist.sort();
                 }
                 data.forEach(function (entry, index)
                 {
@@ -97,7 +94,7 @@ function refresh(fade) {
                 // Add regex domains if present in returned list data
                 data2.forEach(function (entry, index)
                 {
-                    addListEntry(entry, index, listw, "#list-regex", "regex");
+                    addListEntry(entry, index, listw, "#list-regex", listType+"_regex");
                 });
             }
             list.fadeIn(100);
@@ -117,9 +114,9 @@ window.onload = refresh(false);
 function sub(index, entry, arg) {
     var domain = $("#list #"+index);
     var locallistType = listType;
-    if(arg === "regex")
+    if(arg === "black_regex" || arg === "white_regex")
     {
-        locallistType = "regex";
+        locallistType = arg;
         domain = $("#list-regex #"+index);
     }
     domain.hide("highlight");
@@ -143,14 +140,12 @@ function sub(index, entry, arg) {
 function add(arg) {
     var locallistType = listType;
     var domain = $("#domain");
-    var wild = false;
     if(domain.val().length === 0){
         return;
     }
-    if(arg === "wild" || arg === "regex")
+    if(arg === "wild")
     {
-        locallistType = arg;
-        wild = true;
+        locallistType = listType+"_wild";
     }
 
     var alInfo = $("#alInfo");

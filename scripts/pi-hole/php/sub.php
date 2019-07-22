@@ -18,7 +18,7 @@ if (empty($api)) {
 
 // Don't check if the added item is a valid domain for regex expressions.
 // Regex filters are validated by FTL on import and skipped if invalid
-if($type !== "regex") {
+if($type !== "black_regex" && $type !== "white_regex") {
     check_domain();
 }
 
@@ -27,13 +27,16 @@ $domain = escapeshellcmd($_POST['domain']);
 
 switch($type) {
     case "white":
-        exec("sudo pihole -w -q -d ".$domain);
+        echo shell_exec("sudo pihole -w -q -d ".$domain);
         break;
     case "black":
-        exec("sudo pihole -b -q -d ".$domain);
+        echo shell_exec("sudo pihole -b -q -d ".$domain);
         break;
-    case "regex":
-        exec("sudo pihole --regex -q -d ".$domain);
+    case "black_regex":
+        echo shell_exec("sudo pihole --regex -q -d ".$domain);
+        break;
+    case "white_regex":
+        echo shell_exec("sudo pihole --whiteregex -q -d ".$domain);
         break;
 }
 
