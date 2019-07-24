@@ -316,11 +316,11 @@ if(isset($_POST["action"]))
 				echo "Processed domain_audit (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
+		}
 
-			if($importedsomething)
-			{
-				exec("sudo pihole restartdns");
-			}
+		if($importedsomething)
+		{
+			exec("sudo pihole restartdns");
 		}
 
 		unlink($fullfilename);
