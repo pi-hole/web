@@ -1182,6 +1182,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <button type="submit" class="btn btn-default" name="action"
                                                             value="in">Import
                                                     </button>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="flushtables" value="true"
+                                                                      checked>
+                                                            Flush tables during import</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

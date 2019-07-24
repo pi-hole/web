@@ -219,6 +219,8 @@ if(isset($_POST["action"]))
 
 		$importedsomething = false;
 
+		$flushtables = isset($_POST["flushtables"]);
+
 		foreach($archive as $file)
 		{
 			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.txt")
@@ -270,42 +272,42 @@ if(isset($_POST["action"]))
 
 			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.exact.json")
 			{
-				$num = archive_restore_table($file, "blacklist");
+				$num = archive_restore_table($file, "blacklist", $flushtables);
 				echo "Processed blacklist (exact) (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["regexlist"]) && $file->getFilename() === "blacklist.regex.json")
 			{
-				$num = archive_restore_table($file, "regex_blacklist");
+				$num = archive_restore_table($file, "regex_blacklist", $flushtables);
 				echo "Processed blacklist (regex) (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["whitelist"]) && $file->getFilename() === "whitelist.exact.json")
 			{
-				$num = archive_restore_table($file, "whitelist");
+				$num = archive_restore_table($file, "whitelist", $flushtables);
 				echo "Processed whitelist (exact) (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["regex_whitelist"]) && $file->getFilename() === "whitelist.regex.json")
 			{
-				$num = archive_restore_table($file, "regex_whitelist");
+				$num = archive_restore_table($file, "regex_whitelist", $flushtables);
 				echo "Processed whitelist (regex) (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["adlist"]) && $file->getFilename() === "adlist.json")
 			{
-				$num = archive_restore_table($file, "adlist");
+				$num = archive_restore_table($file, "adlist", $flushtables);
 				echo "Processed adlist (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["auditlog"]) && $file->getFilename() === "domain_audit.json")
 			{
-				$num = archive_restore_table($file, "domain_audit");
+				$num = archive_restore_table($file, "domain_audit", $flushtables);
 				echo "Processed domain_audit (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
