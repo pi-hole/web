@@ -15,7 +15,7 @@ if (php_sapi_name() !== "cli") {
 	check_csrf(isset($_POST["token"]) ? $_POST["token"] : "");
 }
 
-$db = SQLite3_connect(getGravityDBFilename());
+$db = SQLite3_connect(getGravityDBFilename(), SQLITE3_OPEN_READWRITE);
 
 function archive_add_file($path,$name,$subdir="")
 {
@@ -29,20 +29,112 @@ function archive_add_file($path,$name,$subdir="")
  *
  * @param $name string The name of the file in the archive to save the table to
  * @param $table string The table to export
- * @param $column string The column on the table to export
  */
-function archive_add_table($name, $table, $column)
+function archive_add_table($name, $table)
 {
 	global $archive, $db;
 
-	$results = $db->query("SELECT $column FROM $table");
-	$content = "";
+	$results = $db->query("SELECT * FROM $table");
 
-	while($row = $results->fetchArray()) {
-		$content .= $row[0]."\n";
+	// Return early without creating a file if th
+	// requested table cannot be accessed
+	if(is_null($results))
+		return;
+
+	$content = array();
+	while ($row = $results->fetchArray(SQLITE3_ASSOC))
+	{
+		array_push($content, $row);
 	}
 
-	$archive[$name] = $content;
+	$archive[$name] = json_encode($content);
+}
+
+/**
+ * Restore the contents of a table from an uploaded archive
+ *
+ * @param $file object The file of the file in the archive to restore the table from
+ * @param $table string The table to import
+ * @param $flush boolean Whether to flush the table before importing the archived data
+ */
+function archive_restore_table($file, $table, $flush=false)
+{
+	global $archive, $db;
+
+	$json_string = file_get_contents($file);
+	// Return early if we cannot extract the JSON string
+	if(is_null($json_string))
+		return 0;
+
+	$contents = json_decode($json_string, true);
+	// Return early if we cannot decode the JSON string
+	if(is_null($contents))
+		return 0;
+
+	// Flush table if requested
+	if($flush)
+		$db->exec("DELETE FROM ".$table);
+
+	// Prepare field name for domain/address depending on the table we restore to
+	if($table === "adlist")
+	{
+		$sql  = "INSERT OR IGNORE INTO adlist";
+		$sql  .= " (id,address,enabled,date_added,comment)";
+		$sql  .= " VALUES (:id,:address,:enabled,:date_added,:comment);";
+	}
+	elseif($table === "domain_audit")
+	{
+		$sql  = "INSERT OR IGNORE INTO domain_audit";
+		$sql  .= " (id,domain,date_added)";
+		$sql  .= " VALUES (:id,:domain,:date_added);";
+	}
+	else
+	{
+		$sql  = "INSERT OR IGNORE INTO ".$table;
+		$sql  .= " (id,domain,enabled,date_added,comment)";
+		$sql  .= " VALUES (:id,:domain,:enabled,:date_added,:comment);";
+	}
+
+	// Prepare SQLite statememt
+	$stmt = $db->prepare($sql);
+
+	// Return early if we prepare the SQLite statement
+	if(!$stmt)
+	{
+		echo "Failed to prepare statement for ".$table." table.";
+		echo $sql;
+		return 0;
+	}
+
+	// Loop over rows and inject the lines into the database
+	$num = 0;
+	foreach($contents as $row)
+	{
+		$stmt->bindValue(":id", $row["id"], SQLITE3_INTEGER);
+		$stmt->bindValue(":date_added", $row["date_added"], SQLITE3_INTEGER);
+
+		if($table === "adlist")
+			$stmt->bindValue(":address", $row["address"], SQLITE3_TEXT);
+		else
+			$stmt->bindValue(":domain", $row["domain"], SQLITE3_TEXT);
+
+		if($table !== "domain_audit")
+		{
+			$stmt->bindValue(":enabled", $row["enabled"], SQLITE3_INTEGER);
+			if(is_null($row["comment"]))
+				$type = SQLITE3_NULL;
+			else
+				$type = SQLITE3_TEXT;
+			$stmt->bindValue(":comment", $row["comment"], $type);
+		}
+
+		$stmt->execute();
+		$stmt->reset();
+		$stmt->clear();
+		$num++;
+	}
+
+	return $num;
 }
 
 function archive_add_directory($path,$subdir="")
@@ -176,6 +268,48 @@ if(isset($_POST["action"]))
 				exec("sudo pihole -a audit ".implode(" ",$auditlog));
 			}
 
+			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.exact.json")
+			{
+				$num = archive_restore_table($file, "blacklist");
+				echo "Processed blacklist (exact) (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["regexlist"]) && $file->getFilename() === "blacklist.regex.json")
+			{
+				$num = archive_restore_table($file, "regex_blacklist");
+				echo "Processed blacklist (regex) (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["whitelist"]) && $file->getFilename() === "whitelist.exact.json")
+			{
+				$num = archive_restore_table($file, "whitelist");
+				echo "Processed whitelist (exact) (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["regex_whitelist"]) && $file->getFilename() === "whitelist.regex.json")
+			{
+				$num = archive_restore_table($file, "regex_whitelist");
+				echo "Processed whitelist (regex) (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["adlist"]) && $file->getFilename() === "adlist.json")
+			{
+				$num = archive_restore_table($file, "adlist");
+				echo "Processed adlist (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["auditlog"]) && $file->getFilename() === "domain_audit.json")
+			{
+				$num = archive_restore_table($file, "domain_audit");
+				echo "Processed domain_audit (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
 			if($importedsomething)
 			{
 				exec("sudo pihole restartdns");
@@ -201,12 +335,13 @@ else
 		exit("cannot open/create ".htmlentities($archive_file_name)."<br>\nPHP user: ".exec('whoami')."\n");
 	}
 
-	archive_add_table("whitelist.txt", "whitelist", "domain");
-	archive_add_table("blacklist.txt", "blacklist", "domain");
-	archive_add_table("regex.list", "regex", "domain");
-	archive_add_table("adlists.list", "adlist", "address");
+	archive_add_table("whitelist.exact.json", "whitelist");
+	archive_add_table("whitelist.regex.json", "regex_whitelist");
+	archive_add_table("blacklist.exact.json", "blacklist");
+	archive_add_table("blacklist.regex.json", "regex_blacklist");
+	archive_add_table("adlists.json", "adlist");
+	archive_add_table("domain_audit.json", "domain_audit");
 	archive_add_file("/etc/pihole/","setupVars.conf");
-	archive_add_file("/etc/pihole/","auditlog.list");
 	archive_add_directory("/etc/dnsmasq.d/","dnsmasq.d/");
 
 	$archive->compress(Phar::GZ); // Creates a gziped copy
