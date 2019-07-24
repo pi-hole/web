@@ -59,7 +59,7 @@ function archive_add_table($name, $table)
  */
 function archive_restore_table($file, $table, $flush=false)
 {
-	global $archive, $db;
+	global $db;
 
 	$json_string = file_get_contents($file);
 	// Return early if we cannot extract the JSON string
@@ -128,12 +128,17 @@ function archive_restore_table($file, $table, $flush=false)
 			$stmt->bindValue(":comment", $row["comment"], $type);
 		}
 
-		$stmt->execute();
-		$stmt->reset();
-		$stmt->clear();
-		$num++;
+		if($stmt->execute() && $stmt->reset() && $stmt->clear())
+			$num++;
+		else
+		{
+			$stmt->close();
+			return $num;
+		}
 	}
 
+	// Close database connection and return number or processed rows
+	$stmt->close();
 	return $num;
 }
 
