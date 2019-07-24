@@ -82,11 +82,11 @@ function refresh(fade) {
 
                 if(data.length > 0)
                 {
-                    $("#h3-exact").show();
+                    $("#h3-exact").fadeIn(100);
                 }
                 if(data2.length > 0)
                 {
-                    $("#h3-regex").show();
+                    $("#h3-regex").fadeIn(100);
                 }
 
                 data.forEach(function (entry, index)
@@ -132,7 +132,7 @@ function sub(index, entry, arg) {
             domain.remove();
             if($(list+" li").length < 1)
             {
-                $(heading).hide();
+                $(heading).fadeOut(100);
             }
         },
         error: function(jqXHR, exception) {

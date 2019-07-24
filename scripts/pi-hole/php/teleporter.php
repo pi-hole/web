@@ -17,6 +17,8 @@ if (php_sapi_name() !== "cli") {
 
 $db = SQLite3_connect(getGravityDBFilename(), SQLITE3_OPEN_READWRITE);
 
+$flushed_tables = array();
+
 function archive_add_file($path,$name,$subdir="")
 {
 	global $archive;
@@ -59,7 +61,7 @@ function archive_add_table($name, $table)
  */
 function archive_restore_table($file, $table, $flush=false)
 {
-	global $db;
+	global $db, $flushed_tables;
 
 	$json_string = file_get_contents($file);
 	// Return early if we cannot extract the JSON string
@@ -71,9 +73,12 @@ function archive_restore_table($file, $table, $flush=false)
 	if(is_null($contents))
 		return 0;
 
-	// Flush table if requested
-	if($flush)
+	// Flush table if requested, only flush each table once
+	if($flush && !in_array($table, $flushed_tables))
+	{
 		$db->exec("DELETE FROM ".$table);
+		array_push($flushed_tables, $table);
+	}
 
 	// Prepare field name for domain/address depending on the table we restore to
 	if($table === "adlist")
@@ -142,6 +147,80 @@ function archive_restore_table($file, $table, $flush=false)
 	return $num;
 }
 
+/**
+ * Create table rows from an uploaded archive file
+ *
+ * @param $file object The file of the file in the archive to import
+ * @param $table string The target table
+ * @param $flush boolean Whether to flush the table before importing the archived data
+ */
+function archive_insert_into_table($file, $table, $flush=false, $wildcardstyle=false)
+{
+	global $db, $flushed_tables;
+
+	$rows = array_filter(explode("\n",file_get_contents($file)));
+	// Return early if we cannot extract the lines in the file
+	if(is_null($rows))
+		return 0;
+
+	// Flush table if requested, only flush each table once
+	if($flush && !in_array($table, $flushed_tables))
+	{
+		$db->exec("DELETE FROM ".$table);
+		array_push($flushed_tables, $table);
+	}
+
+	// Prepare field name for domain/address depending on the table we restore to
+	if($table === "adlist")
+	{
+		$sql  = "INSERT OR IGNORE INTO adlist";
+		$sql  .= " (address) VALUES (:address);";
+	}
+	else
+	{
+		$sql  = "INSERT OR IGNORE INTO ".$table;
+		$sql  .= " (domain) VALUES (:domain);";
+	}
+
+	// Prepare SQLite statememt
+	$stmt = $db->prepare($sql);
+
+	// Return early if we prepare the SQLite statement
+	if(!$stmt)
+	{
+		echo "Failed to prepare statement for ".$table." table.";
+		echo $sql;
+		return 0;
+	}
+
+	// Loop over rows and inject the lines into the database
+	$num = 0;
+	foreach($rows as $row)
+	{
+		if($wildcardstyle)
+			$line = "(\\.|^)".str_replace(".","\\.",$row)."$";
+		else
+			$line = $row;
+
+		if($table === "adlist")
+			$stmt->bindValue(":address", $line, SQLITE3_TEXT);
+		else
+			$stmt->bindValue(":domain", $line, SQLITE3_TEXT);
+
+		if($stmt->execute() && $stmt->reset() && $stmt->clear())
+			$num++;
+		else
+		{
+			$stmt->close();
+			return $num;
+		}
+	}
+
+	// Close database connection and return number or processed rows
+	$stmt->close();
+	return $num;
+}
+
 function archive_add_directory($path,$subdir="")
 {
 	if($dir = opendir($path))
@@ -154,40 +233,6 @@ function archive_add_directory($path,$subdir="")
 			}
 		}
 		closedir($dir);
-	}
-}
-
-function limit_length(&$item, $key)
-{
-	// limit max length for a domain entry to 253 chars
-	// return only a part of the string if it is longer
-	$item = substr($item, 0, 253);
-}
-
-function process_file($contents,$check=True)
-{
-	$domains = array_filter(explode("\n",$contents));
-
-	// Walk array and apply a max string length
-	// function to every member of the array of domains
-	array_walk($domains, "limit_length");
-
-	// Check validity of domains (don't do it for regex filters)
-	if($check)
-	{
-		check_domains($domains);
-	}
-
-	return $domains;
-}
-
-function check_domains($domains)
-{
-	foreach($domains as $domain)
-	{
-		if(!is_valid_domain_name($domain)){
-			die(htmlspecialchars($domain).' is not a valid domain');
-		}
 	}
 }
 
@@ -230,49 +275,38 @@ if(isset($_POST["action"]))
 		{
 			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.txt")
 			{
-				$blacklist = process_file(file_get_contents($file));
-				echo "Processing blacklist.txt (".count($blacklist)." entries)<br>\n";
-				exec("sudo pihole -b -nr --nuke");
-				exec("sudo pihole -b -q -nr ".implode(" ", $blacklist));
+				$num = archive_insert_into_table($file, "blacklist", $flushtables);
+				echo "Processed blacklist (exact) (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["whitelist"]) && $file->getFilename() === "whitelist.txt")
 			{
-				$whitelist = process_file(file_get_contents($file));
-				echo "Processing whitelist.txt (".count($whitelist)." entries)<br>\n";
-				exec("sudo pihole -w -nr --nuke");
-				exec("sudo pihole -w -q -nr ".implode(" ", $whitelist));
+				$num = archive_insert_into_table($file, "whitelist", $flushtables);
+				echo "Processed whitelist (exact) (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["regexlist"]) && $file->getFilename() === "regex.list")
 			{
-				$regexlist = process_file(file_get_contents($file),false);
-				echo "Processing regex.list (".count($regexlist)." entries)<br>\n";
-
-				$escapedRegexlist = array_map("escapeshellcmd", $regexlist);
-				exec("sudo pihole --regex -nr --nuke");
-				exec("sudo pihole --regex -q -nr ".implode(" ", $escapedRegexlist));
+				$num = archive_insert_into_table($file, "regex_blacklist", $flushtables);
+				echo "Processed blacklist (regex) (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
 			// Also try to import legacy wildcard list if found
 			if(isset($_POST["regexlist"]) && $file->getFilename() === "wildcardblocking.txt")
 			{
-				$wildlist = process_file(file_get_contents($file));
-				echo "Processing wildcardblocking.txt (".count($wildlist)." entries)<br>\n";
-				exec("sudo pihole --wild -nr --nuke");
-				exec("sudo pihole --wild -q -nr ".implode(" ", $wildlist));
+				$num = archive_insert_into_table($file, "regex_blacklist", $flushtables, true);
+				echo "Processed blacklist (regex, wildcard style) (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["auditlog"]) && $file->getFilename() === "auditlog.list")
 			{
-				$auditlog = process_file(file_get_contents($file));
-				echo "Processing auditlog.list (".count($auditlog)." entries)<br>\n";
-				exec("sudo pihole -a clearaudit");
-				exec("sudo pihole -a audit ".implode(" ",$auditlog));
+				$num = archive_insert_into_table($file, "domain_audit", $flushtables);
+				echo "Processed blacklist (regex) (".$num." entries)<br>\n";
+				$importedsomething = true;
 			}
 
 			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.exact.json")
