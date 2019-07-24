@@ -320,7 +320,7 @@ if(isset($_POST["action"]))
 
 		if($importedsomething)
 		{
-			exec("sudo pihole restartdns");
+			exec("sudo pihole restartdns reload");
 		}
 
 		unlink($fullfilename);
