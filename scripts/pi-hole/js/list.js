@@ -47,10 +47,7 @@ function refresh(fade) {
     var listw = $("#list-regex");
     if(fade) {
         list.fadeOut(100);
-        if(listw)
-        {
-            listw.fadeOut(100);
-        }
+        listw.fadeOut(100);
     }
     $.ajax({
         url: "scripts/pi-hole/php/get.php",
@@ -58,10 +55,7 @@ function refresh(fade) {
         data: {"list":listType},
         success: function(response) {
             list.html("");
-            if(listw)
-            {
-                listw.html("");
-            }
+            listw.html("");
 
             if((listType === "black" &&
                response.blacklist.length === 0 &&
@@ -105,10 +99,7 @@ function refresh(fade) {
                 });
             }
             list.fadeIn(100);
-            if(listw)
-            {
-                listw.fadeIn(100);
-            }
+            listw.fadeIn(100);
         },
         error: function(jqXHR, exception) {
             $("#alFailure").show();
