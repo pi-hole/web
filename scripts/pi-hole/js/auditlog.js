@@ -60,7 +60,7 @@ function updateTopLists() {
                 {
                     url = "<a href=\"queries.php?domain="+printdomain+"\">"+printdomain+"</a>";
                     adtable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button> <button style=\"color:orange; white-space: nowrap;\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
+                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <button style=\"color:green; white-space: nowrap;\"><i class=\"fas fa-check\"></i> Whitelist</button> <button style=\"color:orange; white-space: nowrap;\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
                 }
             }
         }
