@@ -38,7 +38,7 @@ function archive_add_table($name, $table)
 
 	$results = $db->query("SELECT * FROM $table");
 
-	// Return early without creating a file if th
+	// Return early without creating a file if the
 	// requested table cannot be accessed
 	if(is_null($results))
 		return;
@@ -55,9 +55,10 @@ function archive_add_table($name, $table)
 /**
  * Restore the contents of a table from an uploaded archive
  *
- * @param $file object The file of the file in the archive to restore the table from
+ * @param $file object The file in the archive to restore the table from
  * @param $table string The table to import
  * @param $flush boolean Whether to flush the table before importing the archived data
+ * @return integer Number of restored rows
  */
 function archive_restore_table($file, $table, $flush=false)
 {
@@ -103,7 +104,7 @@ function archive_restore_table($file, $table, $flush=false)
 	// Prepare SQLite statememt
 	$stmt = $db->prepare($sql);
 
-	// Return early if we prepare the SQLite statement
+	// Return early if we fail to prepare the SQLite statement
 	if(!$stmt)
 	{
 		echo "Failed to prepare statement for ".$table." table.";
@@ -153,6 +154,8 @@ function archive_restore_table($file, $table, $flush=false)
  * @param $file object The file of the file in the archive to import
  * @param $table string The target table
  * @param $flush boolean Whether to flush the table before importing the archived data
+ * @param $wildcardstyle boolean Whether to format the input domains in legacy wildcard notation
+ * @return integer Number of processed rows from the imported file
  */
 function archive_insert_into_table($file, $table, $flush=false, $wildcardstyle=false)
 {
