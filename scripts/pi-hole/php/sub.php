@@ -16,28 +16,64 @@ if (empty($api)) {
     list_verify($type);
 }
 
-// Don't check if the added item is a valid domain for regex expressions.
-// Regex filters are validated by FTL on import and skipped if invalid
-if($type !== "black_regex" && $type !== "white_regex") {
-    check_domain();
-}
-
 // Escape shell metacharacters
-$domain = escapeshellcmd($_POST['domain']);
+$domains = explode(",",$_POST['domain']);
+
+require_once("func.php");
+
+require("database.php");
+$GRAVITYDB = getGravityDBFilename();
+$db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
+
+function remove_from_table($table, $domains)
+{
+	global $db;
+	// Prepare SQLite statememt
+	$stmt = $db->prepare("DELETE FROM ".$table." WHERE domain = :domain;");
+
+	// Return early if we prepare the SQLite statement
+	if(!$stmt)
+	{
+		echo "Failed to prepare statement for ".$table." table.";
+		echo $sql;
+		return 0;
+	}
+
+	// Loop over domains and remove the lines from the database
+	$num = 0;
+	foreach($domains as $row)
+	{
+		$stmt->bindValue(":domain", $row, SQLITE3_TEXT);
+
+		if($stmt->execute() && $stmt->reset() && $stmt->clear())
+			$num++;
+		else
+		{
+			$stmt->close();
+			return "Error, removed: ".$num."\n";
+		}
+	}
+
+	// Close database connection and return number or processed rows
+	$stmt->close();
+	return "Success, removed: ".$num."\n";
+}
 
 switch($type) {
-    case "white":
-        echo shell_exec("sudo pihole -w -q -d ".$domain);
-        break;
-    case "black":
-        echo shell_exec("sudo pihole -b -q -d ".$domain);
-        break;
-    case "black_regex":
-        echo shell_exec("sudo pihole --regex -q -d ".$domain);
-        break;
-    case "white_regex":
-        echo shell_exec("sudo pihole --white-regex -q -d ".$domain);
-        break;
-}
+	case "white":
+		echo remove_from_table("whitelist", $domains);
+		break;
 
+	case "black":
+		echo remove_from_table("blacklist", $domains);
+		break;
+
+	case "black_regex":
+		echo remove_from_table("regex_blacklist", $domains);
+		break;
+
+	case "white_regex":
+		echo remove_from_table("regex_whitelist", $domains);
+		break;
+}
 ?>

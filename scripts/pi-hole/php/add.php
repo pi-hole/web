@@ -18,47 +18,90 @@ if (empty($api)) {
 
 // Don't check if the added item is a valid domain for regex expressions. Regex
 // filters are validated by FTL on import and skipped if invalid
-if($type !== "regex") {
+$check_lists = ["white","black","audit"];
+if(in_array($list, $check_lists)) {
     check_domain();
 }
 
 // Escape shell metacharacters
-$domains = escapeshellcmd($_POST['domain']);
+$domains = explode(",",$_POST['domain']);
 
-switch($type) {
-    case "white":
-        if(!isset($_POST["auditlog"]))
-            echo shell_exec("sudo pihole -w --web ".$domains);
-        else
-        {
-            echo shell_exec("sudo pihole -w --web ".$domains);
-            echo shell_exec("sudo pihole -a audit ".$domains);
-        }
-        break;
-    case "black":
-        if(!isset($_POST["auditlog"]))
-            echo shell_exec("sudo pihole -b --web ".$domains);
-        else
-        {
-            echo shell_exec("sudo pihole -b --web ".$domains);
-            echo shell_exec("sudo pihole -a audit ".$domains);
-        }
-        break;
-    case "black_regex":
-        echo shell_exec("sudo pihole --regex --web ".$domains);
-        break;
-    case "white_regex":
-        echo shell_exec("sudo pihole --white-regex --web ".$domains);
-        break;
-    case "black_wild":
-        echo shell_exec("sudo pihole --wild --web ".$domains);
-        break;
-    case "white_wild":
-        echo shell_exec("sudo pihole --white-wild --web ".$domains);
-        break;
-    case "audit":
-        echo shell_exec("sudo pihole -a audit ".$domains);
-        break;
+require_once("func.php");
+
+require("database.php");
+$GRAVITYDB = getGravityDBFilename();
+$db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
+
+function add_to_table($table, $domains, $wildcardstyle=false)
+{
+	global $db;
+	// Prepare SQLite statememt
+	$stmt = $db->prepare("INSERT OR IGNORE INTO ".$table." (domain) VALUES (:domain);");
+
+	// Return early if we prepare the SQLite statement
+	if(!$stmt)
+	{
+		echo "Failed to prepare statement for ".$table." table.";
+		echo $sql;
+		return 0;
+	}
+
+	// Loop over domains and inject the lines into the database
+	$num = 0;
+	foreach($domains as $row)
+	{
+		if($wildcardstyle)
+			$line = "(\\.|^)".str_replace(".","\\.",$row)."$";
+		else
+			$line = $row;
+
+		$stmt->bindValue(":domain", $line, SQLITE3_TEXT);
+
+		if($stmt->execute() && $stmt->reset() && $stmt->clear())
+			$num++;
+		else
+		{
+			$stmt->close();
+			return "Error, added: ".$num."\n";
+		}
+	}
+
+	// Close database connection and return number or processed rows
+	$stmt->close();
+	return "Success, added: ".$num."\n";
 }
 
+switch($type) {
+	case "white":
+		if(isset($_POST["auditlog"]))
+			echo add_to_table("domain_audit", $domains);
+		echo add_to_table("whitelist", $domains);
+		break;
+
+	case "black":
+		if(isset($_POST["auditlog"]))
+			echo add_to_table("domain_audit", $domains);
+		echo add_to_table("blacklist", $domains);
+		break;
+
+	case "black_regex":
+		echo add_to_table("regex_blacklist", $domains);
+		break;
+
+	case "white_regex":
+		echo add_to_table("regex_whitelist", $domains);
+		break;
+
+	case "black_wild":
+		echo add_to_table("regex_blacklist", $domains, true);
+		break;
+
+	case "white_wild":
+		echo add_to_table("regex_whitelist", $domains, true);
+		break;
+
+	case "audit":
+		echo add_to_table("domain_audit", $domains);
+		break;
+}
 ?>

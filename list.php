@@ -49,7 +49,7 @@ function getFullName() {
 </div>
 <div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Success! The list will refresh.
+    Success!
 </div>
 <div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
