@@ -36,7 +36,7 @@ switch($type) {
         echo shell_exec("sudo pihole --regex -q -d ".$domain);
         break;
     case "white_regex":
-        echo shell_exec("sudo pihole --whiteregex -q -d ".$domain);
+        echo shell_exec("sudo pihole --white-regex -q -d ".$domain);
         break;
 }
 
