@@ -16,8 +16,8 @@ if (empty($api)) {
     list_verify($type);
 }
 
-// Escape shell metacharacters
-$domains = explode(",",$_POST['domain']);
+// Split individual domains into array
+$domains = explode(" ",$_POST['domain']);
 
 require_once("func.php");
 
