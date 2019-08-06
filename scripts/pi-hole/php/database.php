@@ -54,4 +54,49 @@ function SQLite3_connect($filename, $mode=SQLITE3_OPEN_READONLY)
 	}
 	return $db;
 }
+
+
+/**
+ * Add domains to a given table
+ *
+ * @param $db object The SQLite3 database connection object
+ * @param $table string The target table
+ * @param $domains array Array of domains (strings) to be added to the table
+ * @param $wildcardstyle boolean Whether to format the input domains in legacy wildcard notation
+ * @return string Success/error and number of processed domains
+ */
+function add_to_table($db, $table, $domains, $wildcardstyle=false)
+{
+	// Prepare SQLite statememt
+	$stmt = $db->prepare("INSERT OR IGNORE INTO ".$table." (domain) VALUES (:domain);");
+
+	// Return early if we prepare the SQLite statement
+	if(!$stmt)
+	{
+		echo "Failed to prepare statement for ".$table." table.";
+		return "Error, added: 0\n";
+	}
+
+	// Loop over domains and inject the lines into the database
+	$num = 0;
+	foreach($domains as $domain)
+	{
+		if($wildcardstyle)
+			$domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
+
+		$stmt->bindValue(":domain", $domain, SQLITE3_TEXT);
+
+		if($stmt->execute() && $stmt->reset())
+			$num++;
+		else
+		{
+			$stmt->close();
+			return "Error, added: ".$num."\n";
+		}
+	}
+
+	// Close database connection and return number of processed rows
+	$stmt->close();
+	return "Success, added: ".$num."\n";
+}
 ?>
