@@ -16,8 +16,8 @@ if (empty($api)) {
     list_verify($type);
 }
 
-// Don't check if the added item is a valid domain for regex expressions. Regex
-// filters are validated by FTL on import and skipped if invalid
+// Only check domains we add to the exact lists.
+// Regex are validated by FTL during import
 $check_lists = ["white","black","audit"];
 if(in_array($list, $check_lists)) {
     check_domain();
@@ -27,8 +27,7 @@ if(in_array($list, $check_lists)) {
 $domains = explode(",",$_POST['domain']);
 
 require_once("func.php");
-
-require("database.php");
+require_once("database.php");
 $GRAVITYDB = getGravityDBFilename();
 $db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
 
