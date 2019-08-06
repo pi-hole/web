@@ -65,9 +65,7 @@ switch($list) {
 		break;
 
 	default:
-		echo "Invalid list!";
-		exit();
-		break;
+		die("Invalid list!");
 }
 
 // Reload lists in pihole-FTL after having removed something
