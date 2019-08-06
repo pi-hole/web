@@ -99,4 +99,45 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false)
 	$stmt->close();
 	return "Success, added: ".$num."\n";
 }
+
+/**
+ * Remove domains from a given table
+ *
+ * @param $db object The SQLite3 database connection object
+ * @param $table string The target table
+ * @param $domains array Array of domains (strings) to be removed from the table
+ * @return string Success/error and number of processed domains
+ */
+function remove_from_table($db, $table, $domains)
+{
+	// Prepare SQLite statememt
+	$stmt = $db->prepare("DELETE FROM ".$table." WHERE domain = :domain;");
+
+	// Return early if we prepare the SQLite statement
+	if(!$stmt)
+	{
+		echo "Failed to prepare statement for ".$table." table.";
+		return "Error, added: 0\n";
+	}
+
+	// Loop over domains and remove the lines from the database
+	$num = 0;
+	foreach($domains as $domain)
+	{
+		$stmt->bindValue(":domain", $domain, SQLITE3_TEXT);
+
+		if($stmt->execute() && $stmt->reset())
+			$num++;
+		else
+		{
+			$stmt->close();
+			return "Error, removed: ".$num."\n";
+		}
+	}
+
+	// Close database connection and return number or processed rows
+	$stmt->close();
+	return "Success, removed: ".$num."\n";
+}
+
 ?>

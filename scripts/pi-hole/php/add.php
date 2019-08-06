@@ -63,5 +63,13 @@ switch($list) {
 	case "audit":
 		echo add_to_table($db, "domain_audit", $domains);
 		break;
+
+	default:
+		echo "Invalid list!";
+		exit();
+		break;
 }
+
+// Reload lists in pihole-FTL after having removed something
+echo shell_exec("sudo pihole restartdns reload");
 ?>
