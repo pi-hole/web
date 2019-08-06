@@ -116,13 +116,18 @@ function archive_restore_table($file, $table, $flush=false)
 	$num = 0;
 	foreach($contents as $row)
 	{
+		if($table === "adlist")
+			$line = "address";
+		else
+			$line = "domain";
+
+		// Limit max length for a domain entry to 253 chars
+		if(strlen($row[$line]) > 253)
+			continue;
+
 		$stmt->bindValue(":id", $row["id"], SQLITE3_INTEGER);
 		$stmt->bindValue(":date_added", $row["date_added"], SQLITE3_INTEGER);
-
-		if($table === "adlist")
-			$stmt->bindValue(":address", $row["address"], SQLITE3_TEXT);
-		else
-			$stmt->bindValue(":domain", $row["domain"], SQLITE3_TEXT);
+		$stmt->bindValue(":".$line, $row[$line], SQLITE3_TEXT);
 
 		if($table !== "domain_audit")
 		{
@@ -204,6 +209,10 @@ function archive_insert_into_table($file, $table, $flush=false, $wildcardstyle=f
 			$line = "(\\.|^)".str_replace(".","\\.",$row)."$";
 		else
 			$line = $row;
+
+		// Limit max length for a domain entry to 253 chars
+		if(strlen($line) > 253)
+			continue;
 
 		if($table === "adlist")
 			$stmt->bindValue(":address", $line, SQLITE3_TEXT);
