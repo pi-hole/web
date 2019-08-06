@@ -131,29 +131,29 @@ function sub(index, entry, arg) {
         method: "post",
         data: {"domain":entry, "list":locallistType, "token":token},
         success: function(response) {
-          if (response.indexOf("Success") === -1) {
-            alFailure.show();
-            err.html(response);
-            alFailure.delay(8000).fadeOut(2000, function() {
-                alFailure.hide();
-            });
-            alInfo.delay(8000).fadeOut(2000, function() {
-                alInfo.hide();
-            });
-          } else {
-            alSuccess.show();
-            alSuccess.delay(1000).fadeOut(2000, function() {
-                alSuccess.hide();
-            });
-            alInfo.delay(1000).fadeOut(2000, function() {
-                alInfo.hide();
-            });
-            domain.remove();
-            if($(list+" li").length < 1)
-            {
-                $(heading).fadeOut(100);
+            if (response.indexOf("Success") === -1) {
+                alFailure.show();
+                err.html(response);
+                alFailure.delay(8000).fadeOut(2000, function() {
+                    alFailure.hide();
+                });
+                alInfo.delay(8000).fadeOut(2000, function() {
+                    alInfo.hide();
+                });
+            } else {
+                alSuccess.show();
+                alSuccess.delay(1000).fadeOut(2000, function() {
+                    alSuccess.hide();
+                });
+                alInfo.delay(1000).fadeOut(2000, function() {
+                    alInfo.hide();
+                });
+                domain.remove();
+                if($(list+" li").length < 1)
+                {
+                    $(heading).fadeOut(100);
+                }
             }
-          }
         },
         error: function(jqXHR, exception) {
             alert("Failed to remove the domain!");
@@ -183,26 +183,26 @@ function add(type) {
         method: "post",
         data: {"domain":domain.val().trim(), "list":type, "token":token},
         success: function(response) {
-          if (response.indexOf("Success") === -1) {
-            alFailure.show();
-            err.html(response);
-            alFailure.delay(8000).fadeOut(2000, function() {
-                alFailure.hide();
-            });
-            alInfo.delay(8000).fadeOut(2000, function() {
-                alInfo.hide();
-            });
-          } else {
-            alSuccess.show();
-            alSuccess.delay(1000).fadeOut(2000, function() {
-                alSuccess.hide();
-            });
-            alInfo.delay(1000).fadeOut(2000, function() {
-                alInfo.hide();
-            });
-            domain.val("");
-            refresh(true);
-          }
+            if (response.indexOf("Success") === -1) {
+                alFailure.show();
+                err.html(response);
+                alFailure.delay(8000).fadeOut(2000, function() {
+                    alFailure.hide();
+                });
+                alInfo.delay(8000).fadeOut(2000, function() {
+                    alInfo.hide();
+                });
+            } else {
+                alSuccess.show();
+                alSuccess.delay(1000).fadeOut(2000, function() {
+                    alSuccess.hide();
+                });
+                alInfo.delay(1000).fadeOut(2000, function() {
+                    alInfo.hide();
+                });
+                domain.val("");
+                refresh(true);
+            }
         },
         error: function(jqXHR, exception) {
             alFailure.show();
