@@ -74,7 +74,7 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false)
 	// Prepare SQLite statememt
 	$stmt = $db->prepare("INSERT OR IGNORE INTO ".$table." (domain) VALUES (:domain);");
 
-	// Return early if we prepare the SQLite statement
+	// Return early if we failed to prepare the SQLite statement
 	if(!$stmt)
 	{
 		echo "Failed to prepare statement for ".$table." table.";
@@ -103,7 +103,7 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false)
 		}
 	}
 
-	// Close database connection and return number of processed rows
+	// Close prepared statement and return number of processed rows
 	$stmt->close();
 	return "Success, added: ".$num."\n";
 }
@@ -121,7 +121,7 @@ function remove_from_table($db, $table, $domains)
 	// Prepare SQLite statememt
 	$stmt = $db->prepare("DELETE FROM ".$table." WHERE domain = :domain;");
 
-	// Return early if we prepare the SQLite statement
+	// Return early if we failed to prepare the SQLite statement
 	if(!$stmt)
 	{
 		echo "Failed to prepare statement for ".$table." table.";
@@ -147,7 +147,7 @@ function remove_from_table($db, $table, $domains)
 		}
 	}
 
-	// Close database connection and return number or processed rows
+	// Close prepared statement and return number or processed rows
 	$stmt->close();
 	return "Success, removed: ".$num."\n";
 }

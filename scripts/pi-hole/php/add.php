@@ -68,6 +68,6 @@ switch($list) {
 		die("Invalid list!");
 }
 
-// Reload lists in pihole-FTL after having removed something
+// Reload lists in pihole-FTL after having added something
 echo shell_exec("sudo pihole restartdns reload");
 ?>

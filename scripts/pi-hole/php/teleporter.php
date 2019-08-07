@@ -87,18 +87,21 @@ function archive_restore_table($file, $table, $flush=false)
 		$sql  = "INSERT OR IGNORE INTO adlist";
 		$sql  .= " (id,address,enabled,date_added,comment)";
 		$sql  .= " VALUES (:id,:address,:enabled,:date_added,:comment);";
+		$field = "address";
 	}
 	elseif($table === "domain_audit")
 	{
 		$sql  = "INSERT OR IGNORE INTO domain_audit";
 		$sql  .= " (id,domain,date_added)";
 		$sql  .= " VALUES (:id,:domain,:date_added);";
+		$field = "domain";
 	}
 	else
 	{
 		$sql  = "INSERT OR IGNORE INTO ".$table;
 		$sql  .= " (id,domain,enabled,date_added,comment)";
 		$sql  .= " VALUES (:id,:domain,:enabled,:date_added,:comment);";
+		$field = "domain";
 	}
 
 	// Prepare SQLite statememt
@@ -112,22 +115,17 @@ function archive_restore_table($file, $table, $flush=false)
 		return 0;
 	}
 
-	// Loop over rows and inject the lines into the database
+	// Loop over rows and inject the entries into the database
 	$num = 0;
 	foreach($contents as $row)
 	{
-		if($table === "adlist")
-			$line = "address";
-		else
-			$line = "domain";
-
 		// Limit max length for a domain entry to 253 chars
-		if(strlen($row[$line]) > 253)
+		if(strlen($row[$field]) > 253)
 			continue;
 
 		$stmt->bindValue(":id", $row["id"], SQLITE3_INTEGER);
 		$stmt->bindValue(":date_added", $row["date_added"], SQLITE3_INTEGER);
-		$stmt->bindValue(":".$line, $row[$line], SQLITE3_TEXT);
+		$stmt->bindValue(":".$field, $row[$field], SQLITE3_TEXT);
 
 		if($table !== "domain_audit")
 		{
@@ -180,17 +178,12 @@ function archive_insert_into_table($file, $table, $flush=false, $wildcardstyle=f
 
 	// Prepare field name for domain/address depending on the table we restore to
 	if($table === "adlist")
-	{
-		$sql  = "INSERT OR IGNORE INTO adlist";
-		$sql  .= " (address) VALUES (:address);";
-	}
+		$field = "address";
 	else
-	{
-		$sql  = "INSERT OR IGNORE INTO ".$table;
-		$sql  .= " (domain) VALUES (:domain);";
-	}
+		$field = "domain";
 
-	// Prepare SQLite statememt
+	// Prepare SQLite statement
+	$sql  = "INSERT OR IGNORE INTO ".$table." (".$field.") VALUES (:".$field.");";
 	$stmt = $db->prepare($sql);
 
 	// Return early if we prepare the SQLite statement
@@ -214,10 +207,7 @@ function archive_insert_into_table($file, $table, $flush=false, $wildcardstyle=f
 		if(strlen($line) > 253)
 			continue;
 
-		if($table === "adlist")
-			$stmt->bindValue(":address", $line, SQLITE3_TEXT);
-		else
-			$stmt->bindValue(":domain", $line, SQLITE3_TEXT);
+		$stmt->bindValue(":".$field, $line, SQLITE3_TEXT);
 
 		if($stmt->execute() && $stmt->reset() && $stmt->clear())
 			$num++;
