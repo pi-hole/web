@@ -82,7 +82,7 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=fa
 		if($returnnum)
 			return 0;
 		else
-			return "Error, added: 0\n";
+			return "Error, added: 0";
 	}
 
 	// Loop over domains and inject the lines into the database
@@ -102,7 +102,7 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=fa
 			if($returnnum)
 				return $num;
 			else
-				return "Error, added: ".$num."\n";
+				return "Error, added: ".$num;
 		}
 	}
 
@@ -111,7 +111,7 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=fa
 	if($returnnum)
 		return $num;
 	else
-		return "Success, added: ".$num."\n";
+		return "Success, added: ".$num;
 }
 
 /**
@@ -135,7 +135,7 @@ function remove_from_table($db, $table, $domains, $returnnum=false)
 		if($returnnum)
 			return 0;
 		else
-			return "Error, added: 0\n";
+			return "Error, added: 0";
 	}
 
 	// Loop over domains and remove the lines from the database
@@ -152,7 +152,7 @@ function remove_from_table($db, $table, $domains, $returnnum=false)
 			if($returnnum)
 				return $num;
 			else
-				return "Error, removed: ".$num."\n";
+				return "Error, removed: ".$num;
 		}
 	}
 
@@ -161,7 +161,7 @@ function remove_from_table($db, $table, $domains, $returnnum=false)
 	if($returnnum)
 		return $num;
 	else
-		return "Success, removed: ".$num."\n";
+		return "Success, removed: ".$num;
 }
 
 ?>

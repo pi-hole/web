@@ -78,7 +78,7 @@ function add(domain,list) {
     $.ajax({
         url: "scripts/pi-hole/php/add.php",
         method: "post",
-        data: {"domain":domain, "list":list, "token":token, "auditlog":1}
+        data: {"domain":domain, "list":list, "token":token}
     });
 }
 
@@ -91,6 +91,7 @@ $(document).ready(function() {
         var url = ($(this).parents("tr"))[0].innerText.split("	")[0];
         if($(this).context.innerText === " Blacklist")
         {
+            add(url,"audit");
             add(url,"black");
             $("#gravityBtn").prop("disabled", false);
         }
@@ -104,6 +105,7 @@ $(document).ready(function() {
         var url = ($(this).parents("tr"))[0].innerText.split("	")[0].split(" ")[0];
         if($(this).context.innerText === " Whitelist")
         {
+            add(url,"audit");
             add(url,"white");
             $("#gravityBtn").prop("disabled", false);
         }

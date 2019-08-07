@@ -33,14 +33,10 @@ $db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
 
 switch($list) {
 	case "white":
-		if(isset($_POST["auditlog"]))
-			echo add_to_table($db, "domain_audit", $domains);
 		echo add_to_table($db, "whitelist", $domains);
 		break;
 
 	case "black":
-		if(isset($_POST["auditlog"]))
-			echo add_to_table($db, "domain_audit", $domains);
 		echo add_to_table($db, "blacklist", $domains);
 		break;
 
