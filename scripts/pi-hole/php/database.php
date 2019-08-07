@@ -89,6 +89,10 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=fa
 	$num = 0;
 	foreach($domains as $domain)
 	{
+		// Limit max length for a domain entry to 253 chars
+		if(strlen($domain) > 253)
+			continue;
+
 		if($wildcardstyle)
 			$domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
 
