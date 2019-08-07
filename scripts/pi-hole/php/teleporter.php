@@ -164,9 +164,9 @@ function archive_insert_into_table($file, $table, $flush=false, $wildcardstyle=f
 {
 	global $db, $flushed_tables;
 
-	$rows = array_filter(explode("\n",file_get_contents($file)));
+	$domains = array_filter(explode("\n",file_get_contents($file)));
 	// Return early if we cannot extract the lines in the file
-	if(is_null($rows))
+	if(is_null($domains))
 		return 0;
 
 	// Flush table if requested, only flush each table once
@@ -176,51 +176,8 @@ function archive_insert_into_table($file, $table, $flush=false, $wildcardstyle=f
 		array_push($flushed_tables, $table);
 	}
 
-	// Prepare field name for domain/address depending on the table we restore to
-	if($table === "adlist")
-		$field = "address";
-	else
-		$field = "domain";
-
-	// Prepare SQLite statement
-	$sql  = "INSERT OR IGNORE INTO ".$table." (".$field.") VALUES (:".$field.");";
-	$stmt = $db->prepare($sql);
-
-	// Return early if we prepare the SQLite statement
-	if(!$stmt)
-	{
-		echo "Failed to prepare statement for ".$table." table.";
-		echo $sql;
-		return 0;
-	}
-
-	// Loop over rows and inject the lines into the database
-	$num = 0;
-	foreach($rows as $row)
-	{
-		if($wildcardstyle)
-			$line = "(\\.|^)".str_replace(".","\\.",$row)."$";
-		else
-			$line = $row;
-
-		// Limit max length for a domain entry to 253 chars
-		if(strlen($line) > 253)
-			continue;
-
-		$stmt->bindValue(":".$field, $line, SQLITE3_TEXT);
-
-		if($stmt->execute() && $stmt->reset() && $stmt->clear())
-			$num++;
-		else
-		{
-			$stmt->close();
-			return $num;
-		}
-	}
-
-	// Close database connection and return number or processed rows
-	$stmt->close();
-	return $num;
+	// Add domains to requested table
+	return add_to_table($db, $table, $domains, $wildcardstyle, true);
 }
 
 function archive_add_directory($path,$subdir="")

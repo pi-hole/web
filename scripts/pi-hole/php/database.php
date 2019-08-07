@@ -67,9 +67,10 @@ function SQLite3_connect($filename, $mode=SQLITE3_OPEN_READONLY)
  * @param $table string The target table
  * @param $domains array Array of domains (strings) to be added to the table
  * @param $wildcardstyle boolean Whether to format the input domains in legacy wildcard notation
+ * @param $returnnum boolean Whether to return an integer or a string
  * @return string Success/error and number of processed domains
  */
-function add_to_table($db, $table, $domains, $wildcardstyle=false)
+function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=false)
 {
 	// Prepare SQLite statememt
 	$stmt = $db->prepare("INSERT OR IGNORE INTO ".$table." (domain) VALUES (:domain);");
@@ -78,7 +79,10 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false)
 	if(!$stmt)
 	{
 		echo "Failed to prepare statement for ".$table." table.";
-		return "Error, added: 0\n";
+		if($returnnum)
+			return 0;
+		else
+			return "Error, added: 0\n";
 	}
 
 	// Loop over domains and inject the lines into the database
@@ -95,13 +99,19 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false)
 		else
 		{
 			$stmt->close();
-			return "Error, added: ".$num."\n";
+			if($returnnum)
+				return $num;
+			else
+				return "Error, added: ".$num."\n";
 		}
 	}
 
 	// Close prepared statement and return number of processed rows
 	$stmt->close();
-	return "Success, added: ".$num."\n";
+	if($returnnum)
+		return $num;
+	else
+		return "Success, added: ".$num."\n";
 }
 
 /**
@@ -110,9 +120,10 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false)
  * @param $db object The SQLite3 database connection object
  * @param $table string The target table
  * @param $domains array Array of domains (strings) to be removed from the table
+ * @param $returnnum boolean Whether to return an integer or a string
  * @return string Success/error and number of processed domains
  */
-function remove_from_table($db, $table, $domains)
+function remove_from_table($db, $table, $domains, $returnnum=false)
 {
 	// Prepare SQLite statememt
 	$stmt = $db->prepare("DELETE FROM ".$table." WHERE domain = :domain;");
@@ -121,7 +132,10 @@ function remove_from_table($db, $table, $domains)
 	if(!$stmt)
 	{
 		echo "Failed to prepare statement for ".$table." table.";
-		return "Error, added: 0\n";
+		if($returnnum)
+			return 0;
+		else
+			return "Error, added: 0\n";
 	}
 
 	// Loop over domains and remove the lines from the database
@@ -135,13 +149,19 @@ function remove_from_table($db, $table, $domains)
 		else
 		{
 			$stmt->close();
-			return "Error, removed: ".$num."\n";
+			if($returnnum)
+				return $num;
+			else
+				return "Error, removed: ".$num."\n";
 		}
 	}
 
 	// Close prepared statement and return number or processed rows
 	$stmt->close();
-	return "Success, removed: ".$num."\n";
+	if($returnnum)
+		return $num;
+	else
+		return "Success, removed: ".$num."\n";
 }
 
 ?>
