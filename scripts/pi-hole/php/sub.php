@@ -17,7 +17,7 @@ if (empty($api)) {
 }
 
 // Split individual domains into array
-$domains = preg_split('/\s+/', $_POST['domain']);
+$domains = preg_split('/\s+/', $_POST['domain'], -1, PREG_SPLIT_NO_EMPTY);
 
 require_once("func.php");
 
