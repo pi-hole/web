@@ -81,6 +81,10 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false)
 	$num = 0;
 	foreach($domains as $domain)
 	{
+		// Skip empty domains
+		if(strlen($domain) == 0)
+			continue;
+
 		if($wildcardstyle)
 			$domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
 
@@ -124,6 +128,10 @@ function remove_from_table($db, $table, $domains)
 	$num = 0;
 	foreach($domains as $domain)
 	{
+		// Skip empty domains
+		if(strlen($domain) == 0)
+			continue;
+
 		$stmt->bindValue(":domain", $domain, SQLITE3_TEXT);
 
 		if($stmt->execute() && $stmt->reset())
