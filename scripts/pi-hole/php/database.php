@@ -52,6 +52,10 @@ function SQLite3_connect($filename, $mode=SQLITE3_OPEN_READONLY)
 	{
 		die("Error connecting to database");
 	}
+
+	// Add busy timeout so methods don't fail immediately when, e.g., FTL is currently reading from the DB
+	$db->busyTimeout(5000);
+
 	return $db;
 }
 
