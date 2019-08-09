@@ -16,7 +16,7 @@
       <div id="cookieInfo" class="panel-title text-center" style="color:#F00; font-size: 150%" hidden>Verify that cookies are allowed for <samp><?php echo $_SERVER['HTTP_HOST']; ?></samp></div>
       <?php if ($wrongpassword) { ?>
         <div class="form-group has-error login-box-msg">
-          <label class="control-label"><i class="fa far fa-times-circle"></i> Wrong password!</label>
+          <label class="control-label"><i class="fa fa-times-circle"></i> Wrong password!</label>
         </div>
       <?php } ?>
     </div>
