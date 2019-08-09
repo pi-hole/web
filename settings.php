@@ -46,7 +46,7 @@ if (isset($_POST["submit"])) {
     <div id="alDebug" class="alert alert-warning alert-dismissible fade in" role="alert">
         <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
         </button>
-        <h4><i class="icon fa fa-warning"></i> Debug</h4>
+        <h4><i class="icon fa fa-exclamation-triangle"></i> Debug</h4>
         <pre><?php print_r($_POST); ?></pre>
     </div>
 <?php } ?>
