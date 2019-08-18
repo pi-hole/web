@@ -55,11 +55,28 @@
                 setcookie('persistentlogin', '');
             }
         }
-        // Compare doubly hashes password input with saved hash
         else if(isset($_POST["pw"]))
         {
-            $postinput = hash('sha256',hash('sha256',$_POST["pw"]));
-            if(hash_equals($pwhash, $postinput))
+            // Compare bcrypt hashes password input with saved hash
+            if(password_verify($_POST["pw"], $pwhash))
+            {
+                $_SESSION["hash"] = $pwhash;
+
+                // Login successful, redirect the user to the homepage to discard the POST request
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['QUERY_STRING'] === 'login') {
+                    // Set persistent cookie if selected
+                    if (isset($_POST['persistentlogin']))
+                    {
+                        setcookie('persistentlogin', $pwhash, time()+60*60*24*7);
+                    }
+                    header('Location: index.php');
+                    exit();
+                }
+
+                $auth = true;
+            }
+            // Compare doubly hashes password input with saved hash
+            else if(hash_equals($pwhash, hash('sha256',hash('sha256',$_POST["pw"]))))
             {
                 $_SESSION["hash"] = $pwhash;
 
