@@ -9,6 +9,7 @@
 require "password.php";
 require "auth.php"; // Also imports func.php
 require "database.php";
+require_once "savesettings.php";
 
 if (php_sapi_name() !== "cli") {
 	if(!$auth) die("Not authorized");
@@ -45,7 +46,7 @@ function archive_add_table($name, $table, $column)
 	$archive[$name] = $content;
 }
 
-function archive_add_directory($path,$subdir="")
+function archive_add_directory($path, $subdir="")
 {
 	if($dir = opendir($path))
 	{
@@ -53,7 +54,7 @@ function archive_add_directory($path,$subdir="")
 		{
 			if($entry !== "." && $entry !== "..")
 			{
-				archive_add_file($path,$entry,$subdir);
+				archive_add_file($path, $entry, $subdir);
 			}
 		}
 		closedir($dir);
@@ -67,9 +68,9 @@ function limit_length(&$item, $key)
 	$item = substr($item, 0, 253);
 }
 
-function process_file($contents,$check=True)
+function process_file($contents, $check=True)
 {
-	$domains = array_filter(explode("\n",$contents));
+	$domains = array_filter(explode("\n", $contents));
 
 	// Walk array and apply a max string length
 	// function to every member of the array of domains
@@ -127,7 +128,7 @@ if(isset($_POST["action"]))
 
 		$importedsomething = false;
 
-		foreach($archive as $file)
+		foreach(new RecursiveIteratorIterator($archive) as $file)
 		{
 			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.txt")
 			{
@@ -149,7 +150,7 @@ if(isset($_POST["action"]))
 
 			if(isset($_POST["regexlist"]) && $file->getFilename() === "regex.list")
 			{
-				$regexlist = process_file(file_get_contents($file),false);
+				$regexlist = process_file(file_get_contents($file), false);
 				echo "Processing regex.list (".count($regexlist)." entries)<br>\n";
 
 				$escapedRegexlist = array_map("escapeshellcmd", $regexlist);
@@ -174,6 +175,21 @@ if(isset($_POST["action"]))
 				echo "Processing auditlog.list (".count($auditlog)." entries)<br>\n";
 				exec("sudo pihole -a clearaudit");
 				exec("sudo pihole -a audit ".implode(" ",$auditlog));
+			}
+
+			if(isset($_POST["dhcpleases"]) && $file->getFilename() === "04-pihole-static-dhcp.conf")
+			{
+				$dhcpleases = processStaticLeasesFile($file->getPathname());
+				echo "Processing DHCP leases 04-pihole-static-dhcp.conf (".count($dhcpleases)." entries)";
+				$counter_leases_added = 0;
+				foreach($dhcpleases as $lease) {
+					$result = addDHCPLease($lease["hwaddr"], $lease["IP"], $lease["host"]);
+					if($result['value']) {
+						$counter_leases_added++;
+					}
+				}
+				echo " - Added ".$counter_leases_added."/".count($dhcpleases)."<br>\n";
+				$importedsomething = true;
 			}
 
 			if($importedsomething)
