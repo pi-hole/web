@@ -105,7 +105,7 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=fa
 			if($returnnum)
 				return $num;
 			else
-				return "Error, added: ".$num;
+				return "Error: ".$db->lastErrorMsg().", added: ".$num;
 		}
 	}
 
@@ -134,11 +134,10 @@ function remove_from_table($db, $table, $domains, $returnnum=false)
 	// Return early if we failed to prepare the SQLite statement
 	if(!$stmt)
 	{
-		echo "Failed to prepare statement for ".$table." table.";
 		if($returnnum)
 			return 0;
 		else
-			return "Error, added: 0";
+			return "Error: Failed to prepare statement for ".$table." table.";
 	}
 
 	// Loop over domains and remove the lines from the database
@@ -155,7 +154,7 @@ function remove_from_table($db, $table, $domains, $returnnum=false)
 			if($returnnum)
 				return $num;
 			else
-				return "Error, removed: ".$num;
+				return "Error: ".$db->lastErrorMsg().", removed: ".$num;
 		}
 	}
 
