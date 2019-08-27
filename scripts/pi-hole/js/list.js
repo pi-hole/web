@@ -123,6 +123,10 @@ function sub(index, entry, arg) {
     var alSuccess = $("#alSuccess");
     var alFailure = $("#alFailure");
     var alWarning = $("#alWarning");
+    var err = $("#err");
+    var warn = $("#warn");
+    var msg = $("#success-message");
+
 
     var domain = $(list+" #"+index);
     domain.hide("highlight");
@@ -142,6 +146,7 @@ function sub(index, entry, arg) {
                 });
             } else {
                 alSuccess.show();
+                msg.html(response);
                 alSuccess.delay(1000).fadeOut(2000, function() {
                     alSuccess.hide();
                 });
@@ -174,6 +179,7 @@ function add(type) {
     var alWarning = $("#alWarning");
     var err = $("#err");
     var warn = $("#warn");
+    var msg = $("#success-message");
     alInfo.show();
     alSuccess.hide();
     alFailure.hide();
@@ -194,6 +200,7 @@ function add(type) {
                 });
             } else {
                 alSuccess.show();
+                msg.html(response);
                 alSuccess.delay(1000).fadeOut(2000, function() {
                     alSuccess.hide();
                 });

@@ -72,6 +72,16 @@ function SQLite3_connect($filename, $mode=SQLITE3_OPEN_READONLY)
  */
 function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=false)
 {
+	// Begin transaction
+	if(!$db->exec("BEGIN TRANSACTION;"))
+	{
+		if($returnnum)
+			return 0;
+		else
+			return "Error: Unable to begin transaction for ".$table." table.";
+	}
+	$initialcount = intval($db->querySingle("SELECT COUNT(*) FROM ".$table.";"));
+
 	// Prepare SQLite statememt
 	$stmt = $db->prepare("INSERT OR IGNORE INTO ".$table." (domain) VALUES (:domain);");
 
@@ -105,16 +115,32 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=fa
 			if($returnnum)
 				return $num;
 			else
-				return "Error: ".$db->lastErrorMsg().", added: ".$num;
+			{
+				if($num === 1)
+					$plural = "";
+				else
+					$plural = "s";
+				return "Error: ".$db->lastErrorMsg().", added ".$num." domain".$plural;
+			}
 		}
 	}
 
 	// Close prepared statement and return number of processed rows
 	$stmt->close();
+	$db->exec("COMMIT;");
+
 	if($returnnum)
 		return $num;
 	else
-		return "Success, added: ".$num;
+	{
+		$finalcount = intval($db->querySingle("SELECT COUNT(*) FROM ".$table.";"));
+		$modified = $finalcount - $initialcount;
+		if($num === 1)
+			$plural = "";
+		else
+			$plural = "s";
+		return "Success, added ".$modified." of ".$num." domain".$plural;
+	}
 }
 
 /**
@@ -128,6 +154,16 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=fa
  */
 function remove_from_table($db, $table, $domains, $returnnum=false)
 {
+	// Begin transaction
+	if(!$db->exec("BEGIN TRANSACTION;"))
+	{
+		if($returnnum)
+			return 0;
+		else
+			return "Error: Unable to begin transaction for ".$table." table.";
+	}
+	$initialcount = intval($db->querySingle("SELECT COUNT(*) FROM ".$table.";"));
+
 	// Prepare SQLite statememt
 	$stmt = $db->prepare("DELETE FROM ".$table." WHERE domain = :domain;");
 
@@ -154,16 +190,30 @@ function remove_from_table($db, $table, $domains, $returnnum=false)
 			if($returnnum)
 				return $num;
 			else
-				return "Error: ".$db->lastErrorMsg().", removed: ".$num;
+			{
+				if($num === 1)
+					$plural = "";
+				else
+					$plural = "s";
+				return "Error: ".$db->lastErrorMsg().", removed ".$num." domain".$plural;
+			}
 		}
 	}
 
 	// Close prepared statement and return number or processed rows
 	$stmt->close();
+	$db->exec("COMMIT;");
+
 	if($returnnum)
 		return $num;
 	else
-		return "Success, removed: ".$num;
+	{
+		if($num === 1)
+			$plural = "";
+		else
+			$plural = "s";
+		return "Success, removed ".$num." domain".$plural;
+	}
 }
 
 ?>
