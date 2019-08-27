@@ -1165,7 +1165,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="adlist" value="true"
                                                                       checked>
-                                                            Lists of Ads</label>
+                                                            Blocklists</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="auditlog" value="true"
@@ -1185,7 +1185,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="flushtables" value="true"
                                                                       checked>
-                                                            Flush tables during import</label>
+                                                            Clear existing data</label>
                                                     </div>
                                                 </div>
                                             </div>

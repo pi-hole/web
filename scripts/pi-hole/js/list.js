@@ -223,7 +223,7 @@ function add(type) {
 $(document).keypress(function(e) {
     if(e.which === 13 && $("#domain").is(":focus")) {
         // Enter was pressed, and the input has focus
-        add("exact");
+        add(listType);
     }
 });
 

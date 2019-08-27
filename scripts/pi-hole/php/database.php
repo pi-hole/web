@@ -78,11 +78,10 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=fa
 	// Return early if we failed to prepare the SQLite statement
 	if(!$stmt)
 	{
-		echo "Failed to prepare statement for ".$table." table.";
 		if($returnnum)
 			return 0;
 		else
-			return "Error, added: 0";
+			return "Error: Failed to prepare statement for ".$table." table.";
 	}
 
 	// Loop over domains and inject the lines into the database
