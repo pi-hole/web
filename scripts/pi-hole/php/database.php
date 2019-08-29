@@ -140,7 +140,7 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=fa
 		if($modified !== $num)
 		{
 			$delta = $num - $modified;
-			$extra = " (".$delta." already existing)";
+			$extra = " (skipped ".$delta." duplicates)";
 		}
 		else
 		{
