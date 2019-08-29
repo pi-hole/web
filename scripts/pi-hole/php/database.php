@@ -135,11 +135,23 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=fa
 	{
 		$finalcount = intval($db->querySingle("SELECT COUNT(*) FROM ".$table.";"));
 		$modified = $finalcount - $initialcount;
+
+		// If we add less domains than the user specified, then they wanted to add duplicates
+		if($modified !== $num)
+		{
+			$delta = $num - $modified;
+			$extra = " (".$delta." already existing)";
+		}
+		else
+		{
+			$extra = "";
+		}
+
 		if($num === 1)
 			$plural = "";
 		else
 			$plural = "s";
-		return "Success, added ".$modified." of ".$num." domain".$plural;
+		return "Success, added ".$modified." of ".$num." domain".$plural.$extra;
 	}
 }
 
