@@ -16,25 +16,36 @@ if (empty($api)) {
     list_verify($type);
 }
 
-// Don't check if the added item is a valid domain for regex expressions.
-// Regex filters are validated by FTL on import and skipped if invalid
-if($type !== "regex") {
-    check_domain();
-}
+// Split individual domains into array
+$domains = preg_split('/\s+/', trim($_POST['domain']));
 
-// Escape shell metacharacters
-$domain = escapeshellcmd($_POST['domain']);
+require_once("func.php");
+
+require("database.php");
+$GRAVITYDB = getGravityDBFilename();
+$db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
 
 switch($type) {
-    case "white":
-        exec("sudo pihole -w -q -d ".$domain);
-        break;
-    case "black":
-        exec("sudo pihole -b -q -d ".$domain);
-        break;
-    case "regex":
-        exec("sudo pihole --regex -q -d ".$domain);
-        break;
+	case "white":
+		echo remove_from_table($db, "whitelist", $domains);
+		break;
+
+	case "black":
+		echo remove_from_table($db, "blacklist", $domains);
+		break;
+
+	case "black_regex":
+		echo remove_from_table($db, "regex_blacklist", $domains);
+		break;
+
+	case "white_regex":
+		echo remove_from_table($db, "regex_whitelist", $domains);
+		break;
+
+	default:
+		die("Invalid list!");
 }
 
+// Reload lists in pihole-FTL after having removed something
+echo shell_exec("sudo pihole restartdns reload");
 ?>

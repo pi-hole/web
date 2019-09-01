@@ -8,51 +8,62 @@
 
 require_once('auth.php');
 
-$type = $_POST['list'];
+$list = $_POST['list'];
 
 // Perform all of the authentication for list editing
 // when NOT invoked and authenticated from API
 if (empty($api)) {
-    list_verify($type);
+    list_verify($list);
 }
 
-// Don't check if the added item is a valid domain for regex expressions. Regex
-// filters are validated by FTL on import and skipped if invalid
-if($type !== "regex") {
+// Only check domains we add to the exact lists.
+// Regex are validated by FTL during import
+$check_lists = ["white","black","audit"];
+if(in_array($list, $check_lists)) {
     check_domain();
 }
 
-// Escape shell metacharacters
-$domains = escapeshellcmd($_POST['domain']);
+// Split individual domains into array
+$domains = preg_split('/\s+/', trim($_POST['domain']));
 
-switch($type) {
-    case "white":
-        if(!isset($_POST["auditlog"]))
-            echo shell_exec("sudo pihole -w --web ".$domains);
-        else
-        {
-            echo shell_exec("sudo pihole -w --web ".$domains);
-            echo shell_exec("sudo pihole -a audit ".$domains);
-        }
-        break;
-    case "black":
-        if(!isset($_POST["auditlog"]))
-            echo shell_exec("sudo pihole -b --web ".$domains);
-        else
-        {
-            echo shell_exec("sudo pihole -b --web ".$domains);
-            echo shell_exec("sudo pihole -a audit ".$domains);
-        }
-        break;
-    case "regex":
-        echo shell_exec("sudo pihole --regex --web ".$domains);
-        break;
-    case "wild":
-        echo shell_exec("sudo pihole --wild --web ".$domains);
-        break;
-    case "audit":
-        echo shell_exec("sudo pihole -a audit ".$domains);
-        break;
+require_once("func.php");
+require_once("database.php");
+$GRAVITYDB = getGravityDBFilename();
+$db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
+
+switch($list) {
+	case "white":
+		echo add_to_table($db, "whitelist", $domains);
+		break;
+
+	case "black":
+		echo add_to_table($db, "blacklist", $domains);
+		break;
+
+	case "black_regex":
+		echo add_to_table($db, "regex_blacklist", $domains);
+		break;
+
+	case "white_regex":
+		echo add_to_table($db, "regex_whitelist", $domains);
+		break;
+
+	case "black_wild":
+		echo add_to_table($db, "regex_blacklist", $domains, true);
+		break;
+
+	case "white_wild":
+		echo add_to_table($db, "regex_whitelist", $domains, true);
+		break;
+
+	case "audit":
+		echo add_to_table($db, "domain_audit", $domains);
+		break;
+
+	default:
+		die("Invalid list!");
 }
 
+// Reload lists in pihole-FTL after having added something
+echo shell_exec("sudo pihole restartdns reload");
 ?>

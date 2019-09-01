@@ -21,7 +21,7 @@ function getTableContent($listname) {
 	global $db;
 	$entries = array();
 	$querystr = implode(" ",array("SELECT ${listname}.*,\"group\".enabled as group_enabled",
-	                              "FROM $listname",
+	                              "FROM ${listname}",
 	                              "LEFT JOIN ${listname}_by_group ON ${listname}_by_group.${listname}_id = ${listname}.id",
 	                              "LEFT JOIN \"group\" ON \"group\".id = ${listname}_by_group.group_id",
 	                              "GROUP BY domain;"));
@@ -54,13 +54,15 @@ function filterArray(&$inArray) {
 switch ($listtype)
 {
 	case "white":
-		$list = getTableContent("whitelist");
+		$exact = getTableContent("whitelist");
+		$regex = getTableContent("regex_whitelist");
+		$list  = array_merge($exact, $regex);
 		break;
 
 	case "black":
 		$exact = getTableContent("blacklist");
-		$regex = getTableContent("regex");
-		$list = array_merge($exact, $regex);
+		$regex = getTableContent("regex_blacklist");
+		$list  = array_merge($exact, $regex);
 		break;
 
 	default:

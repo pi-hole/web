@@ -1145,7 +1145,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="whitelist" value="true"
                                                                       checked>
-                                                            Whitelist</label>
+                                                            Whitelist (exact)</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="regex_whitelist" value="true"
+                                                                      checked>
+                                                            Whitelist (regex)</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="blacklist" value="true"
@@ -1155,7 +1160,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="regexlist" value="true"
                                                                       checked>
-                                                            Regex filters</label>
+                                                            Blacklist (regex)</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="adlist" value="true"
+                                                                      checked>
+                                                            Blocklists</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="auditlog" value="true"
@@ -1172,6 +1182,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <button type="submit" class="btn btn-default" name="action"
                                                             value="in">Import
                                                     </button>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="flushtables" value="true"
+                                                                      checked>
+                                                            Clear existing data</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
