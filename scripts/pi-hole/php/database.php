@@ -33,7 +33,13 @@ function SQLite3_connect_try($filename, $mode, $trytoreconnect)
 		if($trytoreconnect)
 		{
 			sleep(3);
-			$db = SQLite3_connect_try($filename, $mode, false);
+			return SQLite3_connect_try($filename, $mode, false);
+		}
+		else
+		{
+			// If we should not try again (or are already trying again!), we return the exception string
+			// so the user gets it on the dashboard
+			return $filename.": ".$exception->getMessage();
 		}
 	}
 }
@@ -48,9 +54,9 @@ function SQLite3_connect($filename, $mode=SQLITE3_OPEN_READONLY)
 	{
 		die("No database available");
 	}
-	if(!$db)
+	if(is_string($db))
 	{
-		die("Error connecting to database");
+		die("Error connecting to database\n".$db);
 	}
 
 	// Add busy timeout so methods don't fail immediately when, e.g., FTL is currently reading from the DB
