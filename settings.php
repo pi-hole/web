@@ -1150,7 +1150,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="regex_whitelist" value="true"
                                                                       checked>
-                                                            Whitelist (regex)</label>
+                                                            Whitelist (regex/wildcard)</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="blacklist" value="true"
@@ -1160,7 +1160,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="regexlist" value="true"
                                                                       checked>
-                                                            Blacklist (regex)</label>
+                                                            Blacklist (regex/wildcard)</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="adlist" value="true"
