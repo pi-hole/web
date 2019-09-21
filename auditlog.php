@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="overlay">
-          <i class="fa fa-refresh fa-spin"></i>
+          <i class="fa fa-sync fa-spin"></i>
         </div>
         <!-- /.box-body -->
       </div>
@@ -62,7 +62,7 @@
             </div>
         </div>
         <div class="overlay">
-          <i class="fa fa-refresh fa-spin"></i>
+          <i class="fa fa-sync fa-spin"></i>
         </div>
         <!-- /.box-body -->
       </div>
@@ -75,13 +75,7 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
-<div class="container">
-  <div class="row justify-content-md-right">
-    <div class="col-2">
-      <button class="btn btn-lg btn-primary btn-block" id="gravityBtn" disabled="true">Update black-/whitelists</button>
-    </div>
-  </div>
-</div>
+<button class="btn btn-lg btn-primary btn-block" id="gravityBtn" disabled="true">Update black-/whitelists</button>
 
 <script src="scripts/pi-hole/js/auditlog.js"></script>
 

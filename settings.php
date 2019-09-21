@@ -46,7 +46,7 @@ if (isset($_POST["submit"])) {
     <div id="alDebug" class="alert alert-warning alert-dismissible fade in" role="alert">
         <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
         </button>
-        <h4><i class="icon fa fa-warning"></i> Debug</h4>
+        <h4><i class="icon fa fa-exclamation-triangle"></i> Debug</h4>
         <pre><?php print_r($_POST); ?></pre>
     </div>
 <?php } ?>
@@ -787,7 +787,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="radio">
                                                         <label><input type="radio" name="DNSinterface" value="single"
                                                                       <?php if ($DNSinterface == "single"){ ?>checked<?php } ?>>
-                                                               <strong>Listen only on interface <?php echo $piHoleInterface; ?></strong>
+                                                               <strong>Listen only on interface <?php echo htmlentities($piHoleInterface); ?></strong>
                                                         </label>
                                                     </div>
                                                     <div class="radio">
@@ -856,11 +856,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                    determine the names of devices on your local network.  As a
                                                    result, tables such as Top Clients will only show IP addresses.</p>
                                                 <p>One solution for this is to configure Pi-hole to forward these
-	                                                 requests to your home router, but only for devices on your
+	                                                 requests to your DHCP server (most likely your router), but only for devices on your
 	                                                 home network.  To configure this we will need to know the IP
-	                                                 address of your router and the name of your local network.</p>
+	                                                 address of your DHCP server and the name of your local network.</p>
                                                 <p>Note: The local domain name must match the domain name specified
-	                                                 in your router, likely found within the DHCP settings.</p>
+                                                        in your DHCP server, likely found within the DHCP settings.</p>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="conditionalForwarding" value="conditionalForwarding"
@@ -1196,19 +1196,19 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 <tbody>
                                                 <tr>
                                                     <th scope="row">Pi-hole Ethernet Interface:</th>
-                                                    <td><?php echo $piHoleInterface; ?></td>
+                                                    <td><?php echo htmlentities($piHoleInterface); ?></td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Pi-hole IPv4 address:</th>
-                                                    <td><?php echo $piHoleIPv4; ?></td>
+                                                    <td><?php echo htmlentities($piHoleIPv4); ?></td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Pi-hole IPv6 address:</th>
-                                                    <td><?php echo $piHoleIPv6; ?></td>
+                                                    <td><?php echo htmlentities($piHoleIPv6); ?></td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Pi-hole hostname:</th>
-                                                    <td><?php echo $hostname; ?></td>
+                                                    <td><?php echo htmlentities($hostname); ?></td>
                                                 </tr>
                                                 </tbody>
                                             </table>
