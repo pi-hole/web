@@ -257,8 +257,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             <table class="table table-striped table-bordered dt-responsive nowrap">
                                                 <thead>
                                                 <tr>
-                                                    <th>Enabled</th>
+                                                    <th style="width:1%">Enabled</th>
                                                     <th>List</th>
+                                                    <th>Added</th>
+                                                    <th>Last modified</th>
+                                                    <th>Comment</th>
                                                     <th style="width:1%">Delete</th>
                                                 </tr>
                                                 </thead>
@@ -266,10 +269,19 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <?php foreach ($adlist as $key => $value) { ?>
                                                         <tr>
                                                             <td>
-                                                                <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if ($value[0]){ ?>checked<?php } ?>>
+                                                                <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if ($value["enabled"] === 1){ ?>checked<?php } ?>>
                                                             </td>
                                                             <td>
-                                                                <a href="<?php echo htmlentities($value[1]); ?>" target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value[1]); ?></a>
+                                                                <a href="<?php echo htmlentities($value["address"]); ?>" target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value["address"]); ?></a>
+                                                            </td>
+                                                            <td>
+                                                                <?php echo date(DateTime::RFC2822, intval($value["date_added"])); ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php echo date(DateTime::RFC2822, intval($value["date_modified"])); ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php echo htmlentities($value["comment"]); ?>
                                                             </td>
                                                             <td class="text-center">
                                                                 <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
@@ -283,7 +295,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             </table>
                                         </div>
                                         <div class="form-group">
-                                            <textarea name="newuserlists" class="form-control" rows="1" placeholder="Enter one URL per line to add new blocklists"></textarea>
+                                            <input name="newuserlists" class="form-control" placeholder="Enter a URL to add a new blocklist">
                                         </div>
                                         <input type="hidden" name="field" value="adlists">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
@@ -1133,7 +1145,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="whitelist" value="true"
                                                                       checked>
-                                                            Whitelist</label>
+                                                            Whitelist (exact)</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="regex_whitelist" value="true"
+                                                                      checked>
+                                                            Whitelist (regex/wildcard)</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="blacklist" value="true"
@@ -1143,7 +1160,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="regexlist" value="true"
                                                                       checked>
-                                                            Regex filters</label>
+                                                            Blacklist (regex/wildcard)</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="adlist" value="true"
+                                                                      checked>
+                                                            Blocklists</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="auditlog" value="true"
@@ -1160,6 +1182,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <button type="submit" class="btn btn-default" name="action"
                                                             value="in">Import
                                                     </button>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="flushtables" value="true"
+                                                                      checked>
+                                                            Clear existing data</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1319,9 +1346,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
-                                            <?php if ($piHoleLogging) { ?>
-                                                <button type="button" class="btn btn-danger confirm-disablelogging form-control">Disable query logging and flush logs</button>
-                                            <?php } ?>
+                                                <button type="button" class="btn btn-warning confirm-flusharp form-control">Flush network table</button>
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
@@ -1347,9 +1372,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         <input type="hidden" name="field" value="flushlogs">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
                                     </form>
-                                    <form role="form" method="post" id="disablelogsform">
-                                        <input type="hidden" name="field" value="Logging">
-                                        <input type="hidden" name="action" value="Disable">
+                                    <form role="form" method="post" id="flusharpform">
+                                        <input type="hidden" name="field" value="flusharp">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
                                     </form>
                                     <form role="form" method="post" id="disablelogsform-noflush">

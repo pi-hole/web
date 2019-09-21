@@ -16,44 +16,36 @@ if (empty($api)) {
     list_verify($type);
 }
 
-// Don't check if the added item is a valid domain for regex expressions. Regex
-// filters are validated by FTL on import and skipped if invalid
-if($type !== "regex") {
-    check_domain();
-}
+// Split individual domains into array
+$domains = preg_split('/\s+/', trim($_POST['domain']));
+
+require_once("func.php");
+
+require("database.php");
+$GRAVITYDB = getGravityDBFilename();
+$db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
 
 switch($type) {
-    case "white":
-        exec("sudo pihole -w -q -d ${_POST['domain']}");
-        break;
-    case "black":
-        exec("sudo pihole -b -q -d ${_POST['domain']}");
-        break;
-    case "regex":
-        if(($list = file_get_contents($regexfile)) === FALSE)
-        {
-            $err = error_get_last()["message"];
-            echo "Unable to read ${regexfile}<br>Error message: $err";
-        }
+	case "white":
+		echo remove_from_table($db, "whitelist", $domains);
+		break;
 
-        // Remove the regex and any empty lines from the list
-        $list = explode("\n", $list);
-        $list = array_diff($list, array($_POST['domain'], ""));
-        $list = implode("\n", $list);
+	case "black":
+		echo remove_from_table($db, "blacklist", $domains);
+		break;
 
-        if(file_put_contents($regexfile, $list."\n") === FALSE)
-        {
-            $err = error_get_last()["message"];
-            echo "Unable to remove regex \"".htmlspecialchars($_POST['domain'])."\" from ${regexfile}<br>Error message: $err";
-        }
-        else
-        {
-            // Send SIGHUP to pihole-FTL using a frontend command
-            // to force reloading of the regex domains
-            // This will also wipe the resolver's cache
-            echo exec("sudo pihole restartdns reload");
-        }
-        break;
+	case "black_regex":
+		echo remove_from_table($db, "regex_blacklist", $domains);
+		break;
+
+	case "white_regex":
+		echo remove_from_table($db, "regex_whitelist", $domains);
+		break;
+
+	default:
+		die("Invalid list!");
 }
 
+// Reload lists in pihole-FTL after having removed something
+echo shell_exec("sudo pihole restartdns reload");
 ?>

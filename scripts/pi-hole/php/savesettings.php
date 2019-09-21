@@ -165,37 +165,22 @@ function readDNSserversList()
 	return $list;
 }
 
+require_once("database.php");
 $adlist = [];
 function readAdlists()
 {
 	// Reset list
 	$list = [];
-	$handle = @fopen("/etc/pihole/adlists.list", "r");
-	if ($handle)
+	$db = SQLite3_connect(getGravityDBFilename());
+	if ($db)
 	{
-		while (($line = fgets($handle)) !== false)
+		$results = $db->query("SELECT * FROM adlist");
+
+		while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
 		{
-			if(strlen($line) < 3)
-			{
-				continue;
-			}
-			elseif($line[0] === "#")
-			{
-				// Comments start either with "##" or "# "
-				if($line[1] !== "#" &&
-				   $line[1] !== " ")
-				{
-					// Commented list
-					array_push($list, [false,rtrim(substr($line, 1))]);
-				}
-			}
-			else
-			{
-				// Active list
-				array_push($list, [true,rtrim($line)]);
-			}
+			array_push($list, $res);
 		}
-		fclose($handle);
+		$db->close();
 	}
 	return $list;
 }
@@ -704,18 +689,18 @@ function readAdlists()
 					if(isset($_POST["adlist-del-".$key]))
 					{
 						// Delete list
-						exec("sudo pihole -a adlist del ".escapeshellcmd($value[1]));
+						exec("sudo pihole -a adlist del ".escapeshellcmd($value["address"]));
 					}
-					elseif(isset($_POST["adlist-enable-".$key]) && !$value[0])
+					elseif(isset($_POST["adlist-enable-".$key]) && $value["enabled"] !== 1)
 					{
 						// Is not enabled, but should be
-						exec("sudo pihole -a adlist enable ".escapeshellcmd($value[1]));
+						exec("sudo pihole -a adlist enable ".escapeshellcmd($value["address"]));
 
 					}
-					elseif(!isset($_POST["adlist-enable-".$key]) && $value[0])
+					elseif(!isset($_POST["adlist-enable-".$key]) && $value["enabled"] === 1)
 					{
 						// Is enabled, but shouldn't be
-						exec("sudo pihole -a adlist disable ".escapeshellcmd($value[1]));
+						exec("sudo pihole -a adlist disable ".escapeshellcmd($value["address"]));
 					}
 				}
 
@@ -763,6 +748,15 @@ function readAdlists()
 				else
 				{
 					$error .= "Invalid privacy level (".$level.")!";
+				}
+				break;
+			// Flush network table
+			case "flusharp":
+				exec("sudo pihole arpflush quiet", $output);
+				$error = implode("<br>", $output);
+				if(strlen($error) == 0)
+				{
+					$success .= "The network table has been flushed";
 				}
 				break;
 

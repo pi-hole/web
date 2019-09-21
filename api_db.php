@@ -8,6 +8,7 @@
 
 $api = true;
 header('Content-type: application/json');
+require("scripts/pi-hole/php/database.php");
 require("scripts/pi-hole/php/password.php");
 require("scripts/pi-hole/php/auth.php");
 check_cors();
@@ -48,7 +49,7 @@ function resolveHostname($clientip, $printIP)
 	return $clientname;
 }
 
-// Get posible non-standard location of FTL's database
+// Get possible non-standard location of FTL's database
 $FTLsettings = parse_ini_file("/etc/pihole/pihole-FTL.conf");
 if(isset($FTLsettings["DBFILE"]))
 {
@@ -62,37 +63,7 @@ else
 // Needs package php5-sqlite, e.g.
 //    sudo apt-get install php5-sqlite
 
-function SQLite3_connect($trytoreconnect)
-{
-	global $DBFILE;
-	try
-	{
-		// connect to database
-		return new SQLite3($DBFILE, SQLITE3_OPEN_READONLY);
-	}
-	catch (Exception $exception)
-	{
-		// sqlite3 throws an exception when it is unable to connect, try to reconnect after 3 seconds
-		if($trytoreconnect)
-		{
-			sleep(3);
-			$db = SQLite3_connect(false);
-		}
-	}
-}
-
-if(strlen($DBFILE) > 0)
-{
-	$db = SQLite3_connect(true);
-}
-else
-{
-	die("No database available");
-}
-if(!$db)
-{
-	die("Error connecting to database");
-}
+$db = SQLite3_connect($DBFILE);
 
 if(isset($_GET["network"]) && $auth)
 {
@@ -100,7 +71,16 @@ if(isset($_GET["network"]) && $auth)
 	$results = $db->query('SELECT * FROM network');
 
 	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
+	{
+		$id = $res["id"];
+		// Empty array for holding the IP addresses
+		$res["ip"] = array();
+		// Get IP addresses for this device
+		$network_addresses = $db->query("SELECT ip FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC");
+		while($network_addresses !== false && $ip = $network_addresses->fetchArray(SQLITE3_ASSOC))
+			array_push($res["ip"],$ip["ip"]);
 		array_push($network, $res);
+	}
 
 	$data = array_merge($data, array('network' => $network));
 }
