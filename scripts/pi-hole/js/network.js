@@ -142,7 +142,7 @@ $(document).ready(function() {
         "processing": true,
         "order" : [[5, "desc"]],
         "columns": [
-            {data: "ip", "width" : "10%", "render": $.fn.dataTable.render.text(), "orderable": false },
+            {data: "ip", "type": "ip-address", "width" : "10%", "render": $.fn.dataTable.render.text() },
             {data: "hwaddr", "width" : "10%", "render": $.fn.dataTable.render.text() },
             {data: "interface", "width" : "4%", "render": $.fn.dataTable.render.text() },
             {data: "name", "width" : "15%", "render": $.fn.dataTable.render.text() },
