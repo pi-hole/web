@@ -56,6 +56,16 @@ function validMAC($mac_addr)
   return (preg_match('/([a-fA-F0-9]{2}[:]?){6}/', $mac_addr) == 1);
 }
 
+function validEmail($email)
+{
+	return filter_var($email, FILTER_VALIDATE_EMAIL)
+		// Make sure that the email does not contain special characters which
+		// may be used to execute shell commands, even though they may be valid
+		// in an email address. If the escaped email does not equal the original
+		// email, it is not safe to store in setupVars.
+		&& escapeshellcmd($email) === $email;
+}
+
 $dhcp_static_leases = array();
 function readStaticLeasesFile()
 {
@@ -527,7 +537,7 @@ function readAdlists()
 				{
 					$adminemail = 'noadminemail';
 				}
-				elseif(!filter_var($adminemail, FILTER_VALIDATE_EMAIL) || strpos($adminemail, "'") !== false)
+				elseif(!validEmail($adminemail))
 				{
 					$error .= "Administrator email address (".htmlspecialchars($adminemail).") is invalid!<br>";
 				}
@@ -603,7 +613,7 @@ function readAdlists()
 					if(strlen($ip) == 0)
 						$ip = "noip";
 
-					// Test if this MAC address is already included
+					// Test if this lease is already included
 					readStaticLeasesFile();
 					foreach($dhcp_static_leases as $lease) {
 						if($lease["hwaddr"] === $mac)
@@ -614,6 +624,11 @@ function readAdlists()
 						if($ip !== "noip" && $lease["IP"] === $ip)
 						{
 							$error .= "Static lease for IP address (".htmlspecialchars($ip).") already defined!<br>";
+							break;
+						}
+						if($lease["host"] === $hostname)
+						{
+							$error .= "Static lease for hostname (".htmlspecialchars($hostname).") already defined!<br>";
 							break;
 						}
 					}

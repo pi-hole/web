@@ -90,7 +90,7 @@
           </div>
         </div>
         <div class="overlay">
-          <i class="fa fa-refresh fa-spin"></i>
+          <i class="fa fa-sync fa-spin"></i>
         </div>
         <!-- /.box-body -->
       </div>
@@ -136,7 +136,7 @@
           </div>
         </div>
         <div class="overlay">
-          <i class="fa fa-refresh fa-spin"></i>
+          <i class="fa fa-sync fa-spin"></i>
         </div>
         <!-- /.box-body -->
       </div>
@@ -158,7 +158,7 @@
           </div>
         </div>
         <div class="overlay">
-          <i class="fa fa-refresh fa-spin"></i>
+          <i class="fa fa-sync fa-spin"></i>
         </div>
         <!-- /.box-body -->
       </div>
@@ -177,72 +177,12 @@
           </div>
         </div>
         <div class="overlay">
-          <i class="fa fa-refresh fa-spin"></i>
+          <i class="fa fa-sync fa-spin"></i>
         </div>
         <!-- /.box-body -->
       </div>
     </div>
 </div>
-<?php
-  // Determine if "Query Types (over time)" should be shown
-  $queryTypesOverTime = false;
-  if(isset($setupVars['DASHBOARD_SHOW_QUERY_TYPES_OVER_TIME']))
-  {
-    if($setupVars['DASHBOARD_SHOW_QUERY_TYPES_OVER_TIME'])
-    {
-        $queryTypesOverTime = true;
-    }
-  }
-
-  // Determine if "Forward Destinations (over time)" should be shown
-  $forwardDestsOverTime = false;
-  if(isset($setupVars['DASHBOARD_SHOW_FORWARD_DESTS_OVER_TIME']))
-  {
-    if($setupVars['DASHBOARD_SHOW_FORWARD_DESTS_OVER_TIME'])
-    {
-        $forwardDestsOverTime = true;
-    }
-  }
-?>
-<?php if($forwardDestsOverTime || $queryTypesOverTime) { ?>
-<div class="row">
-<?php if($queryTypesOverTime) { ?>
-    <div class="col-md-12 col-lg-6">
-    <div class="box" id="query-types">
-        <div class="box-header with-border">
-          <h3 class="box-title">Query Types (over time)</h3>
-        </div>
-        <div class="box-body">
-          <div class="chart">
-            <canvas id="queryTypeChart" width="400" height="150"></canvas>
-          </div>
-        </div>
-        <div class="overlay">
-          <i class="fa fa-refresh fa-spin"></i>
-        </div>
-        <!-- /.box-body -->
-      </div>
-    </div>
-<?php } if($forwardDestsOverTime) { ?>
-    <div class="col-md-12 col-lg-6">
-    <div class="box" id="forward-destinations">
-        <div class="box-header with-border">
-          <h3 class="box-title">Upstreams (over time)</h3>
-        </div>
-        <div class="box-body">
-          <div class="chart">
-            <canvas id="forwardDestinationChart" width="400" height="150"></canvas>
-          </div>
-        </div>
-        <div class="overlay">
-          <i class="fa fa-refresh fa-spin"></i>
-        </div>
-        <!-- /.box-body -->
-      </div>
-    </div>
-<?php } ?>
-</div>
-<?php } ?>
 
 <?php
 if($boxedlayout)
@@ -275,7 +215,7 @@ else
             </div>
         </div>
         <div class="overlay">
-          <i class="fa fa-refresh fa-spin"></i>
+          <i class="fa fa-sync fa-spin"></i>
         </div>
         <!-- /.box-body -->
       </div>
@@ -302,7 +242,7 @@ else
             </div>
         </div>
         <div class="overlay">
-          <i class="fa fa-refresh fa-spin"></i>
+          <i class="fa fa-sync fa-spin"></i>
         </div>
         <!-- /.box-body -->
       </div>
@@ -331,7 +271,7 @@ else
             </div>
         </div>
         <div class="overlay">
-          <i class="fa fa-refresh fa-spin"></i>
+          <i class="fa fa-sync fa-spin"></i>
         </div>
         <!-- /.box-body -->
       </div>
@@ -359,7 +299,7 @@ else
             </div>
         </div>
         <div class="overlay">
-          <i class="fa fa-refresh fa-spin"></i>
+          <i class="fa fa-sync fa-spin"></i>
         </div>
         <!-- /.box-body -->
       </div>
