@@ -83,7 +83,7 @@
     }
 }
 
-.main-header>.navbar {
+.main-header>.navbar, .navbar>.sidebar-toggle {
   height: 50px;
 }
 

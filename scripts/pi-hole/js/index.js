@@ -261,15 +261,16 @@ function updateClientsOverTime() {
             return;
         }
 
-        // convert received objects to arrays
-        data.over_time = objectToArray(data.over_time);
-
         // Remove graph if there are no results (e.g. privacy mode enabled)
         if(jQuery.isEmptyObject(data.over_time))
         {
             $("#clients").parent().remove();
             return;
         }
+
+        // convert received objects to arrays
+        data.over_time = objectToArray(data.over_time);
+
         // remove last data point since it not representative
         data.over_time[0].splice(-1,1);
         var timestamps = data.over_time[0];
@@ -636,8 +637,8 @@ function updateSummaryData(runOnce) {
             $("#temperature").html("<i class=\"fa fa-circle\" style=\"color:#FF0000\"></i> FTL offline");
             // Show spinner
             $("#queries-over-time .overlay").show();
-            $("#forward-destinations .overlay").show();
-            $("#query-types .overlay").show();
+            $("#forward-destinations-pie .overlay").show();
+            $("#query-types-pie .overlay").show();
             $("#client-frequency .overlay").show();
             $("#domain-frequency .overlay").show();
             $("#ad-frequency .overlay").show();

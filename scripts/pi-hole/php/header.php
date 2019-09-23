@@ -60,6 +60,15 @@
         {
             $temperatureunit = $_POST["tempunit"];
         }
+        // Get user-defined temperature limit if set
+        if(isset($setupVars['TEMPERATURE_LIMIT']))
+        {
+            $temperaturelimit = intval($setupVars['TEMPERATURE_LIMIT']);
+        }
+        else
+        {
+            $temperaturelimit = 60;
+        }
     }
     else
     {
@@ -352,7 +361,7 @@ if($auth) {
                         {
                             if ($celsius >= -273.15) {
                                 echo "<a id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
-                                if ($celsius > 60) {
+                                if ($celsius > $temperaturelimit) {
                                     echo "#FF0000";
                                 }
                                 else
