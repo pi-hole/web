@@ -13,7 +13,6 @@ Pi-hole[®](https://pi-hole.net/trademark-rules-and-brand-guidelines/)'s Web int
 - **Insightful**: use the query log, audit log, or long-term stats to gain insight into your networks activity
 
 ---
-<a class="badge-align" href="https://www.codacy.com/app/Pi-hole/AdminLTE?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pi-hole/AdminLTE&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/10540ea45a3b4d5f992c05a2c9714609"/></a>
 <img src="https://pi-hole.github.io/graphics/Badges/browserstack-badge.png" height="80"><br>
 
 # Installation
