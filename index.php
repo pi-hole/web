@@ -32,7 +32,7 @@
                 <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
             </div>
             <div class="icon">
-                <i class="ion ion-earth"></i>
+                <i class="fas fa-globe-americas"></i>
             </div>
         </div>
     </div>
@@ -45,7 +45,7 @@
                 <h3 class="statistic"><span id="ads_blocked_today">---</span></h3>
             </div>
             <div class="icon">
-                <i class="ion ion-android-hand"></i>
+                <i class="fas fa-hand-paper"></i>
             </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
                 <h3 class="statistic"><span id="ads_percentage_today">---</span></h3>
             </div>
             <div class="icon">
-                <i class="ion ion-pie-graph"></i>
+                <i class="fas fa-bug"></i>
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@
                 <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
             </div>
             <div class="icon">
-                <i class="ion ion-ios-list"></i>
+                <i class="fas fa-globe"></i>
             </div>
         </div>
     </div>
