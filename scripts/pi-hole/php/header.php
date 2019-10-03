@@ -209,10 +209,6 @@
     <link href="style/pi-hole.css" rel="stylesheet" type="text/css" />
     <link rel="icon" type="image/png" sizes="160x160" href="img/logo.svg" />
 
-    <!--[if lt IE 9]>
-    <script src="scripts/vendor/html5shiv.min.js"></script>
-    <script src="scripts/vendor/respond.min.js"></script>
-    <![endif]-->
 </head>
 <body class="skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <!-- JS Warning -->
