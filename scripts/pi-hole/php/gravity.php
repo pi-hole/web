@@ -12,14 +12,26 @@ function gravity_last_update($raw = false)
 {
 	$db = SQLite3_connect(getGravityDBFilename());
 	$date_file_created_unix = $db->querySingle("SELECT value FROM info WHERE property = 'updated';");
-	if($date_file_created_unix !== false)
+	if($date_file_created_unix === false)
 	{
-		$date_file_created = date_create("@".intval($date_file_created_unix));
-		$date_now = date_create("now");
-		$gravitydiff = date_diff($date_file_created,$date_now);
 		if($raw)
 		{
-			$output = array(
+			// Array output
+			return array("file_exists" => false);
+		}
+		else
+		{
+			// String output
+			return "Gravity database not available";
+		}
+	}
+	$date_file_created = date_create("@".intval($date_file_created_unix));
+	$date_now = date_create("now");
+	$gravitydiff = date_diff($date_file_created,$date_now);
+	if($raw)
+	{
+		// Array output
+		return array(
 			"file_exists"=> true,
 			"absolute" => $date_file_created_unix,
 			"relative" => array(
@@ -28,34 +40,20 @@ function gravity_last_update($raw = false)
 				"minutes" =>  $gravitydiff->format("%I"),
 				)
 			);
-		}
-		else
-		{
-			if($gravitydiff->d > 1)
-			{
-				$output = $gravitydiff->format("Blocking list updated %a days, %H:%I ago");
-			}
-			elseif($gravitydiff->d == 1)
-			{
-				$output = $gravitydiff->format("Blocking list updated one day, %H:%I ago");
-			}
-			else
-			{
-				$output = $gravitydiff->format("Blocking list updated %H:%I ago");
-			}
-		}
 	}
-	else
+
+	if($gravitydiff->d > 1)
 	{
-		if($raw)
-		{
-			$output = array("file_exists" => false);
-		}
-		else
-		{
-			$output = "Gravity database not available";
-		}
+		// String output (more than one day ago)
+		return $gravitydiff->format("Blocking list updated %a days, %H:%I (hh:mm) ago");
 	}
-	return $output;
+	elseif($gravitydiff->d == 1)
+	{
+		// String output (one day ago)
+		return $gravitydiff->format("Blocking list updated one day, %H:%I (hh:mm) ago");
+	}
+
+	// String output (less than one day ago)
+	return $gravitydiff->format("Blocking list updated %H:%I (hh:mm) ago");
 }
 ?>
