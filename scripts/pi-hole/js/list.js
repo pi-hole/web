@@ -234,7 +234,7 @@ $(document).keypress(function(e) {
     if(e.which === 13 && $("#domain,#comment").is(":focus")) {
         // Enter was pressed, and the input has focus
         add(listType);
-    };
+    }
 });
 
 // Handle buttons
