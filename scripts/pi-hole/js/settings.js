@@ -225,7 +225,7 @@ $("button[id^='adlist-btn-']").on("click", function (e) {
 	$("input[name=\"adlist-del-"+id+"\"]").prop("checked", !status);
 	// Untick and disable check box (or reset)
 	$("input[name=\"adlist-enable-"+id+"\"]").prop("checked", status).prop("disabled", !status);
-	// Strink through text (or reset)
+	// Strike through text (or reset)
 	$("a[id=\"adlist-text-"+id+"\"]").css("text-decoration", textType);
 	// Highlight that the button has to be clicked in order to make the change live
 	$("button[id=\"blockinglistsaveupdate\"]").addClass("btn-danger").css("font-weight", "bold");

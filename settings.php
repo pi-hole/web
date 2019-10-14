@@ -294,9 +294,16 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <div class="form-group">
-                                            <input name="newuserlists" class="form-control" placeholder="Enter a URL to add a new blocklist">
-                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-xs-6">
+                                                <label for="newuserlists">Domain:</label>
+                                                <input name="newuserlists" type="text" class="form-control" placeholder="Enter a URL to add a new blocklist">
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <label for="newusercomment">Comment:</label>
+                                                <input name="newusercomment" type="text" class="form-control" placeholder="Include a comment (optional)">
+                                            </div>                                            
+                                        </div>  
                                         <input type="hidden" name="field" value="adlists">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
                                     </div>
