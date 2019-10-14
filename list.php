@@ -32,14 +32,24 @@ function getFullName() {
 </div>
 
 <!-- Domain Input -->
-<div class="form-group input-group">
+<div class="form-group row">
+  <div class="col-xs-4">
+    <label for="ex1">Domain:</label>
     <input id="domain" type="text" class="form-control" placeholder="Add a domain (example.com or sub.example.com)">
+  </div>
+  <div class="col-xs-4">
+    <label for="ex2">Comment:</label>
+    <input id="comment" type="text" class="form-control" placeholder="Include a comment (optional)">
+  </div>
+  <div class="col-xs-4">
+    <label for="ex2">&nbsp;</label>
     <span class="input-group-btn">
         <button id="btnAdd" class="btn btn-default" type="button">Add (exact)</button>
         <button id="btnAddWildcard" class="btn btn-default" type="button">Add (wildcard)</button>
         <button id="btnAddRegex" class="btn btn-default" type="button">Add (regex)</button>
         <button id="btnRefresh" class="btn btn-default" type="button"><i class="fa fa-sync"></i></button>
     </span>
+  </div>
 </div>
 
 <!-- Alerts -->

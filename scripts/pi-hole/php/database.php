@@ -76,7 +76,7 @@ function SQLite3_connect($filename, $mode=SQLITE3_OPEN_READONLY)
  * @param $returnnum boolean Whether to return an integer or a string
  * @return string Success/error and number of processed domains
  */
-function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=false)
+function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $returnnum=false)
 {
 	// Begin transaction
 	if(!$db->exec("BEGIN TRANSACTION;"))
@@ -89,7 +89,7 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=fa
 	$initialcount = intval($db->querySingle("SELECT COUNT(*) FROM ".$table.";"));
 
 	// Prepare SQLite statememt
-	$stmt = $db->prepare("INSERT OR IGNORE INTO ".$table." (domain) VALUES (:domain);");
+	$stmt = $db->prepare("INSERT OR IGNORE INTO ".$table." (domain,comment) VALUES (:domain, :comment);");
 
 	// Return early if we failed to prepare the SQLite statement
 	if(!$stmt)
@@ -112,6 +112,7 @@ function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=fa
 			$domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
 
 		$stmt->bindValue(":domain", $domain, SQLITE3_TEXT);
+		$stmt->bindValue(":comment", $comment, SQLITE3_TEXT);
 
 		if($stmt->execute() && $stmt->reset())
 			$num++;

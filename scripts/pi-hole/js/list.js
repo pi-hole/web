@@ -173,6 +173,8 @@ function add(type) {
         return;
     }
 
+    var comment = $("#comment");
+
     var alInfo = $("#alInfo");
     var alSuccess = $("#alSuccess");
     var alFailure = $("#alFailure");
@@ -187,7 +189,7 @@ function add(type) {
     $.ajax({
         url: "scripts/pi-hole/php/add.php",
         method: "post",
-        data: {"domain":domain.val().trim(), "list":type, "token":token},
+        data: {"domain":domain.val().trim(),"comment":comment.val(), "list":type, "token":token},
         success: function(response) {
             if (response.indexOf("Success") === -1) {
                 alFailure.show();
@@ -208,6 +210,7 @@ function add(type) {
                     alInfo.hide();
                 });
                 domain.val("");
+                comment.val("");
                 refresh(true);
             }
         },
@@ -228,10 +231,10 @@ function add(type) {
 
 // Handle enter button for adding domains
 $(document).keypress(function(e) {
-    if(e.which === 13 && $("#domain").is(":focus")) {
+    if(e.which === 13 && $("#domain,#comment").is(":focus")) {
         // Enter was pressed, and the input has focus
         add(listType);
-    }
+    };
 });
 
 // Handle buttons
