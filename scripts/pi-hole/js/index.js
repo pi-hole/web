@@ -637,8 +637,8 @@ function updateSummaryData(runOnce) {
             $("#temperature").html("<i class=\"fa fa-circle\" style=\"color:#FF0000\"></i> FTL offline");
             // Show spinner
             $("#queries-over-time .overlay").show();
-            $("#forward-destinations .overlay").show();
-            $("#query-types .overlay").show();
+            $("#forward-destinations-pie .overlay").show();
+            $("#query-types-pie .overlay").show();
             $("#client-frequency .overlay").show();
             $("#domain-frequency .overlay").show();
             $("#ad-frequency .overlay").show();

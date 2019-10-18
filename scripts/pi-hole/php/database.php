@@ -33,7 +33,13 @@ function SQLite3_connect_try($filename, $mode, $trytoreconnect)
 		if($trytoreconnect)
 		{
 			sleep(3);
-			$db = SQLite3_connect_try($filename, $mode, false);
+			return SQLite3_connect_try($filename, $mode, false);
+		}
+		else
+		{
+			// If we should not try again (or are already trying again!), we return the exception string
+			// so the user gets it on the dashboard
+			return $filename.": ".$exception->getMessage();
 		}
 	}
 }
@@ -48,10 +54,184 @@ function SQLite3_connect($filename, $mode=SQLITE3_OPEN_READONLY)
 	{
 		die("No database available");
 	}
-	if(!$db)
+	if(is_string($db))
 	{
-		die("Error connecting to database");
+		die("Error connecting to database\n".$db);
 	}
+
+	// Add busy timeout so methods don't fail immediately when, e.g., FTL is currently reading from the DB
+	$db->busyTimeout(5000);
+
 	return $db;
 }
+
+
+/**
+ * Add domains to a given table
+ *
+ * @param $db object The SQLite3 database connection object
+ * @param $table string The target table
+ * @param $domains array Array of domains (strings) to be added to the table
+ * @param $wildcardstyle boolean Whether to format the input domains in legacy wildcard notation
+ * @param $returnnum boolean Whether to return an integer or a string
+ * @return string Success/error and number of processed domains
+ */
+function add_to_table($db, $table, $domains, $wildcardstyle=false, $returnnum=false)
+{
+	// Begin transaction
+	if(!$db->exec("BEGIN TRANSACTION;"))
+	{
+		if($returnnum)
+			return 0;
+		else
+			return "Error: Unable to begin transaction for ".$table." table.";
+	}
+	$initialcount = intval($db->querySingle("SELECT COUNT(*) FROM ".$table.";"));
+
+	// Prepare SQLite statememt
+	$stmt = $db->prepare("INSERT OR IGNORE INTO ".$table." (domain) VALUES (:domain);");
+
+	// Return early if we failed to prepare the SQLite statement
+	if(!$stmt)
+	{
+		if($returnnum)
+			return 0;
+		else
+			return "Error: Failed to prepare statement for ".$table." table.";
+	}
+
+	// Loop over domains and inject the lines into the database
+	$num = 0;
+	foreach($domains as $domain)
+	{
+		// Limit max length for a domain entry to 253 chars
+		if(strlen($domain) > 253)
+			continue;
+
+		if($wildcardstyle)
+			$domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
+
+		$stmt->bindValue(":domain", $domain, SQLITE3_TEXT);
+
+		if($stmt->execute() && $stmt->reset())
+			$num++;
+		else
+		{
+			$stmt->close();
+			if($returnnum)
+				return $num;
+			else
+			{
+				if($num === 1)
+					$plural = "";
+				else
+					$plural = "s";
+				return "Error: ".$db->lastErrorMsg().", added ".$num." domain".$plural;
+			}
+		}
+	}
+
+	// Close prepared statement and return number of processed rows
+	$stmt->close();
+	$db->exec("COMMIT;");
+
+	if($returnnum)
+		return $num;
+	else
+	{
+		$finalcount = intval($db->querySingle("SELECT COUNT(*) FROM ".$table.";"));
+		$modified = $finalcount - $initialcount;
+
+		// If we add less domains than the user specified, then they wanted to add duplicates
+		if($modified !== $num)
+		{
+			$delta = $num - $modified;
+			$extra = " (skipped ".$delta." duplicates)";
+		}
+		else
+		{
+			$extra = "";
+		}
+
+		if($num === 1)
+			$plural = "";
+		else
+			$plural = "s";
+		return "Success, added ".$modified." of ".$num." domain".$plural.$extra;
+	}
+}
+
+/**
+ * Remove domains from a given table
+ *
+ * @param $db object The SQLite3 database connection object
+ * @param $table string The target table
+ * @param $domains array Array of domains (strings) to be removed from the table
+ * @param $returnnum boolean Whether to return an integer or a string
+ * @return string Success/error and number of processed domains
+ */
+function remove_from_table($db, $table, $domains, $returnnum=false)
+{
+	// Begin transaction
+	if(!$db->exec("BEGIN TRANSACTION;"))
+	{
+		if($returnnum)
+			return 0;
+		else
+			return "Error: Unable to begin transaction for ".$table." table.";
+	}
+	$initialcount = intval($db->querySingle("SELECT COUNT(*) FROM ".$table.";"));
+
+	// Prepare SQLite statememt
+	$stmt = $db->prepare("DELETE FROM ".$table." WHERE domain = :domain;");
+
+	// Return early if we failed to prepare the SQLite statement
+	if(!$stmt)
+	{
+		if($returnnum)
+			return 0;
+		else
+			return "Error: Failed to prepare statement for ".$table." table.";
+	}
+
+	// Loop over domains and remove the lines from the database
+	$num = 0;
+	foreach($domains as $domain)
+	{
+		$stmt->bindValue(":domain", $domain, SQLITE3_TEXT);
+
+		if($stmt->execute() && $stmt->reset())
+			$num++;
+		else
+		{
+			$stmt->close();
+			if($returnnum)
+				return $num;
+			else
+			{
+				if($num === 1)
+					$plural = "";
+				else
+					$plural = "s";
+				return "Error: ".$db->lastErrorMsg().", removed ".$num." domain".$plural;
+			}
+		}
+	}
+
+	// Close prepared statement and return number or processed rows
+	$stmt->close();
+	$db->exec("COMMIT;");
+
+	if($returnnum)
+		return $num;
+	else
+	{
+		if($num === 1)
+			$plural = "";
+		else
+			$plural = "s";
+		return "Success, removed ".$num." domain".$plural;
+	}
+}
+
 ?>

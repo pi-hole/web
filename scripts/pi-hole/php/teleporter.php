@@ -16,7 +16,9 @@ if (php_sapi_name() !== "cli") {
 	check_csrf(isset($_POST["token"]) ? $_POST["token"] : "");
 }
 
-$db = SQLite3_connect(getGravityDBFilename());
+$db = SQLite3_connect(getGravityDBFilename(), SQLITE3_OPEN_READWRITE);
+
+$flushed_tables = array();
 
 function archive_add_file($path,$name,$subdir="")
 {
@@ -30,23 +32,158 @@ function archive_add_file($path,$name,$subdir="")
  *
  * @param $name string The name of the file in the archive to save the table to
  * @param $table string The table to export
- * @param $column string The column on the table to export
  */
-function archive_add_table($name, $table, $column)
+function archive_add_table($name, $table)
 {
 	global $archive, $db;
 
-	$results = $db->query("SELECT $column FROM $table");
-	$content = "";
+	$results = $db->query("SELECT * FROM $table");
 
-	while($row = $results->fetchArray()) {
-		$content .= $row[0]."\n";
+	// Return early without creating a file if the
+	// requested table cannot be accessed
+	if(is_null($results))
+		return;
+
+	$content = array();
+	while ($row = $results->fetchArray(SQLITE3_ASSOC))
+	{
+		array_push($content, $row);
 	}
 
-	$archive[$name] = $content;
+	$archive[$name] = json_encode($content);
 }
 
-function archive_add_directory($path, $subdir="")
+
+/**
+ * Restore the contents of a table from an uploaded archive
+ *
+ * @param $file object The file in the archive to restore the table from
+ * @param $table string The table to import
+ * @param $flush boolean Whether to flush the table before importing the archived data
+ * @return integer Number of restored rows
+ */
+function archive_restore_table($file, $table, $flush=false)
+{
+	global $db, $flushed_tables;
+
+	$json_string = file_get_contents($file);
+	// Return early if we cannot extract the JSON string
+	if(is_null($json_string))
+		return 0;
+
+	$contents = json_decode($json_string, true);
+	// Return early if we cannot decode the JSON string
+	if(is_null($contents))
+		return 0;
+
+	// Flush table if requested, only flush each table once
+	if($flush && !in_array($table, $flushed_tables))
+	{
+		$db->exec("DELETE FROM ".$table);
+		array_push($flushed_tables, $table);
+	}
+
+	// Prepare field name for domain/address depending on the table we restore to
+	if($table === "adlist")
+	{
+		$sql  = "INSERT OR IGNORE INTO adlist";
+		$sql  .= " (id,address,enabled,date_added,comment)";
+		$sql  .= " VALUES (:id,:address,:enabled,:date_added,:comment);";
+		$field = "address";
+	}
+	elseif($table === "domain_audit")
+	{
+		$sql  = "INSERT OR IGNORE INTO domain_audit";
+		$sql  .= " (id,domain,date_added)";
+		$sql  .= " VALUES (:id,:domain,:date_added);";
+		$field = "domain";
+	}
+	else
+	{
+		$sql  = "INSERT OR IGNORE INTO ".$table;
+		$sql  .= " (id,domain,enabled,date_added,comment)";
+		$sql  .= " VALUES (:id,:domain,:enabled,:date_added,:comment);";
+		$field = "domain";
+	}
+
+	// Prepare SQLite statememt
+	$stmt = $db->prepare($sql);
+
+	// Return early if we fail to prepare the SQLite statement
+	if(!$stmt)
+	{
+		echo "Failed to prepare statement for ".$table." table.";
+		echo $sql;
+		return 0;
+	}
+
+	// Loop over rows and inject the entries into the database
+	$num = 0;
+	foreach($contents as $row)
+	{
+		// Limit max length for a domain entry to 253 chars
+		if(strlen($row[$field]) > 253)
+			continue;
+
+		$stmt->bindValue(":id", $row["id"], SQLITE3_INTEGER);
+		$stmt->bindValue(":date_added", $row["date_added"], SQLITE3_INTEGER);
+		$stmt->bindValue(":".$field, $row[$field], SQLITE3_TEXT);
+
+		if($table !== "domain_audit")
+		{
+			$stmt->bindValue(":enabled", $row["enabled"], SQLITE3_INTEGER);
+			if(is_null($row["comment"]))
+				$type = SQLITE3_NULL;
+			else
+				$type = SQLITE3_TEXT;
+			$stmt->bindValue(":comment", $row["comment"], $type);
+		}
+
+		if($stmt->execute() && $stmt->reset() && $stmt->clear())
+			$num++;
+		else
+		{
+			$stmt->close();
+			return $num;
+		}
+	}
+
+	// Close database connection and return number or processed rows
+	$stmt->close();
+	return $num;
+}
+
+=======
+/**
+ * Create table rows from an uploaded archive file
+ *
+ * @param $file object The file of the file in the archive to import
+ * @param $table string The target table
+ * @param $flush boolean Whether to flush the table before importing the archived data
+ * @param $wildcardstyle boolean Whether to format the input domains in legacy wildcard notation
+ * @return integer Number of processed rows from the imported file
+ */
+function archive_insert_into_table($file, $table, $flush=false, $wildcardstyle=false)
+{
+	global $db, $flushed_tables;
+
+	$domains = array_filter(explode("\n",file_get_contents($file)));
+	// Return early if we cannot extract the lines in the file
+	if(is_null($domains))
+		return 0;
+
+	// Flush table if requested, only flush each table once
+	if($flush && !in_array($table, $flushed_tables))
+	{
+		$db->exec("DELETE FROM ".$table);
+		array_push($flushed_tables, $table);
+	}
+
+	// Add domains to requested table
+	return add_to_table($db, $table, $domains, $wildcardstyle, true);
+}
+
+function archive_add_directory($path,$subdir="")
 {
 	if($dir = opendir($path))
 	{
@@ -54,44 +191,10 @@ function archive_add_directory($path, $subdir="")
 		{
 			if($entry !== "." && $entry !== "..")
 			{
-				archive_add_file($path, $entry, $subdir);
+				archive_add_file($path,$entry,$subdir);
 			}
 		}
 		closedir($dir);
-	}
-}
-
-function limit_length(&$item, $key)
-{
-	// limit max length for a domain entry to 253 chars
-	// return only a part of the string if it is longer
-	$item = substr($item, 0, 253);
-}
-
-function process_file($contents, $check=True)
-{
-	$domains = array_filter(explode("\n", $contents));
-
-	// Walk array and apply a max string length
-	// function to every member of the array of domains
-	array_walk($domains, "limit_length");
-
-	// Check validity of domains (don't do it for regex filters)
-	if($check)
-	{
-		check_domains($domains);
-	}
-
-	return $domains;
-}
-
-function check_domains($domains)
-{
-	foreach($domains as $domain)
-	{
-		if(!is_valid_domain_name($domain)){
-			die(htmlspecialchars($domain).' is not a valid domain');
-		}
 	}
 }
 
@@ -128,74 +231,92 @@ if(isset($_POST["action"]))
 
 		$importedsomething = false;
 
-		foreach(new RecursiveIteratorIterator($archive) as $file)
+		$flushtables = isset($_POST["flushtables"]);
+
+		foreach($archive as $file)
 		{
 			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.txt")
 			{
-				$blacklist = process_file(file_get_contents($file));
-				echo "Processing blacklist.txt (".count($blacklist)." entries)<br>\n";
-				exec("sudo pihole -b -nr --nuke");
-				exec("sudo pihole -b -q -nr ".implode(" ", $blacklist));
+				$num = archive_insert_into_table($file, "blacklist", $flushtables);
+				echo "Processed blacklist (exact) (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["whitelist"]) && $file->getFilename() === "whitelist.txt")
 			{
-				$whitelist = process_file(file_get_contents($file));
-				echo "Processing whitelist.txt (".count($whitelist)." entries)<br>\n";
-				exec("sudo pihole -w -nr --nuke");
-				exec("sudo pihole -w -q -nr ".implode(" ", $whitelist));
+				$num = archive_insert_into_table($file, "whitelist", $flushtables);
+				echo "Processed whitelist (exact) (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["regexlist"]) && $file->getFilename() === "regex.list")
 			{
-				$regexlist = process_file(file_get_contents($file), false);
-				echo "Processing regex.list (".count($regexlist)." entries)<br>\n";
-
-				$escapedRegexlist = array_map("escapeshellcmd", $regexlist);
-				exec("sudo pihole --regex -nr --nuke");
-				exec("sudo pihole --regex -q -nr ".implode(" ", $escapedRegexlist));
+				$num = archive_insert_into_table($file, "regex_blacklist", $flushtables);
+				echo "Processed blacklist (regex) (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
 			// Also try to import legacy wildcard list if found
 			if(isset($_POST["regexlist"]) && $file->getFilename() === "wildcardblocking.txt")
 			{
-				$wildlist = process_file(file_get_contents($file));
-				echo "Processing wildcardblocking.txt (".count($wildlist)." entries)<br>\n";
-				exec("sudo pihole --wild -nr --nuke");
-				exec("sudo pihole --wild -q -nr ".implode(" ", $wildlist));
+				$num = archive_insert_into_table($file, "regex_blacklist", $flushtables, true);
+				echo "Processed blacklist (regex, wildcard style) (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["auditlog"]) && $file->getFilename() === "auditlog.list")
 			{
-				$auditlog = process_file(file_get_contents($file));
-				echo "Processing auditlog.list (".count($auditlog)." entries)<br>\n";
-				exec("sudo pihole -a clearaudit");
-				exec("sudo pihole -a audit ".implode(" ",$auditlog));
-			}
-
-			if(isset($_POST["dhcpleases"]) && $file->getFilename() === "04-pihole-static-dhcp.conf")
-			{
-				$dhcpleases = processStaticLeasesFile($file->getPathname());
-				echo "Processing DHCP leases 04-pihole-static-dhcp.conf (".count($dhcpleases)." entries)";
-				$counter_leases_added = 0;
-				foreach($dhcpleases as $lease) {
-					$result = addDHCPLease($lease["hwaddr"], $lease["IP"], $lease["host"]);
-					if($result['value']) {
-						$counter_leases_added++;
-					}
-				}
-				echo " - Added ".$counter_leases_added."/".count($dhcpleases)."<br>\n";
+				$num = archive_insert_into_table($file, "domain_audit", $flushtables);
+				echo "Processed blacklist (regex) (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
-			if($importedsomething)
+			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.exact.json")
 			{
-				exec("sudo pihole restartdns");
+				$num = archive_restore_table($file, "blacklist", $flushtables);
+				echo "Processed blacklist (exact) (".$num." entries)<br>\n";
+				$importedsomething = true;
 			}
+
+			if(isset($_POST["regexlist"]) && $file->getFilename() === "blacklist.regex.json")
+			{
+				$num = archive_restore_table($file, "regex_blacklist", $flushtables);
+				echo "Processed blacklist (regex) (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["whitelist"]) && $file->getFilename() === "whitelist.exact.json")
+			{
+				$num = archive_restore_table($file, "whitelist", $flushtables);
+				echo "Processed whitelist (exact) (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["regex_whitelist"]) && $file->getFilename() === "whitelist.regex.json")
+			{
+				$num = archive_restore_table($file, "regex_whitelist", $flushtables);
+				echo "Processed whitelist (regex) (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["adlist"]) && $file->getFilename() === "adlist.json")
+			{
+				$num = archive_restore_table($file, "adlist", $flushtables);
+				echo "Processed adlist (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["auditlog"]) && $file->getFilename() === "domain_audit.json")
+			{
+				$num = archive_restore_table($file, "domain_audit", $flushtables);
+				echo "Processed domain_audit (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+		}
+
+		if($importedsomething)
+		{
+			exec("sudo pihole restartdns reload");
 		}
 
 		unlink($fullfilename);
@@ -217,12 +338,13 @@ else
 		exit("cannot open/create ".htmlentities($archive_file_name)."<br>\nPHP user: ".exec('whoami')."\n");
 	}
 
-	archive_add_table("whitelist.txt", "whitelist", "domain");
-	archive_add_table("blacklist.txt", "blacklist", "domain");
-	archive_add_table("regex.list", "regex", "domain");
-	archive_add_table("adlists.list", "adlist", "address");
+	archive_add_table("whitelist.exact.json", "whitelist");
+	archive_add_table("whitelist.regex.json", "regex_whitelist");
+	archive_add_table("blacklist.exact.json", "blacklist");
+	archive_add_table("blacklist.regex.json", "regex_blacklist");
+	archive_add_table("adlist.json", "adlist");
+	archive_add_table("domain_audit.json", "domain_audit");
 	archive_add_file("/etc/pihole/","setupVars.conf");
-	archive_add_file("/etc/pihole/","auditlog.list");
 	archive_add_directory("/etc/dnsmasq.d/","dnsmasq.d/");
 
 	$archive->compress(Phar::GZ); // Creates a gziped copy

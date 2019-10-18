@@ -799,7 +799,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="radio">
                                                         <label><input type="radio" name="DNSinterface" value="single"
                                                                       <?php if ($DNSinterface == "single"){ ?>checked<?php } ?>>
-                                                               <strong>Listen only on interface <?php echo $piHoleInterface; ?></strong>
+                                                               <strong>Listen only on interface <?php echo htmlentities($piHoleInterface); ?></strong>
                                                         </label>
                                                     </div>
                                                     <div class="radio">
@@ -1145,7 +1145,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="whitelist" value="true"
                                                                       checked>
-                                                            Whitelist</label>
+                                                            Whitelist (exact)</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="regex_whitelist" value="true"
+                                                                      checked>
+                                                            Whitelist (regex/wildcard)</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="blacklist" value="true"
@@ -1155,7 +1160,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="regexlist" value="true"
                                                                       checked>
-                                                            Regex filters</label>
+                                                            Blacklist (regex/wildcard)</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="adlist" value="true"
+                                                                      checked>
+                                                            Blocklists</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="auditlog" value="true"
@@ -1177,6 +1187,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <button type="submit" class="btn btn-default" name="action"
                                                             value="in">Import
                                                     </button>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="flushtables" value="true"
+                                                                      checked>
+                                                            Clear existing data</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1213,19 +1228,19 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 <tbody>
                                                 <tr>
                                                     <th scope="row">Pi-hole Ethernet Interface:</th>
-                                                    <td><?php echo $piHoleInterface; ?></td>
+                                                    <td><?php echo htmlentities($piHoleInterface); ?></td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Pi-hole IPv4 address:</th>
-                                                    <td><?php echo $piHoleIPv4; ?></td>
+                                                    <td><?php echo htmlentities($piHoleIPv4); ?></td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Pi-hole IPv6 address:</th>
-                                                    <td><?php echo $piHoleIPv6; ?></td>
+                                                    <td><?php echo htmlentities($piHoleIPv6); ?></td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Pi-hole hostname:</th>
-                                                    <td><?php echo $hostname; ?></td>
+                                                    <td><?php echo htmlentities($hostname); ?></td>
                                                 </tr>
                                                 </tbody>
                                             </table>

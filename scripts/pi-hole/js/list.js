@@ -43,18 +43,11 @@ function addListEntry(entry, index, list, button, type)
 }
 
 function refresh(fade) {
-    var listw;
     var list = $("#list");
-    if(listType === "black")
-    {
-        listw = $("#list-regex");
-    }
+    var listw = $("#list-regex");
     if(fade) {
         list.fadeOut(100);
-        if(listw)
-        {
-            listw.fadeOut(100);
-        }
+        listw.fadeOut(100);
     }
     $.ajax({
         url: "scripts/pi-hole/php/get.php",
@@ -62,49 +55,51 @@ function refresh(fade) {
         data: {"list":listType},
         success: function(response) {
             list.html("");
-            if(listw)
-            {
-                listw.html("");
-            }
+            listw.html("");
 
             if((listType === "black" &&
                response.blacklist.length === 0 &&
-               response.regex.length === 0) ||
+               response.regex_blacklist.length === 0) ||
                (listType === "white" &&
-               response.whitelist.length === 0))
+               response.whitelist.length === 0 &&
+               response.regex_whitelist.length === 0))
             {
                 $("h3").hide();
                 list.html("<div class=\"alert alert-info\" role=\"alert\">Your " + fullName + " is empty!</div>");
             }
             else
             {
-                $("h3").show();
                 if(listType === "white")
                 {
                     data = response.whitelist.sort();
-                    data2 = []; // No regex data, use empty array
+                    data2 = response.regex_whitelist.sort();
                 }
                 else if(listType === "black")
                 {
                     data = response.blacklist.sort();
-                    data2 = response.regex.sort();
+                    data2 = response.regex_blacklist.sort();
                 }
+
+                if(data.length > 0)
+                {
+                    $("#h3-exact").fadeIn(100);
+                }
+                if(data2.length > 0)
+                {
+                    $("#h3-regex").fadeIn(100);
+                }
+
                 data.forEach(function (entry, index)
                 {
                     addListEntry(entry, index, list, "#list", "exact");
                 });
-
-                // Add regex domains if present in returned list data
                 data2.forEach(function (entry, index)
                 {
-                    addListEntry(entry, index, listw, "#list-regex", "regex");
+                    addListEntry(entry, index, listw, "#list-regex", listType+"_regex");
                 });
             }
             list.fadeIn(100);
-            if(listw)
-            {
-                listw.fadeIn(100);
-            }
+            listw.fadeIn(100);
         },
         error: function(jqXHR, exception) {
             $("#alFailure").show();
@@ -115,23 +110,55 @@ function refresh(fade) {
 window.onload = refresh(false);
 
 function sub(index, entry, arg) {
-    var domain = $("#list #"+index);
+    var list = "#list";
+    var heading = "#h3-exact";
     var locallistType = listType;
-    if(arg === "regex")
+    if(arg === "black_regex" || arg === "white_regex")
     {
-        locallistType = "regex";
-        domain = $("#list-regex #"+index);
+        list = "#list-regex";
+        heading = "#h3-regex";
+        locallistType = arg;
     }
+    var alInfo = $("#alInfo");
+    var alSuccess = $("#alSuccess");
+    var alFailure = $("#alFailure");
+    var alWarning = $("#alWarning");
+    var err = $("#err");
+    var warn = $("#warn");
+    var msg = $("#success-message");
+
+
+    var domain = $(list+" #"+index);
     domain.hide("highlight");
     $.ajax({
         url: "scripts/pi-hole/php/sub.php",
         method: "post",
         data: {"domain":entry, "list":locallistType, "token":token},
         success: function(response) {
-            if(response.length !== 0){
-                return;
+            if (response.indexOf("Success") === -1) {
+                alFailure.show();
+                err.html(response);
+                alFailure.delay(8000).fadeOut(2000, function() {
+                    alFailure.hide();
+                });
+                alInfo.delay(8000).fadeOut(2000, function() {
+                    alInfo.hide();
+                });
+            } else {
+                alSuccess.show();
+                msg.html(response);
+                alSuccess.delay(1000).fadeOut(2000, function() {
+                    alSuccess.hide();
+                });
+                alInfo.delay(1000).fadeOut(2000, function() {
+                    alInfo.hide();
+                });
+                domain.remove();
+                if($(list+" li").length < 1)
+                {
+                    $(heading).fadeOut(100);
+                }
             }
-            domain.remove();
         },
         error: function(jqXHR, exception) {
             alert("Failed to remove the domain!");
@@ -140,17 +167,10 @@ function sub(index, entry, arg) {
     });
 }
 
-function add(arg) {
-    var locallistType = listType;
+function add(type) {
     var domain = $("#domain");
-    var wild = false;
     if(domain.val().length === 0){
         return;
-    }
-    if(arg === "wild" || arg === "regex")
-    {
-        locallistType = arg;
-        wild = true;
     }
 
     var alInfo = $("#alInfo");
@@ -159,6 +179,7 @@ function add(arg) {
     var alWarning = $("#alWarning");
     var err = $("#err");
     var warn = $("#warn");
+    var msg = $("#success-message");
     alInfo.show();
     alSuccess.hide();
     alFailure.hide();
@@ -166,37 +187,29 @@ function add(arg) {
     $.ajax({
         url: "scripts/pi-hole/php/add.php",
         method: "post",
-        data: {"domain":domain.val().trim(), "list":locallistType, "token":token},
+        data: {"domain":domain.val().trim(), "list":type, "token":token},
         success: function(response) {
-          if (response.indexOf(" already exists in ") !== -1) {
-            alWarning.show();
-            warn.html(response);
-            alWarning.delay(8000).fadeOut(2000, function() {
-                alWarning.hide();
-            });
-            alInfo.delay(8000).fadeOut(2000, function() {
-                alInfo.hide();
-            });
-          } else if (response.indexOf("DONE") === -1) {
-            alFailure.show();
-            err.html(response);
-            alFailure.delay(8000).fadeOut(2000, function() {
-                alFailure.hide();
-            });
-            alInfo.delay(8000).fadeOut(2000, function() {
-                alInfo.hide();
-            });
-          } else {
-            alSuccess.show();
-            alSuccess.delay(1000).fadeOut(2000, function() {
-                alSuccess.hide();
-            });
-            alInfo.delay(1000).fadeOut(2000, function() {
-                alInfo.hide();
-            });
-            domain.val("");
-            refresh(true);
-          }
+            if (response.indexOf("Success") === -1) {
+                alFailure.show();
+                err.html(response);
+                alFailure.delay(8000).fadeOut(2000, function() {
+                    alFailure.hide();
+                });
+                alInfo.delay(8000).fadeOut(2000, function() {
+                    alInfo.hide();
+                });
+            } else {
+                alSuccess.show();
+                msg.html(response);
+                alSuccess.delay(1000).fadeOut(2000, function() {
+                    alSuccess.hide();
+                });
+                alInfo.delay(1000).fadeOut(2000, function() {
+                    alInfo.hide();
+                });
+                domain.val("");
+                refresh(true);
+            }
         },
         error: function(jqXHR, exception) {
             alFailure.show();
@@ -217,21 +230,21 @@ function add(arg) {
 $(document).keypress(function(e) {
     if(e.which === 13 && $("#domain").is(":focus")) {
         // Enter was pressed, and the input has focus
-        add("exact");
+        add(listType);
     }
 });
 
 // Handle buttons
 $("#btnAdd").on("click", function() {
-    add("exact");
+    add(listType);
 });
 
 $("#btnAddWildcard").on("click", function() {
-    add("wild");
+    add(listType+"_wild");
 });
 
 $("#btnAddRegex").on("click", function() {
-    add("regex");
+    add(listType+"_regex");
 });
 
 $("#btnRefresh").on("click", function() {
