@@ -28,14 +28,14 @@
           <span class="fa fa-key form-control-feedback"></span>
         </div>
         <div class="row">
-          <div class="col-xs-8">
+          <div class="col-xs-8 visible-md">
           <ul>
             <li><samp>Return</samp> &rarr; Log in and go to requested page (<?php echo $scriptname; ?>)</li>
             <li><samp>Ctrl+Return</samp> &rarr; Log in and go to Settings page</li>
           </ul>
           </div>
-          <div class="col-xs-4">
-            <div class="form-group">
+          <div class="col-xs-12 col-md-4">
+            <div class="form-group pull-left">
               <div class="checkbox pull-right"><label><input type="checkbox" id="logincookie" name="persistentlogin">Remember me for 7 days</label></div>
             </div>
             <button type="submit" href="#" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;&nbsp;Log in</button>
