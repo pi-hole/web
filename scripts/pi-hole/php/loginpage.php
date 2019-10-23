@@ -28,7 +28,7 @@
           <span class="fa fa-key form-control-feedback"></span>
         </div>
         <div class="row">
-          <div class="col-xs-8 visible-md">
+          <div class="col-xs-8 hidden-xs hidden-sm">
           <ul>
             <li><samp>Return</samp> &rarr; Log in and go to requested page (<?php echo $scriptname; ?>)</li>
             <li><samp>Ctrl+Return</samp> &rarr; Log in and go to Settings page</li>
