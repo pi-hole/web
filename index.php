@@ -58,7 +58,7 @@
                 <h3 class="statistic"><span id="ads_percentage_today">---</span></h3>
             </div>
             <div class="icon">
-                <i class="fas fa-bug"></i>
+                <i class="fas fa-chart-pie"></i>
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@
                 <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
             </div>
             <div class="icon">
-                <i class="fas fa-globe"></i>
+                <i class="fas fa-list-alt"></i>
             </div>
         </div>
     </div>
