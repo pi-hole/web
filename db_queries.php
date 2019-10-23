@@ -131,7 +131,7 @@ $token = $_SESSION['token'];
                 <p>Queries Blocked</p>
             </div>
             <div class="icon">
-                <i class="fas fa-bug"></i>
+                <i class="fas fa-chart-pie"></i>
             </div>
         </div>
     </div>
