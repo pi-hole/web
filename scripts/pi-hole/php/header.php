@@ -199,7 +199,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <link href="style/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/vendor/font-awesome-5.6.3/css/all.min.css" rel="stylesheet" type="text/css" />
+  
+    <link href="style/vendor/font-awesome-5.11.2/css/all.min.css" rel="stylesheet" type="text/css" />
+
     <link href="style/vendor/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="style/vendor/daterangepicker.css" rel="stylesheet" type="text/css" />
 
@@ -208,10 +210,6 @@
     <link href="style/pi-hole.css" rel="stylesheet" type="text/css" />
     <link rel="icon" type="image/png" sizes="160x160" href="img/logo.svg" />
 
-    <!--[if lt IE 9]>
-    <script src="scripts/vendor/html5shiv.min.js"></script>
-    <script src="scripts/vendor/respond.min.js"></script>
-    <![endif]-->
 </head>
 <body class="skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <!-- JS Warning -->
