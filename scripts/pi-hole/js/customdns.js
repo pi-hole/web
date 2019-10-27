@@ -44,8 +44,6 @@ function addCustomDNS()
 
 function deleteCustomDNS()
 {
-    var thisCell = $(this);
-
     $.ajax({
         url: "scripts/pi-hole/php/customdns.php",
         method: "post",
