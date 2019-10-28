@@ -13,6 +13,13 @@ function is_valid_domain_name($domain_name)
         preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)); // Length of each label
 }
 
+function get_ip_type($ip)
+{
+    return  filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 4 :
+           (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 6 :
+            0);
+}
+
 function checkfile($filename) {
     if(is_readable($filename))
     {

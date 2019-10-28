@@ -18,9 +18,8 @@
         $entries = getCustomDNSEntries();
 
         $data = [];
-
-        foreach ($entries as $domain => $ip)
-            $data[] = [ $domain, $ip ];
+        foreach ($entries as $entry)
+            $data[] = [ $entry->domain, $entry->ip ];
 
         return [ "data" => $data ];
     }
@@ -42,7 +41,10 @@
                 if (count($explodedLine) != 2)
                     continue;
 
-                $entries[$explodedLine[1]] = $explodedLine[0];
+                $data = new \stdClass();
+                $data->ip = $explodedLine[0];
+                $data->domain = $explodedLine[1];
+                $entries[] = $data;
             }
 
             fclose($handle);
@@ -61,7 +63,9 @@
             if (empty($ip))
                 return errorJsonResponse("IP must be set");
 
-            if (!filter_var($ip, FILTER_VALIDATE_IP))
+            $ipType = get_ip_type($ip);
+
+            if (!$ipType)
                 return errorJsonResponse("IP must be valid");
 
             if (empty($domain))
@@ -72,8 +76,10 @@
 
             $existingEntries = getCustomDNSEntries();
 
-            if (array_key_exists($domain, $existingEntries))
-                return errorJsonResponse("This domain already has a custom DNS entry");
+            foreach ($existingEntries as $entry)
+                if ($entry->domain == $domain)
+                    if (get_ip_type($entry->ip) == $ipType)
+                        return errorJsonResponse("This domain already has a custom DNS entry for an IPv" . $ipType);
 
             exec("sudo pihole -a addcustomdns ".$ip." ".$domain);
             exec("sudo pihole -a restartdns");
@@ -90,17 +96,29 @@
     {
         try
         {
+            $ip = !empty($_REQUEST['ip']) ? $_REQUEST['ip']: "";
             $domain = !empty($_REQUEST['domain']) ? $_REQUEST['domain']: "";
+
+            if (empty($ip))
+                return errorJsonResponse("IP must be set");
 
             if (empty($domain))
                 return errorJsonResponse("Domain must be set");
 
             $existingEntries = getCustomDNSEntries();
 
-            if (!array_key_exists($domain, $existingEntries))
-                return errorJsonResponse("This domain does not have a custom DNS entry");
+            $found = false;
+            foreach ($existingEntries as $entry)
+                if ($entry->domain == $domain)
+                    if ($entry->ip == $ip) {
+                        $found = true;
+                        break;
+                    }
 
-            exec("sudo pihole -a removecustomdns ".$domain);
+            if (!$found)
+                return errorJsonResponse("This domain/ip association does not exist");
+
+            exec("sudo pihole -a removecustomdns ".$ip." ".$domain);
             exec("sudo pihole -a restartdns");
 
             return successJsonResponse();

@@ -9,7 +9,7 @@ $(document).ready(function() {
         "columnDefs": [ {
             "targets": 2,
             "render": function ( data, type, row ) {
-                return "<button id=\"" + row[0] + "\" class=\"btn btn-danger btn-xs deleteCustomDNS\" type=\"button\">" +
+                return "<button class=\"btn btn-danger btn-xs deleteCustomDNS\" type=\"button\" data-domain='"+row[0]+"' data-ip='"+row[1]+"'>" +
                            "<span class=\"glyphicon glyphicon-trash\"></span>" +
                        "</button>";
             }
@@ -44,11 +44,14 @@ function addCustomDNS()
 
 function deleteCustomDNS()
 {
+    var ip = $(this).attr("data-ip");
+    var domain = $(this).attr("data-domain");
+
     $.ajax({
         url: "scripts/pi-hole/php/customdns.php",
         method: "post",
         dataType: 'json',
-        data: {"action":"delete", "domain": $(this).prop('id')},
+        data: {"action":"delete", "domain": domain, "ip": ip},
         success: function(response) {
             if (response.success)
                 table.ajax.reload();
