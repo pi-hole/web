@@ -104,7 +104,8 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
-			$top_queries[$tmp[2]] = intval($tmp[1]);
+			$domain = utf8_encode($tmp[2]);
+			$top_queries[$domain] = intval($tmp[1]);
 		}
 
 		if($_GET['topItems'] === "audit")
@@ -125,10 +126,11 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
+			$domain = utf8_encode($tmp[2]);
 			if(count($tmp) > 3)
-				$top_ads[$tmp[2]." (".$tmp[3].")"] = intval($tmp[1]);
+				$top_ads[$domain." (".$tmp[3].")"] = intval($tmp[1]);
 			else
-				$top_ads[$tmp[2]] = intval($tmp[1]);
+				$top_ads[$domain] = intval($tmp[1]);
 		}
 
 		$result = array('top_queries' => $top_queries,
@@ -163,10 +165,14 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
+			$clientip = utf8_encode($tmp[2]);
 			if(count($tmp) > 3 && strlen($tmp[3]) > 0)
-				$top_clients[$tmp[3]."|".$tmp[2]] = intval($tmp[1]);
+			{
+				$clientname = utf8_encode($tmp[3]);
+				$top_clients[$clientname."|".$clientip] = intval($tmp[1]);
+			}
 			else
-				$top_clients[$tmp[2]] = intval($tmp[1]);
+				$top_clients[$clientip] = intval($tmp[1]);
 		}
 
 		$result = array('top_sources' => $top_clients);
@@ -195,10 +201,14 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
+			$clientip = utf8_encode($tmp[2]);
 			if(count($tmp) > 3 && strlen($tmp[3]) > 0)
-				$top_clients[$tmp[3]."|".$tmp[2]] = intval($tmp[1]);
+			{
+				$clientname = utf8_encode($tmp[3]);
+				$top_clients[$clientname."|".$clientip] = intval($tmp[1]);
+			}
 			else
-				$top_clients[$tmp[2]] = intval($tmp[1]);
+				$top_clients[$clientip] = intval($tmp[1]);
 		}
 
 		$result = array('top_sources_blocked' => $top_clients);
@@ -220,10 +230,14 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
+			$forwardip = utf8_encode($tmp[2]);
 			if(count($tmp) > 3 && strlen($tmp[3]) > 0)
-				$forward_dest[$tmp[3]."|".$tmp[2]] = floatval($tmp[1]);
+			{
+				$forwardname = utf8_encode($tmp[3]);
+				$forward_dest[$forwardname."|".$forwardip] = floatval($tmp[1]);
+			}
 			else
-				$forward_dest[$tmp[2]] = floatval($tmp[1]);
+				$forward_dest[$forwardip] = floatval($tmp[1]);
 		}
 
 		$result = array('forward_destinations' => $forward_dest);
@@ -238,6 +252,7 @@ else
 		foreach($return as $ret)
 		{
 			$tmp = explode(": ",$ret);
+			// Reply cannot contain non-ASCII characters
 			$querytypes[$tmp[0]] = floatval($tmp[1]);
 		}
 
@@ -253,6 +268,7 @@ else
 		foreach($return as $ret)
 		{
 			$tmp = explode(": ",$ret);
+			// Reply cannot contain non-ASCII characters
 			$cacheinfo[$tmp[0]] = floatval($tmp[1]);
 		}
 
@@ -301,6 +317,10 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
+			// UTF-8 encode domain
+			$tmp[2] = utf8_encode($tmp[2]);
+			// UTF-8 encode client host name
+			$tmp[3] = utf8_encode($tmp[3]);;
 			array_push($allQueries,$tmp);
 		}
 
@@ -311,7 +331,7 @@ else
 	if(isset($_GET["recentBlocked"]))
 	{
 		sendRequestFTL("recentBlocked");
-		die(getResponseFTL()[0]);
+		die(utf8_encode(getResponseFTL()[0]));
 		unset($data);
 	}
 
@@ -323,13 +343,15 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
+			$forwardip = utf8_encode($tmp[2]);
 			if(count($tmp) > 3)
 			{
-				$forward_dest[$tmp[3]."|".$tmp[2]] = floatval($tmp[1]);
+				$forwardname = utf8_encode($tmp[3]);
+				$forward_dest[$forwardname."|".$forwardip] = floatval($tmp[1]);
 			}
 			else
 			{
-				$forward_dest[$tmp[2]] = floatval($tmp[1]);
+				$forward_dest[$forwardip] = floatval($tmp[1]);
 			}
 		}
 
@@ -363,8 +385,8 @@ else
 		{
 			$tmp = explode(" ", $line);
 			$client_names[] = array(
-				"name" => $tmp[0],
-				"ip" => $tmp[1]
+				"name" => utf8_encode($tmp[0]),
+				"ip" => utf8_encode($tmp[1])
 			);
 		}
 
