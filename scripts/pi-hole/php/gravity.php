@@ -25,7 +25,9 @@ function gravity_last_update($raw = false)
 			return "Gravity database not available";
 		}
 	}
-	$date_file_created = date_create("@".intval($date_file_created_unix));
+	// Now that we know that $date_file_created_unix is a valid response, we can convert it to an integer
+	$date_file_created_unix = intval($date_file_created_unix);
+	$date_file_created = date_create("@".$date_file_created_unix);
 	$date_now = date_create("now");
 	$gravitydiff = date_diff($date_file_created,$date_now);
 	if($raw)
@@ -35,9 +37,9 @@ function gravity_last_update($raw = false)
 			"file_exists"=> true,
 			"absolute" => $date_file_created_unix,
 			"relative" => array(
-				"days" =>  $gravitydiff->format("%a"),
-				"hours" =>  $gravitydiff->format("%H"),
-				"minutes" =>  $gravitydiff->format("%I"),
+				"days" =>  intval($gravitydiff->format("%a")),
+				"hours" =>  intval($gravitydiff->format("%H")),
+				"minutes" =>  intval($gravitydiff->format("%I")),
 				)
 			);
 	}
