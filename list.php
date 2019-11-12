@@ -30,18 +30,27 @@ function getFullName() {
 <div class="page-header">
     <h1><?php getFullName(); ?></h1>
 </div>
-
+<?php
+if($boxedlayout)
+{
+	$tablelayout = "col-md-3";
+}
+else
+{
+	$tablelayout = "col-md-6 col-lg-4";
+}
+?>
 <!-- Domain Input -->
 <div class="form-group row">
-  <div class="col-xs-4">
+  <div class="<?php echo $tablelayout; ?>">
     <label for="ex1">Domain:</label>
-    <input id="domain" type="text" class="form-control" placeholder="Add a domain (example.com or sub.example.com)">
+    <input id="domain" type="text" class="form-control" placeholder="Add a domain (example.com)">
   </div>
-  <div class="col-xs-4">
+  <div class="<?php echo $tablelayout; ?>">
     <label for="ex2">Comment:</label>
     <input id="comment" type="text" class="form-control" placeholder="Include a comment (optional)">
   </div>
-  <div class="col-xs-4">
+  <div class="<?php echo $tablelayout; ?>">
     <label for="ex2">&nbsp;</label>
     <span class="input-group-btn">
         <button id="btnAdd" class="btn btn-default" type="button">Add (exact)</button>
