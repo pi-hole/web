@@ -79,6 +79,9 @@ if(isset($_GET["network"]) && $auth)
 		$network_addresses = $db->query("SELECT ip FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC");
 		while($network_addresses !== false && $ip = $network_addresses->fetchArray(SQLITE3_ASSOC))
 			array_push($res["ip"],$ip["ip"]);
+		// UTF-8 encode host name and vendor
+		$res["name"] = utf8_encode($res["name"]);
+		$res["macVendor"] = utf8_encode($res["macVendor"]);
 		array_push($network, $res);
 	}
 
@@ -148,8 +151,8 @@ if (isset($_GET['getAllQueries']) && $auth)
 						$query_type = "UNKN";
 						break;
 				}
-
-				$allQueries[] = [$row[0], $query_type, $row[2], $c, $row[4]];
+				// array:        time     type         domain                client           status
+				$allQueries[] = [$row[0], $query_type, utf8_encode($row[2]), utf8_encode($c), $row[4]];
 			}
 	}
 	$result = array('data' => $allQueries);
@@ -182,8 +185,8 @@ if (isset($_GET['topClients']) && $auth)
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
 		{
-
-			$c = resolveHostname($row[0],false);
+			// Try to resolve host name and convert to UTF-8
+			$c = utf8_encode(resolveHostname($row[0],false));
 
 			if(array_key_exists($c, $clientnums))
 			{
@@ -233,8 +236,8 @@ if (isset($_GET['topDomains']) && $auth)
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
 		{
-			// Convert client to lower case
-			$c = strtolower($row[0]);
+			// Convert domain to lower case UTF-8
+			$c = utf8_encode(strtolower($row[0]));
 			if(array_key_exists($c, $domains))
 			{
 				// Entry already exists, add to it (might appear multiple times due to mixed capitalization in the database)
@@ -283,7 +286,7 @@ if (isset($_GET['topAds']) && $auth)
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
 		{
-			$addomains[$row[0]] = intval($row[1]);
+			$addomains[utf8_encode($row[0])] = intval($row[1]);
 		}
 	$result = array('top_ads' => $addomains);
 	$data = array_merge($data, $result);
