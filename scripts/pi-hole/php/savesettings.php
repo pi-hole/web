@@ -707,9 +707,10 @@ function readAdlists()
 				if(strlen($_POST["newuserlists"]) > 1)
 				{
 					$domains = array_filter(preg_split('/\r\n|[\r\n]/', $_POST["newuserlists"]));
+					$comment = "'".$_POST["newusercomment"]."'";
 					foreach($domains as $domain)
 					{
-						exec("sudo pihole -a adlist add ".escapeshellcmd($domain));
+						exec("sudo pihole -a adlist add ".escapeshellcmd($domain)." ".escapeshellcmd($comment));
 					}
 				}
 
