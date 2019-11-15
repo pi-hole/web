@@ -30,18 +30,24 @@ function getFullName() {
 <div class="page-header">
     <h1><?php getFullName(); ?></h1>
 </div>
-
-<!-- Domain Input -->
-<div class="form-group input-group">
-    <input id="domain" type="text" class="form-control" placeholder="Add a domain (example.com or sub.example.com)">
-    <span class="input-group-btn">
-        <button id="btnAdd" class="btn btn-default" type="button">Add (exact)</button>
-        <button id="btnAddWildcard" class="btn btn-default" type="button">Add (wildcard)</button>
-        <button id="btnAddRegex" class="btn btn-default" type="button">Add (regex)</button>
-        <button id="btnRefresh" class="btn btn-default" type="button"><i class="fa fa-sync"></i></button>
-    </span>
+<div class="row">
+  <div class="col-md-6">
+    <label for="ex1">Domain:</label>
+    <input id="domain" type="text" class="form-control" placeholder="Add a domain (example.com)">
+  </div>
+  <div class="col-md-6">
+    <label for="ex2">Comment:</label>
+    <div class="form-group input-group">
+      <input id="comment" type="text" class="form-control" placeholder="Include a comment (optional)">
+      <span class="input-group-btn">
+          <button id="btnAdd" class="btn btn-default" type="button">Add (exact)</button>
+          <button id="btnAddWildcard" class="btn btn-default" type="button">Add (wildcard)</button>
+          <button id="btnAddRegex" class="btn btn-default" type="button">Add (regex)</button>
+          <button id="btnRefresh" class="btn btn-default" type="button"><i class="fa fa-sync"></i></button>
+      </span>
+    </div>
+  </div>
 </div>
-
 <!-- Alerts -->
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>

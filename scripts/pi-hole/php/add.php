@@ -25,6 +25,7 @@ if(in_array($list, $check_lists)) {
 
 // Split individual domains into array
 $domains = preg_split('/\s+/', trim($_POST['domain']));
+$comment = trim($_POST['comment']);
 
 require_once("func.php");
 require_once("database.php");
@@ -33,31 +34,31 @@ $db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
 
 switch($list) {
 	case "white":
-		echo add_to_table($db, "whitelist", $domains);
+		echo add_to_table($db, "whitelist", $domains, $comment);
 		break;
 
 	case "black":
-		echo add_to_table($db, "blacklist", $domains);
+		echo add_to_table($db, "blacklist", $domains, $comment);
 		break;
 
 	case "black_regex":
-		echo add_to_table($db, "regex_blacklist", $domains);
+		echo add_to_table($db, "regex_blacklist", $domains, $comment);
 		break;
 
 	case "white_regex":
-		echo add_to_table($db, "regex_whitelist", $domains);
+		echo add_to_table($db, "regex_whitelist", $domains, $comment);
 		break;
 
 	case "black_wild":
-		echo add_to_table($db, "regex_blacklist", $domains, true);
+		echo add_to_table($db, "regex_blacklist", $domains, $comment, true);
 		break;
 
 	case "white_wild":
-		echo add_to_table($db, "regex_whitelist", $domains, true);
+		echo add_to_table($db, "regex_whitelist", $domains, $comment, true);
 		break;
 
 	case "audit":
-		echo add_to_table($db, "domain_audit", $domains);
+		echo add_to_table($db, "domain_audit", $domains, $comment);
 		break;
 
 	default:
