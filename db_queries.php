@@ -92,7 +92,7 @@ $token = $_SESSION['token'];
                 <p>Queries Blocked</p>
             </div>
             <div class="icon">
-                <i class="ion ion-android-hand"></i>
+                <i class="fas fa-hand-paper"></i>
             </div>
         </div>
     </div>
@@ -105,7 +105,7 @@ $token = $_SESSION['token'];
                 <p>Queries Blocked (Wildcards)</p>
             </div>
             <div class="icon">
-                <i class="ion ion-android-hand"></i>
+                <i class="fas fa-hand-paper"></i>
             </div>
         </div>
     </div>
@@ -118,7 +118,7 @@ $token = $_SESSION['token'];
                 <p>Queries Total</p>
             </div>
             <div class="icon">
-                <i class="ion ion-earth"></i>
+                <i class="fas fa-globe-americas"></i>
             </div>
         </div>
     </div>
@@ -131,7 +131,7 @@ $token = $_SESSION['token'];
                 <p>Queries Blocked</p>
             </div>
             <div class="icon">
-                <i class="ion ion-pie-graph"></i>
+                <i class="fas fa-chart-pie"></i>
             </div>
         </div>
     </div>
