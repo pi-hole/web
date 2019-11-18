@@ -38,12 +38,12 @@ function eventsource() {
 
     // IE does not support EventSource - load whole content at once
     if (typeof EventSource !== "function") {
-        httpGet(ta,"/admin/scripts/pi-hole/php/debug.php?IE&token="+token+"&"+checked);
+        httpGet(ta,"scripts/pi-hole/php/debug.php?IE&token="+token+"&"+checked);
         return;
     }
 
     var host = window.location.host;
-    var source = new EventSource("/admin/scripts/pi-hole/php/debug.php?&token="+token+"&"+checked);
+    var source = new EventSource("scripts/pi-hole/php/debug.php?&token="+token+"&"+checked);
 
     // Reset and show field
     ta.empty();
