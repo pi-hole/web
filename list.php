@@ -70,7 +70,7 @@ function getFullName() {
 <!-- Domain List -->
 <h3 id="h3-exact" hidden="true">Exact blocking</h3>
 <ul class="list-group" id="list"></ul>
-<h3 id="h3-regex" hidden="true"><a href="https://docs.pi-hole.net/ftldns/regex/overview/" target="_blank" title="Click for Pi-hole Regex documentation">Regex</a> &amp; Wildcard blocking</h3>
+<h3 id="h3-regex" hidden="true"><a href="https://docs.pi-hole.net/ftldns/regex/overview/" rel="noopener" target="_blank" title="Click for Pi-hole Regex documentation">Regex</a> &amp; Wildcard blocking</h3>
 <ul class="list-group" id="list-regex"></ul>
 
 <script src="scripts/pi-hole/js/list.js"></script>
