@@ -242,7 +242,7 @@ if($auth) {
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
-        <a href="http://pi-hole.net" class="logo" target="_blank">
+        <a href="https://pi-hole.net/" class="logo" target="_blank">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">P<b>h</b></span>
             <!-- logo for regular state and mobile devices -->
@@ -277,7 +277,7 @@ if($auth) {
                                     <a class="btn-link" href="https://github.com/pi-hole" target="_blank">GitHub</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a class="btn-link" href="https://pi-hole.net" target="_blank">Website</a>
+                                    <a class="btn-link" href="https://pi-hole.net/" target="_blank">Website</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
                                     <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" target="_blank">Updates</a>
