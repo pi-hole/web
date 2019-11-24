@@ -9,7 +9,6 @@
 require "password.php";
 require "auth.php"; // Also imports func.php
 require "database.php";
-require_once "savesettings.php";
 
 if (php_sapi_name() !== "cli") {
 	if(!$auth) die("Not authorized");
@@ -52,7 +51,6 @@ function archive_add_table($name, $table)
 
 	$archive[$name] = json_encode($content);
 }
-
 
 /**
  * Restore the contents of a table from an uploaded archive
@@ -153,7 +151,6 @@ function archive_restore_table($file, $table, $flush=false)
 	return $num;
 }
 
-=======
 /**
  * Create table rows from an uploaded archive file
  *
