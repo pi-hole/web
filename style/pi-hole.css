@@ -83,7 +83,7 @@
     }
 }
 
-.main-header>.navbar {
+.main-header>.navbar, .navbar>.sidebar-toggle {
   height: 50px;
 }
 
@@ -174,4 +174,14 @@
 
 .float-left{
     float:left;
+}
+
+.fa-paypal-icon {
+    width: 18px;
+    margin-left: 2px;
+}
+
+.sidebar-toggle:before {
+    font-weight: 900;
+    font-family: "Font Awesome 5 Free";
 }

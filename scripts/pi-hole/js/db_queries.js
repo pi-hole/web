@@ -18,6 +18,8 @@ var daterange;
 
 var timeoutWarning = $("#timeoutWarning");
 
+var dateformat = "MMMM Do YYYY, HH:mm";
+
 // Do we want to filter queries?
 var GETDict = {};
 location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
@@ -47,7 +49,8 @@ $(function () {
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()]
       },
-      "opens": "center", "showDropdowns": true
+      "opens": "center", "showDropdowns": true,
+      "autoUpdateInput": false
     },
     function (startt, endt) {
       from = moment(startt).utc().valueOf()/1000;
@@ -167,7 +170,9 @@ function getQueryTypes()
     }
     if($("#type_external").prop("checked"))
     {
-        queryType.push(6);
+        // Multiple IDs correspond to this status
+        // We request queries with all of them
+        queryType.push([6,7,8]);
     }
     return queryType.join(",");
 }
@@ -239,14 +244,13 @@ $(document).ready(function() {
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
             var blocked, fieldtext, buttontext, color;
-
             switch (data[4])
             {
               case 1:
                 blocked = true;
                 color = "red";
                 fieldtext = "Blocked (gravity)";
-                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>";
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
               case 2:
                 blocked = false;
@@ -264,18 +268,30 @@ $(document).ready(function() {
                 blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
-                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fas fa-check\"></i> Whitelist</button>" ;
                 break;
               case 5:
                 blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
-                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fas fa-check\"></i> Whitelist</button>" ;
                 break;
               case 6:
                 blocked = true;
                 color = "red";
-                fieldtext = "Blocked <br class='hidden-lg'>(external)";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
+                buttontext = "" ;
+                break;
+              case 7:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
+                buttontext = "" ;
+                break;
+              case 8:
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
                 buttontext = "" ;
                 break;
               default:
@@ -293,13 +309,23 @@ $(document).ready(function() {
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": {"url": APIstring, "error": handleAjaxError },
+        "ajax": {
+            "url": APIstring,
+            "error": handleAjaxError,
+            "dataSrc": function(data){
+                var dataIndex = 0;
+                return data.data.map(function(x){
+                    x[0] = x[0] * 1e6 + (dataIndex++);
+                    return x;
+                });
+            }
+        },
         "autoWidth" : false,
         "processing": true,
         "deferRender": true,
         "order" : [[0, "desc"]],
         "columns": [
-            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
+            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(Math.floor(data/1e6)).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
             { "width" : "10%" },
             { "width" : "40%" },
             { "width" : "20%" },
@@ -333,6 +359,6 @@ $(document).ready(function() {
 } );
 
 $("#querytime").on("apply.daterangepicker", function(ev, picker) {
+    $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
     refreshTableData();
 });
-

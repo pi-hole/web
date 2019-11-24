@@ -5,7 +5,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 // Define global variables
-var timeLineChart, queryTypeChart, forwardDestinationChart;
+var timeLineChart, queryTypeChart, forwardDestinationChart, auditList = [], auditTimeout;
 
 // Credit: http://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406
 function escapeHtml(text) {
@@ -60,7 +60,7 @@ function updateTopLists() {
                 {
                     url = "<a href=\"queries.php?domain="+printdomain+"\">"+printdomain+"</a>";
                     adtable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button> <button style=\"color:orange; white-space: nowrap;\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
+                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <button style=\"color:green; white-space: nowrap;\"><i class=\"fas fa-check\"></i> Whitelist</button> <button style=\"color:orange; white-space: nowrap;\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
                 }
             }
         }
@@ -96,7 +96,7 @@ $(document).ready(function() {
         }
         else
         {
-            add(url,"audit");
+            auditUrl(url);
         }
     });
 
@@ -109,10 +109,26 @@ $(document).ready(function() {
         }
         else
         {
-            add(url,"audit");
+            auditUrl(url);
         }
     });
 });
+
+function auditUrl(url) {
+    if (auditList.indexOf(url) > -1) {
+        return;
+    }
+    if (auditTimeout) {
+        clearTimeout(auditTimeout);
+    }
+    auditList.push(url);
+    // wait 3 seconds to see if more domains need auditing
+    // and batch them all into a single request
+    auditTimeout = setTimeout(function() {
+        add(auditList.join(' '), "audit");
+        auditList = [];
+    }, 3000);
+}
 
 
 $("#gravityBtn").on("click", function() {

@@ -152,7 +152,6 @@ $(document).ready(function() {
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data, index ){
-
             // DNSSEC status
             var dnssec_status;
             switch (data[5])
@@ -170,7 +169,7 @@ $(document).ready(function() {
                 dnssec_status = "<br><span style=\"color:red\">ABANDONED</span>";
                 break;
             case "5":
-                dnssec_status = "<br><span style=\"color:red\">UNKNOWN</span>";
+                dnssec_status = "<br><span style=\"color:orange\">UNKNOWN</span>";
                 break;
             default: // No DNSSEC
                 dnssec_status = "";
@@ -184,7 +183,7 @@ $(document).ready(function() {
                 blocked = true;
                 color = "red";
                 fieldtext = "Blocked (gravity)";
-                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>";
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
             case "2":
                 blocked = false;
@@ -202,24 +201,36 @@ $(document).ready(function() {
                 blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
-                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fas fa-check\"></i> Whitelist</button>" ;
                 break;
             case "5":
                 blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
-                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fa fa-pencil-square-o\"></i> Whitelist</button>" ;
+                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fas fa-check\"></i> Whitelist</button>" ;
                 break;
             case "6":
                 blocked = true;
                 color = "red";
-                fieldtext = "Blocked <br class='hidden-lg'>(external)";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
+                buttontext = "" ;
+                break;
+            case "7":
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
+                buttontext = "" ;
+                break;
+            case "8":
+                blocked = true;
+                color = "red";
+                fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
                 buttontext = "" ;
                 break;
             default:
                 blocked = false;
                 color = "black";
-                fieldtext = "Unknown";
+                fieldtext = "Unknown ("+parseInt(data[4])+")";
                 buttontext = "";
             }
             $(row).css("color", color);
@@ -266,7 +277,7 @@ $(document).ready(function() {
                     replytext = "upstream error";
                     break;
                 default:
-                    replytext = "? ("+data[6]+")";
+                    replytext = "? ("+parseInt(data[6])+")";
                 }
             }
             else
@@ -287,12 +298,22 @@ $(document).ready(function() {
              "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
              "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "ajax": {"url": APIstring, "error": handleAjaxError },
+        "ajax": {
+            "url": APIstring,
+            "error": handleAjaxError,
+            "dataSrc": function(data){
+                var dataIndex = 0;
+                return data.data.map(function(x){
+                    x[0] = x[0] * 1e6 + (dataIndex++);
+                    return x;
+                });
+            }
+        },
         "autoWidth" : false,
         "processing": true,
         "order" : [[0, "desc"]],
         "columns": [
-            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
+            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(Math.floor(data/1e6)).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
             { "width" : "4%" },
             { "width" : "36%", "render": $.fn.dataTable.render.text() },
             { "width" : "8%", "render": $.fn.dataTable.render.text() },
@@ -329,21 +350,45 @@ $(document).ready(function() {
             // Query type IPv4 / IPv6
             api.$("td:eq(1)").click( function () { if(autofilter()){ api.search( this.innerHTML ).draw(); $("#resetButton").show(); }});
             api.$("td:eq(1)").hover(
-              function () { this.title="Click to show only "+this.innerHTML+" queries"; this.style.color="#72afd2"; },
+              function () {
+                  if(autofilter()) {
+                      this.title = "Click to show only " + this.innerHTML + " queries";
+                      this.style.color = "#72afd2";
+                  } else {
+                      this.title = "";
+                      this.style.color = "";
+                  }
+              },
               function () { this.style.color=""; }
             );
             api.$("td:eq(1)").css("cursor","pointer");
             // Domain
             api.$("td:eq(2)").click( function () { if(autofilter()){ api.search( this.innerHTML ).draw(); $("#resetButton").show(); }});
             api.$("td:eq(2)").hover(
-              function () { this.title="Click to show only queries with domain "+this.innerHTML; this.style.color="#72afd2"; },
+              function () {
+                  if(autofilter()) {
+                      this.title = "Click to show only queries with domain " + this.innerHTML;
+                      this.style.color = "#72afd2";
+                  } else {
+                      this.title = "";
+                      this.style.color = "";
+                  }
+              },
               function () { this.style.color=""; }
             );
             api.$("td:eq(2)").css("cursor","pointer");
             // Client
             api.$("td:eq(3)").click( function () { if(autofilter()){ api.search( this.innerHTML ).draw(); $("#resetButton").show(); }});
             api.$("td:eq(3)").hover(
-              function () { this.title="Click to show only queries made by "+this.innerHTML; this.style.color="#72afd2"; },
+              function () {
+                  if(autofilter()) {
+                      this.title = "Click to show only queries made by " + this.innerHTML;
+                      this.style.color = "#72afd2";
+                  } else {
+                      this.title = "";
+                      this.style.color = "";
+                  }
+              },
               function () { this.style.color=""; }
             );
             api.$("td:eq(3)").css("cursor","pointer");
@@ -364,5 +409,3 @@ $(document).ready(function() {
 
     $("#resetButton").click( function () { tableApi.search("").draw(); $("#resetButton").hide(); } );
 } );
-
-

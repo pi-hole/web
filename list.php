@@ -42,7 +42,7 @@ function getFullName() {
     <?php }else{ ?>
         <button id="btnAdd" class="btn btn-default" type="button">Add</button>
     <?php } ?>
-        <button id="btnRefresh" class="btn btn-default" type="button"><i class="fa fa-refresh"></i></button>
+        <button id="btnRefresh" class="btn btn-default" type="button"><i class="fa fa-sync"></i></button>
     </span>
 </div>
 

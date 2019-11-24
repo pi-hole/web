@@ -16,11 +16,13 @@ var until = moment(end__).utc().valueOf()/1000;
 
 var timeoutWarning = $("#timeoutWarning");
 
+var dateformat = "MMMM Do YYYY, HH:mm";
+
 $(function () {
     $("#querytime").daterangepicker(
     {
       timePicker: true, timePickerIncrement: 15,
-      locale: { format: "MMMM Do YYYY, HH:mm" },
+      locale: { format: dateformat },
       startDate: start__, endDate: end__,
       ranges: {
         "Today": [moment().startOf("day"), moment()],
@@ -32,7 +34,8 @@ $(function () {
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()]
       },
-      "opens": "center", "showDropdowns": true
+      "opens": "center", "showDropdowns": true,
+      "autoUpdateInput": false
     },
     function (startt, endt) {
       from = moment(startt).utc().valueOf()/1000;
@@ -244,6 +247,7 @@ $(document).ready(function() {
 });
 
 $("#querytime").on("apply.daterangepicker", function(ev, picker) {
+    $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
     $("#queries-over-time").show();
     updateQueriesOverTime();
 });
