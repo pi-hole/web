@@ -1140,7 +1140,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-lg-6 col-md-12">
-                                                <label>Import ...</label>
+                                                <label>Import...</label>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="whitelist" value="true"
@@ -1173,9 +1173,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             Audit log</label>
                                                     </div>
                                                     <div class="checkbox">
-                                                        <label><input type="checkbox" name="dhcpleases" value="true"
+                                                        <label><input type="checkbox" name="staticdhcpleases" value="true"
                                                                       checked>
-                                                            DHCP Leases</label>
+                                                            Static DHCP Leases</label>
                                                     </div>
                                                 </div>
                                             </div>

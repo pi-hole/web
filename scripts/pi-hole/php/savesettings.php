@@ -6,7 +6,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-if(!in_array(basename($_SERVER['SCRIPT_FILENAME']), array("settings.php", "teleporter.php"), true))
+if(!in_array(basename($_SERVER['SCRIPT_FILENAME']), ["settings.php", "teleporter.php"], true))
 {
 	die("Direct access to this script is forbidden!");
 }
@@ -53,7 +53,15 @@ function validDomainWildcard($domain_name)
 function validMAC($mac_addr)
 {
   // Accepted input format: 00:01:02:1A:5F:FF (characters may be lower case)
-  return (preg_match('/([a-fA-F0-9]{2}[:]?){6}/', $mac_addr) == 1);
+  return !filter_var($mac_addr, FILTER_VALIDATE_MAC) === false;
+}
+
+function formatMAC($mac_addr)
+{
+	preg_match("/([0-9a-fA-F]{2}[:]){5}([0-9a-fA-F]{2})/", $mac_addr, $matches);
+	if(count($matches) > 0)
+		return $matches[0];
+	return null;
 }
 
 function validEmail($email)
@@ -66,15 +74,18 @@ function validEmail($email)
 		&& escapeshellcmd($email) === $email;
 }
 
-function processStaticLeasesFile($file_path) {
-	$dhcp_static_leases_local = array();
+$dhcp_static_leases = array();
+function readStaticLeasesFile($origin_file="/etc/dnsmasq.d/04-pihole-static-dhcp.conf")
+{
+	global $dhcp_static_leases;
+	$dhcp_static_leases = array();
 	try
 	{
-		$dhcpstatic = @fopen($file_path, 'r');
+		$dhcpstatic = @fopen($origin_file, 'r');
 	}
 	catch(Exception $e)
 	{
-		echo "Warning: Failed to read $file_path, this is not an error";
+		echo "Warning: Failed to read ".$origin_file.", this is not an error";
 		return false;
 	}
 
@@ -90,34 +101,21 @@ function processStaticLeasesFile($file_path) {
 		{
 			if(validIP($one) && strlen($two) == 0)
 				// dhcp-host=mac,IP - no HOST
-				array_push($dhcp_static_leases_local,["hwaddr"=>$mac, "IP"=>$one, "host"=>""]);
+				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>$one, "host"=>""]);
 			elseif(strlen($two) == 0)
 				// dhcp-host=mac,hostname - no IP
-				array_push($dhcp_static_leases_local,["hwaddr"=>$mac, "IP"=>"", "host"=>$one]);
+				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>"", "host"=>$one]);
 			else
 				// dhcp-host=mac,IP,hostname
-				array_push($dhcp_static_leases_local,["hwaddr"=>$mac, "IP"=>$one, "host"=>$two]);
+				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>$one, "host"=>$two]);
 		}
 		else if(validIP($one) && validDomain($mac))
 		{
 			// dhcp-host=hostname,IP - no MAC
-			array_push($dhcp_static_leases_local,["hwaddr"=>"", "IP"=>$one, "host"=>$mac]);
+			array_push($dhcp_static_leases,["hwaddr"=>"", "IP"=>$one, "host"=>$mac]);
 		}
 	}
-	return $dhcp_static_leases_local;
-}
-
-$dhcp_static_leases = array();
-function readStaticLeasesFile()
-{
-	global $dhcp_static_leases;
-	$dhcp_static_leases = array();
-	$result = processStaticLeasesFile('/etc/dnsmasq.d/04-pihole-static-dhcp.conf');
-	if($result !== false) {
-		$dhcp_static_leases = $result;
-			return true;
-	}
-	return $result;
+	return true;
 }
 
 function isequal(&$argument, &$compareto) {
@@ -195,64 +193,62 @@ function readAdlists()
 	return $list;
 }
 
-function addDHCPLease($mac, $ip, $hostname) {
-	$result = array('message' => "", 'value' => false);
+function addStaticDHCPLease($mac, $ip, $hostname) {
+	global $error, $success, $dhcp_static_leases;
 
-	if(!validMAC($mac))
-	{
-		$result['message'] .= "MAC address (".htmlspecialchars($mac).") is invalid!<br>";
-	}
-	$mac = strtoupper($mac);
-
-	if(!validIP($ip) && strlen($ip) > 0)
-	{
-		$result['message'] .= "IP address (".htmlspecialchars($ip).") is invalid!<br>";
-	}
-
-	if(!validDomain($hostname) && strlen($hostname) > 0)
-	{
-		$result['message'] .= "Host name (".htmlspecialchars($hostname).") is invalid!<br>";
-	}
-
-	if(strlen($hostname) == 0 && strlen($ip) == 0)
-	{
-		$result['message'] .= "You can not omit both the IP address and the host name!<br>";
-	}
-
-	if(strlen($hostname) == 0)
-		$hostname = "nohost";
-
-	if(strlen($ip) == 0)
-		$ip = "noip";
-
-	// Test if this lease is already included
-	readStaticLeasesFile();
-	global $dhcp_static_leases;
-	foreach($dhcp_static_leases as $lease) {
-		if($lease["hwaddr"] === $mac)
+	try {
+		if(!validMAC($mac))
 		{
-			$result['message'] .= "Static release for MAC address (".htmlspecialchars($mac).") already defined!<br>";
-			break;
+			throw new Exception("MAC address (".htmlspecialchars($mac).") is invalid!<br>", 0);
 		}
-		if($ip !== "noip" && $lease["IP"] === $ip)
-		{
-			$result['message'] .= "Static lease for IP address (".htmlspecialchars($ip).") already defined!<br>";
-			break;
-		}
-		if($lease["host"] === $hostname)
-		{
-			$result['message'] .= "Static lease for hostname (".htmlspecialchars($hostname).") already defined!<br>";
-			break;
-		}
-	}
+		$mac = strtoupper($mac);
 
-	if(!strlen($result['message']))
-	{
+		if(!validIP($ip) && strlen($ip) > 0)
+		{
+			throw new Exception("IP address (".htmlspecialchars($ip).") is invalid!<br>", 1);
+		}
+
+		if(!validDomain($hostname) && strlen($hostname) > 0)
+		{
+			throw new Exception("Host name (".htmlspecialchars($hostname).") is invalid!<br>", 2);
+		}
+
+		if(strlen($hostname) == 0 && strlen($ip) == 0)
+		{
+			throw new Exception("You can not omit both the IP address and the host name!<br>", 3);
+		}
+
+		if(strlen($hostname) == 0)
+			$hostname = "nohost";
+
+		if(strlen($ip) == 0)
+			$ip = "noip";
+
+		// Test if this lease is already included
+		readStaticLeasesFile();
+		
+		foreach($dhcp_static_leases as $lease) {
+			if($lease["hwaddr"] === $mac)
+			{
+				throw new Exception("Static release for MAC address (".htmlspecialchars($mac).") already defined!<br>", 4);
+			}
+			if($ip !== "noip" && $lease["IP"] === $ip)
+			{
+				throw new Exception("Static lease for IP address (".htmlspecialchars($ip).") already defined!<br>", 5);
+			}
+			if($lease["host"] === $hostname)
+			{
+				throw new Exception("Static lease for hostname (".htmlspecialchars($hostname).") already defined!<br>", 6);
+			}
+		}
+
 		exec("sudo pihole -a addstaticdhcp ".$mac." ".$ip." ".$hostname);
-		$result['message'] = "A new static address has been added";
-		$result['value'] = true;
+		$success .= "A new static address has been added";
+		return true;
+	} catch(Exception $exception) {
+		$error .= $exception->getMessage();
+		return false;
 	}
-	return $result;
 }
 
 	// Read available adlists
@@ -604,12 +600,11 @@ function addDHCPLease($mac, $ip, $hostname) {
 
 				if(isset($_POST["addstatic"]))
 				{
-					$result = addDHCPLease($_POST["AddMAC"], $_POST["AddIP"], $_POST["AddHostname"]);
-					if($result['value']) {
-						$success .= $result['message'];
-					} else {
-						$error .= $result['message'];
-					}
+					$mac = $_POST["AddMAC"];
+					$ip = $_POST["AddIP"];
+					$hostname = $_POST["AddHostname"];
+
+					addStaticDHCPLease($mac, $ip, $hostname);
 					break;
 				}
 

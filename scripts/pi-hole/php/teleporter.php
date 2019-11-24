@@ -9,7 +9,7 @@
 require "password.php";
 require "auth.php"; // Also imports func.php
 require "database.php";
-require_once "savesettings.php";
+require "savesettings.php";
 
 if (php_sapi_name() !== "cli") {
 	if(!$auth) die("Not authorized");
@@ -52,7 +52,6 @@ function archive_add_table($name, $table)
 
 	$archive[$name] = json_encode($content);
 }
-
 
 /**
  * Restore the contents of a table from an uploaded archive
@@ -153,7 +152,6 @@ function archive_restore_table($file, $table, $flush=false)
 	return $num;
 }
 
-=======
 /**
  * Create table rows from an uploaded archive file
  *
@@ -198,6 +196,22 @@ function archive_add_directory($path,$subdir="")
 	}
 }
 
+function limit_length(&$item, $key)
+{
+	// limit max length for a domain entry to 253 chars
+	// return only a part of the string if it is longer
+	$item = substr($item, 0, 253);
+}
+
+function process_file($contents)
+{
+	$domains = array_filter(explode("\n",$contents));
+	// Walk array and apply a max string length
+	// function to every member of the array of domains
+	array_walk($domains, "limit_length");
+	return $domains;
+}
+
 if(isset($_POST["action"]))
 {
 	if($_FILES["zip_file"]["name"] && $_POST["action"] == "in")
@@ -233,7 +247,7 @@ if(isset($_POST["action"]))
 
 		$flushtables = isset($_POST["flushtables"]);
 
-		foreach($archive as $file)
+		foreach(new RecursiveIteratorIterator($archive) as $file)
 		{
 			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.txt")
 			{
@@ -311,6 +325,31 @@ if(isset($_POST["action"]))
 				$num = archive_restore_table($file, "domain_audit", $flushtables);
 				echo "Processed domain_audit (".$num." entries)<br>\n";
 				$importedsomething = true;
+			}
+
+			if(isset($_POST["staticdhcpleases"]) && $file->getFilename() === "04-pihole-static-dhcp.conf")
+			{
+				if($flushtables) {
+					$local_file = @fopen("/etc/dnsmasq.d/04-pihole-static-dhcp.conf", "r+");
+					if ($local_file !== false) {
+						ftruncate($local_file, 0);
+						fclose($local_file);
+					}
+				}
+				$num = 0;
+				$staticdhcpleases = process_file(file_get_contents($file));
+				foreach($staticdhcpleases as $lease) {
+					list($mac,$ip,$hostname) = explode(",",$lease);
+					$mac = formatMAC($mac);
+					if(addStaticDHCPLease($mac,$ip,$hostname))
+						$num++;
+				}
+
+				readStaticLeasesFile();
+				echo "Processed static DHCP leases (".$num." entries)<br>\n";
+				if($num > 0) {
+					$importedsomething = true;
+				}
 			}
 		}
 
