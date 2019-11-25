@@ -869,7 +869,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                    server which supports DNSSEC when activating DNSSEC. Note that
                                                    the size of your log might increase significantly
                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
-                                                   <a href="http://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
+                                                   <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
                                                 <label>Conditional Forwarding</label>
                                                 <p>If not configured as your DHCP server, Pi-hole won't be able to
                                                    determine the names of devices on your local network.  As a
