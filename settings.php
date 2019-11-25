@@ -869,7 +869,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                    server which supports DNSSEC when activating DNSSEC. Note that
                                                    the size of your log might increase significantly
                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
-                                                   <a href="https://dnssec.vs.uni-due.de/" target="_blank">here</a>.</p>
+                                                   <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
                                                 <label>Conditional Forwarding</label>
                                                 <p>If not configured as your DHCP server, Pi-hole won't be able to
                                                    determine the names of devices on your local network.  As a
@@ -1321,7 +1321,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" target="_blank">DNS cache documentation</a>.
+                                            See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
                                             <?php } else { ?>
                                             <div>The FTL service is offline!</div>
                                             <?php } ?>

@@ -216,8 +216,8 @@
 <div>
     <link rel="stylesheet" type="text/css" href="style/vendor/js-warn.css">
     <input type="checkbox" id="js-hide" />
-    <div class="js-warn" id="js-warn-exit"><h1>Javascript Is Disabled</h1><p>Javascript seems to be disabled. This will break some site features.</p>
-        <p>To enable Javascript click <a href="http://www.enable-javascript.com/" target="_blank">here</a></p><label for="js-hide">Close</label></div>
+    <div class="js-warn" id="js-warn-exit"><h1>JavaScript Is Disabled</h1><p>JavaScript seems to be disabled. This will break some site features.</p>
+        <p>To enable JavaScript click <a href="https://www.enable-javascript.com/" rel="noopener" target="_blank">here</a></p><label for="js-hide">Close</label></div>
 </div>
 <!-- /JS Warning -->
 <?php
@@ -242,7 +242,7 @@ if($auth) {
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
-        <a href="https://pi-hole.net/" class="logo" target="_blank">
+        <a href="https://pi-hole.net/" class="logo" rel="noopener" target="_blank">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">P<b>h</b></span>
             <!-- logo for regular state and mobile devices -->
@@ -274,13 +274,13 @@ if($auth) {
                             <!-- Menu Body -->
                             <li class="user-body">
                                 <div class="col-xs-4 text-center">
-                                    <a class="btn-link" href="https://github.com/pi-hole" target="_blank">GitHub</a>
+                                    <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank">GitHub</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a class="btn-link" href="https://pi-hole.net/" target="_blank">Website</a>
+                                    <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">Website</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
-                                    <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" target="_blank">Updates</a>
+                                    <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank">Updates</a>
                                 </div>
                                 <div class="col-xs-12 text-center" id="sessiontimer">
                                     <b>Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></b>
@@ -294,19 +294,19 @@ if($auth) {
                                     <b>Pi-hole Version </b> <?php
                                     echo $core_current;
                                     if(isset($core_commit)) { echo "<br>(".$core_branch.", ".$core_commit.")"; }
-                                    if($core_update){ ?> <a class="alert-link lookatme btn-link" href="https://github.com/pi-hole/pi-hole/releases" target="_blank" style="background:none">(Update available!)</a><?php } ?><br>
+                                    if($core_update){ ?> <a class="alert-link lookatme btn-link" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank" style="background:none">(Update available!)</a><?php } ?><br>
                                     <b>Web Interface Version </b><?php
                                     echo $web_current;
                                     if(isset($web_commit)) { echo "<br>(".$web_branch.", ".$web_commit.")"; }
-                                    if($web_update){ ?> <a class="alert-link lookatme btn-link" href="https://github.com/pi-hole/AdminLTE/releases" target="_blank" style="background:none">(Update available!)</a><?php } ?><br>
+                                    if($web_update){ ?> <a class="alert-link lookatme btn-link" href="https://github.com/pi-hole/AdminLTE/releases" rel="noopener" target="_blank" style="background:none">(Update available!)</a><?php } ?><br>
                                     <b>FTL Version </b> <?php
                                     echo $FTL_current;
-                                    if($FTL_update){ ?> <a class="alert-link lookatme btn-link" href="https://github.com/pi-hole/FTL/releases" target="_blank" style="background:none">(Update available!)</a><?php } ?><br><br>
+                                    if($FTL_update){ ?> <a class="alert-link lookatme btn-link" href="https://github.com/pi-hole/FTL/releases" rel="noopener" target="_blank" style="background:none">(Update available!)</a><?php } ?><br><br>
                                 </div>
                                 */ ?>
                                 <!-- PayPal -->
                                 <div class="text-center">
-                                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY" target="_blank" style="background:none">
+                                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY" rel="noopener" target="_blank" style="background:none">
                                         <img src="img/donate.gif" alt="Donate">
                                     </a>
                                 </div>
@@ -600,7 +600,7 @@ if($auth) {
                 <?php } ?>
                 <!-- Donate -->
                 <li>
-                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY" target="_blank">
+                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY" rel="noopener" target="_blank">
                         <i class="fa-paypal-icon fab fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
