@@ -30,7 +30,7 @@
 <!-- Alerts -->
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Adding the custom DNS entry...
+    Updating the custom DNS entries...
 </div>
 <div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -62,13 +62,6 @@
                         <th>Action</th>
                     </tr>
                     </thead>
-                    <tfoot>
-                    <tr>
-                        <th>Domain</th>
-                        <th>IP</th>
-                        <th>Action</th>
-                    </tr>
-                    </tfoot>
                 </table>
                 <button type="button" id="resetButton" hidden="true">Clear Filters</button>
             </div>
