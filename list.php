@@ -5,22 +5,26 @@
 *
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
-    require "scripts/pi-hole/php/header.php";
 
-$list = $_GET['l'];
+require "scripts/pi-hole/php/header.php";
 
-if($list !== "white" && $list !== "black"){
-    echo "Invalid list parameter";
+$list = $_GET['l'] ?? '';
+
+if ($list == "white")
+{
+    $listtitle = "Whitelist";
+    $heading = "whitelisting";
+}
+elseif ($list == "black")
+{
+    $listtitle = "Blacklist";
+    $heading = "blocking";
+}
+else
+{
+    echo "Invalid list parameter ".$list;
     require "scripts/pi-hole/php/footer.php";
     die();
-}
-
-function getFullName() {
-    global $list;
-    if($list == "white")
-        echo "Whitelist";
-    else
-        echo "Blacklist";
 }
 ?>
 <!-- Send list type to JS -->
@@ -28,7 +32,7 @@ function getFullName() {
 
 <!-- Title -->
 <div class="page-header">
-    <h1><?php getFullName(); ?></h1>
+    <h1><?php echo $listtitle; ?></h1>
 </div>
 <div class="row">
   <div class="col-md-6">
@@ -51,7 +55,7 @@ function getFullName() {
 <!-- Alerts -->
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Adding to the <?php getFullName(); ?>...
+    Adding to the <?php echo $listtitle; ?>...
 </div>
 <div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -68,9 +72,9 @@ function getFullName() {
 
 
 <!-- Domain List -->
-<h3 id="h3-exact" hidden="true">Exact blocking</h3>
+<h3 id="h3-exact" hidden="true">Exact <?php echo $heading; ?></h3>
 <ul class="list-group" id="list"></ul>
-<h3 id="h3-regex" hidden="true"><a href="https://docs.pi-hole.net/ftldns/regex/overview/" rel="noopener" target="_blank" title="Click for Pi-hole Regex documentation">Regex</a> &amp; Wildcard blocking</h3>
+<h3 id="h3-regex" hidden="true"><a href="https://docs.pi-hole.net/ftldns/regex/overview/" rel="noopener" target="_blank" title="Click for Pi-hole Regex documentation">Regex</a> &amp; Wildcard <?php echo $heading; ?></h3>
 <ul class="list-group" id="list-regex"></ul>
 
 <script src="scripts/pi-hole/js/list.js"></script>
