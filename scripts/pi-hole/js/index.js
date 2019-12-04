@@ -1006,9 +1006,6 @@ $(document).ready(function() {
                 maintainAspectRatio: true
             }
         });
-
-        // Pull in data via AJAX
-        updateQueryTypesOverTime();
     }
 
     // Create / load "Top Domains" and "Top Advertisers" only if authorized
