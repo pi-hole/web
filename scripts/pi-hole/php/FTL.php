@@ -26,7 +26,7 @@ function sendRequestFTL($requestin)
 	global $socket;
 
 	$request = ">".$requestin;
-	fwrite($socket, $request) or die("Could not send data to server\n");
+	fwrite($socket, $request) or die('{"error":"Could not send data to server"}');
 }
 
 function getResponseFTL()
@@ -35,9 +35,15 @@ function getResponseFTL()
 
 	$response = [];
 
+	$errCount = 0;
 	while(true)
 	{
 		$out = fgets($socket);
+		if ($out == "") $errCount++;
+		if ($errCount > 100) {
+			// Tried 100 times, but never got proper reply, fail to prevent busy loop
+			die('{"error":"Tried 100 times to connect to FTL server, but never got proper reply. Please check Port and logs!"}');
+		}
 		if(strrpos($out,"---EOM---") !== false)
 			break;
 
