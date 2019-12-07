@@ -42,7 +42,6 @@ function eventsource() {
         return;
     }
 
-    var host = window.location.host;
     var source = new EventSource("scripts/pi-hole/php/debug.php?&token="+token+"&"+checked);
 
     // Reset and show field

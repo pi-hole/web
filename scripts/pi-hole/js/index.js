@@ -297,7 +297,6 @@ function updateClientsOverTime() {
         // Get colors from AdminLTE
         var colors = [];
         $.each($.AdminLTE.options.colors, function(key, value) { colors.push(value); });
-        var v = [], c = [], k = [];
 
         // Remove possibly already existing data
         clientsChart.data.labels = [];
