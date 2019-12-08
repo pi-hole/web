@@ -102,7 +102,6 @@ function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $re
 	{
 		$countquery = "SELECT COUNT(*) FROM $table WHERE type = $type;";
 	}
-	error_log($countquery);
 	$initialcount = intval($db->querySingle($countquery));
 
 	// Prepare INSERT SQLite statememt
@@ -114,7 +113,6 @@ function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $re
 	{
 		$querystr = "INSERT OR IGNORE INTO $table (domain,comment,type) VALUES (:domain, :comment, $type);";
 	}
-	error_log($querystr);
 	$stmt = $db->prepare($querystr);
 
 	// Return early if we failed to prepare the SQLite statement
