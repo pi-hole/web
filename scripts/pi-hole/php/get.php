@@ -55,14 +55,14 @@ function filterArray(&$inArray) {
 switch ($listtype)
 {
 	case "white":
-		$exact = array("whitelist" => getTableContent(0));
-		$regex = array("regex_whitelist" => getTableContent(2));
+		$exact = array("whitelist" => getTableContent(ListType::whitelist));
+		$regex = array("regex_whitelist" => getTableContent(ListType::regex_whitelist));
 		$list  = array_merge($exact, $regex);
 		break;
 
 	case "black":
-		$exact = array("blacklist" => getTableContent(1));
-		$regex = array("regex_blacklist" => getTableContent(3));
+		$exact = array("blacklist" => getTableContent(ListType::blacklist));
+		$regex = array("regex_blacklist" => getTableContent(ListType::regex_blacklist));
 		$list  = array_merge($exact, $regex);
 		break;
 

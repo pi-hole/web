@@ -365,10 +365,10 @@ else
 		exit("cannot open/create ".htmlentities($archive_file_name)."<br>\nPHP user: ".exec('whoami')."\n");
 	}
 
-	archive_add_table("whitelist.exact.json", "domainlist");
-	archive_add_table("whitelist.regex.json", "domainlist");
-	archive_add_table("blacklist.exact.json", "domainlist");
-	archive_add_table("blacklist.regex.json", "domainlist");
+	archive_add_table("whitelist.exact.json", "domainlist", ListType::whitelist);
+	archive_add_table("whitelist.regex.json", "domainlist", ListType::regex_whitelist);
+	archive_add_table("blacklist.exact.json", "domainlist", ListType::blacklist);
+	archive_add_table("blacklist.regex.json", "domainlist", ListType::regex_blacklist);
 	archive_add_table("adlist.json", "adlist");
 	archive_add_table("domain_audit.json", "domain_audit");
 	archive_add_file("/etc/pihole/","setupVars.conf");
