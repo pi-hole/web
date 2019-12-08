@@ -33,13 +33,12 @@ function updateTopLists() {
         $("#ad-frequency td").parent().remove();
         var domaintable = $("#domain-frequency").find("tbody:last");
         var adtable = $("#ad-frequency").find("tbody:last");
-        var url, domain, percentage;
+        var url, domain;
         for (domain in data.top_queries) {
             if ({}.hasOwnProperty.call(data.top_queries,domain)){
                 // Sanitize domain
                 domain = escapeHtml(domain);
                 url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
-                percentage = data.top_queries[domain] / data.dns_queries_today * 100;
                 domaintable.append("<tr> <td>" + url +
                     "</td> <td>" + data.top_queries[domain] + "</td> <td> <button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button> <button style=\"color:orange; white-space: nowrap;\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
             }

@@ -78,7 +78,6 @@ function eventsource() {
         return;
     }
 
-    var host = window.location.host;
     var source = new EventSource("scripts/pi-hole/php/queryads.php?domain="+domain.toLowerCase()+"&"+exact);
 
     // Reset and show field
