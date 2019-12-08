@@ -34,27 +34,27 @@ $db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
 
 switch($list) {
 	case "white":
-		echo add_to_table($db, "whitelist", $domains, $comment);
+		echo add_to_table($db, "domainlist", $domains, $comment, false, false, 0);
 		break;
 
 	case "black":
-		echo add_to_table($db, "blacklist", $domains, $comment);
-		break;
-
-	case "black_regex":
-		echo add_to_table($db, "regex_blacklist", $domains, $comment);
+		echo add_to_table($db, "domainlist", $domains, $comment, false, false, 1);
 		break;
 
 	case "white_regex":
-		echo add_to_table($db, "regex_whitelist", $domains, $comment);
-		break;
-
-	case "black_wild":
-		echo add_to_table($db, "regex_blacklist", $domains, $comment, true);
+		echo add_to_table($db, "domainlist", $domains, $comment, false, false, 2);
 		break;
 
 	case "white_wild":
-		echo add_to_table($db, "regex_whitelist", $domains, $comment, true);
+		echo add_to_table($db, "domainlist", $domains, $comment, true, false, 2);
+		break;
+
+	case "black_regex":
+		echo add_to_table($db, "domainlist", $domains, $comment, false, false, 3);
+		break;
+
+	case "black_wild":
+		echo add_to_table($db, "domainlist", $domains, $comment, true, false, 3);
 		break;
 
 	case "audit":

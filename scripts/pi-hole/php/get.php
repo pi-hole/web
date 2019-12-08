@@ -17,13 +17,14 @@ require("database.php");
 $GRAVITYDB = getGravityDBFilename();
 $db = SQLite3_connect($GRAVITYDB);
 
-function getTableContent($listname) {
+function getTableContent($type) {
 	global $db;
 	$entries = array();
-	$querystr = implode(" ",array("SELECT ${listname}.*,\"group\".enabled as group_enabled",
-	                              "FROM ${listname}",
-	                              "LEFT JOIN ${listname}_by_group ON ${listname}_by_group.${listname}_id = ${listname}.id",
-	                              "LEFT JOIN \"group\" ON \"group\".id = ${listname}_by_group.group_id",
+	$querystr = implode(" ",array("SELECT domainlist.*,\"group\".enabled as group_enabled",
+	                              "FROM domainlist",
+	                              "LEFT JOIN domainlist_by_group ON domainlist_by_group.domainlist_id = domainlist.id",
+	                              "LEFT JOIN \"group\" ON \"group\".id = domainlist_by_group.group_id",
+	                              "WHERE type = $type",
 	                              "GROUP BY domain;"));
 	$results = $db->query($querystr);
 
@@ -32,7 +33,7 @@ function getTableContent($listname) {
 		array_push($entries, $res);
 	}
 
-	return array($listname => $entries);
+	return $entries;
 }
 
 function filterArray(&$inArray) {
@@ -54,14 +55,14 @@ function filterArray(&$inArray) {
 switch ($listtype)
 {
 	case "white":
-		$exact = getTableContent("whitelist");
-		$regex = getTableContent("regex_whitelist");
+		$exact = array("whitelist" => getTableContent(0));
+		$regex = array("regex_whitelist" => getTableContent(2));
 		$list  = array_merge($exact, $regex);
 		break;
 
 	case "black":
-		$exact = getTableContent("blacklist");
-		$regex = getTableContent("regex_blacklist");
+		$exact = array("blacklist" => getTableContent(1));
+		$regex = array("regex_blacklist" => getTableContent(3));
 		$list  = array_merge($exact, $regex);
 		break;
 
