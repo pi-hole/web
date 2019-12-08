@@ -166,7 +166,7 @@ function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $re
 		return $num;
 	else
 	{
-		$finalcount = intval($countquery);
+		$finalcount = intval($db->querySingle($countquery));
 		$modified = $finalcount - $initialcount;
 
 		// If we add less domains than the user specified, then they wanted to add duplicates
