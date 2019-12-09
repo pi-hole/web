@@ -51,7 +51,7 @@ function escapeHtml(text) {
     "<": "&lt;",
     ">": "&gt;",
     "\"": "&quot;",
-    "\'": "&#039;"
+    "'": "&#039;"
   };
 
   return text.replace(/[&<>"']/g, function(m) { return map[m]; });

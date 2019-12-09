@@ -172,69 +172,72 @@
     }
 
 ?>
-<!DOCTYPE html>
+<!doctype html>
 <!-- Pi-hole: A black hole for Internet advertisements
 *  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. -->
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'">
     <title>Pi-hole Admin Console</title>
     <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
     <meta http-equiv="x-dns-prefetch-control" content="off">
     <meta http-equiv="cache-control" content="max-age=60,private">
     <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
-    <meta name="theme-color" content="#367fa9">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="img/favicon.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="img/logo.svg">
-    <link rel="icon" type="image/png" sizes="96x96" href="img/logo.svg">
+    <link rel="icon" href="img/logo.svg" type="image/png" sizes="192x192">
+    <link rel="icon" href="img/logo.svg" type="image/png" sizes="160x160">
+    <link rel="icon" href="img/logo.svg" type="image/png" sizes="96x96">
+    <meta name="theme-color" content="#367fa9">
     <meta name="msapplication-TileColor" content="#367fa9">
     <meta name="msapplication-TileImage" content="img/logo.svg">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <link href="style/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-  
-    <link href="style/vendor/font-awesome-5.11.2/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css">
 
-    <link href="style/vendor/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/vendor/daterangepicker.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="style/vendor/font-awesome-5.11.2/css/all.min.css">
 
-    <link href="style/vendor/AdminLTE.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/vendor/skin-blue.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/pi-hole.css" rel="stylesheet" type="text/css" />
-    <link rel="icon" type="image/png" sizes="160x160" href="img/logo.svg" />
+    <link rel="stylesheet" href="style/vendor/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="style/vendor/daterangepicker.css">
 
+    <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
+    <link rel="stylesheet" href="style/vendor/skin-blue.min.css">
+
+    <link rel="stylesheet" href="style/pi-hole.css">
+    <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
+
+    <script src="scripts/vendor/jquery.min.js"></script>
+    <script src="scripts/vendor/jquery-ui.min.js"></script>
+    <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="scripts/vendor/app.min.js"></script>
+
+    <script src="scripts/vendor/jquery.dataTables.min.js"></script>
+    <script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
+    <script src="scripts/vendor/Chart.bundle.min.js"></script>
 </head>
 <body class="skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
+ <noscript>
 <!-- JS Warning -->
 <div>
-    <link rel="stylesheet" type="text/css" href="style/vendor/js-warn.css">
-    <input type="checkbox" id="js-hide" />
-    <div class="js-warn" id="js-warn-exit"><h1>JavaScript Is Disabled</h1><p>JavaScript seems to be disabled. This will break some site features.</p>
-        <p>To enable JavaScript click <a href="https://www.enable-javascript.com/" rel="noopener" target="_blank">here</a></p><label for="js-hide">Close</label></div>
+    <input type="checkbox" id="js-hide">
+    <div class="js-warn" id="js-warn-exit"><h1>JavaScript Is Disabled</h1><p>JavaScript is required for the site to function.</p>
+        <p>To learn how to enable JavaScript click <a href="https://www.enable-javascript.com/" rel="noopener" target="_blank">here</a></p><label for="js-hide">Close</label>
+    </div>
 </div>
 <!-- /JS Warning -->
+ </noscript>
 <?php
 if($auth) {
-    echo "<div id='token' hidden>$token</div>";
+    echo "<div id=\"token\" hidden>$token</div>";
 }
 ?>
-<script src="scripts/pi-hole/js/header.js"></script>
-
-<script src="scripts/vendor/jquery.min.js"></script>
-<script src="scripts/vendor/jquery-ui.min.js"></script>
-<script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
-<script src="scripts/vendor/app.min.js"></script>
-
-<script src="scripts/vendor/jquery.dataTables.min.js"></script>
-<script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
-<script src="scripts/vendor/Chart.bundle.min.js"></script>
 
 <!-- Send token to JS -->
 <div id="token" hidden><?php if($auth) echo $token; ?></div>
@@ -249,23 +252,23 @@ if($auth) {
             <span class="logo-lg">Pi-<b>hole</b></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
-        <nav class="navbar navbar-static-top" role="navigation">
+        <nav class="navbar navbar-static-top">
             <!-- Sidebar toggle button-->
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li><a style="pointer-events:none;"><samp><?php echo gethostname(); ?></samp></a></li>
+                    <li><a style="pointer-events:none;">hostname: <code><?php echo gethostname(); ?></code></a></li>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                            <img src="img/logo.svg" class="user-image" style="border-radius: initial" sizes="160x160" alt="Pi-hole logo" />
+                            <img src="img/logo.svg" class="user-image" style="border-radius: 0" alt="Pi-hole logo" width="25" height="25">
                             <span class="hidden-xs">Pi-hole</span>
                         </a>
                         <ul class="dropdown-menu" style="right:0">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="img/logo.svg" sizes="160x160" alt="User Image" style="border-color:transparent" />
+                                <img src="img/logo.svg" alt="User Image" style="border-color:transparent" width="90" height="90">
                                 <p>
                                     Open Source Ad Blocker
                                     <small>Designed For Raspberry Pi</small>
@@ -324,33 +327,33 @@ if($auth) {
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="img/logo.svg" class="img-responsive" alt="Pi-hole logo" style="display: table; table-layout: fixed; height: 67px;" />
+                    <img src="img/logo.svg" class="img-responsive" alt="Pi-hole logo" style="display: table; table-layout: fixed; height: 67px;">
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
                         <?php
                         $pistatus = exec('sudo pihole status web');
                         if ($pistatus == "1") {
-                            echo '<a id="status"><i class="fa fa-circle" style="color:#7FFF00"></i> Active</a>';
+                            echo '<a id="status"><i class="fa fa-circle text-green-light"></i> Active</a>';
                         } elseif ($pistatus == "0") {
-                            echo '<a id="status"><i class="fa fa-circle" style="color:#FF0000"></i> Offline</a>';
+                            echo '<a id="status"><i class="fa fa-circle text-red"></i> Offline</a>';
                         } elseif ($pistatus == "-1") {
-                            echo '<a id="status"><i class="fa fa-circle" style="color:#FF0000"></i> DNS service not running</a>';
+                            echo '<a id="status"><i class="fa fa-circle text-red"></i> DNS service not running</a>';
                         } else {
-                            echo '<a id="status"><i class="fa fa-circle" style="color:#ff9900"></i> Unknown</a>';
+                            echo '<a id="status"><i class="fa fa-circle text-orange"></i> Unknown</a>';
                         }
 
                         // CPU Temp
                         if($FTL)
                         {
                             if ($celsius >= -273.15) {
-                                echo "<a id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
+                                echo "<a id=\"temperature\"><i class=\"fa fa-fire ";
                                 if ($celsius > $temperaturelimit) {
-                                    echo "#FF0000";
+                                    echo "text-red";
                                 }
                                 else
                                 {
-                                    echo "#3366FF";
+                                    echo "text-vivid-blue";
                                 }
                                 echo "\"></i> Temp:&nbsp;";
                                 if($temperatureunit === "F")
@@ -370,30 +373,30 @@ if($auth) {
                         }
                         else
                         {
-                            echo '<a id=\"temperature\"><i class="fa fa-circle" style="color:#FF0000"></i> FTL offline</a>';
+                            echo '<a id=\"temperature\"><i class="fa fa-circle text-red"></i> FTL offline</a>';
                         }
                     ?>
                     <br/>
                     <?php
-                    echo "<a title=\"Detected $nproc cores\"><i class=\"fa fa-circle\" style=\"color:";
+                    echo "<a title=\"Detected $nproc cores\"><i class=\"fa fa-circle ";
                         if ($loaddata[0] > $nproc) {
-                            echo "#FF0000";
+                            echo "text-red";
                         }
                         else
                         {
-                            echo "#7FFF00";
+                            echo "text-green-light";
                         }
                         echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
                     ?>
                     <br/>
                     <?php
-                    echo "<a><i class=\"fa fa-circle\" style=\"color:";
+                    echo "<a><i class=\"fa fa-circle ";
                         if ($memory_usage > 0.75 || $memory_usage < 0.0) {
-                            echo "#FF0000";
+                            echo "text-red";
                         }
                         else
                         {
-                            echo "#7FFF00";
+                            echo "text-green-light";
                         }
                         if($memory_usage > 0.0)
                         {

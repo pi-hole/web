@@ -444,7 +444,7 @@ function escapeHtml(text) {
     "<": "&lt;",
     ">": "&gt;",
     "\"": "&quot;",
-    "\'": "&#039;"
+    "'": "&#039;"
   };
 
   return text.replace(/[&<>"']/g, function(m) { return map[m]; });
@@ -633,7 +633,7 @@ function updateSummaryData(runOnce) {
             data["ads_percentage_today"] = "to";
             data["domains_being_blocked"] = "API";
             // Adjust text
-            $("#temperature").html("<i class=\"fa fa-circle\" style=\"color:#FF0000\"></i> FTL offline");
+            $("#temperature").html("<i class=\"fa fa-circle text-red\"></i> FTL offline");
             // Show spinner
             $("#queries-over-time .overlay").show();
             $("#forward-destinations-pie .overlay").show();
