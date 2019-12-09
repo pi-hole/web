@@ -189,7 +189,7 @@
     <meta http-equiv="cache-control" content="max-age=60,private">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
     <meta name="theme-color" content="#367fa9">
     <link rel="apple-touch-icon" sizes="180x180" href="img/favicon.png">
     <link rel="icon" type="image/png" sizes="192x192"  href="img/logo.svg">
@@ -198,24 +198,24 @@
     <meta name="msapplication-TileImage" content="img/logo.svg">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <link href="style/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="style/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   
-    <link href="style/vendor/font-awesome-5.11.2/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="style/vendor/font-awesome-5.11.2/css/all.min.css" rel="stylesheet" type="text/css">
 
-    <link href="style/vendor/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/vendor/daterangepicker.css" rel="stylesheet" type="text/css" />
+    <link href="style/vendor/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="style/vendor/daterangepicker.css" rel="stylesheet" type="text/css">
 
-    <link href="style/vendor/AdminLTE.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/vendor/skin-blue.min.css" rel="stylesheet" type="text/css" />
-    <link href="style/pi-hole.css" rel="stylesheet" type="text/css" />
-    <link rel="icon" type="image/png" sizes="160x160" href="img/logo.svg" />
+    <link href="style/vendor/AdminLTE.min.css" rel="stylesheet" type="text/css">
+    <link href="style/vendor/skin-blue.min.css" rel="stylesheet" type="text/css">
+    <link href="style/pi-hole.css" rel="stylesheet" type="text/css">
+    <link rel="icon" type="image/png" sizes="160x160" href="img/logo.svg">
 
 </head>
 <body class="skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <!-- JS Warning -->
 <div>
     <link rel="stylesheet" type="text/css" href="style/vendor/js-warn.css">
-    <input type="checkbox" id="js-hide" />
+    <input type="checkbox" id="js-hide">
     <div class="js-warn" id="js-warn-exit"><h1>JavaScript Is Disabled</h1><p>JavaScript seems to be disabled. This will break some site features.</p>
         <p>To enable JavaScript click <a href="https://www.enable-javascript.com/" rel="noopener" target="_blank">here</a></p><label for="js-hide">Close</label></div>
 </div>
@@ -259,13 +259,13 @@ if($auth) {
                     <li><a style="pointer-events:none;"><samp><?php echo gethostname(); ?></samp></a></li>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                            <img src="img/logo.svg" class="user-image" style="border-radius: initial" sizes="160x160" alt="Pi-hole logo" />
+                            <img src="img/logo.svg" class="user-image" style="border-radius: initial" sizes="160x160" alt="Pi-hole logo">
                             <span class="hidden-xs">Pi-hole</span>
                         </a>
                         <ul class="dropdown-menu" style="right:0">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="img/logo.svg" sizes="160x160" alt="User Image" style="border-color:transparent" />
+                                <img src="img/logo.svg" sizes="160x160" alt="User Image" style="border-color:transparent">
                                 <p>
                                     Open Source Ad Blocker
                                     <small>Designed For Raspberry Pi</small>
@@ -324,7 +324,7 @@ if($auth) {
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="img/logo.svg" class="img-responsive" alt="Pi-hole logo" style="display: table; table-layout: fixed; height: 67px;" />
+                    <img src="img/logo.svg" class="img-responsive" alt="Pi-hole logo" style="display: table; table-layout: fixed; height: 67px;">
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
