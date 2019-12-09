@@ -26,7 +26,7 @@ if($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR)
 }
 
 ?>
-<style type="text/css">
+<style>
 	.tooltip-inner {
 		max-width: none;
 		white-space: nowrap;

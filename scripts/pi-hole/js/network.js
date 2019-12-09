@@ -86,14 +86,14 @@ $(document).ready(function() {
                  {
                      // Last query was longer than 24 hours ago
                      // Color: light-orange
-                     color = "#FFEDD9";
+                     color = "#ffedd9";
                      mark = "<strong>?</strong>";
                  }
              }
              else
              {
                  // This client has never sent a query to Pi-hole, color light-red
-                 color = "#FFBFAA";
+                 color = "#ffbfaa";
                  mark = "&#x2718;";
              }
              // Set determined background color
