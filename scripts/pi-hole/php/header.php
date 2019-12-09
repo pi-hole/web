@@ -191,10 +191,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
-    <meta name="theme-color" content="#367fa9">
     <link rel="apple-touch-icon" sizes="180x180" href="img/favicon.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="img/logo.svg">
-    <link rel="icon" type="image/png" sizes="96x96" href="img/logo.svg">
+    <link rel="icon" href="img/logo.svg" type="image/png" sizes="192x192">
+    <link rel="icon" href="img/logo.svg" type="image/png" sizes="160x160">
+    <link rel="icon" href="img/logo.svg" type="image/png" sizes="96x96">
+    <meta name="theme-color" content="#367fa9">
     <meta name="msapplication-TileColor" content="#367fa9">
     <meta name="msapplication-TileImage" content="img/logo.svg">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -212,9 +213,14 @@
     <link rel="stylesheet" href="style/pi-hole.css">
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
 
-    <link href="style/pi-hole.css" rel="stylesheet" type="text/css">
-    <link rel="icon" type="image/png" sizes="160x160" href="img/logo.svg">
+    <script src="scripts/vendor/jquery.min.js"></script>
+    <script src="scripts/vendor/jquery-ui.min.js"></script>
+    <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="scripts/vendor/app.min.js"></script>
 
+    <script src="scripts/vendor/jquery.dataTables.min.js"></script>
+    <script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
+    <script src="scripts/vendor/Chart.bundle.min.js"></script>
 </head>
 <body class="skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
  <noscript>
@@ -232,15 +238,6 @@ if($auth) {
     echo "<div id='token' hidden>$token</div>";
 }
 ?>
-
-<script src="scripts/vendor/jquery.min.js"></script>
-<script src="scripts/vendor/jquery-ui.min.js"></script>
-<script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
-<script src="scripts/vendor/app.min.js"></script>
-
-<script src="scripts/vendor/jquery.dataTables.min.js"></script>
-<script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
-<script src="scripts/vendor/Chart.bundle.min.js"></script>
 
 <!-- Send token to JS -->
 <div id="token" hidden><?php if($auth) echo $token; ?></div>
