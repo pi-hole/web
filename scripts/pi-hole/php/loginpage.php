@@ -33,8 +33,8 @@
         <div class="row">
           <div class="col-xs-8 hidden-xs hidden-sm">
           <ul>
-            <li><code>Return</code> &rarr; Log in and go to requested page (<?php echo $scriptname; ?>)</li>
-            <li><code>Ctrl+Return</code> &rarr; Log in and go to Settings page</li>
+            <li><kbd>Return</kbd> &rarr; Log in and go to requested page (<?php echo $scriptname; ?>)</li>
+            <li><kbd>Ctrl</kbd>+<kbd>Return</kbd> &rarr; Log in and go to Settings page</li>
           </ul>
           </div>
           <div class="col-xs-12 col-md-4">
