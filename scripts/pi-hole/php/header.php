@@ -208,25 +208,28 @@
 
     <link href="style/vendor/AdminLTE.min.css" rel="stylesheet" type="text/css">
     <link href="style/vendor/skin-blue.min.css" rel="stylesheet" type="text/css">
+    <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
+
     <link href="style/pi-hole.css" rel="stylesheet" type="text/css">
     <link rel="icon" type="image/png" sizes="160x160" href="img/logo.svg">
 
 </head>
 <body class="skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
+ <noscript>
 <!-- JS Warning -->
 <div>
-    <link rel="stylesheet" type="text/css" href="style/vendor/js-warn.css">
     <input type="checkbox" id="js-hide">
     <div class="js-warn" id="js-warn-exit"><h1>JavaScript Is Disabled</h1><p>JavaScript seems to be disabled. This will break some site features.</p>
-        <p>To enable JavaScript click <a href="https://www.enable-javascript.com/" rel="noopener" target="_blank">here</a></p><label for="js-hide">Close</label></div>
+        <p>To enable JavaScript click <a href="https://www.enable-javascript.com/" rel="noopener" target="_blank">here</a></p><label for="js-hide">Close</label>
+    </div>
 </div>
 <!-- /JS Warning -->
+ </noscript>
 <?php
 if($auth) {
     echo "<div id='token' hidden>$token</div>";
 }
 ?>
-<script src="scripts/pi-hole/js/header.js"></script>
 
 <script src="scripts/vendor/jquery.min.js"></script>
 <script src="scripts/vendor/jquery-ui.min.js"></script>
