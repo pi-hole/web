@@ -23,14 +23,14 @@ function piholeChanged(action)
 
     switch(action) {
         case "enabled":
-            status.html("<i class='fa fa-circle' style='color:#7fff00'></i> Active");
+            status.html("<i class='fa fa-circle text-green-light'></i> Active");
             ena.hide();
             dis.show();
             dis.removeClass("active");
             break;
 
         case "disabled":
-            status.html("<i class='fa fa-circle' style='color:#ff0000'></i> Offline");
+            status.html("<i class='fa fa-circle text-red'></i> Offline");
             ena.show();
             dis.hide();
             break;

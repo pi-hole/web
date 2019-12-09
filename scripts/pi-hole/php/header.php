@@ -334,26 +334,26 @@ if($auth) {
                         <?php
                         $pistatus = exec('sudo pihole status web');
                         if ($pistatus == "1") {
-                            echo '<a id="status"><i class="fa fa-circle" style="color:#7fff00"></i> Active</a>';
+                            echo '<a id="status"><i class="fa fa-circle text-green-light"></i> Active</a>';
                         } elseif ($pistatus == "0") {
-                            echo '<a id="status"><i class="fa fa-circle" style="color:#ff0000"></i> Offline</a>';
+                            echo '<a id="status"><i class="fa fa-circle text-red"></i> Offline</a>';
                         } elseif ($pistatus == "-1") {
-                            echo '<a id="status"><i class="fa fa-circle" style="color:#ff0000"></i> DNS service not running</a>';
+                            echo '<a id="status"><i class="fa fa-circle text-red"></i> DNS service not running</a>';
                         } else {
-                            echo '<a id="status"><i class="fa fa-circle" style="color:#ff9900"></i> Unknown</a>';
+                            echo '<a id="status"><i class="fa fa-circle text-orange"></i> Unknown</a>';
                         }
 
                         // CPU Temp
                         if($FTL)
                         {
                             if ($celsius >= -273.15) {
-                                echo "<a id=\"temperature\"><i class=\"fa fa-fire\" style=\"color:";
+                                echo "<a id=\"temperature\"><i class=\"fa fa-fire ";
                                 if ($celsius > $temperaturelimit) {
-                                    echo "#ff0000";
+                                    echo "text-red";
                                 }
                                 else
                                 {
-                                    echo "#3366ff";
+                                    echo "text-vivid-blue";
                                 }
                                 echo "\"></i> Temp:&nbsp;";
                                 if($temperatureunit === "F")
@@ -373,30 +373,30 @@ if($auth) {
                         }
                         else
                         {
-                            echo '<a id=\"temperature\"><i class="fa fa-circle" style="color:#ff0000"></i> FTL offline</a>';
+                            echo '<a id=\"temperature\"><i class="fa fa-circle text-red"></i> FTL offline</a>';
                         }
                     ?>
                     <br/>
                     <?php
-                    echo "<a title=\"Detected $nproc cores\"><i class=\"fa fa-circle\" style=\"color:";
+                    echo "<a title=\"Detected $nproc cores\"><i class=\"fa fa-circle ";
                         if ($loaddata[0] > $nproc) {
-                            echo "#ff0000";
+                            echo "text-red";
                         }
                         else
                         {
-                            echo "#7fff00";
+                            echo "text-green-light";
                         }
                         echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
                     ?>
                     <br/>
                     <?php
-                    echo "<a><i class=\"fa fa-circle\" style=\"color:";
+                    echo "<a><i class=\"fa fa-circle ";
                         if ($memory_usage > 0.75 || $memory_usage < 0.0) {
-                            echo "#ff0000";
+                            echo "text-red";
                         }
                         else
                         {
-                            echo "#7fff00";
+                            echo "text-green-light";
                         }
                         if($memory_usage > 0.0)
                         {

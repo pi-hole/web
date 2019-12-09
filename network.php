@@ -52,7 +52,7 @@ $token = $_SESSION['token'];
             </table>
             <label>Background color: Last query from this device seen ...</label>
         <table width="100%">
-          <tr style="text-align: center;">
+          <tr class="text-center">
             <td style="background: #e7ffde;" width="15%">just now</td>
             <td style="background-image: linear-gradient(to right, #e7ffde 0%, #ffffdf 100%)" width="30%"><center>... to ...</center></td>
             <td style="background: #ffffdf;" width="15%">24 hours ago</td>

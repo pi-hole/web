@@ -155,83 +155,83 @@ $(document).ready(function() {
             switch (data[5])
             {
             case "1":
-                dnssec_status = "<br><span style=\"color:green\">SECURE</span>";
+                dnssec_status = "<br><span class=\"text-green\">SECURE</span>";
                 break;
             case "2":
-                dnssec_status = "<br><span style=\"color:orange\">INSECURE</span>";
+                dnssec_status = "<br><span class=\"text-orange\">INSECURE</span>";
                 break;
             case "3":
-                dnssec_status = "<br><span style=\"color:red\">BOGUS</span>";
+                dnssec_status = "<br><span class=\"text-red\">BOGUS</span>";
                 break;
             case "4":
-                dnssec_status = "<br><span style=\"color:red\">ABANDONED</span>";
+                dnssec_status = "<br><span class=\"text-red\">ABANDONED</span>";
                 break;
             case "5":
-                dnssec_status = "<br><span style=\"color:orange\">UNKNOWN</span>";
+                dnssec_status = "<br><span class=\"text-orange\">UNKNOWN</span>";
                 break;
             default: // No DNSSEC
                 dnssec_status = "";
             }
 
             // Query status
-            var blocked, fieldtext, buttontext, color;
+            var blocked, fieldtext, buttontext, colorClass;
             switch (data[4])
             {
             case "1":
                 blocked = true;
-                color = "red";
+                colorClass = "text-red";
                 fieldtext = "Blocked (gravity)";
-                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fas fa-check\"></i> Whitelist</button>";
+                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
             case "2":
                 blocked = false;
-                color = "green";
+                colorClass = "text-green";
                 fieldtext = "OK <br class='hidden-lg'>(forwarded)"+dnssec_status;
-                buttontext = "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
+                buttontext = "<button class=\"text-red text-nowrap\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
                 break;
             case "3":
                 blocked = false;
-                color = "green";
+                colorClass = "text-green";
                 fieldtext = "OK <br class='hidden-lg'>(cached)"+dnssec_status;
-                buttontext = "<button style=\"color:red; white-space: nowrap;\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
+                buttontext = "<button class=\"text-red text-nowrap\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
                 break;
             case "4":
                 blocked = true;
-                color = "red";
+                colorClass = "text-red";
                 fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
-                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fas fa-check\"></i> Whitelist</button>" ;
+                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>" ;
                 break;
             case "5":
                 blocked = true;
-                color = "red";
+                colorClass = "text-red";
                 fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
-                buttontext = "<button style=\"color:green; white-space: nowrap;\"><i class=\"fas fa-check\"></i> Whitelist</button>" ;
+                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>" ;
                 break;
             case "6":
                 blocked = true;
-                color = "red";
+                colorClass = "text-red";
                 fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
                 buttontext = "" ;
                 break;
             case "7":
                 blocked = true;
-                color = "red";
+                colorClass = "text-red";
                 fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
                 buttontext = "" ;
                 break;
             case "8":
                 blocked = true;
-                color = "red";
+                colorClass = "text-red";
                 fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
                 buttontext = "" ;
                 break;
             default:
                 blocked = false;
-                color = "black";
+                colorClass = "text-black";
                 fieldtext = "Unknown ("+parseInt(data[4])+")";
                 buttontext = "";
             }
-            $(row).css("color", color);
+            $(row).addClass(colorClass);
             $("td:eq(4)", row).html(fieldtext);
             $("td:eq(6)", row).html(buttontext);
 
@@ -282,7 +282,7 @@ $(document).ready(function() {
             {
                 replytext = "-";
             }
-            $("td:eq(5)", row).css("color","black");
+            $("td:eq(5)", row).addClass("text-black");
             $("td:eq(5)", row).html(replytext);
 
             if(data.length > 7 && data[7] > 0)
