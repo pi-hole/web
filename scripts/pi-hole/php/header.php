@@ -199,15 +199,17 @@
     <meta name="msapplication-TileImage" content="img/logo.svg">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <link href="style/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-  
-    <link href="style/vendor/font-awesome-5.11.2/css/all.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css">
 
-    <link href="style/vendor/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="style/vendor/daterangepicker.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="style/vendor/font-awesome-5.11.2/css/all.min.css">
 
-    <link href="style/vendor/AdminLTE.min.css" rel="stylesheet" type="text/css">
-    <link href="style/vendor/skin-blue.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="style/vendor/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="style/vendor/daterangepicker.css">
+
+    <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
+    <link rel="stylesheet" href="style/vendor/skin-blue.min.css">
+
+    <link rel="stylesheet" href="style/pi-hole.css">
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
 
     <link href="style/pi-hole.css" rel="stylesheet" type="text/css">
