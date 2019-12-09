@@ -13,7 +13,7 @@
 
         <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;">Pi-<b>hole</b></span></div>
       <p class="login-box-msg">Sign in to start your session</p>
-      <div id="cookieInfo" class="panel-title text-center" style="color:#F00; font-size: 150%" hidden>Verify that cookies are allowed for <samp><?php echo $_SERVER['HTTP_HOST']; ?></samp></div>
+      <div id="cookieInfo" class="panel-title text-center" style="color:#F00; font-size: 150%" hidden>Verify that cookies are allowed for <code><?php echo $_SERVER['HTTP_HOST']; ?></code></div>
       <?php if ($wrongpassword) { ?>
         <div class="form-group has-error login-box-msg">
           <label class="control-label"><i class="fa fa-times-circle"></i> Wrong password!</label>
@@ -30,8 +30,8 @@
         <div class="row">
           <div class="col-xs-8 hidden-xs hidden-sm">
           <ul>
-            <li><samp>Return</samp> &rarr; Log in and go to requested page (<?php echo $scriptname; ?>)</li>
-            <li><samp>Ctrl+Return</samp> &rarr; Log in and go to Settings page</li>
+            <li><code>Return</code> &rarr; Log in and go to requested page (<?php echo $scriptname; ?>)</li>
+            <li><code>Ctrl+Return</code> &rarr; Log in and go to Settings page</li>
           </ul>
           </div>
           <div class="col-xs-12 col-md-4">
