@@ -227,8 +227,8 @@
 <!-- JS Warning -->
 <div>
     <input type="checkbox" id="js-hide">
-    <div class="js-warn" id="js-warn-exit"><h1>JavaScript Is Disabled</h1><p>JavaScript seems to be disabled. This will break some site features.</p>
-        <p>To enable JavaScript click <a href="https://www.enable-javascript.com/" rel="noopener" target="_blank">here</a></p><label for="js-hide">Close</label>
+    <div class="js-warn" id="js-warn-exit"><h1>JavaScript Is Disabled</h1><p>JavaScript is required for the site to function.</p>
+        <p>To learn how to enable JavaScript click <a href="https://www.enable-javascript.com/" rel="noopener" target="_blank">here</a></p><label for="js-hide">Close</label>
     </div>
 </div>
 <!-- /JS Warning -->
