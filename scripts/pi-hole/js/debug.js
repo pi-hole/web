@@ -1,3 +1,5 @@
+/* global ActiveXObject: false */
+
 // Credit: http://stackoverflow.com/a/10642418/2087442
 function httpGet(ta,theUrl)
 {
@@ -53,7 +55,7 @@ function eventsource() {
     }, false);
 
     // Will be called when script has finished
-    source.addEventListener("error", function(e) {
+    source.addEventListener("error", function() {
         source.close();
     }, false);
 }

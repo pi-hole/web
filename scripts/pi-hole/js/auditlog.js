@@ -4,8 +4,9 @@
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
+
 // Define global variables
-var timeLineChart, queryTypeChart, forwardDestinationChart, auditList = [], auditTimeout;
+var auditList = [], auditTimeout;
 
 // Credit: http://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406
 function escapeHtml(text) {
@@ -35,7 +36,7 @@ function updateTopLists() {
         var adtable = $("#ad-frequency").find("tbody:last");
         var url, domain;
         for (domain in data.top_queries) {
-            if ({}.hasOwnProperty.call(data.top_queries,domain)){
+            if (Object.prototype.hasOwnProperty.call(data.top_queries,domain)){
                 // Sanitize domain
                 domain = escapeHtml(domain);
                 url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
@@ -45,7 +46,7 @@ function updateTopLists() {
         }
 
         for (domain in data.top_ads) {
-            if ({}.hasOwnProperty.call(data.top_ads,domain)){
+            if (Object.prototype.hasOwnProperty.call(data.top_ads,domain)){
                 var input = domain.split(" ");
                 // Sanitize domain
                 var printdomain = escapeHtml(input[0]);
@@ -71,7 +72,6 @@ function updateTopLists() {
     });
 }
 
-
 function add(domain,list) {
     var token = $("#token").html();
     $.ajax({
@@ -87,8 +87,8 @@ $(document).ready(function() {
     updateTopLists();
 
     $("#domain-frequency tbody").on( "click", "button", function () {
-        var url = ($(this).parents("tr"))[0].innerText.split("	")[0];
-        if($(this).context.innerText === " Blacklist")
+        var url = ($(this).parents("tr"))[0].textContent.split("	")[0];
+        if($(this).context.textContent === " Blacklist")
         {
             add(url,"audit");
             add(url,"black");
@@ -101,8 +101,8 @@ $(document).ready(function() {
     });
 
     $("#ad-frequency tbody").on( "click", "button", function () {
-        var url = ($(this).parents("tr"))[0].innerText.split("	")[0].split(" ")[0];
-        if($(this).context.innerText === " Whitelist")
+        var url = ($(this).parents("tr"))[0].textContent.split("	")[0].split(" ")[0];
+        if($(this).context.textContent === " Whitelist")
         {
             add(url,"audit");
             add(url,"white");
@@ -130,7 +130,6 @@ function auditUrl(url) {
         auditList = [];
     }, 3000);
 }
-
 
 $("#gravityBtn").on("click", function() {
     window.location.replace("gravity.php?go");

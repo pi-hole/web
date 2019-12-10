@@ -4,6 +4,7 @@
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
+
 function eventsource() {
     var alInfo = $("#alInfo");
     var alSuccess = $("#alSuccess");
@@ -43,7 +44,7 @@ function eventsource() {
     }, false);
 
     // Will be called when script has finished
-    source.addEventListener("error", function(e) {
+    source.addEventListener("error", function() {
         alInfo.delay(1000).fadeOut(2000, function() { alInfo.hide(); });
         source.close();
         $("#gravityBtn").removeAttr("disabled");

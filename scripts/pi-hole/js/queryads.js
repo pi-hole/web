@@ -4,12 +4,15 @@
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
+
+/* global ActiveXObject: false */
+
 var exact = "";
 
 function quietfilter(ta,data)
 {
     var lines = data.split("\n");
-    for(var i = 0;i<lines.length;i++)
+    for(var i = 0; i<lines.length; i++)
     {
         if(lines[i].indexOf("results") !== -1 && lines[i].indexOf("0 results") === -1)
         {
@@ -96,7 +99,7 @@ function eventsource() {
     }, false);
 
     // Will be called when script has finished
-    source.addEventListener("error", function(e) {
+    source.addEventListener("error", function() {
         source.close();
     }, false);
 

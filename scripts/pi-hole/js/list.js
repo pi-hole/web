@@ -4,6 +4,7 @@
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
+
 // IE likes to cache too much :P
 $.ajaxSetup({cache: false});
 
@@ -69,6 +70,7 @@ function refresh(fade) {
             }
             else
             {
+                var data, data2;
                 if(listType === "white")
                 {
                     data = response.whitelist.sort();
@@ -101,13 +103,13 @@ function refresh(fade) {
             list.fadeIn(100);
             listw.fadeIn(100);
         },
-        error: function(jqXHR, exception) {
+        error: function() {
             $("#alFailure").show();
         }
     });
 }
 
-window.onload = refresh(false);
+window.addEventListener('load', refresh(false));
 
 function sub(index, entry, arg) {
     var list = "#list";
@@ -122,11 +124,8 @@ function sub(index, entry, arg) {
     var alInfo = $("#alInfo");
     var alSuccess = $("#alSuccess");
     var alFailure = $("#alFailure");
-    var alWarning = $("#alWarning");
     var err = $("#err");
-    var warn = $("#warn");
     var msg = $("#success-message");
-
 
     var domain = $(list+" #"+index);
     domain.hide("highlight");
@@ -160,7 +159,7 @@ function sub(index, entry, arg) {
                 }
             }
         },
-        error: function(jqXHR, exception) {
+        error: function() {
             alert("Failed to remove the domain!");
             domain.show({queue:true});
         }
@@ -180,7 +179,6 @@ function add(type) {
     var alFailure = $("#alFailure");
     var alWarning = $("#alWarning");
     var err = $("#err");
-    var warn = $("#warn");
     var msg = $("#success-message");
     alInfo.show();
     alSuccess.hide();
@@ -214,7 +212,7 @@ function add(type) {
                 refresh(true);
             }
         },
-        error: function(jqXHR, exception) {
+        error: function() {
             alFailure.show();
             err.html("");
             alFailure.delay(1000).fadeOut(2000, function() {
@@ -226,8 +224,6 @@ function add(type) {
         }
     });
 }
-
-
 
 // Handle enter button for adding domains
 $(document).keypress(function(e) {

@@ -1,3 +1,10 @@
+/* Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license. */
+
 var table;
 
 function showAlert(type, message)
@@ -7,10 +14,10 @@ function showAlert(type, message)
 
     switch (type)
     {
-        case 'info':    alertElement = $('#alInfo');                                    break;
-        case 'success': alertElement = $('#alSuccess');                                 break;
-        case 'warning': alertElement = $('#alWarning'); messageElement = $('#warn');    break;
-        case 'error':   alertElement = $('#alFailure'); messageElement = $('#err');     break;
+        case 'info': alertElement = $('#alInfo'); break;
+        case 'success': alertElement = $('#alSuccess'); break;
+        case 'warning': alertElement = $('#alWarning'); messageElement = $('#warn'); break;
+        case 'error': alertElement = $('#alFailure'); messageElement = $('#err'); break;
         default: return;
     }
 
@@ -35,7 +42,7 @@ $(document).ready(function() {
                        "</button>";
             }
         } ],
-        "drawCallback": function( settings ) {
+        "drawCallback": function() {
             $('.deleteCustomDNS').on('click', deleteCustomDNS);
         }
     });
@@ -60,7 +67,7 @@ function addCustomDNS()
             else
                 showAlert('error', response.message);
         },
-        error: function(jqXHR, exception) {
+        error: function() {
             showAlert('error', "Error while adding this custom DNS entry");
         }
     });

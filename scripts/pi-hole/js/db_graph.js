@@ -5,9 +5,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-/*global
-    moment
-*/
+/* global Chart:false, moment:false */
 
 var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf()/1000;
@@ -42,21 +40,7 @@ $(function () {
       until = moment(endt).utc().valueOf()/1000;
     });
 
-
 });
-
-// Credit: http://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406
-function escapeHtml(text) {
-  var map = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    "\"": "&quot;",
-    "'": "&#039;"
-  };
-
-  return text.replace(/[&<>"']/g, function(m) { return map[m]; });
-}
 
 function padNumber(num) {
     return ("00" + num).substr(-2,2);
@@ -100,13 +84,13 @@ function updateQueriesOverTime() {
         var dates = [], hour;
 
         for (hour in data.domains_over_time[0]) {
-            if ({}.hasOwnProperty.call(data.domains_over_time[0], hour)) {
+            if (Object.prototype.hasOwnProperty.call(data.domains_over_time[0], hour)) {
                 dates.push(parseInt(data.domains_over_time[0][hour]));
             }
         }
 
         for (hour in data.ads_over_time[0]) {
-            if ({}.hasOwnProperty.call(data.ads_over_time[0], hour)) {
+            if (Object.prototype.hasOwnProperty.call(data.ads_over_time[0], hour)) {
                 if(dates.indexOf(parseInt(data.ads_over_time[0][hour])) === -1)
                 {
                     dates.push(parseInt(data.ads_over_time[0][hour]));
@@ -118,7 +102,7 @@ function updateQueriesOverTime() {
 
         // Add data for each hour that is available
         for (hour in dates) {
-            if ({}.hasOwnProperty.call(dates, hour)) {
+            if (Object.prototype.hasOwnProperty.call(dates, hour)) {
                 var d, dom = 0, ads = 0;
                 d = new Date(1000*dates[hour]);
 
@@ -147,7 +131,6 @@ function updateQueriesOverTime() {
     });
 }
 
-/* global Chart */
 $(document).ready(function() {
     var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
     timeLineChart = new Chart(ctx, {
@@ -187,7 +170,7 @@ $(document).ready(function() {
                 responsive: true,
                 mode: "x-axis",
                 callbacks: {
-                    title: function(tooltipItem, data) {
+                    title: function(tooltipItem) {
                         var label = tooltipItem[0].xLabel;
                         var time = new Date(label);
                         var date = time.getFullYear()+"-"+padNumber(time.getMonth()+1)+"-"+padNumber(time.getDate());
@@ -209,10 +192,8 @@ $(document).ready(function() {
                             }
                             return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel + " (" + percentage.toFixed(1) + "%)";
                         }
-                        else
-                        {
-                            return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
-                        }
+
+                        return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
                     }
                 }
             },
@@ -257,7 +238,7 @@ $("#queryOverTimeChart").click(function(evt){
     if(activePoints.length > 0)
     {
         //get the internal index in the chart
-        var clickedElementindex = activePoints[0]["_index"];
+        var clickedElementindex = activePoints[0]._index;
 
         //get specific label by index
         var label = timeLineChart.data.labels[clickedElementindex];
