@@ -16,6 +16,8 @@
 	user-select: none;
 }
 .small-box span {
+	-webkit-transition-duration: 500ms;
+	-o-transition-duration: 500ms;
 	transition-duration: 500ms;
 }
 .small-box span.glow {
@@ -46,6 +48,11 @@
 	50% {color:#e33100;-webkit-text-shadow:0 0 5px #e33100;}
 	to {color:#630030;-webkit-text-shadow:0 0 2px transparent;}
 }
+@-o-keyframes Pulse{
+	from {color:#630030;text-shadow:0 0 2px transparent;}
+	50% {color:#e33100;text-shadow:0 0 5px #e33100;}
+	to {color:#630030;text-shadow:0 0 2px transparent;}
+}
 @keyframes Pulse{
 	from {color:#630030;text-shadow:0 0 2px transparent;}
 	50% {color:#e33100;text-shadow:0 0 5px #e33100;}
@@ -53,10 +60,13 @@
 }
 .lookatme {
 	-webkit-animation-name: Pulse;
+	-o-animation-name: Pulse;
 	animation-name: Pulse;
 	-webkit-animation-duration: 2s;
+	-o-animation-duration: 2s;
 	animation-duration: 2s;
 	-webkit-animation-iteration-count: infinite;
+	-o-animation-iteration-count: infinite;
 	animation-iteration-count: infinite;
 }
 
@@ -137,6 +147,7 @@
     border: 4px solid #c0c0c0;
     border-right-color: transparent;
     -webkit-animation: fa-spin 1s infinite linear;
+    -o-animation: fa-spin 1s infinite linear;
     animation: fa-spin 1s infinite linear;
 }
 
@@ -154,9 +165,12 @@
     color: #fff;
     border-radius: 3px;
     -webkit-transition: all .1s ease;
+    -o-transition: all .1s ease;
     transition: all .1s ease;
     pointer-events: none;
     -webkit-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
     transform: translate(-50%, 0);
 }
 
