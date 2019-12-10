@@ -39,7 +39,6 @@ function getResponseFTL()
 	while(true)
 	{
 		$out = fgets($socket);
-		file_put_contents('/tmp/pihole.txt', $out, FILE_APPEND);
 		if ($out == "") $errCount++;
 		if ($errCount > 100) {
 			// Tried 100 times, but never got proper reply, fail to prevent busy loop
