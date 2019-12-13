@@ -55,7 +55,7 @@ $(document).ready(function() {
             { data: "enabled", searchable: false },
             { data: "comment" },
             { data: "groups", searchable: false },
-            { data: null, width: "60px", orderable: false }
+            { data: null, width: "80px", orderable: false }
         ],
         "drawCallback": function( settings ) {
             $('.editDomain').on('click', editDomain);
@@ -64,7 +64,7 @@ $(document).ready(function() {
         "rowCallback": function( row, data ) {
             $('td:eq(0)', row).html( '<code>'+data["domain"]+'</code>' );
 
-            $('td:eq(1)', row).html( '<select id="type">'+
+            $('td:eq(1)', row).html( '<select id="type" class="form-control">'+
                                      '<option value="0"'+(data["type"]===0?' selected':'')+'>Exact whitelist</option>'+
                                      '<option value="1"'+(data["type"]===1?' selected':'')+'>Exact blacklist</option>'+
                                      '<option value="2"'+(data["type"]===2?' selected':'')+'>Regex whitelist</option>'+
@@ -72,12 +72,12 @@ $(document).ready(function() {
                                      '</select>' );
 
             const disabled = data["enabled"] === 0;
-            $('td:eq(2)', row).html( '<select id="status">'+
+            $('td:eq(2)', row).html( '<select id="status" class="form-control">'+
                                      '<option value="0"'+(disabled?' selected':'')+'>Disabled</option>'+
                                      '<option value="1"'+(disabled?'':' selected')+'>Enabled</option>'+
                                      '</select>' );
             
-            $('td:eq(3)', row).html( '<input id="comment"><input id="id" type="hidden" value="'+data["id"]+'">' );
+            $('td:eq(3)', row).html( '<input id="comment" class="form-control"><input id="id" type="hidden" value="'+data["id"]+'">' );
             $('#comment', row).val(data["comment"]);
 
             $('td:eq(4)', row).empty();

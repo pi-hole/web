@@ -64,9 +64,9 @@ $(document).ready(function() {
         "ajax": "scripts/pi-hole/php/groups.php?action=get_clients",
         order: [[ 1, 'asc' ]],
         columns: [
-            { data: "ip", width: "20%" },
+            { data: "ip" },
             { data: "groups", searchable: false },
-            { data: null, width: "60px", orderable: false }
+            { data: null, width: "80px", orderable: false }
         ],
         "drawCallback": function( settings ) {
             $('.editClient').on('click', editClient);

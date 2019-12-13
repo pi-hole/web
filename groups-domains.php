@@ -50,7 +50,7 @@
                     </div>
                     <div class="col-md-2">
                         <label for="ex2">Type:</label>
-                        <select id="type">
+                        <select id="type" class="form-control">
                             <option value="0">Exact whitelist</option>
                             <option value="1">Exact blacklist</option>
                             <option value="2">Regex whitelist</option>

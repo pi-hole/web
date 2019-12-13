@@ -54,7 +54,7 @@ $(document).ready(function() {
             { data: "enabled", searchable: false },
             { data: "comment" },
             { data: "groups", searchable: false },
-            { data: null, width: "60px", orderable: false }
+            { data: null, width: "80px", orderable: false }
         ],
         "drawCallback": function( settings ) {
             $('.editAdlist').on('click', editAdlist);
@@ -64,12 +64,12 @@ $(document).ready(function() {
             $('td:eq(0)', row).html( '<code>'+data["address"]+'</code>' );
 
             const disabled = data["enabled"] === 0;
-            $('td:eq(1)', row).html( '<select id="status">'+
+            $('td:eq(1)', row).html( '<select id="status" class="form-control">'+
                                      '<option value="0"'+(disabled?' selected':'')+'>Disabled</option>'+
                                      '<option value="1"'+(disabled?'':' selected')+'>Enabled</option>'+
                                      '</select>' );
             
-            $('td:eq(2)', row).html( '<input id="comment"><input id="id" type="hidden" value="'+data["id"]+'">' );
+            $('td:eq(2)', row).html( '<input id="comment" class="form-control"><input id="id" type="hidden" value="'+data["id"]+'">' );
             $('#comment', row).val(data["comment"]);
 
             $('td:eq(3)', row).empty();

@@ -41,15 +41,15 @@ $(document).ready(function() {
         },
         "rowCallback": function( row, data ) {
             const disabled = data["enabled"] === 0;
-            $('td:eq(1)', row).html( '<select id="status">'+
+            $('td:eq(1)', row).html( '<select id="status" class="form-control">'+
                                      '<option value="0"'+(disabled?' selected':'')+'>Disabled</option>'+
                                      '<option value="1"'+(disabled?'':' selected')+'>Enabled</option>'+
                                      '</select>' );
 
-            $('td:eq(2)', row).html( '<input id="name">' );
+            $('td:eq(2)', row).html( '<input id="name" class="form-control">' );
             $('#name', row).val( data["name"] );
 
-            $('td:eq(3)', row).html( '<input id="desc">' );
+            $('td:eq(3)', row).html( '<input id="desc" class="form-control">' );
             const desc = data["description"] !== null ? data["description"] : '';
             $('#desc', row).val( desc );
 
