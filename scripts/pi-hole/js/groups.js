@@ -29,11 +29,11 @@ $(document).ready(function() {
         "ajax": "scripts/pi-hole/php/groups.php?action=get_groups",
         order: [[ 1, 'asc' ]],
         columns: [
-            { data: "id", width: "10px" },
+            { data: "id", width: "60px" },
             { data: "enabled" },
             { data: "name" },
             { data: "description" },
-            { data: null, width: "20px" }
+            { data: null, width: "60px", "orderable": false }
         ],
         "drawCallback": function( settings ) {
             $('.deleteGroup').on('click', deleteGroup);
@@ -103,6 +103,8 @@ function addGroup()
         success: function(response) {
             if (response.success) {
                 showAlert('success');
+                $("#name").empty();
+                $("#desc").empty();
                 table.ajax.reload();
             }
             else

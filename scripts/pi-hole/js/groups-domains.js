@@ -21,19 +21,6 @@ function showAlert(type, message)
     alertElement.delay(8000).fadeOut(2000);
 }
 
-function reload_client_suggestions()
-{
-    $.get("scripts/pi-hole/php/groups.php", { 'action': 'get_unconfigured_clients' },
-    function(data) {
-        var sel = $("#select");
-        sel.empty();
-        for (var i = 0; i < data.length; i++) {
-            sel.append($('<option />').val(data[i]).text(data[i]));
-        }
-        sel.append($('<option />').val("custom").text("Custom, specified on the right"));
-    }, "json");
-}
-
 function get_groups()
 {
     $.get("scripts/pi-hole/php/groups.php", { 'action': 'get_groups' },
@@ -50,9 +37,8 @@ $.fn.redraw = function(){
 
 $(document).ready(function() {
 
-    $('#btnAdd').on('click', addClient);
+    $('#btnAdd').on('click', addDomain);
 
-    reload_client_suggestions();
     get_groups();
 
     $('#select').on('change', function() {
@@ -60,24 +46,42 @@ $(document).ready(function() {
         $("#ip-custom").prop( "disabled" , $( "#select option:selected" ).val() !== "custom");
       });
 
-    table = $("#clientsTable").DataTable( {
-        "ajax": "scripts/pi-hole/php/groups.php?action=get_clients",
+    table = $("#domainsTable").DataTable( {
+        "ajax": "scripts/pi-hole/php/groups.php?action=get_domains",
         order: [[ 1, 'asc' ]],
         columns: [
-            { data: "id", width: "60px" },
-            { data: "ip", width: "20%" },
+            { data: null },
+            { data: null, "orderable": false },
+            { data: null, "orderable": false },
+            { data: null, "orderable": false },
             { data: null, "orderable": false },
             { data: null, width: "60px", "orderable": false }
         ],
         "drawCallback": function( settings ) {
-            $('.editClient').on('click', editClient);
-            $('.deleteClient').on('click', deleteClient);
+            $('.editDomain').on('click', editDomain);
+            $('.deleteDomain').on('click', deleteDomain);
         },
         "rowCallback": function( row, data ) {
-            $('td:eq(1)', row).html( "<code>"+data["ip"]+"</code>" );
+            $('td:eq(0)', row).html( '<code>'+data["domain"]+'</code>' );
 
-            $('td:eq(2)', row).empty();
-            $('td:eq(2)', row).append( '<select id="multiselect" multiple="multiple"></select>' );
+            $('td:eq(1)', row).html( '<select id="type">'+
+                                     '<option value="0"'+(data["type"]===0?' selected':'')+'>Exact whitelist</option>'+
+                                     '<option value="1"'+(data["type"]===1?' selected':'')+'>Exact blacklist</option>'+
+                                     '<option value="2"'+(data["type"]===2?' selected':'')+'>Regex whitelist</option>'+
+                                     '<option value="3"'+(data["type"]===3?' selected':'')+'>Regex blacklist</option>'+
+                                     '</select>' );
+
+            const disabled = data["enabled"] === 0;
+            $('td:eq(2)', row).html( '<select id="status">'+
+                                     '<option value="0"'+(disabled?' selected':'')+'>Disabled</option>'+
+                                     '<option value="1"'+(disabled?'':' selected')+'>Enabled</option>'+
+                                     '</select>' );
+            
+            $('td:eq(3)', row).html( '<input id="comment"><input id="id" type="hidden" value="'+data["id"]+'">' );
+            $('#comment', row).val(data["comment"]);
+
+            $('td:eq(4)', row).empty();
+            $('td:eq(4)', row).append( '<select id="multiselect" multiple="multiple"></select>' );
             var sel = $('#multiselect', row);
             // Add all known groups
             for (var i = 0; i < groups.length; i++) {
@@ -94,24 +98,24 @@ $(document).ready(function() {
             // Initialize multiselect
             sel.multiselect({ includeSelectAllOption: true });
 
-            let button = "<button class=\"btn btn-success btn-xs editClient\" type=\"button\" data-id='"+data["id"]+"'>" +
+            let button = "<button class=\"btn btn-success btn-xs editDomain\" type=\"button\" data-id='"+data["id"]+"'>" +
                          "<span class=\"glyphicon glyphicon-pencil\"></span>" +
                          "</button>" +
                          " &nbsp;" +
-                         "<button class=\"btn btn-danger btn-xs deleteClient\" type=\"button\" data-id='"+data["id"]+"'>" +
+                         "<button class=\"btn btn-danger btn-xs deleteDomain\" type=\"button\" data-id='"+data["id"]+"'>" +
                          "<span class=\"glyphicon glyphicon-trash\"></span>" +
                          "</button>";
-            $('td:eq(3)', row).html( button );
+            $('td:eq(5)', row).html( button );
         },
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "stateSave": true,
         stateSaveCallback: function(settings, data) {
             // Store current state in client's local storage area
-            localStorage.setItem("groups-clients-table", JSON.stringify(data));
+            localStorage.setItem("groups-domains-table", JSON.stringify(data));
         },
         stateLoadCallback: function(settings) {
             // Receive previous state from client's local storage area
-            var data = localStorage.getItem("groups-clients-table");
+            var data = localStorage.getItem("groups-domains-table");
             // Return if not available
             if(data === null){ return null; }
             data = JSON.parse(data);
@@ -125,24 +129,23 @@ $(document).ready(function() {
     });
 });
 
-function addClient()
+function addDomain()
 {
-    var ip = $("#select").val();
-    if(ip === "custom")
-    {
-        ip = $("#ip-custom").val();
-    }
+    var domain = $("#domain").val();
+    var type = $("#type").val();
+    var comment = $("#comment").val();
 
     showAlert('info');
     $.ajax({
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "add_client", "ip": ip},
+        data: {"action": "add_domain", "domain": domain, "type": type, "comment": comment},
         success: function(response) {
             if (response.success) {
                 showAlert('success');
-                reload_client_suggestions();
+                $("#domain").empty();
+                $("#comment").empty();
                 table.ajax.reload();
             }
             else
@@ -155,10 +158,13 @@ function addClient()
     });
 }
 
-function editClient()
+function editDomain()
 {
     var tr = $(this).closest("tr");
-    var id = tr.find("td:eq(0)").html();
+    var id = tr.find("#id").val();
+    var type = tr.find("#type").val();
+    var status = tr.find("#status").val();
+    var comment = tr.find("#comment").val();
     var groups = tr.find("#multiselect").val();
 
     showAlert('info');
@@ -166,7 +172,7 @@ function editClient()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "edit_client", "id": id, "groups": groups},
+        data: {"action": "edit_domain", "id": id, "type": type, "comment": comment, "status": status, "groups": groups},
         success: function(response) {
             if (response.success) {
                 showAlert('success');
@@ -176,13 +182,13 @@ function editClient()
                 showAlert('error', response.message);
         },
         error: function(jqXHR, exception) {
-            showAlert('error', "Error while editing client with ID "+id);
+            showAlert('error', "Error while editing domain with ID "+id);
             console.log(exception);
         }
     });
 }
 
-function deleteClient()
+function deleteDomain()
 {
     var id = $(this).attr("data-id");
 
@@ -191,18 +197,17 @@ function deleteClient()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "delete_client", "id": id},
+        data: {"action": "delete_domain", "id": id},
         success: function(response) {
             if (response.success) {
                 showAlert('success');
-                reload_client_suggestions();
                 table.ajax.reload();
             }
             else
                 showAlert('error', response.message);
         },
         error: function(jqXHR, exception) {
-            showAlert('error', "Error while deleting client with ID "+id);
+            showAlert('error', "Error while deleting domain with ID "+id);
             console.log(exception);
         }
     });

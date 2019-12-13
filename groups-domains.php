@@ -10,13 +10,13 @@
 
 <!-- Title -->
 <div class="page-header">
-    <h1>Group management</h1>
+    <h1>Domain group management</h1>
 </div>
 
 <!-- Alerts -->
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Updating groups...
+    Updating domain groups...
 </div>
 <div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -31,26 +31,35 @@
     Warning, see output below:<br/><br/><pre><span id="warn"></span></pre>
 </div>
 
-<!-- Group Input -->
+<!-- Domain Input -->
 <div class="row">
     <div class="col-md-12">
         <div class="box" id="add-group">
             <!-- /.box-header -->
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    Add a new group
+                    Add a new domain
                 </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="ex1">Name:</label>
-                        <input id="name" type="text" class="form-control" placeholder="Group name">
+                        <label for="ex1">Domain / Comment:</label>
+                        <input id="domain" type="text" class="form-control" placeholder="Domain to be added">
                     </div>
-                    <div class="col-md-6">
-                        <label for="ex2">Description:</label>
-                        <input id="desc" type="text" class="form-control" placeholder="Group description (optional)">
+                    <div class="col-md-2">
+                        <label for="ex2">Type:</label>
+                        <select id="type">
+                            <option value="0">Exact whitelist</option>
+                            <option value="1">Exact blacklist</option>
+                            <option value="2">Regex whitelist</option>
+                            <option value="3">Regex blacklist</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="ex3">Comment:</label>
+                        <input id="comment" type="text" class="form-control" placeholder="Domain description (optional)">
                     </div>
                 </div>
             </div>
@@ -62,21 +71,22 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="groups-list">
+        <div class="box" id="domains-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of configured groups
+                    List of configured domains
                 </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="groupsTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                <table id="domainsTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Domain</th>
+                        <th>Type</th>
                         <th>Status</th>
-                        <th>Name</th>
-                        <th>Description</th>
+                        <th>Comment</th>
+                        <th>Group assignment</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -88,7 +98,7 @@
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/groups.js"></script>
+<script src="scripts/pi-hole/js/groups-domains.js"></script>
 
 <?php
 require "scripts/pi-hole/php/footer.php";
