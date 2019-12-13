@@ -224,6 +224,7 @@
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-multiselect.css">
     <script src="style/vendor/bootstrap/js/bootstrap-toggle.min.js"></script>
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-toggle.min.css">
+    <script src="scripts/vendor/moment.min.js"></script>
 <?php } ?>
 
     <script src="scripts/vendor/jquery.dataTables.min.js"></script>

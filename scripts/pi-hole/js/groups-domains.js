@@ -35,9 +35,15 @@ $.fn.redraw = function(){
     });
 };
 
+function datetime(date)
+{
+    return moment.unix(Math.floor(date)).format("Y-MM-DD HH:mm:ss z");
+}
+
 $(document).ready(function() {
 
     $('#btnAdd').on('click', addDomain);
+    $( function() { $( document ).tooltip(); } );
 
     get_groups();
 
@@ -62,7 +68,8 @@ $(document).ready(function() {
             $('.deleteDomain').on('click', deleteDomain);
         },
         "rowCallback": function( row, data ) {
-            $('td:eq(0)', row).html( '<code>'+data["domain"]+'</code>' );
+            const tooltip = 'Added: '+datetime(data["date_added"])+'\nLast modified: '+datetime(data["date_modified"]);
+            $('td:eq(0)', row).html( '<code title="'+tooltip+'">'+data["domain"]+'</code>' );
 
             $('td:eq(1)', row).html( '<select id="type" class="form-control">'+
                                      '<option value="0"'+(data["type"]===0?' selected':'')+'>Exact whitelist</option>'+

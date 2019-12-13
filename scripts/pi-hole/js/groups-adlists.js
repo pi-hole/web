@@ -35,6 +35,11 @@ $.fn.redraw = function(){
     });
 };
 
+function datetime(date)
+{
+    return moment.unix(Math.floor(date)).format("Y-MM-DD HH:mm:ss z");
+}
+
 $(document).ready(function() {
 
     $('#btnAdd').on('click', addAdlist);
@@ -61,8 +66,8 @@ $(document).ready(function() {
             $('.deleteAdlist').on('click', deleteAdlist);
         },
         "rowCallback": function( row, data ) {
-            $('td:eq(0)', row).html( '<code>'+data["address"]+'</code>' );
-
+            const tooltip = 'Added: '+datetime(data["date_added"])+'\nLast modified: '+datetime(data["date_modified"]);
+            $('td:eq(0)', row).html( '<code title="'+tooltip+'">'+data["address"]+'</code>' );
 
             const disabled = data["enabled"] === 0;
             $('td:eq(1)', row).html( '<input type="checkbox" id="status"'+(disabled?'':' checked')+'>');
