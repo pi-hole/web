@@ -219,7 +219,7 @@
     <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="scripts/vendor/app.min.js"></script>
 
-<?php if(in_array($scriptname, array("groups-clients.php", "groups-domains.php"))){ ?>
+<?php if(in_array($scriptname, array("groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
     <script src="style/vendor/bootstrap/js/bootstrap-multiselect.js"></script>
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-multiselect.css">
 <?php } ?>
@@ -492,7 +492,7 @@ if($auth) {
                     </a>
                 </li>
                 <!-- Group Management -->
-                <li class="treeview <?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php"))){ ?>active<?php } ?>">
+                <li class="treeview <?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>active<?php } ?>">
                   <a href="#">
                     <span class="pull-right-container">
                       <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
@@ -517,6 +517,13 @@ if($auth) {
                     <li<?php if($scriptname === "groups-domains.php"){ ?> class="active"<?php } ?>>
                         <a href="groups-domains.php">
                             <i class="fa fa-address-book"></i> <span>Domains</span>
+                        </a>
+                    </li>
+                  </ul>
+                  <ul class="treeview-menu">
+                    <li<?php if($scriptname === "groups-adlists.php"){ ?> class="active"<?php } ?>>
+                        <a href="groups-adlists.php">
+                            <i class="fa fa-address-book"></i> <span>Adlists</span>
                         </a>
                     </li>
                   </ul>

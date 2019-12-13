@@ -149,7 +149,7 @@ function addClient()
                 showAlert('error', response.message);
         },
         error: function(jqXHR, exception) {
-            showAlert('error', "Error while adding new group");
+            showAlert('error', "Error while adding new client");
             console.log(exception);
         }
     });

@@ -37,7 +37,7 @@ $.fn.redraw = function(){
 
 $(document).ready(function() {
 
-    $('#btnAdd').on('click', addDomain);
+    $('#btnAdd').on('click', addAdlist);
 
     get_groups();
 
@@ -46,42 +46,34 @@ $(document).ready(function() {
         $("#ip-custom").prop( "disabled" , $( "#select option:selected" ).val() !== "custom");
       });
 
-    table = $("#domainsTable").DataTable( {
-        "ajax": "scripts/pi-hole/php/groups.php?action=get_domains",
+    table = $("#adlistsTable").DataTable( {
+        "ajax": "scripts/pi-hole/php/groups.php?action=get_adlists",
         order: [[ 1, 'asc' ]],
         columns: [
             { data: null },
             { data: null, "orderable": false },
             { data: null, "orderable": false },
             { data: null, "orderable": false },
-            { data: null, "orderable": false },
             { data: null, width: "60px", "orderable": false }
         ],
         "drawCallback": function( settings ) {
-            $('.editDomain').on('click', editDomain);
-            $('.deleteDomain').on('click', deleteDomain);
+            $('.editAdlist').on('click', editAdlist);
+            $('.deleteAdlist').on('click', deleteAdlist);
         },
         "rowCallback": function( row, data ) {
-            $('td:eq(0)', row).html( '<code>'+data["domain"]+'</code>' );
-
-            $('td:eq(1)', row).html( '<select id="type">'+
-                                     '<option value="0"'+(data["type"]===0?' selected':'')+'>Exact whitelist</option>'+
-                                     '<option value="1"'+(data["type"]===1?' selected':'')+'>Exact blacklist</option>'+
-                                     '<option value="2"'+(data["type"]===2?' selected':'')+'>Regex whitelist</option>'+
-                                     '<option value="3"'+(data["type"]===3?' selected':'')+'>Regex blacklist</option>'+
-                                     '</select>' );
+            $('td:eq(0)', row).html( '<code>'+data["address"]+'</code>' );
 
             const disabled = data["enabled"] === 0;
-            $('td:eq(2)', row).html( '<select id="status">'+
+            $('td:eq(1)', row).html( '<select id="status">'+
                                      '<option value="0"'+(disabled?' selected':'')+'>Disabled</option>'+
                                      '<option value="1"'+(disabled?'':' selected')+'>Enabled</option>'+
                                      '</select>' );
             
-            $('td:eq(3)', row).html( '<input id="comment"><input id="id" type="hidden" value="'+data["id"]+'">' );
+            $('td:eq(2)', row).html( '<input id="comment"><input id="id" type="hidden" value="'+data["id"]+'">' );
             $('#comment', row).val(data["comment"]);
 
-            $('td:eq(4)', row).empty();
-            $('td:eq(4)', row).append( '<select id="multiselect" multiple="multiple"></select>' );
+            $('td:eq(3)', row).empty();
+            $('td:eq(3)', row).append( '<select id="multiselect" multiple="multiple"></select>' );
             var sel = $('#multiselect', row);
             // Add all known groups
             for (var i = 0; i < groups.length; i++) {
@@ -98,24 +90,24 @@ $(document).ready(function() {
             // Initialize multiselect
             sel.multiselect({ includeSelectAllOption: true });
 
-            let button = "<button class=\"btn btn-success btn-xs editDomain\" type=\"button\" data-id='"+data["id"]+"'>" +
+            let button = "<button class=\"btn btn-success btn-xs editAdlist\" type=\"button\" data-id='"+data["id"]+"'>" +
                          "<span class=\"glyphicon glyphicon-pencil\"></span>" +
                          "</button>" +
                          " &nbsp;" +
-                         "<button class=\"btn btn-danger btn-xs deleteDomain\" type=\"button\" data-id='"+data["id"]+"'>" +
+                         "<button class=\"btn btn-danger btn-xs deleteAdlist\" type=\"button\" data-id='"+data["id"]+"'>" +
                          "<span class=\"glyphicon glyphicon-trash\"></span>" +
                          "</button>";
-            $('td:eq(5)', row).html( button );
+            $('td:eq(4)', row).html( button );
         },
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "stateSave": true,
         stateSaveCallback: function(settings, data) {
             // Store current state in client's local storage area
-            localStorage.setItem("groups-domains-table", JSON.stringify(data));
+            localStorage.setItem("groups-adlists-table", JSON.stringify(data));
         },
         stateLoadCallback: function(settings) {
             // Receive previous state from client's local storage area
-            var data = localStorage.getItem("groups-domains-table");
+            var data = localStorage.getItem("groups-adlists-table");
             // Return if not available
             if(data === null){ return null; }
             data = JSON.parse(data);
@@ -129,10 +121,9 @@ $(document).ready(function() {
     });
 });
 
-function addDomain()
+function addAdlist()
 {
-    var domain = $("#domain").val();
-    var type = $("#type").val();
+    var address = $("#address").val();
     var comment = $("#comment").val();
 
     showAlert('info');
@@ -140,11 +131,11 @@ function addDomain()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "add_domain", "domain": domain, "type": type, "comment": comment},
+        data: {"action": "add_adlist", "address": address, "comment": comment},
         success: function(response) {
             if (response.success) {
                 showAlert('success');
-                $("#domain").empty();
+                $("#address").empty();
                 $("#comment").empty();
                 table.ajax.reload();
             }
@@ -152,17 +143,16 @@ function addDomain()
                 showAlert('error', response.message);
         },
         error: function(jqXHR, exception) {
-            showAlert('error', "Error while adding new domain");
+            showAlert('error', "Error while adding new adlist");
             console.log(exception);
         }
     });
 }
 
-function editDomain()
+function editAdlist()
 {
     var tr = $(this).closest("tr");
     var id = tr.find("#id").val();
-    var type = tr.find("#type").val();
     var status = tr.find("#status").val();
     var comment = tr.find("#comment").val();
     var groups = tr.find("#multiselect").val();
@@ -172,7 +162,7 @@ function editDomain()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "edit_domain", "id": id, "type": type, "comment": comment, "status": status, "groups": groups},
+        data: {"action": "edit_adlist", "id": id, "comment": comment, "status": status, "groups": groups},
         success: function(response) {
             if (response.success) {
                 showAlert('success');
@@ -182,13 +172,13 @@ function editDomain()
                 showAlert('error', response.message);
         },
         error: function(jqXHR, exception) {
-            showAlert('error', "Error while editing domain with ID "+id);
+            showAlert('error', "Error while editing adlist with ID "+id);
             console.log(exception);
         }
     });
 }
 
-function deleteDomain()
+function deleteAdlist()
 {
     var id = $(this).attr("data-id");
 
@@ -197,7 +187,7 @@ function deleteDomain()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "delete_domain", "id": id},
+        data: {"action": "delete_adlist", "id": id},
         success: function(response) {
             if (response.success) {
                 showAlert('success');
@@ -207,7 +197,7 @@ function deleteDomain()
                 showAlert('error', response.message);
         },
         error: function(jqXHR, exception) {
-            showAlert('error', "Error while deleting domain with ID "+id);
+            showAlert('error', "Error while deleting adlist with ID "+id);
             console.log(exception);
         }
     });

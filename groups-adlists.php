@@ -10,13 +10,13 @@
 
 <!-- Title -->
 <div class="page-header">
-    <h1>Domain group management</h1>
+    <h1>Adllist group management</h1>
 </div>
 
 <!-- Alerts -->
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Updating domain...
+    Updating adlist...
 </div>
 <div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -38,28 +38,19 @@
             <!-- /.box-header -->
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    Add a new domain
+                    Add a new adlist
                 </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="ex1">Domain:</label>
-                        <input id="domain" type="text" class="form-control" placeholder="Domain to be added">
+                        <label for="ex1">Address:</label>
+                        <input id="address" type="text" class="form-control" placeholder="http://..., https://..., file://...">
                     </div>
-                    <div class="col-md-2">
-                        <label for="ex2">Type:</label>
-                        <select id="type">
-                            <option value="0">Exact whitelist</option>
-                            <option value="1">Exact blacklist</option>
-                            <option value="2">Regex whitelist</option>
-                            <option value="3">Regex blacklist</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="ex3">Comment:</label>
-                        <input id="comment" type="text" class="form-control" placeholder="Domain description (optional)">
+                    <div class="col-md-6">
+                        <label for="ex2">Comment:</label>
+                        <input id="comment" type="text" class="form-control" placeholder="Adlist description (optional)">
                     </div>
                 </div>
             </div>
@@ -71,19 +62,18 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="domains-list">
+        <div class="box" id="adlists-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of configured domains
+                    List of configured adlists
                 </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="domainsTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                <table id="adlistsTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                     <tr>
-                        <th>Domain</th>
-                        <th>Type</th>
+                        <th>Address</th>
                         <th>Status</th>
                         <th>Comment</th>
                         <th>Group assignment</th>
@@ -98,7 +88,7 @@
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/groups-domains.js"></script>
+<script src="scripts/pi-hole/js/groups-adlists.js"></script>
 
 <?php
 require "scripts/pi-hole/php/footer.php";

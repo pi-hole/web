@@ -617,6 +617,215 @@ elseif($_REQUEST['action'] == "delete_domain")
         return JSON_error($ex->getMessage());
     }
 }
+elseif($_REQUEST['action'] == "get_adlists")
+{
+    // List all available groups
+    try
+    {
+        $query = $db->query("SELECT * FROM adlist;");
+        if(!$query)
+        {
+            throw new Exception("Error while querying gravity's adlist table: ".$db->lastErrorMsg());
+        }
+
+        $data = array();
+        while($res = $query->fetchArray(SQLITE3_ASSOC))
+        {
+            $group_query = $db->query("SELECT group_id FROM adlist_by_group WHERE adlist_id = ".$res["id"].";");
+            if(!$group_query)
+            {
+                throw new Exception("Error while querying gravity's adlist_by_group table: ".$db->lastErrorMsg());
+            }
+    
+            $groups = array();
+            while($gres = $group_query->fetchArray(SQLITE3_ASSOC))
+            {
+                array_push($groups,$gres["group_id"]);
+            }
+            $res["groups"] = $groups;
+            array_push($data,$res);
+        }
+
+
+        echo json_encode(array("data" => $data));
+    }
+    catch (\Exception $ex)
+    {
+        return JSON_error($ex->getMessage());
+    }
+}
+elseif($_REQUEST['action'] == "add_adlist")
+{
+    // Add new adlist
+    try
+    {
+        $stmt = $db->prepare('INSERT INTO adlist (address,comment) VALUES (:address,:comment)');
+        if(!$stmt)
+        {
+            throw new Exception("While preparing statement: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->bindValue(':address', $_POST["address"], SQLITE3_TEXT))
+        {
+            throw new Exception("While binding address: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->bindValue(':comment', $_POST["comment"], SQLITE3_TEXT))
+        {
+            throw new Exception("While binding comment: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->execute())
+        {
+            throw new Exception("While executing: ".$db->lastErrorMsg());
+        }
+
+        $reload = true;
+        return JSON_success();
+    }
+    catch (\Exception $ex)
+    {
+        return JSON_error($ex->getMessage());
+    }
+}
+elseif($_REQUEST['action'] == "edit_adlist")
+{
+    // Edit adlist identified by ID
+    try
+    {
+        $stmt = $db->prepare('UPDATE adlist SET enabled=:enabled, comment=:comment WHERE id = :id');
+        if(!$stmt)
+        {
+            throw new Exception("While preparing statement: ".$db->lastErrorMsg());
+        }
+
+        $status = intval($_POST["status"]);
+        if($status !== 0)
+        {
+                $status = 1;
+        }
+    
+        if(!$stmt->bindValue(':enabled', $status, SQLITE3_INTEGER))
+        {
+            throw new Exception("While binding enabled: ".$db->lastErrorMsg());
+        }
+
+        $comment = $_POST["comment"];
+        if(strlen($comment) == 0)
+        {
+                // Store NULL in database for empty comments
+                $comment = null;
+        }
+        if(!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT))
+        {
+            throw new Exception("While binding comment: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->bindValue(':id', intval($_POST["id"]), SQLITE3_INTEGER))
+        {
+            throw new Exception("While binding id: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->execute())
+        {
+            throw new Exception("While executing: ".$db->lastErrorMsg());
+        }
+
+        $stmt = $db->prepare('DELETE FROM adlist_by_group WHERE adlist_id = :id');
+        if(!$stmt)
+        {
+            throw new Exception("While preparing DELETE statement: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->bindValue(':id', intval($_POST["id"]), SQLITE3_INTEGER))
+        {
+            throw new Exception("While binding id: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->execute())
+        {
+            throw new Exception("While executing DELETE statement: ".$db->lastErrorMsg());
+        }
+        
+        $db->query("BEGIN TRANSACTION;");
+        foreach ($_POST["groups"] as $gid)
+        {
+            $stmt = $db->prepare('INSERT INTO adlist_by_group (adlist_id,group_id) VALUES(:id,:gid);');
+            if(!$stmt)
+            {
+                throw new Exception("While preparing INSERT INTO statement: ".$db->lastErrorMsg());
+            }
+    
+            if(!$stmt->bindValue(':id', intval($_POST["id"]), SQLITE3_INTEGER))
+            {
+                throw new Exception("While binding id: ".$db->lastErrorMsg());
+            }
+    
+            if(!$stmt->bindValue(':gid', intval($gid), SQLITE3_INTEGER))
+            {
+                throw new Exception("While binding gid: ".$db->lastErrorMsg());
+            }
+    
+            if(!$stmt->execute())
+            {
+                throw new Exception("While executing INSERT INTO statement: ".$db->lastErrorMsg());
+            }
+        }
+        $db->query("COMMIT;");
+
+        $reload = true;
+        return JSON_success();
+    }
+    catch (\Exception $ex)
+    {
+        return JSON_error($ex->getMessage());
+    }
+}
+elseif($_REQUEST['action'] == "delete_adlist")
+{
+    // Delete adlist identified by ID
+    try
+    {
+        $stmt = $db->prepare('DELETE FROM adlist_by_group WHERE adlist_id=:id');
+        if(!$stmt)
+        {
+            throw new Exception("While preparing adlist_by_group statement: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->bindValue(':id', intval($_POST["id"]), SQLITE3_INTEGER))
+        {
+            throw new Exception("While binding id to adlist_by_group statement: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->execute())
+        {
+            throw new Exception("While executing adlist_by_group statement: ".$db->lastErrorMsg());
+        }
+
+        $stmt = $db->prepare('DELETE FROM adlist WHERE id=:id');
+        if(!$stmt)
+        {
+            throw new Exception("While preparing adlist statement: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->bindValue(':id', intval($_POST["id"]), SQLITE3_INTEGER))
+        {
+            throw new Exception("While binding id to adlist statement: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->execute())
+        {
+            throw new Exception("While executing adlist statement: ".$db->lastErrorMsg());
+        }
+
+        $reload = true;
+        return JSON_success();
+    }
+    catch (\Exception $ex)
+    {
+        return JSON_error($ex->getMessage());
+    }
+}
 else
 {
     log_and_die("Requested action not supported!");
