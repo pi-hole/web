@@ -72,10 +72,8 @@ $(document).ready(function() {
                                      '</select>' );
 
             const disabled = data["enabled"] === 0;
-            $('td:eq(2)', row).html( '<select id="status" class="form-control">'+
-                                     '<option value="0"'+(disabled?' selected':'')+'>Disabled</option>'+
-                                     '<option value="1"'+(disabled?'':' selected')+'>Enabled</option>'+
-                                     '</select>' );
+            $('td:eq(2)', row).html( '<input type="checkbox" id="status"'+(disabled?'':' checked')+'>');
+            $('#status', row).bootstrapToggle({ on: 'Enabled', off: 'Disabled', size: 'small', onstyle: "success", width: "80px" });
             
             $('td:eq(3)', row).html( '<input id="comment" class="form-control"><input id="id" type="hidden" value="'+data["id"]+'">' );
             $('#comment', row).val(data["comment"]);

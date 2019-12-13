@@ -63,11 +63,10 @@ $(document).ready(function() {
         "rowCallback": function( row, data ) {
             $('td:eq(0)', row).html( '<code>'+data["address"]+'</code>' );
 
+
             const disabled = data["enabled"] === 0;
-            $('td:eq(1)', row).html( '<select id="status" class="form-control">'+
-                                     '<option value="0"'+(disabled?' selected':'')+'>Disabled</option>'+
-                                     '<option value="1"'+(disabled?'':' selected')+'>Enabled</option>'+
-                                     '</select>' );
+            $('td:eq(1)', row).html( '<input type="checkbox" id="status"'+(disabled?'':' checked')+'>');
+            $('#status', row).bootstrapToggle({ on: 'Enabled', off: 'Disabled', size: 'small', onstyle: "success", width: "80px" });
             
             $('td:eq(2)', row).html( '<input id="comment" class="form-control"><input id="id" type="hidden" value="'+data["id"]+'">' );
             $('#comment', row).val(data["comment"]);

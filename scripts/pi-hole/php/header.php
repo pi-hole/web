@@ -219,9 +219,11 @@
     <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="scripts/vendor/app.min.js"></script>
 
-<?php if(in_array($scriptname, array("groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
+<?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
     <script src="style/vendor/bootstrap/js/bootstrap-multiselect.js"></script>
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-multiselect.css">
+    <script src="style/vendor/bootstrap/js/bootstrap-toggle.min.js"></script>
+    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-toggle.min.css">
 <?php } ?>
 
     <script src="scripts/vendor/jquery.dataTables.min.js"></script>

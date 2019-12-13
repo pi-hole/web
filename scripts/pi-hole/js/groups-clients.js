@@ -157,7 +157,7 @@ function addClient()
 function editClient()
 {
     var tr = $(this).closest("tr");
-    var id = tr.find("td:eq(0)").html();
+    var id = tr.find("#id").val();
     var groups = tr.find("#multiselect").val();
 
     showAlert('info');
