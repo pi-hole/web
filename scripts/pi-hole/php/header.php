@@ -181,8 +181,13 @@
 *  Please see LICENSE file for your rights under this license. -->
 <html lang="en">
 <head>
+<<<<<<< HEAD
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'">
+=======
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+>>>>>>> da1fba88... Add group management page
     <title>Pi-hole Admin Console</title>
     <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
     <meta http-equiv="x-dns-prefetch-control" content="off">
@@ -485,6 +490,22 @@ if($auth) {
                     <a href="custom_dns.php">
                         <i class="fa fa-address-book"></i> <span>Custom DNS</span>
                     </a>
+                </li>
+                <!-- Group Management -->
+                <li class="treeview <?php if(in_array($scriptname, array("groups.php", "client-groups.php", "domain-groups.php"))){ ?>active<?php } ?>">
+                  <a href="#">
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
+                    </span>
+                    <i class="fa fa-address-book"></i> <span>Group Management</span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li<?php if($scriptname === "groups.php"){ ?> class="active"<?php } ?>>
+                        <a href="groups.php">
+                            <i class="fa fa-address-book"></i> <span>Groups</span>
+                        </a>
+                    </li>
+                  </ul>
                 </li>
                 <!-- Toggle -->
 
