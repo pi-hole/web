@@ -168,7 +168,7 @@ function editDomain()
     var tr = $(this).closest("tr");
     var id = tr.find("#id").val();
     var type = tr.find("#type").val();
-    var status = tr.find("#status").val();
+    var status = tr.find("#status").is(":checked") ? 1 : 0;
     var comment = tr.find("#comment").val();
     var groups = tr.find("#multiselect").val();
 

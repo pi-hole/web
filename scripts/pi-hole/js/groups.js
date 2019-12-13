@@ -120,7 +120,7 @@ function editGroup()
     var tr = $(this).closest("tr");
     var id = tr.find("td:eq(0)").html();
     var name = tr.find("#name").val();
-    var status = tr.find("#status").val();
+    var status = tr.find("#status").is(":checked") ? 1 : 0;
     var desc = tr.find("#desc").val();
 
     showAlert('info');
