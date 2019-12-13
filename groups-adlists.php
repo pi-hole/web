@@ -10,7 +10,7 @@
 
 <!-- Title -->
 <div class="page-header">
-    <h1>Adllist group management</h1>
+    <h1>Adlist group management</h1>
 </div>
 
 <!-- Alerts -->

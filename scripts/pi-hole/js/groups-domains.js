@@ -50,12 +50,12 @@ $(document).ready(function() {
         "ajax": "scripts/pi-hole/php/groups.php?action=get_domains",
         order: [[ 1, 'asc' ]],
         columns: [
-            { data: null },
-            { data: null, "orderable": false },
-            { data: null, "orderable": false },
-            { data: null, "orderable": false },
-            { data: null, "orderable": false },
-            { data: null, width: "60px", "orderable": false }
+            { data: "domain" },
+            { data: "type", searchable: false },
+            { data: "enabled", searchable: false },
+            { data: "comment" },
+            { data: "groups", searchable: false },
+            { data: null, width: "60px", orderable: false }
         ],
         "drawCallback": function( settings ) {
             $('.editDomain').on('click', editDomain);

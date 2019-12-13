@@ -30,10 +30,10 @@ $(document).ready(function() {
         order: [[ 1, 'asc' ]],
         columns: [
             { data: "id", width: "60px" },
-            { data: "enabled" },
+            { data: "enabled", searchable: false },
             { data: "name" },
             { data: "description" },
-            { data: null, width: "60px", "orderable": false }
+            { data: null, width: "60px", orderable: false }
         ],
         "drawCallback": function( settings ) {
             $('.deleteGroup').on('click', deleteGroup);

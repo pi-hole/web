@@ -64,20 +64,19 @@ $(document).ready(function() {
         "ajax": "scripts/pi-hole/php/groups.php?action=get_clients",
         order: [[ 1, 'asc' ]],
         columns: [
-            { data: "id", width: "60px" },
             { data: "ip", width: "20%" },
-            { data: null, "orderable": false },
-            { data: null, width: "60px", "orderable": false }
+            { data: "groups", searchable: false },
+            { data: null, width: "60px", orderable: false }
         ],
         "drawCallback": function( settings ) {
             $('.editClient').on('click', editClient);
             $('.deleteClient').on('click', deleteClient);
         },
         "rowCallback": function( row, data ) {
-            $('td:eq(1)', row).html( "<code>"+data["ip"]+"</code>" );
+            $('td:eq(0)', row).html( '<code>'+data["ip"]+'</code><input id="id" type="hidden" value="'+data["id"]+'">' );
 
-            $('td:eq(2)', row).empty();
-            $('td:eq(2)', row).append( '<select id="multiselect" multiple="multiple"></select>' );
+            $('td:eq(1)', row).empty();
+            $('td:eq(1)', row).append( '<select id="multiselect" multiple="multiple"></select>' );
             var sel = $('#multiselect', row);
             // Add all known groups
             for (var i = 0; i < groups.length; i++) {
@@ -101,7 +100,7 @@ $(document).ready(function() {
                          "<button class=\"btn btn-danger btn-xs deleteClient\" type=\"button\" data-id='"+data["id"]+"'>" +
                          "<span class=\"glyphicon glyphicon-trash\"></span>" +
                          "</button>";
-            $('td:eq(3)', row).html( button );
+            $('td:eq(2)', row).html( button );
         },
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "stateSave": true,
