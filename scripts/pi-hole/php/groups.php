@@ -58,7 +58,7 @@ if($_REQUEST['action'] == "get_groups")
     {
         $query = $db->query("SELECT * FROM \"group\";");
         $data = array();
-        while($res = $query->fetchArray(SQLITE3_ASSOC))
+        while(($res = $query->fetchArray(SQLITE3_ASSOC)) != false)
         {
             array_push($data,$res);
         }
@@ -200,7 +200,7 @@ elseif($_REQUEST['action'] == "get_clients")
         }
 
         $data = array();
-        while($res = $query->fetchArray(SQLITE3_ASSOC))
+        while(($res = $query->fetchArray(SQLITE3_ASSOC)) != false)
         {
             $group_query = $db->query("SELECT group_id FROM client_by_group WHERE client_id = ".$res["id"].";");
             if(!$group_query)
@@ -254,7 +254,7 @@ elseif($_REQUEST['action'] == "get_unconfigured_clients")
         }
 
         // Loop over results, remove already configured clients
-        while($res = $query->fetchArray(SQLITE3_ASSOC))
+        while(($res = $query->fetchArray(SQLITE3_ASSOC)) != false)
         {
             if(($idx = array_search($res["ip"],$ips)) !== false)
             {
@@ -410,7 +410,7 @@ elseif($_REQUEST['action'] == "get_domains")
         }
 
         $data = array();
-        while($res = $query->fetchArray(SQLITE3_ASSOC))
+        while(($res = $query->fetchArray(SQLITE3_ASSOC)) != false)
         {
             $group_query = $db->query("SELECT group_id FROM domainlist_by_group WHERE domainlist_id = ".$res["id"].";");
             if(!$group_query)
@@ -629,7 +629,7 @@ elseif($_REQUEST['action'] == "get_adlists")
         }
 
         $data = array();
-        while($res = $query->fetchArray(SQLITE3_ASSOC))
+        while(($res = $query->fetchArray(SQLITE3_ASSOC)) != false)
         {
             $group_query = $db->query("SELECT group_id FROM adlist_by_group WHERE adlist_id = ".$res["id"].";");
             if(!$group_query)
@@ -833,6 +833,6 @@ else
 // Reload lists in pihole-FTL after having added something
 if($reload)
 {
-    //echo shell_exec("sudo pihole restartdns reload-lists");
+    echo shell_exec("sudo pihole restartdns reload-lists");
 }
 ?>
