@@ -8,6 +8,7 @@
 
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
+    $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
 
     check_cors();
 
@@ -181,13 +182,8 @@
 *  Please see LICENSE file for your rights under this license. -->
 <html lang="en">
 <head>
-<<<<<<< HEAD
     <meta charset="utf-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'">
-=======
-    <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
->>>>>>> da1fba88... Add group management page
     <title>Pi-hole Admin Console</title>
     <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
     <meta http-equiv="x-dns-prefetch-control" content="off">
@@ -222,6 +218,11 @@
     <script src="scripts/vendor/jquery-ui.min.js"></script>
     <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="scripts/vendor/app.min.js"></script>
+
+<?php if(in_array($scriptname, array("groups-clients.php", "groups-domains.php"))){ ?>
+    <script src="style/vendor/bootstrap/js/bootstrap-multiselect.js"></script>
+    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-multiselect.css">
+<?php } ?>
 
     <script src="scripts/vendor/jquery.dataTables.min.js"></script>
     <script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
@@ -416,7 +417,6 @@ if($auth) {
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <?php
-            $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
             if($scriptname === "list.php")
             {
                 if($_GET["l"] === "white")
@@ -492,7 +492,7 @@ if($auth) {
                     </a>
                 </li>
                 <!-- Group Management -->
-                <li class="treeview <?php if(in_array($scriptname, array("groups.php", "client-groups.php", "domain-groups.php"))){ ?>active<?php } ?>">
+                <li class="treeview <?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php"))){ ?>active<?php } ?>">
                   <a href="#">
                     <span class="pull-right-container">
                       <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
@@ -503,6 +503,20 @@ if($auth) {
                     <li<?php if($scriptname === "groups.php"){ ?> class="active"<?php } ?>>
                         <a href="groups.php">
                             <i class="fa fa-address-book"></i> <span>Groups</span>
+                        </a>
+                    </li>
+                  </ul>
+                  <ul class="treeview-menu">
+                    <li<?php if($scriptname === "groups-clients.php"){ ?> class="active"<?php } ?>>
+                        <a href="groups-clients.php">
+                            <i class="fa fa-address-book"></i> <span>Clients</span>
+                        </a>
+                    </li>
+                  </ul>
+                  <ul class="treeview-menu">
+                    <li<?php if($scriptname === "groups-domains.php"){ ?> class="active"<?php } ?>>
+                        <a href="groups-domains.php">
+                            <i class="fa fa-address-book"></i> <span>Domains</span>
                         </a>
                     </li>
                   </ul>

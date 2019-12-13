@@ -27,6 +27,8 @@ else
     log_and_die("Not allowed!");
 }*/
 
+$reload = false;
+
 require_once("func.php");
 require_once("database.php");
 $GRAVITYDB = getGravityDBFilename();
@@ -41,7 +43,12 @@ function JSON_success($message = null)
 function JSON_error($message = null)
 {
     header('Content-type: application/json');
-    echo json_encode(array("success" => false, "message" => $message));
+    $response = array("success" => false, "message" => $message);
+    if(isset($_REQUEST['action']))
+    {
+        array_push($response, array("action" => $_REQUEST['action']));
+    }
+    echo json_encode($response);
 }
 
 if($_REQUEST['action'] == "get_groups")
@@ -67,7 +74,7 @@ elseif($_REQUEST['action'] == "add_group")
     // Add new group
     try
     {
-        $stmt = $db->prepare('INSERT OR IGNORE INTO "group" (name,description) VALUES (:name,:desc)');
+        $stmt = $db->prepare('INSERT INTO "group" (name,description) VALUES (:name,:desc)');
         if(!$stmt)
         {
             throw new Exception("While preparing statement: ".$db->lastErrorMsg());
@@ -88,6 +95,7 @@ elseif($_REQUEST['action'] == "add_group")
             throw new Exception("While executing: ".$db->lastErrorMsg());
         }
 
+        $reload = true;
         return JSON_success();
     }
     catch (\Exception $ex)
@@ -143,6 +151,7 @@ elseif($_REQUEST['action'] == "edit_group")
             throw new Exception("While executing: ".$db->lastErrorMsg());
         }
 
+        $reload = true;
         return JSON_success();
     }
     catch (\Exception $ex)
@@ -171,6 +180,201 @@ elseif($_REQUEST['action'] == "delete_group")
             throw new Exception("While executing: ".$db->lastErrorMsg());
         }
 
+        $reload = true;
+        return JSON_success();
+    }
+    catch (\Exception $ex)
+    {
+        return JSON_error($ex->getMessage());
+    }
+}
+elseif($_REQUEST['action'] == "get_clients")
+{
+    // List all available groups
+    try
+    {
+        $query = $db->query("SELECT * FROM client;");
+        if(!$query)
+        {
+            throw new Exception("Error while querying gravity's client table: ".$db->lastErrorMsg());
+        }
+
+        $data = array();
+        while($res = $query->fetchArray(SQLITE3_ASSOC))
+        {
+            $group_query = $db->query("SELECT group_id FROM client_by_group WHERE client_id = ".$res["id"].";");
+            if(!$group_query)
+            {
+                throw new Exception("Error while querying gravity's client_by_group table: ".$db->lastErrorMsg());
+            }
+    
+            $groups = array();
+            while($gres = $group_query->fetchArray(SQLITE3_ASSOC))
+            {
+                array_push($groups,$gres["group_id"]);
+            }
+            $res["groups"] = $groups;
+            array_push($data,$res);
+        }
+
+
+        echo json_encode(array("data" => $data));
+    }
+    catch (\Exception $ex)
+    {
+        return JSON_error($ex->getMessage());
+    }
+}
+elseif($_REQUEST['action'] == "get_unconfigured_clients")
+{
+    // List all available clients WITHOUT already configured clients
+    try
+    {
+        $QUERYDB = getQueriesDBFilename();
+        $FTLdb = SQLite3_connect($QUERYDB);
+
+        $query = $FTLdb->query("SELECT DISTINCT ip FROM network_addresses ORDER BY ip ASC;");
+        if(!$query)
+        {
+            throw new Exception("Error while querying FTL's database: ".$db->lastErrorMsg());
+        }
+
+        // Loop over results
+        $ips = array();
+        while($res = $query->fetchArray(SQLITE3_ASSOC))
+        {
+            array_push($ips,$res["ip"]);
+        }
+        $FTLdb->close();
+
+        $query = $db->query("SELECT ip FROM client;");
+        if(!$query)
+        {
+            throw new Exception("Error while querying gravity's database: ".$db->lastErrorMsg());
+        }
+
+        // Loop over results, remove already configured clients
+        while($res = $query->fetchArray(SQLITE3_ASSOC))
+        {
+            if(($idx = array_search($res["ip"],$ips)) !== false)
+            {
+                unset($ips[$idx]);
+            }
+        }
+
+        echo json_encode(array_values($ips));
+    }
+    catch (\Exception $ex)
+    {
+        return JSON_error($ex->getMessage());
+    }
+}
+elseif($_REQUEST['action'] == "add_client")
+{
+    // Add new client
+    try
+    {
+        $stmt = $db->prepare('INSERT INTO client (ip) VALUES (:ip)');
+        if(!$stmt)
+        {
+            throw new Exception("While preparing statement: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->bindValue(':ip', $_POST["ip"], SQLITE3_TEXT))
+        {
+            throw new Exception("While binding ip: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->execute())
+        {
+            throw new Exception("While executing: ".$db->lastErrorMsg());
+        }
+
+        $reload = true;
+        return JSON_success();
+    }
+    catch (\Exception $ex)
+    {
+        return JSON_error($ex->getMessage());
+    }
+}
+elseif($_REQUEST['action'] == "edit_client")
+{
+    // Edit client identified by ID
+    try
+    {
+        $stmt = $db->prepare('DELETE FROM client_by_group WHERE client_id = :id');
+        if(!$stmt)
+        {
+            throw new Exception("While preparing DELETE statement: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->bindValue(':id', intval($_POST["id"]), SQLITE3_INTEGER))
+        {
+            throw new Exception("While binding id: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->execute())
+        {
+            throw new Exception("While executing DELETE statement: ".$db->lastErrorMsg());
+        }
+        
+        $db->query("BEGIN TRANSACTION;");
+        foreach ($_POST["groups"] as $gid)
+        {
+            $stmt = $db->prepare('INSERT INTO client_by_group (client_id,group_id) VALUES(:id,:gid);');
+            if(!$stmt)
+            {
+                throw new Exception("While preparing INSERT INTO statement: ".$db->lastErrorMsg());
+            }
+    
+            if(!$stmt->bindValue(':id', intval($_POST["id"]), SQLITE3_INTEGER))
+            {
+                throw new Exception("While binding id: ".$db->lastErrorMsg());
+            }
+    
+            if(!$stmt->bindValue(':gid', intval($gid), SQLITE3_INTEGER))
+            {
+                throw new Exception("While binding gid: ".$db->lastErrorMsg());
+            }
+    
+            if(!$stmt->execute())
+            {
+                throw new Exception("While executing INSERT INTO statement: ".$db->lastErrorMsg());
+            }
+        }
+        $db->query("COMMIT;");
+
+        $reload = true;
+        return JSON_success();
+    }
+    catch (\Exception $ex)
+    {
+        return JSON_error($ex->getMessage());
+    }
+}
+elseif($_REQUEST['action'] == "delete_client")
+{
+    // Delete client identified by ID
+    try
+    {
+        $stmt = $db->prepare('DELETE FROM client WHERE id=:id');
+        if(!$stmt)
+        {
+            throw new Exception("While preparing statement: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->bindValue(':id', intval($_POST["id"]), SQLITE3_INTEGER))
+        {
+            throw new Exception("While binding id: ".$db->lastErrorMsg());
+        }
+
+        if(!$stmt->execute())
+        {
+            throw new Exception("While executing: ".$db->lastErrorMsg());
+        }
+
+        $reload = true;
         return JSON_success();
     }
     catch (\Exception $ex)
@@ -182,7 +386,9 @@ else
 {
     log_and_die("Requested action not supported!");
 }
-
 // Reload lists in pihole-FTL after having added something
-echo shell_exec("sudo pihole restartdns reload-lists");
+if($reload)
+{
+    //echo shell_exec("sudo pihole restartdns reload-lists");
+}
 ?>
