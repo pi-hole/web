@@ -1,4 +1,6 @@
-var table, groups;
+var table;
+var groups = [];
+const token = $("#token").html();
 
 function showAlert(type, message)
 {
@@ -53,7 +55,11 @@ $(document).ready(function() {
       });
 
     table = $("#domainsTable").DataTable( {
-        "ajax": "scripts/pi-hole/php/groups.php?action=get_domains",
+        "ajax": {
+            "url": "scripts/pi-hole/php/groups.php",
+            "data": {"action": "get_domains", "token": token},
+            "type": "POST"
+        },
         order: [[ 1, 'asc' ]],
         columns: [
             { data: "domain" },
@@ -145,7 +151,7 @@ function addDomain()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "add_domain", "domain": domain, "type": type, "comment": comment},
+        data: {"action": "add_domain", "domain": domain, "type": type, "comment": comment, "token":token},
         success: function(response) {
             if (response.success) {
                 showAlert('success');
@@ -177,7 +183,7 @@ function editDomain()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "edit_domain", "id": id, "type": type, "comment": comment, "status": status, "groups": groups},
+        data: {"action": "edit_domain", "id": id, "type": type, "comment": comment, "status": status, "groups": groups, "token":token},
         success: function(response) {
             if (response.success) {
                 showAlert('success');
@@ -202,7 +208,7 @@ function deleteDomain()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "delete_domain", "id": id},
+        data: {"action": "delete_domain", "id": id, "token":token},
         success: function(response) {
             if (response.success) {
                 showAlert('success');

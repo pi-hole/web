@@ -1,4 +1,6 @@
-var table, groups;
+var table;
+var groups = [];
+const token = $("#token").html();
 
 function showAlert(type, message)
 {
@@ -23,7 +25,7 @@ function showAlert(type, message)
 
 function get_groups()
 {
-    $.get("scripts/pi-hole/php/groups.php", { 'action': 'get_groups' },
+    $.post("scripts/pi-hole/php/groups.php", { 'action': 'get_groups', "token":token },
     function(data) {
         groups = data.data;
     }, "json");
@@ -52,7 +54,11 @@ $(document).ready(function() {
       });
 
     table = $("#adlistsTable").DataTable( {
-        "ajax": "scripts/pi-hole/php/groups.php?action=get_adlists",
+        "ajax": {
+            "url": "scripts/pi-hole/php/groups.php",
+            "data": {"action": "get_adlists", "token": token},
+            "type": "POST"
+        },
         order: [[ 1, 'asc' ]],
         columns: [
             { data: "address" },
@@ -135,7 +141,7 @@ function addAdlist()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "add_adlist", "address": address, "comment": comment},
+        data: {"action": "add_adlist", "address": address, "comment": comment, "token":token},
         success: function(response) {
             if (response.success) {
                 showAlert('success');
@@ -166,7 +172,7 @@ function editAdlist()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "edit_adlist", "id": id, "comment": comment, "status": status, "groups": groups},
+        data: {"action": "edit_adlist", "id": id, "comment": comment, "status": status, "groups": groups, "token":token},
         success: function(response) {
             if (response.success) {
                 showAlert('success');
@@ -191,7 +197,7 @@ function deleteAdlist()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "delete_adlist", "id": id},
+        data: {"action": "delete_adlist", "id": id, "token":token},
         success: function(response) {
             if (response.success) {
                 showAlert('success');

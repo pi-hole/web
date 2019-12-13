@@ -1,4 +1,6 @@
-var table, groups;
+var table;
+var groups = [];
+const token = $("#token").html();
 
 function showAlert(type, message)
 {
@@ -23,7 +25,7 @@ function showAlert(type, message)
 
 function reload_client_suggestions()
 {
-    $.get("scripts/pi-hole/php/groups.php", { 'action': 'get_unconfigured_clients' },
+    $.post("scripts/pi-hole/php/groups.php", { 'action': 'get_unconfigured_clients', "token":token },
     function(data) {
         var sel = $("#select");
         sel.empty();
@@ -36,7 +38,7 @@ function reload_client_suggestions()
 
 function get_groups()
 {
-    $.get("scripts/pi-hole/php/groups.php", { 'action': 'get_groups' },
+    $.post("scripts/pi-hole/php/groups.php", { 'action': 'get_groups', "token":token },
     function(data) {
         groups = data.data;
     }, "json");
@@ -61,7 +63,11 @@ $(document).ready(function() {
       });
 
     table = $("#clientsTable").DataTable( {
-        "ajax": "scripts/pi-hole/php/groups.php?action=get_clients",
+        "ajax": {
+            "url": "scripts/pi-hole/php/groups.php",
+            "data": {"action": "get_clients", "token": token},
+            "type": "POST"
+        },
         order: [[ 1, 'asc' ]],
         columns: [
             { data: "ip" },
@@ -137,7 +143,7 @@ function addClient()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "add_client", "ip": ip},
+        data: {"action": "add_client", "ip": ip, "token":token},
         success: function(response) {
             if (response.success) {
                 showAlert('success');
@@ -165,7 +171,7 @@ function editClient()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "edit_client", "id": id, "groups": groups},
+        data: {"action": "edit_client", "id": id, "groups": groups, "token":token},
         success: function(response) {
             if (response.success) {
                 showAlert('success');
@@ -190,7 +196,7 @@ function deleteClient()
         url: "scripts/pi-hole/php/groups.php",
         method: "post",
         dataType: 'json',
-        data: {"action": "delete_client", "id": id},
+        data: {"action": "delete_client", "id": id, "token":token},
         success: function(response) {
             if (response.success) {
                 showAlert('success');

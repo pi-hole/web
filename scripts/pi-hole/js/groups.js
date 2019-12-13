@@ -1,4 +1,5 @@
 var table;
+const token = $("#token").html();
 
 function showAlert(type, message)
 {
@@ -26,7 +27,11 @@ $(document).ready(function() {
     $('#btnAdd').on('click', addGroup);
 
     table = $("#groupsTable").DataTable( {
-        "ajax": "scripts/pi-hole/php/groups.php?action=get_groups",
+        "ajax": {
+            "url": "scripts/pi-hole/php/groups.php",
+            "data": {"action": "get_groups", "token": token},
+            "type": "POST"
+        },
         order: [[ 1, 'asc' ]],
         columns: [
             { data: "id", width: "60px" },

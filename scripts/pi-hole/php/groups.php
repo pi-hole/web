@@ -7,25 +7,17 @@
 *  Please see LICENSE file for your rights under this license. */
 
 require_once('auth.php');
-/*
+
 // Authentication checks
 if(isset($_POST['token']))
 {
     check_cors();
     check_csrf($_POST['token']);
 }
-elseif(isset($_POST['pw']))
-{
-    require("password.php");
-    if($wrongpassword || !$auth)
-    {
-	log_and_die("Wrong password!");
-    }
-}
 else
 {
     log_and_die("Not allowed!");
-}*/
+}
 
 $reload = false;
 
@@ -44,14 +36,14 @@ function JSON_error($message = null)
 {
     header('Content-type: application/json');
     $response = array("success" => false, "message" => $message);
-    if(isset($_REQUEST['action']))
+    if(isset($_POST['action']))
     {
-        array_push($response, array("action" => $_REQUEST['action']));
+        array_push($response, array("action" => $_POST['action']));
     }
     echo json_encode($response);
 }
 
-if($_REQUEST['action'] == "get_groups")
+if($_POST['action'] == "get_groups")
 {
     // List all available groups
     try
@@ -69,7 +61,7 @@ if($_REQUEST['action'] == "get_groups")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "add_group")
+elseif($_POST['action'] == "add_group")
 {
     // Add new group
     try
@@ -103,7 +95,7 @@ elseif($_REQUEST['action'] == "add_group")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "edit_group")
+elseif($_POST['action'] == "edit_group")
 {
     // Edit group identified by ID
     try
@@ -159,7 +151,7 @@ elseif($_REQUEST['action'] == "edit_group")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "delete_group")
+elseif($_POST['action'] == "delete_group")
 {
     // Delete group identified by ID
     try
@@ -188,7 +180,7 @@ elseif($_REQUEST['action'] == "delete_group")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "get_clients")
+elseif($_POST['action'] == "get_clients")
 {
     // List all available groups
     try
@@ -225,7 +217,7 @@ elseif($_REQUEST['action'] == "get_clients")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "get_unconfigured_clients")
+elseif($_POST['action'] == "get_unconfigured_clients")
 {
     // List all available clients WITHOUT already configured clients
     try
@@ -270,7 +262,7 @@ elseif($_REQUEST['action'] == "get_unconfigured_clients")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "add_client")
+elseif($_POST['action'] == "add_client")
 {
     // Add new client
     try
@@ -299,7 +291,7 @@ elseif($_REQUEST['action'] == "add_client")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "edit_client")
+elseif($_POST['action'] == "edit_client")
 {
     // Edit client identified by ID
     try
@@ -354,7 +346,7 @@ elseif($_REQUEST['action'] == "edit_client")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "delete_client")
+elseif($_POST['action'] == "delete_client")
 {
     // Delete client identified by ID
     try
@@ -399,7 +391,7 @@ elseif($_REQUEST['action'] == "delete_client")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "get_domains")
+elseif($_POST['action'] == "get_domains")
 {
     // List all available groups
     try
@@ -436,7 +428,7 @@ elseif($_REQUEST['action'] == "get_domains")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "add_domain")
+elseif($_POST['action'] == "add_domain")
 {
     // Add new domain
     try
@@ -475,7 +467,7 @@ elseif($_REQUEST['action'] == "add_domain")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "edit_domain")
+elseif($_POST['action'] == "edit_domain")
 {
     // Edit domain identified by ID
     try
@@ -573,7 +565,7 @@ elseif($_REQUEST['action'] == "edit_domain")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "delete_domain")
+elseif($_POST['action'] == "delete_domain")
 {
     // Delete domain identified by ID
     try
@@ -618,7 +610,7 @@ elseif($_REQUEST['action'] == "delete_domain")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "get_adlists")
+elseif($_POST['action'] == "get_adlists")
 {
     // List all available groups
     try
@@ -655,7 +647,7 @@ elseif($_REQUEST['action'] == "get_adlists")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "add_adlist")
+elseif($_POST['action'] == "add_adlist")
 {
     // Add new adlist
     try
@@ -689,7 +681,7 @@ elseif($_REQUEST['action'] == "add_adlist")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "edit_adlist")
+elseif($_POST['action'] == "edit_adlist")
 {
     // Edit adlist identified by ID
     try
@@ -782,7 +774,7 @@ elseif($_REQUEST['action'] == "edit_adlist")
         return JSON_error($ex->getMessage());
     }
 }
-elseif($_REQUEST['action'] == "delete_adlist")
+elseif($_POST['action'] == "delete_adlist")
 {
     // Delete adlist identified by ID
     try
