@@ -25,9 +25,10 @@ function showAlert(type, message)
 
 function get_groups()
 {
-    $.get("scripts/pi-hole/php/groups.php", { 'action': 'get_groups' },
+    $.post("scripts/pi-hole/php/groups.php", { 'action': 'get_groups', "token": token },
     function(data) {
         groups = data.data;
+        initTable();
     }, "json");
 }
 
@@ -45,15 +46,17 @@ function datetime(date)
 $(document).ready(function() {
 
     $('#btnAdd').on('click', addDomain);
-    $( function() { $( document ).tooltip(); } );
 
     get_groups();
 
     $('#select').on('change', function() {
         $("#ip-custom").val("");
         $("#ip-custom").prop( "disabled" , $( "#select option:selected" ).val() !== "custom");
-      });
+    });
+});
 
+function initTable()
+{
     table = $("#domainsTable").DataTable( {
         "ajax": {
             "url": "scripts/pi-hole/php/groups.php",
@@ -138,7 +141,7 @@ $(document).ready(function() {
             return data;
         }
     });
-});
+}
 
 function addDomain()
 {

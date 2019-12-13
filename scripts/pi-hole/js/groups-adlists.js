@@ -28,6 +28,7 @@ function get_groups()
     $.post("scripts/pi-hole/php/groups.php", { 'action': 'get_groups', "token":token },
     function(data) {
         groups = data.data;
+        initTable();
     }, "json");
 }
 
@@ -51,8 +52,11 @@ $(document).ready(function() {
     $('#select').on('change', function() {
         $("#ip-custom").val("");
         $("#ip-custom").prop( "disabled" , $( "#select option:selected" ).val() !== "custom");
-      });
+    });
+});
 
+function initTable()
+{
     table = $("#adlistsTable").DataTable( {
         "ajax": {
             "url": "scripts/pi-hole/php/groups.php",
@@ -129,7 +133,7 @@ $(document).ready(function() {
             return data;
         }
     });
-});
+}
 
 function addAdlist()
 {
