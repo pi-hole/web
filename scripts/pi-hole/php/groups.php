@@ -256,7 +256,8 @@ elseif($_REQUEST['action'] == "get_unconfigured_clients")
         // Loop over results, remove already configured clients
         while(($res = $query->fetchArray(SQLITE3_ASSOC)) != false)
         {
-            if(($idx = array_search($res["ip"],$ips)) !== false)
+            $idx = array_search($res["ip"], $ips);
+            if($idx != false)
             {
                 unset($ips[$idx]);
             }
