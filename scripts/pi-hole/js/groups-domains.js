@@ -90,31 +90,31 @@ function initTable() {
     rowCallback: function(row, data) {
       const tooltip =
         "Added: " +
-        datetime(data["date_added"]) +
+        datetime(data.date_added) +
         "\nLast modified: " +
-        datetime(data["date_modified"]);
+        datetime(data.date_modified);
       $("td:eq(0)", row).html(
-        '<code title="' + tooltip + '">' + data["domain"] + "</code>"
+        '<code title="' + tooltip + '">' + data.domain + "</code>"
       );
 
       $("td:eq(1)", row).html(
         '<select id="type" class="form-control">' +
           '<option value="0"' +
-          (data["type"] === 0 ? " selected" : "") +
+          (data.type === 0 ? " selected" : "") +
           ">Exact whitelist</option>" +
           '<option value="1"' +
-          (data["type"] === 1 ? " selected" : "") +
+          (data.type === 1 ? " selected" : "") +
           ">Exact blacklist</option>" +
           '<option value="2"' +
-          (data["type"] === 2 ? " selected" : "") +
+          (data.type === 2 ? " selected" : "") +
           ">Regex whitelist</option>" +
           '<option value="3"' +
-          (data["type"] === 3 ? " selected" : "") +
+          (data.type === 3 ? " selected" : "") +
           ">Regex blacklist</option>" +
           "</select>"
       );
 
-      const disabled = data["enabled"] === 0;
+      const disabled = data.enabled === 0;
       $("td:eq(2)", row).html(
         '<input type="checkbox" id="status"' +
           (disabled ? "" : " checked") +
@@ -130,10 +130,10 @@ function initTable() {
 
       $("td:eq(3)", row).html(
         '<input id="comment" class="form-control"><input id="id" type="hidden" value="' +
-          data["id"] +
+          data.id +
           '">'
       );
-      $("#comment", row).val(data["comment"]);
+      $("#comment", row).val(data.comment);
 
       $("td:eq(4)", row).empty();
       $("td:eq(4)", row).append(
@@ -160,13 +160,13 @@ function initTable() {
 
       let button =
         '<button class="btn btn-success btn-xs editDomain" type="button" data-id=\'' +
-        data["id"] +
+        data.id +
         "'>" +
         '<span class="glyphicon glyphicon-pencil"></span>' +
         "</button>" +
         " &nbsp;" +
         '<button class="btn btn-danger btn-xs deleteDomain" type="button" data-id=\'' +
-        data["id"] +
+        data.id +
         "'>" +
         '<span class="glyphicon glyphicon-trash"></span>' +
         "</button>";
@@ -190,9 +190,9 @@ function initTable() {
       }
       data = JSON.parse(data);
       // Always start on the first page to show most recent queries
-      data["start"] = 0;
+      data.start = 0;
       // Always start with empty search field
-      data["search"]["search"] = "";
+      data.search.search = "";
       // Apply loaded state to table
       return data;
     }

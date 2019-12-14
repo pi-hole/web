@@ -108,9 +108,9 @@ function initTable() {
     rowCallback: function(row, data) {
       $("td:eq(0)", row).html(
         "<code>" +
-          data["ip"] +
+          data.ip +
           '</code><input id="id" type="hidden" value="' +
-          data["id"] +
+          data.id +
           '">'
       );
 
@@ -139,13 +139,13 @@ function initTable() {
 
       let button =
         '<button class="btn btn-success btn-xs editClient" type="button" data-id=\'' +
-        data["id"] +
+        data.id +
         "'>" +
         '<span class="glyphicon glyphicon-pencil"></span>' +
         "</button>" +
         " &nbsp;" +
         '<button class="btn btn-danger btn-xs deleteClient" type="button" data-id=\'' +
-        data["id"] +
+        data.id +
         "'>" +
         '<span class="glyphicon glyphicon-trash"></span>' +
         "</button>";
@@ -169,9 +169,9 @@ function initTable() {
       }
       data = JSON.parse(data);
       // Always start on the first page to show most recent queries
-      data["start"] = 0;
+      data.start = 0;
       // Always start with empty search field
-      data["search"]["search"] = "";
+      data.search.search = "";
       // Apply loaded state to table
       return data;
     }

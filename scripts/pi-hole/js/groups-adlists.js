@@ -89,14 +89,14 @@ function initTable() {
     rowCallback: function(row, data) {
       const tooltip =
         "Added: " +
-        datetime(data["date_added"]) +
+        datetime(data.date_added) +
         "\nLast modified: " +
-        datetime(data["date_modified"]);
+        datetime(data.date_modified);
       $("td:eq(0)", row).html(
-        '<code title="' + tooltip + '">' + data["address"] + "</code>"
+        '<code title="' + tooltip + '">' + data.address + "</code>"
       );
 
-      const disabled = data["enabled"] === 0;
+      const disabled = data.enabled === 0;
       $("td:eq(1)", row).html(
         '<input type="checkbox" id="status"' +
           (disabled ? "" : " checked") +
@@ -112,10 +112,10 @@ function initTable() {
 
       $("td:eq(2)", row).html(
         '<input id="comment" class="form-control"><input id="id" type="hidden" value="' +
-          data["id"] +
+          data.id +
           '">'
       );
-      $("#comment", row).val(data["comment"]);
+      $("#comment", row).val(data.comment);
 
       $("td:eq(3)", row).empty();
       $("td:eq(3)", row).append(
@@ -142,13 +142,13 @@ function initTable() {
 
       let button =
         '<button class="btn btn-success btn-xs editAdlist" type="button" data-id=\'' +
-        data["id"] +
+        data.id +
         "'>" +
         '<span class="glyphicon glyphicon-pencil"></span>' +
         "</button>" +
         " &nbsp;" +
         '<button class="btn btn-danger btn-xs deleteAdlist" type="button" data-id=\'' +
-        data["id"] +
+        data.id +
         "'>" +
         '<span class="glyphicon glyphicon-trash"></span>' +
         "</button>";
@@ -172,9 +172,9 @@ function initTable() {
       }
       data = JSON.parse(data);
       // Always start on the first page to show most recent queries
-      data["start"] = 0;
+      data.start = 0;
       // Always start with empty search field
-      data["search"]["search"] = "";
+      data.search.search = "";
       // Apply loaded state to table
       return data;
     }

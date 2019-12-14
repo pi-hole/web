@@ -52,7 +52,7 @@ $(document).ready(function() {
       $(".editGroup").on("click", editGroup);
     },
     rowCallback: function(row, data) {
-      const disabled = data["enabled"] === 0;
+      const disabled = data.enabled === 0;
       $("td:eq(1)", row).html(
         '<input type="checkbox" id="status"' +
           (disabled ? "" : " checked") +
@@ -67,23 +67,23 @@ $(document).ready(function() {
       });
 
       $("td:eq(2)", row).html('<input id="name" class="form-control">');
-      $("#name", row).val(data["name"]);
+      $("#name", row).val(data.name);
 
       $("td:eq(3)", row).html('<input id="desc" class="form-control">');
-      const desc = data["description"] !== null ? data["description"] : "";
+      const desc = data.description !== null ? data.description : "";
       $("#desc", row).val(desc);
 
       let button =
         '<button class="btn btn-success btn-xs editGroup" type="button" data-id=\'' +
-        data["id"] +
+        data.id +
         "'>" +
         '<span class="glyphicon glyphicon-pencil"></span>' +
         "</button>";
-      if (data["id"] !== 0) {
+      if (data.id !== 0) {
         button +=
           " &nbsp;" +
           '<button class="btn btn-danger btn-xs deleteGroup" type="button" data-id=\'' +
-          data["id"] +
+          data.id +
           "'>" +
           '<span class="glyphicon glyphicon-trash"></span>' +
           "</button>";
@@ -108,9 +108,9 @@ $(document).ready(function() {
       }
       data = JSON.parse(data);
       // Always start on the first page to show most recent queries
-      data["start"] = 0;
+      data.start = 0;
       // Always start with empty search field
-      data["search"]["search"] = "";
+      data.search.search = "";
       // Apply loaded state to table
       return data;
     }
