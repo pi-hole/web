@@ -234,8 +234,13 @@ $("button[id^='adlist-btn-']").on("click", function (e) {
 
 // Change "?tab=" parameter in URL for save and reload
 $(".nav-tabs a").on("shown.bs.tab", function (e) {
-    window.history.pushState("", "", "?tab=" + e.target.hash.substring(1));
-    window.scrollTo(0, 0);
+	var tab = e.target.hash.substring(1);
+    window.history.pushState("", "", "?tab=" + tab);
+	if(tab === "piholedhcp")
+	{
+		location.reload();
+	}
+	window.scrollTo(0, 0);
 });
 
 // Auto dismissal for info notifications
