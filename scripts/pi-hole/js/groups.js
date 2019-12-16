@@ -169,7 +169,10 @@ function editGroup() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while editing group with ID " + id + ": " + jqXHR.responseText);
+      showAlert(
+        "error",
+        "Error while editing group with ID " + id + ": " + jqXHR.responseText
+      );
       console.log(exception);
     }
   });
@@ -191,7 +194,10 @@ function deleteGroup() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while deleting group with ID " + id + ": " + jqXHR.responseText);
+      showAlert(
+        "error",
+        "Error while deleting group with ID " + id + ": " + jqXHR.responseText
+      );
       console.log(exception);
     }
   });

@@ -198,7 +198,10 @@ function addClient() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while adding new client: " + jqXHR.responseText);
+      showAlert(
+        "error",
+        "Error while adding new client: " + jqXHR.responseText
+      );
       console.log(exception);
     }
   });
@@ -222,7 +225,10 @@ function editClient() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while editing client with ID " + id + ": " + jqXHR.responseText);
+      showAlert(
+        "error",
+        "Error while editing client with ID " + id + ": " + jqXHR.responseText
+      );
       console.log(exception);
     }
   });
@@ -245,7 +251,10 @@ function deleteClient() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while deleting client with ID " + id + ": " + jqXHR.responseText);
+      showAlert(
+        "error",
+        "Error while deleting client with ID " + id + ": " + jqXHR.responseText
+      );
       console.log(exception);
     }
   });
