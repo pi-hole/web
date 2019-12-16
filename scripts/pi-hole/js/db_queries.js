@@ -5,9 +5,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-/*global
-    moment
-*/
+/* global moment:false */
 
 var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf()/1000;
@@ -26,8 +24,8 @@ location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split(
 
 if("from" in GETDict && "until" in GETDict)
 {
-    from = parseInt(GETDict["from"]);
-    until = parseInt(GETDict["until"]);
+    from = parseInt(GETDict.from);
+    until = parseInt(GETDict.until);
     start__ = moment(1000*from);
     end__ = moment(1000*until);
     instantquery = true;
@@ -59,15 +57,6 @@ $(function () {
 });
 
 var tableApi, statistics;
-
-function escapeRegex(text) {
-  var map = {
-    "(": "\\(",
-    ")": "\\)",
-    ".": "\\.",
-  };
-  return text.replace(/[().]/g, function(m) { return map[m]; });
-}
 
 function add(domain,list) {
     var token = $("#token").html();
@@ -113,7 +102,7 @@ function add(domain,list) {
                 alDomain.html("");
             });
         },
-        error: function(jqXHR, exception) {
+        error: function() {
             alFailure.show();
             err.html("");
             alFailure.delay(1000).fadeOut(2000, function() {
@@ -127,7 +116,7 @@ function add(domain,list) {
         }
     });
 }
-function handleAjaxError( xhr, textStatus, error ) {
+function handleAjaxError( xhr, textStatus ) {
     if ( textStatus === "timeout" )
     {
         alert( "The server took too long to send the data." );
@@ -223,9 +212,8 @@ function refreshTableData() {
 }
 
 $(document).ready(function() {
-    var status;
-
     var APIstring;
+
     if(instantquery)
     {
         APIstring = "api_db.php?getAllQueries&from="+from+"&until="+until;
@@ -242,7 +230,7 @@ $(document).ready(function() {
     }
 
     tableApi = $("#all-queries").DataTable( {
-        "rowCallback": function( row, data, index ){
+        "rowCallback": function( row, data ){
             var blocked, fieldtext, buttontext, color;
             switch (data[4])
             {
@@ -268,31 +256,31 @@ $(document).ready(function() {
                 blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
-                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>" ;
+                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
               case 5:
                 blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
-                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>" ;
+                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
               case 6:
                 blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
-                buttontext = "" ;
+                buttontext = "";
                 break;
               case 7:
                 blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
-                buttontext = "" ;
+                buttontext = "";
                 break;
               case 8:
                 blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
-                buttontext = "" ;
+                buttontext = "";
                 break;
               default:
                 blocked = false;
@@ -325,12 +313,12 @@ $(document).ready(function() {
         "deferRender": true,
         "order" : [[0, "desc"]],
         "columns": [
-            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(Math.floor(data/1e6)).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
+            { "width" : "15%", "render": function (data, type) { if(type === "display"){return moment.unix(Math.floor(data/1e6)).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}return data; }},
             { "width" : "10%" },
             { "width" : "40%" },
             { "width" : "20%" },
             { "width" : "10%" },
-            { "width" : "5%" },
+            { "width" : "5%" }
         ],
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         "columnDefs": [ {

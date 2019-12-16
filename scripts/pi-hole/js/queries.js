@@ -4,21 +4,10 @@
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license.  */
+
+/* global moment:false */
+
 var tableApi;
-
-function escapeRegex(text) {
-  var map = {
-    "(": "\\(",
-    ")": "\\)",
-    ".": "\\.",
-  };
-  return text.replace(/[().]/g, function(m) { return map[m]; });
-}
-
-function refreshData() {
-    tableApi.ajax.url("api.php?getAllQueries").load();
-//    updateSessionTimer();
-}
 
 function add(domain,list) {
     var token = $("#token").html();
@@ -73,7 +62,7 @@ function add(domain,list) {
                     setTimeout(function() { alertModal.modal("hide"); }, 2000);
                 }
             },
-            error: function(jqXHR, exception) {
+            error: function() {
                 // Network Error
                 alProcessing.hide();
                 alNetworkErr.show();
@@ -92,7 +81,7 @@ function add(domain,list) {
     });
 }
 
-function handleAjaxError( xhr, textStatus, error ) {
+function handleAjaxError( xhr, textStatus ) {
     if ( textStatus === "timeout" )
     {
         alert( "The server took too long to send the data." );
@@ -123,24 +112,24 @@ $(document).ready(function() {
 
     if("from" in GETDict && "until" in GETDict)
     {
-        APIstring += "&from="+GETDict["from"];
-        APIstring += "&until="+GETDict["until"];
+        APIstring += "&from="+GETDict.from;
+        APIstring += "&until="+GETDict.until;
     }
     else if("client" in GETDict)
     {
-        APIstring += "&client="+GETDict["client"];
+        APIstring += "&client="+GETDict.client;
     }
     else if("domain" in GETDict)
     {
-        APIstring += "&domain="+GETDict["domain"];
+        APIstring += "&domain="+GETDict.domain;
     }
     else if("querytype" in GETDict)
     {
-        APIstring += "&querytype="+GETDict["querytype"];
+        APIstring += "&querytype="+GETDict.querytype;
     }
     else if("forwarddest" in GETDict)
     {
-        APIstring += "&forwarddest="+GETDict["forwarddest"];
+        APIstring += "&forwarddest="+GETDict.forwarddest;
     }
     // If we don't ask filtering and also not for all queries, just request the most recent 100 queries
     else if(!("all" in GETDict))
@@ -149,7 +138,7 @@ $(document).ready(function() {
     }
 
     tableApi = $("#all-queries").DataTable( {
-        "rowCallback": function( row, data, index ){
+        "rowCallback": function( row, data ){
             // DNSSEC status
             var dnssec_status;
             switch (data[5])
@@ -199,31 +188,31 @@ $(document).ready(function() {
                 blocked = true;
                 colorClass = "text-red";
                 fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
-                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>" ;
+                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
             case "5":
                 blocked = true;
                 colorClass = "text-red";
                 fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
-                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>" ;
+                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
             case "6":
                 blocked = true;
                 colorClass = "text-red";
                 fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
-                buttontext = "" ;
+                buttontext = "";
                 break;
             case "7":
                 blocked = true;
                 colorClass = "text-red";
                 fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
-                buttontext = "" ;
+                buttontext = "";
                 break;
             case "8":
                 blocked = true;
                 colorClass = "text-red";
                 fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
-                buttontext = "" ;
+                buttontext = "";
                 break;
             default:
                 blocked = false;
@@ -311,7 +300,7 @@ $(document).ready(function() {
         "processing": true,
         "order" : [[0, "desc"]],
         "columns": [
-            { "width" : "15%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(Math.floor(data/1e6)).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
+            { "width" : "15%", "render": function (data, type) { if(type === "display"){return moment.unix(Math.floor(data/1e6)).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}return data; }},
             { "width" : "4%" },
             { "width" : "36%", "render": $.fn.dataTable.render.text() },
             { "width" : "8%", "render": $.fn.dataTable.render.text() },
@@ -325,16 +314,16 @@ $(document).ready(function() {
             // Store current state in client's local storage area
             localStorage.setItem("query_log_table", JSON.stringify(data));
         },
-        stateLoadCallback: function(settings) {
+        stateLoadCallback: function() {
             // Receive previous state from client's local storage area
             var data = localStorage.getItem("query_log_table");
             // Return if not available
             if(data === null){ return null; }
             data = JSON.parse(data);
             // Always start on the first page to show most recent queries
-            data["start"] = 0;
+            data.start = 0;
             // Always start with empty search field
-            data["search"]["search"] = "";
+            data.search.search = "";
             // Apply loaded state to table
             return data;
         },
@@ -346,11 +335,11 @@ $(document).ready(function() {
         "initComplete": function () {
             var api = this.api();
             // Query type IPv4 / IPv6
-            api.$("td:eq(1)").click( function () { if(autofilter()){ api.search( this.innerHTML ).draw(); $("#resetButton").show(); }});
+            api.$("td:eq(1)").click( function () { if(autofilter()){ api.search( this.textContent ).draw(); $("#resetButton").show(); }});
             api.$("td:eq(1)").hover(
               function () {
                   if(autofilter()) {
-                      this.title = "Click to show only " + this.innerHTML + " queries";
+                      this.title = "Click to show only " + this.textContent + " queries";
                       this.style.color = "#72afd2";
                   } else {
                       this.title = "";
@@ -361,11 +350,11 @@ $(document).ready(function() {
             );
             api.$("td:eq(1)").css("cursor","pointer");
             // Domain
-            api.$("td:eq(2)").click( function () { if(autofilter()){ api.search( this.innerHTML ).draw(); $("#resetButton").show(); }});
+            api.$("td:eq(2)").click( function () { if(autofilter()){ api.search( this.textContent ).draw(); $("#resetButton").show(); }});
             api.$("td:eq(2)").hover(
               function () {
                   if(autofilter()) {
-                      this.title = "Click to show only queries with domain " + this.innerHTML;
+                      this.title = "Click to show only queries with domain " + this.textContent;
                       this.style.color = "#72afd2";
                   } else {
                       this.title = "";
@@ -376,11 +365,11 @@ $(document).ready(function() {
             );
             api.$("td:eq(2)").css("cursor","pointer");
             // Client
-            api.$("td:eq(3)").click( function () { if(autofilter()){ api.search( this.innerHTML ).draw(); $("#resetButton").show(); }});
+            api.$("td:eq(3)").click( function () { if(autofilter()){ api.search( this.textContent ).draw(); $("#resetButton").show(); }});
             api.$("td:eq(3)").hover(
               function () {
                   if(autofilter()) {
-                      this.title = "Click to show only queries made by " + this.innerHTML;
+                      this.title = "Click to show only queries made by " + this.textContent;
                       this.style.color = "#72afd2";
                   } else {
                       this.title = "";

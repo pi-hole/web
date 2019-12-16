@@ -5,9 +5,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-/*global
-    moment
-*/
+/* global moment:false */
 
 var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf()/1000;
@@ -67,14 +65,14 @@ function updateTopClientsChart() {
         var client, percentage, clientname, clientip;
         var sum = 0;
         for (client in data.top_sources) {
-            if ({}.hasOwnProperty.call(data.top_sources, client)){
+            if (Object.prototype.hasOwnProperty.call(data.top_sources, client)){
                 sum += data.top_sources[client];
             }
         }
 
         for (client in data.top_sources) {
 
-            if ({}.hasOwnProperty.call(data.top_sources, client)){
+            if (Object.prototype.hasOwnProperty.call(data.top_sources, client)){
                 // Sanitize client
                 client = escapeHtml(client);
                 if(escapeHtml(client) !== client)
@@ -121,14 +119,14 @@ function updateTopDomainsChart() {
         var domain, percentage;
         var sum = 0;
         for (domain in data.top_domains) {
-            if ({}.hasOwnProperty.call(data.top_domains, domain)){
+            if (Object.prototype.hasOwnProperty.call(data.top_domains, domain)){
                 sum += data.top_domains[domain];
             }
         }
 
         for (domain in data.top_domains) {
 
-            if ({}.hasOwnProperty.call(data.top_domains, domain)){
+            if (Object.prototype.hasOwnProperty.call(data.top_domains, domain)){
                 // Sanitize domain
                 domain = escapeHtml(domain);
                 if(escapeHtml(domain) !== domain)
@@ -163,14 +161,14 @@ function updateTopAdsChart() {
         var ad, percentage;
         var sum = 0;
         for (ad in data.top_ads) {
-            if ({}.hasOwnProperty.call(data.top_ads, ad)){
+            if (Object.prototype.hasOwnProperty.call(data.top_ads, ad)){
                 sum += data.top_ads[ad];
             }
         }
 
         for (ad in data.top_ads) {
 
-            if ({}.hasOwnProperty.call(data.top_ads, ad)){
+            if (Object.prototype.hasOwnProperty.call(data.top_ads, ad)){
                 // Sanitize ad
                 ad = escapeHtml(ad);
                 if(escapeHtml(ad) !== ad)

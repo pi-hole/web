@@ -11,24 +11,24 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort,
 {
     "ip-address-pre": function ( a )
     {
-        if (!a) { return 0 }
+        if (!a) { return 0; }
         var i, item;
         var m = a.split("."),
             n = a.split(":"),
             x = "",
             xa = "";
-        if (m.length == 4)
+        if (m.length === 4)
         {
             // IPV4
             for(i = 0; i < m.length; i++)
             {
                 item = m[i];
 
-                if(item.length == 1)
+                if(item.length === 1)
                 {
                     x += "00" + item;
                 }
-                else if(item.length == 2)
+                else if(item.length === 2)
                 {
                     x += "0" + item;
                 }
@@ -55,17 +55,17 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort,
                 {
                     count += 0;
                 }
-                else if(item.length == 1)
+                else if(item.length === 1)
                 {
                     xa += "000" + item;
                     count += 4;
                 }
-                else if(item.length == 2)
+                else if(item.length === 2)
                 {
                     xa += "00" + item;
                     count += 4;
                 }
-                else if(item.length == 3)
+                else if(item.length === 3)
                 {
                     xa += "0" + item;
                     count += 4;
@@ -86,7 +86,7 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort,
                 item = n[i];
                 if (item.length === 0 && paddDone === 0)
                 {
-                    for(var padding = 0 ; padding < (32-count) ; padding++)
+                    for(var padding = 0; padding < (32-count); padding++)
                     {
                         x += "0";
                         paddDone = 1;
