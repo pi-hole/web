@@ -35,7 +35,7 @@ $(function () {
     daterange = $("#querytime").daterangepicker(
     {
       timePicker: true, timePickerIncrement: 15,
-      locale: { format: "MMMM Do YYYY, HH:mm" },
+      locale: { format: dateformat },
       startDate: start__, endDate: end__,
       ranges: {
         "Today": [moment().startOf("day"), moment()],
@@ -342,7 +342,7 @@ $(document).ready(function() {
 
     if(instantquery)
     {
-        daterange.val(start__.format("MMMM Do YYYY, HH:mm") + " - " + end__.format("MMMM Do YYYY, HH:mm"));
+        daterange.val(start__.format(dateformat) + " - " + end__.format(dateformat));
     }
 } );
 
