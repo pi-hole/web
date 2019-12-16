@@ -31,12 +31,21 @@ function archive_add_file($path,$name,$subdir="")
  *
  * @param $name string The name of the file in the archive to save the table to
  * @param $table string The table to export
+ * @param $type integer Type of domains to store
  */
-function archive_add_table($name, $table)
+function archive_add_table($name, $table, $type=-1)
 {
 	global $archive, $db;
 
-	$results = $db->query("SELECT * FROM $table");
+	if($type > -1)
+	{
+		$querystr = "SELECT * FROM $table WHERE type = $type;";
+	}
+	else
+	{
+		$querystr = "SELECT * FROM $table;";
+	}
+	$results = $db->query($querystr);
 
 	// Return early without creating a file if the
 	// requested table cannot be accessed
@@ -96,11 +105,27 @@ function archive_restore_table($file, $table, $flush=false)
 		$sql  .= " VALUES (:id,:domain,:date_added);";
 		$field = "domain";
 	}
+	elseif($table === "domainlist")
+	{
+		$sql  = "INSERT OR IGNORE INTO domainlist";
+		$sql  .= " (id,domain,enabled,date_added,comment,type)";
+		$sql  .= " VALUES (:id,:domain,:enabled,:date_added,:comment,:type);";
+		$field = "domain";
+	}
 	else
 	{
-		$sql  = "INSERT OR IGNORE INTO ".$table;
-		$sql  .= " (id,domain,enabled,date_added,comment)";
-		$sql  .= " VALUES (:id,:domain,:enabled,:date_added,:comment);";
+		if($table === "whitelist")
+			$type = 0;
+		elseif($table === "blacklist")
+			$type = 1;
+		elseif($table === "regex_whitelist")
+			$type = 2;
+		elseif($table === "regex_blacklist")
+			$type = 3;
+
+		$sql  = "INSERT OR IGNORE INTO domainlist";
+		$sql  .= " (id,domain,enabled,date_added,comment,type)";
+		$sql  .= " VALUES (:id,:domain,:enabled,:date_added,:comment,$type);";
 		$field = "domain";
 	}
 
@@ -135,6 +160,11 @@ function archive_restore_table($file, $table, $flush=false)
 			else
 				$type = SQLITE3_TEXT;
 			$stmt->bindValue(":comment", $row["comment"], $type);
+		}
+
+		if($table === "domainlist")
+		{
+			$stmt->bindValue(":type", $row["type"], SQLITE3_INTEGER);
 		}
 
 		if($stmt->execute() && $stmt->reset() && $stmt->clear())
@@ -335,10 +365,10 @@ else
 		exit("cannot open/create ".htmlentities($archive_file_name)."<br>\nPHP user: ".exec('whoami')."\n");
 	}
 
-	archive_add_table("whitelist.exact.json", "whitelist");
-	archive_add_table("whitelist.regex.json", "regex_whitelist");
-	archive_add_table("blacklist.exact.json", "blacklist");
-	archive_add_table("blacklist.regex.json", "regex_blacklist");
+	archive_add_table("whitelist.exact.json", "domainlist", ListType::whitelist);
+	archive_add_table("whitelist.regex.json", "domainlist", ListType::regex_whitelist);
+	archive_add_table("blacklist.exact.json", "domainlist", ListType::blacklist);
+	archive_add_table("blacklist.regex.json", "domainlist", ListType::regex_blacklist);
 	archive_add_table("adlist.json", "adlist");
 	archive_add_table("domain_audit.json", "domain_audit");
 	archive_add_file("/etc/pihole/","setupVars.conf");

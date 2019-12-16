@@ -74,22 +74,46 @@ function SQLite3_connect($filename, $mode=SQLITE3_OPEN_READONLY)
  * @param $domains array Array of domains (strings) to be added to the table
  * @param $wildcardstyle boolean Whether to format the input domains in legacy wildcard notation
  * @param $returnnum boolean Whether to return an integer or a string
+ * @param $type integer The target type (0 = exact whitelist, 1 = exact blacklist, 2 = regex whitelist, 3 = regex blacklist)
  * @return string Success/error and number of processed domains
  */
-function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $returnnum=false)
+function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $returnnum=false, $type=-1)
 {
+	if(!is_int($type))
+	{
+		return "Error: Argument type has to be of type integer (is ".gettype($type).")";
+	}
+
 	// Begin transaction
 	if(!$db->exec("BEGIN TRANSACTION;"))
 	{
 		if($returnnum)
 			return 0;
 		else
-			return "Error: Unable to begin transaction for ".$table." table.";
+			return "Error: Unable to begin transaction for $table table.";
 	}
-	$initialcount = intval($db->querySingle("SELECT COUNT(*) FROM ".$table.";"));
 
-	// Prepare SQLite statememt
-	$stmt = $db->prepare("INSERT OR IGNORE INTO ".$table." (domain,comment) VALUES (:domain, :comment);");
+	// Get initial count of domains in this table
+	if($type === -1)
+	{
+		$countquery = "SELECT COUNT(*) FROM $table;";
+	}
+	else
+	{
+		$countquery = "SELECT COUNT(*) FROM $table WHERE type = $type;";
+	}
+	$initialcount = intval($db->querySingle($countquery));
+
+	// Prepare INSERT SQLite statememt
+	if($type === -1)
+	{
+		$querystr = "INSERT OR IGNORE INTO $table (domain,comment) VALUES (:domain, :comment);";
+	}
+	else
+	{
+		$querystr = "INSERT OR IGNORE INTO $table (domain,comment,type) VALUES (:domain, :comment, $type);";
+	}
+	$stmt = $db->prepare($querystr);
 
 	// Return early if we failed to prepare the SQLite statement
 	if(!$stmt)
@@ -97,7 +121,7 @@ function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $re
 		if($returnnum)
 			return 0;
 		else
-			return "Error: Failed to prepare statement for ".$table." table.";
+			return "Error: Failed to prepare statement for $table table (type = $type).";
 	}
 
 	// Loop over domains and inject the lines into the database
@@ -140,7 +164,7 @@ function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $re
 		return $num;
 	else
 	{
-		$finalcount = intval($db->querySingle("SELECT COUNT(*) FROM ".$table.";"));
+		$finalcount = intval($db->querySingle($countquery));
 		$modified = $finalcount - $initialcount;
 
 		// If we add less domains than the user specified, then they wanted to add duplicates
@@ -169,22 +193,46 @@ function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $re
  * @param $table string The target table
  * @param $domains array Array of domains (strings) to be removed from the table
  * @param $returnnum boolean Whether to return an integer or a string
+ * @param $type integer The target type (0 = exact whitelist, 1 = exact blacklist, 2 = regex whitelist, 3 = regex blacklist)
  * @return string Success/error and number of processed domains
  */
-function remove_from_table($db, $table, $domains, $returnnum=false)
+function remove_from_table($db, $table, $domains, $returnnum=false, $type=-1)
 {
+	if(!is_int($type))
+	{
+		return "Error: Argument type has to be of type integer (is ".gettype($type).")";
+	}
+
 	// Begin transaction
 	if(!$db->exec("BEGIN TRANSACTION;"))
 	{
 		if($returnnum)
 			return 0;
 		else
-			return "Error: Unable to begin transaction for ".$table." table.";
+			return "Error: Unable to begin transaction for domainlist table.";
 	}
-	$initialcount = intval($db->querySingle("SELECT COUNT(*) FROM ".$table.";"));
+
+	// Get initial count of domains in this table
+	if($type === -1)
+	{
+		$countquery = "SELECT COUNT(*) FROM $table;";
+	}
+	else
+	{
+		$countquery = "SELECT COUNT(*) FROM $table WHERE type = $type;";
+	}
+	$initialcount = intval($db->querySingle($countquery));
 
 	// Prepare SQLite statememt
-	$stmt = $db->prepare("DELETE FROM ".$table." WHERE domain = :domain;");
+	if($type === -1)
+	{
+		$querystr = "DELETE FROM $table WHERE domain = :domain AND type = $type;";
+	}
+	else
+	{
+		$querystr = "DELETE FROM $table WHERE domain = :domain;";
+	}
+	$stmt = $db->prepare($querystr);
 
 	// Return early if we failed to prepare the SQLite statement
 	if(!$stmt)
@@ -192,7 +240,7 @@ function remove_from_table($db, $table, $domains, $returnnum=false)
 		if($returnnum)
 			return 0;
 		else
-			return "Error: Failed to prepare statement for ".$table." table.";
+			return "Error: Failed to prepare statement for ".$table." table (type = ".$type.").";
 	}
 
 	// Loop over domains and remove the lines from the database
@@ -235,4 +283,9 @@ function remove_from_table($db, $table, $domains, $returnnum=false)
 	}
 }
 
-?>
+class ListType{
+	const whitelist = 0;
+	const blacklist = 1;
+	const regex_whitelist = 2;
+	const regex_blacklist = 3;
+}
