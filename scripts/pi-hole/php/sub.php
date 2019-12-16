@@ -27,19 +27,19 @@ $db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
 
 switch($type) {
 	case "white":
-		echo remove_from_table($db, "whitelist", $domains);
+		echo remove_from_table($db, "domainlist", $domains, false, ListType::whitelist);
 		break;
 
 	case "black":
-		echo remove_from_table($db, "blacklist", $domains);
-		break;
-
-	case "black_regex":
-		echo remove_from_table($db, "regex_blacklist", $domains);
+		echo remove_from_table($db, "domainlist", $domains, false, ListType::blacklist);
 		break;
 
 	case "white_regex":
-		echo remove_from_table($db, "regex_whitelist", $domains);
+		echo remove_from_table($db, "domainlist", $domains, false, ListType::regex_whitelist);
+		break;
+
+	case "black_regex":
+		echo remove_from_table($db, "domainlist", $domains, false, ListType::regex_blacklist);
 		break;
 
 	default:
