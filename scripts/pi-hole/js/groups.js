@@ -5,6 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global moment:false */
+
 var table;
 var token = $("#token").html();
 var info = null;
@@ -89,7 +91,7 @@ $(document).ready(function() {
       { data: "description" },
       { data: null, width: "60px", orderable: false }
     ],
-    drawCallback: function(settings) {
+    drawCallback: function() {
       $(".deleteGroup").on("click", deleteGroup);
     },
     rowCallback: function(row, data) {
@@ -151,7 +153,7 @@ $(document).ready(function() {
       // Store current state in client's local storage area
       localStorage.setItem("groups-table", JSON.stringify(data));
     },
-    stateLoadCallback: function(settings) {
+    stateLoadCallback: function() {
       // Receive previous state from client's local storage area
       var data = localStorage.getItem("groups-table");
       // Return if not available

@@ -30,7 +30,7 @@ function showAlert(type, message) {
       return;
   }
 
-  if (messageElement != null) messageElement.html(message);
+  if (messageElement !== null) messageElement.html(message);
 
   alertElement.fadeIn(200);
   alertElement.delay(8000).fadeOut(2000);

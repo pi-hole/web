@@ -77,7 +77,7 @@ function reload_client_suggestions() {
       var sel = $("#select");
       sel.empty();
       for (var key in data) {
-        if (!data.hasOwnProperty(key)) {
+        if (!Object.prototype.hasOwnProperty.call(data, key)) {
           continue;
         }
 
@@ -141,7 +141,7 @@ function initTable() {
       { data: "groups", searchable: false },
       { data: "name", width: "80px", orderable: false }
     ],
-    drawCallback: function(settings) {
+    drawCallback: function() {
       $(".deleteClient").on("click", deleteClient);
     },
     rowCallback: function(row, data) {
@@ -198,7 +198,7 @@ function initTable() {
       // Store current state in client's local storage area
       localStorage.setItem("groups-clients-table", JSON.stringify(data));
     },
-    stateLoadCallback: function(settings) {
+    stateLoadCallback: function() {
       // Receive previous state from client's local storage area
       var data = localStorage.getItem("groups-clients-table");
       // Return if not available

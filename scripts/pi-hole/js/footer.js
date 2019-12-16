@@ -34,6 +34,9 @@ function piholeChanged(action) {
       ena.show();
       dis.hide();
       break;
+
+    default:
+    // nothing
   }
 }
 
@@ -84,6 +87,9 @@ function piholeChange(action, duration) {
         }
       });
       break;
+
+    default:
+    // nothing
   }
 }
 
