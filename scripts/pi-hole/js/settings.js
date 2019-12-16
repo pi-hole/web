@@ -18,10 +18,10 @@ $(function () {
 $(".confirm-poweroff").confirm({
 	text: "Are you sure you want to send a poweroff command to your Pi-Hole?",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function(button) {
 		$("#poweroffform").submit();
 	},
-	cancel(button) {
+	cancel: function(button) {
 		// nothing to do
 	},
 	confirmButton: "Yes, poweroff",
@@ -34,10 +34,10 @@ $(".confirm-poweroff").confirm({
 $(".confirm-reboot").confirm({
 	text: "Are you sure you want to send a reboot command to your Pi-Hole?",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function(button) {
 		$("#rebootform").submit();
 	},
-	cancel(button) {
+	cancel: function(button) {
 		// nothing to do
 	},
 	confirmButton: "Yes, reboot",
@@ -51,10 +51,10 @@ $(".confirm-reboot").confirm({
 $(".confirm-restartdns").confirm({
 	text: "Are you sure you want to send a restart command to your DNS server?",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function(button) {
 		$("#restartdnsform").submit();
 	},
-	cancel(button) {
+	cancel: function(button) {
 		// nothing to do
 	},
 	confirmButton: "Yes, restart DNS",
@@ -68,10 +68,10 @@ $(".confirm-restartdns").confirm({
 $(".confirm-flushlogs").confirm({
 	text: "Are you sure you want to flush your logs?",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function(button) {
 		$("#flushlogsform").submit();
 	},
-	cancel(button) {
+	cancel: function(button) {
 		// nothing to do
 	},
 	confirmButton: "Yes, flush logs",
@@ -85,10 +85,10 @@ $(".confirm-flushlogs").confirm({
 $(".confirm-flusharp").confirm({
 	text: "Are you sure you want to flush your network table?",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function(button) {
 		$("#flusharpform").submit();
 	},
-	cancel(button) {
+	cancel: function(button) {
 		// nothing to do
 	},
 	confirmButton: "Yes, flush my network table",
@@ -102,10 +102,10 @@ $(".confirm-flusharp").confirm({
 $(".confirm-disablelogging-noflush").confirm({
 	text: "Are you sure you want to disable logging?",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function(button) {
 		$("#disablelogsform-noflush").submit();
 	},
-	cancel(button) {
+	cancel: function(button) {
 		// nothing to do
 	},
 	confirmButton: "Yes, disable logs",
@@ -119,10 +119,10 @@ $(".confirm-disablelogging-noflush").confirm({
 $(".api-token").confirm({
 	text: "Make sure that nobody else can scan this code around you. They will have full access to the API without having to know the password. Note that the generation of the QR code will take some time.",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function(button) {
 		window.open("scripts/pi-hole/php/api_token.php");
 	},
-	cancel(button) {
+	cancel: function(button) {
 		// nothing to do
 	},
 	confirmButton: "Yes, show API token",
