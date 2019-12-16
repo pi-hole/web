@@ -225,7 +225,7 @@ function addDomain() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while adding new domain");
+      showAlert("error", "Error while adding new domain: " + jqXHR.responseText);
       console.log(exception);
     }
   });
@@ -260,7 +260,7 @@ function editDomain() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while editing domain with ID " + id);
+      showAlert("error", "Error while editing domain with ID " + id + ": " + jqXHR.responseText);
       console.log(exception);
     }
   });
@@ -282,7 +282,7 @@ function deleteDomain() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while deleting domain with ID " + id);
+      showAlert("error", "Error while deleting domain with ID " + id + ": " + jqXHR.responseText);
       console.log(exception);
     }
   });

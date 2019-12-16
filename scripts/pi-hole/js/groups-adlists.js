@@ -205,7 +205,7 @@ function addAdlist() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while adding new adlist");
+      showAlert("error", "Error while adding new adlist: " + jqXHR.responseText);
       console.log(exception);
     }
   });
@@ -238,7 +238,7 @@ function editAdlist() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while editing adlist with ID " + id);
+      showAlert("error", "Error while editing adlist with ID " + id + ": " + jqXHR.responseText);
       console.log(exception);
     }
   });
@@ -260,7 +260,7 @@ function deleteAdlist() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while deleting adlist with ID " + id);
+      showAlert("error", "Error while deleting adlist with ID " + id + ": " + jqXHR.responseText);
       console.log(exception);
     }
   });

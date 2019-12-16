@@ -136,7 +136,7 @@ function addGroup() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while adding new group");
+      showAlert("error", "Error while adding new group: " + jqXHR.responseText);
       console.log(exception);
     }
   });
@@ -159,7 +159,8 @@ function editGroup() {
       id: id,
       name: name,
       desc: desc,
-      status: status
+      status: status,
+      token: token
     },
     success: function(response) {
       if (response.success) {
@@ -168,7 +169,7 @@ function editGroup() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while editing group with ID " + id);
+      showAlert("error", "Error while editing group with ID " + id + ": " + jqXHR.responseText);
       console.log(exception);
     }
   });
@@ -182,7 +183,7 @@ function deleteGroup() {
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
     dataType: "json",
-    data: { action: "delete_group", id: id },
+    data: { action: "delete_group", id: id, token: token },
     success: function(response) {
       if (response.success) {
         showAlert("success");
@@ -190,7 +191,7 @@ function deleteGroup() {
       } else showAlert("error", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while deleting group with ID " + id);
+      showAlert("error", "Error while deleting group with ID " + id + ": " + jqXHR.responseText);
       console.log(exception);
     }
   });
