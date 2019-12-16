@@ -126,7 +126,7 @@ function addGroup() {
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
     dataType: "json",
-    data: { action: "add_group", name: name, desc: desc },
+    data: { action: "add_group", name: name, desc: desc, token: token },
     success: function(response) {
       if (response.success) {
         showAlert("success");
