@@ -107,7 +107,7 @@ function updateQueriesOverTime() {
 
         for (hour in data.ads_over_time[0]) {
             if ({}.hasOwnProperty.call(data.ads_over_time[0], hour)) {
-                if(!dates.includes(parseInt(data.ads_over_time[0][hour])))
+                if(dates.indexOf(parseInt(data.ads_over_time[0][hour])) === -1)
                 {
                     dates.push(parseInt(data.ads_over_time[0][hour]));
                 }
