@@ -41,7 +41,7 @@ function updateTopLists() {
                 domain = escapeHtml(domain);
                 url = "<a href=\"queries.php?domain="+domain+"\">"+domain+"</a>";
                 domaintable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_queries[domain] + "</td> <td> <button class=\"text-red text-nowrap\"><i class=\"fa fa-ban\"></i> Blacklist</button> <button class=\"text-orange text-nowrap\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
+                    "</td> <td>" + data.top_queries[domain] + "</td> <td> <button type=\"button\" class=\"btn btn-default btn-sm text-red\"><i class=\"fa fa-ban\"></i> Blacklist</button> <button class=\"btn btn-default btn-sm text-orange\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
             }
         }
 
@@ -54,13 +54,13 @@ function updateTopLists() {
                 {
                     url = "<a href=\"queries.php?domain="+printdomain+"\">"+printdomain+"</a> (wildcard blocked)";
                     adtable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <button class=\"text-orange text-nowrap\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
+                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <button type=\"button\" class=\"btn btn-default btn-sm text-orange\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
                 }
                 else
                 {
                     url = "<a href=\"queries.php?domain="+printdomain+"\">"+printdomain+"</a>";
                     adtable.append("<tr> <td>" + url +
-                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button> <button class=\"text-orange text-nowrap\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
+                    "</td> <td>" + data.top_ads[domain] + "</td> <td> <button type=\"button\" class=\"btn btn-default btn-sm text-green\"><i class=\"fas fa-check\"></i> Whitelist</button> <button class=\"btn btn-default btn-sm text-orange\"><i class=\"fa fa-balance-scale\"></i> Audit</button> </td> </tr> ");
                 }
             }
         }
