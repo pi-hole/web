@@ -118,19 +118,29 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'delete_group') {
     // Delete group identified by ID
     try {
-        $stmt = $db->prepare('DELETE FROM "group" WHERE id=:id');
-        if (!$stmt) {
-            throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
-        }
+        $table_name = ['domainlist_by_group', 'client_by_group', 'adlist_by_group', 'group'];
+        $table_keys = ['group_id', 'group_id', 'group_id', 'id'];
+        for ($i = 0; $i < count($table_name); $i++) {
+            $table = $table_name[$i];
+            $key = $table_keys[$i];
 
-        if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
-            throw new Exception('While binding id: ' . $db->lastErrorMsg());
-        }
+            $stmt = $db->prepare("DELETE FROM \"$table\" WHERE $key = :id;");
+            if (!$stmt) {
+                throw new Exception("While preparing DELETE FROM $table statement: " . $db->lastErrorMsg());
+            }
 
-        if (!$stmt->execute()) {
-            throw new Exception('While executing: ' . $db->lastErrorMsg());
-        }
+            if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
+                throw new Exception("While binding id to DELETE FROM $table statement: " . $db->lastErrorMsg());
+            }
 
+            if (!$stmt->execute()) {
+                throw new Exception("While executing DELETE FROM $table statement: " . $db->lastErrorMsg());
+            }
+
+            if (!$stmt->reset()) {
+                throw new Exception("While resetting DELETE FROM $table statement: " . $db->lastErrorMsg());
+            }
+        }
         $reload = true;
         return JSON_success();
     } catch (\Exception $ex) {
