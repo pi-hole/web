@@ -62,7 +62,7 @@ function updateTopClientsChart() {
         // Clear tables before filling them with data
         $("#client-frequency td").parent().remove();
         var clienttable = $("#client-frequency").find("tbody:last");
-        var client, percentage, clientname, clientip;
+        var client, percentage, clientname;
         var sum = 0;
         for (client in data.top_sources) {
             if (Object.prototype.hasOwnProperty.call(data.top_sources, client)){
@@ -84,12 +84,10 @@ function updateTopClientsChart() {
                 {
                     var idx = client.indexOf("|");
                     clientname = client.substr(0, idx);
-                    clientip = client.substr(idx+1, client.length-idx);
                 }
                 else
                 {
                     clientname = client;
-                    clientip = client;
                 }
 
                 var url = clientname;

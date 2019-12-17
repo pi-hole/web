@@ -231,59 +231,50 @@ $(document).ready(function() {
 
     tableApi = $("#all-queries").DataTable( {
         "rowCallback": function( row, data ){
-            var blocked, fieldtext, buttontext, color;
+            var fieldtext, buttontext, color;
             switch (data[4])
             {
               case 1:
-                blocked = true;
                 color = "red";
                 fieldtext = "Blocked (gravity)";
                 buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
               case 2:
-                blocked = false;
                 color = "green";
                 fieldtext = "OK <br class='hidden-lg'>(forwarded)";
                 buttontext = "<button class=\"text-red text-nowrap\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
                 break;
               case 3:
-                blocked = false;
                 color = "green";
                 fieldtext = "OK <br class='hidden-lg'>(cached)";
                 buttontext = "<button class=\"text-red text-nowrap\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
                 break;
               case 4:
-                blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
                 buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
               case 5:
-                blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
                 buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
               case 6:
-                blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
                 buttontext = "";
                 break;
               case 7:
-                blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
                 buttontext = "";
                 break;
               case 8:
-                blocked = true;
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
                 buttontext = "";
                 break;
               default:
-                blocked = false;
                 color = "black";
                 fieldtext = "Unknown";
                 buttontext = "";
