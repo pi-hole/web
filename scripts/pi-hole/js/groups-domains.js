@@ -1,34 +1,45 @@
 var table;
 var groups = [];
 const token = $("#token").html();
+var info = null;
 
-function showAlert(type, message) {
-  var alertElement = null;
-  var messageElement = null;
-
+function showAlert(type, icon, message) {
+  var msg = "";
   switch (type) {
     case "info":
-      alertElement = $("#alInfo");
+      info = $.notify({
+        type: "info",
+        icon: "glyphicon glyphicon-time",
+        message: message
+      });
       break;
     case "success":
-      alertElement = $("#alSuccess");
-      break;
-    case "warning":
-      alertElement = $("#alWarning");
-      messageElement = $("#warn");
+      msg = "Successfully " + message;
+      if (info) {
+        info.update({ type: "success", icon: icon, message: msg });
+      } else {
+        $.notify({ type: "success", icon: icon, message: msg });
+      }
       break;
     case "error":
-      alertElement = $("#alFailure");
-      messageElement = $("#err");
+      msg = "Error, something went wrong!<br><pre>" + message + "</pre>";
+      if (info) {
+        info.update({
+          type: "danger",
+          icon: "glyphicon glyphicon-remove",
+          message: msg
+        });
+      } else {
+        $.notify({
+          type: "danger",
+          icon: "glyphicon glyphicon-remove",
+          message: msg
+        });
+      }
       break;
     default:
       return;
   }
-
-  if (messageElement != null) messageElement.html(message);
-
-  alertElement.fadeIn(200);
-  alertElement.delay(8000).fadeOut(2000);
 }
 
 function get_groups() {
@@ -42,12 +53,6 @@ function get_groups() {
     "json"
   );
 }
-
-$.fn.redraw = function() {
-  return $(this).each(function() {
-    var redraw = this.offsetHeight;
-  });
-};
 
 function datetime(date) {
   return moment.unix(Math.floor(date)).format("Y-MM-DD HH:mm:ss z");
@@ -96,7 +101,7 @@ function initTable() {
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
-        '<code title="' + tooltip + '">' + data.domain + "</code>"
+        '<code id="domain" title="' + tooltip + '">' + data.domain + "</code>"
       );
 
       $("td:eq(1)", row).html(
@@ -153,7 +158,6 @@ function initTable() {
             .val(groups[i].id)
             .text(groups[i].name + " (" + extra + ")")
         );
-        sel.redraw();
       }
       // Select assigned groups
       sel.val(data.groups);
@@ -202,11 +206,11 @@ function initTable() {
 }
 
 function addDomain() {
-  var domain = $("#domain").val();
-  var type = $("#type").val();
-  var comment = $("#comment").val();
+  var domain = $("#new_domain").val();
+  var type = $("#new_type").val();
+  var comment = $("#new_comment").val();
 
-  showAlert("info");
+  showAlert("info", "", "Adding domain " + domain + "...");
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -220,15 +224,20 @@ function addDomain() {
     },
     success: function(response) {
       if (response.success) {
-        showAlert("success");
-        $("#domain").empty();
-        $("#comment").empty();
+        showAlert(
+          "success",
+          "glyphicon glyphicon-plus",
+          "added new domain " + domain
+        );
+        $("#new_domain").val("");
+        $("#new_comment").val("");
         table.ajax.reload();
-      } else showAlert("error", response.message);
+      } else showAlert("error", "", response.message);
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
+        "",
         "Error while adding new domain: " + jqXHR.responseText
       );
       console.log(exception);
@@ -238,13 +247,14 @@ function addDomain() {
 
 function editDomain() {
   var tr = $(this).closest("tr");
+  var domain = tr.find("#domain").text();
   var id = tr.find("#id").val();
   var type = tr.find("#type").val();
   var status = tr.find("#status").is(":checked") ? 1 : 0;
   var comment = tr.find("#comment").val();
   var groups = tr.find("#multiselect").val();
 
-  showAlert("info");
+  showAlert("info", "", "Editing domain " + name + "...");
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -260,13 +270,18 @@ function editDomain() {
     },
     success: function(response) {
       if (response.success) {
-        showAlert("success");
+        showAlert(
+          "success",
+          "glyphicon glyphicon-pencil",
+          "edited domain " + domain
+        );
         table.ajax.reload();
-      } else showAlert("error", response.message);
+      } else showAlert("error", "", response.message);
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
+        "",
         "Error while editing domain with ID " + id + ": " + jqXHR.responseText
       );
       console.log(exception);
@@ -276,8 +291,10 @@ function editDomain() {
 
 function deleteDomain() {
   var id = $(this).attr("data-id");
+  var tr = $(this).closest("tr");
+  var domain = tr.find("#domain").text();
 
-  showAlert("info");
+  showAlert("info", "", "Deleting domain " + domain + "...");
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -285,13 +302,18 @@ function deleteDomain() {
     data: { action: "delete_domain", id: id, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert("success");
+        showAlert(
+          "success",
+          "glyphicon glyphicon-trash",
+          "deleted domain " + domain
+        );
         table.ajax.reload();
-      } else showAlert("error", response.message);
+      } else showAlert("error", "", response.message);
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
+        "",
         "Error while deleting domain with ID " + id + ": " + jqXHR.responseText
       );
       console.log(exception);

@@ -1,34 +1,45 @@
 var table;
 var groups = [];
 const token = $("#token").html();
+var info = null;
 
-function showAlert(type, message) {
-  var alertElement = null;
-  var messageElement = null;
-
+function showAlert(type, icon, message) {
+  var msg = "";
   switch (type) {
     case "info":
-      alertElement = $("#alInfo");
+      info = $.notify({
+        type: "info",
+        icon: "glyphicon glyphicon-time",
+        message: message
+      });
       break;
     case "success":
-      alertElement = $("#alSuccess");
-      break;
-    case "warning":
-      alertElement = $("#alWarning");
-      messageElement = $("#warn");
+      msg = "Successfully " + message;
+      if (info) {
+        info.update({ type: "success", icon: icon, message: msg });
+      } else {
+        $.notify({ type: "success", icon: icon, message: msg });
+      }
       break;
     case "error":
-      alertElement = $("#alFailure");
-      messageElement = $("#err");
+      msg = "Error, something went wrong!<br><pre>" + message + "</pre>";
+      if (info) {
+        info.update({
+          type: "danger",
+          icon: "glyphicon glyphicon-remove",
+          message: msg
+        });
+      } else {
+        $.notify({
+          type: "danger",
+          icon: "glyphicon glyphicon-remove",
+          message: msg
+        });
+      }
       break;
     default:
       return;
   }
-
-  if (messageElement != null) messageElement.html(message);
-
-  alertElement.fadeIn(200);
-  alertElement.delay(8000).fadeOut(2000);
 }
 
 function get_groups() {
@@ -42,12 +53,6 @@ function get_groups() {
     "json"
   );
 }
-
-$.fn.redraw = function() {
-  return $(this).each(function() {
-    var redraw = this.offsetHeight;
-  });
-};
 
 function datetime(date) {
   return moment.unix(Math.floor(date)).format("Y-MM-DD HH:mm:ss z");
@@ -95,7 +100,7 @@ function initTable() {
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
-        '<code title="' + tooltip + '">' + data.address + "</code>"
+        '<code id="address" title="' + tooltip + '">' + data.address + "</code>"
       );
 
       const disabled = data.enabled === 0;
@@ -135,7 +140,6 @@ function initTable() {
             .val(groups[i].id)
             .text(groups[i].name + " (" + extra + ")")
         );
-        sel.redraw();
       }
       // Select assigned groups
       sel.val(data.groups);
@@ -184,10 +188,10 @@ function initTable() {
 }
 
 function addAdlist() {
-  var address = $("#address").val();
-  var comment = $("#comment").val();
+  var address = $("#new_address").val();
+  var comment = $("#new_comment").val();
 
-  showAlert("info");
+  showAlert("info", "", "Adding adlist " + address + "...");
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -200,15 +204,20 @@ function addAdlist() {
     },
     success: function(response) {
       if (response.success) {
-        showAlert("success");
-        $("#address").empty();
-        $("#comment").empty();
+        showAlert(
+          "success",
+          "glyphicon glyphicon-plus",
+          "added adlist " + address
+        );
+        $("#new_address").val("");
+        $("#new_comment").val("");
         table.ajax.reload();
-      } else showAlert("error", response.message);
+      } else showAlert("error", "", response.message);
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
+        "",
         "Error while adding new adlist: " + jqXHR.responseText
       );
       console.log(exception);
@@ -222,6 +231,7 @@ function editAdlist() {
   var status = tr.find("#status").is(":checked") ? 1 : 0;
   var comment = tr.find("#comment").val();
   var groups = tr.find("#multiselect").val();
+  var address = tr.find("#address").text();
 
   showAlert("info");
   $.ajax({
@@ -238,13 +248,18 @@ function editAdlist() {
     },
     success: function(response) {
       if (response.success) {
-        showAlert("success");
+        showAlert(
+          "success",
+          "glyphicon glyphicon-pencil",
+          "edited adlist " + address
+        );
         table.ajax.reload();
-      } else showAlert("error", response.message);
+      } else showAlert("error", "", response.message);
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
+        "",
         "Error while editing adlist with ID " + id + ": " + jqXHR.responseText
       );
       console.log(exception);
@@ -254,6 +269,8 @@ function editAdlist() {
 
 function deleteAdlist() {
   var id = $(this).attr("data-id");
+  var tr = $(this).closest("tr");
+  var address = tr.find("#address").text();
 
   showAlert("info");
   $.ajax({
@@ -263,13 +280,18 @@ function deleteAdlist() {
     data: { action: "delete_adlist", id: id, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert("success");
+        showAlert(
+          "success",
+          "glyphicon glyphicon-trash",
+          "deleted adlist " + address
+        );
         table.ajax.reload();
-      } else showAlert("error", response.message);
+      } else showAlert("error", "", response.message);
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
+        "",
         "Error while deleting adlist with ID " + id + ": " + jqXHR.responseText
       );
       console.log(exception);

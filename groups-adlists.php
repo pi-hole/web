@@ -13,24 +13,6 @@
     <h1>Adlist group management</h1>
 </div>
 
-<!-- Alerts -->
-<div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Updating adlist...
-</div>
-<div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden="true">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Success! The list will refresh.
-</div>
-<div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden="true">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Failure! Something went wrong, see output below:<br/><br/><pre><span id="err"></span></pre>
-</div>
-<div id="alWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden="true">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Warning, see output below:<br/><br/><pre><span id="warn"></span></pre>
-</div>
-
 <!-- Domain Input -->
 <div class="row">
     <div class="col-md-12">
@@ -46,11 +28,11 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label for="ex1">Address:</label>
-                        <input id="address" type="text" class="form-control" placeholder="http://..., https://..., file://...">
+                        <input id="new_address" type="text" class="form-control" placeholder="http://..., https://..., file://...">
                     </div>
                     <div class="col-md-6">
                         <label for="ex2">Comment:</label>
-                        <input id="comment" type="text" class="form-control" placeholder="Adlist description (optional)">
+                        <input id="new_comment" type="text" class="form-control" placeholder="Adlist description (optional)">
                     </div>
                 </div>
             </div>

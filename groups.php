@@ -13,24 +13,6 @@
     <h1>Group management</h1>
 </div>
 
-<!-- Alerts -->
-<div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Updating groups...
-</div>
-<div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden="true">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Success! The list will refresh.
-</div>
-<div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden="true">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Failure! Something went wrong, see output below:<br/><br/><pre><span id="err"></span></pre>
-</div>
-<div id="alWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden="true">
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Warning, see output below:<br/><br/><pre><span id="warn"></span></pre>
-</div>
-
 <!-- Group Input -->
 <div class="row">
     <div class="col-md-12">
@@ -46,11 +28,11 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label for="ex1">Name:</label>
-                        <input id="name" type="text" class="form-control" placeholder="Group name">
+                        <input id="new_name" type="text" class="form-control" placeholder="Group name">
                     </div>
                     <div class="col-md-6">
                         <label for="ex2">Description:</label>
-                        <input id="desc" type="text" class="form-control" placeholder="Group description (optional)">
+                        <input id="new_desc" type="text" class="form-control" placeholder="Group description (optional)">
                     </div>
                 </div>
             </div>

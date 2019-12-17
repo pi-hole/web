@@ -1,33 +1,44 @@
 var table;
 const token = $("#token").html();
+var info = null;
 
-function showAlert(type, message) {
-  var alertElement = null;
-  var messageElement = null;
-
+function showAlert(type, icon, message) {
+  var msg = "";
   switch (type) {
     case "info":
-      alertElement = $("#alInfo");
+      info = $.notify({
+        type: "info",
+        icon: "glyphicon glyphicon-time",
+        message: message
+      });
       break;
     case "success":
-      alertElement = $("#alSuccess");
-      break;
-    case "warning":
-      alertElement = $("#alWarning");
-      messageElement = $("#warn");
+      msg = "Successfully " + message;
+      if (info) {
+        info.update({ type: "success", icon: icon, message: msg });
+      } else {
+        $.notify({ type: "success", icon: icon, message: msg });
+      }
       break;
     case "error":
-      alertElement = $("#alFailure");
-      messageElement = $("#err");
+      msg = "Error, something went wrong!<br><pre>" + message + "</pre>";
+      if (info) {
+        info.update({
+          type: "danger",
+          icon: "glyphicon glyphicon-remove",
+          message: msg
+        });
+      } else {
+        $.notify({
+          type: "danger",
+          icon: "glyphicon glyphicon-remove",
+          message: msg
+        });
+      }
       break;
     default:
       return;
   }
-
-  if (messageElement != null) messageElement.html(message);
-
-  alertElement.fadeIn(200);
-  alertElement.delay(8000).fadeOut(2000);
 }
 
 $(document).ready(function() {
@@ -118,10 +129,10 @@ $(document).ready(function() {
 });
 
 function addGroup() {
-  var name = $("#name").val();
-  var desc = $("#desc").val();
+  var name = $("#new_name").val();
+  var desc = $("#new_desc").val();
 
-  showAlert("info");
+  showAlert("info", "", "Adding group " + name + "...");
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -129,14 +140,18 @@ function addGroup() {
     data: { action: "add_group", name: name, desc: desc, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert("success");
-        $("#name").empty();
-        $("#desc").empty();
+        showAlert("success", "glyphicon glyphicon-plus", "added group " + name);
+        $("#new_name").val("");
+        $("#new_desc").val("");
         table.ajax.reload();
-      } else showAlert("error", response.message);
+      } else showAlert("error", "", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "Error while adding new group: " + jqXHR.responseText);
+      showAlert(
+        "error",
+        "",
+        "Error while adding new group: " + jqXHR.responseText
+      );
       console.log(exception);
     }
   });
@@ -149,7 +164,7 @@ function editGroup() {
   var status = tr.find("#status").is(":checked") ? 1 : 0;
   var desc = tr.find("#desc").val();
 
-  showAlert("info");
+  showAlert("info", "", "Editing group " + name + "...");
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -164,13 +179,18 @@ function editGroup() {
     },
     success: function(response) {
       if (response.success) {
-        showAlert("success");
+        showAlert(
+          "success",
+          "glyphicon glyphicon-pencil",
+          "edited group " + name
+        );
         table.ajax.reload();
-      } else showAlert("error", response.message);
+      } else showAlert("error", "", response.message);
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
+        "",
         "Error while editing group with ID " + id + ": " + jqXHR.responseText
       );
       console.log(exception);
@@ -180,8 +200,10 @@ function editGroup() {
 
 function deleteGroup() {
   var id = $(this).attr("data-id");
+  var tr = $(this).closest("tr");
+  var name = tr.find("#name").val();
 
-  showAlert("info");
+  showAlert("info", "", "Deleting group " + name + "...");
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -189,13 +211,18 @@ function deleteGroup() {
     data: { action: "delete_group", id: id, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert("success");
+        showAlert(
+          "success",
+          "glyphicon glyphicon-trash",
+          "deleted group " + name
+        );
         table.ajax.reload();
-      } else showAlert("error", response.message);
+      } else showAlert("error", "", response.message);
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
+        "",
         "Error while deleting group with ID " + id + ": " + jqXHR.responseText
       );
       console.log(exception);
