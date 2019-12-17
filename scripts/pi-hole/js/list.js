@@ -8,7 +8,7 @@
 $.ajaxSetup({cache: false});
 
 // Get PHP info
-var token = $("#token").html();
+var token = $("#token").text();
 var listType = $("#list-type").html();
 var fullName = listType === "white" ? "Whitelist" : "Blacklist";
 

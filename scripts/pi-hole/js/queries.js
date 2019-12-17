@@ -21,7 +21,7 @@ function refreshData() {
 }
 
 function add(domain,list) {
-    var token = $("#token").html();
+    var token = $("#token").text();
     var alertModal = $("#alertModal");
     var alProcessing = alertModal.find(".alProcessing");
     var alSuccess = alertModal.find(".alSuccess");
