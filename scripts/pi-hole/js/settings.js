@@ -4,6 +4,7 @@
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
+
 $(function () {
 	$("[data-static]").on("click", function(){
 		var row = $(this).closest("tr");
@@ -18,10 +19,10 @@ $(function () {
 $(".confirm-poweroff").confirm({
 	text: "Are you sure you want to send a poweroff command to your Pi-Hole?",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function() {
 		$("#poweroffform").submit();
 	},
-	cancel(button) {
+	cancel: function() {
 		// nothing to do
 	},
 	confirmButton: "Yes, poweroff",
@@ -34,10 +35,10 @@ $(".confirm-poweroff").confirm({
 $(".confirm-reboot").confirm({
 	text: "Are you sure you want to send a reboot command to your Pi-Hole?",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function() {
 		$("#rebootform").submit();
 	},
-	cancel(button) {
+	cancel: function() {
 		// nothing to do
 	},
 	confirmButton: "Yes, reboot",
@@ -51,10 +52,10 @@ $(".confirm-reboot").confirm({
 $(".confirm-restartdns").confirm({
 	text: "Are you sure you want to send a restart command to your DNS server?",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function() {
 		$("#restartdnsform").submit();
 	},
-	cancel(button) {
+	cancel: function() {
 		// nothing to do
 	},
 	confirmButton: "Yes, restart DNS",
@@ -68,10 +69,10 @@ $(".confirm-restartdns").confirm({
 $(".confirm-flushlogs").confirm({
 	text: "Are you sure you want to flush your logs?",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function() {
 		$("#flushlogsform").submit();
 	},
-	cancel(button) {
+	cancel: function() {
 		// nothing to do
 	},
 	confirmButton: "Yes, flush logs",
@@ -85,10 +86,10 @@ $(".confirm-flushlogs").confirm({
 $(".confirm-flusharp").confirm({
 	text: "Are you sure you want to flush your network table?",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function() {
 		$("#flusharpform").submit();
 	},
-	cancel(button) {
+	cancel: function() {
 		// nothing to do
 	},
 	confirmButton: "Yes, flush my network table",
@@ -102,10 +103,10 @@ $(".confirm-flusharp").confirm({
 $(".confirm-disablelogging-noflush").confirm({
 	text: "Are you sure you want to disable logging?",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function() {
 		$("#disablelogsform-noflush").submit();
 	},
-	cancel(button) {
+	cancel: function() {
 		// nothing to do
 	},
 	confirmButton: "Yes, disable logs",
@@ -119,10 +120,10 @@ $(".confirm-disablelogging-noflush").confirm({
 $(".api-token").confirm({
 	text: "Make sure that nobody else can scan this code around you. They will have full access to the API without having to know the password. Note that the generation of the QR code will take some time.",
 	title: "Confirmation required",
-	confirm(button) {
+	confirm: function() {
 		window.open("scripts/pi-hole/php/api_token.php");
 	},
-	cancel(button) {
+	cancel: function() {
 		// nothing to do
 	},
 	confirmButton: "Yes, show API token",
@@ -147,11 +148,11 @@ function loadCacheInfo()
         }
 
         // Fill table with obtained values
-        $("#cache-size").text(parseInt(data["cacheinfo"]["cache-size"]));
-        $("#cache-inserted").text(parseInt(data["cacheinfo"]["cache-inserted"]));
+        $("#cache-size").text(parseInt(data.cacheinfo["cache-size"]));
+        $("#cache-inserted").text(parseInt(data.cacheinfo["cache-inserted"]));
 
         // Highlight early cache removals when present
-        var cachelivefreed = parseInt(data["cacheinfo"]["cache-live-freed"]);
+        var cachelivefreed = parseInt(data.cacheinfo["cache-live-freed"]);
         $("#cache-live-freed").text(cachelivefreed);
         if(cachelivefreed > 0)
         {
@@ -192,7 +193,7 @@ $(document).ready(function() {
 		});
 	}
     //call draw() on each table... they don't render properly with scrollX and scrollY set... ¯\_(ツ)_/¯
-    $("a[data-toggle=\"tab\"]").on("shown.bs.tab", function (e) {
+    $("a[data-toggle=\"tab\"]").on("shown.bs.tab", function () {
         leasetable.draw();
         staticleasetable.draw();
     });

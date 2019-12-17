@@ -4,6 +4,9 @@
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license.  */
+
+/* global moment:false */
+
 var tableApi;
 
 var APIstring = "api_db.php?network";
@@ -11,16 +14,7 @@ var APIstring = "api_db.php?network";
 // How many IPs do we show at most per device?
 var MAXIPDISPLAY = 3;
 
-function refreshData() {
-    tableApi.ajax.url(APIstring).load();
-}
-
-function openInNewTab(url) {
-  var win = window.open(url, "_blank");
-  win.focus();
-}
-
-function handleAjaxError( xhr, textStatus, error ) {
+function handleAjaxError(xhr, textStatus) {
     if ( textStatus === "timeout" )
     {
         alert( "The server took too long to send the data." );
@@ -52,9 +46,9 @@ function valueToHex(c) {
 }
 
 function rgbToHex(values) {
-    return "#" + valueToHex(values[0])
-               + valueToHex(values[1])
-               + valueToHex(values[2]);
+    return "#" + valueToHex(values[0]) +
+               valueToHex(values[1]) +
+               valueToHex(values[2]);
 }
 
 function mixColors(ratio, rgb1, rgb2)
@@ -66,9 +60,9 @@ function mixColors(ratio, rgb1, rgb2)
 
 $(document).ready(function() {
     tableApi = $("#network-entries").DataTable( {
-        "rowCallback": function( row, data, index )
+        "rowCallback": function( row, data )
         {
-             var color, mark, lastQuery = parseInt(data["lastQuery"]);
+             var color, mark, lastQuery = parseInt(data.lastQuery);
              if(lastQuery > 0)
              {
                  var diff = getTimestamp()-lastQuery;
@@ -76,7 +70,7 @@ $(document).ready(function() {
                  {
                      // Last query came in within the last 24 hours (24*60*60 = 86400)
                      // Color: light-green to light-yellow
-                     var ratio = 1e0*diff/86400;
+                     var ratio = Number(diff)/86400;
                      var lightgreen = [0xE7, 0xFF, 0xDE];
                      var lightyellow = [0xFF, 0xFF, 0xDF];
                      color = rgbToHex(mixColors(ratio, lightgreen, lightyellow));
@@ -102,21 +96,21 @@ $(document).ready(function() {
 
              // Insert "Never" into Last Query field when we have
              // never seen a query from this device
-             if(data["lastQuery"] === 0)
+             if(data.lastQuery === 0)
              {
                  $("td:eq(5)", row).html("Never");
              }
 
              // Set hostname to "N/A" if not available
-             if(!data["name"] || data["name"].length < 1)
+             if(!data.name || data.name.length < 1)
              {
                  $("td:eq(3)", row).html("N/A");
              }
 
              // Set number of queries to localized string (add thousand separators)
-             $("td:eq(6)", row).html(data["numQueries"].toLocaleString());
+             $("td:eq(6)", row).html(data.numQueries.toLocaleString());
 
-            var ips = data["ip"];
+            var ips = data.ip;
             var shortips = ips;
             if(ips.length > MAXIPDISPLAY)
             {
@@ -127,9 +121,9 @@ $(document).ready(function() {
             $("td:eq(0)", row).hover(function () { this.title=ips.join("\n");});
 
             // MAC + Vendor field if available
-            if(data["macVendor"] && data["macVendor"].length > 0)
+            if(data.macVendor && data.macVendor.length > 0)
             {
-                 $("td:eq(1)", row).html(data["hwaddr"]+"<br/>"+data["macVendor"]);
+                 $("td:eq(1)", row).html(data.hwaddr+"<br/>"+data.macVendor);
             }
 
         },
@@ -146,8 +140,8 @@ $(document).ready(function() {
             {data: "hwaddr", "width" : "10%", "render": $.fn.dataTable.render.text() },
             {data: "interface", "width" : "4%", "render": $.fn.dataTable.render.text() },
             {data: "name", "width" : "15%", "render": $.fn.dataTable.render.text() },
-            {data: "firstSeen", "width" : "8%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
-            {data: "lastQuery", "width" : "8%", "render": function (data, type, full, meta) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}else{return data;} }},
+            {data: "firstSeen", "width" : "8%", "render": function (data, type) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}return data; }},
+            {data: "lastQuery", "width" : "8%", "render": function (data, type) { if(type === "display"){return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");}return data; }},
             {data: "numQueries", "width" : "9%", "render": $.fn.dataTable.render.text() },
             {data: "", "width" : "6%", "orderable" : false }
         ],
@@ -157,16 +151,16 @@ $(document).ready(function() {
             // Store current state in client's local storage area
             localStorage.setItem("network_table", JSON.stringify(data));
         },
-        stateLoadCallback: function(settings) {
+        stateLoadCallback: function() {
             // Receive previous state from client's local storage area
             var data = localStorage.getItem("network_table");
             // Return if not available
             if(data === null){ return null; }
             data = JSON.parse(data);
             // Always start on the first page
-            data["start"] = 0;
+            data.start = 0;
             // Always start with empty search field
-            data["search"]["search"] = "";
+            data.search.search = "";
             // Apply loaded state to table
             return data;
         },

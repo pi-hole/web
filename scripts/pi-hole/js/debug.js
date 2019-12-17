@@ -1,3 +1,12 @@
+/* Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license. */
+
+/* global ActiveXObject: false */
+
 // Credit: http://stackoverflow.com/a/10642418/2087442
 function httpGet(ta,theUrl)
 {
@@ -29,7 +38,7 @@ function eventsource() {
     var ta = $("#output");
     var upload = $( "#upload" );
     var checked = "";
-    var token = encodeURIComponent($("#token").html());
+    var token = encodeURIComponent($("#token").text());
 
     if(upload.prop("checked"))
     {
@@ -53,7 +62,7 @@ function eventsource() {
     }, false);
 
     // Will be called when script has finished
-    source.addEventListener("error", function(e) {
+    source.addEventListener("error", function() {
         source.close();
     }, false);
 }
