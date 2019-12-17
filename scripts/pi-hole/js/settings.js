@@ -239,7 +239,7 @@ $(".nav-tabs a").on("shown.bs.tab", function (e) {
     window.history.pushState("", "", "?tab=" + tab);
 	if(tab === "piholedhcp")
 	{
-		location.reload();
+		window.location.reload();
 	}
 	window.scrollTo(0, 0);
 });
