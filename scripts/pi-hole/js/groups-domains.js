@@ -10,19 +10,35 @@ function showAlert(type, icon, message) {
       info = $.notify({
         type: "info",
         icon: "glyphicon glyphicon-time",
-        message: message
+        message: "&nbsp;" + message
       });
       break;
     case "success":
-      msg = "Successfully " + message;
+      msg = "&nbsp;Successfully " + message;
       if (info) {
         info.update({ type: "success", icon: icon, message: msg });
       } else {
         $.notify({ type: "success", icon: icon, message: msg });
       }
       break;
+    case "warning":
+      msg = "&nbsp;" + message;
+      if (info) {
+        info.update({
+          type: "warning",
+          icon: "glyphicon glyphicon-warning-sign",
+          message: msg
+        });
+      } else {
+        $.notify({
+          type: "warning",
+          icon: "glyphicon glyphicon-warning-sign",
+          message: msg
+        });
+      }
+      break;
     case "error":
-      msg = "Error, something went wrong!<br><pre>" + message + "</pre>";
+      msg = "&nbsp;Error, something went wrong!<br><pre>" + message + "</pre>";
       if (info) {
         info.update({
           type: "danger",
@@ -211,6 +227,12 @@ function addDomain() {
   var comment = $("#new_comment").val();
 
   showAlert("info", "", "Adding domain " + domain + "...");
+
+  if (domain.length === 0) {
+    showAlert("warning", "", "Please specify a domain");
+    return;
+  }
+
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
