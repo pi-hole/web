@@ -233,7 +233,7 @@ function updateQueryTypesPie() {
                 var index = $(this).index();
                 var ci = e.view.queryTypePieChart;
                 var meta = ci.data.datasets[0]._meta;
-                for(let i in meta)
+                for(var i in meta)
                 {
                     if (Object.prototype.hasOwnProperty.call(meta, i))
                     {
@@ -416,7 +416,7 @@ function updateForwardDestinationsPie() {
                 var index = $(this).index();
                 var ci = e.view.forwardDestinationPieChart;
                 var meta = ci.data.datasets[0]._meta;
-                for(let i in meta)
+                for(var i in meta)
                 {
                     if (Object.prototype.hasOwnProperty.call(meta, i))
                     {
