@@ -74,17 +74,17 @@ $(document).ready(function() {
       $("#desc", row).val(desc);
 
       let button =
-        '<button class="btn btn-success btn-xs editGroup" type="button" data-id=\'' +
+        '<button class="btn btn-success btn-xs editGroup" type="button" data-id="' +
         data.id +
-        "'>" +
+        '">' +
         '<span class="glyphicon glyphicon-pencil"></span>' +
         "</button>";
       if (data.id !== 0) {
         button +=
           " &nbsp;" +
-          '<button class="btn btn-danger btn-xs deleteGroup" type="button" data-id=\'' +
+          '<button class="btn btn-danger btn-xs deleteGroup" type="button" data-id="' +
           data.id +
-          "'>" +
+          '">' +
           '<span class="glyphicon glyphicon-trash"></span>' +
           "</button>";
       }

@@ -106,8 +106,11 @@ function initTable() {
       $(".deleteClient").on("click", deleteClient);
     },
     rowCallback: function(row, data) {
+      const tooltip = "Database ID: " + data.id;
       $("td:eq(0)", row).html(
-        "<code>" +
+        '<code title="' +
+          tooltip +
+          '">' +
           data.ip +
           '</code><input id="id" type="hidden" value="' +
           data.id +
@@ -138,15 +141,15 @@ function initTable() {
       sel.multiselect({ includeSelectAllOption: true });
 
       let button =
-        '<button class="btn btn-success btn-xs editClient" type="button" data-id=\'' +
+        '<button class="btn btn-success btn-xs editClient" type="button" data-id="' +
         data.id +
-        "'>" +
+        '">' +
         '<span class="glyphicon glyphicon-pencil"></span>' +
         "</button>" +
         " &nbsp;" +
-        '<button class="btn btn-danger btn-xs deleteClient" type="button" data-id=\'' +
+        '<button class="btn btn-danger btn-xs deleteClient" type="button" data-id="' +
         data.id +
-        "'>" +
+        '">' +
         '<span class="glyphicon glyphicon-trash"></span>' +
         "</button>";
       $("td:eq(2)", row).html(button);

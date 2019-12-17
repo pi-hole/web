@@ -91,7 +91,9 @@ function initTable() {
         "Added: " +
         datetime(data.date_added) +
         "\nLast modified: " +
-        datetime(data.date_modified);
+        datetime(data.date_modified) +
+        "\nDatabase ID: " +
+        data.id;
       $("td:eq(0)", row).html(
         '<code title="' + tooltip + '">' + data.address + "</code>"
       );
@@ -141,15 +143,15 @@ function initTable() {
       sel.multiselect({ includeSelectAllOption: true });
 
       let button =
-        '<button class="btn btn-success btn-xs editAdlist" type="button" data-id=\'' +
+        '<button class="btn btn-success btn-xs editAdlist" type="button" data-id="' +
         data.id +
-        "'>" +
+        '">' +
         '<span class="glyphicon glyphicon-pencil"></span>' +
         "</button>" +
         " &nbsp;" +
-        '<button class="btn btn-danger btn-xs deleteAdlist" type="button" data-id=\'' +
+        '<button class="btn btn-danger btn-xs deleteAdlist" type="button" data-id="' +
         data.id +
-        "'>" +
+        '">' +
         '<span class="glyphicon glyphicon-trash"></span>' +
         "</button>";
       $("td:eq(4)", row).html(button);
