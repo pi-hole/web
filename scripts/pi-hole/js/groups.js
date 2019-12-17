@@ -2,54 +2,56 @@ var table;
 const token = $("#token").html();
 var info = null;
 
-function showAlert(type, icon, message) {
-  var msg = "";
+function showAlert(type, icon, title, message) {
+  let opts = {};
+  title = "&nbsp;<strong>" + title + "</strong><br>";
   switch (type) {
     case "info":
-      info = $.notify({
+      opts = {
         type: "info",
         icon: "glyphicon glyphicon-time",
-        message: "&nbsp;" + message
-      });
+        title: title,
+        message: message
+      };
+      info = $.notify(opts);
       break;
     case "success":
-      msg = "&nbsp;Successfully " + message;
+      opts = {
+        type: "success",
+        icon: icon,
+        title: title,
+        message: message
+      };
       if (info) {
-        info.update({ type: "success", icon: icon, message: msg });
+        info.update(opts);
       } else {
-        $.notify({ type: "success", icon: icon, message: msg });
+        $.notify(opts);
       }
       break;
     case "warning":
-      msg = "&nbsp;" + message;
+      opts = {
+        type: "warning",
+        icon: "glyphicon glyphicon-warning-sign",
+        title: title,
+        message: message
+      };
       if (info) {
-        info.update({
-          type: "warning",
-          icon: "glyphicon glyphicon-warning-sign",
-          message: msg
-        });
+        info.update(opts);
       } else {
-        $.notify({
-          type: "warning",
-          icon: "glyphicon glyphicon-warning-sign",
-          message: msg
-        });
+        $.notify(opts);
       }
       break;
     case "error":
-      msg = "&nbsp;Error, something went wrong!<br><pre>" + message + "</pre>";
+      opts = {
+        type: "danger",
+        icon: "glyphicon glyphicon-remove",
+        title: "Error, something went wrong!",
+        message: message
+      };
       if (info) {
-        info.update({
-          type: "danger",
-          icon: "glyphicon glyphicon-remove",
-          message: msg
-        });
+        info.update(opts);
       } else {
-        $.notify({
-          type: "danger",
-          icon: "glyphicon glyphicon-remove",
-          message: msg
-        });
+        $.notify(opts);
       }
       break;
     default:
@@ -148,10 +150,10 @@ function addGroup() {
   var name = $("#new_name").val();
   var desc = $("#new_desc").val();
 
-  showAlert("info", "", "Adding group " + name + "...");
+  showAlert("info", "", "Adding group...", name);
 
   if (name.length === 0) {
-    showAlert("warning", "", "Please specify a group name");
+    showAlert("warning", "", "Warning", "Please specify a group name");
     return;
   }
 
@@ -162,17 +164,30 @@ function addGroup() {
     data: { action: "add_group", name: name, desc: desc, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-plus", "added group " + name);
+        showAlert(
+          "success",
+          "glyphicon glyphicon-plus",
+          "Successfully added group",
+          name
+        );
         $("#new_name").val("");
         $("#new_desc").val("");
         table.ajax.reload();
-      } else showAlert("error", "", response.message);
+      } else {
+        showAlert(
+          "error",
+          "",
+          "Error while adding new group",
+          response.message
+        );
+      }
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
         "",
-        "Error while adding new group: " + jqXHR.responseText
+        "Error while adding new group",
+        jqXHR.responseText
       );
       console.log(exception);
     }
@@ -186,7 +201,7 @@ function editGroup() {
   var status = tr.find("#status").is(":checked") ? 1 : 0;
   var desc = tr.find("#desc").val();
 
-  showAlert("info", "", "Editing group " + name + "...");
+  showAlert("info", "", "Editing group...", name);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -204,16 +219,25 @@ function editGroup() {
         showAlert(
           "success",
           "glyphicon glyphicon-pencil",
-          "edited group " + name
+          "Successfully edited group",
+          name
         );
         table.ajax.reload();
-      } else showAlert("error", "", response.message);
+      } else {
+        showAlert(
+          "error",
+          "",
+          "Error while editing group with ID " + id,
+          response.message
+        );
+      }
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
         "",
-        "Error while editing group with ID " + id + ": " + jqXHR.responseText
+        "Error while editing group with ID " + id,
+        jqXHR.responseText
       );
       console.log(exception);
     }
@@ -225,7 +249,7 @@ function deleteGroup() {
   var tr = $(this).closest("tr");
   var name = tr.find("#name").val();
 
-  showAlert("info", "", "Deleting group " + name + "...");
+  showAlert("info", "", "Deleting group...", name);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -236,16 +260,25 @@ function deleteGroup() {
         showAlert(
           "success",
           "glyphicon glyphicon-trash",
-          "deleted group " + name
+          "Successfully deleted group ",
+          name
         );
         table.ajax.reload();
-      } else showAlert("error", "", response.message);
+      } else {
+        showAlert(
+          "error",
+          "",
+          "Error while deleting group with ID " + id,
+          response.message
+        );
+      }
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
         "",
-        "Error while deleting group with ID " + id + ": " + jqXHR.responseText
+        "Error while deleting group with ID " + id,
+        jqXHR.responseText
       );
       console.log(exception);
     }

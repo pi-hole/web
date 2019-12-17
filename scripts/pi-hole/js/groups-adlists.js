@@ -3,54 +3,57 @@ var groups = [];
 const token = $("#token").html();
 var info = null;
 
-function showAlert(type, icon, message) {
-  var msg = "";
+function showAlert(type, icon, title, message) {
+  let opts = {};
+  title = "&nbsp;<strong>" + title + "</strong><br>";
+  message = "<pre>" + message + "</pre>";
   switch (type) {
     case "info":
-      info = $.notify({
+      opts = {
         type: "info",
         icon: "glyphicon glyphicon-time",
-        message: "&nbsp;" + message
-      });
+        title: title,
+        message: message
+      };
+      info = $.notify(opts);
       break;
     case "success":
-      msg = "&nbsp;Successfully " + message;
+      opts = {
+        type: "success",
+        icon: icon,
+        title: title,
+        message: message
+      };
       if (info) {
-        info.update({ type: "success", icon: icon, message: msg });
+        info.update(opts);
       } else {
-        $.notify({ type: "success", icon: icon, message: msg });
+        $.notify(opts);
       }
       break;
     case "warning":
-      msg = "&nbsp;" + message;
+      opts = {
+        type: "warning",
+        icon: "glyphicon glyphicon-warning-sign",
+        title: title,
+        message: message
+      };
       if (info) {
-        info.update({
-          type: "warning",
-          icon: "glyphicon glyphicon-warning-sign",
-          message: msg
-        });
+        info.update(opts);
       } else {
-        $.notify({
-          type: "warning",
-          icon: "glyphicon glyphicon-warning-sign",
-          message: msg
-        });
+        $.notify(opts);
       }
       break;
     case "error":
-      msg = "&nbsp;Error, something went wrong!<br><pre>" + message + "</pre>";
+      opts = {
+        type: "danger",
+        icon: "glyphicon glyphicon-remove",
+        title: "Error, something went wrong!",
+        message: message
+      };
       if (info) {
-        info.update({
-          type: "danger",
-          icon: "glyphicon glyphicon-remove",
-          message: msg
-        });
+        info.update(opts);
       } else {
-        $.notify({
-          type: "danger",
-          icon: "glyphicon glyphicon-remove",
-          message: msg
-        });
+        $.notify(opts);
       }
       break;
     default:
@@ -207,10 +210,10 @@ function addAdlist() {
   var address = $("#new_address").val();
   var comment = $("#new_comment").val();
 
-  showAlert("info", "", "Adding adlist " + address + "...");
+  showAlert("info", "", "Adding adlist...", address);
 
   if (address.length === 0) {
-    showAlert("warning", "", "Please specify an adlist address");
+    showAlert("warning", "", "Warning", "Please specify an adlist address");
     return;
   }
 
@@ -229,18 +232,27 @@ function addAdlist() {
         showAlert(
           "success",
           "glyphicon glyphicon-plus",
-          "added adlist " + address
+          "Successfully added adlist",
+          address
         );
         $("#new_address").val("");
         $("#new_comment").val("");
         table.ajax.reload();
-      } else showAlert("error", "", response.message);
+      } else {
+        showAlert(
+          "error",
+          "",
+          "Error while adding new adlist: ",
+          response.message
+        );
+      }
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
         "",
-        "Error while adding new adlist: " + jqXHR.responseText
+        "Error while adding new adlist: ",
+        jqXHR.responseText
       );
       console.log(exception);
     }
@@ -255,7 +267,8 @@ function editAdlist() {
   var groups = tr.find("#multiselect").val();
   var address = tr.find("#address").text();
 
-  showAlert("info");
+  showAlert("info", "", "Editing adlist...", address);
+
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -273,16 +286,25 @@ function editAdlist() {
         showAlert(
           "success",
           "glyphicon glyphicon-pencil",
-          "edited adlist " + address
+          "Successfully edited adlist ",
+          address
         );
         table.ajax.reload();
-      } else showAlert("error", "", response.message);
+      } else {
+        showAlert(
+          "error",
+          "",
+          "Error while editing adlist with ID " + id,
+          +response.message
+        );
+      }
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
         "",
-        "Error while editing adlist with ID " + id + ": " + jqXHR.responseText
+        "Error while editing adlist with ID " + id,
+        jqXHR.responseText
       );
       console.log(exception);
     }
@@ -294,7 +316,7 @@ function deleteAdlist() {
   var tr = $(this).closest("tr");
   var address = tr.find("#address").text();
 
-  showAlert("info");
+  showAlert("info", "", "Deleting adlist...", address);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -305,16 +327,24 @@ function deleteAdlist() {
         showAlert(
           "success",
           "glyphicon glyphicon-trash",
-          "deleted adlist " + address
+          "Successfully deleted adlist ",
+          address
         );
         table.ajax.reload();
-      } else showAlert("error", "", response.message);
+      } else
+        showAlert(
+          "error",
+          "",
+          "Error while deleting adlist with ID " + id,
+          response.message
+        );
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
         "",
-        "Error while deleting adlist with ID " + id + ": " + jqXHR.responseText
+        "Error while deleting adlist with ID " + id,
+        jqXHR.responseText
       );
       console.log(exception);
     }

@@ -3,54 +3,57 @@ var groups = [];
 const token = $("#token").html();
 var info = null;
 
-function showAlert(type, icon, message) {
-  var msg = "";
+function showAlert(type, icon, title, message) {
+  let opts = {};
+  title = "&nbsp;<strong>" + title + "</strong><br>";
+  message = "<pre>" + message + "</pre>";
   switch (type) {
     case "info":
-      info = $.notify({
+      opts = {
         type: "info",
         icon: "glyphicon glyphicon-time",
-        message: "&nbsp;" + message
-      });
+        title: title,
+        message: message
+      };
+      info = $.notify(opts);
       break;
     case "success":
-      msg = "&nbsp;Successfully " + message;
+      opts = {
+        type: "success",
+        icon: icon,
+        title: title,
+        message: message
+      };
       if (info) {
-        info.update({ type: "success", icon: icon, message: msg });
+        info.update(opts);
       } else {
-        $.notify({ type: "success", icon: icon, message: msg });
+        $.notify(opts);
       }
       break;
     case "warning":
-      msg = "&nbsp;" + message;
+      opts = {
+        type: "warning",
+        icon: "glyphicon glyphicon-warning-sign",
+        title: title,
+        message: message
+      };
       if (info) {
-        info.update({
-          type: "warning",
-          icon: "glyphicon glyphicon-warning-sign",
-          message: msg
-        });
+        info.update(opts);
       } else {
-        $.notify({
-          type: "warning",
-          icon: "glyphicon glyphicon-warning-sign",
-          message: msg
-        });
+        $.notify(opts);
       }
       break;
     case "error":
-      msg = "&nbsp;Error, something went wrong!<br><pre>" + message + "</pre>";
+      opts = {
+        type: "danger",
+        icon: "glyphicon glyphicon-remove",
+        title: "Error, something went wrong!",
+        message: message
+      };
       if (info) {
-        info.update({
-          type: "danger",
-          icon: "glyphicon glyphicon-remove",
-          message: msg
-        });
+        info.update(opts);
       } else {
-        $.notify({
-          type: "danger",
-          icon: "glyphicon glyphicon-remove",
-          message: msg
-        });
+        $.notify(opts);
       }
       break;
     default:
@@ -226,10 +229,10 @@ function addDomain() {
   var type = $("#new_type").val();
   var comment = $("#new_comment").val();
 
-  showAlert("info", "", "Adding domain " + domain + "...");
+  showAlert("info", "", "Adding domain...", domain);
 
   if (domain.length === 0) {
-    showAlert("warning", "", "Please specify a domain");
+    showAlert("warning", "", "Warning", "Please specify a domain");
     return;
   }
 
@@ -249,18 +252,26 @@ function addDomain() {
         showAlert(
           "success",
           "glyphicon glyphicon-plus",
-          "added new domain " + domain
+          "Successfully added domain",
+          domain
         );
         $("#new_domain").val("");
         $("#new_comment").val("");
         table.ajax.reload();
-      } else showAlert("error", "", response.message);
+      } else
+        showAlert(
+          "error",
+          "",
+          "Error while adding new domain",
+          response.message
+        );
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
         "",
-        "Error while adding new domain: " + jqXHR.responseText
+        "Error while adding new domain",
+        jqXHR.responseText
       );
       console.log(exception);
     }
@@ -276,7 +287,7 @@ function editDomain() {
   var comment = tr.find("#comment").val();
   var groups = tr.find("#multiselect").val();
 
-  showAlert("info", "", "Editing domain " + name + "...");
+  showAlert("info", "", "Editing domain...", name);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -295,16 +306,24 @@ function editDomain() {
         showAlert(
           "success",
           "glyphicon glyphicon-pencil",
-          "edited domain " + domain
+          "Successfully edited domain",
+          domain
         );
         table.ajax.reload();
-      } else showAlert("error", "", response.message);
+      } else
+        showAlert(
+          "error",
+          "",
+          "Error while editing domain with ID " + id,
+          response.message
+        );
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
         "",
-        "Error while editing domain with ID " + id + ": " + jqXHR.responseText
+        "Error while editing domain with ID " + id,
+        jqXHR.responseText
       );
       console.log(exception);
     }
@@ -316,7 +335,7 @@ function deleteDomain() {
   var tr = $(this).closest("tr");
   var domain = tr.find("#domain").text();
 
-  showAlert("info", "", "Deleting domain " + domain + "...");
+  showAlert("info", "", "Deleting domain...", domain);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -327,16 +346,24 @@ function deleteDomain() {
         showAlert(
           "success",
           "glyphicon glyphicon-trash",
-          "deleted domain " + domain
+          "Successfully deleted domain",
+          domain
         );
         table.ajax.reload();
-      } else showAlert("error", "", response.message);
+      } else
+        showAlert(
+          "error",
+          "",
+          "Error while deleting domain with ID " + id,
+          response.message
+        );
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
         "",
-        "Error while deleting domain with ID " + id + ": " + jqXHR.responseText
+        "Error while deleting domain with ID " + id,
+        jqXHR.responseText
       );
       console.log(exception);
     }

@@ -3,54 +3,57 @@ var groups = [];
 const token = $("#token").html();
 var info = null;
 
-function showAlert(type, icon, message) {
-  var msg = "";
+function showAlert(type, icon, title, message) {
+  let opts = {};
+  title = "&nbsp;<strong>" + title + "</strong><br>";
+  message = "<pre>" + message + "</pre>";
   switch (type) {
     case "info":
-      info = $.notify({
+      opts = {
         type: "info",
         icon: "glyphicon glyphicon-time",
-        message: "&nbsp;" + message
-      });
+        title: title,
+        message: message
+      };
+      info = $.notify(opts);
       break;
     case "success":
-      msg = "&nbsp;Successfully " + message;
+      opts = {
+        type: "success",
+        icon: icon,
+        title: title,
+        message: message
+      };
       if (info) {
-        info.update({ type: "success", icon: icon, message: msg });
+        info.update(opts);
       } else {
-        $.notify({ type: "success", icon: icon, message: msg });
+        $.notify(opts);
       }
       break;
     case "warning":
-      msg = "&nbsp;" + message;
+      opts = {
+        type: "warning",
+        icon: "glyphicon glyphicon-warning-sign",
+        title: title,
+        message: message
+      };
       if (info) {
-        info.update({
-          type: "warning",
-          icon: "glyphicon glyphicon-warning-sign",
-          message: msg
-        });
+        info.update(opts);
       } else {
-        $.notify({
-          type: "warning",
-          icon: "glyphicon glyphicon-warning-sign",
-          message: msg
-        });
+        $.notify(opts);
       }
       break;
     case "error":
-      msg = "&nbsp;Error, something went wrong!<br><pre>" + message + "</pre>";
+      opts = {
+        type: "danger",
+        icon: "glyphicon glyphicon-remove",
+        title: "Error, something went wrong!",
+        message: message
+      };
       if (info) {
-        info.update({
-          type: "danger",
-          icon: "glyphicon glyphicon-remove",
-          message: msg
-        });
+        info.update(opts);
       } else {
-        $.notify({
-          type: "danger",
-          icon: "glyphicon glyphicon-remove",
-          message: msg
-        });
+        $.notify(opts);
       }
       break;
     default:
@@ -207,10 +210,10 @@ function addClient() {
     ip = $("#ip-custom").val();
   }
 
-  showAlert("info", "", "Adding client " + ip + "...");
+  showAlert("info", "", "Adding client...", ip);
 
   if (ip.length === 0) {
-    showAlert("warning", "", "Please specify a client");
+    showAlert("warning", "", "Warning", "Please specify a client IP address");
     return;
   }
 
@@ -221,16 +224,29 @@ function addClient() {
     data: { action: "add_client", ip: ip, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-plus", "added client " + ip);
+        showAlert(
+          "success",
+          "glyphicon glyphicon-plus",
+          "Successfully added client",
+          ip
+        );
         reload_client_suggestions();
         table.ajax.reload();
-      } else showAlert("error", "", response.message);
+      } else {
+        showAlert(
+          "error",
+          "",
+          "Error while adding new client",
+          response.message
+        );
+      }
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
         "",
-        "Error while adding new client: " + jqXHR.responseText
+        "Error while adding new client",
+        jqXHR.responseText
       );
       console.log(exception);
     }
@@ -243,7 +259,7 @@ function editClient() {
   var groups = tr.find("#multiselect").val();
   var ip = tr.find("#ip").text();
 
-  showAlert("info", "", "Editing client " + ip + "...");
+  showAlert("info", "", "Editing client...", ip);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -251,15 +267,27 @@ function editClient() {
     data: { action: "edit_client", id: id, groups: groups, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-plus", "edited client " + ip);
+        showAlert(
+          "success",
+          "glyphicon glyphicon-plus",
+          "Successfully edited client",
+          ip
+        );
         table.ajax.reload();
-      } else showAlert("error", "", response.message);
+      } else {
+        showAlert(
+          "error",
+          "Error while editing client with ID " + id,
+          response.message
+        );
+      }
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
         "",
-        "Error while editing client with ID " + id + ": " + jqXHR.responseText
+        "Error while editing client with ID " + id,
+        jqXHR.responseText
       );
       console.log(exception);
     }
@@ -271,7 +299,7 @@ function deleteClient() {
   var tr = $(this).closest("tr");
   var ip = tr.find("#ip").text();
 
-  showAlert("info", "", "Deleting client " + ip + "...");
+  showAlert("info", "", "Deleting client...", ip);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -286,13 +314,21 @@ function deleteClient() {
         );
         reload_client_suggestions();
         table.ajax.reload();
-      } else showAlert("error", "", response.message);
+      } else {
+        showAlert(
+          "error",
+          "",
+          "Error while deleting client with ID " + id,
+          response.message
+        );
+      }
     },
     error: function(jqXHR, exception) {
       showAlert(
         "error",
         "",
-        "Error while deleting client with ID " + id + ": " + jqXHR.responseText
+        "Error while deleting client with ID " + id,
+        jqXHR.responseText
       );
       console.log(exception);
     }
