@@ -87,7 +87,7 @@ $(document).ready(function() {
     updateTopLists();
 
     $("#domain-frequency tbody").on( "click", "button", function () {
-        var url = ($(this).parents("tr"))[0].textContent.split("	")[0];
+        var url = ($(this).parents("tr"))[0].textContent.split("\t")[0];
         if($(this).context.textContent === " Blacklist")
         {
             add(url,"audit");
@@ -101,7 +101,7 @@ $(document).ready(function() {
     });
 
     $("#ad-frequency tbody").on( "click", "button", function () {
-        var url = ($(this).parents("tr"))[0].textContent.split("	")[0].split(" ")[0];
+        var url = ($(this).parents("tr"))[0].textContent.split("\t")[0].split(" ")[0];
         if($(this).context.textContent === " Whitelist")
         {
             add(url,"audit");
