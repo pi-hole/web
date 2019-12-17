@@ -655,10 +655,14 @@ function updateSummaryData(runOnce) {
         }
 
         ["ads_blocked_today", "dns_queries_today", "ads_percentage_today", "unique_clients"].forEach(function(today) {
-            var todayElement = $("span#" + today);
-            todayElement.text() !== data[today] &&
-            todayElement.text() !== data[today] + "%" &&
-            $("span#" + today).addClass("glow");
+            var $todayElement = $("span#" + today);
+
+            if (
+                $todayElement.text() !== data[today] &&
+                $todayElement.text() !== data[today] + "%"
+            ) {
+                $todayElement.addClass("glow");
+            }
         });
 
         if(Object.prototype.hasOwnProperty.call(data, "dns_queries_all_types"))
