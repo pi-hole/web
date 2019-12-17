@@ -31,7 +31,7 @@ function eventsource() {
     var ta = $("#output");
     var upload = $( "#upload" );
     var checked = "";
-    var token = encodeURIComponent($("#token").html());
+    var token = encodeURIComponent($("#token").text());
 
     if(upload.prop("checked"))
     {

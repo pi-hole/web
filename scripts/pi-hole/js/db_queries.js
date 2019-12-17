@@ -59,7 +59,7 @@ $(function () {
 var tableApi, statistics;
 
 function add(domain,list) {
-    var token = $("#token").html();
+    var token = $("#token").text();
     var alInfo = $("#alInfo");
     var alList = $("#alList");
     var alDomain = $("#alDomain");

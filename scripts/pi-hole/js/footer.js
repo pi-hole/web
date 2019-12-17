@@ -59,7 +59,7 @@ function countDown(){
 
 function piholeChange(action, duration)
 {
-    var token = encodeURIComponent($("#token").html());
+    var token = encodeURIComponent($("#token").text());
     var enaT = $("#enableTimer");
     var btnStatus;
 

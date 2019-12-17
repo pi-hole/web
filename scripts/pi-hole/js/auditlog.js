@@ -73,7 +73,7 @@ function updateTopLists() {
 }
 
 function add(domain,list) {
-    var token = $("#token").html();
+    var token = $("#token").text();
     $.ajax({
         url: "scripts/pi-hole/php/add.php",
         method: "post",
