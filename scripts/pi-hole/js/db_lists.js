@@ -62,7 +62,7 @@ function updateTopClientsChart() {
         // Clear tables before filling them with data
         $("#client-frequency td").parent().remove();
         var clienttable = $("#client-frequency").find("tbody:last");
-        var client, percentage, clientname, clientip;
+        var client, percentage, clientname;
         var sum = 0;
         for (client in data.top_sources) {
             if (Object.prototype.hasOwnProperty.call(data.top_sources, client)){
@@ -84,17 +84,14 @@ function updateTopClientsChart() {
                 {
                     var idx = client.indexOf("|");
                     clientname = client.substr(0, idx);
-                    clientip = client.substr(idx+1, client.length-idx);
                 }
                 else
                 {
                     clientname = client;
-                    clientip = client;
                 }
 
-                var url = clientname;
                 percentage = data.top_sources[client] / sum * 100.0;
-                clienttable.append("<tr> <td>" + url +
+                clienttable.append("<tr> <td>" + clientname +
                     "</td> <td>" + data.top_sources[client] + "</td> <td> <div class=\"progress progress-sm\" title=\""+percentage.toFixed(1)+"% of " + sum + "\"> <div class=\"progress-bar progress-bar-blue\" style=\"width: " +
                     percentage + "%\"></div> </div> </td> </tr> ");
             }
