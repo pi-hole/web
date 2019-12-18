@@ -11,6 +11,7 @@ var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf()/1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf()/1000;
+var interval = 0;
 
 var timeoutWarning = $("#timeoutWarning");
 
@@ -71,7 +72,35 @@ function compareNumbers(a, b) {
 function updateQueriesOverTime() {
     $("#queries-over-time .overlay").show();
     timeoutWarning.show();
-    $.getJSON("api_db.php?getGraphData&from="+from+"&until="+until, function(data) {
+
+    // Compute interval to obtain about 200 values
+    var num = 200;
+    interval = (until-from)/num;
+    // Default displaying axis scaling
+    timeLineChart.options.scales.xAxes[0].time.unit="hour"
+
+    if(num*interval >= 6*29*24*60*60)
+    {
+        // If the requested data is more than 3 months, set ticks interval to quarterly
+        timeLineChart.options.scales.xAxes[0].time.unit="quarter"
+    }
+    else if(num*interval >= 3*29*24*60*60)
+    {
+        // If the requested data is more than 3 months, set ticks interval to months
+        timeLineChart.options.scales.xAxes[0].time.unit="month"
+    }
+    if(num*interval >= 29*24*60*60)
+    {
+        // If the requested data is more than 1 month, set ticks interval to weeks
+        timeLineChart.options.scales.xAxes[0].time.unit="week"
+    }
+    else if(num*interval >= 6*24*60*60)
+    {
+        // If the requested data is more than 1 week, set ticks interval to days
+        timeLineChart.options.scales.xAxes[0].time.unit="day"
+    }
+
+    $.getJSON("api_db.php?getGraphData&from="+from+"&until="+until+"&interval="+interval, function(data) {
 
         // convert received objects to arrays
         data.domains_over_time = objectToArray(data.domains_over_time);
@@ -119,7 +148,7 @@ function updateQueriesOverTime() {
                 }
 
                 timeLineChart.data.labels.push(d);
-                timeLineChart.data.datasets[0].data.push(dom);
+                timeLineChart.data.datasets[0].data.push(dom - ads);
                 timeLineChart.data.datasets[1].data.push(ads);
             }
         }
@@ -131,54 +160,73 @@ function updateQueriesOverTime() {
     });
 }
 
+Date.prototype.AddInterval = function () {
+    return new Date(this.valueOf() + 1000 * interval);
+}
+
 $(document).ready(function() {
     var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
     timeLineChart = new Chart(ctx, {
-        type: "line",
+        type: "bar",
         data: {
-            labels: [ 0 ],
+            labels: [ ],
             datasets: [
                 {
-                    label: "Total DNS Queries",
+                    label: "Permitted DNS Queries",
                     fill: true,
-                    backgroundColor: "rgba(220,220,220,0.5)",
+                    backgroundColor: "rgba(0, 166, 90,.8)",
                     borderColor: "rgba(0, 166, 90,.8)",
                     pointBorderColor: "rgba(0, 166, 90,.8)",
                     pointRadius: 1,
                     pointHoverRadius: 5,
                     data: [],
-                    pointHitRadius: 5,
-                    cubicInterpolationMode: "monotone"
+                    pointHitRadius: 5
                 },
                 {
                     label: "Blocked DNS Queries",
                     fill: true,
-                    backgroundColor: "rgba(0,192,239,0.5)",
+                    backgroundColor: "rgba(0,192,239,1)",
                     borderColor: "rgba(0,192,239,1)",
                     pointBorderColor: "rgba(0,192,239,1)",
                     pointRadius: 1,
                     pointHoverRadius: 5,
                     data: [],
-                    pointHitRadius: 5,
-                    cubicInterpolationMode: "monotone"
+                    pointHitRadius: 5
                 }
             ]
         },
         options: {
             tooltips: {
                 enabled: true,
-                responsive: true,
                 mode: "x-axis",
                 callbacks: {
                     title: function(tooltipItem) {
                         var label = tooltipItem[0].xLabel;
                         var time = new Date(label);
-                        var date = time.getFullYear()+"-"+padNumber(time.getMonth()+1)+"-"+padNumber(time.getDate());
-                        var h = time.getHours();
-                        var m = time.getMinutes();
-                        var from = padNumber(h)+":"+padNumber(m)+":00";
-                        var to = padNumber(h)+":"+padNumber(m+9)+":59";
-                        return "Queries from "+from+" to "+to+" on "+date;
+                        var from_date = time.getFullYear() +
+                                        "-" +
+                                        padNumber(time.getMonth()+1) +
+                                        "-" +
+                                        padNumber(time.getDate()) +
+                                        " " +
+                                        padNumber(time.getHours()) +
+                                        ":" +
+                                        padNumber(time.getMinutes()) +
+                                        ":" +
+                                        padNumber(time.getSeconds());
+                        time = time.AddInterval();
+                        var until_date = time.getFullYear() +
+                                         "-" +
+                                         padNumber(time.getMonth()+1) +
+                                         "-" +
+                                         padNumber(time.getDate()) +
+                                         " " +
+                                         padNumber(time.getHours()) +
+                                         ":" +
+                                         padNumber(time.getMinutes()) +
+                                         ":" +
+                                         padNumber(time.getSeconds());
+                        return "Queries from " + from_date + " to " + until_date;
                     },
                     label: function(tooltipItems, data) {
                         if(tooltipItems.datasetIndex === 1)
@@ -203,20 +251,22 @@ $(document).ready(function() {
             scales: {
                 xAxes: [{
                     type: "time",
-                    display: false,
+                    stacked: true,
                     time: {
+                        unit: "hour",
                         displayFormats: {
                            "minute": "HH:mm",
                            "hour": "HH:mm",
-                           "day": "HH:mm",
-                           "week": "MMM DD HH:mm",
-                           "month": "MMM DD",
-                           "quarter": "MMM DD",
-                           "year": "MMM DD"
+                           "day": "MMM DD",
+                           "week": "MMM DD",
+                           "month": "MMM",
+                           "quarter": "MMM",
+                           "year": "YYYY MMM"
                         }
                     }
                 }],
                 yAxes: [{
+                    stacked: true,
                     ticks: {
                         beginAtZero: true
                     }
