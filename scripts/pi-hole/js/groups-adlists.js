@@ -6,7 +6,6 @@ var info = null;
 function showAlert(type, icon, title, message) {
   let opts = {};
   title = "&nbsp;<strong>" + title + "</strong><br>";
-  message = "<pre>" + message + "</pre>";
   switch (type) {
     case "info":
       opts = {

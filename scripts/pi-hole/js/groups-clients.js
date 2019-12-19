@@ -6,7 +6,6 @@ var info = null;
 function showAlert(type, icon, title, message) {
   let opts = {};
   title = "&nbsp;<strong>" + title + "</strong><br>";
-  message = "<pre>" + message + "</pre>";
   switch (type) {
     case "info":
       opts = {
@@ -68,11 +67,18 @@ function reload_client_suggestions() {
     function(data) {
       var sel = $("#select");
       sel.empty();
-      for (var i = 0; i < data.length; i++) {
+      for (var key in data) {
+        if (!data.hasOwnProperty(key)) {
+          continue;
+        }
+        var text = key;
+        if (data[key].length > 0) {
+          text += " (" + data[key] + ")";
+        }
         sel.append(
           $("<option />")
-            .val(data[i])
-            .text(data[i])
+            .val(key)
+            .text(text)
         );
       }
       sel.append(
@@ -123,7 +129,7 @@ function initTable() {
     columns: [
       { data: "ip" },
       { data: "groups", searchable: false },
-      { data: null, width: "80px", orderable: false }
+      { data: "name", width: "80px", orderable: false }
     ],
     drawCallback: function(settings) {
       $(".editClient").on("click", editClient);
@@ -131,15 +137,22 @@ function initTable() {
     },
     rowCallback: function(row, data) {
       const tooltip = "Database ID: " + data.id;
-      $("td:eq(0)", row).html(
+      var ip_name =
         '<code id="ip" title="' +
+        tooltip +
+        '">' +
+        data.ip +
+        '</code><input id="id" type="hidden" value="' +
+        data.id +
+        '">';
+      if (data.name !== null && data.name.length > 0)
+        ip_name +=
+          '<br><code id="name" title="' +
           tooltip +
           '">' +
-          data.ip +
-          '</code><input id="id" type="hidden" value="' +
-          data.id +
-          '">'
-      );
+          data.name +
+          "</code>";
+      $("td:eq(0)", row).html(ip_name);
 
       $("td:eq(1)", row).empty();
       $("td:eq(1)", row).append(
@@ -258,8 +271,14 @@ function editClient() {
   var id = tr.find("#id").val();
   var groups = tr.find("#multiselect").val();
   var ip = tr.find("#ip").text();
+  var name = tr.find("#name").text();
 
-  showAlert("info", "", "Editing client...", ip);
+  var ip_name = ip;
+  if (name.length > 0) {
+    ip_name += " (" + name + ")";
+  }
+
+  showAlert("info", "", "Editing client...", ip_name);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -271,7 +290,7 @@ function editClient() {
           "success",
           "glyphicon glyphicon-plus",
           "Successfully edited client",
-          ip
+          ip_name
         );
         table.ajax.reload();
       } else {
@@ -298,8 +317,13 @@ function deleteClient() {
   var id = $(this).attr("data-id");
   var tr = $(this).closest("tr");
   var ip = tr.find("#ip").text();
+  var name = tr.find("#name").text();
 
-  showAlert("info", "", "Deleting client...", ip);
+  var ip_name = ip;
+  if (name.length > 0) {
+    ip_name += " (" + name + ")";
+  }
+  showAlert("info", "", "Deleting client...", ip_name);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -309,8 +333,8 @@ function deleteClient() {
       if (response.success) {
         showAlert(
           "success",
-          "glyphicon glyphicon-pencil",
-          "deleted client " + ip
+          "glyphicon glyphicon-trash",
+          "Successfully deleted client ", ip_name
         );
         reload_client_suggestions();
         table.ajax.reload();

@@ -149,10 +149,14 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'get_clients') {
     // List all available groups
     try {
+        $QUERYDB = getQueriesDBFilename();
+        $FTLdb = SQLite3_connect($QUERYDB);
+
         $query = $db->query('SELECT * FROM client;');
         if (!$query) {
             throw new Exception('Error while querying gravity\'s client table: ' . $db->lastErrorMsg());
         }
+
 
         $data = array();
         while (($res = $query->fetchArray(SQLITE3_ASSOC)) !== false) {
@@ -160,6 +164,24 @@ if ($_POST['action'] == 'get_groups') {
             if (!$group_query) {
                 throw new Exception('Error while querying gravity\'s client_by_group table: ' . $db->lastErrorMsg());
             }
+
+            $stmt = $FTLdb->prepare('SELECT name FROM network WHERE id = (SELECT network_id FROM network_addresses WHERE ip = :ip);');
+            if (!$stmt) {
+                throw new Exception('Error while preparing network table statement: ' . $db->lastErrorMsg());
+            }
+
+            if (!$stmt->bindValue(':ip', $res['ip'], SQLITE3_TEXT)) {
+                throw new Exception('While binding to network table statement: ' . $db->lastErrorMsg());
+            }
+
+            $result = $stmt->execute();
+            if (!$result) {
+                throw new Exception('While executing network table statement: ' . $db->lastErrorMsg());
+            }
+
+            // There will always be a result. Unknown host names are NULL
+            $name_result = $result->fetchArray(SQLITE3_ASSOC);
+            $res['name'] = $name_result['name'];
     
             $groups = array();
             while ($gres = $group_query->fetchArray(SQLITE3_ASSOC)) {
@@ -179,7 +201,7 @@ if ($_POST['action'] == 'get_groups') {
         $QUERYDB = getQueriesDBFilename();
         $FTLdb = SQLite3_connect($QUERYDB);
 
-        $query = $FTLdb->query('SELECT DISTINCT ip FROM network_addresses ORDER BY ip ASC;');
+        $query = $FTLdb->query('SELECT DISTINCT ip,network.name FROM network_addresses AS name LEFT JOIN network ON network.id = network_id ORDER BY ip ASC;');
         if (!$query) {
             throw new Exception('Error while querying FTL\'s database: ' . $db->lastErrorMsg());
         }
@@ -187,7 +209,7 @@ if ($_POST['action'] == 'get_groups') {
         // Loop over results
         $ips = array();
         while ($res = $query->fetchArray(SQLITE3_ASSOC)) {
-            array_push($ips, $res['ip']);
+            $ips[$res['ip']] = $res['name'];
         }
         $FTLdb->close();
 
@@ -198,13 +220,12 @@ if ($_POST['action'] == 'get_groups') {
 
         // Loop over results, remove already configured clients
         while (($res = $query->fetchArray(SQLITE3_ASSOC)) !== false) {
-            $idx = array_search($res['ip'], $ips);
-            if ($idx !== false) {
-                unset($ips[$idx]);
+            if (isset($ips[$res['ip']])) {
+                unset($ips[$res['ip']]);
             }
         }
 
-        echo json_encode(array_values($ips));
+        echo json_encode($ips);
     } catch (\Exception $ex) {
         return JSON_error($ex->getMessage());
     }
