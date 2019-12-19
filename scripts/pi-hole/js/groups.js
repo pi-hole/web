@@ -78,7 +78,6 @@ $(document).ready(function() {
     ],
     drawCallback: function(settings) {
       $(".deleteGroup").on("click", deleteGroup);
-      $(".editGroup").on("click", editGroup);
     },
     rowCallback: function(row, data) {
       const disabled = data.enabled === 0;
@@ -94,30 +93,28 @@ $(document).ready(function() {
         onstyle: "success",
         width: "80px"
       });
+      $('#status', row).on('change', editGroup);
 
       $("td:eq(2)", row).html('<input id="name" class="form-control">');
       $("#name", row).val(data.name);
+      $('#name', row).on('change', editGroup);
 
       $("td:eq(3)", row).html('<input id="desc" class="form-control">');
       const desc = data.description !== null ? data.description : "";
       $("#desc", row).val(desc);
+      $('#desc', row).on('change', editGroup);
 
-      let button =
-        '<button class="btn btn-success btn-xs editGroup" type="button" data-id="' +
-        data.id +
-        '">' +
-        '<span class="glyphicon glyphicon-pencil"></span>' +
-        "</button>";
+      $("td:eq(4)", row).empty();
       if (data.id !== 0) {
-        button +=
+        let button =
           " &nbsp;" +
           '<button class="btn btn-danger btn-xs deleteGroup" type="button" data-id="' +
           data.id +
           '">' +
           '<span class="glyphicon glyphicon-trash"></span>' +
           "</button>";
+          $("td:eq(4)", row).html(button);
       }
-      $("td:eq(4)", row).html(button);
     },
     lengthMenu: [
       [10, 25, 50, 100, -1],
@@ -195,11 +192,35 @@ function addGroup() {
 }
 
 function editGroup() {
+  var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
-  var id = tr.find("td:eq(0)").html();
+  var id = tr.find("td:eq(0)").text();
   var name = tr.find("#name").val();
   var status = tr.find("#status").is(":checked") ? 1 : 0;
   var desc = tr.find("#desc").val();
+
+  var done = "edited";
+  var not_done = "editing";
+  if(elem === "status" && status === 1)
+  {
+    done = "enabled";
+    not_done = "enabling";
+  }
+  else if(elem === "status" && status === 0)
+  {
+    done = "disabled";
+    not_done = "disabling";
+  }
+  else if(elem === "name")
+  {
+    done = "edited name of";
+    not_done = "editing name of";
+  }
+  else if(elem === "desc")
+  {
+    done = "edited description of";
+    not_done = "editing description of";
+  }
 
   showAlert("info", "", "Editing group...", name);
   $.ajax({
@@ -219,7 +240,7 @@ function editGroup() {
         showAlert(
           "success",
           "glyphicon glyphicon-pencil",
-          "Successfully edited group",
+          "Successfully " + done + " group",
           name
         );
         table.ajax.reload();
@@ -227,7 +248,7 @@ function editGroup() {
         showAlert(
           "error",
           "",
-          "Error while editing group with ID " + id,
+          "Error while " + not_done + " group with ID " + id,
           response.message
         );
       }
@@ -236,7 +257,7 @@ function editGroup() {
       showAlert(
         "error",
         "",
-        "Error while editing group with ID " + id,
+        "Error while " + not_done + " group with ID " + id,
         jqXHR.responseText
       );
       console.log(exception);
