@@ -132,8 +132,8 @@ function updateQueriesOverTime() {
         // Add data for each hour that is available
         for (hour in dates) {
             if (Object.prototype.hasOwnProperty.call(dates, hour)) {
-                var d, dom = 0, ads = 0;
-                d = new Date(1000*dates[hour]);
+                var date, dom = 0, ads = 0;
+                date = new Date(1000*dates[hour]);
 
                 var idx = data.domains_over_time[0].indexOf(dates[hour].toString());
                 if (idx > -1)
@@ -147,7 +147,7 @@ function updateQueriesOverTime() {
                     ads = data.ads_over_time[1][idx];
                 }
 
-                timeLineChart.data.labels.push(d);
+                timeLineChart.data.labels.push(date);
                 timeLineChart.data.datasets[0].data.push(dom - ads);
                 timeLineChart.data.datasets[1].data.push(ads);
             }
@@ -158,10 +158,6 @@ function updateQueriesOverTime() {
         timeoutWarning.hide();
         timeLineChart.update();
     });
-}
-
-Date.prototype.AddInterval = function () {
-    return new Date(this.valueOf() + 1000 * interval);
 }
 
 $(document).ready(function() {
@@ -214,7 +210,7 @@ $(document).ready(function() {
                                         padNumber(time.getMinutes()) +
                                         ":" +
                                         padNumber(time.getSeconds());
-                        time = time.AddInterval();
+                        time = new Date(time.valueOf() + 1000 * interval);
                         var until_date = time.getFullYear() +
                                          "-" +
                                          padNumber(time.getMonth()+1) +
