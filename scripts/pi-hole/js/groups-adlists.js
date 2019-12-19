@@ -97,7 +97,7 @@ function initTable() {
       data: { action: "get_adlists", token: token },
       type: "POST"
     },
-    order: [[1, "asc"]],
+    order: [[0, "asc"]],
     columns: [
       { data: "address" },
       { data: "enabled", searchable: false },

@@ -97,7 +97,7 @@ function initTable() {
       data: { action: "get_domains", token: token },
       type: "POST"
     },
-    order: [[1, "asc"]],
+    order: [[0, "asc"]],
     columns: [
       { data: "domain" },
       { data: "type", searchable: false },

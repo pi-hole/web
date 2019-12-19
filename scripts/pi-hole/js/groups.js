@@ -68,7 +68,7 @@ $(document).ready(function() {
       data: { action: "get_groups", token: token },
       type: "POST"
     },
-    order: [[1, "asc"]],
+    order: [[0, "asc"]],
     columns: [
       { data: "id", width: "60px" },
       { data: "enabled", searchable: false },

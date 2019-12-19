@@ -125,7 +125,7 @@ function initTable() {
       data: { action: "get_clients", token: token },
       type: "POST"
     },
-    order: [[1, "asc"]],
+    order: [[0, "asc"]],
     columns: [
       { data: "ip" },
       { data: "groups", searchable: false },
