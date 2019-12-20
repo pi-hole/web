@@ -515,22 +515,16 @@ if($auth) {
                             <i class="fa fa-address-book"></i> <span>Groups</span>
                         </a>
                     </li>
-                  </ul>
-                  <ul class="treeview-menu">
                     <li<?php if($scriptname === "groups-clients.php"){ ?> class="active"<?php } ?>>
                         <a href="groups-clients.php">
                             <i class="fa fa-address-book"></i> <span>Clients</span>
                         </a>
                     </li>
-                  </ul>
-                  <ul class="treeview-menu">
                     <li<?php if($scriptname === "groups-domains.php"){ ?> class="active"<?php } ?>>
                         <a href="groups-domains.php">
                             <i class="fa fa-address-book"></i> <span>Domains</span>
                         </a>
                     </li>
-                  </ul>
-                  <ul class="treeview-menu">
                     <li<?php if($scriptname === "groups-adlists.php"){ ?> class="active"<?php } ?>>
                         <a href="groups-adlists.php">
                             <i class="fa fa-address-book"></i> <span>Adlists</span>
