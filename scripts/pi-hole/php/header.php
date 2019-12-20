@@ -485,14 +485,7 @@ if($auth) {
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
-                <!-- Custom DNS -->
-                <li<?php if($scriptname === "custom_dns.php"){ ?> class="active"<?php } ?>>
-                    <a href="custom_dns.php">
-                        <i class="fa fa-address-book"></i> <span>Custom DNS</span>
-                    </a>
-                </li>
                 <!-- Toggle -->
-
                 <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden="true"<?php } ?>>
                   <a href="#">
                     <span class="pull-right-container">
@@ -589,6 +582,12 @@ if($auth) {
                 <li<?php if($scriptname === "settings.php"){ ?> class="active"<?php } ?>>
                     <a href="settings.php">
                         <i class="fa fa-cogs"></i> <span>Settings</span>
+                    </a>
+                </li>
+                <!-- Custom DNS -->
+                <li<?php if($scriptname === "custom_dns.php"){ ?> class="active"<?php } ?>>
+                    <a href="custom_dns.php">
+                        <i class="fa fa-address-book"></i> <span>Custom DNS</span>
                     </a>
                 </li>
                 <!-- Logout -->
