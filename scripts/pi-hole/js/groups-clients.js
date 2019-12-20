@@ -161,14 +161,14 @@ function initTable() {
       var sel = $("#multiselect", row);
       // Add all known groups
       for (var i = 0; i < groups.length; i++) {
-        var extra = "ID " + groups[i].id;
+        var extra = "";
         if (!groups[i].enabled) {
-          extra += ", disabled";
+          extra = " (disabled)";
         }
         sel.append(
           $("<option />")
             .val(groups[i].id)
-            .text(groups[i].name + " (" + extra + ")")
+            .text(groups[i].name + extra)
         );
       }
       // Select assigned groups
