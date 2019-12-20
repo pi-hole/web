@@ -334,7 +334,8 @@ function deleteClient() {
         showAlert(
           "success",
           "glyphicon glyphicon-trash",
-          "Successfully deleted client ", ip_name
+          "Successfully deleted client ",
+          ip_name
         );
         reload_client_suggestions();
         table.ajax.reload();

@@ -61,6 +61,10 @@ function showAlert(type, icon, title, message) {
 
 $(document).ready(function() {
   $("#btnAdd").on("click", addGroup);
+  $("#resetButton").on("click", function() {
+    table.order([[0, "asc"]]).draw();
+    $("#resetButton").hide();
+  });
 
   table = $("#groupsTable").DataTable({
     ajax: {
@@ -70,6 +74,7 @@ $(document).ready(function() {
     },
     order: [[0, "asc"]],
     columns: [
+      { data: "id", visible: false },
       { data: "name" },
       { data: "enabled", searchable: false },
       { data: "description" },
@@ -142,6 +147,15 @@ $(document).ready(function() {
       data.search.search = "";
       // Apply loaded state to table
       return data;
+    }
+  });
+
+  table.on("order.dt", function() {
+    var order = table.order();
+    if (order[0][0] !== 0 || order[0][1] !== "asc") {
+      $("#resetButton").show();
+    } else {
+      $("#resetButton").hide();
     }
   });
 });

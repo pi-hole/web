@@ -56,13 +56,14 @@
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Status</th>
                         <th>Name</th>
+                        <th>Status</th>
                         <th>Description</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                 </table>
+                <button type="button" id="resetButton" hidden="true">Reset sorting</button>
             </div>
             <!-- /.box-body -->
         </div>
