@@ -11,7 +11,8 @@
 
 <!-- Title -->
 <div class="page-header">
-    <h1>Custom DNS</h1>
+    <h1>Custom DNS configuration</h1>
+    <small>On this page, you can add domain/IP associations similar to records in <code>/etc/hosts</code>.</small>
 </div>
 
 <!-- Domain Input -->
