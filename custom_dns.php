@@ -17,7 +17,7 @@
 <!-- Domain Input -->
 <form class="form-inline" >
     <div class="form-group">
-        <input id="domain" type="text" class="form-control" placeholder="Add a domain (example.com or sub.example.com)">
+        <input id="domain" type="url" class="form-control" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
     </div>
     <div class="form-group">
         <input id="ip" type="text" class="form-control" placeholder="Define an associate IP">
