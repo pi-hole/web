@@ -33,7 +33,7 @@ $token = $_SESSION['token'];
           <div class="input-group-addon">
             <i class="far fa-clock"></i>
           </div>
-          <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range" style="text-align:left">
+          <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
         </div>
         <!-- /.input group -->
       </div>
