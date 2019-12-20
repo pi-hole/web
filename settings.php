@@ -952,7 +952,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                                                 <div class="form-group">
                                                     <label>Top Domains / Top Advertisers</label>
-                                                    <textarea name="domains" class="form-control" placeholder="Enter one domain per line"
+                                                    <textarea name="domains" class="form-control" placeholder="Enter one domain per line" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                               rows="4"><?php foreach ($excludedDomains as $domain) {
                                                                              echo $domain . "\n"; }
                                                                        ?></textarea>
@@ -961,7 +961,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                                                 <div class="form-group">
                                                     <label>Top Clients</label>
-                                                    <textarea name="clients" class="form-control" placeholder="Enter one IP address or host name per line"
+                                                    <textarea name="clients" class="form-control" placeholder="Enter one IP address or host name per line" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                               rows="4"><?php foreach ($excludedClients as $client) {
                                                                              echo $client . "\n"; }
                                                                        ?></textarea>
