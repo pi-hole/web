@@ -206,6 +206,8 @@ function initTable() {
       data.start = 0;
       // Always start with empty search field
       data.search.search = "";
+      // Reset visibility of ID column
+      data.columns[0].visible = false;
       // Apply loaded state to table
       return data;
     }
