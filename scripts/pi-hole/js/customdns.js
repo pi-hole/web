@@ -34,6 +34,11 @@ $(document).ready(function() {
 
     table = $("#customDNSTable").DataTable( {
         "ajax": "scripts/pi-hole/php/customdns.php?action=get",
+        columns: [
+            {},
+            {},
+            {orderable: false, searchable: false}
+        ],
         "columnDefs": [ {
             "targets": 2,
             "render": function ( data, type, row ) {
