@@ -55,6 +55,7 @@
                 <table id="adlistsTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Address</th>
                         <th>Status</th>
                         <th>Comment</th>
@@ -63,6 +64,7 @@
                     </tr>
                     </thead>
                 </table>
+                <button type="button" id="resetButton" hidden="true">Reset sorting</button>
             </div>
             <!-- /.box-body -->
         </div>

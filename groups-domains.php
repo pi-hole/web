@@ -64,6 +64,7 @@
                 <table id="domainsTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Domain</th>
                         <th>Type</th>
                         <th>Status</th>
@@ -73,6 +74,7 @@
                     </tr>
                     </thead>
                 </table>
+                <button type="button" id="resetButton" hidden="true">Reset sorting</button>
             </div>
             <!-- /.box-body -->
         </div>

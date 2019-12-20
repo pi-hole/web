@@ -57,12 +57,14 @@
                 <table id="clientsTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>IP address</th>
                         <th>Group assignment</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                 </table>
+                <button type="button" id="resetButton" hidden="true">Reset sorting</button>
             </div>
             <!-- /.box-body -->
         </div>

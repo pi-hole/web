@@ -65,10 +65,6 @@ function datetime(date) {
 
 $(document).ready(function() {
   $("#btnAdd").on("click", addGroup);
-  $("#resetButton").on("click", function() {
-    table.order([[0, "asc"]]).draw();
-    $("#resetButton").hide();
-  });
 
   table = $("#groupsTable").DataTable({
     ajax: {
@@ -172,6 +168,10 @@ $(document).ready(function() {
     } else {
       $("#resetButton").hide();
     }
+  });
+  $("#resetButton").on("click", function() {
+    table.order([[0, "asc"]]).draw();
+    $("#resetButton").hide();
   });
 });
 

@@ -127,6 +127,7 @@ function initTable() {
     },
     order: [[0, "asc"]],
     columns: [
+      { data: "id", visible: false },
       { data: "ip" },
       { data: "groups", searchable: false },
       { data: "name", width: "80px", orderable: false }
@@ -208,6 +209,19 @@ function initTable() {
       // Apply loaded state to table
       return data;
     }
+  });
+
+  table.on("order.dt", function() {
+    var order = table.order();
+    if (order[0][0] !== 0 || order[0][1] !== "asc") {
+      $("#resetButton").show();
+    } else {
+      $("#resetButton").hide();
+    }
+  });
+  $("#resetButton").on("click", function() {
+    table.order([[0, "asc"]]).draw();
+    $("#resetButton").hide();
   });
 }
 
