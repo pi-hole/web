@@ -70,9 +70,8 @@ $(document).ready(function() {
     },
     order: [[0, "asc"]],
     columns: [
-      { data: "id", width: "60px" },
-      { data: "enabled", searchable: false },
       { data: "name" },
+      { data: "enabled", searchable: false },
       { data: "description" },
       { data: null, width: "60px", orderable: false }
     ],
@@ -80,6 +79,14 @@ $(document).ready(function() {
       $(".deleteGroup").on("click", deleteGroup);
     },
     rowCallback: function(row, data) {
+      $("td:eq(0)", row).html(
+        '<input id="name" class="form-control"><input id="id" type="hidden" value="' +
+          data.id +
+          '">'
+      );
+      $("#name", row).val(data.name);
+      $("#name", row).on("change", editGroup);
+
       const disabled = data.enabled === 0;
       $("td:eq(1)", row).html(
         '<input type="checkbox" id="status"' +
@@ -93,18 +100,14 @@ $(document).ready(function() {
         onstyle: "success",
         width: "80px"
       });
-      $('#status', row).on('change', editGroup);
+      $("#status", row).on("change", editGroup);
 
-      $("td:eq(2)", row).html('<input id="name" class="form-control">');
-      $("#name", row).val(data.name);
-      $('#name', row).on('change', editGroup);
-
-      $("td:eq(3)", row).html('<input id="desc" class="form-control">');
+      $("td:eq(2)", row).html('<input id="desc" class="form-control">');
       const desc = data.description !== null ? data.description : "";
       $("#desc", row).val(desc);
-      $('#desc', row).on('change', editGroup);
+      $("#desc", row).on("change", editGroup);
 
-      $("td:eq(4)", row).empty();
+      $("td:eq(3)", row).empty();
       if (data.id !== 0) {
         let button =
           " &nbsp;" +
@@ -113,7 +116,7 @@ $(document).ready(function() {
           '">' +
           '<span class="glyphicon glyphicon-trash"></span>' +
           "</button>";
-          $("td:eq(4)", row).html(button);
+        $("td:eq(3)", row).html(button);
       }
     },
     lengthMenu: [
@@ -201,23 +204,16 @@ function editGroup() {
 
   var done = "edited";
   var not_done = "editing";
-  if(elem === "status" && status === 1)
-  {
+  if (elem === "status" && status === 1) {
     done = "enabled";
     not_done = "enabling";
-  }
-  else if(elem === "status" && status === 0)
-  {
+  } else if (elem === "status" && status === 0) {
     done = "disabled";
     not_done = "disabling";
-  }
-  else if(elem === "name")
-  {
+  } else if (elem === "name") {
     done = "edited name of";
     not_done = "editing name of";
-  }
-  else if(elem === "desc")
-  {
+  } else if (elem === "desc") {
     done = "edited description of";
     not_done = "editing description of";
   }
