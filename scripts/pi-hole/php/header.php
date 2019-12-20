@@ -507,27 +507,27 @@ if($auth) {
                     <span class="pull-right-container">
                       <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
                     </span>
-                    <i class="fa fa-address-book"></i> <span>Group Management</span>
+                    <i class="fa fa-users-cog"></i> <span>Group Management</span>
                   </a>
                   <ul class="treeview-menu">
                     <li<?php if($scriptname === "groups.php"){ ?> class="active"<?php } ?>>
                         <a href="groups.php">
-                            <i class="fa fa-address-book"></i> <span>Groups</span>
+                            <i class="fa fa-user-friends"></i> <span>Groups</span>
                         </a>
                     </li>
                     <li<?php if($scriptname === "groups-clients.php"){ ?> class="active"<?php } ?>>
                         <a href="groups-clients.php">
-                            <i class="fa fa-address-book"></i> <span>Clients</span>
+                            <i class="fa fa-laptop"></i> <span>Clients</span>
                         </a>
                     </li>
                     <li<?php if($scriptname === "groups-domains.php"){ ?> class="active"<?php } ?>>
                         <a href="groups-domains.php">
-                            <i class="fa fa-address-book"></i> <span>Domains</span>
+                            <i class="fa fa-list"></i> <span>Domains</span>
                         </a>
                     </li>
                     <li<?php if($scriptname === "groups-adlists.php"){ ?> class="active"<?php } ?>>
                         <a href="groups-adlists.php">
-                            <i class="fa fa-address-book"></i> <span>Adlists</span>
+                            <i class="fa fa-shield-alt"></i> <span>Adlists</span>
                         </a>
                     </li>
                   </ul>
