@@ -107,7 +107,6 @@ function initTable() {
       { data: null, width: "80px", orderable: false }
     ],
     drawCallback: function(settings) {
-      $(".editDomain").on("click", editDomain);
       $(".deleteDomain").on("click", deleteDomain);
     },
     rowCallback: function(row, data) {
@@ -138,6 +137,7 @@ function initTable() {
           ">Regex blacklist</option>" +
           "</select>"
       );
+      $("#type", row).on("change", editDomain);
 
       const disabled = data.enabled === 0;
       $("td:eq(2)", row).html(
@@ -152,6 +152,7 @@ function initTable() {
         onstyle: "success",
         width: "80px"
       });
+      $("#status", row).on("change", editDomain);
 
       $("td:eq(3)", row).html(
         '<input id="comment" class="form-control"><input id="id" type="hidden" value="' +
@@ -159,6 +160,7 @@ function initTable() {
           '">'
       );
       $("#comment", row).val(data.comment);
+      $("#comment", row).on("change", editDomain);
 
       $("td:eq(4)", row).empty();
       $("td:eq(4)", row).append(
@@ -181,14 +183,9 @@ function initTable() {
       sel.val(data.groups);
       // Initialize multiselect
       sel.multiselect({ includeSelectAllOption: true });
+      sel.on("change", editDomain);
 
       let button =
-        '<button class="btn btn-success btn-xs editDomain" type="button" data-id="' +
-        data.id +
-        '">' +
-        '<span class="glyphicon glyphicon-pencil"></span>' +
-        "</button>" +
-        " &nbsp;" +
         '<button class="btn btn-danger btn-xs deleteDomain" type="button" data-id="' +
         data.id +
         '">' +
@@ -278,6 +275,7 @@ function addDomain() {
 }
 
 function editDomain() {
+  var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
   var domain = tr.find("#domain").text();
   var id = tr.find("#id").val();
@@ -285,6 +283,28 @@ function editDomain() {
   var status = tr.find("#status").is(":checked") ? 1 : 0;
   var comment = tr.find("#comment").val();
   var groups = tr.find("#multiselect").val();
+
+  var done = "edited";
+  var not_done = "editing";
+  if (elem === "status" && status === 1) {
+    done = "enabled";
+    not_done = "enabling";
+  } else if (elem === "status" && status === 0) {
+    done = "disabled";
+    not_done = "disabling";
+  } else if (elem === "name") {
+    done = "edited name of";
+    not_done = "editing name of";
+  } else if (elem === "comment") {
+    done = "edited comment of";
+    not_done = "editing comment of";
+  } else if (elem === "type") {
+    done = "edited type of";
+    not_done = "editing type of";
+  } else if (elem === "multiselect") {
+    done = "edited groups of";
+    not_done = "editing groups of";
+  }
 
   showAlert("info", "", "Editing domain...", name);
   $.ajax({
@@ -305,7 +325,7 @@ function editDomain() {
         showAlert(
           "success",
           "glyphicon glyphicon-pencil",
-          "Successfully edited domain",
+          "Successfully " + done + " domain",
           domain
         );
         table.ajax.reload();
@@ -313,7 +333,7 @@ function editDomain() {
         showAlert(
           "error",
           "",
-          "Error while editing domain with ID " + id,
+          "Error while " + not_done + " domain with ID " + id,
           response.message
         );
     },
@@ -321,7 +341,7 @@ function editDomain() {
       showAlert(
         "error",
         "",
-        "Error while editing domain with ID " + id,
+        "Error while " + not_done + " domain with ID " + id,
         jqXHR.responseText
       );
       console.log(exception);

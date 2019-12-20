@@ -106,7 +106,6 @@ function initTable() {
       { data: null, width: "80px", orderable: false }
     ],
     drawCallback: function(settings) {
-      $(".editAdlist").on("click", editAdlist);
       $(".deleteAdlist").on("click", deleteAdlist);
     },
     rowCallback: function(row, data) {
@@ -127,20 +126,24 @@ function initTable() {
           (disabled ? "" : " checked") +
           ">"
       );
-      $("#status", row).bootstrapToggle({
+      var status = $("#status", row);
+      status.bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px"
       });
+      status.on("change", editAdlist);
 
       $("td:eq(2)", row).html(
         '<input id="comment" class="form-control"><input id="id" type="hidden" value="' +
           data.id +
           '">'
       );
-      $("#comment", row).val(data.comment);
+      var comment = $("#comment", row);
+      comment.val(data.comment);
+      comment.on("change", editAdlist);
 
       $("td:eq(3)", row).empty();
       $("td:eq(3)", row).append(
@@ -163,14 +166,9 @@ function initTable() {
       sel.val(data.groups);
       // Initialize multiselect
       sel.multiselect({ includeSelectAllOption: true });
+      sel.on("change", editAdlist);
 
       let button =
-        '<button class="btn btn-success btn-xs editAdlist" type="button" data-id="' +
-        data.id +
-        '">' +
-        '<span class="glyphicon glyphicon-pencil"></span>' +
-        "</button>" +
-        " &nbsp;" +
         '<button class="btn btn-danger btn-xs deleteAdlist" type="button" data-id="' +
         data.id +
         '">' +
@@ -259,12 +257,29 @@ function addAdlist() {
 }
 
 function editAdlist() {
+  var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
   var id = tr.find("#id").val();
   var status = tr.find("#status").is(":checked") ? 1 : 0;
   var comment = tr.find("#comment").val();
   var groups = tr.find("#multiselect").val();
   var address = tr.find("#address").text();
+
+  var done = "edited";
+  var not_done = "editing";
+  if (elem === "status" && status === 1) {
+    done = "enabled";
+    not_done = "enabling";
+  } else if (elem === "status" && status === 0) {
+    done = "disabled";
+    not_done = "disabling";
+  } else if (elem === "comment") {
+    done = "edited comment of";
+    not_done = "editing comment of";
+  } else if (elem === "multiselect") {
+    done = "edited groups of";
+    not_done = "editing groups of";
+  }
 
   showAlert("info", "", "Editing adlist...", address);
 
@@ -285,7 +300,7 @@ function editAdlist() {
         showAlert(
           "success",
           "glyphicon glyphicon-pencil",
-          "Successfully edited adlist ",
+          "Successfully " + done + " adlist ",
           address
         );
         table.ajax.reload();
@@ -293,7 +308,7 @@ function editAdlist() {
         showAlert(
           "error",
           "",
-          "Error while editing adlist with ID " + id,
+          "Error while " + not_done + " adlist with ID " + id,
           +response.message
         );
       }
@@ -302,7 +317,7 @@ function editAdlist() {
       showAlert(
         "error",
         "",
-        "Error while editing adlist with ID " + id,
+        "Error while " + not_done + " adlist with ID " + id,
         jqXHR.responseText
       );
       console.log(exception);

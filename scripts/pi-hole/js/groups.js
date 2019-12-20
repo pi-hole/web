@@ -96,12 +96,15 @@ $(document).ready(function() {
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
-        '<input id="name" title="' + tooltip + '" class="form-control"><input id="id" type="hidden" value="' +
+        '<input id="name" title="' +
+          tooltip +
+          '" class="form-control"><input id="id" type="hidden" value="' +
           data.id +
           '">'
       );
-      $("#name", row).val(data.name);
-      $("#name", row).on("change", editGroup);
+      var name = $("#name", row);
+      name.val(data.name);
+      name.on("change", editGroup);
 
       const disabled = data.enabled === 0;
       $("td:eq(1)", row).html(
@@ -109,14 +112,15 @@ $(document).ready(function() {
           (disabled ? "" : " checked") +
           ">"
       );
-      $("#status", row).bootstrapToggle({
+      var status = $("#status", row);
+      status.bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px"
       });
-      $("#status", row).on("change", editGroup);
+      status.on("change", editGroup);
 
       $("td:eq(2)", row).html('<input id="desc" class="form-control">');
       const desc = data.description !== null ? data.description : "";

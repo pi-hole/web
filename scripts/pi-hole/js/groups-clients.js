@@ -132,7 +132,6 @@ function initTable() {
       { data: "name", width: "80px", orderable: false }
     ],
     drawCallback: function(settings) {
-      $(".editClient").on("click", editClient);
       $(".deleteClient").on("click", deleteClient);
     },
     rowCallback: function(row, data) {
@@ -175,14 +174,9 @@ function initTable() {
       sel.val(data.groups);
       // Initialize multiselect
       sel.multiselect({ includeSelectAllOption: true });
+      sel.on("change", editClient);
 
       let button =
-        '<button class="btn btn-success btn-xs editClient" type="button" data-id="' +
-        data.id +
-        '">' +
-        '<span class="glyphicon glyphicon-pencil"></span>' +
-        "</button>" +
-        " &nbsp;" +
         '<button class="btn btn-danger btn-xs deleteClient" type="button" data-id="' +
         data.id +
         '">' +
@@ -267,11 +261,19 @@ function addClient() {
 }
 
 function editClient() {
+  var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
   var id = tr.find("#id").val();
   var groups = tr.find("#multiselect").val();
   var ip = tr.find("#ip").text();
   var name = tr.find("#name").text();
+
+  var done = "edited";
+  var not_done = "editing";
+  if (elem === "multiselect") {
+    done = "edited groups of";
+    not_done = "editing groups of";
+  }
 
   var ip_name = ip;
   if (name.length > 0) {
@@ -289,14 +291,14 @@ function editClient() {
         showAlert(
           "success",
           "glyphicon glyphicon-plus",
-          "Successfully edited client",
+          "Successfully " + done + " client",
           ip_name
         );
         table.ajax.reload();
       } else {
         showAlert(
           "error",
-          "Error while editing client with ID " + id,
+          "Error while " + not_done + " client with ID " + id,
           response.message
         );
       }
@@ -305,7 +307,7 @@ function editClient() {
       showAlert(
         "error",
         "",
-        "Error while editing client with ID " + id,
+        "Error while " + not_done + " client with ID " + id,
         jqXHR.responseText
       );
       console.log(exception);
