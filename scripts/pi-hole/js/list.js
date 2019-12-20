@@ -153,7 +153,7 @@ function sub(index, entry, arg) {
                     alInfo.hide();
                 });
                 domain.remove();
-                if($(list+" li").length < 1)
+                if($(list+" li").length === 0)
                 {
                     $(heading).fadeOut(100);
                 }
