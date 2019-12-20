@@ -59,6 +59,10 @@ function showAlert(type, icon, title, message) {
   }
 }
 
+function datetime(date) {
+  return moment.unix(Math.floor(date)).format("Y-MM-DD HH:mm:ss z");
+}
+
 $(document).ready(function() {
   $("#btnAdd").on("click", addGroup);
   $("#resetButton").on("click", function() {
@@ -84,8 +88,15 @@ $(document).ready(function() {
       $(".deleteGroup").on("click", deleteGroup);
     },
     rowCallback: function(row, data) {
+      const tooltip =
+        "Added: " +
+        datetime(data.date_added) +
+        "\nLast modified: " +
+        datetime(data.date_modified) +
+        "\nDatabase ID: " +
+        data.id;
       $("td:eq(0)", row).html(
-        '<input id="name" class="form-control"><input id="id" type="hidden" value="' +
+        '<input id="name" title="' + tooltip + '" class="form-control"><input id="id" type="hidden" value="' +
           data.id +
           '">'
       );
