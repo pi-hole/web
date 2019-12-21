@@ -252,11 +252,9 @@ $(document).ready(function(){
         alInfo.delay(3000).fadeOut(2000, function() { alInfo.hide(); });
     }
     // Disable autocorrect in the search box
-    const inputs = document.querySelectorAll('input[type=search]');
-    inputs.forEach(input => {
-        input.setAttribute('autocomplete', 'off')
-        input.setAttribute('autocorrect', 'off')
-        input.setAttribute('autocapitalize', 'off')
-        input.setAttribute('spellcheck', false)
-    })
+    input = document.querySelector('input[type=search]');
+    input.setAttribute('autocomplete', 'off')
+    input.setAttribute('autocorrect', 'off')
+    input.setAttribute('autocapitalize', 'off')
+    input.setAttribute('spellcheck', false)
 });
