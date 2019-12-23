@@ -362,11 +362,24 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':domain', $_POST['domain'], SQLITE3_TEXT)) {
+        $type = intval($_POST['type']);
+
+        $domain = $_POST['domain'];
+        if($type === ListType::whitelist || $type === ListType::blacklist)
+        {
+            // If adding to the exact lists, we convert the domain lower case and check whether it is valid
+            $domain = strtolower($domain);
+            if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)
+            {
+                throw new Exception('Domain ' . htmlentities(utf8_encode($domain)) . 'is not a valid domain.');
+            }
+        }
+
+        if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
             throw new Exception('While binding domain: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':type', intval($_POST['type']), SQLITE3_TEXT)) {
+        if (!$stmt->bindValue(':type', $type, SQLITE3_TEXT)) {
             throw new Exception('While binding type: ' . $db->lastErrorMsg());
         }
 
@@ -395,7 +408,7 @@ if ($_POST['action'] == 'get_groups') {
         if ($status !== 0) {
                 $status = 1;
         }
-    
+
         if (!$stmt->bindValue(':enabled', $status, SQLITE3_INTEGER)) {
             throw new Exception('While binding enabled: ' . $db->lastErrorMsg());
         }
