@@ -228,7 +228,7 @@ function addGroup() {
 function editGroup() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
-  var id = tr.find("td:eq(0)").text();
+  var id = tr.find("#id").val();
   var name = tr.find("#name").val();
   var status = tr.find("#status").is(":checked") ? 1 : 0;
   var desc = tr.find("#desc").val();
