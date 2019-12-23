@@ -45,7 +45,7 @@ function showAlert(type, icon, title, message) {
       opts = {
         type: "danger",
         icon: "glyphicon glyphicon-remove",
-        title: "Error, something went wrong!",
+        title: "&nbsp;<strong>Error, something went wrong!</strong><br>",
         message: message
       };
       if (info) {
