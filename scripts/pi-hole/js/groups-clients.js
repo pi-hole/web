@@ -310,7 +310,6 @@ function editClient() {
           "Successfully " + done + " client",
           ip_name
         );
-        table.ajax.reload();
       } else {
         showAlert(
           "error",
@@ -355,8 +354,11 @@ function deleteClient() {
           "Successfully deleted client ",
           ip_name
         );
+        table
+          .row(tr)
+          .remove()
+          .draw();
         reload_client_suggestions();
-        table.ajax.reload();
       } else {
         showAlert(
           "error",

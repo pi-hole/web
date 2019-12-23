@@ -344,7 +344,6 @@ function editDomain() {
           "Successfully " + done + " domain",
           domain
         );
-        table.ajax.reload();
       } else
         showAlert(
           "error",
@@ -384,7 +383,10 @@ function deleteDomain() {
           "Successfully deleted domain",
           domain
         );
-        table.ajax.reload();
+        table
+          .row(tr)
+          .remove()
+          .draw();
       } else
         showAlert(
           "error",

@@ -319,7 +319,6 @@ function editAdlist() {
           "Successfully " + done + " adlist ",
           address
         );
-        table.ajax.reload();
       } else {
         showAlert(
           "error",
@@ -360,7 +359,10 @@ function deleteAdlist() {
           "Successfully deleted adlist ",
           address
         );
-        table.ajax.reload();
+        table
+          .row(tr)
+          .remove()
+          .draw();
       } else
         showAlert(
           "error",

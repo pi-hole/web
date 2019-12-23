@@ -270,7 +270,6 @@ function editGroup() {
           "Successfully " + done + " group",
           name
         );
-        table.ajax.reload();
       } else {
         showAlert(
           "error",
@@ -311,7 +310,10 @@ function deleteGroup() {
           "Successfully deleted group ",
           name
         );
-        table.ajax.reload();
+        table
+          .row(tr)
+          .remove()
+          .draw();
       } else {
         showAlert(
           "error",
