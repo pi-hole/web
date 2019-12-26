@@ -200,6 +200,7 @@
     <meta name="msapplication-TileImage" content="img/logo.svg">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
+    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css">
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="style/vendor/font-awesome-5.11.2/css/all.min.css">
