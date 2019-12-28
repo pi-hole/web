@@ -34,10 +34,12 @@ $db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
 
 switch($list) {
 	case "white":
+		$domains = array_map('strtolower', $domains);
 		echo add_to_table($db, "domainlist", $domains, $comment, false, false, ListType::whitelist);
 		break;
 
 	case "black":
+		$domains = array_map('strtolower', $domains);
 		echo add_to_table($db, "domainlist", $domains, $comment, false, false, ListType::blacklist);
 		break;
 
