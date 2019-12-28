@@ -106,7 +106,7 @@ function autofilter(){
 $(document).ready(function() {
     // Do we want to filter queries?
     var GETDict = {};
-    location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
+    window.location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
 
     var APIstring = "api.php?getAllQueries";
 
