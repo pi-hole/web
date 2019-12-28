@@ -1,10 +1,10 @@
 var table;
 var groups = [];
-const token = $("#token").html();
+var token = $("#token").html();
 var info = null;
 
 function showAlert(type, icon, title, message) {
-  let opts = {};
+  var opts = {};
   title = "&nbsp;<strong>" + title + "</strong><br>";
   switch (type) {
     case "info":
@@ -136,7 +136,7 @@ function initTable() {
       $(".deleteClient").on("click", deleteClient);
     },
     rowCallback: function(row, data) {
-      const tooltip = "Database ID: " + data.id;
+      var tooltip = "Database ID: " + data.id;
       var ip_name =
         '<code id="ip" title="' +
         tooltip +
@@ -177,7 +177,7 @@ function initTable() {
       sel.multiselect({ includeSelectAllOption: true });
       sel.on("change", editClient);
 
-      let button =
+      var button =
         '<button class="btn btn-danger btn-xs deleteClient" type="button" data-id="' +
         data.id +
         '">' +
