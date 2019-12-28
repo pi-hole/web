@@ -386,7 +386,7 @@ function deleteDomain() {
         table
           .row(tr)
           .remove()
-          .draw();
+          .draw(false);
       } else
         showAlert(
           "error",

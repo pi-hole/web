@@ -357,7 +357,7 @@ function deleteClient() {
         table
           .row(tr)
           .remove()
-          .draw();
+          .draw(false);
         reload_client_suggestions();
       } else {
         showAlert(
