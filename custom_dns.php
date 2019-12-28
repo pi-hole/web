@@ -11,21 +11,39 @@
 
 <!-- Title -->
 <div class="page-header">
-    <h1>Custom DNS</h1>
+    <h1>Custom DNS configuration</h1>
+    <small>On this page, you can add domain/IP associations similar to records in <code>/etc/hosts</code>.</small>
 </div>
 
 <!-- Domain Input -->
-<form class="form-inline" >
-    <div class="form-group">
-        <input id="domain" type="text" class="form-control" placeholder="Add a domain (example.com or sub.example.com)">
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <!-- /.box-header -->
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    Add a new domain/IP combination
+                </h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="ex1">Name:</label>
+                        <input id="domain" type="text" class="form-control" placeholder="Add a domain (example.com or sub.example.com)">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="ex2">Description:</label>
+                        <input id="ip" type="text" class="form-control" placeholder="Associated IP address">
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer clearfix">
+                <button id="btnAdd" class="btn btn-primary pull-right">Add</button>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <input id="ip" type="text" class="form-control" placeholder="Define an associate IP">
-    </div>
-    <div class="form-group">
-        <button id="btnAdd" class="btn btn-default" type="button">Add</button>
-    </div>
-</form>
+</div>
 
 <!-- Alerts -->
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
