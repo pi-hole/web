@@ -372,13 +372,6 @@ if (isset($_GET['getGraphData']) && $auth)
 				// $data[timestamp] = value_in_this_interval
 				$data[$row[0]] = intval($row[1]);
 			}
-
-			// Fill the missing intervals with zero
-			// Advance in steps of interval
-			for($i = $from; $i < $until; $i += $interval) {
-				if(!array_key_exists($i, $data))
-					$data[$i] = 0;
-			}
 		}
 
 		return $data;
