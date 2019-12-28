@@ -8,6 +8,7 @@
 
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
+    $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
 
     check_cors();
 
@@ -182,7 +183,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
     <title>Pi-hole Admin Console</title>
     <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
     <meta http-equiv="x-dns-prefetch-control" content="off">
@@ -209,6 +210,7 @@
 
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
     <link rel="stylesheet" href="style/vendor/skin-blue.min.css">
+    <link rel="stylesheet" href="style/vendor/animate.css">
 
     <link rel="stylesheet" href="style/pi-hole.css">
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
@@ -217,6 +219,15 @@
     <script src="scripts/vendor/jquery-ui.min.js"></script>
     <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="scripts/vendor/app.min.js"></script>
+    <script src="scripts/vendor/bootstrap-notify.min.js"></script>
+
+<?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
+    <script src="style/vendor/bootstrap/js/bootstrap-multiselect.js"></script>
+    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-multiselect.css">
+    <script src="style/vendor/bootstrap/js/bootstrap-toggle.min.js"></script>
+    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-toggle.min.css">
+    <script src="scripts/vendor/moment.min.js"></script>
+<?php } ?>
 
     <script src="scripts/vendor/jquery.dataTables.min.js"></script>
     <script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
@@ -416,7 +427,6 @@ if($auth) {
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <?php
-            $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
             if($scriptname === "list.php")
             {
                 if($_GET["l"] === "white")
@@ -484,6 +494,37 @@ if($auth) {
                     <a href="list.php?l=black">
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
+                </li>
+                <!-- Group Management -->
+                <li class="treeview <?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>active<?php } ?>">
+                  <a href="#">
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
+                    </span>
+                    <i class="fa fa-users-cog"></i> <span>Group Management</span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li<?php if($scriptname === "groups.php"){ ?> class="active"<?php } ?>>
+                        <a href="groups.php">
+                            <i class="fa fa-user-friends"></i> <span>Groups</span>
+                        </a>
+                    </li>
+                    <li<?php if($scriptname === "groups-clients.php"){ ?> class="active"<?php } ?>>
+                        <a href="groups-clients.php">
+                            <i class="fa fa-laptop"></i> <span>Clients</span>
+                        </a>
+                    </li>
+                    <li<?php if($scriptname === "groups-domains.php"){ ?> class="active"<?php } ?>>
+                        <a href="groups-domains.php">
+                            <i class="fa fa-list"></i> <span>Domains</span>
+                        </a>
+                    </li>
+                    <li<?php if($scriptname === "groups-adlists.php"){ ?> class="active"<?php } ?>>
+                        <a href="groups-adlists.php">
+                            <i class="fa fa-shield-alt"></i> <span>Adlists</span>
+                        </a>
+                    </li>
+                  </ul>
                 </li>
                 <!-- Toggle -->
                 <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden="true"<?php } ?>>

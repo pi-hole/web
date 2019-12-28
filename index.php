@@ -82,7 +82,7 @@
     <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
-          <h3 class="box-title">Queries over last <?php echo getinterval(); ?> hours</h3>
+          <h3 class="box-title">Total queries over last <?php echo getinterval(); ?> hours</h3>
         </div>
         <div class="box-body">
           <div class="chart">
@@ -107,7 +107,7 @@
     <div class="col-md-12">
     <div class="box" id="clients">
         <div class="box-header with-border">
-          <h3 class="box-title">Clients (over time)</h3>
+          <h3 class="box-title">Client activity over last <?php echo getinterval(); ?> hours</h3>
         </div>
         <div class="box-body">
           <div class="chart">

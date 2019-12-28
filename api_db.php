@@ -49,21 +49,11 @@ function resolveHostname($clientip, $printIP)
 	return $clientname;
 }
 
-// Get possible non-standard location of FTL's database
-$FTLsettings = parse_ini_file("/etc/pihole/pihole-FTL.conf");
-if(isset($FTLsettings["DBFILE"]))
-{
-	$DBFILE = $FTLsettings["DBFILE"];
-}
-else
-{
-	$DBFILE = "/etc/pihole/pihole-FTL.db";
-}
-
 // Needs package php5-sqlite, e.g.
 //    sudo apt-get install php5-sqlite
 
-$db = SQLite3_connect($DBFILE);
+$QUERYDB = getQueriesDBFilename();
+$db = SQLite3_connect($QUERYDB);
 
 if(isset($_GET["network"]) && $auth)
 {
@@ -381,13 +371,6 @@ if (isset($_GET['getGraphData']) && $auth)
 			while($row = $results->fetchArray()) {
 				// $data[timestamp] = value_in_this_interval
 				$data[$row[0]] = intval($row[1]);
-			}
-
-			// Fill the missing intervals with zero
-			// Advance in steps of interval
-			for($i = $from; $i < $until; $i += $interval) {
-				if(!array_key_exists($i, $data))
-					$data[$i] = 0;
 			}
 		}
 
