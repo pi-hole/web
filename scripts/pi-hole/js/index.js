@@ -7,8 +7,8 @@
 
 // Define global variables
 /* global Chart:false, updateSessionTimer:false */
-var timeLineChart, forwardDestinationChart;
-var queryTypePieChart, forwardDestinationPieChart, clientsChart;
+var timeLineChart, clientsChart;
+var queryTypePieChart, forwardDestinationPieChart;
 
 function padNumber(num) {
     return ("00" + num).substr(-2,2);
@@ -166,8 +166,10 @@ function updateQueriesOverTime() {
                 }
 
                 timeLineChart.data.labels.push(d);
-                timeLineChart.data.datasets[0].data.push(data.domains_over_time[1][hour]);
-                timeLineChart.data.datasets[1].data.push(data.ads_over_time[1][hour]);
+                var blocked = data.ads_over_time[1][hour];
+                var permitted = data.domains_over_time[1][hour] - blocked;
+                timeLineChart.data.datasets[0].data.push(permitted);
+                timeLineChart.data.datasets[1].data.push(blocked);
             }
         }
         $("#queries-over-time .overlay").hide();
@@ -718,33 +720,31 @@ $(document).ready(function() {
 
     var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
     timeLineChart = new Chart(ctx, {
-        type: "line",
+        type: "bar",
         data: {
-            labels: [],
+            labels: [ ],
             datasets: [
                 {
-                    label: "Total DNS Queries",
+                    label: "Permitted DNS Queries",
                     fill: true,
-                    backgroundColor: "rgba(220,220,220,0.5)",
+                    backgroundColor: "rgba(0, 166, 90,.8)",
                     borderColor: "rgba(0, 166, 90,.8)",
                     pointBorderColor: "rgba(0, 166, 90,.8)",
                     pointRadius: 1,
                     pointHoverRadius: 5,
                     data: [],
-                    pointHitRadius: 5,
-                    cubicInterpolationMode: "monotone"
+                    pointHitRadius: 5
                 },
                 {
                     label: "Blocked DNS Queries",
                     fill: true,
-                    backgroundColor: "rgba(0,192,239,0.5)",
+                    backgroundColor: "rgba(0,192,239,1)",
                     borderColor: "rgba(0,192,239,1)",
                     pointBorderColor: "rgba(0,192,239,1)",
                     pointRadius: 1,
                     pointHoverRadius: 5,
                     data: [],
-                    pointHitRadius: 5,
-                    cubicInterpolationMode: "monotone"
+                    pointHitRadius: 5
                 }
             ]
         },
@@ -785,6 +785,7 @@ $(document).ready(function() {
             scales: {
                 xAxes: [{
                     type: "time",
+                    stacked: true,
                     time: {
                         unit: "hour",
                         displayFormats: {
@@ -794,6 +795,7 @@ $(document).ready(function() {
                     }
                 }],
                 yAxes: [{
+                    stacked: true,
                     ticks: {
                         beginAtZero: true
                     }
@@ -807,73 +809,13 @@ $(document).ready(function() {
 
     updateQueriesOverTime();
 
-    // Create / load "Forward Destinations over Time" only if authorized
-    if(document.getElementById("forwardDestinationChart"))
-    {
-        ctx = document.getElementById("forwardDestinationChart").getContext("2d");
-        forwardDestinationChart = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: [],
-                datasets: [{ data: [] }]
-            },
-            options: {
-                tooltips: {
-                    enabled: true,
-                    mode: "x-axis",
-                    callbacks: {
-                        title: function(tooltipItem) {
-                            var label = tooltipItem[0].xLabel;
-                            var time = label.match(/(\d?\d):?(\d?\d?)/);
-                            var h = parseInt(time[1], 10);
-                            var m = parseInt(time[2], 10) || 0;
-                            var from = padNumber(h)+":"+padNumber(m-5)+":00";
-                            var to = padNumber(h)+":"+padNumber(m+4)+":59";
-                            return "Forward destinations from "+from+" to "+to;
-                        },
-                        label: function(tooltipItems, data) {
-                            return data.datasets[tooltipItems.datasetIndex].label + ": " + (100.0*tooltipItems.yLabel).toFixed(1) + "%";
-                        }
-                    }
-                },
-                legend: {
-                    display: false
-                },
-                scales: {
-                    xAxes: [{
-                        type: "time",
-                        time: {
-                            unit: "hour",
-                            displayFormats: {
-                                hour: "HH:mm"
-                            },
-                            tooltipFormat: "HH:mm"
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            mix: 0.0,
-                            max: 1.0,
-                            beginAtZero: true,
-                            callback: function(value) {
-                                return Math.round(value*100) + " %";
-                            }
-                        },
-                        stacked: true
-                    }]
-                },
-                maintainAspectRatio: true
-            }
-        });
-    }
-
     // Create / load "Top Clients over Time" only if authorized
     var clientsChartEl = document.getElementById("clientsChart");
     if(clientsChartEl)
     {
         ctx = clientsChartEl.getContext("2d");
         clientsChart = new Chart(ctx, {
-            type: "line",
+            type: "bar",
             data: {
                 labels: [],
                 datasets: [{ data: [] }]
@@ -907,6 +849,7 @@ $(document).ready(function() {
                 scales: {
                     xAxes: [{
                         type: "time",
+                        stacked: true,
                         time: {
                             unit: "hour",
                             displayFormats: {

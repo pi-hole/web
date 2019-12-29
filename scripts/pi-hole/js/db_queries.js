@@ -20,7 +20,7 @@ var dateformat = "MMMM Do YYYY, HH:mm";
 
 // Do we want to filter queries?
 var GETDict = {};
-location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
+window.location.search.substr(1).split("&").forEach(function(item) {GETDict[item.split("=")[0]] = item.split("=")[1];});
 
 if("from" in GETDict && "until" in GETDict)
 {

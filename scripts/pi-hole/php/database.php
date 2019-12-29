@@ -20,6 +20,20 @@ function getGravityDBFilename()
 	}
 }
 
+function getQueriesDBFilename()
+{
+	// Get possible non-standard location of FTL's database
+	$FTLsettings = parse_ini_file("/etc/pihole/pihole-FTL.conf");
+	if(isset($FTLsettings["DBFILE"]))
+	{
+		return $FTLsettings["DBFILE"];
+	}
+	else
+	{
+		return "/etc/pihole/pihole-FTL.db";
+	}
+}
+
 function SQLite3_connect_try($filename, $mode, $trytoreconnect)
 {
 	try

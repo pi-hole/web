@@ -415,6 +415,7 @@ else
 	archive_add_table("domain_audit.json", "domain_audit");
 	archive_add_file("/etc/pihole/","setupVars.conf");
 	archive_add_file("/etc/pihole/","dhcp.leases");
+	archive_add_file("/etc/","hosts","etc/");
 	archive_add_directory("/etc/dnsmasq.d/","dnsmasq.d/");
 
 	$archive->compress(Phar::GZ); // Creates a gziped copy
