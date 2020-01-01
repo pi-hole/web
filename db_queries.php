@@ -22,18 +22,16 @@ $token = $_SESSION['token'];
     <h1>Specify date range to be queried from the Pi-hole query database</h1>
 </div>
 
-
 <div class="row">
     <div class="col-md-12">
 <!-- Date Input -->
       <div class="form-group">
         <label>Date and time range:</label>
-
         <div class="input-group">
-          <div class="input-group-addon">
-            <i class="far fa-clock"></i>
-          </div>
-          <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
+            <button type="button" id="querytime" class="btn btn-default text-wrap">
+                <span><i class="fa fa-calendar"></i> Click to select date and time range</span>
+                <i class="fa fa-caret-down"></i>
+            </button>
         </div>
         <!-- /.input group -->
       </div>

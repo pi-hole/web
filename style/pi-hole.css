@@ -220,6 +220,10 @@
     white-space: nowrap !important;
 }
 
+.text-wrap {
+    white-space: normal !important;
+}
+
 .text-black {
     color: #000 !important;
 }

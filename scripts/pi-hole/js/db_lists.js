@@ -189,7 +189,7 @@ function updateTopAdsChart() {
 }
 
 $("#querytime").on("apply.daterangepicker", function(ev, picker) {
-    $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
+    $(this).children('span').text(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
     timeoutWarning.show();
     listsStillLoading = 3;
     updateTopClientsChart();

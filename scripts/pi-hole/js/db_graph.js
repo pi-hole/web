@@ -274,7 +274,7 @@ $(document).ready(function() {
 });
 
 $("#querytime").on("apply.daterangepicker", function(ev, picker) {
-    $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
+    $(this).children('span').text(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
     $("#queries-over-time").show();
     updateQueriesOverTime();
 });
