@@ -102,7 +102,7 @@ $(document).ready(function() {
              }
 
              // Set hostname to "N/A" if not available
-             if(!data.name || data.name.length < 1)
+             if(!data.name || data.name.length === 0)
              {
                  $("td:eq(3)", row).html("N/A");
              }
