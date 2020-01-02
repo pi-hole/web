@@ -257,12 +257,20 @@ $(document).ready(function() {
               padNumber(time.getMinutes()) +
               ":" +
               padNumber(time.getSeconds());
+
             if (from_date === until_date) {
               // Abbreviated form for intervals on the same day
-              return "Queries from " + from_time + " to " + until_time + " on " + from_date;
+              // We split title in two lines on small screens
+              if ($(window).width() < 992) {
+                until_time += "\n";
+              }
+
+              return ("Queries from " + from_time + " to " + until_time + " on " + from_date).split(
+                "\n "
+              );
             }
 
-            // Full tooltip for intervals spanning more than one date.
+            // Full tooltip for intervals spanning more than one day
             // We split title in two lines on small screens
             if ($(window).width() < 992) {
               from_date += "\n";
