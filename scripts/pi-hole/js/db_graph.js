@@ -190,7 +190,7 @@ function updateQueriesOverTime() {
 
 $(document).ready(function() {
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
-  var blockedColor = "#999999";
+  var blockedColor = "#999";
   var permittedColor = "#00a65a";
   timeLineChart = new Chart(ctx, {
     type: "bar",
@@ -258,12 +258,26 @@ $(document).ready(function() {
               ":" +
               padNumber(time.getSeconds());
             if (from_date === until_date) {
-              return "Queries from " + from_time + " to " + until_time;
-            } else {
-              return (
-                "Queries from " + from_date + " " + from_time + " to " + until_date + " " + until_time
-              );
+              // Abbreviated form for intervals on the same day
+              return "Queries from " + from_time + " to " + until_time + " on " + from_date;
             }
+
+            // Full tooltip for intervals spanning more than one date.
+            // We split title in two lines on small screens
+            if ($(window).width() < 992) {
+              from_date += "\n";
+            }
+
+            return (
+              "Queries from " +
+              from_date +
+              " " +
+              from_time +
+              " to " +
+              until_date +
+              " " +
+              until_time
+            ).split("\n ");
           },
           label: function(tooltipItems, data) {
             if (tooltipItems.datasetIndex === 0) {

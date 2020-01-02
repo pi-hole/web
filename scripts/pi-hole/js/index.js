@@ -764,7 +764,7 @@ $(document).ready(function() {
 
   updateSummaryData();
 
-  var blockedColor = "#999999";
+  var blockedColor = "#999";
   var permittedColor = "#00a65a";
 
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
