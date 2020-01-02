@@ -237,27 +237,27 @@ $(document).ready(function() {
               case 1:
                 color = "red";
                 fieldtext = "Blocked (gravity)";
-                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
+                buttontext = "<button type=\"button\" class=\"btn btn-default btn-sm text-green\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
               case 2:
                 color = "green";
                 fieldtext = "OK <br class='hidden-lg'>(forwarded)";
-                buttontext = "<button class=\"text-red text-nowrap\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
+                buttontext = "<button type=\"button\" class=\"btn btn-default btn-sm text-red\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
                 break;
               case 3:
                 color = "green";
                 fieldtext = "OK <br class='hidden-lg'>(cached)";
-                buttontext = "<button class=\"text-red text-nowrap\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
+                buttontext = "<button type=\"button\" class=\"btn btn-default btn-sm text-red\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
                 break;
               case 4:
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
-                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
+                buttontext = "<button type=\"button\" class=\"btn btn-default btn-sm text-green\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
               case 5:
                 color = "red";
                 fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
-                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
+                buttontext = "<button type=\"button\" class=\"btn btn-default btn-sm text-green\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
               case 6:
                 color = "red";

@@ -170,31 +170,31 @@ $(document).ready(function() {
                 blocked = true;
                 colorClass = "text-red";
                 fieldtext = "Blocked (gravity)";
-                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
+                buttontext = "<button type=\"button\" class=\"btn btn-default btn-sm text-green\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
             case "2":
                 blocked = false;
                 colorClass = "text-green";
                 fieldtext = "OK <br class='hidden-lg'>(forwarded)"+dnssec_status;
-                buttontext = "<button class=\"text-red text-nowrap\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
+                buttontext = "<button type=\"button\" class=\"btn btn-default btn-sm text-red\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
                 break;
             case "3":
                 blocked = false;
                 colorClass = "text-green";
                 fieldtext = "OK <br class='hidden-lg'>(cached)"+dnssec_status;
-                buttontext = "<button class=\"text-red text-nowrap\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
+                buttontext = "<button type=\"button\" class=\"btn btn-default btn-sm text-red\"><i class=\"fa fa-ban\"></i> Blacklist</button>";
                 break;
             case "4":
                 blocked = true;
                 colorClass = "text-red";
                 fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
-                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
+                buttontext = "<button type=\"button\" class=\"btn btn-default btn-sm text-green\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
             case "5":
                 blocked = true;
                 colorClass = "text-red";
                 fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
-                buttontext = "<button class=\"text-green text-nowrap\"><i class=\"fas fa-check\"></i> Whitelist</button>";
+                buttontext = "<button type=\"button\" class=\"btn btn-default btn-sm text-green\"><i class=\"fas fa-check\"></i> Whitelist</button>";
                 break;
             case "6":
                 blocked = true;
