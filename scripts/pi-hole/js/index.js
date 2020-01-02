@@ -119,7 +119,7 @@ var customTooltips = function(tooltip) {
         }
         tooltipEl.style.opacity = 1;
         tooltipEl.style.left = position.left + width + "px";
-        tooltipEl.style.top = position.top + tooltip.caretY + window.scrollY + "px";
+        tooltipEl.style.top = position.top + tooltip.caretY + window.pageYOffset + "px";
         tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
         tooltipEl.style.fontSize = tooltip.bodyFontSize + "px";
         tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
