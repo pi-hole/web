@@ -1,10 +1,10 @@
 var table;
 var groups = [];
-const token = $("#token").html();
+var token = $("#token").html();
 var info = null;
 
 function showAlert(type, icon, title, message) {
-  let opts = {};
+  var opts = {};
   title = "&nbsp;<strong>" + title + "</strong><br>";
   switch (type) {
     case "info":
@@ -111,7 +111,7 @@ function initTable() {
       $(".deleteDomain").on("click", deleteDomain);
     },
     rowCallback: function(row, data) {
-      const tooltip =
+      var tooltip =
         "Added: " +
         datetime(data.date_added) +
         "\nLast modified: " +
@@ -140,7 +140,7 @@ function initTable() {
       );
       $("#type", row).on("change", editDomain);
 
-      const disabled = data.enabled === 0;
+      var disabled = data.enabled === 0;
       $("td:eq(2)", row).html(
         '<input type="checkbox" id="status"' +
           (disabled ? "" : " checked") +
@@ -186,7 +186,7 @@ function initTable() {
       sel.multiselect({ includeSelectAllOption: true });
       sel.on("change", editDomain);
 
-      let button =
+      var button =
         '<button class="btn btn-danger btn-xs deleteDomain" type="button" data-id="' +
         data.id +
         '">' +

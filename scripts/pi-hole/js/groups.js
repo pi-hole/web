@@ -1,9 +1,9 @@
 var table;
-const token = $("#token").html();
+var token = $("#token").html();
 var info = null;
 
 function showAlert(type, icon, title, message) {
-  let opts = {};
+  var opts = {};
   title = "&nbsp;<strong>" + title + "</strong><br>";
   switch (type) {
     case "info":
@@ -84,7 +84,7 @@ $(document).ready(function() {
       $(".deleteGroup").on("click", deleteGroup);
     },
     rowCallback: function(row, data) {
-      const tooltip =
+      var tooltip =
         "Added: " +
         datetime(data.date_added) +
         "\nLast modified: " +
@@ -102,7 +102,7 @@ $(document).ready(function() {
       name.val(data.name);
       name.on("change", editGroup);
 
-      const disabled = data.enabled === 0;
+      var disabled = data.enabled === 0;
       $("td:eq(1)", row).html(
         '<input type="checkbox" id="status"' +
           (disabled ? "" : " checked") +
@@ -119,13 +119,13 @@ $(document).ready(function() {
       status.on("change", editGroup);
 
       $("td:eq(2)", row).html('<input id="desc" class="form-control">');
-      const desc = data.description !== null ? data.description : "";
+      var desc = data.description !== null ? data.description : "";
       $("#desc", row).val(desc);
       $("#desc", row).on("change", editGroup);
 
       $("td:eq(3)", row).empty();
       if (data.id !== 0) {
-        let button =
+        var button =
           " &nbsp;" +
           '<button class="btn btn-danger btn-xs deleteGroup" type="button" data-id="' +
           data.id +
