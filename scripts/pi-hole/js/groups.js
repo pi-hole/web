@@ -5,6 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global moment:false */
+
 var table;
 var token = $("#token").html();
 var info = null;
@@ -34,6 +36,7 @@ function showAlert(type, icon, title, message) {
       } else {
         $.notify(opts);
       }
+
       break;
     case "warning":
       opts = {
@@ -47,6 +50,7 @@ function showAlert(type, icon, title, message) {
       } else {
         $.notify(opts);
       }
+
       break;
     case "error":
       opts = {
@@ -60,9 +64,9 @@ function showAlert(type, icon, title, message) {
       } else {
         $.notify(opts);
       }
+
       break;
     default:
-      return;
   }
 }
 
@@ -87,7 +91,7 @@ $(document).ready(function() {
       { data: "description" },
       { data: null, width: "60px", orderable: false }
     ],
-    drawCallback: function(settings) {
+    drawCallback: function() {
       $(".deleteGroup").on("click", deleteGroup);
     },
     rowCallback: function(row, data) {
@@ -111,9 +115,7 @@ $(document).ready(function() {
 
       var disabled = data.enabled === 0;
       $("td:eq(1)", row).html(
-        '<input type="checkbox" id="status"' +
-          (disabled ? "" : " checked") +
-          ">"
+        '<input type="checkbox" id="status"' + (disabled ? "" : " checked") + ">"
       );
       var status = $("#status", row);
       status.bootstrapToggle({
@@ -151,13 +153,14 @@ $(document).ready(function() {
       // Store current state in client's local storage area
       localStorage.setItem("groups-table", JSON.stringify(data));
     },
-    stateLoadCallback: function(settings) {
+    stateLoadCallback: function() {
       // Receive previous state from client's local storage area
       var data = localStorage.getItem("groups-table");
       // Return if not available
       if (data === null) {
         return null;
       }
+
       data = JSON.parse(data);
       // Always start on the first page to show most recent queries
       data.start = 0;
@@ -202,31 +205,16 @@ function addGroup() {
     data: { action: "add_group", name: name, desc: desc, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert(
-          "success",
-          "glyphicon glyphicon-plus",
-          "Successfully added group",
-          name
-        );
+        showAlert("success", "glyphicon glyphicon-plus", "Successfully added group", name);
         $("#new_name").val("");
         $("#new_desc").val("");
         table.ajax.reload();
       } else {
-        showAlert(
-          "error",
-          "",
-          "Error while adding new group",
-          response.message
-        );
+        showAlert("error", "", "Error while adding new group", response.message);
       }
     },
     error: function(jqXHR, exception) {
-      showAlert(
-        "error",
-        "",
-        "Error while adding new group",
-        jqXHR.responseText
-      );
+      showAlert("error", "", "Error while adding new group", jqXHR.responseText);
       console.log(exception);
     }
   });
@@ -271,12 +259,7 @@ function editGroup() {
     },
     success: function(response) {
       if (response.success) {
-        showAlert(
-          "success",
-          "glyphicon glyphicon-pencil",
-          "Successfully " + done + " group",
-          name
-        );
+        showAlert("success", "glyphicon glyphicon-pencil", "Successfully " + done + " group", name);
       } else {
         showAlert(
           "error",
@@ -311,32 +294,17 @@ function deleteGroup() {
     data: { action: "delete_group", id: id, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert(
-          "success",
-          "glyphicon glyphicon-trash",
-          "Successfully deleted group ",
-          name
-        );
+        showAlert("success", "glyphicon glyphicon-trash", "Successfully deleted group ", name);
         table
           .row(tr)
           .remove()
           .draw(false);
       } else {
-        showAlert(
-          "error",
-          "",
-          "Error while deleting group with ID " + id,
-          response.message
-        );
+        showAlert("error", "", "Error while deleting group with ID " + id, response.message);
       }
     },
     error: function(jqXHR, exception) {
-      showAlert(
-        "error",
-        "",
-        "Error while deleting group with ID " + id,
-        jqXHR.responseText
-      );
+      showAlert("error", "", "Error while deleting group with ID " + id, jqXHR.responseText);
       console.log(exception);
     }
   });

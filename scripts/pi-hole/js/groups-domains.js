@@ -5,6 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global moment:false */
+
 var table;
 var groups = [];
 var token = $("#token").html();
@@ -35,6 +37,7 @@ function showAlert(type, icon, title, message) {
       } else {
         $.notify(opts);
       }
+
       break;
     case "warning":
       opts = {
@@ -48,6 +51,7 @@ function showAlert(type, icon, title, message) {
       } else {
         $.notify(opts);
       }
+
       break;
     case "error":
       opts = {
@@ -61,9 +65,9 @@ function showAlert(type, icon, title, message) {
       } else {
         $.notify(opts);
       }
+
       break;
     default:
-      return;
   }
 }
 
@@ -90,10 +94,7 @@ $(document).ready(function() {
 
   $("#select").on("change", function() {
     $("#ip-custom").val("");
-    $("#ip-custom").prop(
-      "disabled",
-      $("#select option:selected").val() !== "custom"
-    );
+    $("#ip-custom").prop("disabled", $("#select option:selected").val() !== "custom");
   });
 });
 
@@ -114,7 +115,7 @@ function initTable() {
       { data: "groups", searchable: false },
       { data: null, width: "80px", orderable: false }
     ],
-    drawCallback: function(settings) {
+    drawCallback: function() {
       $(".deleteDomain").on("click", deleteDomain);
     },
     rowCallback: function(row, data) {
@@ -149,9 +150,7 @@ function initTable() {
 
       var disabled = data.enabled === 0;
       $("td:eq(2)", row).html(
-        '<input type="checkbox" id="status"' +
-          (disabled ? "" : " checked") +
-          ">"
+        '<input type="checkbox" id="status"' + (disabled ? "" : " checked") + ">"
       );
       $("#status", row).bootstrapToggle({
         on: "Enabled",
@@ -171,9 +170,7 @@ function initTable() {
       $("#comment", row).on("change", editDomain);
 
       $("td:eq(4)", row).empty();
-      $("td:eq(4)", row).append(
-        '<select id="multiselect" multiple="multiple"></select>'
-      );
+      $("td:eq(4)", row).append('<select id="multiselect" multiple="multiple"></select>');
       var sel = $("#multiselect", row);
       // Add all known groups
       for (var i = 0; i < groups.length; i++) {
@@ -181,12 +178,14 @@ function initTable() {
         if (!groups[i].enabled) {
           extra = " (disabled)";
         }
+
         sel.append(
           $("<option />")
             .val(groups[i].id)
             .text(groups[i].name + extra)
         );
       }
+
       // Select assigned groups
       sel.val(data.groups);
       // Initialize multiselect
@@ -210,13 +209,14 @@ function initTable() {
       // Store current state in client's local storage area
       localStorage.setItem("groups-domains-table", JSON.stringify(data));
     },
-    stateLoadCallback: function(settings) {
+    stateLoadCallback: function() {
       // Receive previous state from client's local storage area
       var data = localStorage.getItem("groups-domains-table");
       // Return if not available
       if (data === null) {
         return null;
       }
+
       data = JSON.parse(data);
       // Always start on the first page to show most recent queries
       data.start = 0;
@@ -268,30 +268,14 @@ function addDomain() {
     },
     success: function(response) {
       if (response.success) {
-        showAlert(
-          "success",
-          "glyphicon glyphicon-plus",
-          "Successfully added domain",
-          domain
-        );
+        showAlert("success", "glyphicon glyphicon-plus", "Successfully added domain", domain);
         $("#new_domain").val("");
         $("#new_comment").val("");
         table.ajax.reload();
-      } else
-        showAlert(
-          "error",
-          "",
-          "Error while adding new domain",
-          response.message
-        );
+      } else showAlert("error", "", "Error while adding new domain", response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert(
-        "error",
-        "",
-        "Error while adding new domain",
-        jqXHR.responseText
-      );
+      showAlert("error", "", "Error while adding new domain", jqXHR.responseText);
       console.log(exception);
     }
   });
@@ -384,31 +368,15 @@ function deleteDomain() {
     data: { action: "delete_domain", id: id, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert(
-          "success",
-          "glyphicon glyphicon-trash",
-          "Successfully deleted domain",
-          domain
-        );
+        showAlert("success", "glyphicon glyphicon-trash", "Successfully deleted domain", domain);
         table
           .row(tr)
           .remove()
           .draw(false);
-      } else
-        showAlert(
-          "error",
-          "",
-          "Error while deleting domain with ID " + id,
-          response.message
-        );
+      } else showAlert("error", "", "Error while deleting domain with ID " + id, response.message);
     },
     error: function(jqXHR, exception) {
-      showAlert(
-        "error",
-        "",
-        "Error while deleting domain with ID " + id,
-        jqXHR.responseText
-      );
+      showAlert("error", "", "Error while deleting domain with ID " + id, jqXHR.responseText);
       console.log(exception);
     }
   });
