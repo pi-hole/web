@@ -17,7 +17,7 @@ function showAlert(type, icon, title, message) {
     case "info":
       opts = {
         type: "info",
-        icon: "glyphicon glyphicon-time",
+        icon: "far fa-clock",
         title: title,
         message: message
       };
@@ -40,7 +40,7 @@ function showAlert(type, icon, title, message) {
     case "warning":
       opts = {
         type: "warning",
-        icon: "glyphicon glyphicon-warning-sign",
+        icon: "fas fa-exclamation-triangle",
         title: title,
         message: message
       };
@@ -54,7 +54,7 @@ function showAlert(type, icon, title, message) {
     case "error":
       opts = {
         type: "danger",
-        icon: "glyphicon glyphicon-remove",
+        icon: "fas fa-times",
         title: "&nbsp;<strong>Error, something went wrong!</strong><br>",
         message: message
       };
@@ -185,7 +185,7 @@ function initTable() {
         '<button class="btn btn-danger btn-xs deleteClient" type="button" data-id="' +
         data.id +
         '">' +
-        '<span class="glyphicon glyphicon-trash"></span>' +
+        '<span class="far fa-trash-alt"></span>' +
         "</button>";
       $("td:eq(2)", row).html(button);
     },
@@ -252,7 +252,7 @@ function addClient() {
     data: { action: "add_client", ip: ip, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-plus", "Successfully added client", ip);
+        showAlert("success", "fas fa-plus", "Successfully added client", ip);
         reload_client_suggestions();
         table.ajax.reload();
       } else {
@@ -294,12 +294,7 @@ function editClient() {
     data: { action: "edit_client", id: id, groups: groups, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert(
-          "success",
-          "glyphicon glyphicon-plus",
-          "Successfully " + done + " client",
-          ip_name
-        );
+        showAlert("success", "fas fa-plus", "Successfully " + done + " client", ip_name);
       } else {
         showAlert("error", "Error while " + not_done + " client with ID " + id, response.message);
       }
@@ -335,7 +330,7 @@ function deleteClient() {
     data: { action: "delete_client", id: id, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-trash", "Successfully deleted client ", ip_name);
+        showAlert("success", "far fa-trash-alt", "Successfully deleted client ", ip_name);
         table
           .row(tr)
           .remove()

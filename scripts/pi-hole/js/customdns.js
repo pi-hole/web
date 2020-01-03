@@ -52,7 +52,7 @@ $(document).ready(function() {
             "' data-ip='" +
             row[1] +
             "'>" +
-            '<span class="glyphicon glyphicon-trash"></span>' +
+            '<span class="far fa-trash-alt"></span>' +
             "</button>"
           );
         }

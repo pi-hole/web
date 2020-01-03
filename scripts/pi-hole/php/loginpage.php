@@ -41,7 +41,7 @@
             <div class="form-group pull-left">
               <div class="checkbox pull-right"><label><input type="checkbox" id="logincookie" name="persistentlogin">Remember me for 7 days</label></div>
             </div>
-            <button type="submit" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;&nbsp;Log in</button>
+            <button type="submit" class="btn btn-primary pull-right"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in</button>
           </div>
         </div>
         <br>

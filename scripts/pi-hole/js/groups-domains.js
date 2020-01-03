@@ -19,7 +19,7 @@ function showAlert(type, icon, title, message) {
     case "info":
       opts = {
         type: "info",
-        icon: "glyphicon glyphicon-time",
+        icon: "far fa-clock",
         title: title,
         message: message
       };
@@ -42,7 +42,7 @@ function showAlert(type, icon, title, message) {
     case "warning":
       opts = {
         type: "warning",
-        icon: "glyphicon glyphicon-warning-sign",
+        icon: "fas fa-exclamation-triangle",
         title: title,
         message: message
       };
@@ -56,7 +56,7 @@ function showAlert(type, icon, title, message) {
     case "error":
       opts = {
         type: "danger",
-        icon: "glyphicon glyphicon-remove",
+        icon: "fas fa-times",
         title: "&nbsp;<strong>Error, something went wrong!</strong><br>",
         message: message
       };
@@ -196,7 +196,7 @@ function initTable() {
         '<button class="btn btn-danger btn-xs deleteDomain" type="button" data-id="' +
         data.id +
         '">' +
-        '<span class="glyphicon glyphicon-trash"></span>' +
+        '<span class="far fa-trash-alt"></span>' +
         "</button>";
       $("td:eq(5)", row).html(button);
     },
@@ -268,7 +268,7 @@ function addDomain() {
     },
     success: function(response) {
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-plus", "Successfully added domain", domain);
+        showAlert("success", "fas fa-plus", "Successfully added domain", domain);
         $("#new_domain").val("");
         $("#new_comment").val("");
         table.ajax.reload();
@@ -329,12 +329,7 @@ function editDomain() {
     },
     success: function(response) {
       if (response.success) {
-        showAlert(
-          "success",
-          "glyphicon glyphicon-pencil",
-          "Successfully " + done + " domain",
-          domain
-        );
+        showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " domain", domain);
       } else
         showAlert(
           "error",
@@ -368,7 +363,7 @@ function deleteDomain() {
     data: { action: "delete_domain", id: id, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-trash", "Successfully deleted domain", domain);
+        showAlert("success", "far fa-trash-alt", "Successfully deleted domain", domain);
         table
           .row(tr)
           .remove()

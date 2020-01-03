@@ -285,7 +285,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             </td>
                                                             <td class="text-center">
                                                                 <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
-                                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                                    <span class="far fa-trash-alt"></span>
                                                                 </button>
                                                                 <input type="checkbox" name="adlist-del-<?php echo $key; ?>" hidden>
                                                             </td>
@@ -603,7 +603,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             <td id="HOST"><?php echo $lease["host"]; ?></td>
                                                             <td>
                                                                 <button class="btn btn-warning btn-xs" type="button" id="button" data-static="alert">
-                                                                    <span class="glyphicon glyphicon-copy"></span>
+                                                                    <span class="fas fas fa-file-import"></span>
                                                                 </button>
                                                             </td>
                                                         </tr>
@@ -633,7 +633,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             <td><?php if (strlen($lease["hwaddr"]) > 0) { ?>
                                                                 <button class="btn btn-danger btn-xs" type="submit" name="removestatic"
                                                                         value="<?php echo $lease["hwaddr"]; ?>">
-                                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                                    <span class="far fa-trash-alt"></span>
                                                                 </button>
                                                                 <?php } ?>
                                                             </td>
@@ -647,7 +647,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             <td><input type="text" name="AddHostname" value=""></td>
                                                             <td>
                                                                 <button class="btn btn-success btn-xs" type="submit" name="addstatic">
-                                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                                    <span class="fas fa-plus"></span>
                                                                 </button>
                                                             </td>
                                                         </tr>
