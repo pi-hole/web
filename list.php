@@ -8,7 +8,7 @@
 
 require "scripts/pi-hole/php/header.php";
 
-$list = $_GET['l'] ?? '';
+$list = isset($_GET['l']) ? $_GET['l'] : '';
 
 if ($list == "white")
 {
