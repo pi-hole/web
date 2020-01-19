@@ -8,6 +8,7 @@
 
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
+    require_once "scripts/pi-hole/php/FTL.php";
     $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
 
     check_cors();
@@ -162,16 +163,7 @@
     $FTLpid = intval(pidofFTL());
     $FTL = ($FTLpid !== 0 ? true : false);
 
-    $piholeFTLConfFile = "/etc/pihole/pihole-FTL.conf";
-    if(is_readable($piholeFTLConfFile))
-    {
-        $piholeFTLConf = parse_ini_file($piholeFTLConfFile);
-    }
-    else
-    {
-        $piholeFTLConf = array();
-    }
-
+    $piholeFTLConf = piholeFTLConfig();
 ?>
 <!doctype html>
 <!-- Pi-hole: A black hole for Internet advertisements
