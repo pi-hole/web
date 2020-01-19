@@ -8,7 +8,7 @@
 /* global moment:false */
 
 var table;
-var token = $("#token").html();
+var token = $("#token").text();
 var info = null;
 
 function showAlert(type, icon, title, message) {
