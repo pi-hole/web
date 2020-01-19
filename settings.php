@@ -7,16 +7,10 @@
 *    Please see LICENSE file for your rights under this license. */
 require "scripts/pi-hole/php/header.php";
 require "scripts/pi-hole/php/savesettings.php";
+require_once "scripts/pi-hole/php/FTL.php";
 // Reread ini file as things might have been changed
 $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
-if(is_readable($piholeFTLConfFile))
-{
-	$piholeFTLConf = parse_ini_file($piholeFTLConfFile);
-}
-else
-{
-	$piholeFTLConf = array();
-}
+$piholeFTLConf = piholeFTLConfig();
 
 // Handling of PHP internal errors
 $last_error = error_get_last();
@@ -302,8 +296,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             <div class="col-xs-6">
                                                 <label for="newusercomment">Comment:</label>
                                                 <input name="newusercomment" type="text" class="form-control" placeholder="Include a comment (optional)">
-                                            </div>                                            
-                                        </div>  
+                                            </div>
+                                        </div>
                                         <input type="hidden" name="field" value="adlists">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
                                     </div>

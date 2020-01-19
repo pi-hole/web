@@ -216,10 +216,6 @@
 }
 
 /* Utilities */
-.text-nowrap {
-    white-space: nowrap !important;
-}
-
 .text-black {
     color: #000 !important;
 }

@@ -1,10 +1,17 @@
+/* Pi-hole: A black hole for Internet advertisements
+ *  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+ *  Network-wide ad blocking via your own hardware.
+ *
+ *  This file is copyright under the latest version of the EUPL.
+ *  Please see LICENSE file for your rights under this license. */
+
 var table;
 var groups = [];
-const token = $("#token").html();
+var token = $("#token").text();
 var info = null;
 
 function showAlert(type, icon, title, message) {
-  let opts = {};
+  var opts = {};
   title = "&nbsp;<strong>" + title + "</strong><br>";
   switch (type) {
     case "info":
@@ -28,6 +35,7 @@ function showAlert(type, icon, title, message) {
       } else {
         $.notify(opts);
       }
+
       break;
     case "warning":
       opts = {
@@ -41,6 +49,7 @@ function showAlert(type, icon, title, message) {
       } else {
         $.notify(opts);
       }
+
       break;
     case "error":
       opts = {
@@ -54,9 +63,9 @@ function showAlert(type, icon, title, message) {
       } else {
         $.notify(opts);
       }
+
       break;
     default:
-      return;
   }
 }
 
@@ -68,19 +77,22 @@ function reload_client_suggestions() {
       var sel = $("#select");
       sel.empty();
       for (var key in data) {
-        if (!data.hasOwnProperty(key)) {
+        if (!Object.prototype.hasOwnProperty.call(data, key)) {
           continue;
         }
+
         var text = key;
         if (data[key].length > 0) {
           text += " (" + data[key] + ")";
         }
+
         sel.append(
           $("<option />")
             .val(key)
             .text(text)
         );
       }
+
       sel.append(
         $("<option />")
           .val("custom")
@@ -111,10 +123,7 @@ $(document).ready(function() {
 
   $("#select").on("change", function() {
     $("#ip-custom").val("");
-    $("#ip-custom").prop(
-      "disabled",
-      $("#select option:selected").val() !== "custom"
-    );
+    $("#ip-custom").prop("disabled", $("#select option:selected").val() !== "custom");
   });
 });
 
@@ -132,11 +141,11 @@ function initTable() {
       { data: "groups", searchable: false },
       { data: "name", width: "80px", orderable: false }
     ],
-    drawCallback: function(settings) {
+    drawCallback: function() {
       $(".deleteClient").on("click", deleteClient);
     },
     rowCallback: function(row, data) {
-      const tooltip = "Database ID: " + data.id;
+      var tooltip = "Database ID: " + data.id;
       var ip_name =
         '<code id="ip" title="' +
         tooltip +
@@ -146,18 +155,11 @@ function initTable() {
         data.id +
         '">';
       if (data.name !== null && data.name.length > 0)
-        ip_name +=
-          '<br><code id="name" title="' +
-          tooltip +
-          '">' +
-          data.name +
-          "</code>";
+        ip_name += '<br><code id="name" title="' + tooltip + '">' + data.name + "</code>";
       $("td:eq(0)", row).html(ip_name);
 
       $("td:eq(1)", row).empty();
-      $("td:eq(1)", row).append(
-        '<select id="multiselect" multiple="multiple"></select>'
-      );
+      $("td:eq(1)", row).append('<select id="multiselect" multiple="multiple"></select>');
       var sel = $("#multiselect", row);
       // Add all known groups
       for (var i = 0; i < groups.length; i++) {
@@ -165,19 +167,21 @@ function initTable() {
         if (!groups[i].enabled) {
           extra = " (disabled)";
         }
+
         sel.append(
           $("<option />")
             .val(groups[i].id)
             .text(groups[i].name + extra)
         );
       }
+
       // Select assigned groups
       sel.val(data.groups);
       // Initialize multiselect
       sel.multiselect({ includeSelectAllOption: true });
       sel.on("change", editClient);
 
-      let button =
+      var button =
         '<button class="btn btn-danger btn-xs deleteClient" type="button" data-id="' +
         data.id +
         '">' +
@@ -194,13 +198,14 @@ function initTable() {
       // Store current state in client's local storage area
       localStorage.setItem("groups-clients-table", JSON.stringify(data));
     },
-    stateLoadCallback: function(settings) {
+    stateLoadCallback: function() {
       // Receive previous state from client's local storage area
       var data = localStorage.getItem("groups-clients-table");
       // Return if not available
       if (data === null) {
         return null;
       }
+
       data = JSON.parse(data);
       // Always start on the first page to show most recent queries
       data.start = 0;
@@ -247,30 +252,15 @@ function addClient() {
     data: { action: "add_client", ip: ip, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert(
-          "success",
-          "glyphicon glyphicon-plus",
-          "Successfully added client",
-          ip
-        );
+        showAlert("success", "glyphicon glyphicon-plus", "Successfully added client", ip);
         reload_client_suggestions();
         table.ajax.reload();
       } else {
-        showAlert(
-          "error",
-          "",
-          "Error while adding new client",
-          response.message
-        );
+        showAlert("error", "", "Error while adding new client", response.message);
       }
     },
     error: function(jqXHR, exception) {
-      showAlert(
-        "error",
-        "",
-        "Error while adding new client",
-        jqXHR.responseText
-      );
+      showAlert("error", "", "Error while adding new client", jqXHR.responseText);
       console.log(exception);
     }
   });
@@ -311,11 +301,7 @@ function editClient() {
           ip_name
         );
       } else {
-        showAlert(
-          "error",
-          "Error while " + not_done + " client with ID " + id,
-          response.message
-        );
+        showAlert("error", "Error while " + not_done + " client with ID " + id, response.message);
       }
     },
     error: function(jqXHR, exception) {
@@ -340,6 +326,7 @@ function deleteClient() {
   if (name.length > 0) {
     ip_name += " (" + name + ")";
   }
+
   showAlert("info", "", "Deleting client...", ip_name);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
@@ -348,33 +335,18 @@ function deleteClient() {
     data: { action: "delete_client", id: id, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert(
-          "success",
-          "glyphicon glyphicon-trash",
-          "Successfully deleted client ",
-          ip_name
-        );
+        showAlert("success", "glyphicon glyphicon-trash", "Successfully deleted client ", ip_name);
         table
           .row(tr)
           .remove()
           .draw(false);
         reload_client_suggestions();
       } else {
-        showAlert(
-          "error",
-          "",
-          "Error while deleting client with ID " + id,
-          response.message
-        );
+        showAlert("error", "", "Error while deleting client with ID " + id, response.message);
       }
     },
     error: function(jqXHR, exception) {
-      showAlert(
-        "error",
-        "",
-        "Error while deleting client with ID " + id,
-        jqXHR.responseText
-      );
+      showAlert("error", "", "Error while deleting client with ID " + id, jqXHR.responseText);
       console.log(exception);
     }
   });
