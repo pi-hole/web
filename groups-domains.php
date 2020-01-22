@@ -82,6 +82,7 @@
     </div>
 </div>
 
+<script src="scripts/pi-hole/js/groups-common.js"></script>
 <script src="scripts/pi-hole/js/groups-domains.js"></script>
 
 <?php

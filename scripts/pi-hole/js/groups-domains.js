@@ -5,71 +5,14 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false */
+/* global showAlert:false */
+/* global datetime:false */
+/* global disableAll:false */
+/* global enableAll:false */
 
 var table;
 var groups = [];
 var token = $("#token").html();
-var info = null;
-
-function showAlert(type, icon, title, message) {
-  var opts = {};
-  title = "&nbsp;<strong>" + title + "</strong><br>";
-  switch (type) {
-    case "info":
-      opts = {
-        type: "info",
-        icon: "glyphicon glyphicon-time",
-        title: title,
-        message: message
-      };
-      info = $.notify(opts);
-      break;
-    case "success":
-      opts = {
-        type: "success",
-        icon: icon,
-        title: title,
-        message: message
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
-
-      break;
-    case "warning":
-      opts = {
-        type: "warning",
-        icon: "glyphicon glyphicon-warning-sign",
-        title: title,
-        message: message
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
-
-      break;
-    case "error":
-      opts = {
-        type: "danger",
-        icon: "glyphicon glyphicon-remove",
-        title: "&nbsp;<strong>Error, something went wrong!</strong><br>",
-        message: message
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
-
-      break;
-    default:
-  }
-}
 
 function get_groups() {
   $.post(
@@ -81,10 +24,6 @@ function get_groups() {
     },
     "json"
   );
-}
-
-function datetime(date) {
-  return moment.unix(Math.floor(date)).format("Y-MM-DD HH:mm:ss z");
 }
 
 $(document).ready(function() {
@@ -248,9 +187,11 @@ function addDomain() {
   var type = $("#new_type").val();
   var comment = $("#new_comment").val();
 
+  disableAll();
   showAlert("info", "", "Adding domain...", domain);
 
   if (domain.length === 0) {
+    enableAll();
     showAlert("warning", "", "Warning", "Please specify a domain");
     return;
   }
@@ -267,6 +208,7 @@ function addDomain() {
       token: token
     },
     success: function(response) {
+      enableAll();
       if (response.success) {
         showAlert("success", "glyphicon glyphicon-plus", "Successfully added domain", domain);
         $("#new_domain").val("");
@@ -275,6 +217,7 @@ function addDomain() {
       } else showAlert("error", "", "Error while adding new domain", response.message);
     },
     error: function(jqXHR, exception) {
+      enableAll();
       showAlert("error", "", "Error while adding new domain", jqXHR.responseText);
       console.log(exception);
     }
@@ -313,6 +256,7 @@ function editDomain() {
     not_done = "editing groups of";
   }
 
+  disableAll();
   showAlert("info", "", "Editing domain...", name);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
@@ -328,6 +272,7 @@ function editDomain() {
       token: token
     },
     success: function(response) {
+      enableAll();
       if (response.success) {
         showAlert(
           "success",
@@ -344,6 +289,7 @@ function editDomain() {
         );
     },
     error: function(jqXHR, exception) {
+      enableAll();
       showAlert(
         "error",
         "",
@@ -360,6 +306,7 @@ function deleteDomain() {
   var tr = $(this).closest("tr");
   var domain = tr.find("#domain").text();
 
+  disableAll();
   showAlert("info", "", "Deleting domain...", domain);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
@@ -367,6 +314,7 @@ function deleteDomain() {
     dataType: "json",
     data: { action: "delete_domain", id: id, token: token },
     success: function(response) {
+      enableAll();
       if (response.success) {
         showAlert("success", "glyphicon glyphicon-trash", "Successfully deleted domain", domain);
         table
@@ -376,6 +324,7 @@ function deleteDomain() {
       } else showAlert("error", "", "Error while deleting domain with ID " + id, response.message);
     },
     error: function(jqXHR, exception) {
+      enableAll();
       showAlert("error", "", "Error while deleting domain with ID " + id, jqXHR.responseText);
       console.log(exception);
     }

@@ -5,74 +5,13 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false */
+/* global showAlert:false */
+/* global datetime:false */
+/* global disableAll:false */
+/* global enableAll:false */
 
 var table;
 var token = $("#token").html();
-var info = null;
-
-function showAlert(type, icon, title, message) {
-  var opts = {};
-  title = "&nbsp;<strong>" + title + "</strong><br>";
-  switch (type) {
-    case "info":
-      opts = {
-        type: "info",
-        icon: "glyphicon glyphicon-time",
-        title: title,
-        message: message
-      };
-      info = $.notify(opts);
-      break;
-    case "success":
-      opts = {
-        type: "success",
-        icon: icon,
-        title: title,
-        message: message
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
-
-      break;
-    case "warning":
-      opts = {
-        type: "warning",
-        icon: "glyphicon glyphicon-warning-sign",
-        title: title,
-        message: message
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
-
-      break;
-    case "error":
-      opts = {
-        type: "danger",
-        icon: "glyphicon glyphicon-remove",
-        title: "&nbsp;<strong>Error, something went wrong!</strong><br>",
-        message: message
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
-
-      break;
-    default:
-  }
-}
-
-function datetime(date) {
-  return moment.unix(Math.floor(date)).format("Y-MM-DD HH:mm:ss z");
-}
 
 $(document).ready(function() {
   $("#btnAdd").on("click", addGroup);
@@ -191,6 +130,7 @@ function addGroup() {
   var name = $("#new_name").val();
   var desc = $("#new_desc").val();
 
+  disableAll();
   showAlert("info", "", "Adding group...", name);
 
   if (name.length === 0) {
@@ -204,6 +144,7 @@ function addGroup() {
     dataType: "json",
     data: { action: "add_group", name: name, desc: desc, token: token },
     success: function(response) {
+      enableAll();
       if (response.success) {
         showAlert("success", "glyphicon glyphicon-plus", "Successfully added group", name);
         $("#new_name").val("");
@@ -214,6 +155,7 @@ function addGroup() {
       }
     },
     error: function(jqXHR, exception) {
+      enableAll();
       showAlert("error", "", "Error while adding new group", jqXHR.responseText);
       console.log(exception);
     }
@@ -244,6 +186,7 @@ function editGroup() {
     not_done = "editing description of";
   }
 
+  disableAll();
   showAlert("info", "", "Editing group...", name);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
@@ -258,6 +201,7 @@ function editGroup() {
       token: token
     },
     success: function(response) {
+      enableAll();
       if (response.success) {
         showAlert("success", "glyphicon glyphicon-pencil", "Successfully " + done + " group", name);
       } else {
@@ -270,6 +214,7 @@ function editGroup() {
       }
     },
     error: function(jqXHR, exception) {
+      enableAll();
       showAlert(
         "error",
         "",
@@ -286,6 +231,7 @@ function deleteGroup() {
   var tr = $(this).closest("tr");
   var name = tr.find("#name").val();
 
+  disableAll();
   showAlert("info", "", "Deleting group...", name);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
@@ -293,6 +239,7 @@ function deleteGroup() {
     dataType: "json",
     data: { action: "delete_group", id: id, token: token },
     success: function(response) {
+      enableAll();
       if (response.success) {
         showAlert("success", "glyphicon glyphicon-trash", "Successfully deleted group ", name);
         table
@@ -304,6 +251,7 @@ function deleteGroup() {
       }
     },
     error: function(jqXHR, exception) {
+      enableAll();
       showAlert("error", "", "Error while deleting group with ID " + id, jqXHR.responseText);
       console.log(exception);
     }
