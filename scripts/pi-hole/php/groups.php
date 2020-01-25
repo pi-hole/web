@@ -746,5 +746,6 @@ if ($_POST['action'] == 'get_groups') {
 }
 // Reload lists in pihole-FTL after having added something
 if ($reload) {
-    echo shell_exec('sudo pihole restartdns reload-lists');
+    $output = pihole_execute('restartdns reload-lists');
+    echo implode("\n", $output);
 }

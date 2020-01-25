@@ -20,8 +20,16 @@ $data = array();
 // Common API functions
 if (isset($_GET['status']))
 {
-	$pistatus = exec('sudo pihole status web');
-	if ($pistatus == "1")
+	$pistatus = pihole_execute('status web');
+	if(isset($pistatus[0]))
+    {
+        $pistatus = $pistatus[0];
+    }
+    else
+    {
+        $pistatus = null;
+    }
+	if ($pistatus === "1")
 	{
 		$data = array_merge($data, array("status" => "enabled"));
 	}
@@ -42,7 +50,7 @@ elseif (isset($_GET['enable']) && $auth)
 		// Skip token validation if explicit auth string is given
 		check_csrf($_GET['token']);
 	}
-	exec('sudo pihole enable');
+	pihole_execute('enable');
 	$data = array_merge($data, array("status" => "enabled"));
 	unlink("../custom_disable_timer");
 }
@@ -63,12 +71,12 @@ elseif (isset($_GET['disable']) && $auth)
 	if($disable > 0)
 	{
 		$timestamp = time();
-		exec("sudo pihole disable ".$disable."s");
+		pihole_execute("disable ".$disable."s");
 		file_put_contents("../custom_disable_timer",($timestamp+$disable)*1000);
 	}
 	else
 	{
-		exec('sudo pihole disable');
+		pihole_execute('disable');
 		unlink("../custom_disable_timer");
 	}
 	$data = array_merge($data, array("status" => "disabled"));

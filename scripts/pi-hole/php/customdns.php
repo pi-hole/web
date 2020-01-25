@@ -81,7 +81,7 @@
                     if (get_ip_type($entry->ip) == $ipType)
                         return errorJsonResponse("This domain already has a custom DNS entry for an IPv" . $ipType);
 
-            exec("sudo pihole -a addcustomdns ".$ip." ".$domain);
+            pihole_execute("-a addcustomdns ".$ip." ".$domain);
 
             return successJsonResponse();
         }
@@ -117,7 +117,7 @@
             if (!$found)
                 return errorJsonResponse("This domain/ip association does not exist");
 
-            exec("sudo pihole -a removecustomdns ".$ip." ".$domain);
+            pihole_execute("-a removecustomdns ".$ip." ".$domain);
 
             return successJsonResponse();
         }

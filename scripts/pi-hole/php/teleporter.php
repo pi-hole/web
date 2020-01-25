@@ -439,7 +439,7 @@ if(isset($_POST["action"]))
 
 		if($importedsomething)
 		{
-			exec("sudo pihole restartdns reload");
+			pihole_execute("restartdns reload");
 		}
 
 		unlink($fullfilename);
