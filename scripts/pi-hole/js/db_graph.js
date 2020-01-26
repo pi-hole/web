@@ -363,7 +363,7 @@ $("#queryOverTimeChart").click(function(evt) {
 
     //get value by index
     var from = label / 1000;
-    var until = label / 1000 + 600;
+    var until = label / 1000 + interval;
     window.location.href = "db_queries.php?from=" + from + "&until=" + until;
   }
 
