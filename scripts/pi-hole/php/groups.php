@@ -209,7 +209,7 @@ if ($_POST['action'] == 'get_groups') {
         // Loop over results
         $ips = array();
         while ($res = $query->fetchArray(SQLITE3_ASSOC)) {
-            $ips[$res['ip']] = $res['name'];
+            $ips[$res['ip']] = $res['name'] !== null ? $res['name'] : '';
         }
         $FTLdb->close();
 
