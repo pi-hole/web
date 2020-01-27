@@ -232,13 +232,22 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_client') {
     // Add new client
     try {
-        $stmt = $db->prepare('INSERT INTO client (ip) VALUES (:ip)');
+        $stmt = $db->prepare('INSERT INTO client (ip,comment) VALUES (:ip,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
         if (!$stmt->bindValue(':ip', $_POST['ip'], SQLITE3_TEXT)) {
             throw new Exception('While binding ip: ' . $db->lastErrorMsg());
+        }
+
+        $comment = $_POST['comment'];
+        if (strlen($comment) == 0) {
+                // Store NULL in database for empty comments
+                $comment = null;
+        }
+        if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
+            throw new Exception('While binding comment: ' . $db->lastErrorMsg());
         }
 
         if (!$stmt->execute()) {
@@ -253,6 +262,28 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'edit_client') {
     // Edit client identified by ID
     try {
+        $stmt = $db->prepare('UPDATE client SET comment=:comment WHERE id = :id');
+        if (!$stmt) {
+            throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
+        }
+
+        $comment = $_POST['comment'];
+        if (strlen($comment) == 0) {
+                // Store NULL in database for empty comments
+                $comment = null;
+        }
+        if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
+            throw new Exception('While binding comment: ' . $db->lastErrorMsg());
+        }
+
+        if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
+            throw new Exception('While binding id: ' . $db->lastErrorMsg());
+        }
+
+        if (!$stmt->execute()) {
+            throw new Exception('While executing: ' . $db->lastErrorMsg());
+        }
+
         $stmt = $db->prepare('DELETE FROM client_by_group WHERE client_id = :id');
         if (!$stmt) {
             throw new Exception('While preparing DELETE statement: ' . $db->lastErrorMsg());
