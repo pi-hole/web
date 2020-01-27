@@ -6,10 +6,6 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global moment:false */
-/* global showAlert:false */
-/* global datetime:false */
-/* global disableAll:false */
-/* global enableAll:false */
 
 var info = null;
 function showAlert(type, icon, title, message) {
@@ -88,3 +84,12 @@ function enableAll() {
   $("button").attr("disabled", false);
   $("textarea").attr("disabled", false);
 }
+
+window.utils = (function() {
+  return {
+    showAlert: showAlert,
+    datetime: datetime,
+    disableAll: disableAll,
+    enableAll: enableAll
+  };
+})();
