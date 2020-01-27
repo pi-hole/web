@@ -228,6 +228,11 @@ $(document).ready(function() {
           buttontext = "";
       }
 
+      // Add extra label when blocking happend during deep CNAME inspection
+      if (blocked && data.length > 6 && data[6] === "3") {
+        fieldtext += "<br>CNAME";
+      }
+
       $(row).addClass(colorClass);
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(6)", row).html(buttontext);
