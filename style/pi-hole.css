@@ -239,3 +239,7 @@
 .text-vivid-blue {
     color: #36f !important;
 }
+
+td.highlight {
+    background-color: yellow;
+}
