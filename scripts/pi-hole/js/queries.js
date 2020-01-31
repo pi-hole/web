@@ -418,14 +418,16 @@ $(document).ready(function() {
       // Domain
       api.$("td:eq(2)").click(function() {
         if (autofilter()) {
-          api.search(this.textContent).draw();
+          var domain = this.textContent.split("\n")[0];
+          api.search(domain).draw();
           $("#resetButton").show();
         }
       });
       api.$("td:eq(2)").hover(
         function() {
           if (autofilter()) {
-            this.title = "Click to show only queries with domain " + this.textContent;
+            var domain = this.textContent.split("\n")[0];
+            this.title = "Click to show only queries with domain " + domain;
             this.style.color = "#72afd2";
           } else {
             this.title = "";
