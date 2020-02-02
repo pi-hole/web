@@ -220,6 +220,10 @@ function archive_insert_into_table($file, $table, $flush=false, $wildcardstyle=f
 		$type = ListType::regex_blacklist;
 	} else if($table === "domain_audit") {
 		$table = "domain_audit";
+		$type = -1; // -1 -> not used inside add_to_table()
+	} else if($table === "adlist") {
+		$table = "adlist";
+		$type = -1; // -1 -> not used inside add_to_table()
 	}
 
 	// Flush table if requested
@@ -250,7 +254,6 @@ function flush_table($table, $type=null)
 			$sql = "DELETE FROM ".$table;
 			array_push($flushed_tables, $table);
 		}
-		echo $sql."<br>";
 		$db->exec($sql);
 	}
 }
@@ -355,7 +358,14 @@ if(isset($_POST["action"]))
 			if(isset($_POST["auditlog"]) && $file->getFilename() === "auditlog.list")
 			{
 				$num = archive_insert_into_table($file, "domain_audit", $flushtables);
-				echo "Processed blacklist (regex) (".$num." entries)<br>\n";
+				echo "Processed audit log (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["adlist"]) && $file->getFilename() === "adlists.list")
+			{
+				$num = archive_insert_into_table($file, "adlist", $flushtables);
+				echo "Processed adlists (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 
