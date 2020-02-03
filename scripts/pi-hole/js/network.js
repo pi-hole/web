@@ -103,10 +103,11 @@ $(document).ready(function() {
 
       var ips = [];
       var maxiter = Math.min(data.ip.length, MAXIPDISPLAY);
-      for (let index = 0; index < maxiter; index++) {
+      for (var index = 0; index < maxiter; index++) {
         var ip = data.ip[index];
-        ips.push('<a href="queries.php?client=' + ip + '">' + ip + '</a>');
+        ips.push('<a href="queries.php?client=' + ip + '">' + ip + "</a>");
       }
+
       if (data.ip.length > MAXIPDISPLAY) {
         // We hit the maximum above, add "..." to symbolize we would
         // have more to show here
