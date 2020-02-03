@@ -14,6 +14,12 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
     }
 
     var i, item;
+    // Use the first IP in case there is a list of IPs
+    // for a given device
+    if (Array.isArray(a)) {
+      a = a[0];
+    }
+
     var m = a.split("."),
       n = a.split(":"),
       x = "",
