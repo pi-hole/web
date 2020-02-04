@@ -792,8 +792,9 @@ $(document).ready(function() {
           label: function(tooltipItems, data) {
             if (tooltipItems.datasetIndex === 1) {
               var percentage = 0.0;
-              var total = parseInt(data.datasets[0].data[tooltipItems.index]);
+              var permitted = parseInt(data.datasets[0].data[tooltipItems.index]);
               var blocked = parseInt(data.datasets[1].data[tooltipItems.index]);
+              var total = permitted + blocked;
               if (total > 0) {
                 percentage = (100.0 * blocked) / total;
               }
