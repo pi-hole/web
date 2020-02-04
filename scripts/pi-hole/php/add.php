@@ -16,16 +16,22 @@ if (empty($api)) {
     list_verify($list);
 }
 
+// Split individual domains into array
+$domains = preg_split('/\s+/', trim($_POST['domain']));
+$comment = trim($_POST['comment']);
+
+// Convert domain name to IDNA ASCII form for international domains
+foreach($domains as &$domain)
+{
+	$domain = idn_to_ascii($domain);
+}
+
 // Only check domains we add to the exact lists.
 // Regex are validated by FTL during import
 $check_lists = ["white","black","audit"];
 if(in_array($list, $check_lists)) {
-    check_domain();
+    check_domain($domains);
 }
-
-// Split individual domains into array
-$domains = preg_split('/\s+/', trim($_POST['domain']));
-$comment = trim($_POST['comment']);
 
 require_once("func.php");
 require_once("database.php");

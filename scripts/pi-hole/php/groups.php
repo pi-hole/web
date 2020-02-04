@@ -346,6 +346,13 @@ if ($_POST['action'] == 'get_groups') {
                 array_push($groups, $gres['group_id']);
             }
             $res['groups'] = $groups;
+            $utf8_domain = idn_to_utf8($res['domain']);
+            // Convert domain name to international form
+            // if applicable
+            if($res['domain'] !== $utf8_domain)
+            {
+                $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
+            }
             array_push($data, $res);
         }
 
@@ -364,7 +371,8 @@ if ($_POST['action'] == 'get_groups') {
 
         $type = intval($_POST['type']);
 
-        $domain = $_POST['domain'];
+        // Convert domain name to IDNA ASCII form for international domains
+        $domain = idn_to_ascii($_POST['domain']);
         if($type === ListType::whitelist || $type === ListType::blacklist)
         {
             // If adding to the exact lists, we convert the domain lower case and check whether it is valid
