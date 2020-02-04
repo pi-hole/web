@@ -198,6 +198,18 @@ $(document).ready(function() {
           blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist)";
+
+          if (data.length > 9 && data[9] > -1) {
+            fieldtext =
+              "<a href='groups-domains.php?domainid=" +
+              data[9] +
+              "' class=" +
+              colorClass +
+              ">" +
+              fieldtext +
+              ' <i class="fas fa-link"></i></a>';
+          }
+
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
@@ -255,10 +267,6 @@ $(document).ready(function() {
           colorClass = "text-black";
           fieldtext = "Unknown (" + parseInt(data[4]) + ")";
           buttontext = "";
-      }
-
-      if (data.length > 9 && data[9] > -1) {
-        fieldtext += "<br><a href='groups-domains.php?domainid=" + data[9] + "'>Jump to regex</a>";
       }
 
       $(row).addClass(colorClass);
