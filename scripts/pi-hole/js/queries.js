@@ -257,6 +257,10 @@ $(document).ready(function() {
           buttontext = "";
       }
 
+      if (data.length > 9 && data[9] > -1) {
+        fieldtext += "<br><a href='groups-domains.php?domainid=" + data[9] + "'>Jump to regex</a>";
+      }
+
       $(row).addClass(colorClass);
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(6)", row).html(buttontext);
