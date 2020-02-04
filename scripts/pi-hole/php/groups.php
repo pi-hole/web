@@ -49,7 +49,7 @@ if ($_POST['action'] == 'get_groups') {
         }
         echo json_encode(array('data' => $data));
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'add_group') {
     // Add new group
@@ -72,9 +72,9 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $reload = true;
-        return JSON_success();
+        JSON_success();
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'edit_group') {
     // Edit group identified by ID
@@ -111,9 +111,9 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $reload = true;
-        return JSON_success();
+        JSON_success();
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'delete_group') {
     // Delete group identified by ID
@@ -142,9 +142,9 @@ if ($_POST['action'] == 'get_groups') {
             }
         }
         $reload = true;
-        return JSON_success();
+        JSON_success();
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'get_clients') {
     // List all available groups
@@ -193,7 +193,7 @@ if ($_POST['action'] == 'get_groups') {
 
         echo json_encode(array('data' => $data));
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'get_unconfigured_clients') {
     // List all available clients WITHOUT already configured clients
@@ -227,7 +227,7 @@ if ($_POST['action'] == 'get_groups') {
 
         echo json_encode($ips);
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'add_client') {
     // Add new client
@@ -246,9 +246,9 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $reload = true;
-        return JSON_success();
+        JSON_success();
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'edit_client') {
     // Edit client identified by ID
@@ -288,9 +288,9 @@ if ($_POST['action'] == 'get_groups') {
         $db->query('COMMIT;');
 
         $reload = true;
-        return JSON_success();
+        JSON_success();
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'delete_client') {
     // Delete client identified by ID
@@ -322,9 +322,9 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $reload = true;
-        return JSON_success();
+        JSON_success();
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'get_domains') {
     // List all available groups
@@ -352,7 +352,7 @@ if ($_POST['action'] == 'get_groups') {
 
         echo json_encode(array('data' => $data));
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'add_domain') {
     // Add new domain
@@ -392,9 +392,9 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $reload = true;
-        return JSON_success();
+        JSON_success();
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'edit_domain') {
     // Edit domain identified by ID
@@ -469,9 +469,9 @@ if ($_POST['action'] == 'get_groups') {
         $db->query('COMMIT;');
 
         $reload = true;
-        return JSON_success();
+        JSON_success();
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'delete_domain') {
     // Delete domain identified by ID
@@ -503,9 +503,9 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $reload = true;
-        return JSON_success();
+        JSON_success();
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'get_adlists') {
     // List all available groups
@@ -533,7 +533,7 @@ if ($_POST['action'] == 'get_groups') {
 
         echo json_encode(array('data' => $data));
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'add_adlist') {
     // Add new adlist
@@ -556,9 +556,9 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $reload = true;
-        return JSON_success();
+        JSON_success();
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'edit_adlist') {
     // Edit adlist identified by ID
@@ -629,9 +629,9 @@ if ($_POST['action'] == 'get_groups') {
         $db->query('COMMIT;');
 
         $reload = true;
-        return JSON_success();
+        JSON_success();
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'delete_adlist') {
     // Delete adlist identified by ID
@@ -663,9 +663,9 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $reload = true;
-        return JSON_success();
+        JSON_success();
     } catch (\Exception $ex) {
-        return JSON_error($ex->getMessage());
+        JSON_error($ex->getMessage());
     }
 } else {
     log_and_die('Requested action not supported!');

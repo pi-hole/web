@@ -5,69 +5,11 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global utils:false */
+
 var table;
 var groups = [];
 var token = $("#token").html();
-var info = null;
-
-function showAlert(type, icon, title, message) {
-  var opts = {};
-  title = "&nbsp;<strong>" + title + "</strong><br>";
-  switch (type) {
-    case "info":
-      opts = {
-        type: "info",
-        icon: "glyphicon glyphicon-time",
-        title: title,
-        message: message
-      };
-      info = $.notify(opts);
-      break;
-    case "success":
-      opts = {
-        type: "success",
-        icon: icon,
-        title: title,
-        message: message
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
-
-      break;
-    case "warning":
-      opts = {
-        type: "warning",
-        icon: "glyphicon glyphicon-warning-sign",
-        title: title,
-        message: message
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
-
-      break;
-    case "error":
-      opts = {
-        type: "danger",
-        icon: "glyphicon glyphicon-remove",
-        title: "&nbsp;<strong>Error, something went wrong!</strong><br>",
-        message: message
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
-
-      break;
-    default:
-  }
-}
 
 function reload_client_suggestions() {
   $.post(
@@ -242,10 +184,12 @@ function addClient() {
     ip = $("#ip-custom").val();
   }
 
-  showAlert("info", "", "Adding client...", ip);
+  utils.disableAll();
+  utils.showAlert("info", "", "Adding client...", ip);
 
   if (ip.length === 0) {
-    showAlert("warning", "", "Warning", "Please specify a client IP address");
+    utils.enableAll();
+    utils.showAlert("warning", "", "Warning", "Please specify a client IP address");
     return;
   }
 
@@ -255,16 +199,18 @@ function addClient() {
     dataType: "json",
     data: { action: "add_client", ip: ip, token: token },
     success: function(response) {
+      utils.enableAll();
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-plus", "Successfully added client", ip);
+        utils.showAlert("success", "glyphicon glyphicon-plus", "Successfully added client", ip);
         reload_client_suggestions();
         table.ajax.reload();
       } else {
-        showAlert("error", "", "Error while adding new client", response.message);
+        utils.showAlert("error", "", "Error while adding new client", response.message);
       }
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "", "Error while adding new client", jqXHR.responseText);
+      utils.enableAll();
+      utils.showAlert("error", "", "Error while adding new client", jqXHR.responseText);
       console.log(exception);
     }
   });
@@ -290,26 +236,33 @@ function editClient() {
     ip_name += " (" + name + ")";
   }
 
-  showAlert("info", "", "Editing client...", ip_name);
+  utils.disableAll();
+  utils.showAlert("info", "", "Editing client...", ip_name);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
     dataType: "json",
     data: { action: "edit_client", id: id, groups: groups, token: token },
     success: function(response) {
+      utils.enableAll();
       if (response.success) {
-        showAlert(
+        utils.showAlert(
           "success",
           "glyphicon glyphicon-plus",
           "Successfully " + done + " client",
           ip_name
         );
       } else {
-        showAlert("error", "Error while " + not_done + " client with ID " + id, response.message);
+        utils.showAlert(
+          "error",
+          "Error while " + not_done + " client with ID " + id,
+          response.message
+        );
       }
     },
     error: function(jqXHR, exception) {
-      showAlert(
+      utils.enableAll();
+      utils.showAlert(
         "error",
         "",
         "Error while " + not_done + " client with ID " + id,
@@ -331,26 +284,34 @@ function deleteClient() {
     ip_name += " (" + name + ")";
   }
 
-  showAlert("info", "", "Deleting client...", ip_name);
+  utils.disableAll();
+  utils.showAlert("info", "", "Deleting client...", ip_name);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
     dataType: "json",
     data: { action: "delete_client", id: id, token: token },
     success: function(response) {
+      utils.enableAll();
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-trash", "Successfully deleted client ", ip_name);
+        utils.showAlert(
+          "success",
+          "glyphicon glyphicon-trash",
+          "Successfully deleted client ",
+          ip_name
+        );
         table
           .row(tr)
           .remove()
           .draw(false);
         reload_client_suggestions();
       } else {
-        showAlert("error", "", "Error while deleting client with ID " + id, response.message);
+        utils.showAlert("error", "", "Error while deleting client with ID " + id, response.message);
       }
     },
     error: function(jqXHR, exception) {
-      showAlert("error", "", "Error while deleting client with ID " + id, jqXHR.responseText);
+      utils.enableAll();
+      utils.showAlert("error", "", "Error while deleting client with ID " + id, jqXHR.responseText);
       console.log(exception);
     }
   });
