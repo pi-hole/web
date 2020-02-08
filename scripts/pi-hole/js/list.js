@@ -42,7 +42,7 @@ function addListEntry(entry, index, list, button, type) {
       disabled_message +
       "</span>" +
       '<button class="btn btn-danger btn-xs pull-right" type="button">' +
-      '<span class="glyphicon glyphicon-trash"></span></button></li>'
+      '<span class="far fa-trash-alt"></span></button></li>'
   );
   // Handle button
   $(button + " #" + index).on("click", "button", function() {

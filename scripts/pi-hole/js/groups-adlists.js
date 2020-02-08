@@ -19,7 +19,7 @@ function showAlert(type, icon, title, message) {
     case "info":
       opts = {
         type: "info",
-        icon: "glyphicon glyphicon-time",
+        icon: "far fa-clock",
         title: title,
         message: message
       };
@@ -42,7 +42,7 @@ function showAlert(type, icon, title, message) {
     case "warning":
       opts = {
         type: "warning",
-        icon: "glyphicon glyphicon-warning-sign",
+        icon: "fas fa-exclamation-triangle",
         title: title,
         message: message
       };
@@ -56,7 +56,7 @@ function showAlert(type, icon, title, message) {
     case "error":
       opts = {
         type: "danger",
-        icon: "glyphicon glyphicon-remove",
+        icon: "fas fa-times",
         title: "&nbsp;<strong>Error, something went wrong!</strong><br>",
         message: message
       };
@@ -179,7 +179,7 @@ function initTable() {
         '<button class="btn btn-danger btn-xs deleteAdlist" type="button" data-id="' +
         data.id +
         '">' +
-        '<span class="glyphicon glyphicon-trash"></span>' +
+        '<span class="far fa-trash-alt"></span>' +
         "</button>";
       $("td:eq(4)", row).html(button);
     },
@@ -249,7 +249,7 @@ function addAdlist() {
     },
     success: function(response) {
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-plus", "Successfully added adlist", address);
+        showAlert("success", "fas fa-plus", "Successfully added adlist", address);
         $("#new_address").val("");
         $("#new_comment").val("");
         table.ajax.reload();
@@ -305,12 +305,7 @@ function editAdlist() {
     },
     success: function(response) {
       if (response.success) {
-        showAlert(
-          "success",
-          "glyphicon glyphicon-pencil",
-          "Successfully " + done + " adlist ",
-          address
-        );
+        showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " adlist ", address);
       } else {
         showAlert(
           "error",
@@ -345,7 +340,7 @@ function deleteAdlist() {
     data: { action: "delete_adlist", id: id, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-trash", "Successfully deleted adlist ", address);
+        showAlert("success", "far fa-trash-alt", "Successfully deleted adlist ", address);
         table
           .row(tr)
           .remove()

@@ -18,7 +18,7 @@ function showAlert(type, icon, title, message) {
     case "info":
       opts = {
         type: "info",
-        icon: "glyphicon glyphicon-time",
+        icon: "far fa-clock",
         title: title,
         message: message
       };
@@ -41,7 +41,7 @@ function showAlert(type, icon, title, message) {
     case "warning":
       opts = {
         type: "warning",
-        icon: "glyphicon glyphicon-warning-sign",
+        icon: "fas fa-exclamation-triangle",
         title: title,
         message: message
       };
@@ -55,7 +55,7 @@ function showAlert(type, icon, title, message) {
     case "error":
       opts = {
         type: "danger",
-        icon: "glyphicon glyphicon-remove",
+        icon: "fas fa-times",
         title: "&nbsp;<strong>Error, something went wrong!</strong><br>",
         message: message
       };
@@ -139,7 +139,7 @@ $(document).ready(function() {
           '<button class="btn btn-danger btn-xs deleteGroup" type="button" data-id="' +
           data.id +
           '">' +
-          '<span class="glyphicon glyphicon-trash"></span>' +
+          '<span class="far fa-trash-alt"></span>' +
           "</button>";
         $("td:eq(3)", row).html(button);
       }
@@ -205,7 +205,7 @@ function addGroup() {
     data: { action: "add_group", name: name, desc: desc, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-plus", "Successfully added group", name);
+        showAlert("success", "fas fa-plus", "Successfully added group", name);
         $("#new_name").val("");
         $("#new_desc").val("");
         table.ajax.reload();
@@ -259,7 +259,7 @@ function editGroup() {
     },
     success: function(response) {
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-pencil", "Successfully " + done + " group", name);
+        showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " group", name);
       } else {
         showAlert(
           "error",
@@ -294,7 +294,7 @@ function deleteGroup() {
     data: { action: "delete_group", id: id, token: token },
     success: function(response) {
       if (response.success) {
-        showAlert("success", "glyphicon glyphicon-trash", "Successfully deleted group ", name);
+        showAlert("success", "far fa-trash-alt", "Successfully deleted group ", name);
         table
           .row(tr)
           .remove()
