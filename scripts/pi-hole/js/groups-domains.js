@@ -10,6 +10,7 @@
 var table;
 var groups = [];
 var token = $("#token").html();
+var GETDict = {};
 
 function get_groups() {
   $.post(
@@ -24,6 +25,13 @@ function get_groups() {
 }
 
 $(document).ready(function() {
+  window.location.search
+    .substr(1)
+    .split("&")
+    .forEach(function(item) {
+      GETDict[item.split("=")[0]] = item.split("=")[1];
+    });
+
   $("#btnAdd").on("click", addDomain);
 
   get_groups();
@@ -122,6 +130,13 @@ function initTable() {
         );
       }
 
+      // Highlight row
+      if ("domainid" in GETDict && data.id === parseInt(GETDict.domainid)) {
+        $(row)
+          .find("td")
+          .addClass("highlight");
+      }
+
       // Select assigned groups
       sel.val(data.groups);
       // Initialize multiselect
@@ -166,6 +181,18 @@ function initTable() {
       data.columns[0].visible = false;
       // Apply loaded state to table
       return data;
+    },
+    initComplete: function() {
+      if ("domainid" in GETDict) {
+        var pos = table
+          .column(0, { order: "current" })
+          .data()
+          .indexOf(parseInt(GETDict.domainid));
+        if (pos >= 0) {
+          var page = Math.floor(pos / table.page.info().length);
+          table.page(page).draw(false);
+        }
+      }
     }
   });
 

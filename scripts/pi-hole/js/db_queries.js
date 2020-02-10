@@ -195,6 +195,18 @@ function getQueryTypes() {
     queryType.push([6, 7, 8]);
   }
 
+  if ($("#type_gravity_CNAME").prop("checked")) {
+    queryType.push(9);
+  }
+
+  if ($("#type_regex_CNAME").prop("checked")) {
+    queryType.push(10);
+  }
+
+  if ($("#type_blacklist_CNAME").prop("checked")) {
+    queryType.push(11);
+  }
+
   return queryType.join(",");
 }
 
@@ -282,13 +294,13 @@ $(document).ready(function() {
           break;
         case 4:
           color = "red";
-          fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
+          fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case 5:
           color = "red";
-          fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
+          fieldtext = "Blocked <br class='hidden-lg'>(exact blacklist)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
@@ -306,6 +318,24 @@ $(document).ready(function() {
           color = "red";
           fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
           buttontext = "";
+          break;
+        case 9:
+          color = "red";
+          fieldtext = "Blocked (gravity, CNAME)";
+          buttontext =
+            '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+          break;
+        case 10:
+          color = "red";
+          fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist, CNAME)";
+          buttontext =
+            '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+          break;
+        case 11:
+          color = "red";
+          fieldtext = "Blocked <br class='hidden-lg'>(exact blacklist, CNAME)";
+          buttontext =
+            '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         default:
           color = "black";
