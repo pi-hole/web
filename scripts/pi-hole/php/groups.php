@@ -331,7 +331,7 @@ if ($_POST['action'] == 'get_groups') {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ($_POST['action'] == 'get_addresses') {
+} elseif ($_POST['action'] == 'get_domains') {
     // List all available groups
     try {
         $query = $db->query('SELECT * FROM domainlist;');

@@ -250,67 +250,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             <div class="col-md-12">
                                 <div class="box">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Blocklists used to generate Pi-hole's Gravity: <?php echo count($adlist); ?></h3>
+                                        <h3 class="box-title">Blocklists used to generate Pi-hole's Gravity</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-bordered dt-responsive nowrap">
-                                                <thead>
-                                                <tr>
-                                                    <th style="width:1%">Enabled</th>
-                                                    <th>List</th>
-                                                    <th>Added</th>
-                                                    <th>Last modified</th>
-                                                    <th>Comment</th>
-                                                    <th style="width:1%">Delete</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php foreach ($adlist as $key => $value) { ?>
-                                                        <tr>
-                                                            <td>
-                                                                <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if ($value["enabled"] === 1){ ?>checked<?php } ?>>
-                                                            </td>
-                                                            <td>
-                                                                <a href="<?php echo htmlentities($value["address"]); ?>" target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value["address"]); ?></a>
-                                                            </td>
-                                                            <td>
-                                                                <?php echo date(DateTime::RFC2822, intval($value["date_added"])); ?>
-                                                            </td>
-                                                            <td>
-                                                                <?php echo date(DateTime::RFC2822, intval($value["date_modified"])); ?>
-                                                            </td>
-                                                            <td>
-                                                                <?php echo htmlentities($value["comment"]); ?>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
-                                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                                </button>
-                                                                <input type="checkbox" name="adlist-del-<?php echo $key; ?>" hidden>
-                                                            </td>
-                                                        </tr>
-                                                    <?php } ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-xs-6">
-                                                <label for="newuserlists">Domain:</label>
-                                                <input name="newuserlists" type="text" class="form-control" placeholder="Enter a URL to add a new blocklist">
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <label for="newusercomment">Comment:</label>
-                                                <input name="newusercomment" type="text" class="form-control" placeholder="Include a comment (optional)">
-                                            </div>                                            
-                                        </div>  
-                                        <input type="hidden" name="field" value="adlists">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
-                                    </div>
-                                    <div class="box-footer clearfix">
-                                        <button type="submit" class="btn btn-primary" name="submit" value="save" id="blockinglistsave">Save</button>
-                                        <span><strong>Important: </strong>Save and Update when you're done!</span>
-                                        <button type="submit" class="btn btn-primary pull-right" name="submit" id="blockinglistsaveupdate" value="saveupdate">Save and Update</button>
+                                        <p>Please use the  <a href="groups-adlists.php">group management pages</a> to edit the blocklists used by Pi-hole.</p>
                                     </div>
                                 </div>
                             </div>
