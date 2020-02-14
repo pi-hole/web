@@ -428,13 +428,13 @@ if($auth) {
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <?php
-            if($scriptname === "list.php")
+            if($scriptname === "groups-domains.php")
             {
-                if($_GET["l"] === "white")
+                if($_GET["type"] === "white")
                 {
                     $scriptname = "whitelist";
                 }
-                elseif($_GET["l"] === "black")
+                elseif($_GET["type"] === "black")
                 {
                     $scriptname = "blacklist";
                 }
@@ -486,13 +486,13 @@ if($auth) {
                 </li>
                 <!-- Whitelist -->
                 <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
-                    <a href="list.php?l=white">
+                    <a href="groups-domains.php?type=white">
                         <i class="fa fa-check-circle "></i> <span>Whitelist</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
                 <li<?php if($scriptname === "blacklist"){ ?> class="active"<?php } ?>>
-                    <a href="list.php?l=black">
+                    <a href="groups-domains.php?type=black">
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
