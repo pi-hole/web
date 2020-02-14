@@ -207,7 +207,7 @@ $(document).ready(function() {
               colorClass +
               ">" +
               fieldtext +
-              ' <i class="fas fa-link"></i></a>';
+              ' <i class="fas fa-link" title="Click to show the regex match"></i></a>';
           }
 
           buttontext =
@@ -259,7 +259,7 @@ $(document).ready(function() {
               colorClass +
               ">" +
               fieldtext +
-              ' <i class="fas fa-link"></i></a>';
+              ' <i class="fas fa-link" title="Click to show the regex match"></i></a>';
           }
 
           buttontext =
