@@ -30,12 +30,14 @@ function getTableContent($type) {
 
 	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
 	{
-		$utf8_domain = idn_to_utf8($res['domain']);
-		// Convert domain name to international form
-		// if applicable
-		if($res['domain'] !== $utf8_domain)
-		{
-			$res['domain'] = $utf8_domain.' ('.$res['domain'].')';
+		if ($res['type'] === ListType::whitelist || $res['type'] === ListType::blacklist) {
+			$utf8_domain = idn_to_utf8($res['domain']);
+			// Convert domain name to international form
+			// if applicable
+			if($res['domain'] !== $utf8_domain)
+			{
+				$res['domain'] = $utf8_domain.' ('.$res['domain'].')';
+			}
 		}
 		array_push($entries, $res);
 	}
