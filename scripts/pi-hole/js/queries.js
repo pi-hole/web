@@ -199,7 +199,7 @@ $(document).ready(function() {
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist)";
 
-          if (data.length > 9 && data[9] > -1) {
+          if (data.length > 9 && data[9] > 0) {
             fieldtext =
               "<a href='groups-domains.php?domainid=" +
               data[9] +
@@ -251,7 +251,7 @@ $(document).ready(function() {
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist, CNAME)";
 
-          if (data.length > 9 && data[9] > -1) {
+          if (data.length > 9 && data[9] > 0) {
             fieldtext =
               "<a href='groups-domains.php?domainid=" +
               data[9] +
