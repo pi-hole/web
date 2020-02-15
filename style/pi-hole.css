@@ -243,3 +243,11 @@
 td.highlight {
     background-color: yellow;
 }
+
+.underline {
+    text-decoration: underline;
+}
+
+.pointer {
+    cursor: pointer;
+}
