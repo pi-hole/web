@@ -372,13 +372,14 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $type = intval($_POST['type']);
+        $domain = $_POST['domain'];
 
         if ($type === ListType::whitelist || $type === ListType::blacklist) {
-            // Convert domain name to IDNA ASCII form for international domains
-            $domain = idn_to_ascii($_POST['domain']);
+            // Convert domain name to IDNA ASCII form for international
+            // domains and convert the domain to lower case
+            $domain = strtolower(idn_to_ascii($domain));
 
-            // If adding to the exact lists, we convert the domain lower case and check whether it is valid
-            $domain = strtolower($domain);
+            // Check validity of domain
             if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)
             {
                 throw new Exception('Domain ' . htmlentities(utf8_encode($domain)) . 'is not a valid domain.');
