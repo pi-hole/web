@@ -478,10 +478,10 @@ $(document).ready(function() {
 
   $("#all-queries tbody").on("click", "button", function() {
     var data = tableApi.row($(this).parents("tr")).data();
-    if (data[4] === "1" || data[4] === "4" || data[4] === "5") {
-      add(data[2], "white");
-    } else {
+    if (data[4] === "2" || data[4] === "3") {
       add(data[2], "black");
+    } else {
+      add(data[2], "white");
     }
   });
 
