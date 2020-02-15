@@ -123,6 +123,12 @@ function sub(index, entry, arg) {
     list = "#list-regex";
     heading = "#h3-regex";
     locallistType = arg;
+  } else {
+    // Extract possible IDN part
+    // This extracts "xn--allestrungen-9ib.de" from,
+    // e.g. "allestörungen.de (xn--allestrungen-9ib.de)"
+    var raw_domain = entry.split("(");
+    entry = raw_domain[raw_domain.length - 1].split(")")[0];
   }
 
   var alInfo = $("#alInfo");
