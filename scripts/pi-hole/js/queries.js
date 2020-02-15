@@ -288,7 +288,8 @@ $(document).ready(function() {
             new_tab.focus();
           }
         });
-        $("td:eq(4)", row).css("cursor", "pointer");
+        $("td:eq(4)", row).addClass("underline");
+        $("td:eq(4)", row).addClass("pointer");
       }
 
       // Add domain in CNAME chain causing the query to have been blocked
