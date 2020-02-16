@@ -76,7 +76,7 @@ function initTable() {
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
-        '<code id="domain" title="' + tooltip + '">' + data.domain + "</code>"
+        '<code id="domain" title="' + tooltip + '" class="breakall">' + data.domain + "</code>"
       );
 
       var whitelist_options = "";
