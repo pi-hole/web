@@ -352,10 +352,12 @@ if ($_POST['action'] == 'get_groups') {
                 array_push($groups, $gres['group_id']);
             }
             $res['groups'] = $groups;
-            if ($res['type'] === ListType::whitelist || $res['type'] === ListType::blacklist) {
+            if (extension_loaded("intl") &&
+                ($res['type'] === ListType::whitelist ||
+                 $res['type'] === ListType::blacklist) ) {
                 $utf8_domain = idn_to_utf8($res['domain']);
                 // Convert domain name to international form
-                // if applicable
+                // if applicable and extension is available
                 if($res['domain'] !== $utf8_domain)
                 {
                     $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
@@ -389,7 +391,11 @@ if ($_POST['action'] == 'get_groups') {
         if ($type === ListType::whitelist || $type === ListType::blacklist) {
             // Convert domain name to IDNA ASCII form for international
             // domains and convert the domain to lower case
-            $domain = strtolower(idn_to_ascii($domain));
+            // Only use IDN routine when php-intl is available
+            if (extension_loaded("intl")) {
+                $domain = idn_to_ascii($domain);
+            }
+            $domain = strtolower($domain);
 
             // Check validity of domain
             if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)

@@ -22,7 +22,8 @@ $comment = trim($_POST['comment']);
 
 // Convert domain name to IDNA ASCII form for international domains
 // Do this only for exact domains, not for regex filters
-if ($list === "white" || $list === "black") {
+// Only do it when the php-intl extension is available
+if (extension_loaded("intl") && ($list === "white" || $list === "black")) {
 	foreach($domains as &$domain)
 	{
 		$domain = idn_to_ascii($domain);
