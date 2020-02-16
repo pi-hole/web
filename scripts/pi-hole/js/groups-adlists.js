@@ -108,7 +108,23 @@ function initTable() {
       // Select assigned groups
       sel.val(data.groups);
       // Initialize multiselect
-      sel.multiselect({ includeSelectAllOption: true });
+      sel.multiselect({
+        includeSelectAllOption: true,
+        buttonContainer: '<div id="container' + data.id + '" class="btn-group"/>',
+        maxHeight: 200,
+        onDropdownShown: function() {
+          var el = $("#container" + data.id);
+          var top = el[0].getBoundingClientRect().top;
+          var bottom = $(window).height() - top - el.height();
+          if (bottom < 200) {
+            el.addClass("dropup");
+          }
+
+          if (bottom > 200) {
+            el.removeClass("dropup");
+          }
+        }
+      });
       sel.on("change", editAdlist);
 
       var button =
