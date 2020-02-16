@@ -15,7 +15,7 @@
 <!-- Alerts -->
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Updating...
+    Updating...this may take a while. <strong>Please do not navigate away from or close this page.</strong>
 </div>
 <div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden="true">
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>

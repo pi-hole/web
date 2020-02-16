@@ -170,7 +170,8 @@ $(document).ready(function() {
         fieldtext,
         buttontext,
         colorClass,
-        isCNAME = false;
+        isCNAME = false,
+        regexLink = false;
 
       switch (data[4]) {
         case "1":
@@ -199,15 +200,8 @@ $(document).ready(function() {
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist)";
 
-          if (data.length > 9 && data[9] > -1) {
-            fieldtext =
-              "<a href='groups-domains.php?domainid=" +
-              data[9] +
-              "' class=" +
-              colorClass +
-              ">" +
-              fieldtext +
-              ' <i class="fas fa-link"></i></a>';
+          if (data.length > 9 && data[9] > 0) {
+            regexLink = true;
           }
 
           buttontext =
@@ -250,6 +244,11 @@ $(document).ready(function() {
           blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist, CNAME)";
+
+          if (data.length > 9 && data[9] > 0) {
+            regexLink = true;
+          }
+
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
@@ -272,6 +271,26 @@ $(document).ready(function() {
       $(row).addClass(colorClass);
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(6)", row).html(buttontext);
+
+      if (regexLink) {
+        $("td:eq(4)", row).hover(
+          function() {
+            this.title = "Click to show matching regex filter";
+            this.style.color = "#72afd2";
+          },
+          function() {
+            this.style.color = "";
+          }
+        );
+        $("td:eq(4)", row).click(function() {
+          var new_tab = window.open("groups-domains.php?domainid=" + data[9], "_blank");
+          if (new_tab) {
+            new_tab.focus();
+          }
+        });
+        $("td:eq(4)", row).addClass("underline");
+        $("td:eq(4)", row).addClass("pointer");
+      }
 
       // Add domain in CNAME chain causing the query to have been blocked
       var domain = data[2];
@@ -478,10 +497,10 @@ $(document).ready(function() {
 
   $("#all-queries tbody").on("click", "button", function() {
     var data = tableApi.row($(this).parents("tr")).data();
-    if (data[4] === "1" || data[4] === "4" || data[4] === "5") {
-      add(data[2], "white");
-    } else {
+    if (data[4] === "2" || data[4] === "3") {
       add(data[2], "black");
+    } else {
+      add(data[2], "white");
     }
   });
 

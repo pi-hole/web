@@ -253,3 +253,11 @@ code.breakall
     word-break: break-all;
     word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
+
+.underline {
+    text-decoration: underline;
+}
+
+.pointer {
+    cursor: pointer;
+}

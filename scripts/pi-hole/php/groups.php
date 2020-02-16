@@ -352,12 +352,14 @@ if ($_POST['action'] == 'get_groups') {
                 array_push($groups, $gres['group_id']);
             }
             $res['groups'] = $groups;
-            $utf8_domain = idn_to_utf8($res['domain']);
-            // Convert domain name to international form
-            // if applicable
-            if($res['domain'] !== $utf8_domain)
-            {
-                $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
+            if ($res['type'] === ListType::whitelist || $res['type'] === ListType::blacklist) {
+                $utf8_domain = idn_to_utf8($res['domain']);
+                // Convert domain name to international form
+                // if applicable
+                if($res['domain'] !== $utf8_domain)
+                {
+                    $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
+                }
             }
             array_push($data, $res);
         }
@@ -375,7 +377,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
-        $type = intval($_POST['type'][0]);
+        $type = intval($_POST['type']);
         $domain = $_POST['domain'];
 
         if(strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
@@ -384,12 +386,12 @@ if ($_POST['action'] == 'get_groups') {
             $domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
         }
 
-        if($type === ListType::whitelist || $type === ListType::blacklist)
-        {
-            // Convert domain name to IDNA ASCII form for international domains
-            $domain = idn_to_ascii($domain);
-            // If adding to the exact lists, we convert the domain lower case and check whether it is valid
-            $domain = strtolower($domain);
+        if ($type === ListType::whitelist || $type === ListType::blacklist) {
+            // Convert domain name to IDNA ASCII form for international
+            // domains and convert the domain to lower case
+            $domain = strtolower(idn_to_ascii($domain));
+
+            // Check validity of domain
             if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)
             {
                 throw new Exception('Domain ' . htmlentities(utf8_encode($domain)) . 'is not a valid domain.');
