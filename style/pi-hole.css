@@ -72,7 +72,6 @@
 
 .table-responsive {
     -webkit-overflow-scrolling: touch;
-    overflow: visible;
 }
 
 /* Optimize Queries-Table for small screens */

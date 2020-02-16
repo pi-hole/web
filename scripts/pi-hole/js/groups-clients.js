@@ -101,7 +101,11 @@ function initTable() {
       $("td:eq(0)", row).html(ip_name);
 
       $("td:eq(1)", row).empty();
-      $("td:eq(1)", row).append('<select id="multiselect" multiple="multiple"></select>');
+      $("td:eq(1)", row).append(
+        '<div id="selectHome' +
+          data.id +
+          '"><select id="multiselect" multiple="multiple"></select></div>'
+      );
       var sel = $("#multiselect", row);
       // Add all known groups
       for (var i = 0; i < groups.length; i++) {
@@ -135,6 +139,18 @@ function initTable() {
           if (bottom > 200) {
             el.removeClass("dropup");
           }
+
+          var offset = el.offset();
+          $("body").append(el);
+          el.css("position", "absolute");
+          el.css("top", offset.top + "px");
+          el.css("left", offset.left + "px");
+        },
+        onDropdownHide: function() {
+          var el = $("#container" + data.id);
+          var home = $("#selectHome" + data.id);
+          home.append(el);
+          el.removeAttr("style");
         }
       });
       sel.on("change", editClient);
