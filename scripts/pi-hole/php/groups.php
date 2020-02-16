@@ -329,7 +329,13 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'get_domains') {
     // List all available groups
     try {
-        $query = $db->query('SELECT * FROM domainlist;');
+        $limit = "";
+        if (isset($_POST["showtype"]) && $_POST["showtype"] === "white"){
+            $limit = " WHERE type = 0 OR type = 2";
+        } elseif (isset($_POST["showtype"]) && $_POST["showtype"] === "black"){
+            $limit = " WHERE type = 1 OR type = 3";
+        }
+        $query = $db->query('SELECT * FROM domainlist'.$limit);
         if (!$query) {
             throw new Exception('Error while querying gravity\'s domainlist table: ' . $db->lastErrorMsg());
         }
@@ -373,6 +379,12 @@ if ($_POST['action'] == 'get_groups') {
 
         $type = intval($_POST['type']);
         $domain = $_POST['domain'];
+
+        if(strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
+        {
+            // Apply wildcard-style formatting
+            $domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
+        }
 
         if ($type === ListType::whitelist || $type === ListType::blacklist) {
             // Convert domain name to IDNA ASCII form for international

@@ -6,11 +6,19 @@
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
+    $type = "all";
+    $pagetitle = "Domain";
+    $adjective = "";
+    if (isset($_GET['type']) && ($_GET['type'] === "white" || $_GET['type'] === "black")) {
+        $type = $_GET['type'];
+        $pagetitle = ucfirst($type)."list";
+        $adjective = $type."listed";
+    }
 ?>
 
 <!-- Title -->
 <div class="page-header">
-    <h1>Domain group management</h1>
+    <h1><?php echo $pagetitle; ?> management</h1>
 </div>
 
 <!-- Domain Input -->
@@ -20,7 +28,7 @@
             <!-- /.box-header -->
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    Add a new domain
+                    Add a new <?php echo $adjective; ?> domain
                 </h3>
             </div>
             <!-- /.box-header -->
@@ -33,10 +41,17 @@
                     <div class="col-md-2">
                         <label for="ex2">Type:</label>
                         <select id="new_type" class="form-control">
-                            <option value="0">Exact whitelist</option>
-                            <option value="1">Exact blacklist</option>
-                            <option value="2">Regex whitelist</option>
-                            <option value="3">Regex blacklist</option>
+                            <?php if($type === "all" || $type === "white") { ?>
+                                <option value="0">Exact whitelist</option>
+                                <option value="2">Regex whitelist</option>
+                            <?php } if($type === "white") { ?>
+                                <option value="2W">Wildcard whitelist</option>
+                            <?php } if($type === "all" || $type === "black") { ?>
+                                <option value="1">Exact blacklist</option>
+                                <option value="3">Regex blacklist</option>
+                            <?php } if($type === "black") { ?>
+                                <option value="3W">Wildcard blacklist</option>
+                            <?php } ?>
                         </select>
                     </div>
                     <div class="col-md-4">
@@ -56,7 +71,7 @@
         <div class="box" id="domains-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of configured domains
+                    List of <?php echo $adjective; ?> domains
                 </h3>
             </div>
             <!-- /.box-header -->
