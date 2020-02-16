@@ -131,7 +131,7 @@ function initTable() {
       $("#comment", row).on("change", editDomain);
 
       // Show group assignment field only if in full domain management mode
-      if (showtype === "all") {
+      if (table.column(5).visible()) {
         $("td:eq(4)", row).empty();
         $("td:eq(4)", row).append('<select id="multiselect" multiple="multiple"></select>');
         var sel = $("#multiselect", row);
@@ -169,7 +169,7 @@ function initTable() {
         '">' +
         '<span class="glyphicon glyphicon-trash"></span>' +
         "</button>";
-      if (showtype === "all") {
+      if (table.column(5).visible()) {
         $("td:eq(5)", row).html(button);
       } else {
         $("td:eq(4)", row).html(button);
