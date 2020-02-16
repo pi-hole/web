@@ -252,3 +252,9 @@ td.highlight {
 .pointer {
     cursor: pointer;
 }
+
+.multiselect-container{
+
+    max-height:200px;
+    overflow:auto;
+  }
