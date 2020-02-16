@@ -62,7 +62,7 @@ function initTable() {
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
-        '<code id="address" title="' + tooltip + '">' + data.address + "</code>"
+        '<code id="address" title="' + tooltip + '" class="breakall">' + data.address + "</code>"
       );
 
       var disabled = data.enabled === 0;

@@ -91,13 +91,17 @@ function initTable() {
       var ip_name =
         '<code id="ip" title="' +
         tooltip +
-        '">' +
+        '" class="breakall">' +
         data.ip +
         '</code><input id="id" type="hidden" value="' +
         data.id +
         '">';
-      if (data.name !== null && data.name.length > 0)
-        ip_name += '<br><code id="name" title="' + tooltip + '">' + data.name + "</code>";
+
+      if (data.name !== null && data.name.length > 0) {
+        ip_name +=
+          '<br><code id="name" title="' + tooltip + '" class="breakall">' + data.name + "</code>";
+      }
+
       $("td:eq(0)", row).html(ip_name);
 
       $("td:eq(1)", row).empty();
