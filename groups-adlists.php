@@ -26,12 +26,12 @@
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <label for="ex1">Address:</label>
+                    <div class="form-group col-md-6">
+                        <label for="new_address">Address:</label>
                         <input id="new_address" type="text" class="form-control" placeholder="http://..., https://..., file://...">
                     </div>
-                    <div class="col-md-6">
-                        <label for="ex2">Comment:</label>
+                    <div class="form-group col-md-6">
+                        <label for="new_comment">Comment:</label>
                         <input id="new_comment" type="text" class="form-control" placeholder="Adlist description (optional)">
                     </div>
                 </div>
