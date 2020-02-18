@@ -30,11 +30,12 @@
                         <label for="ex1">Known clients:</label>
                         <select id="select" class="form-control" placeholder="">
                             <option disabled selected>Loading...</option>
-                        </select>
+                        </select><br>
+                        <input id="ip-custom" type="text" class="form-control" disabled placeholder="Client IP address (IPv4 or IPv6, optional)">
                     </div>
                     <div class="col-md-6">
-                        <label for="ex2">Custom client:</label>
-                        <input id="ip-custom" type="text" class="form-control" disabled placeholder="Client IP address (IPv4 or IPv6, optional)">
+                        <label for="ex3">Comment:</label>
+                        <input id="new_comment" type="text" class="form-control" placeholder="Client description (optional)">
                     </div>
                 </div>
             </div>
@@ -59,6 +60,7 @@
                     <tr>
                         <th>ID</th>
                         <th>IP address</th>
+                        <th>Comment</th>
                         <th>Group assignment</th>
                         <th>Action</th>
                     </tr>
