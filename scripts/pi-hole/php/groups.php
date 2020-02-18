@@ -360,7 +360,13 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'get_domains') {
     // List all available groups
     try {
-        $query = $db->query('SELECT * FROM domainlist;');
+        $limit = "";
+        if (isset($_POST["showtype"]) && $_POST["showtype"] === "white"){
+            $limit = " WHERE type = 0 OR type = 2";
+        } elseif (isset($_POST["showtype"]) && $_POST["showtype"] === "black"){
+            $limit = " WHERE type = 1 OR type = 3";
+        }
+        $query = $db->query('SELECT * FROM domainlist'.$limit);
         if (!$query) {
             throw new Exception('Error while querying gravity\'s domainlist table: ' . $db->lastErrorMsg());
         }
@@ -377,10 +383,12 @@ if ($_POST['action'] == 'get_groups') {
                 array_push($groups, $gres['group_id']);
             }
             $res['groups'] = $groups;
-            if ($res['type'] === ListType::whitelist || $res['type'] === ListType::blacklist) {
+            if (extension_loaded("intl") &&
+                ($res['type'] === ListType::whitelist ||
+                 $res['type'] === ListType::blacklist) ) {
                 $utf8_domain = idn_to_utf8($res['domain']);
                 // Convert domain name to international form
-                // if applicable
+                // if applicable and extension is available
                 if($res['domain'] !== $utf8_domain)
                 {
                     $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
@@ -405,10 +413,20 @@ if ($_POST['action'] == 'get_groups') {
         $type = intval($_POST['type']);
         $domain = $_POST['domain'];
 
+        if(strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
+        {
+            // Apply wildcard-style formatting
+            $domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
+        }
+
         if ($type === ListType::whitelist || $type === ListType::blacklist) {
             // Convert domain name to IDNA ASCII form for international
             // domains and convert the domain to lower case
-            $domain = strtolower(idn_to_ascii($domain));
+            // Only use IDN routine when php-intl is available
+            if (extension_loaded("intl")) {
+                $domain = idn_to_ascii($domain);
+            }
+            $domain = strtolower($domain);
 
             // Check validity of domain
             if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)
