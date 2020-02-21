@@ -17,6 +17,7 @@ function reload_client_suggestions() {
     { action: "get_unconfigured_clients", token: token },
     function(data) {
       var sel = $("#select");
+      var customWasSelected = sel.val() === "custom";
       sel.empty();
       for (var key in data) {
         if (!Object.prototype.hasOwnProperty.call(data, key)) {
@@ -40,6 +41,9 @@ function reload_client_suggestions() {
           .val("custom")
           .text("Custom, specified below...")
       );
+      if (customWasSelected) {
+        sel.val("custom");
+      }
     },
     "json"
   );
