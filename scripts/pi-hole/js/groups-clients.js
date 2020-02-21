@@ -89,9 +89,10 @@ function initTable() {
       { data: "name", width: "80px", orderable: false }
     ],
     drawCallback: function() {
-      $(".deleteClient").on("click", deleteClient);
+      $('button[id^="deleteClient_"]').on("click", deleteClient);
     },
     rowCallback: function(row, data) {
+      $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
         utils.datetime(data.date_added) +
@@ -99,33 +100,27 @@ function initTable() {
         utils.datetime(data.date_modified) +
         "\nDatabase ID: " +
         data.id;
-      var ip_name =
-        '<code id="ip" title="' +
-        tooltip +
-        '">' +
-        data.ip +
-        '</code><input id="id" type="hidden" value="' +
-        data.id +
-        '">';
+      var ip_name = '<code id="ip_' + data.id + '" title="' + tooltip + '">' + data.ip + "</code>";
       if (data.name !== null && data.name.length > 0)
-        ip_name += '<br><code id="name" title="' + tooltip + '">' + data.name + "</code>";
+        ip_name +=
+          '<br><code id="name_' + data.id + '" title="' + tooltip + '">' + data.name + "</code>";
       $("td:eq(0)", row).html(ip_name);
 
-      $("td:eq(1)", row).html(
-        '<input id="comment" class="form-control"><input id="id" type="hidden" value="' +
-          data.id +
-          '">'
-      );
-      $("#comment", row).val(data.comment);
-      $("#comment", row).on("change", editClient);
+      $("td:eq(1)", row).html('<input id="comment_' + data.id + '" class="form-control">');
+      var commentEl = $("#comment_" + data.id, row);
+      commentEl.val(data.comment);
+      commentEl.on("change", editClient);
 
       $("td:eq(2)", row).empty();
       $("td:eq(2)", row).append(
-        '<div id="selectHome' +
+        '<div id="selectHome_' +
           data.id +
-          '"><select id="multiselect" multiple="multiple"></select></div>'
+          '">' +
+          '<select id="multiselect_' +
+          data.id +
+          '" multiple="multiple"></select></div>'
       );
-      var sel = $("#multiselect", row);
+      var selectEl = $("#multiselect_" + data.id, row);
       // Add all known groups
       for (var i = 0; i < groups.length; i++) {
         var extra = "";
@@ -133,7 +128,7 @@ function initTable() {
           extra = " (disabled)";
         }
 
-        sel.append(
+        selectEl.append(
           $("<option />")
             .val(groups[i].id)
             .text(groups[i].name + extra)
@@ -141,14 +136,14 @@ function initTable() {
       }
 
       // Select assigned groups
-      sel.val(data.groups);
+      selectEl.val(data.groups);
       // Initialize multiselect
-      sel.multiselect({
+      selectEl.multiselect({
         includeSelectAllOption: true,
-        buttonContainer: '<div id="container' + data.id + '" class="btn-group"/>',
+        buttonContainer: '<div id="container_' + data.id + '" class="btn-group"/>',
         maxHeight: 200,
         onDropdownShown: function() {
-          var el = $("#container" + data.id);
+          var el = $("#container_" + data.id);
           var top = el[0].getBoundingClientRect().top;
           var bottom = $(window).height() - top - el.height();
           if (bottom < 200) {
@@ -172,10 +167,10 @@ function initTable() {
           el.removeAttr("style");
         }
       });
-      sel.on("change", editClient);
+      selectEl.on("change", editClient);
 
       var button =
-        '<button class="btn btn-danger btn-xs deleteClient" type="button" data-id="' +
+        '<button class="btn btn-danger btn-xs" type="button" id="deleteClient_' +
         data.id +
         '">' +
         '<span class="glyphicon glyphicon-trash"></span>' +
@@ -271,20 +266,26 @@ function addClient() {
 function editClient() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
-  var id = tr.find("#id").val();
-  var groups = tr.find("#multiselect").val();
-  var ip = tr.find("#ip").text();
-  var name = tr.find("#name").text();
-  var comment = tr.find("#comment").val();
+  var id = tr.attr("data-id");
+  var groups = tr.find("#multiselect_" + id).val();
+  var ip = tr.find("#ip_" + id).text();
+  var name = tr.find("#name_" + id).text();
+  var comment = tr.find("#comment_" + id).val();
 
   var done = "edited";
   var not_done = "editing";
-  if (elem === "multiselect") {
-    done = "edited groups of";
-    not_done = "editing groups of";
-  } else if (elem === "comment") {
-    done = "edited comment of";
-    not_done = "editing comment of";
+  switch (elem) {
+    case "multiselect_" + id:
+      done = "edited groups of";
+      not_done = "editing groups of";
+      break;
+    case "comment_" + id:
+      done = "edited comment of";
+      not_done = "editing comment of";
+      break;
+    default:
+      alert("bad element or invalid data-id!");
+      return;
   }
 
   var ip_name = ip;
@@ -336,10 +337,10 @@ function editClient() {
 }
 
 function deleteClient() {
-  var id = $(this).attr("data-id");
   var tr = $(this).closest("tr");
-  var ip = tr.find("#ip").text();
-  var name = tr.find("#name").text();
+  var id = tr.attr("data-id");
+  var ip = tr.find("#ip_" + id).text();
+  var name = tr.find("#name_" + id).text();
 
   var ip_name = ip;
   if (name.length > 0) {

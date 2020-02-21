@@ -40,11 +40,6 @@ $(document).ready(function() {
   $("#btnAdd").on("click", addDomain);
 
   get_groups();
-
-  $("#select").on("change", function() {
-    $("#ip-custom").val("");
-    $("#ip-custom").prop("disabled", $("#select option:selected").val() !== "custom");
-  });
 });
 
 function initTable() {
@@ -65,9 +60,10 @@ function initTable() {
       { data: null, width: "80px", orderable: false }
     ],
     drawCallback: function() {
-      $(".deleteDomain").on("click", deleteDomain);
+      $('button[id^="deleteDomain_"]').on("click", deleteDomain);
     },
     rowCallback: function(row, data) {
+      $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
         utils.datetime(data.date_added) +
@@ -76,7 +72,13 @@ function initTable() {
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
-        '<code id="domain" title="' + tooltip + '" class="breakall">' + data.domain + "</code>"
+        '<code id="domain_' +
+          data.id +
+          '" title="' +
+          tooltip +
+          '" class="breakall">' +
+          data.domain +
+          "</code>"
       );
 
       var whitelist_options = "";
@@ -102,43 +104,47 @@ function initTable() {
       }
 
       $("td:eq(1)", row).html(
-        '<select id="type" class="form-control">' +
+        '<select id="type_' +
+          data.id +
+          '" class="form-control">' +
           whitelist_options +
           blacklist_options +
           "</select>"
       );
-      $("#type", row).on("change", editDomain);
+      var typeEl = $("#type_" + data.id, row);
+      typeEl.on("change", editDomain);
 
       var disabled = data.enabled === 0;
       $("td:eq(2)", row).html(
-        '<input type="checkbox" id="status"' + (disabled ? "" : " checked") + ">"
+        '<input type="checkbox" id="status_' + data.id + '"' + (disabled ? "" : " checked") + ">"
       );
-      $("#status", row).bootstrapToggle({
+      var statusEl = $("#status_" + data.id, row);
+      statusEl.bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px"
       });
-      $("#status", row).on("change", editDomain);
+      statusEl.on("change", editDomain);
 
-      $("td:eq(3)", row).html(
-        '<input id="comment" class="form-control"><input id="id" type="hidden" value="' +
-          data.id +
-          '">'
-      );
-      $("#comment", row).val(data.comment);
-      $("#comment", row).on("change", editDomain);
+      $("td:eq(3)", row).html('<input id="comment_' + data.id + '" class="form-control">');
+      var commentEl = $("#comment_" + data.id, row);
+      commentEl.val(data.comment);
+      commentEl.on("change", editDomain);
 
       // Show group assignment field only if in full domain management mode
       if (table.column(5).visible()) {
         $("td:eq(4)", row).empty();
         $("td:eq(4)", row).append(
-          '<div id="selectHome' +
+          '<div id="selectHome_' +
             data.id +
-            '"><select id="multiselect" multiple="multiple"></select></div>'
+            '">' +
+            '<select id="multiselect_' +
+            data.id +
+            '" multiple="multiple"></select></div>'
         );
-        var sel = $("#multiselect", row);
+        var selectEl = $("#multiselect_" + data.id, row);
         // Add all known groups
         for (var i = 0; i < groups.length; i++) {
           var extra = "";
@@ -146,7 +152,7 @@ function initTable() {
             extra = " (disabled)";
           }
 
-          sel.append(
+          selectEl.append(
             $("<option />")
               .val(groups[i].id)
               .text(groups[i].name + extra)
@@ -154,14 +160,14 @@ function initTable() {
         }
 
         // Select assigned groups
-        sel.val(data.groups);
+        selectEl.val(data.groups);
         // Initialize multiselect
-        sel.multiselect({
+        selectEl.multiselect({
           includeSelectAllOption: true,
-          buttonContainer: '<div id="container' + data.id + '" class="btn-group"/>',
+          buttonContainer: '<div id="container_' + data.id + '" class="btn-group"/>',
           maxHeight: 200,
           onDropdownShown: function() {
-            var el = $("#container" + data.id);
+            var el = $("#container_" + data.id);
             var top = el[0].getBoundingClientRect().top;
             var bottom = $(window).height() - top - el.height();
             if (bottom < 200) {
@@ -179,16 +185,16 @@ function initTable() {
             el.css("left", offset.left + "px");
           },
           onDropdownHide: function() {
-            var el = $("#container" + data.id);
-            var home = $("#selectHome" + data.id);
+            var el = $("#container_" + data.id);
+            var home = $("#selectHome_" + data.id);
             home.append(el);
             el.removeAttr("style");
           }
         });
-        sel.on("change", editDomain);
+        selectEl.on("change", editDomain);
       }
 
-      // Highlight row
+      // Highlight row (if url parameter "domainid=" is used)
       if ("domainid" in GETDict && data.id === parseInt(GETDict.domainid)) {
         $(row)
           .find("td")
@@ -196,7 +202,7 @@ function initTable() {
       }
 
       var button =
-        '<button class="btn btn-danger btn-xs deleteDomain" type="button" data-id="' +
+        '<button class="btn btn-danger btn-xs" type="button" id="deleteDomain_' +
         data.id +
         '">' +
         '<span class="glyphicon glyphicon-trash"></span>' +
@@ -313,33 +319,45 @@ function addDomain() {
 function editDomain() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
-  var domain = tr.find("#domain").text();
-  var id = tr.find("#id").val();
-  var type = tr.find("#type").val();
-  var status = tr.find("#status").is(":checked") ? 1 : 0;
-  var comment = tr.find("#comment").val();
-  var groups = tr.find("#multiselect").val();
+  var id = tr.attr("data-id");
+  var domain = tr.find("#domain_" + id).text();
+  var type = tr.find("#type_" + id).val();
+  var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
+  var comment = tr.find("#comment_" + id).val();
+  var groups = tr.find("#multiselect_" + id).val();
 
   var done = "edited";
   var not_done = "editing";
-  if (elem === "status" && status === 1) {
-    done = "enabled";
-    not_done = "enabling";
-  } else if (elem === "status" && status === 0) {
-    done = "disabled";
-    not_done = "disabling";
-  } else if (elem === "name") {
-    done = "edited name of";
-    not_done = "editing name of";
-  } else if (elem === "comment") {
-    done = "edited comment of";
-    not_done = "editing comment of";
-  } else if (elem === "type") {
-    done = "edited type of";
-    not_done = "editing type of";
-  } else if (elem === "multiselect") {
-    done = "edited groups of";
-    not_done = "editing groups of";
+  switch (elem) {
+    case "status_" + id:
+      if (status === 0) {
+        done = "disabled";
+        not_done = "disabling";
+      } else if (status === 1) {
+        done = "enabled";
+        not_done = "enabling";
+      }
+
+      break;
+    case "name_" + id:
+      done = "edited name of";
+      not_done = "editing name of";
+      break;
+    case "comment_" + id:
+      done = "edited comment of";
+      not_done = "editing comment of";
+      break;
+    case "type_" + id:
+      done = "edited type of";
+      not_done = "editing type of";
+      break;
+    case "multiselect_" + id:
+      done = "edited groups of";
+      not_done = "editing groups of";
+      break;
+    default:
+      alert("bad element or invalid data-id!");
+      return;
   }
 
   utils.disableAll();
@@ -388,9 +406,9 @@ function editDomain() {
 }
 
 function deleteDomain() {
-  var id = $(this).attr("data-id");
   var tr = $(this).closest("tr");
-  var domain = tr.find("#domain").text();
+  var id = tr.attr("data-id");
+  var domain = tr.find("#domain_" + id).text();
 
   utils.disableAll();
   utils.showAlert("info", "", "Deleting domain...", domain);
