@@ -28,9 +28,10 @@ $(document).ready(function() {
       { data: null, width: "60px", orderable: false }
     ],
     drawCallback: function() {
-      $(".deleteGroup").on("click", deleteGroup);
+      $('button[id^="deleteGroup_"]').on("click", deleteGroup);
     },
     rowCallback: function(row, data) {
+      $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
         utils.datetime(data.date_added) +
@@ -39,40 +40,36 @@ $(document).ready(function() {
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
-        '<input id="name" title="' +
-          tooltip +
-          '" class="form-control"><input id="id" type="hidden" value="' +
-          data.id +
-          '">'
+        '<input id="name_' + data.id + '" title="' + tooltip + '" class="form-control">'
       );
-      var name = $("#name", row);
-      name.val(data.name);
-      name.on("change", editGroup);
+      var nameEl = $("#name_" + data.id, row);
+      nameEl.val(data.name);
+      nameEl.on("change", editGroup);
 
       var disabled = data.enabled === 0;
       $("td:eq(1)", row).html(
-        '<input type="checkbox" id="status"' + (disabled ? "" : " checked") + ">"
+        '<input type="checkbox" id="status_' + data.id + '"' + (disabled ? "" : " checked") + ">"
       );
-      var status = $("#status", row);
-      status.bootstrapToggle({
+      var statusEl = $("#status_" + data.id, row);
+      statusEl.bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px"
       });
-      status.on("change", editGroup);
+      statusEl.on("change", editGroup);
 
-      $("td:eq(2)", row).html('<input id="desc" class="form-control">');
+      $("td:eq(2)", row).html('<input id="desc_' + data.id + '" class="form-control">');
       var desc = data.description !== null ? data.description : "";
-      $("#desc", row).val(desc);
-      $("#desc", row).on("change", editGroup);
+      var descEl = $("#desc_" + data.id, row);
+      descEl.val(desc);
+      descEl.on("change", editGroup);
 
       $("td:eq(3)", row).empty();
       if (data.id !== 0) {
         var button =
-          " &nbsp;" +
-          '<button class="btn btn-danger btn-xs deleteGroup" type="button" data-id="' +
+          '<button class="btn btn-danger btn-xs" type="button" id="deleteGroup_' +
           data.id +
           '">' +
           '<span class="glyphicon glyphicon-trash"></span>' +
@@ -166,25 +163,35 @@ function addGroup() {
 function editGroup() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
-  var id = tr.find("#id").val();
-  var name = tr.find("#name").val();
-  var status = tr.find("#status").is(":checked") ? 1 : 0;
-  var desc = tr.find("#desc").val();
+  var id = tr.attr("data-id");
+  var name = tr.find("#name_" + id).val();
+  var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
+  var desc = tr.find("#desc_" + id).val();
 
   var done = "edited";
   var not_done = "editing";
-  if (elem === "status" && status === 1) {
-    done = "enabled";
-    not_done = "enabling";
-  } else if (elem === "status" && status === 0) {
-    done = "disabled";
-    not_done = "disabling";
-  } else if (elem === "name") {
-    done = "edited name of";
-    not_done = "editing name of";
-  } else if (elem === "desc") {
-    done = "edited description of";
-    not_done = "editing description of";
+  switch (elem) {
+    case "status_" + id:
+      if (status === 0) {
+        done = "disabled";
+        not_done = "disabling";
+      } else if (status === 1) {
+        done = "enabled";
+        not_done = "enabling";
+      }
+
+      break;
+    case "name_" + id:
+      done = "edited name of";
+      not_done = "editing name of";
+      break;
+    case "desc_" + id:
+      done = "edited description of";
+      not_done = "editing description of";
+      break;
+    default:
+      alert("bad element or invalid data-id!");
+      return;
   }
 
   utils.disableAll();
@@ -233,9 +240,9 @@ function editGroup() {
 }
 
 function deleteGroup() {
-  var id = $(this).attr("data-id");
   var tr = $(this).closest("tr");
-  var name = tr.find("#name").val();
+  var id = tr.attr("data-id");
+  var name = tr.find("#name_" + id).val();
 
   utils.disableAll();
   utils.showAlert("info", "", "Deleting group...", name);

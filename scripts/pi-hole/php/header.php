@@ -428,7 +428,7 @@ if($auth) {
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <?php
-            if($scriptname === "groups-domains.php")
+            if($scriptname === "groups-domains.php" && isset($_GET['type']))
             {
                 if($_GET["type"] === "white")
                 {
