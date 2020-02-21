@@ -18,7 +18,12 @@ if (empty($api)) {
 
 // Split individual domains into array
 $domains = preg_split('/\s+/', trim($_POST['domain']));
-$comment = trim($_POST['comment']);
+
+// Get comment if available
+$comment = null;
+if(isset($_POST['comment'])) {
+	$comment = trim($_POST['comment']);
+}
 
 // Convert domain name to IDNA ASCII form for international domains
 // Do this only for exact domains, not for regex filters
@@ -70,7 +75,7 @@ switch($list) {
 		break;
 
 	case "audit":
-		echo add_to_table($db, "domain_audit", $domains, $comment);
+		echo add_to_table($db, "domain_audit", $domains);
 		break;
 
 	default:

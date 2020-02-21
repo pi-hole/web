@@ -46,7 +46,7 @@ function updateTopLists() {
         domain = escapeHtml(domain);
         url = '<a href="queries.php?domain=' + domain + '">' + domain + "</a>";
         domaintable.append(
-          "<tr> <td>" +
+          "<tr><td>" +
             url +
             "</td> <td>" +
             data.top_queries[domain] +
@@ -68,7 +68,7 @@ function updateTopLists() {
             printdomain +
             "</a> (wildcard blocked)";
           adtable.append(
-            "<tr> <td>" +
+            "<tr><td>" +
               url +
               "</td> <td>" +
               data.top_ads[domain] +
@@ -77,7 +77,7 @@ function updateTopLists() {
         } else {
           url = '<a href="queries.php?domain=' + printdomain + '">' + printdomain + "</a>";
           adtable.append(
-            "<tr> <td>" +
+            "<tr><td>" +
               url +
               "</td> <td>" +
               data.top_ads[domain] +
@@ -110,7 +110,7 @@ $(document).ready(function() {
   $("#domain-frequency tbody").on("click", "button", function() {
     var url = $(this)
       .parents("tr")[0]
-      .textContent.split("	")[0];
+      .textContent.split(" ")[0];
     if ($(this).context.textContent === " Blacklist") {
       add(url, "audit");
       add(url, "black");
@@ -123,8 +123,7 @@ $(document).ready(function() {
   $("#ad-frequency tbody").on("click", "button", function() {
     var url = $(this)
       .parents("tr")[0]
-      .textContent.split("	")[0]
-      .split(" ")[0];
+      .textContent.split(" ")[0];
     if ($(this).context.textContent === " Whitelist") {
       add(url, "audit");
       add(url, "white");
