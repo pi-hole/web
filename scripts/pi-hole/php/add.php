@@ -47,6 +47,7 @@ require_once("database.php");
 $GRAVITYDB = getGravityDBFilename();
 $db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
 
+$reload = true;
 switch($list) {
 	case "white":
 		$domains = array_map('strtolower', $domains);
@@ -75,6 +76,7 @@ switch($list) {
 		break;
 
 	case "audit":
+		$reload = false;
 		echo add_to_table($db, "domain_audit", $domains);
 		break;
 
@@ -83,6 +85,8 @@ switch($list) {
 }
 
 // Reload lists in pihole-FTL after having added something
-echo shell_exec("sudo pihole restartdns reload");
+if ($reload) {
+	echo shell_exec("sudo pihole restartdns reload-lists");
+}
 ?>
 
