@@ -18,7 +18,12 @@ if (empty($api)) {
 
 // Split individual domains into array
 $domains = preg_split('/\s+/', trim($_POST['domain']));
-$comment = trim($_POST['comment']);
+
+// Get comment if available
+$comment = null;
+if(isset($_POST['comment'])) {
+	$comment = trim($_POST['comment']);
+}
 
 // Convert domain name to IDNA ASCII form for international domains
 // Do this only for exact domains, not for regex filters
@@ -42,6 +47,7 @@ require_once("database.php");
 $GRAVITYDB = getGravityDBFilename();
 $db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
 
+$reload = true;
 switch($list) {
 	case "white":
 		$domains = array_map('strtolower', $domains);
@@ -70,7 +76,8 @@ switch($list) {
 		break;
 
 	case "audit":
-		echo add_to_table($db, "domain_audit", $domains, $comment);
+		$reload = false;
+		echo add_to_table($db, "domain_audit", $domains);
 		break;
 
 	default:
@@ -78,6 +85,8 @@ switch($list) {
 }
 
 // Reload lists in pihole-FTL after having added something
-echo shell_exec("sudo pihole restartdns reload");
+if ($reload) {
+	echo shell_exec("sudo pihole restartdns reload-lists");
+}
 ?>
 
