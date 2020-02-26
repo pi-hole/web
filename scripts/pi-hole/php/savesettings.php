@@ -53,7 +53,15 @@ function validDomainWildcard($domain_name)
 function validMAC($mac_addr)
 {
   // Accepted input format: 00:01:02:1A:5F:FF (characters may be lower case)
-  return (preg_match('/([a-fA-F0-9]{2}[:]?){6}/', $mac_addr) == 1);
+  return !filter_var($mac_addr, FILTER_VALIDATE_MAC) === false;
+}
+
+function formatMAC($mac_addr)
+{
+	preg_match("/([0-9a-fA-F]{2}[:]){5}([0-9a-fA-F]{2})/", $mac_addr, $matches);
+	if(count($matches) > 0)
+		return $matches[0];
+	return null;
 }
 
 function validEmail($email)
