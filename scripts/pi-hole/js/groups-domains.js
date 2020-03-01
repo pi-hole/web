@@ -324,7 +324,11 @@ function editDomain() {
   var type = tr.find("#type_" + id).val();
   var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
   var comment = tr.find("#comment_" + id).val();
-  var groups = tr.find("#multiselect_" + id).val();
+
+  // Show group assignment field only if in full domain management mode
+  // if not included, just use the row data.
+  var rowData = table.row(tr).data();
+  var groups = table.column(5).visible() ? tr.find("#multiselect_" + id).val() : rowData.groups;
 
   var done = "edited";
   var not_done = "editing";
