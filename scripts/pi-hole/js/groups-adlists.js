@@ -47,6 +47,7 @@ function initTable() {
     ],
     drawCallback: function() {
       $('button[id^="deleteAdlist_"]').on("click", deleteAdlist);
+      $('body > [id^="container_"]').each(function () { $(this).remove(); });
     },
     rowCallback: function(row, data) {
       $(row).attr("data-id", data.id);

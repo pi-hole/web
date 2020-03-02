@@ -61,6 +61,7 @@ function initTable() {
     ],
     drawCallback: function() {
       $('button[id^="deleteDomain_"]').on("click", deleteDomain);
+      $('body > [id^="container_"]').each(function () { $(this).remove(); });
     },
     rowCallback: function(row, data) {
       $(row).attr("data-id", data.id);

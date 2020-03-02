@@ -90,6 +90,7 @@ function initTable() {
     ],
     drawCallback: function() {
       $('button[id^="deleteClient_"]').on("click", deleteClient);
+      $('body > [id^="container_"]').each(function () { $(this).remove(); });
     },
     rowCallback: function(row, data) {
       $(row).attr("data-id", data.id);
@@ -161,8 +162,8 @@ function initTable() {
           el.css("left", offset.left + "px");
         },
         onDropdownHide: function() {
-          var el = $("#container" + data.id);
-          var home = $("#selectHome" + data.id);
+          var el = $("#container_" + data.id);
+          var home = $("#selectHome_" + data.id);
           home.append(el);
           el.removeAttr("style");
         }
