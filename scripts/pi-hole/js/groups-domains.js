@@ -37,6 +37,37 @@ $(document).ready(function() {
     showtype = GETDict.type;
   }
 
+  // Disable regex field when typing into domains field
+  // bind is not only triggered on key but also clipboard events
+  $('#new_domain').bind('input', function () {
+    if ($('#new_domain').val().length > 0) {
+      $('#new_regex').prop( "disabled", true );
+    } else {
+      $('#new_regex').prop( "disabled", false );
+    }
+  });
+
+  // Disable domain field when typing into regex field
+  $('#new_regex').bind('input', function () {
+    if ($('#new_regex').val().length > 0) {
+      $('#new_domain').prop( "disabled", true );
+      $('#wildcard_checkbox').prop( "disabled", true );
+    } else {
+      $('#new_domain').prop( "disabled", false );
+      $('#wildcard_checkbox').prop( "disabled", false );
+    }
+  });
+
+  // Disable domain field when typing into regex field
+  $('#wildcard_checkbox').change(function () {
+    if ($('#wildcard_checkbox').prop("checked")) {
+      $('#new_regex').text( "" );
+      $('#new_regex').prop( "disabled", true );
+    } else {
+      $('#new_regex').prop( "disabled", false );
+    }
+  });
+
   $("#btnAdd").on("click", addDomain);
 
   get_groups();
@@ -276,13 +307,34 @@ function initTable() {
 
 function addDomain() {
   var domain = $("#new_domain").val();
+  var regex = $("#new_regex").val();
+  var wildcard_checkbox = $("#wildcard_checkbox").prop("checked");
   var type = $("#new_type").val();
   var comment = $("#new_comment").val();
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding domain...", domain);
 
-  if (domain.length === 0) {
+  // Determine type
+  if (domain.length > 0) {
+    if (wildcard_checkbox) {
+      // Strip "*." if specified by user in wildcard mode
+      if(domain.startsWith("*.")) {
+        domain = domain.substr(2);
+      }
+      if (type == 0) {
+        type = "2W";
+      } else {
+        type = "4W";
+      }
+    }
+  } else if (regex.length > 0 && type == 0) {
+    domain = regex;
+    type = "2";
+  } else if (regex.length > 0 && type == 1) {
+    domain = regex;
+    type = "3";
+  } else {
     utils.enableAll();
     utils.showAlert("warning", "", "Warning", "Please specify a domain");
     return;
@@ -305,6 +357,7 @@ function addDomain() {
         utils.showAlert("success", "glyphicon glyphicon-plus", "Successfully added domain", domain);
         $("#new_domain").val("");
         $("#new_comment").val("");
+        $("#new_regex").val("");
         table.ajax.reload();
       } else utils.showAlert("error", "", "Error while adding new domain", response.message);
     },

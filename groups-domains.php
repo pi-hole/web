@@ -28,7 +28,7 @@
             <!-- /.box-header -->
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    Add a new <?php echo $adjective; ?> domain
+                    Add a new <?php echo $adjective; ?> domain or regex filter
                 </h3>
             </div>
             <!-- /.box-header -->
@@ -38,25 +38,36 @@
                         <label for="ex1">Domain:</label>
                         <input id="new_domain" type="text" class="form-control" placeholder="Domain to be added">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-6">
+                        <label for="ex1">Regex:</label>
+                        <input id="new_regex" type="text" class="form-control" placeholder="Regular expression to be added">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <?php if ($type === "all") { ?>
+                    <div class="col-md-3">
                         <label for="ex2">Type:</label>
                         <select id="new_type" class="form-control">
-                            <?php if($type === "all" || $type === "white") { ?>
-                                <option value="0">Exact whitelist</option>
-                                <option value="2">Regex whitelist</option>
-                            <?php } if($type === "white") { ?>
-                                <option value="2W">Wildcard whitelist</option>
-                            <?php } if($type === "all" || $type === "black") { ?>
-                                <option value="1">Exact blacklist</option>
-                                <option value="3">Regex blacklist</option>
-                            <?php } if($type === "black") { ?>
-                                <option value="3W">Wildcard blacklist</option>
-                            <?php } ?>
+                                <option value="0">Whitelist</option>
+                                <option value="1">Blacklist</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
+                    <?php } else { ?>
+                    <input type="hidden" id="new_type"
+                        value="<?php if ( $type === "white" ) { ?>0<?php } else { ?>1<?php } ?>">
+                    <?php } ?>
+                    <div class="col-md-3">
+                        <label>Domain wildcard blocking</label><br>
+                        <input type="checkbox" name="active" id="wildcard_checkbox">
+                    </div>
+                    <div class="col-md-6">
                         <label for="ex3">Comment:</label>
-                        <input id="new_comment" type="text" class="form-control" placeholder="Domain description (optional)">
+                        <input id="new_comment" type="text" class="form-control" placeholder="Description (optional)">
                     </div>
                 </div>
             </div>
