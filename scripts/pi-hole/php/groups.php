@@ -182,7 +182,7 @@ if ($_POST['action'] == 'get_groups') {
             // There will always be a result. Unknown host names are NULL
             $name_result = $result->fetchArray(SQLITE3_ASSOC);
             $res['name'] = $name_result['name'];
-    
+
             $groups = array();
             while ($gres = $group_query->fetchArray(SQLITE3_ASSOC)) {
                 array_push($groups, $gres['group_id']);
@@ -296,22 +296,22 @@ if ($_POST['action'] == 'get_groups') {
         if (!$stmt->execute()) {
             throw new Exception('While executing DELETE statement: ' . $db->lastErrorMsg());
         }
-        
+
         $db->query('BEGIN TRANSACTION;');
         foreach ($_POST['groups'] as $gid) {
             $stmt = $db->prepare('INSERT INTO client_by_group (client_id,group_id) VALUES(:id,:gid);');
             if (!$stmt) {
                 throw new Exception('While preparing INSERT INTO statement: ' . $db->lastErrorMsg());
             }
-    
+
             if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
                 throw new Exception('While binding id: ' . $db->lastErrorMsg());
             }
-    
+
             if (!$stmt->bindValue(':gid', intval($gid), SQLITE3_INTEGER)) {
                 throw new Exception('While binding gid: ' . $db->lastErrorMsg());
             }
-    
+
             if (!$stmt->execute()) {
                 throw new Exception('While executing INSERT INTO statement: ' . $db->lastErrorMsg());
             }
@@ -377,7 +377,7 @@ if ($_POST['action'] == 'get_groups') {
             if (!$group_query) {
                 throw new Exception('Error while querying gravity\'s domainlist_by_group table: ' . $db->lastErrorMsg());
             }
-    
+
             $groups = array();
             while ($gres = $group_query->fetchArray(SQLITE3_ASSOC)) {
                 array_push($groups, $gres['group_id']);
@@ -494,39 +494,41 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While executing: ' . $db->lastErrorMsg());
         }
 
-        $stmt = $db->prepare('DELETE FROM domainlist_by_group WHERE domainlist_id = :id');
-        if (!$stmt) {
-            throw new Exception('While preparing DELETE statement: ' . $db->lastErrorMsg());
-        }
-
-        if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
-            throw new Exception('While binding id: ' . $db->lastErrorMsg());
-        }
-
-        if (!$stmt->execute()) {
-            throw new Exception('While executing DELETE statement: ' . $db->lastErrorMsg());
-        }
-        
-        $db->query('BEGIN TRANSACTION;');
-        foreach ($_POST['groups'] as $gid) {
-            $stmt = $db->prepare('INSERT INTO domainlist_by_group (domainlist_id,group_id) VALUES(:id,:gid);');
+        if (isset($_POST['groups'])) {
+            $stmt = $db->prepare('DELETE FROM domainlist_by_group WHERE domainlist_id = :id');
             if (!$stmt) {
-                throw new Exception('While preparing INSERT INTO statement: ' . $db->lastErrorMsg());
+                throw new Exception('While preparing DELETE statement: ' . $db->lastErrorMsg());
             }
-    
+
             if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
                 throw new Exception('While binding id: ' . $db->lastErrorMsg());
             }
-    
-            if (!$stmt->bindValue(':gid', intval($gid), SQLITE3_INTEGER)) {
-                throw new Exception('While binding gid: ' . $db->lastErrorMsg());
-            }
-    
+
             if (!$stmt->execute()) {
-                throw new Exception('While executing INSERT INTO statement: ' . $db->lastErrorMsg());
+                throw new Exception('While executing DELETE statement: ' . $db->lastErrorMsg());
             }
+
+            $db->query('BEGIN TRANSACTION;');
+            foreach ($_POST['groups'] as $gid) {
+                $stmt = $db->prepare('INSERT INTO domainlist_by_group (domainlist_id,group_id) VALUES(:id,:gid);');
+                if (!$stmt) {
+                    throw new Exception('While preparing INSERT INTO statement: ' . $db->lastErrorMsg());
+                }
+
+                if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
+                    throw new Exception('While binding id: ' . $db->lastErrorMsg());
+                }
+
+                if (!$stmt->bindValue(':gid', intval($gid), SQLITE3_INTEGER)) {
+                    throw new Exception('While binding gid: ' . $db->lastErrorMsg());
+                }
+
+                if (!$stmt->execute()) {
+                    throw new Exception('While executing INSERT INTO statement: ' . $db->lastErrorMsg());
+                }
+            }
+            $db->query('COMMIT;');
         }
-        $db->query('COMMIT;');
 
         $reload = true;
         JSON_success();
@@ -581,7 +583,7 @@ if ($_POST['action'] == 'get_groups') {
             if (!$group_query) {
                 throw new Exception('Error while querying gravity\'s adlist_by_group table: ' . $db->lastErrorMsg());
             }
-    
+
             $groups = array();
             while ($gres = $group_query->fetchArray(SQLITE3_ASSOC)) {
                 array_push($groups, $gres['group_id']);
@@ -632,7 +634,7 @@ if ($_POST['action'] == 'get_groups') {
         if ($status !== 0) {
                 $status = 1;
         }
-    
+
         if (!$stmt->bindValue(':enabled', $status, SQLITE3_INTEGER)) {
             throw new Exception('While binding enabled: ' . $db->lastErrorMsg());
         }
@@ -666,22 +668,22 @@ if ($_POST['action'] == 'get_groups') {
         if (!$stmt->execute()) {
             throw new Exception('While executing DELETE statement: ' . $db->lastErrorMsg());
         }
-        
+
         $db->query('BEGIN TRANSACTION;');
         foreach ($_POST['groups'] as $gid) {
             $stmt = $db->prepare('INSERT INTO adlist_by_group (adlist_id,group_id) VALUES(:id,:gid);');
             if (!$stmt) {
                 throw new Exception('While preparing INSERT INTO statement: ' . $db->lastErrorMsg());
             }
-    
+
             if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
                 throw new Exception('While binding id: ' . $db->lastErrorMsg());
             }
-    
+
             if (!$stmt->bindValue(':gid', intval($gid), SQLITE3_INTEGER)) {
                 throw new Exception('While binding gid: ' . $db->lastErrorMsg());
             }
-    
+
             if (!$stmt->execute()) {
                 throw new Exception('While executing INSERT INTO statement: ' . $db->lastErrorMsg());
             }
