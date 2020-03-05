@@ -39,32 +39,32 @@ $(document).ready(function() {
 
   // Disable regex field when typing into domains field
   // bind is not only triggered on key but also clipboard events
-  $('#new_domain').bind('input', function () {
-    if ($('#new_domain').val().length > 0) {
-      $('#new_regex').prop( "disabled", true );
+  $("#new_domain").bind("input", function () {
+    if ($("#new_domain").val().length > 0) {
+      $("#new_regex").prop("disabled", true);
     } else {
-      $('#new_regex').prop( "disabled", false );
+      $("#new_regex").prop("disabled", false);
     }
   });
 
   // Disable domain field when typing into regex field
-  $('#new_regex').bind('input', function () {
-    if ($('#new_regex').val().length > 0) {
-      $('#new_domain').prop( "disabled", true );
-      $('#wildcard_checkbox').prop( "disabled", true );
+  $("#new_regex").bind("input", function () {
+    if ($("#new_regex").val().length > 0) {
+      $("#new_domain").prop("disabled", true);
+      $("#wildcard_checkbox").prop("disabled", true);
     } else {
-      $('#new_domain').prop( "disabled", false );
-      $('#wildcard_checkbox').prop( "disabled", false );
+      $("#new_domain").prop("disabled", false);
+      $("#wildcard_checkbox").prop("disabled", false);
     }
   });
 
   // Disable domain field when typing into regex field
-  $('#wildcard_checkbox').change(function () {
-    if ($('#wildcard_checkbox').prop("checked")) {
-      $('#new_regex').text( "" );
-      $('#new_regex').prop( "disabled", true );
+  $("#wildcard_checkbox").change(function () {
+    if ($("#wildcard_checkbox").prop("checked")) {
+      $("#new_regex").text("");
+      $("#new_regex").prop("disabled", true);
     } else {
-      $('#new_regex').prop( "disabled", false );
+      $("#new_regex").prop("disabled", false);
     }
   });
 
