@@ -49,6 +49,10 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-<?php if ($type === "all") { ?>3<?php } else { ?>6<?php } ?>">
+                        <label>Domain wildcard blocking</label><br>
+                        <input type="checkbox" name="active" id="wildcard_checkbox">
+                    </div>
                     <?php if ($type === "all") { ?>
                     <div class="col-md-3">
                         <label for="ex2">Type:</label>
@@ -61,10 +65,6 @@
                     <input type="hidden" id="new_type"
                         value="<?php if ( $type === "white" ) { ?>0<?php } else { ?>1<?php } ?>">
                     <?php } ?>
-                    <div class="col-md-3">
-                        <label>Domain wildcard blocking</label><br>
-                        <input type="checkbox" name="active" id="wildcard_checkbox">
-                    </div>
                     <div class="col-md-6">
                         <label for="ex3">Comment:</label>
                         <input id="new_comment" type="text" class="form-control" placeholder="Description (optional)">
