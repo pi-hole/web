@@ -61,6 +61,9 @@ function initTable() {
     ],
     drawCallback: function() {
       $('button[id^="deleteDomain_"]').on("click", deleteDomain);
+
+      // Remove visible dropdowns to prevent orphaning
+      $.fn.multiselect.extRemoveVisibleDropdowns();
     },
     rowCallback: function(row, data) {
       $(row).attr("data-id", data.id);
@@ -166,32 +169,21 @@ function initTable() {
           includeSelectAllOption: true,
           buttonContainer: '<div id="container_' + data.id + '" class="btn-group"/>',
           maxHeight: 200,
-          onDropdownShown: function() {
-            var el = $("#container_" + data.id);
-            var top = el[0].getBoundingClientRect().top;
-            var bottom = $(window).height() - top - el.height();
-            if (bottom < 200) {
-              el.addClass("dropup");
-            }
-
-            if (bottom > 200) {
-              el.removeClass("dropup");
-            }
-
-            var offset = el.offset();
-            $("body").append(el);
-            el.css("position", "absolute");
-            el.css("top", offset.top + "px");
-            el.css("left", offset.left + "px");
+          onDropdownShow: function() {
+            this.extShowDropdown();
           },
           onDropdownHide: function() {
-            var el = $("#container_" + data.id);
-            var home = $("#selectHome_" + data.id);
-            home.append(el);
-            el.removeAttr("style");
+            this.extHideDropdown();
           }
         });
-        selectEl.on("change", editDomain);
+        selectEl.on("change", function() {
+          editDomain.call(this);
+
+          // Button might move a little, therefore realign
+          setTimeout(function() {
+            $("#multiselect_" + data.id).multiselect("extAlignDropdown");
+          });
+        });
       }
 
       // Highlight row (if url parameter "domainid=" is used)
