@@ -154,15 +154,17 @@ function initTable() {
             el.removeClass("dropup");
           }
 
+          this.$ul.addClass("hidden");
           var offset = el.offset();
           $("body").append(el);
           el.css("position", "absolute");
           el.css("top", offset.top + "px");
           el.css("left", offset.left + "px");
+          this.$ul.removeClass("hidden");
         },
         onDropdownHide: function() {
-          var el = $("#container" + data.id);
-          var home = $("#selectHome" + data.id);
+          var el = $("#container_" + data.id);
+          var home = $("#selectHome_" + data.id);
           home.append(el);
           el.removeAttr("style");
         }
