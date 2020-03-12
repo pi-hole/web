@@ -123,6 +123,11 @@ $(document).ready(function() {
       if (data.macVendor && data.macVendor.length > 0) {
         $("td:eq(1)", row).html(data.hwaddr + "<br/>" + data.macVendor);
       }
+
+      // Hide mock MAC addresses
+      if (data.hwaddr.startsWith("ip-")) {
+        $("td:eq(1)", row).text("N/A");
+      }
     },
     dom:
       "<'row'<'col-sm-12'f>>" +
