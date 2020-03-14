@@ -31,7 +31,7 @@
                         <select id="select" class="form-control" placeholder="">
                             <option disabled selected>Loading...</option>
                         </select><br>
-                        <input id="ip-custom" type="text" class="form-control" disabled placeholder="Client IP address (IPv4 or IPv6, optional)">
+                        <input id="ip-custom" type="text" class="form-control" disabled placeholder="Client IP address (IPv4 or IPv6, CIDR subnetting available, optional)">
                     </div>
                     <div class="col-md-6">
                         <label for="ex3">Comment:</label>

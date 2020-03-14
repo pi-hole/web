@@ -240,6 +240,21 @@ function addClient() {
     return;
   }
 
+  // Validate IP address (may contain CIDR details)
+  var ipv6format = ip.includes(":");
+
+  if (!ipv6format && !utils.validateIPv4CIDR(ip)) {
+    utils.enableAll();
+    utils.showAlert("warning", "", "Warning", "Invalid IPv4 address!");
+    return;
+  }
+
+  if (ipv6format && !utils.validateIPv6CIDR(ip)) {
+    utils.enableAll();
+    utils.showAlert("warning", "", "Warning", "Invalid IPv6 address!");
+    return;
+  }
+
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
