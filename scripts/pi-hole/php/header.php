@@ -191,16 +191,17 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
-    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon.png">
-    <link rel="icon" href="img/logo.svg" type="image/png" sizes="192x192">
-    <link rel="icon" href="img/logo.svg" type="image/png" sizes="160x160">
-    <link rel="icon" href="img/logo.svg" type="image/png" sizes="96x96">
-    <meta name="theme-color" content="#367fa9">
+    <link rel="apple-touch-icon" href="img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="img/favicons/manifest.json">
+    <link rel="mask-icon" href="img/favicons/safari-pinned-tab.svg" color="#367fa9">
+    <link rel="shortcut icon" href="img/favicons/favicon.ico">
     <meta name="msapplication-TileColor" content="#367fa9">
-    <meta name="msapplication-TileImage" content="img/logo.svg">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileImage" content="img/favicons/mstile-150x150.png">
+    <meta name="theme-color" content="#367fa9">
 
+    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css">
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="style/vendor/font-awesome-5.11.2/css/all.min.css">
@@ -256,7 +257,7 @@ if($auth) {
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
-        <a href="https://pi-hole.net/" class="logo" rel="noopener" target="_blank">
+        <a href="index.php" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">P<b>h</b></span>
             <!-- logo for regular state and mobile devices -->
@@ -427,13 +428,13 @@ if($auth) {
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <?php
-            if($scriptname === "list.php")
+            if($scriptname === "groups-domains.php" && isset($_GET['type']))
             {
-                if($_GET["l"] === "white")
+                if($_GET["type"] === "white")
                 {
                     $scriptname = "whitelist";
                 }
-                elseif($_GET["l"] === "black")
+                elseif($_GET["type"] === "black")
                 {
                     $scriptname = "blacklist";
                 }
@@ -485,13 +486,13 @@ if($auth) {
                 </li>
                 <!-- Whitelist -->
                 <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
-                    <a href="list.php?l=white">
+                    <a href="groups-domains.php?type=white">
                         <i class="fa fa-check-circle "></i> <span>Whitelist</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
                 <li<?php if($scriptname === "blacklist"){ ?> class="active"<?php } ?>>
-                    <a href="list.php?l=black">
+                    <a href="groups-domains.php?type=black">
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
