@@ -37,7 +37,23 @@ $(document).ready(function() {
     showtype = GETDict.type;
   }
 
-  $("#btnAdd").on("click", addDomain);
+  // sync description fields, reset inactive inputs on tab change
+  $('a[data-toggle="tab"]').on("shown.bs.tab", function() {
+    var tabHref = $(this).attr("href");
+    var val;
+    if (tabHref === "#tab_domain") {
+      val = $("#new_regex_comment").val();
+      $("#new_domain_comment").val(val);
+      $("#new_regex").val("");
+    } else if (tabHref === "#tab_regex") {
+      val = $("#new_domain_comment").val();
+      $("#new_regex_comment").val(val);
+      $("#new_domain").val("");
+      $("#wildcard_checkbox").prop("checked", false);
+    }
+  });
+
+  $("#add2black, #add2white").on("click", addDomain);
 
   get_groups();
 });
@@ -275,16 +291,53 @@ function initTable() {
 }
 
 function addDomain() {
-  var domain = $("#new_domain").val();
-  var type = $("#new_type").val();
-  var comment = $("#new_comment").val();
+  var action = this.id;
+  var tabHref = $('a[data-toggle="tab"][aria-expanded="true"]').attr("href");
+  var wildcardEl = $("#wildcard_checkbox");
+  var wildcard_checked = wildcardEl.prop("checked");
+  var type;
+
+  // current tab's inputs
+  var domain_regex, domainEl, commentEl;
+  if (tabHref === "#tab_domain") {
+    domain_regex = "domain";
+    domainEl = $("#new_domain");
+    commentEl = $("#new_domain_comment");
+  } else if (tabHref === "#tab_regex") {
+    domain_regex = "regex";
+    domainEl = $("#new_regex");
+    commentEl = $("#new_regex_comment");
+  }
+
+  var domain = domainEl.val();
+  var comment = commentEl.val();
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding domain...", domain);
+  utils.showAlert("info", "", "Adding " + domain_regex + "...", domain);
 
-  if (domain.length === 0) {
+  if (domain.length > 0) {
+    // strip "*." if specified by user in wildcard mode
+    if (domain_regex === "domain" && wildcard_checked && domain.startsWith("*.")) {
+      domain = domain.substr(2);
+    }
+
+    // determine list type
+    if (domain_regex === "domain" && action === "add2black" && wildcard_checked) {
+      type = "3W";
+    } else if (domain_regex === "domain" && action === "add2black" && !wildcard_checked) {
+      type = "1";
+    } else if (domain_regex === "domain" && action === "add2white" && wildcard_checked) {
+      type = "2W";
+    } else if (domain_regex === "domain" && action === "add2white" && !wildcard_checked) {
+      type = "0";
+    } else if (domain_regex === "regex" && action === "add2black") {
+      type = "3";
+    } else if (domain_regex === "regex" && action === "add2white") {
+      type = "2";
+    }
+  } else {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify a domain");
+    utils.showAlert("warning", "", "Warning", "Please specify a " + domain_regex);
     return;
   }
 
@@ -302,15 +355,23 @@ function addDomain() {
     success: function(response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "glyphicon glyphicon-plus", "Successfully added domain", domain);
-        $("#new_domain").val("");
-        $("#new_comment").val("");
+        utils.showAlert(
+          "success",
+          "glyphicon glyphicon-plus",
+          "Successfully added " + domain_regex,
+          domain
+        );
+        domainEl.val("");
+        commentEl.val("");
+        wildcardEl.prop("checked", false);
         table.ajax.reload();
-      } else utils.showAlert("error", "", "Error while adding new domain", response.message);
+      } else {
+        utils.showAlert("error", "", "Error while adding new " + domain_regex, response.message);
+      }
     },
     error: function(jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new domain", jqXHR.responseText);
+      utils.showAlert("error", "", "Error while adding new " + domain_regex, jqXHR.responseText);
       console.log(exception);
     }
   });
@@ -329,6 +390,13 @@ function editDomain() {
   // if not included, just use the row data.
   var rowData = table.row(tr).data();
   var groups = table.column(5).visible() ? tr.find("#multiselect_" + id).val() : rowData.groups;
+
+  var domain_regex;
+  if (type === "0" || type === "1") {
+    domain_regex = "domain";
+  } else if (type === "2" || type === "3") {
+    domain_regex = "regex";
+  }
 
   var done = "edited";
   var not_done = "editing";
@@ -365,7 +433,7 @@ function editDomain() {
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Editing domain...", name);
+  utils.showAlert("info", "", "Editing " + domain_regex + "...", name);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -385,14 +453,14 @@ function editDomain() {
         utils.showAlert(
           "success",
           "glyphicon glyphicon-pencil",
-          "Successfully " + done + " domain",
+          "Successfully " + done + " " + domain_regex,
           domain
         );
       } else
         utils.showAlert(
           "error",
           "",
-          "Error while " + not_done + " domain with ID " + id,
+          "Error while " + not_done + " " + domain_regex + " with ID " + id,
           response.message
         );
     },
@@ -401,7 +469,7 @@ function editDomain() {
       utils.showAlert(
         "error",
         "",
-        "Error while " + not_done + " domain with ID " + id,
+        "Error while " + not_done + " " + domain_regex + " with ID " + id,
         jqXHR.responseText
       );
       console.log(exception);
@@ -413,9 +481,17 @@ function deleteDomain() {
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
   var domain = tr.find("#domain_" + id).text();
+  var type = tr.find("#type_" + id).val();
+
+  var domain_regex;
+  if (type === "0" || type === "1") {
+    domain_regex = "domain";
+  } else if (type === "2" || type === "3") {
+    domain_regex = "regex";
+  }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting domain...", domain);
+  utils.showAlert("info", "", "Deleting " + domain_regex + "...", domain);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -427,7 +503,7 @@ function deleteDomain() {
         utils.showAlert(
           "success",
           "glyphicon glyphicon-trash",
-          "Successfully deleted domain",
+          "Successfully deleted " + domain_regex,
           domain
         );
         table
@@ -435,12 +511,22 @@ function deleteDomain() {
           .remove()
           .draw(false);
       } else {
-        utils.showAlert("error", "", "Error while deleting domain with ID " + id, response.message);
+        utils.showAlert(
+          "error",
+          "",
+          "Error while deleting " + domain_regex + " with ID " + id,
+          response.message
+        );
       }
     },
     error: function(jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting domain with ID " + id, jqXHR.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting " + domain_regex + " with ID " + id,
+        jqXHR.responseText
+      );
       console.log(exception);
     }
   });
