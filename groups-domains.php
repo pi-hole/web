@@ -53,7 +53,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <strong>wildcard:</span></strong> Check this box if you want to involve
+                                        <strong><i class="fa fa-question-circle"></i> Checkbox "wildcard":</span></strong> Check this box if you want to involve
                                         all subdomains. The entered domain will be converted to a RegEx filter while adding.
                                     </div>
                                 </div>
