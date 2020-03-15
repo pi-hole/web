@@ -261,3 +261,8 @@ code.breakall
 .pointer {
     cursor: pointer;
 }
+
+.bootstrap-select.bs-container.align-right {
+    left: unset !important;
+    right: 10px;
+}
