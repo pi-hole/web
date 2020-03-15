@@ -1126,7 +1126,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <p>Export your Pi-hole lists as downloadable archive</p>
+                                                <p>Export your Pi-hole configuration (settings &amp; lists) as a downloadable archive</p>
                                                 <button type="submit" class="btn btn-default">Export</button>
                                             </div>
                                         </div>
