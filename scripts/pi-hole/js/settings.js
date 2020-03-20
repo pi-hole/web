@@ -219,7 +219,7 @@ $(document).ready(function() {
 
 // Handle list deletion
 $("button[id^='adlist-btn-']").on("click", function(e) {
-  var id = parseInt($(this).context.id.replace(/[^0-9.]/g, ""), 10);
+  var id = parseInt($(this).context.id.replace(/[^\d.]/g, ""), 10);
   e.preventDefault();
 
   var status = $('input[name="adlist-del-' + id + '"]').is(":checked");
