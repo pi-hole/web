@@ -6,8 +6,7 @@
  *  Please see LICENSE file for your rights under this license. */
 
 // Define global variables
-var auditList = [],
-  auditTimeout;
+var auditTimeout = null;
 
 // Credit: http://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406
 function escapeHtml(text) {
@@ -46,7 +45,7 @@ function updateTopLists() {
         domain = escapeHtml(domain);
         url = '<a href="queries.php?domain=' + domain + '">' + domain + "</a>";
         domaintable.append(
-          "<tr> <td>" +
+          "<tr><td>" +
             url +
             "</td> <td>" +
             data.top_queries[domain] +
@@ -68,7 +67,7 @@ function updateTopLists() {
             printdomain +
             "</a> (wildcard blocked)";
           adtable.append(
-            "<tr> <td>" +
+            "<tr><td>" +
               url +
               "</td> <td>" +
               data.top_ads[domain] +
@@ -77,7 +76,7 @@ function updateTopLists() {
         } else {
           url = '<a href="queries.php?domain=' + printdomain + '">' + printdomain + "</a>";
           adtable.append(
-            "<tr> <td>" +
+            "<tr><td>" +
               url +
               "</td> <td>" +
               data.top_ads[domain] +
@@ -89,8 +88,14 @@ function updateTopLists() {
 
     $("#domain-frequency .overlay").hide();
     $("#ad-frequency .overlay").hide();
-    // Update top lists data every second
-    setTimeout(updateTopLists, 1000);
+    // Update top lists data every ten seconds
+    // Updates are also triggered by button actions
+    // and reset the running timer
+    if (auditTimeout !== null) {
+      window.clearTimeout(auditTimeout);
+    }
+
+    auditTimeout = setTimeout(updateTopLists, 10000);
   });
 }
 
@@ -99,8 +104,30 @@ function add(domain, list) {
   $.ajax({
     url: "scripts/pi-hole/php/add.php",
     method: "post",
-    data: { domain: domain, list: list, token: token }
+    data: { domain: domain, list: list, token: token },
+    success: function() {
+      updateTopLists();
+    },
+    error: function(jqXHR, exception) {
+      console.log(exception);
+    }
   });
+}
+
+function blacklistUrl(url) {
+  // We add to audit last as it will reload the table on success
+  add(url, "black");
+  add(url, "audit");
+}
+
+function whitelistUrl(url) {
+  // We add to audit last as it will reload the table on success
+  add(url, "white");
+  add(url, "audit");
+}
+
+function auditUrl(url) {
+  add(url, "audit");
 }
 
 $(document).ready(function() {
@@ -110,11 +137,9 @@ $(document).ready(function() {
   $("#domain-frequency tbody").on("click", "button", function() {
     var url = $(this)
       .parents("tr")[0]
-      .textContent.split("	")[0];
+      .textContent.split(" ")[0];
     if ($(this).context.textContent === " Blacklist") {
-      add(url, "audit");
-      add(url, "black");
-      $("#gravityBtn").prop("disabled", false);
+      blacklistUrl(url);
     } else {
       auditUrl(url);
     }
@@ -123,36 +148,11 @@ $(document).ready(function() {
   $("#ad-frequency tbody").on("click", "button", function() {
     var url = $(this)
       .parents("tr")[0]
-      .textContent.split("	")[0]
-      .split(" ")[0];
+      .textContent.split(" ")[0];
     if ($(this).context.textContent === " Whitelist") {
-      add(url, "audit");
-      add(url, "white");
-      $("#gravityBtn").prop("disabled", false);
+      whitelistUrl(url);
     } else {
       auditUrl(url);
     }
   });
-});
-
-function auditUrl(url) {
-  if (auditList.indexOf(url) > -1) {
-    return;
-  }
-
-  if (auditTimeout) {
-    clearTimeout(auditTimeout);
-  }
-
-  auditList.push(url);
-  // wait 3 seconds to see if more domains need auditing
-  // and batch them all into a single request
-  auditTimeout = setTimeout(function() {
-    add(auditList.join(" "), "audit");
-    auditList = [];
-  }, 3000);
-}
-
-$("#gravityBtn").on("click", function() {
-  window.location.replace("gravity.php?go");
 });

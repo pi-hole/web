@@ -83,6 +83,50 @@ function enableAll() {
   $("select").attr("disabled", false);
   $("button").attr("disabled", false);
   $("textarea").attr("disabled", false);
+
+  // Enable custom input field only if applicable
+  var ip = $("#select") ? $("#select").val() : null;
+  if (ip !== null && ip !== "custom") {
+    ip = $("#ip-custom").attr("disabled", true);
+  }
+}
+
+// Pi-hole IPv4/CIDR validator by DL6ER, see regexr.com/50csh
+function validateIPv4CIDR(ip) {
+  // One IPv4 element is 8bit: 0 - 256
+  var ipv4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
+  // CIDR for IPv4 is 1 - 32 bit
+  var v4cidr = "(\\/([1-9]|[1-2][0-9]|3[0-2])){0,1}";
+  var ipv4validator = new RegExp(
+    "^" + ipv4elem + "\\." + ipv4elem + "\\." + ipv4elem + "\\." + ipv4elem + v4cidr + "$"
+  );
+  return ipv4validator.test(ip);
+}
+
+// Pi-hole IPv6/CIDR validator by DL6ER, see regexr.com/50csn
+function validateIPv6CIDR(ip) {
+  // One IPv6 element is 16bit: 0000 - FFFF
+  var ipv6elem = "[0-9A-Fa-f]{1,4}";
+  // CIDR for IPv6 is 1- 128 bit
+  var v6cidr = "(\\/([1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])){0,1}";
+  var ipv6validator = new RegExp(
+    "^(((?:" +
+      ipv6elem +
+      "))((?::" +
+      ipv6elem +
+      "))*::((?:" +
+      ipv6elem +
+      "))((?::" +
+      ipv6elem +
+      "))*|((?:" +
+      ipv6elem +
+      "))((?::" +
+      ipv6elem +
+      ")){7})" +
+      v6cidr +
+      "$"
+  );
+  return ipv6validator.test(ip);
 }
 
 window.utils = (function() {
@@ -90,6 +134,8 @@ window.utils = (function() {
     showAlert: showAlert,
     datetime: datetime,
     disableAll: disableAll,
-    enableAll: enableAll
+    enableAll: enableAll,
+    validateIPv4CIDR: validateIPv4CIDR,
+    validateIPv6CIDR: validateIPv6CIDR
   };
 })();
