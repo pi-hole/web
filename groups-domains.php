@@ -74,7 +74,7 @@
                     </tr>
                     </thead>
                 </table>
-                <button type="button" id="resetButton" hidden="true">Reset sorting</button>
+                <button type="button" id="resetButton" hidden="true" class="btn btn-default btn-sm text-red">Reset sorting</button>
             </div>
             <!-- /.box-body -->
         </div>
