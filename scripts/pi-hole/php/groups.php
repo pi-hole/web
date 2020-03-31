@@ -600,12 +600,17 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_adlist') {
     // Add new adlist
     try {
+        $address = $_POST['address'];
+        if(preg_match("/[^a-zA-Z0-9:\/?&%=~._-]/", $address) !== 0) {
+            throw new Exception('Invalid adlist URL');
+        }
+
         $stmt = $db->prepare('INSERT INTO adlist (address,comment) VALUES (:address,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':address', $_POST['address'], SQLITE3_TEXT)) {
+        if (!$stmt->bindValue(':address', $address, SQLITE3_TEXT)) {
             throw new Exception('While binding address: ' . $db->lastErrorMsg());
         }
 
