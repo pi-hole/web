@@ -108,7 +108,7 @@ function handleAjaxError(xhr, textStatus) {
 }
 
 function autofilter() {
-  return document.getElementById("autofilter").checked;
+  return $("#autofilter").prop("checked");
 }
 
 $(document).ready(function() {
@@ -507,5 +507,19 @@ $(document).ready(function() {
   $("#resetButton").click(function() {
     tableApi.search("").draw();
     $("#resetButton").hide();
+  });
+
+  var chkbox_data = localStorage.getItem("query_log_filter_chkbox");
+  if (chkbox_data !== null) {
+    // Restore checkbox state
+    $("#autofilter").prop("checked", chkbox_data === "true");
+  } else {
+    // Initialize checkbox
+    $("#autofilter").prop("checked", true);
+    localStorage.setItem("query_log_filter_chkbox", true);
+  }
+
+  $("#autofilter").click(function() {
+    localStorage.setItem("query_log_filter_chkbox", $("#autofilter").prop("checked"));
   });
 });
