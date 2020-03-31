@@ -185,7 +185,7 @@ function archive_restore_table($file, $table, $flush=false)
 /**
  * Create table rows from an uploaded archive file
  *
- * @param $file object The file of the file in the archive to import
+ * @param $file object The file in the archive to import
  * @param $table string The target table
  * @param $flush boolean Whether to flush the table before importing the archived data
  * @param $wildcardstyle boolean Whether to format the input domains in legacy wildcard notation
@@ -193,22 +193,69 @@ function archive_restore_table($file, $table, $flush=false)
  */
 function archive_insert_into_table($file, $table, $flush=false, $wildcardstyle=false)
 {
-	global $db, $flushed_tables;
+	global $db;
 
 	$domains = array_filter(explode("\n",file_get_contents($file)));
 	// Return early if we cannot extract the lines in the file
 	if(is_null($domains))
 		return 0;
 
-	// Flush table if requested, only flush each table once
-	if($flush && !in_array($table, $flushed_tables))
-	{
-		$db->exec("DELETE FROM ".$table);
-		array_push($flushed_tables, $table);
+	// Generate comment
+	$prefix = "phar:///tmp/";
+	if (substr($file, 0, strlen($prefix)) == $prefix) {
+		$file = substr($file, strlen($prefix));
+	}
+	$comment = "Imported from ".$file;
+
+	// Determine table and type to import to
+	$type = null;
+	if($table === "whitelist") {
+		$table = "domainlist";
+		$type = ListType::whitelist;
+	} else if($table === "blacklist") {
+		$table = "domainlist";
+		$type = ListType::blacklist;
+	} else if($table === "regex_blacklist") {
+		$table = "domainlist";
+		$type = ListType::regex_blacklist;
+	} else if($table === "domain_audit") {
+		$table = "domain_audit";
+		$type = -1; // -1 -> not used inside add_to_table()
+	} else if($table === "adlist") {
+		$table = "adlist";
+		$type = -1; // -1 -> not used inside add_to_table()
+	}
+
+	// Flush table if requested
+	if($flush) {
+		flush_table($table, $type);
 	}
 
 	// Add domains to requested table
-	return add_to_table($db, $table, $domains, $wildcardstyle, true);
+	return add_to_table($db, $table, $domains, $comment, $wildcardstyle, true, $type);
+}
+
+/**
+ * Flush table if requested. This subroutine flushes each table only once
+ *
+ * @param $table string The target table
+ * @param $type integer Type of item to flush in table (applies only to domainlist table)
+ */
+function flush_table($table, $type=null)
+{
+	global $db, $flushed_tables;
+
+	if(!in_array($table, $flushed_tables))
+	{
+		if($type !== null) {
+			$sql = "DELETE FROM ".$table." WHERE type = ".$type;
+			array_push($flushed_tables, $table.$type);
+		} else {
+			$sql = "DELETE FROM ".$table;
+			array_push($flushed_tables, $table);
+		}
+		$db->exec($sql);
+	}
 }
 
 function archive_add_directory($path,$subdir="")
@@ -311,7 +358,14 @@ if(isset($_POST["action"]))
 			if(isset($_POST["auditlog"]) && $file->getFilename() === "auditlog.list")
 			{
 				$num = archive_insert_into_table($file, "domain_audit", $flushtables);
-				echo "Processed blacklist (regex) (".$num." entries)<br>\n";
+				echo "Processed audit log (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["adlist"]) && $file->getFilename() === "adlists.list")
+			{
+				$num = archive_insert_into_table($file, "adlist", $flushtables);
+				echo "Processed adlists (".$num." entries)<br>\n";
 				$importedsomething = true;
 			}
 

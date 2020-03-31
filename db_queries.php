@@ -45,34 +45,39 @@ $token = $_SESSION['token'];
         <label>Query status:</label>
     </div>
     <div class="form-group">
-        <div class="col-md-2">
+        <div class="col-md-3">
             <div class="checkbox">
-                <label><input type="checkbox" id="type_gravity" checked>Blocked (exact)</label>
+                <label><input type="checkbox" id="type_forwarded" checked><strong>Permitted: </strong>forwarded</label>
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_cached" checked><strong>Permitted: </strong>cached</label>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             <div class="checkbox">
-                <label><input type="checkbox" id="type_forwarded" checked>OK (forwarded)</label>
+                <label><input type="checkbox" id="type_gravity" checked><strong>Blocked: </strong>gravity</label>
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_external" checked><strong>Blocked: </strong>external</label>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             <div class="checkbox">
-                <label><input type="checkbox" id="type_cached" checked>OK (cached)</label>
+                <label><input type="checkbox" id="type_blacklist" checked><strong>Blocked: </strong>exact blacklist</label>
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox" id="type_regex" checked><strong>Blocked: </strong>regex blacklist</label>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             <div class="checkbox">
-                <label><input type="checkbox" id="type_regex" checked>Blocked (regex/wildcard)</label>
+                <label><input type="checkbox" id="type_gravity_CNAME" checked><strong>Blocked: </strong>gravity (CNAME)</label>
             </div>
-        </div>
-        <div class="col-md-2">
             <div class="checkbox">
-                <label><input type="checkbox" id="type_blacklist" checked>Blocked (blacklist)</label>
+                <label><input type="checkbox" id="type_blacklist_CNAME" checked><strong>Blocked: </strong>exact blacklist (CNAME)</label>
             </div>
-        </div>
-        <div class="col-md-2">
             <div class="checkbox">
-                <label><input type="checkbox" id="type_external" checked>Blocked (external)</label>
+                <label><input type="checkbox" id="type_regex_CNAME" checked><strong>Blocked: </strong>regex blacklist (CNAME)</label>
             </div>
         </div>
     </div>

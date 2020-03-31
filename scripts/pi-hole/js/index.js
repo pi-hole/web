@@ -800,8 +800,9 @@ $(document).ready(function() {
               var percentage = 0.0;
               var permitted = parseInt(data.datasets[1].data[tooltipItems.index]);
               var blocked = parseInt(data.datasets[0].data[tooltipItems.index]);
-              if (permitted + blocked > 0) {
-                percentage = (100.0 * blocked) / (permitted + blocked);
+              var total = permitted + blocked;
+              if (total > 0) {
+                percentage = (100.0 * blocked) / total;
               }
 
               return (

@@ -16,22 +16,38 @@ if (empty($api)) {
     list_verify($list);
 }
 
+// Split individual domains into array
+$domains = preg_split('/\s+/', trim($_POST['domain']));
+
+// Get comment if available
+$comment = null;
+if(isset($_POST['comment'])) {
+	$comment = trim($_POST['comment']);
+}
+
+// Convert domain name to IDNA ASCII form for international domains
+// Do this only for exact domains, not for regex filters
+// Only do it when the php-intl extension is available
+if (extension_loaded("intl") && ($list === "white" || $list === "black")) {
+	foreach($domains as &$domain)
+	{
+		$domain = idn_to_ascii($domain);
+	}
+}
+
 // Only check domains we add to the exact lists.
 // Regex are validated by FTL during import
 $check_lists = ["white","black","audit"];
 if(in_array($list, $check_lists)) {
-    check_domain();
+    check_domain($domains);
 }
-
-// Split individual domains into array
-$domains = preg_split('/\s+/', trim($_POST['domain']));
-$comment = trim($_POST['comment']);
 
 require_once("func.php");
 require_once("database.php");
 $GRAVITYDB = getGravityDBFilename();
 $db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
 
+$reload = true;
 switch($list) {
 	case "white":
 		$domains = array_map('strtolower', $domains);
@@ -60,7 +76,8 @@ switch($list) {
 		break;
 
 	case "audit":
-		echo add_to_table($db, "domain_audit", $domains, $comment);
+		$reload = false;
+		echo add_to_table($db, "domain_audit", $domains);
 		break;
 
 	default:
@@ -68,5 +85,8 @@ switch($list) {
 }
 
 // Reload lists in pihole-FTL after having added something
-echo shell_exec("sudo pihole restartdns reload");
+if ($reload) {
+	echo shell_exec("sudo pihole restartdns reload-lists");
+}
 ?>
+

@@ -101,16 +101,22 @@ $(document).ready(function() {
       // Set number of queries to localized string (add thousand separators)
       $("td:eq(6)", row).html(data.numQueries.toLocaleString());
 
-      var ips = data.ip;
-      var shortips = ips;
-      if (ips.length > MAXIPDISPLAY) {
-        shortips = ips.slice(0, MAXIPDISPLAY - 1);
-        shortips.push("...");
+      var ips = [];
+      var maxiter = Math.min(data.ip.length, MAXIPDISPLAY);
+      for (var index = 0; index < maxiter; index++) {
+        var ip = data.ip[index];
+        ips.push('<a href="queries.php?client=' + ip + '">' + ip + "</a>");
       }
 
-      $("td:eq(0)", row).html(shortips.join("<br>"));
+      if (data.ip.length > MAXIPDISPLAY) {
+        // We hit the maximum above, add "..." to symbolize we would
+        // have more to show here
+        ips.push("...");
+      }
+
+      $("td:eq(0)", row).html(ips.join("<br>"));
       $("td:eq(0)", row).hover(function() {
-        this.title = ips.join("\n");
+        this.title = data.ip.join("\n");
       });
 
       // MAC + Vendor field if available

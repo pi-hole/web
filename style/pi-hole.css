@@ -239,3 +239,25 @@
 .text-vivid-blue {
     color: #36f !important;
 }
+
+td.highlight {
+    background-color: yellow;
+}
+
+code.breakall
+{
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: pre-wrap;
+    word-break: break-all;
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.pointer {
+    cursor: pointer;
+}

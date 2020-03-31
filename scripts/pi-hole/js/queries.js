@@ -166,7 +166,13 @@ $(document).ready(function() {
       }
 
       // Query status
-      var blocked, fieldtext, buttontext, colorClass;
+      var blocked,
+        fieldtext,
+        buttontext,
+        colorClass,
+        isCNAME = false,
+        regexLink = false;
+
       switch (data[4]) {
         case "1":
           blocked = true;
@@ -192,14 +198,19 @@ $(document).ready(function() {
         case "4":
           blocked = true;
           colorClass = "text-red";
-          fieldtext = "Blocked <br class='hidden-lg'>(regex/wildcard)";
+          fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist)";
+
+          if (data.length > 9 && data[9] > 0) {
+            regexLink = true;
+          }
+
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case "5":
           blocked = true;
           colorClass = "text-red";
-          fieldtext = "Blocked <br class='hidden-lg'>(blacklist)";
+          fieldtext = "Blocked <br class='hidden-lg'>(exact blacklist)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
@@ -221,6 +232,35 @@ $(document).ready(function() {
           fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
           buttontext = "";
           break;
+        case "9":
+          blocked = true;
+          colorClass = "text-red";
+          fieldtext = "Blocked (gravity, CNAME)";
+          buttontext =
+            '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+          isCNAME = true;
+          break;
+        case "10":
+          blocked = true;
+          colorClass = "text-red";
+          fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist, CNAME)";
+
+          if (data.length > 9 && data[9] > 0) {
+            regexLink = true;
+          }
+
+          buttontext =
+            '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+          isCNAME = true;
+          break;
+        case "11":
+          blocked = true;
+          colorClass = "text-red";
+          fieldtext = "Blocked <br class='hidden-lg'>(exact blacklist, CNAME)";
+          buttontext =
+            '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+          isCNAME = true;
+          break;
         default:
           blocked = false;
           colorClass = "text-black";
@@ -228,14 +268,36 @@ $(document).ready(function() {
           buttontext = "";
       }
 
-      // Add extra label when blocking happend during deep CNAME inspection
-      if (blocked && data.length > 6 && data[6] === "3") {
-        fieldtext += "<br>CNAME";
-      }
-
       $(row).addClass(colorClass);
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(6)", row).html(buttontext);
+
+      if (regexLink) {
+        $("td:eq(4)", row).hover(
+          function() {
+            this.title = "Click to show matching regex filter";
+            this.style.color = "#72afd2";
+          },
+          function() {
+            this.style.color = "";
+          }
+        );
+        $("td:eq(4)", row).click(function() {
+          var new_tab = window.open("groups-domains.php?domainid=" + data[9], "_blank");
+          if (new_tab) {
+            new_tab.focus();
+          }
+        });
+        $("td:eq(4)", row).addClass("underline");
+        $("td:eq(4)", row).addClass("pointer");
+      }
+
+      // Add domain in CNAME chain causing the query to have been blocked
+      var domain = data[2];
+      var CNAME_domain = data[8];
+      if (isCNAME) {
+        $("td:eq(2)", row).text(domain + "\n(blocked " + CNAME_domain + ")");
+      }
 
       // Check for existence of sixth column and display only if not Pi-holed
       var replytext;
@@ -387,14 +449,16 @@ $(document).ready(function() {
       // Domain
       api.$("td:eq(2)").click(function() {
         if (autofilter()) {
-          api.search(this.textContent).draw();
+          var domain = this.textContent.split("\n")[0];
+          api.search(domain).draw();
           $("#resetButton").show();
         }
       });
       api.$("td:eq(2)").hover(
         function() {
           if (autofilter()) {
-            this.title = "Click to show only queries with domain " + this.textContent;
+            var domain = this.textContent.split("\n")[0];
+            this.title = "Click to show only queries with domain " + domain;
             this.style.color = "#72afd2";
           } else {
             this.title = "";
@@ -433,10 +497,10 @@ $(document).ready(function() {
 
   $("#all-queries tbody").on("click", "button", function() {
     var data = tableApi.row($(this).parents("tr")).data();
-    if (data[4] === "1" || data[4] === "4" || data[4] === "5") {
-      add(data[2], "white");
-    } else {
+    if (data[4] === "2" || data[4] === "3") {
       add(data[2], "black");
+    } else {
+      add(data[2], "white");
     }
   });
 
