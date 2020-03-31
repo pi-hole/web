@@ -54,21 +54,24 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_group') {
     // Add new group
     try {
+        $names = explode(' ', $_POST['name']);
         $stmt = $db->prepare('INSERT INTO "group" (name,description) VALUES (:name,:desc)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
-        }
-
-        if (!$stmt->bindValue(':name', $_POST['name'], SQLITE3_TEXT)) {
-            throw new Exception('While binding name: ' . $db->lastErrorMsg());
         }
 
         if (!$stmt->bindValue(':desc', $_POST['desc'], SQLITE3_TEXT)) {
             throw new Exception('While binding desc: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->execute()) {
-            throw new Exception('While executing: ' . $db->lastErrorMsg());
+        foreach ($names as $name) {
+            if (!$stmt->bindValue(':name', $name, SQLITE3_TEXT)) {
+                throw new Exception('While binding name: ' . $db->lastErrorMsg());
+            }
+
+            if (!$stmt->execute()) {
+                throw new Exception('While executing: ' . $db->lastErrorMsg());
+            }
         }
 
         $reload = true;
@@ -157,7 +160,6 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('Error while querying gravity\'s client table: ' . $db->lastErrorMsg());
         }
 
-
         $data = array();
         while (($res = $query->fetchArray(SQLITE3_ASSOC)) !== false) {
             $group_query = $db->query('SELECT group_id FROM client_by_group WHERE client_id = ' . $res['id'] . ';');
@@ -232,26 +234,29 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_client') {
     // Add new client
     try {
+        $ips = explode(' ', $_POST['ip']);
         $stmt = $db->prepare('INSERT INTO client (ip,comment) VALUES (:ip,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':ip', $_POST['ip'], SQLITE3_TEXT)) {
-            throw new Exception('While binding ip: ' . $db->lastErrorMsg());
-        }
+        foreach ($ips as $ip) {
+            if (!$stmt->bindValue(':ip', $ip, SQLITE3_TEXT)) {
+                throw new Exception('While binding ip: ' . $db->lastErrorMsg());
+            }
 
-        $comment = $_POST['comment'];
-        if (strlen($comment) == 0) {
-                // Store NULL in database for empty comments
-                $comment = null;
-        }
-        if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
-            throw new Exception('While binding comment: ' . $db->lastErrorMsg());
-        }
+            $comment = $_POST['comment'];
+            if (strlen($comment) == 0) {
+                    // Store NULL in database for empty comments
+                    $comment = null;
+            }
+            if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
+                throw new Exception('While binding comment: ' . $db->lastErrorMsg());
+            }
 
-        if (!$stmt->execute()) {
-            throw new Exception('While executing: ' . $db->lastErrorMsg());
+            if (!$stmt->execute()) {
+                throw new Exception('While executing: ' . $db->lastErrorMsg());
+            }
         }
 
         $reload = true;
@@ -405,39 +410,13 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_domain') {
     // Add new domain
     try {
+        $domains = explode(' ', $_POST['domain']);
         $stmt = $db->prepare('INSERT INTO domainlist (domain,type,comment) VALUES (:domain,:type,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
         $type = intval($_POST['type']);
-        $domain = $_POST['domain'];
-
-        if(strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
-        {
-            // Apply wildcard-style formatting
-            $domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
-        }
-
-        if ($type === ListType::whitelist || $type === ListType::blacklist) {
-            // Convert domain name to IDNA ASCII form for international
-            // domains and convert the domain to lower case
-            // Only use IDN routine when php-intl is available
-            if (extension_loaded("intl")) {
-                $domain = idn_to_ascii($domain);
-            }
-            $domain = strtolower($domain);
-
-            // Check validity of domain
-            if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)
-            {
-                throw new Exception('Domain ' . htmlentities(utf8_encode($domain)) . 'is not a valid domain.');
-            }
-        }
-
-        if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
-            throw new Exception('While binding domain: ' . $db->lastErrorMsg());
-        }
 
         if (!$stmt->bindValue(':type', $type, SQLITE3_TEXT)) {
             throw new Exception('While binding type: ' . $db->lastErrorMsg());
@@ -447,8 +426,33 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While binding comment: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->execute()) {
-            throw new Exception('While executing: ' . $db->lastErrorMsg());
+        foreach ($domains as $domain) {
+            // Convert domain name to IDNA ASCII form for international domains
+            $domain = idn_to_ascii($domain);
+
+            if(strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
+            {
+                // Apply wildcard-style formatting
+                $domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
+            }
+
+            if($type === ListType::whitelist || $type === ListType::blacklist)
+            {
+                // If adding to the exact lists, we convert the domain lower case and check whether it is valid
+                $domain = strtolower($domain);
+                if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)
+                {
+                    throw new Exception('Domain ' . htmlentities(utf8_encode($domain)) . 'is not a valid domain.');
+                }
+            }
+
+            if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
+                throw new Exception('While binding domain: ' . $db->lastErrorMsg());
+            }
+
+            if (!$stmt->execute()) {
+                throw new Exception('While executing: ' . $db->lastErrorMsg());
+            }
         }
 
         $reload = true;
@@ -600,26 +604,29 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_adlist') {
     // Add new adlist
     try {
-        $address = $_POST['address'];
-        if(preg_match("/[^a-zA-Z0-9:\/?&%=~._-]/", $address) !== 0) {
-            throw new Exception('Invalid adlist URL');
-        }
+        $addresses = explode(' ', $_POST['address']);
 
         $stmt = $db->prepare('INSERT INTO adlist (address,comment) VALUES (:address,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':address', $address, SQLITE3_TEXT)) {
-            throw new Exception('While binding address: ' . $db->lastErrorMsg());
-        }
-
         if (!$stmt->bindValue(':comment', $_POST['comment'], SQLITE3_TEXT)) {
             throw new Exception('While binding comment: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->execute()) {
-            throw new Exception('While executing: ' . $db->lastErrorMsg());
+        foreach ($addresses as $address) {
+            if(preg_match("/[^a-zA-Z0-9:\/?&%=~._-]/", $address) !== 0) {
+                throw new Exception('Invalid adlist URL');
+            }
+
+            if (!$stmt->bindValue(':address', $address, SQLITE3_TEXT)) {
+                throw new Exception('While binding address: ' . $db->lastErrorMsg());
+            }
+
+            if (!$stmt->execute()) {
+                throw new Exception('While executing: ' . $db->lastErrorMsg());
+            }
         }
 
         $reload = true;

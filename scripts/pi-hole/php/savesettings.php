@@ -174,24 +174,6 @@ function readDNSserversList()
 }
 
 require_once("database.php");
-$adlist = [];
-function readAdlists()
-{
-	// Reset list
-	$list = [];
-	$db = SQLite3_connect(getGravityDBFilename());
-	if ($db)
-	{
-		$results = $db->query("SELECT * FROM adlist");
-
-		while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
-		{
-			array_push($list, $res);
-		}
-		$db->close();
-	}
-	return $list;
-}
 
 function addStaticDHCPLease($mac, $ip, $hostname) {
 	global $error, $success, $dhcp_static_leases;
@@ -251,8 +233,6 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 	}
 }
 
-	// Read available adlists
-	$adlist = readAdlists();
 	// Read available DNS server list
 	$DNSserverslist = readDNSserversList();
 
@@ -696,41 +676,6 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					$success = "The DHCP server has been deactivated";
 				}
 
-				break;
-
-			case "adlists":
-				foreach ($adlist as $key => $value)
-				{
-					if(isset($_POST["adlist-del-".$key]))
-					{
-						// Delete list
-						exec("sudo pihole -a adlist del ".escapeshellcmd($value["address"]));
-					}
-					elseif(isset($_POST["adlist-enable-".$key]) && $value["enabled"] !== 1)
-					{
-						// Is not enabled, but should be
-						exec("sudo pihole -a adlist enable ".escapeshellcmd($value["address"]));
-
-					}
-					elseif(!isset($_POST["adlist-enable-".$key]) && $value["enabled"] === 1)
-					{
-						// Is enabled, but shouldn't be
-						exec("sudo pihole -a adlist disable ".escapeshellcmd($value["address"]));
-					}
-				}
-
-				if(strlen($_POST["newuserlists"]) > 1)
-				{
-					$domains = array_filter(preg_split('/\r\n|[\r\n]/', $_POST["newuserlists"]));
-					$comment = "'".$_POST["newusercomment"]."'";
-					foreach($domains as $domain)
-					{
-						exec("sudo pihole -a adlist add ".escapeshellcmd($domain)." ".escapeshellcmd($comment));
-					}
-				}
-
-				// Reread available adlists
-				$adlist = readAdlists();
 				break;
 
 			case "privacyLevel":
