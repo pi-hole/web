@@ -100,10 +100,23 @@ function initTable() {
         utils.datetime(data.date_modified) +
         "\nDatabase ID: " +
         data.id;
-      var ip_name = '<code id="ip_' + data.id + '" title="' + tooltip + '">' + data.ip + "</code>";
+      var ip_name =
+        '<code id="ip_' +
+        data.id +
+        '" title="' +
+        tooltip +
+        '" class="breakall">' +
+        data.ip +
+        "</code>";
       if (data.name !== null && data.name.length > 0)
         ip_name +=
-          '<br><code id="name_' + data.id + '" title="' + tooltip + '">' + data.name + "</code>";
+          '<br><code id="name_' +
+          data.id +
+          '" title="' +
+          tooltip +
+          '" class="breakall">' +
+          data.name +
+          "</code>";
       $("td:eq(0)", row).html(ip_name);
 
       $("td:eq(1)", row).html('<input id="comment_' + data.id + '" class="form-control">');
