@@ -93,9 +93,9 @@ $(document).ready(function() {
         $("td:eq(5)", row).html("Never");
       }
 
-      // Set hostname to "N/A" if not available
+      // Set hostname to "unknown" if not available
       if (!data.name || data.name.length === 0) {
-        $("td:eq(3)", row).html("N/A");
+        $("td:eq(3)", row).html("<em>unknown</em>");
       }
 
       // Set number of queries to localized string (add thousand separators)
@@ -122,6 +122,11 @@ $(document).ready(function() {
       // MAC + Vendor field if available
       if (data.macVendor && data.macVendor.length > 0) {
         $("td:eq(1)", row).html(data.hwaddr + "<br/>" + data.macVendor);
+      }
+
+      // Hide mock MAC addresses
+      if (data.hwaddr.startsWith("ip-")) {
+        $("td:eq(1)", row).text("N/A");
       }
     },
     dom:
