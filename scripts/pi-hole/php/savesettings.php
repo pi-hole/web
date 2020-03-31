@@ -555,9 +555,9 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				$adminemail = trim($_POST["adminemail"]);
 				if(strlen($adminemail) == 0 || !isset($adminemail))
 				{
-					$adminemail = 'noadminemail';
+					$adminemail = '';
 				}
-				elseif(!validEmail($adminemail))
+				if(strlen($adminemail) > 0 && !validEmail($adminemail))
 				{
 					$error .= "Administrator email address (".htmlspecialchars($adminemail).") is invalid!<br>";
 				}
