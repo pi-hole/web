@@ -138,6 +138,8 @@ function bsSelect_defaults() {
   pickerDEFAULTS.width = "fit";
   pickerDEFAULTS.container = "body";
   pickerDEFAULTS.dropdownAlignRight = "auto";
+  pickerDEFAULTS.selectAllText = "All";
+  pickerDEFAULTS.deselectAllText = "None";
   pickerDEFAULTS.countSelectedText = function(num, total) {
     if (num === total) {
       return "All selected (" + num + ")";

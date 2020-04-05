@@ -215,8 +215,7 @@ function initTable() {
           })
           .selectpicker()
           .siblings(".dropdown-menu")
-          .find(".btn-group")
-          .parent()
+          .find(".bs-actionsbox")
           .prepend(
             '<button type="button" id=btn_apply_' +
               data.id +
