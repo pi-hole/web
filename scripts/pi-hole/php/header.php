@@ -223,8 +223,8 @@
     <script src="scripts/vendor/bootstrap-notify.min.js"></script>
 
 <?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
-    <script src="style/vendor/bootstrap/js/bootstrap-multiselect.js"></script>
-    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-multiselect.css">
+    <script src="style/vendor/bootstrap/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-select.min.css">
     <script src="style/vendor/bootstrap/js/bootstrap-toggle.min.js"></script>
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-toggle.min.css">
     <script src="scripts/vendor/moment.min.js"></script>
