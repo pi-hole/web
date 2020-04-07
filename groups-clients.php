@@ -26,15 +26,15 @@
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <label for="ex1">Known clients:</label>
+                    <div class="form-group col-md-6">
+                        <label for="select">Known clients:</label>
                         <select id="select" class="form-control" placeholder="">
                             <option disabled selected>Loading...</option>
                         </select><br>
                         <input id="ip-custom" type="text" class="form-control" disabled placeholder="Client IP address (IPv4 or IPv6, CIDR subnetting available, optional)">
                     </div>
-                    <div class="col-md-6">
-                        <label for="ex3">Comment:</label>
+                    <div class="form-group col-md-6">
+                        <label for="new_comment">Comment:</label>
                         <input id="new_comment" type="text" class="form-control" placeholder="Client description (optional)">
                     </div>
                 </div>
