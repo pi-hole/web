@@ -79,16 +79,10 @@ function readStaticLeasesFile($origin_file="/etc/dnsmasq.d/04-pihole-static-dhcp
 {
 	global $dhcp_static_leases;
 	$dhcp_static_leases = array();
-	try
-	{
-		$dhcpstatic = @fopen($origin_file, 'r');
-	}
-	catch(Exception $e)
-	{
-		echo "Warning: Failed to read ".$origin_file.", this is not an error";
+	if(!file_exists($origin_file) || !is_readable($origin_file))
 		return false;
-	}
-
+	
+	$dhcpstatic = @fopen($origin_file, 'r');
 	if(!is_resource($dhcpstatic))
 		return false;
 
