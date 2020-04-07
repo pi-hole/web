@@ -258,4 +258,11 @@ $(document).ready(function() {
       alInfo.hide();
     });
   }
+
+  // Disable autocorrect in the search box
+  var input = document.querySelector("input[type=search]");
+  input.setAttribute("autocomplete", "off");
+  input.setAttribute("autocorrect", "off");
+  input.setAttribute("autocapitalize", "off");
+  input.setAttribute("spellcheck", false);
 });

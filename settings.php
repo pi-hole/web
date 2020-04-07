@@ -291,7 +291,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         <div class="form-group row">
                                             <div class="col-xs-6">
                                                 <label for="newuserlists">Domain:</label>
-                                                <input name="newuserlists" type="text" class="form-control" placeholder="Enter a URL to add a new blocklist">
+                                                <input name="newuserlists" type="url" class="form-control" placeholder="Enter a URL to add a new blocklist" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                             </div>
                                             <div class="col-xs-6">
                                                 <label for="newusercomment">Comment:</label>
@@ -412,7 +412,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 <div class="form-group">
                                                     <div class="input-group">
                                                         <div class="input-group-addon">From</div>
-                                                        <input type="text" class="form-control DHCPgroup" name="from"
+                                                        <input type="text" class="form-control DHCPgroup" name="from" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                value="<?php echo $DHCPstart; ?>"
                                                                <?php if (!$DHCP){ ?>disabled<?php } ?>>
                                                     </div>
@@ -422,7 +422,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 <div class="form-group">
                                                     <div class="input-group">
                                                         <div class="input-group-addon">To</div>
-                                                        <input type="text" class="form-control DHCPgroup" name="to"
+                                                        <input type="text" class="form-control DHCPgroup" name="to" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                value="<?php echo $DHCPend; ?>"
                                                                <?php if (!$DHCP){ ?>disabled<?php } ?>>
                                                     </div>
@@ -435,7 +435,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 <div class="form-group">
                                                     <div class="input-group">
                                                         <div class="input-group-addon">Router</div>
-                                                        <input type="text" class="form-control DHCPgroup" name="router"
+                                                        <input type="text" class="form-control DHCPgroup" name="router" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                value="<?php echo $DHCProuter; ?>"
                                                                <?php if (!$DHCP){ ?>disabled<?php } ?>>
                                                     </div>
@@ -471,7 +471,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 <div class="form-group">
                                                     <div class="input-group">
                                                         <div class="input-group-addon">Lease time in hours</div>
-                                                        <input type="text" class="form-control DHCPgroup"
+                                                        <input type="number" class="form-control DHCPgroup"
                                                                name="leasetime"
                                                                id="leasetime" value="<?php echo $DHCPleasetime; ?>"
                                                                data-mask <?php if (!$DHCP){ ?>disabled<?php } ?>>
@@ -636,9 +636,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     </tbody>
                                                     <tfoot style="display: table-row-group">
                                                         <tr>
-                                                            <td><input type="text" name="AddMAC"></td>
-                                                            <td><input type="text" name="AddIP"></td>
-                                                            <td><input type="text" name="AddHostname" value=""></td>
+                                                            <td><input type="text" name="AddMAC" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
+                                                            <td><input type="text" name="AddIP" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
+                                                            <td><input type="text" name="AddHostname" value="" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
                                                             <td>
                                                                 <button class="btn btn-success btn-xs" type="submit" name="addstatic">
                                                                     <span class="fas fa-plus"></span>
@@ -742,7 +742,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             <input type="checkbox" name="custom1" value="Customv4"
                                                                    <?php if (isset($custom1)){ ?>checked<?php } ?>>
                                                         </div>
-                                                        <input type="text" name="custom1val" class="form-control"
+                                                        <input type="text" name="custom1val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                <?php if (isset($custom1)){ ?>value="<?php echo $custom1; ?>"<?php } ?>>
                                                     </div>
                                                     <label>Custom 2 (IPv4)</label>
@@ -751,7 +751,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             <input type="checkbox" name="custom2" value="Customv4"
                                                                    <?php if (isset($custom2)){ ?>checked<?php } ?>>
                                                         </div>
-                                                        <input type="text" name="custom2val" class="form-control"
+                                                        <input type="text" name="custom2val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                <?php if (isset($custom2)){ ?>value="<?php echo $custom2; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
@@ -764,7 +764,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             <input type="checkbox" name="custom3" value="Customv6"
                                                                    <?php if (isset($custom3)){ ?>checked<?php } ?>>
                                                         </div>
-                                                        <input type="text" name="custom3val" class="form-control"
+                                                        <input type="text" name="custom3val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                <?php if (isset($custom3)){ ?>value="<?php echo $custom3; ?>"<?php } ?>>
                                                     </div>
                                                     <label>Custom 4 (IPv6)</label>
@@ -773,7 +773,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             <input type="checkbox" name="custom4" value="Customv6"
                                                                    <?php if (isset($custom4)){ ?>checked<?php } ?>>
                                                         </div>
-                                                        <input type="text" name="custom4val" class="form-control"
+                                                        <input type="text" name="custom4val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                <?php if (isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
@@ -889,10 +889,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <tr>
                                                           <div class="input-group">
                                                             <td>
-                                                              <input type="text" name="conditionalForwardingIP" class="form-control"
+                                                              <input type="text" name="conditionalForwardingIP" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                               <?php if(isset($conditionalForwardingIP)){ ?>value="<?php echo $conditionalForwardingIP; ?>"<?php } ?>>
                                                             </td>
-                                                            <td><input type="text" name="conditionalForwardingDomain" class="form-control" data-mask
+                                                            <td><input type="text" name="conditionalForwardingDomain" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                               <?php if(isset($conditionalForwardingDomain)){ ?>value="<?php echo $conditionalForwardingDomain; ?>"<?php } ?>>
                                                             </td>
                                                           </div>
@@ -946,7 +946,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                                                 <div class="form-group">
                                                     <label>Top Domains / Top Advertisers</label>
-                                                    <textarea name="domains" class="form-control" placeholder="Enter one domain per line"
+                                                    <textarea name="domains" class="form-control" placeholder="Enter one domain per line" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                               rows="4"><?php foreach ($excludedDomains as $domain) {
                                                                              echo $domain . "\n"; }
                                                                        ?></textarea>
@@ -955,7 +955,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                                                 <div class="form-group">
                                                     <label>Top Clients</label>
-                                                    <textarea name="clients" class="form-control" placeholder="Enter one IP address or host name per line"
+                                                    <textarea name="clients" class="form-control" placeholder="Enter one IP address or host name per line" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                               rows="4"><?php foreach ($excludedClients as $client) {
                                                                              echo $client . "\n"; }
                                                                        ?></textarea>
@@ -1027,7 +1027,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 <h4>Administrator Email Address</h4>
                                                 <div class="form-group">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" name="adminemail"
+                                                        <input type="email" class="form-control" name="adminemail"
                                                                value="<?php echo htmlspecialchars($adminemail); ?>">
                                                     </div>
                                                 </div>

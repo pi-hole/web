@@ -37,7 +37,7 @@ else
 <div class="row">
   <div class="col-md-6">
     <label for="ex1">Domain:</label>
-    <input id="domain" type="text" class="form-control" placeholder="Add a domain (example.com)">
+    <input id="domain" type="url" class="form-control" placeholder="Add a domain (example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
   </div>
   <div class="col-md-6">
     <label for="ex2">Comment:</label>

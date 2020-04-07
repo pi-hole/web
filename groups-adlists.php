@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label for="ex1">Address:</label>
-                        <input id="new_address" type="text" class="form-control" placeholder="http://..., https://..., file://...">
+                        <input id="new_address" type="url" class="form-control" placeholder="http://..., https://..., file://..." autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
                     <div class="col-md-6">
                         <label for="ex2">Comment:</label>

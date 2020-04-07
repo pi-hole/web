@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label for="ex1">Domain:</label>
-                        <input id="new_domain" type="text" class="form-control" placeholder="Domain to be added">
+                        <input id="new_domain" type="url" class="form-control" placeholder="Domain to be added" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
                     <div class="col-md-2">
                         <label for="ex2">Type:</label>

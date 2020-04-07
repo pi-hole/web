@@ -34,7 +34,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="ex2">Custom client:</label>
-                        <input id="ip-custom" type="text" class="form-control" disabled placeholder="Client IP address (IPv4 or IPv6, optional)">
+                        <input id="ip-custom" type="text" class="form-control" disabled placeholder="Client IP address (IPv4 or IPv6, optional)"  autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
                 </div>
             </div>
