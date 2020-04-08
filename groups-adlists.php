@@ -37,6 +37,7 @@
                 </div>
             </div>
             <div class="box-footer clearfix">
+                <strong>Hint:</strong>&nbsp;Please run <code>pihole -g</code> or update your gravity list <a href="gravity.php">online</a> after modifying your adlists.
                 <button id="btnAdd" class="btn btn-primary pull-right">Add</button>
             </div>
         </div>
@@ -72,6 +73,7 @@
     </div>
 </div>
 
+<script src="scripts/pi-hole/js/groups-common.js"></script>
 <script src="scripts/pi-hole/js/groups-adlists.js"></script>
 
 <?php

@@ -91,7 +91,7 @@ function SQLite3_connect($filename, $mode=SQLITE3_OPEN_READONLY)
  * @param $type integer The target type (0 = exact whitelist, 1 = exact blacklist, 2 = regex whitelist, 3 = regex blacklist)
  * @return string Success/error and number of processed domains
  */
-function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $returnnum=false, $type=-1)
+function add_to_table($db, $table, $domains, $comment=null, $wildcardstyle=false, $returnnum=false, $type=-1)
 {
 	if(!is_int($type))
 	{
@@ -107,6 +107,16 @@ function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $re
 			return "Error: Unable to begin transaction for $table table.";
 	}
 
+	// To which column should the record be added to?
+	if ($table === "adlist")
+	{
+		$field = "address";
+	}
+	else
+	{
+		$field = "domain";
+	}
+
 	// Get initial count of domains in this table
 	if($type === -1)
 	{
@@ -119,13 +129,15 @@ function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $re
 	$initialcount = intval($db->querySingle($countquery));
 
 	// Prepare INSERT SQLite statememt
-	if($type === -1)
-	{
-		$querystr = "INSERT OR IGNORE INTO $table (domain,comment) VALUES (:domain, :comment);";
-	}
-	else
-	{
-		$querystr = "INSERT OR IGNORE INTO $table (domain,comment,type) VALUES (:domain, :comment, $type);";
+	$bindcomment = false;
+	if($table === "domain_audit") {
+		$querystr = "INSERT OR IGNORE INTO $table ($field) VALUES (:$field);";
+	} elseif($type === -1) {
+		$querystr = "INSERT OR IGNORE INTO $table ($field,comment) VALUES (:$field, :comment);";
+		$bindcomment = true;
+	} else {
+		$querystr = "INSERT OR IGNORE INTO $table ($field,comment,type) VALUES (:$field, :comment, $type);";
+		$bindcomment = true;
 	}
 	$stmt = $db->prepare($querystr);
 
@@ -135,7 +147,7 @@ function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $re
 		if($returnnum)
 			return 0;
 		else
-			return "Error: Failed to prepare statement for $table table (type = $type).";
+			return "Error: Failed to prepare statement for $table table (type = $type, field = $field).";
 	}
 
 	// Loop over domains and inject the lines into the database
@@ -149,8 +161,10 @@ function add_to_table($db, $table, $domains, $comment, $wildcardstyle=false, $re
 		if($wildcardstyle)
 			$domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
 
-		$stmt->bindValue(":domain", $domain, SQLITE3_TEXT);
-		$stmt->bindValue(":comment", $comment, SQLITE3_TEXT);
+		$stmt->bindValue(":$field", $domain, SQLITE3_TEXT);
+		if($bindcomment) {
+			$stmt->bindValue(":comment", $comment, SQLITE3_TEXT);
+		}
 
 		if($stmt->execute() && $stmt->reset())
 			$num++;

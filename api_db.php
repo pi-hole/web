@@ -137,6 +137,9 @@ if (isset($_GET['getAllQueries']) && $auth)
 					case 7:
 						$query_type = "TXT";
 						break;
+					case 8:
+						$query_type = "NAPTR";
+						break;
 					default:
 						$query_type = "UNKN";
 						break;
