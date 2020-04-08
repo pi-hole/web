@@ -29,11 +29,11 @@
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="ex1">Name:</label>
+                        <label for="domain">Domain:</label>
                         <input id="domain" type="url" class="form-control" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
                     <div class="col-md-6">
-                        <label for="ex2">Description:</label>
+                        <label for="ip">IP Address:</label>
                         <input id="ip" type="text" class="form-control" placeholder="Associated IP address" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
                 </div>

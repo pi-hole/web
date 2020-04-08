@@ -217,28 +217,6 @@ $(document).ready(function() {
   $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
 });
 
-// Handle list deletion
-$("button[id^='adlist-btn-']").on("click", function(e) {
-  var id = parseInt($(this).context.id.replace(/[^\d.]/g, ""), 10);
-  e.preventDefault();
-
-  var status = $('input[name="adlist-del-' + id + '"]').is(":checked");
-  var textType = status ? "none" : "line-through";
-
-  // Check hidden delete box (or reset)
-  $('input[name="adlist-del-' + id + '"]').prop("checked", !status);
-  // Untick and disable check box (or reset)
-  $('input[name="adlist-enable-' + id + '"]')
-    .prop("checked", status)
-    .prop("disabled", !status);
-  // Strike through text (or reset)
-  $('a[id="adlist-text-' + id + '"]').css("text-decoration", textType);
-  // Highlight that the button has to be clicked in order to make the change live
-  $('button[id="blockinglistsaveupdate"]')
-    .addClass("btn-danger")
-    .css("font-weight", "bold");
-});
-
 // Change "?tab=" parameter in URL for save and reload
 $(".nav-tabs a").on("shown.bs.tab", function(e) {
   var tab = e.target.hash.substring(1);
