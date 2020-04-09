@@ -20,7 +20,7 @@
     "test": "npm run xo"
   },
   "devDependencies": {
-    "xo": "^0.28.3"
+    "xo": "^0.29.0"
   },
   "prettier": {
     "bracketSpacing": true,
