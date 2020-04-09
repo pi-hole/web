@@ -345,6 +345,18 @@ if (isset($_GET['getGraphData']) && $auth)
 		$limit = " AND timestamp <= :until";
 	}
 
+	if(isset($_GET["client"]) && strlen($_GET["client"]) > 0)
+	{
+		$limit .= " AND client = :client";
+		$client = urldecode($_GET["client"]);
+	}
+
+	if(isset($_GET["domain"]) && strlen($_GET["domain"]) > 0)
+	{
+		$limit .= " AND domain = :domain";
+		$domain = urldecode($_GET["domain"]);
+	}
+
 	$interval = 600;
 
 	if(isset($_GET["interval"]))
@@ -363,6 +375,11 @@ if (isset($_GET['getGraphData']) && $auth)
 	$stmt->bindValue(":from", $from, SQLITE3_INTEGER);
 	$stmt->bindValue(":until", $until, SQLITE3_INTEGER);
 	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
+	if(isset($client))
+		$stmt->bindValue(":client", $client, SQLITE3_TEXT);
+	if(isset($domain))
+		$stmt->bindValue(":domain", $domain, SQLITE3_TEXT);
+
 	$results = $stmt->execute();
 
 	// Parse the DB result into graph data, filling in missing interval sections with zero

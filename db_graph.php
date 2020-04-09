@@ -24,18 +24,41 @@ $token = $_SESSION['token'];
 
 <div class="row">
     <div class="col-md-12">
-<!-- Date Input -->
-      <div class="form-group">
-        <label>Date and time range:</label>
-
-        <div class="input-group">
-          <div class="input-group-addon">
-            <i class="far fa-clock"></i>
-          </div>
-          <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
+        <div class="box">
+            <!-- /.box-header -->
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    Request information from Pi-hole's long-term database
+                </h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- Date Input -->
+                        <div class="form-group">
+                            <label>Date and time range:</label>
+                            <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="far fa-clock"></i>
+                            </div>
+                            <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="client">Limit to specific client:</label>
+                        <input id="client" type="url" class="form-control" placeholder="Leave empty for all clients" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="domain">Limit to specific domain:</label>
+                        <input id="domain" type="url" class="form-control" placeholder="Leave empty for all domains" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- /.input group -->
-      </div>
     </div>
 </div>
 

@@ -126,8 +126,20 @@ function updateQueriesOverTime() {
     timeLineChart.options.scales.xAxes[0].time.unit = "day";
   }
 
+  var client = encodeURIComponent($("#client").val());
+  var domain = encodeURIComponent($("#domain").val());
+
   $.getJSON(
-    "api_db.php?getGraphData&from=" + from + "&until=" + until + "&interval=" + interval,
+    "api_db.php?getGraphData&from=" +
+      from +
+      "&until=" +
+      until +
+      "&interval=" +
+      interval +
+      "&client=" +
+      client +
+      "&domain=" +
+      domain,
     function(data) {
       // convert received objects to arrays
       data.domains_over_time = objectToArray(data.domains_over_time);
