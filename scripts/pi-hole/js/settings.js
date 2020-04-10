@@ -5,8 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-$(function() {
-  $("[data-static]").on("click", function() {
+$(function () {
+  $("[data-static]").on("click", function () {
     var row = $(this).closest("tr");
     var mac = row.find("#MAC").text();
     var ip = row.find("#IP").text();
@@ -19,10 +19,10 @@ $(function() {
 $(".confirm-poweroff").confirm({
   text: "Are you sure you want to send a poweroff command to your Pi-Hole?",
   title: "Confirmation required",
-  confirm: function() {
+  confirm: function () {
     $("#poweroffform").submit();
   },
-  cancel: function() {
+  cancel: function () {
     // nothing to do
   },
   confirmButton: "Yes, poweroff",
@@ -35,10 +35,10 @@ $(".confirm-poweroff").confirm({
 $(".confirm-reboot").confirm({
   text: "Are you sure you want to send a reboot command to your Pi-Hole?",
   title: "Confirmation required",
-  confirm: function() {
+  confirm: function () {
     $("#rebootform").submit();
   },
-  cancel: function() {
+  cancel: function () {
     // nothing to do
   },
   confirmButton: "Yes, reboot",
@@ -52,10 +52,10 @@ $(".confirm-reboot").confirm({
 $(".confirm-restartdns").confirm({
   text: "Are you sure you want to send a restart command to your DNS server?",
   title: "Confirmation required",
-  confirm: function() {
+  confirm: function () {
     $("#restartdnsform").submit();
   },
-  cancel: function() {
+  cancel: function () {
     // nothing to do
   },
   confirmButton: "Yes, restart DNS",
@@ -69,10 +69,10 @@ $(".confirm-restartdns").confirm({
 $(".confirm-flushlogs").confirm({
   text: "Are you sure you want to flush your logs?",
   title: "Confirmation required",
-  confirm: function() {
+  confirm: function () {
     $("#flushlogsform").submit();
   },
-  cancel: function() {
+  cancel: function () {
     // nothing to do
   },
   confirmButton: "Yes, flush logs",
@@ -86,10 +86,10 @@ $(".confirm-flushlogs").confirm({
 $(".confirm-flusharp").confirm({
   text: "Are you sure you want to flush your network table?",
   title: "Confirmation required",
-  confirm: function() {
+  confirm: function () {
     $("#flusharpform").submit();
   },
-  cancel: function() {
+  cancel: function () {
     // nothing to do
   },
   confirmButton: "Yes, flush my network table",
@@ -103,10 +103,10 @@ $(".confirm-flusharp").confirm({
 $(".confirm-disablelogging-noflush").confirm({
   text: "Are you sure you want to disable logging?",
   title: "Confirmation required",
-  confirm: function() {
+  confirm: function () {
     $("#disablelogsform-noflush").submit();
   },
-  cancel: function() {
+  cancel: function () {
     // nothing to do
   },
   confirmButton: "Yes, disable logs",
@@ -121,10 +121,10 @@ $(".api-token").confirm({
   text:
     "Make sure that nobody else can scan this code around you. They will have full access to the API without having to know the password. Note that the generation of the QR code will take some time.",
   title: "Confirmation required",
-  confirm: function() {
+  confirm: function () {
     window.open("scripts/pi-hole/php/api_token.php");
   },
-  cancel: function() {
+  cancel: function () {
     // nothing to do
   },
   confirmButton: "Yes, show API token",
@@ -135,15 +135,13 @@ $(".api-token").confirm({
   dialogClass: "modal-dialog modal-mg"
 });
 
-$("#DHCPchk").click(function() {
+$("#DHCPchk").click(function () {
   $("input.DHCPgroup").prop("disabled", !this.checked);
-  $("#dhcpnotice")
-    .prop("hidden", !this.checked)
-    .addClass("lookatme");
+  $("#dhcpnotice").prop("hidden", !this.checked).addClass("lookatme");
 });
 
 function loadCacheInfo() {
-  $.getJSON("api.php?getCacheInfo", function(data) {
+  $.getJSON("api.php?getCacheInfo", function (data) {
     if ("FTLnotrunning" in data) {
       return;
     }
@@ -156,13 +154,9 @@ function loadCacheInfo() {
     var cachelivefreed = parseInt(data.cacheinfo["cache-live-freed"]);
     $("#cache-live-freed").text(cachelivefreed);
     if (cachelivefreed > 0) {
-      $("#cache-live-freed")
-        .parent("tr")
-        .addClass("lookatme");
+      $("#cache-live-freed").parent("tr").addClass("lookatme");
     } else {
-      $("#cache-live-freed")
-        .parent("tr")
-        .removeClass("lookatme");
+      $("#cache-live-freed").parent("tr").removeClass("lookatme");
     }
 
     // Update cache info every 10 seconds
@@ -171,7 +165,7 @@ function loadCacheInfo() {
 }
 
 var leasetable, staticleasetable;
-$(document).ready(function() {
+$(document).ready(function () {
   if (document.getElementById("DHCPLeasesTable")) {
     leasetable = $("#DHCPLeasesTable").DataTable({
       dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-6'i><'col-sm-6'f>>",
@@ -195,7 +189,7 @@ $(document).ready(function() {
   }
 
   //call draw() on each table... they don't render properly with scrollX and scrollY set... ¯\_(ツ)_/¯
-  $('a[data-toggle="tab"]').on("shown.bs.tab", function() {
+  $('a[data-toggle="tab"]').on("shown.bs.tab", function () {
     leasetable.draw();
     staticleasetable.draw();
   });
@@ -204,8 +198,8 @@ $(document).ready(function() {
 });
 
 // Handle hiding of alerts
-$(function() {
-  $("[data-hide]").on("click", function() {
+$(function () {
+  $("[data-hide]").on("click", function () {
     $(this)
       .closest("." + $(this).attr("data-hide"))
       .hide();
@@ -213,12 +207,12 @@ $(function() {
 });
 
 // DHCP leases tooltips
-$(document).ready(function() {
+$(document).ready(function () {
   $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
 });
 
 // Change "?tab=" parameter in URL for save and reload
-$(".nav-tabs a").on("shown.bs.tab", function(e) {
+$(".nav-tabs a").on("shown.bs.tab", function (e) {
   var tab = e.target.hash.substring(1);
   window.history.pushState("", "", "?tab=" + tab);
   if (tab === "piholedhcp") {
@@ -229,10 +223,10 @@ $(".nav-tabs a").on("shown.bs.tab", function(e) {
 });
 
 // Auto dismissal for info notifications
-$(document).ready(function() {
+$(document).ready(function () {
   var alInfo = $("#alInfo");
   if (alInfo.length) {
-    alInfo.delay(3000).fadeOut(2000, function() {
+    alInfo.delay(3000).fadeOut(2000, function () {
       alInfo.hide();
     });
   }

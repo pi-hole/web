@@ -37,12 +37,12 @@ function add(domain, list) {
   alertModal.modal("show");
 
   // add Domain to List after Modal has faded in
-  alertModal.one("shown.bs.modal", function() {
+  alertModal.one("shown.bs.modal", function () {
     $.ajax({
       url: "scripts/pi-hole/php/add.php",
       method: "post",
       data: { domain: domain, list: list, token: token },
-      success: function(response) {
+      success: function (response) {
         alProcessing.hide();
         if (
           response.indexOf("not a valid argument") >= 0 ||
@@ -53,7 +53,7 @@ function add(domain, list) {
           alNetworkErr.hide();
           alCustomErr.html(response.replace("[✗]", ""));
           alFailure.fadeIn(1000);
-          setTimeout(function() {
+          setTimeout(function () {
             alertModal.modal("hide");
           }, 3000);
         } else {
@@ -61,17 +61,17 @@ function add(domain, list) {
           alSuccess.children(alDomain).html(domain);
           alSuccess.children(alList).html(listtype);
           alSuccess.fadeIn(1000);
-          setTimeout(function() {
+          setTimeout(function () {
             alertModal.modal("hide");
           }, 2000);
         }
       },
-      error: function() {
+      error: function () {
         // Network Error
         alProcessing.hide();
         alNetworkErr.show();
         alFailure.fadeIn(1000);
-        setTimeout(function() {
+        setTimeout(function () {
           alertModal.modal("hide");
         }, 3000);
       }
@@ -79,16 +79,10 @@ function add(domain, list) {
   });
 
   // Reset Modal after it has faded out
-  alertModal.one("hidden.bs.modal", function() {
+  alertModal.one("hidden.bs.modal", function () {
     alProcessing.show();
     alSuccess.add(alFailure).hide();
-    alProcessing
-      .add(alSuccess)
-      .children(alDomain)
-      .html("")
-      .end()
-      .children(alList)
-      .html("");
+    alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
     alCustomErr.html("");
   });
 }
@@ -111,13 +105,13 @@ function autofilter() {
   return $("#autofilter").prop("checked");
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   // Do we want to filter queries?
   var GETDict = {};
   window.location.search
     .substr(1)
     .split("&")
-    .forEach(function(item) {
+    .forEach(function (item) {
       GETDict[item.split("=")[0]] = item.split("=")[1];
     });
 
@@ -141,7 +135,7 @@ $(document).ready(function() {
   }
 
   tableApi = $("#all-queries").DataTable({
-    rowCallback: function(row, data) {
+    rowCallback: function (row, data) {
       // DNSSEC status
       var dnssec_status;
       switch (data[5]) {
@@ -274,15 +268,15 @@ $(document).ready(function() {
 
       if (regexLink) {
         $("td:eq(4)", row).hover(
-          function() {
+          function () {
             this.title = "Click to show matching regex filter";
             this.style.color = "#72afd2";
           },
-          function() {
+          function () {
             this.style.color = "";
           }
         );
-        $("td:eq(4)", row).click(function() {
+        $("td:eq(4)", row).click(function () {
           var new_tab = window.open("groups-domains.php?domainid=" + data[9], "_blank");
           if (new_tab) {
             new_tab.focus();
@@ -359,9 +353,9 @@ $(document).ready(function() {
     ajax: {
       url: APIstring,
       error: handleAjaxError,
-      dataSrc: function(data) {
+      dataSrc: function (data) {
         var dataIndex = 0;
-        return data.data.map(function(x) {
+        return data.data.map(function (x) {
           x[0] = x[0] * 1e6 + dataIndex++;
           return x;
         });
@@ -373,7 +367,7 @@ $(document).ready(function() {
     columns: [
       {
         width: "15%",
-        render: function(data, type) {
+        render: function (data, type) {
           if (type === "display") {
             return moment
               .unix(Math.floor(data / 1e6))
@@ -395,11 +389,11 @@ $(document).ready(function() {
       [10, 25, 50, 100, "All"]
     ],
     stateSave: true,
-    stateSaveCallback: function(settings, data) {
+    stateSaveCallback: function (settings, data) {
       // Store current state in client's local storage area
       localStorage.setItem("query_log_table", JSON.stringify(data));
     },
-    stateLoadCallback: function() {
+    stateLoadCallback: function () {
       // Receive previous state from client's local storage area
       var data = localStorage.getItem("query_log_table");
       // Return if not available
@@ -422,17 +416,17 @@ $(document).ready(function() {
         defaultContent: ""
       }
     ],
-    initComplete: function() {
+    initComplete: function () {
       var api = this.api();
       // Query type IPv4 / IPv6
-      api.$("td:eq(1)").click(function() {
+      api.$("td:eq(1)").click(function () {
         if (autofilter()) {
           api.search(this.textContent).draw();
           $("#resetButton").show();
         }
       });
       api.$("td:eq(1)").hover(
-        function() {
+        function () {
           if (autofilter()) {
             this.title = "Click to show only " + this.textContent + " queries";
             this.style.color = "#72afd2";
@@ -441,13 +435,13 @@ $(document).ready(function() {
             this.style.color = "";
           }
         },
-        function() {
+        function () {
           this.style.color = "";
         }
       );
       api.$("td:eq(1)").css("cursor", "pointer");
       // Domain
-      api.$("td:eq(2)").click(function() {
+      api.$("td:eq(2)").click(function () {
         if (autofilter()) {
           var domain = this.textContent.split("\n")[0];
           api.search(domain).draw();
@@ -455,7 +449,7 @@ $(document).ready(function() {
         }
       });
       api.$("td:eq(2)").hover(
-        function() {
+        function () {
           if (autofilter()) {
             var domain = this.textContent.split("\n")[0];
             this.title = "Click to show only queries with domain " + domain;
@@ -465,20 +459,20 @@ $(document).ready(function() {
             this.style.color = "";
           }
         },
-        function() {
+        function () {
           this.style.color = "";
         }
       );
       api.$("td:eq(2)").css("cursor", "pointer");
       // Client
-      api.$("td:eq(3)").click(function() {
+      api.$("td:eq(3)").click(function () {
         if (autofilter()) {
           api.search(this.textContent).draw();
           $("#resetButton").show();
         }
       });
       api.$("td:eq(3)").hover(
-        function() {
+        function () {
           if (autofilter()) {
             this.title = "Click to show only queries made by " + this.textContent;
             this.style.color = "#72afd2";
@@ -487,7 +481,7 @@ $(document).ready(function() {
             this.style.color = "";
           }
         },
-        function() {
+        function () {
           this.style.color = "";
         }
       );
@@ -495,7 +489,7 @@ $(document).ready(function() {
     }
   });
 
-  $("#all-queries tbody").on("click", "button", function() {
+  $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();
     if (data[4] === "2" || data[4] === "3") {
       add(data[2], "black");
@@ -504,7 +498,7 @@ $(document).ready(function() {
     }
   });
 
-  $("#resetButton").click(function() {
+  $("#resetButton").click(function () {
     tableApi.search("").draw();
     $("#resetButton").hide();
   });
@@ -526,7 +520,7 @@ $(document).ready(function() {
     localStorage.setItem("query_log_filter_chkbox", true);
   }
 
-  $("#autofilter").click(function() {
+  $("#autofilter").click(function () {
     localStorage.setItem("query_log_filter_chkbox", $("#autofilter").prop("checked"));
   });
 });

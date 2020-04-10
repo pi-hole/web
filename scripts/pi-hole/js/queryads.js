@@ -32,7 +32,7 @@ function httpGet(ta, quiet, theUrl) {
     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
   }
 
-  xmlhttp.onreadystatechange = function() {
+  xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
       ta.show();
       ta.empty();
@@ -50,9 +50,7 @@ function httpGet(ta, quiet, theUrl) {
 
 function eventsource() {
   var ta = $("#output");
-  var domain = $("#domain")
-    .val()
-    .trim();
+  var domain = $("#domain").val().trim();
   var q = $("#quiet");
 
   if (domain.length === 0) {
@@ -85,7 +83,7 @@ function eventsource() {
 
   source.addEventListener(
     "message",
-    function(e) {
+    function (e) {
       if (!quiet) {
         ta.append(e.data);
       } else {
@@ -98,7 +96,7 @@ function eventsource() {
   // Will be called when script has finished
   source.addEventListener(
     "error",
-    function() {
+    function () {
       source.close();
     },
     false
@@ -109,7 +107,7 @@ function eventsource() {
 }
 
 // Handle enter button
-$(document).keypress(function(e) {
+$(document).keypress(function (e) {
   if (e.which === 13 && $("#domain").is(":focus")) {
     // Enter was pressed, and the input has focus
     exact = "";
@@ -117,36 +115,32 @@ $(document).keypress(function(e) {
   }
 });
 // Handle button
-$("#btnSearch").on("click", function() {
+$("#btnSearch").on("click", function () {
   exact = "";
   eventsource();
 });
 // Handle exact button
-$("#btnSearchExact").on("click", function() {
+$("#btnSearchExact").on("click", function () {
   exact = "exact";
   eventsource();
 });
 
 // Wrap form-group's buttons to next line when viewed on a small screen
-$(window).on("resize", function() {
+$(window).on("resize", function () {
   if ($(window).width() < 991) {
-    $(".form-group.input-group")
-      .removeClass("input-group")
-      .addClass("input-group-block");
+    $(".form-group.input-group").removeClass("input-group").addClass("input-group-block");
     $(".form-group.input-group-block > input").css("margin-bottom", "5px");
     $(".form-group.input-group-block > .input-group-btn")
       .removeClass("input-group-btn")
       .addClass("btn-block text-center");
   } else {
-    $(".form-group.input-group-block")
-      .removeClass("input-group-block")
-      .addClass("input-group");
+    $(".form-group.input-group-block").removeClass("input-group-block").addClass("input-group");
     $(".form-group.input-group > input").css("margin-bottom", "");
     $(".form-group.input-group > .btn-block.text-center")
       .removeClass("btn-block text-center")
       .addClass("input-group-btn");
   }
 });
-$(document).ready(function() {
+$(document).ready(function () {
   $(window).trigger("resize");
 });

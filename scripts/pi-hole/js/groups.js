@@ -10,7 +10,7 @@
 var table;
 var token = $("#token").html();
 
-$(document).ready(function() {
+$(document).ready(function () {
   $("#btnAdd").on("click", addGroup);
 
   table = $("#groupsTable").DataTable({
@@ -27,10 +27,10 @@ $(document).ready(function() {
       { data: "description" },
       { data: null, width: "60px", orderable: false }
     ],
-    drawCallback: function() {
+    drawCallback: function () {
       $('button[id^="deleteGroup_"]').on("click", deleteGroup);
     },
-    rowCallback: function(row, data) {
+    rowCallback: function (row, data) {
       $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
@@ -86,11 +86,11 @@ $(document).ready(function() {
       [10, 25, 50, 100, "All"]
     ],
     stateSave: true,
-    stateSaveCallback: function(settings, data) {
+    stateSaveCallback: function (settings, data) {
       // Store current state in client's local storage area
       localStorage.setItem("groups-table", JSON.stringify(data));
     },
-    stateLoadCallback: function() {
+    stateLoadCallback: function () {
       // Receive previous state from client's local storage area
       var data = localStorage.getItem("groups-table");
       // Return if not available
@@ -110,7 +110,7 @@ $(document).ready(function() {
     }
   });
 
-  table.on("order.dt", function() {
+  table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
       $("#resetButton").show();
@@ -118,7 +118,7 @@ $(document).ready(function() {
       $("#resetButton").hide();
     }
   });
-  $("#resetButton").on("click", function() {
+  $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").hide();
   });
@@ -141,7 +141,7 @@ function addGroup() {
     method: "post",
     dataType: "json",
     data: { action: "add_group", name: name, desc: desc, token: token },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "fas fa-plus", "Successfully added group", name);
@@ -152,7 +152,7 @@ function addGroup() {
         utils.showAlert("error", "", "Error while adding new group", response.message);
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new group", jqXHR.responseText);
       console.log(exception);
@@ -208,7 +208,7 @@ function editGroup() {
       status: status,
       token: token
     },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " group", name);
@@ -221,7 +221,7 @@ function editGroup() {
         );
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert(
         "error",
@@ -246,19 +246,16 @@ function deleteGroup() {
     method: "post",
     dataType: "json",
     data: { action: "delete_group", id: id, token: token },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "far fa-trash-alt", "Successfully deleted group ", name);
-        table
-          .row(tr)
-          .remove()
-          .draw(false);
+        table.row(tr).remove().draw(false);
       } else {
         utils.showAlert("error", "", "Error while deleting group with ID " + id, response.message);
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting group with ID " + id, jqXHR.responseText);
       console.log(exception);

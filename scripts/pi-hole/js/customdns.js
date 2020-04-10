@@ -36,7 +36,7 @@ function showAlert(type, message) {
   alertElement.delay(8000).fadeOut(2000);
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   $("#btnAdd").on("click", addCustomDNS);
 
   table = $("#customDNSTable").DataTable({
@@ -45,7 +45,7 @@ $(document).ready(function() {
     columnDefs: [
       {
         targets: 2,
-        render: function(data, type, row) {
+        render: function (data, type, row) {
           return (
             '<button class="btn btn-danger btn-xs deleteCustomDNS" type="button" data-domain=\'' +
             row[0] +
@@ -58,7 +58,7 @@ $(document).ready(function() {
         }
       }
     ],
-    drawCallback: function() {
+    drawCallback: function () {
       $(".deleteCustomDNS").on("click", deleteCustomDNS);
     }
   });
@@ -80,13 +80,13 @@ function addCustomDNS() {
     method: "post",
     dataType: "json",
     data: { action: "add", ip: ip, domain: domain },
-    success: function(response) {
+    success: function (response) {
       if (response.success) {
         showAlert("success");
         table.ajax.reload();
       } else showAlert("error", response.message);
     },
-    error: function() {
+    error: function () {
       showAlert("error", "Error while adding this custom DNS entry");
     }
   });
@@ -102,13 +102,13 @@ function deleteCustomDNS() {
     method: "post",
     dataType: "json",
     data: { action: "delete", domain: domain, ip: ip },
-    success: function(response) {
+    success: function (response) {
       if (response.success) {
         showAlert("success");
         table.ajax.reload();
       } else showAlert("error", response.message);
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       showAlert("error", "Error while deleting this custom DNS entry");
       console.log(exception);
     }

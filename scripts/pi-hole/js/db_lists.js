@@ -8,22 +8,16 @@
 /* global moment:false */
 
 var start__ = moment().subtract(6, "days");
-var from =
-  moment(start__)
-    .utc()
-    .valueOf() / 1000;
+var from = moment(start__).utc().valueOf() / 1000;
 var end__ = moment();
-var until =
-  moment(end__)
-    .utc()
-    .valueOf() / 1000;
+var until = moment(end__).utc().valueOf() / 1000;
 
 var timeoutWarning = $("#timeoutWarning");
 var listsStillLoading = 0;
 
 var dateformat = "MMMM Do YYYY, HH:mm";
 
-$(function() {
+$(function () {
   $("#querytime").daterangepicker(
     {
       timePicker: true,
@@ -34,23 +28,15 @@ $(function() {
       ranges: {
         Today: [moment().startOf("day"), moment()],
         Yesterday: [
-          moment()
-            .subtract(1, "days")
-            .startOf("day"),
-          moment()
-            .subtract(1, "days")
-            .endOf("day")
+          moment().subtract(1, "days").startOf("day"),
+          moment().subtract(1, "days").endOf("day")
         ],
         "Last 7 Days": [moment().subtract(6, "days"), moment()],
         "Last 30 Days": [moment().subtract(29, "days"), moment()],
         "This Month": [moment().startOf("month"), moment()],
         "Last Month": [
-          moment()
-            .subtract(1, "month")
-            .startOf("month"),
-          moment()
-            .subtract(1, "month")
-            .endOf("month")
+          moment().subtract(1, "month").startOf("month"),
+          moment().subtract(1, "month").endOf("month")
         ],
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()]
@@ -59,15 +45,9 @@ $(function() {
       showDropdowns: true,
       autoUpdateInput: false
     },
-    function(startt, endt) {
-      from =
-        moment(startt)
-          .utc()
-          .valueOf() / 1000;
-      until =
-        moment(endt)
-          .utc()
-          .valueOf() / 1000;
+    function (startt, endt) {
+      from = moment(startt).utc().valueOf() / 1000;
+      until = moment(endt).utc().valueOf() / 1000;
     }
   );
 });
@@ -82,18 +62,16 @@ function escapeHtml(text) {
     "'": "&#039;"
   };
 
-  return text.replace(/[&<>"']/g, function(m) {
+  return text.replace(/[&<>"']/g, function (m) {
     return map[m];
   });
 }
 
 function updateTopClientsChart() {
   $("#client-frequency .overlay").show();
-  $.getJSON("api_db.php?topClients&from=" + from + "&until=" + until, function(data) {
+  $.getJSON("api_db.php?topClients&from=" + from + "&until=" + until, function (data) {
     // Clear tables before filling them with data
-    $("#client-frequency td")
-      .parent()
-      .remove();
+    $("#client-frequency td").parent().remove();
     var clienttable = $("#client-frequency").find("tbody:last");
     var client, percentage, clientname;
     var sum = 0;
@@ -145,11 +123,9 @@ function updateTopClientsChart() {
 
 function updateTopDomainsChart() {
   $("#domain-frequency .overlay").show();
-  $.getJSON("api_db.php?topDomains&from=" + from + "&until=" + until, function(data) {
+  $.getJSON("api_db.php?topDomains&from=" + from + "&until=" + until, function (data) {
     // Clear tables before filling them with data
-    $("#domain-frequency td")
-      .parent()
-      .remove();
+    $("#domain-frequency td").parent().remove();
     var domaintable = $("#domain-frequency").find("tbody:last");
     var domain, percentage;
     var sum = 0;
@@ -194,11 +170,9 @@ function updateTopDomainsChart() {
 
 function updateTopAdsChart() {
   $("#ad-frequency .overlay").show();
-  $.getJSON("api_db.php?topAds&from=" + from + "&until=" + until, function(data) {
+  $.getJSON("api_db.php?topAds&from=" + from + "&until=" + until, function (data) {
     // Clear tables before filling them with data
-    $("#ad-frequency td")
-      .parent()
-      .remove();
+    $("#ad-frequency td").parent().remove();
     var adtable = $("#ad-frequency").find("tbody:last");
     var ad, percentage;
     var sum = 0;
@@ -241,7 +215,7 @@ function updateTopAdsChart() {
   });
 }
 
-$("#querytime").on("apply.daterangepicker", function(ev, picker) {
+$("#querytime").on("apply.daterangepicker", function (ev, picker) {
   $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
   timeoutWarning.show();
   listsStillLoading = 3;

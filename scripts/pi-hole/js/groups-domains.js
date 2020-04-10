@@ -17,7 +17,7 @@ function get_groups() {
   $.post(
     "scripts/pi-hole/php/groups.php",
     { action: "get_groups", token: token },
-    function(data) {
+    function (data) {
       groups = data.data;
       initTable();
     },
@@ -25,11 +25,11 @@ function get_groups() {
   );
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   window.location.search
     .substr(1)
     .split("&")
-    .forEach(function(item) {
+    .forEach(function (item) {
       GETDict[item.split("=")[0]] = item.split("=")[1];
     });
 
@@ -38,7 +38,7 @@ $(document).ready(function() {
   }
 
   // sync description fields, reset inactive inputs on tab change
-  $('a[data-toggle="tab"]').on("shown.bs.tab", function() {
+  $('a[data-toggle="tab"]').on("shown.bs.tab", function () {
     var tabHref = $(this).attr("href");
     var val;
     if (tabHref === "#tab_domain") {
@@ -81,10 +81,10 @@ function initTable() {
       { data: "groups", searchable: false },
       { data: null, width: "80px", orderable: false }
     ],
-    drawCallback: function() {
+    drawCallback: function () {
       $('button[id^="deleteDomain_"]').on("click", deleteDomain);
     },
-    rowCallback: function(row, data) {
+    rowCallback: function (row, data) {
       $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
@@ -188,7 +188,7 @@ function initTable() {
           includeSelectAllOption: true,
           buttonContainer: '<div id="container_' + data.id + '" class="btn-group"/>',
           maxHeight: 200,
-          onDropdownShown: function() {
+          onDropdownShown: function () {
             var el = $("#container_" + data.id);
             var top = el[0].getBoundingClientRect().top;
             var bottom = $(window).height() - top - el.height();
@@ -206,7 +206,7 @@ function initTable() {
             el.css("top", offset.top + "px");
             el.css("left", offset.left + "px");
           },
-          onDropdownHide: function() {
+          onDropdownHide: function () {
             var el = $("#container_" + data.id);
             var home = $("#selectHome_" + data.id);
             home.append(el);
@@ -218,9 +218,7 @@ function initTable() {
 
       // Highlight row (if url parameter "domainid=" is used)
       if ("domainid" in GETDict && data.id === parseInt(GETDict.domainid)) {
-        $(row)
-          .find("td")
-          .addClass("highlight");
+        $(row).find("td").addClass("highlight");
       }
 
       var button =
@@ -244,11 +242,11 @@ function initTable() {
       [10, 25, 50, 100, "All"]
     ],
     stateSave: true,
-    stateSaveCallback: function(settings, data) {
+    stateSaveCallback: function (settings, data) {
       // Store current state in client's local storage area
       localStorage.setItem("groups-domains-table", JSON.stringify(data));
     },
-    stateLoadCallback: function() {
+    stateLoadCallback: function () {
       // Receive previous state from client's local storage area
       var data = localStorage.getItem("groups-domains-table");
       // Return if not available
@@ -268,12 +266,9 @@ function initTable() {
       // Apply loaded state to table
       return data;
     },
-    initComplete: function() {
+    initComplete: function () {
       if ("domainid" in GETDict) {
-        var pos = table
-          .column(0, { order: "current" })
-          .data()
-          .indexOf(parseInt(GETDict.domainid));
+        var pos = table.column(0, { order: "current" }).data().indexOf(parseInt(GETDict.domainid));
         if (pos >= 0) {
           var page = Math.floor(pos / table.page.info().length);
           table.page(page).draw(false);
@@ -282,7 +277,7 @@ function initTable() {
     }
   });
 
-  table.on("order.dt", function() {
+  table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
       $("#resetButton").show();
@@ -290,7 +285,7 @@ function initTable() {
       $("#resetButton").hide();
     }
   });
-  $("#resetButton").on("click", function() {
+  $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").hide();
   });
@@ -358,7 +353,7 @@ function addDomain() {
       comment: comment,
       token: token
     },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "fas fa-plus", "Successfully added " + domain_regex, domain);
@@ -370,7 +365,7 @@ function addDomain() {
         utils.showAlert("error", "", "Error while adding new " + domain_regex, response.message);
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new " + domain_regex, jqXHR.responseText);
       console.log(exception);
@@ -448,7 +443,7 @@ function editDomain() {
       groups: groups,
       token: token
     },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert(
@@ -465,7 +460,7 @@ function editDomain() {
           response.message
         );
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert(
         "error",
@@ -498,7 +493,7 @@ function deleteDomain() {
     method: "post",
     dataType: "json",
     data: { action: "delete_domain", id: id, token: token },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert(
@@ -507,10 +502,7 @@ function deleteDomain() {
           "Successfully deleted " + domain_regex,
           domain
         );
-        table
-          .row(tr)
-          .remove()
-          .draw(false);
+        table.row(tr).remove().draw(false);
       } else {
         utils.showAlert(
           "error",
@@ -520,7 +512,7 @@ function deleteDomain() {
         );
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert(
         "error",

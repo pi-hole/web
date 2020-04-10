@@ -18,7 +18,7 @@ function padNumber(num) {
 
 function objectToArray(p) {
   var keys = Object.keys(p);
-  keys.sort(function(a, b) {
+  keys.sort(function (a, b) {
     return a - b;
   });
 
@@ -34,7 +34,7 @@ function objectToArray(p) {
 
 var lastTooltipTime = 0;
 
-var customTooltips = function(tooltip) {
+var customTooltips = function (tooltip) {
   // Tooltip Element
   var tooltipEl = document.getElementById("chartjs-tooltip");
   if (!tooltipEl) {
@@ -76,12 +76,12 @@ var customTooltips = function(tooltip) {
     var titleLines = tooltip.title || [];
     var bodyLines = tooltip.body.map(getBody);
     var innerHtml = "<table><thead>";
-    titleLines.forEach(function(title) {
+    titleLines.forEach(function (title) {
       innerHtml += "<tr><th>" + title + "</th></tr>";
     });
     innerHtml += "</thead><tbody>";
     var printed = 0;
-    bodyLines.forEach(function(body, i) {
+    bodyLines.forEach(function (body, i) {
       var colors = tooltip.labelColors[i];
       var style = "background:" + colors.backgroundColor;
       style += "; border-color:" + colors.borderColor;
@@ -129,7 +129,7 @@ var customTooltips = function(tooltip) {
 
 var failures = 0;
 function updateQueriesOverTime() {
-  $.getJSON("api.php?overTimeData10mins", function(data) {
+  $.getJSON("api.php?overTimeData10mins", function (data) {
     if ("FTLnotrunning" in data) {
       return;
     }
@@ -168,12 +168,12 @@ function updateQueriesOverTime() {
     $("#queries-over-time .overlay").hide();
     timeLineChart.update();
   })
-    .done(function() {
+    .done(function () {
       // Reload graph after 10 minutes
       failures = 0;
       setTimeout(updateQueriesOverTime, 600000);
     })
-    .fail(function() {
+    .fail(function () {
       failures++;
       if (failures < 5) {
         // Try again after 1 minute only if this has not failed more
@@ -184,14 +184,14 @@ function updateQueriesOverTime() {
 }
 
 function updateQueryTypesPie() {
-  $.getJSON("api.php?getQueryTypes", function(data) {
+  $.getJSON("api.php?getQueryTypes", function (data) {
     if ("FTLnotrunning" in data) {
       return;
     }
 
     var colors = [];
     // Get colors from AdminLTE
-    $.each($.AdminLTE.options.colors, function(key, value) {
+    $.each($.AdminLTE.options.colors, function (key, value) {
       colors.push(value);
     });
     var v = [],
@@ -205,7 +205,7 @@ function updateQueryTypesPie() {
       iter = data;
     }
 
-    $.each(iter, function(key, value) {
+    $.each(iter, function (key, value) {
       v.push(value);
       c.push(colors.shift());
       k.push(key);
@@ -223,7 +223,7 @@ function updateQueryTypesPie() {
     queryTypePieChart.options.animation.duration = 0;
     // Generate legend in separate div
     $("#query-types-legend").html(queryTypePieChart.generateLegend());
-    $("#query-types-legend > ul > li").on("mousedown", function(e) {
+    $("#query-types-legend > ul > li").on("mousedown", function (e) {
       if (e.which === 2) {
         // which == 2 is middle mouse button
         $(this).toggleClass("strike");
@@ -243,23 +243,21 @@ function updateQueryTypesPie() {
         window.open("queries.php?querytype=" + ($(this).index() + 1), "_self");
       }
     });
-  }).done(function() {
+  }).done(function () {
     // Reload graph after minute
     setTimeout(updateQueryTypesPie, 60000);
   });
 }
 
 function updateClientsOverTime() {
-  $.getJSON("api.php?overTimeDataClients&getClientNames", function(data) {
+  $.getJSON("api.php?overTimeDataClients&getClientNames", function (data) {
     if ("FTLnotrunning" in data) {
       return;
     }
 
     // Remove graph if there are no results (e.g. privacy mode enabled)
     if (jQuery.isEmptyObject(data.over_time)) {
-      $("#clients")
-        .parent()
-        .remove();
+      $("#clients").parent().remove();
       return;
     }
 
@@ -289,7 +287,7 @@ function updateClientsOverTime() {
 
     // Get colors from AdminLTE
     var colors = [];
-    $.each($.AdminLTE.options.colors, function(key, value) {
+    $.each($.AdminLTE.options.colors, function (key, value) {
       colors.push(value);
     });
 
@@ -344,12 +342,12 @@ function updateClientsOverTime() {
     $("#clients .overlay").hide();
     clientsChart.update();
   })
-    .done(function() {
+    .done(function () {
       // Reload graph after 10 minutes
       failures = 0;
       setTimeout(updateClientsOverTime, 600000);
     })
-    .fail(function() {
+    .fail(function () {
       failures++;
       if (failures < 5) {
         // Try again after 1 minute only if this has not failed more
@@ -360,14 +358,14 @@ function updateClientsOverTime() {
 }
 
 function updateForwardDestinationsPie() {
-  $.getJSON("api.php?getForwardDestinations", function(data) {
+  $.getJSON("api.php?getForwardDestinations", function (data) {
     if ("FTLnotrunning" in data) {
       return;
     }
 
     var colors = [];
     // Get colors from AdminLTE
-    $.each($.AdminLTE.options.colors, function(key, value) {
+    $.each($.AdminLTE.options.colors, function (key, value) {
       colors.push(value);
     });
     var v = [],
@@ -376,7 +374,7 @@ function updateForwardDestinationsPie() {
       values = [];
 
     // Collect values and colors
-    $.each(data.forward_destinations, function(key, value) {
+    $.each(data.forward_destinations, function (key, value) {
       if (key.indexOf("|") > -1) {
         key = key.substr(0, key.indexOf("|"));
       }
@@ -385,7 +383,7 @@ function updateForwardDestinationsPie() {
     });
 
     // Split data into individual arrays for the graphs
-    $.each(values, function(key, value) {
+    $.each(values, function (key, value) {
       k.push(value[0]);
       v.push(value[1]);
       c.push(value[2]);
@@ -405,7 +403,7 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.options.animation.duration = 0;
     // Generate legend in separate div
     $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
-    $("#forward-destinations-legend > ul > li").on("mousedown", function(e) {
+    $("#forward-destinations-legend > ul > li").on("mousedown", function (e) {
       if (e.which === 2) {
         // which == 2 is middle mouse button
         $(this).toggleClass("strike");
@@ -426,7 +424,7 @@ function updateForwardDestinationsPie() {
         window.open("queries.php?forwarddest=" + obj, "_self");
       }
     });
-  }).done(function() {
+  }).done(function () {
     // Reload graph after one minute
     setTimeout(updateForwardDestinationsPie, 60000);
   });
@@ -442,21 +440,19 @@ function escapeHtml(text) {
     "'": "&#039;"
   };
 
-  return text.replace(/[&<>"']/g, function(m) {
+  return text.replace(/[&<>"']/g, function (m) {
     return map[m];
   });
 }
 
 function updateTopClientsChart() {
-  $.getJSON("api.php?summaryRaw&getQuerySources&topClientsBlocked", function(data) {
+  $.getJSON("api.php?summaryRaw&getQuerySources&topClientsBlocked", function (data) {
     if ("FTLnotrunning" in data) {
       return;
     }
 
     // Clear tables before filling them with data
-    $("#client-frequency td")
-      .parent()
-      .remove();
+    $("#client-frequency td").parent().remove();
     var clienttable = $("#client-frequency").find("tbody:last");
     var client, percentage, clientname, clientip, idx, url;
     for (client in data.top_sources) {
@@ -503,9 +499,7 @@ function updateTopClientsChart() {
     }
 
     // Clear tables before filling them with data
-    $("#client-frequency-blocked td")
-      .parent()
-      .remove();
+    $("#client-frequency-blocked td").parent().remove();
     var clientblockedtable = $("#client-frequency-blocked").find("tbody:last");
     for (client in data.top_sources_blocked) {
       if (Object.prototype.hasOwnProperty.call(data.top_sources_blocked, client)) {
@@ -552,16 +546,12 @@ function updateTopClientsChart() {
 
     // Remove table if there are no results (e.g. privacy mode enabled)
     if (jQuery.isEmptyObject(data.top_sources)) {
-      $("#client-frequency")
-        .parent()
-        .remove();
+      $("#client-frequency").parent().remove();
     }
 
     // Remove table if there are no results (e.g. privacy mode enabled)
     if (jQuery.isEmptyObject(data.top_sources_blocked)) {
-      $("#client-frequency-blocked")
-        .parent()
-        .remove();
+      $("#client-frequency-blocked").parent().remove();
     }
 
     $("#client-frequency .overlay").hide();
@@ -572,18 +562,14 @@ function updateTopClientsChart() {
 }
 
 function updateTopLists() {
-  $.getJSON("api.php?summaryRaw&topItems", function(data) {
+  $.getJSON("api.php?summaryRaw&topItems", function (data) {
     if ("FTLnotrunning" in data) {
       return;
     }
 
     // Clear tables before filling them with data
-    $("#domain-frequency td")
-      .parent()
-      .remove();
-    $("#ad-frequency td")
-      .parent()
-      .remove();
+    $("#domain-frequency td").parent().remove();
+    $("#ad-frequency td").parent().remove();
     var domaintable = $("#domain-frequency").find("tbody:last");
     var adtable = $("#ad-frequency").find("tbody:last");
     var url, domain, percentage;
@@ -616,9 +602,7 @@ function updateTopLists() {
 
     // Remove table if there are no results (e.g. privacy mode enabled)
     if (jQuery.isEmptyObject(data.top_queries)) {
-      $("#domain-frequency")
-        .parent()
-        .remove();
+      $("#domain-frequency").parent().remove();
     }
 
     for (domain in data.top_ads) {
@@ -650,9 +634,7 @@ function updateTopLists() {
 
     // Remove table if there are no results (e.g. privacy mode enabled)
     if (jQuery.isEmptyObject(data.top_ads)) {
-      $("#ad-frequency")
-        .parent()
-        .remove();
+      $("#ad-frequency").parent().remove();
     }
 
     $("#domain-frequency .overlay").hide();
@@ -664,13 +646,13 @@ function updateTopLists() {
 
 var FTLoffline = false;
 function updateSummaryData(runOnce) {
-  var setTimer = function(timeInSeconds) {
+  var setTimer = function (timeInSeconds) {
     if (!runOnce) {
       setTimeout(updateSummaryData, timeInSeconds * 1000);
     }
   };
 
-  $.getJSON("api.php?summary", function(data) {
+  $.getJSON("api.php?summary", function (data) {
     updateSessionTimer();
 
     if ("FTLnotrunning" in data) {
@@ -699,7 +681,7 @@ function updateSummaryData(runOnce) {
     }
 
     ["ads_blocked_today", "dns_queries_today", "ads_percentage_today", "unique_clients"].forEach(
-      function(today) {
+      function (today) {
         var $todayElement = $("span#" + today);
 
         if ($todayElement.text() !== data[today] && $todayElement.text() !== data[today] + "%") {
@@ -715,33 +697,33 @@ function updateSummaryData(runOnce) {
       );
     }
 
-    window.setTimeout(function() {
+    window.setTimeout(function () {
       [
         "ads_blocked_today",
         "dns_queries_today",
         "domains_being_blocked",
         "ads_percentage_today",
         "unique_clients"
-      ].forEach(function(header, idx) {
+      ].forEach(function (header, idx) {
         var textData = idx === 3 && data[header] !== "to" ? data[header] + "%" : data[header];
         $("span#" + header).text(textData);
       });
       $("span.glow").removeClass("glow");
     }, 500);
   })
-    .done(function() {
+    .done(function () {
       if (!FTLoffline) {
         setTimer(1);
       } else {
         setTimer(10);
       }
     })
-    .fail(function() {
+    .fail(function () {
       setTimer(300);
     });
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   // Pull in data via AJAX
   updateSummaryData();
 
@@ -780,7 +762,7 @@ $(document).ready(function() {
         enabled: true,
         mode: "x-axis",
         callbacks: {
-          title: function(tooltipItem) {
+          title: function (tooltipItem) {
             var label = tooltipItem[0].xLabel;
             var time = label.match(/(\d?\d):?(\d?\d?)/);
             var h = parseInt(time[1], 10);
@@ -789,7 +771,7 @@ $(document).ready(function() {
             var to = padNumber(h) + ":" + padNumber(m + 4) + ":59";
             return "Upstreams from " + from + " to " + to;
           },
-          label: function(tooltipItems, data) {
+          label: function (tooltipItems, data) {
             if (tooltipItems.datasetIndex === 1) {
               var percentage = 0.0;
               var permitted = parseInt(data.datasets[0].data[tooltipItems.index]);
@@ -862,11 +844,11 @@ $(document).ready(function() {
           enabled: false,
           mode: "x-axis",
           custom: customTooltips,
-          itemSort: function(a, b) {
+          itemSort: function (a, b) {
             return b.yLabel - a.yLabel;
           },
           callbacks: {
-            title: function(tooltipItem) {
+            title: function (tooltipItem) {
               var label = tooltipItem[0].xLabel;
               var time = label.match(/(\d?\d):?(\d?\d?)/);
               var h = parseInt(time[1], 10);
@@ -875,7 +857,7 @@ $(document).ready(function() {
               var to = padNumber(h) + ":" + padNumber(m + 4) + ":59";
               return "Client activity from " + from + " to " + to;
             },
-            label: function(tooltipItems, data) {
+            label: function (tooltipItems, data) {
               return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
             }
           }
@@ -924,7 +906,7 @@ $(document).ready(function() {
     updateTopClientsChart();
   }
 
-  $("#queryOverTimeChart").click(function(evt) {
+  $("#queryOverTimeChart").click(function (evt) {
     var activePoints = timeLineChart.getElementAtEvent(evt);
     if (activePoints.length > 0) {
       //get the internal index of slice in pie chart
@@ -958,10 +940,10 @@ $(document).ready(function() {
           enabled: false,
           custom: customTooltips,
           callbacks: {
-            title: function() {
+            title: function () {
               return "Query types";
             },
-            label: function(tooltipItems, data) {
+            label: function (tooltipItems, data) {
               var dataset = data.datasets[tooltipItems.datasetIndex];
               var label = data.labels[tooltipItems.index];
               return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
@@ -995,10 +977,10 @@ $(document).ready(function() {
           enabled: false,
           custom: customTooltips,
           callbacks: {
-            title: function() {
+            title: function () {
               return "Forward destinations";
             },
-            label: function(tooltipItems, data) {
+            label: function (tooltipItems, data) {
               var dataset = data.datasets[tooltipItems.datasetIndex];
               var label = data.labels[tooltipItems.index];
               return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";

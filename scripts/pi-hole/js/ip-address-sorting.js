@@ -8,7 +8,7 @@
 // This code has been taken from
 // https://datatables.net/plug-ins/sorting/ip-address
 jQuery.extend(jQuery.fn.dataTableExt.oSort, {
-  "ip-address-pre": function(a) {
+  "ip-address-pre": function (a) {
     if (!a) {
       return 0;
     }
@@ -84,11 +84,11 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
     return x;
   },
 
-  "ip-address-asc": function(a, b) {
+  "ip-address-asc": function (a, b) {
     return a < b ? -1 : a > b ? 1 : 0;
   },
 
-  "ip-address-desc": function(a, b) {
+  "ip-address-desc": function (a, b) {
     return a < b ? 1 : a > b ? -1 : 0;
   }
 });

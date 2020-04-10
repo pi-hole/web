@@ -26,7 +26,7 @@ function eventsource() {
 
   source.addEventListener(
     "message",
-    function(e) {
+    function (e) {
       if (e.data.indexOf("Pi-hole blocking is") !== -1) {
         alSuccess.show();
       }
@@ -46,8 +46,8 @@ function eventsource() {
   // Will be called when script has finished
   source.addEventListener(
     "error",
-    function() {
-      alInfo.delay(1000).fadeOut(2000, function() {
+    function () {
+      alInfo.delay(1000).fadeOut(2000, function () {
         alInfo.hide();
       });
       source.close();
@@ -57,14 +57,14 @@ function eventsource() {
   );
 }
 
-$("#gravityBtn").on("click", function() {
+$("#gravityBtn").on("click", function () {
   $("#gravityBtn").attr("disabled", true);
   eventsource();
 });
 
 // Handle hiding of alerts
-$(function() {
-  $("[data-hide]").on("click", function() {
+$(function () {
+  $("[data-hide]").on("click", function () {
     $(this)
       .closest("." + $(this).attr("data-hide"))
       .hide();
