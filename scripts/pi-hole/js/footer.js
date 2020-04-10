@@ -65,7 +65,7 @@ function piholeChange(action, duration) {
     case "enable":
       btnStatus = $("#flip-status-enable");
       btnStatus.html("<i class='fa fa-spinner'> </i>");
-      $.getJSON("api.php?enable&token=" + token, function(data) {
+      $.getJSON("api.php?enable&token=" + token, function (data) {
         if (data.status === "enabled") {
           btnStatus.html("");
           piholeChanged("enabled");
@@ -76,7 +76,7 @@ function piholeChange(action, duration) {
     case "disable":
       btnStatus = $("#flip-status-disable");
       btnStatus.html("<i class='fa fa-spinner'> </i>");
-      $.getJSON("api.php?disable=" + duration + "&token=" + token, function(data) {
+      $.getJSON("api.php?disable=" + duration + "&token=" + token, function (data) {
         if (data.status === "disabled") {
           btnStatus.html("");
           piholeChanged("disabled");
@@ -93,7 +93,7 @@ function piholeChange(action, duration) {
   }
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html()));
   var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
@@ -103,28 +103,28 @@ $(document).ready(function() {
 });
 
 // Handle Enable/Disable
-$("#pihole-enable").on("click", function(e) {
+$("#pihole-enable").on("click", function (e) {
   e.preventDefault();
   localStorage.removeItem("countDownTarget");
   piholeChange("enable", "");
 });
-$("#pihole-disable-permanently").on("click", function(e) {
+$("#pihole-disable-permanently").on("click", function (e) {
   e.preventDefault();
   piholeChange("disable", "0");
 });
-$("#pihole-disable-10s").on("click", function(e) {
+$("#pihole-disable-10s").on("click", function (e) {
   e.preventDefault();
   piholeChange("disable", "10");
 });
-$("#pihole-disable-30s").on("click", function(e) {
+$("#pihole-disable-30s").on("click", function (e) {
   e.preventDefault();
   piholeChange("disable", "30");
 });
-$("#pihole-disable-5m").on("click", function(e) {
+$("#pihole-disable-5m").on("click", function (e) {
   e.preventDefault();
   piholeChange("disable", "300");
 });
-$("#pihole-disable-custom").on("click", function(e) {
+$("#pihole-disable-custom").on("click", function (e) {
   e.preventDefault();
   var custVal = $("#customTimeout").val();
   custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
@@ -145,7 +145,7 @@ if (sessionvalidity > 0) {
   // setSeconds will correctly handle wrap-around cases
   updateSessionTimer();
 
-  setInterval(function() {
+  setInterval(function () {
     var current = new Date();
     var totalseconds = (start - current) / 1000;
     var minutes = Math.floor(totalseconds / 60);
@@ -169,7 +169,7 @@ if (sessionvalidity > 0) {
 }
 
 // Handle Strg + Enter button on Login page
-$(document).keypress(function(e) {
+$(document).keypress(function (e) {
   if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
     $("#loginform").attr("action", "settings.php");
     $("#loginform").submit();
@@ -191,7 +191,7 @@ function testCookies() {
   return ret;
 }
 
-$(function() {
+$(function () {
   if (!testCookies() && $("#cookieInfo").length) {
     $("#cookieInfo").show();
   }

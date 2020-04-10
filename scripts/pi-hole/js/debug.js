@@ -18,7 +18,7 @@ function httpGet(ta, theUrl) {
     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
   }
 
-  xmlhttp.onreadystatechange = function() {
+  xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
       ta.show();
       ta.empty();
@@ -54,7 +54,7 @@ function eventsource() {
 
   source.addEventListener(
     "message",
-    function(e) {
+    function (e) {
       ta.append(e.data);
     },
     false
@@ -63,14 +63,14 @@ function eventsource() {
   // Will be called when script has finished
   source.addEventListener(
     "error",
-    function() {
+    function () {
       source.close();
     },
     false
   );
 }
 
-$("#debugBtn").on("click", function() {
+$("#debugBtn").on("click", function () {
   $("#debugBtn").attr("disabled", true);
   $("#upload").attr("disabled", true);
   eventsource();

@@ -15,7 +15,7 @@ function reload_client_suggestions() {
   $.post(
     "scripts/pi-hole/php/groups.php",
     { action: "get_unconfigured_clients", token: token },
-    function(data) {
+    function (data) {
       var sel = $("#select");
       var customWasSelected = sel.val() === "custom";
       sel.empty();
@@ -29,18 +29,10 @@ function reload_client_suggestions() {
           text += " (" + data[key] + ")";
         }
 
-        sel.append(
-          $("<option />")
-            .val(key)
-            .text(text)
-        );
+        sel.append($("<option />").val(key).text(text));
       }
 
-      sel.append(
-        $("<option />")
-          .val("custom")
-          .text("Custom, specified below...")
-      );
+      sel.append($("<option />").val("custom").text("Custom, specified below..."));
       if (customWasSelected) {
         sel.val("custom");
       }
@@ -53,7 +45,7 @@ function get_groups() {
   $.post(
     "scripts/pi-hole/php/groups.php",
     { action: "get_groups", token: token },
-    function(data) {
+    function (data) {
       groups = data.data;
       initTable();
     },
@@ -61,13 +53,13 @@ function get_groups() {
   );
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   $("#btnAdd").on("click", addClient);
 
   reload_client_suggestions();
   get_groups();
 
-  $("#select").on("change", function() {
+  $("#select").on("change", function () {
     $("#ip-custom").val("");
     $("#ip-custom").prop("disabled", $("#select option:selected").val() !== "custom");
   });
@@ -94,10 +86,10 @@ function initTable() {
       { data: "groups", searchable: false },
       { data: "name", width: "80px", orderable: false }
     ],
-    drawCallback: function() {
+    drawCallback: function () {
       $('button[id^="deleteClient_"]').on("click", deleteClient);
     },
-    rowCallback: function(row, data) {
+    rowCallback: function (row, data) {
       $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
@@ -161,7 +153,7 @@ function initTable() {
         includeSelectAllOption: true,
         buttonContainer: '<div id="container_' + data.id + '" class="btn-group"/>',
         maxHeight: 200,
-        onDropdownShown: function() {
+        onDropdownShown: function () {
           var el = $("#container_" + data.id);
           var top = el[0].getBoundingClientRect().top;
           var bottom = $(window).height() - top - el.height();
@@ -179,7 +171,7 @@ function initTable() {
           el.css("top", offset.top + "px");
           el.css("left", offset.left + "px");
         },
-        onDropdownHide: function() {
+        onDropdownHide: function () {
           var el = $("#container" + data.id);
           var home = $("#selectHome" + data.id);
           home.append(el);
@@ -205,11 +197,11 @@ function initTable() {
       [10, 25, 50, 100, "All"]
     ],
     stateSave: true,
-    stateSaveCallback: function(settings, data) {
+    stateSaveCallback: function (settings, data) {
       // Store current state in client's local storage area
       localStorage.setItem("groups-clients-table", JSON.stringify(data));
     },
-    stateLoadCallback: function() {
+    stateLoadCallback: function () {
       // Receive previous state from client's local storage area
       var data = localStorage.getItem("groups-clients-table");
       // Return if not available
@@ -229,7 +221,7 @@ function initTable() {
     }
   });
 
-  table.on("order.dt", function() {
+  table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
       $("#resetButton").show();
@@ -237,7 +229,7 @@ function initTable() {
       $("#resetButton").hide();
     }
   });
-  $("#resetButton").on("click", function() {
+  $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").hide();
   });
@@ -279,7 +271,7 @@ function addClient() {
     method: "post",
     dataType: "json",
     data: { action: "add_client", ip: ip, comment: comment, token: token },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "fas fa-plus", "Successfully added client", ip);
@@ -289,7 +281,7 @@ function addClient() {
         utils.showAlert("error", "", "Error while adding new client", response.message);
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new client", jqXHR.responseText);
       console.log(exception);
@@ -340,7 +332,7 @@ function editClient() {
       token: token,
       comment: comment
     },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "fas fa-plus", "Successfully " + done + " client", ip_name);
@@ -352,7 +344,7 @@ function editClient() {
         );
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert(
         "error",
@@ -383,20 +375,17 @@ function deleteClient() {
     method: "post",
     dataType: "json",
     data: { action: "delete_client", id: id, token: token },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "far fa-trash-alt", "Successfully deleted client ", ip_name);
-        table
-          .row(tr)
-          .remove()
-          .draw(false);
+        table.row(tr).remove().draw(false);
         reload_client_suggestions();
       } else {
         utils.showAlert("error", "", "Error while deleting client with ID " + id, response.message);
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting client with ID " + id, jqXHR.responseText);
       console.log(exception);

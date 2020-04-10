@@ -8,22 +8,16 @@
 /* global Chart:false, moment:false */
 
 var start__ = moment().subtract(6, "days");
-var from =
-  moment(start__)
-    .utc()
-    .valueOf() / 1000;
+var from = moment(start__).utc().valueOf() / 1000;
 var end__ = moment();
-var until =
-  moment(end__)
-    .utc()
-    .valueOf() / 1000;
+var until = moment(end__).utc().valueOf() / 1000;
 var interval = 0;
 
 var timeoutWarning = $("#timeoutWarning");
 
 var dateformat = "MMMM Do YYYY, HH:mm";
 
-$(function() {
+$(function () {
   $("#querytime").daterangepicker(
     {
       timePicker: true,
@@ -34,23 +28,15 @@ $(function() {
       ranges: {
         Today: [moment().startOf("day"), moment()],
         Yesterday: [
-          moment()
-            .subtract(1, "days")
-            .startOf("day"),
-          moment()
-            .subtract(1, "days")
-            .endOf("day")
+          moment().subtract(1, "days").startOf("day"),
+          moment().subtract(1, "days").endOf("day")
         ],
         "Last 7 Days": [moment().subtract(6, "days"), moment()],
         "Last 30 Days": [moment().subtract(29, "days"), moment()],
         "This Month": [moment().startOf("month"), moment()],
         "Last Month": [
-          moment()
-            .subtract(1, "month")
-            .startOf("month"),
-          moment()
-            .subtract(1, "month")
-            .endOf("month")
+          moment().subtract(1, "month").startOf("month"),
+          moment().subtract(1, "month").endOf("month")
         ],
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()]
@@ -59,15 +45,9 @@ $(function() {
       showDropdowns: true,
       autoUpdateInput: false
     },
-    function(startt, endt) {
-      from =
-        moment(startt)
-          .utc()
-          .valueOf() / 1000;
-      until =
-        moment(endt)
-          .utc()
-          .valueOf() / 1000;
+    function (startt, endt) {
+      from = moment(startt).utc().valueOf() / 1000;
+      until = moment(endt).utc().valueOf() / 1000;
     }
   );
 });
@@ -80,7 +60,7 @@ function padNumber(num) {
 
 function objectToArray(p) {
   var keys = Object.keys(p);
-  keys.sort(function(a, b) {
+  keys.sort(function (a, b) {
     return a - b;
   });
 
@@ -128,7 +108,7 @@ function updateQueriesOverTime() {
 
   $.getJSON(
     "api_db.php?getGraphData&from=" + from + "&until=" + until + "&interval=" + interval,
-    function(data) {
+    function (data) {
       // convert received objects to arrays
       data.domains_over_time = objectToArray(data.domains_over_time);
       data.ads_over_time = objectToArray(data.ads_over_time);
@@ -188,7 +168,7 @@ function updateQueriesOverTime() {
   );
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   timeLineChart = new Chart(ctx, {
     type: "bar",
@@ -224,7 +204,7 @@ $(document).ready(function() {
         enabled: true,
         mode: "x-axis",
         callbacks: {
-          title: function(tooltipItem) {
+          title: function (tooltipItem) {
             var label = tooltipItem[0].xLabel;
             var time = new Date(label);
             var from_date =
@@ -254,7 +234,7 @@ $(document).ready(function() {
               padNumber(time.getSeconds());
             return "Queries from " + from_date + " to " + until_date;
           },
-          label: function(tooltipItems, data) {
+          label: function (tooltipItems, data) {
             if (tooltipItems.datasetIndex === 1) {
               var percentage = 0.0;
               var total = parseInt(data.datasets[0].data[tooltipItems.index]);
@@ -313,13 +293,13 @@ $(document).ready(function() {
   });
 });
 
-$("#querytime").on("apply.daterangepicker", function(ev, picker) {
+$("#querytime").on("apply.daterangepicker", function (ev, picker) {
   $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
   $("#queries-over-time").show();
   updateQueriesOverTime();
 });
 
-$("#queryOverTimeChart").click(function(evt) {
+$("#queryOverTimeChart").click(function (evt) {
   var activePoints = timeLineChart.getElementAtEvent(evt);
   if (activePoints.length > 0) {
     //get the internal index in the chart

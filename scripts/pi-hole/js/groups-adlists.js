@@ -15,7 +15,7 @@ function get_groups() {
   $.post(
     "scripts/pi-hole/php/groups.php",
     { action: "get_groups", token: token },
-    function(data) {
+    function (data) {
       groups = data.data;
       initTable();
     },
@@ -23,7 +23,7 @@ function get_groups() {
   );
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   $("#btnAdd").on("click", addAdlist);
 
   get_groups();
@@ -52,10 +52,10 @@ function initTable() {
       { data: "groups", searchable: false },
       { data: null, width: "80px", orderable: false }
     ],
-    drawCallback: function() {
+    drawCallback: function () {
       $('button[id^="deleteAdlist_"]').on("click", deleteAdlist);
     },
-    rowCallback: function(row, data) {
+    rowCallback: function (row, data) {
       $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
@@ -124,7 +124,7 @@ function initTable() {
         includeSelectAllOption: true,
         buttonContainer: '<div id="container_' + data.id + '" class="btn-group"/>',
         maxHeight: 200,
-        onDropdownShown: function() {
+        onDropdownShown: function () {
           var el = $("#container_" + data.id);
           var top = el[0].getBoundingClientRect().top;
           var bottom = $(window).height() - top - el.height();
@@ -142,7 +142,7 @@ function initTable() {
           el.css("top", offset.top + "px");
           el.css("left", offset.left + "px");
         },
-        onDropdownHide: function() {
+        onDropdownHide: function () {
           var el = $("#container_" + data.id);
           var home = $("#selectHome_" + data.id);
           home.append(el);
@@ -168,11 +168,11 @@ function initTable() {
       [10, 25, 50, 100, "All"]
     ],
     stateSave: true,
-    stateSaveCallback: function(settings, data) {
+    stateSaveCallback: function (settings, data) {
       // Store current state in client's local storage area
       localStorage.setItem("groups-adlists-table", JSON.stringify(data));
     },
-    stateLoadCallback: function() {
+    stateLoadCallback: function () {
       // Receive previous state from client's local storage area
       var data = localStorage.getItem("groups-adlists-table");
       // Return if not available
@@ -192,7 +192,7 @@ function initTable() {
     }
   });
 
-  table.on("order.dt", function() {
+  table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
       $("#resetButton").show();
@@ -200,7 +200,7 @@ function initTable() {
       $("#resetButton").hide();
     }
   });
-  $("#resetButton").on("click", function() {
+  $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").hide();
   });
@@ -228,7 +228,7 @@ function addAdlist() {
       comment: comment,
       token: token
     },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "fas fa-plus", "Successfully added adlist", address);
@@ -239,7 +239,7 @@ function addAdlist() {
         utils.showAlert("error", "", "Error while adding new adlist: ", response.message);
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new adlist: ", jqXHR.responseText);
       console.log(exception);
@@ -297,7 +297,7 @@ function editAdlist() {
       groups: groups,
       token: token
     },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert(
@@ -315,7 +315,7 @@ function editAdlist() {
         );
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert(
         "error",
@@ -340,19 +340,16 @@ function deleteAdlist() {
     method: "post",
     dataType: "json",
     data: { action: "delete_adlist", id: id, token: token },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "far fa-trash-alt", "Successfully deleted adlist ", address);
-        table
-          .row(tr)
-          .remove()
-          .draw(false);
+        table.row(tr).remove().draw(false);
       } else {
         utils.showAlert("error", "", "Error while deleting adlist with ID " + id, response.message);
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting adlist with ID " + id, jqXHR.responseText);
       console.log(exception);

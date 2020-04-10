@@ -30,7 +30,7 @@ function handleAjaxError(xhr, textStatus) {
 
 function getTimestamp() {
   if (!Date.now) {
-    Date.now = function() {
+    Date.now = function () {
       return new Date().getTime();
     };
   }
@@ -55,9 +55,9 @@ function mixColors(ratio, rgb1, rgb2) {
   ];
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   tableApi = $("#network-entries").DataTable({
-    rowCallback: function(row, data) {
+    rowCallback: function (row, data) {
       var color,
         mark,
         lastQuery = parseInt(data.lastQuery);
@@ -115,7 +115,7 @@ $(document).ready(function() {
       }
 
       $("td:eq(0)", row).html(ips.join("<br>"));
-      $("td:eq(0)", row).hover(function() {
+      $("td:eq(0)", row).hover(function () {
         this.title = data.ip.join("\n");
       });
 
@@ -146,7 +146,7 @@ $(document).ready(function() {
       {
         data: "firstSeen",
         width: "8%",
-        render: function(data, type) {
+        render: function (data, type) {
           if (type === "display") {
             return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
           }
@@ -157,7 +157,7 @@ $(document).ready(function() {
       {
         data: "lastQuery",
         width: "8%",
-        render: function(data, type) {
+        render: function (data, type) {
           if (type === "display") {
             return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
           }
@@ -173,11 +173,11 @@ $(document).ready(function() {
       [10, 25, 50, 100, "All"]
     ],
     stateSave: true,
-    stateSaveCallback: function(settings, data) {
+    stateSaveCallback: function (settings, data) {
       // Store current state in client's local storage area
       localStorage.setItem("network_table", JSON.stringify(data));
     },
-    stateLoadCallback: function() {
+    stateLoadCallback: function () {
       // Receive previous state from client's local storage area
       var data = localStorage.getItem("network_table");
       // Return if not available

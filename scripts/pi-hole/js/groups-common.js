@@ -129,7 +129,7 @@ function validateIPv6CIDR(ip) {
   return ipv6validator.test(ip);
 }
 
-window.utils = (function() {
+window.utils = (function () {
   return {
     showAlert: showAlert,
     datetime: datetime,

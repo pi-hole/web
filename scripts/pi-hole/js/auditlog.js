@@ -18,24 +18,20 @@ function escapeHtml(text) {
     "'": "&#039;"
   };
 
-  return text.replace(/[&<>"']/g, function(m) {
+  return text.replace(/[&<>"']/g, function (m) {
     return map[m];
   });
 }
 
 function updateTopLists() {
-  $.getJSON("api.php?topItems=audit", function(data) {
+  $.getJSON("api.php?topItems=audit", function (data) {
     if ("FTLnotrunning" in data) {
       return;
     }
 
     // Clear tables before filling them with data
-    $("#domain-frequency td")
-      .parent()
-      .remove();
-    $("#ad-frequency td")
-      .parent()
-      .remove();
+    $("#domain-frequency td").parent().remove();
+    $("#ad-frequency td").parent().remove();
     var domaintable = $("#domain-frequency").find("tbody:last");
     var adtable = $("#ad-frequency").find("tbody:last");
     var url, domain;
@@ -105,10 +101,10 @@ function add(domain, list) {
     url: "scripts/pi-hole/php/add.php",
     method: "post",
     data: { domain: domain, list: list, token: token },
-    success: function() {
+    success: function () {
       updateTopLists();
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       console.log(exception);
     }
   });
@@ -130,14 +126,12 @@ function auditUrl(url) {
   add(url, "audit");
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   // Pull in data via AJAX
   updateTopLists();
 
-  $("#domain-frequency tbody").on("click", "button", function() {
-    var url = $(this)
-      .parents("tr")[0]
-      .textContent.split(" ")[0];
+  $("#domain-frequency tbody").on("click", "button", function () {
+    var url = $(this).parents("tr")[0].textContent.split(" ")[0];
     if ($(this).context.textContent === " Blacklist") {
       blacklistUrl(url);
     } else {
@@ -145,10 +139,8 @@ $(document).ready(function() {
     }
   });
 
-  $("#ad-frequency tbody").on("click", "button", function() {
-    var url = $(this)
-      .parents("tr")[0]
-      .textContent.split(" ")[0];
+  $("#ad-frequency tbody").on("click", "button", function () {
+    var url = $(this).parents("tr")[0].textContent.split(" ")[0];
     if ($(this).context.textContent === " Whitelist") {
       whitelistUrl(url);
     } else {
