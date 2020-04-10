@@ -283,6 +283,7 @@ $(document).ready(function() {
           }
         );
         $("td:eq(4)", row).click(function() {
+          console.log("Adding");
           var new_tab = window.open("groups-domains.php?domainid=" + data[9], "_blank");
           if (new_tab) {
             new_tab.focus();

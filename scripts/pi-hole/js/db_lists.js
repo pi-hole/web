@@ -89,7 +89,11 @@ function escapeHtml(text) {
 
 function updateTopClientsChart() {
   $("#client-frequency .overlay").show();
-  $.getJSON("api_db.php?topClients&from=" + from + "&until=" + until, function(data) {
+
+  var client = encodeURIComponent($("#client").val());
+  var domain = encodeURIComponent($("#domain").val());
+
+  $.getJSON("api_db.php?topClients&from=" + from + "&until=" + until + "&client=" + client + "&domain=" + domain, function(data) {
     // Clear tables before filling them with data
     $("#client-frequency td")
       .parent()
@@ -145,7 +149,11 @@ function updateTopClientsChart() {
 
 function updateTopDomainsChart() {
   $("#domain-frequency .overlay").show();
-  $.getJSON("api_db.php?topDomains&from=" + from + "&until=" + until, function(data) {
+
+  var client = encodeURIComponent($("#client").val());
+  var domain = encodeURIComponent($("#domain").val());
+
+  $.getJSON("api_db.php?topDomains&from=" + from + "&until=" + until + "&client=" + client + "&domain=" + domain, function(data) {
     // Clear tables before filling them with data
     $("#domain-frequency td")
       .parent()
@@ -194,7 +202,11 @@ function updateTopDomainsChart() {
 
 function updateTopAdsChart() {
   $("#ad-frequency .overlay").show();
-  $.getJSON("api_db.php?topAds&from=" + from + "&until=" + until, function(data) {
+
+  var client = encodeURIComponent($("#client").val());
+  var domain = encodeURIComponent($("#domain").val());
+
+  $.getJSON("api_db.php?topAds&from=" + from + "&until=" + until + "&client=" + client + "&domain=" + domain, function(data) {
     // Clear tables before filling them with data
     $("#ad-frequency td")
       .parent()
