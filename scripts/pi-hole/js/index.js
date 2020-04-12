@@ -32,16 +32,26 @@ function objectToArray(p) {
   return [idx, arr];
 }
 
-var lastTooltipTime = 0;
-
 var customTooltips = function(tooltip) {
-  // Tooltip Element
-  var tooltipEl = document.getElementById("chartjs-tooltip");
+  var tooltipEl = document.getElementById(this._chart.canvas.id + "-customTooltip");
   if (!tooltipEl) {
+    // Create Tooltip Element once per chart
     tooltipEl = document.createElement("div");
-    tooltipEl.id = "chartjs-tooltip";
-    document.body.appendChild(tooltipEl);
-    $(tooltipEl).html("<table></table>");
+    tooltipEl.id = this._chart.canvas.id + "-customTooltip";
+    tooltipEl.classList.add("chartjs-tooltip");
+    tooltipEl.innerHTML = "<div class='arrow'></div> <table></table>";
+    // avoid browser's font-zoom since we know that <body>'s
+    // font-size was set to 14px by bootstrap's css
+    var fontZoom = parseFloat($("body").css("font-size")) / 14;
+    // set styles and font
+    tooltipEl.style.padding = tooltip.yPadding + "px " + tooltip.xPadding + "px";
+    tooltipEl.style.borderRadius = tooltip.cornerRadius + "px";
+    tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
+    tooltipEl.style.fontSize = tooltip.bodyFontSize / fontZoom + "px";
+    tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
+    // append Tooltip next to canvas-containing box
+    tooltipEl.ancestor = this._chart.canvas.closest(".box[id]").parentNode;
+    tooltipEl.ancestor.appendChild(tooltipEl);
   }
 
   // Hide if no tooltip
@@ -50,22 +60,9 @@ var customTooltips = function(tooltip) {
     return;
   }
 
-  // Limit rendering to once every 50ms. This gives the DOM time to react,
-  // and avoids "lag" caused by not giving the DOM time to reapply CSS.
-  var now = Date.now();
-  if (now - lastTooltipTime < 50) {
-    return;
-  }
-
-  lastTooltipTime = now;
-
-  // Set caret Position
-  tooltipEl.classList.remove("above", "below", "no-transform");
-  if (tooltip.yAlign) {
-    tooltipEl.classList.add(tooltip.yAlign);
-  } else {
-    tooltipEl.classList.add("above");
-  }
+  // Set caret position
+  tooltipEl.classList.remove("left", "right", "center", "top", "bottom");
+  tooltipEl.classList.add(tooltip.xAlign, tooltip.yAlign);
 
   function getBody(bodyItem) {
     return bodyItem.lines;
@@ -75,22 +72,26 @@ var customTooltips = function(tooltip) {
   if (tooltip.body) {
     var titleLines = tooltip.title || [];
     var bodyLines = tooltip.body.map(getBody);
-    var innerHtml = "<table><thead>";
+    var innerHtml = "<thead>";
+
     titleLines.forEach(function(title) {
       innerHtml += "<tr><th>" + title + "</th></tr>";
     });
     innerHtml += "</thead><tbody>";
     var printed = 0;
+
+    var devicePixel = (1 / window.devicePixelRatio).toFixed(1);
     bodyLines.forEach(function(body, i) {
       var colors = tooltip.labelColors[i];
-      var style = "background:" + colors.backgroundColor;
-      style += "; border-color:" + colors.borderColor;
-      style += "; border-width: 2px";
-      var span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
+      var style = "background: " + colors.backgroundColor;
+      style += "; outline: 1px solid " + colors.backgroundColor;
+      style += "; border: " + devicePixel + "px solid #fff";
+      var span = "<span class='chartjs-tooltip-key' style='" + style + "'></span>";
+
       var num = body[0].split(": ");
-      // remove percent symbol from amount to allow numeric comparison
-      var number = num[1].replace(/%/i, "");
-      if (number > 0) {
+      // do not display entries with value of 0 (in bar chart),
+      // but pass through entries with "0.0% (in pie charts)
+      if (num[1] !== "0") {
         innerHtml += "<tr><td>" + span + body + "</td></tr>";
         printed++;
       }
@@ -99,30 +100,119 @@ var customTooltips = function(tooltip) {
       innerHtml += "<tr><td>No activity recorded</td></tr>";
     }
 
-    innerHtml += "</tbody></table>";
-    $(tooltipEl).html(innerHtml);
+    innerHtml += "</tbody>";
+
+    var tableRoot = tooltipEl.querySelector("table");
+    tableRoot.innerHTML = innerHtml;
   }
 
-  // Display, position, and set styles for font
-  var position = this._chart.canvas.getBoundingClientRect();
-  var width = tooltip.caretX;
-  // Prevent compression of the tooltip at the right edge of the screen
-  if ($(document).width() - tooltip.caretX < 400) {
-    width = $(document).width() - 400;
+  var canvasPos = this._chart.canvas.getBoundingClientRect();
+  var boxPos = tooltipEl.ancestor.getBoundingClientRect();
+  var offsetX = canvasPos.left - boxPos.left;
+  var offsetY = canvasPos.top - boxPos.top;
+  var tooltipWidth = tooltipEl.offsetWidth;
+  var tooltipHeight = tooltipEl.offsetHeight;
+  var caretX = tooltip.caretX;
+  var caretY = tooltip.caretY;
+  var caretPadding = tooltip.caretPadding;
+  var tooltipX, tooltipY, arrowX;
+  var arrowMinIndent = 2 * tooltip.cornerRadius;
+  var arrowSize = 5;
+
+  // Compute X position
+  if ($(document).width() > 2 * tooltip.width || tooltip.xAlign !== "center") {
+    // If the viewport is wide enough, let the tooltip follow the caret position
+    tooltipX = offsetX + caretX;
+    if (tooltip.yAlign === "top" || tooltip.yAlign === "bottom") {
+      switch (tooltip.xAlign) {
+        case "center":
+          // set a minimal X position to 5px to prevent
+          // the tooltip to stick out left of the viewport
+          var minX = 5;
+          if (2 * tooltipX < tooltipWidth + minX) {
+            arrowX = tooltipX - minX;
+            tooltipX = minX;
+          } else {
+            tooltipX -= tooltipWidth / 2;
+          }
+
+          break;
+        case "left":
+          tooltipX -= arrowMinIndent;
+          arrowX = arrowMinIndent;
+          break;
+        case "right":
+          tooltipX -= tooltipWidth - arrowMinIndent;
+          arrowX = tooltipWidth - arrowMinIndent;
+          break;
+        default:
+          break;
+      }
+    } else if (tooltip.yAlign === "center") {
+      switch (tooltip.xAlign) {
+        case "left":
+          tooltipX += caretPadding;
+          break;
+        case "right":
+          tooltipX -= tooltipWidth - caretPadding;
+          break;
+        case "center":
+          tooltipX -= tooltipWidth / 2;
+          break;
+        default:
+          break;
+      }
+    }
+  } else {
+    // compute the tooltip's center inside ancestor element
+    tooltipX = (tooltipEl.ancestor.offsetWidth - tooltipWidth) / 2;
+    // move the tooltip if the arrow would stick out to the left
+    if (offsetX + caretX - arrowMinIndent < tooltipX) {
+      tooltipX = offsetX + caretX - arrowMinIndent;
+    }
+
+    // move the tooltip if the arrow would stick out to the right
+    if (offsetX + caretX - tooltipWidth + arrowMinIndent > tooltipX) {
+      tooltipX = offsetX + caretX - tooltipWidth + arrowMinIndent;
+    }
+
+    arrowX = offsetX + caretX - tooltipX;
   }
 
-  // Prevent tooltip disapearing behind the sidebar
-  if (tooltip.caretX < 100) {
-    width = 100;
+  // Compute Y position
+  switch (tooltip.yAlign) {
+    case "top":
+      tooltipY = offsetY + caretY + arrowSize + caretPadding;
+      break;
+    case "center":
+      tooltipY = offsetY + caretY - tooltipHeight / 2;
+      if (tooltip.xAlign === "left") {
+        tooltipX += arrowSize;
+      } else if (tooltip.xAlign === "right") {
+        tooltipX -= arrowSize;
+      }
+
+      break;
+    case "bottom":
+      tooltipY = offsetY + caretY - tooltipHeight - arrowSize - caretPadding;
+      break;
+    default:
+      break;
+  }
+
+  // Position tooltip and display
+  tooltipEl.style.top = tooltipY.toFixed(1) + "px";
+  tooltipEl.style.left = tooltipX.toFixed(1) + "px";
+  if (arrowX === undefined) {
+    tooltipEl.querySelector(".arrow").style.left = "";
+  } else {
+    // Calculate percentage X value depending on the tooltip's
+    // width to avoid hanging arrow out on tooltip width changes
+    var arrowXpercent = ((100 / tooltipWidth) * arrowX).toFixed(1);
+    tooltipEl.querySelector(".arrow").style.left = arrowXpercent + "%";
   }
 
   tooltipEl.style.opacity = 1;
-  tooltipEl.style.left = position.left + width + "px";
-  tooltipEl.style.top = position.top + tooltip.caretY + window.pageYOffset + "px";
-  tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
-  tooltipEl.style.fontSize = tooltip.bodyFontSize + "px";
-  tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
-  tooltipEl.style.padding = tooltip.yPadding + "px " + tooltip.xPadding + "px";
 };
 
 // Functions to update data in page
@@ -862,6 +952,7 @@ $(document).ready(function() {
           enabled: false,
           mode: "x-axis",
           custom: customTooltips,
+          yAlign: "top",
           itemSort: function(a, b) {
             return b.yLabel - a.yLabel;
           },
@@ -906,7 +997,10 @@ $(document).ready(function() {
             }
           ]
         },
-        maintainAspectRatio: true
+        maintainAspectRatio: false,
+        hover: {
+          animationDuration: 0
+        }
       }
     });
 
@@ -1015,4 +1109,9 @@ $(document).ready(function() {
     // Pull in data via AJAX
     updateForwardDestinationsPie();
   }
+});
+
+//destroy all chartjs customTooltips on window resize
+window.addEventListener("resize", function() {
+  $(".chartjs-tooltip").remove();
 });
