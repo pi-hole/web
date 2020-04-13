@@ -116,7 +116,7 @@ function validateIPv6CIDR(ip) {
       ipv6elem +
       "))*::((?:" +
       ipv6elem +
-      "))((?::" +
+      "))*((?::" +
       ipv6elem +
       "))*|((?:" +
       ipv6elem +
