@@ -366,12 +366,12 @@ if ($_POST['action'] == 'get_groups') {
     // List all available groups
     try {
         $limit = "";
-        if (isset($_POST["showtype"]) && $_POST["showtype"] === "white"){
+        if (isset($_POST["showtype"]) && $_POST["showtype"] === "white") {
             $limit = " WHERE type = 0 OR type = 2";
-        } elseif (isset($_POST["showtype"]) && $_POST["showtype"] === "black"){
+        } elseif (isset($_POST["showtype"]) && $_POST["showtype"] === "black") {
             $limit = " WHERE type = 1 OR type = 3";
         }
-        $query = $db->query('SELECT * FROM domainlist'.$limit);
+        $query = $db->query('SELECT * FROM domainlist' . $limit);
         if (!$query) {
             throw new Exception('Error while querying gravity\'s domainlist table: ' . $db->lastErrorMsg());
         }
@@ -388,15 +388,16 @@ if ($_POST['action'] == 'get_groups') {
                 array_push($groups, $gres['group_id']);
             }
             $res['groups'] = $groups;
-            if (extension_loaded("intl") &&
+            if (
+                extension_loaded("intl") &&
                 ($res['type'] === ListType::whitelist ||
-                 $res['type'] === ListType::blacklist) ) {
+                 $res['type'] === ListType::blacklist)
+            ) {
                 $utf8_domain = idn_to_utf8($res['domain']);
                 // Convert domain name to international form
                 // if applicable and extension is available
-                if($res['domain'] !== $utf8_domain)
-                {
-                    $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
+                if ($res['domain'] !== $utf8_domain) {
+                    $res['domain'] = $utf8_domain . ' (' . $res['domain'] . ')';
                 }
             }
             array_push($data, $res);
@@ -430,18 +431,15 @@ if ($_POST['action'] == 'get_groups') {
             // Convert domain name to IDNA ASCII form for international domains
             $domain = idn_to_ascii($domain);
 
-            if(strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
-            {
+            if (strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W') {
                 // Apply wildcard-style formatting
-                $domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
+                $domain = "(\\.|^)" . str_replace(".", "\\.", $domain) . "$";
             }
 
-            if($type === ListType::whitelist || $type === ListType::blacklist)
-            {
+            if ($type === ListType::whitelist || $type === ListType::blacklist) {
                 // If adding to the exact lists, we convert the domain lower case and check whether it is valid
                 $domain = strtolower($domain);
-                if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)
-                {
+                if (filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false) {
                     throw new Exception('Domain ' . htmlentities(utf8_encode($domain)) . 'is not a valid domain.');
                 }
             }
@@ -616,7 +614,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         foreach ($addresses as $address) {
-            if(preg_match("/[^a-zA-Z0-9:\/?&%=~._-]/", $address) !== 0) {
+            if (preg_match("/[^a-zA-Z0-9:\/?&%=~._-]/", $address) !== 0) {
                 throw new Exception('Invalid adlist URL');
             }
 

@@ -14,11 +14,13 @@ ob_implicit_flush(true);
 header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 
-function echoEvent($datatext) {
-    if(!isset($_GET["IE"]))
-      echo "data: ".implode("\ndata: ", explode("\n", $datatext))."\n\n";
-    else
-      echo $datatext;
+function echoEvent($datatext)
+{
+    if (!isset($_GET["IE"])) {
+        echo "data: " . implode("\ndata: ", explode("\n", $datatext)) . "\n\n";
+    } else {
+        echo $datatext;
+    }
 }
 
 // Credit: http://stackoverflow.com/a/4694816/2087442
@@ -32,37 +34,27 @@ function is_valid_domain_name($domain_name)
 }
 
 // Test if domain is set
-if(isset($_GET["domain"]))
-{
+if (isset($_GET["domain"])) {
     // Is this a valid domain?
     $url = $_GET["domain"];
-    if(!is_valid_domain_name($url))
-    {
+    if (!is_valid_domain_name($url)) {
         echoEvent("Invalid domain!");
         die();
     }
-}
-else
-{
+} else {
     echoEvent("No domain provided");
     die();
 }
 
-if(isset($_GET["exact"]))
-{
+if (isset($_GET["exact"])) {
     $exact = "-exact";
-}
-elseif(isset($_GET["bp"]))
-{
+} elseif (isset($_GET["bp"])) {
     $exact = "-bp";
-}
-else
-{
+} else {
     $exact = "";
 }
 
-$proc = popen("sudo pihole -q -adlist ".$url." ".$exact, 'r');
+$proc = popen("sudo pihole -q -adlist " . $url . " " . $exact, 'r');
 while (!feof($proc)) {
     echoEvent(fread($proc, 4096));
 }
-?>

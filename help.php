@@ -7,14 +7,11 @@
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
 
-    if(strlen($pwhash) > 0)
-    {
-        $authenticationsystem = true;
-    }
-    else
-    {
-        $authenticationsystem = false;
-    }
+if (strlen($pwhash) > 0) {
+    $authenticationsystem = true;
+} else {
+    $authenticationsystem = false;
+}
 ?>
 
 <div class="row">
@@ -35,7 +32,7 @@
         <li>Details: Link to Jacob Salmela's blog with some more details, describing also the concept of the Pi-hole</li>
         <li>Updates: Link to list of releases</li>
         <li>Update notifications: If updates are available, a link will be shown here.</li>
-        <?php if($authenticationsystem){ ?>
+        <?php if ($authenticationsystem) { ?>
         <li>Session timer: Shows the time remaining until the current login session expires.</li>
         <?php } ?>
     </ul>
@@ -55,7 +52,7 @@
         <li>Top Clients: Ranking of how many DNS requests each client has made on the local network.</li>
     </ul>
     <p>The Top Domains and Top Advertisers lists may be hidden depending on the privacy Settings on the settings page</p>
-    <?php if($authenticationsystem){ ?>
+    <?php if ($authenticationsystem) { ?>
     <p>Note that the login session does <em>not</em> expire on the dashboard, as the summary is updated every 10 seconds which refreshes the session.</p>
     <?php } ?>
     </div>
@@ -120,11 +117,15 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-    <h2>Authentication system (currently <?php if($authenticationsystem) { ?>enabled<?php } else { ?>disabled<?php } ?>)</h2>
+    <h2>Authentication system (currently <?php if ($authenticationsystem) {
+        ?>enabled<?php
+                                         } else {
+                                                ?>disabled<?php
+                                         } ?>)</h2>
     <p>Using the command<pre>sudo pihole -a -p</pre> and entering a password to be set, one can enable the authentication system of this web interface. Thereafter, a login is required for most pages (the dashboard will show a limited amount of statistics). Note that the authentication system may be disabled again, by setting an empty password using the command shown above. The Help center will show more details concerning the authentication system only if it is enabled</p>
     </div>
 </div>
-<?php if($authenticationsystem) { ?>
+<?php if ($authenticationsystem) { ?>
 <div class="row">
     <div class="col-md-12">
     <h2>Login / Logout</h2>

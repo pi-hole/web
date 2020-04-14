@@ -9,11 +9,11 @@
     $type = "all";
     $pagetitle = "Domain";
     $adjective = "";
-    if (isset($_GET['type']) && ($_GET['type'] === "white" || $_GET['type'] === "black")) {
-        $type = $_GET['type'];
-        $pagetitle = ucfirst($type)."list";
-        $adjective = $type."listed";
-    }
+if (isset($_GET['type']) && ($_GET['type'] === "white" || $_GET['type'] === "black")) {
+    $type = $_GET['type'];
+    $pagetitle = ucfirst($type) . "list";
+    $adjective = $type . "listed";
+}
 ?>
 
 <!-- Title -->
@@ -86,11 +86,11 @@
                     </div>
                 </div>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
-                    <?php if ( $type !== "white" ) { ?>
+                    <?php if ($type !== "white") { ?>
                     <div class="btn-group" role="group" aria-label="Third group">
                         <button type="button" class="btn btn-primary" id="add2black">Add to Blacklist</button>
                     </div>
-                    <?php } if ( $type !== "black" ) { ?>
+                    <?php } if ($type !== "black") { ?>
                     <div class="btn-group" role="group" aria-label="Third group">
                         <button type="button" class="btn btn-primary" id="add2white">Add to Whitelist</button>
                     </div>

@@ -8,7 +8,7 @@
     require "scripts/pi-hole/php/header.php";
 
 // Generate CSRF token
-if(empty($_SESSION['token'])) {
+if (empty($_SESSION['token'])) {
     $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
 }
 $token = $_SESSION['token'];

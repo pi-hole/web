@@ -9,18 +9,15 @@
     require "scripts/pi-hole/php/header.php";
     require_once("scripts/pi-hole/php/gravity.php");
 
-    function getinterval()
-    {
-        global $piholeFTLConf;
-        if(isset($piholeFTLConf["MAXLOGAGE"]))
-        {
-             return round(floatval($piholeFTLConf["MAXLOGAGE"]), 1);
-        }
-        else
-        {
-             return "24";
-        }
+function getinterval()
+{
+    global $piholeFTLConf;
+    if (isset($piholeFTLConf["MAXLOGAGE"])) {
+         return round(floatval($piholeFTLConf["MAXLOGAGE"]), 1);
+    } else {
+         return "24";
     }
+}
 ?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
@@ -101,8 +98,7 @@
   // Even if we would include them here anyhow, there would be nothing to
   // show since the API will respect the privacy of the user if he defines
   // a password
-  if($auth){ ?>
-
+if ($auth) { ?>
 <div class="row">
     <div class="col-md-12">
     <div class="box" id="clients">
@@ -163,16 +159,13 @@
     </div>
 </div>
 
-<?php
-if($boxedlayout)
-{
-  $tablelayout = "col-md-6";
-}
-else
-{
-  $tablelayout = "col-md-6 col-lg-6";
-}
-?>
+    <?php
+    if ($boxedlayout) {
+        $tablelayout = "col-md-6";
+    } else {
+        $tablelayout = "col-md-6 col-lg-6";
+    }
+    ?>
 <div class="row">
     <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="domain-frequency">

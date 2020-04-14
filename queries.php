@@ -8,76 +8,55 @@
     require "scripts/pi-hole/php/header.php";
 
 // Generate CSRF token
-if(empty($_SESSION['token'])) {
+if (empty($_SESSION['token'])) {
     $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
 }
 $token = $_SESSION['token'];
 
 $showing = "";
 
-if(isset($setupVars["API_QUERY_LOG_SHOW"]))
-{
-	if($setupVars["API_QUERY_LOG_SHOW"] === "all")
-	{
-		$showing = "showing";
-	}
-	elseif($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly")
-	{
-		$showing = "showing permitted";
-	}
-	elseif($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly")
-	{
-		$showing = "showing blocked";
-	}
-	elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
-	{
-		$showing = "showing no queries (due to setting)";
-	}
-}
-else
-{
-	// If filter variable is not set, we
-	// automatically show all queries
-	$showing = "showing";
+if (isset($setupVars["API_QUERY_LOG_SHOW"])) {
+    if ($setupVars["API_QUERY_LOG_SHOW"] === "all") {
+        $showing = "showing";
+    } elseif ($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly") {
+        $showing = "showing permitted";
+    } elseif ($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly") {
+        $showing = "showing blocked";
+    } elseif ($setupVars["API_QUERY_LOG_SHOW"] === "nothing") {
+        $showing = "showing no queries (due to setting)";
+    }
+} else {
+    // If filter variable is not set, we
+    // automatically show all queries
+    $showing = "showing";
 }
 
 $showall = false;
-if(isset($_GET["all"]))
-{
-	$showing .= " all queries within the Pi-hole log";
-}
-else if(isset($_GET["client"]))
-{
-	$showing .= " queries for client ".htmlentities($_GET["client"]);
-}
-else if(isset($_GET["domain"]))
-{
-	$showing .= " queries for domain ".htmlentities($_GET["domain"]);
-}
-else if(isset($_GET["from"]) || isset($_GET["until"]))
-{
-	$showing .= " queries within specified time interval";
-}
-else
-{
-	$showing .= " up to 100 queries";
-	$showall = true;
+if (isset($_GET["all"])) {
+    $showing .= " all queries within the Pi-hole log";
+} elseif (isset($_GET["client"])) {
+    $showing .= " queries for client " . htmlentities($_GET["client"]);
+} elseif (isset($_GET["domain"])) {
+    $showing .= " queries for domain " . htmlentities($_GET["domain"]);
+} elseif (isset($_GET["from"]) || isset($_GET["until"])) {
+    $showing .= " queries within specified time interval";
+} else {
+    $showing .= " up to 100 queries";
+    $showall = true;
 }
 
-if(isset($setupVars["API_PRIVACY_MODE"]))
-{
-	if($setupVars["API_PRIVACY_MODE"])
-	{
-		// Overwrite string from above
-		$showing .= ", privacy mode enabled";
-	}
+if (isset($setupVars["API_PRIVACY_MODE"])) {
+    if ($setupVars["API_PRIVACY_MODE"]) {
+        // Overwrite string from above
+        $showing .= ", privacy mode enabled";
+    }
 }
 
-if(strlen($showing) > 0)
-{
-	$showing = "(".$showing.")";
-	if($showall)
-		$showing .= ", <a href=\"?all\">show all</a>";
+if (strlen($showing) > 0) {
+    $showing = "(" . $showing . ")";
+    if ($showall) {
+        $showing .= ", <a href=\"?all\">show all</a>";
+    }
 }
 ?>
 <!-- Send PHP info to JS -->
