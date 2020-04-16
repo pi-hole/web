@@ -50,7 +50,12 @@ else if(isset($_GET["client"]))
 }
 else if(isset($_GET["forwarddest"]))
 {
-	$showing .= " queries for upstream destination ".htmlentities($_GET["forwarddest"]);
+	if($_GET["forwarddest"] === "blocklist")
+		$showing .= " queries answered from blocklists";
+	elseif($_GET["forwarddest"] === "cache")
+		$showing .= " queries answered from cache";
+	else
+		$showing .= " queries for upstream destination ".htmlentities($_GET["forwarddest"]);
 }
 else if(isset($_GET["querytype"]))
 {
