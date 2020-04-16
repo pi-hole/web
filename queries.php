@@ -44,6 +44,19 @@ else if(isset($_GET["client"]))
 {
 	$showing .= " queries for client ".htmlentities($_GET["client"]);
 }
+else if(isset($_GET["forwarddest"]))
+{
+	$showing .= " queries for upstream destination ".htmlentities($_GET["forwarddest"]);
+}
+else if(isset($_GET["querytype"]))
+{
+	$qtypes = ["A (IPv4)", "AAAA (IPv6)", "ANY", "SRV", "SOA", "PTR", "TXT", "NAPTR"];
+	$qtype = intval($_GET["querytype"]);
+	if($qtype > 0 && $qtype <= count($qtypes))
+		$showing .= " ".$qtypes[$qtype-1]." queries";
+	else
+		$showing .= " type ".$qtype." queries";
+}
 else if(isset($_GET["domain"]))
 {
 	$showing .= " queries for domain ".htmlentities($_GET["domain"]);
