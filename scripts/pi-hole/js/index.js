@@ -587,7 +587,7 @@ function updateTopClientsChart() {
         url =
           '<a href="queries.php?client=' +
           clientip +
-          '" title="' +
+          '&type=blocked" title="' +
           clientip +
           '">' +
           clientname +

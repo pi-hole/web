@@ -148,6 +148,10 @@ $(function () {
     APIstring += "=100";
   }
 
+  if ("type" in GETDict) {
+    APIstring += "&type=" + GETDict.type;
+  }
+
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
       // DNSSEC status

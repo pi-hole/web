@@ -28,6 +28,10 @@ if(isset($setupVars["API_QUERY_LOG_SHOW"]))
 		$showing = "showing no queries (due to setting)";
 	}
 }
+else if(isset($_GET["type"]) && $_GET["type"] === "blocked")
+{
+	$showing = "showing blocked";
+}
 else
 {
 	// If filter variable is not set, we
