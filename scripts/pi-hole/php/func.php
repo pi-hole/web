@@ -52,4 +52,33 @@ if(!function_exists('hash_equals')) {
    }
 }
 
+/**
+ * More safely execute a command with pihole shell script.
+ *
+ * For example,
+ *
+ *   pihole_execute("-h");
+ *
+ * would execute command
+ *
+ *   sudo pihole -h
+ *
+ * and returns output of that command as a string.
+ *
+ * @param $argument_string String of arguments to run pihole with.
+ * @param $error_on_failure If true, a warning is raised if command execution fails. Defaults to true.
+ */
+function pihole_execute($argument_string, $error_on_failure = true) {
+    $escaped = escapeshellcmd($argument_string);
+    $output = null;
+    $return_status = -1;
+    $command = "sudo pihole " . $escaped;
+    exec($command, $output, $return_status);
+    if($return_status !== 0)
+    {
+        trigger_error("Executing {$command} failed.", E_USER_WARNING);
+    }
+    return $output;
+}
+
 ?>

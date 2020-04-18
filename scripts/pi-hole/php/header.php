@@ -341,12 +341,17 @@ if($auth) {
                 <div class="pull-left info">
                     <p>Status</p>
                         <?php
-                        $pistatus = exec('sudo pihole status web');
-                        if ($pistatus == "1") {
+                        $pistatus = pihole_execute('status web');
+                        if(isset($pistatus[0])) {
+                            $pistatus = $pistatus[0];
+                        } else {
+                            $pistatus = null;
+                        }
+                        if ($pistatus === "1") {
                             echo '<a id="status"><i class="fa fa-circle text-green-light"></i> Active</a>';
-                        } elseif ($pistatus == "0") {
+                        } elseif ($pistatus === "0") {
                             echo '<a id="status"><i class="fa fa-circle text-red"></i> Offline</a>';
-                        } elseif ($pistatus == "-1") {
+                        } elseif ($pistatus === "-1") {
                             echo '<a id="status"><i class="fa fa-circle text-red"></i> DNS service not running</a>';
                         } else {
                             echo '<a id="status"><i class="fa fa-circle text-orange"></i> Unknown</a>';
