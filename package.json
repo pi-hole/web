@@ -20,7 +20,7 @@
     "test": "npm run xo"
   },
   "devDependencies": {
-    "xo": "^0.29.0"
+    "xo": "^0.29.1"
   },
   "prettier": {
     "arrowParens": "avoid",
