@@ -425,9 +425,13 @@ $(document).ready(function() {
     initComplete: function() {
       var api = this.api();
       // Query type IPv4 / IPv6
-      api.$("td:eq(1)").click(function() {
+      api.$("td:eq(1)").click(function(event) {
         if (autofilter()) {
-          api.search("\\s"+this.textContent+"\\s", true, true).draw();
+          if(!event.ctrlKey) {
+            resetColumnsFilters();
+          }
+          console.log(event.ctrlKey);
+          api.column(1).search("^"+this.textContent+"$", true, true).draw();
           $("#resetButton").show();
         }
       });
@@ -447,10 +451,13 @@ $(document).ready(function() {
       );
       api.$("td:eq(1)").css("cursor", "pointer");
       // Domain
-      api.$("td:eq(2)").click(function() {
+      api.$("td:eq(2)").click(function(event) {
         if (autofilter()) {
+          if(!event.ctrlKey) {
+            resetColumnsFilters();
+          }
           var domain = this.textContent.split("\n")[0];
-          api.search("\\s"+domain+"\\s", true, true).draw();
+          api.column(2).search("^"+domain+"$", true, true).draw();
           $("#resetButton").show();
         }
       });
@@ -471,10 +478,12 @@ $(document).ready(function() {
       );
       api.$("td:eq(2)").css("cursor", "pointer");
       // Client
-      api.$("td:eq(3)").click(function() {
+      api.$("td:eq(3)").click(function(event) {
         if (autofilter()) {
-          api.search("\\s"+this.textContent+"\\s", true, true).draw();
-
+          if(!event.ctrlKey) {
+            resetColumnsFilters();
+          }
+          api.column(3).search("^"+this.textContent+"$", true, true).draw();
           $("#resetButton").show();
         }
       });
@@ -497,6 +506,7 @@ $(document).ready(function() {
   });
 
   // Initialize regex filter mode and clear search field (if set previously)
+  resetColumnsFilters();
   tableApi.search("", true, true).draw();
 
   $("#all-queries tbody").on("click", "button", function() {
@@ -509,7 +519,8 @@ $(document).ready(function() {
   });
 
   $("#resetButton").click(function() {
-    tableApi.search("", true, true).draw();
+    resetColumnsFilters();
+    tableApi.draw();
     $("#resetButton").hide();
   });
 
@@ -527,3 +538,10 @@ $(document).ready(function() {
     localStorage.setItem("query_log_filter_chkbox", $("#autofilter").prop("checked"));
   });
 });
+
+function resetColumnsFilters(add_filters) {
+  tableApi.columns()[0].forEach(index => {
+      tableApi.column(index).search("", true, true);
+    });
+    tableApi.draw();
+}
