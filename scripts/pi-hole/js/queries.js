@@ -427,10 +427,14 @@ $(document).ready(function() {
       // Query type IPv4 / IPv6
       api.$("td:eq(1)").click(function(event) {
         if (autofilter()) {
-          if(!event.ctrlKey) {
+          if (!event.ctrlKey) {
             resetColumnsFilters();
           }
-          api.column(1).search("^"+this.textContent+"$", true, true).draw();
+
+          api
+            .column(1)
+            .search("^" + this.textContent + "$", true, true)
+            .draw();
           showResetButton("query type", this.textContent);
         }
       });
@@ -452,11 +456,15 @@ $(document).ready(function() {
       // Domain
       api.$("td:eq(2)").click(function(event) {
         if (autofilter()) {
-          if(!event.ctrlKey) {
+          if (!event.ctrlKey) {
             resetColumnsFilters();
           }
+
           var domain = this.textContent.split("\n")[0];
-          api.column(2).search("^"+domain+"$", true, true).draw();
+          api
+            .column(2)
+            .search("^" + domain + "$", true, true)
+            .draw();
           showResetButton("domain", domain);
         }
       });
@@ -479,10 +487,14 @@ $(document).ready(function() {
       // Client
       api.$("td:eq(3)").click(function(event) {
         if (autofilter()) {
-          if(!event.ctrlKey) {
+          if (!event.ctrlKey) {
             resetColumnsFilters();
           }
-          api.column(3).search("^"+this.textContent+"$", true, true).draw();
+
+          api
+            .column(3)
+            .search("^" + this.textContent + "$", true, true)
+            .draw();
           showResetButton("client", this.textContent);
         }
       });
@@ -541,8 +553,8 @@ $(document).ready(function() {
 
 function resetColumnsFilters() {
   tableApi.columns()[0].forEach(function(index) {
-      tableApi.column(index).search("", true, true);
-    });
+    tableApi.column(index).search("", true, true);
+  });
   // Clear filter reset button
   hideResetButton();
   // Trigger table update
@@ -550,17 +562,18 @@ function resetColumnsFilters() {
 }
 
 function showResetButton(type, param) {
-  let button = $("#resetButton");
-  if(button.text().length === 0) {
-    button.text("Clear filtering on "+type+" \""+param+"\"");
+  var button = $("#resetButton");
+  if (button.text().length === 0) {
+    button.text("Clear filtering on " + type + ' "' + param + '"');
   } else {
-    button.text(button.text() + " and "+type+" \""+param+"\"");
+    button.text(button.text() + " and " + type + ' "' + param + '"');
   }
+
   button.show();
 }
 
 function hideResetButton() {
-  let button = $("#resetButton");
+  var button = $("#resetButton");
   button.text("");
   button.hide();
 }
