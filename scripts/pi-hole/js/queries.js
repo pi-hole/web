@@ -432,7 +432,7 @@ $(document).ready(function() {
           }
           console.log(event.ctrlKey);
           api.column(1).search("^"+this.textContent+"$", true, true).draw();
-          $("#resetButton").show();
+          showResetButton("query type", this.textContent);
         }
       });
       api.$("td:eq(1)").hover(
@@ -458,7 +458,7 @@ $(document).ready(function() {
           }
           var domain = this.textContent.split("\n")[0];
           api.column(2).search("^"+domain+"$", true, true).draw();
-          $("#resetButton").show();
+          showResetButton("domain", domain);
         }
       });
       api.$("td:eq(2)").hover(
@@ -484,7 +484,7 @@ $(document).ready(function() {
             resetColumnsFilters();
           }
           api.column(3).search("^"+this.textContent+"$", true, true).draw();
-          $("#resetButton").show();
+          showResetButton("client", this.textContent);
         }
       });
       api.$("td:eq(3)").hover(
@@ -521,6 +521,7 @@ $(document).ready(function() {
   $("#resetButton").click(function() {
     resetColumnsFilters();
     tableApi.draw();
+    $("#resetButton").text("");
     $("#resetButton").hide();
   });
 
@@ -543,5 +544,16 @@ function resetColumnsFilters(add_filters) {
   tableApi.columns()[0].forEach(index => {
       tableApi.column(index).search("", true, true);
     });
-    tableApi.draw();
+  $("#resetButton").text("");
+  tableApi.draw();
+}
+
+function showResetButton(type, param) {
+  let button = $("#resetButton");
+  if(button.text().length === 0) {
+    button.text("Clear filtering on "+type+" \""+param+"\"");
+  } else {
+    button.text(button.text() + "and "+type+" \""+param+"\"");
+  }
+  button.show();
 }
