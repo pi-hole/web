@@ -496,6 +496,8 @@ $(document).ready(function() {
     }
   });
 
+  // Initialize regex filter mode and clear search field (if set previously)
+  tableApi.search("", true, true).draw();
 
   $("#all-queries tbody").on("click", "button", function() {
     var data = tableApi.row($(this).parents("tr")).data();
