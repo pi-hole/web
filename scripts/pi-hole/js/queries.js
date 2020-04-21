@@ -427,7 +427,7 @@ $(document).ready(function() {
       // Query type IPv4 / IPv6
       api.$("td:eq(1)").click(function() {
         if (autofilter()) {
-          api.search(this.textContent).draw();
+          api.search("\\s"+this.textContent+"\\s", true, true).draw();
           $("#resetButton").show();
         }
       });
@@ -450,7 +450,7 @@ $(document).ready(function() {
       api.$("td:eq(2)").click(function() {
         if (autofilter()) {
           var domain = this.textContent.split("\n")[0];
-          api.search(domain).draw();
+          api.search("\\s"+domain+"\\s", true, true).draw();
           $("#resetButton").show();
         }
       });
@@ -473,7 +473,8 @@ $(document).ready(function() {
       // Client
       api.$("td:eq(3)").click(function() {
         if (autofilter()) {
-          api.search(this.textContent).draw();
+          api.search("\\s"+this.textContent+"\\s", true, true).draw();
+
           $("#resetButton").show();
         }
       });
@@ -495,6 +496,7 @@ $(document).ready(function() {
     }
   });
 
+
   $("#all-queries tbody").on("click", "button", function() {
     var data = tableApi.row($(this).parents("tr")).data();
     if (data[4] === "2" || data[4] === "3") {
@@ -505,7 +507,7 @@ $(document).ready(function() {
   });
 
   $("#resetButton").click(function() {
-    tableApi.search("").draw();
+    tableApi.search("", true, true).draw();
     $("#resetButton").hide();
   });
 
