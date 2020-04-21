@@ -519,9 +519,9 @@ $(document).ready(function() {
 
   $("#resetButton").click(function() {
     resetColumnsFilters();
+    hideResetButton();
+    // Trigger table update
     tableApi.draw();
-    $("#resetButton").text("");
-    $("#resetButton").hide();
   });
 
   var chkbox_data = localStorage.getItem("query_log_filter_chkbox");
@@ -543,7 +543,9 @@ function resetColumnsFilters() {
   tableApi.columns()[0].forEach(function(index) {
       tableApi.column(index).search("", true, true);
     });
-  $("#resetButton").text("");
+  // Clear filter reset button
+  hideResetButton();
+  // Trigger table update
   tableApi.draw();
 }
 
@@ -555,4 +557,10 @@ function showResetButton(type, param) {
     button.text(button.text() + " and "+type+" \""+param+"\"");
   }
   button.show();
+}
+
+function hideResetButton() {
+  let button = $("#resetButton");
+  button.text("");
+  button.hide();
 }
