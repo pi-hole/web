@@ -430,7 +430,6 @@ $(document).ready(function() {
           if(!event.ctrlKey) {
             resetColumnsFilters();
           }
-          console.log(event.ctrlKey);
           api.column(1).search("^"+this.textContent+"$", true, true).draw();
           showResetButton("query type", this.textContent);
         }
@@ -540,8 +539,8 @@ $(document).ready(function() {
   });
 });
 
-function resetColumnsFilters(add_filters) {
-  tableApi.columns()[0].forEach(index => {
+function resetColumnsFilters() {
+  tableApi.columns()[0].forEach(function(index) {
       tableApi.column(index).search("", true, true);
     });
   $("#resetButton").text("");
@@ -553,7 +552,7 @@ function showResetButton(type, param) {
   if(button.text().length === 0) {
     button.text("Clear filtering on "+type+" \""+param+"\"");
   } else {
-    button.text(button.text() + "and "+type+" \""+param+"\"");
+    button.text(button.text() + " and "+type+" \""+param+"\"");
   }
   button.show();
 }
