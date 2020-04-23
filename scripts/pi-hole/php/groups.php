@@ -427,8 +427,10 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         foreach ($domains as $domain) {
-            // Convert domain name to IDNA ASCII form for international domains
-            $domain = idn_to_ascii($domain);
+            $input = $domain;
+            // Convert domain name to IDNA ASCII form for international domains if intl package is available
+            if (extension_loaded("intl"))
+                $domain = idn_to_ascii($domain);
 
             if(strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
             {
@@ -442,7 +444,13 @@ if ($_POST['action'] == 'get_groups') {
                 $domain = strtolower($domain);
                 if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)
                 {
-                    throw new Exception('Domain ' . htmlentities(utf8_encode($domain)) . 'is not a valid domain.');
+                    // This is the case when idn_to_ascii() modified the string
+                if($input !== $domain && strlen($domain) > 0)
+                    throw new Exception('Domain ' . htmlentities($input) . ' (converted to "' . htmlentities(utf8_encode($domain)) . '") is not a valid domain.');
+                elseif($input !== $domain)
+                    throw new Exception('Domain ' . htmlentities($input) . ' is not a valid domain.');
+                else
+                    throw new Exception('Domain ' . htmlentities(utf8_encode($domain)) . ' is not a valid domain.');
                 }
             }
 
