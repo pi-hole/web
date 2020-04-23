@@ -54,7 +54,7 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_group') {
     // Add new group
     try {
-        $names = explode(' ', $_POST['name']);
+        $names = explode(' ', trim($_POST['name']));
         $stmt = $db->prepare('INSERT INTO "group" (name,description) VALUES (:name,:desc)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -234,7 +234,7 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_client') {
     // Add new client
     try {
-        $ips = explode(' ', $_POST['ip']);
+        $ips = explode(' ', trim($_POST['ip']));
         $stmt = $db->prepare('INSERT INTO client (ip,comment) VALUES (:ip,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -410,7 +410,7 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_domain') {
     // Add new domain
     try {
-        $domains = explode(' ', $_POST['domain']);
+        $domains = explode(' ', trim($_POST['domain']));
         $stmt = $db->prepare('INSERT INTO domainlist (domain,type,comment) VALUES (:domain,:type,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -604,7 +604,7 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_adlist') {
     // Add new adlist
     try {
-        $addresses = explode(' ', $_POST['address']);
+        $addresses = explode(' ', trim($_POST['address']));
 
         $stmt = $db->prepare('INSERT INTO adlist (address,comment) VALUES (:address,:comment)');
         if (!$stmt) {
