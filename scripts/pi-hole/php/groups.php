@@ -55,6 +55,8 @@ if ($_POST['action'] == 'get_groups') {
     // Add new group
     try {
         $names = explode(' ', trim($_POST['name']));
+        $total = count($names);
+        $added = 0;
         $stmt = $db->prepare('INSERT INTO "group" (name,description) VALUES (:name,:desc)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -66,12 +68,15 @@ if ($_POST['action'] == 'get_groups') {
 
         foreach ($names as $name) {
             if (!$stmt->bindValue(':name', $name, SQLITE3_TEXT)) {
-                throw new Exception('While binding name: ' . $db->lastErrorMsg());
+                throw new Exception('While binding name: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " groups");
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: ' . $db->lastErrorMsg());
+                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " groups");
             }
+            $added++;
         }
 
         $reload = true;
@@ -235,6 +240,8 @@ if ($_POST['action'] == 'get_groups') {
     // Add new client
     try {
         $ips = explode(' ', trim($_POST['ip']));
+        $total = count($ips);
+        $added = 0;
         $stmt = $db->prepare('INSERT INTO client (ip,comment) VALUES (:ip,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -251,12 +258,15 @@ if ($_POST['action'] == 'get_groups') {
                     $comment = null;
             }
             if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
-                throw new Exception('While binding comment: ' . $db->lastErrorMsg());
+                throw new Exception('While binding comment: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " clients");
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: ' . $db->lastErrorMsg());
+                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " clients");
             }
+            $added++;
         }
 
         $reload = true;
@@ -411,6 +421,8 @@ if ($_POST['action'] == 'get_groups') {
     // Add new domain
     try {
         $domains = explode(' ', trim($_POST['domain']));
+        $total = count($domains);
+        $added = 0;
         $stmt = $db->prepare('INSERT INTO domainlist (domain,type,comment) VALUES (:domain,:type,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -445,22 +457,26 @@ if ($_POST['action'] == 'get_groups') {
                 if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)
                 {
                     // This is the case when idn_to_ascii() modified the string
-                if($input !== $domain && strlen($domain) > 0)
-                    throw new Exception('Domain ' . htmlentities($input) . ' (converted to "' . htmlentities(utf8_encode($domain)) . '") is not a valid domain.');
-                elseif($input !== $domain)
-                    throw new Exception('Domain ' . htmlentities($input) . ' is not a valid domain.');
-                else
-                    throw new Exception('Domain ' . htmlentities(utf8_encode($domain)) . ' is not a valid domain.');
+                    if($input !== $domain && strlen($domain) > 0)
+                        $errormsg = 'Domain ' . htmlentities($input) . ' (converted to "' . htmlentities(utf8_encode($domain)) . '") is not a valid domain.';
+                    elseif($input !== $domain)
+                        $errormsg = 'Domain ' . htmlentities($input) . ' is not a valid domain.';
+                    else
+                        $errormsg = 'Domain ' . htmlentities(utf8_encode($domain)) . ' is not a valid domain.';
+                    throw new Exception($errormsg . '<br>'. 'Added ' . $added . " out of ". $total . " domains");
                 }
             }
 
             if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
-                throw new Exception('While binding domain: ' . $db->lastErrorMsg());
+                throw new Exception('While binding domain: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " domains");
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: ' . $db->lastErrorMsg());
+                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " domains");
             }
+            $added++;
         }
 
         $reload = true;
@@ -613,6 +629,8 @@ if ($_POST['action'] == 'get_groups') {
     // Add new adlist
     try {
         $addresses = explode(' ', trim($_POST['address']));
+        $total = count($addresses);
+        $added = 0;
 
         $stmt = $db->prepare('INSERT INTO adlist (address,comment) VALUES (:address,:comment)');
         if (!$stmt) {
@@ -625,16 +643,20 @@ if ($_POST['action'] == 'get_groups') {
 
         foreach ($addresses as $address) {
             if(preg_match("/[^a-zA-Z0-9:\/?&%=~._-]/", $address) !== 0) {
-                throw new Exception('Invalid adlist URL');
+                throw new Exception('<strong>Invalid adlist URL ' . htmlentities($address) . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " adlists");
             }
 
             if (!$stmt->bindValue(':address', $address, SQLITE3_TEXT)) {
-                throw new Exception('While binding address: ' . $db->lastErrorMsg());
+                throw new Exception('While binding address: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " adlists");
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: ' . $db->lastErrorMsg());
+                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " adlists");
             }
+            $added++;
         }
 
         $reload = true;
