@@ -8,6 +8,7 @@
 /* global moment:false */
 
 var tableApi;
+var colHighlightColor = "#ffefad";
 
 function add(domain, list) {
   var token = $("#token").text();
@@ -426,17 +427,7 @@ $(document).ready(function() {
       var api = this.api();
       // Query type IPv4 / IPv6
       api.$("td:eq(1)").click(function(event) {
-        if (autofilter()) {
-          if (!event.ctrlKey) {
-            resetColumnsFilters();
-          }
-
-          api
-            .column(1)
-            .search("^" + this.textContent + "$", true, true)
-            .draw();
-          showResetButton("query type", this.textContent);
-        }
+        addColumnFilter(event, 1, "query type", this.textContent);
       });
       api.$("td:eq(1)").hover(
         function() {
@@ -455,18 +446,7 @@ $(document).ready(function() {
       api.$("td:eq(1)").css("cursor", "pointer");
       // Domain
       api.$("td:eq(2)").click(function(event) {
-        if (autofilter()) {
-          if (!event.ctrlKey) {
-            resetColumnsFilters();
-          }
-
-          var domain = this.textContent.split("\n")[0];
-          api
-            .column(2)
-            .search("^" + domain + "$", true, true)
-            .draw();
-          showResetButton("domain", domain);
-        }
+        addColumnFilter(event, 2, "domain", this.textContent.split("\n")[0]);
       });
       api.$("td:eq(2)").hover(
         function() {
@@ -486,17 +466,7 @@ $(document).ready(function() {
       api.$("td:eq(2)").css("cursor", "pointer");
       // Client
       api.$("td:eq(3)").click(function(event) {
-        if (autofilter()) {
-          if (!event.ctrlKey) {
-            resetColumnsFilters();
-          }
-
-          api
-            .column(3)
-            .search("^" + this.textContent + "$", true, true)
-            .draw();
-          showResetButton("client", this.textContent);
-        }
+        addColumnFilter(event, 3, "client", this.textContent);
       });
       api.$("td:eq(3)").hover(
         function() {
@@ -516,9 +486,7 @@ $(document).ready(function() {
     }
   });
 
-  // Initialize regex filter mode and clear search field (if set previously)
   resetColumnsFilters();
-  tableApi.search("", true, true).draw();
 
   $("#all-queries tbody").on("click", "button", function() {
     var data = tableApi.row($(this).parents("tr")).data();
@@ -531,9 +499,6 @@ $(document).ready(function() {
 
   $("#resetButton").click(function() {
     resetColumnsFilters();
-    hideResetButton();
-    // Trigger table update
-    tableApi.draw();
   });
 
   var chkbox_data = localStorage.getItem("query_log_filter_chkbox");
@@ -551,10 +516,36 @@ $(document).ready(function() {
   });
 });
 
+function addColumnFilter(event, colID, colType, filterstring) {
+  if (!autofilter()) {
+    return;
+  }
+  // Do nothing in case of a requested multi-selection
+  if (!event.ctrlKey && !event.metaKey) {
+    resetColumnsFilters();
+  }
+
+  // Apply filtering
+  tableApi
+    .column(colID)
+    .search("^" + filterstring + "$", true, true)
+    .draw();
+
+  // Apply background color
+  tableApi
+    .$("td:eq(" + colID + ")")
+    .css("background-color", colHighlightColor);
+  showResetButton(colType, filterstring);
+}
+
 function resetColumnsFilters() {
   tableApi.columns()[0].forEach(function(index) {
     tableApi.column(index).search("", true, true);
+    tableApi
+      .$("td:eq(" + index + ")")
+      .css("background-color", "#fff");
   });
+
   // Clear filter reset button
   hideResetButton();
   // Trigger table update
