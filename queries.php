@@ -155,7 +155,7 @@ if(strlen($showing) > 0)
                     </tr>
                 </tfoot>
             </table>
-            <label><input type="checkbox" id="autofilter">&nbsp;Apply filtering on click on Query type, Domain, and Clients (use <kbd>Ctrl</kbd> + click for multi-selections)</label><br/>
+            <label><input type="checkbox" id="autofilter">&nbsp;Apply filtering on click on Query type, Domain, and Clients (use <kbd>Ctrl</kbd> + click to add elements to the current selection)</label><br/>
             <button type="button" id="resetButton" hidden="true"></button>
         </div>
         <!-- /.box-body -->
