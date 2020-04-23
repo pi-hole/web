@@ -425,58 +425,42 @@ $(document).ready(function() {
     ],
     initComplete: function() {
       var api = this.api();
+
       // Query type IPv4 / IPv6
       api.$("td:eq(1)").click(function(event) {
         addColumnFilter(event, 1, "query type", this.textContent);
       });
       api.$("td:eq(1)").hover(
         function() {
-          if (autofilter()) {
-            this.title = "Click to show only " + this.textContent + " queries";
-            this.style.color = "#72afd2";
-          } else {
-            this.title = "";
-            this.style.color = "";
-          }
+          addFilteringHint(this, "with query type " + this.textContent);
         },
         function() {
           this.style.color = "";
         }
       );
       api.$("td:eq(1)").css("cursor", "pointer");
+
       // Domain
       api.$("td:eq(2)").click(function(event) {
         addColumnFilter(event, 2, "domain", this.textContent.split("\n")[0]);
       });
       api.$("td:eq(2)").hover(
         function() {
-          if (autofilter()) {
-            var domain = this.textContent.split("\n")[0];
-            this.title = "Click to show only queries with domain " + domain;
-            this.style.color = "#72afd2";
-          } else {
-            this.title = "";
-            this.style.color = "";
-          }
+          addFilteringHint(this, "with domain " + this.textContent);
         },
         function() {
           this.style.color = "";
         }
       );
       api.$("td:eq(2)").css("cursor", "pointer");
+
       // Client
       api.$("td:eq(3)").click(function(event) {
         addColumnFilter(event, 3, "client", this.textContent);
       });
       api.$("td:eq(3)").hover(
         function() {
-          if (autofilter()) {
-            this.title = "Click to show only queries made by " + this.textContent;
-            this.style.color = "#72afd2";
-          } else {
-            this.title = "";
-            this.style.color = "";
-          }
+          addFilteringHint(this, "made by client " + this.textContent);
         },
         function() {
           this.style.color = "";
@@ -516,10 +500,23 @@ $(document).ready(function() {
   });
 });
 
+function addFilteringHint(obj, text)
+{
+  if (autofilter()) {
+    obj.title = "Click to show only queries " + text;
+    obj.style.color = "#72afd2";
+  } else {
+    obj.title = "";
+    obj.style.color = "";
+  }
+}
+
 function addColumnFilter(event, colID, colType, filterstring) {
+  // Do not filter anything when the checkbox is unticked
   if (!autofilter()) {
     return;
   }
+
   // Do nothing in case of a requested multi-selection
   if (!event.ctrlKey && !event.metaKey) {
     resetColumnsFilters();
@@ -532,8 +529,7 @@ function addColumnFilter(event, colID, colType, filterstring) {
     .draw();
 
   // Apply background color
-  tableApi
-    .$("td:eq(" + colID + ")")
+  tableApi.$("td:eq(" + colID + ")")
     .css("background-color", colHighlightColor);
   showResetButton(colType, filterstring);
 }
@@ -541,8 +537,7 @@ function addColumnFilter(event, colID, colType, filterstring) {
 function resetColumnsFilters() {
   tableApi.columns()[0].forEach(function(index) {
     tableApi.column(index).search("", true, true);
-    tableApi
-      .$("td:eq(" + index + ")")
+    tableApi.$("td:eq(" + index + ")")
       .css("background-color", "#fff");
   });
 
