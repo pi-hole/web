@@ -436,9 +436,9 @@ $(document).ready(function() {
         },
         function() {
           this.style.color = "";
+          this.style.cursor = "";
         }
       );
-      api.$("td:eq(1)").css("cursor", "pointer");
 
       // Domain
       api.$("td:eq(2)").click(function(event) {
@@ -450,9 +450,9 @@ $(document).ready(function() {
         },
         function() {
           this.style.color = "";
+          this.style.cursor = "";
         }
       );
-      api.$("td:eq(2)").css("cursor", "pointer");
 
       // Client
       api.$("td:eq(3)").click(function(event) {
@@ -464,9 +464,9 @@ $(document).ready(function() {
         },
         function() {
           this.style.color = "";
+          this.style.cursor = "";
         }
       );
-      api.$("td:eq(3)").css("cursor", "pointer");
     }
   });
 
@@ -505,9 +505,11 @@ function addFilteringHint(obj, text)
   if (autofilter()) {
     obj.title = "Click to show only queries " + text;
     obj.style.color = "#72afd2";
+    obj.style.cursor = "pointer";
   } else {
     obj.title = "";
     obj.style.color = "";
+    obj.style.cursor = "";
   }
 }
 
