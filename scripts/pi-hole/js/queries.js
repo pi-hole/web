@@ -9,6 +9,7 @@
 
 var tableApi;
 var colHighlightColor = "#ffefad";
+var tableFilters = [];
 
 function add(domain, list) {
   var token = $("#token").text();
@@ -397,6 +398,17 @@ $(document).ready(function() {
     ],
     stateSave: true,
     stateSaveCallback: function(settings, data) {
+      // Clear possible filtering settings
+      data.columns.forEach(function(value, index) {
+        data.columns[index].search.search = "";
+      });
+
+      // Always start on the first page to show most recent queries
+      data.start = 0;
+
+      // Always start with empty search field
+      data.search.search = "";
+
       // Store current state in client's local storage area
       localStorage.setItem("query_log_table", JSON.stringify(data));
     },
@@ -409,10 +421,6 @@ $(document).ready(function() {
       }
 
       data = JSON.parse(data);
-      // Always start on the first page to show most recent queries
-      data.start = 0;
-      // Always start with empty search field
-      data.search.search = "";
       // Apply loaded state to table
       return data;
     },
@@ -428,7 +436,7 @@ $(document).ready(function() {
 
       // Query type IPv4 / IPv6
       api.$("td:eq(1)").click(function(event) {
-        addColumnFilter(event, 1, "query type", this.textContent);
+        addColumnFilter(event, 1, this.textContent);
       });
       api.$("td:eq(1)").hover(
         function() {
@@ -442,7 +450,7 @@ $(document).ready(function() {
 
       // Domain
       api.$("td:eq(2)").click(function(event) {
-        addColumnFilter(event, 2, "domain", this.textContent.split("\n")[0]);
+        addColumnFilter(event, 2, this.textContent.split("\n")[0]);
       });
       api.$("td:eq(2)").hover(
         function() {
@@ -456,7 +464,7 @@ $(document).ready(function() {
 
       // Client
       api.$("td:eq(3)").click(function(event) {
-        addColumnFilter(event, 3, "client", this.textContent);
+        addColumnFilter(event, 3, this.textContent);
       });
       api.$("td:eq(3)").hover(
         function() {
@@ -513,7 +521,7 @@ function addFilteringHint(obj, text)
   }
 }
 
-function addColumnFilter(event, colID, colType, filterstring) {
+function addColumnFilter(event, colID, filterstring) {
   // Do not filter anything when the checkbox is unticked
   if (!autofilter()) {
     return;
@@ -524,6 +532,8 @@ function addColumnFilter(event, colID, colType, filterstring) {
     resetColumnsFilters();
   }
 
+  tableFilters[colID] = filterstring;
+
   // Apply filtering
   tableApi
     .column(colID)
@@ -533,11 +543,12 @@ function addColumnFilter(event, colID, colType, filterstring) {
   // Apply background color
   tableApi.$("td:eq(" + colID + ")")
     .css("background-color", colHighlightColor);
-  showResetButton(colType, filterstring);
+  showResetButton();
 }
 
 function resetColumnsFilters() {
-  tableApi.columns()[0].forEach(function(index) {
+  tableFilters.forEach(function(value, index) {
+    tableFilters[index] = "";
     tableApi.column(index).search("", true, true);
     tableApi.$("td:eq(" + index + ")")
       .css("background-color", "#fff");
@@ -549,14 +560,22 @@ function resetColumnsFilters() {
   tableApi.draw();
 }
 
-function showResetButton(type, param) {
-  var button = $("#resetButton");
-  if (button.text().length === 0) {
-    button.text("Clear filtering on " + type + ' "' + param + '"');
-  } else {
-    button.text(button.text() + " and " + type + ' "' + param + '"');
-  }
+var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
 
+function showResetButton() {
+  var button = $("#resetButton");
+  var text = "";
+  tableFilters.forEach(function(value, index) {
+    if (value.length > 0) {
+      if (text.length === 0) {
+        text = 'Clear filtering on ' + colTypes[index] + ' "' + value + '"';
+      } else {
+        text += ' and ' + colTypes[index] + ' "' + value + '"';
+      }
+    }
+  });
+
+  button.text(text);
   button.show();
 }
 
