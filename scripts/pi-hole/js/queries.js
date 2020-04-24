@@ -508,8 +508,7 @@ $(document).ready(function() {
   });
 });
 
-function addFilteringHint(obj, text)
-{
+function addFilteringHint(obj, text) {
   if (autofilter()) {
     obj.title = "Click to show only queries " + text;
     obj.style.color = "#72afd2";
@@ -527,35 +526,57 @@ function addColumnFilter(event, colID, filterstring) {
     return;
   }
 
-  // Do nothing in case of a requested multi-selection
-  if (!event.ctrlKey && !event.metaKey) {
+  // Reset other columns when NOT requesting multi-selection functions
+  if (!event.ctrlKey && !event.metaKey && !event.shiftKey) {
     resetColumnsFilters();
+  }
+
+  if (event.shiftKey) {
+    filterstring = "";
   }
 
   tableFilters[colID] = filterstring;
 
-  // Apply filtering
-  tableApi
-    .column(colID)
-    .search("^" + filterstring + "$", true, true)
-    .draw();
-
-  // Apply background color
-  tableApi.$("td:eq(" + colID + ")")
-    .css("background-color", colHighlightColor);
-  showResetButton();
+  applyColumnFiltering();
 }
 
 function resetColumnsFilters() {
   tableFilters.forEach(function(value, index) {
     tableFilters[index] = "";
-    tableApi.column(index).search("", true, true);
-    tableApi.$("td:eq(" + index + ")")
-      .css("background-color", "#fff");
   });
 
   // Clear filter reset button
-  hideResetButton();
+  applyColumnFiltering();
+}
+
+function applyColumnFiltering() {
+  var showReset = false;
+  tableFilters.forEach(function(value, index) {
+    // Prepare regex filter string
+    var regex = "";
+    if (value.length > 0) {
+      regex = "^" + value + "$";
+
+      // Add background color
+      tableApi.$("td:eq(" + index + ")").css("background-color", colHighlightColor);
+
+      // Remember to show reset button
+      showReset = true;
+    } else {
+      // Clear background color
+      tableApi.$("td:eq(" + index + ")").css("background-color", "#fff");
+    }
+
+    // Apply filtering on this column (regex may be empty -> no filtering)
+    tableApi.column(index).search(regex, true, true);
+  });
+
+  if (showReset) {
+    showResetButton();
+  } else {
+    hideResetButton();
+  }
+
   // Trigger table update
   tableApi.draw();
 }
@@ -566,12 +587,10 @@ function showResetButton() {
   var button = $("#resetButton");
   var text = "";
   tableFilters.forEach(function(value, index) {
-    if (value.length > 0) {
-      if (text.length === 0) {
-        text = 'Clear filtering on ' + colTypes[index] + ' "' + value + '"';
-      } else {
-        text += ' and ' + colTypes[index] + ' "' + value + '"';
-      }
+    if (value.length > 0 && text.length === 0) {
+      text = "Clear filtering on " + colTypes[index] + ' "' + value + '"';
+    } else if (value.length > 0) {
+      text += " and " + colTypes[index] + ' "' + value + '"';
     }
   });
 
