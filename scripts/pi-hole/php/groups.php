@@ -391,11 +391,31 @@ if ($_POST['action'] == 'get_groups') {
             if (extension_loaded("intl") &&
                 ($res['type'] === ListType::whitelist ||
                  $res['type'] === ListType::blacklist) ) {
-                $utf8_domain = idn_to_utf8($res['domain']);
+
+                // Try to convert possible IDNA domain to Unicode, we try the UTS #46 standard first
+                // as this is the new default, see https://sourceforge.net/p/icu/mailman/message/32980778/
+                // We know that this fails for some Google domains violating the standard
+                // see https://github.com/pi-hole/AdminLTE/issues/1223
+                $utf8_domain = false;
+                if (defined("INTL_IDNA_VARIANT_UTS46")) {
+                    // We have to use the option IDNA_NONTRANSITIONAL_TO_ASCII here
+                    // to ensure sparkasse-gießen.de is not converted into
+                    // sparkass-giessen.de but into xn--sparkasse-gieen-2ib.de
+                    // as mandated by the UTS #46 standard
+                    $utf8_domain = idn_to_utf8($res['domain'], IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
+                }
+
+                // If conversion failed, try with the (deprecated!) IDNA 2003 variant
+                // We have to check for its existance as support of this variant is
+                // scheduled for removal with PHP 8.0
+                // see https://wiki.php.net/rfc/deprecate-and-remove-intl_idna_variant_2003
+                if ($utf8_domain === false && defined("INTL_IDNA_VARIANT_2003")) {
+                    $utf8_domain = idn_to_utf8($res['domain'], IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
+                }
+
                 // Convert domain name to international form
                 // if applicable and extension is available
-                if($res['domain'] !== $utf8_domain)
-                {
+                if ($utf8_domain !== false && $res['domain'] !== $utf8_domain) {
                     $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
                 }
             }
@@ -428,7 +448,20 @@ if ($_POST['action'] == 'get_groups') {
 
         foreach ($domains as $domain) {
             // Convert domain name to IDNA ASCII form for international domains
-            $domain = idn_to_ascii($domain);
+            if (extension_loaded("intl")) {
+                // Be prepared that this may fail and see our comments above
+                // (search for "idn_to_utf8)
+                $idn_domain = false;
+                if (defined("INTL_IDNA_VARIANT_UTS46")) {
+                    $idn_domain = idn_to_ascii($domain, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
+                }
+                if ($idn_domain === false && defined("INTL_IDNA_VARIANT_2003")) {
+                    $idn_domain = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
+                }
+                if($idn_domain !== false) {
+                    $domain = $idn_domain;
+                }
+            }
 
             if(strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
             {
