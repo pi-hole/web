@@ -146,7 +146,7 @@ $(document).ready(function() {
     rowCallback: function(row, data) {
       // DNSSEC status
       var dnssec_status;
-      switch (data[5]) {
+      switch (data[6]) {
         case "1":
           dnssec_status = '<br><span class="text-green">SECURE</span>';
           break;
@@ -306,8 +306,8 @@ $(document).ready(function() {
       // Check for existence of sixth column and display only if not Pi-holed
       var replytext,
         replyid = -1;
-      if (data.length > 6 && !blocked) {
-        switch (data[6]) {
+      if (!blocked) {
+        switch (data[5]) {
           case "0":
             replytext = "N/A";
             break;
@@ -345,7 +345,7 @@ $(document).ready(function() {
             replytext = "? (" + parseInt(data[6]) + ")";
         }
 
-        replyid = parseInt(data[6]);
+        replyid = parseInt(data[5]);
       } else {
         replytext = "-";
       }
@@ -372,6 +372,10 @@ $(document).ready(function() {
         var dataIndex = 0;
         return data.data.map(function(x) {
           x[0] = x[0] * 1e6 + dataIndex++;
+          var dnssec = x[5];
+          var reply = x[6];
+          x[5] = reply;
+          x[6] = dnssec;
           return x;
         });
       }
@@ -498,13 +502,12 @@ $(document).ready(function() {
           this.style.cursor = "";
         }
       );
-      /*
+
       // Reply type
       api.$("td:eq(5)").click(function(event) {
         var id = this.children.id.value;
         var text = this.textContent.split(" ")[0];
-        // Column 5 is DNSSEC status data
-        addColumnFilter(event, 6, id + "#" + text);
+        addColumnFilter(event, 5, id + "#" + text);
       });
       api.$("td:eq(5)").hover(
         function() {
@@ -514,7 +517,7 @@ $(document).ready(function() {
           this.style.color = "";
           this.style.cursor = "";
         }
-      );*/
+      );
     }
   });
 
