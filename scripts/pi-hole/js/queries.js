@@ -109,10 +109,6 @@ function handleAjaxError(xhr, textStatus) {
   tableApi.draw();
 }
 
-function autofilter() {
-  return $("#autofilter").prop("checked");
-}
-
 $(document).ready(function() {
   // Do we want to filter queries?
   var GETDict = {};
@@ -305,49 +301,43 @@ $(document).ready(function() {
 
       // Check for existence of sixth column and display only if not Pi-holed
       var replytext,
-        replyid = -1;
-      if (!blocked) {
-        switch (data[5]) {
-          case "0":
-            replytext = "N/A";
-            break;
-          case "1":
-            replytext = "NODATA";
-            break;
-          case "2":
-            replytext = "NXDOMAIN";
-            break;
-          case "3":
-            replytext = "CNAME";
-            break;
-          case "4":
-            replytext = "IP";
-            break;
-          case "5":
-            replytext = "DOMAIN";
-            break;
-          case "6":
-            replytext = "RRNAME";
-            break;
-          case "7":
-            replytext = "SERVFAIL";
-            break;
-          case "8":
-            replytext = "REFUSED";
-            break;
-          case "9":
-            replytext = "NOTIMP";
-            break;
-          case "10":
-            replytext = "upstream error";
-            break;
-          default:
-            replytext = "? (" + parseInt(data[6]) + ")";
-        }
-
-        replyid = parseInt(data[5]);
-      } else {
-        replytext = "-";
+        replyid = parseInt(data[5]);;
+      switch (replyid) {
+        case 0:
+          replytext = "N/A";
+          break;
+        case 1:
+          replytext = "NODATA";
+          break;
+        case 2:
+          replytext = "NXDOMAIN";
+          break;
+        case 3:
+          replytext = "CNAME";
+          break;
+        case 4:
+          replytext = "IP";
+          break;
+        case 5:
+          replytext = "DOMAIN";
+          break;
+        case 6:
+          replytext = "RRNAME";
+          break;
+        case 7:
+          replytext = "SERVFAIL";
+          break;
+        case 8:
+          replytext = "REFUSED";
+          break;
+        case 9:
+          replytext = "NOTIMP";
+          break;
+        case 10:
+          replytext = "upstream error";
+          break;
+        default:
+          replytext = "? (" +data[5] + ")";
       }
 
       replytext += '<input type="hidden" name="id" value="' + replyid + '">';
@@ -449,43 +439,16 @@ $(document).ready(function() {
       api.$("td:eq(1)").click(function(event) {
         addColumnFilter(event, 1, this.textContent);
       });
-      api.$("td:eq(1)").hover(
-        function() {
-          addFilteringHint(this, "with query type " + this.textContent);
-        },
-        function() {
-          this.style.color = "";
-          this.style.cursor = "";
-        }
-      );
 
       // Domain
       api.$("td:eq(2)").click(function(event) {
         addColumnFilter(event, 2, this.textContent.split("\n")[0]);
       });
-      api.$("td:eq(2)").hover(
-        function() {
-          addFilteringHint(this, "with domain " + this.textContent);
-        },
-        function() {
-          this.style.color = "";
-          this.style.cursor = "";
-        }
-      );
 
       // Client
       api.$("td:eq(3)").click(function(event) {
         addColumnFilter(event, 3, this.textContent);
       });
-      api.$("td:eq(3)").hover(
-        function() {
-          addFilteringHint(this, "made by client " + this.textContent);
-        },
-        function() {
-          this.style.color = "";
-          this.style.cursor = "";
-        }
-      );
 
       // Status
       api.$("td:eq(4)").click(function(event) {
@@ -493,15 +456,6 @@ $(document).ready(function() {
         var text = this.textContent;
         addColumnFilter(event, 4, id + "#" + text);
       });
-      api.$("td:eq(4)").hover(
-        function() {
-          addFilteringHint(this, "with status " + this.textContent);
-        },
-        function() {
-          this.style.color = "";
-          this.style.cursor = "";
-        }
-      );
 
       // Reply type
       api.$("td:eq(5)").click(function(event) {
@@ -509,15 +463,6 @@ $(document).ready(function() {
         var text = this.textContent.split(" ")[0];
         addColumnFilter(event, 5, id + "#" + text);
       });
-      api.$("td:eq(5)").hover(
-        function() {
-          addFilteringHint(this, "with reply type " + this.textContent);
-        },
-        function() {
-          this.style.color = "";
-          this.style.cursor = "";
-        }
-      );
     }
   });
 
@@ -535,43 +480,12 @@ $(document).ready(function() {
   $("#resetButton").click(function() {
     resetColumnsFilters();
   });
-
-  var chkbox_data = localStorage.getItem("query_log_filter_chkbox");
-  if (chkbox_data !== null) {
-    // Restore checkbox state
-    $("#autofilter").prop("checked", chkbox_data === "true");
-  } else {
-    // Initialize checkbox
-    $("#autofilter").prop("checked", true);
-    localStorage.setItem("query_log_filter_chkbox", true);
-  }
-
-  $("#autofilter").click(function() {
-    localStorage.setItem("query_log_filter_chkbox", $("#autofilter").prop("checked"));
-  });
 });
 
-function addFilteringHint(obj, text) {
-  if (autofilter()) {
-    obj.title = "Click to show only queries " + text;
-    obj.style.color = "#72afd2";
-    obj.style.cursor = "pointer";
-  } else {
-    obj.title = "";
-    obj.style.color = "";
-    obj.style.cursor = "";
-  }
-}
-
 function addColumnFilter(event, colID, filterstring) {
-  // Do not filter anything when the checkbox is unticked
-  if (!autofilter()) {
-    return;
-  }
-
-  // Reset other columns when NOT requesting multi-selection functions
+  // Don't do anything when NOT explicitly requesting multi-selection functions
   if (!event.ctrlKey && !event.metaKey && !event.shiftKey) {
-    resetColumnsFilters();
+    return;
   }
 
   if (event.shiftKey) {
@@ -632,7 +546,7 @@ function applyColumnFiltering() {
   tableApi.draw();
 }
 
-var colTypes = ["time", "query type", "domain", "client", "status", "DNSSEC reply", "reply type"];
+var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
 
 function showResetButton() {
   var button = $("#resetButton");
