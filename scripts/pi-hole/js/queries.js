@@ -270,6 +270,8 @@ $(document).ready(function() {
           buttontext = "";
       }
 
+      fieldtext += '<input type="hidden" name="id" value="' + parseInt(data[4]) + '">';
+
       $(row).addClass(colorClass);
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(6)", row).html(buttontext);
@@ -302,7 +304,8 @@ $(document).ready(function() {
       }
 
       // Check for existence of sixth column and display only if not Pi-holed
-      var replytext;
+      var replytext,
+        replyid = -1;
       if (data.length > 6 && !blocked) {
         switch (data[6]) {
           case "0":
@@ -341,9 +344,13 @@ $(document).ready(function() {
           default:
             replytext = "? (" + parseInt(data[6]) + ")";
         }
+
+        replyid = parseInt(data[6]);
       } else {
         replytext = "-";
       }
+
+      replytext += '<input type="hidden" name="id" value="' + replyid + '">';
 
       $("td:eq(5)", row).addClass("text-black");
       $("td:eq(5)", row).html(replytext);
@@ -475,6 +482,39 @@ $(document).ready(function() {
           this.style.cursor = "";
         }
       );
+
+      // Status
+      api.$("td:eq(4)").click(function(event) {
+        var id = this.children.id.value;
+        var text = this.textContent;
+        addColumnFilter(event, 4, id + "#" + text);
+      });
+      api.$("td:eq(4)").hover(
+        function() {
+          addFilteringHint(this, "with status " + this.textContent);
+        },
+        function() {
+          this.style.color = "";
+          this.style.cursor = "";
+        }
+      );
+      /*
+      // Reply type
+      api.$("td:eq(5)").click(function(event) {
+        var id = this.children.id.value;
+        var text = this.textContent.split(" ")[0];
+        // Column 5 is DNSSEC status data
+        addColumnFilter(event, 6, id + "#" + text);
+      });
+      api.$("td:eq(5)").hover(
+        function() {
+          addFilteringHint(this, "with reply type " + this.textContent);
+        },
+        function() {
+          this.style.color = "";
+          this.style.cursor = "";
+        }
+      );*/
     }
   });
 
@@ -554,7 +594,15 @@ function applyColumnFiltering() {
   tableFilters.forEach(function(value, index) {
     // Prepare regex filter string
     var regex = "";
+
+    // Split filter string if we received a combined ID#Name column
+    var valArr = value.split("#");
+    if (valArr.length > 0) {
+      value = valArr[0];
+    }
+
     if (value.length > 0) {
+      // Exact matching
       regex = "^" + value + "$";
 
       // Add background color
@@ -581,12 +629,19 @@ function applyColumnFiltering() {
   tableApi.draw();
 }
 
-var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
+var colTypes = ["time", "query type", "domain", "client", "status", "DNSSEC reply", "reply type"];
 
 function showResetButton() {
   var button = $("#resetButton");
   var text = "";
   tableFilters.forEach(function(value, index) {
+    // Split filter string if we received a combined ID#Name column
+    var valArr = value.split("#");
+    if (valArr.length > 1) {
+      value = valArr[1];
+    }
+
+    // Create or add to button text
     if (value.length > 0 && text.length === 0) {
       text = "Clear filtering on " + colTypes[index] + ' "' + value + '"';
     } else if (value.length > 0) {
