@@ -649,7 +649,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         foreach ($addresses as $address) {
-            if(preg_match("/[^a-zA-Z0-9:\/?&%=~._-]/", $address) !== 0) {
+            if(preg_match("/[^a-zA-Z0-9:\/?&%=~._()-]/", $address) !== 0) {
                 throw new Exception('Invalid adlist URL');
             }
 
