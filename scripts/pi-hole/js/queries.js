@@ -11,6 +11,21 @@ var tableApi;
 var colHighlightColor = "#ffefad";
 var tableFilters = [];
 
+var replyTypes = [
+  "N/A",
+  "NODATA",
+  "NXDOMAIN",
+  "CNAME",
+  "IP",
+  "DOMAIN",
+  "RRNAME",
+  "SERVFAIL",
+  "REFUSED",
+  "NOTIMP",
+  "upstream error"
+];
+var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
+
 function add(domain, list) {
   var token = $("#token").text();
   var alertModal = $("#alertModal");
@@ -164,8 +179,7 @@ $(document).ready(function() {
       }
 
       // Query status
-      var blocked,
-        fieldtext,
+      var fieldtext,
         buttontext,
         colorClass,
         isCNAME = false,
@@ -173,28 +187,24 @@ $(document).ready(function() {
 
       switch (data[4]) {
         case "1":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked (gravity)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case "2":
-          blocked = false;
           colorClass = "text-green";
           fieldtext = "OK <br class='hidden-lg'>(forwarded)" + dnssec_status;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case "3":
-          blocked = false;
           colorClass = "text-green";
           fieldtext = "OK <br class='hidden-lg'>(cached)" + dnssec_status;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case "4":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist)";
 
@@ -206,32 +216,27 @@ $(document).ready(function() {
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case "5":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(exact blacklist)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case "6":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
           buttontext = "";
           break;
         case "7":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
           buttontext = "";
           break;
         case "8":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
           buttontext = "";
           break;
         case "9":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked (gravity, CNAME)";
           buttontext =
@@ -239,7 +244,6 @@ $(document).ready(function() {
           isCNAME = true;
           break;
         case "10":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist, CNAME)";
 
@@ -252,7 +256,6 @@ $(document).ready(function() {
           isCNAME = true;
           break;
         case "11":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(exact blacklist, CNAME)";
           buttontext =
@@ -260,7 +263,6 @@ $(document).ready(function() {
           isCNAME = true;
           break;
         default:
-          blocked = false;
           colorClass = "text-black";
           fieldtext = "Unknown (" + parseInt(data[4]) + ")";
           buttontext = "";
@@ -301,43 +303,12 @@ $(document).ready(function() {
 
       // Check for existence of sixth column and display only if not Pi-holed
       var replytext,
-        replyid = parseInt(data[5]);;
-      switch (replyid) {
-        case 0:
-          replytext = "N/A";
-          break;
-        case 1:
-          replytext = "NODATA";
-          break;
-        case 2:
-          replytext = "NXDOMAIN";
-          break;
-        case 3:
-          replytext = "CNAME";
-          break;
-        case 4:
-          replytext = "IP";
-          break;
-        case 5:
-          replytext = "DOMAIN";
-          break;
-        case 6:
-          replytext = "RRNAME";
-          break;
-        case 7:
-          replytext = "SERVFAIL";
-          break;
-        case 8:
-          replytext = "REFUSED";
-          break;
-        case 9:
-          replytext = "NOTIMP";
-          break;
-        case 10:
-          replytext = "upstream error";
-          break;
-        default:
-          replytext = "? (" +data[5] + ")";
+        replyid = parseInt(data[5]);
+
+      if (replyid >= 0 && replyid < replyTypes.length) {
+        replytext = replyTypes[replyid];
+      } else {
+        replytext = "? (" + replyid + ")";
       }
 
       replytext += '<input type="hidden" name="id" value="' + replyid + '">';
@@ -545,8 +516,6 @@ function applyColumnFiltering() {
   // Trigger table update
   tableApi.draw();
 }
-
-var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
 
 function showResetButton() {
   var button = $("#resetButton");
