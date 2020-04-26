@@ -8,7 +8,6 @@
 /* global moment:false */
 
 var tableApi;
-var colHighlightColor = "#ffefad";
 var tableFilters = [];
 
 var replyTypes = [
@@ -494,13 +493,13 @@ function applyColumnFiltering() {
       regex = "^" + value + "$";
 
       // Add background color
-      tableApi.$("td:eq(" + index + ")").css("background-color", colHighlightColor);
+      tableApi.$("td:eq(" + index + ")").addClass("filter-highlight");
 
       // Remember to show reset button
       showReset = true;
     } else {
       // Clear background color
-      tableApi.$("td:eq(" + index + ")").css("background-color", "#fff");
+      tableApi.$("td:eq(" + index + ")").removeClass("filter-highlight");
     }
 
     // Apply filtering on this column (regex may be empty -> no filtering)

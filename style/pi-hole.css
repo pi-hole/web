@@ -266,3 +266,7 @@ code.breakall
     left: unset !important;
     right: 10px;
 }
+
+.filter-highlight {
+    background-color: #ffcc0050;
+}

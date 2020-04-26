@@ -155,8 +155,11 @@ if(strlen($showing) > 0)
                     </tr>
                 </tfoot>
             </table>
-            <label>Apply filtering on click on Query type, Domain, and Clients (use <kbd>Ctrl</kbd> or <kbd>&#8984;</kbd> + <i class="fas fa-mouse-pointer"></i> to add elements to the current selection)</label><br/>
-            <button type="button" id="resetButton" hidden="true"></button>
+            <label>Filtering options:</label>
+            <ul>
+                <li>Use <kbd>Ctrl</kbd> or <kbd>&#8984;</kbd> + <i class="fas fa-mouse-pointer"></i> to add columns to the current filter</li>
+                <li>Use <kbd>Shift</kbd> + <i class="fas fa-mouse-pointer"></i> to remove columns to the current filter</li>
+            </ul><br/><button type="button" id="resetButton" hidden="true"></button>
         </div>
         <!-- /.box-body -->
       </div>
