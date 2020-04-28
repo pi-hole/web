@@ -11,8 +11,8 @@
 
 <!-- Title -->
 <div class="page-header">
-    <h1>Custom DNS configuration</h1>
-    <small>On this page, you can add domain/IP associations similar to records in <code>/etc/hosts</code>.</small>
+    <h1>Local DNS Records</h1>
+    <small>On this page, you can add domain/IP associations</small>
 </div>
 
 <!-- Domain Input -->
@@ -67,7 +67,7 @@
         <div class="box" id="recent-queries">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of custom DNS domains
+                    List of local DNS domains
                 </h3>
             </div>
             <!-- /.box-header -->
