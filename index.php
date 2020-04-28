@@ -82,6 +82,10 @@
     <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
+        <span class="queries-permitted"></span>
+        <span class="queries-blocked"></span>
+        <span class="graphs-grid"></span>
+        <span class="graphs-ticks"></span>
           <h3 class="box-title">Total queries over last <?php echo getinterval(); ?> hours</h3>
         </div>
         <div class="box-body">

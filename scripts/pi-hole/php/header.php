@@ -11,6 +11,9 @@
     require_once "scripts/pi-hole/php/FTL.php";
     $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
 
+    //$theme = "default-light";
+    $theme = "default-dark";
+
     check_cors();
 
     // Generate CSRF token
@@ -202,12 +205,11 @@
     <link rel="stylesheet" href="style/vendor/daterangepicker.css">
 
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
-    <link rel="stylesheet" href="style/vendor/skin-blue.min.css">
     <link rel="stylesheet" href="style/vendor/animate.css">
-
     <link rel="stylesheet" href="style/pi-hole.css">
-    <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
+    <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css">
 
+    <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
     <script src="scripts/vendor/jquery.min.js"></script>
     <script src="scripts/vendor/jquery-ui.min.js"></script>
     <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -226,7 +228,7 @@
     <script src="scripts/vendor/moment.min.js"></script>
     <script src="scripts/vendor/Chart.min.js"></script>
 </head>
-<body class="hold-transition skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
+<body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
  <noscript>
 <!-- JS Warning -->
 <div>

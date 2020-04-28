@@ -27,23 +27,8 @@
 .small-box span.glow {
 	text-shadow: 0 0 5px #fff;
 }
-.skin-blue .list-group-item:hover {
-	background: #ddd;
-}
 
-.skin-blue .not-used {
-	background: #eee;
-}
-
-.skin-blue .not-used:hover {
-	background: #c5c5c5;
-}
-
-.skin-blue .used {
-	background: #fff;
-}
-
-.skin-blue .used:hover {
+.list-group-item:hover {
 	background: #ddd;
 }
 
