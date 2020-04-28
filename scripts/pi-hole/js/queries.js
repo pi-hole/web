@@ -282,6 +282,7 @@ $(document).ready(function() {
             this.style.color = "";
           }
         );
+        $("td:eq(4)", row).off(); // Release any possible previous onClick event handlers
         $("td:eq(4)", row).click(function() {
           var new_tab = window.open("groups-domains.php?domainid=" + data[9], "_blank");
           if (new_tab) {
