@@ -160,23 +160,23 @@ function updateQueriesOverTime() {
       for (hour in dates) {
         if (Object.prototype.hasOwnProperty.call(dates, hour)) {
           var date,
-            dom = 0,
-            ads = 0;
+            total = 0,
+            blocked = 0;
           date = new Date(1000 * dates[hour]);
 
           var idx = data.domains_over_time[0].indexOf(dates[hour].toString());
           if (idx > -1) {
-            dom = data.domains_over_time[1][idx];
+            total = data.domains_over_time[1][idx];
           }
 
           idx = data.ads_over_time[0].indexOf(dates[hour].toString());
           if (idx > -1) {
-            ads = data.ads_over_time[1][idx];
+            blocked = data.ads_over_time[1][idx];
           }
 
           timeLineChart.data.labels.push(date);
-          timeLineChart.data.datasets[0].data.push(dom - ads);
-          timeLineChart.data.datasets[1].data.push(ads);
+          timeLineChart.data.datasets[0].data.push(blocked);
+          timeLineChart.data.datasets[1].data.push(total - blocked);
         }
       }
 
@@ -190,28 +190,30 @@ function updateQueriesOverTime() {
 
 $(document).ready(function() {
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
+  var blockedColor = "#999";
+  var permittedColor = "#00a65a";
   timeLineChart = new Chart(ctx, {
     type: "bar",
     data: {
       labels: [],
       datasets: [
         {
-          label: "Permitted DNS Queries",
+          label: "Blocked DNS Queries",
           fill: true,
-          backgroundColor: "rgba(0, 166, 90,.8)",
-          borderColor: "rgba(0, 166, 90,.8)",
-          pointBorderColor: "rgba(0, 166, 90,.8)",
+          backgroundColor: blockedColor,
+          borderColor: blockedColor,
+          pointBorderColor: blockedColor,
           pointRadius: 1,
           pointHoverRadius: 5,
           data: [],
           pointHitRadius: 5
         },
         {
-          label: "Blocked DNS Queries",
+          label: "Permitted DNS Queries",
           fill: true,
-          backgroundColor: "rgba(0,192,239,1)",
-          borderColor: "rgba(0,192,239,1)",
-          pointBorderColor: "rgba(0,192,239,1)",
+          backgroundColor: permittedColor,
+          borderColor: permittedColor,
+          pointBorderColor: permittedColor,
           pointRadius: 1,
           pointHoverRadius: 5,
           data: [],
@@ -222,6 +224,9 @@ $(document).ready(function() {
     options: {
       tooltips: {
         enabled: true,
+        itemSort: function(a, b) {
+          return b.datasetIndex - a.datasetIndex;
+        },
         mode: "x-axis",
         callbacks: {
           title: function(tooltipItem) {
@@ -232,8 +237,8 @@ $(document).ready(function() {
               "-" +
               padNumber(time.getMonth() + 1) +
               "-" +
-              padNumber(time.getDate()) +
-              " " +
+              padNumber(time.getDate());
+            var from_time =
               padNumber(time.getHours()) +
               ":" +
               padNumber(time.getMinutes()) +
@@ -245,22 +250,50 @@ $(document).ready(function() {
               "-" +
               padNumber(time.getMonth() + 1) +
               "-" +
-              padNumber(time.getDate()) +
-              " " +
+              padNumber(time.getDate());
+            var until_time =
               padNumber(time.getHours()) +
               ":" +
               padNumber(time.getMinutes()) +
               ":" +
               padNumber(time.getSeconds());
-            return "Queries from " + from_date + " to " + until_date;
+
+            if (from_date === until_date) {
+              // Abbreviated form for intervals on the same day
+              // We split title in two lines on small screens
+              if ($(window).width() < 992) {
+                until_time += "\n";
+              }
+
+              return ("Queries from " + from_time + " to " + until_time + " on " + from_date).split(
+                "\n "
+              );
+            }
+
+            // Full tooltip for intervals spanning more than one day
+            // We split title in two lines on small screens
+            if ($(window).width() < 992) {
+              from_date += "\n";
+            }
+
+            return (
+              "Queries from " +
+              from_date +
+              " " +
+              from_time +
+              " to " +
+              until_date +
+              " " +
+              until_time
+            ).split("\n ");
           },
           label: function(tooltipItems, data) {
-            if (tooltipItems.datasetIndex === 1) {
+            if (tooltipItems.datasetIndex === 0) {
               var percentage = 0.0;
-              var total = parseInt(data.datasets[0].data[tooltipItems.index]);
-              var blocked = parseInt(data.datasets[1].data[tooltipItems.index]);
-              if (total > 0) {
-                percentage = (100.0 * blocked) / total;
+              var permitted = parseInt(data.datasets[1].data[tooltipItems.index]);
+              var blocked = parseInt(data.datasets[0].data[tooltipItems.index]);
+              if (permitted + blocked > 0) {
+                percentage = (100.0 * blocked) / (permitted + blocked);
               }
 
               return (
