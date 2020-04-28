@@ -237,6 +237,7 @@
 
 .chart-legend li {
     cursor: pointer;
+    word-break: break-all;
 }
 
 .chart-legend li span {
