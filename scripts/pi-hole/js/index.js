@@ -250,8 +250,8 @@ function updateQueriesOverTime() {
         timeLineChart.data.labels.push(d);
         var blocked = data.ads_over_time[1][hour];
         var permitted = data.domains_over_time[1][hour] - blocked;
-        timeLineChart.data.datasets[0].data.push(permitted);
-        timeLineChart.data.datasets[1].data.push(blocked);
+        timeLineChart.data.datasets[0].data.push(blocked);
+        timeLineChart.data.datasets[1].data.push(permitted);
       }
     }
 
@@ -835,6 +835,9 @@ $(document).ready(function() {
   // Pull in data via AJAX
   updateSummaryData();
 
+  var blockedColor = "#999";
+  var permittedColor = "#00a65a";
+
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   timeLineChart = new Chart(ctx, {
     type: "bar",
@@ -842,22 +845,22 @@ $(document).ready(function() {
       labels: [],
       datasets: [
         {
-          label: "Permitted DNS Queries",
+          label: "Blocked DNS Queries",
           fill: true,
-          backgroundColor: "rgba(0, 166, 90,.8)",
-          borderColor: "rgba(0, 166, 90,.8)",
-          pointBorderColor: "rgba(0, 166, 90,.8)",
+          backgroundColor: blockedColor,
+          borderColor: blockedColor,
+          pointBorderColor: blockedColor,
           pointRadius: 1,
           pointHoverRadius: 5,
           data: [],
           pointHitRadius: 5
         },
         {
-          label: "Blocked DNS Queries",
+          label: "Permitted DNS Queries",
           fill: true,
-          backgroundColor: "rgba(0,192,239,1)",
-          borderColor: "rgba(0,192,239,1)",
-          pointBorderColor: "rgba(0,192,239,1)",
+          backgroundColor: permittedColor,
+          borderColor: permittedColor,
+          pointBorderColor: permittedColor,
           pointRadius: 1,
           pointHoverRadius: 5,
           data: [],
@@ -869,6 +872,9 @@ $(document).ready(function() {
       tooltips: {
         enabled: true,
         mode: "x-axis",
+        itemSort: function(a, b) {
+          return b.datasetIndex - a.datasetIndex;
+        },
         callbacks: {
           title: function(tooltipItem) {
             var label = tooltipItem[0].xLabel;
@@ -877,13 +883,13 @@ $(document).ready(function() {
             var m = parseInt(time[2], 10) || 0;
             var from = padNumber(h) + ":" + padNumber(m - 5) + ":00";
             var to = padNumber(h) + ":" + padNumber(m + 4) + ":59";
-            return "Upstreams from " + from + " to " + to;
+            return "Queries from " + from + " to " + to;
           },
           label: function(tooltipItems, data) {
-            if (tooltipItems.datasetIndex === 1) {
+            if (tooltipItems.datasetIndex === 0) {
               var percentage = 0.0;
-              var permitted = parseInt(data.datasets[0].data[tooltipItems.index]);
-              var blocked = parseInt(data.datasets[1].data[tooltipItems.index]);
+              var permitted = parseInt(data.datasets[1].data[tooltipItems.index]);
+              var blocked = parseInt(data.datasets[0].data[tooltipItems.index]);
               var total = permitted + blocked;
               if (total > 0) {
                 percentage = (100.0 * blocked) / total;
