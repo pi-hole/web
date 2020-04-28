@@ -626,10 +626,10 @@ if($auth) {
                         <i class="fa fa-cogs"></i> <span>Settings</span>
                     </a>
                 </li>
-                <!-- Custom DNS -->
-                <li<?php if($scriptname === "custom_dns.php"){ ?> class="active"<?php } ?>>
-                    <a href="custom_dns.php">
-                        <i class="fa fa-address-book"></i> <span>Custom DNS</span>
+                <!-- Local DNS Records -->
+                <li<?php if($scriptname === "dns_records.php"){ ?> class="active"<?php } ?>>
+                    <a href="dns_records.php">
+                        <i class="fa fa-address-book"></i> <span>Local DNS Records</span>
                     </a>
                 </li>
                 <!-- Logout -->
