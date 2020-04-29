@@ -271,3 +271,7 @@ code.breakall {
     left: unset !important;
     right: 10px;
 }
+
+.input-group-addon {
+	padding: 0px 12px;
+}
