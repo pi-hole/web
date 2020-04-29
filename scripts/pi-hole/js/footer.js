@@ -107,7 +107,8 @@ $(document).ready(function () {
   var checkbox_theme = $("#checkbox_theme").text();
   $('input').icheck({
     checkboxClass: 'icheckbox_' + checkbox_theme,
-    radioClass: 'iradio_' + checkbox_theme
+    radioClass: 'iradio_' + checkbox_theme,
+    increaseArea: '20%'
   });
 });
 

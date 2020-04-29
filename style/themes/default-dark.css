@@ -257,11 +257,12 @@ h4 {
 }
 .main-footer .nav-tabs,
 .nav-tabs-custom .nav-tabs {
-  border-bottom-color: #353c42;
+  background-color: #30383f;
+  border-bottom-color: #2f363b;
 }
 .main-footer .tab-content,
 .nav-tabs-custom .tab-content {
-  background-color: #272c30;
+  background-color: #30383f;
 }
 .nav-tabs-custom > .nav-tabs > li.active > a {
   border-left-color: #353c42;
@@ -278,16 +279,6 @@ h4 {
 }
 .nav-tabs-custom > .nav-tabs > li > a {
   color: #bec5cb;
-}
-.form-group .input-group-addon,
-.input-group .input-group-addon,
-.form-group input,
-.input-group input,
-.form-group textarea,
-.input-group textarea {
-  background-color: #353c42;
-  color: #bec5cb;
-  border: 1px solid #353c42;
 }
 .list-group {
   color: #bec5cb;
@@ -441,16 +432,24 @@ td.highlight {
   background-color: #1e2226;
   color: #bec5cb;
 }
+input,
 select,
 select.form-control,
+.form-group .input-group-addon,
+.input-group .input-group-addon,
+.form-group input,
+.input-group input,
+.form-group textarea,
+.input-group textarea 
 .daterangepicker select.hourselect,
 .daterangepicker select.minuteselect,
 .daterangepicker select.secondselect,
 .daterangepicker select.ampmselect,
+.form-control,
 div.dataTables_wrapper div.dataTables_length select {
   background-color: #353c42;
   color: #bec5cb;
-  border: 1px solid #353c42;
+  border: 1px solid #3d444b;
 }
 .nav-tabs-custom > .nav-tabs > li.active > a {
   color: #bec5cb;
@@ -503,4 +502,15 @@ fieldset[disabled] .form-control {
 }
 .network-gradient {
   background-image: linear-gradient(to right, #114100 0%, #525200 100%);
+}
+
+.icheckbox_polaris,
+.icheckbox_futurico,
+.icheckbox_minimal-blue {
+	margin-right: 10px;
+}
+.iradio_polaris,
+.iradio_futurico,
+.iradio_minimal-blue {
+	margin-right: 8px;
 }

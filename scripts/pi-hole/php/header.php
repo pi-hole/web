@@ -9,16 +9,8 @@
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
     require_once "scripts/pi-hole/php/FTL.php";
+    require "scripts/pi-hole/php/theme.php";
     $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
-
-    //$theme = "default-light";
-    $theme = "default-dark";
-    //$checkbox_theme_name = "flat";
-    //$checkbox_theme_variant = "blue";
-    $checkbox_theme_name = "polaris";
-    $checkbox_theme_variant = "polaris";
-    //$checkbox_theme_name = "futurico";
-    //$checkbox_theme_variant = "futurico";
 
     check_cors();
 

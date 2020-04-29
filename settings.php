@@ -898,7 +898,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <h4>Interface appearance</h4>
-                                                <input type="checkbox" name="boxedlayout" id="boxedlayout" value="yes" <?php if ($boxedlayout){ ?>checked<?php } ?>><label for="boxedlayout">Use boxed layout (helpful when working on large screens)</label>
+                                                <?php theme_selection(); ?>
+                                                <input type="checkbox" name="boxedlayout" id="boxedlayout" value="yes" <?php if ($boxedlayout){ ?>checked<?php } ?>><label for="boxedlayout">Use boxed layout (for large screens)</label>
                                                 <h4>CPU Temperature Unit</h4>
                                                 <input type="radio" name="tempunit" value="C" id="tempunit_C" <?php if ($temperatureunit === "C"){ ?>checked<?php } ?>><label for="tempunit_C">&nbsp;Celsius</label><br>
                                                 <input type="radio" name="tempunit" value="K" id="tempunit_K" <?php if ($temperatureunit === "K"){ ?>checked<?php } ?>><label for="tempunit_K">&nbsp;Kelvin</label><br>

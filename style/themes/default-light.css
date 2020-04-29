@@ -216,3 +216,10 @@ td.highlight {
 .network-gradient {
   background-image: linear-gradient(to right, #e7ffde 0%, #ffffdf 100%);
 }
+
+.icheckbox_minimal-blue {
+	margin-right: 10px;
+}
+.iradio_minimal-blue {
+	margin-right: 8px;
+}
