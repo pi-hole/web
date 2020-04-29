@@ -200,3 +200,19 @@
 td.highlight {
   background-color: #ff0 !important;
 }
+
+.network-never {
+  background-color: #ffbfaa;
+}
+.network-recent {
+  background-color: #e7ffde;
+}
+.network-old {
+  background-color: #ffffdf;
+}
+.network-older {
+  background-color: #ffedd9;
+}
+.network-gradient {
+  background-image: linear-gradient(to right, #e7ffde 0%, #ffffdf 100%);
+}

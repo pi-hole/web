@@ -55,7 +55,19 @@ function mixColors(ratio, rgb1, rgb2) {
   ];
 }
 
+function parseColor(input) {
+  var m;
+  m = input.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+  if (m) {
+    return [m[1], m[2], m[3]];
+  }
+}
+
 $(document).ready(function () {
+  var network_recent = $(".network-recent").css("background-color");
+  var network_old = $(".network-old").css("background-color");
+  var network_older = $(".network-older").css("background-color");
+  var network_never = $(".network-never").css("background-color");
   tableApi = $("#network-entries").DataTable({
     rowCallback: function (row, data) {
       var color,
@@ -67,19 +79,19 @@ $(document).ready(function () {
           // Last query came in within the last 24 hours (24*60*60 = 86400)
           // Color: light-green to light-yellow
           var ratio = Number(diff) / 86400;
-          var lightgreen = [0xe7, 0xff, 0xde];
-          var lightyellow = [0xff, 0xff, 0xdf];
+          var lightgreen = parseColor(network_recent);
+          var lightyellow = parseColor(network_old);
           color = rgbToHex(mixColors(ratio, lightgreen, lightyellow));
           mark = "&#x2714;";
         } else {
           // Last query was longer than 24 hours ago
           // Color: light-orange
-          color = "#ffedd9";
+          color = network_older;
           mark = "<strong>?</strong>";
         }
       } else {
         // This client has never sent a query to Pi-hole, color light-red
-        color = "#ffbfaa";
+        color = network_never;
         mark = "&#x2718;";
       }
 
