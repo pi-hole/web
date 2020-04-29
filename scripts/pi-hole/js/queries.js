@@ -257,12 +257,14 @@ $(document).ready(function () {
           break;
         default:
           blocked = false;
-          colorClass = "text-black";
+          colorClass = false;
           fieldtext = "Unknown (" + parseInt(data[4]) + ")";
           buttontext = "";
       }
 
-      $(row).addClass(colorClass);
+      if(colorClass !== false) {
+        $("td:eq(4)", row).addClass(colorClass);
+      }
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(6)", row).html(buttontext);
 
@@ -344,7 +346,6 @@ $(document).ready(function () {
         replytext = "-";
       }
 
-      $("td:eq(5)", row).addClass("text-black");
       $("td:eq(5)", row).html(replytext);
 
       if (data.length > 7 && data[7] > 0) {

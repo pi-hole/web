@@ -39,6 +39,7 @@ h4 {
 .table > tfoot > tr.even:hover {
   background-color: #1e2226;
 }
+.table-bordered,
 .table-bordered > thead > tr > th,
 .table-bordered > tbody > tr > th,
 .table-bordered > tfoot > tr > th,
@@ -48,12 +49,6 @@ h4 {
   border: 1px solid #353c42;
 }
 .dataTables_wrapper input[type="search"] {
-  border-radius: 4px;
-  background-color: #353c42;
-  border: 0;
-  color: #bec5cb;
-}
-.dataTables_wrapper select {
   border-radius: 4px;
   background-color: #353c42;
   border: 0;
@@ -385,4 +380,70 @@ code {
 	color: #bec5cb;
 	background-color: #353c42;
 	border-radius: 4px;
+}
+
+/* Used in the Query Log table */
+.text-green-light {
+  color: #5ca314 !important;
+}
+.text-green {
+  color: #007e47 !important;
+}
+.text-orange {
+  color: #b1720c !important;
+}
+.text-red {
+  color: #bd2c19 !important;
+}
+.text-vivid-blue {
+  color: #007997 !important;
+}
+td.highlight {
+  background-color: yellow;
+}
+.btn-default {
+  box-shadow: none;
+  background-color: #3e464c;
+  color: #bec5cb;
+  border: 1px solid #353c42;
+}
+
+/* Used by the long-term pages */
+.daterangepicker {
+	background-color: #3e464c;
+	border-radius: 4px;
+	border: 1px solid #353c42;
+}
+.daterangepicker .ranges li:hover {
+	background-color: #353c42;
+}
+.daterangepicker .ranges li.active {
+	background-color: #1e2226; /* Color also used in table pagination */
+}
+.daterangepicker .calendar-table {
+	background-color: #3e464c;
+	border-radius: 4px;
+	border: 1px solid #353c42;
+}
+.daterangepicker td.off, .daterangepicker td.off.in-range, .daterangepicker td.off.start-date, .daterangepicker td.off.end-date {
+	background-color: #485158;
+}
+.daterangepicker td.available:hover, .daterangepicker th.available:hover {
+	background-color: #1e2226;
+}
+.daterangepicker td.active, .daterangepicker td.active:hover, .daterangepicker td.in-range:hover {
+	background-color: #225e92;
+}
+.daterangepicker td.in-range {
+	background-color: #1e2226;
+	color: #bec5cb;
+}
+select, .daterangepicker select.hourselect, .daterangepicker select.minuteselect, .daterangepicker select.secondselect, .daterangepicker select.ampmselect {
+	width: 50px;
+	margin: 0 auto;
+	background: #eee;
+	border: 1px solid #eee;
+	padding: 2px;
+	outline: 0;
+	font-size: 12px;
 }

@@ -254,34 +254,6 @@
     text-decoration: underline;
 }
 
-.text-black {
-    color: #000 !important;
-}
-
-.text-green-light {
-    color: #7fff00 !important;
-}
-
-.text-green {
-    color: #080 !important;
-}
-
-.text-orange {
-    color: #ffa500 !important;
-}
-
-.text-red {
-    color: #f00 !important;
-}
-
-.text-vivid-blue {
-    color: #36f !important;
-}
-
-td.highlight {
-    background-color: #ff0 !important;
-}
-
 code.breakall {
     white-space: -moz-pre-wrap;
     white-space: -pre-wrap;
