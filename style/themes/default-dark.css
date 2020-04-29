@@ -374,12 +374,13 @@ h4 {
   background-color: #913225 !important;
 }
 
-code {
-	padding: 2px 4px;
-	font-size: 90%;
-	color: #bec5cb;
-	background-color: #353c42;
-	border-radius: 4px;
+code,
+pre {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #bec5cb;
+  background-color: #353c42;
+  border-radius: 4px;
 }
 
 /* Used in the Query Log table */
@@ -410,40 +411,70 @@ td.highlight {
 
 /* Used by the long-term pages */
 .daterangepicker {
-	background-color: #3e464c;
-	border-radius: 4px;
-	border: 1px solid #353c42;
+  background-color: #3e464c;
+  border-radius: 4px;
+  border: 1px solid #353c42;
 }
 .daterangepicker .ranges li:hover {
-	background-color: #353c42;
+  background-color: #353c42;
 }
 .daterangepicker .ranges li.active {
-	background-color: #1e2226; /* Color also used in table pagination */
+  background-color: #1e2226; /* Color also used in table pagination */
 }
 .daterangepicker .calendar-table {
-	background-color: #3e464c;
-	border-radius: 4px;
-	border: 1px solid #353c42;
+  background-color: #3e464c;
+  border-radius: 4px;
+  border: 1px solid #353c42;
 }
-.daterangepicker td.off, .daterangepicker td.off.in-range, .daterangepicker td.off.start-date, .daterangepicker td.off.end-date {
-	background-color: #485158;
+.daterangepicker td.off,
+.daterangepicker td.off.in-range,
+.daterangepicker td.off.start-date,
+.daterangepicker td.off.end-date {
+  background-color: #485158;
 }
-.daterangepicker td.available:hover, .daterangepicker th.available:hover {
-	background-color: #1e2226;
+.daterangepicker td.available:hover,
+.daterangepicker th.available:hover {
+  background-color: #1e2226;
 }
-.daterangepicker td.active, .daterangepicker td.active:hover, .daterangepicker td.in-range:hover {
-	background-color: #225e92;
+.daterangepicker td.active,
+.daterangepicker td.active:hover,
+.daterangepicker td.in-range:hover {
+  background-color: #225e92;
 }
 .daterangepicker td.in-range {
-	background-color: #1e2226;
-	color: #bec5cb;
+  background-color: #1e2226;
+  color: #bec5cb;
 }
-select, .daterangepicker select.hourselect, .daterangepicker select.minuteselect, .daterangepicker select.secondselect, .daterangepicker select.ampmselect {
-	width: 50px;
-	margin: 0 auto;
-	background: #eee;
-	border: 1px solid #eee;
-	padding: 2px;
-	outline: 0;
-	font-size: 12px;
+select,
+select.form-control,
+.daterangepicker select.hourselect,
+.daterangepicker select.minuteselect,
+.daterangepicker select.secondselect,
+.daterangepicker select.ampmselect,
+div.dataTables_wrapper div.dataTables_length select {
+  background-color: #353c42;
+  color: #bec5cb;
+  border: 1px solid #353c42;
+}
+.nav-tabs-custom > .nav-tabs > li.active > a {
+  color: #bec5cb;
+}
+.nav-tabs-custom > .nav-tabs > li:hover > a,
+.nav-tabs-custom > .nav-tabs > li.active:hover > a {
+  background-color: #353c42;
+  color: #bec5cb;
+}
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled] .form-control {
+  background-color: #353c42;
+  opacity: 1;
+}
+.dropdown-menu {
+  background-color: #353c42;
+  color: #bec5cb;
+  border: 1px solid #353c42;
+}
+.table-striped > tbody > tr:nth-of-type(2n + 1) {
+  background-color: #3d454d;
 }
