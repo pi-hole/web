@@ -336,15 +336,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="active" id="DHCPchk"
-                                                                      <?php if ($DHCP){ ?>checked<?php }
-                                                                      ?>>DHCP server enabled</label>
-                                                    </div>
-                                                </div>
-                                                <p id="dhcpnotice" <?php if (!$DHCP){ ?>hidden<?php }
-                                                                   ?>>Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
+                                                <input type="checkbox" name="active" id="DHCPchk" <?php if ($DHCP){ ?>checked<?php } ?>><label for="DHCPchk">DHCP server enabled</label><br>
+                                                <p id="dhcpnotice" <?php if (!$DHCP){ ?>hidden<?php } ?>>Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -425,22 +418,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="useIPv6" class="DHCPgroup"
-                                                                      <?php if ($DHCPIPv6){ ?>checked<?php };
-                                                                            if (!$DHCP){ ?> disabled<?php }
-                                                                      ?>>Enable IPv6 support (SLAAC + RA)</label>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="DHCP_rapid_commit" class="DHCPgroup"
-                                                                      <?php if ($DHCP_rapid_commit){ ?>checked<?php };
-                                                                            if (!$DHCP){ ?> disabled<?php }
-                                                                      ?>>Enable DHCP rapid commit (fast address assignment)</label>
-                                                    </div>
-                                                </div>
+                                                <input type="checkbox" name="useIPv6" id="useIPv6" class="DHCPgroup" <?php if ($DHCPIPv6){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="useIPv6">Enable IPv6 support (SLAAC + RA)</label><br>
+                                                <input type="checkbox" name="DHCP_rapid_commit" id="DHCP_rapid_commit" class="DHCPgroup" <?php if ($DHCP_rapid_commit){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="DHCP_rapid_commit">Enable DHCP rapid commit (fast address assignment)</label>
                                             </div>
                                         </div>
                                     </div>
@@ -579,9 +558,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     </tbody>
                                                     <tfoot style="display: table-row-group">
                                                         <tr>
-                                                            <td><input type="text" name="AddMAC" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
-                                                            <td><input type="text" name="AddIP" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
-                                                            <td><input type="text" name="AddHostname" value="" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
+                                                            <td><input type="text" class="form-group" name="AddMAC" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
+                                                            <td><input type="text" class="form-group" name="AddIP" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
+                                                            <td><input type="text" class="form-group" name="AddHostname" value="" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
                                                             <td>
                                                                 <button type="submit" class="btn btn-success btn-xs" name="addstatic">
                                                                     <span class="fas fa-plus"></span>
@@ -628,34 +607,28 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <tr>
                                                     <?php if (isset($value["v4_1"])) { ?>
                                                         <td title="<?php echo $value["v4_1"]; ?>">
-                                                            <input type="checkbox" name="DNSserver<?php echo $value["v4_1"]; ?>" value="true"
-                                                                   <?php if (in_array($value["v4_1"], $DNSactive)){ ?>checked<?php } ?>>
+                                                            <input type="checkbox" name="DNSserver<?php echo $value["v4_1"]; ?>" id="DNS4server<?php echo $value["v4_1"]; ?>" value="true" <?php if (in_array($value["v4_1"], $DNSactive)){ ?>checked<?php } ?>><label for="DNS4server<?php echo $value["v4_1"]; ?>"></label>
                                                         </td>
                                                     <?php } else { ?>
                                                         <td></td>
                                                     <?php } ?>
                                                     <?php if (isset($value["v4_2"])) { ?>
                                                         <td title="<?php echo $value["v4_2"]; ?>">
-                                                            <input type="checkbox" name="DNSserver<?php echo $value["v4_2"]; ?>" value="true"
-                                                                   <?php if (in_array($value["v4_2"], $DNSactive)){ ?>checked<?php } ?>>
+                                                            <input type="checkbox" name="DNSserver<?php echo $value["v4_2"]; ?>" id="DNS4server<?php echo $value["v4_2"]; ?>" value="true" <?php if (in_array($value["v4_2"], $DNSactive)){ ?>checked<?php } ?>><label for="DNS4server<?php echo $value["v4_2"]; ?>"></label>
                                                         </td>
                                                     <?php } else { ?>
                                                         <td></td>
                                                     <?php } ?>
                                                     <?php if (isset($value["v6_1"])) { ?>
                                                         <td title="<?php echo $value["v6_1"]; ?>">
-                                                            <input type="checkbox" name="DNSserver<?php echo $value["v6_1"]; ?>" value="true"
-                                                                   <?php if (in_array($value["v6_1"], $DNSactive) && $IPv6connectivity){ ?>checked<?php }
-                                                                         if (!$IPv6connectivity) { ?> disabled <?php } ?>>
+                                                            <input type="checkbox" name="DNSserver<?php echo $value["v6_1"]; ?>" id="DNS6server<?php echo $value["v6_1"]; ?>" value="true" <?php if (in_array($value["v6_1"], $DNSactive) && $IPv6connectivity){ ?>checked<?php } if (!$IPv6connectivity) { ?> disabled <?php } ?>><label for="DNS6server<?php echo $value["v6_1"]; ?>"></label>
                                                         </td>
                                                     <?php } else { ?>
                                                         <td></td>
                                                     <?php } ?>
                                                     <?php if (isset($value["v6_2"])) { ?>
                                                         <td title="<?php echo $value["v6_2"]; ?>">
-                                                            <input type="checkbox" name="DNSserver<?php echo $value["v6_2"]; ?>" value="true"
-                                                                   <?php if (in_array($value["v6_2"], $DNSactive) && $IPv6connectivity){ ?>checked<?php }
-                                                                if (!$IPv6connectivity) { ?> disabled <?php } ?>>
+                                                            <input type="checkbox" name="DNSserver<?php echo $value["v6_2"]; ?>" id="DNS6server<?php echo $value["v6_2"]; ?>" value="true" <?php if (in_array($value["v6_2"], $DNSactive) && $IPv6connectivity){ ?>checked<?php } if (!$IPv6connectivity) { ?> disabled <?php } ?>><label for="DNS6server<?php echo $value["v6_2"]; ?>"></label>
                                                         </td>
                                                     <?php } else { ?>
                                                         <td></td>
@@ -682,8 +655,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <label>Custom 1 (IPv4)</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon">
-                                                            <input type="checkbox" name="custom1" value="Customv4"
-                                                                   <?php if (isset($custom1)){ ?>checked<?php } ?>>
+                                                            <input type="checkbox" name="custom1" value="Customv4" <?php if (isset($custom1)){ ?>checked<?php } ?>>
                                                         </div>
                                                         <input type="text" name="custom1val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                <?php if (isset($custom1)){ ?>value="<?php echo $custom1; ?>"<?php } ?>>
@@ -693,8 +665,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <label>Custom 2 (IPv4)</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon">
-                                                            <input type="checkbox" name="custom2" value="Customv4"
-                                                                   <?php if (isset($custom2)){ ?>checked<?php } ?>>
+                                                            <input type="checkbox" name="custom2" value="Customv4" <?php if (isset($custom2)){ ?>checked<?php } ?>>
                                                         </div>
                                                         <input type="text" name="custom2val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                <?php if (isset($custom2)){ ?>value="<?php echo $custom2; ?>"<?php } ?>>
@@ -778,30 +749,15 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="DNSrequiresFQDN" title="domain-needed"
-                                                                      <?php if ($DNSrequiresFQDN){ ?>checked<?php }
-                                                                      ?>>Never forward non-FQDNs</label>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="DNSbogusPriv" title="bogus-priv"
-                                                                      <?php if ($DNSbogusPriv){ ?>checked<?php }
-                                                                      ?>>Never forward reverse lookups for private IP ranges</label>
-                                                    </div>
-                                                </div>
+                                                <input type="checkbox" name="DNSrequiresFQDN" id="DNSrequiresFQDN" title="domain-needed" <?php if ($DNSrequiresFQDN){ ?>checked<?php } ?>>
+                                                <label for="DNSrequiresFQDN">Never forward non-FQDNs</label><br>
+                                                <input type="checkbox" name="DNSbogusPriv" id="DNSbogusPriv" title="bogus-priv" <?php if ($DNSbogusPriv){ ?>checked<?php } ?>>
+                                                <label for="DNSbogusPriv">Never forward reverse lookups for private IP ranges</label>
                                                 <p>Note that enabling these two options may increase your privacy
                                                    slightly, but may also prevent you from being able to access
                                                    local hostnames if the Pi-hole is not used as DHCP server</p>
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="DNSSEC"
-                                                                      <?php if ($DNSSEC){ ?>checked<?php }
-                                                                      ?>>Use DNSSEC</label>
-                                                    </div>
-                                                </div>
+                                                <input type="checkbox" name="DNSSEC" id="DNSSEC" <?php if ($DNSSEC){ ?>checked<?php } ?>>
+                                                <label for="DNSSEC">Use DNSSEC</label>
                                                 <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
                                                    queries, Pi-hole requests the DNSSEC records needed to validate
                                                    the replies. If a domain fails validation or the upstream does not
@@ -916,14 +872,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <div class="checkbox"><label><input type="checkbox" name="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show permitted domain entries</label></div>
-                                                </div>
+                                                <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>><label for="querylog-permitted">Show permitted domain entries</label>
                                             </div>
                                             <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <div class="checkbox"><label><input type="checkbox" name="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>> Show blocked domain entries</label></div>
-                                                </div>
+                                                <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>><label for="querylog-blocked">Show blocked domain entries</label>
                                             </div>
                                         </div>
                                     </div>
@@ -946,32 +898,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <h4>Interface appearance</h4>
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="boxedlayout" value="yes"
-                                                                      <?php if ($boxedlayout){ ?>checked<?php }
-                                                                      ?>>Use boxed layout (helpful when working on large screens)</label>
-                                                    </div>
-                                                </div>
+                                                <input type="checkbox" name="boxedlayout" id="boxedlayout" value="yes" <?php if ($boxedlayout){ ?>checked<?php } ?>><label for="boxedlayout">Use boxed layout (helpful when working on large screens)</label>
                                                 <h4>CPU Temperature Unit</h4>
-                                                <div class="form-group">
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="tempunit" value="C"
-                                                                      <?php if ($temperatureunit === "C"){ ?>checked<?php }
-                                                                      ?>>Celsius</label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="tempunit" value="K"
-                                                                      <?php if ($temperatureunit === "K"){ ?>checked<?php }
-                                                                      ?>>Kelvin</label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="tempunit" value="F"
-                                                                      <?php if ($temperatureunit === "F"){ ?>checked<?php }
-                                                                      ?>>Fahrenheit</label>
-                                                    </div>
-                                                </div>
+                                                <input type="radio" name="tempunit" value="C" id="tempunit_C" <?php if ($temperatureunit === "C"){ ?>checked<?php } ?>><label for="tempunit_C">&nbsp;Celsius</label><br>
+                                                <input type="radio" name="tempunit" value="K" id="tempunit_K" <?php if ($temperatureunit === "K"){ ?>checked<?php } ?>><label for="tempunit_K">&nbsp;Kelvin</label><br>
+                                                <input type="radio" name="tempunit" value="F" id="tempunit_F" <?php if ($temperatureunit === "F"){ ?>checked<?php } ?>><label for="tempunit_F">&nbsp;Fahrenheit</label>
                                                 <h4>Administrator Email Address</h4>
+<<<<<<< HEAD
                                                 <div class="form-group">
 <<<<<<< HEAD
                                                     <div class="input-group">
@@ -983,6 +916,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                            value="<?php echo htmlspecialchars($adminemail); ?>">
 >>>>>>> master
                                                 </div>
+=======
+                                                <input type="text" class="form-control" name="adminemail" value="<?php echo htmlspecialchars($adminemail); ?>">
+>>>>>>> Add custom checkboxes.
                                                 <input type="hidden" name="field" value="webUI">
                                                 <input type="hidden" name="token" value="<?php echo $token ?>">
                                             </div>
@@ -1017,34 +953,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <h4>DNS resolver privacy level</h4>
-                                                <p>Specify if DNS queries should be anonymized, available options are:
-                                                <div class="form-group">
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="privacylevel" value="0"
-                                                                      <?php if ($privacylevel === 0){ ?>checked<?php }
-                                                                      ?>>Show everything and record everything<br>Gives maximum amount of statistics</label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="privacylevel" value="1"
-                                                                      <?php if ($privacylevel === 1){ ?>checked<?php }
-                                                                      ?>>Hide domains: Display and store all domains as "hidden"<br>This disables the Top Domains and Top Ads tables on the dashboard</label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="privacylevel" value="2"
-                                                                      <?php if ($privacylevel === 2){ ?>checked<?php }
-                                                                      ?>>Hide domains and clients: Display and store all domains as "hidden" and all clients as "0.0.0.0"<br>This disables all tables on the dashboard</label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="privacylevel" value="3"
-                                                                      <?php if ($privacylevel === 3){ ?>checked<?php }
-                                                                      ?>>Anonymous mode: This disables basically everything except the live anonymous statistics<br>No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists.</label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="privacylevel" value="4"
-                                                                      <?php if ($privacylevel === 4){ ?>checked<?php }
-                                                            ?>>No Statistics mode: This disables all statistics processing. Even the query counters will not be available.<br><strong>Note that regex blocking is not available when query analyzing is disabled.</strong><br>Additionally, you can disable logging to the file <code>/var/log/pihole.log</code> using <code>sudo pihole logging off</code>.</label>
-                                                    </div>
-                                                </div>
+                                                <p>Specify if DNS queries should be anonymized, available options are:<br>
+                                                <input type="radio" name="privacylevel" id="privacylevel_0" value="0" <?php if ($privacylevel === 0){ ?>checked<?php } ?>>&nbsp;<label for="privacylevel_0">Show everything and record everything<br>Gives maximum amount of statistics</label><br>
+                                                <input type="radio" name="privacylevel" id="privacylevel_1" value="1" <?php if ($privacylevel === 1){ ?>checked<?php } ?>>&nbsp;<label for="privacylevel_1">Hide domains: Display and store all domains as "hidden"<br>This disables the Top Domains and Top Ads tables on the dashboard</label><br>
+                                                <input type="radio" name="privacylevel" id="privacylevel_2" value="2" <?php if ($privacylevel === 2){ ?>checked<?php } ?>>&nbsp;<label for="privacylevel_2">Hide domains and clients: Display and store all domains as "hidden" and all clients as "0.0.0.0"<br>This disables all tables on the dashboard</label><br>
+                                                <input type="radio" name="privacylevel" id="privacylevel_3" value="3" <?php if ($privacylevel === 3){ ?>checked<?php } ?>>&nbsp;<label for="privacylevel_3">Anonymous mode: This disables basically everything except the live anonymous statistics<br>No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists.</label><br>
+                                                <input type="radio" name="privacylevel" id="privacylevel_4" value="4" <?php if ($privacylevel === 4){ ?>checked<?php } ?>>&nbsp;<label for="privacylevel_4">No Statistics mode: This disables all statistics processing. Even the query counters will not be available.<br><strong>Note that regex blocking is not available when query analyzing is disabled.</strong><br>Additionally, you can disable logging to the file <code>/var/log/pihole.log</code> using <code>sudo pihole logging off</code>.</label><br>
                                                 <p>The privacy level may be increased at any time without having to restart the DNS resolver. However, note that the DNS resolver needs to be restarted when lowering the privacy level. This restarting is automatically done when saving.</p>
                                                 <?php if($privacylevel > 0 && $piHoleLogging){ ?>
                                                 <p class="lookatme">Warning: Pi-hole's query logging is activated. Although the dashboard will hide the requested details, all queries are still fully logged to the pihole.log file.</p>
@@ -1098,79 +1012,38 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="whitelist" value="true"
-                                                                      checked>
-                                                            Whitelist (exact)</label>
-                                                    </div>
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="regex_whitelist" value="true"
-                                                                      checked>
-                                                            Whitelist (regex/wildcard)</label>
-                                                    </div>
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="blacklist" value="true"
-                                                                      checked>
-                                                            Blacklist (exact)</label>
-                                                    </div>
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="regexlist" value="true"
-                                                                      checked>
-                                                            Blacklist (regex/wildcard)</label>
-                                                    </div>
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="adlist" value="true"
-                                                                      checked>
-                                                            Adlists</label>
-                                                    </div>
-                                                </div>
+                                                <input type="checkbox" name="whitelist" id="tele_whitelist" value="true" checked>
+                                                <label for="tele_whitelist">Whitelist (exact)</label><br>
+                                                <input type="checkbox" name="regex_whitelist" id="tele_regex_whitelist" value="true" checked>
+                                                <label for="tele_regex_whitelist">Whitelist (regex/wildcard)</label><br>
+                                                <input type="checkbox" name="blacklist" id="tele_blacklist" value="true" checked>
+                                                <label for="tele_blacklist">Blacklist (exact)</label><br>
+                                                <input type="checkbox" name="regexlist" id="tele_regexlist" value="true" checked>
+                                                <label for="tele_regexlist">Blacklist (regex/wildcard)</label><br>
+                                                <input type="checkbox" name="adlist" id="tele_adlist" value="true" checked>
+                                                <label for="tele_adlist">Blocklists</label><br>
                                             </div>
                                             <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="client" value="true"
-                                                                        checked>
-                                                            Clients</label>
-                                                    </div>
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="group" value="true"
-                                                                        checked>
-                                                            Groups</label>
-                                                    </div>
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="auditlog" value="true"
-                                                                        checked>
-                                                            Audit log</label>
-                                                    </div>
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="staticdhcpleases" value="true"
-                                                                        checked>
-                                                            Static DHCP Leases</label>
-                                                    </div>
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="localdnsrecords" value="true"
-                                                                        checked>
-                                                            Local DNS Records</label>
-                                                    </div>
-                                                </div> 
-                                            </div>
+                                                <input type="checkbox" name="client" id="tele_client" value="true" checked>
+                                                <label for="tele_client">Client</label><br>
+                                                <input type="checkbox" name="group" id="tele_group" value="true" checked>
+                                                <label for="tele_group">Group</label><br>
+                                                <input type="checkbox" name="auditlog" id="tele_auditlog" value="true" checked>
+                                                <label for="tele_auditlog">Audit log</label><br>
+                                                <input type="checkbox" name="staticdhcpleases" id="tele_staticdhcpleases" value="true" checked>
+                                                <label for="tele_staticdhcpleases">Static DHCP Leases</label>
+                                                <input type="checkbox" name="localdnsrecords" id="tele_localdnsrecords" value="true" checked>
+                                                <label for="tele_localdnsrecords">Local DNS Records</label>
+                                            </div> 
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label for="zip_file">File input</label>
-                                                    <input type="file" name="zip_file" id="zip_file">
-                                                    <p class="help-block">Upload only Pi-hole backup files.</p>
-                                                    <button type="submit" class="btn btn-default" name="action"
-                                                            value="in">Restore
-                                                    </button>
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="flushtables" value="true"
-                                                                      checked>
-                                                            Clear existing data</label>
-                                                    </div>
-                                                </div>
+                                                <label for="zip_file">File input</label>
+                                                <input type="file" name="zip_file" id="zip_file">
+                                                <p class="help-block">Upload only Pi-hole backup files.</p>
+                                                <input type="checkbox" name="flushtables" id="tele_flushtables" value="true" checked>
+                                                <label for="tele_flushtables">Clear existing data</label><br>
+                                                <button type="submit" class="btn btn-default" name="action" value="in">Restore</button>
                                             </div>
                                         </div>
                                     </div>
