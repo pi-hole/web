@@ -22,6 +22,11 @@
         }
     }
 ?>
+<!-- Sourceing CSS colors from stylesheet to be used in JS code -->
+<span class="queries-permitted"></span>
+<span class="queries-blocked"></span>
+<span class="graphs-grid"></span>
+<span class="graphs-ticks"></span>
 <!-- Small boxes (Stat box) -->
 <div class="row">
     <div class="col-lg-3 col-sm-6">
@@ -82,10 +87,6 @@
     <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
-        <span class="queries-permitted"></span>
-        <span class="queries-blocked"></span>
-        <span class="graphs-grid"></span>
-        <span class="graphs-ticks"></span>
           <h3 class="box-title">Total queries over last <?php echo getinterval(); ?> hours</h3>
         </div>
         <div class="box-body">
