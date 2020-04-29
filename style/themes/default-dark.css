@@ -478,3 +478,17 @@ fieldset[disabled] .form-control {
 .table-striped > tbody > tr:nth-of-type(2n + 1) {
   background-color: #3d454d;
 }
+.panel,
+.panel-body,
+.panel-default > .panel-heading {
+  background-color: #3e464c;
+  border-radius: 4px;
+  border: 1px solid #353c42;
+  color: #bec5cb;
+}
+.box.box-solid.box-info,
+.box.box-solid.box-info > .box-header {
+  color: #bec5cb;
+  background-color: #367fa9 !important;
+  border: 1px solid #367fa9;
+}
