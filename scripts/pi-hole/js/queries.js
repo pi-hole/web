@@ -263,7 +263,7 @@ $(document).ready(function () {
       }
 
       if (colorClass !== false) {
-        $("td:eq(4)", row).addClass(colorClass);
+        $(row).addClass(colorClass);
       }
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(6)", row).html(buttontext);

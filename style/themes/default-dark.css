@@ -23,7 +23,6 @@ h4 {
 .table > thead > tr > td,
 .table > tbody > tr > td,
 .table > tfoot > tr > td {
-  color: #bec5cb;
   border-top: 0px;
 }
 .table > thead > tr.odd,
