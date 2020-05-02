@@ -64,15 +64,13 @@ function parseColor(input) {
 }
 
 $(document).ready(function () {
-  var network_recent = $(".network-recent").css("background-color");
-  var network_old = $(".network-old").css("background-color");
-  var network_older = $(".network-older").css("background-color");
-  var network_never = $(".network-never").css("background-color");
   tableApi = $("#network-entries").DataTable({
     rowCallback: function (row, data) {
-      var color,
-        mark,
-        lastQuery = parseInt(data.lastQuery);
+      var color, mark, lastQuery = parseInt(data.lastQuery);
+      var network_recent = $(".network-recent").css("background-color");
+      var network_old = $(".network-old").css("background-color");
+      var network_older = $(".network-older").css("background-color");
+      var network_never = $(".network-never").css("background-color");
       if (lastQuery > 0) {
         var diff = getTimestamp() - lastQuery;
         if (diff <= 86400) {
