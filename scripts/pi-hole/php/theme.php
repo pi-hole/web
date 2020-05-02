@@ -8,9 +8,16 @@
 
 // Array of available themes and their description
 $available_themes = [];
-$available_themes["default-light"] = ["Pi-hole default theme (light, default)", "default-light", "minimal", "blue"];
-$available_themes["default-dark"] = ["Pi-hole midnight theme (dark)", "default-dark", "polaris", "polaris"];
-$available_themes["default-dark2"] = ["Pi-hole afternoon theme (dark)", "default-dark", "futurico", "futurico"];
+/* Array key = name used internally, not shown to the user
+*  Array[0] = Description
+*  Array[1] = Is this a dark mode theme? (Sets background to black during page reloading to avoid white "flashing")
+*  Array[2] = Style sheet name
+*  Array[3] = Radio/checkbox theme name
+*  Array[4] = Radio/checkbox theme variant
+*/
+$available_themes["default-light"] = ["Pi-hole default theme (light, default)", false, "default-light", "minimal", "blue"];
+$available_themes["default-dark"] = ["Pi-hole midnight theme (dark)", true, "default-dark", "polaris", "polaris"];
+$available_themes["default-dark2"] = ["Pi-hole afternoon theme (dark)", true, "default-dark", "futurico", "futurico"];
 
 $webtheme = "";
 // Try to load theme settings from setupVars.conf
@@ -29,15 +36,16 @@ if(!array_key_exists($webtheme,$available_themes)) {
         // or requested theme is not among the available
         $webtheme = "default-light";
 }
-$theme = $available_themes[$webtheme][1];
-$checkbox_theme_name = $available_themes[$webtheme][2];
-$checkbox_theme_variant = $available_themes[$webtheme][3];
+
+$darkmode = $available_themes[$webtheme][1];
+$theme = $available_themes[$webtheme][2];
+$checkbox_theme_name = $available_themes[$webtheme][3];
+$checkbox_theme_variant = $available_themes[$webtheme][4];
 
 error_log(print_r($available_themes,true));
 function theme_selection() {
     global $available_themes, $webtheme;
     foreach ($available_themes as $key => $value) {
-        error_log($key."->".$value);
         ?><input type="radio" name="webtheme" value="<?php echo $key; ?>" id="webtheme_<?php echo $key; ?>" <?php if ($key === $webtheme){ ?>checked<?php } ?>>
         <label for="webtheme_<?php echo $key; ?>"><?php echo $value[0]; ?></label><br><?php
     }

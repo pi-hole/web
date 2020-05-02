@@ -175,6 +175,11 @@
 *  Please see LICENSE file for your rights under this license. -->
 <html lang="en">
 <head>
+<?php if ($darkmode) { ?>
+    <style>
+        html { background-color: black; }
+    </style>
+<?php } ?>
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
     <title>Pi-hole<?php if (gethostname()) {echo " - ", gethostname();} ?></title>
