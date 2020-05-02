@@ -513,3 +513,13 @@ fieldset[disabled] .form-control {
 .iradio_minimal-blue {
 	margin-right: 8px;
 }
+
+/* Overlay box with spinners as shown during data collection for graphs */
+.box .overlay, .overlay-wrapper .overlay {
+	z-index: 50;
+  background: #353c42bb;
+	border-radius: 3px;
+}
+.box .overlay > .fa, .overlay-wrapper .overlay > .fa {
+  color: #bec5cb;
+}
