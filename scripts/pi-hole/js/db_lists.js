@@ -66,8 +66,6 @@ function escapeHtml(text) {
     return map[m];
   });
 }
-var blockedColor = $(".queries-blocked").css("background-color");
-var permittedColor = $(".queries-permitted").css("background-color");
 
 function updateTopClientsChart() {
   $("#client-frequency .overlay").show();

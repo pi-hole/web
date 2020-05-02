@@ -26,11 +26,6 @@
 .main-header .navbar .sidebar-toggle:hover {
   color: #f6f6f6;
   background: rgba(0, 0, 0, 0.1);
-}
-.main-header .navbar .sidebar-toggle {
-  color: #fff;
-}
-.main-header .navbar .sidebar-toggle:hover {
   background-color: #367fa9;
 }
 @media (max-width: 767px) {
@@ -100,7 +95,7 @@
 .sidebar-form {
   border-radius: 3px;
   border: 1px solid #374850;
-  margin: 10px 10px;
+  margin: 10px;
 }
 .sidebar-form input[type="text"],
 .sidebar-form .btn {

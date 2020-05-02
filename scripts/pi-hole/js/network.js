@@ -66,7 +66,9 @@ function parseColor(input) {
 $(document).ready(function () {
   tableApi = $("#network-entries").DataTable({
     rowCallback: function (row, data) {
-      var color, mark, lastQuery = parseInt(data.lastQuery);
+      var color,
+        mark,
+        lastQuery = parseInt(data.lastQuery);
       var network_recent = $(".network-recent").css("background-color");
       var network_old = $(".network-old").css("background-color");
       var network_older = $(".network-older").css("background-color");

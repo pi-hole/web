@@ -927,13 +927,11 @@ $(document).ready(function () {
           {
             stacked: true,
             ticks: {
-              beginAtZero: true
+              beginAtZero: true,
+              fontColor: ticksColor
             },
             gridLines: {
               color: gridColor
-            },
-            ticks: {
-              fontColor: ticksColor
             }
           }
         ]
@@ -1006,14 +1004,12 @@ $(document).ready(function () {
           yAxes: [
             {
               ticks: {
-                beginAtZero: true
+                beginAtZero: true,
+                fontColor: ticksColor
               },
               stacked: true,
               gridLines: {
                 color: gridColor
-              },
-              ticks: {
-                fontColor: ticksColor
               }
             }
           ]

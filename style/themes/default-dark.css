@@ -23,7 +23,7 @@ h4 {
 .table > thead > tr > td,
 .table > tbody > tr > td,
 .table > tfoot > tr > td {
-  border-top: 0px;
+  border-top: 0;
 }
 .table > thead > tr.odd,
 .table > tbody > tr.odd,
@@ -119,7 +119,7 @@ h4 {
 .sidebar-form {
   border-radius: 3px;
   border: 1px solid #3e464c;
-  margin: 10px 10px;
+  margin: 10px;
 }
 .sidebar-form input[type="text"],
 .sidebar-form .btn {
@@ -266,15 +266,14 @@ h4 {
 .nav-tabs-custom > .nav-tabs > li.active > a {
   border-left-color: #353c42;
   border-right-color: #353c42;
+  background-color: #272c30;
+  color: #bec5cb;
 }
 .nav-tabs-custom > .nav-tabs.pull-right > li:first-of-type.active > a {
   border-left-color: #353c42;
 }
 .nav-tabs-custom > .nav-tabs > li {
   color: #bec5cb;
-}
-.nav-tabs-custom > .nav-tabs > li.active > a {
-  background-color: #272c30;
 }
 .nav-tabs-custom > .nav-tabs > li > a {
   color: #bec5cb;
@@ -439,7 +438,7 @@ select.form-control,
 .form-group input,
 .input-group input,
 .form-group textarea,
-.input-group textarea 
+.input-group textarea,
 .daterangepicker select.hourselect,
 .daterangepicker select.minuteselect,
 .daterangepicker select.secondselect,
@@ -449,9 +448,6 @@ div.dataTables_wrapper div.dataTables_length select {
   background-color: #353c42;
   color: #bec5cb;
   border: 1px solid #3d444b;
-}
-.nav-tabs-custom > .nav-tabs > li.active > a {
-  color: #bec5cb;
 }
 .nav-tabs-custom > .nav-tabs > li:hover > a,
 .nav-tabs-custom > .nav-tabs > li.active:hover > a {

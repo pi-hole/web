@@ -69,6 +69,9 @@ $token = $_SESSION['token'];
           </div>
         </div>
       </div>
+      <div class="overlay" hidden="true">
+        <i class="fa fa-sync fa-spin"></i>
+      </div>
     </div>
   </div>
 </div>
