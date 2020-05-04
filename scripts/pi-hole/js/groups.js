@@ -8,7 +8,7 @@
 /* global utils:false */
 
 var table;
-var token = $("#token").html();
+var token = $("#token").text();
 
 $(document).ready(function () {
   $("#btnAdd").on("click", addGroup);
