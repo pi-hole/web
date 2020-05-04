@@ -192,7 +192,7 @@ function testCookies() {
 }
 
 $(function () {
-  if (!testCookies() && $("#cookieInfo").length) {
+  if (!testCookies() && $("#cookieInfo").length > 0) {
     $("#cookieInfo").show();
   }
 });
