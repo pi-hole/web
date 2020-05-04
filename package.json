@@ -36,7 +36,7 @@
       "jquery"
     ],
     "parserOptions": {
-      "ecmaVersion": 3,
+      "ecmaVersion": 5,
       "sourceType": "script"
     },
     "esnext": false,
