@@ -225,7 +225,7 @@ $(".nav-tabs a").on("shown.bs.tab", function (e) {
 // Auto dismissal for info notifications
 $(document).ready(function () {
   var alInfo = $("#alInfo");
-  if (alInfo.length) {
+  if (alInfo.length > 0) {
     alInfo.delay(3000).fadeOut(2000, function () {
       alInfo.hide();
     });
