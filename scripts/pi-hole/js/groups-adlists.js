@@ -9,7 +9,7 @@
 
 var table;
 var groups = [];
-var token = $("#token").html();
+var token = $("#token").text();
 
 function get_groups() {
   $.post(
