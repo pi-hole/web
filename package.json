@@ -64,8 +64,7 @@
       "unicorn/prefer-number-properties": "off",
       "unicorn/prefer-query-selector": "off",
       "unicorn/prefer-string-slice": "off",
-      "unicorn/prevent-abbreviations": "off",
-      "unicorn/string-content": "off"
+      "unicorn/prevent-abbreviations": "off"
     }
   }
 }
