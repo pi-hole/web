@@ -686,7 +686,8 @@ function updateTopLists() {
         }
 
         domain = escapeHtml(domain);
-        url = '<a href="queries.php?domain=' + domain + '">' + domain + "</a>";
+        var urlText = domain == "" ? "." : domain;
+        url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
         percentage = (data.top_queries[domain] / data.dns_queries_today) * 100;
         domaintable.append(
           "<tr> <td>" +
@@ -720,7 +721,8 @@ function updateTopLists() {
         }
 
         domain = escapeHtml(domain);
-        url = '<a href="queries.php?domain=' + domain + '">' + domain + "</a>";
+        var urlText = domain == "" ? "." : domain;
+        url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
         percentage = (data.top_ads[domain] / data.ads_blocked_today) * 100;
         adtable.append(
           "<tr> <td>" +
