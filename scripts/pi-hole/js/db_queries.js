@@ -346,6 +346,14 @@ $(document).ready(function() {
       $(row).css("color", color);
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(5)", row).html(buttontext);
+
+      // Substitute domain by "." if empty
+      var domain = data[2];
+      if (domain.length === 0) {
+        domain = ".";
+      }
+
+      $("td:eq(2)", row).text(domain);
     },
     dom:
       "<'row'<'col-sm-12'f>>" +

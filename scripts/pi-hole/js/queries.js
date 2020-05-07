@@ -293,11 +293,18 @@ $(document).ready(function() {
         $("td:eq(4)", row).addClass("pointer");
       }
 
-      // Add domain in CNAME chain causing the query to have been blocked
+      // Substitute domain by "." if empty
       var domain = data[2];
-      var CNAME_domain = data[8];
+      if (domain.length === 0) {
+        domain = ".";
+      }
+
       if (isCNAME) {
+        var CNAME_domain = data[8];
+        // Add domain in CNAME chain causing the query to have been blocked
         $("td:eq(2)", row).text(domain + "\n(blocked " + CNAME_domain + ")");
+      } else {
+        $("td:eq(2)", row).text(domain);
       }
 
       // Check for existence of sixth column and display only if not Pi-holed
