@@ -676,7 +676,7 @@ function updateTopLists() {
       .remove();
     var domaintable = $("#domain-frequency").find("tbody:last");
     var adtable = $("#ad-frequency").find("tbody:last");
-    var url, domain, percentage;
+    var url, domain, percentage, urlText;
     for (domain in data.top_queries) {
       if (Object.prototype.hasOwnProperty.call(data.top_queries, domain)) {
         // Sanitize domain
@@ -686,7 +686,7 @@ function updateTopLists() {
         }
 
         domain = escapeHtml(domain);
-        var urlText = domain == "" ? "." : domain;
+        urlText = domain === "" ? "." : domain;
         url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
         percentage = (data.top_queries[domain] / data.dns_queries_today) * 100;
         domaintable.append(
@@ -721,7 +721,7 @@ function updateTopLists() {
         }
 
         domain = escapeHtml(domain);
-        var urlText = domain == "" ? "." : domain;
+        urlText = domain === "" ? "." : domain;
         url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
         percentage = (data.top_ads[domain] / data.ads_blocked_today) * 100;
         adtable.append(
