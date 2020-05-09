@@ -326,7 +326,7 @@ if($auth) {
                                 */ ?>
                                 <!-- PayPal -->
                                 <div class="text-center">
-                                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY" rel="noopener" target="_blank" style="background:none">
+                                    <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank" style="background:none">
                                         <img src="img/donate.gif" alt="Donate">
                                     </a>
                                 </div>
@@ -655,7 +655,7 @@ if($auth) {
                 <?php } ?>
                 <!-- Donate -->
                 <li>
-                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY" rel="noopener" target="_blank">
+                    <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
                         <i class="fa-paypal-icon fab fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
