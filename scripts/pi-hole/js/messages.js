@@ -19,12 +19,19 @@ function render_timestamp(data, type) {
   return data;
 }
 
+function multline(input) {
+  return input.split(",").join("\n");
+}
+
 function render_message(data, type, row) {
   // Display and search content
   switch (row["type"]) {
     case "REGEX":
       return "Encountered an error when processing <a href=\"groups-domains.php?domainid=" + row["blob3"] + "\">" + row["blob1"] + " regex filter with ID " + row["blob3"] + "</a>:<pre>"+row["blob2"]+"</pre>Error message: <pre>"+row["message"]+"</pre>";
-  
+
+    case "SUBNET":
+      return "Client <code>"+row["message"]+"</code> is managed by "+row["blob1"]+" groups (database IDs ["+row["blob3"]+"]):<pre>"+multline(row["blob2"])+"</pre>" +
+      "FTL chose the most recent entry <pre>"+row["blob4"]+"</pre> to get the group configuration for this client.";
     default:
       return "Unknown message type<pre>" + JSON.stringify(row) + "</pre>";
   }
