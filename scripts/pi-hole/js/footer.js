@@ -93,6 +93,22 @@ function piholeChange(action, duration) {
   }
 }
 
+function check_messages() {
+  $.getJSON("api_db.php?status", function(data) {
+    if ("message_count" in data && data.message_count > 0) {
+      var title;
+      if (data.message_count > 1) {
+        title = "There are " + data.message_count + " warnings. Click for further details.";
+      } else {
+        title = "There is one warning. Click for further details.";
+      }
+      $("#pihole-diagnosis").prop("title", title);
+      $("#pihole-diagnosis-count").text(data.message_count);
+      $("#pihole-diagnosis").removeClass("hidden");
+    }
+  });
+}
+
 $(document).ready(function () {
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html()));
@@ -111,6 +127,10 @@ $(document).ready(function () {
     radioClass: "iradio_" + checkbox_theme,
     increaseArea: "20%"
   });
+  // Run check immediately after page loading ...
+  check_messages();
+  // ... and once again with five seconds delay
+  setTimeout(check_messages, 5000);
 });
 
 // Handle Enable/Disable
