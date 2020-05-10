@@ -215,8 +215,8 @@
     <script src="scripts/vendor/bootstrap-notify.min.js"></script>
 
 <?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
-    <script src="style/vendor/bootstrap/js/bootstrap-multiselect.js"></script>
-    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-multiselect.css">
+    <script src="style/vendor/bootstrap/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-select.min.css">
     <script src="style/vendor/bootstrap/js/bootstrap-toggle.min.js"></script>
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-toggle.min.css">
     <script src="scripts/vendor/moment.min.js"></script>
@@ -318,7 +318,7 @@ if($auth) {
                                 */ ?>
                                 <!-- PayPal -->
                                 <div class="text-center">
-                                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=3J2L3Z4DHW9UY" rel="noopener" target="_blank" style="background:none">
+                                    <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank" style="background:none">
                                         <img src="img/donate.gif" alt="Donate">
                                     </a>
                                 </div>
@@ -623,10 +623,10 @@ if($auth) {
                         <i class="fa fa-cogs"></i> <span>Settings</span>
                     </a>
                 </li>
-                <!-- Custom DNS -->
-                <li<?php if($scriptname === "custom_dns.php"){ ?> class="active"<?php } ?>>
-                    <a href="custom_dns.php">
-                        <i class="fa fa-address-book"></i> <span>Custom DNS</span>
+                <!-- Local DNS Records -->
+                <li<?php if($scriptname === "dns_records.php"){ ?> class="active"<?php } ?>>
+                    <a href="dns_records.php">
+                        <i class="fa fa-address-book"></i> <span>Local DNS Records</span>
                     </a>
                 </li>
                 <!-- Logout -->
@@ -652,7 +652,7 @@ if($auth) {
                 <?php } ?>
                 <!-- Donate -->
                 <li>
-                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY" rel="noopener" target="_blank">
+                    <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
                         <i class="fa-paypal-icon fab fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>

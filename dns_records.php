@@ -11,8 +11,8 @@
 
 <!-- Title -->
 <div class="page-header">
-    <h1>Custom DNS configuration</h1>
-    <small>On this page, you can add domain/IP associations similar to records in <code>/etc/hosts</code>.</small>
+    <h1>Local DNS Records</h1>
+    <small>On this page, you can add domain/IP associations</small>
 </div>
 
 <!-- Domain Input -->
@@ -28,11 +28,11 @@
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="form-group col-md-6">
                         <label for="domain">Domain:</label>
                         <input id="domain" type="url" class="form-control" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
-                    <div class="col-md-6">
+                    <div class="form-group col-md-6">
                         <label for="ip">IP Address:</label>
                         <input id="ip" type="text" class="form-control" placeholder="Associated IP address" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
@@ -67,7 +67,7 @@
         <div class="box" id="recent-queries">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of custom DNS domains
+                    List of local DNS domains
                 </h3>
             </div>
             <!-- /.box-header -->

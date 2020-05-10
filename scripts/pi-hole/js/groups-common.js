@@ -116,7 +116,7 @@ function validateIPv6CIDR(ip) {
       ipv6elem +
       "))*::((?:" +
       ipv6elem +
-      "))((?::" +
+      "))*((?::" +
       ipv6elem +
       "))*|((?:" +
       ipv6elem +
@@ -129,13 +129,34 @@ function validateIPv6CIDR(ip) {
   return ipv6validator.test(ip);
 }
 
-window.utils = (function () {
+function bsSelect_defaults() {
+  // set bootstrap-select defaults
+  var pickerDEFAULTS = $.fn.selectpicker.Constructor.DEFAULTS;
+  pickerDEFAULTS.noneSelectedText = "none selected";
+  pickerDEFAULTS.selectedTextFormat = "count > 1";
+  pickerDEFAULTS.actionsBox = true;
+  pickerDEFAULTS.width = "fit";
+  pickerDEFAULTS.container = "body";
+  pickerDEFAULTS.dropdownAlignRight = "auto";
+  pickerDEFAULTS.selectAllText = "All";
+  pickerDEFAULTS.deselectAllText = "None";
+  pickerDEFAULTS.countSelectedText = function(num, total) {
+    if (num === total) {
+      return "All selected (" + num + ")";
+    }
+
+    return num + " selected";
+  };
+}
+
+window.utils = (function() {
   return {
     showAlert: showAlert,
     datetime: datetime,
     disableAll: disableAll,
     enableAll: enableAll,
     validateIPv4CIDR: validateIPv4CIDR,
-    validateIPv6CIDR: validateIPv6CIDR
+    validateIPv6CIDR: validateIPv6CIDR,
+    bsSelect_defaults: bsSelect_defaults
   };
 })();

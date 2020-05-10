@@ -688,6 +688,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <input type="text" name="custom1val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                <?php if (isset($custom1)){ ?>value="<?php echo $custom1; ?>"<?php } ?>>
                                                     </div>
+                                                </div>
+                                                <div class="form-group">
                                                     <label>Custom 2 (IPv4)</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon">
@@ -710,6 +712,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <input type="text" name="custom3val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                <?php if (isset($custom3)){ ?>value="<?php echo $custom3; ?>"<?php } ?>>
                                                     </div>
+                                                </div>
+                                                <div class="form-group">
                                                     <label>Custom 4 (IPv6)</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon">
@@ -969,10 +973,15 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 </div>
                                                 <h4>Administrator Email Address</h4>
                                                 <div class="form-group">
+<<<<<<< HEAD
                                                     <div class="input-group">
                                                         <input type="email" class="form-control" name="adminemail"
                                                                value="<?php echo htmlspecialchars($adminemail); ?>">
                                                     </div>
+=======
+                                                    <input type="text" class="form-control" name="adminemail"
+                                                           value="<?php echo htmlspecialchars($adminemail); ?>">
+>>>>>>> master
                                                 </div>
                                                 <input type="hidden" name="field" value="webUI">
                                                 <input type="hidden" name="token" value="<?php echo $token ?>">

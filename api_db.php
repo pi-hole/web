@@ -368,13 +368,28 @@ if (isset($_GET['getGraphData']) && $auth)
 	// Parse the DB result into graph data, filling in missing interval sections with zero
 	function parseDBData($results, $interval, $from, $until) {
 		$data = array();
+		$first_db_timestamp = -1;
 
 		if(!is_bool($results)) {
 			// Read in the data
 			while($row = $results->fetchArray()) {
 				// $data[timestamp] = value_in_this_interval
 				$data[$row[0]] = intval($row[1]);
+				if($first_db_timestamp === -1)
+					$first_db_timestamp = intval($row[0]);
 			}
+		}
+
+		// It is unpredictable what the first timestamp returned by the database
+		// will be. This depends on live data. Hence, we re-align the FROM
+		// timestamp to avoid unaligned holes appearing as additional
+		// (incorrect) data points
+		$aligned_from = $from + (($first_db_timestamp - $from) % $interval);
+
+		// Fill gaps in returned data
+		for($i = $aligned_from; $i < $until; $i += $interval) {
+			if(!array_key_exists($i, $data))
+				$data[$i] = 0;
 		}
 
 		return $data;
