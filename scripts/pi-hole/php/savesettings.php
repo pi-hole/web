@@ -6,7 +6,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-if(basename($_SERVER['SCRIPT_FILENAME']) !== "settings.php")
+if(!in_array(basename($_SERVER['SCRIPT_FILENAME']), ["settings.php", "teleporter.php"], true))
 {
 	die("Direct access to this script is forbidden!");
 }
@@ -35,7 +35,7 @@ function istrue(&$argument) {
 // Credit: http://stackoverflow.com/a/4694816/2087442
 function validDomain($domain_name)
 {
-	$validChars = preg_match("/^([_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([a-z\d])*)*$/i", $domain_name);
+	$validChars = preg_match("/^([_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([_a-z\d])*)*$/i", $domain_name);
 	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
 	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
 	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
@@ -44,7 +44,7 @@ function validDomain($domain_name)
 function validDomainWildcard($domain_name)
 {
 	// There has to be either no or at most one "*" at the beginning of a line
-	$validChars = preg_match("/^((\*.)?[_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([a-z\d])*)*$/i", $domain_name);
+	$validChars = preg_match("/^((\*.)?[_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([_a-z\d])*)*$/i", $domain_name);
 	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
 	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
 	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
@@ -75,20 +75,14 @@ function validEmail($email)
 }
 
 $dhcp_static_leases = array();
-function readStaticLeasesFile()
+function readStaticLeasesFile($origin_file="/etc/dnsmasq.d/04-pihole-static-dhcp.conf")
 {
 	global $dhcp_static_leases;
 	$dhcp_static_leases = array();
-	try
-	{
-		$dhcpstatic = @fopen('/etc/dnsmasq.d/04-pihole-static-dhcp.conf', 'r');
-	}
-	catch(Exception $e)
-	{
-		echo "Warning: Failed to read /etc/dnsmasq.d/04-pihole-static-dhcp.conf, this is not an error";
+	if(!file_exists($origin_file) || !is_readable($origin_file))
 		return false;
-	}
 
+	$dhcpstatic = @fopen($origin_file, 'r');
 	if(!is_resource($dhcpstatic))
 		return false;
 
@@ -154,16 +148,16 @@ function readDNSserversList()
 			$line = explode(';', $line);
 			$name = $line[0];
 			$values = [];
-			if (!empty($line[1])) {
+			if (!empty($line[1]) && validIP($line[1])) {
 				$values["v4_1"] = $line[1];
 			}
-			if (!empty($line[2])) {
+			if (!empty($line[2]) && validIP($line[2])) {
 				$values["v4_2"] = $line[2];
 			}
-			if (!empty($line[3])) {
+			if (!empty($line[3]) && validIP($line[3])) {
 				$values["v6_1"] = $line[3];
 			}
-			if (!empty($line[4])) {
+			if (!empty($line[4]) && validIP($line[4])) {
 				$values["v6_2"] = $line[4];
 			}
             $list[$name] = $values;
@@ -173,43 +167,66 @@ function readDNSserversList()
 	return $list;
 }
 
-$adlist = [];
-function readAdlists()
-{
-	// Reset list
-	$list = [];
-	$handle = @fopen("/etc/pihole/adlists.list", "r");
-	if ($handle)
-	{
-		while (($line = fgets($handle)) !== false)
+require_once("database.php");
+
+function addStaticDHCPLease($mac, $ip, $hostname) {
+	global $error, $success, $dhcp_static_leases;
+
+	try {
+		if(!validMAC($mac))
 		{
-			if(strlen($line) < 3)
+			throw new Exception("MAC address (".htmlspecialchars($mac).") is invalid!<br>", 0);
+		}
+		$mac = strtoupper($mac);
+
+		if(!validIP($ip) && strlen($ip) > 0)
+		{
+			throw new Exception("IP address (".htmlspecialchars($ip).") is invalid!<br>", 1);
+		}
+
+		if(!validDomain($hostname) && strlen($hostname) > 0)
+		{
+			throw new Exception("Host name (".htmlspecialchars($hostname).") is invalid!<br>", 2);
+		}
+
+		if(strlen($hostname) == 0 && strlen($ip) == 0)
+		{
+			throw new Exception("You can not omit both the IP address and the host name!<br>", 3);
+		}
+
+		if(strlen($hostname) == 0)
+			$hostname = "nohost";
+
+		if(strlen($ip) == 0)
+			$ip = "noip";
+
+		// Test if this lease is already included
+		readStaticLeasesFile();
+
+		foreach($dhcp_static_leases as $lease) {
+			if($lease["hwaddr"] === $mac)
 			{
-				continue;
+				throw new Exception("Static release for MAC address (".htmlspecialchars($mac).") already defined!<br>", 4);
 			}
-			elseif($line[0] === "#")
+			if($ip !== "noip" && $lease["IP"] === $ip)
 			{
-				// Comments start either with "##" or "# "
-				if($line[1] !== "#" &&
-				   $line[1] !== " ")
-				{
-					// Commented list
-					array_push($list, [false,rtrim(substr($line, 1))]);
-				}
+				throw new Exception("Static lease for IP address (".htmlspecialchars($ip).") already defined!<br>", 5);
 			}
-			else
+			if($lease["host"] === $hostname)
 			{
-				// Active list
-				array_push($list, [true,rtrim($line)]);
+				throw new Exception("Static lease for hostname (".htmlspecialchars($hostname).") already defined!<br>", 6);
 			}
 		}
-		fclose($handle);
+
+		exec("sudo pihole -a addstaticdhcp ".$mac." ".$ip." ".$hostname);
+		$success .= "A new static address has been added";
+		return true;
+	} catch(Exception $exception) {
+		$error .= $exception->getMessage();
+		return false;
 	}
-	return $list;
 }
 
-	// Read available adlists
-	$adlist = readAdlists();
 	// Read available DNS server list
 	$DNSserverslist = readDNSserversList();
 
@@ -512,9 +529,9 @@ function readAdlists()
 				$adminemail = trim($_POST["adminemail"]);
 				if(strlen($adminemail) == 0 || !isset($adminemail))
 				{
-					$adminemail = 'noadminemail';
+					$adminemail = '';
 				}
-				elseif(!validEmail($adminemail))
+				if(strlen($adminemail) > 0 && !validEmail($adminemail))
 				{
 					$error .= "Administrator email address (".htmlspecialchars($adminemail).") is invalid!<br>";
 				}
@@ -561,58 +578,7 @@ function readAdlists()
 					$ip = $_POST["AddIP"];
 					$hostname = $_POST["AddHostname"];
 
-					if(!validMAC($mac))
-					{
-						$error .= "MAC address (".htmlspecialchars($mac).") is invalid!<br>";
-					}
-					$mac = strtoupper($mac);
-
-					if(!validIP($ip) && strlen($ip) > 0)
-					{
-						$error .= "IP address (".htmlspecialchars($ip).") is invalid!<br>";
-					}
-
-					if(!validDomain($hostname) && strlen($hostname) > 0)
-					{
-						$error .= "Host name (".htmlspecialchars($hostname).") is invalid!<br>";
-					}
-
-					if(strlen($hostname) == 0 && strlen($ip) == 0)
-					{
-						$error .= "You can not omit both the IP address and the host name!<br>";
-					}
-
-					if(strlen($hostname) == 0)
-						$hostname = "nohost";
-
-					if(strlen($ip) == 0)
-						$ip = "noip";
-
-					// Test if this lease is already included
-					readStaticLeasesFile();
-					foreach($dhcp_static_leases as $lease) {
-						if($lease["hwaddr"] === $mac)
-						{
-							$error .= "Static release for MAC address (".htmlspecialchars($mac).") already defined!<br>";
-							break;
-						}
-						if($ip !== "noip" && $lease["IP"] === $ip)
-						{
-							$error .= "Static lease for IP address (".htmlspecialchars($ip).") already defined!<br>";
-							break;
-						}
-						if($lease["host"] === $hostname)
-						{
-							$error .= "Static lease for hostname (".htmlspecialchars($hostname).") already defined!<br>";
-							break;
-						}
-					}
-
-					if(!strlen($error))
-					{
-						exec("sudo pihole -a addstaticdhcp ".$mac." ".$ip." ".$hostname);
-						$success .= "A new static address has been added";
-					}
+					addStaticDHCPLease($mac, $ip, $hostname);
 					break;
 				}
 
@@ -706,40 +672,6 @@ function readAdlists()
 
 				break;
 
-			case "adlists":
-				foreach ($adlist as $key => $value)
-				{
-					if(isset($_POST["adlist-del-".$key]))
-					{
-						// Delete list
-						exec("sudo pihole -a adlist del ".escapeshellcmd($value[1]));
-					}
-					elseif(isset($_POST["adlist-enable-".$key]) && !$value[0])
-					{
-						// Is not enabled, but should be
-						exec("sudo pihole -a adlist enable ".escapeshellcmd($value[1]));
-
-					}
-					elseif(!isset($_POST["adlist-enable-".$key]) && $value[0])
-					{
-						// Is enabled, but shouldn't be
-						exec("sudo pihole -a adlist disable ".escapeshellcmd($value[1]));
-					}
-				}
-
-				if(strlen($_POST["newuserlists"]) > 1)
-				{
-					$domains = array_filter(preg_split('/\r\n|[\r\n]/', $_POST["newuserlists"]));
-					foreach($domains as $domain)
-					{
-						exec("sudo pihole -a adlist add ".escapeshellcmd($domain));
-					}
-				}
-
-				// Reread available adlists
-				$adlist = readAdlists();
-				break;
-
 			case "privacyLevel":
 				$level = intval($_POST["privacylevel"]);
 				if($level >= 0 && $level <= 4)
@@ -771,6 +703,15 @@ function readAdlists()
 				else
 				{
 					$error .= "Invalid privacy level (".$level.")!";
+				}
+				break;
+			// Flush network table
+			case "flusharp":
+				exec("sudo pihole arpflush quiet", $output);
+				$error = implode("<br>", $output);
+				if(strlen($error) == 0)
+				{
+					$success .= "The network table has been flushed";
 				}
 				break;
 

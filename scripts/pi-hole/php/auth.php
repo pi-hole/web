@@ -10,8 +10,15 @@ require_once('func.php');
 $ERRORLOG = getenv('PHP_ERROR_LOG');
 if (empty($ERRORLOG)) {
     $ERRORLOG = '/var/log/lighttpd/error.log';
+
+    if (!file_exists($ERRORLOG) || !is_writable($ERRORLOG)) {
+	    $ERRORLOG = '/var/log/apache2/error.log';
+
+	    if (!file_exists($ERRORLOG) || !is_writable($ERRORLOG)) {
+		    $ERRORLOG = '/tmp/pi-hole-error.log';
+	    }
+    }
 }
-$regexfile = "/etc/pihole/regex.list";
 
 function pi_log($message) {
     error_log(date('Y-m-d H:i:s') . ': ' . $message . "\n", 3, $GLOBALS['ERRORLOG']);
@@ -106,15 +113,12 @@ function check_csrf($token) {
     }
 }
 
-function check_domain() {
-    if(isset($_POST['domain'])){
-        $domains = preg_split('/\s+/', $_POST['domain']);
-        foreach($domains as $domain)
-        {
-            $validDomain = is_valid_domain_name($domain);
-            if(!$validDomain){
-                log_and_die(htmlspecialchars($domain. ' is not a valid domain'));
-            }
+function check_domain(&$domains) {
+    foreach($domains as &$domain)
+    {
+        $validDomain = is_valid_domain_name($domain);
+        if(!$validDomain){
+            log_and_die(htmlspecialchars($domain. ' is not a valid domain'));
         }
     }
 }

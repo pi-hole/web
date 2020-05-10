@@ -8,6 +8,7 @@
 
 $api = true;
 header('Content-type: application/json');
+require("scripts/pi-hole/php/database.php");
 require("scripts/pi-hole/php/password.php");
 require("scripts/pi-hole/php/auth.php");
 check_cors();
@@ -48,51 +49,11 @@ function resolveHostname($clientip, $printIP)
 	return $clientname;
 }
 
-// Get posible non-standard location of FTL's database
-$FTLsettings = parse_ini_file("/etc/pihole/pihole-FTL.conf");
-if(isset($FTLsettings["DBFILE"]))
-{
-	$DBFILE = $FTLsettings["DBFILE"];
-}
-else
-{
-	$DBFILE = "/etc/pihole/pihole-FTL.db";
-}
-
 // Needs package php5-sqlite, e.g.
 //    sudo apt-get install php5-sqlite
 
-function SQLite3_connect($trytoreconnect)
-{
-	global $DBFILE;
-	try
-	{
-		// connect to database
-		return new SQLite3($DBFILE, SQLITE3_OPEN_READONLY);
-	}
-	catch (Exception $exception)
-	{
-		// sqlite3 throws an exception when it is unable to connect, try to reconnect after 3 seconds
-		if($trytoreconnect)
-		{
-			sleep(3);
-			$db = SQLite3_connect(false);
-		}
-	}
-}
-
-if(strlen($DBFILE) > 0)
-{
-	$db = SQLite3_connect(true);
-}
-else
-{
-	die("No database available");
-}
-if(!$db)
-{
-	die("Error connecting to database");
-}
+$QUERYDB = getQueriesDBFilename();
+$db = SQLite3_connect($QUERYDB);
 
 if(isset($_GET["network"]) && $auth)
 {
@@ -100,7 +61,19 @@ if(isset($_GET["network"]) && $auth)
 	$results = $db->query('SELECT * FROM network');
 
 	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
+	{
+		$id = $res["id"];
+		// Empty array for holding the IP addresses
+		$res["ip"] = array();
+		// Get IP addresses for this device
+		$network_addresses = $db->query("SELECT ip FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC");
+		while($network_addresses !== false && $ip = $network_addresses->fetchArray(SQLITE3_ASSOC))
+			array_push($res["ip"],$ip["ip"]);
+		// UTF-8 encode host name and vendor
+		$res["name"] = utf8_encode($res["name"]);
+		$res["macVendor"] = utf8_encode($res["macVendor"]);
 		array_push($network, $res);
+	}
 
 	$data = array_merge($data, array('network' => $network));
 }
@@ -164,12 +137,15 @@ if (isset($_GET['getAllQueries']) && $auth)
 					case 7:
 						$query_type = "TXT";
 						break;
+					case 8:
+						$query_type = "NAPTR";
+						break;
 					default:
 						$query_type = "UNKN";
 						break;
 				}
-
-				$allQueries[] = [$row[0], $query_type, $row[2], $c, $row[4]];
+				// array:        time     type         domain                client           status
+				$allQueries[] = [$row[0], $query_type, utf8_encode($row[2]), utf8_encode($c), $row[4]];
 			}
 	}
 	$result = array('data' => $allQueries);
@@ -202,8 +178,8 @@ if (isset($_GET['topClients']) && $auth)
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
 		{
-
-			$c = resolveHostname($row[0],false);
+			// Try to resolve host name and convert to UTF-8
+			$c = utf8_encode(resolveHostname($row[0],false));
 
 			if(array_key_exists($c, $clientnums))
 			{
@@ -253,8 +229,8 @@ if (isset($_GET['topDomains']) && $auth)
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
 		{
-			// Convert client to lower case
-			$c = strtolower($row[0]);
+			// Convert domain to lower case UTF-8
+			$c = utf8_encode(strtolower($row[0]));
 			if(array_key_exists($c, $domains))
 			{
 				// Entry already exists, add to it (might appear multiple times due to mixed capitalization in the database)
@@ -303,7 +279,7 @@ if (isset($_GET['topAds']) && $auth)
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
 		{
-			$addomains[$row[0]] = intval($row[1]);
+			$addomains[utf8_encode($row[0])] = intval($row[1]);
 		}
 	$result = array('top_ads' => $addomains);
 	$data = array_merge($data, $result);
@@ -392,20 +368,28 @@ if (isset($_GET['getGraphData']) && $auth)
 	// Parse the DB result into graph data, filling in missing interval sections with zero
 	function parseDBData($results, $interval, $from, $until) {
 		$data = array();
+		$first_db_timestamp = -1;
 
 		if(!is_bool($results)) {
 			// Read in the data
 			while($row = $results->fetchArray()) {
 				// $data[timestamp] = value_in_this_interval
 				$data[$row[0]] = intval($row[1]);
+				if($first_db_timestamp === -1)
+					$first_db_timestamp = intval($row[0]);
 			}
+		}
 
-			// Fill the missing intervals with zero
-			// Advance in steps of interval
-			for($i = $from; $i < $until; $i += $interval) {
-				if(!array_key_exists($i, $data))
-					$data[$i] = 0;
-			}
+		// It is unpredictable what the first timestamp returned by the database
+		// will be. This depends on live data. Hence, we re-align the FROM
+		// timestamp to avoid unaligned holes appearing as additional
+		// (incorrect) data points
+		$aligned_from = $from + (($first_db_timestamp - $from) % $interval);
+
+		// Fill gaps in returned data
+		for($i = $aligned_from; $i < $until; $i += $interval) {
+			if(!array_key_exists($i, $data))
+				$data[$i] = 0;
 		}
 
 		return $data;

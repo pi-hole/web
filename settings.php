@@ -26,7 +26,7 @@ if($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR)
 }
 
 ?>
-<style type="text/css">
+<style>
 	.tooltip-inner {
 		max-width: none;
 		white-space: nowrap;
@@ -250,48 +250,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             <div class="col-md-12">
                                 <div class="box">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Blocklists used to generate Pi-hole's Gravity: <?php echo count($adlist); ?></h3>
+                                        <h3 class="box-title">Blocklists used to generate Pi-hole's Gravity</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-bordered dt-responsive nowrap">
-                                                <thead>
-                                                <tr>
-                                                    <th>Enabled</th>
-                                                    <th>List</th>
-                                                    <th style="width:1%">Delete</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php foreach ($adlist as $key => $value) { ?>
-                                                        <tr>
-                                                            <td>
-                                                                <input type="checkbox" name="adlist-enable-<?php echo $key; ?>" <?php if ($value[0]){ ?>checked<?php } ?>>
-                                                            </td>
-                                                            <td>
-                                                                <a href="<?php echo htmlentities($value[1]); ?>" target="_new" id="adlist-text-<?php echo $key; ?>"><?php echo htmlentities($value[1]); ?></a>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <button class="btn btn-danger btn-xs" id="adlist-btn-<?php echo $key; ?>">
-                                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                                </button>
-                                                                <input type="checkbox" name="adlist-del-<?php echo $key; ?>" hidden>
-                                                            </td>
-                                                        </tr>
-                                                    <?php } ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="form-group">
-                                            <textarea name="newuserlists" class="form-control" rows="1" placeholder="Enter one URL per line to add new blocklists"></textarea>
-                                        </div>
-                                        <input type="hidden" name="field" value="adlists">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
-                                    </div>
-                                    <div class="box-footer clearfix">
-                                        <button type="submit" class="btn btn-primary" name="submit" value="save" id="blockinglistsave">Save</button>
-                                        <span><strong>Important: </strong>Save and Update when you're done!</span>
-                                        <button type="submit" class="btn btn-primary pull-right" name="submit" id="blockinglistsaveupdate" value="saveupdate">Save and Update</button>
+                                        <p>Please use the  <a href="groups-adlists.php">group management pages</a> to edit the blocklists used by Pi-hole.</p>
                                     </div>
                                 </div>
                             </div>
@@ -732,6 +694,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <input type="text" name="custom1val" class="form-control"
                                                                <?php if (isset($custom1)){ ?>value="<?php echo $custom1; ?>"<?php } ?>>
                                                     </div>
+                                                </div>
+                                                <div class="form-group">
                                                     <label>Custom 2 (IPv4)</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon">
@@ -754,6 +718,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         <input type="text" name="custom3val" class="form-control"
                                                                <?php if (isset($custom3)){ ?>value="<?php echo $custom3; ?>"<?php } ?>>
                                                     </div>
+                                                </div>
+                                                <div class="form-group">
                                                     <label>Custom 4 (IPv6)</label>
                                                     <div class="input-group">
                                                         <div class="input-group-addon">
@@ -850,7 +816,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                    server which supports DNSSEC when activating DNSSEC. Note that
                                                    the size of your log might increase significantly
                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
-                                                   <a href="http://dnssec.vs.uni-due.de/" target="_blank">here</a>.</p>
+                                                   <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
                                                 <label>Conditional Forwarding</label>
                                                 <p>If not configured as your DHCP server, Pi-hole won't be able to
                                                    determine the names of devices on your local network.  As a
@@ -1013,10 +979,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 </div>
                                                 <h4>Administrator Email Address</h4>
                                                 <div class="form-group">
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control" name="adminemail"
-                                                               value="<?php echo htmlspecialchars($adminemail); ?>">
-                                                    </div>
+                                                    <input type="text" class="form-control" name="adminemail"
+                                                           value="<?php echo htmlspecialchars($adminemail); ?>">
                                                 </div>
                                                 <input type="hidden" name="field" value="webUI">
                                                 <input type="hidden" name="token" value="<?php echo $token ?>">
@@ -1128,12 +1092,17 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-lg-6 col-md-12">
-                                                <label>Import ...</label>
+                                                <label>Import...</label>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="whitelist" value="true"
                                                                       checked>
-                                                            Whitelist</label>
+                                                            Whitelist (exact)</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="regex_whitelist" value="true"
+                                                                      checked>
+                                                            Whitelist (regex/wildcard)</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="blacklist" value="true"
@@ -1143,12 +1112,22 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="regexlist" value="true"
                                                                       checked>
-                                                            Regex filters</label>
+                                                            Blacklist (regex/wildcard)</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="adlist" value="true"
+                                                                      checked>
+                                                            Blocklists</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="auditlog" value="true"
                                                                       checked>
                                                             Audit log</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="staticdhcpleases" value="true"
+                                                                      checked>
+                                                            Static DHCP Leases</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1160,6 +1139,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <button type="submit" class="btn btn-default" name="action"
                                                             value="in">Import
                                                     </button>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="flushtables" value="true"
+                                                                      checked>
+                                                            Clear existing data</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1287,7 +1271,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" target="_blank">DNS cache documentation</a>.
+                                            See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
                                             <?php } else { ?>
                                             <div>The FTL service is offline!</div>
                                             <?php } ?>
@@ -1319,9 +1303,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
-                                            <?php if ($piHoleLogging) { ?>
-                                                <button type="button" class="btn btn-danger confirm-disablelogging form-control">Disable query logging and flush logs</button>
-                                            <?php } ?>
+                                                <button type="button" class="btn btn-warning confirm-flusharp form-control">Flush network table</button>
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
@@ -1347,9 +1329,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                         <input type="hidden" name="field" value="flushlogs">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
                                     </form>
-                                    <form role="form" method="post" id="disablelogsform">
-                                        <input type="hidden" name="field" value="Logging">
-                                        <input type="hidden" name="action" value="Disable">
+                                    <form role="form" method="post" id="flusharpform">
+                                        <input type="hidden" name="field" value="flusharp">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
                                     </form>
                                     <form role="form" method="post" id="disablelogsform-noflush">

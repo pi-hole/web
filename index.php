@@ -32,7 +32,7 @@
                 <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
             </div>
             <div class="icon">
-                <i class="ion ion-earth"></i>
+                <i class="fas fa-globe-americas"></i>
             </div>
         </div>
     </div>
@@ -45,7 +45,7 @@
                 <h3 class="statistic"><span id="ads_blocked_today">---</span></h3>
             </div>
             <div class="icon">
-                <i class="ion ion-android-hand"></i>
+                <i class="fas fa-hand-paper"></i>
             </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
                 <h3 class="statistic"><span id="ads_percentage_today">---</span></h3>
             </div>
             <div class="icon">
-                <i class="ion ion-pie-graph"></i>
+                <i class="fas fa-chart-pie"></i>
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@
                 <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
             </div>
             <div class="icon">
-                <i class="ion ion-ios-list"></i>
+                <i class="fas fa-list-alt"></i>
             </div>
         </div>
     </div>
@@ -82,7 +82,7 @@
     <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
-          <h3 class="box-title">Queries over last <?php echo getinterval(); ?> hours</h3>
+          <h3 class="box-title">Total queries over last <?php echo getinterval(); ?> hours</h3>
         </div>
         <div class="box-body">
           <div class="chart">
@@ -107,7 +107,7 @@
     <div class="col-md-12">
     <div class="box" id="clients">
         <div class="box-header with-border">
-          <h3 class="box-title">Clients (over time)</h3>
+          <h3 class="box-title">Client activity over last <?php echo getinterval(); ?> hours</h3>
         </div>
         <div class="box-body">
           <div class="chart">
@@ -129,10 +129,10 @@
           <h3 class="box-title">Query Types</h3>
         </div>
         <div class="box-body">
-          <div class="float-left" style="width:50%">
+          <div class="pull-left" style="width:50%">
             <canvas id="queryTypePieChart" width="120" height="120"></canvas>
           </div>
-          <div class="float-left" style="width:50%">
+          <div class="pull-left" style="width:50%">
             <div id="query-types-legend" class="chart-legend"></div>
           </div>
         </div>
@@ -148,10 +148,10 @@
           <h3 class="box-title">Queries answered by</h3>
         </div>
         <div class="box-body">
-          <div class="float-left" style="width:50%">
+          <div class="pull-left" style="width:50%">
             <canvas id="forwardDestinationPieChart" width="120" height="120" class="extratooltipcanvas"></canvas>
           </div>
-          <div class="float-left" style="width:50%">
+          <div class="pull-left" style="width:50%">
             <div id="forward-destinations-legend" class="chart-legend" class="extratooltipcanvas"></div>
           </div>
         </div>

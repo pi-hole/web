@@ -1,0 +1,65 @@
+{
+  "name": "AdminLTE",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pi-hole/AdminLTE.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "EUPL-1.2",
+  "bugs": {
+    "url": "https://github.com/pi-hole/AdminLTE/issues"
+  },
+  "homepage": "https://github.com/pi-hole/AdminLTE#readme",
+  "scripts": {
+    "xo": "xo",
+    "xo:fix": "npm run xo -- --fix",
+    "test": "npm run xo"
+  },
+  "devDependencies": {
+    "xo": "^0.25.3"
+  },
+  "prettier": {
+    "bracketSpacing": true,
+    "printWidth": 100,
+    "singleQuote": false,
+    "trailingComma": "none"
+  },
+  "xo": {
+    "space": 2,
+    "envs": [
+      "browser",
+      "jquery"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 3,
+      "sourceType": "script"
+    },
+    "esnext": false,
+    "prettier": true,
+    "ignores": [
+      "**/vendor/**"
+    ],
+    "rules": {
+      "camelcase": "off",
+      "capitalized-comments": "off",
+      "new-cap": "off",
+      "no-alert": "off",
+      "no-negated-condition": "off",
+      "one-var": "off",
+      "radix": "off",
+      "spaced-comment": "off",
+      "unicorn/explicit-length-check": "off",
+      "unicorn/filename-case": "off",
+      "unicorn/no-for-loop": "off",
+      "unicorn/no-zero-fractions": "off",
+      "unicorn/prefer-includes": "off",
+      "unicorn/prefer-node-append": "off",
+      "unicorn/prefer-query-selector": "off",
+      "unicorn/prefer-string-slice": "off"
+    }
+  }
+}
