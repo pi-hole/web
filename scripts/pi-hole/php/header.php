@@ -208,7 +208,7 @@
     <link rel="stylesheet" href="style/vendor/daterangepicker.css">
 
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
-    <link rel="stylesheet" href="style/vendor/animate.css">
+    <link rel="stylesheet" href="style/vendor/animate.min.css">
 
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
     <script src="scripts/vendor/jquery.min.js"></script>
