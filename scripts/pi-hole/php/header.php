@@ -271,7 +271,7 @@ if($auth) {
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li  id="pihole-diagnosis" class="hidden">
+                    <li id="pihole-diagnosis" class="d-none">
                         <a href="messages.php">
                             <i class="fa fa-exclamation-triangle"></i>
                             <span class="label label-warning" id="pihole-diagnosis-count"></span>

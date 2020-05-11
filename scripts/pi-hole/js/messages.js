@@ -7,7 +7,7 @@
 
 /* global utils:false */
 
-var token = $("#token").html();
+var token = $("#token").text();
 
 function render_timestamp(data, type) {
   // Display and search content

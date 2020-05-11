@@ -105,7 +105,7 @@ function check_messages() {
 
       $("#pihole-diagnosis").prop("title", title);
       $("#pihole-diagnosis-count").text(data.message_count);
-      $("#pihole-diagnosis").removeClass("hidden");
+      $("#pihole-diagnosis").removeClass("d-none");
     }
   });
 }
