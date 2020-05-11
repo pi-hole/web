@@ -10,7 +10,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="text-center">
-        <img src="img/logo.svg" alt="" style="width: <?php if ($boxedlayout) { ?>50%<?php } else { ?>30%<?php } ?>;">
+        <img src="img/logo.svg" alt="Pi-hole logo" style="width: <?php if ($boxedlayout) { ?>50%<?php } else { ?>30%<?php } ?>;">
       </div>
       <br>
 
@@ -26,7 +26,7 @@
 
     <div class="panel-body">
       <form action="" id="loginform" method="post">
-        <div class="form-group has-feedback <?php if ($wrongpassword) { ?>has-error<?php } ?> ">
+        <div class="form-group has-feedback <?php if ($wrongpassword) { ?>has-error<?php } ?>">
           <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" autofocus>
           <span class="fa fa-key form-control-feedback"></span>
         </div>

@@ -283,8 +283,7 @@ $(document).ready(function () {
             new_tab.focus();
           }
         });
-        $("td:eq(4)", row).addClass("underline");
-        $("td:eq(4)", row).addClass("pointer");
+        $("td:eq(4)", row).addClass("text-underline pointer");
       }
 
       // Substitute domain by "." if empty
@@ -447,7 +446,7 @@ $(document).ready(function () {
           this.style.color = "";
         }
       );
-      api.$("td:eq(1)").css("cursor", "pointer");
+      api.$("td:eq(1)").addClass("pointer");
       // Domain
       api.$("td:eq(2)").click(function () {
         if (autofilter()) {
@@ -471,7 +470,7 @@ $(document).ready(function () {
           this.style.color = "";
         }
       );
-      api.$("td:eq(2)").css("cursor", "pointer");
+      api.$("td:eq(2)").addClass("pointer");
       // Client
       api.$("td:eq(3)").click(function () {
         if (autofilter()) {
@@ -493,7 +492,7 @@ $(document).ready(function () {
           this.style.color = "";
         }
       );
-      api.$("td:eq(3)").css("cursor", "pointer");
+      api.$("td:eq(3)").addClass("pointer");
     }
   });
 
