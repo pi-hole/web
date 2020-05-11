@@ -140,7 +140,7 @@ function bsSelect_defaults() {
   pickerDEFAULTS.dropdownAlignRight = "auto";
   pickerDEFAULTS.selectAllText = "All";
   pickerDEFAULTS.deselectAllText = "None";
-  pickerDEFAULTS.countSelectedText = function(num, total) {
+  pickerDEFAULTS.countSelectedText = function (num, total) {
     if (num === total) {
       return "All selected (" + num + ")";
     }
@@ -149,7 +149,7 @@ function bsSelect_defaults() {
   };
 }
 
-window.utils = (function() {
+window.utils = (function () {
   return {
     showAlert: showAlert,
     datetime: datetime,

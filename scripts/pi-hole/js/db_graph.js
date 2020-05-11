@@ -204,7 +204,7 @@ $(document).ready(function () {
     options: {
       tooltips: {
         enabled: true,
-        itemSort: function(a, b) {
+        itemSort: function (a, b) {
           return b.datasetIndex - a.datasetIndex;
         },
         mode: "x-axis",
@@ -267,7 +267,7 @@ $(document).ready(function () {
               until_time
             ).split("\n ");
           },
-          label: function(tooltipItems, data) {
+          label: function (tooltipItems, data) {
             if (tooltipItems.datasetIndex === 0) {
               var percentage = 0.0;
               var permitted = parseInt(data.datasets[1].data[tooltipItems.index]);

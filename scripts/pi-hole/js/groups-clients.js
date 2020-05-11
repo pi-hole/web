@@ -149,7 +149,7 @@ function initTable() {
       // Initialize bootstrap-select
       selectEl
         // fix dropdown if it would stick out right of the viewport
-        .on("show.bs.select", function() {
+        .on("show.bs.select", function () {
           var winWidth = $(window).width();
           var dropdownEl = $("body > .bootstrap-select.dropdown");
           if (dropdownEl.length > 0) {
@@ -161,27 +161,22 @@ function initTable() {
             }
           }
         })
-        .on("changed.bs.select", function() {
+        .on("changed.bs.select", function () {
           // enable Apply button
           if ($(ApplyBtn).prop("disabled")) {
             $(ApplyBtn)
               .addClass("btn-success")
               .prop("disabled", false)
-              .on("click", function() {
+              .on("click", function () {
                 editClient.call(selectEl);
               });
           }
         })
-        .on("hide.bs.select", function() {
+        .on("hide.bs.select", function () {
           // Restore values if drop-down menu is closed without clicking the Apply button
           if (!$(ApplyBtn).prop("disabled")) {
-            $(this)
-              .val(data.groups)
-              .selectpicker("refresh");
-            $(ApplyBtn)
-              .removeClass("btn-success")
-              .prop("disabled", true)
-              .off("click");
+            $(this).val(data.groups).selectpicker("refresh");
+            $(ApplyBtn).removeClass("btn-success").prop("disabled", true).off("click");
           }
         })
         .selectpicker()
@@ -405,11 +400,7 @@ function deleteClient() {
           "Successfully deleted client ",
           ip_name
         );
-        table
-          .row(tr)
-          .remove()
-          .draw(false)
-          .ajax.reload(null, false);
+        table.row(tr).remove().draw(false).ajax.reload(null, false);
         reload_client_suggestions();
       } else {
         utils.showAlert("error", "", "Error while deleting client with ID " + id, response.message);

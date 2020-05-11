@@ -32,7 +32,7 @@ function objectToArray(p) {
   return [idx, arr];
 }
 
-var customTooltips = function(tooltip) {
+var customTooltips = function (tooltip) {
   var tooltipEl = document.getElementById(this._chart.canvas.id + "-customTooltip");
   if (!tooltipEl) {
     // Create Tooltip Element once per chart
@@ -74,14 +74,14 @@ var customTooltips = function(tooltip) {
     var bodyLines = tooltip.body.map(getBody);
     var innerHtml = "<thead>";
 
-    titleLines.forEach(function(title) {
+    titleLines.forEach(function (title) {
       innerHtml += "<tr><th>" + title + "</th></tr>";
     });
     innerHtml += "</thead><tbody>";
     var printed = 0;
 
     var devicePixel = (1 / window.devicePixelRatio).toFixed(1);
-    bodyLines.forEach(function(body, i) {
+    bodyLines.forEach(function (body, i) {
       var colors = tooltip.labelColors[i];
       var style = "background: " + colors.backgroundColor;
       style += "; outline: 1px solid " + colors.backgroundColor;
@@ -856,7 +856,7 @@ $(document).ready(function () {
       tooltips: {
         enabled: true,
         mode: "x-axis",
-        itemSort: function(a, b) {
+        itemSort: function (a, b) {
           return b.datasetIndex - a.datasetIndex;
         },
         callbacks: {
@@ -869,7 +869,7 @@ $(document).ready(function () {
             var to = padNumber(h) + ":" + padNumber(m + 4) + ":59";
             return "Queries from " + from + " to " + to;
           },
-          label: function(tooltipItems, data) {
+          label: function (tooltipItems, data) {
             if (tooltipItems.datasetIndex === 0) {
               var percentage = 0.0;
               var permitted = parseInt(data.datasets[1].data[tooltipItems.index]);
@@ -943,7 +943,7 @@ $(document).ready(function () {
           mode: "x-axis",
           custom: customTooltips,
           yAlign: "top",
-          itemSort: function(a, b) {
+          itemSort: function (a, b) {
             return b.yLabel - a.yLabel;
           },
           callbacks: {
@@ -1102,6 +1102,6 @@ $(document).ready(function () {
 });
 
 //destroy all chartjs customTooltips on window resize
-window.addEventListener("resize", function() {
+window.addEventListener("resize", function () {
   $(".chartjs-tooltip").remove();
 });
