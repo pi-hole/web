@@ -82,7 +82,7 @@ function initTable() {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: "ip" },
+      { data: "ip", type: "ip-address" },
       { data: "comment" },
       { data: "groups", searchable: false },
       { data: "name", width: "80px", orderable: false }
