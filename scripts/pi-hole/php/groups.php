@@ -54,7 +54,9 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_group') {
     // Add new group
     try {
-        $names = explode(' ', $_POST['name']);
+        $names = explode(' ', trim($_POST['name']));
+        $total = count($names);
+        $added = 0;
         $stmt = $db->prepare('INSERT INTO "group" (name,description) VALUES (:name,:desc)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -66,12 +68,15 @@ if ($_POST['action'] == 'get_groups') {
 
         foreach ($names as $name) {
             if (!$stmt->bindValue(':name', $name, SQLITE3_TEXT)) {
-                throw new Exception('While binding name: ' . $db->lastErrorMsg());
+                throw new Exception('While binding name: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " groups");
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: ' . $db->lastErrorMsg());
+                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " groups");
             }
+            $added++;
         }
 
         $reload = true;
@@ -234,7 +239,9 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_client') {
     // Add new client
     try {
-        $ips = explode(' ', $_POST['ip']);
+        $ips = explode(' ', trim($_POST['ip']));
+        $total = count($ips);
+        $added = 0;
         $stmt = $db->prepare('INSERT INTO client (ip,comment) VALUES (:ip,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -251,12 +258,15 @@ if ($_POST['action'] == 'get_groups') {
                     $comment = null;
             }
             if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
-                throw new Exception('While binding comment: ' . $db->lastErrorMsg());
+                throw new Exception('While binding comment: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " clients");
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: ' . $db->lastErrorMsg());
+                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " clients");
             }
+            $added++;
         }
 
         $reload = true;
@@ -391,11 +401,31 @@ if ($_POST['action'] == 'get_groups') {
             if (extension_loaded("intl") &&
                 ($res['type'] === ListType::whitelist ||
                  $res['type'] === ListType::blacklist) ) {
-                $utf8_domain = idn_to_utf8($res['domain']);
+
+                // Try to convert possible IDNA domain to Unicode, we try the UTS #46 standard first
+                // as this is the new default, see https://sourceforge.net/p/icu/mailman/message/32980778/
+                // We know that this fails for some Google domains violating the standard
+                // see https://github.com/pi-hole/AdminLTE/issues/1223
+                $utf8_domain = false;
+                if (defined("INTL_IDNA_VARIANT_UTS46")) {
+                    // We have to use the option IDNA_NONTRANSITIONAL_TO_ASCII here
+                    // to ensure sparkasse-gießen.de is not converted into
+                    // sparkass-giessen.de but into xn--sparkasse-gieen-2ib.de
+                    // as mandated by the UTS #46 standard
+                    $utf8_domain = idn_to_utf8($res['domain'], IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
+                }
+
+                // If conversion failed, try with the (deprecated!) IDNA 2003 variant
+                // We have to check for its existance as support of this variant is
+                // scheduled for removal with PHP 8.0
+                // see https://wiki.php.net/rfc/deprecate-and-remove-intl_idna_variant_2003
+                if ($utf8_domain === false && defined("INTL_IDNA_VARIANT_2003")) {
+                    $utf8_domain = idn_to_utf8($res['domain'], IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
+                }
+
                 // Convert domain name to international form
                 // if applicable and extension is available
-                if($res['domain'] !== $utf8_domain)
-                {
+                if ($utf8_domain !== false && $res['domain'] !== $utf8_domain) {
                     $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
                 }
             }
@@ -410,7 +440,9 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_domain') {
     // Add new domain
     try {
-        $domains = explode(' ', $_POST['domain']);
+        $domains = explode(' ', trim($_POST['domain']));
+        $total = count($domains);
+        $added = 0;
         $stmt = $db->prepare('INSERT INTO domainlist (domain,type,comment) VALUES (:domain,:type,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -427,8 +459,22 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         foreach ($domains as $domain) {
+            $input = $domain;
             // Convert domain name to IDNA ASCII form for international domains
-            $domain = idn_to_ascii($domain);
+            if (extension_loaded("intl")) {
+                // Be prepared that this may fail and see our comments above
+                // (search for "idn_to_utf8)
+                $idn_domain = false;
+                if (defined("INTL_IDNA_VARIANT_UTS46")) {
+                    $idn_domain = idn_to_ascii($domain, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
+                }
+                if ($idn_domain === false && defined("INTL_IDNA_VARIANT_2003")) {
+                    $idn_domain = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
+                }
+                if($idn_domain !== false) {
+                    $domain = $idn_domain;
+                }
+            }
 
             if(strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
             {
@@ -442,17 +488,27 @@ if ($_POST['action'] == 'get_groups') {
                 $domain = strtolower($domain);
                 if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)
                 {
-                    throw new Exception('Domain ' . htmlentities(utf8_encode($domain)) . 'is not a valid domain.');
+                    // This is the case when idn_to_ascii() modified the string
+                    if($input !== $domain && strlen($domain) > 0)
+                        $errormsg = 'Domain ' . htmlentities($input) . ' (converted to "' . htmlentities(utf8_encode($domain)) . '") is not a valid domain.';
+                    elseif($input !== $domain)
+                        $errormsg = 'Domain ' . htmlentities($input) . ' is not a valid domain.';
+                    else
+                        $errormsg = 'Domain ' . htmlentities(utf8_encode($domain)) . ' is not a valid domain.';
+                    throw new Exception($errormsg . '<br>Added ' . $added . " out of ". $total . " domains");
                 }
             }
 
             if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
-                throw new Exception('While binding domain: ' . $db->lastErrorMsg());
+                throw new Exception('While binding domain: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " domains");
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: ' . $db->lastErrorMsg());
+                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " domains");
             }
+            $added++;
         }
 
         $reload = true;
@@ -604,7 +660,9 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_adlist') {
     // Add new adlist
     try {
-        $addresses = explode(' ', $_POST['address']);
+        $addresses = explode(' ', trim($_POST['address']));
+        $total = count($addresses);
+        $added = 0;
 
         $stmt = $db->prepare('INSERT INTO adlist (address,comment) VALUES (:address,:comment)');
         if (!$stmt) {
@@ -616,17 +674,21 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         foreach ($addresses as $address) {
-            if(preg_match("/[^a-zA-Z0-9:\/?&%=~._-]/", $address) !== 0) {
-                throw new Exception('Invalid adlist URL');
+            if(preg_match("/[^a-zA-Z0-9:\/?&%=~._()-]/", $address) !== 0) {
+                throw new Exception('<strong>Invalid adlist URL ' . htmlentities($address) . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " adlists");
             }
 
             if (!$stmt->bindValue(':address', $address, SQLITE3_TEXT)) {
-                throw new Exception('While binding address: ' . $db->lastErrorMsg());
+                throw new Exception('While binding address: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " adlists");
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: ' . $db->lastErrorMsg());
+                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " adlists");
             }
+            $added++;
         }
 
         $reload = true;

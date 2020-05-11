@@ -26,14 +26,8 @@ function get_groups() {
 $(document).ready(function () {
   $("#btnAdd").on("click", addAdlist);
 
+  utils.bsSelect_defaults();
   get_groups();
-
-  // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
-  input.setAttribute("autocomplete", "off");
-  input.setAttribute("autocorrect", "off");
-  input.setAttribute("autocapitalize", "off");
-  input.setAttribute("spellcheck", false);
 });
 
 function initTable() {
@@ -54,6 +48,8 @@ function initTable() {
     ],
     drawCallback: function () {
       $('button[id^="deleteAdlist_"]').on("click", deleteAdlist);
+      // Remove visible dropdown to prevent orphaning
+      $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback: function (row, data) {
       $(row).attr("data-id", data.id);
@@ -95,61 +91,68 @@ function initTable() {
 
       $("td:eq(3)", row).empty();
       $("td:eq(3)", row).append(
-        '<div id="selectHome_' +
-          data.id +
-          '">' +
-          '<select id="multiselect_' +
-          data.id +
-          '" multiple="multiple"></select></div>'
+        '<select class="selectpicker" id="multiselect_' + data.id + '" multiple></select>'
       );
       var selectEl = $("#multiselect_" + data.id, row);
       // Add all known groups
       for (var i = 0; i < groups.length; i++) {
-        var extra = "";
+        var data_sub = "";
         if (!groups[i].enabled) {
-          extra = " (disabled)";
+          data_sub = 'data-subtext="(disabled)"';
         }
 
         selectEl.append(
-          $("<option />")
+          $("<option " + data_sub + "/>")
             .val(groups[i].id)
-            .text(groups[i].name + extra)
+            .text(groups[i].name)
         );
       }
 
       // Select assigned groups
       selectEl.val(data.groups);
-      // Initialize multiselect
-      selectEl.multiselect({
-        includeSelectAllOption: true,
-        buttonContainer: '<div id="container_' + data.id + '" class="btn-group"/>',
-        maxHeight: 200,
-        onDropdownShown: function () {
-          var el = $("#container_" + data.id);
-          var top = el[0].getBoundingClientRect().top;
-          var bottom = $(window).height() - top - el.height();
-          if (bottom < 200) {
-            el.addClass("dropup");
+      // Initialize bootstrap-select
+      selectEl
+        // fix dropdown if it would stick out right of the viewport
+        .on("show.bs.select", function () {
+          var winWidth = $(window).width();
+          var dropdownEl = $("body > .bootstrap-select.dropdown");
+          if (dropdownEl.length > 0) {
+            dropdownEl.removeClass("align-right");
+            var width = dropdownEl.width();
+            var left = dropdownEl.offset().left;
+            if (left + width > winWidth) {
+              dropdownEl.addClass("align-right");
+            }
           }
-
-          if (bottom > 200) {
-            el.removeClass("dropup");
+        })
+        .on("changed.bs.select", function () {
+          // enable Apply button
+          if ($(ApplyBtn).prop("disabled")) {
+            $(ApplyBtn)
+              .addClass("btn-success")
+              .prop("disabled", false)
+              .on("click", function () {
+                editAdlist.call(selectEl);
+              });
           }
+        })
+        .on("hide.bs.select", function () {
+          // Restore values if drop-down menu is closed without clicking the Apply button
+          if (!$(ApplyBtn).prop("disabled")) {
+            $(this).val(data.groups).selectpicker("refresh");
+            $(ApplyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+          }
+        })
+        .selectpicker()
+        .siblings(".dropdown-menu")
+        .find(".bs-actionsbox")
+        .prepend(
+          '<button type="button" id=btn_apply_' +
+            data.id +
+            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+        );
 
-          var offset = el.offset();
-          $("body").append(el);
-          el.css("position", "absolute");
-          el.css("top", offset.top + "px");
-          el.css("left", offset.left + "px");
-        },
-        onDropdownHide: function () {
-          var el = $("#container_" + data.id);
-          var home = $("#selectHome_" + data.id);
-          home.append(el);
-          el.removeAttr("style");
-        }
-      });
-      selectEl.on("change", editAdlist);
+      var ApplyBtn = "#btn_apply_" + data.id;
 
       var button =
         '<button class="btn btn-danger btn-xs" type="button" id="deleteAdlist_' +
@@ -204,6 +207,13 @@ function initTable() {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").hide();
   });
+
+  // Disable autocorrect in the search box
+  var input = document.querySelector("input[type=search]");
+  input.setAttribute("autocomplete", "off");
+  input.setAttribute("autocorrect", "off");
+  input.setAttribute("autocapitalize", "off");
+  input.setAttribute("spellcheck", false);
 }
 
 function addAdlist() {
@@ -231,7 +241,13 @@ function addAdlist() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Successfully added adlist", address);
+        utils.showAlert(
+          "success",
+          "glyphicon glyphicon-plus",
+          "Successfully added adlist",
+          address
+        );
+        table.ajax.reload(null, false);
         $("#new_address").val("");
         $("#new_comment").val("");
         table.ajax.reload();
@@ -306,6 +322,7 @@ function editAdlist() {
           "Successfully " + done + " adlist ",
           address
         );
+        table.ajax.reload(null, false);
       } else {
         utils.showAlert(
           "error",
@@ -343,8 +360,13 @@ function deleteAdlist() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted adlist ", address);
-        table.row(tr).remove().draw(false);
+        utils.showAlert(
+          "success",
+          "glyphicon glyphicon-trash",
+          "Successfully deleted adlist ",
+          address
+        );
+        table.row(tr).remove().draw(false).ajax.reload(null, false);
       } else {
         utils.showAlert("error", "", "Error while deleting adlist with ID " + id, response.message);
       }

@@ -79,16 +79,10 @@ function readStaticLeasesFile($origin_file="/etc/dnsmasq.d/04-pihole-static-dhcp
 {
 	global $dhcp_static_leases;
 	$dhcp_static_leases = array();
-	try
-	{
-		$dhcpstatic = @fopen($origin_file, 'r');
-	}
-	catch(Exception $e)
-	{
-		echo "Warning: Failed to read ".$origin_file.", this is not an error";
+	if(!file_exists($origin_file) || !is_readable($origin_file))
 		return false;
-	}
 
+	$dhcpstatic = @fopen($origin_file, 'r');
 	if(!is_resource($dhcpstatic))
 		return false;
 
@@ -154,16 +148,16 @@ function readDNSserversList()
 			$line = explode(';', $line);
 			$name = $line[0];
 			$values = [];
-			if (!empty($line[1])) {
+			if (!empty($line[1]) && validIP($line[1])) {
 				$values["v4_1"] = $line[1];
 			}
-			if (!empty($line[2])) {
+			if (!empty($line[2]) && validIP($line[2])) {
 				$values["v4_2"] = $line[2];
 			}
-			if (!empty($line[3])) {
+			if (!empty($line[3]) && validIP($line[3])) {
 				$values["v6_1"] = $line[3];
 			}
-			if (!empty($line[4])) {
+			if (!empty($line[4]) && validIP($line[4])) {
 				$values["v6_2"] = $line[4];
 			}
             $list[$name] = $values;
