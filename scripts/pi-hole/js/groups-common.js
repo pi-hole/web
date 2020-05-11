@@ -87,7 +87,7 @@ function enableAll() {
   // Enable custom input field only if applicable
   var ip = $("#select") ? $("#select").val() : null;
   if (ip !== null && ip !== "custom") {
-    ip = $("#ip-custom").attr("disabled", true);
+    $("#ip-custom").attr("disabled", true);
   }
 }
 
