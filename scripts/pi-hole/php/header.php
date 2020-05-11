@@ -271,13 +271,13 @@ if($auth) {
                     </li>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                            <img src="img/logo.svg" class="user-image" style="border-radius: 0" alt="Pi-hole logo" width="25" height="25">
+                            <img src="img/logo.svg" class="user-image" alt="Pi-hole logo" style="border-radius: 0" width="25" height="25">
                             <span class="hidden-xs">Pi-hole</span>
                         </a>
                         <ul class="dropdown-menu" style="right:0">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="img/logo.svg" alt="User Image" style="border-color:transparent" width="90" height="90">
+                                <img src="img/logo.svg" alt="Pi-hole Logo" style="border: 0" width="90" height="90">
                                 <p>
                                     Open Source Ad Blocker
                                     <small>Designed For Raspberry Pi</small>
@@ -300,26 +300,10 @@ if($auth) {
                             </li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
-                                <!-- Version Infos -->
-                                <?php /*
-                                <div class="<?php if(!isset($core_commit) && !isset($web_commit)) { ?>hidden-md <?php } ?>hidden-lg">
-                                    <b>Pi-hole Version </b> <?php
-                                    echo $core_current;
-                                    if(isset($core_commit)) { echo "<br>(".$core_branch.", ".$core_commit.")"; }
-                                    if($core_update){ ?> <a class="alert-link lookatme btn-link" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank" style="background:none">(Update available!)</a><?php } ?><br>
-                                    <b>Web Interface Version </b><?php
-                                    echo $web_current;
-                                    if(isset($web_commit)) { echo "<br>(".$web_branch.", ".$web_commit.")"; }
-                                    if($web_update){ ?> <a class="alert-link lookatme btn-link" href="https://github.com/pi-hole/AdminLTE/releases" rel="noopener" target="_blank" style="background:none">(Update available!)</a><?php } ?><br>
-                                    <b>FTL Version </b> <?php
-                                    echo $FTL_current;
-                                    if($FTL_update){ ?> <a class="alert-link lookatme btn-link" href="https://github.com/pi-hole/FTL/releases" rel="noopener" target="_blank" style="background:none">(Update available!)</a><?php } ?><br><br>
-                                </div>
-                                */ ?>
                                 <!-- PayPal -->
                                 <div class="text-center">
-                                    <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank" style="background:none">
-                                        <img src="img/donate.gif" alt="Donate">
+                                    <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
+                                        <img src="img/donate.gif" alt="Donate" width="147" height="47">
                                     </a>
                                 </div>
                             </li>

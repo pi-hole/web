@@ -1292,37 +1292,37 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     <div class="row">
                                         <div class="col-md-4">
                                             <?php if ($piHoleLogging) { ?>
-                                                <button type="button" class="btn btn-warning confirm-disablelogging-noflush form-control">Disable query logging</button>
+                                                <button type="button" class="btn btn-warning confirm-disablelogging-noflush btn-block">Disable query logging</button>
                                             <?php } else { ?>
                                                 <form role="form" method="post">
                                                     <input type="hidden" name="action" value="Enable">
                                                     <input type="hidden" name="field" value="Logging">
                                                     <input type="hidden" name="token" value="<?php echo $token ?>">
-                                                    <button type="submit" class="btn btn-success form-control">Enable query logging</button>
+                                                    <button type="submit" class="btn btn-success btn-block">Enable query logging</button>
                                                 </form>
                                             <?php } ?>
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
-                                                <button type="button" class="btn btn-warning confirm-flusharp form-control">Flush network table</button>
+                                                <button type="button" class="btn btn-warning confirm-flusharp btn-block">Flush network table</button>
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
-                                            <button type="button" class="btn btn-warning confirm-restartdns form-control">Restart DNS resolver</button>
+                                            <button type="button" class="btn btn-warning confirm-restartdns btn-block">Restart DNS resolver</button>
                                         </div>
                                     </div>
                                     <br/>
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <button type="button" class="btn btn-danger confirm-flushlogs form-control">Flush logs</button>
+                                            <button type="button" class="btn btn-danger confirm-flushlogs btn-block">Flush logs</button>
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
-                                            <button type="button" class="btn btn-danger confirm-poweroff form-control">Power off system</button>
+                                            <button type="button" class="btn btn-danger confirm-poweroff btn-block">Power off system</button>
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
-                                            <button type="button" class="btn btn-danger confirm-reboot form-control">Restart system</button>
+                                            <button type="button" class="btn btn-danger confirm-reboot btn-block">Restart system</button>
                                         </div>
                                     </div>
 
