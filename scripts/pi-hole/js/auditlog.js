@@ -45,7 +45,10 @@ function updateTopLists() {
             url +
             "</td> <td>" +
             data.top_queries[domain] +
-            '</td> <td> <button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button> <button class="btn btn-default btn-sm text-orange"><i class="fa fa-balance-scale"></i> Audit</button> </td> </tr> '
+            "</td> <td>" +
+            '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>' +
+            '<button type="button" class="btn btn-default btn-sm text-orange"><i class="fa fa-balance-scale"></i> Audit</button>' +
+            "</td> </tr> "
         );
       }
     }
@@ -67,7 +70,9 @@ function updateTopLists() {
               url +
               "</td> <td>" +
               data.top_ads[domain] +
-              '</td> <td> <button type="button" class="btn btn-default btn-sm text-orange"><i class="fa fa-balance-scale"></i> Audit</button> </td> </tr> '
+              "</td> <td>" +
+              '<button type="button" class="btn btn-default btn-sm text-orange"><i class="fa fa-balance-scale"></i> Audit</button>' +
+              "</td> </tr> "
           );
         } else {
           url = '<a href="queries.php?domain=' + printdomain + '">' + printdomain + "</a>";
@@ -76,7 +81,10 @@ function updateTopLists() {
               url +
               "</td> <td>" +
               data.top_ads[domain] +
-              '</td> <td> <button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button> <button class="btn btn-default btn-sm text-orange"><i class="fa fa-balance-scale"></i> Audit</button> </td> </tr> '
+              "</td> <td>" +
+              '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>' +
+              '<button type="button" class="btn btn-default btn-sm text-orange"><i class="fa fa-balance-scale"></i> Audit</button>' +
+              "</td> </tr> "
           );
         }
       }

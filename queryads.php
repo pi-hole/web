@@ -16,8 +16,8 @@
     <input id="domain" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
 	<input id="quiet" type="hidden" value="no">
     <span class="input-group-btn">
-        <button id="btnSearch" class="btn btn-default" type="button">Search partial match</button>
-        <button id="btnSearchExact" class="btn btn-default" type="button">Search exact match</button>
+        <button type="button" id="btnSearch" class="btn btn-default">Search partial match</button>
+        <button type="button" id="btnSearchExact" class="btn btn-default">Search exact match</button>
     </span>
 </div>
 

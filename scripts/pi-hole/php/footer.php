@@ -32,7 +32,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button id="pihole-disable-custom" type="button" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                    <button type="button" id="pihole-disable-custom" class="btn btn-primary" data-dismiss="modal">Submit</button>
                 </div>
             </div>
         </div>

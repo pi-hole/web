@@ -191,7 +191,7 @@ function initTable() {
       var ApplyBtn = "#btn_apply_" + data.id;
 
       var button =
-        '<button class="btn btn-danger btn-xs" type="button" id="deleteClient_' +
+        '<button type="button" class="btn btn-danger btn-xs" id="deleteClient_' +
         data.id +
         '">' +
         '<span class="far fa-trash-alt"></span>' +

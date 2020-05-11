@@ -539,7 +539,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             <td id="IP" data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
                                                             <td id="HOST"><?php echo $lease["host"]; ?></td>
                                                             <td>
-                                                                <button class="btn btn-warning btn-xs" type="button" id="button" data-static="alert">
+                                                                <button type="button" id="button" class="btn btn-warning btn-xs" data-static="alert">
                                                                     <span class="fas fas fa-file-import"></span>
                                                                 </button>
                                                             </td>
@@ -568,7 +568,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             <td data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
                                                             <td><?php echo $lease["host"]; ?></td>
                                                             <td><?php if (strlen($lease["hwaddr"]) > 0) { ?>
-                                                                <button class="btn btn-danger btn-xs" type="submit" name="removestatic"
+                                                                <button type="button" class="btn btn-danger btn-xs" name="removestatic"
                                                                         value="<?php echo $lease["hwaddr"]; ?>">
                                                                     <span class="far fa-trash-alt"></span>
                                                                 </button>
@@ -583,7 +583,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             <td><input type="text" name="AddIP" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
                                                             <td><input type="text" name="AddHostname" value="" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
                                                             <td>
-                                                                <button class="btn btn-success btn-xs" type="submit" name="addstatic">
+                                                                <button type="submit" class="btn btn-success btn-xs" name="addstatic">
                                                                     <span class="fas fa-plus"></span>
                                                                 </button>
                                                             </td>

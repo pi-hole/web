@@ -232,7 +232,7 @@ function initTable() {
       }
 
       var button =
-        '<button class="btn btn-danger btn-xs" type="button" id="deleteDomain_' +
+        '<button type="button" class="btn btn-danger btn-xs" id="deleteDomain_' +
         data.id +
         '">' +
         '<span class="far fa-trash-alt"></span>' +

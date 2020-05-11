@@ -47,7 +47,7 @@ $(document).ready(function () {
         targets: 2,
         render: function (data, type, row) {
           return (
-            '<button class="btn btn-danger btn-xs deleteCustomDNS" type="button" data-domain=\'' +
+            '<button type="button" class="btn btn-danger btn-xs deleteCustomDNS" data-domain=\'' +
             row[0] +
             "' data-ip='" +
             row[1] +

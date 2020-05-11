@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="box-footer clearfix">
-                <button id="btnAdd" class="btn btn-primary pull-right">Add</button>
+                <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
             </div>
         </div>
     </div>
