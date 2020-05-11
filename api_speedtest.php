@@ -38,7 +38,7 @@ if (isset($_GET['getAllSpeedTestData'])  && $auth)
 function getAllSpeedTestData($dbSpeedtest)
 {
     $data = getSpeedTestData($dbSpeedtest,-1);
-    if($data['errr'])
+    if(isset($data['errr']))
         return [];
     $newarr = array();
     foreach ($data as  $array) {

@@ -24,7 +24,7 @@
     <h4>Top left: Status display</h4>
     <p>Shows different status messages:</p>
     <ul>
-        <li>Status: Current status of the Pi-hole - Active (<i class="fa fa-circle" style="color:#7FFF00"></i>), Offline (<i class="fa fa-circle" style="color:#FF0000"></i>), or Starting (<i class="fa fa-circle" style="color:#ff9900"></i>)</li>
+        <li>Status: Current status of the Pi-hole - Active (<i class="fa fa-circle text-green-light"></i>), Offline (<i class="fa fa-circle text-red"></i>), or Starting (<i class="fa fa-circle text-orange"></i>)</li>
         <li>Temp: Current CPU temperature</li>
         <li>Load: load averages for the last minute, 5 minutes and 15 minutes, respectively. A load average of 1 reflects the full workload of a single processor on the system. We show a red icon if the current load exceeds the number of available processors on this machine (which is <?php echo $nproc; ?>)</li>
         <li>Memory usage: Shows the percentage of memory actually blocked by applications. We show a red icon if the memory usage exceeds 75%</li>
@@ -70,7 +70,7 @@
     <div class="col-md-12">
     <h2>White- / Blacklist</h2>
     <p>Add or remove domains (or subdomains) from the white-/blacklist. If a domain is added to e.g. the whitelist, any possible entry of the same domain will be automatically removed from the blacklist and vice versa.</p>
-    <p>Regex blacklisting is supported (entering <samp>^example</samp> will block any domain starting with <samp>example</samp>, see also our <a href="https://docs.pi-hole.net/ftldns/regex/" target="_blank">Regex documentation</a>). You can still whitelist specific domains even if they fall under a regex pattern.</p>
+    <p>Regex blacklisting is supported (entering <code>^example</code> will block any domain starting with <code>example</code>, see also our <a href="https://docs.pi-hole.net/ftldns/regex/" rel="noopener" target="_blank">Regex documentation</a>). You can still whitelist specific domains even if they fall under a regex pattern.</p>
     <p>You can white-/blacklist multiple entries at a time if you separate the domains by spaces.</p>
     </div>
 </div>
@@ -89,7 +89,7 @@
 <div class="row">
     <div class="col-md-12">
     <h2>Tools &rarr; Query Lists</h2>
-    This function is useful to find out what list a domain appears on. Since we don't control what the third-parties put on the blocklists, you may find that a domain you normally visit stops working. If this is the case, you could run  this command to scan for strings in the list of blocked domains and it will return the list the domain is found on. This proved useful a while back when the Mahakala list was adding <samp>apple.com</samp> and <samp>microsoft.com</samp> to their block list.</p>
+    This function is useful to find out what list a domain appears on. Since we don't control what the third-parties put on the blocklists, you may find that a domain you normally visit stops working. If this is the case, you could run  this command to scan for strings in the list of blocked domains and it will return the list the domain is found on. This proved useful a while back when the Mahakala list was adding <code>apple.com</code> and <code>microsoft.com</code> to their block list.</p>
     </div>
 </div>
 <div class="row">

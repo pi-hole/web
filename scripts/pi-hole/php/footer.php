@@ -22,10 +22,10 @@
                         <input id="customTimeout" class="form-control" type="number" value="60">
                             <div class="input-group-btn" data-toggle="buttons">
                                 <label class="btn btn-default">
-                                    <input type="radio"/> Secs
+                                    <input type="radio"> Secs
                                 </label>
                                 <label id="btnMins" class="btn btn-default active">
-                                    <input type="radio"  /> Mins
+                                    <input type="radio"> Mins
                                 </label>
                             </div>
                     </div>
@@ -52,17 +52,17 @@
             <b>Pi-hole Version </b> <?php
             echo $core_current;
             if(isset($core_commit)) { echo " (".$core_branch.", ".$core_commit.")"; }
-            if($core_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/pi-hole/releases" target="_blank">(Update available!)</a><?php } ?>
+            if($core_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank">(Update available!)</a><?php } ?>
             <b>Web Interface Version </b><?php
             echo $web_current;
             if(isset($web_commit)) { echo " (".$web_branch.", ".$web_commit.")"; }
-            if($web_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/AdminLTE/releases" target="_blank">(Update available!)</a><?php } ?>
+            if($web_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/AdminLTE/releases" rel="noopener" target="_blank">(Update available!)</a><?php } ?>
             <b>FTL Version </b> <?php
             echo $FTL_current;
-            if(isset($FTL_commit)) { echo htmlspecialchars(" (".$FTL_branch.", ".$FTL_commit.")"); }
-            if($FTL_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/FTL/releases" target="_blank">(Update available!)</a><?php } ?>
+            if(isset($FTL_commit)) { echo " (".$FTL_branch.", ".$FTL_commit.")"; }
+            if($FTL_update){ ?> <a class="alert-link lookatme" href="https://github.com/pi-hole/FTL/releases" rel="noopener" target="_blank">(Update available!)</a><?php } ?>
         </div>
-        <div style="display: inline-block"><strong><a href="https://pi-hole.net/donate" target="_blank"><i class="fa fa-heart"></i> Donate</a></strong> if you found this useful.</div>
+        <div style="display: inline-block"><strong><a href="https://pi-hole.net/donate/" rel="noopener" target="_blank"><i class="fa fa-heart"></i> Donate</a></strong> if you found this useful.</div>
     </footer>
 </div>
 <!-- ./wrapper -->
