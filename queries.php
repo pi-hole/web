@@ -83,15 +83,6 @@ if(strlen($showing) > 0)
 <!-- Send PHP info to JS -->
 <div id="token" hidden><?php echo $token ?></div>
 
-
-<!--
-<div class="row">
-    <div class="col-md-12">
-        <button class="btn btn-info margin-bottom pull-right">Refresh Data</button>
-    </div>
-</div>
--->
-
 <!-- Alert Modal -->
 <div id="alertModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="vertical-alignment-helper">

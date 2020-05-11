@@ -22,7 +22,7 @@
     Success!
 </div>
 
-<button class="btn btn-lg btn-primary btn-block" id="gravityBtn">Update</button>
+<button type="button" id="gravityBtn" class="btn btn-lg btn-primary btn-block">Update</button>
 <pre id="output" style="width: 100%; height: 100%;" hidden="true"></pre>
 
 <script src="scripts/pi-hole/js/gravity.js"></script>

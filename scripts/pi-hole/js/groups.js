@@ -69,7 +69,7 @@ $(document).ready(function () {
       $("td:eq(3)", row).empty();
       if (data.id !== 0) {
         var button =
-          '<button class="btn btn-danger btn-xs" type="button" id="deleteGroup_' +
+          '<button type="button" class="btn btn-danger btn-xs" id="deleteGroup_' +
           data.id +
           '">' +
           '<span class="far fa-trash-alt"></span>' +
