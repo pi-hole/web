@@ -13,6 +13,13 @@ function is_valid_domain_name($domain_name)
         preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)); // Length of each label
 }
 
+function get_ip_type($ip)
+{
+    return  filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 4 :
+           (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 6 :
+            0);
+}
+
 function checkfile($filename) {
     if(is_readable($filename))
     {
@@ -43,23 +50,6 @@ if(!function_exists('hash_equals')) {
 
         return !$ret;
    }
-}
-
-function add_regex($regex, $mode=FILE_APPEND, $append="\n")
-{
-    global $regexfile;
-    if(file_put_contents($regexfile, $regex.$append, $mode) === FALSE)
-    {
-        $err = error_get_last()["message"];
-        echo "Unable to add regex \"".htmlspecialchars($regex)."\" to ${regexfile}<br>Error message: $err";
-    }
-    else
-    {
-        // Send SIGHUP to pihole-FTL using a frontend command
-        // to force reloading of the regex domains
-        // This will also wipe the resolver's cache
-        echo exec("sudo pihole restartdns reload");
-    }
 }
 
 ?>

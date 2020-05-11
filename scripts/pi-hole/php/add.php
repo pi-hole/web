@@ -8,51 +8,85 @@
 
 require_once('auth.php');
 
-$type = $_POST['list'];
+$list = $_POST['list'];
 
 // Perform all of the authentication for list editing
 // when NOT invoked and authenticated from API
 if (empty($api)) {
-    list_verify($type);
+    list_verify($list);
 }
 
-// Don't check if the added item is a valid domain for regex expressions. Regex
-// filters are validated by FTL on import and skipped if invalid
-if($type !== "regex") {
-    check_domain();
+// Split individual domains into array
+$domains = preg_split('/\s+/', trim($_POST['domain']));
+
+// Get comment if available
+$comment = null;
+if(isset($_POST['comment'])) {
+	$comment = trim($_POST['comment']);
 }
 
-switch($type) {
-    case "white":
-        if(!isset($_POST["auditlog"]))
-            echo shell_exec("sudo pihole -w ${_POST['domain']}");
-        else
-        {
-            echo shell_exec("sudo pihole -w -n ${_POST['domain']}");
-            echo shell_exec("sudo pihole -a audit ${_POST['domain']}");
-        }
-        break;
-    case "black":
-        if(!isset($_POST["auditlog"]))
-            echo shell_exec("sudo pihole -b ${_POST['domain']}");
-        else
-        {
-            echo shell_exec("sudo pihole -b -n ${_POST['domain']}");
-            echo shell_exec("sudo pihole -a audit ${_POST['domain']}");
-        }
-        break;
-    case "wild":
-        // Escape "." so it won't be interpreted as the wildcard character
-        $domain = str_replace(".","\.",$_POST['domain']);
-        // Add regex filter for legacy wildcard behavior
-        add_regex("(^|\.)".$domain."$");
-        break;
-    case "regex":
-        add_regex($_POST['domain']);
-        break;
-    case "audit":
-        echo exec("sudo pihole -a audit ${_POST['domain']}");
-        break;
+// Convert domain name to IDNA ASCII form for international domains
+// Do this only for exact domains, not for regex filters
+// Only do it when the php-intl extension is available
+if (extension_loaded("intl") && ($list === "white" || $list === "black")) {
+	foreach($domains as &$domain)
+	{
+		$domain = idn_to_ascii($domain);
+	}
 }
 
+// Only check domains we add to the exact lists.
+// Regex are validated by FTL during import
+$check_lists = ["white","black","audit"];
+if(in_array($list, $check_lists)) {
+    check_domain($domains);
+}
+
+require_once("func.php");
+require_once("database.php");
+$GRAVITYDB = getGravityDBFilename();
+$db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
+
+$reload = true;
+switch($list) {
+	case "white":
+		$domains = array_map('strtolower', $domains);
+		echo add_to_table($db, "domainlist", $domains, $comment, false, false, ListType::whitelist);
+		break;
+
+	case "black":
+		$domains = array_map('strtolower', $domains);
+		echo add_to_table($db, "domainlist", $domains, $comment, false, false, ListType::blacklist);
+		break;
+
+	case "white_regex":
+		echo add_to_table($db, "domainlist", $domains, $comment, false, false, ListType::regex_whitelist);
+		break;
+
+	case "white_wild":
+		echo add_to_table($db, "domainlist", $domains, $comment, true, false, ListType::regex_whitelist);
+		break;
+
+	case "black_regex":
+		echo add_to_table($db, "domainlist", $domains, $comment, false, false, ListType::regex_blacklist);
+		break;
+
+	case "black_wild":
+		echo add_to_table($db, "domainlist", $domains, $comment, true, false, ListType::regex_blacklist);
+		break;
+
+	case "audit":
+		$reload = false;
+		echo add_to_table($db, "domain_audit", $domains);
+		break;
+
+	default:
+		die("Invalid list!");
+}
+
+// Reload lists in pihole-FTL after having added something
+if ($reload) {
+	echo shell_exec("sudo pihole restartdns reload-lists");
+}
 ?>
+
