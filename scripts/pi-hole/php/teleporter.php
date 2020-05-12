@@ -87,31 +87,58 @@ function archive_restore_table($file, $table, $flush=false)
 	// Flush table if requested, only flush each table once
 	if($flush && !in_array($table, $flushed_tables))
 	{
-		$db->exec("DELETE FROM ".$table);
+		$db->exec("DELETE FROM \"".$table."\"");
 		array_push($flushed_tables, $table);
 	}
 
-	// Prepare field name for domain/address depending on the table we restore to
+	// Prepare fields depending on the table we restore to
 	if($table === "adlist")
 	{
 		$sql  = "INSERT OR IGNORE INTO adlist";
 		$sql  .= " (id,address,enabled,date_added,comment)";
 		$sql  .= " VALUES (:id,:address,:enabled,:date_added,:comment);";
-		$field = "address";
 	}
 	elseif($table === "domain_audit")
 	{
 		$sql  = "INSERT OR IGNORE INTO domain_audit";
 		$sql  .= " (id,domain,date_added)";
 		$sql  .= " VALUES (:id,:domain,:date_added);";
-		$field = "domain";
 	}
 	elseif($table === "domainlist")
 	{
 		$sql  = "INSERT OR IGNORE INTO domainlist";
 		$sql  .= " (id,domain,enabled,date_added,comment,type)";
 		$sql  .= " VALUES (:id,:domain,:enabled,:date_added,:comment,:type);";
-		$field = "domain";
+	}
+	elseif($table === "group")
+	{
+		$sql  = "INSERT OR IGNORE INTO \"group\"";
+		$sql  .= " (id,name,date_added,description)";
+		$sql  .= " VALUES (:id,:name,:date_added,:description);";
+	}
+	elseif($table === "client")
+	{
+		$sql  = "INSERT OR IGNORE INTO client";
+		$sql  .= " (id,ip,date_added,comment)";
+		$sql  .= " VALUES (:id,:ip,:date_added,:comment);";
+	}
+	elseif($table === "domainlist_by_group")
+	{
+		$sql  = "INSERT OR IGNORE INTO domainlist_by_group";
+		$sql  .= " (domainlist_id,group_id)";
+		$sql  .= " VALUES (:domainlist_id,:group_id);";
+	}
+	elseif($table === "client_by_group")
+	{
+		$sql  = "INSERT OR IGNORE INTO client_by_group";
+		$sql  .= " (client_id,group_id)";
+		$sql  .= " VALUES (:client_id,:group_id);";
+	}
+	elseif($table === "adlist_by_group")
+	{
+		$sql  = "INSERT OR IGNORE INTO adlist_by_group";
+		$sql  .= " (adlist_id,group_id)";
+		$sql  .= " VALUES (:adlist_id,:group_id);";
 	}
 	else
 	{
@@ -149,23 +176,27 @@ function archive_restore_table($file, $table, $flush=false)
 		if(strlen($row[$field]) > 253)
 			continue;
 
-		$stmt->bindValue(":id", $row["id"], SQLITE3_INTEGER);
-		$stmt->bindValue(":date_added", $row["date_added"], SQLITE3_INTEGER);
-		$stmt->bindValue(":".$field, $row[$field], SQLITE3_TEXT);
-
-		if($table !== "domain_audit")
-		{
-			$stmt->bindValue(":enabled", $row["enabled"], SQLITE3_INTEGER);
-			if(is_null($row["comment"]))
-				$type = SQLITE3_NULL;
-			else
-				$type = SQLITE3_TEXT;
-			$stmt->bindValue(":comment", $row["comment"], $type);
-		}
-
-		if($table === "domainlist")
-		{
-			$stmt->bindValue(":type", $row["type"], SQLITE3_INTEGER);
+		// Bind properties from JSON data
+		// Note that only defined above are actually used
+		// so even maliciously modified Teleporter files
+		// cannot be dangerous in any way
+		foreach($row as $key => $value) {
+			$type = gettype($value);
+			$sqltype=NULL;
+			switch($type) {
+				case "integer":
+					$sqltype = SQLITE3_INTEGER;
+				break;
+				case "string":
+					$sqltype = SQLITE3_TEXT;
+				break;
+				case "NULL":
+					$sqltype = SQLITE3_NULL;
+				break;
+				default:
+					$sqltype = "UNK";
+			}
+			$stmt->bindValue(":".$key, $value, $sqltype);
 		}
 
 		if($stmt->execute() && $stmt->reset() && $stmt->clear())
@@ -408,6 +439,40 @@ if(isset($_POST["action"]))
 			{
 				$num = archive_restore_table($file, "domain_audit", $flushtables);
 				echo "Processed domain_audit (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["group"]) && $file->getFilename() === "group.json")
+			{
+				$num = archive_restore_table($file, "group", $flushtables);
+				echo "Processed group (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["client"]) && $file->getFilename() === "client.json")
+			{
+				$num = archive_restore_table($file, "client", $flushtables);
+				echo "Processed client (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["client"]) && $file->getFilename() === "client_by_group.json")
+			{
+				$num = archive_restore_table($file, "client_by_group", $flushtables);
+				$importedsomething = true;
+			}
+
+			if((isset($_POST["whitelist"]) || isset($_POST["regex_whitelist"]) ||
+				isset($_POST["blacklist"]) || isset($_POST["regex_blacklist"])) &&
+				$file->getFilename() === "domainlist_by_group.json")
+			{
+				$num = archive_restore_table($file, "domainlist_by_group", $flushtables);
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["adlist"]) && $file->getFilename() === "adlist_by_group.json")
+			{
+				$num = archive_restore_table($file, "adlist_by_group", $flushtables);
 				$importedsomething = true;
 			}
 

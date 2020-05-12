@@ -1118,7 +1118,17 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="adlist" value="true"
                                                                       checked>
-                                                            Blocklists</label>
+                                                            Adlists</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="client" value="true"
+                                                                      checked>
+                                                            Clients</label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="group" value="true"
+                                                                      checked>
+                                                            Groups</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="auditlog" value="true"
