@@ -219,12 +219,12 @@
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-select.min.css">
     <script src="style/vendor/bootstrap/js/bootstrap-toggle.min.js"></script>
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-toggle.min.css">
-    <script src="scripts/vendor/moment.min.js"></script>
 <?php } ?>
 
     <script src="scripts/vendor/jquery.dataTables.min.js"></script>
     <script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
-    <script src="scripts/vendor/Chart.bundle.min.js"></script>
+    <script src="scripts/vendor/moment.min.js"></script>
+    <script src="scripts/vendor/Chart.min.js"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
  <noscript>
