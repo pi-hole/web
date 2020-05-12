@@ -72,6 +72,5 @@ $token = $_SESSION['token'];
     require "scripts/pi-hole/php/footer.php";
 ?>
 
-<script src="scripts/vendor/moment.min.js"></script>
 <script src="scripts/pi-hole/js/ip-address-sorting.js"></script>
 <script src="scripts/pi-hole/js/network.js"></script>

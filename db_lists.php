@@ -138,7 +138,6 @@ else
     <!-- /.col -->
 </div>
 
-<script src="scripts/vendor/moment.min.js"></script>
 <script src="scripts/vendor/daterangepicker.js"></script>
 <script src="scripts/pi-hole/js/db_lists.js"></script>
 
