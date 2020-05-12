@@ -542,6 +542,8 @@ else
 
 	archive_add_file("/etc/pihole/","setupVars.conf");
 	archive_add_file("/etc/pihole/","dhcp.leases");
+	archive_add_file("/etc/pihole/","custom.list");
+	archive_add_file("/etc/pihole/","pihole-FTL.conf");
 	archive_add_file("/etc/","hosts","etc/");
 	archive_add_directory("/etc/dnsmasq.d/","dnsmasq.d/");
 
