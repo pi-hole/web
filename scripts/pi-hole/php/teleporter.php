@@ -40,11 +40,11 @@ function archive_add_table($name, $table, $type=-1)
 
 	if($type > -1)
 	{
-		$querystr = "SELECT * FROM $table WHERE type = $type;";
+		$querystr = "SELECT * FROM \"$table\" WHERE type = $type;";
 	}
 	else
 	{
-		$querystr = "SELECT * FROM $table;";
+		$querystr = "SELECT * FROM \"$table\";";
 	}
 	$results = $db->query($querystr);
 
@@ -248,10 +248,10 @@ function flush_table($table, $type=null)
 	if(!in_array($table, $flushed_tables))
 	{
 		if($type !== null) {
-			$sql = "DELETE FROM ".$table." WHERE type = ".$type;
+			$sql = "DELETE FROM \"".$table."\" WHERE type = ".$type;
 			array_push($flushed_tables, $table.$type);
 		} else {
-			$sql = "DELETE FROM ".$table;
+			$sql = "DELETE FROM \"".$table."\"";
 			array_push($flushed_tables, $table);
 		}
 		$db->exec($sql);
@@ -467,6 +467,14 @@ else
 	archive_add_table("blacklist.regex.json", "domainlist", ListType::regex_blacklist);
 	archive_add_table("adlist.json", "adlist");
 	archive_add_table("domain_audit.json", "domain_audit");
+	archive_add_table("group.json", "group");
+	archive_add_table("client.json", "client");
+
+	// Group linking tables
+	archive_add_table("domainlist_by_group.json", "domainlist_by_group");
+	archive_add_table("adlist_by_group.json", "adlist_by_group");
+	archive_add_table("client_by_group.json", "client_by_group");
+
 	archive_add_file("/etc/pihole/","setupVars.conf");
 	archive_add_file("/etc/pihole/","dhcp.leases");
 	archive_add_file("/etc/","hosts","etc/");
