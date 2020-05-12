@@ -10,6 +10,25 @@
 var timeLineChart, clientsChart;
 var queryTypePieChart, forwardDestinationPieChart;
 
+var colors = [
+  "#3c8dbc",
+  "#f56954",
+  "#00a65a",
+  "#00c0ef",
+  "#f39c12",
+  "#0073b7",
+  "#001f3f",
+  "#39cccc",
+  "#3d9970",
+  "#01ff70",
+  "#ff851b",
+  "#f012be",
+  "#8e24aa",
+  "#d81b60",
+  "#222222",
+  "#d2d6de"
+];
+
 function padNumber(num) {
   return ("00" + num).substr(-2, 2);
 }
@@ -279,14 +298,10 @@ function updateQueryTypesPie() {
       return;
     }
 
-    var colors = [];
-    // Get colors from AdminLTE
-    $.each($.AdminLTE.options.colors, function (key, value) {
-      colors.push(value);
-    });
     var v = [],
       c = [],
       k = [],
+      i = 0,
       iter;
     // Collect values and colors, and labels
     if (Object.prototype.hasOwnProperty.call(data, "querytypes")) {
@@ -297,7 +312,7 @@ function updateQueryTypesPie() {
 
     $.each(iter, function (key, value) {
       v.push(value);
-      c.push(colors.shift());
+      c.push(colors[i++ % colors.length]);
       k.push(key);
     });
     // Build a single dataset with the data to be pushed
@@ -375,12 +390,6 @@ function updateClientsOverTime() {
       labels.push(clientname);
     }
 
-    // Get colors from AdminLTE
-    var colors = [];
-    $.each($.AdminLTE.options.colors, function (key, value) {
-      colors.push(value);
-    });
-
     // Remove possibly already existing data
     clientsChart.data.labels = [];
     clientsChart.data.datasets[0].data = [];
@@ -453,14 +462,10 @@ function updateForwardDestinationsPie() {
       return;
     }
 
-    var colors = [];
-    // Get colors from AdminLTE
-    $.each($.AdminLTE.options.colors, function (key, value) {
-      colors.push(value);
-    });
     var v = [],
       c = [],
       k = [],
+      i = 0,
       values = [];
 
     // Collect values and colors
@@ -469,7 +474,7 @@ function updateForwardDestinationsPie() {
         key = key.substr(0, key.indexOf("|"));
       }
 
-      values.push([key, value, colors.shift()]);
+      values.push([key, value, colors[i++ % colors.length]]);
     });
 
     // Split data into individual arrays for the graphs

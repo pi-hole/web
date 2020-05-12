@@ -211,7 +211,7 @@
     <script src="scripts/vendor/jquery.min.js"></script>
     <script src="scripts/vendor/jquery-ui.min.js"></script>
     <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="scripts/vendor/app.min.js"></script>
+    <script src="scripts/vendor/adminlte.min.js"></script>
     <script src="scripts/vendor/bootstrap-notify.min.js"></script>
 
 <?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
@@ -226,7 +226,7 @@
     <script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
     <script src="scripts/vendor/Chart.bundle.min.js"></script>
 </head>
-<body class="skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
+<body class="hold-transition skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
  <noscript>
 <!-- JS Warning -->
 <div>
@@ -258,7 +258,7 @@ if($auth) {
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
             <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
             <div class="navbar-custom-menu">
@@ -425,7 +425,7 @@ if($auth) {
                 $scriptname = "login";
             }
             ?>
-            <ul class="sidebar-menu">
+            <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">MAIN NAVIGATION</li>
                 <!-- Home Page -->
                 <li<?php if($scriptname === "index.php"){ ?> class="active"<?php } ?>>
