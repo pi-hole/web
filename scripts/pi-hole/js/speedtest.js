@@ -37,7 +37,7 @@ setInterval(function () {
 
 var speedChartctx = document.getElementById("speedtestChart");
 var speedChart = new Chart(speedChartctx, {
-    type: 'line',
+    type: 'bar',
     data: {
         labels: speedlabels,
         datasets: [{
