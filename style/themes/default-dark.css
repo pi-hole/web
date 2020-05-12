@@ -209,7 +209,8 @@ h4 {
 .main-header .navbar {
   background-color: #272c30;
 }
-.main-header .navbar .nav > li > a {
+.main-header .navbar .nav > li > a,
+.main-header .navbar .nav > li > .navbar-text {
   color: #bec5cb;
 }
 .main-header .navbar .nav > li > a:hover,

@@ -272,10 +272,10 @@ if($auth) {
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a style="pointer-events:none;">
+                        <p class="navbar-text">
                             <span class="hidden-xs hidden-sm">hostname:</span>
                             <code><?php echo gethostname(); ?></code>
-                        </a>
+                        </p>
                     </li>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">

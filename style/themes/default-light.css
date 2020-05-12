@@ -8,7 +8,8 @@
 .main-header .navbar {
   background-color: #3c8dbc;
 }
-.main-header .navbar .nav > li > a {
+.main-header .navbar .nav > li > a,
+.main-header .navbar .nav > li > .navbar-text {
   color: #fff;
 }
 .main-header .navbar .nav > li > a:hover,
