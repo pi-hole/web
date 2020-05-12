@@ -56,6 +56,13 @@ function eventsource() {
     "message",
     function (e) {
       ta.append(e.data);
+
+      var debug_token = e.data.match(/Your debug token is: .*\n/);
+      if (debug_token !== null) {
+        $("#tokenDisplay_text").text(debug_token);
+        $("#tokenDisplay").show();
+        $("#debugBtn").hide();
+      }
     },
     false
   );

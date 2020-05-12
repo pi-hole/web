@@ -15,6 +15,11 @@
 <p><input type="checkbox" id="upload"> Upload debug log and provide token once finished</p>
 <p>Once you click this button a debug log will be generated and can automatically be uploaded if we detect a working internet connection.</p>
 <button type="button" id="debugBtn" class="btn btn-lg btn-primary btn-block">Generate debug log</button>
+
+<div id="tokenDisplay" class="alert alert-success text-center font-weight-bold" role="alert" hidden="true">
+    <strong><span id="tokenDisplay_text"></span></strong>
+</div>
+
 <pre id="output" style="width: 100%; height: 100%;" hidden="true"></pre>
 
 <script src="scripts/pi-hole/js/debug.js"></script>
