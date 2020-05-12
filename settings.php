@@ -1073,7 +1073,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             <div class="col-lg-6 col-md-12">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Teleporter Backup</h3>
+                                        <h3 class="box-title">Backup</h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
@@ -1088,7 +1088,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             <div class="col-lg-6 col-md-12">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Teleporter Restore</h3>
+                                        <h3 class="box-title">Restore</h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
