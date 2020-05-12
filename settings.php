@@ -1073,13 +1073,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             <div class="col-lg-6 col-md-12">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Teleporter Export</h3>
+                                        <h3 class="box-title">Teleporter Backup</h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <p>Export your Pi-hole configuration (settings &amp; lists) as a downloadable archive</p>
-                                                <button type="submit" class="btn btn-default">Export</button>
+                                                <p>Backup your Pi-hole configuration (settings &amp; lists) as a downloadable archive</p>
+                                                <button type="submit" class="btn btn-default">Backup</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1088,12 +1088,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                             <div class="col-lg-6 col-md-12">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Teleporter Import</h3>
+                                        <h3 class="box-title">Teleporter Restore</h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-lg-6 col-md-12">
-                                                <label>Import...</label>
+                                                <label>Restore...</label>
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="whitelist" value="true"
@@ -1148,7 +1148,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                     <input type="file" name="zip_file" id="zip_file">
                                                     <p class="help-block">Upload only Pi-hole backup files.</p>
                                                     <button type="submit" class="btn btn-default" name="action"
-                                                            value="in">Import
+                                                            value="in">Restore
                                                     </button>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="flushtables" value="true"
