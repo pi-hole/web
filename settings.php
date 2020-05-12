@@ -1140,6 +1140,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                                       checked>
                                                             Static DHCP Leases</label>
                                                     </div>
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" name="localdnsrecords" value="true"
+                                                                      checked>
+                                                            Local DNS Records</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6 col-md-12">

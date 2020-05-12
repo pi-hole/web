@@ -500,6 +500,26 @@ if(isset($_POST["action"]))
 					$importedsomething = true;
 				}
 			}
+
+			if(isset($_POST["localdnsrecords"]) && $file->getFilename() === "custom.list")
+			{
+				if($flushtables) {
+					// Defined in func.php included via auth.php
+					deleteAllCustomDNSEntries();
+				}
+				$num = 0;
+				$localdnsrecords = process_file(file_get_contents($file));
+				foreach($localdnsrecords as $record) {
+					list($ip,$domain) = explode(" ",$record);
+					if(addCustomDNSEntry($ip, $domain, false))
+						$num++;
+				}
+
+				echo "Processed local DNS records (".$num." entries)<br>\n";
+				if($num > 0) {
+					$importedsomething = true;
+				}
+			}
 		}
 
 		if($importedsomething)
