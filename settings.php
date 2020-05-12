@@ -905,21 +905,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 <input type="radio" name="tempunit" value="K" id="tempunit_K" <?php if ($temperatureunit === "K"){ ?>checked<?php } ?>><label for="tempunit_K">&nbsp;Kelvin</label><br>
                                                 <input type="radio" name="tempunit" value="F" id="tempunit_F" <?php if ($temperatureunit === "F"){ ?>checked<?php } ?>><label for="tempunit_F">&nbsp;Fahrenheit</label>
                                                 <h4>Administrator Email Address</h4>
-<<<<<<< HEAD
-                                                <div class="form-group">
-<<<<<<< HEAD
-                                                    <div class="input-group">
-                                                        <input type="email" class="form-control" name="adminemail"
-                                                               value="<?php echo htmlspecialchars($adminemail); ?>">
-                                                    </div>
-=======
-                                                    <input type="text" class="form-control" name="adminemail"
-                                                           value="<?php echo htmlspecialchars($adminemail); ?>">
->>>>>>> master
-                                                </div>
-=======
-                                                <input type="text" class="form-control" name="adminemail" value="<?php echo htmlspecialchars($adminemail); ?>">
->>>>>>> Add custom checkboxes.
+                                                <input type="email" class="form-control" name="adminemail" value="<?php echo htmlspecialchars($adminemail); ?>">
                                                 <input type="hidden" name="field" value="webUI">
                                                 <input type="hidden" name="token" value="<?php echo $token ?>">
                                             </div>
