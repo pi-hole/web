@@ -226,7 +226,7 @@
     <script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
     <script src="scripts/vendor/Chart.bundle.min.js"></script>
 </head>
-<body class="skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
+<body class="hold-transition skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
  <noscript>
 <!-- JS Warning -->
 <div>
