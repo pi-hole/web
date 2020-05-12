@@ -1092,8 +1092,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
-                                            <div class="col-lg-6 col-md-12">
+                                            <div class="col-lg-12">
                                                 <label>Restore...</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="whitelist" value="true"
@@ -1120,34 +1124,40 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                                       checked>
                                                             Adlists</label>
                                                     </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="client" value="true"
-                                                                      checked>
+                                                                        checked>
                                                             Clients</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="group" value="true"
-                                                                      checked>
+                                                                        checked>
                                                             Groups</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="auditlog" value="true"
-                                                                      checked>
+                                                                        checked>
                                                             Audit log</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="staticdhcpleases" value="true"
-                                                                      checked>
+                                                                        checked>
                                                             Static DHCP Leases</label>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label><input type="checkbox" name="localdnsrecords" value="true"
-                                                                      checked>
+                                                                        checked>
                                                             Local DNS Records</label>
                                                     </div>
-                                                </div>
+                                                </div> 
                                             </div>
-                                            <div class="col-lg-6 col-md-12">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
                                                 <div class="form-group">
                                                     <label for="zip_file">File input</label>
                                                     <input type="file" name="zip_file" id="zip_file">
