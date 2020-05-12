@@ -301,6 +301,7 @@ function updateQueryTypesPie() {
     var v = [],
       c = [],
       k = [],
+      i = 0,
       iter;
     // Collect values and colors, and labels
     if (Object.prototype.hasOwnProperty.call(data, "querytypes")) {
@@ -311,7 +312,7 @@ function updateQueryTypesPie() {
 
     $.each(iter, function (key, value) {
       v.push(value);
-      c.push(colors.shift());
+      c.push(colors[i++ % colors.length]);
       k.push(key);
     });
     // Build a single dataset with the data to be pushed
@@ -464,6 +465,7 @@ function updateForwardDestinationsPie() {
     var v = [],
       c = [],
       k = [],
+      i = 0,
       values = [];
 
     // Collect values and colors
@@ -472,7 +474,7 @@ function updateForwardDestinationsPie() {
         key = key.substr(0, key.indexOf("|"));
       }
 
-      values.push([key, value, colors.shift()]);
+      values.push([key, value, colors[i++ % colors.length]]);
     });
 
     // Split data into individual arrays for the graphs
