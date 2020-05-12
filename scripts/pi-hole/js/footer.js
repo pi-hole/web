@@ -100,6 +100,17 @@ $(document).ready(function () {
   if (seconds > 0) {
     setTimeout(countDown, 100);
   }
+
+  if (!testCookies() && $("#cookieInfo").length > 0) {
+    $("#cookieInfo").show();
+  }
+
+  var checkbox_theme = $("#checkbox_theme").text();
+  $("input").icheck({
+    checkboxClass: "icheckbox_" + checkbox_theme,
+    radioClass: "iradio_" + checkbox_theme,
+    increaseArea: "20%"
+  });
 });
 
 // Handle Enable/Disable

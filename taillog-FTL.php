@@ -12,9 +12,9 @@
     <h1>Output the last lines of the pihole-FTL.log file (live)</h1>
 </div>
 
-<div class="checkbox"><label><input type="checkbox" name="active" checked id="chk1"> Automatic scrolling on update</label></div>
+<input type="checkbox" name="active" id="active" checked id="chk1"><label for="active">Automatic scrolling on update</label>
 <pre id="output" style="width: 100%; height: 100%; max-height:650px; overflow-y:scroll;"></pre>
-<div class="checkbox"><label><input type="checkbox" name="active" checked id="chk2"> Automatic scrolling on update</label></div>
+<input type="checkbox" name="active" id="active" checked id="chk2"><label for="active">Automatic scrolling on update</label>
 
 <script src="scripts/pi-hole/js/taillog-FTL.js"></script>
 

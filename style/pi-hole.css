@@ -27,23 +27,8 @@
 .small-box span.glow {
 	text-shadow: 0 0 5px #fff;
 }
-.skin-blue .list-group-item:hover {
-	background: #ddd;
-}
 
-.skin-blue .not-used {
-	background: #eee;
-}
-
-.skin-blue .not-used:hover {
-	background: #c5c5c5;
-}
-
-.skin-blue .used {
-	background: #fff;
-}
-
-.skin-blue .used:hover {
+.list-group-item:hover {
 	background: #ddd;
 }
 
@@ -269,34 +254,6 @@
     text-decoration: underline;
 }
 
-.text-black {
-    color: #000 !important;
-}
-
-.text-green-light {
-    color: #7fff00 !important;
-}
-
-.text-green {
-    color: #080 !important;
-}
-
-.text-orange {
-    color: #ffa500 !important;
-}
-
-.text-red {
-    color: #f00 !important;
-}
-
-.text-vivid-blue {
-    color: #36f !important;
-}
-
-td.highlight {
-    background-color: #ff0 !important;
-}
-
 code.breakall {
     white-space: -moz-pre-wrap;
     white-space: -pre-wrap;
@@ -313,4 +270,8 @@ code.breakall {
 .bootstrap-select.bs-container.align-right {
     left: unset !important;
     right: 10px;
+}
+
+.input-group-addon {
+	padding: 0 12px;
 }

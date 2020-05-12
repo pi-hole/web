@@ -9,6 +9,7 @@
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
     require_once "scripts/pi-hole/php/FTL.php";
+    require "scripts/pi-hole/php/theme.php";
     $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
 
     check_cors();
@@ -174,6 +175,11 @@
 *  Please see LICENSE file for your rights under this license. -->
 <html lang="en">
 <head>
+<?php if ($darkmode) { ?>
+    <style>
+        html { background-color: black; }
+    </style>
+<?php } ?>
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
     <title>Pi-hole<?php if (gethostname()) {echo " - ", gethostname();} ?></title>
@@ -202,12 +208,9 @@
     <link rel="stylesheet" href="style/vendor/daterangepicker.css">
 
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
-    <link rel="stylesheet" href="style/vendor/skin-blue.min.css">
     <link rel="stylesheet" href="style/vendor/animate.css">
 
-    <link rel="stylesheet" href="style/pi-hole.css">
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
-
     <script src="scripts/vendor/jquery.min.js"></script>
     <script src="scripts/vendor/jquery-ui.min.js"></script>
     <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -225,8 +228,12 @@
     <script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
     <script src="scripts/vendor/moment.min.js"></script>
     <script src="scripts/vendor/Chart.min.js"></script>
+    <script src="scripts/vendor/iCheck.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style/vendor/iCheck/<?php echo $checkbox_theme_name;?>/<?php echo $checkbox_theme_variant;?>.css">
+    <link rel="stylesheet" href="style/pi-hole.css">
+    <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css">
 </head>
-<body class="hold-transition skin-blue sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
+<body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
  <noscript>
 <!-- JS Warning -->
 <div>
@@ -244,7 +251,7 @@ if($auth) {
 ?>
 
 <!-- Send token to JS -->
-<div id="token" hidden><?php if($auth) echo $token; ?></div>
+<div id="checkbox_theme" hidden><?php echo $checkbox_theme_name; ?><?php if($checkbox_theme_name !== $checkbox_theme_variant){ echo "-$checkbox_theme_variant"; } ?></div>
 <div id="enableTimer" hidden><?php if(file_exists("../custom_disable_timer")){ echo file_get_contents("../custom_disable_timer"); } ?></div>
 <div class="wrapper">
     <header class="main-header">

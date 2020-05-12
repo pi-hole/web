@@ -22,22 +22,28 @@ $token = $_SESSION['token'];
     <h1>Specify date range to be queried from the Pi-hole query database</h1>
 </div>
 
-
 <div class="row">
-    <div class="col-md-12">
-<!-- Date Input -->
-      <div class="form-group">
-        <label>Date and time range:</label>
-
-        <div class="input-group">
-          <div class="input-group-addon">
-            <i class="far fa-clock"></i>
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">
+          Select date and time range
+        </h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="form-group col-md-12">
+            <div class="input-group">
+              <div class="input-group-addon">
+                <i class="far fa-clock"></i>
+              </div>
+              <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
+            </div>
           </div>
-          <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
         </div>
-        <!-- /.input group -->
       </div>
     </div>
+  </div>
 </div>
 
 <div class="row">
@@ -46,39 +52,21 @@ $token = $_SESSION['token'];
     </div>
     <div class="form-group">
         <div class="col-md-3">
-            <div class="checkbox">
-                <label><input type="checkbox" id="type_forwarded" checked><strong>Permitted: </strong>forwarded</label>
-            </div>
-            <div class="checkbox">
-                <label><input type="checkbox" id="type_cached" checked><strong>Permitted: </strong>cached</label>
-            </div>
+            <input type="checkbox" id="type_forwarded" checked><label for="type_forwarded">Permitted: forwarded</label><br>
+            <input type="checkbox" id="type_cached" checked><label for="type_cached">Permitted: cached</label>
         </div>
         <div class="col-md-3">
-            <div class="checkbox">
-                <label><input type="checkbox" id="type_gravity" checked><strong>Blocked: </strong>gravity</label>
-            </div>
-            <div class="checkbox">
-                <label><input type="checkbox" id="type_external" checked><strong>Blocked: </strong>external</label>
-            </div>
+            <input type="checkbox" id="type_gravity" checked><label for="type_gravity">Blocked: gravity</label><br>
+            <input type="checkbox" id="type_external" checked><label for="type_external">Blocked: external</label>
         </div>
         <div class="col-md-3">
-            <div class="checkbox">
-                <label><input type="checkbox" id="type_blacklist" checked><strong>Blocked: </strong>exact blacklist</label>
-            </div>
-            <div class="checkbox">
-                <label><input type="checkbox" id="type_regex" checked><strong>Blocked: </strong>regex blacklist</label>
-            </div>
+            <input type="checkbox" id="type_blacklist" checked><label for="type_blacklist">Blocked: exact blacklist</label><br>
+            <input type="checkbox" id="type_regex" checked><label for="type_regex">Blocked: regex blacklist</label>
         </div>
         <div class="col-md-3">
-            <div class="checkbox">
-                <label><input type="checkbox" id="type_gravity_CNAME" checked><strong>Blocked: </strong>gravity (CNAME)</label>
-            </div>
-            <div class="checkbox">
-                <label><input type="checkbox" id="type_blacklist_CNAME" checked><strong>Blocked: </strong>exact blacklist (CNAME)</label>
-            </div>
-            <div class="checkbox">
-                <label><input type="checkbox" id="type_regex_CNAME" checked><strong>Blocked: </strong>regex blacklist (CNAME)</label>
-            </div>
+            <input type="checkbox" id="type_gravity_CNAME" checked><label for="type_gravity_CNAME">Blocked: gravity (CNAME)</label><br>
+            <input type="checkbox" id="type_blacklist_CNAME" checked><label for="type_blacklist_CNAME">Blocked: exact blacklist (CNAME)</label><br>
+            <input type="checkbox" id="type_regex_CNAME" checked><label for="type_regex_CNAME">Blocked: regex blacklist (CNAME)</label>
         </div>
     </div>
 </div>

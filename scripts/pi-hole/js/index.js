@@ -689,7 +689,7 @@ function updateTopLists() {
             percentage.toFixed(1) +
             "% of " +
             data.dns_queries_today +
-            '"> <div class="progress-bar progress-bar-green" style="width: ' +
+            '"> <div class="progress-bar queries-permitted" style="width: ' +
             percentage +
             '%"></div> </div> </td> </tr> '
         );
@@ -722,7 +722,7 @@ function updateTopLists() {
             percentage.toFixed(1) +
             "% of " +
             data.ads_blocked_today +
-            '"> <div class="progress-bar progress-bar-yellow" style="width: ' +
+            '"> <div class="progress-bar queries-blocked" style="width: ' +
             percentage +
             '%"></div> </div> </td> </tr> '
         );
@@ -824,8 +824,10 @@ $(document).ready(function () {
   // Pull in data via AJAX
   updateSummaryData();
 
-  var blockedColor = "#999";
-  var permittedColor = "#00a65a";
+  var blockedColor = $(".queries-blocked").css("background-color");
+  var permittedColor = $(".queries-permitted").css("background-color");
+  var gridColor = $(".graphs-grid").css("background-color");
+  var ticksColor = $(".graphs-ticks").css("color");
 
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   timeLineChart = new Chart(ctx, {
@@ -912,6 +914,12 @@ $(document).ready(function () {
                 hour: "HH:mm"
               },
               tooltipFormat: "HH:mm"
+            },
+            gridLines: {
+              color: gridColor
+            },
+            ticks: {
+              fontColor: ticksColor
             }
           }
         ],
@@ -919,7 +927,11 @@ $(document).ready(function () {
           {
             stacked: true,
             ticks: {
-              beginAtZero: true
+              beginAtZero: true,
+              fontColor: ticksColor
+            },
+            gridLines: {
+              color: gridColor
             }
           }
         ]
@@ -980,15 +992,25 @@ $(document).ready(function () {
                   hour: "HH:mm"
                 },
                 tooltipFormat: "HH:mm"
+              },
+              gridLines: {
+                color: gridColor
+              },
+              ticks: {
+                fontColor: ticksColor
               }
             }
           ],
           yAxes: [
             {
               ticks: {
-                beginAtZero: true
+                beginAtZero: true,
+                fontColor: ticksColor
               },
-              stacked: true
+              stacked: true,
+              gridLines: {
+                color: gridColor
+              }
             }
           ]
         },
@@ -1040,6 +1062,11 @@ $(document).ready(function () {
         datasets: [{ data: [] }]
       },
       options: {
+        elements: {
+          arc: {
+            borderColor: $(".box").css("background-color")
+          }
+        },
         legend: {
           display: false
         },
@@ -1077,6 +1104,11 @@ $(document).ready(function () {
         datasets: [{ data: [] }]
       },
       options: {
+        elements: {
+          arc: {
+            borderColor: $(".box").css("background-color")
+          }
+        },
         legend: {
           display: false
         },

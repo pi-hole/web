@@ -154,7 +154,7 @@ function updateTopDomainsChart() {
             percentage.toFixed(1) +
             "% of " +
             sum +
-            '"> <div class="progress-bar progress-bar-blue" style="width: ' +
+            '"> <div class="progress-bar queries-blocked" style="width: ' +
             percentage +
             '%"></div> </div> </td> </tr> '
         );
@@ -201,7 +201,7 @@ function updateTopAdsChart() {
             percentage.toFixed(1) +
             "% of " +
             sum +
-            '"> <div class="progress-bar progress-bar-blue" style="width: ' +
+            '"> <div class="progress-bar queries-permitted" style="width: ' +
             percentage +
             '%"></div> </div> </td> </tr> '
         );
