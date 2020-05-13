@@ -15,13 +15,25 @@
   },
   "homepage": "https://github.com/pi-hole/AdminLTE#readme",
   "scripts": {
+    "prefix": "postcss \"style/*.css\" \"style/themes/*.css\" --use autoprefixer --no-map --replace",
+    "prettier:check": "prettier -l \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**/*.js\"",
+    "prettier:fix": "prettier --write \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**/*.js\"",
     "xo": "xo",
     "xo:fix": "npm run xo -- --fix",
-    "test": "npm run xo"
+    "test": "npm run prettier:check && npm run xo"
   },
   "devDependencies": {
+    "autoprefixer": "^9.8.0",
+    "postcss-cli": "^7.1.1",
+    "prettier": "2.0.4",
     "xo": "^0.30.0"
   },
+  "browserslist": [
+    "defaults",
+    "Explorer >= 10",
+    "not ExplorerMobile <= 11",
+    "not Safari 5.1"
+  ],
   "prettier": {
     "arrowParens": "avoid",
     "bracketSpacing": true,
