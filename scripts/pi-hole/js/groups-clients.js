@@ -32,12 +32,12 @@ function reload_client_suggestions() {
           continue;
         }
 
-        // Add MAC address
-        var text = key.toUpperCase();
-
-        // Check if this is a valid MAC address (skip mock devices)
-        if (!utils.validateMAC(text)) {
-          continue;
+        var text = key,
+          key_plain = key;
+        if (key.startsWith("IP-")) {
+          // Mock MAC address for address-only devices
+          key_plain = key.substring(3);
+          text = key_plain;
         }
 
         // Append host name if available
@@ -45,7 +45,7 @@ function reload_client_suggestions() {
           text += " (" + data[key] + ")";
         }
 
-        sel.append($("<option />").val(key).text(text));
+        sel.append($("<option />").val(key_plain).text(text));
       }
     },
     "json"

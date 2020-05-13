@@ -216,7 +216,7 @@ if ($_POST['action'] == 'get_groups') {
         // Loop over results
         $ips = array();
         while ($res = $query->fetchArray(SQLITE3_ASSOC)) {
-            $ips[$res['hwaddr']] = $res['name'] !== null ? $res['name'] : '';
+            $ips[strtoupper($res['hwaddr'])] = $res['name'] !== null ? $res['name'] : '';
         }
         $FTLdb->close();
 
@@ -227,8 +227,11 @@ if ($_POST['action'] == 'get_groups') {
 
         // Loop over results, remove already configured clients
         while (($res = $query->fetchArray(SQLITE3_ASSOC)) !== false) {
-            if (isset($ips[$res['hwaddr']])) {
-                unset($ips[$res['hwaddr']]);
+            if (isset($ips[$res['ip']])) {
+                unset($ips[$res['ip']]);
+            }
+            if (isset($ips["IP-".$res['ip']])) {
+                unset($ips["IP-".$res['ip']]);
             }
         }
 
