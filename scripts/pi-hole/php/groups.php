@@ -54,7 +54,8 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_group') {
     // Add new group
     try {
-        $names = explode(' ', trim($_POST['name']));
+        // Explode (split) name string by comma to add multiple groups in one go
+        $names = explode(',', trim($_POST['name']));
         $total = count($names);
         $added = 0;
         $stmt = $db->prepare('INSERT INTO "group" (name,description) VALUES (:name,:desc)');

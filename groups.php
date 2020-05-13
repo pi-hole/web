@@ -28,7 +28,8 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="new_name">Name:</label>
-                        <input id="new_name" type="text" class="form-control" placeholder="Group name">
+                        <!-- Placeholder updated to reveal commas separated is supported -->
+                        <input id="new_name" type="text" class="form-control" placeholder="Group name (use commas to add multiple)">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="new_desc">Description:</label>
