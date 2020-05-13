@@ -64,12 +64,6 @@ $(document).ready(function () {
     $("#ip-custom").val("");
     $("#ip-custom").prop("disabled", $("#select option:selected").val() !== "custom");
   });
-  // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
-  input.setAttribute("autocomplete", "off");
-  input.setAttribute("autocorrect", "off");
-  input.setAttribute("autocapitalize", "off");
-  input.setAttribute("spellcheck", false);
 });
 
 function initTable() {
@@ -230,6 +224,14 @@ function initTable() {
       return data;
     }
   });
+  // Disable autocorrect in the search box
+  var input = document.querySelector("input[type=search]");
+  if (input !== null) {
+    input.setAttribute("autocomplete", "off");
+    input.setAttribute("autocorrect", "off");
+    input.setAttribute("autocapitalize", "off");
+    input.setAttribute("spellcheck", false);
+  }
 
   table.on("order.dt", function () {
     var order = table.order();
