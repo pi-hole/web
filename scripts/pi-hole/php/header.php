@@ -209,6 +209,7 @@
 
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
     <link rel="stylesheet" href="style/vendor/animate.css">
+    <link rel="stylesheet" href="style/vendor/select2.min.css">
 
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
     <script src="scripts/vendor/jquery.min.js"></script>
@@ -216,6 +217,7 @@
     <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="scripts/vendor/adminlte.min.js"></script>
     <script src="scripts/vendor/bootstrap-notify.min.js"></script>
+    <script src="scripts/vendor/select2.min.js"></script>
 
 <?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
     <script src="style/vendor/bootstrap/js/bootstrap-select.min.js"></script>

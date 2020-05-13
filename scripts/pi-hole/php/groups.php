@@ -208,7 +208,7 @@ if ($_POST['action'] == 'get_groups') {
         $QUERYDB = getQueriesDBFilename();
         $FTLdb = SQLite3_connect($QUERYDB);
 
-        $query = $FTLdb->query('SELECT DISTINCT ip,network.name FROM network_addresses AS name LEFT JOIN network ON network.id = network_id ORDER BY ip ASC;');
+        $query = $FTLdb->query('SELECT DISTINCT hwaddr,name FROM network;');
         if (!$query) {
             throw new Exception('Error while querying FTL\'s database: ' . $db->lastErrorMsg());
         }
@@ -216,7 +216,7 @@ if ($_POST['action'] == 'get_groups') {
         // Loop over results
         $ips = array();
         while ($res = $query->fetchArray(SQLITE3_ASSOC)) {
-            $ips[$res['ip']] = $res['name'] !== null ? $res['name'] : '';
+            $ips[$res['hwaddr']] = $res['name'] !== null ? $res['name'] : '';
         }
         $FTLdb->close();
 
@@ -227,8 +227,8 @@ if ($_POST['action'] == 'get_groups') {
 
         // Loop over results, remove already configured clients
         while (($res = $query->fetchArray(SQLITE3_ASSOC)) !== false) {
-            if (isset($ips[$res['ip']])) {
-                unset($ips[$res['ip']]);
+            if (isset($ips[$res['hwaddr']])) {
+                unset($ips[$res['hwaddr']]);
             }
         }
 

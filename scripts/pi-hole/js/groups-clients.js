@@ -17,24 +17,35 @@ function reload_client_suggestions() {
     { action: "get_unconfigured_clients", token: token },
     function (data) {
       var sel = $("#select");
-      var customWasSelected = sel.val() === "custom";
       sel.empty();
+
+      // In order for the placeholder value to appear, we have to have a blank
+      // <option> as the first option in our <select> control. This is because
+      // the browser tries to select the first option by default. If our first
+      // option were non-empty, the browser would display this instead of the
+      // placeholder.
+      sel.append($("<option />"));
+
+      // Add data obtained from API
       for (var key in data) {
         if (!Object.prototype.hasOwnProperty.call(data, key)) {
           continue;
         }
 
-        var text = key;
+        // Add MAC address
+        var text = key.toUpperCase();
+
+        // Check if this is a valid MAC address (skip mock devices)
+        if (!utils.validateMAC(text)) {
+          continue;
+        }
+
+        // Append host name if available
         if (data[key].length > 0) {
           text += " (" + data[key] + ")";
         }
 
         sel.append($("<option />").val(key).text(text));
-      }
-
-      sel.append($("<option />").val("custom").text("Custom, specified below..."));
-      if (customWasSelected) {
-        sel.val("custom");
       }
     },
     "json"
@@ -57,6 +68,12 @@ $(document).ready(function () {
   $("#btnAdd").on("click", addClient);
 
   reload_client_suggestions();
+  $("select").select2({
+    tags: true,
+    placeholder: "Select client...",
+    allowClear: true
+  });
+
   utils.bsSelect_defaults();
   get_groups();
 
@@ -64,12 +81,6 @@ $(document).ready(function () {
     $("#ip-custom").val("");
     $("#ip-custom").prop("disabled", $("#select option:selected").val() !== "custom");
   });
-  // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
-  input.setAttribute("autocomplete", "off");
-  input.setAttribute("autocorrect", "off");
-  input.setAttribute("autocapitalize", "off");
-  input.setAttribute("spellcheck", false);
 });
 
 function initTable() {
@@ -231,6 +242,13 @@ function initTable() {
     }
   });
 
+  // Disable autocorrect in the search box
+  var input = document.querySelector("input[type=search]");
+  input.setAttribute("autocomplete", "off");
+  input.setAttribute("autocorrect", "off");
+  input.setAttribute("autocapitalize", "off");
+  input.setAttribute("spellcheck", false);
+
   table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
@@ -248,9 +266,6 @@ function initTable() {
 function addClient() {
   var ip = $("#select").val();
   var comment = $("#new_comment").val();
-  if (ip === "custom") {
-    ip = $("#ip-custom").val();
-  }
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding client...", ip);

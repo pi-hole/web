@@ -30,12 +30,16 @@
                         <label for="select">Known clients:</label>
                         <select id="select" class="form-control" placeholder="">
                             <option disabled selected>Loading...</option>
-                        </select><br>
-                        <input id="ip-custom" type="text" class="form-control" disabled placeholder="Client IP address (IPv4 or IPv6, CIDR subnetting available, optional)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                        </select>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="new_comment">Comment:</label>
                         <input id="new_comment" type="text" class="form-control" placeholder="Client description (optional)">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>You can select an existing client or add a custom one by typing into the field above and confirming your entry with <kbd>&#x23CE;</kbd>. Clients can be described either by their IP addresses (IPv4 and IPv6 are supported), IP subnets (CIDR notation, like <code>192.168.2.0/24</code>) or by their MAC addresses. Note that client recognition by MAC addresses only work for devices at most one networking hop away from your Pi-hole.</p>
                     </div>
                 </div>
             </div>
