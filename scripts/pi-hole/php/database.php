@@ -136,7 +136,7 @@ function add_to_table($db, $table, $domains, $comment=null, $wildcardstyle=false
 		$querystr = "INSERT OR IGNORE INTO $table ($field,comment) VALUES (:$field, :comment);";
 		$bindcomment = true;
 	} else {
-		$querystr = "INSERT OR IGNORE INTO $table ($field,comment,type) VALUES (:$field, :comment, $type);";
+		$querystr = "REPLACE INTO $table ($field,comment,type) VALUES (:$field, :comment, $type);";
 		$bindcomment = true;
 	}
 	$stmt = $db->prepare($querystr);
