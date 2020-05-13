@@ -52,12 +52,6 @@ $(document).ready(function () {
       $("#wildcard_checkbox").prop("checked", false);
     }
   });
-  // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
-  input.setAttribute("autocomplete", "off");
-  input.setAttribute("autocorrect", "off");
-  input.setAttribute("autocapitalize", "off");
-  input.setAttribute("spellcheck", false);
 
   $("#add2black, #add2white").on("click", addDomain);
 
@@ -286,6 +280,14 @@ function initTable() {
       }
     }
   });
+  // Disable autocorrect in the search box
+  var input = document.querySelector("input[type=search]");
+  if (input !== null) {
+    input.setAttribute("autocomplete", "off");
+    input.setAttribute("autocorrect", "off");
+    input.setAttribute("autocapitalize", "off");
+    input.setAttribute("spellcheck", false);
+  }
 
   table.on("order.dt", function () {
     var order = table.order();
