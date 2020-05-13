@@ -129,6 +129,11 @@ function validateIPv6CIDR(ip) {
   return ipv6validator.test(ip);
 }
 
+function validateMAC(mac) {
+  var macvalidator = new RegExp(/^([\dA-F]{2}:){5}([\dA-F]{2})$/);
+  return macvalidator.test(mac);
+}
+
 function bsSelect_defaults() {
   // set bootstrap-select defaults
   var pickerDEFAULTS = $.fn.selectpicker.Constructor.DEFAULTS;
@@ -157,6 +162,7 @@ window.utils = (function () {
     enableAll: enableAll,
     validateIPv4CIDR: validateIPv4CIDR,
     validateIPv6CIDR: validateIPv6CIDR,
+    validateMAC: validateMAC,
     bsSelect_defaults: bsSelect_defaults
   };
 })();

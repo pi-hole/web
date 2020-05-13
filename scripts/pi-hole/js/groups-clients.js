@@ -257,22 +257,20 @@ function addClient() {
 
   if (ip.length === 0) {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify a client IP address");
+    utils.showAlert("warning", "", "Warning", "Please specify a client IP or MAC address");
     return;
   }
 
-  // Validate IP address (may contain CIDR details)
-  var ipv6format = ip.includes(":");
+  // Convert input to upper case (important for MAC addresses)
+  ip = ip.toUpperCase();
 
-  if (!ipv6format && !utils.validateIPv4CIDR(ip)) {
+  // Validate input, can be:
+  // - IPv4 address (with and without CIDR)
+  // - IPv6 address (with and without CIDR)
+  // - MAC address (in the form AA:BB:CC:DD:EE:FF)
+  if (!utils.validateIPv4CIDR(ip) && !utils.validateIPv6CIDR(ip) && !utils.validateMAC(ip)) {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Invalid IPv4 address!");
-    return;
-  }
-
-  if (ipv6format && !utils.validateIPv6CIDR(ip)) {
-    utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Invalid IPv6 address!");
+    utils.showAlert("warning", "", "Warning", "Input is neither an IP nor a MAC address!");
     return;
   }
 
