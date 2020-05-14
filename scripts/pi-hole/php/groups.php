@@ -68,6 +68,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         foreach ($names as $name) {
+            $name = trim($name);
             if (!$stmt->bindValue(':name', $name, SQLITE3_TEXT)) {
                 throw new Exception('While binding name: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
                 'Added ' . $added . " out of ". $total . " groups");
