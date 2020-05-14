@@ -208,7 +208,7 @@ if ($_POST['action'] == 'get_groups') {
         $QUERYDB = getQueriesDBFilename();
         $FTLdb = SQLite3_connect($QUERYDB);
 
-        $query = $FTLdb->query('SELECT DISTINCT id,hwaddr FROM network;');
+        $query = $FTLdb->query('SELECT DISTINCT id,hwaddr,macVendor FROM network;');
         if (!$query) {
             throw new Exception('Error while querying FTL\'s database: ' . $db->lastErrorMsg());
         }
@@ -222,7 +222,19 @@ if ($_POST['action'] == 'get_groups') {
             while ($res_names = $query_names->fetchArray(SQLITE3_ASSOC)) {
                 array_push($names, utf8_encode($res_names["name"]));
             }
-            $ips[strtoupper($res['hwaddr'])] = implode(",", $names);
+            $extrainfo = "";
+            // Add device vendor to info string (if available)
+            if (strlen($res["macVendor"]) > 0) {
+                $extrainfo = "vendor: ".htmlspecialchars($res["macVendor"]);
+                if (count($names) > 0)
+                    $extrainfo .= ", ";
+            }
+            // Add list of associated host names to info string (if available)
+            if(count($names) === 1)
+                $extrainfo .= "hostname: ".$names[0];
+            else if(count($names) > 0)
+                $extrainfo .= "hostnames: ".implode(", ", $names);
+            $ips[strtoupper($res['hwaddr'])] = $extrainfo;
         }
         $FTLdb->close();
 
