@@ -251,7 +251,7 @@ function addClient() {
   var ip = $("#select").val();
   var comment = $("#new_comment").val();
   if (ip === "custom") {
-    ip = $("#ip-custom").val();
+    ip = $("#ip-custom").val().trim();
   }
 
   utils.disableAll();
