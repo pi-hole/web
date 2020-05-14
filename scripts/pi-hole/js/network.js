@@ -108,7 +108,25 @@ $(document).ready(function () {
       // Set hostname to "unknown" if not available
       if (!data.name || data.name.length === 0) {
         $("td:eq(3)", row).html("<em>unknown</em>");
+      } else {
+        var names = [];
+        var maxiter = Math.min(data.name.length, MAXIPDISPLAY);
+        for (var index = 0; index < maxiter; index++) {
+          var name = data.name[index];
+          names.push('<a href="queries.php?client=' + name + '">' + name + "</a>");
+        }
+
+        if (data.name.length > MAXIPDISPLAY) {
+          // We hit the maximum above, add "..." to symbolize we would
+          // have more to show here
+          names.push("...");
+        }
+        $("td:eq(3)", row).html(names.join("<br>"));
+        $("td:eq(3)", row).hover(function () {
+          this.title = data.name.join("\n");
+        });
       }
+
 
       // Set number of queries to localized string (add thousand separators)
       $("td:eq(6)", row).html(data.numQueries.toLocaleString());

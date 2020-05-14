@@ -172,7 +172,7 @@ if ($_POST['action'] == 'get_groups') {
                 throw new Exception('Error while querying gravity\'s client_by_group table: ' . $db->lastErrorMsg());
             }
 
-            $stmt = $FTLdb->prepare('SELECT name FROM network WHERE id = (SELECT network_id FROM network_addresses WHERE ip = :ip);');
+            $stmt = $FTLdb->prepare('SELECT name FROM network_names WHERE network_id = (SELECT network_id FROM network_addresses WHERE ip = :ip);');
             if (!$stmt) {
                 throw new Exception('Error while preparing network table statement: ' . $db->lastErrorMsg());
             }
@@ -208,7 +208,7 @@ if ($_POST['action'] == 'get_groups') {
         $QUERYDB = getQueriesDBFilename();
         $FTLdb = SQLite3_connect($QUERYDB);
 
-        $query = $FTLdb->query('SELECT DISTINCT hwaddr,name FROM network;');
+        $query = $FTLdb->query('SELECT DISTINCT id,hwaddr FROM network;');
         if (!$query) {
             throw new Exception('Error while querying FTL\'s database: ' . $db->lastErrorMsg());
         }
@@ -216,7 +216,13 @@ if ($_POST['action'] == 'get_groups') {
         // Loop over results
         $ips = array();
         while ($res = $query->fetchArray(SQLITE3_ASSOC)) {
-            $ips[strtoupper($res['hwaddr'])] = $res['name'] !== null ? $res['name'] : '';
+            $id = intval($res["id"]);
+            $query_names = $FTLdb->query("SELECT name FROM network_names WHERE network_id = $id ORDER BY lastSeen DESC;");
+            $names = [];
+            while ($res_names = $query_names->fetchArray(SQLITE3_ASSOC)) {
+                array_push($names, utf8_encode($res_names["name"]));
+            }
+            $ips[strtoupper($res['hwaddr'])] = implode(",", $names);
         }
         $FTLdb->close();
 
