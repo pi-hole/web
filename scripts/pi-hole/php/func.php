@@ -137,10 +137,10 @@ function addCustomDNSEntry($ip="", $domain="", $json_reply=true)
     try
     {
         if(isset($_REQUEST['ip']))
-            $ip = $_REQUEST['ip'];
+            $ip = trim($_REQUEST['ip']);
 
         if(isset($_REQUEST['domain']))
-            $domain = $_REQUEST['domain'];
+            $domain = trim($_REQUEST['domain']);
 
         if (empty($ip))
             return error("IP must be set");

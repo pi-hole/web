@@ -68,6 +68,8 @@ $(document).ready(function () {
     rowCallback: function (row, data) {
       var color,
         mark,
+        maxiter,
+        index,
         lastQuery = parseInt(data.lastQuery);
       var network_recent = $(".network-recent").css("background-color");
       var network_old = $(".network-old").css("background-color");
@@ -110,8 +112,9 @@ $(document).ready(function () {
         $("td:eq(3)", row).html("<em>unknown</em>");
       } else {
         var names = [];
-        var maxiter = Math.min(data.name.length, MAXIPDISPLAY);
-        for (var index = 0; index < maxiter; index++) {
+        maxiter = Math.min(data.name.length, MAXIPDISPLAY);
+        index = 0;
+        for (index = 0; index < maxiter; index++) {
           var name = data.name[index];
           names.push('<a href="queries.php?client=' + name + '">' + name + "</a>");
         }
@@ -121,19 +124,20 @@ $(document).ready(function () {
           // have more to show here
           names.push("...");
         }
+
         $("td:eq(3)", row).html(names.join("<br>"));
         $("td:eq(3)", row).hover(function () {
           this.title = data.name.join("\n");
         });
       }
 
-
       // Set number of queries to localized string (add thousand separators)
       $("td:eq(6)", row).html(data.numQueries.toLocaleString());
 
       var ips = [];
-      var maxiter = Math.min(data.ip.length, MAXIPDISPLAY);
-      for (var index = 0; index < maxiter; index++) {
+      maxiter = Math.min(data.ip.length, MAXIPDISPLAY);
+      index = 0;
+      for (index = 0; index < maxiter; index++) {
         var ip = data.ip[index];
         ips.push('<a href="queries.php?client=' + ip + '">' + ip + "</a>");
       }

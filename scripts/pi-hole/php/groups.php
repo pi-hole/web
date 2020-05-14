@@ -488,7 +488,7 @@ if ($_POST['action'] == 'get_groups') {
         $domains = explode(' ', trim($_POST['domain']));
         $total = count($domains);
         $added = 0;
-        $stmt = $db->prepare('INSERT INTO domainlist (domain,type,comment) VALUES (:domain,:type,:comment)');
+        $stmt = $db->prepare('REPLACE INTO domainlist (domain,type,comment) VALUES (:domain,:type,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }

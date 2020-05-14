@@ -244,10 +244,12 @@ function initTable() {
 
   // Disable autocorrect in the search box
   var input = document.querySelector("input[type=search]");
-  input.setAttribute("autocomplete", "off");
-  input.setAttribute("autocorrect", "off");
-  input.setAttribute("autocapitalize", "off");
-  input.setAttribute("spellcheck", false);
+  if (input !== null) {
+    input.setAttribute("autocomplete", "off");
+    input.setAttribute("autocorrect", "off");
+    input.setAttribute("autocapitalize", "off");
+    input.setAttribute("spellcheck", false);
+  }
 
   table.on("order.dt", function () {
     var order = table.order();
@@ -257,6 +259,7 @@ function initTable() {
       $("#resetButton").hide();
     }
   });
+
   $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").hide();
@@ -264,7 +267,7 @@ function initTable() {
 }
 
 function addClient() {
-  var ip = $("#select").val();
+  var ip = $("#select").val().trim();
   var comment = $("#new_comment").val();
 
   utils.disableAll();
