@@ -194,6 +194,7 @@ if ($_POST['action'] == 'get_groups') {
             while ($gres = $group_query->fetchArray(SQLITE3_ASSOC)) {
                 array_push($groups, $gres['group_id']);
             }
+            $group_query->finalize();
             $res['groups'] = $groups;
             array_push($data, $res);
         }
@@ -222,6 +223,7 @@ if ($_POST['action'] == 'get_groups') {
             while ($res_names = $query_names->fetchArray(SQLITE3_ASSOC)) {
                 array_push($names, utf8_encode($res_names["name"]));
             }
+            $query_names->finalize();
             $extrainfo = "";
             // Add device vendor to info string (if available)
             if (strlen($res["macVendor"]) > 0) {
