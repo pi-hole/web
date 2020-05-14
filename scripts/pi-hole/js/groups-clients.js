@@ -32,6 +32,10 @@ function reload_client_suggestions() {
         sel.append($("<option />").val(key).text(text));
       }
 
+      if (data.length === 0) {
+        $("#ip-custom").prop("disabled", false);
+      }
+
       sel.append($("<option />").val("custom").text("Custom, specified below..."));
       if (customWasSelected) {
         sel.val("custom");
