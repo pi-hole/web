@@ -227,14 +227,6 @@ if ($_POST['action'] == 'get_groups') {
             }
             $query_names->finalize();
 
-            // Get associated IP addresses
-            $query_ips = $FTLdb->query("SELECT ip FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC;");
-            $addresses = [];
-            while ($res_ips = $query_ips->fetchArray(SQLITE3_ASSOC)) {
-                array_push($addresses, utf8_encode($res_ips["ip"]));
-            }
-            $query_ips->finalize();
-
             // Prepare extra information
             $extrainfo = "";
             // Add device vendor to info string (if available)
@@ -249,14 +241,25 @@ if ($_POST['action'] == 'get_groups') {
             else if(count($names) > 0)
                 $extrainfo .= "hostnames: ".implode(", ", $names);
 
-            if (count($names) > 0 && count($addresses) > 0)
-                $extrainfo .= ", ";
+            // Add list of associated host names to info string (if available and if this is not a mock device)
+            if (stripos($res["hwaddr"], "ip-") === FALSE) {
 
-            // Add list of associated host names to info string (if available)
-            if(count($addresses) === 1)
-                $extrainfo .= "address: ".$addresses[0];
-            else if(count($addresses) > 0)
-                $extrainfo .= "addresses: ".implode(", ", $addresses);
+                // Get associated IP addresses
+                $query_ips = $FTLdb->query("SELECT ip FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC;");
+                $addresses = [];
+                while ($res_ips = $query_ips->fetchArray(SQLITE3_ASSOC)) {
+                    array_push($addresses, utf8_encode($res_ips["ip"]));
+                }
+                $query_ips->finalize();
+
+                if (count($names) > 0 && count($addresses) > 0)
+                    $extrainfo .= ", ";
+
+                if(count($addresses) === 1)
+                    $extrainfo .= "address: ".$addresses[0];
+                else if(count($addresses) > 0)
+                    $extrainfo .= "addresses: ".implode(", ", $addresses);
+            }
 
             $ips[strtoupper($res['hwaddr'])] = $extrainfo;
         }
