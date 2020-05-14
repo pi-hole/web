@@ -218,12 +218,24 @@ if ($_POST['action'] == 'get_groups') {
         $ips = array();
         while ($res = $query->fetchArray(SQLITE3_ASSOC)) {
             $id = intval($res["id"]);
+
+            // Get associated host names
             $query_names = $FTLdb->query("SELECT name FROM network_names WHERE network_id = $id ORDER BY lastSeen DESC;");
             $names = [];
             while ($res_names = $query_names->fetchArray(SQLITE3_ASSOC)) {
                 array_push($names, utf8_encode($res_names["name"]));
             }
             $query_names->finalize();
+
+            // Get associated IP addresses
+            $query_ips = $FTLdb->query("SELECT ip FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC;");
+            $addresses = [];
+            while ($res_ips = $query_ips->fetchArray(SQLITE3_ASSOC)) {
+                array_push($addresses, utf8_encode($res_ips["ip"]));
+            }
+            $query_ips->finalize();
+
+            // Prepare extra information
             $extrainfo = "";
             // Add device vendor to info string (if available)
             if (strlen($res["macVendor"]) > 0) {
@@ -236,6 +248,16 @@ if ($_POST['action'] == 'get_groups') {
                 $extrainfo .= "hostname: ".$names[0];
             else if(count($names) > 0)
                 $extrainfo .= "hostnames: ".implode(", ", $names);
+
+            if (count($names) > 0 && count($addresses) > 0)
+                $extrainfo .= ", ";
+
+            // Add list of associated host names to info string (if available)
+            if(count($addresses) === 1)
+                $extrainfo .= "address: ".$addresses[0];
+            else if(count($addresses) > 0)
+                $extrainfo .= "addresses: ".implode(", ", $addresses);
+
             $ips[strtoupper($res['hwaddr'])] = $extrainfo;
         }
         $FTLdb->close();
