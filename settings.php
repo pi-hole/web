@@ -218,7 +218,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 ?>
 
 <?php
-if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists", "dns", "piholedhcp", "api", "privacy", "teleporter"))) {
+if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "dns", "piholedhcp", "api", "privacy", "teleporter"))) {
     $tab = $_GET['tab'];
 } else {
     $tab = "sysadmin";
@@ -229,7 +229,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li<?php if($tab === "sysadmin"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#sysadmin">System</a></li>
-                <li<?php if($tab === "blocklists"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#blocklists">Blocklists</a></li>
+                <li<?php if($tab === "adlists"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#adlists">Adlists</a></li>
                 <li<?php if($tab === "dns"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#dns">DNS</a></li>
                 <li<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
                 <li<?php if($tab === "api"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#api">API / Web interface</a></li>
@@ -237,17 +237,17 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                 <li<?php if($tab === "teleporter"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#teleporter">Teleporter</a></li>
             </ul>
             <div class="tab-content">
-                <!-- ######################################################### Blocklists ######################################################### -->
-                <div id="blocklists" class="tab-pane fade<?php if($tab === "blocklists"){ ?> in active<?php } ?>">
+                <!-- ######################################################### Adlists ######################################################### -->
+                <div id="adlists" class="tab-pane fade<?php if($tab === "adlists"){ ?> in active<?php } ?>">
                     <form role="form" method="post">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="box">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Blocklists used to generate Pi-hole's Gravity</h3>
+                                        <h3 class="box-title">Adlists used to generate Pi-hole's Gravity</h3>
                                     </div>
                                     <div class="box-body">
-                                        <p>Please use the  <a href="groups-adlists.php">group management pages</a> to edit the blocklists used by Pi-hole.</p>
+                                        <p>Please use the <a href="groups-adlists.php">group management pages</a> to edit the adlists used by Pi-hole.</p>
                                     </div>
                                 </div>
                             </div>
@@ -1008,7 +1008,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 <input type="checkbox" name="regexlist" id="tele_regexlist" value="true" checked>
                                                 <label for="tele_regexlist">Blacklist (regex/wildcard)</label><br>
                                                 <input type="checkbox" name="adlist" id="tele_adlist" value="true" checked>
-                                                <label for="tele_adlist">Blocklists</label><br>
+                                                <label for="tele_adlist">Adlists</label>
                                             </div>
                                             <div class="col-lg-6">
                                                 <input type="checkbox" name="client" id="tele_client" value="true" checked>
@@ -1018,7 +1018,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 <input type="checkbox" name="auditlog" id="tele_auditlog" value="true" checked>
                                                 <label for="tele_auditlog">Audit log</label><br>
                                                 <input type="checkbox" name="staticdhcpleases" id="tele_staticdhcpleases" value="true" checked>
-                                                <label for="tele_staticdhcpleases">Static DHCP Leases</label>
+                                                <label for="tele_staticdhcpleases">Static DHCP Leases</label><br>
                                                 <input type="checkbox" name="localdnsrecords" id="tele_localdnsrecords" value="true" checked>
                                                 <label for="tele_localdnsrecords">Local DNS Records</label>
                                             </div> 
