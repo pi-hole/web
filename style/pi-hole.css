@@ -275,3 +275,9 @@ code.breakall {
 .input-group-addon {
 	padding: 0 12px;
 }
+
+.form-inline .form-control {
+    display: inline-block;
+    width: 100%;
+	vertical-align: middle;
+}
