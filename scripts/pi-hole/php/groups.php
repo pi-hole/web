@@ -229,17 +229,18 @@ if ($_POST['action'] == 'get_groups') {
 
             // Prepare extra information
             $extrainfo = "";
-            // Add device vendor to info string (if available)
-            if (strlen($res["macVendor"]) > 0) {
-                $extrainfo = "vendor: ".htmlspecialchars($res["macVendor"]);
-                if (count($names) > 0)
-                    $extrainfo .= ", ";
-            }
             // Add list of associated host names to info string (if available)
             if(count($names) === 1)
                 $extrainfo .= "hostname: ".$names[0];
             else if(count($names) > 0)
                 $extrainfo .= "hostnames: ".implode(", ", $names);
+
+            // Add device vendor to info string (if available)
+            if (strlen($res["macVendor"]) > 0) {
+                if (count($names) > 0)
+                    $extrainfo .= "; ";
+                $extrainfo .= "vendor: ".htmlspecialchars($res["macVendor"]);
+            }
 
             // Add list of associated host names to info string (if available and if this is not a mock device)
             if (stripos($res["hwaddr"], "ip-") === FALSE) {
@@ -253,7 +254,7 @@ if ($_POST['action'] == 'get_groups') {
                 $query_ips->finalize();
 
                 if (count($names) > 0 && count($addresses) > 0)
-                    $extrainfo .= ", ";
+                    $extrainfo .= "; ";
 
                 if(count($addresses) === 1)
                     $extrainfo .= "address: ".$addresses[0];
