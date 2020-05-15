@@ -777,15 +777,24 @@ function updateSummaryData(runOnce) {
       updateTopLists();
     }
 
-    ["ads_blocked_today", "dns_queries_today", "ads_percentage_today", "unique_clients"].forEach(
-      function (today) {
-        var $todayElement = $("span#" + today);
-
-        if ($todayElement.text() !== data[today] && $todayElement.text() !== data[today] + "%") {
-          $todayElement.addClass("glow");
-        }
+    //Element name might have a different name to the property of the API so we split it at |
+    [
+      "ads_blocked_today|queries_blocked_today",
+      "dns_queries_today",
+      "ads_percentage_today|percentage_blocked_today",
+      "unique_clients",
+      "domains_being_blocked"
+    ].forEach(function (arrayItem, idx) {
+      var apiElName = arrayItem.split("|");
+      var apiName = apiElName[0];
+      var elName = apiElName[1];
+      var $todayElement = elName === null ? $("span#" + apiName) : $("span#" + elName);
+      var textData = idx === 2 && data[apiName] !== "to" ? data[apiName] + "%" : data[apiName];
+      if ($todayElement.text() !== textData && $todayElement.text() !== textData + "%") {
+        $todayElement.addClass("glow");
+        $todayElement.text(textData);
       }
-    );
+    });
 
     if (Object.prototype.hasOwnProperty.call(data, "dns_queries_all_types")) {
       $("#total_queries").prop(
@@ -795,16 +804,6 @@ function updateSummaryData(runOnce) {
     }
 
     window.setTimeout(function () {
-      [
-        "ads_blocked_today",
-        "dns_queries_today",
-        "domains_being_blocked",
-        "ads_percentage_today",
-        "unique_clients"
-      ].forEach(function (header, idx) {
-        var textData = idx === 3 && data[header] !== "to" ? data[header] + "%" : data[header];
-        $("span#" + header).text(textData);
-      });
       $("span.glow").removeClass("glow");
     }, 500);
   })

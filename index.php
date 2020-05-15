@@ -47,7 +47,7 @@
         <div class="small-box bg-aqua">
             <div class="inner">
                 <p>Queries Blocked</p>
-                <h3 class="statistic"><span id="ads_blocked_today">---</span></h3>
+                <h3 class="statistic"><span id="queries_blocked_today">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-hand-paper"></i>
@@ -60,7 +60,7 @@
         <div class="small-box bg-yellow">
             <div class="inner">
                 <p>Percent Blocked</p>
-                <h3 class="statistic"><span id="ads_percentage_today">---</span></h3>
+                <h3 class="statistic"><span id="percentage_blocked_today">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-chart-pie"></i>
