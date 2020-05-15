@@ -209,7 +209,7 @@ if ($_POST['action'] == 'get_groups') {
         $QUERYDB = getQueriesDBFilename();
         $FTLdb = SQLite3_connect($QUERYDB);
 
-        $query = $FTLdb->query('SELECT DISTINCT id,hwaddr,macVendor FROM network;');
+        $query = $FTLdb->query('SELECT DISTINCT id,hwaddr,macVendor FROM network ORDER BY firstSeen DESC;');
         if (!$query) {
             throw new Exception('Error while querying FTL\'s database: ' . $db->lastErrorMsg());
         }
