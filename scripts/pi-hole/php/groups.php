@@ -253,7 +253,7 @@ if ($_POST['action'] == 'get_groups') {
                 }
                 $query_ips->finalize();
 
-                if (count($names) > 0 && count($addresses) > 0)
+                if ((count($names) > 0 || strlen($res["macVendor"]) > 0) && count($addresses) > 0)
                     $extrainfo .= "; ";
 
                 if(count($addresses) === 1)
