@@ -128,14 +128,4 @@
             return errorJsonResponse($ex->getMessage());
         }
     }
-
-    function successJsonResponse($message = "")
-    {
-        return [ "success" => true, "message" => $message ];
-    }
-
-    function errorJsonResponse($message = "")
-    {
-        return [ "success" => false, "message" => $message ];
-    }
 ?>
