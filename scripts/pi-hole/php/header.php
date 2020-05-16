@@ -202,7 +202,7 @@
     <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css">
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css">
 
-    <link rel="stylesheet" href="style/vendor/font-awesome-5.11.2/css/all.min.css">
+    <link rel="stylesheet" href="style/vendor/font-awesome-5.13.0/css/all.min.css">
 
     <link rel="stylesheet" href="style/vendor/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="style/vendor/daterangepicker.css">
