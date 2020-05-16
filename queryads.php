@@ -32,7 +32,7 @@
   </div>
 </div>
 
-<pre id="output" style="width: 100%; height: 100%;" hidden="true"></pre>
+<pre id="output" style="width: 100%; height: 100%;" hidden></pre>
 
 <script src="scripts/pi-hole/js/queryads.js"></script>
 

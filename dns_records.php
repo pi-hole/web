@@ -46,19 +46,19 @@
 </div>
 
 <!-- Alerts -->
-<div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
+<div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     Updating the custom DNS entries...
 </div>
-<div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden="true">
+<div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden>
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     Success! The list will refresh.
 </div>
-<div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden="true">
+<div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden>
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     Failure! Something went wrong, see output below:<br/><br/><pre><span id="err"></span></pre>
 </div>
-<div id="alWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden="true">
+<div id="alWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden>
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     At least one domain was already present, see output below:<br/><br/><pre><span id="warn"></span></pre>
 </div>
