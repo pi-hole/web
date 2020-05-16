@@ -451,7 +451,7 @@ if($auth) {
                   <a href="#">
                     <i class="fa fa-clock"></i> <span>Long term data</span>
                     <span class="pull-right-container">
-                      <i class="fa fa-angle-down pull-right"></i>
+                      <i class="fa fa-angle-left pull-right"></i>
                     </span>
                   </a>
                   <ul class="treeview-menu">
@@ -489,7 +489,7 @@ if($auth) {
                   <a href="#">
                     <i class="fa fa-users-cog"></i> <span>Group Management</span>
                     <span class="pull-right-container">
-                      <i class="fa fa-angle-down pull-right"></i>
+                      <i class="fa fa-angle-left pull-right"></i>
                     </span>
                   </a>
                   <ul class="treeview-menu">
@@ -519,7 +519,7 @@ if($auth) {
                 <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden="true"<?php } ?>>
                   <a href="#">
                     <span class="pull-right-container">
-                      <i class="fa fa-angle-down pull-right"></i>
+                      <i class="fa fa-angle-left pull-right"></i>
                     </span>
                     <i class="fa fa-stop"></i> <span>Disable&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
                   </a>
@@ -565,7 +565,7 @@ if($auth) {
                   <a href="#">
                     <i class="fa fa-folder"></i> <span>Tools</span>
                     <span class="pull-right-container">
-                      <i class="fa fa-angle-down pull-right"></i>
+                      <i class="fa fa-angle-left pull-right"></i>
                     </span>
                   </a>
                   <ul class="treeview-menu">
