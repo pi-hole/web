@@ -277,7 +277,7 @@ if($auth) {
                         </a>
                     </li>
                     <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                             <img src="img/logo.svg" class="user-image" alt="Pi-hole logo" style="border-radius: 0" width="25" height="25">
                             <span class="hidden-xs">Pi-hole</span>
                         </a>
