@@ -49,9 +49,9 @@ function rgbToHex(values) {
 
 function mixColors(ratio, rgb1, rgb2) {
   return [
-    (1.0 - ratio) * rgb1[0] + ratio * rgb2[0],
-    (1.0 - ratio) * rgb1[1] + ratio * rgb2[1],
-    (1.0 - ratio) * rgb1[2] + ratio * rgb2[2]
+    (1 - ratio) * rgb1[0] + ratio * rgb2[0],
+    (1 - ratio) * rgb1[1] + ratio * rgb2[1],
+    (1 - ratio) * rgb1[2] + ratio * rgb2[2]
   ];
 }
 

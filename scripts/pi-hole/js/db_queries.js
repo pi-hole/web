@@ -209,9 +209,9 @@ var reloadCallback = function () {
   $("h3#ads_blocked_exact").text(statistics[2].toLocaleString());
   $("h3#ads_wildcard_blocked").text(statistics[3].toLocaleString());
 
-  var percent = 0.0;
+  var percent = 0;
   if (statistics[2] + statistics[3] > 0) {
-    percent = (100.0 * (statistics[2] + statistics[3])) / statistics[0];
+    percent = (100 * (statistics[2] + statistics[3])) / statistics[0];
   }
 
   $("h3#ads_percentage_today").text(parseFloat(percent).toFixed(1).toLocaleString() + " %");
