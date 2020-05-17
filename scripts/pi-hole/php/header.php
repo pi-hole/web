@@ -449,25 +449,25 @@ if($auth) {
                 </li>
                 <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php"){ ?> active<?php } ?>">
                   <a href="#">
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
-                    </span>
                     <i class="fa fa-clock"></i> <span>Long term data</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                   </a>
                   <ul class="treeview-menu">
                     <li<?php if($scriptname === "db_graph.php"){ ?> class="active"<?php } ?>>
                         <a href="db_graph.php">
-                            <i class="fa fa-file-alt"></i> <span>Graphics</span>
+                            <i class="fa fa-file-alt"></i> Graphics
                         </a>
                     </li>
                     <li<?php if($scriptname === "db_queries.php"){ ?> class="active"<?php } ?>>
                         <a href="db_queries.php">
-                            <i class="fa fa-file-alt"></i> <span>Query Log</span>
+                            <i class="fa fa-file-alt"></i> Query Log
                         </a>
                     </li>
                     <li<?php if($scriptname === "db_lists.php"){ ?> class="active"<?php } ?>>
                         <a href="db_lists.php">
-                            <i class="fa fa-file-alt"></i> <span>Top Lists</span>
+                            <i class="fa fa-file-alt"></i> Top Lists
                         </a>
                     </li>
                   </ul>
@@ -485,32 +485,32 @@ if($auth) {
                     </a>
                 </li>
                 <!-- Group Management -->
-                <li class="treeview <?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>active<?php } ?>">
+                <li class="treeview<?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?> active<?php } ?>">
                   <a href="#">
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
-                    </span>
                     <i class="fa fa-users-cog"></i> <span>Group Management</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                   </a>
                   <ul class="treeview-menu">
                     <li<?php if($scriptname === "groups.php"){ ?> class="active"<?php } ?>>
                         <a href="groups.php">
-                            <i class="fa fa-user-friends"></i> <span>Groups</span>
+                            <i class="fa fa-user-friends"></i> Groups
                         </a>
                     </li>
                     <li<?php if($scriptname === "groups-clients.php"){ ?> class="active"<?php } ?>>
                         <a href="groups-clients.php">
-                            <i class="fa fa-laptop"></i> <span>Clients</span>
+                            <i class="fa fa-laptop"></i> Clients
                         </a>
                     </li>
                     <li<?php if($scriptname === "groups-domains.php"){ ?> class="active"<?php } ?>>
                         <a href="groups-domains.php">
-                            <i class="fa fa-list"></i> <span>Domains</span>
+                            <i class="fa fa-list"></i> Domains
                         </a>
                     </li>
                     <li<?php if($scriptname === "groups-adlists.php"){ ?> class="active"<?php } ?>>
                         <a href="groups-adlists.php">
-                            <i class="fa fa-shield-alt"></i> <span>Adlists</span>
+                            <i class="fa fa-shield-alt"></i> Adlists
                         </a>
                     </li>
                   </ul>
@@ -519,29 +519,29 @@ if($auth) {
                 <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden="true"<?php } ?>>
                   <a href="#">
                     <span class="pull-right-container">
-                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
+                      <i class="fa fa-angle-left pull-right"></i>
                     </span>
                     <i class="fa fa-stop"></i> <span>Disable&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
                   </a>
                   <ul class="treeview-menu">
                     <li>
                         <a href="#" id="pihole-disable-permanently">
-                            <i class="fa fa-stop"></i> <span>Permanently</span>
+                            <i class="fa fa-stop"></i> Permanently
                         </a>
                     </li>
                     <li>
                         <a href="#" id="pihole-disable-10s">
-                            <i class="fa fa-clock"></i> <span>For 10 seconds</span>
+                            <i class="fa fa-clock"></i> For 10 seconds
                         </a>
                     </li>
                     <li>
                         <a href="#" id="pihole-disable-30s">
-                            <i class="fa fa-clock"></i> <span>For 30 seconds</span>
+                            <i class="fa fa-clock"></i> For 30 seconds
                         </a>
                     </li>
                     <li>
                         <a href="#" id="pihole-disable-5m">
-                            <i class="fa fas fa-clock"></i> <span>For 5 minutes</span>
+                            <i class="fa fas fa-clock"></i> For 5 minutes
                         </a>
                     </li>
                     <li>
@@ -553,51 +553,56 @@ if($auth) {
                     <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
                 <li id="pihole-enable" class="treeview"<?php if ($pistatus == "1") { ?> hidden="true"<?php } ?>>
-                    <a href="#"><i class="fa fa-play"></i> <span id="enableLabel">Enable&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></span></a>
+                    <a href="#">
+                      <i class="fa fa-play"></i>
+                      <span id="enableLabel">Enable&nbsp;&nbsp;&nbsp;
+                        <span id="flip-status-enable"></span>
+                      </span>
+                    </a>
                 </li>
                 <!-- Tools -->
-                <li class="treeview <?php if(in_array($scriptname, array("gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php"))){ ?>active<?php } ?>">
+                <li class="treeview<?php if(in_array($scriptname, array("gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php"))){ ?> active<?php } ?>">
                   <a href="#">
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
-                    </span>
                     <i class="fa fa-folder"></i> <span>Tools</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                   </a>
                   <ul class="treeview-menu">
                     <!-- Run gravity.sh -->
                     <li<?php if($scriptname === "gravity.php"){ ?> class="active"<?php } ?>>
                         <a href="gravity.php">
-                            <i class="fa fa-arrow-circle-down"></i> <span>Update Gravity</span>
+                            <i class="fa fa-arrow-circle-down"></i> Update Gravity
                         </a>
                     </li>
                     <!-- Query Lists -->
                     <li<?php if($scriptname === "queryads.php"){ ?> class="active"<?php } ?>>
                         <a href="queryads.php">
-                            <i class="fa fa-search"></i> <span>Query Lists</span>
+                            <i class="fa fa-search"></i> Query Lists
                         </a>
                     </li>
                     <!-- Audit log -->
                     <li<?php if($scriptname === "auditlog.php"){ ?> class="active"<?php } ?>>
                         <a href="auditlog.php">
-                            <i class="fa fa-balance-scale"></i> <span>Audit log</span>
+                            <i class="fa fa-balance-scale"></i> Audit log
                         </a>
                     </li>
                     <!-- Tail pihole.log -->
                     <li<?php if($scriptname === "taillog.php"){ ?> class="active"<?php } ?>>
                         <a href="taillog.php">
-                            <i class="fa fa-list-ul"></i> <span>Tail pihole.log</span>
+                            <i class="fa fa-list-ul"></i> Tail pihole.log
                         </a>
                     </li>
                     <!-- Tail pihole-FTL.log -->
                     <li<?php if($scriptname === "taillog-FTL.php"){ ?> class="active"<?php } ?>>
                         <a href="taillog-FTL.php">
-                            <i class="fa fa-list-ul"></i> <span>Tail pihole-FTL.log</span>
+                            <i class="fa fa-list-ul"></i> Tail pihole-FTL.log
                         </a>
                     </li>
                     <!-- Generate debug log -->
                     <li<?php if($scriptname === "debug.php"){ ?> class="active"<?php } ?>>
                         <a href="debug.php">
-                            <i class="fa fa-ambulance"></i> <span>Generate debug log</span>
+                            <i class="fa fa-ambulance"></i> Generate debug log
                         </a>
                     </li>
                   </ul>
