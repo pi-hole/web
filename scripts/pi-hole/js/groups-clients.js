@@ -161,8 +161,8 @@ function initTable() {
         })
         .on("changed.bs.select", function () {
           // enable Apply button
-          if ($(ApplyBtn).prop("disabled")) {
-            $(ApplyBtn)
+          if ($(applyBtn).prop("disabled")) {
+            $(applyBtn)
               .addClass("btn-success")
               .prop("disabled", false)
               .on("click", function () {
@@ -172,9 +172,9 @@ function initTable() {
         })
         .on("hide.bs.select", function () {
           // Restore values if drop-down menu is closed without clicking the Apply button
-          if (!$(ApplyBtn).prop("disabled")) {
+          if (!$(applyBtn).prop("disabled")) {
             $(this).val(data.groups).selectpicker("refresh");
-            $(ApplyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
           }
         })
         .selectpicker()
@@ -186,7 +186,7 @@ function initTable() {
             ' class="btn btn-block btn-sm" disabled>Apply</button>'
         );
 
-      var ApplyBtn = "#btn_apply_" + data.id;
+      var applyBtn = "#btn_apply_" + data.id;
 
       var button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteClient_' +
