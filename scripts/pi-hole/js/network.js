@@ -67,7 +67,7 @@ $(document).ready(function () {
   tableApi = $("#network-entries").DataTable({
     rowCallback: function (row, data) {
       var color,
-        mark,
+        iconClasses,
         lastQuery = parseInt(data.lastQuery);
       var network_recent = $(".network-recent").css("background-color");
       var network_old = $(".network-old").css("background-color");
@@ -82,22 +82,22 @@ $(document).ready(function () {
           var lightgreen = parseColor(network_recent);
           var lightyellow = parseColor(network_old);
           color = rgbToHex(mixColors(ratio, lightgreen, lightyellow));
-          mark = "&#x2714;";
+          iconClasses = "fas fa-check";
         } else {
           // Last query was longer than 24 hours ago
           // Color: light-orange
           color = network_older;
-          mark = "<strong>?</strong>";
+          iconClasses = "fas fa-question";
         }
       } else {
         // This client has never sent a query to Pi-hole, color light-red
         color = network_never;
-        mark = "&#x2718;";
+        iconClasses = "fas fa-check";
       }
 
       // Set determined background color
       $(row).css("background-color", color);
-      $("td:eq(7)", row).html(mark);
+      $("td:eq(7)", row).html('<i class="' + iconClasses + '"></i>');
 
       // Insert "Never" into Last Query field when we have
       // never seen a query from this device
