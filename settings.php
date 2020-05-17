@@ -904,6 +904,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 <input type="radio" name="tempunit" value="C" id="tempunit_C" <?php if ($temperatureunit === "C"){ ?>checked<?php } ?>><label for="tempunit_C">&nbsp;Celsius</label><br>
                                                 <input type="radio" name="tempunit" value="K" id="tempunit_K" <?php if ($temperatureunit === "K"){ ?>checked<?php } ?>><label for="tempunit_K">&nbsp;Kelvin</label><br>
                                                 <input type="radio" name="tempunit" value="F" id="tempunit_F" <?php if ($temperatureunit === "F"){ ?>checked<?php } ?>><label for="tempunit_F">&nbsp;Fahrenheit</label>
+                                                <h4>Timezone</h4>
+                                                <select id="timezone"><option value="">Default</option></select>
                                                 <h4>Administrator Email Address</h4>
                                                 <input type="email" class="form-control" name="adminemail" value="<?php echo htmlspecialchars($adminemail); ?>">
                                                 <input type="hidden" name="field" value="webUI">

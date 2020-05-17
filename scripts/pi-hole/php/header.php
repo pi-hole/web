@@ -227,6 +227,8 @@
     <script src="scripts/vendor/jquery.dataTables.min.js"></script>
     <script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
     <script src="scripts/vendor/moment.min.js"></script>
+    <script src="scripts/vendor/moment-timezone-with-data.min.js"></script>
+    <script src="scripts/pi-hole/js/header.js"></script>
     <script src="scripts/vendor/Chart.min.js"></script>
     <script src="scripts/vendor/iCheck.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style/vendor/iCheck/<?php echo $checkbox_theme_name;?>/<?php echo $checkbox_theme_variant;?>.css">

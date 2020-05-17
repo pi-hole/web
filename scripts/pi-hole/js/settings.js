@@ -238,3 +238,38 @@ $(document).ready(function () {
   input.setAttribute("autocapitalize", "off");
   input.setAttribute("spellcheck", false);
 });
+
+//Timezone per browser
+!function()
+{
+	let tz = $("#timezone");
+	tz[0].innerHTML += moment.tz.names()
+		.reduce(function(r, n)
+		{
+			let i = moment.tz(n).utcOffset();
+			r[r.length] = {
+				o: '<option value="' + n + '">(GMT' + (i ? moment.tz(n).format('Z') : '') + ') ' + n + '</option>',
+				i: i
+			};
+
+			return r;
+		}, [])
+		.sort(function(a, b)
+		{
+			return a.i - b.i;
+		})
+		.reduce(function (r, n)
+		{
+			return r += n.o;
+		}, "");
+
+	tz[0].value = timeZone;
+	tz.closest("form").on("submit", function(e)
+	{
+		timeZone = tz[0].value;
+		if (timeZone)
+			localStorage.setItem("timeZone", timeZone);
+		else
+			localStorage.removeItem("timeZone");
+	});
+}();
