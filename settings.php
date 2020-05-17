@@ -224,7 +224,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
     $tab = "sysadmin";
 }
 ?>
-<div class="row justify-content-md-center">
+<div class="row">
     <div class="col-md-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
