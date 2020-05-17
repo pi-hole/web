@@ -293,17 +293,19 @@ if($auth) {
                             </li>
                             <!-- Menu Body -->
                             <li class="user-body">
-                                <div class="col-xs-4 text-center">
-                                    <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank">GitHub</a>
-                                </div>
-                                <div class="col-xs-4 text-center">
-                                    <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">Website</a>
-                                </div>
-                                <div class="col-xs-4 text-center">
-                                    <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank">Updates</a>
-                                </div>
-                                <div class="col-xs-12 text-center" id="sessiontimer">
-                                    <b>Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></b>
+                                <div class="row">
+                                    <div class="col-xs-4 text-center">
+                                        <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank">GitHub</a>
+                                    </div>
+                                    <div class="col-xs-4 text-center">
+                                        <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">Website</a>
+                                    </div>
+                                    <div class="col-xs-4 text-center">
+                                        <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank">Updates</a>
+                                    </div>
+                                    <div id="sessiontimer" class="col-xs-12 text-center">
+                                        <strong>Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></strong>
+                                    </div>
                                 </div>
                             </li>
                             <!-- Menu Footer -->
