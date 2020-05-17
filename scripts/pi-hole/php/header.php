@@ -442,7 +442,7 @@ if($auth) {
             }
             ?>
             <ul class="sidebar-menu" data-widget="tree">
-                <li class="header">MAIN NAVIGATION</li>
+                <li class="header text-uppercase">Main navigation</li>
                 <!-- Home Page -->
                 <li<?php if($scriptname === "index.php"){ ?> class="active"<?php } ?>>
                     <a href="index.php">
