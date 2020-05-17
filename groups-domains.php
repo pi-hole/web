@@ -43,7 +43,7 @@
                     </ul>        
                     <div class="tab-content">
                         <!-- Domain tab -->
-                        <div id="tab_domain" class="tab-pane active in">
+                        <div id="tab_domain" class="tab-pane active fade in">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -68,7 +68,7 @@
                             </div>
                         </div>
                         <!-- RegEx tab -->
-                        <div id="tab_regex" class="tab-pane">
+                        <div id="tab_regex" class="tab-pane fade">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
