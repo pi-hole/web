@@ -68,7 +68,7 @@ function showAlert(type, icon, title, message) {
 }
 
 function datetime(date) {
-  return moment.unix(Math.floor(date)).format("Y-MM-DD HH:mm:ss z");
+  return moment.unix(Math.floor(date)).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
 }
 
 function disableAll() {

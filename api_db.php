@@ -413,6 +413,37 @@ if (isset($_GET['getGraphData']) && $auth)
 	$data = array_merge($data, $result);
 }
 
+if (isset($_GET['status']))
+{
+	$results = $db->query('SELECT COUNT(*) FROM message;');
+
+	if(!is_bool($results))
+		$result = array('message_count' => $results->fetchArray()[0]);
+	else
+		$result = array();
+
+	$data = array_merge($data, $result);
+}
+
+if(isset($_GET["messages"]) && $auth)
+{
+	$messages = array();
+	$results = $db->query('SELECT * FROM message');
+
+	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
+	{
+		// Convert string to to UTF-8 encoding to ensure php-json can handle it.
+		// Furthermore, convert special characters to HTML entities to prevent XSS attacks.
+		foreach ($res as $key => $value) {
+			if (is_string($value))
+				$res[$key] = htmlspecialchars(utf8_encode($value));
+		}
+		array_push($messages, $res);
+	}
+
+	$data = array_merge($data, array('messages' => $messages));
+}
+
 if(isset($_GET["jsonForceObject"]))
 {
 	echo json_encode($data, JSON_FORCE_OBJECT);

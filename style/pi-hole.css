@@ -275,3 +275,7 @@
 .input-group-addon {
 	padding: 0 12px;
 }
+
+.d-none {
+    display: none !important;
+}
