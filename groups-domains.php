@@ -33,9 +33,13 @@
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="nav-tabs-custom">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a aria-expanded="true" href="#tab_domain" data-toggle="tab">Domain</a></li>
-                        <li class=""><a aria-expanded="false" href="#tab_regex" data-toggle="tab">RegEx filter</a></li>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="active" role="presentation">
+                            <a href="#tab_domain" aria-controls="tab_domain" aria-expanded="true" role="tab" data-toggle="tab">Domain</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#tab_regex" aria-controls="tab_regex" aria-expanded="false" role="tab" data-toggle="tab">RegEx filter</a>
+                        </li>
                     </ul>        
                     <div class="tab-content">
                         <!-- Domain tab -->

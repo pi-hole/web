@@ -227,14 +227,28 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
 <div class="row">
     <div class="col-md-12">
         <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                <li<?php if($tab === "sysadmin"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#sysadmin">System</a></li>
-                <li<?php if($tab === "adlists"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#adlists">Adlists</a></li>
-                <li<?php if($tab === "dns"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#dns">DNS</a></li>
-                <li<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
-                <li<?php if($tab === "api"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#api">API / Web interface</a></li>
-                <li<?php if($tab === "privacy"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#privacy">Privacy</a></li>
-                <li<?php if($tab === "teleporter"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#teleporter">Teleporter</a></li>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation"<?php if($tab === "sysadmin"){ ?> class="active"<?php } ?>>
+                    <a href="#sysadmin" aria-controls="sysadmin" aria-expanded="<?php echo $tab === "sysadmin" ? "true" : "false"; ?>" role="tab" data-toggle="tab">System</a>
+                </li>
+                <li role="presentation"<?php if($tab === "adlists"){ ?> class="active"<?php } ?>>
+                    <a href="#adlists" aria-controls="adlists" aria-expanded="<?php echo $tab === "adlists" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Adlists</a>
+                </li>
+                <li role="presentation"<?php if($tab === "dns"){ ?> class="active"<?php } ?>>
+                    <a href="#dns" aria-controls="dns" aria-expanded="<?php echo $tab === "dns" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DNS</a>
+                </li>
+                <li role="presentation"<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>>
+                    <a href="#piholedhcp" aria-controls="piholedhcp" aria-expanded="<?php echo $tab === "piholedhcp" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DHCP</a>
+                </li>
+                <li role="presentation"<?php if($tab === "api"){ ?> class="active"<?php } ?>>
+                    <a href="#api" aria-controls="api" aria-expanded="<?php echo $tab === "api" ? "true" : "false"; ?>" role="tab" data-toggle="tab">API / Web interface</a>
+                </li>
+                <li role="presentation"<?php if($tab === "privacy"){ ?> class="active"<?php } ?>>
+                    <a href="#privacy" aria-controls="privacy" aria-expanded="<?php echo $tab === "privacy" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Privacy</a>
+                </li>
+                <li role="presentation"<?php if($tab === "teleporter"){ ?> class="active"<?php } ?>>
+                    <a href="#teleporter" aria-controls="teleporter" aria-expanded="<?php echo $tab === "teleporter" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Teleporter</a>
+                </li>
             </ul>
             <div class="tab-content">
                 <!-- ######################################################### Adlists ######################################################### -->
