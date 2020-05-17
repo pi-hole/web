@@ -253,20 +253,18 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
             <div class="tab-content">
                 <!-- ######################################################### Adlists ######################################################### -->
                 <div id="adlists" class="tab-pane fade<?php if($tab === "adlists"){ ?> in active<?php } ?>">
-                    <form role="form" method="post">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="box">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">Adlists used to generate Pi-hole's Gravity</h3>
-                                    </div>
-                                    <div class="box-body">
-                                        <p>Please use the <a href="groups-adlists.php">group management pages</a> to edit the adlists used by Pi-hole.</p>
-                                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Adlists used to generate Pi-hole's Gravity</h3>
+                                </div>
+                                <div class="box-body">
+                                    <p>Please use the <a href="groups-adlists.php">group management pages</a> to edit the adlists used by Pi-hole.</p>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
                 <!-- ######################################################### DHCP ######################################################### -->
                 <div id="piholedhcp" class="tab-pane fade<?php if($tab === "piholedhcp"){ ?> in active<?php } ?>">
