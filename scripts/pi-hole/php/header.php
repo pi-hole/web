@@ -182,12 +182,13 @@
 <?php } ?>
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
-    <title>Pi-hole<?php if (gethostname()) {echo " - ", gethostname();} ?></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
     <meta http-equiv="x-dns-prefetch-control" content="off">
     <meta http-equiv="cache-control" content="max-age=60,private">
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pi-hole<?php if (gethostname()) {echo " - ", gethostname();} ?></title>
 
     <link rel="apple-touch-icon" href="img/favicons/apple-touch-icon.png" sizes="180x180">
     <link rel="icon" href="img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
