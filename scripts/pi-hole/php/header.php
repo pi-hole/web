@@ -587,7 +587,7 @@ if($auth) {
                     <!-- Pi-hole diagnosis -->
                     <li<?php if($scriptname === "messages.php"){ ?> class="active"<?php } ?>>
                         <a href="messages.php">
-                            <i class="fa fa-stethoscope"></i> <span>Pi-hole diagnosis</span>
+                            <i class="fa fa-stethoscope"></i> Pi-hole diagnosis
                         </a>
                     </li>
                     <!-- Run gravity.sh -->
@@ -629,7 +629,7 @@ if($auth) {
                     <!-- Network -->
                     <li<?php if($scriptname === "network.php"){ ?> class="active"<?php } ?>>
                         <a href="network.php">
-                            <i class="fa fa-network-wired"></i> <span>Network</span>
+                            <i class="fa fa-network-wired"></i> Network
                         </a>
                     </li>
                   </ul>
