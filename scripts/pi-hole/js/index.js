@@ -788,7 +788,7 @@ function updateSummaryData(runOnce) {
       var apiElName = arrayItem.split("|");
       var apiName = apiElName[0];
       var elName = apiElName[1];
-      var $todayElement = elName === null ? $("span#" + apiName) : $("span#" + elName);
+      var $todayElement = elName ? $("span#" + elName) : $("span#" + apiName);
       var textData = idx === 2 && data[apiName] !== "to" ? data[apiName] + "%" : data[apiName];
       if ($todayElement.text() !== textData && $todayElement.text() !== textData + "%") {
         $todayElement.addClass("glow");
