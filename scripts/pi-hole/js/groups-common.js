@@ -135,7 +135,7 @@ function validateMAC(mac) {
 }
 
 function validateHostname(name) {
-  var namevalidator = new RegExp(/[^<>;\"]/);
+  var namevalidator = new RegExp(/[^<>;"]/);
   return namevalidator.test(name);
 }
 
