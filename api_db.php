@@ -64,19 +64,17 @@ if(isset($_GET["network"]) && $auth)
 	{
 		$id = intval($res["id"]);
 
-		// Get IP addresses for this device
+		// Get IP addresses and host names for this device
 		$res["ip"] = array();
-		$network_addresses = $db->query("SELECT ip FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC");
-		while($network_addresses !== false && $ip = $network_addresses->fetchArray(SQLITE3_ASSOC))
-			array_push($res["ip"],$ip["ip"]);
-		$network_addresses->finalize();
-
-			// Get list of host names for this device
 		$res["name"] = array();
-		$network_names = $db->query("SELECT name FROM network_names WHERE network_id = $id ORDER BY lastSeen DESC");
-		while($network_names !== false && $ip = $network_names->fetchArray(SQLITE3_ASSOC))
-			array_push($res["name"],utf8_encode($ip["name"]));
-		$network_names->finalize();
+		$network_addresses = $db->query("SELECT ip,name FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC");
+		while($network_addresses !== false && $network_address = $network_addresses->fetchArray(SQLITE3_ASSOC))
+		{
+			array_push($res["ip"],$network_address["ip"]);
+			if($network_address["name"] !== null)
+				array_push($res["name"],utf8_encode($network_address["name"]));
+		}
+		$network_addresses->finalize();
 
 		// UTF-8 encode vendor
 		$res["macVendor"] = utf8_encode($res["macVendor"]);
