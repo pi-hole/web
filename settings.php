@@ -224,35 +224,234 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
     $tab = "sysadmin";
 }
 ?>
-<div class="row justify-content-md-center">
+<div class="row">
     <div class="col-md-12">
         <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                <li<?php if($tab === "sysadmin"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#sysadmin">System</a></li>
-                <li<?php if($tab === "adlists"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#adlists">Adlists</a></li>
-                <li<?php if($tab === "dns"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#dns">DNS</a></li>
-                <li<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#piholedhcp">DHCP</a></li>
-                <li<?php if($tab === "api"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#api">API / Web interface</a></li>
-                <li<?php if($tab === "privacy"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#privacy">Privacy</a></li>
-                <li<?php if($tab === "teleporter"){ ?> class="active"<?php } ?>><a data-toggle="tab" href="#teleporter">Teleporter</a></li>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation"<?php if($tab === "sysadmin"){ ?> class="active"<?php } ?>>
+                    <a href="#sysadmin" aria-controls="sysadmin" aria-expanded="<?php echo $tab === "sysadmin" ? "true" : "false"; ?>" role="tab" data-toggle="tab">System</a>
+                </li>
+                <li role="presentation"<?php if($tab === "adlists"){ ?> class="active"<?php } ?>>
+                    <a href="#adlists" aria-controls="adlists" aria-expanded="<?php echo $tab === "adlists" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Adlists</a>
+                </li>
+                <li role="presentation"<?php if($tab === "dns"){ ?> class="active"<?php } ?>>
+                    <a href="#dns" aria-controls="dns" aria-expanded="<?php echo $tab === "dns" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DNS</a>
+                </li>
+                <li role="presentation"<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>>
+                    <a href="#piholedhcp" aria-controls="piholedhcp" aria-expanded="<?php echo $tab === "piholedhcp" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DHCP</a>
+                </li>
+                <li role="presentation"<?php if($tab === "api"){ ?> class="active"<?php } ?>>
+                    <a href="#api" aria-controls="api" aria-expanded="<?php echo $tab === "api" ? "true" : "false"; ?>" role="tab" data-toggle="tab">API / Web interface</a>
+                </li>
+                <li role="presentation"<?php if($tab === "privacy"){ ?> class="active"<?php } ?>>
+                    <a href="#privacy" aria-controls="privacy" aria-expanded="<?php echo $tab === "privacy" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Privacy</a>
+                </li>
+                <li role="presentation"<?php if($tab === "teleporter"){ ?> class="active"<?php } ?>>
+                    <a href="#teleporter" aria-controls="teleporter" aria-expanded="<?php echo $tab === "teleporter" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Teleporter</a>
+                </li>
             </ul>
             <div class="tab-content">
-                <!-- ######################################################### Adlists ######################################################### -->
-                <div id="adlists" class="tab-pane fade<?php if($tab === "adlists"){ ?> in active<?php } ?>">
-                    <form role="form" method="post">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="box">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">Adlists used to generate Pi-hole's Gravity</h3>
-                                    </div>
-                                    <div class="box-body">
-                                        <p>Please use the <a href="groups-adlists.php">group management pages</a> to edit the adlists used by Pi-hole.</p>
+                <!-- ######################################################### System admin ######################################################### -->
+                <div id="sysadmin" class="tab-pane fade<?php if($tab === "sysadmin"){ ?> in active<?php } ?>">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Network Information</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table class="table table-striped table-bordered dt-responsive nowrap">
+                                                <tbody>
+                                                <tr>
+                                                    <th scope="row">Pi-hole Ethernet Interface:</th>
+                                                    <td><?php echo htmlentities($piHoleInterface); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Pi-hole IPv4 address:</th>
+                                                    <td><?php echo htmlentities($piHoleIPv4); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Pi-hole IPv6 address:</th>
+                                                    <td class="breakall"><?php echo htmlentities($piHoleIPv6); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Pi-hole hostname:</th>
+                                                    <td><?php echo htmlentities($hostname); ?></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                        <div class="col-md-6">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">FTL Information</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <?php
+                                            if ($FTL) {
+                                                function get_FTL_data($arg)
+                                                {
+                                                    global $FTLpid;
+                                                    return trim(exec("ps -p " . $FTLpid . " -o " . $arg));
+                                                }
+
+                                                $FTLversion = exec("/usr/bin/pihole-FTL version");
+                                            ?>
+                                            <table class="table table-striped table-bordered dt-responsive nowrap">
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">FTL version:</th>
+                                                        <td><?php echo $FTLversion; ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Process identifier (PID):</th>
+                                                        <td><?php echo $FTLpid; ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Time FTL started:</th>
+                                                        <td><?php print_r(get_FTL_data("start")); ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">User / Group:</th>
+                                                        <td><?php print_r(get_FTL_data("euser")); ?> / <?php print_r(get_FTL_data("egroup")); ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Total CPU utilization:</th>
+                                                        <td><?php print_r(get_FTL_data("%cpu")); ?>%</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Memory utilization:</th>
+                                                        <td><?php print_r(get_FTL_data("%mem")); ?>%</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory:</span>
+                                                        </th>
+                                                        <td><?php echo formatSizeUnits(1e3 * floatval(get_FTL_data("rss"))); ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span title="Size of the DNS domain cache">DNS cache size:</span>
+                                                        </th>
+                                                        <td id="cache-size">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span title="Number of cache insertions">DNS cache insertions:</span>
+                                                        </th>
+                                                        <td id="cache-inserted">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span title="Number of cache entries that had to be removed although they are not expired (increase cache size to reduce this number)">DNS cache evictions:</span>
+                                                        </th>
+                                                        <td id="cache-live-freed">&nbsp;</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
+                                            <?php } else { ?>
+                                            <div>The FTL service is offline!</div>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box box-warning">
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <?php if ($piHoleLogging) { ?>
+                                                <button type="button" class="btn btn-warning confirm-disablelogging-noflush btn-block">Disable query logging</button>
+                                            <?php } else { ?>
+                                                <form role="form" method="post">
+                                                    <input type="hidden" name="action" value="Enable">
+                                                    <input type="hidden" name="field" value="Logging">
+                                                    <input type="hidden" name="token" value="<?php echo $token ?>">
+                                                    <button type="submit" class="btn btn-success btn-block">Enable query logging</button>
+                                                </form>
+                                            <?php } ?>
+                                        </div>
+                                        <p class="hidden-md hidden-lg"></p>
+                                        <div class="col-md-4">
+                                                <button type="button" class="btn btn-warning confirm-flusharp btn-block">Flush network table</button>
+                                        </div>
+                                        <p class="hidden-md hidden-lg"></p>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-warning confirm-restartdns btn-block">Restart DNS resolver</button>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-danger confirm-flushlogs btn-block">Flush logs</button>
+                                        </div>
+                                        <p class="hidden-md hidden-lg"></p>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-danger confirm-poweroff btn-block">Power off system</button>
+                                        </div>
+                                        <p class="hidden-md hidden-lg"></p>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-danger confirm-reboot btn-block">Restart system</button>
+                                        </div>
+                                    </div>
+
+                                    <form role="form" method="post" id="flushlogsform">
+                                        <input type="hidden" name="field" value="flushlogs">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                    </form>
+                                    <form role="form" method="post" id="flusharpform">
+                                        <input type="hidden" name="field" value="flusharp">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                    </form>
+                                    <form role="form" method="post" id="disablelogsform-noflush">
+                                        <input type="hidden" name="field" value="Logging">
+                                        <input type="hidden" name="action" value="Disable-noflush">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                    </form>
+                                    <form role="form" method="post" id="poweroffform">
+                                        <input type="hidden" name="field" value="poweroff">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                    </form>
+                                    <form role="form" method="post" id="rebootform">
+                                        <input type="hidden" name="field" value="reboot">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                    </form>
+                                    <form role="form" method="post" id="restartdnsform">
+                                        <input type="hidden" name="field" value="restartdns">
+                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ######################################################### Adlists ######################################################### -->
+                <div id="adlists" class="tab-pane fade<?php if($tab === "adlists"){ ?> in active<?php } ?>">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Adlists used to generate Pi-hole's Gravity</h3>
+                                </div>
+                                <div class="box-body">
+                                    <p>Please use the <a href="groups-adlists.php">group management pages</a> to edit the adlists used by Pi-hole.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- ######################################################### DHCP ######################################################### -->
                 <div id="piholedhcp" class="tab-pane fade<?php if($tab === "piholedhcp"){ ?> in active<?php } ?>">
@@ -1021,7 +1220,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <label for="tele_staticdhcpleases">Static DHCP Leases</label><br>
                                                 <input type="checkbox" name="localdnsrecords" id="tele_localdnsrecords" value="true" checked>
                                                 <label for="tele_localdnsrecords">Local DNS Records</label>
-                                            </div> 
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-12">
@@ -1049,196 +1248,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                             </div>
                         </div>
                         <?php } ?>
-                    </div>
-                </div>
-                <!-- ######################################################### System admin ######################################################### -->
-                <div id="sysadmin" class="tab-pane fade<?php if($tab === "sysadmin"){ ?> in active<?php } ?>">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Network Information</h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <table class="table table-striped table-bordered dt-responsive nowrap">
-                                                <tbody>
-                                                <tr>
-                                                    <th scope="row">Pi-hole Ethernet Interface:</th>
-                                                    <td><?php echo htmlentities($piHoleInterface); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Pi-hole IPv4 address:</th>
-                                                    <td><?php echo htmlentities($piHoleIPv4); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Pi-hole IPv6 address:</th>
-                                                    <td class="breakall"><?php echo htmlentities($piHoleIPv6); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Pi-hole hostname:</th>
-                                                    <td><?php echo htmlentities($hostname); ?></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">FTL Information</h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <?php
-                                            if ($FTL) {
-                                                function get_FTL_data($arg)
-                                                {
-                                                    global $FTLpid;
-                                                    return trim(exec("ps -p " . $FTLpid . " -o " . $arg));
-                                                }
-
-                                                $FTLversion = exec("/usr/bin/pihole-FTL version");
-                                            ?>
-                                            <table class="table table-striped table-bordered dt-responsive nowrap">
-                                                <tbody>
-                                                    <tr>
-                                                        <th scope="row">FTL version:</th>
-                                                        <td><?php echo $FTLversion; ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Process identifier (PID):</th>
-                                                        <td><?php echo $FTLpid; ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Time FTL started:</th>
-                                                        <td><?php print_r(get_FTL_data("start")); ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">User / Group:</th>
-                                                        <td><?php print_r(get_FTL_data("euser")); ?> / <?php print_r(get_FTL_data("egroup")); ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Total CPU utilization:</th>
-                                                        <td><?php print_r(get_FTL_data("%cpu")); ?>%</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Memory utilization:</th>
-                                                        <td><?php print_r(get_FTL_data("%mem")); ?>%</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory:</span>
-                                                        </th>
-                                                        <td><?php echo formatSizeUnits(1e3 * floatval(get_FTL_data("rss"))); ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span title="Size of the DNS domain cache">DNS cache size:</span>
-                                                        </th>
-                                                        <td id="cache-size">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span title="Number of cache insertions">DNS cache insertions:</span>
-                                                        </th>
-                                                        <td id="cache-inserted">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span title="Number of cache entries that had to be removed although they are not expired (increase cache size to reduce this number)">DNS cache evictions:</span>
-                                                        </th>
-                                                        <td id="cache-live-freed">&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
-                                            <?php } else { ?>
-                                            <div>The FTL service is offline!</div>
-                                            <?php } ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="box box-warning">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Danger Zone!</h3><br/>
-                                </div>
-                                <div class="box-body">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <?php if ($piHoleLogging) { ?>
-                                                <button type="button" class="btn btn-warning confirm-disablelogging-noflush btn-block">Disable query logging</button>
-                                            <?php } else { ?>
-                                                <form role="form" method="post">
-                                                    <input type="hidden" name="action" value="Enable">
-                                                    <input type="hidden" name="field" value="Logging">
-                                                    <input type="hidden" name="token" value="<?php echo $token ?>">
-                                                    <button type="submit" class="btn btn-success btn-block">Enable query logging</button>
-                                                </form>
-                                            <?php } ?>
-                                        </div>
-                                        <p class="hidden-md hidden-lg"></p>
-                                        <div class="col-md-4">
-                                                <button type="button" class="btn btn-warning confirm-flusharp btn-block">Flush network table</button>
-                                        </div>
-                                        <p class="hidden-md hidden-lg"></p>
-                                        <div class="col-md-4">
-                                            <button type="button" class="btn btn-warning confirm-restartdns btn-block">Restart DNS resolver</button>
-                                        </div>
-                                    </div>
-                                    <br/>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <button type="button" class="btn btn-danger confirm-flushlogs btn-block">Flush logs</button>
-                                        </div>
-                                        <p class="hidden-md hidden-lg"></p>
-                                        <div class="col-md-4">
-                                            <button type="button" class="btn btn-danger confirm-poweroff btn-block">Power off system</button>
-                                        </div>
-                                        <p class="hidden-md hidden-lg"></p>
-                                        <div class="col-md-4">
-                                            <button type="button" class="btn btn-danger confirm-reboot btn-block">Restart system</button>
-                                        </div>
-                                    </div>
-
-                                    <form role="form" method="post" id="flushlogsform">
-                                        <input type="hidden" name="field" value="flushlogs">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
-                                    </form>
-                                    <form role="form" method="post" id="flusharpform">
-                                        <input type="hidden" name="field" value="flusharp">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
-                                    </form>
-                                    <form role="form" method="post" id="disablelogsform-noflush">
-                                        <input type="hidden" name="field" value="Logging">
-                                        <input type="hidden" name="action" value="Disable-noflush">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
-                                    </form>
-                                    <form role="form" method="post" id="poweroffform">
-                                        <input type="hidden" name="field" value="poweroff">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
-                                    </form>
-                                    <form role="form" method="post" id="rebootform">
-                                        <input type="hidden" name="field" value="reboot">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
-                                    </form>
-                                    <form role="form" method="post" id="restartdnsform">
-                                        <input type="hidden" name="field" value="restartdns">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
