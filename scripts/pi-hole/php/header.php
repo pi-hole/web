@@ -175,14 +175,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<?php if ($darkmode) { ?>
-    <style>
-        html { background-color: black; }
-    </style>
-<?php } ?>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
     <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
     <meta http-equiv="x-dns-prefetch-control" content="off">
     <meta http-equiv="cache-control" content="max-age=60,private">
@@ -200,18 +195,28 @@
     <meta name="msapplication-TileImage" content="img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#367fa9">
 
+<?php if ($darkmode) { ?>
+    <style>
+        html { background-color: #000; }
+    </style>
+<?php } ?>
     <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css">
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css">
-
     <link rel="stylesheet" href="style/vendor/font-awesome-5.13.0/css/all.min.css">
-
     <link rel="stylesheet" href="style/vendor/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="style/vendor/daterangepicker.css">
-
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
     <link rel="stylesheet" href="style/vendor/animate.min.css">
 
+<?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
+    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-toggle.min.css">
+<?php } ?>
+    <link rel="stylesheet" href="style/vendor/iCheck/<?php echo $checkbox_theme_name;?>/<?php echo $checkbox_theme_variant;?>.css">
+    <link rel="stylesheet" href="style/pi-hole.css">
+    <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css">
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
+
     <script src="scripts/vendor/jquery.min.js"></script>
     <script src="scripts/vendor/jquery-ui.min.js"></script>
     <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -220,9 +225,7 @@
 
 <?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
     <script src="style/vendor/bootstrap/js/bootstrap-select.min.js"></script>
-    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-select.min.css">
     <script src="style/vendor/bootstrap/js/bootstrap-toggle.min.js"></script>
-    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-toggle.min.css">
 <?php } ?>
 
     <script src="scripts/vendor/jquery.dataTables.min.js"></script>
@@ -230,21 +233,18 @@
     <script src="scripts/vendor/moment.min.js"></script>
     <script src="scripts/vendor/Chart.min.js"></script>
     <script src="scripts/vendor/iCheck.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="style/vendor/iCheck/<?php echo $checkbox_theme_name;?>/<?php echo $checkbox_theme_variant;?>.css">
-    <link rel="stylesheet" href="style/pi-hole.css">
-    <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css">
 </head>
 <body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
- <noscript>
-<!-- JS Warning -->
-<div>
-    <input type="checkbox" id="js-hide">
-    <div class="js-warn" id="js-warn-exit"><h1>JavaScript Is Disabled</h1><p>JavaScript is required for the site to function.</p>
-        <p>To learn how to enable JavaScript click <a href="https://www.enable-javascript.com/" rel="noopener" target="_blank">here</a></p><label for="js-hide">Close</label>
+<noscript>
+    <!-- JS Warning -->
+    <div>
+        <input type="checkbox" id="js-hide">
+        <div class="js-warn" id="js-warn-exit"><h1>JavaScript Is Disabled</h1><p>JavaScript is required for the site to function.</p>
+            <p>To learn how to enable JavaScript click <a href="https://www.enable-javascript.com/" rel="noopener" target="_blank">here</a></p><label for="js-hide">Close</label>
+        </div>
     </div>
-</div>
-<!-- /JS Warning -->
- </noscript>
+    <!-- /JS Warning -->
+</noscript>
 <?php
 if($auth) {
     echo "<div id=\"token\" hidden>$token</div>";
