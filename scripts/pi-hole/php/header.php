@@ -259,9 +259,9 @@ if($auth) {
         <!-- Logo -->
         <a href="index.php" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini">P<b>h</b></span>
+            <span class="logo-mini">P<strong>h</strong></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg">Pi-<b>hole</b></span>
+            <span class="logo-lg">Pi-<strong>hole</strong></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
@@ -288,7 +288,7 @@ if($auth) {
                             <img src="img/logo.svg" class="user-image" alt="Pi-hole logo" style="border-radius: 0" width="25" height="25">
                             <span class="hidden-xs">Pi-hole</span>
                         </a>
-                        <ul class="dropdown-menu" style="right:0">
+                        <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
                                 <img src="img/logo.svg" alt="Pi-hole Logo" style="border: 0" width="90" height="90">
@@ -336,7 +336,7 @@ if($auth) {
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="img/logo.svg" class="img-responsive" alt="Pi-hole logo" style="display: table; table-layout: fixed; height: 67px;">
+                    <img src="img/logo.svg" alt="Pi-hole logo" width="45" height="67" style="height: 67px;">
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
