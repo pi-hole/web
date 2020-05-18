@@ -279,16 +279,18 @@ function addClient() {
     return;
   }
 
-  // Convert input to upper case (important for MAC addresses)
-  ip = ip.toUpperCase();
 
   // Validate input, can be:
   // - IPv4 address (with and without CIDR)
   // - IPv6 address (with and without CIDR)
   // - MAC address (in the form AA:BB:CC:DD:EE:FF)
-  if (!utils.validateIPv4CIDR(ip) && !utils.validateIPv6CIDR(ip) && !utils.validateMAC(ip)) {
+  // - host name (arbitrary form, we're only checking against some reserved charaters)
+  if (utils.validateIPv4CIDR(ip) || utils.validateIPv6CIDR(ip) || utils.validateMAC(ip)) {
+    // Convert input to upper case (important for MAC addresses)
+    ip = ip.toUpperCase();
+  } else if (!utils.validateHostname(ip)) {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Input is neither an IP nor a MAC address!");
+    utils.showAlert("warning", "", "Warning", "Input is neither a valid IP or MAC address nor a valid host name!");
     return;
   }
 

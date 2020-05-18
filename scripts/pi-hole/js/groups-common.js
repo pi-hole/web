@@ -130,8 +130,13 @@ function validateIPv6CIDR(ip) {
 }
 
 function validateMAC(mac) {
-  var macvalidator = new RegExp(/^([\dA-F]{2}:){5}([\dA-F]{2})$/);
+  var macvalidator = new RegExp(/^([\da-fA-F]{2}:){5}([\da-fA-F]{2})$/);
   return macvalidator.test(mac);
+}
+
+function validateHostname(name) {
+  var namevalidator = new RegExp(/[^<>;\"]/);
+  return namevalidator.test(name);
 }
 
 function bsSelect_defaults() {
@@ -163,6 +168,7 @@ window.utils = (function () {
     validateIPv4CIDR: validateIPv4CIDR,
     validateIPv6CIDR: validateIPv6CIDR,
     validateMAC: validateMAC,
+    validateHostname: validateHostname,
     bsSelect_defaults: bsSelect_defaults
   };
 })();

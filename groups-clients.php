@@ -39,7 +39,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <p>You can select an existing client or add a custom one by typing into the field above and confirming your entry with <kbd>&#x23CE;</kbd>. Clients can be described either by their IP addresses (IPv4 and IPv6 are supported), IP subnets (CIDR notation, like <code>192.168.2.0/24</code>) or by their MAC addresses. Note that client recognition by MAC addresses only work for devices at most one networking hop away from your Pi-hole.</p>
+                        <p>You can select an existing client or add a custom one by typing into the field above and confirming your entry with <kbd>&#x23CE;</kbd>.<br>Clients may be described either by their IP addresses (IPv4 and IPv6 are supported), IP subnets (CIDR notation, like <code>192.168.2.0/24</code>), their MAC addresses (like <code>12:34:56:78:9A:BC</code>) or by hostnames (like <code>localhost</code>). Note that client recognition by IP addresses (incl. subnet ranges) are prefered over MAC address or host name recognition as the two latter will only be available after some time. Furthermore, MAC address recognition only works for devices at most one networking hop away from your Pi-hole.</p>
                     </div>
                 </div>
             </div>
