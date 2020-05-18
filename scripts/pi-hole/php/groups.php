@@ -172,7 +172,7 @@ if ($_POST['action'] == 'get_groups') {
                 throw new Exception('Error while querying gravity\'s client_by_group table: ' . $db->lastErrorMsg());
             }
 
-            $stmt = $FTLdb->prepare('SELECT name FROM network_names WHERE network_id = (SELECT network_id FROM network_addresses WHERE ip = :ip);');
+            $stmt = $FTLdb->prepare('SELECT name FROM network_addresses WHERE ip = :ip;');
             if (!$stmt) {
                 throw new Exception('Error while preparing network table statement: ' . $db->lastErrorMsg());
             }
@@ -219,13 +219,16 @@ if ($_POST['action'] == 'get_groups') {
         while ($res = $query->fetchArray(SQLITE3_ASSOC)) {
             $id = intval($res["id"]);
 
-            // Get associated host names
-            $query_names = $FTLdb->query("SELECT name FROM network_names WHERE network_id = $id ORDER BY lastSeen DESC;");
+            // Get possibly associated IP addresses and hostnames for this client
+            $query_ips = $FTLdb->query("SELECT ip,name FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC;");
+            $addresses = [];
             $names = [];
-            while ($res_names = $query_names->fetchArray(SQLITE3_ASSOC)) {
-                array_push($names, utf8_encode($res_names["name"]));
+            while ($res_ips = $query_ips->fetchArray(SQLITE3_ASSOC)) {
+                array_push($addresses, utf8_encode($res_ips["ip"]));
+                if($res_ips["name"] !== null)
+                    array_push($names,utf8_encode($res_ips["name"]));
             }
-            $query_names->finalize();
+            $query_ips->finalize();
 
             // Prepare extra information
             $extrainfo = "";
@@ -244,14 +247,6 @@ if ($_POST['action'] == 'get_groups') {
 
             // Add list of associated host names to info string (if available and if this is not a mock device)
             if (stripos($res["hwaddr"], "ip-") === FALSE) {
-
-                // Get associated IP addresses
-                $query_ips = $FTLdb->query("SELECT ip FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC;");
-                $addresses = [];
-                while ($res_ips = $query_ips->fetchArray(SQLITE3_ASSOC)) {
-                    array_push($addresses, utf8_encode($res_ips["ip"]));
-                }
-                $query_ips->finalize();
 
                 if ((count($names) > 0 || strlen($res["macVendor"]) > 0) && count($addresses) > 0)
                     $extrainfo .= "; ";
