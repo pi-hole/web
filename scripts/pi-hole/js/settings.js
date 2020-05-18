@@ -173,7 +173,8 @@ $(document).ready(function () {
       paging: false,
       scrollCollapse: true,
       scrollY: "200px",
-      scrollX: true
+      scrollX: true,
+      order: [[2, "asc"]]
     });
   }
 
@@ -184,7 +185,8 @@ $(document).ready(function () {
       paging: false,
       scrollCollapse: true,
       scrollY: "200px",
-      scrollX: true
+      scrollX: true,
+      order: [[2, "asc"]]
     });
   }
 
