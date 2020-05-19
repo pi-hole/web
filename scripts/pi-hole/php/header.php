@@ -203,7 +203,7 @@
     <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css">
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="style/vendor/font-awesome-5.13.0/css/all.min.css">
-    <link rel="stylesheet" href="style/vendor/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="style/vendor/datatables.min.css">
     <link rel="stylesheet" href="style/vendor/daterangepicker.css">
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
     <link rel="stylesheet" href="style/vendor/animate.min.css">
@@ -228,8 +228,7 @@
     <script src="style/vendor/bootstrap/js/bootstrap-toggle.min.js"></script>
 <?php } ?>
 
-    <script src="scripts/vendor/jquery.dataTables.min.js"></script>
-    <script src="scripts/vendor/dataTables.bootstrap.min.js"></script>
+    <script src="scripts/vendor/datatables.min.js"></script>
     <script src="scripts/vendor/moment.min.js"></script>
     <script src="scripts/vendor/Chart.min.js"></script>
     <script src="scripts/vendor/iCheck.min.js"></script>
