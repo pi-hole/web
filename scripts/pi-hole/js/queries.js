@@ -503,7 +503,13 @@ $(document).ready(function () {
     if (data[4] === "2" || data[4] === "3") {
       add(data[2], "black");
     } else {
-      add(data[2], "white");
+      var domainToWhitelist = data[2];
+      if (data[4] === "9" || data[4] === "10" || data[4] === "11") {
+        // whitelist the CNAME on CNAME blocks
+        domainToWhitelist = data[8];
+      }
+
+      add(domainToWhitelist, "white");
     }
   });
 
