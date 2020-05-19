@@ -243,6 +243,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                 <li role="presentation"<?php if($tab === "api"){ ?> class="active"<?php } ?>>
                     <a href="#api" aria-controls="api" aria-expanded="<?php echo $tab === "api" ? "true" : "false"; ?>" role="tab" data-toggle="tab">API / Web interface</a>
                 </li>
+                <li role="presentation"<?php if($tab === "perbrowser"){ ?> class="active"<?php } ?>>
+                    <a href="#perbrowser" aria-controls="perbrowser" aria-expanded="<?php echo $tab === "perbrowser" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Per Browser Settings</a>
+                </li>
                 <li role="presentation"<?php if($tab === "privacy"){ ?> class="active"<?php } ?>>
                     <a href="#privacy" aria-controls="privacy" aria-expanded="<?php echo $tab === "privacy" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Privacy</a>
                 </li>
@@ -1099,8 +1102,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <h4>Interface appearance</h4>
                                                 <?php theme_selection(); ?>
                                                 <input type="checkbox" name="boxedlayout" id="boxedlayout" value="yes" <?php if ($boxedlayout){ ?>checked<?php } ?>><label for="boxedlayout">Use boxed layout (for large screens)</label>
-                                                <br/>
-                                                <input type="checkbox" name="bargraphs" id="bargraphs" value="yes"><label for="bargraphs">Use new Bar charts on dashboard</label>
                                                 <h4>CPU Temperature Unit</h4>
                                                 <input type="radio" name="tempunit" value="C" id="tempunit_C" <?php if ($temperatureunit === "C"){ ?>checked<?php } ?>><label for="tempunit_C">&nbsp;Celsius</label><br>
                                                 <input type="radio" name="tempunit" value="K" id="tempunit_K" <?php if ($temperatureunit === "K"){ ?>checked<?php } ?>><label for="tempunit_K">&nbsp;Kelvin</label><br>
@@ -1117,6 +1118,25 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     </div>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- ######################################################### Per Browser Settings (not saved in setupVars) #############################-->
+                <div id="perbrowser" class="tab-pane fade<?php if($tab === "perbrowser"){ ?> in active<?php } ?>">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">UI/Interface</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="checkbox" name="bargraphs" id="bargraphs" value="yes"><label for="bargraphs">Use new Bar charts on dashboard</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
