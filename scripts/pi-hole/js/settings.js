@@ -174,7 +174,8 @@ $(document).ready(function () {
       scrollCollapse: true,
       scrollY: "200px",
       scrollX: true,
-      order: [[2, "asc"]]
+      order: [[2, "asc"]],
+      stateSave: true
     });
   }
 
@@ -186,7 +187,8 @@ $(document).ready(function () {
       scrollCollapse: true,
       scrollY: "200px",
       scrollX: true,
-      order: [[2, "asc"]]
+      order: [[2, "asc"]],
+      stateSave: true
     });
   }
 
