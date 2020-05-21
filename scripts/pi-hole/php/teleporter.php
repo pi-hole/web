@@ -320,6 +320,15 @@ function process_file($contents)
 	return $domains;
 }
 
+function noun($num)
+{
+	if($num === 1)
+	{
+		return " entry";
+	}
+	return " entries";
+}
+
 if(isset($_POST["action"]))
 {
 	if($_FILES["zip_file"]["name"] && $_POST["action"] == "in")
@@ -352,6 +361,7 @@ if(isset($_POST["action"]))
 		$archive = new PharData($fullfilename);
 
 		$importedsomething = false;
+		$reloadsettingspage = false;
 
 		$flushtables = isset($_POST["flushtables"]);
 
@@ -360,21 +370,21 @@ if(isset($_POST["action"]))
 			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.txt")
 			{
 				$num = archive_insert_into_table($file, "blacklist", $flushtables);
-				echo "Processed blacklist (exact) (".$num." entries)<br>\n";
+				echo "Processed blacklist (exact) (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["whitelist"]) && $file->getFilename() === "whitelist.txt")
 			{
 				$num = archive_insert_into_table($file, "whitelist", $flushtables);
-				echo "Processed whitelist (exact) (".$num." entries)<br>\n";
+				echo "Processed whitelist (exact) (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["regexlist"]) && $file->getFilename() === "regex.list")
 			{
 				$num = archive_insert_into_table($file, "regex_blacklist", $flushtables);
-				echo "Processed blacklist (regex) (".$num." entries)<br>\n";
+				echo "Processed blacklist (regex) (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
@@ -382,63 +392,63 @@ if(isset($_POST["action"]))
 			if(isset($_POST["regexlist"]) && $file->getFilename() === "wildcardblocking.txt")
 			{
 				$num = archive_insert_into_table($file, "regex_blacklist", $flushtables, true);
-				echo "Processed blacklist (regex, wildcard style) (".$num." entries)<br>\n";
+				echo "Processed blacklist (regex, wildcard style) (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["auditlog"]) && $file->getFilename() === "auditlog.list")
 			{
 				$num = archive_insert_into_table($file, "domain_audit", $flushtables);
-				echo "Processed audit log (".$num." entries)<br>\n";
+				echo "Processed audit log (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["adlist"]) && $file->getFilename() === "adlists.list")
 			{
 				$num = archive_insert_into_table($file, "adlist", $flushtables);
-				echo "Processed adlists (".$num." entries)<br>\n";
+				echo "Processed adlists (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["blacklist"]) && $file->getFilename() === "blacklist.exact.json")
 			{
 				$num = archive_restore_table($file, "blacklist", $flushtables);
-				echo "Processed blacklist (exact) (".$num." entries)<br>\n";
+				echo "Processed blacklist (exact) (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["regexlist"]) && $file->getFilename() === "blacklist.regex.json")
 			{
 				$num = archive_restore_table($file, "regex_blacklist", $flushtables);
-				echo "Processed blacklist (regex) (".$num." entries)<br>\n";
+				echo "Processed blacklist (regex) (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["whitelist"]) && $file->getFilename() === "whitelist.exact.json")
 			{
 				$num = archive_restore_table($file, "whitelist", $flushtables);
-				echo "Processed whitelist (exact) (".$num." entries)<br>\n";
+				echo "Processed whitelist (exact) (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["regex_whitelist"]) && $file->getFilename() === "whitelist.regex.json")
 			{
 				$num = archive_restore_table($file, "regex_whitelist", $flushtables);
-				echo "Processed whitelist (regex) (".$num." entries)<br>\n";
+				echo "Processed whitelist (regex) (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["adlist"]) && $file->getFilename() === "adlist.json")
 			{
 				$num = archive_restore_table($file, "adlist", $flushtables);
-				echo "Processed adlist (".$num." entries)<br>\n";
+				echo "Processed adlist (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["auditlog"]) && $file->getFilename() === "domain_audit.json")
 			{
 				$num = archive_restore_table($file, "domain_audit", $flushtables);
-				echo "Processed domain_audit (".$num." entries)<br>\n";
+				echo "Processed domain_audit (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
@@ -498,9 +508,10 @@ if(isset($_POST["action"]))
 				}
 
 				readStaticLeasesFile();
-				echo "Processed static DHCP leases (".$num." entries)<br>\n";
+				echo "Processed static DHCP leases (".$num.noun($num).")<br>\n";
 				if($num > 0) {
 					$importedsomething = true;
+					$reloadsettingspage = true;
 				}
 			}
 
@@ -560,6 +571,10 @@ if(isset($_POST["action"]))
 
 		unlink($fullfilename);
 		echo "OK";
+		if($reloadsettingspage)
+		{
+			echo "<br>\n<span data-forcereload></span>";
+		}
 	}
 	else
 	{
