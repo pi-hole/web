@@ -285,3 +285,12 @@
 .user-panel > .info i {
     margin-right: 3px;
 }
+
+.row-centered > div[class^=col-] {
+    display: inline-block;
+    float: none;
+}
+
+.version-info {
+    margin-top: 10px;
+}
