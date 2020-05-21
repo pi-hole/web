@@ -353,7 +353,7 @@ function editClient() {
       if (response.success) {
         utils.showAlert(
           "success",
-          "glyphicon glyphicon-pencil",
+          "fas fa-pencil-alt",
           "Successfully " + done + " client",
           ip_name
         );
@@ -400,12 +400,7 @@ function deleteClient() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert(
-          "success",
-          "glyphicon glyphicon-trash",
-          "Successfully deleted client ",
-          ip_name
-        );
+        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted client ", ip_name);
         table.row(tr).remove().draw(false).ajax.reload(null, false);
         reload_client_suggestions();
       } else {
