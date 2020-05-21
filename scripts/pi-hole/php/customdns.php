@@ -2,8 +2,6 @@
 
     require_once "func.php";
 
-    $customDNSFile = "/etc/pihole/custom.list";
-
     switch ($_REQUEST['action'])
     {
         case 'get':     echo json_encode(echoCustomDNSEntries()); break;

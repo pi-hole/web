@@ -6,6 +6,7 @@
  *  Please see LICENSE file for your rights under this license. */
 
 var table;
+var token = $("#token").text();
 
 function showAlert(type, message) {
   var alertElement = null;
@@ -40,7 +41,11 @@ $(document).ready(function () {
   $("#btnAdd").on("click", addCustomCNAME);
 
   table = $("#customCNAMETable").DataTable({
-    ajax: "scripts/pi-hole/php/customcname.php?action=get",
+    ajax: {
+      url: "scripts/pi-hole/php/customcname.php",
+      data: { action: "get", token: token },
+      type: "POST"
+    },
     columns: [{}, {}, { orderable: false, searchable: false }],
     columnDefs: [
       {
@@ -79,7 +84,7 @@ function addCustomCNAME() {
     url: "scripts/pi-hole/php/customcname.php",
     method: "post",
     dataType: "json",
-    data: { action: "add", target: target, domain: domain },
+    data: { action: "add", target: target, domain: domain, token: token },
     success: function (response) {
       if (response.success) {
         showAlert("success");
@@ -101,7 +106,7 @@ function deleteCustomCNAME() {
     url: "scripts/pi-hole/php/customcname.php",
     method: "post",
     dataType: "json",
-    data: { action: "delete", domain: domain, target: target },
+    data: { action: "delete", domain: domain, target: target, token: token },
     success: function (response) {
       if (response.success) {
         showAlert("success");
