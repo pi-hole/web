@@ -88,7 +88,7 @@ h4 {
 }
 .sidebar-menu > li.header {
   color: #556068;
-  background: #1e2225;
+  background-color: #1e2225;
 }
 .sidebar-menu > li > a {
   border-left: 3px solid transparent;
@@ -96,12 +96,12 @@ h4 {
 .sidebar-menu > li:hover > a,
 .sidebar-menu > li.active > a {
   color: #fff;
-  background: #22272a;
+  background-color: #22272a;
   border-left-color: #272c30;
 }
 .sidebar-menu > li > .treeview-menu {
   margin: 0 1px;
-  background: #32393e;
+  background-color: #32393e;
 }
 .sidebar a {
   color: #bec5cb;
@@ -175,7 +175,6 @@ h4 {
 .box-solid > .box-header,
 .box > .box-header {
   color: #bec5cb;
-  background: #272c30;
   background-color: #272c30;
 }
 .box-solid > .box-header a,
@@ -220,7 +219,7 @@ h4 {
 .main-header .navbar .nav .open > a:hover,
 .main-header .navbar .nav .open > a:focus,
 .main-header .navbar .nav > .active > a {
-  background: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
   color: #f6f6f6;
 }
 .main-header .navbar .sidebar-toggle {
@@ -228,7 +227,7 @@ h4 {
 }
 .main-header .navbar .sidebar-toggle:hover {
   color: #f6f6f6;
-  background: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .timeline li .timeline-item {
   color: #bec5cb;
@@ -319,16 +318,16 @@ h4 {
   background: url("../../img/boxed-bg-dark.jpg") repeat fixed;
 }
 .not-used {
-  background: #eee;
+  background-color: #eee;
 }
 .not-used:hover {
-  background: #c5c5c5;
+  background-color: #c5c5c5;
 }
 .used {
-  background: #fff;
+  background-color: #fff;
 }
 .used:hover {
-  background: #ddd;
+  background-color: #ddd;
 }
 
 .graphs-grid {
@@ -503,20 +502,22 @@ fieldset[disabled] .form-control {
 .icheckbox_polaris,
 .icheckbox_futurico,
 .icheckbox_minimal-blue {
-	margin-right: 10px;
+  margin-right: 10px;
 }
 .iradio_polaris,
 .iradio_futurico,
 .iradio_minimal-blue {
-	margin-right: 8px;
+  margin-right: 8px;
 }
 
 /* Overlay box with spinners as shown during data collection for graphs */
-.box .overlay, .overlay-wrapper .overlay {
-	z-index: 50;
-  background: #353c42bb;
-	border-radius: 3px;
+.box .overlay,
+.overlay-wrapper .overlay {
+  z-index: 50;
+  background-color: #353c42bb;
+  border-radius: 3px;
 }
-.box .overlay > .fa, .overlay-wrapper .overlay > .fa {
+.box .overlay > .fa,
+.overlay-wrapper .overlay > .fa {
   color: #bec5cb;
 }
