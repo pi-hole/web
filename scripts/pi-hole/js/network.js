@@ -69,29 +69,29 @@ $(document).ready(function () {
       var color,
         iconClasses,
         lastQuery = parseInt(data.lastQuery);
-      var network_recent = $(".network-recent").css("background-color");
-      var network_old = $(".network-old").css("background-color");
-      var network_older = $(".network-older").css("background-color");
-      var network_never = $(".network-never").css("background-color");
+      var networkRecent = $(".network-recent").css("background-color");
+      var networkOld = $(".network-old").css("background-color");
+      var networkOlder = $(".network-older").css("background-color");
+      var networkNever = $(".network-never").css("background-color");
       if (lastQuery > 0) {
         var diff = getTimestamp() - lastQuery;
         if (diff <= 86400) {
           // Last query came in within the last 24 hours (24*60*60 = 86400)
           // Color: light-green to light-yellow
           var ratio = Number(diff) / 86400;
-          var lightgreen = parseColor(network_recent);
-          var lightyellow = parseColor(network_old);
+          var lightgreen = parseColor(networkRecent);
+          var lightyellow = parseColor(networkOld);
           color = rgbToHex(mixColors(ratio, lightgreen, lightyellow));
           iconClasses = "fas fa-check";
         } else {
           // Last query was longer than 24 hours ago
           // Color: light-orange
-          color = network_older;
+          color = networkOlder;
           iconClasses = "fas fa-question";
         }
       } else {
         // This client has never sent a query to Pi-hole, color light-red
-        color = network_never;
+        color = networkNever;
         iconClasses = "fas fa-check";
       }
 

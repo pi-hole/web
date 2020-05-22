@@ -137,26 +137,26 @@ $(document).ready(function () {
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
       // DNSSEC status
-      var dnssec_status;
+      var dnssecStatus;
       switch (data[5]) {
         case "1":
-          dnssec_status = '<br><span class="text-green">SECURE</span>';
+          dnssecStatus = '<br><span class="text-green">SECURE</span>';
           break;
         case "2":
-          dnssec_status = '<br><span class="text-orange">INSECURE</span>';
+          dnssecStatus = '<br><span class="text-orange">INSECURE</span>';
           break;
         case "3":
-          dnssec_status = '<br><span class="text-red">BOGUS</span>';
+          dnssecStatus = '<br><span class="text-red">BOGUS</span>';
           break;
         case "4":
-          dnssec_status = '<br><span class="text-red">ABANDONED</span>';
+          dnssecStatus = '<br><span class="text-red">ABANDONED</span>';
           break;
         case "5":
-          dnssec_status = '<br><span class="text-orange">UNKNOWN</span>';
+          dnssecStatus = '<br><span class="text-orange">UNKNOWN</span>';
           break;
         default:
           // No DNSSEC
-          dnssec_status = "";
+          dnssecStatus = "";
       }
 
       // Query status
@@ -178,14 +178,14 @@ $(document).ready(function () {
         case "2":
           blocked = false;
           colorClass = "text-green";
-          fieldtext = "OK <br class='hidden-lg'>(forwarded)" + dnssec_status;
+          fieldtext = "OK <br class='hidden-lg'>(forwarded)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case "3":
           blocked = false;
           colorClass = "text-green";
-          fieldtext = "OK <br class='hidden-lg'>(cached)" + dnssec_status;
+          fieldtext = "OK <br class='hidden-lg'>(cached)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
@@ -281,9 +281,9 @@ $(document).ready(function () {
         );
         $("td:eq(4)", row).off(); // Release any possible previous onClick event handlers
         $("td:eq(4)", row).click(function () {
-          var new_tab = window.open("groups-domains.php?domainid=" + data[9], "_blank");
-          if (new_tab) {
-            new_tab.focus();
+          var newTab = window.open("groups-domains.php?domainid=" + data[9], "_blank");
+          if (newTab) {
+            newTab.focus();
           }
         });
         $("td:eq(4)", row).addClass("text-underline pointer");
@@ -296,9 +296,9 @@ $(document).ready(function () {
       }
 
       if (isCNAME) {
-        var CNAME_domain = data[8];
+        var CNAMEDomain = data[8];
         // Add domain in CNAME chain causing the query to have been blocked
-        $("td:eq(2)", row).text(domain + "\n(blocked " + CNAME_domain + ")");
+        $("td:eq(2)", row).text(domain + "\n(blocked " + CNAMEDomain + ")");
       } else {
         $("td:eq(2)", row).text(domain);
       }
@@ -519,10 +519,10 @@ $(document).ready(function () {
   input.setAttribute("autocapitalize", "off");
   input.setAttribute("spellcheck", false);
 
-  var chkbox_data = localStorage.getItem("query_log_filter_chkbox");
-  if (chkbox_data !== null) {
+  var chkboxData = localStorage.getItem("query_log_filter_chkbox");
+  if (chkboxData !== null) {
     // Restore checkbox state
-    $("#autofilter").prop("checked", chkbox_data === "true");
+    $("#autofilter").prop("checked", chkboxData === "true");
   } else {
     // Initialize checkbox
     $("#autofilter").prop("checked", true);

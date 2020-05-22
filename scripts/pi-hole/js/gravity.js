@@ -32,10 +32,11 @@ function eventsource() {
       }
 
       // Detect ${OVER}
-      if (e.data.indexOf("<------") !== -1) {
+      var newString = "<------";
+
+      if (e.data.indexOf(newString) !== -1) {
         ta.text(ta.text().substring(0, ta.text().lastIndexOf("\n")) + "\n");
-        var new_string = e.data.replace("<------", "");
-        ta.append(new_string);
+        ta.append(e.data.replace(newString, ""));
       } else {
         ta.append(e.data);
       }

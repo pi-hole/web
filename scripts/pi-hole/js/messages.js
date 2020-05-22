@@ -9,7 +9,7 @@
 
 var token = $("#token").text();
 
-function render_timestamp(data, type) {
+function renderTimestamp(data, type) {
   // Display and search content
   if (type === "display" || type === "filter") {
     return utils.datetime(data);
@@ -23,7 +23,7 @@ function multline(input) {
   return input.split(",").join("\n");
 }
 
-function render_message(data, type, row) {
+function renderMessage(data, type, row) {
   // Display and search content
   switch (row.type) {
     case "REGEX":
@@ -73,9 +73,9 @@ $(document).ready(function () {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: "timestamp", width: "8%", render: render_timestamp },
+      { data: "timestamp", width: "8%", render: renderTimestamp },
       { data: "type", width: "8%" },
-      { data: "message", orderable: false, render: render_message },
+      { data: "message", orderable: false, render: renderMessage },
       { data: "blob1", visible: false },
       { data: "blob2", visible: false },
       { data: "blob3", visible: false },
