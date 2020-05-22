@@ -514,7 +514,7 @@ fieldset[disabled] .form-control {
 .box .overlay,
 .overlay-wrapper .overlay {
   z-index: 50;
-  background-color: #353c42bb;
+  background-color: rgba(53, 60, 66, 0.733);
   border-radius: 3px;
 }
 .box .overlay > .fa,
