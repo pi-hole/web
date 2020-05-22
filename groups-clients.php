@@ -75,7 +75,7 @@
 </div>
 
 <script src="scripts/pi-hole/js/ip-address-sorting.js"></script>
-<script src="scripts/pi-hole/js/groups-common.js"></script>
+<script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/groups-clients.js"></script>
 
 <?php
