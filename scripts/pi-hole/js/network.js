@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false */
+/* global moment:false, utils:false */
 
 var tableApi;
 
@@ -186,24 +186,10 @@ $(document).ready(function () {
     ],
     stateSave: true,
     stateSaveCallback: function (settings, data) {
-      // Store current state in client's local storage area
-      localStorage.setItem("network_table", JSON.stringify(data));
+      utils.stateSaveCallback("network_table", data);
     },
     stateLoadCallback: function () {
-      // Receive previous state from client's local storage area
-      var data = localStorage.getItem("network_table");
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
-
-      data = JSON.parse(data);
-      // Always start on the first page
-      data.start = 0;
-      // Always start with empty search field
-      data.search.search = "";
-      // Apply loaded state to table
-      return data;
+      return utils.stateLoadCallback("network_table");
     },
     columnDefs: [
       {

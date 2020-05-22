@@ -5,6 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global utils:false */
+
 $(function () {
   $("[data-static]").on("click", function () {
     var row = $(this).closest("tr");
@@ -176,25 +178,11 @@ $(document).ready(function () {
       scrollX: true,
       order: [[2, "asc"]],
       stateSave: true,
-      stateSaveCallback: function(settings, data) {
-        // Store current state in client's local storage area
-        localStorage.setItem("activeDhcpLeaseTable", JSON.stringify(data));
+      stateSaveCallback: function (settings, data) {
+        utils.stateSaveCallback("activeDhcpLeaseTable", data);
       },
-      stateLoadCallback: function() {
-        // Receive previous state from client's local storage area
-        var data = localStorage.getItem("activeDhcpLeaseTable");
-        // Return if not available
-        if (data === null) {
-          return null;
-        }
-
-        data = JSON.parse(data);
-        // Always start on the first page to show most recent queries
-        data.start = 0;
-        // Always start with empty search field
-        data.search.search = "";
-        // Apply loaded state to table
-        return data;
+      stateLoadCallback: function () {
+        return utils.stateLoadCallback("activeDhcpLeaseTable");
       }
     });
   }
@@ -209,25 +197,11 @@ $(document).ready(function () {
       scrollX: true,
       order: [[2, "asc"]],
       stateSave: true,
-      stateSaveCallback: function(settings, data) {
-        // Store current state in client's local storage area
-        localStorage.setItem("staticDhcpLeaseTable", JSON.stringify(data));
+      stateSaveCallback: function (settings, data) {
+        utils.stateSaveCallback("staticDhcpLeaseTable", data);
       },
-      stateLoadCallback: function() {
-        // Receive previous state from client's local storage area
-        var data = localStorage.getItem("staticDhcpLeaseTable");
-        // Return if not available
-        if (data === null) {
-          return null;
-        }
-
-        data = JSON.parse(data);
-        // Always start on the first page to show most recent queries
-        data.start = 0;
-        // Always start with empty search field
-        data.search.search = "";
-        // Apply loaded state to table
-        return data;
+      stateLoadCallback: function () {
+        return utils.stateLoadCallback("staticDhcpLeaseTable");
       }
     });
   }
