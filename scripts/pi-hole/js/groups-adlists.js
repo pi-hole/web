@@ -26,7 +26,7 @@ function getGroups() {
 $(document).ready(function () {
   $("#btnAdd").on("click", addAdlist);
 
-  utils.bsSelectDefaults();
+  utils.setBsSelectDefaults();
   getGroups();
 });
 

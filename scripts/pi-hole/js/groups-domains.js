@@ -55,7 +55,7 @@ $(document).ready(function () {
 
   $("#add2black, #add2white").on("click", addDomain);
 
-  utils.bsSelectDefaults();
+  utils.setBsSelectDefaults();
   getGroups();
 });
 

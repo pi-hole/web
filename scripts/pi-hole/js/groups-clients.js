@@ -61,7 +61,7 @@ $(document).ready(function () {
   $("#btnAdd").on("click", addClient);
 
   reloadClientSuggestions();
-  utils.bsSelectDefaults();
+  utils.setBsSelectDefaults();
   getGroups();
 
   $("#select").on("change", function () {

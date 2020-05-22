@@ -129,18 +129,18 @@ function validateIPv6CIDR(ip) {
   return ipv6validator.test(ip);
 }
 
-function bsSelectDefaults() {
-  // set bootstrap-select defaults
-  var pickerDEFAULTS = $.fn.selectpicker.Constructor.DEFAULTS;
-  pickerDEFAULTS.noneSelectedText = "none selected";
-  pickerDEFAULTS.selectedTextFormat = "count > 1";
-  pickerDEFAULTS.actionsBox = true;
-  pickerDEFAULTS.width = "fit";
-  pickerDEFAULTS.container = "body";
-  pickerDEFAULTS.dropdownAlignRight = "auto";
-  pickerDEFAULTS.selectAllText = "All";
-  pickerDEFAULTS.deselectAllText = "None";
-  pickerDEFAULTS.countSelectedText = function (num, total) {
+// set bootstrap-select defaults
+function setBsSelectDefaults() {
+  var bsSelectDefaults = $.fn.selectpicker.Constructor.DEFAULTS;
+  bsSelectDefaults.noneSelectedText = "none selected";
+  bsSelectDefaults.selectedTextFormat = "count > 1";
+  bsSelectDefaults.actionsBox = true;
+  bsSelectDefaults.width = "fit";
+  bsSelectDefaults.container = "body";
+  bsSelectDefaults.dropdownAlignRight = "auto";
+  bsSelectDefaults.selectAllText = "All";
+  bsSelectDefaults.deselectAllText = "None";
+  bsSelectDefaults.countSelectedText = function (num, total) {
     if (num === total) {
       return "All selected (" + num + ")";
     }
@@ -157,6 +157,6 @@ window.utils = (function () {
     enableAll: enableAll,
     validateIPv4CIDR: validateIPv4CIDR,
     validateIPv6CIDR: validateIPv6CIDR,
-    bsSelectDefaults: bsSelectDefaults
+    setBsSelectDefaults: setBsSelectDefaults
   };
 })();
