@@ -175,7 +175,27 @@ $(document).ready(function () {
       scrollY: "200px",
       scrollX: true,
       order: [[2, "asc"]],
-      stateSave: true
+      stateSave: true,
+      stateSaveCallback: function(settings, data) {
+        // Store current state in client's local storage area
+        localStorage.setItem("activeDhcpLeaseTable", JSON.stringify(data));
+      },
+      stateLoadCallback: function() {
+        // Receive previous state from client's local storage area
+        var data = localStorage.getItem("activeDhcpLeaseTable");
+        // Return if not available
+        if (data === null) {
+          return null;
+        }
+
+        data = JSON.parse(data);
+        // Always start on the first page to show most recent queries
+        data.start = 0;
+        // Always start with empty search field
+        data.search.search = "";
+        // Apply loaded state to table
+        return data;
+      }
     });
   }
 
@@ -188,7 +208,27 @@ $(document).ready(function () {
       scrollY: "200px",
       scrollX: true,
       order: [[2, "asc"]],
-      stateSave: true
+      stateSave: true,
+      stateSaveCallback: function(settings, data) {
+        // Store current state in client's local storage area
+        localStorage.setItem("staticDhcpLeaseTable", JSON.stringify(data));
+      },
+      stateLoadCallback: function() {
+        // Receive previous state from client's local storage area
+        var data = localStorage.getItem("staticDhcpLeaseTable");
+        // Return if not available
+        if (data === null) {
+          return null;
+        }
+
+        data = JSON.parse(data);
+        // Always start on the first page to show most recent queries
+        data.start = 0;
+        // Always start with empty search field
+        data.search.search = "";
+        // Apply loaded state to table
+        return data;
+      }
     });
   }
 
