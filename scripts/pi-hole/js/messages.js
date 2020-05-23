@@ -65,14 +65,13 @@ function renderMessage(data, type, row) {
         decodeURIComponent(escape(row.blob1))[row.blob2] +
         "</code>:<pre>" +
         hint +
-        "↓\n" +
+        "&darr;\n" +
         row.message +
         ": " +
         decodeURIComponent(escape(row.blob1)) +
         "\n" +
         hint +
-        "↑" +
-        "</pre>"
+        "&uarr;</pre>"
       );
 
     default:
