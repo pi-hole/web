@@ -243,12 +243,7 @@ function addAdlist() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert(
-          "success",
-          "glyphicon glyphicon-plus",
-          "Successfully added adlist",
-          address
-        );
+        utils.showAlert("success", "fas fa-plus", "Successfully added adlist", address);
         table.ajax.reload(null, false);
         $("#new_address").val("");
         $("#new_comment").val("");
@@ -362,12 +357,7 @@ function deleteAdlist() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert(
-          "success",
-          "glyphicon glyphicon-trash",
-          "Successfully deleted adlist ",
-          address
-        );
+        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted adlist ", address);
         table.row(tr).remove().draw(false).ajax.reload(null, false);
       } else {
         utils.showAlert("error", "", "Error while deleting adlist with ID " + id, response.message);
