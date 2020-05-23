@@ -46,7 +46,7 @@ $token = $_SESSION['token'];
 
 <div class="row">
   <div class="col-md-12">
-    <div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden="true">
+    <div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden>
         Depending on how large of a range you specified, the request may time out while Pi-hole tries to retrieve all the data.<br/><span id="err"></span>
     </div>
   </div>
@@ -69,7 +69,7 @@ $token = $_SESSION['token'];
           </div>
         </div>
       </div>
-      <div class="overlay" hidden="true">
+      <div class="overlay" hidden>
         <i class="fa fa-sync fa-spin"></i>
       </div>
     </div>
