@@ -128,7 +128,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12 col-lg-6">
+    <div class="col-md-6">
     <div class="box" id="query-types-pie">
         <div class="box-header with-border">
           <h3 class="box-title">Query Types</h3>
@@ -147,7 +147,7 @@
         <!-- /.box-body -->
       </div>
     </div>
-    <div class="col-md-12 col-lg-6">
+    <div class="col-md-6">
     <div class="box" id="forward-destinations-pie">
         <div class="box-header with-border">
           <h3 class="box-title">Queries answered by</h3>
