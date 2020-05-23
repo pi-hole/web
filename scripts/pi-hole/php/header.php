@@ -218,7 +218,6 @@
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
 
     <script src="scripts/vendor/jquery.min.js"></script>
-    <script src="scripts/vendor/jquery-ui.min.js"></script>
     <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="scripts/vendor/adminlte.min.js"></script>
     <script src="scripts/vendor/bootstrap-notify.min.js"></script>
