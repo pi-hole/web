@@ -57,6 +57,24 @@ function renderMessage(data, type, row) {
         "</pre> to get the group configuration for this client."
       );
 
+    case "HOSTNAME":
+      var hint = "";
+      for (var i = 0; i < row.blob2 + row.message.length + 2; i++) hint += " ";
+      return (
+        "Host names contains invalid character <code> " +
+        decodeURIComponent(escape(row.blob1))[row.blob2] +
+        "</code>:<pre>" +
+        hint +
+        "↓\n" +
+        row.message +
+        ": " +
+        decodeURIComponent(escape(row.blob1)) +
+        "\n" +
+        hint +
+        "↑" +
+        "</pre>"
+      );
+
     default:
       return "Unknown message type<pre>" + JSON.stringify(row) + "</pre>";
   }
