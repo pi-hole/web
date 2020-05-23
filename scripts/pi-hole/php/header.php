@@ -209,8 +209,8 @@
     <link rel="stylesheet" href="style/vendor/animate.min.css">
 
 <?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
-    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-select.min.css">
-    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap-toggle.min.css">
+    <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css">
+    <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css">
 <?php } ?>
     <link rel="stylesheet" href="style/vendor/iCheck/<?php echo $checkbox_theme_name;?>/<?php echo $checkbox_theme_variant;?>.css">
     <link rel="stylesheet" href="style/pi-hole.css">
@@ -224,8 +224,8 @@
     <script src="scripts/vendor/bootstrap-notify.min.js"></script>
 
 <?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
-    <script src="style/vendor/bootstrap/js/bootstrap-select.min.js"></script>
-    <script src="style/vendor/bootstrap/js/bootstrap-toggle.min.js"></script>
+    <script src="scripts/vendor/bootstrap-select.min.js"></script>
+    <script src="scripts/vendor/bootstrap-toggle.min.js"></script>
 <?php } ?>
 
     <script src="scripts/vendor/jquery.dataTables.min.js"></script>
