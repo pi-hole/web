@@ -125,7 +125,7 @@ function testCookies() {
   return ret;
 }
 
-$(document).ready(function () {
+$(function () {
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html()));
   var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);

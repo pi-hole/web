@@ -25,7 +25,7 @@ function getGroups() {
   );
 }
 
-$(document).ready(function () {
+$(function () {
   window.location.search
     .substr(1)
     .split("&")

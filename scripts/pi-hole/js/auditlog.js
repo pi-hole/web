@@ -127,7 +127,7 @@ function auditUrl(url) {
   add(url, "audit");
 }
 
-$(document).ready(function () {
+$(function () {
   // Pull in data via AJAX
   updateTopLists();
 

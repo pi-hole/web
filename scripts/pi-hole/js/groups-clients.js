@@ -57,7 +57,7 @@ function getGroups() {
   );
 }
 
-$(document).ready(function () {
+$(function () {
   $("#btnAdd").on("click", addClient);
 
   reloadClientSuggestions();

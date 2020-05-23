@@ -121,6 +121,6 @@ $(window).on("resize", function () {
       .addClass("input-group-btn");
   }
 });
-$(document).ready(function () {
+$(function () {
   $(window).trigger("resize");
 });
