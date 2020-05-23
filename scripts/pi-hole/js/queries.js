@@ -431,7 +431,7 @@ $(document).ready(function () {
       api.$("td:eq(1)").click(function () {
         if (autofilter()) {
           api.search(this.textContent).draw();
-          $("#resetButton").show();
+          $("#resetButton").removeClass("hidden");
         }
       });
       api.$("td:eq(1)").hover(
@@ -454,7 +454,7 @@ $(document).ready(function () {
         if (autofilter()) {
           var domain = this.textContent.split("\n")[0];
           api.search(domain).draw();
-          $("#resetButton").show();
+          $("#resetButton").removeClass("hidden");
         }
       });
       api.$("td:eq(2)").hover(
@@ -477,7 +477,7 @@ $(document).ready(function () {
       api.$("td:eq(3)").click(function () {
         if (autofilter()) {
           api.search(this.textContent).draw();
-          $("#resetButton").show();
+          $("#resetButton").removeClass("hidden");
         }
       });
       api.$("td:eq(3)").hover(
@@ -509,7 +509,7 @@ $(document).ready(function () {
 
   $("#resetButton").click(function () {
     tableApi.search("").draw();
-    $("#resetButton").hide();
+    $("#resetButton").addClass("hidden");
   });
 
   // Disable autocorrect in the search box

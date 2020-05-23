@@ -276,10 +276,6 @@
 	padding: 0 12px;
 }
 
-.d-none {
-    display: none !important;
-}
-
 .user-panel > .info > span {
     padding-right: 5px;
     margin-top: 3px;

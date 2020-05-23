@@ -81,7 +81,7 @@
                     </tr>
                     </thead>
                 </table>
-                <button type="button" id="resetButton" hidden="true" class="btn btn-default btn-sm text-red">Clear Filters</button>
+                <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear Filters</button>
             </div>
             <!-- /.box-body -->
         </div>
