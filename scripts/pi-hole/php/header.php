@@ -341,26 +341,26 @@ if($auth) {
                     <p>Status</p>
                         <?php
                         $pistatus = pihole_execute('status web');
-                        if(isset($pistatus[0])) {
+                        if (isset($pistatus[0])) {
                             $pistatus = $pistatus[0];
                         } else {
                             $pistatus = null;
                         }
                         if ($pistatus === "1") {
-                            echo '<a id="status"><i class="fa fa-circle text-green-light"></i> Active</a>';
+                            echo '<span id="status"><i class="fa fa-circle text-green-light"></i> Active</span>';
                         } elseif ($pistatus === "0") {
-                            echo '<a id="status"><i class="fa fa-circle text-red"></i> Offline</a>';
+                            echo '<span id="status"><i class="fa fa-circle text-red"></i> Offline</span>';
                         } elseif ($pistatus === "-1") {
-                            echo '<a id="status"><i class="fa fa-circle text-red"></i> DNS service not running</a>';
+                            echo '<span id="status"><i class="fa fa-circle text-red"></i> DNS service not running</span>';
                         } else {
-                            echo '<a id="status"><i class="fa fa-circle text-orange"></i> Unknown</a>';
+                            echo '<span id="status"><i class="fa fa-circle text-orange"></i> Unknown</span>';
                         }
 
                         // CPU Temp
                         if($FTL)
                         {
                             if ($celsius >= -273.15) {
-                                echo "<a id=\"temperature\"><i class=\"fa fa-fire ";
+                                echo "<span id=\"temperature\"><i class=\"fa fa-fire ";
                                 if ($celsius > $temperaturelimit) {
                                     echo "text-red";
                                 }
@@ -381,17 +381,17 @@ if($auth) {
                                 {
                                     echo round($celsius,1) . "&nbsp;&deg;C";
                                 }
-                                echo "</a>";
+                                echo "</span>";
                             }
                         }
                         else
                         {
-                            echo '<a id=\"temperature\"><i class="fa fa-circle text-red"></i> FTL offline</a>';
+                            echo '<span id=\"temperature\"><i class="fa fa-circle text-red"></i> FTL offline</span>';
                         }
                     ?>
                     <br/>
                     <?php
-                    echo "<a title=\"Detected $nproc cores\"><i class=\"fa fa-circle ";
+                    echo "<span title=\"Detected $nproc cores\"><i class=\"fa fa-circle ";
                         if ($loaddata[0] > $nproc) {
                             echo "text-red";
                         }
@@ -399,11 +399,11 @@ if($auth) {
                         {
                             echo "text-green-light";
                         }
-                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</a>";
+                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</span>";
                     ?>
                     <br/>
                     <?php
-                    echo "<a><i class=\"fa fa-circle ";
+                    echo "<span><i class=\"fa fa-circle ";
                         if ($memory_usage > 0.75 || $memory_usage < 0.0) {
                             echo "text-red";
                         }
@@ -413,11 +413,11 @@ if($auth) {
                         }
                         if($memory_usage > 0.0)
                         {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</a>";
+                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</span>";
                         }
                         else
                         {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp; N/A</a>";
+                            echo "\"></i> Memory usage:&nbsp;&nbsp; N/A</span>";
                         }
                     ?>
                 </div>
