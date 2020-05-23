@@ -109,22 +109,22 @@ function datetime(date) {
 }
 
 function disableAll() {
-  $("input").attr("disabled", true);
-  $("select").attr("disabled", true);
-  $("button").attr("disabled", true);
-  $("textarea").attr("disabled", true);
+  $("input").prop("disabled", true);
+  $("select").prop("disabled", true);
+  $("button").prop("disabled", true);
+  $("textarea").prop("disabled", true);
 }
 
 function enableAll() {
-  $("input").attr("disabled", false);
-  $("select").attr("disabled", false);
-  $("button").attr("disabled", false);
-  $("textarea").attr("disabled", false);
+  $("input").prop("disabled", false);
+  $("select").prop("disabled", false);
+  $("button").prop("disabled", false);
+  $("textarea").prop("disabled", false);
 
   // Enable custom input field only if applicable
   var ip = $("#select") ? $("#select").val() : null;
   if (ip !== null && ip !== "custom") {
-    $("#ip-custom").attr("disabled", true);
+    $("#ip-custom").prop("disabled", true);
   }
 }
 
