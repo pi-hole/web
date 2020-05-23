@@ -212,40 +212,40 @@ $(document).ready(function () {
           title: function (tooltipItem) {
             var label = tooltipItem[0].xLabel;
             var time = new Date(label);
-            var from_date =
+            var fromDate =
               time.getFullYear() +
               "-" +
               padNumber(time.getMonth() + 1) +
               "-" +
               padNumber(time.getDate());
-            var from_time =
+            var fromTime =
               padNumber(time.getHours()) +
               ":" +
               padNumber(time.getMinutes()) +
               ":" +
               padNumber(time.getSeconds());
             time = new Date(time.valueOf() + 1000 * interval);
-            var until_date =
+            var untilDate =
               time.getFullYear() +
               "-" +
               padNumber(time.getMonth() + 1) +
               "-" +
               padNumber(time.getDate());
-            var until_time =
+            var untilTime =
               padNumber(time.getHours()) +
               ":" +
               padNumber(time.getMinutes()) +
               ":" +
               padNumber(time.getSeconds());
 
-            if (from_date === until_date) {
+            if (fromDate === untilDate) {
               // Abbreviated form for intervals on the same day
               // We split title in two lines on small screens
               if ($(window).width() < 992) {
-                until_time += "\n";
+                untilTime += "\n";
               }
 
-              return ("Queries from " + from_time + " to " + until_time + " on " + from_date).split(
+              return ("Queries from " + fromTime + " to " + untilTime + " on " + fromDate).split(
                 "\n "
               );
             }
@@ -253,18 +253,18 @@ $(document).ready(function () {
             // Full tooltip for intervals spanning more than one day
             // We split title in two lines on small screens
             if ($(window).width() < 992) {
-              from_date += "\n";
+              fromDate += "\n";
             }
 
             return (
               "Queries from " +
-              from_date +
+              fromDate +
               " " +
-              from_time +
+              fromTime +
               " to " +
-              until_date +
+              untilDate +
               " " +
-              until_time
+              untilTime
             ).split("\n ");
           },
           label: function (tooltipItems, data) {

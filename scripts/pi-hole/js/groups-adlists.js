@@ -11,7 +11,7 @@ var table;
 var groups = [];
 var token = $("#token").text();
 
-function get_groups() {
+function getGroups() {
   $.post(
     "scripts/pi-hole/php/groups.php",
     { action: "get_groups", token: token },
@@ -26,8 +26,8 @@ function get_groups() {
 $(document).ready(function () {
   $("#btnAdd").on("click", addAdlist);
 
-  utils.bsSelect_defaults();
-  get_groups();
+  utils.setBsSelectDefaults();
+  getGroups();
 });
 
 function initTable() {
@@ -96,13 +96,13 @@ function initTable() {
       var selectEl = $("#multiselect_" + data.id, row);
       // Add all known groups
       for (var i = 0; i < groups.length; i++) {
-        var data_sub = "";
+        var dataSub = "";
         if (!groups[i].enabled) {
-          data_sub = 'data-subtext="(disabled)"';
+          dataSub = 'data-subtext="(disabled)"';
         }
 
         selectEl.append(
-          $("<option " + data_sub + "/>")
+          $("<option " + dataSub + "/>")
             .val(groups[i].id)
             .text(groups[i].name)
         );
@@ -270,25 +270,25 @@ function editAdlist() {
   var address = tr.find("#address_" + id).text();
 
   var done = "edited";
-  var not_done = "editing";
+  var notDone = "editing";
   switch (elem) {
     case "status_" + id:
       if (status === 0) {
         done = "disabled";
-        not_done = "disabling";
+        notDone = "disabling";
       } else if (status === 1) {
         done = "enabled";
-        not_done = "enabling";
+        notDone = "enabling";
       }
 
       break;
     case "comment_" + id:
       done = "edited comment of";
-      not_done = "editing comment of";
+      notDone = "editing comment of";
       break;
     case "multiselect_" + id:
       done = "edited groups of";
-      not_done = "editing groups of";
+      notDone = "editing groups of";
       break;
     default:
       alert("bad element or invalid data-id!");
@@ -324,7 +324,7 @@ function editAdlist() {
         utils.showAlert(
           "error",
           "",
-          "Error while " + not_done + " adlist with ID " + id,
+          "Error while " + notDone + " adlist with ID " + id,
           Number(response.message)
         );
       }
@@ -334,7 +334,7 @@ function editAdlist() {
       utils.showAlert(
         "error",
         "",
-        "Error while " + not_done + " adlist with ID " + id,
+        "Error while " + notDone + " adlist with ID " + id,
         jqXHR.responseText
       );
       console.log(exception);

@@ -11,7 +11,7 @@ var table;
 var groups = [];
 var token = $("#token").text();
 
-function reload_client_suggestions() {
+function reloadClientSuggestions() {
   $.post(
     "scripts/pi-hole/php/groups.php",
     { action: "get_unconfigured_clients", token: token },
@@ -45,7 +45,7 @@ function reload_client_suggestions() {
   );
 }
 
-function get_groups() {
+function getGroups() {
   $.post(
     "scripts/pi-hole/php/groups.php",
     { action: "get_groups", token: token },
@@ -60,9 +60,9 @@ function get_groups() {
 $(document).ready(function () {
   $("#btnAdd").on("click", addClient);
 
-  reload_client_suggestions();
-  utils.bsSelect_defaults();
-  get_groups();
+  reloadClientSuggestions();
+  utils.setBsSelectDefaults();
+  getGroups();
 
   $("#select").on("change", function () {
     $("#ip-custom").val("");
@@ -99,7 +99,7 @@ function initTable() {
         utils.datetime(data.date_modified) +
         "\nDatabase ID: " +
         data.id;
-      var ip_name =
+      var ipName =
         '<code id="ip_' +
         data.id +
         '" title="' +
@@ -108,7 +108,7 @@ function initTable() {
         data.ip +
         "</code>";
       if (data.name !== null && data.name.length > 0)
-        ip_name +=
+        ipName +=
           '<br><code id="name_' +
           data.id +
           '" title="' +
@@ -116,7 +116,7 @@ function initTable() {
           '" class="breakall">' +
           data.name +
           "</code>";
-      $("td:eq(0)", row).html(ip_name);
+      $("td:eq(0)", row).html(ipName);
 
       $("td:eq(1)", row).html('<input id="comment_' + data.id + '" class="form-control">');
       var commentEl = $("#comment_" + data.id, row);
@@ -130,13 +130,13 @@ function initTable() {
       var selectEl = $("#multiselect_" + data.id, row);
       // Add all known groups
       for (var i = 0; i < groups.length; i++) {
-        var data_sub = "";
+        var dataSub = "";
         if (!groups[i].enabled) {
-          data_sub = 'data-subtext="(disabled)"';
+          dataSub = 'data-subtext="(disabled)"';
         }
 
         selectEl.append(
-          $("<option " + data_sub + "/>")
+          $("<option " + dataSub + "/>")
             .val(groups[i].id)
             .text(groups[i].name)
         );
@@ -291,7 +291,7 @@ function addClient() {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "fas fa-plus", "Successfully added client", ip);
-        reload_client_suggestions();
+        reloadClientSuggestions();
         table.ajax.reload(null, false);
       } else {
         utils.showAlert("error", "", "Error while adding new client", response.message);
@@ -315,28 +315,28 @@ function editClient() {
   var comment = tr.find("#comment_" + id).val();
 
   var done = "edited";
-  var not_done = "editing";
+  var notDone = "editing";
   switch (elem) {
     case "multiselect_" + id:
       done = "edited groups of";
-      not_done = "editing groups of";
+      notDone = "editing groups of";
       break;
     case "comment_" + id:
       done = "edited comment of";
-      not_done = "editing comment of";
+      notDone = "editing comment of";
       break;
     default:
       alert("bad element or invalid data-id!");
       return;
   }
 
-  var ip_name = ip;
+  var ipName = ip;
   if (name.length > 0) {
-    ip_name += " (" + name + ")";
+    ipName += " (" + name + ")";
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Editing client...", ip_name);
+  utils.showAlert("info", "", "Editing client...", ipName);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -351,17 +351,12 @@ function editClient() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert(
-          "success",
-          "fas fa-pencil-alt",
-          "Successfully " + done + " client",
-          ip_name
-        );
+        utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " client", ipName);
         table.ajax.reload(null, false);
       } else {
         utils.showAlert(
           "error",
-          "Error while " + not_done + " client with ID " + id,
+          "Error while " + notDone + " client with ID " + id,
           response.message
         );
       }
@@ -371,7 +366,7 @@ function editClient() {
       utils.showAlert(
         "error",
         "",
-        "Error while " + not_done + " client with ID " + id,
+        "Error while " + notDone + " client with ID " + id,
         jqXHR.responseText
       );
       console.log(exception);
@@ -385,13 +380,13 @@ function deleteClient() {
   var ip = tr.find("#ip_" + id).text();
   var name = tr.find("#name_" + id).text();
 
-  var ip_name = ip;
+  var ipName = ip;
   if (name.length > 0) {
-    ip_name += " (" + name + ")";
+    ipName += " (" + name + ")";
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting client...", ip_name);
+  utils.showAlert("info", "", "Deleting client...", ipName);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -400,9 +395,9 @@ function deleteClient() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted client ", ip_name);
+        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted client ", ipName);
         table.row(tr).remove().draw(false).ajax.reload(null, false);
-        reload_client_suggestions();
+        reloadClientSuggestions();
       } else {
         utils.showAlert("error", "", "Error while deleting client with ID " + id, response.message);
       }

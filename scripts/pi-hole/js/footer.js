@@ -93,7 +93,7 @@ function piholeChange(action, duration) {
   }
 }
 
-function check_messages() {
+function checkMessages() {
   $.getJSON("api_db.php?status", function (data) {
     if ("message_count" in data && data.message_count > 0) {
       var title;
@@ -122,16 +122,16 @@ $(document).ready(function () {
     $("#cookieInfo").show();
   }
 
-  var checkbox_theme = $("#checkbox_theme").text();
+  var checkboxTheme = $("#checkbox_theme").text();
   $("input").icheck({
-    checkboxClass: "icheckbox_" + checkbox_theme,
-    radioClass: "iradio_" + checkbox_theme,
+    checkboxClass: "icheckbox_" + checkboxTheme,
+    radioClass: "iradio_" + checkboxTheme,
     increaseArea: "20%"
   });
   // Run check immediately after page loading ...
-  check_messages();
+  checkMessages();
   // ... and once again with five seconds delay
-  setTimeout(check_messages, 5000);
+  setTimeout(checkMessages, 5000);
 });
 
 // Handle Enable/Disable

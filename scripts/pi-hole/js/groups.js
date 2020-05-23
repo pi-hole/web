@@ -178,25 +178,25 @@ function editGroup() {
   var desc = tr.find("#desc_" + id).val();
 
   var done = "edited";
-  var not_done = "editing";
+  var notDone = "editing";
   switch (elem) {
     case "status_" + id:
       if (status === 0) {
         done = "disabled";
-        not_done = "disabling";
+        notDone = "disabling";
       } else if (status === 1) {
         done = "enabled";
-        not_done = "enabling";
+        notDone = "enabling";
       }
 
       break;
     case "name_" + id:
       done = "edited name of";
-      not_done = "editing name of";
+      notDone = "editing name of";
       break;
     case "desc_" + id:
       done = "edited description of";
-      not_done = "editing description of";
+      notDone = "editing description of";
       break;
     default:
       alert("bad element or invalid data-id!");
@@ -225,7 +225,7 @@ function editGroup() {
         utils.showAlert(
           "error",
           "",
-          "Error while " + not_done + " group with ID " + id,
+          "Error while " + notDone + " group with ID " + id,
           response.message
         );
       }
@@ -235,7 +235,7 @@ function editGroup() {
       utils.showAlert(
         "error",
         "",
-        "Error while " + not_done + " group with ID " + id,
+        "Error while " + notDone + " group with ID " + id,
         jqXHR.responseText
       );
       console.log(exception);

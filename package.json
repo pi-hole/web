@@ -46,9 +46,19 @@
       "**/vendor/**"
     ],
     "rules": {
-      "camelcase": "off",
+      "camelcase": [
+        "error",
+        {
+          "properties": "never"
+        }
+      ],
       "capitalized-comments": "off",
-      "new-cap": "off",
+      "new-cap": [
+        "error",
+        {
+          "properties": false
+        }
+      ],
       "no-alert": "off",
       "no-negated-condition": "off",
       "one-var": "off",
