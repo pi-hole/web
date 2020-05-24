@@ -9,13 +9,6 @@
   background: url("../img/boxed-bg.jpg") repeat fixed;
 }
 
-.small-box {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
 .small-box span {
   transition-duration: 0.5s;
 }
@@ -149,13 +142,6 @@
   animation: fa-spin 1s infinite linear;
 }
 
-.extratooltipcanvas {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
 .chartjs-tooltip {
   opacity: 0;
   position: absolute;
@@ -262,6 +248,13 @@
   white-space: pre-wrap;
   word-break: break-all;
   word-wrap: break-word;
+}
+
+.no-user-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .pointer {

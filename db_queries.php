@@ -79,7 +79,7 @@ $token = $_SESSION['token'];
 <div class="row">
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-aqua">
+        <div class="small-box bg-aqua no-user-select">
             <div class="inner">
                 <h3 class="statistic" id="ads_blocked_exact">---</h3>
                 <p>Queries Blocked</p>
@@ -92,7 +92,7 @@ $token = $_SESSION['token'];
     <!-- ./col -->
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-aqua">
+        <div class="small-box bg-aqua no-user-select">
             <div class="inner">
                 <h3 class="statistic" id="ads_wildcard_blocked">---</h3>
                 <p>Queries Blocked (Wildcards)</p>
@@ -105,7 +105,7 @@ $token = $_SESSION['token'];
     <!-- ./col -->
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-green">
+        <div class="small-box bg-green no-user-select">
             <div class="inner">
                 <h3 class="statistic" id="dns_queries">---</h3>
                 <p>Queries Total</p>
@@ -118,7 +118,7 @@ $token = $_SESSION['token'];
     <!-- ./col -->
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-yellow">
+        <div class="small-box bg-yellow no-user-select">
             <div class="inner">
                 <h3 class="statistic" id="ads_percentage_today">---</h3>
                 <p>Queries Blocked</p>
