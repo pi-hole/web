@@ -29,7 +29,7 @@ $token = $_SESSION['token'];
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <table id="network-entries" class="table table-striped table-bordered">
+            <table id="network-entries" class="table table-striped table-bordered" width="100%">
                 <thead>
                     <tr>
                         <th>IP address</th>
@@ -56,15 +56,15 @@ $token = $_SESSION['token'];
                 </tfoot>
             </table>
             <label>Background color: Last query from this device seen ...</label>
-            <table class="table text-center">
-                <tr>
-                    <td class="network-recent" width="15%">just now</td>
-                    <td class="network-gradient" width="30%">... to ...</td>
-                    <td class="network-old" width="15%">24 hours ago</td>
-                    <td class="network-older" width="20%">&gt; 24 hours ago</td>
-                    <td class="network-never" width="20%">Device does not use Pi-hole</td>
-                </tr>
-            </table>
+        <table width="100%">
+          <tr class="text-center">
+            <td class="network-recent" width="15%">just now</td>
+            <td class="network-gradient" width="30%">... to ...</td>
+            <td class="network-old" width="15%">24 hours ago</td>
+            <td class="network-older" width="20%">&gt; 24 hours ago</td>
+            <td class="network-never" width="20%">Device does not use Pi-hole</td>
+          </tr>
+        </table>
         </div>
         <!-- /.box-body -->
       </div>

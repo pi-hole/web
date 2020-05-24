@@ -55,15 +55,15 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="clientsTable" class="table table-striped table-bordered">
+                <table id="clientsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>IP address</th>
-                            <th>Comment</th>
-                            <th>Group assignment</th>
-                            <th>Action</th>
-                        </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>IP address</th>
+                        <th>Comment</th>
+                        <th>Group assignment</th>
+                        <th>Action</th>
+                    </tr>
                     </thead>
                 </table>
                 <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Reset sorting</button>

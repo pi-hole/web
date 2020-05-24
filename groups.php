@@ -52,7 +52,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="groupsTable" class="table table-striped table-bordered">
+                <table id="groupsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                     <tr>
                         <th>ID</th>

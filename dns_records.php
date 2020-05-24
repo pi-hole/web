@@ -72,7 +72,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="customDNSTable" class="table table-striped table-bordered">
+                <table id="customDNSTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                     <tr>
                         <th>Domain</th>
