@@ -19,19 +19,19 @@
         <div class="box" id="messages-list">
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="messagesTable" class="table table-striped table-bordered" width="100%">
+                <table id="messagesTable" class="table table-striped table-bordered">
                     <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Time</th>
-                        <th>Type</th>
-                        <th>Message</th>
-                        <th>Data1</th>
-                        <th>Data2</th>
-                        <th>Data3</th>
-                        <th>Data4</th>
-                        <th>Data5</th>
-                    </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Message</th>
+                            <th>Data1</th>
+                            <th>Data2</th>
+                            <th>Data3</th>
+                            <th>Data4</th>
+                            <th>Data5</th>
+                        </tr>
                     </thead>
                 </table>
             </div>

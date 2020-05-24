@@ -118,17 +118,17 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="domainsTable" class="table table-striped table-bordered" width="100%">
+                <table id="domainsTable" class="table table-striped table-bordered">
                     <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Domain/RegEx</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Comment</th>
-                        <th>Group assignment</th>
-                        <th>Action</th>
-                    </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Domain/RegEx</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Comment</th>
+                            <th>Group assignment</th>
+                            <th>Action</th>
+                        </tr>
                     </thead>
                 </table>
                 <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Reset sorting</button>

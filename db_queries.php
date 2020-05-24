@@ -139,7 +139,7 @@ $token = $_SESSION['token'];
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <table id="all-queries" class="table table-striped table-bordered" width="100%">
+            <table id="all-queries" class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>Time</th>
