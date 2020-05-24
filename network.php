@@ -29,7 +29,7 @@ $token = $_SESSION['token'];
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <table id="network-entries" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+            <table id="network-entries" class="table table-striped table-bordered" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>IP address</th>

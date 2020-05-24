@@ -55,7 +55,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="clientsTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                <table id="clientsTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                     <tr>
                         <th>ID</th>

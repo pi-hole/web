@@ -53,7 +53,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="adlistsTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                <table id="adlistsTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                     <tr>
                         <th>ID</th>

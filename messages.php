@@ -19,7 +19,7 @@
         <div class="box" id="messages-list">
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="messagesTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                <table id="messagesTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                     <tr>
                         <th>ID</th>
