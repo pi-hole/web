@@ -699,8 +699,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Currently active DHCP leases</label>
-                                                <table id="DHCPLeasesTable" class="table table-striped table-bordered nowrap"
-                                                       cellspacing="0" width="100%">
+                                                <table id="DHCPLeasesTable" class="table table-striped table-bordered nowrap" width="100%">
                                                     <thead>
                                                         <tr>
                                                             <th>MAC address</th>
@@ -729,8 +728,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                             </div>
                                             <div class="col-md-12">
                                                 <label>Static DHCP leases configuration</label>
-                                                <table id="DHCPStaticLeasesTable" class="table table-striped table-bordered nowrap"
-                                                       cellspacing="0" width="100%">
+                                                <table id="DHCPStaticLeasesTable" class="table table-striped table-bordered nowrap" width="100%">
                                                     <thead>
                                                     <tr>
                                                         <th>MAC address</th>
