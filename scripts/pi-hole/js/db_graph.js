@@ -13,8 +13,6 @@ var end__ = moment();
 var until = moment(end__).utc().valueOf() / 1000;
 var interval = 0;
 
-var timeoutWarning = $("#timeoutWarning");
-
 var dateformat = "MMMM Do YYYY, HH:mm";
 
 $(function () {
@@ -81,6 +79,8 @@ function compareNumbers(a, b) {
 }
 
 function updateQueriesOverTime() {
+  var timeoutWarning = $("#timeoutWarning");
+
   $("#queries-over-time .overlay").show();
   timeoutWarning.show();
 
