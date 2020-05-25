@@ -259,18 +259,19 @@ $(document).ready(function () {
 
 // Bar/Smooth chart toggle
 $(function () {
-  var chkbox_data = localStorage.getItem("barchart_chkbox");
+  var bargraphs = $("#bargraphs");
+  var chkboxData = localStorage.getItem("barchart_chkbox");
 
-  if (chkbox_data !== null) {
+  if (chkboxData !== null) {
     // Restore checkbox state
-    $("#bargraphs").prop("checked", chkbox_data === "true");
+    bargraphs.prop("checked", chkboxData === "true");
   } else {
     // Initialize checkbox
-    $("#bargraphs").prop("checked", true);
+    bargraphs.prop("checked", true);
     localStorage.setItem("barchart_chkbox", true);
   }
 
-  $("#bargraphs").click(function () {
-    localStorage.setItem("barchart_chkbox", $("#bargraphs").prop("checked"));
+  bargraphs.click(function () {
+    localStorage.setItem("barchart_chkbox", bargraphs.prop("checked"));
   });
 });
