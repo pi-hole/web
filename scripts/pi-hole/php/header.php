@@ -206,7 +206,7 @@
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="style/vendor/font-awesome/css/all.min.css">
     <link rel="stylesheet" href="style/vendor/datatables.min.css">
-    <link rel="stylesheet" href="style/vendor/daterangepicker.css">
+    <link rel="stylesheet" href="style/vendor/daterangepicker.min.css">
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
     <link rel="stylesheet" href="style/vendor/animate.min.css">
 
