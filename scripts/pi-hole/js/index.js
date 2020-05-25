@@ -30,10 +30,6 @@ var colors = [
   "#d2d6de"
 ];
 
-function padNumber(num) {
-  return ("00" + num).substr(-2, 2);
-}
-
 var customTooltips = function (tooltip) {
   var tooltipEl = document.getElementById(this._chart.canvas.id + "-customTooltip");
   if (!tooltipEl) {
@@ -844,8 +840,8 @@ $(document).ready(function () {
             var time = label.match(/(\d?\d):?(\d?\d?)/);
             var h = parseInt(time[1], 10);
             var m = parseInt(time[2], 10) || 0;
-            var from = padNumber(h) + ":" + padNumber(m - 5) + ":00";
-            var to = padNumber(h) + ":" + padNumber(m + 4) + ":59";
+            var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
+            var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
             return "Queries from " + from + " to " + to;
           },
           label: function (tooltipItems, data) {
@@ -941,8 +937,8 @@ $(document).ready(function () {
               var time = label.match(/(\d?\d):?(\d?\d?)/);
               var h = parseInt(time[1], 10);
               var m = parseInt(time[2], 10) || 0;
-              var from = padNumber(h) + ":" + padNumber(m - 5) + ":00";
-              var to = padNumber(h) + ":" + padNumber(m + 4) + ":59";
+              var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
+              var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
               return "Client activity from " + from + " to " + to;
             },
             label: function (tooltipItems, data) {

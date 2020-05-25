@@ -40,6 +40,10 @@ function objectToArray(obj) {
   return [idx, arr];
 }
 
+function padNumber(num) {
+  return ("00" + num).substr(-2, 2);
+}
+
 var info = null; // TODO clear this up; there shouldn't be a global var here
 function showAlert(type, icon, title, message) {
   var opts = {};
@@ -207,6 +211,7 @@ window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
     objectToArray: objectToArray,
+    padNumber: padNumber,
     showAlert: showAlert,
     datetime: datetime,
     disableAll: disableAll,

@@ -50,10 +50,6 @@ $(function () {
   );
 });
 
-function padNumber(num) {
-  return ("00" + num).substr(-2, 2);
-}
-
 var timeLineChart;
 
 function compareNumbers(a, b) {
@@ -197,28 +193,28 @@ $(document).ready(function () {
             var fromDate =
               time.getFullYear() +
               "-" +
-              padNumber(time.getMonth() + 1) +
+              utils.padNumber(time.getMonth() + 1) +
               "-" +
-              padNumber(time.getDate());
+              utils.padNumber(time.getDate());
             var fromTime =
-              padNumber(time.getHours()) +
+              utils.padNumber(time.getHours()) +
               ":" +
-              padNumber(time.getMinutes()) +
+              utils.padNumber(time.getMinutes()) +
               ":" +
-              padNumber(time.getSeconds());
+              utils.padNumber(time.getSeconds());
             time = new Date(time.valueOf() + 1000 * interval);
             var untilDate =
               time.getFullYear() +
               "-" +
-              padNumber(time.getMonth() + 1) +
+              utils.padNumber(time.getMonth() + 1) +
               "-" +
-              padNumber(time.getDate());
+              utils.padNumber(time.getDate());
             var untilTime =
-              padNumber(time.getHours()) +
+              utils.padNumber(time.getHours()) +
               ":" +
-              padNumber(time.getMinutes()) +
+              utils.padNumber(time.getMinutes()) +
               ":" +
-              padNumber(time.getSeconds());
+              utils.padNumber(time.getSeconds());
 
             if (fromDate === untilDate) {
               // Abbreviated form for intervals on the same day
