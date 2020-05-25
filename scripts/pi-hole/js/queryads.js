@@ -5,8 +5,6 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global ActiveXObject: false */
-
 var exact = "";
 
 function quietfilter(ta, data) {
@@ -19,33 +17,6 @@ function quietfilter(ta, data) {
       ta.append(shortstring + "\n");
     }
   }
-}
-
-// Credit: http://stackoverflow.com/a/10642418/2087442
-function httpGet(ta, quiet, theUrl) {
-  var xmlhttp;
-  if (window.XMLHttpRequest) {
-    // code for IE7+
-    xmlhttp = new XMLHttpRequest();
-  } else {
-    // code for IE6, IE5
-    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-
-  xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-      ta.show();
-      ta.empty();
-      if (!quiet) {
-        ta.append(xmlhttp.responseText);
-      } else {
-        quietfilter(ta, xmlhttp.responseText);
-      }
-    }
-  };
-
-  xmlhttp.open("GET", theUrl, false);
-  xmlhttp.send();
 }
 
 function eventsource() {
@@ -65,11 +36,19 @@ function eventsource() {
 
   // IE does not support EventSource - load whole content at once
   if (typeof EventSource !== "function") {
-    httpGet(
-      ta,
-      quiet,
-      "scripts/pi-hole/php/queryads.php?domain=" + domain.toLowerCase() + exact + "&IE"
-    );
+    $.ajax({
+      method: "GET",
+      url: "scripts/pi-hole/php/queryads.php?domain=" + domain.toLowerCase() + exact + "&IE",
+      async: false
+    }).done(function (data) {
+      ta.show();
+      ta.empty();
+      if (!quiet) {
+        ta.append(data);
+      } else {
+        quietfilter(ta, data);
+      }
+    });
     return;
   }
 
