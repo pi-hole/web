@@ -25,7 +25,7 @@
     </div>
 
     <div class="panel-body">
-      <form action="" id="loginform" method="post">
+      <form action="index.php" id="loginform" method="post">
         <div class="form-group has-feedback <?php if ($wrongpassword) { ?>has-error<?php } ?>">
           <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" autofocus>
           <span class="fa fa-key form-control-feedback"></span>

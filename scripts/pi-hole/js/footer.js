@@ -218,7 +218,9 @@ if (sessionvalidity > 0) {
 // Handle Strg + Enter button on Login page
 $(document).keypress(function (e) {
   if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
-    $("#loginform").attr("action", "settings.php");
-    $("#loginform").submit();
+    e.preventDefault();
+    var form = $("#loginform");
+    form.attr("action", "settings.php");
+    form.submit();
   }
 });
