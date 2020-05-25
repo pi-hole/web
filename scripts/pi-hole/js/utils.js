@@ -7,7 +7,7 @@
 
 /* global moment:false */
 
-// Credit: https://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406
+// Credit: https://stackoverflow.com/a/4835406
 function escapeHtml(text) {
   var map = {
     "&": "&amp;",
@@ -22,7 +22,25 @@ function escapeHtml(text) {
   });
 }
 
-var info = null;
+// Helper function for converting Objects to Arrays after sorting the keys
+function objectToArray(obj) {
+  var arr = [];
+  var idx = [];
+  var keys = Object.keys(obj);
+
+  keys.sort(function (a, b) {
+    return a - b;
+  });
+
+  for (var i = 0; i < keys.length; i++) {
+    arr.push(obj[keys[i]]);
+    idx.push(keys[i]);
+  }
+
+  return [idx, arr];
+}
+
+var info = null; // TODO clear this up; there shouldn't be a global var here
 function showAlert(type, icon, title, message) {
   var opts = {};
   title = "&nbsp;<strong>" + title + "</strong><br>";
@@ -188,6 +206,7 @@ function stateLoadCallback(itemName) {
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
+    objectToArray: objectToArray,
     showAlert: showAlert,
     datetime: datetime,
     disableAll: disableAll,

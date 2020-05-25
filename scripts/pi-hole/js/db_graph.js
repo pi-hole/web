@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global Chart:false, moment:false */
+/* global utils:false, Chart:false, moment:false */
 
 var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf() / 1000;
@@ -54,24 +54,6 @@ function padNumber(num) {
   return ("00" + num).substr(-2, 2);
 }
 
-// Helper function needed for converting the Objects to Arrays
-
-function objectToArray(p) {
-  var keys = Object.keys(p);
-  keys.sort(function (a, b) {
-    return a - b;
-  });
-
-  var arr = [],
-    idx = [];
-  for (var i = 0; i < keys.length; i++) {
-    arr.push(p[keys[i]]);
-    idx.push(keys[i]);
-  }
-
-  return [idx, arr];
-}
-
 var timeLineChart;
 
 function compareNumbers(a, b) {
@@ -110,8 +92,8 @@ function updateQueriesOverTime() {
     "api_db.php?getGraphData&from=" + from + "&until=" + until + "&interval=" + interval,
     function (data) {
       // convert received objects to arrays
-      data.domains_over_time = objectToArray(data.domains_over_time);
-      data.ads_over_time = objectToArray(data.ads_over_time);
+      data.domains_over_time = utils.objectToArray(data.domains_over_time);
+      data.ads_over_time = utils.objectToArray(data.ads_over_time);
       // Remove possibly already existing data
       timeLineChart.data.labels = [];
       timeLineChart.data.datasets[0].data = [];

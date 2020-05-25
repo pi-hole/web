@@ -34,24 +34,6 @@ function padNumber(num) {
   return ("00" + num).substr(-2, 2);
 }
 
-// Helper function needed for converting the Objects to Arrays
-
-function objectToArray(p) {
-  var keys = Object.keys(p);
-  keys.sort(function (a, b) {
-    return a - b;
-  });
-
-  var arr = [],
-    idx = [];
-  for (var i = 0; i < keys.length; i++) {
-    arr.push(p[keys[i]]);
-    idx.push(keys[i]);
-  }
-
-  return [idx, arr];
-}
-
 var customTooltips = function (tooltip) {
   var tooltipEl = document.getElementById(this._chart.canvas.id + "-customTooltip");
   if (!tooltipEl) {
@@ -245,8 +227,8 @@ function updateQueriesOverTime() {
     }
 
     // convert received objects to arrays
-    data.domains_over_time = objectToArray(data.domains_over_time);
-    data.ads_over_time = objectToArray(data.ads_over_time);
+    data.domains_over_time = utils.objectToArray(data.domains_over_time);
+    data.ads_over_time = utils.objectToArray(data.ads_over_time);
     // remove last data point since it not representative
     data.ads_over_time[0].splice(-1, 1);
     // Remove possibly already existing data
@@ -369,7 +351,7 @@ function updateClientsOverTime() {
     }
 
     // convert received objects to arrays
-    data.over_time = objectToArray(data.over_time);
+    data.over_time = utils.objectToArray(data.over_time);
 
     // remove last data point since it not representative
     data.over_time[0].splice(-1, 1);
