@@ -877,12 +877,12 @@ $(document).ready(function () {
           },
           label: function (tooltipItems, data) {
             if (tooltipItems.datasetIndex === 0) {
-              var percentage = 0.0;
+              var percentage = 0;
               var permitted = parseInt(data.datasets[1].data[tooltipItems.index]);
               var blocked = parseInt(data.datasets[0].data[tooltipItems.index]);
               var total = permitted + blocked;
               if (total > 0) {
-                percentage = (100.0 * blocked) / total;
+                percentage = (100 * blocked) / total;
               }
 
               return (

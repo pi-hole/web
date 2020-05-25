@@ -269,11 +269,11 @@ $(document).ready(function () {
           },
           label: function (tooltipItems, data) {
             if (tooltipItems.datasetIndex === 0) {
-              var percentage = 0.0;
+              var percentage = 0;
               var permitted = parseInt(data.datasets[1].data[tooltipItems.index]);
               var blocked = parseInt(data.datasets[0].data[tooltipItems.index]);
               if (permitted + blocked > 0) {
-                percentage = (100.0 * blocked) / (permitted + blocked);
+                percentage = (100 * blocked) / (permitted + blocked);
               }
 
               return (

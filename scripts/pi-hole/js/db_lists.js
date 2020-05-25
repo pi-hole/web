@@ -97,7 +97,7 @@ function updateTopClientsChart() {
           clientname = client;
         }
 
-        percentage = (data.top_sources[client] / sum) * 100.0;
+        percentage = (data.top_sources[client] / sum) * 100;
         clienttable.append(
           "<tr> <td>" +
             clientname +
@@ -144,7 +144,7 @@ function updateTopDomainsChart() {
           data.top_domains[escapeHtml(domain)] = data.top_domains[domain];
         }
 
-        percentage = (data.top_domains[domain] / sum) * 100.0;
+        percentage = (data.top_domains[domain] / sum) * 100;
         domaintable.append(
           "<tr> <td>" +
             domain +
@@ -191,7 +191,7 @@ function updateTopAdsChart() {
           data.top_ads[escapeHtml(ad)] = data.top_ads[ad];
         }
 
-        percentage = (data.top_ads[ad] / sum) * 100.0;
+        percentage = (data.top_ads[ad] / sum) * 100;
         adtable.append(
           "<tr> <td>" +
             ad +

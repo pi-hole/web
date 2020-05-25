@@ -73,7 +73,6 @@
       "unicorn/filename-case": "off",
       "unicorn/no-fn-reference-in-iterator": "off",
       "unicorn/no-for-loop": "off",
-      "unicorn/no-zero-fractions": "off",
       "unicorn/prefer-includes": "off",
       "unicorn/prefer-node-append": "off",
       "unicorn/prefer-number-properties": "off",
