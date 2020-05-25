@@ -5,8 +5,9 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global utils:false, Chart:false, updateSessionTimer:false */
+
 // Define global variables
-/* global Chart:false, updateSessionTimer:false */
 var timeLineChart, clientsChart;
 var queryTypePieChart, forwardDestinationPieChart;
 
@@ -528,21 +529,6 @@ function updateForwardDestinationsPie() {
   });
 }
 
-// Credit: http://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406
-function escapeHtml(text) {
-  var map = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  };
-
-  return text.replace(/[&<>"']/g, function (m) {
-    return map[m];
-  });
-}
-
 function updateTopClientsChart() {
   $.getJSON("api.php?summaryRaw&getQuerySources&topClientsBlocked", function (data) {
     if ("FTLnotrunning" in data) {
@@ -556,12 +542,12 @@ function updateTopClientsChart() {
     for (client in data.top_sources) {
       if (Object.prototype.hasOwnProperty.call(data.top_sources, client)) {
         // Sanitize client
-        if (escapeHtml(client) !== client) {
+        if (utils.escapeHtml(client) !== client) {
           // Make a copy with the escaped index if necessary
-          data.top_sources[escapeHtml(client)] = data.top_sources[client];
+          data.top_sources[utils.escapeHtml(client)] = data.top_sources[client];
         }
 
-        client = escapeHtml(client);
+        client = utils.escapeHtml(client);
         if (client.indexOf("|") !== -1) {
           idx = client.indexOf("|");
           clientname = client.substr(0, idx);
@@ -602,12 +588,12 @@ function updateTopClientsChart() {
     for (client in data.top_sources_blocked) {
       if (Object.prototype.hasOwnProperty.call(data.top_sources_blocked, client)) {
         // Sanitize client
-        if (escapeHtml(client) !== client) {
+        if (utils.escapeHtml(client) !== client) {
           // Make a copy with the escaped index if necessary
-          data.top_sources_blocked[escapeHtml(client)] = data.top_sources_blocked[client];
+          data.top_sources_blocked[utils.escapeHtml(client)] = data.top_sources_blocked[client];
         }
 
-        client = escapeHtml(client);
+        client = utils.escapeHtml(client);
         if (client.indexOf("|") !== -1) {
           idx = client.indexOf("|");
           clientname = client.substr(0, idx);
@@ -674,12 +660,12 @@ function updateTopLists() {
     for (domain in data.top_queries) {
       if (Object.prototype.hasOwnProperty.call(data.top_queries, domain)) {
         // Sanitize domain
-        if (escapeHtml(domain) !== domain) {
+        if (utils.escapeHtml(domain) !== domain) {
           // Make a copy with the escaped index if necessary
-          data.top_queries[escapeHtml(domain)] = data.top_queries[domain];
+          data.top_queries[utils.escapeHtml(domain)] = data.top_queries[domain];
         }
 
-        domain = escapeHtml(domain);
+        domain = utils.escapeHtml(domain);
         urlText = domain === "" ? "." : domain;
         url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
         percentage = (data.top_queries[domain] / data.dns_queries_today) * 100;
@@ -707,12 +693,12 @@ function updateTopLists() {
     for (domain in data.top_ads) {
       if (Object.prototype.hasOwnProperty.call(data.top_ads, domain)) {
         // Sanitize domain
-        if (escapeHtml(domain) !== domain) {
+        if (utils.escapeHtml(domain) !== domain) {
           // Make a copy with the escaped index if necessary
-          data.top_ads[escapeHtml(domain)] = data.top_ads[domain];
+          data.top_ads[utils.escapeHtml(domain)] = data.top_ads[domain];
         }
 
-        domain = escapeHtml(domain);
+        domain = utils.escapeHtml(domain);
         urlText = domain === "" ? "." : domain;
         url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
         percentage = (data.top_ads[domain] / data.ads_blocked_today) * 100;

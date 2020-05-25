@@ -294,6 +294,7 @@ else
 <!-- /.row -->
 <?php } ?>
 
+<script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/index.js"></script>
 
 <?php

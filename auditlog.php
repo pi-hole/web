@@ -73,6 +73,7 @@
 </div>
 <!-- /.row -->
 
+<script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/auditlog.js"></script>
 
 <?php
