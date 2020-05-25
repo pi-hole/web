@@ -256,3 +256,21 @@ $(document).ready(function () {
   input.setAttribute("autocapitalize", "off");
   input.setAttribute("spellcheck", false);
 });
+
+// Bar/Smooth chart toggle
+$(function () {
+  var chkbox_data = localStorage.getItem("barchart_chkbox");
+
+  if (chkbox_data !== null) {
+    // Restore checkbox state
+    $("#bargraphs").prop("checked", chkbox_data === "true");
+  } else {
+    // Initialize checkbox
+    $("#bargraphs").prop("checked", true);
+    localStorage.setItem("barchart_chkbox", true);
+  }
+
+  $("#bargraphs").click(function () {
+    localStorage.setItem("barchart_chkbox", $("#bargraphs").prop("checked"));
+  });
+});
