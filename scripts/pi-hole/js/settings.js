@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, applyCheckboxRadioStyle:false, applyBoxedLayout:false */
 
 $(function () {
   $("[data-static]").on("click", function () {
@@ -281,10 +281,29 @@ $(function () {
   if (iCheckStyle === null) {
     iCheckStyle = "material-blue";
   }
+
   iCheckSelect.val(iCheckStyle);
 
   iCheckSelect.change(function () {
     localStorage.setItem("theme_icheck", iCheckSelect.val());
     applyCheckboxRadioStyle();
+  });
+
+  // boxed style toggle
+  var boxedlayout = $("#boxedlayout");
+  chkboxData = localStorage.getItem("boxedlayout");
+
+  if (chkboxData !== null) {
+    // Restore checkbox state
+    boxedlayout.prop("checked", chkboxData === "true");
+  } else {
+    // Initialize checkbox
+    boxedlayout.prop("checked", true);
+    localStorage.setItem("boxedlayout", true);
+  }
+
+  boxedlayout.click(function () {
+    localStorage.setItem("boxedlayout", boxedlayout.prop("checked"));
+    applyBoxedLayout();
   });
 });

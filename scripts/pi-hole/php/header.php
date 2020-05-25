@@ -130,35 +130,6 @@
         $token = $_SESSION['token'];
     }
 
-    if(isset($setupVars['WEBUIBOXEDLAYOUT']))
-    {
-        if($setupVars['WEBUIBOXEDLAYOUT'] === "boxed")
-        {
-            $boxedlayout = true;
-        }
-        else
-        {
-            $boxedlayout = false;
-        }
-    }
-    else
-    {
-        $boxedlayout = true;
-    }
-
-    // Override layout setting if layout is changed via Settings page
-    if(isset($_POST["field"]))
-    {
-        if($_POST["field"] === "webUI" && isset($_POST["boxedlayout"]))
-        {
-            $boxedlayout = true;
-        }
-        elseif($_POST["field"] === "webUI" && !isset($_POST["boxedlayout"]))
-        {
-            $boxedlayout = false;
-        }
-    }
-
     function pidofFTL()
     {
         return shell_exec("pidof pihole-FTL");
@@ -227,7 +198,7 @@
     <script src="scripts/vendor/moment.min.js"></script>
     <script src="scripts/vendor/Chart.min.js"></script>
 </head>
-<body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
+<body class="hold-transition sidebar-mini">
 <noscript>
     <!-- JS Warning -->
     <div>

@@ -1113,10 +1113,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                             <div class="col-md-12">
                                                 <h4>Interface appearance</h4>
                                                 <?php theme_selection(); ?>
-                                                <div>
-                                                    <input type="checkbox" name="boxedlayout" id="boxedlayout" value="yes" <?php if ($boxedlayout){ ?>checked<?php } ?>>
-                                                    <label for="boxedlayout"><strong>Use boxed layout (for large screens)</strong></label>
-                                                </div>
                                                 <h4>CPU Temperature Unit</h4>
                                                 <div>
                                                     <input type="radio" name="tempunit" value="C" id="tempunit_C" <?php if ($temperatureunit === "C"){ ?>checked<?php } ?>>
@@ -1180,6 +1176,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <option>material-grey</option>
                                                 <option>material-bluegrey</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div>
+                                                <input type="checkbox" id="boxedlayout">
+                                                <label for="boxedlayout"><strong>Use boxed layout (for large screens)</strong></label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

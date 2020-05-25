@@ -130,8 +130,24 @@ function applyCheckboxRadioStyle() {
   if (chkboxStyle === null) {
     chkboxStyle = "material-blue";
   }
+
   $("input[type='radio'],input[type='checkbox']").parent().removeClass();
-  $("input[type='radio'],input[type='checkbox']").parent().addClass("icheck-" + chkboxStyle);
+  $("input[type='radio'],input[type='checkbox']")
+    .parent()
+    .addClass("icheck-" + chkboxStyle);
+}
+
+function applyBoxedLayout() {
+  var boxedlayout = localStorage.getItem("boxedlayout");
+  if (boxedlayout === null) {
+    boxedlayout = true;
+  }
+
+  if (boxedlayout === true) {
+    $("body").addClass("layout-boxed");
+  } else {
+    $("body").removeClass("layout-boxed");
+  }
 }
 
 $(function () {
@@ -146,7 +162,9 @@ $(function () {
     $("#cookieInfo").show();
   }
 
+  // Apply per-browser styling settings
   applyCheckboxRadioStyle();
+  applyBoxedLayout();
 
   // Run check immediately after page loading ...
   checkMessages();
