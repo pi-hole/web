@@ -90,7 +90,7 @@ function updateTopClientsChart() {
           data.top_sources[escapeHtml(client)] = data.top_sources[client];
         }
 
-        if (client.indexOf("|") > -1) {
+        if (client.indexOf("|") !== -1) {
           var idx = client.indexOf("|");
           clientname = client.substr(0, idx);
         } else {

@@ -17,7 +17,7 @@ var MAXIPDISPLAY = 3;
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
-  } else if (xhr.responseText.indexOf("Connection refused") >= 0) {
+  } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
     alert("An error occured while loading the data: Connection refused. Is FTL running?");
   } else {
     alert("An unknown error occured while loading the data.\n" + xhr.responseText);

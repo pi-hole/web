@@ -97,8 +97,8 @@ function add(domain, list) {
     data: { domain: domain, list: list, token: token },
     success: function (response) {
       if (
-        response.indexOf("not a valid argument") >= 0 ||
-        response.indexOf("is not a valid domain") >= 0
+        response.indexOf("not a valid argument") !== -1 ||
+        response.indexOf("is not a valid domain") !== -1
       ) {
         alFailure.show();
         err.html(response);
@@ -136,7 +136,7 @@ function add(domain, list) {
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
-  } else if (xhr.responseText.indexOf("Connection refused") >= 0) {
+  } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
     alert("An error occurred while loading the data: Connection refused. Is FTL running?");
   } else {
     alert("An unknown error occurred while loading the data.\n" + xhr.responseText);
