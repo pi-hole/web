@@ -110,31 +110,12 @@ function checkMessages() {
   });
 }
 
-function testCookies() {
-  if (navigator.cookieEnabled) {
-    return true;
-  }
-
-  // set and read cookie
-  document.cookie = "cookietest=1";
-  var ret = document.cookie.indexOf("cookietest=") !== -1;
-
-  // delete cookie
-  document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
-
-  return ret;
-}
-
 $(document).ready(function () {
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html()));
   var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
   if (seconds > 0) {
     setTimeout(countDown, 100);
-  }
-
-  if (!testCookies() && $("#cookieInfo").length > 0) {
-    $("#cookieInfo").show();
   }
 
   var checkboxTheme = $("#checkbox_theme").text();
@@ -214,13 +195,3 @@ if (sessionvalidity > 0) {
 } else {
   document.getElementById("sessiontimer").style.display = "none";
 }
-
-// Handle Strg + Enter button on Login page
-$(document).keypress(function (e) {
-  if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
-    e.preventDefault();
-    var form = $("#loginform");
-    form.attr("action", "settings.php");
-    form.submit();
-  }
-});
