@@ -295,3 +295,7 @@
 .version-info {
   margin-top: 10px;
 }
+
+.daterangepicker {
+  font-family: inherit;
+}
