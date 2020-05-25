@@ -265,7 +265,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <table class="table table-striped table-bordered dt-responsive nowrap">
+                                            <table class="table table-striped table-bordered nowrap">
                                                 <tbody>
                                                 <tr>
                                                     <th scope="row">Pi-hole Ethernet Interface:</th>
@@ -308,7 +308,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
 
                                                 $FTLversion = exec("/usr/bin/pihole-FTL version");
                                             ?>
-                                            <table class="table table-striped table-bordered dt-responsive nowrap">
+                                            <table class="table table-striped table-bordered nowrap">
                                                 <tbody>
                                                     <tr>
                                                         <th scope="row">FTL version:</th>
@@ -702,8 +702,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Currently active DHCP leases</label>
-                                                <table id="DHCPLeasesTable" class="table table-striped table-bordered dt-responsive nowrap"
-                                                       cellspacing="0" width="100%">
+                                                <table id="DHCPLeasesTable" class="table table-striped table-bordered nowrap" width="100%">
                                                     <thead>
                                                         <tr>
                                                             <th>MAC address</th>
@@ -732,8 +731,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                             </div>
                                             <div class="col-md-12">
                                                 <label>Static DHCP leases configuration</label>
-                                                <table id="DHCPStaticLeasesTable" class="table table-striped table-bordered dt-responsive nowrap"
-                                                       cellspacing="0" width="100%">
+                                                <table id="DHCPStaticLeasesTable" class="table table-striped table-bordered nowrap" width="100%">
                                                     <thead>
                                                     <tr>
                                                         <th>MAC address</th>
