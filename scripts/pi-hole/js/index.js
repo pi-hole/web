@@ -470,7 +470,7 @@ function updateForwardDestinationsPie() {
 
     // Collect values and colors
     $.each(data.forward_destinations, function (key, value) {
-      if (key.indexOf("|") > -1) {
+      if (key.indexOf("|") !== -1) {
         key = key.substr(0, key.indexOf("|"));
       }
 
@@ -559,7 +559,7 @@ function updateTopClientsChart() {
         }
 
         client = escapeHtml(client);
-        if (client.indexOf("|") > -1) {
+        if (client.indexOf("|") !== -1) {
           idx = client.indexOf("|");
           clientname = client.substr(0, idx);
           clientip = client.substr(idx + 1, client.length - idx);
@@ -605,7 +605,7 @@ function updateTopClientsChart() {
         }
 
         client = escapeHtml(client);
-        if (client.indexOf("|") > -1) {
+        if (client.indexOf("|") !== -1) {
           idx = client.indexOf("|");
           clientname = client.substr(0, idx);
           clientip = client.substr(idx + 1, client.length - idx);
