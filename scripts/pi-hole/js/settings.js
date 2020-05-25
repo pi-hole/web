@@ -274,4 +274,17 @@ $(function () {
   bargraphs.click(function () {
     localStorage.setItem("barchart_chkbox", bargraphs.prop("checked"));
   });
+
+  // iCheck style toggle
+  var iCheckSelect = $("#iCheckStyle");
+  var iCheckStyle = localStorage.getItem("theme_icheck");
+  if (iCheckStyle === null) {
+    iCheckStyle = "material-blue";
+  }
+  iCheckSelect.val(iCheckStyle);
+
+  iCheckSelect.change(function () {
+    localStorage.setItem("theme_icheck", iCheckSelect.val());
+    applyCheckboxRadioStyle();
+  });
 });

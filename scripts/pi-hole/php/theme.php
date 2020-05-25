@@ -12,12 +12,9 @@ $available_themes = [];
 *  Array[0] = Description
 *  Array[1] = Is this a dark mode theme? (Sets background to black during page reloading to avoid white "flashing")
 *  Array[2] = Style sheet name
-*  Array[3] = Radio/checkbox theme name
-*  Array[4] = Radio/checkbox theme variant
 */
-$available_themes["default-light"] = ["Pi-hole default theme (light, default)", false, "default-light", "minimal", "blue"];
-$available_themes["default-dark"] = ["Pi-hole midnight theme (dark)", true, "default-dark", "polaris", "polaris"];
-$available_themes["default-dark2"] = ["Pi-hole afternoon theme (dark)", true, "default-dark", "futurico", "futurico"];
+$available_themes["default-light"] = ["Pi-hole default theme (light, default)", false, "default-light"];
+$available_themes["default-dark"] = ["Pi-hole midnight theme (dark)", true, "default-dark"];
 
 $webtheme = "";
 // Try to load theme settings from setupVars.conf
@@ -39,14 +36,12 @@ if(!array_key_exists($webtheme,$available_themes)) {
 
 $darkmode = $available_themes[$webtheme][1];
 $theme = $available_themes[$webtheme][2];
-$checkbox_theme_name = $available_themes[$webtheme][3];
-$checkbox_theme_variant = $available_themes[$webtheme][4];
 
 function theme_selection() {
     global $available_themes, $webtheme;
     foreach ($available_themes as $key => $value) {
-        ?><input type="radio" name="webtheme" value="<?php echo $key; ?>" id="webtheme_<?php echo $key; ?>" <?php if ($key === $webtheme){ ?>checked<?php } ?>>
-        <label for="webtheme_<?php echo $key; ?>"><?php echo $value[0]; ?></label><br><?php
+        ?><div><input type="radio" name="webtheme" value="<?php echo $key; ?>" id="webtheme_<?php echo $key; ?>" <?php if ($key === $webtheme){ ?>checked<?php } ?>>
+        <label for="webtheme_<?php echo $key; ?>"><strong><?php echo $value[0]; ?></strong></label></div><?php
     }
 }
 ?>

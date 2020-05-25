@@ -214,7 +214,7 @@
     <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css">
     <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css">
 <?php } ?>
-    <link rel="stylesheet" href="style/vendor/iCheck/<?php echo $checkbox_theme_name;?>/<?php echo $checkbox_theme_variant;?>.css">
+    <link rel="stylesheet" href="style/vendor/icheck-material.min.css">
     <link rel="stylesheet" href="style/pi-hole.css">
     <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css">
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
@@ -226,7 +226,6 @@
     <script src="scripts/vendor/datatables.min.js"></script>
     <script src="scripts/vendor/moment.min.js"></script>
     <script src="scripts/vendor/Chart.min.js"></script>
-    <script src="scripts/vendor/iCheck.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <noscript>

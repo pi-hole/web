@@ -138,7 +138,10 @@ if(strlen($showing) > 0)
                     </tr>
                 </tfoot>
             </table>
-            <label><input type="checkbox" id="autofilter">&nbsp;Apply filtering on click on Type, Domain, and Clients</label><br/>
+            <div>
+                <input type="checkbox" id="autofilter">
+                <label for="autofilter">Apply filtering on click on Type, Domain, and Clients</label>
+            </div>
             <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear Filters</button>
         </div>
         <!-- /.box-body -->

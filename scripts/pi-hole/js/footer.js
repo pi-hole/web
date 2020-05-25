@@ -125,6 +125,15 @@ function testCookies() {
   return ret;
 }
 
+function applyCheckboxRadioStyle() {
+  var chkboxStyle = localStorage.getItem("theme_icheck");
+  if (chkboxStyle === null) {
+    chkboxStyle = "material-blue";
+  }
+  $("input[type='radio'],input[type='checkbox']").parent().removeClass();
+  $("input[type='radio'],input[type='checkbox']").parent().addClass("icheck-" + chkboxStyle);
+}
+
 $(function () {
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html()));
@@ -137,12 +146,8 @@ $(function () {
     $("#cookieInfo").show();
   }
 
-  var checkboxTheme = $("#checkbox_theme").text();
-  $("input").icheck({
-    checkboxClass: "icheckbox_" + checkboxTheme,
-    radioClass: "iradio_" + checkboxTheme,
-    increaseArea: "20%"
-  });
+  applyCheckboxRadioStyle();
+
   // Run check immediately after page loading ...
   checkMessages();
   // ... and once again with five seconds delay
