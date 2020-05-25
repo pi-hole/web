@@ -40,7 +40,7 @@
                         <li role="presentation">
                             <a href="#tab_regex" aria-controls="tab_regex" aria-expanded="false" role="tab" data-toggle="tab">RegEx filter</a>
                         </li>
-                    </ul>        
+                    </ul>
                     <div class="tab-content">
                         <!-- Domain tab -->
                         <div id="tab_domain" class="tab-pane active fade in">

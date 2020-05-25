@@ -5,6 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global utils:false */
+
 $(function () {
   $("[data-static]").on("click", function () {
     var row = $(this).closest("tr");
@@ -174,7 +176,14 @@ $(document).ready(function () {
       scrollCollapse: true,
       scrollY: "200px",
       scrollX: true,
-      order: [[2, "asc"]]
+      order: [[2, "asc"]],
+      stateSave: true,
+      stateSaveCallback: function (settings, data) {
+        utils.stateSaveCallback("activeDhcpLeaseTable", data);
+      },
+      stateLoadCallback: function () {
+        return utils.stateLoadCallback("activeDhcpLeaseTable");
+      }
     });
   }
 
@@ -186,7 +195,14 @@ $(document).ready(function () {
       scrollCollapse: true,
       scrollY: "200px",
       scrollX: true,
-      order: [[2, "asc"]]
+      order: [[2, "asc"]],
+      stateSave: true,
+      stateSaveCallback: function (settings, data) {
+        utils.stateSaveCallback("staticDhcpLeaseTable", data);
+      },
+      stateLoadCallback: function () {
+        return utils.stateLoadCallback("staticDhcpLeaseTable");
+      }
     });
   }
 
