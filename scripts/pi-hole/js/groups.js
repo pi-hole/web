@@ -91,6 +91,7 @@ $(document).ready(function () {
     },
     stateLoadCallback: function () {
       var data = utils.stateLoadCallback("groups-table");
+      if (data === null) return null;
       // Reset visibility of ID column
       data.columns[0].visible = false;
       // Apply loaded state to table
