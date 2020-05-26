@@ -125,28 +125,59 @@ function testCookies() {
   return ret;
 }
 
-function applyCheckboxRadioStyle() {
+function initCheckboxRadioStyle() {
+  function applyCheckboxRadioStyle(style) {
+    var sel = $("input[type='radio'],input[type='checkbox']");
+    sel.parent().removeClass();
+    sel.parent().addClass("icheck-" + style);
+  }
+
+  // Read from local storage, initialize if needed
   var chkboxStyle = localStorage.getItem("theme_icheck");
   if (chkboxStyle === null) {
     chkboxStyle = "material-blue";
   }
+  applyCheckboxRadioStyle(chkboxStyle);
 
-  $("input[type='radio'],input[type='checkbox']").parent().removeClass();
-  $("input[type='radio'],input[type='checkbox']")
-    .parent()
-    .addClass("icheck-" + chkboxStyle);
+  // Add handler when on settings page
+  var iCheckStyle = $('#iCheckStyle');
+  if (iCheckStyle !== null) {
+    iCheckStyle.val(chkboxStyle);
+    iCheckStyle.change(function(){
+      themename = $(this).val();
+      localStorage.setItem("theme_icheck", themename);
+      applyCheckboxRadioStyle(themename);
+    });
+  }
 }
 
-function applyBoxedLayout() {
-  var boxedlayout = localStorage.getItem("boxedlayout");
-  if (boxedlayout === null) {
-    boxedlayout = true;
+function initBoxedLayout() {
+  function applyBoxedLayout(enabled) {
+    localStorage.setItem("boxedlayout", enabled);
+    if (enabled) {
+      $("body").addClass("layout-boxed");
+    } else {
+      $("body").removeClass("layout-boxed");
+    }
   }
 
-  if (boxedlayout === true) {
-    $("body").addClass("layout-boxed");
+  // Read from local storage, initialize if needed
+  var boxed = localStorage.getItem("boxedlayout");
+  if (boxed === null) {
+    boxed = true;
   } else {
-    $("body").removeClass("layout-boxed");
+    boxed = boxed === "true";
+  }
+  applyBoxedLayout(boxed);
+
+  // Add handler when on settings page
+  var boxedlayout_selector = $("#boxedlayout-selector");
+  if (boxedlayout_selector !== null) {
+    boxedlayout_selector.prop("checked", boxed);
+    boxedlayout_selector.change(function () {
+      var enabled = $(this).prop("checked");
+      applyBoxedLayout(enabled);
+    });
   }
 }
 
@@ -155,16 +186,19 @@ function initTheme() {
     return 'style/themes/' + themename + '.css';
   }
 
+  // Read from local storage, initialize if needed
   var themename = localStorage.getItem("css-theme");
   if (themename === null) {
     themename = "default-light";
+    localStorage.setItem("css-theme", themename);
   }
   var themesheet = $('<link href="' + getThemeURL(themename) + '" rel="stylesheet" />');
   themesheet.appendTo('head');
 
-  // The theme selector is only available on the settings page
+  // Add handler when on settings page
   var theme_selector = $('#theme-selector');
   if (theme_selector !== null) {
+    theme_selector.val(themename);
     theme_selector.change(function(){
       themename = $(this).val();
       localStorage.setItem("css-theme", themename);
@@ -175,6 +209,7 @@ function initTheme() {
 
 function initCPUtemp() {
   function setCPUtemp(unit) {
+    localStorage.setItem("tempunit", tempunit);
     var temperature = parseFloat($("#rawtemp").text());
     var displaytemp = $("#tempdisplay");
     if (temperature !== NaN) {
@@ -195,18 +230,20 @@ function initCPUtemp() {
       }
     }
   }
+
+  // Read from local storage, initialize if needed
   var tempunit = localStorage.getItem("tempunit");
   if (tempunit === null) {
     tempunit = "C";
   }
   setCPUtemp(tempunit);
 
-  // The theme selector is only available on the settings page
+  // Add handler when on settings page
   var tempunit_selector = $('#tempunit-selector');
   if (tempunit_selector !== null) {
+    tempunit_selector.val(tempunit);
     tempunit_selector.change(function(){
       tempunit = $(this).val();
-      localStorage.setItem("tempunit", tempunit);
       setCPUtemp(tempunit);
     });
   }
@@ -225,8 +262,8 @@ $(function () {
   }
 
   // Apply per-browser styling settings
-  applyCheckboxRadioStyle();
-  applyBoxedLayout();
+  initCheckboxRadioStyle();
+  initBoxedLayout();
   initTheme();
   initCPUtemp();
 

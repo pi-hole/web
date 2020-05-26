@@ -1189,8 +1189,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div>
-                                                <input type="checkbox" id="boxedlayout">
-                                                <label for="boxedlayout"><strong>Use boxed layout (for large screens)</strong></label>
+                                                <input type="checkbox" id="boxedlayout-selector">
+                                                <label for="boxedlayout-selector"><strong>Use boxed layout (for large screens)</strong></label>
                                             </div>
                                         </div>
                                     </div>

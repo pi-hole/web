@@ -274,36 +274,4 @@ $(function () {
   bargraphs.click(function () {
     localStorage.setItem("barchart_chkbox", bargraphs.prop("checked"));
   });
-
-  // iCheck style toggle
-  var iCheckSelect = $("#iCheckStyle");
-  var iCheckStyle = localStorage.getItem("theme_icheck");
-  if (iCheckStyle === null) {
-    iCheckStyle = "material-blue";
-  }
-
-  iCheckSelect.val(iCheckStyle);
-
-  iCheckSelect.change(function () {
-    localStorage.setItem("theme_icheck", $(this).val());
-    applyCheckboxRadioStyle();
-  });
-
-  // boxed style toggle
-  var boxedlayout = $("#boxedlayout");
-  chkboxData = localStorage.getItem("boxedlayout");
-
-  if (chkboxData !== null) {
-    // Restore checkbox state
-    boxedlayout.prop("checked", chkboxData === "true");
-  } else {
-    // Initialize checkbox
-    boxedlayout.prop("checked", true);
-    localStorage.setItem("boxedlayout", true);
-  }
-
-  boxedlayout.click(function () {
-    localStorage.setItem("boxedlayout", boxedlayout.prop("checked"));
-    applyBoxedLayout();
-  });
 });
