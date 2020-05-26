@@ -1111,8 +1111,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h4>Interface appearance</h4>
-                                                <?php theme_selection(); ?>
                                                 <h4>CPU Temperature Unit</h4>
                                                 <div>
                                                     <input type="radio" name="tempunit" value="C" id="tempunit_C" <?php if ($temperatureunit === "C"){ ?>checked<?php } ?>>
@@ -1175,6 +1173,17 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <option>material-brown</option>
                                                 <option>material-grey</option>
                                                 <option>material-bluegrey</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>Theme</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select id="theme-selector">
+                                                <option value="default-light">Pi-hole default theme (light, default)</option>
+                                                <option value="default-dark">Pi-hole midnight theme (dark)</option>
                                             </select>
                                         </div>
                                     </div>

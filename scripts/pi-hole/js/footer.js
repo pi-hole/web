@@ -150,6 +150,30 @@ function applyBoxedLayout() {
   }
 }
 
+function initTheme() {
+  function getThemeURL(themename) {
+    return 'style/themes/' + themename + '.css';
+  }
+
+  var themename = localStorage.getItem("css-theme");
+  if (themename === null) {
+    themename = "default-light";
+  }
+  var themesheet = $('<link href="' + getThemeURL(themename) + '" rel="stylesheet" />');
+  themesheet.appendTo('head');
+
+  // The theme selector is only available on the settings page
+  var theme_selector = $('#theme-selector');
+  console.log(theme_selector);
+  if (theme_selector !== null) {
+    theme_selector.change(function(){
+      themename = $(this).val();
+      localStorage.setItem("css-theme", themename);
+      themesheet.attr('href', getThemeURL(themename));
+    });
+  }
+}
+
 $(function () {
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html()));
@@ -165,6 +189,7 @@ $(function () {
   // Apply per-browser styling settings
   applyCheckboxRadioStyle();
   applyBoxedLayout();
+  initTheme();
 
   // Run check immediately after page loading ...
   checkMessages();

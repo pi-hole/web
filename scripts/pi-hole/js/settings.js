@@ -285,7 +285,7 @@ $(function () {
   iCheckSelect.val(iCheckStyle);
 
   iCheckSelect.change(function () {
-    localStorage.setItem("theme_icheck", iCheckSelect.val());
+    localStorage.setItem("theme_icheck", $(this).val());
     applyCheckboxRadioStyle();
   });
 
