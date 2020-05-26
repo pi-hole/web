@@ -87,10 +87,22 @@ $(document).ready(function () {
     ],
     stateSave: true,
     stateSaveCallback: function (settings, data) {
-      utils.stateSaveCallback("groups-table", data);
+      // Store current state in client's local storage area
+      localStorage.setItem("groups-table", JSON.stringify(data));
     },
     stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("groups-table");
+      // Receive previous state from client's local storage area
+      var data = localStorage.getItem("groups-table");
+      // Return if not available
+      if (data === null) {
+        return null;
+      }
+
+      data = JSON.parse(data);
+      // Always start on the first page to show most recent queries
+      data.start = 0;
+      // Always start with empty search field
+      data.search.search = "";
       // Reset visibility of ID column
       data.columns[0].visible = false;
       // Apply loaded state to table

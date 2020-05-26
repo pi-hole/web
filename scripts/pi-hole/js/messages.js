@@ -95,10 +95,23 @@ $(document).ready(function () {
     },
     stateSave: true,
     stateSaveCallback: function (settings, data) {
-      utils.stateSaveCallback("messages-table", data);
+      // Store current state in client's local storage area
+      localStorage.setItem("messages-table", JSON.stringify(data));
     },
     stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("messages-table");
+      // Receive previous state from client's local storage area
+      var data = localStorage.getItem("messages-table");
+      // Return if not available
+      if (data === null) {
+        return null;
+      }
+
+      // Parse loaded data
+      data = JSON.parse(data);
+      // Always start on the first page to show most recent queries
+      data.start = 0;
+      // Always start with empty search field
+      data.search.search = "";
       // Reset visibility of ID and blob columns
       var hiddenCols = [0, 4, 5, 6, 7, 8];
       for (var key in hiddenCols) {

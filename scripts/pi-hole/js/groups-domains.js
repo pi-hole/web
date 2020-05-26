@@ -247,10 +247,22 @@ function initTable() {
     ],
     stateSave: true,
     stateSaveCallback: function (settings, data) {
-      utils.stateSaveCallback("groups-domains-table", data);
+      // Store current state in client's local storage area
+      localStorage.setItem("groups-domains-table", JSON.stringify(data));
     },
     stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("groups-domains-table");
+      // Receive previous state from client's local storage area
+      var data = localStorage.getItem("groups-domains-table");
+      // Return if not available
+      if (data === null) {
+        return null;
+      }
+
+      data = JSON.parse(data);
+      // Always start on the first page to show most recent queries
+      data.start = 0;
+      // Always start with empty search field
+      data.search.search = "";
       // Reset visibility of ID column
       data.columns[0].visible = false;
       // Show group assignment column only on full page
