@@ -4,6 +4,7 @@
  *
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
+/* global initpage:false */
 
 //The following functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
@@ -137,14 +138,15 @@ function initCheckboxRadioStyle() {
   if (chkboxStyle === null) {
     chkboxStyle = "material-blue";
   }
+
   applyCheckboxRadioStyle(chkboxStyle);
 
   // Add handler when on settings page
-  var iCheckStyle = $('#iCheckStyle');
+  var iCheckStyle = $("#iCheckStyle");
   if (iCheckStyle !== null) {
     iCheckStyle.val(chkboxStyle);
-    iCheckStyle.change(function(){
-      themename = $(this).val();
+    iCheckStyle.change(function () {
+      var themename = $(this).val();
       localStorage.setItem("theme_icheck", themename);
       applyCheckboxRadioStyle(themename);
     });
@@ -168,13 +170,14 @@ function initBoxedLayout() {
   } else {
     boxed = boxed === "true";
   }
+
   applyBoxedLayout(boxed);
 
   // Add handler when on settings page
-  var boxedlayout_selector = $("#boxedlayout-selector");
-  if (boxedlayout_selector !== null) {
-    boxedlayout_selector.prop("checked", boxed);
-    boxedlayout_selector.change(function () {
+  var boxedlayoutSelector = $("#boxedlayout-selector");
+  if (boxedlayoutSelector !== null) {
+    boxedlayoutSelector.prop("checked", boxed);
+    boxedlayoutSelector.change(function () {
       var enabled = $(this).prop("checked");
       applyBoxedLayout(enabled);
     });
@@ -183,7 +186,7 @@ function initBoxedLayout() {
 
 function initTheme() {
   function getThemeURL(themename) {
-    return 'style/themes/' + themename + '.css';
+    return "style/themes/" + themename + ".css";
   }
 
   // Read from local storage, initialize if needed
@@ -192,17 +195,18 @@ function initTheme() {
     themename = "default-light";
     localStorage.setItem("css-theme", themename);
   }
+
   var themesheet = $('<link href="' + getThemeURL(themename) + '" rel="stylesheet" />');
-  themesheet.appendTo('head');
+  themesheet.appendTo("head");
 
   // Add handler when on settings page
-  var theme_selector = $('#theme-selector');
-  if (theme_selector !== null) {
-    theme_selector.val(themename);
-    theme_selector.change(function(){
+  var themeSelector = $("#theme-selector");
+  if (themeSelector !== null) {
+    themeSelector.val(themename);
+    themeSelector.change(function () {
       themename = $(this).val();
       localStorage.setItem("css-theme", themename);
-      themesheet.attr('href', getThemeURL(themename));
+      themesheet.attr("href", getThemeURL(themename));
     });
   }
 }
@@ -212,15 +216,15 @@ function initCPUtemp() {
     localStorage.setItem("tempunit", tempunit);
     var temperature = parseFloat($("#rawtemp").text());
     var displaytemp = $("#tempdisplay");
-    if (temperature !== NaN) {
+    if (!isNaN(temperature)) {
       switch (unit) {
         case "K":
-          temperature = temperature + 273.15;
+          temperature += 273.15;
           displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;K");
           break;
 
         case "F":
-          temperature = (temperature * 9/5) + 32;
+          temperature = (temperature * 9) / 5 + 32;
           displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;F");
           break;
 
@@ -236,13 +240,14 @@ function initCPUtemp() {
   if (tempunit === null) {
     tempunit = "C";
   }
+
   setCPUtemp(tempunit);
 
   // Add handler when on settings page
-  var tempunit_selector = $('#tempunit-selector');
-  if (tempunit_selector !== null) {
-    tempunit_selector.val(tempunit);
-    tempunit_selector.change(function(){
+  var tempunitSelector = $("#tempunit-selector");
+  if (tempunitSelector !== null) {
+    tempunitSelector.val(tempunit);
+    tempunitSelector.change(function () {
       tempunit = $(this).val();
       setCPUtemp(tempunit);
     });
