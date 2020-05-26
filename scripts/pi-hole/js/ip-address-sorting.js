@@ -99,8 +99,6 @@ $.extend($.fn.dataTableExt.oSort, {
           x += item;
         }
       }
-
-      console.log([a, n, xa, count, x]);
     }
 
     return x;
