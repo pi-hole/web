@@ -456,7 +456,13 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
-        $type = intval($_POST['type']);
+        if (isset($_POST['type'])) {
+            $type = intval($_POST['type']);
+        } else if (isset($_POST['list']) && $_POST['list'] === "white") {
+            $type = ListType::whitelist;
+        } else if (isset($_POST['list']) && $_POST['list'] === "black") {
+            $type = ListType::blacklist;
+        }
 
         if (!$stmt->bindValue(':type', $type, SQLITE3_TEXT)) {
             throw new Exception('While binding type: ' . $db->lastErrorMsg());

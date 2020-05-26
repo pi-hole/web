@@ -39,19 +39,21 @@ function add(domain, list) {
   // add Domain to List after Modal has faded in
   alertModal.one("shown.bs.modal", function () {
     $.ajax({
-      url: "scripts/pi-hole/php/add.php",
+      url: "scripts/pi-hole/php/groups.php",
       method: "post",
-      data: { domain: domain, list: list, token: token },
+      data: {
+        domain: domain,
+        list: list,
+        token: token,
+        action: "add_domain",
+        comment: "Added from Query Log"
+      },
       success: function (response) {
         alProcessing.hide();
-        if (
-          response.indexOf("not a valid argument") !== -1 ||
-          response.indexOf("is not a valid domain") !== -1 ||
-          response.indexOf("Wrong token") !== -1
-        ) {
+        if (!response.success) {
           // Failure
           alNetworkErr.hide();
-          alCustomErr.html(response.replace("[✗]", ""));
+          alCustomErr.html(response.message);
           alFailure.fadeIn(1000);
           setTimeout(function () {
             alertModal.modal("hide");
