@@ -284,3 +284,16 @@
 .version-info {
     margin-top: 10px;
 }
+
+/* overwrite AdminLTE's effect: no need to transition all properties */
+.small-box .icon {
+    -webkit-transition: transform .3s linear;
+    -o-transition: transform .3s linear; /* needed because AdminLTE has this prefix */
+    transition: transform .3s linear;
+}
+
+/* overwrite AdminLTE's effect: keep the font-size the same and use a transform */
+.small-box:hover .icon {
+    font-size: 90px;
+    transform: scale(1.1);
+}
