@@ -164,12 +164,50 @@ function initTheme() {
 
   // The theme selector is only available on the settings page
   var theme_selector = $('#theme-selector');
-  console.log(theme_selector);
   if (theme_selector !== null) {
     theme_selector.change(function(){
       themename = $(this).val();
       localStorage.setItem("css-theme", themename);
       themesheet.attr('href', getThemeURL(themename));
+    });
+  }
+}
+
+function initCPUtemp() {
+  function setCPUtemp(unit) {
+    var temperature = parseFloat($("#rawtemp").text());
+    var displaytemp = $("#tempdisplay");
+    if (temperature !== NaN) {
+      switch (unit) {
+        case "K":
+          temperature = temperature + 273.15;
+          displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;K");
+          break;
+
+        case "F":
+          temperature = (temperature * 9/5) + 32;
+          displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;F");
+          break;
+
+        default:
+          displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;C");
+          break;
+      }
+    }
+  }
+  var tempunit = localStorage.getItem("tempunit");
+  if (tempunit === null) {
+    tempunit = "C";
+  }
+  setCPUtemp(tempunit);
+
+  // The theme selector is only available on the settings page
+  var tempunit_selector = $('#tempunit-selector');
+  if (tempunit_selector !== null) {
+    tempunit_selector.change(function(){
+      tempunit = $(this).val();
+      localStorage.setItem("tempunit", tempunit);
+      setCPUtemp(tempunit);
     });
   }
 }
@@ -190,6 +228,7 @@ $(function () {
   applyCheckboxRadioStyle();
   applyBoxedLayout();
   initTheme();
+  initCPUtemp();
 
   // Run check immediately after page loading ...
   checkMessages();

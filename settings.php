@@ -1111,19 +1111,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h4>CPU Temperature Unit</h4>
-                                                <div>
-                                                    <input type="radio" name="tempunit" value="C" id="tempunit_C" <?php if ($temperatureunit === "C"){ ?>checked<?php } ?>>
-                                                    <label for="tempunit_C"><strong>Celsius</strong></label>
-                                                </div>
-                                                <div>
-                                                    <input type="radio" name="tempunit" value="K" id="tempunit_K" <?php if ($temperatureunit === "K"){ ?>checked<?php } ?>>
-                                                    <label for="tempunit_K"><strong>Kelvin</strong></label>
-                                                </div>
-                                                <div>
-                                                    <input type="radio" name="tempunit" value="F" id="tempunit_F" <?php if ($temperatureunit === "F"){ ?>checked<?php } ?>>
-                                                    <label for="tempunit_F"><strong>Fahrenheit</strong></label>
-                                                </div>
                                                 <h4>Administrator Email Address</h4>
                                                 <input type="email" class="form-control" name="adminemail" value="<?php echo htmlspecialchars($adminemail); ?>">
                                                 <input type="hidden" name="field" value="webUI">
@@ -1152,7 +1139,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         <div class="col-md-4">
                                             <p>Checkbox and radio buttons</p>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-8">
                                             <select id="iCheckStyle">
                                                 <option>material-red</option>
                                                 <option>material-pink</option>
@@ -1180,10 +1167,22 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         <div class="col-md-4">
                                             <p>Theme</p>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-8">
                                             <select id="theme-selector">
                                                 <option value="default-light">Pi-hole default theme (light, default)</option>
                                                 <option value="default-dark">Pi-hole midnight theme (dark)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>CPU Temperature Unit</p>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <select id="tempunit-selector">
+                                                <option value="C">Celsius</option>
+                                                <option value="K">Kelvin</option>
+                                                <option value="F">Fahrenheit</option>
                                             </select>
                                         </div>
                                     </div>

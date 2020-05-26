@@ -49,22 +49,6 @@
             $celsius *= 1e-3;
         }
 
-        $kelvin = $celsius + 273.15;
-        $fahrenheit = ($celsius*9./5)+32.0;
-
-        if(isset($setupVars['TEMPERATUREUNIT']))
-        {
-            $temperatureunit = $setupVars['TEMPERATUREUNIT'];
-        }
-        else
-        {
-            $temperatureunit = "C";
-        }
-        // Override temperature unit setting if it is changed via Settings page
-        if(isset($_POST["tempunit"]))
-        {
-            $temperatureunit = $_POST["tempunit"];
-        }
         // Get user-defined temperature limit if set
         if(isset($setupVars['TEMPERATURE_LIMIT']))
         {
@@ -326,20 +310,7 @@ if($auth) {
                                 {
                                     echo "text-vivid-blue";
                                 }
-                                echo "\"></i> Temp:&nbsp;";
-                                if($temperatureunit === "F")
-                                {
-                                    echo round($fahrenheit,1) . "&nbsp;&deg;F";
-                                }
-                                elseif($temperatureunit === "K")
-                                {
-                                    echo round($kelvin,1) . "&nbsp;K";
-                                }
-                                else
-                                {
-                                    echo round($celsius,1) . "&nbsp;&deg;C";
-                                }
-                                echo "</span>";
+                                ?>"\"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span><?php
                             }
                         }
                         else
