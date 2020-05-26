@@ -48,22 +48,21 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="new_domain">Domain:</label>
-                                        <div class="input-group">
                                             <input id="new_domain" type="url" class="form-control active" placeholder="Domain to be added" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                                            <span class="input-group-addon">
-                                                <input type="checkbox" id="wildcard_checkbox">
-                                                <label for="wildcard_checkbox">wildcard</label>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <strong><i class="fa fa-question-circle"></i> Checkbox "wildcard":</span></strong> Check this box if you want to involve
-                                        all subdomains. The entered domain will be converted to a RegEx filter while adding.
                                     </div>
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label for="new_domain_comment">Comment:</label>
                                     <input id="new_domain_comment" type="text" class="form-control" placeholder="Description (optional)">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div>
+                                        <input type="checkbox" id="wildcard_checkbox">
+                                        <label for="wildcard_checkbox"><strong>Add domain as wildcard</strong></label>
+                                        <p>Check this box if you want to involve all subdomains. The entered domain will be converted to a RegEx filter while adding.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

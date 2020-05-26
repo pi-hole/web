@@ -1090,7 +1090,7 @@ $(function () {
     // Pull in data via AJAX
     updateForwardDestinationsPie();
   }
-});
+}
 
 //destroy all chartjs customTooltips on window resize
 window.addEventListener("resize", function () {
