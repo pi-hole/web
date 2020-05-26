@@ -129,7 +129,6 @@ elseif (isset($_GET['list']))
 
 		default:
 			die("Invalid list [supported: black, regex_black, white, regex_white]");
-			break;
 	}
 
 	if (isset($_GET['add']))
