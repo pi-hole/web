@@ -797,11 +797,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <table class="table table-bordered">
+                                                  <thead>
                                                     <tr>
                                                         <th colspan="2">IPv4</th>
                                                         <th colspan="2">IPv6</th>
                                                         <th>Name</th>
                                                     </tr>
+                                                  </thead>
                                                     <?php foreach ($DNSserverslist as $key => $value) { ?>
                                                     <tr>
                                                     <?php if (isset($value["v4_1"])) { ?>
@@ -984,10 +986,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     </div>
                                                     <div class="input-group">
                                                       <table class="table table-bordered">
-                                                        <tr>
-                                                          <th>IP of your router</th>
-                                                          <th>Local domain name</th>
-                                                        </tr>
+                                                        <thead>
+                                                          <tr>
+                                                            <th>IP of your router</th>
+                                                            <th>Local domain name</th>
+                                                          </tr>
+                                                        </thead>
                                                         <tr>
                                                           <div class="input-group">
                                                             <td>

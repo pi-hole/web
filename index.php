@@ -188,12 +188,14 @@ else
         <div class="box-body">
             <div class="table-responsive">
                 <table class="table table-bordered">
-                  <tbody>
+                  <thead>
                     <tr>
-                    <th>Domain</th>
-                    <th>Hits</th>
-                    <th>Frequency</th>
+                      <th>Domain</th>
+                      <th>Hits</th>
+                      <th>Frequency</th>
                     </tr>
+                  </thead>
+                  <tbody>
                   </tbody>
                 </table>
             </div>
@@ -215,12 +217,14 @@ else
         <div class="box-body">
             <div class="table-responsive">
                 <table class="table table-bordered">
-                  <tbody>
+                  <thead>
                     <tr>
-                    <th>Domain</th>
-                    <th>Hits</th>
-                    <th>Frequency</th>
+                      <th>Domain</th>
+                      <th>Hits</th>
+                      <th>Frequency</th>
                     </tr>
+                  </thead>
+                  <tbody>
                   </tbody>
                 </table>
             </div>
@@ -244,12 +248,14 @@ else
         <div class="box-body">
             <div class="table-responsive">
                 <table class="table table-bordered">
-                  <tbody>
+                  <thead>
                     <tr>
-                    <th>Client</th>
-                    <th>Requests</th>
-                    <th>Frequency</th>
+                      <th>Client</th>
+                      <th>Requests</th>
+                      <th>Frequency</th>
                     </tr>
+                  </thead>
+                  <tbody>
                   </tbody>
                 </table>
             </div>
@@ -272,12 +278,14 @@ else
         <div class="box-body">
             <div class="table-responsive">
                 <table class="table table-bordered">
-                  <tbody>
+                  <thead>
                     <tr>
-                    <th>Client</th>
-                    <th>Requests</th>
-                    <th>Frequency</th>
+                      <th>Client</th>
+                      <th>Requests</th>
+                      <th>Frequency</th>
                     </tr>
+                  </thead>
+                  <tbody>
                   </tbody>
                 </table>
             </div>

@@ -24,12 +24,14 @@
         <div class="box-body">
             <div class="table-responsive">
                 <table class="table table-bordered">
-                  <tbody>
+                  <thead>
                     <tr>
-                    <th>Domain</th>
-                    <th>Hits</th>
-                    <th>Actions</th>
+                      <th>Domain</th>
+                      <th>Hits</th>
+                      <th>Actions</th>
                     </tr>
+                  </thead>
+                  <tbody>
                   </tbody>
                 </table>
             </div>
@@ -52,12 +54,14 @@
         <div class="box-body">
             <div class="table-responsive">
                 <table class="table table-bordered">
-                  <tbody>
+                  <thead>
                     <tr>
-                    <th>Domain</th>
-                    <th>Hits</th>
-                    <th>Actions</th>
+                      <th>Domain</th>
+                      <th>Hits</th>
+                      <th>Actions</th>
                     </tr>
+                  </thead>
+                  <tbody>
                   </tbody>
                 </table>
             </div>
