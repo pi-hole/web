@@ -99,6 +99,23 @@
 
 </div>
 <!-- ./wrapper -->
+
+<script src="scripts/vendor/jquery.min.js?v=<?=$cacheVer?>"></script>
+<script src="style/vendor/bootstrap/js/bootstrap.min.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/vendor/adminlte.min.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/vendor/bootstrap-notify.min.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/vendor/select2.min.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/vendor/datatables.min.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/vendor/moment.min.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/vendor/Chart.min.js?v=<?=$cacheVer?>"></script>
+
 <script src="scripts/pi-hole/js/footer.js?v=<?=$cacheVer?>"></script>
+
+<?php if (isset($extra_scripts)) {
+    foreach($extra_scripts as $script){
+        echo "<script src=" . $script . "></script>";
+    }
+}
+?>
 </body>
 </html>

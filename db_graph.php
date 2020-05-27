@@ -67,10 +67,12 @@
   </div>
 </div>
 
-<script src="scripts/vendor/daterangepicker.min.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/db_graph.js?v=<?=$cacheVer?>"></script>
-
 <?php
+    $extra_scripts = [
+        "scripts/vendor/daterangepicker.min.js?v=<?=$cacheVer?>",
+        "scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>",
+        "scripts/pi-hole/js/db_graph.js?v=<?=$cacheVer?>"
+    ];
+
     require "scripts/pi-hole/php/footer.php";
 ?>

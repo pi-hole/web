@@ -77,11 +77,13 @@
     </div>
 </div>
 
-<script src="scripts/vendor/bootstrap-select.min.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/vendor/bootstrap-toggle.min.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/groups-adlists.js?v=<?=$cacheVer?>"></script>
-
 <?php
-require "scripts/pi-hole/php/footer.php";
+    $extra_scripts = [
+        "scripts/vendor/bootstrap-select.min.js?v=<?=$cacheVer?>",
+        "scripts/vendor/bootstrap-toggle.min.js?v=<?=$cacheVer?>",
+        "scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>",
+        "scripts/pi-hole/js/groups-adlists.js?v=<?=$cacheVer?>"
+    ];
+
+    require "scripts/pi-hole/php/footer.php";
 ?>

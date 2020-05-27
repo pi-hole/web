@@ -203,15 +203,6 @@
     <link rel="stylesheet" href="style/pi-hole.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css?v=<?=$cacheVer?>">
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css?v=<?=$cacheVer?>"></noscript>
-
-    <script src="scripts/vendor/jquery.min.js?v=<?=$cacheVer?>"></script>
-    <script src="style/vendor/bootstrap/js/bootstrap.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/adminlte.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/bootstrap-notify.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/select2.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/datatables.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/moment.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/Chart.min.js?v=<?=$cacheVer?>"></script>
     <script src="style/vendor/font-awesome/js/all.min.js?v=<?=$cacheVer?>"></script>
 </head>
 <body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">

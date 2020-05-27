@@ -294,9 +294,11 @@ else
 <!-- /.row -->
 <?php } ?>
 
-<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/index.js?v=<?=$cacheVer?>"></script>
-
 <?php
+    $extra_scripts = [
+        "scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>",
+        "scripts/pi-hole/js/index.js?v=<?=$cacheVer?>"
+    ];
+
     require "scripts/pi-hole/php/footer.php";
 ?>

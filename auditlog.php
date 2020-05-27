@@ -72,9 +72,11 @@
 </div>
 <!-- /.row -->
 
-<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/auditlog.js?v=<?=$cacheVer?>"></script>
-
 <?php
+    $extra_scripts = [
+        "scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>",
+        "scripts/pi-hole/js/auditlog.js?v=<?=$cacheVer?>"
+    ];
+
     require "scripts/pi-hole/php/footer.php";
 ?>
