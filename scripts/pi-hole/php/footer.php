@@ -101,8 +101,9 @@
 <!-- ./wrapper -->
 
 <?php if ($scriptname === "login") { ?>
-  <script src="scripts/pi-hole/js/login.js"></script>
-<?php } ?>
+<script src="scripts/pi-hole/js/login.js"></script>
+<?php } else { ?>
 <script src="scripts/pi-hole/js/footer.js"></script>
+<?php } ?>
 </body>
 </html>
