@@ -18,7 +18,7 @@
 .main-header .navbar .nav .open > a,
 .main-header .navbar .nav .open > a:hover,
 .main-header .navbar .nav .open > a:focus {
-  background: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
   color: #f6f6f6;
 }
 .main-header .navbar .sidebar-toggle {
@@ -26,7 +26,7 @@
 }
 .main-header .navbar .sidebar-toggle:hover {
   color: #f6f6f6;
-  background: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
   background-color: #367fa9;
 }
 @media (max-width: 767px) {
@@ -37,7 +37,7 @@
     color: #fff;
   }
   .main-header .navbar .dropdown-menu li a:hover {
-    background: #367fa9;
+    background-color: #367fa9;
   }
 }
 .main-header .logo {
@@ -52,7 +52,7 @@
   background-color: #3c8dbc;
 }
 .content-header {
-  background: transparent;
+  background-color: transparent;
 }
 .wrapper,
 .main-sidebar,
@@ -65,7 +65,7 @@
 }
 .sidebar-menu > li.header {
   color: #4b646f;
-  background: #1a2226;
+  background-color: #1a2226;
 }
 .sidebar-menu > li > a {
   border-left: 3px solid transparent;
@@ -73,12 +73,12 @@
 .sidebar-menu > li:hover > a,
 .sidebar-menu > li.active > a {
   color: #fff;
-  background: #1e282c;
+  background-color: #1e282c;
   border-left-color: #3c8dbc;
 }
 .sidebar-menu > li > .treeview-menu {
   margin: 0 1px;
-  background: #2c3b41;
+  background-color: #2c3b41;
 }
 .sidebar a {
   color: #b8c7ce;
@@ -104,8 +104,6 @@
   background-color: #374850;
   border: 1px solid transparent;
   height: 35px;
-  -webkit-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
 }
 .sidebar-form input[type="text"] {
@@ -140,16 +138,16 @@
 }
 
 .not-used {
-  background: #eee;
+  background-color: #eee;
 }
 .not-used:hover {
-  background: #c5c5c5;
+  background-color: #c5c5c5;
 }
 .used {
-  background: #fff;
+  background-color: #fff;
 }
 .used:hover {
-  background: #ddd;
+  background-color: #ddd;
 }
 
 .graphs-grid {
@@ -214,8 +212,8 @@ td.highlight {
 }
 
 .icheckbox_minimal-blue {
-	margin-right: 10px;
+  margin-right: 10px;
 }
 .iradio_minimal-blue {
-	margin-right: 8px;
+  margin-right: 8px;
 }
