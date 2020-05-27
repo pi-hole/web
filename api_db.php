@@ -73,6 +73,8 @@ if(isset($_GET["network"]) && $auth)
 			array_push($res["ip"],$network_address["ip"]);
 			if($network_address["name"] !== null)
 				array_push($res["name"],utf8_encode($network_address["name"]));
+			else
+				array_push($res["name"],"");
 		}
 		$network_addresses->finalize();
 

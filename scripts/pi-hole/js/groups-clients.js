@@ -279,7 +279,6 @@ function addClient() {
     return;
   }
 
-
   // Validate input, can be:
   // - IPv4 address (with and without CIDR)
   // - IPv6 address (with and without CIDR)
@@ -290,7 +289,12 @@ function addClient() {
     ip = ip.toUpperCase();
   } else if (!utils.validateHostname(ip)) {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Input is neither a valid IP or MAC address nor a valid host name!");
+    utils.showAlert(
+      "warning",
+      "",
+      "Warning",
+      "Input is neither a valid IP or MAC address nor a valid host name!"
+    );
     return;
   }
 

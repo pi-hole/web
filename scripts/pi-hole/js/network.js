@@ -112,10 +112,12 @@ $(document).ready(function () {
         $("td:eq(3)", row).html("<em>unknown</em>");
       } else {
         var names = [];
+        var name = "";
         maxiter = Math.min(data.name.length, MAXIPDISPLAY);
         index = 0;
         for (index = 0; index < maxiter; index++) {
-          var name = data.name[index];
+          name = data.name[index];
+          if (name.length === 0) continue;
           names.push('<a href="queries.php?client=' + name + '">' + name + "</a>");
         }
 
@@ -125,9 +127,20 @@ $(document).ready(function () {
           names.push("...");
         }
 
+        maxiter = Math.min(data.ip.length, data.name.length);
+        var allnames = [];
+        for (index = 0; index < maxiter; index++) {
+          name = data.name[index];
+          if (name.length > 0) {
+            allnames.push(name + " (" + data.ip[index] + ")");
+          } else {
+            allnames.push("No host name for " + data.ip[index] + " known");
+          }
+        }
+
         $("td:eq(3)", row).html(names.join("<br>"));
         $("td:eq(3)", row).hover(function () {
-          this.title = data.name.join("\n");
+          this.title = allnames.join("\n");
         });
       }
 
