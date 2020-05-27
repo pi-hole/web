@@ -5,12 +5,13 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-// Define global variables
 /* global Chart:false, updateSessionTimer:false */
+
+// Define global variables
 var timeLineChart, clientsChart;
 var queryTypePieChart, forwardDestinationPieChart;
 
-var colors = [
+var THEME_COLORS = [
   "#3c8dbc",
   "#f56954",
   "#00a65a",
@@ -101,9 +102,9 @@ var customTooltips = function (tooltip) {
 
     var devicePixel = (1 / window.devicePixelRatio).toFixed(1);
     bodyLines.forEach(function (body, i) {
-      var colors = tooltip.labelColors[i];
-      var style = "background: " + colors.backgroundColor;
-      style += "; outline: 1px solid " + colors.backgroundColor;
+      var labelColors = tooltip.labelColors[i];
+      var style = "background-color: " + labelColors.backgroundColor;
+      style += "; outline: 1px solid " + labelColors.backgroundColor;
       style += "; border: " + devicePixel + "px solid #fff";
       var span = "<span class='chartjs-tooltip-key' style='" + style + "'></span>";
 
@@ -312,7 +313,7 @@ function updateQueryTypesPie() {
 
     $.each(iter, function (key, value) {
       v.push(value);
-      c.push(colors[i++ % colors.length]);
+      c.push(THEME_COLORS[i++ % THEME_COLORS.length]);
       k.push(key);
     });
     // Build a single dataset with the data to be pushed
@@ -398,7 +399,7 @@ function updateClientsOverTime() {
     }
 
     // Collect values and colors, and labels
-    clientsChart.data.datasets[0].backgroundColor = colors[0];
+    clientsChart.data.datasets[0].backgroundColor = THEME_COLORS[0];
     clientsChart.data.datasets[0].pointRadius = 0;
     clientsChart.data.datasets[0].pointHitRadius = 5;
     clientsChart.data.datasets[0].pointHoverRadius = 5;
@@ -409,8 +410,8 @@ function updateClientsOverTime() {
         data: [],
         // If we ran out of colors, make a random one
         backgroundColor:
-          i < colors.length
-            ? colors[i]
+          i < THEME_COLORS.length
+            ? THEME_COLORS[i]
             : "#" + (0x1000000 + Math.random() * 0xffffff).toString(16).substr(1, 6),
         pointRadius: 0,
         pointHitRadius: 5,
@@ -474,7 +475,7 @@ function updateForwardDestinationsPie() {
         key = key.substr(0, key.indexOf("|"));
       }
 
-      values.push([key, value, colors[i++ % colors.length]]);
+      values.push([key, value, THEME_COLORS[i++ % THEME_COLORS.length]]);
     });
 
     // Split data into individual arrays for the graphs
