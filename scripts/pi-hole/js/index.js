@@ -310,11 +310,12 @@ function updateQueryTypesPie() {
       iter = data;
     }
 
-    $.each(iter, function (key, value) {
-      v.push(value);
+    Object.keys(iter).forEach(function (key) {
+      v.push(iter[key]);
       c.push(colors[i++ % colors.length]);
       k.push(key);
     });
+
     // Build a single dataset with the data to be pushed
     var dd = { data: v, backgroundColor: c };
     // and push it at once
@@ -469,7 +470,9 @@ function updateForwardDestinationsPie() {
       values = [];
 
     // Collect values and colors
-    $.each(data.forward_destinations, function (key, value) {
+    Object.keys(data.forward_destinations).forEach(function (key) {
+      var value = data.forward_destinations[key];
+
       if (key.indexOf("|") !== -1) {
         key = key.substr(0, key.indexOf("|"));
       }
@@ -478,7 +481,7 @@ function updateForwardDestinationsPie() {
     });
 
     // Split data into individual arrays for the graphs
-    $.each(values, function (key, value) {
+    values.forEach(function (value) {
       k.push(value[0]);
       v.push(value[1]);
       c.push(value[2]);
