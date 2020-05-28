@@ -51,13 +51,11 @@ $reload = true;
 switch($list) {
 	case "white":
 		$domains = array_map('strtolower', $domains);
-		remove_from_table($db, "domainlist", $domains, false, ListType::blacklist);
 		echo add_to_table($db, "domainlist", $domains, $comment, false, false, ListType::whitelist);
 		break;
 
 	case "black":
 		$domains = array_map('strtolower', $domains);
-		remove_from_table($db, "domainlist", $domains, false, ListType::whitelist);
 		echo add_to_table($db, "domainlist", $domains, $comment, false, false, ListType::blacklist);
 		break;
 
