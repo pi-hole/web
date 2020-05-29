@@ -17,6 +17,7 @@ function eventsource() {
     return;
   }
 
+  // eslint-disable-next-line compat/compat
   var source = new EventSource("scripts/pi-hole/php/gravity.sh.php");
 
   ta.html("");

@@ -52,6 +52,7 @@ function eventsource() {
     return;
   }
 
+  // eslint-disable-next-line compat/compat
   var source = new EventSource(
     "scripts/pi-hole/php/queryads.php?domain=" + domain.toLowerCase() + "&" + exact
   );
