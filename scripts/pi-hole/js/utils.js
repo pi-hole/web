@@ -7,7 +7,44 @@
 
 /* global moment:false */
 
-var info = null;
+// Credit: https://stackoverflow.com/a/4835406
+function escapeHtml(text) {
+  var map = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  };
+
+  return text.replace(/[&<>"']/g, function (m) {
+    return map[m];
+  });
+}
+
+// Helper function for converting Objects to Arrays after sorting the keys
+function objectToArray(obj) {
+  var arr = [];
+  var idx = [];
+  var keys = Object.keys(obj);
+
+  keys.sort(function (a, b) {
+    return a - b;
+  });
+
+  for (var i = 0; i < keys.length; i++) {
+    arr.push(obj[keys[i]]);
+    idx.push(keys[i]);
+  }
+
+  return [idx, arr];
+}
+
+function padNumber(num) {
+  return ("00" + num).substr(-2, 2);
+}
+
+var info = null; // TODO clear this up; there shouldn't be a global var here
 function showAlert(type, icon, title, message) {
   var opts = {};
   title = "&nbsp;<strong>" + title + "</strong><br>";
@@ -172,6 +209,9 @@ function stateLoadCallback(itemName) {
 
 window.utils = (function () {
   return {
+    escapeHtml: escapeHtml,
+    objectToArray: objectToArray,
+    padNumber: padNumber,
     showAlert: showAlert,
     datetime: datetime,
     disableAll: disableAll,
