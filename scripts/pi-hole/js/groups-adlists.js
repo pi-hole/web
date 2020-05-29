@@ -248,7 +248,7 @@ function addAdlist() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new adlist: ", jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -330,7 +330,7 @@ function editAdlist() {
         "Error while " + notDone + " adlist with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -359,7 +359,7 @@ function deleteAdlist() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting adlist with ID " + id, jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }

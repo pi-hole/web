@@ -373,7 +373,7 @@ function addDomain() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new " + domainRegex, jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -474,7 +474,7 @@ function editDomain() {
         "Error while " + notDone + " " + domainRegex + " with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -526,7 +526,7 @@ function deleteDomain() {
         "Error while deleting " + domainRegex + " with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }

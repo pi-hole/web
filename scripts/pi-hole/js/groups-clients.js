@@ -293,7 +293,7 @@ function addClient() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new client", jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -361,7 +361,7 @@ function editClient() {
         "Error while " + notDone + " client with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -396,7 +396,7 @@ function deleteClient() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting client with ID " + id, jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
