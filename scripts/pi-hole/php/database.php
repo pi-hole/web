@@ -311,9 +311,11 @@ function remove_from_table($db, $table, $domains, $returnnum=false, $type=-1)
 	}
 }
 
-class ListType{
-	const whitelist = 0;
-	const blacklist = 1;
-	const regex_whitelist = 2;
-	const regex_blacklist = 3;
+if (!class_exists("ListType")) {
+	class ListType{
+		const whitelist = 0;
+		const blacklist = 1;
+		const regex_whitelist = 2;
+		const regex_blacklist = 3;
+	}
 }

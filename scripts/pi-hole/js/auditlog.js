@@ -93,9 +93,15 @@ function updateTopLists() {
 function add(domain, list) {
   var token = $("#token").text();
   $.ajax({
-    url: "scripts/pi-hole/php/add.php",
+    url: "scripts/pi-hole/php/groups.php",
     method: "post",
-    data: { domain: domain, list: list, token: token },
+    data: {
+      domain: domain,
+      list: list,
+      token: token,
+      action: "add_domain",
+      comment: "Added from Audit Log"
+    },
     success: function () {
       updateTopLists();
     },

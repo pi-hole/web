@@ -92,16 +92,19 @@ function add(domain, list) {
   alSuccess.hide();
   alFailure.hide();
   $.ajax({
-    url: "scripts/pi-hole/php/add.php",
+    url: "scripts/pi-hole/php/groups.php",
     method: "post",
-    data: { domain: domain, list: list, token: token },
+    data: {
+      domain: domain,
+      list: list,
+      token: token,
+      action: "add_domain",
+      comment: "Added from Long-Term-Data Query Log"
+    },
     success: function (response) {
-      if (
-        response.indexOf("not a valid argument") !== -1 ||
-        response.indexOf("is not a valid domain") !== -1
-      ) {
+      if (!response.success) {
         alFailure.show();
-        err.html(response);
+        err.html(response.message);
         alFailure.delay(4000).fadeOut(2000, function () {
           alFailure.hide();
         });
