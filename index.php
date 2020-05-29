@@ -31,10 +31,10 @@
 <div class="row">
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-green" id="total_queries" title="only A + AAAA queries">
+        <div class="small-box bg-green" id="total_queries">
             <div class="inner">
-                <p>Total queries (<span id="unique_clients">-</span> clients)</p>
-                <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
+                <p>Total queries (<span id="total_clients">-</span> clients)</p>
+                <h3 class="statistic"><span id="dns_queries">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-globe-americas"></i>
@@ -47,7 +47,7 @@
         <div class="small-box bg-aqua">
             <div class="inner">
                 <p>Queries Blocked</p>
-                <h3 class="statistic"><span id="queries_blocked_today">---</span></h3>
+                <h3 class="statistic"><span id="blocked_queries">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-hand-paper"></i>
@@ -60,7 +60,7 @@
         <div class="small-box bg-yellow">
             <div class="inner">
                 <p>Percent Blocked</p>
-                <h3 class="statistic"><span id="percentage_blocked_today">---</span></h3>
+                <h3 class="statistic"><span id="percent_blocked">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-chart-pie"></i>
@@ -73,7 +73,7 @@
         <div class="small-box bg-red" title="<?php echo gravity_last_update(); ?>">
             <div class="inner">
                 <p>Domains on Blocklist</p>
-                <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
+                <h3 class="statistic"><span id="gravity_size">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-list-alt"></i>
