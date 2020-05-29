@@ -31,7 +31,7 @@
   },
   "browserslist": [
     "defaults",
-    "Explorer >= 10",
+    "Explorer >= 11",
     "not ExplorerMobile <= 11",
     "not Safari 5.1"
   ],
