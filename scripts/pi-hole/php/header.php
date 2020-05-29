@@ -204,7 +204,7 @@
 <?php } ?>
     <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css">
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style/vendor/font-awesome-5.13.0/css/all.min.css">
+    <link rel="stylesheet" href="style/vendor/font-awesome/css/all.min.css">
     <link rel="stylesheet" href="style/vendor/datatables.min.css">
     <link rel="stylesheet" href="style/vendor/daterangepicker.css">
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
