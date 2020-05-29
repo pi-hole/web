@@ -157,7 +157,7 @@
             <canvas id="forwardDestinationPieChart" width="120" height="120" class="extratooltipcanvas no-user-select"></canvas>
           </div>
           <div class="pull-left" style="width:50%">
-            <div id="forward-destinations-legend" class="chart-legend" class="extratooltipcanvas no-user-select"></div>
+            <div id="forward-destinations-legend" class="chart-legend extratooltipcanvas no-user-select"></div>
           </div>
         </div>
         <div class="overlay">
