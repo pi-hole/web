@@ -668,14 +668,12 @@ if($auth) {
                         <i class="fa-paypal-icon fab fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
-                <?php if($auth){ ?>
-                <!-- Help -->
-                <li<?php if($scriptname === "help.php"){ ?> class="active"<?php } ?>>
-                    <a href="help.php">
-                        <i class="fa fa-question-circle"></i> <span>Help</span>
+                 <!-- Docs -->
+                 <li>
+                    <a href="https://docs.pi-hole.net/" rel="noopener" target="_blank">
+                        <i class="fa-question-circle"></i> <span>Donate</span>
                     </a>
                 </li>
-                <?php } ?>
             </ul>
         </section>
         <!-- /.sidebar -->
