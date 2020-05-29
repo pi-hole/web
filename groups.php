@@ -71,6 +71,8 @@
     </div>
 </div>
 
+<script src="scripts/vendor/bootstrap-select.min.js"></script>
+<script src="scripts/vendor/bootstrap-toggle.min.js"></script>
 <script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/groups.js"></script>
 

@@ -210,7 +210,7 @@
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
     <link rel="stylesheet" href="style/vendor/animate.min.css">
 
-<?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
+<?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?>
     <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css">
     <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css">
 <?php } ?>
@@ -223,12 +223,6 @@
     <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="scripts/vendor/adminlte.min.js"></script>
     <script src="scripts/vendor/bootstrap-notify.min.js"></script>
-
-<?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?>
-    <script src="scripts/vendor/bootstrap-select.min.js"></script>
-    <script src="scripts/vendor/bootstrap-toggle.min.js"></script>
-<?php } ?>
-
     <script src="scripts/vendor/datatables.min.js"></script>
     <script src="scripts/vendor/moment.min.js"></script>
     <script src="scripts/vendor/Chart.min.js"></script>
@@ -500,7 +494,7 @@ if($auth) {
                     </a>
                 </li>
                 <!-- Group Management -->
-                <li class="treeview<?php if(in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php"))){ ?> active<?php } ?>">
+                <li class="treeview<?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?> active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-users-cog"></i> <span>Group Management</span>
                     <span class="pull-right-container">
@@ -576,7 +570,7 @@ if($auth) {
                     </a>
                 </li>
                 <!-- Tools -->
-                <li class="treeview<?php if(in_array($scriptname, array("messages.php", "gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php", "network.php"))){ ?> active<?php } ?>">
+                <li class="treeview<?php if (in_array($scriptname, array("messages.php", "gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php", "network.php"))){ ?> active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-folder"></i> <span>Tools</span>
                     <span class="pull-right-container">
