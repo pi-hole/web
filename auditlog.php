@@ -7,8 +7,7 @@
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
 ?>
-<!-- Send PHP info to JS -->
-<div id="token" hidden><?php echo $token ?></div>
+
 <!-- Title -->
 <div class="page-header">
     <h1>Audit log (showing live data)</h1>
