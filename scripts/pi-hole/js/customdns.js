@@ -115,7 +115,7 @@ function deleteCustomDNS() {
     },
     error: function (jqXHR, exception) {
       showAlert("error", "Error while deleting this custom DNS entry");
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }

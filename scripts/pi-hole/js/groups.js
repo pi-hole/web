@@ -157,7 +157,7 @@ function addGroup() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new group", jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -231,7 +231,7 @@ function editGroup() {
         "Error while " + notDone + " group with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -260,7 +260,7 @@ function deleteGroup() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting group with ID " + id, jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
