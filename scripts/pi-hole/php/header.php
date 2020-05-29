@@ -10,7 +10,9 @@
     require "scripts/pi-hole/php/password.php";
     require_once "scripts/pi-hole/php/FTL.php";
     require "scripts/pi-hole/php/theme.php";
+
     $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
+    $hostname = gethostname() ? gethostname() : "";
 
     check_cors();
 
@@ -183,7 +185,7 @@
     <meta http-equiv="cache-control" content="max-age=60,private">
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pi-hole<?php if (gethostname()) {echo " - ", gethostname();} ?></title>
+    <title>Pi-hole<?php echo $hostname ? " - " . $hostname : "" ?></title>
 
     <link rel="apple-touch-icon" href="img/favicons/apple-touch-icon.png" sizes="180x180">
     <link rel="icon" href="img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
@@ -276,10 +278,10 @@ if($auth) {
                             <span class="label label-warning" id="pihole-diagnosis-count"></span>
                         </a>
                     </li>
-                    <li>
+                    <li<?php echo !$hostname ? ' class="hidden"' : "" ?>>
                         <p class="navbar-text">
                             <span class="hidden-xs hidden-sm">hostname:</span>
-                            <code><?php echo gethostname(); ?></code>
+                            <code><?php echo $hostname; ?></code>
                         </p>
                     </li>
                     <li class="dropdown user user-menu">
