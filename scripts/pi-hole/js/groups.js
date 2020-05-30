@@ -10,7 +10,7 @@
 var table;
 var token = $("#token").text();
 
-$(document).ready(function () {
+$(function () {
   $("#btnAdd").on("click", addGroup);
 
   table = $("#groupsTable").DataTable({

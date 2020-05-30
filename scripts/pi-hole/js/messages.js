@@ -62,7 +62,7 @@ function renderMessage(data, type, row) {
   }
 }
 
-$(document).ready(function () {
+$(function () {
   $("#messagesTable").DataTable({
     ajax: {
       url: "api_db.php?messages",

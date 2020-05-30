@@ -107,7 +107,7 @@ function autofilter() {
   return $("#autofilter").prop("checked");
 }
 
-$(document).ready(function () {
+$(function () {
   // Do we want to filter queries?
   var GETDict = {};
   window.location.search

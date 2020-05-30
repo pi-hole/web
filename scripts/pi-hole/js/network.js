@@ -63,7 +63,7 @@ function parseColor(input) {
   }
 }
 
-$(document).ready(function () {
+$(function () {
   tableApi = $("#network-entries").DataTable({
     rowCallback: function (row, data) {
       var color,

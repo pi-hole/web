@@ -23,7 +23,7 @@ function getGroups() {
   );
 }
 
-$(document).ready(function () {
+$(function () {
   $("#btnAdd").on("click", addAdlist);
 
   utils.setBsSelectDefaults();
