@@ -234,9 +234,11 @@
   text-decoration: line-through !important;
 }
 
-.fa-paypal-icon {
-  width: 18px;
-  margin-left: 2px;
+/* These are needed because AdmintLTE 2.x doesn't support Font Awesome 5.x */
+.sidebar-menu > li > a > .fab,
+.sidebar-menu > li > a > .far,
+.sidebar-menu > li > a > .fas {
+  width: 20px;
 }
 
 /* Utilities */

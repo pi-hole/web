@@ -651,20 +651,20 @@ if($auth) {
                 if(strlen($pwhash) > 0 && !$auth) { ?>
                 <li<?php if($scriptname === "login"){ ?> class="active"<?php } ?>>
                     <a href="index.php?login">
-                        <i class="fa far fa-user"></i> <span>Login</span>
+                        <i class="fa fa-user"></i> <span>Login</span>
                     </a>
                 </li>
                 <?php } ?>
                 <!-- Donate -->
                 <li>
                     <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
-                        <i class="fa-paypal-icon fab fa-paypal"></i> <span>Donate</span>
+                        <i class="fab fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
                  <!-- Docs -->
                  <li>
                     <a href="https://docs.pi-hole.net/" rel="noopener" target="_blank">
-                        <i class="fa-question-circle"></i> <span>Donate</span>
+                        <i class="fa fa-question-circle"></i> <span>Documentation</span>
                     </a>
                 </li>
             </ul>
