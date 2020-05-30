@@ -208,9 +208,9 @@
     <link rel="stylesheet" href="style/vendor/datatables.min.css">
     <link rel="stylesheet" href="style/vendor/daterangepicker.min.css">
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
-    <link rel="stylesheet" href="style/vendor/animate.min.css">
 
 <?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?>
+    <link rel="stylesheet" href="style/vendor/animate.min.css">
     <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css">
     <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css">
 <?php } ?>
