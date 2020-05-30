@@ -67,7 +67,7 @@
   </div>
 </div>
 
-<script src="scripts/vendor/daterangepicker.js"></script>
+<script src="scripts/vendor/daterangepicker.min.js"></script>
 <script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/db_graph.js"></script>
 
