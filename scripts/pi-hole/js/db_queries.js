@@ -92,16 +92,19 @@ function add(domain, list) {
   alSuccess.hide();
   alFailure.hide();
   $.ajax({
-    url: "scripts/pi-hole/php/add.php",
+    url: "scripts/pi-hole/php/groups.php",
     method: "post",
-    data: { domain: domain, list: list, token: token },
+    data: {
+      domain: domain,
+      list: list,
+      token: token,
+      action: "add_domain",
+      comment: "Added from Long-Term-Data Query Log"
+    },
     success: function (response) {
-      if (
-        response.indexOf("not a valid argument") >= 0 ||
-        response.indexOf("is not a valid domain") >= 0
-      ) {
+      if (!response.success) {
         alFailure.show();
-        err.html(response);
+        err.html(response.message);
         alFailure.delay(4000).fadeOut(2000, function () {
           alFailure.hide();
         });
@@ -136,7 +139,7 @@ function add(domain, list) {
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
-  } else if (xhr.responseText.indexOf("Connection refused") >= 0) {
+  } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
     alert("An error occurred while loading the data: Connection refused. Is FTL running?");
   } else {
     alert("An unknown error occurred while loading the data.\n" + xhr.responseText);
@@ -209,9 +212,9 @@ var reloadCallback = function () {
   $("h3#ads_blocked_exact").text(statistics[2].toLocaleString());
   $("h3#ads_wildcard_blocked").text(statistics[3].toLocaleString());
 
-  var percent = 0.0;
+  var percent = 0;
   if (statistics[2] + statistics[3] > 0) {
-    percent = (100.0 * (statistics[2] + statistics[3])) / statistics[0];
+    percent = (100 * (statistics[2] + statistics[3])) / statistics[0];
   }
 
   $("h3#ads_percentage_today").text(parseFloat(percent).toFixed(1).toLocaleString() + " %");

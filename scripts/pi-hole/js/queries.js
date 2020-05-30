@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false */
+/* global moment:false, utils:false */
 
 var tableApi;
 
@@ -39,19 +39,21 @@ function add(domain, list) {
   // add Domain to List after Modal has faded in
   alertModal.one("shown.bs.modal", function () {
     $.ajax({
-      url: "scripts/pi-hole/php/add.php",
+      url: "scripts/pi-hole/php/groups.php",
       method: "post",
-      data: { domain: domain, list: list, token: token },
+      data: {
+        domain: domain,
+        list: list,
+        token: token,
+        action: "add_domain",
+        comment: "Added from Query Log"
+      },
       success: function (response) {
         alProcessing.hide();
-        if (
-          response.indexOf("not a valid argument") >= 0 ||
-          response.indexOf("is not a valid domain") >= 0 ||
-          response.indexOf("Wrong token") >= 0
-        ) {
+        if (!response.success) {
           // Failure
           alNetworkErr.hide();
-          alCustomErr.html(response.replace("[✗]", ""));
+          alCustomErr.html(response.message);
           alFailure.fadeIn(1000);
           setTimeout(function () {
             alertModal.modal("hide");
@@ -90,7 +92,7 @@ function add(domain, list) {
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
-  } else if (xhr.responseText.indexOf("Connection refused") >= 0) {
+  } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
     alert("An error occured while loading the data: Connection refused. Is FTL running?");
   } else {
     alert("An unknown error occured while loading the data.\n" + xhr.responseText);
@@ -137,26 +139,26 @@ $(document).ready(function () {
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
       // DNSSEC status
-      var dnssec_status;
+      var dnssecStatus;
       switch (data[5]) {
         case "1":
-          dnssec_status = '<br><span class="text-green">SECURE</span>';
+          dnssecStatus = '<br><span class="text-green">SECURE</span>';
           break;
         case "2":
-          dnssec_status = '<br><span class="text-orange">INSECURE</span>';
+          dnssecStatus = '<br><span class="text-orange">INSECURE</span>';
           break;
         case "3":
-          dnssec_status = '<br><span class="text-red">BOGUS</span>';
+          dnssecStatus = '<br><span class="text-red">BOGUS</span>';
           break;
         case "4":
-          dnssec_status = '<br><span class="text-red">ABANDONED</span>';
+          dnssecStatus = '<br><span class="text-red">ABANDONED</span>';
           break;
         case "5":
-          dnssec_status = '<br><span class="text-orange">UNKNOWN</span>';
+          dnssecStatus = '<br><span class="text-orange">UNKNOWN</span>';
           break;
         default:
           // No DNSSEC
-          dnssec_status = "";
+          dnssecStatus = "";
       }
 
       // Query status
@@ -178,14 +180,14 @@ $(document).ready(function () {
         case "2":
           blocked = false;
           colorClass = "text-green";
-          fieldtext = "OK <br class='hidden-lg'>(forwarded)" + dnssec_status;
+          fieldtext = "OK <br class='hidden-lg'>(forwarded)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case "3":
           blocked = false;
           colorClass = "text-green";
-          fieldtext = "OK <br class='hidden-lg'>(cached)" + dnssec_status;
+          fieldtext = "OK <br class='hidden-lg'>(cached)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
@@ -281,9 +283,9 @@ $(document).ready(function () {
         );
         $("td:eq(4)", row).off(); // Release any possible previous onClick event handlers
         $("td:eq(4)", row).click(function () {
-          var new_tab = window.open("groups-domains.php?domainid=" + data[9], "_blank");
-          if (new_tab) {
-            new_tab.focus();
+          var newTab = window.open("groups-domains.php?domainid=" + data[9], "_blank");
+          if (newTab) {
+            newTab.focus();
           }
         });
         $("td:eq(4)", row).addClass("text-underline pointer");
@@ -296,9 +298,9 @@ $(document).ready(function () {
       }
 
       if (isCNAME) {
-        var CNAME_domain = data[8];
+        var CNAMEDomain = data[8];
         // Add domain in CNAME chain causing the query to have been blocked
-        $("td:eq(2)", row).text(domain + "\n(blocked " + CNAME_domain + ")");
+        $("td:eq(2)", row).text(domain + "\n(blocked " + CNAMEDomain + ")");
       } else {
         $("td:eq(2)", row).text(domain);
       }
@@ -399,24 +401,10 @@ $(document).ready(function () {
     ],
     stateSave: true,
     stateSaveCallback: function (settings, data) {
-      // Store current state in client's local storage area
-      localStorage.setItem("query_log_table", JSON.stringify(data));
+      utils.stateSaveCallback("query_log_table", data);
     },
     stateLoadCallback: function () {
-      // Receive previous state from client's local storage area
-      var data = localStorage.getItem("query_log_table");
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
-
-      data = JSON.parse(data);
-      // Always start on the first page to show most recent queries
-      data.start = 0;
-      // Always start with empty search field
-      data.search.search = "";
-      // Apply loaded state to table
-      return data;
+      return utils.stateLoadCallback("query_log_table");
     },
     columnDefs: [
       {
@@ -431,7 +419,7 @@ $(document).ready(function () {
       api.$("td:eq(1)").click(function () {
         if (autofilter()) {
           api.search(this.textContent).draw();
-          $("#resetButton").show();
+          $("#resetButton").removeClass("hidden");
         }
       });
       api.$("td:eq(1)").hover(
@@ -454,7 +442,7 @@ $(document).ready(function () {
         if (autofilter()) {
           var domain = this.textContent.split("\n")[0];
           api.search(domain).draw();
-          $("#resetButton").show();
+          $("#resetButton").removeClass("hidden");
         }
       });
       api.$("td:eq(2)").hover(
@@ -477,7 +465,7 @@ $(document).ready(function () {
       api.$("td:eq(3)").click(function () {
         if (autofilter()) {
           api.search(this.textContent).draw();
-          $("#resetButton").show();
+          $("#resetButton").removeClass("hidden");
         }
       });
       api.$("td:eq(3)").hover(
@@ -509,7 +497,7 @@ $(document).ready(function () {
 
   $("#resetButton").click(function () {
     tableApi.search("").draw();
-    $("#resetButton").hide();
+    $("#resetButton").addClass("hidden");
   });
 
   // Disable autocorrect in the search box
@@ -519,10 +507,10 @@ $(document).ready(function () {
   input.setAttribute("autocapitalize", "off");
   input.setAttribute("spellcheck", false);
 
-  var chkbox_data = localStorage.getItem("query_log_filter_chkbox");
-  if (chkbox_data !== null) {
+  var chkboxData = localStorage.getItem("query_log_filter_chkbox");
+  if (chkboxData !== null) {
     // Restore checkbox state
-    $("#autofilter").prop("checked", chkbox_data === "true");
+    $("#autofilter").prop("checked", chkboxData === "true");
   } else {
     // Initialize checkbox
     $("#autofilter").prop("checked", true);

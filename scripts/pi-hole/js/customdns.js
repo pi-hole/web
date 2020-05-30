@@ -6,6 +6,7 @@
  *  Please see LICENSE file for your rights under this license. */
 
 var table;
+var token = $("#token").text();
 
 function showAlert(type, message) {
   var alertElement = null;
@@ -40,7 +41,11 @@ $(document).ready(function () {
   $("#btnAdd").on("click", addCustomDNS);
 
   table = $("#customDNSTable").DataTable({
-    ajax: "scripts/pi-hole/php/customdns.php?action=get",
+    ajax: {
+      url: "scripts/pi-hole/php/customdns.php",
+      data: { action: "get", token: token },
+      type: "POST"
+    },
     columns: [{}, { type: "ip-address" }, { orderable: false, searchable: false }],
     columnDefs: [
       {
@@ -79,7 +84,7 @@ function addCustomDNS() {
     url: "scripts/pi-hole/php/customdns.php",
     method: "post",
     dataType: "json",
-    data: { action: "add", ip: ip, domain: domain },
+    data: { action: "add", ip: ip, domain: domain, token: token },
     success: function (response) {
       if (response.success) {
         showAlert("success");
@@ -101,7 +106,7 @@ function deleteCustomDNS() {
     url: "scripts/pi-hole/php/customdns.php",
     method: "post",
     dataType: "json",
-    data: { action: "delete", domain: domain, ip: ip },
+    data: { action: "delete", domain: domain, ip: ip, token: token },
     success: function (response) {
       if (response.success) {
         showAlert("success");
@@ -110,7 +115,7 @@ function deleteCustomDNS() {
     },
     error: function (jqXHR, exception) {
       showAlert("error", "Error while deleting this custom DNS entry");
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }

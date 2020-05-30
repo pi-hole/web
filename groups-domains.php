@@ -33,13 +33,17 @@
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="nav-tabs-custom">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a aria-expanded="true" href="#tab_domain" data-toggle="tab">Domain</a></li>
-                        <li class=""><a aria-expanded="false" href="#tab_regex" data-toggle="tab">RegEx filter</a></li>
-                    </ul>        
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="active" role="presentation">
+                            <a href="#tab_domain" aria-controls="tab_domain" aria-expanded="true" role="tab" data-toggle="tab">Domain</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#tab_regex" aria-controls="tab_regex" aria-expanded="false" role="tab" data-toggle="tab">RegEx filter</a>
+                        </li>
+                    </ul>
                     <div class="tab-content">
                         <!-- Domain tab -->
-                        <div id="tab_domain" class="tab-pane active in">
+                        <div id="tab_domain" class="tab-pane active fade in">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -64,7 +68,7 @@
                             </div>
                         </div>
                         <!-- RegEx tab -->
-                        <div id="tab_regex" class="tab-pane">
+                        <div id="tab_regex" class="tab-pane fade">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -114,7 +118,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="domainsTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                <table id="domainsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -127,7 +131,7 @@
                     </tr>
                     </thead>
                 </table>
-                <button type="button" id="resetButton" hidden="true" class="btn btn-default btn-sm text-red">Reset sorting</button>
+                <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Reset sorting</button>
             </div>
             <!-- /.box-body -->
         </div>
@@ -135,7 +139,9 @@
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/groups-common.js"></script>
+<script src="scripts/vendor/bootstrap-select.min.js"></script>
+<script src="scripts/vendor/bootstrap-toggle.min.js"></script>
+<script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/groups-domains.js"></script>
 
 <?php

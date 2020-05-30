@@ -6,19 +6,11 @@
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
-
-// Generate CSRF token
-if(empty($_SESSION['token'])) {
-    $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
-}
-$token = $_SESSION['token'];
-
 ?>
+
 <!-- Sourceing CSS colors from stylesheet to be used in JS code -->
 <span class="queries-permitted"></span>
 <span class="queries-blocked"></span>
-<!-- Send PHP info to JS -->
-<div id="token" hidden><?php echo $token ?></div>
 
 <!-- Title -->
 <div class="page-header">
@@ -49,7 +41,7 @@ $token = $_SESSION['token'];
   </div>
 </div>
 
-<div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden="true">
+<div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden>
     Depending on how large of a range you specified, the request may time out while Pi-hole tries to retrieve all the data.<br/><span id="err"></span>
 </div>
 
@@ -148,6 +140,7 @@ else
 </div>
 
 <script src="scripts/vendor/daterangepicker.js"></script>
+<script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/db_lists.js"></script>
 
 <?php

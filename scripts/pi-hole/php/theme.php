@@ -42,7 +42,6 @@ $theme = $available_themes[$webtheme][2];
 $checkbox_theme_name = $available_themes[$webtheme][3];
 $checkbox_theme_variant = $available_themes[$webtheme][4];
 
-error_log(print_r($available_themes,true));
 function theme_selection() {
     global $available_themes, $webtheme;
     foreach ($available_themes as $key => $value) {

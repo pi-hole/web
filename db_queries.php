@@ -6,16 +6,7 @@
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
-
-// Generate CSRF token
-if(empty($_SESSION['token'])) {
-    $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
-}
-$token = $_SESSION['token'];
-
 ?>
-<!-- Send PHP info to JS -->
-<div id="token" hidden><?php echo $token ?></div>
 
 <!-- Title -->
 <div class="page-header">
@@ -71,7 +62,7 @@ $token = $_SESSION['token'];
     </div>
 </div>
 
-<div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden="true">
+<div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden>
     Depending on how large of a range you specified, the request may time out while Pi-hole tries to retrieve all the data.<br/><span id="err"></span>
 </div>
 
@@ -79,7 +70,7 @@ $token = $_SESSION['token'];
 <div class="row">
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-aqua">
+        <div class="small-box bg-aqua no-user-select">
             <div class="inner">
                 <h3 class="statistic" id="ads_blocked_exact">---</h3>
                 <p>Queries Blocked</p>
@@ -92,7 +83,7 @@ $token = $_SESSION['token'];
     <!-- ./col -->
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-aqua">
+        <div class="small-box bg-aqua no-user-select">
             <div class="inner">
                 <h3 class="statistic" id="ads_wildcard_blocked">---</h3>
                 <p>Queries Blocked (Wildcards)</p>
@@ -105,7 +96,7 @@ $token = $_SESSION['token'];
     <!-- ./col -->
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-green">
+        <div class="small-box bg-green no-user-select">
             <div class="inner">
                 <h3 class="statistic" id="dns_queries">---</h3>
                 <p>Queries Total</p>
@@ -118,7 +109,7 @@ $token = $_SESSION['token'];
     <!-- ./col -->
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-yellow">
+        <div class="small-box bg-yellow no-user-select">
             <div class="inner">
                 <h3 class="statistic" id="ads_percentage_today">---</h3>
                 <p>Queries Blocked</p>
@@ -139,7 +130,7 @@ $token = $_SESSION['token'];
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <table id="all-queries" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+            <table id="all-queries" class="table table-striped table-bordered" width="100%">
                 <thead>
                     <tr>
                         <th>Time</th>

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false */
+/* global moment:false, utils:false */
 
 var tableApi;
 
@@ -17,7 +17,7 @@ var MAXIPDISPLAY = 3;
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
-  } else if (xhr.responseText.indexOf("Connection refused") >= 0) {
+  } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
     alert("An error occured while loading the data: Connection refused. Is FTL running?");
   } else {
     alert("An unknown error occured while loading the data.\n" + xhr.responseText);
@@ -49,9 +49,9 @@ function rgbToHex(values) {
 
 function mixColors(ratio, rgb1, rgb2) {
   return [
-    (1.0 - ratio) * rgb1[0] + ratio * rgb2[0],
-    (1.0 - ratio) * rgb1[1] + ratio * rgb2[1],
-    (1.0 - ratio) * rgb1[2] + ratio * rgb2[2]
+    (1 - ratio) * rgb1[0] + ratio * rgb2[0],
+    (1 - ratio) * rgb1[1] + ratio * rgb2[1],
+    (1 - ratio) * rgb1[2] + ratio * rgb2[2]
   ];
 }
 
@@ -67,37 +67,37 @@ $(document).ready(function () {
   tableApi = $("#network-entries").DataTable({
     rowCallback: function (row, data) {
       var color,
-        mark,
+        iconClasses,
         lastQuery = parseInt(data.lastQuery);
-      var network_recent = $(".network-recent").css("background-color");
-      var network_old = $(".network-old").css("background-color");
-      var network_older = $(".network-older").css("background-color");
-      var network_never = $(".network-never").css("background-color");
+      var networkRecent = $(".network-recent").css("background-color");
+      var networkOld = $(".network-old").css("background-color");
+      var networkOlder = $(".network-older").css("background-color");
+      var networkNever = $(".network-never").css("background-color");
       if (lastQuery > 0) {
         var diff = getTimestamp() - lastQuery;
         if (diff <= 86400) {
           // Last query came in within the last 24 hours (24*60*60 = 86400)
           // Color: light-green to light-yellow
           var ratio = Number(diff) / 86400;
-          var lightgreen = parseColor(network_recent);
-          var lightyellow = parseColor(network_old);
+          var lightgreen = parseColor(networkRecent);
+          var lightyellow = parseColor(networkOld);
           color = rgbToHex(mixColors(ratio, lightgreen, lightyellow));
-          mark = "&#x2714;";
+          iconClasses = "fas fa-check";
         } else {
           // Last query was longer than 24 hours ago
           // Color: light-orange
-          color = network_older;
-          mark = "<strong>?</strong>";
+          color = networkOlder;
+          iconClasses = "fas fa-question";
         }
       } else {
         // This client has never sent a query to Pi-hole, color light-red
-        color = network_never;
-        mark = "&#x2718;";
+        color = networkNever;
+        iconClasses = "fas fa-check";
       }
 
       // Set determined background color
       $(row).css("background-color", color);
-      $("td:eq(7)", row).html(mark);
+      $("td:eq(7)", row).html('<i class="' + iconClasses + '"></i>');
 
       // Insert "Never" into Last Query field when we have
       // never seen a query from this device
@@ -186,24 +186,10 @@ $(document).ready(function () {
     ],
     stateSave: true,
     stateSaveCallback: function (settings, data) {
-      // Store current state in client's local storage area
-      localStorage.setItem("network_table", JSON.stringify(data));
+      utils.stateSaveCallback("network_table", data);
     },
     stateLoadCallback: function () {
-      // Receive previous state from client's local storage area
-      var data = localStorage.getItem("network_table");
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
-
-      data = JSON.parse(data);
-      // Always start on the first page
-      data.start = 0;
-      // Always start with empty search field
-      data.search.search = "";
-      // Apply loaded state to table
-      return data;
+      return utils.stateLoadCallback("network_table");
     },
     columnDefs: [
       {

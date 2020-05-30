@@ -5,6 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global utils:false */
+
 $(function () {
   $("[data-static]").on("click", function () {
     var row = $(this).closest("tr");
@@ -17,7 +19,7 @@ $(function () {
   });
 });
 $(".confirm-poweroff").confirm({
-  text: "Are you sure you want to send a poweroff command to your Pi-Hole?",
+  text: "Are you sure you want to send a poweroff command to your Pi-hole?",
   title: "Confirmation required",
   confirm: function () {
     $("#poweroffform").submit();
@@ -30,10 +32,10 @@ $(".confirm-poweroff").confirm({
   post: true,
   confirmButtonClass: "btn-danger",
   cancelButtonClass: "btn-success",
-  dialogClass: "modal-dialog modal-mg" // Bootstrap classes for mid-size modal
+  dialogClass: "modal-dialog"
 });
 $(".confirm-reboot").confirm({
-  text: "Are you sure you want to send a reboot command to your Pi-Hole?",
+  text: "Are you sure you want to send a reboot command to your Pi-hole?",
   title: "Confirmation required",
   confirm: function () {
     $("#rebootform").submit();
@@ -46,7 +48,7 @@ $(".confirm-reboot").confirm({
   post: true,
   confirmButtonClass: "btn-danger",
   cancelButtonClass: "btn-success",
-  dialogClass: "modal-dialog modal-mg" // Bootstrap classes for mid-size modal
+  dialogClass: "modal-dialog"
 });
 
 $(".confirm-restartdns").confirm({
@@ -63,7 +65,7 @@ $(".confirm-restartdns").confirm({
   post: true,
   confirmButtonClass: "btn-danger",
   cancelButtonClass: "btn-success",
-  dialogClass: "modal-dialog modal-mg"
+  dialogClass: "modal-dialog"
 });
 
 $(".confirm-flushlogs").confirm({
@@ -80,7 +82,7 @@ $(".confirm-flushlogs").confirm({
   post: true,
   confirmButtonClass: "btn-danger",
   cancelButtonClass: "btn-success",
-  dialogClass: "modal-dialog modal-mg"
+  dialogClass: "modal-dialog"
 });
 
 $(".confirm-flusharp").confirm({
@@ -97,7 +99,7 @@ $(".confirm-flusharp").confirm({
   post: true,
   confirmButtonClass: "btn-warning",
   cancelButtonClass: "btn-success",
-  dialogClass: "modal-dialog modal-mg"
+  dialogClass: "modal-dialog"
 });
 
 $(".confirm-disablelogging-noflush").confirm({
@@ -114,7 +116,7 @@ $(".confirm-disablelogging-noflush").confirm({
   post: true,
   confirmButtonClass: "btn-warning",
   cancelButtonClass: "btn-success",
-  dialogClass: "modal-dialog modal-mg"
+  dialogClass: "modal-dialog"
 });
 
 $(".api-token").confirm({
@@ -132,7 +134,7 @@ $(".api-token").confirm({
   post: true,
   confirmButtonClass: "btn-danger",
   cancelButtonClass: "btn-success",
-  dialogClass: "modal-dialog modal-mg"
+  dialogClass: "modal-dialog"
 });
 
 $("#DHCPchk").click(function () {
@@ -173,7 +175,15 @@ $(document).ready(function () {
       paging: false,
       scrollCollapse: true,
       scrollY: "200px",
-      scrollX: true
+      scrollX: true,
+      order: [[2, "asc"]],
+      stateSave: true,
+      stateSaveCallback: function (settings, data) {
+        utils.stateSaveCallback("activeDhcpLeaseTable", data);
+      },
+      stateLoadCallback: function () {
+        return utils.stateLoadCallback("activeDhcpLeaseTable");
+      }
     });
   }
 
@@ -184,7 +194,15 @@ $(document).ready(function () {
       paging: false,
       scrollCollapse: true,
       scrollY: "200px",
-      scrollX: true
+      scrollX: true,
+      order: [[2, "asc"]],
+      stateSave: true,
+      stateSaveCallback: function (settings, data) {
+        utils.stateSaveCallback("staticDhcpLeaseTable", data);
+      },
+      stateLoadCallback: function () {
+        return utils.stateLoadCallback("staticDhcpLeaseTable");
+      }
     });
   }
 
@@ -237,4 +255,23 @@ $(document).ready(function () {
   input.setAttribute("autocorrect", "off");
   input.setAttribute("autocapitalize", "off");
   input.setAttribute("spellcheck", false);
+});
+
+// Bar/Smooth chart toggle
+$(function () {
+  var bargraphs = $("#bargraphs");
+  var chkboxData = localStorage.getItem("barchart_chkbox");
+
+  if (chkboxData !== null) {
+    // Restore checkbox state
+    bargraphs.prop("checked", chkboxData === "true");
+  } else {
+    // Initialize checkbox
+    bargraphs.prop("checked", true);
+    localStorage.setItem("barchart_chkbox", true);
+  }
+
+  bargraphs.click(function () {
+    localStorage.setItem("barchart_chkbox", bargraphs.prop("checked"));
+  });
 });

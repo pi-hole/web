@@ -93,6 +93,38 @@ function piholeChange(action, duration) {
   }
 }
 
+function checkMessages() {
+  $.getJSON("api_db.php?status", function (data) {
+    if ("message_count" in data && data.message_count > 0) {
+      var title;
+      if (data.message_count > 1) {
+        title = "There are " + data.message_count + " warnings. Click for further details.";
+      } else {
+        title = "There is one warning. Click for further details.";
+      }
+
+      $("#pihole-diagnosis").prop("title", title);
+      $("#pihole-diagnosis-count").text(data.message_count);
+      $("#pihole-diagnosis").removeClass("hidden");
+    }
+  });
+}
+
+function testCookies() {
+  if (navigator.cookieEnabled) {
+    return true;
+  }
+
+  // set and read cookie
+  document.cookie = "cookietest=1";
+  var ret = document.cookie.indexOf("cookietest=") !== -1;
+
+  // delete cookie
+  document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+
+  return ret;
+}
+
 $(document).ready(function () {
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html()));
@@ -105,12 +137,16 @@ $(document).ready(function () {
     $("#cookieInfo").show();
   }
 
-  var checkbox_theme = $("#checkbox_theme").text();
+  var checkboxTheme = $("#checkbox_theme").text();
   $("input").icheck({
-    checkboxClass: "icheckbox_" + checkbox_theme,
-    radioClass: "iradio_" + checkbox_theme,
+    checkboxClass: "icheckbox_" + checkboxTheme,
+    radioClass: "iradio_" + checkboxTheme,
     increaseArea: "20%"
   });
+  // Run check immediately after page loading ...
+  checkMessages();
+  // ... and once again with five seconds delay
+  setTimeout(checkMessages, 5000);
 });
 
 // Handle Enable/Disable
@@ -184,26 +220,5 @@ $(document).keypress(function (e) {
   if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
     $("#loginform").attr("action", "settings.php");
     $("#loginform").submit();
-  }
-});
-
-function testCookies() {
-  if (navigator.cookieEnabled) {
-    return true;
-  }
-
-  // set and read cookie
-  document.cookie = "cookietest=1";
-  var ret = document.cookie.indexOf("cookietest=") !== -1;
-
-  // delete cookie
-  document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
-
-  return ret;
-}
-
-$(function () {
-  if (!testCookies() && $("#cookieInfo").length > 0) {
-    $("#cookieInfo").show();
   }
 });

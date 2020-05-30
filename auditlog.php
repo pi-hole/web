@@ -7,15 +7,14 @@
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
 ?>
-<!-- Send PHP info to JS -->
-<div id="token" hidden><?php echo $token ?></div>
+
 <!-- Title -->
 <div class="page-header">
     <h1>Audit log (showing live data)</h1>
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-xs-12 col-lg-6">
       <div class="box" id="domain-frequency">
         <div class="box-header with-border">
           <h3 class="box-title">Allowed queries</h3>
@@ -42,7 +41,8 @@
       <!-- /.box -->
     </div>
     <!-- /.col -->
-    <div class="col-md-6">
+
+    <div class="col-xs-12 col-lg-6">
       <div class="box" id="ad-frequency">
         <div class="box-header with-border">
           <h3 class="box-title">Blocked queries</h3>
@@ -72,6 +72,7 @@
 </div>
 <!-- /.row -->
 
+<script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/auditlog.js"></script>
 
 <?php
