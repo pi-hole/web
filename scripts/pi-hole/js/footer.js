@@ -155,7 +155,7 @@ $("#pihole-enable").on("click", function (e) {
   localStorage.removeItem("countDownTarget");
   piholeChange("enable", "");
 });
-$("#pihole-disable-permanently").on("click", function (e) {
+$("#pihole-disable-indefinitely").on("click", function (e) {
   e.preventDefault();
   piholeChange("disable", "0");
 });
