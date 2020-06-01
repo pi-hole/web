@@ -65,7 +65,7 @@ function piholeChange(action, duration) {
     case "enable":
       btnStatus = $("#flip-status-enable");
       btnStatus.html("<i class='fa fa-spinner'> </i>");
-      $.getJSON("api.php?enable&token=" + token, function(data) {
+      $.getJSON("api.php?enable&token=" + token, function (data) {
         if (data.status === "enabled") {
           btnStatus.html("");
           piholeChanged("enabled");
@@ -76,7 +76,7 @@ function piholeChange(action, duration) {
     case "disable":
       btnStatus = $("#flip-status-disable");
       btnStatus.html("<i class='fa fa-spinner'> </i>");
-      $.getJSON("api.php?disable=" + duration + "&token=" + token, function(data) {
+      $.getJSON("api.php?disable=" + duration + "&token=" + token, function (data) {
         if (data.status === "disabled") {
           btnStatus.html("");
           piholeChanged("disabled");
@@ -93,38 +93,85 @@ function piholeChange(action, duration) {
   }
 }
 
-$(document).ready(function() {
+function checkMessages() {
+  $.getJSON("api_db.php?status", function (data) {
+    if ("message_count" in data && data.message_count > 0) {
+      var title;
+      if (data.message_count > 1) {
+        title = "There are " + data.message_count + " warnings. Click for further details.";
+      } else {
+        title = "There is one warning. Click for further details.";
+      }
+
+      $("#pihole-diagnosis").prop("title", title);
+      $("#pihole-diagnosis-count").text(data.message_count);
+      $("#pihole-diagnosis").removeClass("hidden");
+    }
+  });
+}
+
+function testCookies() {
+  if (navigator.cookieEnabled) {
+    return true;
+  }
+
+  // set and read cookie
+  document.cookie = "cookietest=1";
+  var ret = document.cookie.indexOf("cookietest=") !== -1;
+
+  // delete cookie
+  document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+
+  return ret;
+}
+
+$(function () {
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html()));
   var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
   if (seconds > 0) {
     setTimeout(countDown, 100);
   }
+
+  if (!testCookies() && $("#cookieInfo").length > 0) {
+    $("#cookieInfo").show();
+  }
+
+  var checkboxTheme = $("#checkbox_theme").text();
+  $("input").icheck({
+    checkboxClass: "icheckbox_" + checkboxTheme,
+    radioClass: "iradio_" + checkboxTheme,
+    increaseArea: "20%"
+  });
+  // Run check immediately after page loading ...
+  checkMessages();
+  // ... and once again with five seconds delay
+  setTimeout(checkMessages, 5000);
 });
 
 // Handle Enable/Disable
-$("#pihole-enable").on("click", function(e) {
+$("#pihole-enable").on("click", function (e) {
   e.preventDefault();
   localStorage.removeItem("countDownTarget");
   piholeChange("enable", "");
 });
-$("#pihole-disable-permanently").on("click", function(e) {
+$("#pihole-disable-permanently").on("click", function (e) {
   e.preventDefault();
   piholeChange("disable", "0");
 });
-$("#pihole-disable-10s").on("click", function(e) {
+$("#pihole-disable-10s").on("click", function (e) {
   e.preventDefault();
   piholeChange("disable", "10");
 });
-$("#pihole-disable-30s").on("click", function(e) {
+$("#pihole-disable-30s").on("click", function (e) {
   e.preventDefault();
   piholeChange("disable", "30");
 });
-$("#pihole-disable-5m").on("click", function(e) {
+$("#pihole-disable-5m").on("click", function (e) {
   e.preventDefault();
   piholeChange("disable", "300");
 });
-$("#pihole-disable-custom").on("click", function(e) {
+$("#pihole-disable-custom").on("click", function (e) {
   e.preventDefault();
   var custVal = $("#customTimeout").val();
   custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
@@ -145,7 +192,7 @@ if (sessionvalidity > 0) {
   // setSeconds will correctly handle wrap-around cases
   updateSessionTimer();
 
-  setInterval(function() {
+  setInterval(function () {
     var current = new Date();
     var totalseconds = (start - current) / 1000;
     var minutes = Math.floor(totalseconds / 60);
@@ -169,30 +216,9 @@ if (sessionvalidity > 0) {
 }
 
 // Handle Strg + Enter button on Login page
-$(document).keypress(function(e) {
+$(document).keypress(function (e) {
   if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
     $("#loginform").attr("action", "settings.php");
     $("#loginform").submit();
-  }
-});
-
-function testCookies() {
-  if (navigator.cookieEnabled) {
-    return true;
-  }
-
-  // set and read cookie
-  document.cookie = "cookietest=1";
-  var ret = document.cookie.indexOf("cookietest=") !== -1;
-
-  // delete cookie
-  document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
-
-  return ret;
-}
-
-$(function() {
-  if (!testCookies() && $("#cookieInfo").length) {
-    $("#cookieInfo").show();
   }
 });

@@ -9,11 +9,13 @@
 require_once('auth.php');
 
 // Authentication checks
-if (isset($_POST['token'])) {
-    check_cors();
-    check_csrf($_POST['token']);
-} else {
-    log_and_die('Not allowed (login session invalid or expired, please relogin on the Pi-hole dashboard)!');
+if (!isset($api)) {
+    if (isset($_POST['token'])) {
+        check_cors();
+        check_csrf($_POST['token']);
+    } else {
+        log_and_die('Not allowed (login session invalid or expired, please relogin on the Pi-hole dashboard)!');
+    }
 }
 
 $reload = false;
@@ -47,6 +49,8 @@ if ($_POST['action'] == 'get_groups') {
         while (($res = $query->fetchArray(SQLITE3_ASSOC)) !== false) {
             array_push($data, $res);
         }
+
+        header('Content-type: application/json');
         echo json_encode(array('data' => $data));
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
@@ -198,6 +202,7 @@ if ($_POST['action'] == 'get_groups') {
             array_push($data, $res);
         }
 
+        header('Content-type: application/json');
         echo json_encode(array('data' => $data));
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
@@ -232,6 +237,7 @@ if ($_POST['action'] == 'get_groups') {
             }
         }
 
+        header('Content-type: application/json');
         echo json_encode($ips);
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
@@ -380,6 +386,8 @@ if ($_POST['action'] == 'get_groups') {
             $limit = " WHERE type = 0 OR type = 2";
         } elseif (isset($_POST["showtype"]) && $_POST["showtype"] === "black"){
             $limit = " WHERE type = 1 OR type = 3";
+        } elseif (isset($_POST["type"]) && is_numeric($_POST["type"])){
+            $limit = " WHERE type = " . $_POST["type"];
         }
         $query = $db->query('SELECT * FROM domainlist'.$limit);
         if (!$query) {
@@ -432,7 +440,7 @@ if ($_POST['action'] == 'get_groups') {
             array_push($data, $res);
         }
 
-
+        header('Content-type: application/json');
         echo json_encode(array('data' => $data));
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
@@ -443,12 +451,18 @@ if ($_POST['action'] == 'get_groups') {
         $domains = explode(' ', trim($_POST['domain']));
         $total = count($domains);
         $added = 0;
-        $stmt = $db->prepare('INSERT INTO domainlist (domain,type,comment) VALUES (:domain,:type,:comment)');
+        $stmt = $db->prepare('REPLACE INTO domainlist (domain,type,comment) VALUES (:domain,:type,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
-        $type = intval($_POST['type']);
+        if (isset($_POST['type'])) {
+            $type = intval($_POST['type']);
+        } else if (isset($_POST['list']) && $_POST['list'] === "white") {
+            $type = ListType::whitelist;
+        } else if (isset($_POST['list']) && $_POST['list'] === "black") {
+            $type = ListType::blacklist;
+        }
 
         if (!$stmt->bindValue(':type', $type, SQLITE3_TEXT)) {
             throw new Exception('While binding type: ' . $db->lastErrorMsg());
@@ -629,6 +643,48 @@ if ($_POST['action'] == 'get_groups') {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
+}  elseif ($_POST['action'] == 'delete_domain_string') {
+    // Delete domain identified by the domain string itself
+    try {
+        $stmt = $db->prepare('DELETE FROM domainlist_by_group WHERE domainlist_id=(SELECT id FROM domainlist WHERE domain=:domain AND type=:type);');
+        if (!$stmt) {
+            throw new Exception('While preparing domainlist_by_group statement: ' . $db->lastErrorMsg());
+        }
+
+        if (!$stmt->bindValue(':domain', $_POST['domain'], SQLITE3_TEXT)) {
+            throw new Exception('While binding domain to domainlist_by_group statement: ' . $db->lastErrorMsg());
+        }
+
+        if (!$stmt->bindValue(':type', intval($_POST['type']), SQLITE3_INTEGER)) {
+            throw new Exception('While binding type to domainlist_by_group statement: ' . $db->lastErrorMsg());
+        }
+
+        if (!$stmt->execute()) {
+            throw new Exception('While executing domainlist_by_group statement: ' . $db->lastErrorMsg());
+        }
+
+        $stmt = $db->prepare('DELETE FROM domainlist WHERE domain=:domain AND type=:type');
+        if (!$stmt) {
+            throw new Exception('While preparing domainlist statement: ' . $db->lastErrorMsg());
+        }
+
+        if (!$stmt->bindValue(':domain', $_POST['domain'], SQLITE3_TEXT)) {
+            throw new Exception('While binding domain to domainlist statement: ' . $db->lastErrorMsg());
+        }
+
+        if (!$stmt->bindValue(':type', intval($_POST['type']), SQLITE3_INTEGER)) {
+            throw new Exception('While binding type to domainlist statement: ' . $db->lastErrorMsg());
+        }
+
+        if (!$stmt->execute()) {
+            throw new Exception('While executing domainlist statement: ' . $db->lastErrorMsg());
+        }
+
+        $reload = true;
+        JSON_success();
+    } catch (\Exception $ex) {
+        JSON_error($ex->getMessage());
+    }
 } elseif ($_POST['action'] == 'get_adlists') {
     // List all available groups
     try {
@@ -652,7 +708,7 @@ if ($_POST['action'] == 'get_groups') {
             array_push($data, $res);
         }
 
-
+        header('Content-type: application/json');
         echo json_encode(array('data' => $data));
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
@@ -674,7 +730,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         foreach ($addresses as $address) {
-            if(preg_match("/[^a-zA-Z0-9:\/?&%=~._()-]/", $address) !== 0) {
+            if(preg_match("/[^a-zA-Z0-9:\/?&%=~._()-;]/", $address) !== 0) {
                 throw new Exception('<strong>Invalid adlist URL ' . htmlentities($address) . '</strong><br>'.
                 'Added ' . $added . " out of ". $total . " adlists");
             }
@@ -808,5 +864,6 @@ if ($_POST['action'] == 'get_groups') {
 }
 // Reload lists in pihole-FTL after having added something
 if ($reload) {
-    echo shell_exec('sudo pihole restartdns reload-lists');
+    $output = pihole_execute('restartdns reload-lists');
+    echo implode("\n", $output);
 }
