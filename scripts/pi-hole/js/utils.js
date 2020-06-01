@@ -207,6 +207,11 @@ function stateLoadCallback(itemName) {
   return data;
 }
 
+function getGraphType() {
+  // Only return line if `barchart_chkbox` is explicitly set to false. Else return bar
+  return localStorage.getItem("barchart_chkbox") === "false" ? "line" : "bar";
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -220,6 +225,7 @@ window.utils = (function () {
     validateIPv6CIDR: validateIPv6CIDR,
     setBsSelectDefaults: setBsSelectDefaults,
     stateSaveCallback: stateSaveCallback,
-    stateLoadCallback: stateLoadCallback
+    stateLoadCallback: stateLoadCallback,
+    getGraphType: getGraphType
   };
 })();
