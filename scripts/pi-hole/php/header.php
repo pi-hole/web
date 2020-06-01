@@ -534,8 +534,8 @@ if($auth) {
                   </a>
                   <ul class="treeview-menu">
                     <li>
-                        <a href="#" id="pihole-disable-permanently">
-                            <i class="fa fa-stop"></i> Permanently
+                        <a href="#" id="pihole-disable-indefinitely">
+                            <i class="fa fa-stop"></i> Indefinitely
                         </a>
                     </li>
                     <li>
