@@ -129,11 +129,11 @@ function testCookies() {
 function initCheckboxRadioStyle() {
   function getCheckboxURL(style) {
     var extra = style.startsWith("material-") ? "material" : "bootstrap";
-    return "style/vendor/icheck-" + extra + ".min.css"
+    return "style/vendor/icheck-" + extra + ".min.css";
   }
 
   function applyCheckboxRadioStyle(style) {
-    boxsheet.attr('href', getCheckboxURL(style));
+    boxsheet.attr("href", getCheckboxURL(style));
     var sel = $("input[type='radio'],input[type='checkbox']");
     sel.parent().removeClass();
     sel.parent().addClass("icheck-" + style);
@@ -146,7 +146,7 @@ function initCheckboxRadioStyle() {
   }
 
   var boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet" />');
-  boxsheet.appendTo('head');
+  boxsheet.appendTo("head");
 
   applyCheckboxRadioStyle(chkboxStyle);
 

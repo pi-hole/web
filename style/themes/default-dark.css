@@ -517,12 +517,13 @@ fieldset[disabled] .form-control {
   background-color: rgba(53, 60, 66, 0.733);
   border-radius: 3px;
 }
-.box .overlay > .fa, .overlay-wrapper .overlay > .fa,
+.box .overlay > .fa,
+.overlay-wrapper .overlay > .fa,
 .navbar-nav > .user-menu > .dropdown-menu > .user-body a {
   color: #bec5cb !important;
 }
 
 .navbar-nav > .user-menu > .dropdown-menu > .user-footer {
-	background-color: #353c42bb;
-	padding: 10px;
+  background-color: #353c42bb;
+  padding: 10px;
 }
