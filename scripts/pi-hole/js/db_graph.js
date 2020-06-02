@@ -151,7 +151,7 @@ $(function () {
   var blockedColor = "#999";
   var permittedColor = "#00a65a";
   timeLineChart = new Chart(ctx, {
-    type: "bar",
+    type: utils.getGraphType(),
     data: {
       labels: [],
       datasets: [

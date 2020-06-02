@@ -783,12 +783,9 @@ $(function () {
   var permittedColor = $(".queries-permitted").css("background-color");
   var gridColor = $(".graphs-grid").css("background-color");
   var ticksColor = $(".graphs-ticks").css("color");
-
-  var graphType = localStorage.getItem("barchart_chkbox") === "true" ? "bar" : "line";
-
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   timeLineChart = new Chart(ctx, {
-    type: graphType,
+    type: utils.getGraphType(),
     data: {
       labels: [],
       datasets: [
@@ -906,7 +903,7 @@ $(function () {
   if (clientsChartEl) {
     ctx = clientsChartEl.getContext("2d");
     clientsChart = new Chart(ctx, {
-      type: graphType,
+      type: utils.getGraphType(),
       data: {
         labels: [],
         datasets: [{ data: [] }]
