@@ -294,3 +294,9 @@
 .daterangepicker {
   font-family: inherit;
 }
+
+.form-inline .form-control {
+    display: inline-block;
+    width: 100%;
+	vertical-align: middle;
+}
