@@ -162,37 +162,6 @@ function initCheckboxRadioStyle() {
   }
 }
 
-function initBoxedLayout() {
-  function applyBoxedLayout(enabled) {
-    localStorage.setItem("boxedlayout", enabled);
-    if (enabled) {
-      $("body").addClass("layout-boxed");
-    } else {
-      $("body").removeClass("layout-boxed");
-    }
-  }
-
-  // Read from local storage, initialize if needed
-  var boxed = localStorage.getItem("boxedlayout");
-  if (boxed === null) {
-    boxed = true;
-  } else {
-    boxed = boxed === "true";
-  }
-
-  applyBoxedLayout(boxed);
-
-  // Add handler when on settings page
-  var boxedlayoutSelector = $("#boxedlayout-selector");
-  if (boxedlayoutSelector !== null) {
-    boxedlayoutSelector.prop("checked", boxed);
-    boxedlayoutSelector.change(function () {
-      var enabled = $(this).prop("checked");
-      applyBoxedLayout(enabled);
-    });
-  }
-}
-
 function initCPUtemp() {
   function setCPUtemp(unit) {
     localStorage.setItem("tempunit", tempunit);
@@ -250,7 +219,6 @@ $(function () {
 
   // Apply per-browser styling settings
   initCheckboxRadioStyle();
-  initBoxedLayout();
   initCPUtemp();
 
   if (typeof initpage === "function") {

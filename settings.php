@@ -1021,13 +1021,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                 </div>
                 <!-- ######################################################### API and Web ######################################################### -->
                 <?php
-                // CPU temperature unit
-                if (isset($setupVars["TEMPERATUREUNIT"])) {
-                    $temperatureunit = $setupVars["TEMPERATUREUNIT"];
-                } else {
-                    $temperatureunit = "C";
-                }
-
                 // Administrator email address
                 if (isset($setupVars["ADMIN_EMAIL"])) {
                     $adminemail = $setupVars["ADMIN_EMAIL"];
@@ -1110,6 +1103,18 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                             <div class="col-md-12">
                                                 <h4>Interface appearance</h4>
                                                 <?php theme_selection(); ?>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div>
+                                                    <input type="checkbox" name="boxedlayout" id="boxedlayout" value="yes" <?php if ($boxedlayout){ ?>checked<?php } ?>>
+                                                    <label for="boxedlayout"><strong>Use boxed layout (for large screens)</strong></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
                                                 <h4>Administrator Email Address</h4>
                                                 <input type="email" class="form-control" name="adminemail" value="<?php echo htmlspecialchars($adminemail); ?>">
                                                 <input type="hidden" name="field" value="webUI">
@@ -1196,21 +1201,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div>
-                                                <input type="checkbox" id="boxedlayout-selector">
-                                                <label for="boxedlayout-selector"><strong>Use boxed layout (for large screens)</strong></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="box box-warning">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Display options (auto saved, per-browser)</h3>
-                                </div>
-                                <div class="box-body">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div>

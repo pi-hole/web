@@ -538,6 +538,14 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				{
 					pihole_execute('-a -e \''.$adminemail.'\'');
 				}
+				if(isset($_POST["boxedlayout"]))
+				{
+					pihole_execute('-a layout boxed');
+				}
+				else
+				{
+					pihole_execute('-a layout traditional');
+				}
 				if(isset($_POST["webtheme"]))
 				{
 					global $available_themes;
