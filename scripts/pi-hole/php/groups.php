@@ -449,6 +449,7 @@ if ($_POST['action'] == 'get_groups') {
     // Add new domain
     try {
         $domains = explode(' ', trim($_POST['domain']));
+        $before = intval($db->querySingle("SELECT COUNT(*) FROM domainlist;"));
         $total = count($domains);
         $added = 0;
         $stmt = $db->prepare('REPLACE INTO domainlist (domain,type,comment) VALUES (:domain,:type,:comment)');
@@ -525,8 +526,23 @@ if ($_POST['action'] == 'get_groups') {
             $added++;
         }
 
+        $after = intval($db->querySingle("SELECT COUNT(*) FROM domainlist;"));
+        $difference = $after - $before;
+        if($total === 1) {
+            if($difference !== 1) {
+                    $msg = "Not adding ". htmlentities(utf8_encode($domain)) . " as it is already on the list";
+            } else {
+                    $msg = "Added " . htmlentities(utf8_encode($domain));
+            }
+        } else {
+            if($difference !== $total) {
+                    $msg = "Added " . ($after-$before) . " out of ". $total . " domains (skipped duplicates)";
+            } else {
+                    $msg = "Added " . $total . " domains";
+            }
+        }
         $reload = true;
-        JSON_success();
+        JSON_success($msg);
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
@@ -865,5 +881,4 @@ if ($_POST['action'] == 'get_groups') {
 // Reload lists in pihole-FTL after having added something
 if ($reload) {
     $output = pihole_execute('restartdns reload-lists');
-    echo implode("\n", $output);
 }

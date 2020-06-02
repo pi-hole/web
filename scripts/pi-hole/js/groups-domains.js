@@ -361,7 +361,7 @@ function addDomain() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Successfully added " + domainRegex, domain);
+        utils.showAlert("success", "fas fa-plus", "Success!", response.message);
         domainEl.val("");
         commentEl.val("");
         wildcardEl.prop("checked", false);
