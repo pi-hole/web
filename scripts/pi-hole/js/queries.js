@@ -351,7 +351,7 @@ $(function () {
 
       $("td:eq(5)", row).html(replytext);
 
-      if (data.length > 7 && data[7] > 0) {
+      if (data.length > 7) {
         var content = $("td:eq(5)", row).html();
         $("td:eq(5)", row).html(content + " (" + (0.1 * data[7]).toFixed(1) + "ms)");
       }
