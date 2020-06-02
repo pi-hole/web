@@ -127,7 +127,13 @@ function testCookies() {
 }
 
 function initCheckboxRadioStyle() {
+  function getCheckboxURL(style) {
+    var extra = style.startsWith("material-") ? "material" : "bootstrap";
+    return "style/vendor/icheck-" + extra + ".min.css"
+  }
+
   function applyCheckboxRadioStyle(style) {
+    boxsheet.attr('href', getCheckboxURL(style));
     var sel = $("input[type='radio'],input[type='checkbox']");
     sel.parent().removeClass();
     sel.parent().addClass("icheck-" + style);
@@ -136,8 +142,11 @@ function initCheckboxRadioStyle() {
   // Read from local storage, initialize if needed
   var chkboxStyle = localStorage.getItem("theme_icheck");
   if (chkboxStyle === null) {
-    chkboxStyle = "material-blue";
+    chkboxStyle = "primary";
   }
+
+  var boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet" />');
+  boxsheet.appendTo('head');
 
   applyCheckboxRadioStyle(chkboxStyle);
 
@@ -180,33 +189,6 @@ function initBoxedLayout() {
     boxedlayoutSelector.change(function () {
       var enabled = $(this).prop("checked");
       applyBoxedLayout(enabled);
-    });
-  }
-}
-
-function initTheme() {
-  function getThemeURL(themename) {
-    return "style/themes/" + themename + ".css";
-  }
-
-  // Read from local storage, initialize if needed
-  var themename = localStorage.getItem("css-theme");
-  if (themename === null) {
-    themename = "default-light";
-    localStorage.setItem("css-theme", themename);
-  }
-
-  var themesheet = $('<link href="' + getThemeURL(themename) + '" rel="stylesheet" />');
-  themesheet.appendTo("head");
-
-  // Add handler when on settings page
-  var themeSelector = $("#theme-selector");
-  if (themeSelector !== null) {
-    themeSelector.val(themename);
-    themeSelector.change(function () {
-      themename = $(this).val();
-      localStorage.setItem("css-theme", themename);
-      themesheet.attr("href", getThemeURL(themename));
     });
   }
 }
@@ -269,7 +251,6 @@ $(function () {
   // Apply per-browser styling settings
   initCheckboxRadioStyle();
   initBoxedLayout();
-  initTheme();
   initCPUtemp();
 
   if (typeof initpage === "function") {

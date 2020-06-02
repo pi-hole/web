@@ -218,7 +218,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 ?>
 
 <?php
-if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "dns", "piholedhcp", "api", "privacy", "perbrowser", "teleporter"))) {
+if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "dns", "piholedhcp", "api", "privacy", "teleporter"))) {
     $tab = $_GET['tab'];
 } else {
     $tab = "sysadmin";
@@ -242,9 +242,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                 </li>
                 <li role="presentation"<?php if($tab === "api"){ ?> class="active"<?php } ?>>
                     <a href="#api" aria-controls="api" aria-expanded="<?php echo $tab === "api" ? "true" : "false"; ?>" role="tab" data-toggle="tab">API / Web interface</a>
-                </li>
-                <li role="presentation"<?php if($tab === "perbrowser"){ ?> class="active"<?php } ?>>
-                    <a href="#perbrowser" aria-controls="perbrowser" aria-expanded="<?php echo $tab === "perbrowser" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Per Browser Settings</a>
                 </li>
                 <li role="presentation"<?php if($tab === "privacy"){ ?> class="active"<?php } ?>>
                     <a href="#privacy" aria-controls="privacy" aria-expanded="<?php echo $tab === "privacy" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Privacy</a>
@@ -1111,6 +1108,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-md-12">
+                                                <h4>Interface appearance</h4>
+                                                <?php theme_selection(); ?>
                                                 <h4>Administrator Email Address</h4>
                                                 <input type="email" class="form-control" name="adminemail" value="<?php echo htmlspecialchars($adminemail); ?>">
                                                 <input type="hidden" name="field" value="webUI">
@@ -1124,23 +1123,45 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                 </div>
                             </form>
                         </div>
-                    </div>
-                </div>
-                <!-- ######################################################### Per Browser Settings (not saved in setupVars) #############################-->
-                <div id="perbrowser" class="tab-pane fade<?php if($tab === "perbrowser"){ ?> in active<?php } ?>">
-                    <div class="row">
                         <div class="col-md-6">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Theme</h3>
+                                    <h3 class="box-title">Styling (auto saved, per-browser)</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <p>Checkbox and radio buttons</p>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-6">
                                             <select id="iCheckStyle">
+                                                <option>default</option>
+                                                <option>primary</option>
+                                                <option>success</option>
+                                                <option>info</option>
+                                                <option>warning</option>
+                                                <option>danger</option>
+                                                <option>turquoise</option>
+                                                <option>emerland</option>
+                                                <option>peterriver</option>
+                                                <option>amethyst</option>
+                                                <option>wetasphalt</option>
+                                                <option>greensea</option>
+                                                <option>nephritis</option>
+                                                <option>belizehole</option>
+                                                <option>wisteria</option>
+                                                <option>midnightblue</option>
+                                                <option>sunflower</option>
+                                                <option>carrot</option>
+                                                <option>alizarin</option>
+                                                <option>clouds</option>
+                                                <option>concrete</option>
+                                                <option>orange</option>
+                                                <option>pumpkin</option>
+                                                <option>pomegranate</option>
+                                                <option>silver</option>
+                                                <option>asbestos</option>
+
                                                 <option>material-red</option>
                                                 <option>material-pink</option>
                                                 <option>material-purple</option>
@@ -1164,21 +1185,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <p>Theme</p>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <select id="theme-selector">
-                                                <option value="default-light">Pi-hole default theme (light, default)</option>
-                                                <option value="default-dark">Pi-hole midnight theme (dark)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <p>CPU Temperature Unit</p>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-6">
                                             <select id="tempunit-selector">
                                                 <option value="C">Celsius</option>
                                                 <option value="K">Kelvin</option>
@@ -1196,11 +1206,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Dashboard</h3>
+                                    <h3 class="box-title">Display options (auto saved, per-browser)</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="row">
