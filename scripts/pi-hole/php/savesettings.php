@@ -525,18 +525,6 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				break;
 
 			case "webUI":
-				if($_POST["tempunit"] == "F")
-				{
-					pihole_execute('-a -f');
-				}
-				elseif($_POST["tempunit"] == "K")
-				{
-					pihole_execute('-a -k');
-				}
-				else
-				{
-					pihole_execute('-a -c');
-				}
 				$adminemail = trim($_POST["adminemail"]);
 				if(strlen($adminemail) == 0 || !isset($adminemail))
 				{
@@ -549,14 +537,6 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				else
 				{
 					pihole_execute('-a -e \''.$adminemail.'\'');
-				}
-				if(isset($_POST["boxedlayout"]))
-				{
-					pihole_execute('-a layout boxed');
-				}
-				else
-				{
-					pihole_execute('-a layout traditional');
 				}
 				if(isset($_POST["webtheme"]))
 				{

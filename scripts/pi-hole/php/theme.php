@@ -7,14 +7,14 @@
 *  Please see LICENSE file for your rights under this license. */
 
 // Array of available themes and their description
-$available_themes = [];
+$available_themes = array();
 /* Array key = name used internally, not shown to the user
 *  Array[0] = Description
 *  Array[1] = Is this a dark mode theme? (Sets background to black during page reloading to avoid white "flashing")
 *  Array[2] = Style sheet name
 */
-$available_themes["default-light"] = ["Pi-hole default theme (light, default)", false, "default-light"];
-$available_themes["default-dark"] = ["Pi-hole midnight theme (dark)", true, "default-dark"];
+$available_themes["default-light"] = array("Pi-hole default theme (light, default)", false, "default-light");
+$available_themes["default-dark"] = array("Pi-hole midnight theme (dark)", true, "default-dark");
 
 $webtheme = "";
 // Try to load theme settings from setupVars.conf
