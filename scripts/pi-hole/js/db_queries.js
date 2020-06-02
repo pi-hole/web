@@ -198,13 +198,13 @@ var reloadCallback = function () {
   statistics = [0, 0, 0, 0];
   var data = tableApi.rows().data();
   for (var i = 0; i < data.length; i++) {
-    statistics[0]++;
-    if (data[i][4] === 1) {
-      statistics[2]++;
+    statistics[0]++; // TOTAL query
+    if (data[i][4] === 1 || (data[i][4] > 4 && data[i][4] !== 10)) {
+      statistics[2]++; // EXACT blocked
     } else if (data[i][4] === 3) {
-      statistics[1]++;
-    } else if (data[i][4] === 4) {
-      statistics[3]++;
+      statistics[1]++; // CACHE query
+    } else if (data[i][4] === 4 || data[i][4] === 10) {
+      statistics[3]++; // REGEX blocked
     }
   }
 
