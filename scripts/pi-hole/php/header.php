@@ -10,7 +10,6 @@
     require "scripts/pi-hole/php/password.php";
     require_once "scripts/pi-hole/php/FTL.php";
     require "scripts/pi-hole/php/theme.php";
-
     $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
     $hostname = gethostname() ? gethostname() : "";
 
@@ -49,22 +48,6 @@
             $celsius *= 1e-3;
         }
 
-        $kelvin = $celsius + 273.15;
-        $fahrenheit = ($celsius*9./5)+32.0;
-
-        if(isset($setupVars['TEMPERATUREUNIT']))
-        {
-            $temperatureunit = $setupVars['TEMPERATUREUNIT'];
-        }
-        else
-        {
-            $temperatureunit = "C";
-        }
-        // Override temperature unit setting if it is changed via Settings page
-        if(isset($_POST["tempunit"]))
-        {
-            $temperatureunit = $_POST["tempunit"];
-        }
         // Get user-defined temperature limit if set
         if(isset($setupVars['TEMPERATURE_LIMIT']))
         {
@@ -214,7 +197,6 @@
     <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css">
     <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css">
 <?php } ?>
-    <link rel="stylesheet" href="style/vendor/iCheck/<?php echo $checkbox_theme_name;?>/<?php echo $checkbox_theme_variant;?>.css">
     <link rel="stylesheet" href="style/pi-hole.css">
     <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css">
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
@@ -226,7 +208,6 @@
     <script src="scripts/vendor/datatables.min.js"></script>
     <script src="scripts/vendor/moment.min.js"></script>
     <script src="scripts/vendor/Chart.min.js"></script>
-    <script src="scripts/vendor/iCheck.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <noscript>
@@ -246,7 +227,6 @@ if($auth) {
 ?>
 
 <!-- Send token to JS -->
-<div id="checkbox_theme" hidden><?php echo $checkbox_theme_name; ?><?php if($checkbox_theme_name !== $checkbox_theme_variant){ echo "-$checkbox_theme_variant"; } ?></div>
 <div id="enableTimer" hidden><?php if(file_exists("../custom_disable_timer")){ echo file_get_contents("../custom_disable_timer"); } ?></div>
 <div class="wrapper">
     <header class="main-header">
@@ -363,20 +343,7 @@ if($auth) {
                                 {
                                     echo "text-vivid-blue";
                                 }
-                                echo "\"></i> Temp:&nbsp;";
-                                if($temperatureunit === "F")
-                                {
-                                    echo round($fahrenheit,1) . "&nbsp;&deg;F";
-                                }
-                                elseif($temperatureunit === "K")
-                                {
-                                    echo round($kelvin,1) . "&nbsp;K";
-                                }
-                                else
-                                {
-                                    echo round($celsius,1) . "&nbsp;&deg;C";
-                                }
-                                echo "</span>";
+                                ?>"\"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span><?php
                             }
                         }
                         else

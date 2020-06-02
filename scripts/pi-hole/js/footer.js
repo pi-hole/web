@@ -4,6 +4,7 @@
  *
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
+/* global initpage:false */
 
 //The following functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
@@ -125,6 +126,85 @@ function testCookies() {
   return ret;
 }
 
+function initCheckboxRadioStyle() {
+  function getCheckboxURL(style) {
+    var extra = style.startsWith("material-") ? "material" : "bootstrap";
+    return "style/vendor/icheck-" + extra + ".min.css";
+  }
+
+  function applyCheckboxRadioStyle(style) {
+    boxsheet.attr("href", getCheckboxURL(style));
+    var sel = $("input[type='radio'],input[type='checkbox']");
+    sel.parent().removeClass();
+    sel.parent().addClass("icheck-" + style);
+  }
+
+  // Read from local storage, initialize if needed
+  var chkboxStyle = localStorage.getItem("theme_icheck");
+  if (chkboxStyle === null) {
+    chkboxStyle = "primary";
+  }
+
+  var boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet" />');
+  boxsheet.appendTo("head");
+
+  applyCheckboxRadioStyle(chkboxStyle);
+
+  // Add handler when on settings page
+  var iCheckStyle = $("#iCheckStyle");
+  if (iCheckStyle !== null) {
+    iCheckStyle.val(chkboxStyle);
+    iCheckStyle.change(function () {
+      var themename = $(this).val();
+      localStorage.setItem("theme_icheck", themename);
+      applyCheckboxRadioStyle(themename);
+    });
+  }
+}
+
+function initCPUtemp() {
+  function setCPUtemp(unit) {
+    localStorage.setItem("tempunit", tempunit);
+    var temperature = parseFloat($("#rawtemp").text());
+    var displaytemp = $("#tempdisplay");
+    if (!isNaN(temperature)) {
+      switch (unit) {
+        case "K":
+          temperature += 273.15;
+          displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;K");
+          break;
+
+        case "F":
+          temperature = (temperature * 9) / 5 + 32;
+          displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;F");
+          break;
+
+        default:
+          displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;C");
+          break;
+      }
+    }
+  }
+
+  // Read from local storage, initialize if needed
+  var tempunit = localStorage.getItem("tempunit");
+  if (tempunit === null) {
+    tempunit = "C";
+  }
+
+  setCPUtemp(tempunit);
+
+  // Add handler when on settings page
+  var tempunitSelector = $("#tempunit-selector");
+  if (tempunitSelector !== null) {
+    tempunitSelector.val(tempunit);
+    tempunitSelector.change(function () {
+      tempunit = $(this).val();
+      setCPUtemp(tempunit);
+    });
+  }
+}
+
 $(function () {
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html()));
@@ -137,12 +217,14 @@ $(function () {
     $("#cookieInfo").show();
   }
 
-  var checkboxTheme = $("#checkbox_theme").text();
-  $("input").icheck({
-    checkboxClass: "icheckbox_" + checkboxTheme,
-    radioClass: "iradio_" + checkboxTheme,
-    increaseArea: "20%"
-  });
+  // Apply per-browser styling settings
+  initCheckboxRadioStyle();
+  initCPUtemp();
+
+  if (typeof initpage === "function") {
+    setTimeout(initpage, 100);
+  }
+
   // Run check immediately after page loading ...
   checkMessages();
   // ... and once again with five seconds delay
