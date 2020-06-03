@@ -87,7 +87,8 @@ function check_cors() {
         if(!in_array($server_origin, $AUTHORIZED_HOSTNAMES)) {
             log_and_die("Failed CORS: " . $server_origin .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
         }
-        header("Access-Control-Allow-Origin: ${_SERVER['HTTP_ORIGIN']}");
+        $allow_origin = $_SERVER['HTTP_ORIGIN'];
+        header("Access-Control-Allow-Origin: ${allow_origin}");
     }
     // If there's no HTTP_ORIGIN, CORS should not be used
 }

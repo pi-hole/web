@@ -63,7 +63,7 @@ function getResponseFTL()
 {
 	global $socket;
 
-	$response = [];
+	$response = array();
 
 	$errCount = 0;
 	while(true)

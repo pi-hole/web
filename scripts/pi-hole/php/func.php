@@ -85,18 +85,18 @@ function echoCustomDNSEntries()
 {
     $entries = getCustomDNSEntries();
 
-    $data = [];
+    $data_arr = array();
     foreach ($entries as $entry)
-        $data[] = [ $entry->domain, $entry->ip ];
+        $data_arr[] = array($entry["domain"], $entry["ip"]);
 
-    return [ "data" => $data ];
+    return array("data" => $data_arr);
 }
 
 function getCustomDNSEntries()
 {
     global $customDNSFile;
 
-    $entries = [];
+    $entries = array();
 
     $handle = fopen($customDNSFile, "r");
     if ($handle)
@@ -109,7 +109,7 @@ function getCustomDNSEntries()
             if (count($explodedLine) != 2)
                 continue;
 
-            $data = new \stdClass();
+            $data = array();
             $data->ip = $explodedLine[0];
             $data->domain = $explodedLine[1];
             $entries[] = $data;
@@ -170,7 +170,7 @@ function addCustomDNSEntry($ip="", $domain="", $json_reply=true)
 
         return $json_reply ? successJsonResponse() : true;
     }
-    catch (\Exception $ex)
+    catch (Exception $ex)
     {
         return error($ex->getMessage());
     }
@@ -206,7 +206,7 @@ function deleteCustomDNSEntry()
 
         return successJsonResponse();
     }
-    catch (\Exception $ex)
+    catch (Exception $ex)
     {
         return errorJsonResponse($ex->getMessage());
     }
@@ -233,7 +233,7 @@ function deleteAllCustomDNSEntries()
                 pihole_execute("-a removecustomdns ".$ip." ".$domain);
             }
         }
-        catch (\Exception $ex)
+        catch (Exception $ex)
         {
             return errorJsonResponse($ex->getMessage());
         }
@@ -246,12 +246,12 @@ function deleteAllCustomDNSEntries()
 
 function successJsonResponse($message = "")
 {
-    return [ "success" => true, "message" => $message ];
+    return array("success" => true, "message" => $message);
 }
 
 function errorJsonResponse($message = "")
 {
-    return [ "success" => false, "message" => $message ];
+    return array("success" => false, "message" => $message);
 }
 
 ?>

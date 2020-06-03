@@ -7,7 +7,7 @@
 *  Please see LICENSE file for your rights under this license. */
 
 // Array of available themes and their description
-$available_themes = [];
+$available_themes = array();
 /* Array key = name used internally, not shown to the user
 *  Array[0] = Description
 *  Array[1] = Is this a dark mode theme? (Sets background to black during page reloading to avoid white "flashing")
@@ -15,9 +15,9 @@ $available_themes = [];
 *  Array[3] = Radio/checkbox theme name
 *  Array[4] = Radio/checkbox theme variant
 */
-$available_themes["default-light"] = ["Pi-hole default theme (light, default)", false, "default-light", "minimal", "blue"];
-$available_themes["default-dark"] = ["Pi-hole midnight theme (dark)", true, "default-dark", "polaris", "polaris"];
-$available_themes["default-dark2"] = ["Pi-hole afternoon theme (dark)", true, "default-dark", "futurico", "futurico"];
+$available_themes["default-light"] = array("Pi-hole default theme (light, default)", false, "default-light", "minimal", "blue");
+$available_themes["default-dark"] = array("Pi-hole midnight theme (dark)", true, "default-dark", "polaris", "polaris");
+$available_themes["default-dark2"] = array("Pi-hole afternoon theme (dark)", true, "default-dark", "futurico", "futurico");
 
 $webtheme = "";
 // Try to load theme settings from setupVars.conf
