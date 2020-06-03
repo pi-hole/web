@@ -41,37 +41,6 @@ function JSON_error($message = null)
     echo json_encode($response);
 }
 
-function space_aware_explode($input)
-{
-    $ret = array();
-    $quoted = false;
-    $pos = 0;
-
-    // Loop over input string
-    for ($i = 0; $i < strlen($input); $i++)
-    {
-        // Get current character
-        $c = $input[$i];
-
-        // If current character is a space (or comma) and we're outside
-        // of a quoted region, we accept this character as separator
-        if (($c == ' ' || $c == ',') && !$quoted) {
-            $ret[] = str_replace('"', '', substr($input, $pos, $i - $pos));
-            $pos = $i+1;
-        }
-        elseif($c == '"' && !$quoted)
-            $quoted = true; // Quotation begins
-        elseif($c == '"' && $quoted)
-            $quoted = false; // Quotation ends here
-    }
-    // Get last element of the string
-    if ($pos > 0) {
-        $ret[] = substr($input, $pos);
-    }
-
-    return $ret;
-}
-
 if ($_POST['action'] == 'get_groups') {
     // List all available groups
     try {
@@ -89,7 +58,7 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_group') {
     // Add new group
     try {
-        $names = space_aware_explode(trim($_POST['name']));
+        $names = str_getcsv(trim($_POST['name']), ' ');
         $total = count($names);
         $added = 0;
         $stmt = $db->prepare('INSERT INTO "group" (name,description) VALUES (:name,:desc)');
