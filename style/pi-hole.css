@@ -295,15 +295,6 @@
   font-family: inherit;
 }
 
-.bootstrap-select.bs-container.align-right {
-  left: unset !important;
-  right: 10px;
-}
-
-.filter-highlight {
-  background-color: #ffcc0050;
-}
-
 .form-inline .form-control {
   display: inline-block;
   width: 100%;

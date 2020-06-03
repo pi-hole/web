@@ -318,7 +318,6 @@ $(function () {
 
       replytext += '<input type="hidden" name="id" value="' + replyid + '">';
 
-      $("td:eq(5)", row).addClass("text-black");
       $("td:eq(5)", row).html(replytext);
 
       if (data.length > 7) {
@@ -488,13 +487,13 @@ function applyColumnFiltering() {
       regex = "^" + value + "$";
 
       // Add background color
-      tableApi.$("td:eq(" + index + ")").addClass("filter-highlight");
+      tableApi.$("td:eq(" + index + ")").addClass("highlight");
 
       // Remember to show reset button
       showReset = true;
     } else {
       // Clear background color
-      tableApi.$("td:eq(" + index + ")").removeClass("filter-highlight");
+      tableApi.$("td:eq(" + index + ")").removeClass("highlight");
     }
 
     // Apply filtering on this column (regex may be empty -> no filtering)

@@ -142,7 +142,7 @@ if(strlen($showing) > 0)
             <ul>
                 <li>Use <kbd>Ctrl</kbd> or <kbd>&#8984;</kbd> + <i class="fas fa-mouse-pointer"></i> to add columns to the current filter</li>
                 <li>Use <kbd>Shift</kbd> + <i class="fas fa-mouse-pointer"></i> to remove columns from the current filter</li>
-            </ul><br/><button type="button" id="resetButton" hidden="true"></button>
+            </ul><br/><button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden"></button>
         </div>
         <!-- /.box-body -->
       </div>
