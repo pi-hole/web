@@ -408,6 +408,7 @@ function updateClientsOverTime() {
     }
 
     $("#clients .overlay").hide();
+    clientsChart.options.animation = false;
     clientsChart.update();
   })
     .done(function () {
@@ -814,6 +815,7 @@ $(function () {
       ]
     },
     options: {
+      animation: false,
       tooltips: {
         enabled: true,
         mode: "x-axis",
