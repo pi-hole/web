@@ -775,7 +775,7 @@ function updateSummaryData(runOnce) {
     });
 }
 
-$(function () {
+function initpage() {
   // Pull in data via AJAX
   updateSummaryData();
 
