@@ -1179,19 +1179,19 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                             <table class="table table-striped table-bordered dt-responsive nowrap">
                                                 <tbody>
                                                 <tr>
-                                                    <th scope="row">Pi-hole Ethernet Interface:</th>
+                                                    <th scope="row">Firewall Ethernet Interface:</th>
                                                     <td><?php echo htmlentities($piHoleInterface); ?></td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Pi-hole IPv4 address:</th>
+                                                    <th scope="row">Firewall IPv4 address:</th>
                                                     <td><?php echo htmlentities($piHoleIPv4); ?></td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Pi-hole IPv6 address:</th>
+                                                    <th scope="row">Firewall IPv6 address:</th>
                                                     <td><?php echo htmlentities($piHoleIPv6); ?></td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Pi-hole hostname:</th>
+                                                    <th scope="row">Firewall hostname:</th>
                                                     <td><?php echo htmlentities($hostname); ?></td>
                                                 </tr>
                                                 </tbody>

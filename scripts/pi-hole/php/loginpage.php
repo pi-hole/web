@@ -14,7 +14,7 @@
       </div>
       <br>
 
-      <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;">Pi-<b>hole</b></span></div>
+      <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;">Lazarus<b>Firewall</b></span></div>
       <p class="login-box-msg">Sign in to start your session</p>
       <div id="cookieInfo" class="panel-title text-center text-red" style="font-size: 150%" hidden>Verify that cookies are allowed for <code><?php echo $_SERVER['HTTP_HOST']; ?></code></div>
       <?php if ($wrongpassword) { ?>

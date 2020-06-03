@@ -184,7 +184,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
-    <title>Pi-hole Admin Console</title>
+    <title>Lazarus Firewall Admin Console</title>
     <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
     <meta http-equiv="x-dns-prefetch-control" content="off">
     <meta http-equiv="cache-control" content="max-age=60,private">
@@ -259,9 +259,9 @@ if($auth) {
         <!-- Logo -->
         <a href="index.php" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini">P<b>h</b></span>
+            <span class="logo-mini"></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg">Pi-<b>hole</b></span>
+            <span class="logo-lg"><b>Lazarus&nbsp;</b><b>Firewall</b></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
@@ -280,20 +280,20 @@ if($auth) {
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <img src="img/logo.svg" class="user-image" style="border-radius: 0" alt="Pi-hole logo" width="25" height="25">
-                            <span class="hidden-xs">Pi-hole</span>
+                            <span class="hidden-xs">Lazarus/span>
                         </a>
                         <ul class="dropdown-menu" style="right:0">
                             <!-- User image -->
                             <li class="user-header">
                                 <img src="img/logo.svg" alt="User Image" style="border-color:transparent" width="90" height="90">
                                 <p>
-                                    Open Source Ad Blocker
-                                    <small>Designed For Raspberry Pi</small>
+                                  Lazarus Network Firewall
+                                  <small>Designed by Lazarus Network</small>
                                 </p>
                             </li>
                             <!-- Menu Body -->
                             <li class="user-body">
-                                <div class="col-xs-4 text-center">
+                                <!-- <div class="col-xs-4 text-center">
                                     <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank">GitHub</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
@@ -301,7 +301,7 @@ if($auth) {
                                 </div>
                                 <div class="col-xs-4 text-center">
                                     <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank">Updates</a>
-                                </div>
+                                </div> -->
                                 <div class="col-xs-12 text-center" id="sessiontimer">
                                     <b>Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></b>
                                 </div>
@@ -325,11 +325,11 @@ if($auth) {
                                 </div>
                                 */ ?>
                                 <!-- PayPal -->
-                                <div class="text-center">
+                                <!-- <div class="text-center">
                                     <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank" style="background:none">
                                         <img src="img/donate.gif" alt="Donate">
                                     </a>
-                                </div>
+                                </div> -->
                             </li>
                         </ul>
                     </li>
@@ -620,6 +620,12 @@ if($auth) {
                         <i class="fa fa-network-wired"></i> <span>Network</span>
                     </a>
                 </li>
+                <!-- Threats -->
+                <li<?php if($scriptname === "threats.php"){ ?> class="active"<?php } ?>>
+                  <a href="threats.php">
+                  <i class="fa fa-exclamation-circle"></i> <span>Threats</span>
+                  </a>
+                </li>
                 <!-- Settings -->
                 <li<?php if($scriptname === "settings.php"){ ?> class="active"<?php } ?>>
                     <a href="settings.php">
@@ -654,11 +660,11 @@ if($auth) {
                 </li>
                 <?php } ?>
                 <!-- Donate -->
-                <li>
+                <!-- <li>
                     <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
                         <i class="fa-paypal-icon fab fa-paypal"></i> <span>Donate</span>
                     </a>
-                </li>
+                </li> -->
                 <?php if($auth){ ?>
                 <!-- Help -->
                 <li<?php if($scriptname === "help.php"){ ?> class="active"<?php } ?>>
