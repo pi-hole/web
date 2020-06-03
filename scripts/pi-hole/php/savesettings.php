@@ -515,6 +515,12 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 
             case "speedtest":
 
+				if (isset($_POST["speedtestmode"])) {
+                    exec('sudo pihole -a -sm ' . $_POST["speedtestmode"]);
+                } else {
+                    // # code...
+				}
+				
                 if (isset($_POST["speedtestschedule"])) {
                     exec('sudo pihole -a -s ' . $_POST["speedtestschedule"]);
                 } else {

@@ -1370,14 +1370,21 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
 
                 if(isset($setupVars["SPEEDTEST_CHART_DAYS"]))
                 {
-                    $speedtestdays = $setupVars["SPEEDTEST_CHART_DAYS"];
+                    $speedtestmode = $setupVars["SPEEDTEST_CHART_DAYS"];
                 }else {
-                    $speedtestdays  = "1";
+                    $speedtestmode  = "official";
                 }
 
                 if(isset($setupVars["SPEEDTEST_SERVER"]))
                 {
                     $speedtestserver = $setupVars["SPEEDTEST_SERVER"];
+                }else {
+                    $speedtestserver  = "";
+                }
+
+                if(isset($setupVars["SPEEDTEST_MODE"]))
+                {
+                    $speedtestserver = $setupVars["SPEEDTEST_MODE"];
                 }else {
                     $speedtestserver  = "";
                 }
@@ -1426,7 +1433,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                 </div>
                                                 <h4>Custom Speedtest server </h4>
 
-                                                <div class="form-group col-md-12">
+                                                <div class="form-group col-md-6">
                                                     <p > <span class="text-danger"> Expert only!!!</span>. Get list of supported servers <a href="https://www.speedtest.net/speedtest-servers.php" target="_blank"> here</a></p>
                                                     <div class="form-group">
                                                         <div class="input-group">
@@ -1434,6 +1441,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                             <input type="number" class="form-control" name="speedtestserver" value="<?php if($speedtestserver) { echo $speedtestserver; } ?>"  placeholder="Keep this blank to autoselect" />
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>Speedtest Mode</label>
+                                                    <select name="speedtestmode" class="form-control" >
+                                                        <option value="official" <?php if($speedtestmode == "official") {?> selected <?php } ?>>Official CLI</option>
+                                                        <option value="python" <?php if($speedtestmode == "python") {?> selected <?php } ?>>Python</option>
+                                                    </select>
                                                 </div>
                                                 <h4>Flush Speedtest history </h4>
                                                 <div class="form-group col-md-12">
