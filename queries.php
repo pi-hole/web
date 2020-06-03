@@ -7,12 +7,6 @@
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
 
-// Generate CSRF token
-if(empty($_SESSION['token'])) {
-    $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
-}
-$token = $_SESSION['token'];
-
 $showing = "";
 
 if(isset($setupVars["API_QUERY_LOG_SHOW"]))
@@ -80,17 +74,6 @@ if(strlen($showing) > 0)
 		$showing .= ", <a href=\"?all\">show all</a>";
 }
 ?>
-<!-- Send PHP info to JS -->
-<div id="token" hidden><?php echo $token ?></div>
-
-
-<!--
-<div class="row">
-    <div class="col-md-12">
-        <button class="btn btn-info margin-bottom pull-right">Refresh Data</button>
-    </div>
-</div>
--->
 
 <!-- Alert Modal -->
 <div id="alertModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -131,7 +114,7 @@ if(strlen($showing) > 0)
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <table id="all-queries" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+            <table id="all-queries" class="table table-striped table-bordered" width="100%">
                 <thead>
                     <tr>
                         <th>Time</th>
@@ -168,7 +151,7 @@ if(strlen($showing) > 0)
 </div>
 <!-- /.row -->
 
-<script src="scripts/vendor/moment.min.js"></script>
+<script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/queries.js"></script>
 
 <?php

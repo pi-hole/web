@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="new_address">Address:</label>
-                        <input id="new_address" type="text" class="form-control" placeholder="http://..., https://..., file://...">
+                        <input id="new_address" type="text" class="form-control" placeholder="URL or space-separated URLs" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="new_comment">Comment:</label>
@@ -37,8 +37,12 @@
                 </div>
             </div>
             <div class="box-footer clearfix">
-                <strong>Hint:</strong>&nbsp;Please run <code>pihole -g</code> or update your gravity list <a href="gravity.php">online</a> after modifying your adlists.
-                <button id="btnAdd" class="btn btn-primary pull-right">Add</button>
+                <strong>Hints:</strong>
+                <ol>
+                    <li>Please run <code>pihole -g</code> or update your gravity list <a href="gravity.php">online</a> after modifying your adlists.</li>
+                    <li>Multiple adlists can be added by separating each <i>unique</i> URL with a space</li>
+                </ol>
+                <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
             </div>
         </div>
     </div>
@@ -53,7 +57,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="adlistsTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                <table id="adlistsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -65,7 +69,7 @@
                     </tr>
                     </thead>
                 </table>
-                <button type="button" id="resetButton" hidden="true">Reset sorting</button>
+                <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Reset sorting</button>
             </div>
             <!-- /.box-body -->
         </div>
@@ -73,7 +77,9 @@
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/groups-common.js"></script>
+<script src="scripts/vendor/bootstrap-select.min.js"></script>
+<script src="scripts/vendor/bootstrap-toggle.min.js"></script>
+<script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/groups-adlists.js"></script>
 
 <?php

@@ -10,7 +10,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="text-center">
-        <img src="img/logo.svg" alt="" style="width: <?php if ($boxedlayout) { ?>50%<?php } else { ?>30%<?php } ?>;">
+        <img src="img/logo.svg" alt="Pi-hole logo" style="width: <?php if ($boxedlayout) { ?>50%<?php } else { ?>30%<?php } ?>;">
       </div>
       <br>
 
@@ -26,7 +26,7 @@
 
     <div class="panel-body">
       <form action="" id="loginform" method="post">
-        <div class="form-group has-feedback <?php if ($wrongpassword) { ?>has-error<?php } ?> ">
+        <div class="form-group has-feedback <?php if ($wrongpassword) { ?>has-error<?php } ?>">
           <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" autofocus>
           <span class="fa fa-key form-control-feedback"></span>
         </div>
@@ -38,10 +38,13 @@
           </ul>
           </div>
           <div class="col-xs-12 col-md-4">
-            <div class="form-group pull-left">
-              <div class="checkbox pull-right"><label><input type="checkbox" id="logincookie" name="persistentlogin">Remember me for 7 days</label></div>
+              <div class="pull-right">
+                <div>
+                  <input type="checkbox" id="logincookie" name="persistentlogin">
+                  <label for="logincookie">Remember me for 7 days</label>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;&nbsp;Log in</button>
+            <button type="submit" class="btn btn-primary pull-right"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in</button>
           </div>
         </div>
         <br>

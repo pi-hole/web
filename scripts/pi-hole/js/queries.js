@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false */
+/* global moment:false, utils:false */
 
 var tableApi;
 var tableFilters = [];
@@ -53,23 +53,25 @@ function add(domain, list) {
   alertModal.modal("show");
 
   // add Domain to List after Modal has faded in
-  alertModal.one("shown.bs.modal", function() {
+  alertModal.one("shown.bs.modal", function () {
     $.ajax({
-      url: "scripts/pi-hole/php/add.php",
+      url: "scripts/pi-hole/php/groups.php",
       method: "post",
-      data: { domain: domain, list: list, token: token },
-      success: function(response) {
+      data: {
+        domain: domain,
+        list: list,
+        token: token,
+        action: "add_domain",
+        comment: "Added from Query Log"
+      },
+      success: function (response) {
         alProcessing.hide();
-        if (
-          response.indexOf("not a valid argument") >= 0 ||
-          response.indexOf("is not a valid domain") >= 0 ||
-          response.indexOf("Wrong token") >= 0
-        ) {
+        if (!response.success) {
           // Failure
           alNetworkErr.hide();
-          alCustomErr.html(response.replace("[✗]", ""));
+          alCustomErr.html(response.message);
           alFailure.fadeIn(1000);
-          setTimeout(function() {
+          setTimeout(function () {
             alertModal.modal("hide");
           }, 3000);
         } else {
@@ -77,17 +79,17 @@ function add(domain, list) {
           alSuccess.children(alDomain).html(domain);
           alSuccess.children(alList).html(listtype);
           alSuccess.fadeIn(1000);
-          setTimeout(function() {
+          setTimeout(function () {
             alertModal.modal("hide");
           }, 2000);
         }
       },
-      error: function() {
+      error: function () {
         // Network Error
         alProcessing.hide();
         alNetworkErr.show();
         alFailure.fadeIn(1000);
-        setTimeout(function() {
+        setTimeout(function () {
           alertModal.modal("hide");
         }, 3000);
       }
@@ -95,16 +97,10 @@ function add(domain, list) {
   });
 
   // Reset Modal after it has faded out
-  alertModal.one("hidden.bs.modal", function() {
+  alertModal.one("hidden.bs.modal", function () {
     alProcessing.show();
     alSuccess.add(alFailure).hide();
-    alProcessing
-      .add(alSuccess)
-      .children(alDomain)
-      .html("")
-      .end()
-      .children(alList)
-      .html("");
+    alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
     alCustomErr.html("");
   });
 }
@@ -112,7 +108,7 @@ function add(domain, list) {
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
-  } else if (xhr.responseText.indexOf("Connection refused") >= 0) {
+  } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
     alert("An error occured while loading the data: Connection refused. Is FTL running?");
   } else {
     alert("An unknown error occured while loading the data.\n" + xhr.responseText);
@@ -123,13 +119,13 @@ function handleAjaxError(xhr, textStatus) {
   tableApi.draw();
 }
 
-$(document).ready(function() {
+$(function () {
   // Do we want to filter queries?
   var GETDict = {};
   window.location.search
     .substr(1)
     .split("&")
-    .forEach(function(item) {
+    .forEach(function (item) {
       GETDict[item.split("=")[0]] = item.split("=")[1];
     });
 
@@ -153,28 +149,28 @@ $(document).ready(function() {
   }
 
   tableApi = $("#all-queries").DataTable({
-    rowCallback: function(row, data) {
+    rowCallback: function (row, data) {
       // DNSSEC status
-      var dnssec_status;
+      var dnssecStatus;
       switch (data[6]) {
         case "1":
-          dnssec_status = '<br><span class="text-green">SECURE</span>';
+          dnssecStatus = '<br><span class="text-green">SECURE</span>';
           break;
         case "2":
-          dnssec_status = '<br><span class="text-orange">INSECURE</span>';
+          dnssecStatus = '<br><span class="text-orange">INSECURE</span>';
           break;
         case "3":
-          dnssec_status = '<br><span class="text-red">BOGUS</span>';
+          dnssecStatus = '<br><span class="text-red">BOGUS</span>';
           break;
         case "4":
-          dnssec_status = '<br><span class="text-red">ABANDONED</span>';
+          dnssecStatus = '<br><span class="text-red">ABANDONED</span>';
           break;
         case "5":
-          dnssec_status = '<br><span class="text-orange">UNKNOWN</span>';
+          dnssecStatus = '<br><span class="text-orange">UNKNOWN</span>';
           break;
         default:
           // No DNSSEC
-          dnssec_status = "";
+          dnssecStatus = "";
       }
 
       // Query status
@@ -193,13 +189,13 @@ $(document).ready(function() {
           break;
         case "2":
           colorClass = "text-green";
-          fieldtext = "OK <br class='hidden-lg'>(forwarded)" + dnssec_status;
+          fieldtext = "OK <br class='hidden-lg'>(forwarded)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case "3":
           colorClass = "text-green";
-          fieldtext = "OK <br class='hidden-lg'>(cached)" + dnssec_status;
+          fieldtext = "OK <br class='hidden-lg'>(cached)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
@@ -262,42 +258,52 @@ $(document).ready(function() {
           isCNAME = true;
           break;
         default:
-          colorClass = "text-black";
+          colorClass = false;
           fieldtext = "Unknown (" + parseInt(data[4]) + ")";
           buttontext = "";
       }
 
       fieldtext += '<input type="hidden" name="id" value="' + parseInt(data[4]) + '">';
 
-      $(row).addClass(colorClass);
+      if (colorClass !== false) {
+        $(row).addClass(colorClass);
+      }
+
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(6)", row).html(buttontext);
 
       if (regexLink) {
         $("td:eq(4)", row).hover(
-          function() {
+          function () {
             this.title = "Click to show matching regex filter";
             this.style.color = "#72afd2";
           },
-          function() {
+          function () {
             this.style.color = "";
           }
         );
-        $("td:eq(4)", row).click(function() {
-          var new_tab = window.open("groups-domains.php?domainid=" + data[9], "_blank");
-          if (new_tab) {
-            new_tab.focus();
+        $("td:eq(4)", row).off(); // Release any possible previous onClick event handlers
+        $("td:eq(4)", row).click(function () {
+          var newTab = window.open("groups-domains.php?domainid=" + data[9], "_blank");
+          if (newTab) {
+            newTab.focus();
           }
         });
-        $("td:eq(4)", row).addClass("underline");
-        $("td:eq(4)", row).addClass("pointer");
+        $("td:eq(4)", row).addClass("text-underline pointer");
       }
 
-      // Add domain in CNAME chain causing the query to have been blocked
+      // Substitute domain by "." if empty
       var domain = data[2];
-      var CNAME_domain = data[8];
+      if (domain.length === 0) {
+        domain = ".";
+      }
+
       if (isCNAME) {
-        $("td:eq(2)", row).text(domain + "\n(blocked " + CNAME_domain + ")");
+        var CNAMEDomain = data[8];
+        // Add domain in CNAME chain causing the query to have been blocked
+        $("td:eq(2)", row).text(domain + "\n(blocked " + CNAMEDomain + ")");
+      } else {
+        $("td:eq(2)", row).text(domain);
       }
 
       // Check for existence of sixth column and display only if not Pi-holed
@@ -315,7 +321,7 @@ $(document).ready(function() {
       $("td:eq(5)", row).addClass("text-black");
       $("td:eq(5)", row).html(replytext);
 
-      if (data.length > 7 && data[7] > 0) {
+      if (data.length > 7) {
         var content = $("td:eq(5)", row).html();
         $("td:eq(5)", row).html(content + " (" + (0.1 * data[7]).toFixed(1) + "ms)");
       }
@@ -328,9 +334,9 @@ $(document).ready(function() {
     ajax: {
       url: APIstring,
       error: handleAjaxError,
-      dataSrc: function(data) {
+      dataSrc: function (data) {
         var dataIndex = 0;
-        return data.data.map(function(x) {
+        return data.data.map(function (x) {
           x[0] = x[0] * 1e6 + dataIndex++;
           var dnssec = x[5];
           var reply = x[6];
@@ -346,7 +352,7 @@ $(document).ready(function() {
     columns: [
       {
         width: "15%",
-        render: function(data, type) {
+        render: function (data, type) {
           if (type === "display") {
             return moment
               .unix(Math.floor(data / 1e6))
@@ -368,32 +374,11 @@ $(document).ready(function() {
       [10, 25, 50, 100, "All"]
     ],
     stateSave: true,
-    stateSaveCallback: function(settings, data) {
-      // Clear possible filtering settings
-      data.columns.forEach(function(value, index) {
-        data.columns[index].search.search = "";
-      });
-
-      // Always start on the first page to show most recent queries
-      data.start = 0;
-
-      // Always start with empty search field
-      data.search.search = "";
-
-      // Store current state in client's local storage area
-      localStorage.setItem("query_log_table", JSON.stringify(data));
+    stateSaveCallback: function (settings, data) {
+      utils.stateSaveCallback("query_log_table", data);
     },
-    stateLoadCallback: function() {
-      // Receive previous state from client's local storage area
-      var data = localStorage.getItem("query_log_table");
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
-
-      data = JSON.parse(data);
-      // Apply loaded state to table
-      return data;
+    stateLoadCallback: function () {
+      return utils.stateLoadCallback("query_log_table");
     },
     columnDefs: [
       {
@@ -402,33 +387,33 @@ $(document).ready(function() {
         defaultContent: ""
       }
     ],
-    initComplete: function() {
+    initComplete: function () {
       var api = this.api();
 
       // Query type IPv4 / IPv6
-      api.$("td:eq(1)").click(function(event) {
+      api.$("td:eq(1)").click(function (event) {
         addColumnFilter(event, 1, this.textContent);
       });
 
       // Domain
-      api.$("td:eq(2)").click(function(event) {
+      api.$("td:eq(2)").click(function (event) {
         addColumnFilter(event, 2, this.textContent.split("\n")[0]);
       });
 
       // Client
-      api.$("td:eq(3)").click(function(event) {
+      api.$("td:eq(3)").click(function (event) {
         addColumnFilter(event, 3, this.textContent);
       });
 
       // Status
-      api.$("td:eq(4)").click(function(event) {
+      api.$("td:eq(4)").click(function (event) {
         var id = this.children.id.value;
         var text = this.textContent;
         addColumnFilter(event, 4, id + "#" + text);
       });
 
       // Reply type
-      api.$("td:eq(5)").click(function(event) {
+      api.$("td:eq(5)").click(function (event) {
         var id = this.children.id.value;
         var text = this.textContent.split(" ")[0];
         addColumnFilter(event, 5, id + "#" + text);
@@ -438,7 +423,7 @@ $(document).ready(function() {
 
   resetColumnsFilters();
 
-  $("#all-queries tbody").on("click", "button", function() {
+  $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();
     if (data[4] === "2" || data[4] === "3") {
       add(data[2], "black");
@@ -447,9 +432,19 @@ $(document).ready(function() {
     }
   });
 
-  $("#resetButton").click(function() {
+  $("#resetButton").click(function () {
+    tableApi.search("");
     resetColumnsFilters();
   });
+
+  // Disable autocorrect in the search box
+  var input = document.querySelector("input[type=search]");
+  if (input !== null) {
+    input.setAttribute("autocomplete", "off");
+    input.setAttribute("autocorrect", "off");
+    input.setAttribute("autocapitalize", "off");
+    input.setAttribute("spellcheck", false);
+  }
 });
 
 function addColumnFilter(event, colID, filterstring) {
@@ -468,7 +463,7 @@ function addColumnFilter(event, colID, filterstring) {
 }
 
 function resetColumnsFilters() {
-  tableFilters.forEach(function(value, index) {
+  tableFilters.forEach(function (value, index) {
     tableFilters[index] = "";
   });
 
@@ -478,7 +473,7 @@ function resetColumnsFilters() {
 
 function applyColumnFiltering() {
   var showReset = false;
-  tableFilters.forEach(function(value, index) {
+  tableFilters.forEach(function (value, index) {
     // Prepare regex filter string
     var regex = "";
 
@@ -519,7 +514,7 @@ function applyColumnFiltering() {
 function showResetButton() {
   var button = $("#resetButton");
   var text = "";
-  tableFilters.forEach(function(value, index) {
+  tableFilters.forEach(function (value, index) {
     // Split filter string if we received a combined ID#Name column
     var valArr = value.split("#");
     if (valArr.length > 1) {
@@ -535,11 +530,11 @@ function showResetButton() {
   });
 
   button.text(text);
-  button.show();
+  button.removeClass("hidden");
 }
 
 function hideResetButton() {
   var button = $("#resetButton");
   button.text("");
-  button.hide();
+  button.addClass("hidden");
 }

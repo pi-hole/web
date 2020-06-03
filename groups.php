@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="new_name">Name:</label>
-                        <input id="new_name" type="text" class="form-control" placeholder="Group name">
+                        <input id="new_name" type="text" class="form-control" placeholder="Group name or space-separated group names">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="new_desc">Description:</label>
@@ -37,7 +37,12 @@
                 </div>
             </div>
             <div class="box-footer clearfix">
-                <button id="btnAdd" class="btn btn-primary pull-right">Add</button>
+                <strong>Hints:</strong>
+                <ol>
+                    <li>Multiple groups can be added by separating each group name with a space</li>
+                    <li>Group names can have spaces if entered in quotes. e.g "My New Group"</li>
+                </ol>
+                <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
             </div>
         </div>
     </div>
@@ -52,7 +57,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="groupsTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                <table id="groupsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -63,7 +68,7 @@
                     </tr>
                     </thead>
                 </table>
-                <button type="button" id="resetButton" hidden="true">Reset sorting</button>
+                <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Reset sorting</button>
             </div>
             <!-- /.box-body -->
         </div>
@@ -71,7 +76,9 @@
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/groups-common.js"></script>
+<script src="scripts/vendor/bootstrap-select.min.js"></script>
+<script src="scripts/vendor/bootstrap-toggle.min.js"></script>
+<script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/groups.js"></script>
 
 <?php
