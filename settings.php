@@ -1370,9 +1370,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
 
                 if(isset($setupVars["SPEEDTEST_CHART_DAYS"]))
                 {
-                    $speedtestmode = $setupVars["SPEEDTEST_CHART_DAYS"];
+                    $speedtestdays = $setupVars["SPEEDTEST_CHART_DAYS"];
                 }else {
-                    $speedtestmode  = "official";
+                    $speedtestdays  = "official";
                 }
 
                 if(isset($setupVars["SPEEDTEST_SERVER"]))
@@ -1384,9 +1384,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
 
                 if(isset($setupVars["SPEEDTEST_MODE"]))
                 {
-                    $speedtestserver = $setupVars["SPEEDTEST_MODE"];
+                    $speedtestmode = $setupVars["SPEEDTEST_MODE"];
                 }else {
-                    $speedtestserver  = "";
+                    $speedtestmode  = "python";
                 }
                 ?>
 
