@@ -2,7 +2,7 @@
 
 start=$(date +"%Y-%m-%d %H:%M:%S")
 
-/usr/bin/speedtest -f json-pretty -u Mbps > /tmp/speedtest.log
+/usr/bin/speedtest --accept-license -f json-pretty -u Mbps > /tmp/speedtest.log
 
 FILE=/tmp/speedtest.log
 if [[ -f "$FILE" ]]; then
