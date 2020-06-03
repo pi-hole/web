@@ -19,8 +19,8 @@ fi
 FILE=/tmp/speedtest.log
 if [[ -f "$FILE" ]]; then
     stop=$(date +"%Y-%m-%d %H:%M:%S")
-    download=`cat /tmp/speedtest.log| jq -r '.download.bandwidth' | awk '{$1=$1*8/1024/1024; print $1;}'`
-    upload=`cat /tmp/speedtest.log| jq -r '.upload.bandwidth' | awk '{$1=$1*8/1024/1024; print $1;}'`
+    download=`cat /tmp/speedtest.log| jq -r '.download.bandwidth' | awk '{$1=$1*8/1000/1000; print $1;}'`
+    upload=`cat /tmp/speedtest.log| jq -r '.upload.bandwidth' | awk '{$1=$1*8/1000/1000; print $1;}'`
     server_name=`cat /tmp/speedtest.log| jq -r '.server.name'`
     isp=`cat /tmp/speedtest.log| jq -r '.isp'`
     server_ip=`cat /tmp/speedtest.log| jq -r '.server.ip'`
