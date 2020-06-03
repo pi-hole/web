@@ -10,9 +10,9 @@ serverid=$(sed -n -e '/SPEEDTEST_SERVER/ s/.*\= *//p' $setupVars)
 echo "Testing with ${serverid}"
 
 if [[ "$serverid" =~ ^[0-9]+$ ]]; then
-    /usr/bin/speedtest -s $serverid --accept-license -f json-pretty > /tmp/speedtest.log
+    /usr/bin/speedtest -s $serverid --accept-gdpr --accept-license -f json-pretty > /tmp/speedtest.log
 else
-    /usr/bin/speedtest --accept-license -f json-pretty> /tmp/speedtest.log
+    /usr/bin/speedtest --accept-gdpr --accept-license -f json-pretty > /tmp/speedtest.log
 fi
 
 
