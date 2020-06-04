@@ -227,8 +227,26 @@ function updateQueriesOverTime() {
     data.ads_over_time[0].splice(-1, 1);
     // Remove possibly already existing data
     timeLineChart.data.labels = [];
-    timeLineChart.data.datasets[0].data = [];
-    timeLineChart.data.datasets[1].data = [];
+    timeLineChart.data.datasets = [];
+
+    var labels = ["Blocked DNS Queries", "Permitted DNS Queries"];
+    var blockedColor = $(".queries-blocked").css("background-color");
+    var permittedColor = $(".queries-permitted").css("background-color");
+    var colors = [blockedColor, permittedColor];
+
+    // Collect values and colors, and labels
+    for (var i = 0; i < labels.length; i++) {
+      timeLineChart.data.datasets.push({
+        data: [],
+        // If we ran out of colors, make a random one
+        backgroundColor: colors[i],
+        pointRadius: 0,
+        pointHitRadius: 5,
+        pointHoverRadius: 5,
+        label: labels[i],
+        cubicInterpolationMode: "monotone"
+      });
+    }
 
     // Add data for each hour that is available
     for (var hour in data.ads_over_time[0]) {
@@ -351,7 +369,7 @@ function updateClientsOverTime() {
     var timestamps = data.over_time[0];
     var plotdata = data.over_time[1];
     var labels = [];
-    var key, i, j;
+    var key;
 
     for (key in data.clients) {
       if (Object.prototype.hasOwnProperty.call(data.clients, key)) {
@@ -362,19 +380,15 @@ function updateClientsOverTime() {
 
     // Remove possibly already existing data
     clientsChart.data.labels = [];
-    clientsChart.data.datasets[0].data = [];
-    for (i = 1; i < clientsChart.data.datasets.length; i++) {
-      clientsChart.data.datasets[i].data = [];
-    }
+    clientsChart.data.datasets = [];
 
     // Collect values and colors, and labels
-    clientsChart.data.datasets[0].backgroundColor = THEME_COLORS[0];
-    clientsChart.data.datasets[0].pointRadius = 0;
-    clientsChart.data.datasets[0].pointHitRadius = 5;
-    clientsChart.data.datasets[0].pointHoverRadius = 5;
-    clientsChart.data.datasets[0].label = labels[0];
+    var numClients = 0;
+    if (plotdata.length > 0) {
+      numClients = plotdata[0].length;
+    }
 
-    for (i = clientsChart.data.datasets.length; plotdata.length && i < plotdata[0].length; i++) {
+    for (var i = 0; i < numClients; i++) {
       clientsChart.data.datasets.push({
         data: [],
         // If we ran out of colors, make a random one
@@ -391,7 +405,7 @@ function updateClientsOverTime() {
     }
 
     // Add data for each dataset that is available
-    for (j in timestamps) {
+    for (var j in timestamps) {
       if (!Object.prototype.hasOwnProperty.call(timestamps, j)) {
         continue;
       }
@@ -407,7 +421,6 @@ function updateClientsOverTime() {
     }
 
     $("#clients .overlay").hide();
-    clientsChart.options.animation = false;
     clientsChart.update();
   })
     .done(function () {
@@ -778,8 +791,6 @@ $(function () {
   // Pull in data via AJAX
   updateSummaryData();
 
-  var blockedColor = $(".queries-blocked").css("background-color");
-  var permittedColor = $(".queries-permitted").css("background-color");
   var gridColor = $(".graphs-grid").css("background-color");
   var ticksColor = $(".graphs-ticks").css("color");
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
@@ -787,33 +798,9 @@ $(function () {
     type: utils.getGraphType(),
     data: {
       labels: [],
-      datasets: [
-        {
-          label: "Blocked DNS Queries",
-          fill: true,
-          backgroundColor: blockedColor,
-          borderColor: blockedColor,
-          pointBorderColor: blockedColor,
-          pointRadius: 1,
-          pointHoverRadius: 5,
-          data: [],
-          pointHitRadius: 5
-        },
-        {
-          label: "Permitted DNS Queries",
-          fill: true,
-          backgroundColor: permittedColor,
-          borderColor: permittedColor,
-          pointBorderColor: permittedColor,
-          pointRadius: 1,
-          pointHoverRadius: 5,
-          data: [],
-          pointHitRadius: 5
-        }
-      ]
+      datasets: [{ data: [] }]
     },
     options: {
-      animation: false,
       tooltips: {
         enabled: true,
         mode: "x-axis",
