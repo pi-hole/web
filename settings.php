@@ -999,6 +999,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                    be <code>192.168.47.0/24</code> and similar. If your network is larger, the CIDR has to be
                                                    different, for instance a range of 10.8.0.1 - 10.8.255.255 results in <code>10.8.0.0/16</code>,
                                                    whereas an even wider network of 10.0.0.1 - 10.255.255.255 results in <code>10.0.0.0/8</code>.
+                                                   Setting up IPv6 ranges is exactly similar to setting up IPv4 here and fully supported.
                                                    Feel free to reach out to us on our
                                                    <a href="https://discourse.pi-hole.net" target="_blank">Discourse forum</a>
                                                    in case you need any assistance setting up local host name resolution for your particular system.</p>
