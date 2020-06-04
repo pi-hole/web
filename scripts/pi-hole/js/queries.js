@@ -466,6 +466,16 @@ $(function () {
             $(this).removeClass("pointer");
           }
         );
+
+      // Disable autocorrect in the search box
+      var input = $("input[type=search]");
+      if (input !== null) {
+        input.attr("autocomplete", "off");
+        input.attr("autocorrect", "off");
+        input.attr("autocapitalize", "off");
+        input.attr("spellcheck", false);
+        input.attr("placeholder", "Type / Domain / Client");
+      }
     }
   });
 
@@ -484,15 +494,6 @@ $(function () {
     tableApi.search("");
     resetColumnsFilters();
   });
-
-  // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
-  if (input !== null) {
-    input.setAttribute("autocomplete", "off");
-    input.setAttribute("autocorrect", "off");
-    input.setAttribute("autocapitalize", "off");
-    input.setAttribute("spellcheck", false);
-  }
 });
 
 function tooltipText(index, text) {
