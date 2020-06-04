@@ -859,6 +859,104 @@ if ($_POST['action'] == 'get_groups') {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
+} elseif ($_POST['action'] == 'get_overview') {
+    // List all available groups
+    try {
+        // Get all groups, initialize array
+        $query = $db->query('SELECT id,name,enabled FROM "group"');
+        if (!$query) {
+            throw new Exception('Error while querying gravity\'s group table: ' . $db->lastErrorMsg());
+        }
+
+        $data = array();
+        while (($res = $query->fetchArray(SQLITE3_ASSOC)) !== false) {
+            $id = $res["id"];
+            unset($res["id"]);
+            $res["enabled"] = $res["enabled"] !== 0;
+            $res["clients"] = array();
+            $res["adlists"] = array();
+            $res["domains"] = array();
+            $data[$id] = $res;
+        }
+        $query->finalize();
+
+        // Get clients
+        $query = $db->query('SELECT "group".id id,"group".name,'.
+                                   'client.ip client,'.
+                                   'client.date_added,'.
+                                   'client.date_modified,'.
+                                   'client.comment FROM "group" '.
+                                    'LEFT JOIN client ON client.id IN '.
+                                    '(SELECT client_id FROM client_by_group WHERE group_id = "group".id)');
+        if (!$query) {
+            throw new Exception('Error while querying gravity\'s group/client tables: ' . $db->lastErrorMsg());
+        }
+
+        while (($res = $query->fetchArray(SQLITE3_ASSOC)) !== false) {
+            if ($res["client"] === NULL) {
+                continue;
+            }
+            $id = $res["id"];
+            unset($res["id"]);
+            array_push($data[$id]["clients"], $res);
+        }
+        $query->finalize();
+
+        // Get adlists
+        $query = $db->query('SELECT "group".id id,"group".name,'.
+                                   'adlist.address adlist,'.
+                                   'adlist.enabled,'.
+                                   'adlist.date_added,'.
+                                   'adlist.date_modified,'.
+                                   'adlist.comment FROM "group" '.
+                                    'LEFT JOIN adlist ON adlist.id IN '.
+                                    '(SELECT adlist_id FROM adlist_by_group WHERE group_id = "group".id)');
+        if (!$query) {
+            throw new Exception('Error while querying gravity\'s group/adlist tables: ' . $db->lastErrorMsg());
+        }
+
+        while (($res = $query->fetchArray(SQLITE3_ASSOC)) !== false) {
+            if ($res["adlist"] === NULL) {
+                continue;
+            }
+            $id = $res["id"];
+            unset($res["id"]);
+            $res["enabled"] = $res["enabled"] !== 0;
+            array_push($data[$id]["adlists"], $res);
+        }
+        $query->finalize();
+
+        // Get domains
+        $query = $db->query('SELECT "group".id id,"group".name,'.
+                                   'domainlist.type,'.
+                                   'domainlist.domain domain,'.
+                                   'domainlist.enabled,'.
+                                   'domainlist.date_added,'.
+                                   'domainlist.date_modified,'.
+                                   'domainlist.comment FROM "group" '.
+                                    'LEFT JOIN domainlist ON domainlist.id IN '.
+                                    '(SELECT domainlist_id FROM domainlist_by_group WHERE group_id = "group".id)');
+        if (!$query) {
+            throw new Exception('Error while querying gravity\'s group/domainlist tables: ' . $db->lastErrorMsg());
+        }
+
+        while (($res = $query->fetchArray(SQLITE3_ASSOC)) !== false) {
+            if ($res["domain"] === NULL) {
+                continue;
+            }
+            $id = $res["id"];
+            unset($res["id"]);
+            $type = $res["type"];
+            $res["enabled"] = $res["enabled"] !== 0;
+            array_push($data[$id]["domains"], $res);
+        }
+        $query->finalize();
+
+        header('Content-type: application/json');
+        echo json_encode(array('groups' => $data));
+    } catch (\Exception $ex) {
+        JSON_error($ex->getMessage());
+    }
 } else {
     log_and_die('Requested action not supported!');
 }
