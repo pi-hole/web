@@ -260,7 +260,7 @@ $(function () {
         default:
           blocked = false;
           colorClass = false;
-          fieldtext = "Unknown (" + parseInt(data[4]) + ")";
+          fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
           buttontext = "";
       }
 
@@ -343,7 +343,7 @@ $(function () {
             replytext = "upstream error";
             break;
           default:
-            replytext = "? (" + parseInt(data[6]) + ")";
+            replytext = "? (" + parseInt(data[6], 10) + ")";
         }
       } else {
         replytext = "-";

@@ -149,11 +149,11 @@ function loadCacheInfo() {
     }
 
     // Fill table with obtained values
-    $("#cache-size").text(parseInt(data.cacheinfo["cache-size"]));
-    $("#cache-inserted").text(parseInt(data.cacheinfo["cache-inserted"]));
+    $("#cache-size").text(parseInt(data.cacheinfo["cache-size"], 10));
+    $("#cache-inserted").text(parseInt(data.cacheinfo["cache-inserted"], 10));
 
     // Highlight early cache removals when present
-    var cachelivefreed = parseInt(data.cacheinfo["cache-live-freed"]);
+    var cachelivefreed = parseInt(data.cacheinfo["cache-live-freed"], 10);
     $("#cache-live-freed").text(cachelivefreed);
     if (cachelivefreed > 0) {
       $("#cache-live-freed").parent("tr").addClass("lookatme");

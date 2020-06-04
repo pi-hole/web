@@ -28,8 +28,8 @@ window.location.search
   });
 
 if ("from" in GETDict && "until" in GETDict) {
-  from = parseInt(GETDict.from);
-  until = parseInt(GETDict.until);
+  from = parseInt(GETDict.from, 10);
+  until = parseInt(GETDict.until, 10);
   start__ = moment(1000 * from);
   end__ = moment(1000 * until);
   instantquery = true;
