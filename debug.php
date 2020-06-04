@@ -1,4 +1,4 @@
-<?php /* 
+<?php /*
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
@@ -11,11 +11,13 @@
 <div class="page-header">
     <h1>Generate debug log</h1>
 </div>
-
-<p><input type="checkbox" id="upload" checked> Upload debug log and provide token once finished</p>
+<div>
+    <input type="checkbox" id="upload">
+    <label for="upload">Upload debug log and provide token once finished</label>
+</div>
 <p>Once you click this button a debug log will be generated and can automatically be uploaded if we detect a working internet connection.</p>
-<button class="btn btn-lg btn-primary btn-block" id="debugBtn">Generate debug log</button>
-<pre id="output" style="width: 100%; height: 100%;" hidden="true"></pre>
+<button type="button" id="debugBtn" class="btn btn-lg btn-primary btn-block">Generate debug log</button>
+<pre id="output" style="width: 100%; height: 100%;" hidden></pre>
 
 <script src="scripts/pi-hole/js/debug.js"></script>
 

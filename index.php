@@ -22,11 +22,16 @@
         }
     }
 ?>
+<!-- Sourceing CSS colors from stylesheet to be used in JS code -->
+<span class="queries-permitted"></span>
+<span class="queries-blocked"></span>
+<span class="graphs-grid"></span>
+<span class="graphs-ticks"></span>
 <!-- Small boxes (Stat box) -->
 <div class="row">
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-green" id="total_queries" title="only A + AAAA queries">
+        <div class="small-box bg-green no-user-select" id="total_queries" title="only A + AAAA queries">
             <div class="inner">
                 <p>Total queries (<span id="unique_clients">-</span> clients)</p>
                 <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
@@ -39,10 +44,10 @@
     <!-- ./col -->
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-aqua">
+        <div class="small-box bg-aqua no-user-select">
             <div class="inner">
                 <p>Queries Blocked</p>
-                <h3 class="statistic"><span id="ads_blocked_today">---</span></h3>
+                <h3 class="statistic"><span id="queries_blocked_today">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-hand-paper"></i>
@@ -52,10 +57,10 @@
     <!-- ./col -->
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-yellow">
+        <div class="small-box bg-yellow no-user-select">
             <div class="inner">
                 <p>Percent Blocked</p>
-                <h3 class="statistic"><span id="ads_percentage_today">---</span></h3>
+                <h3 class="statistic"><span id="percentage_blocked_today">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-chart-pie"></i>
@@ -65,7 +70,7 @@
     <!-- ./col -->
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-red" title="<?php echo gravity_last_update(); ?>">
+        <div class="small-box bg-red no-user-select" title="<?php echo gravity_last_update(); ?>">
             <div class="inner">
                 <p>Domains on Blocklist</p>
                 <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
@@ -111,7 +116,7 @@
         </div>
         <div class="box-body">
           <div class="chart">
-            <canvas id="clientsChart" width="800" height="140" class="extratooltipcanvas"></canvas>
+            <canvas id="clientsChart" width="800" height="140" class="extratooltipcanvas no-user-select"></canvas>
           </div>
         </div>
         <div class="overlay">
@@ -123,7 +128,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12 col-lg-6">
+    <div class="col-md-6">
     <div class="box" id="query-types-pie">
         <div class="box-header with-border">
           <h3 class="box-title">Query Types</h3>
@@ -142,17 +147,17 @@
         <!-- /.box-body -->
       </div>
     </div>
-    <div class="col-md-12 col-lg-6">
+    <div class="col-md-6">
     <div class="box" id="forward-destinations-pie">
         <div class="box-header with-border">
           <h3 class="box-title">Queries answered by</h3>
         </div>
         <div class="box-body">
           <div class="pull-left" style="width:50%">
-            <canvas id="forwardDestinationPieChart" width="120" height="120" class="extratooltipcanvas"></canvas>
+            <canvas id="forwardDestinationPieChart" width="120" height="120" class="extratooltipcanvas no-user-select"></canvas>
           </div>
           <div class="pull-left" style="width:50%">
-            <div id="forward-destinations-legend" class="chart-legend" class="extratooltipcanvas"></div>
+            <div id="forward-destinations-legend" class="chart-legend extratooltipcanvas no-user-select"></div>
           </div>
         </div>
         <div class="overlay">
@@ -289,6 +294,7 @@ else
 <!-- /.row -->
 <?php } ?>
 
+<script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/index.js"></script>
 
 <?php

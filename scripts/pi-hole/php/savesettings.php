@@ -103,16 +103,10 @@ function readStaticLeasesFile($origin_file="/etc/dnsmasq.d/04-pihole-static-dhcp
 {
 	global $dhcp_static_leases;
 	$dhcp_static_leases = array();
-	try
-	{
-		$dhcpstatic = @fopen($origin_file, 'r');
-	}
-	catch(Exception $e)
-	{
-		echo "Warning: Failed to read ".$origin_file.", this is not an error";
+	if(!file_exists($origin_file) || !is_readable($origin_file))
 		return false;
-	}
 
+	$dhcpstatic = @fopen($origin_file, 'r');
 	if(!is_resource($dhcpstatic))
 		return false;
 
@@ -178,16 +172,16 @@ function readDNSserversList()
 			$line = explode(';', $line);
 			$name = $line[0];
 			$values = [];
-			if (!empty($line[1])) {
+			if (!empty($line[1]) && validIP($line[1])) {
 				$values["v4_1"] = $line[1];
 			}
-			if (!empty($line[2])) {
+			if (!empty($line[2]) && validIP($line[2])) {
 				$values["v4_2"] = $line[2];
 			}
-			if (!empty($line[3])) {
+			if (!empty($line[3]) && validIP($line[3])) {
 				$values["v6_1"] = $line[3];
 			}
-			if (!empty($line[4])) {
+			if (!empty($line[4]) && validIP($line[4])) {
 				$values["v6_2"] = $line[4];
 			}
             $list[$name] = $values;
@@ -232,7 +226,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 
 		// Test if this lease is already included
 		readStaticLeasesFile();
-		
+
 		foreach($dhcp_static_leases as $lease) {
 			if($lease["hwaddr"] === $mac)
 			{
@@ -248,7 +242,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 			}
 		}
 
-		exec("sudo pihole -a addstaticdhcp ".$mac." ".$ip." ".$hostname);
+		pihole_execute("-a addstaticdhcp ".$mac." ".$ip." ".$hostname);
 		$success .= "A new static address has been added";
 		return true;
 	} catch(Exception $exception) {
@@ -292,10 +286,10 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					if(array_key_exists("custom".$i,$_POST))
 					{
 						$exploded = explode("#", $_POST["custom".$i."val"], 2);
-						$IP = $exploded[0];
+						$IP = trim($exploded[0]);
 						if(count($exploded) > 1)
 						{
-							$port = $exploded[1];
+							$port = trim($exploded[1]);
 						}
 						else
 						{
@@ -357,28 +351,31 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				if(isset($_POST["rev_server"]))
 				{
 					// Validate CIDR IP
-					if (!validCIDRIP($_POST["rev_server_cidr"]))
+					$cidr = trim($_POST["rev_server_cidr"]);
+					if (!validCIDRIP($cidr))
 					{
-						$error .= "Conditional forwarding subnet (\"".htmlspecialchars($_POST["rev_server_cidr"])."\") is invalid!<br>".
+						$error .= "Conditional forwarding subnet (\"".htmlspecialchars($cidr)."\") is invalid!<br>".
 						          "This field requires CIDR notation for local subnets (e.g., 192.168.0.0/16).<br>".
 						          "Please use only subnets /8, /16, /24, and /32.<br>";
 					}
 
 					// Validate target IP
-					if (!validIP($_POST["rev_server_target"]))
+					$target = trim($_POST["rev_server_target"]);
+					if (!validIP($target))
 					{
-						$error .= "Conditional forwarding target IP (\"".htmlspecialchars($_POST["rev_server_target"])."\") is invalid!<br>";
+						$error .= "Conditional forwarding target IP (\"".htmlspecialchars($target)."\") is invalid!<br>";
 					}
 
 					// Validate conditional forwarding domain name (empty is okay)
-					if(strlen($_POST["rev_server_domain"]) > 0 && !validDomain($_POST["rev_server_domain"]))
+					$domain = trim($_POST["rev_server_domain"]);
+					if(strlen($domain) > 0 && !validDomain($domain))
 					{
-						$error .= "Conditional forwarding domain name (\"".htmlspecialchars($_POST["rev_server_domain"])."\") is invalid!<br>";
+						$error .= "Conditional forwarding domain name (\"".htmlspecialchars($domain)."\") is invalid!<br>";
 					}
 
 					if(!$error)
 					{
-						$extra .= " rev-server ".$_POST["rev_server_cidr"]." ".$_POST["rev_server_target"]." ".$_POST["rev_server_domain"];
+						$extra .= " rev-server ".$cidr." ".$target." ".$domain;
 					}
 				}
 
@@ -403,15 +400,23 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					// Fallback
 					$DNSinterface = "local";
 				}
-				exec("sudo pihole -a -i ".$DNSinterface." -web");
+				pihole_execute("-a -i ".$DNSinterface." -web");
 
 				// If there has been no error we can save the new DNS server IPs
 				if(!strlen($error))
 				{
 					$IPs = implode (",", $DNSservers);
-					$return = exec("sudo pihole -a setdns \"".$IPs."\" ".$extra);
-					$success .= htmlspecialchars($return)."<br>";
-					$success .= "The DNS settings have been updated (using ".$DNSservercount." DNS servers)";
+					$return = pihole_execute("-a setdns \"".$IPs."\" ".$extra);
+					if(!empty($return))
+					{
+						$success .= htmlspecialchars(end($return))."<br>";
+						$success .= "The DNS settings have been updated (using ".$DNSservercount." DNS servers)";
+					}
+					else
+					{
+						$success .= "Updating DNS settings failed. Result:";
+						$success .= implode($return);
+					}
 				}
 				else
 				{
@@ -425,17 +430,17 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 
 				if($_POST["action"] === "Disable")
 				{
-					exec("sudo pihole -l off");
+					pihole_execute("-l off");
 					$success .= "Logging has been disabled and logs have been flushed";
 				}
 				elseif($_POST["action"] === "Disable-noflush")
 				{
-					exec("sudo pihole -l off noflush");
+					pihole_execute("-l off noflush");
 					$success .= "Logging has been disabled, your logs have <strong>not</strong> been flushed";
 				}
 				else
 				{
-					exec("sudo pihole -l on");
+					pihole_execute("-l on");
 					$success .= "Logging has been enabled";
 				}
 
@@ -492,8 +497,8 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				if(!strlen($error))
 				{
 					// All entries are okay
-					exec("sudo pihole -a setexcludedomains ".$domainlist);
-					exec("sudo pihole -a setexcludeclients ".$clientlist);
+					pihole_execute("-a setexcludedomains ".$domainlist);
+					pihole_execute("-a setexcludeclients ".$clientlist);
 					$success .= "The API settings have been updated<br>";
 				}
 				else
@@ -504,7 +509,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				// Set query log options
 				if(isset($_POST["querylog-permitted"]) && isset($_POST["querylog-blocked"]))
 				{
-					exec("sudo pihole -a setquerylog all");
+					pihole_execute("-a setquerylog all");
 					if(!isset($_POST["privacyMode"]))
 					{
 						$success .= "All entries will be shown in Query Log";
@@ -516,7 +521,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				}
 				elseif(isset($_POST["querylog-permitted"]))
 				{
-					exec("sudo pihole -a setquerylog permittedonly");
+					pihole_execute("-a setquerylog permittedonly");
 					if(!isset($_POST["privacyMode"]))
 					{
 						$success .= "Only permitted will be shown in Query Log";
@@ -528,41 +533,29 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				}
 				elseif(isset($_POST["querylog-blocked"]))
 				{
-					exec("sudo pihole -a setquerylog blockedonly");
+					pihole_execute("-a setquerylog blockedonly");
 					$success .= "Only blocked entries will be shown in Query Log";
 				}
 				else
 				{
-					exec("sudo pihole -a setquerylog nothing");
+					pihole_execute("-a setquerylog nothing");
 					$success .= "No entries will be shown in Query Log";
 				}
 
 
 				if(isset($_POST["privacyMode"]))
 				{
-					exec("sudo pihole -a privacymode true");
+					pihole_execute("-a privacymode true");
 					$success .= " (privacy mode enabled)";
 				}
 				else
 				{
-					exec("sudo pihole -a privacymode false");
+					pihole_execute("-a privacymode false");
 				}
 
 				break;
 
 			case "webUI":
-				if($_POST["tempunit"] == "F")
-				{
-					exec('sudo pihole -a -f');
-				}
-				elseif($_POST["tempunit"] == "K")
-				{
-					exec('sudo pihole -a -k');
-				}
-				else
-				{
-					exec('sudo pihole -a -c');
-				}
 				$adminemail = trim($_POST["adminemail"]);
 				if(strlen($adminemail) == 0 || !isset($adminemail))
 				{
@@ -574,36 +567,42 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				}
 				else
 				{
-					exec('sudo pihole -a -e \''.$adminemail.'\'');
+					pihole_execute('-a -e \''.$adminemail.'\'');
 				}
 				if(isset($_POST["boxedlayout"]))
 				{
-					exec('sudo pihole -a layout boxed');
+					pihole_execute('-a layout boxed');
 				}
 				else
 				{
-					exec('sudo pihole -a layout traditional');
+					pihole_execute('-a layout traditional');
+				}
+				if(isset($_POST["webtheme"]))
+				{
+					global $available_themes;
+					if(array_key_exists($_POST["webtheme"], $available_themes))
+						exec('sudo pihole -a theme '.$_POST["webtheme"]);
 				}
 				$success .= "The webUI settings have been updated";
 				break;
 
 			case "poweroff":
-				exec("sudo pihole -a poweroff");
+				pihole_execute("-a poweroff");
 				$success = "The system will poweroff in 5 seconds...";
 				break;
 
 			case "reboot":
-				exec("sudo pihole -a reboot");
+				pihole_execute("-a reboot");
 				$success = "The system will reboot in 5 seconds...";
 				break;
 
 			case "restartdns":
-				exec("sudo pihole -a restartdns");
+				pihole_execute("-a restartdns");
 				$success = "The DNS server has been restarted";
 				break;
 
 			case "flushlogs":
-				exec("sudo pihole -f");
+				pihole_execute("-f");
 				$success = "The Pi-hole log file has been flushed";
 				break;
 
@@ -611,9 +610,9 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 
 				if(isset($_POST["addstatic"]))
 				{
-					$mac = $_POST["AddMAC"];
-					$ip = $_POST["AddIP"];
-					$hostname = $_POST["AddHostname"];
+					$mac = trim($_POST["AddMAC"]);
+					$ip = trim($_POST["AddIP"]);
+					$hostname = trim($_POST["AddHostname"]);
 
 					addStaticDHCPLease($mac, $ip, $hostname);
 					break;
@@ -630,7 +629,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 
 					if(!strlen($error))
 					{
-						exec("sudo pihole -a removestaticdhcp ".$mac);
+						pihole_execute("-a removestaticdhcp ".$mac);
 						$success .= "The static address with MAC address ".htmlspecialchars($mac)." has been removed";
 					}
 					break;
@@ -697,13 +696,13 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 
 					if(!strlen($error))
 					{
-						exec("sudo pihole -a enabledhcp ".$from." ".$to." ".$router." ".$leasetime." ".$domain." ".$ipv6." ".$rapidcommit);
+						pihole_execute("-a enabledhcp ".$from." ".$to." ".$router." ".$leasetime." ".$domain." ".$ipv6." ".$rapidcommit);
 						$success .= "The DHCP server has been activated ".htmlspecialchars($type);
 					}
 				}
 				else
 				{
-					exec("sudo pihole -a disabledhcp");
+					pihole_execute("-a disabledhcp");
 					$success = "The DHCP server has been deactivated";
 				}
 
@@ -721,11 +720,11 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					}
 
 					// Store privacy level
-					exec("sudo pihole -a privacylevel ".$level);
+					pihole_execute("-a privacylevel ".$level);
 
 					if($privacylevel > $level)
 					{
-						exec("sudo pihole -a restartdns");
+						pihole_execute("-a restartdns");
 						$success .= "The privacy level has been decreased and the DNS resolver has been restarted";
 					}
 					elseif($privacylevel < $level)
@@ -744,7 +743,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				break;
 			// Flush network table
 			case "flusharp":
-				exec("sudo pihole arpflush quiet", $output);
+				pihole_execute("arpflush quiet", $output);
 				$error = implode("<br>", $output);
 				if(strlen($error) == 0)
 				{

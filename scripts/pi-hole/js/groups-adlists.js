@@ -9,13 +9,13 @@
 
 var table;
 var groups = [];
-var token = $("#token").html();
+var token = $("#token").text();
 
-function get_groups() {
+function getGroups() {
   $.post(
     "scripts/pi-hole/php/groups.php",
     { action: "get_groups", token: token },
-    function(data) {
+    function (data) {
       groups = data.data;
       initTable();
     },
@@ -23,17 +23,11 @@ function get_groups() {
   );
 }
 
-$(document).ready(function() {
+$(function () {
   $("#btnAdd").on("click", addAdlist);
 
-  get_groups();
-
-  // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
-  input.setAttribute("autocomplete", "off");
-  input.setAttribute("autocorrect", "off");
-  input.setAttribute("autocapitalize", "off");
-  input.setAttribute("spellcheck", false);
+  utils.setBsSelectDefaults();
+  getGroups();
 });
 
 function initTable() {
@@ -52,10 +46,12 @@ function initTable() {
       { data: "groups", searchable: false },
       { data: null, width: "80px", orderable: false }
     ],
-    drawCallback: function() {
+    drawCallback: function () {
       $('button[id^="deleteAdlist_"]').on("click", deleteAdlist);
+      // Remove visible dropdown to prevent orphaning
+      $("body > .bootstrap-select.dropdown").remove();
     },
-    rowCallback: function(row, data) {
+    rowCallback: function (row, data) {
       $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
@@ -95,64 +91,71 @@ function initTable() {
 
       $("td:eq(3)", row).empty();
       $("td:eq(3)", row).append(
-        '<div id="selectHome_' +
-          data.id +
-          '">' +
-          '<select id="multiselect_' +
-          data.id +
-          '" multiple="multiple"></select></div>'
+        '<select class="selectpicker" id="multiselect_' + data.id + '" multiple></select>'
       );
       var selectEl = $("#multiselect_" + data.id, row);
       // Add all known groups
       for (var i = 0; i < groups.length; i++) {
-        var extra = "";
+        var dataSub = "";
         if (!groups[i].enabled) {
-          extra = " (disabled)";
+          dataSub = 'data-subtext="(disabled)"';
         }
 
         selectEl.append(
-          $("<option />")
+          $("<option " + dataSub + "/>")
             .val(groups[i].id)
-            .text(groups[i].name + extra)
+            .text(groups[i].name)
         );
       }
 
       // Select assigned groups
       selectEl.val(data.groups);
-      // Initialize multiselect
-      selectEl.multiselect({
-        includeSelectAllOption: true,
-        buttonContainer: '<div id="container_' + data.id + '" class="btn-group"/>',
-        maxHeight: 200,
-        onDropdownShown: function() {
-          var el = $("#container_" + data.id);
-          var top = el[0].getBoundingClientRect().top;
-          var bottom = $(window).height() - top - el.height();
-          if (bottom < 200) {
-            el.addClass("dropup");
+      // Initialize bootstrap-select
+      selectEl
+        // fix dropdown if it would stick out right of the viewport
+        .on("show.bs.select", function () {
+          var winWidth = $(window).width();
+          var dropdownEl = $("body > .bootstrap-select.dropdown");
+          if (dropdownEl.length > 0) {
+            dropdownEl.removeClass("align-right");
+            var width = dropdownEl.width();
+            var left = dropdownEl.offset().left;
+            if (left + width > winWidth) {
+              dropdownEl.addClass("align-right");
+            }
           }
-
-          if (bottom > 200) {
-            el.removeClass("dropup");
+        })
+        .on("changed.bs.select", function () {
+          // enable Apply button
+          if ($(applyBtn).prop("disabled")) {
+            $(applyBtn)
+              .addClass("btn-success")
+              .prop("disabled", false)
+              .on("click", function () {
+                editAdlist.call(selectEl);
+              });
           }
+        })
+        .on("hide.bs.select", function () {
+          // Restore values if drop-down menu is closed without clicking the Apply button
+          if (!$(applyBtn).prop("disabled")) {
+            $(this).val(data.groups).selectpicker("refresh");
+            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+          }
+        })
+        .selectpicker()
+        .siblings(".dropdown-menu")
+        .find(".bs-actionsbox")
+        .prepend(
+          '<button type="button" id=btn_apply_' +
+            data.id +
+            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+        );
 
-          var offset = el.offset();
-          $("body").append(el);
-          el.css("position", "absolute");
-          el.css("top", offset.top + "px");
-          el.css("left", offset.left + "px");
-        },
-        onDropdownHide: function() {
-          var el = $("#container_" + data.id);
-          var home = $("#selectHome_" + data.id);
-          home.append(el);
-          el.removeAttr("style");
-        }
-      });
-      selectEl.on("change", editAdlist);
+      var applyBtn = "#btn_apply_" + data.id;
 
       var button =
-        '<button class="btn btn-danger btn-xs" type="button" id="deleteAdlist_' +
+        '<button type="button" class="btn btn-danger btn-xs" id="deleteAdlist_' +
         data.id +
         '">' +
         '<span class="far fa-trash-alt"></span>' +
@@ -168,23 +171,16 @@ function initTable() {
       [10, 25, 50, 100, "All"]
     ],
     stateSave: true,
-    stateSaveCallback: function(settings, data) {
-      // Store current state in client's local storage area
-      localStorage.setItem("groups-adlists-table", JSON.stringify(data));
+    stateSaveCallback: function (settings, data) {
+      utils.stateSaveCallback("groups-adlists-table", data);
     },
-    stateLoadCallback: function() {
-      // Receive previous state from client's local storage area
-      var data = localStorage.getItem("groups-adlists-table");
+    stateLoadCallback: function () {
+      var data = utils.stateLoadCallback("groups-adlists-table");
       // Return if not available
       if (data === null) {
         return null;
       }
 
-      data = JSON.parse(data);
-      // Always start on the first page to show most recent queries
-      data.start = 0;
-      // Always start with empty search field
-      data.search.search = "";
       // Reset visibility of ID column
       data.columns[0].visible = false;
       // Apply loaded state to table
@@ -192,18 +188,27 @@ function initTable() {
     }
   });
 
-  table.on("order.dt", function() {
+  table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
-      $("#resetButton").show();
+      $("#resetButton").removeClass("hidden");
     } else {
-      $("#resetButton").hide();
+      $("#resetButton").addClass("hidden");
     }
   });
-  $("#resetButton").on("click", function() {
+  $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
-    $("#resetButton").hide();
+    $("#resetButton").addClass("hidden");
   });
+
+  // Disable autocorrect in the search box
+  var input = document.querySelector("input[type=search]");
+  if (input !== null) {
+    input.setAttribute("autocomplete", "off");
+    input.setAttribute("autocorrect", "off");
+    input.setAttribute("autocapitalize", "off");
+    input.setAttribute("spellcheck", false);
+  }
 }
 
 function addAdlist() {
@@ -228,10 +233,11 @@ function addAdlist() {
       comment: comment,
       token: token
     },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "fas fa-plus", "Successfully added adlist", address);
+        table.ajax.reload(null, false);
         $("#new_address").val("");
         $("#new_comment").val("");
         table.ajax.reload();
@@ -239,10 +245,10 @@ function addAdlist() {
         utils.showAlert("error", "", "Error while adding new adlist: ", response.message);
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new adlist: ", jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -257,25 +263,25 @@ function editAdlist() {
   var address = tr.find("#address_" + id).text();
 
   var done = "edited";
-  var not_done = "editing";
+  var notDone = "editing";
   switch (elem) {
     case "status_" + id:
       if (status === 0) {
         done = "disabled";
-        not_done = "disabling";
+        notDone = "disabling";
       } else if (status === 1) {
         done = "enabled";
-        not_done = "enabling";
+        notDone = "enabling";
       }
 
       break;
     case "comment_" + id:
       done = "edited comment of";
-      not_done = "editing comment of";
+      notDone = "editing comment of";
       break;
     case "multiselect_" + id:
       done = "edited groups of";
-      not_done = "editing groups of";
+      notDone = "editing groups of";
       break;
     default:
       alert("bad element or invalid data-id!");
@@ -297,7 +303,7 @@ function editAdlist() {
       groups: groups,
       token: token
     },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert(
@@ -306,24 +312,25 @@ function editAdlist() {
           "Successfully " + done + " adlist ",
           address
         );
+        table.ajax.reload(null, false);
       } else {
         utils.showAlert(
           "error",
           "",
-          "Error while " + not_done + " adlist with ID " + id,
+          "Error while " + notDone + " adlist with ID " + id,
           Number(response.message)
         );
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert(
         "error",
         "",
-        "Error while " + not_done + " adlist with ID " + id,
+        "Error while " + notDone + " adlist with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -340,22 +347,19 @@ function deleteAdlist() {
     method: "post",
     dataType: "json",
     data: { action: "delete_adlist", id: id, token: token },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "far fa-trash-alt", "Successfully deleted adlist ", address);
-        table
-          .row(tr)
-          .remove()
-          .draw(false);
+        table.row(tr).remove().draw(false).ajax.reload(null, false);
       } else {
         utils.showAlert("error", "", "Error while deleting adlist with ID " + id, response.message);
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting adlist with ID " + id, jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }

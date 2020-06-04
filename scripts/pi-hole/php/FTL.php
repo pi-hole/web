@@ -36,9 +36,13 @@ function connectFTL($address, $port=4711)
 	{
 		$config = piholeFTLConfig();
 		// Read port
-		$portfile = file_get_contents($config["PORTFILE"]);
-		if(is_numeric($portfile))
-			$port = intval($portfile);
+		$portfileName = isset($config['PORTFILE']) ? $config['PORTFILE'] : '';
+		if ($portfileName != '')
+		{
+			$portfileContents = file_get_contents($portfileName);
+			if(is_numeric($portfileContents))
+				$port = intval($portfileContents);
+		}
 	}
 
 	// Open Internet socket connection
@@ -46,6 +50,7 @@ function connectFTL($address, $port=4711)
 
 	return $socket;
 }
+
 function sendRequestFTL($requestin)
 {
 	global $socket;

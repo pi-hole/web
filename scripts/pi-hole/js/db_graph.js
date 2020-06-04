@@ -5,25 +5,17 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global Chart:false, moment:false */
+/* global utils:false, Chart:false, moment:false */
 
 var start__ = moment().subtract(6, "days");
-var from =
-  moment(start__)
-    .utc()
-    .valueOf() / 1000;
+var from = moment(start__).utc().valueOf() / 1000;
 var end__ = moment();
-var until =
-  moment(end__)
-    .utc()
-    .valueOf() / 1000;
+var until = moment(end__).utc().valueOf() / 1000;
 var interval = 0;
-
-var timeoutWarning = $("#timeoutWarning");
 
 var dateformat = "MMMM Do YYYY, HH:mm";
 
-$(function() {
+$(function () {
   $("#querytime").daterangepicker(
     {
       timePicker: true,
@@ -34,23 +26,15 @@ $(function() {
       ranges: {
         Today: [moment().startOf("day"), moment()],
         Yesterday: [
-          moment()
-            .subtract(1, "days")
-            .startOf("day"),
-          moment()
-            .subtract(1, "days")
-            .endOf("day")
+          moment().subtract(1, "days").startOf("day"),
+          moment().subtract(1, "days").endOf("day")
         ],
         "Last 7 Days": [moment().subtract(6, "days"), moment()],
         "Last 30 Days": [moment().subtract(29, "days"), moment()],
         "This Month": [moment().startOf("month"), moment()],
         "Last Month": [
-          moment()
-            .subtract(1, "month")
-            .startOf("month"),
-          moment()
-            .subtract(1, "month")
-            .endOf("month")
+          moment().subtract(1, "month").startOf("month"),
+          moment().subtract(1, "month").endOf("month")
         ],
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()]
@@ -59,40 +43,12 @@ $(function() {
       showDropdowns: true,
       autoUpdateInput: false
     },
-    function(startt, endt) {
-      from =
-        moment(startt)
-          .utc()
-          .valueOf() / 1000;
-      until =
-        moment(endt)
-          .utc()
-          .valueOf() / 1000;
+    function (startt, endt) {
+      from = moment(startt).utc().valueOf() / 1000;
+      until = moment(endt).utc().valueOf() / 1000;
     }
   );
 });
-
-function padNumber(num) {
-  return ("00" + num).substr(-2, 2);
-}
-
-// Helper function needed for converting the Objects to Arrays
-
-function objectToArray(p) {
-  var keys = Object.keys(p);
-  keys.sort(function(a, b) {
-    return a - b;
-  });
-
-  var arr = [],
-    idx = [];
-  for (var i = 0; i < keys.length; i++) {
-    arr.push(p[keys[i]]);
-    idx.push(keys[i]);
-  }
-
-  return [idx, arr];
-}
 
 var timeLineChart;
 
@@ -101,6 +57,8 @@ function compareNumbers(a, b) {
 }
 
 function updateQueriesOverTime() {
+  var timeoutWarning = $("#timeoutWarning");
+
   $("#queries-over-time .overlay").show();
   timeoutWarning.show();
 
@@ -128,10 +86,10 @@ function updateQueriesOverTime() {
 
   $.getJSON(
     "api_db.php?getGraphData&from=" + from + "&until=" + until + "&interval=" + interval,
-    function(data) {
+    function (data) {
       // convert received objects to arrays
-      data.domains_over_time = objectToArray(data.domains_over_time);
-      data.ads_over_time = objectToArray(data.ads_over_time);
+      data.domains_over_time = utils.objectToArray(data.domains_over_time);
+      data.ads_over_time = utils.objectToArray(data.ads_over_time);
       // Remove possibly already existing data
       timeLineChart.data.labels = [];
       timeLineChart.data.datasets[0].data = [];
@@ -160,23 +118,23 @@ function updateQueriesOverTime() {
       for (hour in dates) {
         if (Object.prototype.hasOwnProperty.call(dates, hour)) {
           var date,
-            dom = 0,
-            ads = 0;
+            total = 0,
+            blocked = 0;
           date = new Date(1000 * dates[hour]);
 
           var idx = data.domains_over_time[0].indexOf(dates[hour].toString());
           if (idx > -1) {
-            dom = data.domains_over_time[1][idx];
+            total = data.domains_over_time[1][idx];
           }
 
           idx = data.ads_over_time[0].indexOf(dates[hour].toString());
           if (idx > -1) {
-            ads = data.ads_over_time[1][idx];
+            blocked = data.ads_over_time[1][idx];
           }
 
           timeLineChart.data.labels.push(date);
-          timeLineChart.data.datasets[0].data.push(dom - ads);
-          timeLineChart.data.datasets[1].data.push(ads);
+          timeLineChart.data.datasets[0].data.push(blocked);
+          timeLineChart.data.datasets[1].data.push(total - blocked);
         }
       }
 
@@ -188,30 +146,32 @@ function updateQueriesOverTime() {
   );
 }
 
-$(document).ready(function() {
+$(function () {
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
+  var blockedColor = "#999";
+  var permittedColor = "#00a65a";
   timeLineChart = new Chart(ctx, {
-    type: "bar",
+    type: utils.getGraphType(),
     data: {
       labels: [],
       datasets: [
         {
-          label: "Permitted DNS Queries",
+          label: "Blocked DNS Queries",
           fill: true,
-          backgroundColor: "rgba(0, 166, 90,.8)",
-          borderColor: "rgba(0, 166, 90,.8)",
-          pointBorderColor: "rgba(0, 166, 90,.8)",
+          backgroundColor: blockedColor,
+          borderColor: blockedColor,
+          pointBorderColor: blockedColor,
           pointRadius: 1,
           pointHoverRadius: 5,
           data: [],
           pointHitRadius: 5
         },
         {
-          label: "Blocked DNS Queries",
+          label: "Permitted DNS Queries",
           fill: true,
-          backgroundColor: "rgba(0,192,239,1)",
-          borderColor: "rgba(0,192,239,1)",
-          pointBorderColor: "rgba(0,192,239,1)",
+          backgroundColor: permittedColor,
+          borderColor: permittedColor,
+          pointBorderColor: permittedColor,
           pointRadius: 1,
           pointHoverRadius: 5,
           data: [],
@@ -222,45 +182,76 @@ $(document).ready(function() {
     options: {
       tooltips: {
         enabled: true,
+        itemSort: function (a, b) {
+          return b.datasetIndex - a.datasetIndex;
+        },
         mode: "x-axis",
         callbacks: {
-          title: function(tooltipItem) {
+          title: function (tooltipItem) {
             var label = tooltipItem[0].xLabel;
             var time = new Date(label);
-            var from_date =
+            var fromDate =
               time.getFullYear() +
               "-" +
-              padNumber(time.getMonth() + 1) +
+              utils.padNumber(time.getMonth() + 1) +
               "-" +
-              padNumber(time.getDate()) +
-              " " +
-              padNumber(time.getHours()) +
+              utils.padNumber(time.getDate());
+            var fromTime =
+              utils.padNumber(time.getHours()) +
               ":" +
-              padNumber(time.getMinutes()) +
+              utils.padNumber(time.getMinutes()) +
               ":" +
-              padNumber(time.getSeconds());
+              utils.padNumber(time.getSeconds());
             time = new Date(time.valueOf() + 1000 * interval);
-            var until_date =
+            var untilDate =
               time.getFullYear() +
               "-" +
-              padNumber(time.getMonth() + 1) +
+              utils.padNumber(time.getMonth() + 1) +
               "-" +
-              padNumber(time.getDate()) +
+              utils.padNumber(time.getDate());
+            var untilTime =
+              utils.padNumber(time.getHours()) +
+              ":" +
+              utils.padNumber(time.getMinutes()) +
+              ":" +
+              utils.padNumber(time.getSeconds());
+
+            if (fromDate === untilDate) {
+              // Abbreviated form for intervals on the same day
+              // We split title in two lines on small screens
+              if ($(window).width() < 992) {
+                untilTime += "\n";
+              }
+
+              return ("Queries from " + fromTime + " to " + untilTime + " on " + fromDate).split(
+                "\n "
+              );
+            }
+
+            // Full tooltip for intervals spanning more than one day
+            // We split title in two lines on small screens
+            if ($(window).width() < 992) {
+              fromDate += "\n";
+            }
+
+            return (
+              "Queries from " +
+              fromDate +
               " " +
-              padNumber(time.getHours()) +
-              ":" +
-              padNumber(time.getMinutes()) +
-              ":" +
-              padNumber(time.getSeconds());
-            return "Queries from " + from_date + " to " + until_date;
+              fromTime +
+              " to " +
+              untilDate +
+              " " +
+              untilTime
+            ).split("\n ");
           },
-          label: function(tooltipItems, data) {
-            if (tooltipItems.datasetIndex === 1) {
-              var percentage = 0.0;
-              var total = parseInt(data.datasets[0].data[tooltipItems.index]);
-              var blocked = parseInt(data.datasets[1].data[tooltipItems.index]);
-              if (total > 0) {
-                percentage = (100.0 * blocked) / total;
+          label: function (tooltipItems, data) {
+            if (tooltipItems.datasetIndex === 0) {
+              var percentage = 0;
+              var permitted = parseInt(data.datasets[1].data[tooltipItems.index]);
+              var blocked = parseInt(data.datasets[0].data[tooltipItems.index]);
+              if (permitted + blocked > 0) {
+                percentage = (100 * blocked) / (permitted + blocked);
               }
 
               return (
@@ -313,13 +304,13 @@ $(document).ready(function() {
   });
 });
 
-$("#querytime").on("apply.daterangepicker", function(ev, picker) {
+$("#querytime").on("apply.daterangepicker", function (ev, picker) {
   $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
   $("#queries-over-time").show();
   updateQueriesOverTime();
 });
 
-$("#queryOverTimeChart").click(function(evt) {
+$("#queryOverTimeChart").click(function (evt) {
   var activePoints = timeLineChart.getElementAtEvent(evt);
   if (activePoints.length > 0) {
     //get the internal index in the chart
