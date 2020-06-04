@@ -23,7 +23,6 @@ var replyTypes = [
   "NOTIMP",
   "upstream error"
 ];
-var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
 
 function add(domain, list) {
   var token = $("#token").text();
@@ -176,7 +175,7 @@ $(function () {
       // Query status
       var fieldtext,
         buttontext,
-        colorClass,
+        colorClass = false,
         isCNAME = false,
         regexLink = false;
 
@@ -258,7 +257,6 @@ $(function () {
           isCNAME = true;
           break;
         default:
-          colorClass = false;
           fieldtext = "Unknown (" + parseInt(data[4]) + ")";
           buttontext = "";
       }
@@ -501,39 +499,11 @@ function applyColumnFiltering() {
   });
 
   if (showReset) {
-    showResetButton();
+    $("#resetButton").removeClass("hidden");
   } else {
-    hideResetButton();
+    $("#resetButton").addClass("hidden");
   }
 
   // Trigger table update
   tableApi.draw();
-}
-
-function showResetButton() {
-  var button = $("#resetButton");
-  var text = "";
-  tableFilters.forEach(function (value, index) {
-    // Split filter string if we received a combined ID#Name column
-    var valArr = value.split("#");
-    if (valArr.length > 1) {
-      value = valArr[1];
-    }
-
-    // Create or add to button text
-    if (value.length > 0 && text.length === 0) {
-      text = "Clear filtering on " + colTypes[index] + ' "' + value + '"';
-    } else if (value.length > 0) {
-      text += " and " + colTypes[index] + ' "' + value + '"';
-    }
-  });
-
-  button.text(text);
-  button.removeClass("hidden");
-}
-
-function hideResetButton() {
-  var button = $("#resetButton");
-  button.text("");
-  button.addClass("hidden");
 }
