@@ -1372,7 +1372,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                 {
                     $speedtestdays = $setupVars["SPEEDTEST_CHART_DAYS"];
                 }else {
-                    $speedtestdays  = "1";
+                    $speedtestdays  = "official";
                 }
 
                 if(isset($setupVars["SPEEDTEST_SERVER"]))
@@ -1380,6 +1380,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                     $speedtestserver = $setupVars["SPEEDTEST_SERVER"];
                 }else {
                     $speedtestserver  = "";
+                }
+
+                if(isset($setupVars["SPEEDTEST_MODE"]))
+                {
+                    $speedtestmode = $setupVars["SPEEDTEST_MODE"];
+                }else {
+                    $speedtestmode  = "python";
                 }
                 ?>
 
@@ -1435,12 +1442,21 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "blocklists"
                                                         </div>
                                                     </div>
                                                 </div>
+
                                                 <h4>Flush Speedtest history </h4>
                                                 <div class="form-group col-md-12">
 
                                                     <div class="form-group">
                                                         <div class="checkbox text-danger" ><label><input type="checkbox"  name="clearspeedtests" value="yes"> Flush Speedtest history</label></div>
                                                     </div>
+                                                </div>
+                                                <h4>Speedtest Mode (Beta)</h4>
+                                                <div class="form-group col-md-12">
+                                                    <label>Speedtest Mode</label>
+                                                    <select name="speedtestmode" class="form-control" >
+                                                        <option value="official" <?php if($speedtestmode == "official") {?> selected <?php } ?>>Official CLI</option>
+                                                        <option value="python" <?php if($speedtestmode == "python") {?> selected <?php } ?>>Python</option>
+                                                    </select>
                                                 </div>
 
 
