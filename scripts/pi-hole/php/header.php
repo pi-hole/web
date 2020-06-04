@@ -40,7 +40,7 @@
     {
         // $output could be either 4-5 digits or 2-3, and we only divide by 1000 if it's 4-5
         // ex. 39007 vs 39
-        $celsius = intVal($output);
+        $celsius = intval($output);
 
         // If celsius is greater than 1 degree and is in the 4-5 digit format
         if($celsius > 1000) {
@@ -90,7 +90,7 @@
             if(count($expl) == 2)
             {
                 // remove " kB" from the end of the string and make it an integer
-                $meminfo[$expl[0]] = intVal(substr($expl[1],0, -3));
+                $meminfo[$expl[0]] = intval(substr($expl[1],0, -3));
             }
         }
         $memory_used = $meminfo["MemTotal"]-$meminfo["MemFree"]-$meminfo["Buffers"]-$meminfo["Cached"];
