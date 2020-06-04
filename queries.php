@@ -138,7 +138,7 @@ if(strlen($showing) > 0)
                     </tr>
                 </tfoot>
             </table>
-            <label>Filtering options:</label>
+            <p><strong>Filtering options:</strong></p>
             <ul>
                 <li>Use <kbd>Ctrl</kbd> or <kbd>&#8984;</kbd> + <i class="fas fa-mouse-pointer"></i> to add columns to the current filter</li>
                 <li>Use <kbd>Shift</kbd> + <i class="fas fa-mouse-pointer"></i> to remove columns from the current filter</li>
