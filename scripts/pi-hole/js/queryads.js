@@ -107,7 +107,7 @@ $("#btnSearchExact").on("click", function () {
 
 // Wrap form-group's buttons to next line when viewed on a small screen
 $(window).on("resize", function () {
-  if ($(window).width() < 991) {
+  if ($(window).width() < 992) {
     $(".form-group.input-group").removeClass("input-group").addClass("input-group-block");
     $(".form-group.input-group-block > input").css("margin-bottom", "5px");
     $(".form-group.input-group-block > .input-group-btn")
