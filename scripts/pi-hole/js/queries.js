@@ -396,10 +396,10 @@ $(function () {
         })
         .hover(
           function () {
-            $(this).css("cursor", "pointer").attr("title", tooltipText(1, this.textContent));
+            $(this).addClass("pointer").attr("title", tooltipText(1, this.textContent));
           },
           function () {
-            $(this).css("cursor", "auto");
+            $(this).removeClass("pointer");
           }
         );
 
@@ -411,10 +411,10 @@ $(function () {
         })
         .hover(
           function () {
-            $(this).css("cursor", "pointer").attr("title", tooltipText(2, this.textContent));
+            $(this).addClass("pointer").attr("title", tooltipText(2, this.textContent));
           },
           function () {
-            $(this).css("cursor", "auto");
+            $(this).removeClass("pointer");
           }
         );
 
@@ -426,10 +426,10 @@ $(function () {
         })
         .hover(
           function () {
-            $(this).css("cursor", "pointer").attr("title", tooltipText(3, this.textContent));
+            $(this).addClass("pointer").attr("title", tooltipText(3, this.textContent));
           },
           function () {
-            $(this).css("cursor", "auto");
+            $(this).removeClass("pointer");
           }
         );
 
@@ -443,10 +443,10 @@ $(function () {
         })
         .hover(
           function () {
-            $(this).css("cursor", "pointer").attr("title", tooltipText(4, this.textContent));
+            $(this).addClass("pointer").attr("title", tooltipText(4, this.textContent));
           },
           function () {
-            $(this).css("cursor", "auto");
+            $(this).removeClass("pointer");
           }
         );
 
@@ -460,10 +460,10 @@ $(function () {
         })
         .hover(
           function () {
-            $(this).css("cursor", "pointer").attr("title", tooltipText(5, this.textContent));
+            $(this).addClass("pointer").attr("title", tooltipText(5, this.textContent));
           },
           function () {
-            $(this).css("cursor", "auto");
+            $(this).removeClass("pointer");
           }
         );
     }
