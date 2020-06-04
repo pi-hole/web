@@ -23,6 +23,7 @@ var replyTypes = [
   "NOTIMP",
   "upstream error"
 ];
+var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
 
 function add(domain, list) {
   var token = $("#token").text();
@@ -388,33 +389,83 @@ $(function () {
       var api = this.api();
 
       // Query type IPv4 / IPv6
-      api.$("td:eq(1)").click(function (event) {
-        addColumnFilter(event, 1, this.textContent);
-      });
+      api
+        .$("td:eq(1)")
+        .click(function (event) {
+          addColumnFilter(event, 1, this.textContent);
+        })
+        .hover(
+          function () {
+            $(this).css("cursor", "pointer").attr("title", tooltipText(1, this.textContent));
+          },
+          function () {
+            $(this).css("cursor", "auto");
+          }
+        );
 
       // Domain
-      api.$("td:eq(2)").click(function (event) {
-        addColumnFilter(event, 2, this.textContent.split("\n")[0]);
-      });
+      api
+        .$("td:eq(2)")
+        .click(function (event) {
+          addColumnFilter(event, 2, this.textContent.split("\n")[0]);
+        })
+        .hover(
+          function () {
+            $(this).css("cursor", "pointer").attr("title", tooltipText(2, this.textContent));
+          },
+          function () {
+            $(this).css("cursor", "auto");
+          }
+        );
 
       // Client
-      api.$("td:eq(3)").click(function (event) {
-        addColumnFilter(event, 3, this.textContent);
-      });
+      api
+        .$("td:eq(3)")
+        .click(function (event) {
+          addColumnFilter(event, 3, this.textContent);
+        })
+        .hover(
+          function () {
+            $(this).css("cursor", "pointer").attr("title", tooltipText(3, this.textContent));
+          },
+          function () {
+            $(this).css("cursor", "auto");
+          }
+        );
 
       // Status
-      api.$("td:eq(4)").click(function (event) {
-        var id = this.children.id.value;
-        var text = this.textContent;
-        addColumnFilter(event, 4, id + "#" + text);
-      });
+      api
+        .$("td:eq(4)")
+        .click(function (event) {
+          var id = this.children.id.value;
+          var text = this.textContent;
+          addColumnFilter(event, 4, id + "#" + text);
+        })
+        .hover(
+          function () {
+            $(this).css("cursor", "pointer").attr("title", tooltipText(4, this.textContent));
+          },
+          function () {
+            $(this).css("cursor", "auto");
+          }
+        );
 
       // Reply type
-      api.$("td:eq(5)").click(function (event) {
-        var id = this.children.id.value;
-        var text = this.textContent.split(" ")[0];
-        addColumnFilter(event, 5, id + "#" + text);
-      });
+      api
+        .$("td:eq(5)")
+        .click(function (event) {
+          var id = this.children.id.value;
+          var text = this.textContent.split(" ")[0];
+          addColumnFilter(event, 5, id + "#" + text);
+        })
+        .hover(
+          function () {
+            $(this).css("cursor", "pointer").attr("title", tooltipText(5, this.textContent));
+          },
+          function () {
+            $(this).css("cursor", "auto");
+          }
+        );
     }
   });
 
@@ -443,6 +494,19 @@ $(function () {
     input.setAttribute("spellcheck", false);
   }
 });
+
+function tooltipText(index, text) {
+  if (index === 5) {
+    // Strip reply time from tooltip text
+    text = text.split(" ")[0];
+  }
+
+  if (index in tableFilters && tableFilters[index].length > 0) {
+    return "Clear filter on " + colTypes[index] + ' "' + text + '" using Shift + Click.';
+  }
+
+  return "Add filter on " + colTypes[index] + ' "' + text + '" using Ctrl + Click.';
+}
 
 function addColumnFilter(event, colID, filterstring) {
   // Don't do anything when NOT explicitly requesting multi-selection functions
