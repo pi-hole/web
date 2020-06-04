@@ -258,11 +258,11 @@ $(function () {
           isCNAME = true;
           break;
         default:
-          fieldtext = "Unknown (" + parseInt(data[4]) + ")";
+          fieldtext = "Unknown (" + data[4] + ")";
           buttontext = "";
       }
 
-      fieldtext += '<input type="hidden" name="id" value="' + parseInt(data[4]) + '">';
+      fieldtext += '<input type="hidden" name="id" value="' + data[4] + '">';
 
       if (colorClass !== false) {
         $(row).addClass(colorClass);
@@ -307,7 +307,7 @@ $(function () {
 
       // Check for existence of sixth column and display only if not Pi-holed
       var replytext,
-        replyid = parseInt(data[5]);
+        replyid = data[5];
 
       if (replyid >= 0 && replyid < replyTypes.length) {
         replytext = replyTypes[replyid];
