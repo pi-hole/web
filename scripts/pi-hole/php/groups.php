@@ -881,11 +881,8 @@ if ($_POST['action'] == 'get_groups') {
         $query->finalize();
 
         // Get clients
-        $query = $db->query('SELECT "group".id id,'.
-                                   'client.ip client,'.
-                                   'client.date_added,'.
-                                   'client.date_modified,'.
-                                   'client.comment FROM "group" '.
+        $query = $db->query('SELECT "group".id group_id,'.
+                                   'client.* FROM "group" '.
                                     'LEFT JOIN client ON client.id IN '.
                                     '(SELECT client_id FROM client_by_group WHERE group_id = "group".id)');
         if (!$query) {
@@ -893,22 +890,18 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         while (($res = $query->fetchArray(SQLITE3_ASSOC)) !== false) {
-            if ($res["client"] === NULL) {
+            if ($res["ip"] === NULL) {
                 continue;
             }
-            $id = $res["id"];
-            unset($res["id"]);
-            array_push($data[$id]["clients"], $res);
+            $group_id = $res["group_id"];
+            unset($res["group_id"]);
+            array_push($data[$group_id]["clients"], $res);
         }
         $query->finalize();
 
         // Get adlists
-        $query = $db->query('SELECT "group".id id,'.
-                                   'adlist.address,'.
-                                   'adlist.enabled,'.
-                                   'adlist.date_added,'.
-                                   'adlist.date_modified,'.
-                                   'adlist.comment FROM "group" '.
+        $query = $db->query('SELECT "group".id group_id,'.
+                                   'adlist.* FROM "group" '.
                                     'LEFT JOIN adlist ON adlist.id IN '.
                                     '(SELECT adlist_id FROM adlist_by_group WHERE group_id = "group".id)');
         if (!$query) {
@@ -919,21 +912,16 @@ if ($_POST['action'] == 'get_groups') {
             if ($res["address"] === NULL) {
                 continue;
             }
-            $id = $res["id"];
-            unset($res["id"]);
+            $group_id = $res["group_id"];
+            unset($res["group_id"]);
             $res["enabled"] = $res["enabled"] !== 0;
-            array_push($data[$id]["adlists"], $res);
+            array_push($data[$group_id]["adlists"], $res);
         }
         $query->finalize();
 
         // Get domains
-        $query = $db->query('SELECT "group".id id,'.
-                                   'domainlist.type,'.
-                                   'domainlist.domain,'.
-                                   'domainlist.enabled,'.
-                                   'domainlist.date_added,'.
-                                   'domainlist.date_modified,'.
-                                   'domainlist.comment FROM "group" '.
+        $query = $db->query('SELECT "group".id group_id,'.
+                                   'domainlist.* FROM "group" '.
                                     'LEFT JOIN domainlist ON domainlist.id IN '.
                                     '(SELECT domainlist_id FROM domainlist_by_group WHERE group_id = "group".id)');
         if (!$query) {
@@ -944,11 +932,11 @@ if ($_POST['action'] == 'get_groups') {
             if ($res["domain"] === NULL) {
                 continue;
             }
-            $id = $res["id"];
-            unset($res["id"]);
+            $group_id = $res["group_id"];
+            unset($res["group_id"]);
             $type = $res["type"];
             $res["enabled"] = $res["enabled"] !== 0;
-            array_push($data[$id]["domains"], $res);
+            array_push($data[$group_id]["domains"], $res);
         }
         $query->finalize();
 
