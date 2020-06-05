@@ -863,7 +863,7 @@ if ($_POST['action'] == 'get_groups') {
     // List all available groups
     try {
         // Get all groups, initialize array
-        $query = $db->query('SELECT id,name,enabled FROM "group"');
+        $query = $db->query('SELECT * FROM "group"');
         if (!$query) {
             throw new Exception('Error while querying gravity\'s group table: ' . $db->lastErrorMsg());
         }
@@ -881,7 +881,7 @@ if ($_POST['action'] == 'get_groups') {
         $query->finalize();
 
         // Get clients
-        $query = $db->query('SELECT "group".id id,"group".name,'.
+        $query = $db->query('SELECT "group".id id,'.
                                    'client.ip client,'.
                                    'client.date_added,'.
                                    'client.date_modified,'.
@@ -903,8 +903,8 @@ if ($_POST['action'] == 'get_groups') {
         $query->finalize();
 
         // Get adlists
-        $query = $db->query('SELECT "group".id id,"group".name,'.
-                                   'adlist.address adlist,'.
+        $query = $db->query('SELECT "group".id id,'.
+                                   'adlist.address,'.
                                    'adlist.enabled,'.
                                    'adlist.date_added,'.
                                    'adlist.date_modified,'.
@@ -916,7 +916,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         while (($res = $query->fetchArray(SQLITE3_ASSOC)) !== false) {
-            if ($res["adlist"] === NULL) {
+            if ($res["address"] === NULL) {
                 continue;
             }
             $id = $res["id"];
@@ -927,9 +927,9 @@ if ($_POST['action'] == 'get_groups') {
         $query->finalize();
 
         // Get domains
-        $query = $db->query('SELECT "group".id id,"group".name,'.
+        $query = $db->query('SELECT "group".id id,'.
                                    'domainlist.type,'.
-                                   'domainlist.domain domain,'.
+                                   'domainlist.domain,'.
                                    'domainlist.enabled,'.
                                    'domainlist.date_added,'.
                                    'domainlist.date_modified,'.
