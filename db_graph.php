@@ -6,16 +6,7 @@
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
-
-// Generate CSRF token
-if(empty($_SESSION['token'])) {
-    $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
-}
-$token = $_SESSION['token'];
-
 ?>
-<!-- Send PHP info to JS -->
-<div id="token" hidden><?php echo $token ?></div>
 
 <div class="page-header">
     <h1>Compute graphical statistics from the Pi-hole query database</h1>
@@ -46,7 +37,7 @@ $token = $_SESSION['token'];
 
 <div class="row">
   <div class="col-md-12">
-    <div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden="true">
+    <div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden>
         Depending on how large of a range you specified, the request may time out while Pi-hole tries to retrieve all the data.<br/><span id="err"></span>
     </div>
   </div>
@@ -69,14 +60,15 @@ $token = $_SESSION['token'];
           </div>
         </div>
       </div>
-      <div class="overlay" hidden="true">
+      <div class="overlay" hidden>
         <i class="fa fa-sync fa-spin"></i>
       </div>
     </div>
   </div>
 </div>
 
-<script src="scripts/vendor/daterangepicker.js"></script>
+<script src="scripts/vendor/daterangepicker.min.js"></script>
+<script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/db_graph.js"></script>
 
 <?php

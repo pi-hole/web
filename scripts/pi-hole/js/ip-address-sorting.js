@@ -5,13 +5,12 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-// The original ip-sorting code has been taken from
+// This code has been taken from
 // https://datatables.net/plug-ins/sorting/ip-address
 // and was modified by the Pi-hole team to support
 // CIDR notation and be more robust against invalid
 // input data (like empty IP addresses)
-
-jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+$.extend($.fn.dataTableExt.oSort, {
   "ip-address-pre": function (a) {
     // Skip empty fields (IP address might have expired or
     // reassigned to a differenct device)
@@ -29,9 +28,16 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
     var m = a.split("."),
       n = a.split(":"),
       x = "",
-      xa = "";
+      xa = "",
+      cidr = [];
     if (m.length === 4) {
-      // IPV4
+      // IPV4 (possibly with CIDR)
+      cidr = m[3].split("/");
+      if (cidr.length === 2) {
+        m.pop();
+        m = m.concat(cidr);
+      }
+
       for (i = 0; i < m.length; i++) {
         item = m[i];
 
@@ -44,7 +50,7 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
         }
       }
     } else if (n.length > 0) {
-      // IPV6
+      // IPV6 (possibly with CIDR)
       var count = 0;
       for (i = 0; i < n.length; i++) {
         item = n[i];
@@ -81,6 +87,19 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
             x += "0";
             paddDone = 1;
           }
+        } else {
+          x += item;
+        }
+      }
+
+      cidr = x.split("/");
+      x = cidr[0];
+      if (cidr.length === 2) {
+        item = cidr[1];
+        if (item.length === 1) {
+          x += "00" + item;
+        } else if (item.length === 2) {
+          x += "0" + item;
         } else {
           x += item;
         }

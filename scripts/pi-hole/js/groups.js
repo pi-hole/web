@@ -10,7 +10,7 @@
 var table;
 var token = $("#token").text();
 
-$(document).ready(function () {
+$(function () {
   $("#btnAdd").on("click", addGroup);
 
   table = $("#groupsTable").DataTable({
@@ -87,22 +87,15 @@ $(document).ready(function () {
     ],
     stateSave: true,
     stateSaveCallback: function (settings, data) {
-      // Store current state in client's local storage area
-      localStorage.setItem("groups-table", JSON.stringify(data));
+      utils.stateSaveCallback("groups-table", data);
     },
     stateLoadCallback: function () {
-      // Receive previous state from client's local storage area
-      var data = localStorage.getItem("groups-table");
+      var data = utils.stateLoadCallback("groups-table");
       // Return if not available
       if (data === null) {
         return null;
       }
 
-      data = JSON.parse(data);
-      // Always start on the first page to show most recent queries
-      data.start = 0;
-      // Always start with empty search field
-      data.search.search = "";
       // Reset visibility of ID column
       data.columns[0].visible = false;
       // Apply loaded state to table
@@ -122,14 +115,14 @@ $(document).ready(function () {
   table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
-      $("#resetButton").show();
+      $("#resetButton").removeClass("hidden");
     } else {
-      $("#resetButton").hide();
+      $("#resetButton").addClass("hidden");
     }
   });
   $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
-    $("#resetButton").hide();
+    $("#resetButton").addClass("hidden");
   });
 });
 
@@ -164,7 +157,7 @@ function addGroup() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new group", jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -178,25 +171,25 @@ function editGroup() {
   var desc = tr.find("#desc_" + id).val();
 
   var done = "edited";
-  var not_done = "editing";
+  var notDone = "editing";
   switch (elem) {
     case "status_" + id:
       if (status === 0) {
         done = "disabled";
-        not_done = "disabling";
+        notDone = "disabling";
       } else if (status === 1) {
         done = "enabled";
-        not_done = "enabling";
+        notDone = "enabling";
       }
 
       break;
     case "name_" + id:
       done = "edited name of";
-      not_done = "editing name of";
+      notDone = "editing name of";
       break;
     case "desc_" + id:
       done = "edited description of";
-      not_done = "editing description of";
+      notDone = "editing description of";
       break;
     default:
       alert("bad element or invalid data-id!");
@@ -225,7 +218,7 @@ function editGroup() {
         utils.showAlert(
           "error",
           "",
-          "Error while " + not_done + " group with ID " + id,
+          "Error while " + notDone + " group with ID " + id,
           response.message
         );
       }
@@ -235,10 +228,10 @@ function editGroup() {
       utils.showAlert(
         "error",
         "",
-        "Error while " + not_done + " group with ID " + id,
+        "Error while " + notDone + " group with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -267,7 +260,7 @@ function deleteGroup() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting group with ID " + id, jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }

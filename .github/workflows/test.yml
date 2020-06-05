@@ -1,5 +1,14 @@
 name: Tests
-on: [push, pull_request]
+
+on:
+  push:
+    branches:
+      - devel
+      - master
+  pull_request:
+    branches:
+      - "**"
+
 env:
   CI: true
 
@@ -8,11 +17,6 @@ jobs:
     name: Node ${{ matrix.node }}
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [12]
-
     steps:
       - name: Clone repository
         uses: actions/checkout@v2
@@ -20,7 +24,7 @@ jobs:
       - name: Set Node.js version
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node }}
+          node-version: "12.x"
 
       - name: Install npm dependencies
         run: npm ci

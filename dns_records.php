@@ -46,19 +46,19 @@
 </div>
 
 <!-- Alerts -->
-<div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden="true">
+<div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     Updating the custom DNS entries...
 </div>
-<div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden="true">
+<div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden>
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     Success! The list will refresh.
 </div>
-<div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden="true">
+<div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden>
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     Failure! Something went wrong, see output below:<br/><br/><pre><span id="err"></span></pre>
 </div>
-<div id="alWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden="true">
+<div id="alWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden>
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     At least one domain was already present, see output below:<br/><br/><pre><span id="warn"></span></pre>
 </div>
@@ -72,7 +72,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="customDNSTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                <table id="customDNSTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                     <tr>
                         <th>Domain</th>
@@ -81,7 +81,7 @@
                     </tr>
                     </thead>
                 </table>
-                <button type="button" id="resetButton" hidden="true" class="btn btn-default btn-sm text-red">Clear Filters</button>
+                <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear Filters</button>
             </div>
             <!-- /.box-body -->
         </div>

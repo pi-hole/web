@@ -66,7 +66,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="clientsTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                <table id="clientsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -77,7 +77,7 @@
                     </tr>
                     </thead>
                 </table>
-                <button type="button" id="resetButton" hidden="true" class="btn btn-default btn-sm text-red">Reset sorting</button>
+                <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Reset sorting</button>
             </div>
             <!-- /.box-body -->
         </div>
@@ -85,7 +85,10 @@
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/groups-common.js"></script>
+<script src="scripts/vendor/bootstrap-select.min.js"></script>
+<script src="scripts/vendor/bootstrap-toggle.min.js"></script>
+<script src="scripts/pi-hole/js/ip-address-sorting.js"></script>
+<script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/groups-clients.js"></script>
 
 <?php

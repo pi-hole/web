@@ -11,7 +11,7 @@ var table;
 var groups = [];
 var token = $("#token").text();
 
-function reload_client_suggestions() {
+function reloadClientSuggestions() {
   $.post(
     "scripts/pi-hole/php/groups.php",
     { action: "get_unconfigured_clients", token: token },
@@ -32,12 +32,12 @@ function reload_client_suggestions() {
           continue;
         }
 
-        var text = key,
-          key_plain = key;
+        var text = key;
+        var keyPlain = key;
         if (key.startsWith("IP-")) {
           // Mock MAC address for address-only devices
-          key_plain = key.substring(3);
-          text = key_plain;
+          keyPlain = key.substring(3);
+          text = keyPlain;
         }
 
         // Append host name if available
@@ -45,14 +45,14 @@ function reload_client_suggestions() {
           text += " (" + data[key] + ")";
         }
 
-        sel.append($("<option />").val(key_plain).text(text));
+        sel.append($("<option />").val(keyPlain).text(text));
       }
     },
     "json"
   );
 }
 
-function get_groups() {
+function getGroups() {
   $.post(
     "scripts/pi-hole/php/groups.php",
     { action: "get_groups", token: token },
@@ -64,18 +64,17 @@ function get_groups() {
   );
 }
 
-$(document).ready(function () {
+$(function () {
   $("#btnAdd").on("click", addClient);
-
-  reload_client_suggestions();
   $("select").select2({
     tags: true,
     placeholder: "Select client...",
     allowClear: true
   });
 
-  utils.bsSelect_defaults();
-  get_groups();
+  reloadClientSuggestions();
+  utils.setBsSelectDefaults();
+  getGroups();
 
   $("#select").on("change", function () {
     $("#ip-custom").val("");
@@ -93,7 +92,7 @@ function initTable() {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: "ip" },
+      { data: "ip", type: "ip-address" },
       { data: "comment" },
       { data: "groups", searchable: false },
       { data: "name", width: "80px", orderable: false }
@@ -112,7 +111,7 @@ function initTable() {
         utils.datetime(data.date_modified) +
         "\nDatabase ID: " +
         data.id;
-      var ip_name =
+      var ipName =
         '<code id="ip_' +
         data.id +
         '" title="' +
@@ -121,7 +120,7 @@ function initTable() {
         data.ip +
         "</code>";
       if (data.name !== null && data.name.length > 0)
-        ip_name +=
+        ipName +=
           '<br><code id="name_' +
           data.id +
           '" title="' +
@@ -129,7 +128,7 @@ function initTable() {
           '" class="breakall">' +
           data.name +
           "</code>";
-      $("td:eq(0)", row).html(ip_name);
+      $("td:eq(0)", row).html(ipName);
 
       $("td:eq(1)", row).html('<input id="comment_' + data.id + '" class="form-control">');
       var commentEl = $("#comment_" + data.id, row);
@@ -143,13 +142,13 @@ function initTable() {
       var selectEl = $("#multiselect_" + data.id, row);
       // Add all known groups
       for (var i = 0; i < groups.length; i++) {
-        var data_sub = "";
+        var dataSub = "";
         if (!groups[i].enabled) {
-          data_sub = 'data-subtext="(disabled)"';
+          dataSub = 'data-subtext="(disabled)"';
         }
 
         selectEl.append(
-          $("<option " + data_sub + "/>")
+          $("<option " + dataSub + "/>")
             .val(groups[i].id)
             .text(groups[i].name)
         );
@@ -174,8 +173,8 @@ function initTable() {
         })
         .on("changed.bs.select", function () {
           // enable Apply button
-          if ($(ApplyBtn).prop("disabled")) {
-            $(ApplyBtn)
+          if ($(applyBtn).prop("disabled")) {
+            $(applyBtn)
               .addClass("btn-success")
               .prop("disabled", false)
               .on("click", function () {
@@ -185,9 +184,9 @@ function initTable() {
         })
         .on("hide.bs.select", function () {
           // Restore values if drop-down menu is closed without clicking the Apply button
-          if (!$(ApplyBtn).prop("disabled")) {
+          if (!$(applyBtn).prop("disabled")) {
             $(this).val(data.groups).selectpicker("refresh");
-            $(ApplyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
           }
         })
         .selectpicker()
@@ -199,7 +198,7 @@ function initTable() {
             ' class="btn btn-block btn-sm" disabled>Apply</button>'
         );
 
-      var ApplyBtn = "#btn_apply_" + data.id;
+      var applyBtn = "#btn_apply_" + data.id;
 
       var button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteClient_' +
@@ -219,22 +218,15 @@ function initTable() {
     ],
     stateSave: true,
     stateSaveCallback: function (settings, data) {
-      // Store current state in client's local storage area
-      localStorage.setItem("groups-clients-table", JSON.stringify(data));
+      utils.stateSaveCallback("groups-clients-table", data);
     },
     stateLoadCallback: function () {
-      // Receive previous state from client's local storage area
-      var data = localStorage.getItem("groups-clients-table");
+      var data = utils.stateLoadCallback("groups-clients-table");
       // Return if not available
       if (data === null) {
         return null;
       }
 
-      data = JSON.parse(data);
-      // Always start on the first page to show most recent queries
-      data.start = 0;
-      // Always start with empty search field
-      data.search.search = "";
       // Reset visibility of ID column
       data.columns[0].visible = false;
       // Apply loaded state to table
@@ -254,15 +246,15 @@ function initTable() {
   table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
-      $("#resetButton").show();
+      $("#resetButton").removeClass("hidden");
     } else {
-      $("#resetButton").hide();
+      $("#resetButton").addClass("hidden");
     }
   });
 
   $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
-    $("#resetButton").hide();
+    $("#resetButton").addClass("hidden");
   });
 }
 
@@ -307,7 +299,7 @@ function addClient() {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "fas fa-plus", "Successfully added client", ip);
-        reload_client_suggestions();
+        reloadClientSuggestions();
         table.ajax.reload(null, false);
       } else {
         utils.showAlert("error", "", "Error while adding new client", response.message);
@@ -316,7 +308,7 @@ function addClient() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new client", jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -331,28 +323,27 @@ function editClient() {
   var comment = tr.find("#comment_" + id).val();
 
   var done = "edited";
-  var not_done = "editing";
+  var notDone = "editing";
   switch (elem) {
     case "multiselect_" + id:
       done = "edited groups of";
-      not_done = "editing groups of";
+      notDone = "editing groups of";
       break;
     case "comment_" + id:
       done = "edited comment of";
-      not_done = "editing comment of";
+      notDone = "editing comment of";
       break;
     default:
       alert("bad element or invalid data-id!");
       return;
   }
 
-  var ip_name = ip;
   if (name.length > 0) {
-    ip_name += " (" + name + ")";
+    ip += " (" + name + ")";
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Editing client...", ip_name);
+  utils.showAlert("info", "", "Editing client...", ip);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -367,17 +358,12 @@ function editClient() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert(
-          "success",
-          "glyphicon glyphicon-pencil",
-          "Successfully " + done + " client",
-          ip_name
-        );
+        utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " client", ip);
         table.ajax.reload(null, false);
       } else {
         utils.showAlert(
           "error",
-          "Error while " + not_done + " client with ID " + id,
+          "Error while " + notDone + " client with ID " + id,
           response.message
         );
       }
@@ -387,10 +373,10 @@ function editClient() {
       utils.showAlert(
         "error",
         "",
-        "Error while " + not_done + " client with ID " + id,
+        "Error while " + notDone + " client with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -401,13 +387,12 @@ function deleteClient() {
   var ip = tr.find("#ip_" + id).text();
   var name = tr.find("#name_" + id).text();
 
-  var ip_name = ip;
   if (name.length > 0) {
-    ip_name += " (" + name + ")";
+    ip += " (" + name + ")";
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting client...", ip_name);
+  utils.showAlert("info", "", "Deleting client...", ip);
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
@@ -416,14 +401,9 @@ function deleteClient() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert(
-          "success",
-          "glyphicon glyphicon-trash",
-          "Successfully deleted client ",
-          ip_name
-        );
+        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted client ", ip);
         table.row(tr).remove().draw(false).ajax.reload(null, false);
-        reload_client_suggestions();
+        reloadClientSuggestions();
       } else {
         utils.showAlert("error", "", "Error while deleting client with ID " + id, response.message);
       }
@@ -431,7 +411,7 @@ function deleteClient() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting client with ID " + id, jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }

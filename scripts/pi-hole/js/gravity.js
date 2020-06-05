@@ -17,6 +17,7 @@ function eventsource() {
     return;
   }
 
+  // eslint-disable-next-line compat/compat
   var source = new EventSource("scripts/pi-hole/php/gravity.sh.php");
 
   ta.html("");
@@ -32,10 +33,11 @@ function eventsource() {
       }
 
       // Detect ${OVER}
-      if (e.data.indexOf("<------") !== -1) {
+      var newString = "<------";
+
+      if (e.data.indexOf(newString) !== -1) {
         ta.text(ta.text().substring(0, ta.text().lastIndexOf("\n")) + "\n");
-        var new_string = e.data.replace("<------", "");
-        ta.append(new_string);
+        ta.append(e.data.replace(newString, ""));
       } else {
         ta.append(e.data);
       }
@@ -51,14 +53,14 @@ function eventsource() {
         alInfo.hide();
       });
       source.close();
-      $("#gravityBtn").removeAttr("disabled");
+      $("#gravityBtn").prop("disabled", false);
     },
     false
   );
 }
 
 $("#gravityBtn").on("click", function () {
-  $("#gravityBtn").attr("disabled", true);
+  $("#gravityBtn").prop("disabled", true);
   eventsource();
 });
 
@@ -74,7 +76,7 @@ $(function () {
   // gravity.php?go
   var searchString = window.location.search.substring(1);
   if (searchString.indexOf("go") !== -1) {
-    $("#gravityBtn").attr("disabled", true);
+    $("#gravityBtn").prop("disabled", true);
     eventsource();
   }
 });
