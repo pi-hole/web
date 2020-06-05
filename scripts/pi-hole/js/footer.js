@@ -44,7 +44,7 @@ function piholeChanged(action) {
 function countDown() {
   var ena = $("#enableLabel");
   var enaT = $("#enableTimer");
-  var target = new Date(parseInt(enaT.html()));
+  var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
 
   if (seconds > 0) {
@@ -207,7 +207,7 @@ function initCPUtemp() {
 
 $(function () {
   var enaT = $("#enableTimer");
-  var target = new Date(parseInt(enaT.html()));
+  var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
   if (seconds > 0) {
     setTimeout(countDown, 100);
@@ -262,7 +262,7 @@ $("#pihole-disable-custom").on("click", function (e) {
 
 // Session timer
 var sessionTimerCounter = document.getElementById("sessiontimercounter");
-var sessionvalidity = parseInt(sessionTimerCounter.textContent);
+var sessionvalidity = parseInt(sessionTimerCounter.textContent, 10);
 var start = new Date();
 
 function updateSessionTimer() {

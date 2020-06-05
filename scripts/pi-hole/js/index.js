@@ -252,8 +252,8 @@ function updateQueriesOverTime() {
     for (var hour in data.ads_over_time[0]) {
       if (Object.prototype.hasOwnProperty.call(data.ads_over_time[0], hour)) {
         var d, h;
-        h = parseInt(data.domains_over_time[0][hour]);
-        if (parseInt(data.ads_over_time[0][0]) < 1200) {
+        h = parseInt(data.domains_over_time[0][hour], 10);
+        if (parseInt(data.ads_over_time[0][0], 10) < 1200) {
           // Fallback - old style
           d = new Date().setHours(Math.floor(h / 6), 10 * (h % 6), 0, 0);
         } else {
@@ -416,7 +416,7 @@ function updateClientsOverTime() {
         }
       }
 
-      var d = new Date(1000 * parseInt(timestamps[j]));
+      var d = new Date(1000 * parseInt(timestamps[j], 10));
       clientsChart.data.labels.push(d);
     }
 
@@ -820,8 +820,8 @@ $(function () {
           label: function (tooltipItems, data) {
             if (tooltipItems.datasetIndex === 0) {
               var percentage = 0;
-              var permitted = parseInt(data.datasets[1].data[tooltipItems.index]);
-              var blocked = parseInt(data.datasets[0].data[tooltipItems.index]);
+              var permitted = parseInt(data.datasets[1].data[tooltipItems.index], 10);
+              var blocked = parseInt(data.datasets[0].data[tooltipItems.index], 10);
               var total = permitted + blocked;
               if (total > 0) {
                 percentage = (100 * blocked) / total;

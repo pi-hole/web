@@ -70,7 +70,7 @@ $(function () {
     rowCallback: function (row, data) {
       var color;
       var iconClasses;
-      var lastQuery = parseInt(data.lastQuery);
+      var lastQuery = parseInt(data.lastQuery, 10);
       var diff = getTimestamp() - lastQuery;
       var networkRecent = $(".network-recent").css("background-color");
       var networkOld = $(".network-old").css("background-color");

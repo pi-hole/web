@@ -79,7 +79,6 @@
       "no-console": "error",
       "no-negated-condition": "off",
       "one-var": "off",
-      "radix": "off",
       "spaced-comment": "off",
       "unicorn/explicit-length-check": [
         "error",
