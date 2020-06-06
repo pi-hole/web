@@ -6,8 +6,8 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */ ?>
 
-        </section>
-        <!-- /.content -->
+    </section>
+    <!-- /.content -->
     </div>
     <!-- Modal for custom disable time -->
     <div class="modal fade" id="customDisableModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -37,27 +37,28 @@
             </div>
         </div>
     </div>
-<?php
-  // Flushes the system write buffers of PHP. This attempts to push everything we have so far all the way to the client's browser.
-  flush();
-  // Run update checker
-  //  - determines local branch each time,
-  //  - determines local and remote version every 30 minutes
-  require "scripts/pi-hole/php/update_checker.php";
-?>
+    <?php
+      // Flushes the system write buffers of PHP. This attempts to push everything we have so far all the way to the client's browser.
+      flush();
+      // Run update checker
+      //  - determines local branch each time,
+      //  - determines local and remote version every 30 minutes
+      require "scripts/pi-hole/php/update_checker.php";
+    ?>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
       <!-- Version Infos -->
       <div class="row">
         <div class="col-12">
           <div class="footer-content">
-            <p class="m-0 py-5">Copyrighted&#169; Lazarus Network Firewall 2020 &nbsp;</p>
+            <p class="py-5" style="Margin: 0 !important; padding: 0 15px;">Copyright &#169; <a href="https://github.com/TheLazarusNetwork/AdminLTE" target="_blank">Lazarus Network Firewall</a> 2020 &nbsp;</p>
           </div>
         </div>
       </div>
     </footer>
-</div>
-<!-- ./wrapper -->
-<script src="scripts/pi-hole/js/footer.js"></script>
+  </div>
+
+  <!-- ./wrapper -->
+  <script src="scripts/pi-hole/js/footer.js"></script>
 </body>
 </html>

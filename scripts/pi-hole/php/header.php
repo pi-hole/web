@@ -280,7 +280,7 @@ if($auth) {
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <img src="img/logo.svg" class="user-image" style="border-radius: 0" alt="Pi-hole logo" width="25" height="25">
-                            <span class="hidden-xs">Lazarus/span>
+                            <span class="hidden-xs">Lazarus</span>
                         </a>
                         <ul class="dropdown-menu" style="right:0">
                             <!-- User image -->
