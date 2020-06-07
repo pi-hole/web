@@ -150,7 +150,7 @@ if(strlen($showing) > 0)
     </div>
 </div>
 <!-- /.row -->
-
+<script src="scripts/pi-hole/js/ip-address-sorting.js"></script>
 <script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/queries.js"></script>
 
