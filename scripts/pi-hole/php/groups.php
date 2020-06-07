@@ -746,7 +746,7 @@ if ($_POST['action'] == 'get_groups') {
         $total = count($addresses);
         $added = 0;
 
-        $stmt = $db->prepare('INSERT INTO adlist (address,comment) VALUES (:address,:comment)');
+        $stmt = $db->prepare('INSERT OR IGNORE INTO adlist (address,comment) VALUES (:address,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
