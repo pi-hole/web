@@ -744,7 +744,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                             <td data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
                                                             <td><?php echo $lease["host"]; ?></td>
                                                             <td><?php if (strlen($lease["hwaddr"]) > 0) { ?>
-                                                                <button type="button" class="btn btn-danger btn-xs" name="removestatic"
+                                                                <button type="submit" class="btn btn-danger btn-xs" name="removestatic"
                                                                         value="<?php echo $lease["hwaddr"]; ?>">
                                                                     <span class="far fa-trash-alt"></span>
                                                                 </button>
