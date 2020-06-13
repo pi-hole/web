@@ -89,6 +89,7 @@
     </div>
 </div>
 
+<script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/ip-address-sorting.js"></script>
 <script src="scripts/pi-hole/js/customdns.js"></script>
 

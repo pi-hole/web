@@ -173,7 +173,7 @@ function archive_restore_table($file, $table, $flush=false)
 	foreach($contents as $row)
 	{
 		// Limit max length for a domain entry to 253 chars
-		if(strlen($row[$field]) > 253)
+		if(isset($field) && strlen($row[$field]) > 253)
 			continue;
 
 		// Bind properties from JSON data
@@ -196,7 +196,7 @@ function archive_restore_table($file, $table, $flush=false)
 				default:
 					$sqltype = "UNK";
 			}
-			$stmt->bindValue(":".$key, $value, $sqltype);
+			$stmt->bindValue(":".$key, htmlentities($value), $sqltype);
 		}
 
 		if($stmt->execute() && $stmt->reset() && $stmt->clear())
