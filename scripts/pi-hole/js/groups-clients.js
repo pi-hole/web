@@ -94,9 +94,9 @@ function initTable() {
       $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
-        utils.datetime(data.date_added) +
+        utils.datetime(data.date_added, false) +
         "\nLast modified: " +
-        utils.datetime(data.date_modified) +
+        utils.datetime(data.date_modified, false) +
         "\nDatabase ID: " +
         data.id;
       var ipName =
