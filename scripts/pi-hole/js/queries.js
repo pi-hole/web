@@ -107,7 +107,7 @@ function autofilter() {
   return $("#autofilter").prop("checked");
 }
 
-$(document).ready(function () {
+$(function () {
   // Do we want to filter queries?
   var GETDict = {};
   window.location.search
@@ -260,7 +260,7 @@ $(document).ready(function () {
         default:
           blocked = false;
           colorClass = false;
-          fieldtext = "Unknown (" + parseInt(data[4]) + ")";
+          fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
           buttontext = "";
       }
 
@@ -343,7 +343,7 @@ $(document).ready(function () {
             replytext = "upstream error";
             break;
           default:
-            replytext = "? (" + parseInt(data[6]) + ")";
+            replytext = "? (" + parseInt(data[6], 10) + ")";
         }
       } else {
         replytext = "-";
@@ -351,7 +351,7 @@ $(document).ready(function () {
 
       $("td:eq(5)", row).html(replytext);
 
-      if (data.length > 7 && data[7] > 0) {
+      if (data.length > 7) {
         var content = $("td:eq(5)", row).html();
         $("td:eq(5)", row).html(content + " (" + (0.1 * data[7]).toFixed(1) + "ms)");
       }

@@ -57,12 +57,28 @@ function renderMessage(data, type, row) {
         "</pre> to get the group configuration for this client."
       );
 
+    case "HOSTNAME":
+      var hint = new Array(row.blob2 + row.message.length + 3).join(" ");
+      return (
+        "Hostname contains invalid character <code>" +
+        decodeURIComponent(escape(row.blob1))[row.blob2] +
+        "</code>:<pre>" +
+        hint +
+        "&darr;\n" +
+        row.message +
+        ": " +
+        decodeURIComponent(escape(row.blob1)) +
+        "\n" +
+        hint +
+        "&uarr;</pre>"
+      );
+
     default:
       return "Unknown message type<pre>" + JSON.stringify(row) + "</pre>";
   }
 }
 
-$(document).ready(function () {
+$(function () {
   $("#messagesTable").DataTable({
     ajax: {
       url: "api_db.php?messages",
@@ -99,6 +115,11 @@ $(document).ready(function () {
     },
     stateLoadCallback: function () {
       var data = utils.stateLoadCallback("messages-table");
+      // Return if not available
+      if (data === null) {
+        return null;
+      }
+
       // Reset visibility of ID and blob columns
       var hiddenCols = [0, 4, 5, 6, 7, 8];
       for (var key in hiddenCols) {

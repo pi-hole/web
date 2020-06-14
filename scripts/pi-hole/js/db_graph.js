@@ -100,14 +100,14 @@ function updateQueriesOverTime() {
 
       for (hour in data.domains_over_time[0]) {
         if (Object.prototype.hasOwnProperty.call(data.domains_over_time[0], hour)) {
-          dates.push(parseInt(data.domains_over_time[0][hour]));
+          dates.push(parseInt(data.domains_over_time[0][hour], 10));
         }
       }
 
       for (hour in data.ads_over_time[0]) {
         if (Object.prototype.hasOwnProperty.call(data.ads_over_time[0], hour)) {
-          if (dates.indexOf(parseInt(data.ads_over_time[0][hour])) === -1) {
-            dates.push(parseInt(data.ads_over_time[0][hour]));
+          if (dates.indexOf(parseInt(data.ads_over_time[0][hour], 10)) === -1) {
+            dates.push(parseInt(data.ads_over_time[0][hour], 10));
           }
         }
       }
@@ -146,12 +146,12 @@ function updateQueriesOverTime() {
   );
 }
 
-$(document).ready(function () {
+$(function () {
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   var blockedColor = "#999";
   var permittedColor = "#00a65a";
   timeLineChart = new Chart(ctx, {
-    type: "bar",
+    type: utils.getGraphType(),
     data: {
       labels: [],
       datasets: [
@@ -248,8 +248,8 @@ $(document).ready(function () {
           label: function (tooltipItems, data) {
             if (tooltipItems.datasetIndex === 0) {
               var percentage = 0;
-              var permitted = parseInt(data.datasets[1].data[tooltipItems.index]);
-              var blocked = parseInt(data.datasets[0].data[tooltipItems.index]);
+              var permitted = parseInt(data.datasets[1].data[tooltipItems.index], 10);
+              var blocked = parseInt(data.datasets[0].data[tooltipItems.index], 10);
               if (permitted + blocked > 0) {
                 percentage = (100 * blocked) / (permitted + blocked);
               }

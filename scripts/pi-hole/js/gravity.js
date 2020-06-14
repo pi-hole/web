@@ -53,14 +53,14 @@ function eventsource() {
         alInfo.hide();
       });
       source.close();
-      $("#gravityBtn").removeAttr("disabled");
+      $("#gravityBtn").prop("disabled", false);
     },
     false
   );
 }
 
 $("#gravityBtn").on("click", function () {
-  $("#gravityBtn").attr("disabled", true);
+  $("#gravityBtn").prop("disabled", true);
   eventsource();
 });
 
@@ -76,7 +76,7 @@ $(function () {
   // gravity.php?go
   var searchString = window.location.search.substring(1);
   if (searchString.indexOf("go") !== -1) {
-    $("#gravityBtn").attr("disabled", true);
+    $("#gravityBtn").prop("disabled", true);
     eventsource();
   }
 });

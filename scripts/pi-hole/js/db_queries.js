@@ -28,8 +28,8 @@ window.location.search
   });
 
 if ("from" in GETDict && "until" in GETDict) {
-  from = parseInt(GETDict.from);
-  until = parseInt(GETDict.until);
+  from = parseInt(GETDict.from, 10);
+  until = parseInt(GETDict.until, 10);
   start__ = moment(1000 * from);
   end__ = moment(1000 * until);
   instantquery = true;
@@ -142,7 +142,11 @@ function handleAjaxError(xhr, textStatus) {
   } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
     alert("An error occurred while loading the data: Connection refused. Is FTL running?");
   } else {
-    alert("An unknown error occurred while loading the data.\n" + xhr.responseText);
+    alert(
+      "An unknown error occurred while loading the data.\n" +
+        xhr.responseText +
+        "\nCheck the server's log files (/var/log/lighttpd/error.log when you're using the default Pi-hole web server) for details. You may need to increase the memory available for Pi-hole in case you requested a lot of data."
+    );
   }
 
   $("#all-queries_processing").hide();
@@ -198,13 +202,13 @@ var reloadCallback = function () {
   statistics = [0, 0, 0, 0];
   var data = tableApi.rows().data();
   for (var i = 0; i < data.length; i++) {
-    statistics[0]++;
-    if (data[i][4] === 1) {
-      statistics[2]++;
+    statistics[0]++; // TOTAL query
+    if (data[i][4] === 1 || (data[i][4] > 4 && data[i][4] !== 10)) {
+      statistics[2]++; // EXACT blocked
     } else if (data[i][4] === 3) {
-      statistics[1]++;
-    } else if (data[i][4] === 4) {
-      statistics[3]++;
+      statistics[1]++; // CACHE query
+    } else if (data[i][4] === 4 || data[i][4] === 10) {
+      statistics[3]++; // REGEX blocked
     }
   }
 
@@ -233,7 +237,7 @@ function refreshTableData() {
   tableApi.ajax.url(APIstring).load(reloadCallback);
 }
 
-$(document).ready(function () {
+$(function () {
   var APIstring;
 
   if (instantquery) {

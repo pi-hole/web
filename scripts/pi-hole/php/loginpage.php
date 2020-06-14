@@ -38,8 +38,11 @@
           </ul>
           </div>
           <div class="col-xs-12 col-md-4">
-            <div class="form-group pull-left">
-              <div class="checkbox pull-right"><label><input type="checkbox" id="logincookie" name="persistentlogin">Remember me for 7 days</label></div>
+              <div class="pull-right">
+                <div>
+                  <input type="checkbox" id="logincookie" name="persistentlogin">
+                  <label for="logincookie">Remember me for 7 days</label>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary pull-right"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in</button>
           </div>

@@ -227,15 +227,33 @@ function updateQueriesOverTime() {
     data.ads_over_time[0].splice(-1, 1);
     // Remove possibly already existing data
     timeLineChart.data.labels = [];
-    timeLineChart.data.datasets[0].data = [];
-    timeLineChart.data.datasets[1].data = [];
+    timeLineChart.data.datasets = [];
+
+    var labels = ["Blocked DNS Queries", "Permitted DNS Queries"];
+    var blockedColor = $(".queries-blocked").css("background-color");
+    var permittedColor = $(".queries-permitted").css("background-color");
+    var colors = [blockedColor, permittedColor];
+
+    // Collect values and colors, and labels
+    for (var i = 0; i < labels.length; i++) {
+      timeLineChart.data.datasets.push({
+        data: [],
+        // If we ran out of colors, make a random one
+        backgroundColor: colors[i],
+        pointRadius: 0,
+        pointHitRadius: 5,
+        pointHoverRadius: 5,
+        label: labels[i],
+        cubicInterpolationMode: "monotone"
+      });
+    }
 
     // Add data for each hour that is available
     for (var hour in data.ads_over_time[0]) {
       if (Object.prototype.hasOwnProperty.call(data.ads_over_time[0], hour)) {
         var d, h;
-        h = parseInt(data.domains_over_time[0][hour]);
-        if (parseInt(data.ads_over_time[0][0]) < 1200) {
+        h = parseInt(data.domains_over_time[0][hour], 10);
+        if (parseInt(data.ads_over_time[0][0], 10) < 1200) {
           // Fallback - old style
           d = new Date().setHours(Math.floor(h / 6), 10 * (h % 6), 0, 0);
         } else {
@@ -299,7 +317,6 @@ function updateQueryTypesPie() {
     queryTypePieChart.data.datasets[0] = dd;
     queryTypePieChart.data.labels = k;
     $("#query-types-pie .overlay").hide();
-    queryTypePieChart.update();
     queryTypePieChart.chart.config.options.cutoutPercentage = 50;
     queryTypePieChart.update();
     // Don't use rotation animation for further updates
@@ -352,7 +369,7 @@ function updateClientsOverTime() {
     var timestamps = data.over_time[0];
     var plotdata = data.over_time[1];
     var labels = [];
-    var key, i, j;
+    var key;
 
     for (key in data.clients) {
       if (Object.prototype.hasOwnProperty.call(data.clients, key)) {
@@ -363,19 +380,15 @@ function updateClientsOverTime() {
 
     // Remove possibly already existing data
     clientsChart.data.labels = [];
-    clientsChart.data.datasets[0].data = [];
-    for (i = 1; i < clientsChart.data.datasets.length; i++) {
-      clientsChart.data.datasets[i].data = [];
-    }
+    clientsChart.data.datasets = [];
 
     // Collect values and colors, and labels
-    clientsChart.data.datasets[0].backgroundColor = THEME_COLORS[0];
-    clientsChart.data.datasets[0].pointRadius = 0;
-    clientsChart.data.datasets[0].pointHitRadius = 5;
-    clientsChart.data.datasets[0].pointHoverRadius = 5;
-    clientsChart.data.datasets[0].label = labels[0];
+    var numClients = 0;
+    if (plotdata.length > 0) {
+      numClients = plotdata[0].length;
+    }
 
-    for (i = clientsChart.data.datasets.length; plotdata.length && i < plotdata[0].length; i++) {
+    for (var i = 0; i < numClients; i++) {
       clientsChart.data.datasets.push({
         data: [],
         // If we ran out of colors, make a random one
@@ -392,7 +405,7 @@ function updateClientsOverTime() {
     }
 
     // Add data for each dataset that is available
-    for (j in timestamps) {
+    for (var j in timestamps) {
       if (!Object.prototype.hasOwnProperty.call(timestamps, j)) {
         continue;
       }
@@ -403,7 +416,7 @@ function updateClientsOverTime() {
         }
       }
 
-      var d = new Date(1000 * parseInt(timestamps[j]));
+      var d = new Date(1000 * parseInt(timestamps[j], 10));
       clientsChart.data.labels.push(d);
     }
 
@@ -462,7 +475,6 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.data.datasets[0] = dd;
     // and push it at once
     $("#forward-destinations-pie .overlay").hide();
-    forwardDestinationPieChart.update();
     forwardDestinationPieChart.chart.config.options.cutoutPercentage = 50;
     forwardDestinationPieChart.update();
     // Don't use rotation animation for further updates
@@ -775,46 +787,18 @@ function updateSummaryData(runOnce) {
     });
 }
 
-$(document).ready(function () {
+$(function () {
   // Pull in data via AJAX
   updateSummaryData();
 
-  var blockedColor = $(".queries-blocked").css("background-color");
-  var permittedColor = $(".queries-permitted").css("background-color");
   var gridColor = $(".graphs-grid").css("background-color");
   var ticksColor = $(".graphs-ticks").css("color");
-
-  var graphType = localStorage.getItem("barchart_chkbox") === "true" ? "bar" : "line";
-
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   timeLineChart = new Chart(ctx, {
-    type: graphType,
+    type: utils.getGraphType(),
     data: {
       labels: [],
-      datasets: [
-        {
-          label: "Blocked DNS Queries",
-          fill: true,
-          backgroundColor: blockedColor,
-          borderColor: blockedColor,
-          pointBorderColor: blockedColor,
-          pointRadius: 1,
-          pointHoverRadius: 5,
-          data: [],
-          pointHitRadius: 5
-        },
-        {
-          label: "Permitted DNS Queries",
-          fill: true,
-          backgroundColor: permittedColor,
-          borderColor: permittedColor,
-          pointBorderColor: permittedColor,
-          pointRadius: 1,
-          pointHoverRadius: 5,
-          data: [],
-          pointHitRadius: 5
-        }
-      ]
+      datasets: [{ data: [] }]
     },
     options: {
       tooltips: {
@@ -836,8 +820,8 @@ $(document).ready(function () {
           label: function (tooltipItems, data) {
             if (tooltipItems.datasetIndex === 0) {
               var percentage = 0;
-              var permitted = parseInt(data.datasets[1].data[tooltipItems.index]);
-              var blocked = parseInt(data.datasets[0].data[tooltipItems.index]);
+              var permitted = parseInt(data.datasets[1].data[tooltipItems.index], 10);
+              var blocked = parseInt(data.datasets[0].data[tooltipItems.index], 10);
               var total = permitted + blocked;
               if (total > 0) {
                 percentage = (100 * blocked) / total;
@@ -906,7 +890,7 @@ $(document).ready(function () {
   if (clientsChartEl) {
     ctx = clientsChartEl.getContext("2d");
     clientsChart = new Chart(ctx, {
-      type: graphType,
+      type: utils.getGraphType(),
       data: {
         labels: [],
         datasets: [{ data: [] }]

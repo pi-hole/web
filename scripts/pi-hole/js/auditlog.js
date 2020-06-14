@@ -127,22 +127,24 @@ function auditUrl(url) {
   add(url, "audit");
 }
 
-$(document).ready(function () {
+$(function () {
   // Pull in data via AJAX
   updateTopLists();
 
-  $("#domain-frequency tbody").on("click", "button", function () {
+  $("#domain-frequency tbody").on("click", "button", function (event) {
     var url = $(this).parents("tr")[0].textContent.split(" ")[0];
-    if ($(this).context.textContent === " Blacklist") {
+
+    if (event.target.textContent.trim() === "Blacklist") {
       blacklistUrl(url);
     } else {
       auditUrl(url);
     }
   });
 
-  $("#ad-frequency tbody").on("click", "button", function () {
+  $("#ad-frequency tbody").on("click", "button", function (event) {
     var url = $(this).parents("tr")[0].textContent.split(" ")[0];
-    if ($(this).context.textContent === " Whitelist") {
+
+    if (event.target.textContent.trim() === "Whitelist") {
       whitelistUrl(url);
     } else {
       auditUrl(url);

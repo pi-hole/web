@@ -11,8 +11,10 @@
 <div class="page-header">
     <h1>Generate debug log</h1>
 </div>
-
-<input type="checkbox" id="upload"><label for="upload">Upload debug log and provide token once finished</label>
+<div>
+    <input type="checkbox" id="upload">
+    <label for="upload">Upload debug log and provide token once finished</label>
+</div>
 <p>Once you click this button a debug log will be generated and can automatically be uploaded if we detect a working internet connection.</p>
 <button type="button" id="debugBtn" class="btn btn-lg btn-primary btn-block">Generate debug log</button>
 <pre id="output" style="width: 100%; height: 100%;" hidden></pre>

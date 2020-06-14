@@ -25,7 +25,7 @@ function getGroups() {
   );
 }
 
-$(document).ready(function () {
+$(function () {
   window.location.search
     .substr(1)
     .split("&")
@@ -221,7 +221,7 @@ function initTable() {
       var applyBtn = "#btn_apply_" + data.id;
 
       // Highlight row (if url parameter "domainid=" is used)
-      if ("domainid" in GETDict && data.id === parseInt(GETDict.domainid)) {
+      if ("domainid" in GETDict && data.id === parseInt(GETDict.domainid, 10)) {
         $(row).find("td").addClass("highlight");
       }
 
@@ -265,7 +265,10 @@ function initTable() {
     },
     initComplete: function () {
       if ("domainid" in GETDict) {
-        var pos = table.column(0, { order: "current" }).data().indexOf(parseInt(GETDict.domainid));
+        var pos = table
+          .column(0, { order: "current" })
+          .data()
+          .indexOf(parseInt(GETDict.domainid, 10));
         if (pos >= 0) {
           var page = Math.floor(pos / table.page.info().length);
           table.page(page).draw(false);
@@ -361,7 +364,7 @@ function addDomain() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Successfully added " + domainRegex, domain);
+        utils.showAlert("success", "fas fa-plus", "Success!", response.message);
         domainEl.val("");
         commentEl.val("");
         wildcardEl.prop("checked", false);

@@ -37,7 +37,7 @@ function showAlert(type, message) {
   alertElement.delay(8000).fadeOut(2000);
 }
 
-$(document).ready(function () {
+$(function () {
   $("#btnAdd").on("click", addCustomDNS);
 
   table = $("#customDNSTable").DataTable({

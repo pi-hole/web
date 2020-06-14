@@ -10,7 +10,6 @@
     require "scripts/pi-hole/php/password.php";
     require_once "scripts/pi-hole/php/FTL.php";
     require "scripts/pi-hole/php/theme.php";
-
     $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
     $hostname = gethostname() ? gethostname() : "";
 
@@ -41,7 +40,7 @@
     {
         // $output could be either 4-5 digits or 2-3, and we only divide by 1000 if it's 4-5
         // ex. 39007 vs 39
-        $celsius = intVal($output);
+        $celsius = intval($output);
 
         // If celsius is greater than 1 degree and is in the 4-5 digit format
         if($celsius > 1000) {
@@ -49,22 +48,6 @@
             $celsius *= 1e-3;
         }
 
-        $kelvin = $celsius + 273.15;
-        $fahrenheit = ($celsius*9./5)+32.0;
-
-        if(isset($setupVars['TEMPERATUREUNIT']))
-        {
-            $temperatureunit = $setupVars['TEMPERATUREUNIT'];
-        }
-        else
-        {
-            $temperatureunit = "C";
-        }
-        // Override temperature unit setting if it is changed via Settings page
-        if(isset($_POST["tempunit"]))
-        {
-            $temperatureunit = $_POST["tempunit"];
-        }
         // Get user-defined temperature limit if set
         if(isset($setupVars['TEMPERATURE_LIMIT']))
         {
@@ -107,7 +90,7 @@
             if(count($expl) == 2)
             {
                 // remove " kB" from the end of the string and make it an integer
-                $meminfo[$expl[0]] = intVal(substr($expl[1],0, -3));
+                $meminfo[$expl[0]] = intval(substr($expl[1],0, -3));
             }
         }
         $memory_used = $meminfo["MemTotal"]-$meminfo["MemFree"]-$meminfo["Buffers"]-$meminfo["Cached"];
@@ -168,18 +151,18 @@
 
     $piholeFTLConf = piholeFTLConfig();
 ?>
+<!doctype html>
 <!-- Pi-hole: A black hole for Internet advertisements
 *  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. -->
-<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.github.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; child-src 'self'; form-action 'self'; frame-src 'self'; font-src 'self'; connect-src 'self'; img-src 'self'; manifest-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
     <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
     <meta http-equiv="x-dns-prefetch-control" content="off">
     <meta http-equiv="cache-control" content="max-age=60,private">
@@ -206,15 +189,14 @@
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="style/vendor/font-awesome/css/all.min.css">
     <link rel="stylesheet" href="style/vendor/datatables.min.css">
-    <link rel="stylesheet" href="style/vendor/daterangepicker.css">
+    <link rel="stylesheet" href="style/vendor/daterangepicker.min.css">
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
-    <link rel="stylesheet" href="style/vendor/animate.min.css">
 
 <?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?>
+    <link rel="stylesheet" href="style/vendor/animate.min.css">
     <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css">
     <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css">
 <?php } ?>
-    <link rel="stylesheet" href="style/vendor/iCheck/<?php echo $checkbox_theme_name;?>/<?php echo $checkbox_theme_variant;?>.css">
     <link rel="stylesheet" href="style/pi-hole.css">
     <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css">
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
@@ -226,7 +208,6 @@
     <script src="scripts/vendor/datatables.min.js"></script>
     <script src="scripts/vendor/moment.min.js"></script>
     <script src="scripts/vendor/Chart.min.js"></script>
-    <script src="scripts/vendor/iCheck.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <noscript>
@@ -246,7 +227,6 @@ if($auth) {
 ?>
 
 <!-- Send token to JS -->
-<div id="checkbox_theme" hidden><?php echo $checkbox_theme_name; ?><?php if($checkbox_theme_name !== $checkbox_theme_variant){ echo "-$checkbox_theme_variant"; } ?></div>
 <div id="enableTimer" hidden><?php if(file_exists("../custom_disable_timer")){ echo file_get_contents("../custom_disable_timer"); } ?></div>
 <div class="wrapper">
     <header class="main-header">
@@ -363,20 +343,7 @@ if($auth) {
                                 {
                                     echo "text-vivid-blue";
                                 }
-                                echo "\"></i> Temp:&nbsp;";
-                                if($temperatureunit === "F")
-                                {
-                                    echo round($fahrenheit,1) . "&nbsp;&deg;F";
-                                }
-                                elseif($temperatureunit === "K")
-                                {
-                                    echo round($kelvin,1) . "&nbsp;K";
-                                }
-                                else
-                                {
-                                    echo round($celsius,1) . "&nbsp;&deg;C";
-                                }
-                                echo "</span>";
+                                ?>"\"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span><?php
                             }
                         }
                         else
@@ -452,7 +419,7 @@ if($auth) {
                 </li>
                 <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php"){ ?> active<?php } ?>">
                   <a href="#">
-                    <i class="fa fa-clock"></i> <span>Long term data</span>
+                    <i class="fa fa-clock"></i> <span>Long-term data</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -534,8 +501,8 @@ if($auth) {
                   </a>
                   <ul class="treeview-menu">
                     <li>
-                        <a href="#" id="pihole-disable-permanently">
-                            <i class="fa fa-stop"></i> Permanently
+                        <a href="#" id="pihole-disable-indefinitely">
+                            <i class="fa fa-stop"></i> Indefinitely
                         </a>
                     </li>
                     <li>
@@ -651,20 +618,20 @@ if($auth) {
                 if(strlen($pwhash) > 0 && !$auth) { ?>
                 <li<?php if($scriptname === "login"){ ?> class="active"<?php } ?>>
                     <a href="index.php?login">
-                        <i class="fa far fa-user"></i> <span>Login</span>
+                        <i class="fa fa-user"></i> <span>Login</span>
                     </a>
                 </li>
                 <?php } ?>
                 <!-- Donate -->
                 <li>
                     <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
-                        <i class="fa-paypal-icon fab fa-paypal"></i> <span>Donate</span>
+                        <i class="fab fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
                  <!-- Docs -->
                  <li>
                     <a href="https://docs.pi-hole.net/" rel="noopener" target="_blank">
-                        <i class="fa-question-circle"></i> <span>Donate</span>
+                        <i class="fa fa-question-circle"></i> <span>Documentation</span>
                     </a>
                 </li>
             </ul>

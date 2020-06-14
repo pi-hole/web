@@ -43,21 +43,21 @@
     </div>
     <div class="form-group">
         <div class="col-md-3">
-            <input type="checkbox" id="type_forwarded" checked><label for="type_forwarded">Permitted: forwarded</label><br>
-            <input type="checkbox" id="type_cached" checked><label for="type_cached">Permitted: cached</label>
+            <div><input type="checkbox" id="type_forwarded" checked><label for="type_forwarded">Permitted: forwarded</label><br></div>
+            <div><input type="checkbox" id="type_cached" checked><label for="type_cached">Permitted: cached</label></div>
         </div>
         <div class="col-md-3">
-            <input type="checkbox" id="type_gravity" checked><label for="type_gravity">Blocked: gravity</label><br>
-            <input type="checkbox" id="type_external" checked><label for="type_external">Blocked: external</label>
+            <div><input type="checkbox" id="type_gravity" checked><label for="type_gravity">Blocked: gravity</label><br></div>
+            <div><input type="checkbox" id="type_external" checked><label for="type_external">Blocked: external</label></div>
         </div>
         <div class="col-md-3">
-            <input type="checkbox" id="type_blacklist" checked><label for="type_blacklist">Blocked: exact blacklist</label><br>
-            <input type="checkbox" id="type_regex" checked><label for="type_regex">Blocked: regex blacklist</label>
+            <div><input type="checkbox" id="type_blacklist" checked><label for="type_blacklist">Blocked: exact blacklist</label><br></div>
+            <div><input type="checkbox" id="type_regex" checked><label for="type_regex">Blocked: regex blacklist</label></div>
         </div>
         <div class="col-md-3">
-            <input type="checkbox" id="type_gravity_CNAME" checked><label for="type_gravity_CNAME">Blocked: gravity (CNAME)</label><br>
-            <input type="checkbox" id="type_blacklist_CNAME" checked><label for="type_blacklist_CNAME">Blocked: exact blacklist (CNAME)</label><br>
-            <input type="checkbox" id="type_regex_CNAME" checked><label for="type_regex_CNAME">Blocked: regex blacklist (CNAME)</label>
+            <div><input type="checkbox" id="type_gravity_CNAME" checked><label for="type_gravity_CNAME">Blocked: gravity (CNAME)</label><br></div>
+            <div><input type="checkbox" id="type_blacklist_CNAME" checked><label for="type_blacklist_CNAME">Blocked: exact blacklist (CNAME)</label><br></div>
+            <div><input type="checkbox" id="type_regex_CNAME" checked><label for="type_regex_CNAME">Blocked: regex blacklist (CNAME)</label></div>
         </div>
     </div>
 </div>
@@ -160,7 +160,7 @@
 </div>
 <!-- /.row -->
 
-<script src="scripts/vendor/daterangepicker.js"></script>
+<script src="scripts/vendor/daterangepicker.min.js"></script>
 <script src="scripts/pi-hole/js/db_queries.js"></script>
 
 <?php
