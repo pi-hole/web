@@ -41,37 +41,6 @@ function JSON_error($message = null)
     echo json_encode($response);
 }
 
-function space_aware_explode($input)
-{
-    $ret = array();
-    $quoted = false;
-    $pos = 0;
-
-    // Loop over input string
-    for ($i = 0; $i < strlen($input); $i++)
-    {
-        // Get current character
-        $c = $input[$i];
-
-        // If current character is a space (or comma) and we're outside
-        // of a quoted region, we accept this character as separator
-        if (($c == ' ' || $c == ',') && !$quoted) {
-            $ret[] = str_replace('"', '', substr($input, $pos, $i - $pos));
-            $pos = $i+1;
-        }
-        elseif($c == '"' && !$quoted)
-            $quoted = true; // Quotation begins
-        elseif($c == '"' && $quoted)
-            $quoted = false; // Quotation ends here
-    }
-    // Get last element of the string
-    if ($pos > 0) {
-        $ret[] = substr($input, $pos);
-    }
-
-    return $ret;
-}
-
 if ($_POST['action'] == 'get_groups') {
     // List all available groups
     try {
@@ -89,7 +58,7 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_group') {
     // Add new group
     try {
-        $names = space_aware_explode(trim($_POST['name']));
+        $names = str_getcsv(trim($_POST['name']), ' ');
         $total = count($names);
         $added = 0;
         $stmt = $db->prepare('INSERT INTO "group" (name,description) VALUES (:name,:desc)');
@@ -97,7 +66,12 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':desc', $_POST['desc'], SQLITE3_TEXT)) {
+        $desc = $_POST['desc'];
+        if (strlen($desc) === 0) {
+            // Store NULL in database for empty descriptions
+            $desc = null;
+        }
+        if (!$stmt->bindValue(':desc', $desc, SQLITE3_TEXT)) {
             throw new Exception('While binding desc: ' . $db->lastErrorMsg());
         }
 
@@ -137,7 +111,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $desc = $_POST['desc'];
-        if (strlen($desc) == 0) {
+        if (strlen($desc) === 0) {
             // Store NULL in database for empty descriptions
             $desc = null;
         }
@@ -290,7 +264,7 @@ if ($_POST['action'] == 'get_groups') {
             }
 
             $comment = $_POST['comment'];
-            if (strlen($comment) == 0) {
+            if (strlen($comment) === 0) {
                     // Store NULL in database for empty comments
                     $comment = null;
             }
@@ -320,7 +294,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $comment = $_POST['comment'];
-        if (strlen($comment) == 0) {
+        if (strlen($comment) === 0) {
                 // Store NULL in database for empty comments
                 $comment = null;
         }
@@ -480,6 +454,7 @@ if ($_POST['action'] == 'get_groups') {
     // Add new domain
     try {
         $domains = explode(' ', trim($_POST['domain']));
+        $before = intval($db->querySingle("SELECT COUNT(*) FROM domainlist;"));
         $total = count($domains);
         $added = 0;
         $stmt = $db->prepare('REPLACE INTO domainlist (domain,type,comment) VALUES (:domain,:type,:comment)');
@@ -499,7 +474,12 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While binding type: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':comment', $_POST['comment'], SQLITE3_TEXT)) {
+        $comment = $_POST['comment'];
+        if (strlen($comment) === 0) {
+            // Store NULL in database for empty comments
+            $comment = null;
+        }
+        if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
             throw new Exception('While binding comment: ' . $db->lastErrorMsg());
         }
 
@@ -556,8 +536,23 @@ if ($_POST['action'] == 'get_groups') {
             $added++;
         }
 
+        $after = intval($db->querySingle("SELECT COUNT(*) FROM domainlist;"));
+        $difference = $after - $before;
+        if($total === 1) {
+            if($difference !== 1) {
+                    $msg = "Not adding ". htmlentities(utf8_encode($domain)) . " as it is already on the list";
+            } else {
+                    $msg = "Added " . htmlentities(utf8_encode($domain));
+            }
+        } else {
+            if($difference !== $total) {
+                    $msg = "Added " . ($after-$before) . " out of ". $total . " domains (skipped duplicates)";
+            } else {
+                    $msg = "Added " . $total . " domains";
+            }
+        }
         $reload = true;
-        JSON_success();
+        JSON_success($msg);
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
@@ -579,7 +574,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $comment = $_POST['comment'];
-        if (strlen($comment) == 0) {
+        if (strlen($comment) === 0) {
                 // Store NULL in database for empty comments
                 $comment = null;
         }
@@ -751,12 +746,17 @@ if ($_POST['action'] == 'get_groups') {
         $total = count($addresses);
         $added = 0;
 
-        $stmt = $db->prepare('INSERT INTO adlist (address,comment) VALUES (:address,:comment)');
+        $stmt = $db->prepare('INSERT OR IGNORE INTO adlist (address,comment) VALUES (:address,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':comment', $_POST['comment'], SQLITE3_TEXT)) {
+        $comment = $_POST['comment'];
+        if (strlen($comment) === 0) {
+            // Store NULL in database for empty comments
+            $comment = null;
+        }
+        if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
             throw new Exception('While binding comment: ' . $db->lastErrorMsg());
         }
 
@@ -801,7 +801,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $comment = $_POST['comment'];
-        if (strlen($comment) == 0) {
+        if (strlen($comment) === 0) {
                 // Store NULL in database for empty comments
                 $comment = null;
         }
@@ -896,5 +896,4 @@ if ($_POST['action'] == 'get_groups') {
 // Reload lists in pihole-FTL after having added something
 if ($reload) {
     $output = pihole_execute('restartdns reload-lists');
-    echo implode("\n", $output);
 }

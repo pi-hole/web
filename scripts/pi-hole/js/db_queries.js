@@ -28,8 +28,8 @@ window.location.search
   });
 
 if ("from" in GETDict && "until" in GETDict) {
-  from = parseInt(GETDict.from);
-  until = parseInt(GETDict.until);
+  from = parseInt(GETDict.from, 10);
+  until = parseInt(GETDict.until, 10);
   start__ = moment(1000 * from);
   end__ = moment(1000 * until);
   instantquery = true;
@@ -142,7 +142,11 @@ function handleAjaxError(xhr, textStatus) {
   } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
     alert("An error occurred while loading the data: Connection refused. Is FTL running?");
   } else {
-    alert("An unknown error occurred while loading the data.\n" + xhr.responseText);
+    alert(
+      "An unknown error occurred while loading the data.\n" +
+        xhr.responseText +
+        "\nCheck the server's log files (/var/log/lighttpd/error.log when you're using the default Pi-hole web server) for details. You may need to increase the memory available for Pi-hole in case you requested a lot of data."
+    );
   }
 
   $("#all-queries_processing").hide();

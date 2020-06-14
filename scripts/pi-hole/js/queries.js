@@ -258,7 +258,8 @@ $(function () {
           isCNAME = true;
           break;
         default:
-          fieldtext = "Unknown (" + data[4] + ")";
+          colorClass = false;
+          fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
           buttontext = "";
       }
 
