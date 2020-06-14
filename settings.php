@@ -714,7 +714,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                             title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>">
                                                             <td id="MAC"><?php echo $lease["hwaddr"]; ?></td>
                                                             <td id="IP" data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
-                                                            <td id="HOST"><?php echo $lease["host"]; ?></td>
+                                                            <td id="HOST"><?php echo htmlentities($lease["host"]); ?></td>
                                                             <td>
                                                                 <button type="button" id="button" class="btn btn-warning btn-xs" data-static="alert">
                                                                     <span class="fas fas fa-file-import"></span>
@@ -742,7 +742,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                         <tr>
                                                             <td><?php echo $lease["hwaddr"]; ?></td>
                                                             <td data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
-                                                            <td><?php echo $lease["host"]; ?></td>
+                                                            <td><?php echo htmlentities($lease["host"]); ?></td>
                                                             <td><?php if (strlen($lease["hwaddr"]) > 0) { ?>
                                                                 <button type="submit" class="btn btn-danger btn-xs" name="removestatic"
                                                                         value="<?php echo $lease["hwaddr"]; ?>">
