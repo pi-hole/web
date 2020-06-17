@@ -52,7 +52,10 @@ elseif (isset($_GET['enable']) && $auth)
 	}
 	pihole_execute('enable');
 	$data = array_merge($data, array("status" => "enabled"));
-	unlink("../custom_disable_timer");
+	if (file_exists("../custom_disable_timer"))
+	{
+		unlink("../custom_disable_timer");
+	}
 }
 elseif (isset($_GET['disable']) && $auth)
 {
@@ -77,7 +80,10 @@ elseif (isset($_GET['disable']) && $auth)
 	else
 	{
 		pihole_execute('disable');
-		unlink("../custom_disable_timer");
+		if (file_exists("../custom_disable_timer"))
+		{
+			unlink("../custom_disable_timer");
+		}
 	}
 	$data = array_merge($data, array("status" => "disabled"));
 }
