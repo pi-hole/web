@@ -262,10 +262,10 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					if(array_key_exists("custom".$i,$_POST))
 					{
 						$exploded = explode("#", $_POST["custom".$i."val"], 2);
-						$IP = $exploded[0];
+						$IP = trim($exploded[0]);
 						if(count($exploded) > 1)
 						{
-							$port = $exploded[1];
+							$port = trim($exploded[1]);
 						}
 						else
 						{
@@ -326,22 +326,25 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				// Check if Conditional Forwarding is requested
 				if(isset($_POST["conditionalForwarding"]))
 				{
+					$conditionalForwardingIP = trim($_POST["conditionalForwardingIP"]);
+					$conditionalForwardingDomain = trim($_POST["conditionalForwardingDomain"]);
+
 					// Validate conditional forwarding IP
-					if (!validIP($_POST["conditionalForwardingIP"]))
+					if (!validIP($conditionalForwardingIP))
 					{
-						$error .= "Conditional forwarding IP (".htmlspecialchars($_POST["conditionalForwardingIP"]).") is invalid!<br>";
+						$error .= "Conditional forwarding IP (".htmlspecialchars($conditionalForwardingIP).") is invalid!<br>";
 					}
 
 					// Validate conditional forwarding domain name
-					if(!validDomain($_POST["conditionalForwardingDomain"]))
+					if(!validDomain($conditionalForwardingDomain))
 					{
-						$error .= "Conditional forwarding domain name (".htmlspecialchars($_POST["conditionalForwardingDomain"]).") is invalid!<br>";
+						$error .= "Conditional forwarding domain name (".htmlspecialchars($conditionalForwardingDomain).") is invalid!<br>";
 					}
 					if(!$error)
 					{
-						$addressArray = explode(".", $_POST["conditionalForwardingIP"]);
+						$addressArray = explode(".", $conditionalForwardingIP);
 						$reverseAddress = $addressArray[2].".".$addressArray[1].".".$addressArray[0].".in-addr.arpa";
-						$extra .= " conditional_forwarding ".$_POST["conditionalForwardingIP"]." ".$_POST["conditionalForwardingDomain"]." $reverseAddress";
+						$extra .= " conditional_forwarding ".$conditionalForwardingIP." ".$conditionalForwardingDomain." $reverseAddress";
 					}
 				}
 
@@ -522,18 +525,6 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				break;
 
 			case "webUI":
-				if($_POST["tempunit"] == "F")
-				{
-					pihole_execute('-a -f');
-				}
-				elseif($_POST["tempunit"] == "K")
-				{
-					pihole_execute('-a -k');
-				}
-				else
-				{
-					pihole_execute('-a -c');
-				}
 				$adminemail = trim($_POST["adminemail"]);
 				if(strlen($adminemail) == 0 || !isset($adminemail))
 				{
@@ -554,6 +545,12 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				else
 				{
 					pihole_execute('-a layout traditional');
+				}
+				if(isset($_POST["webtheme"]))
+				{
+					global $available_themes;
+					if(array_key_exists($_POST["webtheme"], $available_themes))
+						exec('sudo pihole -a theme '.$_POST["webtheme"]);
 				}
 				$success .= "The webUI settings have been updated";
 				break;
@@ -582,9 +579,9 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 
 				if(isset($_POST["addstatic"]))
 				{
-					$mac = $_POST["AddMAC"];
-					$ip = $_POST["AddIP"];
-					$hostname = $_POST["AddHostname"];
+					$mac = trim($_POST["AddMAC"]);
+					$ip = trim($_POST["AddIP"]);
+					$hostname = trim($_POST["AddHostname"]);
 
 					addStaticDHCPLease($mac, $ip, $hostname);
 					break;

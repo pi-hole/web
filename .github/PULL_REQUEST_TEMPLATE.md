@@ -26,7 +26,7 @@
 
 `{A detailed list of any necessary changes}`
 
-> * `{Please delete this quoted section when opening your pull request}`
-> * You must follow the template instructions. Failure to do so will result in your issue being closed.
-> * Please respect that Pi-hole is developed by volunteers, who can only reply in their spare time.
-> * Detail helps us understand an issue quicker, but please ensure it's relevant.
+> - `{Please delete this quoted section when opening your pull request}`
+> - You must follow the template instructions. Failure to do so will result in your issue being closed.
+> - Please respect that Pi-hole is developed by volunteers, who can only reply in their spare time.
+> - Detail helps us understand an issue quicker, but please ensure it's relevant.

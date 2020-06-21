@@ -129,10 +129,10 @@ function addCustomDNSEntry($ip="", $domain="", $json=true)
     try
     {
         if(isset($_REQUEST['ip']))
-            $ip = $_REQUEST['ip'];
+            $ip = trim($_REQUEST['ip']);
 
         if(isset($_REQUEST['domain']))
-            $domain = $_REQUEST['domain'];
+            $domain = trim($_REQUEST['domain']);
 
         if (empty($ip))
             return returnError("IP must be set", $json);
@@ -206,31 +206,34 @@ function deleteCustomDNSEntry()
 
 function deleteAllCustomDNSEntries()
 {
-    $handle = fopen($customDNSFile, "r");
-    if ($handle)
+    if (isset($customDNSFile))
     {
-        try
+        $handle = fopen($customDNSFile, "r");
+        if ($handle)
         {
-            while (($line = fgets($handle)) !== false) {
-                $line = str_replace("\r","", $line);
-                $line = str_replace("\n","", $line);
-                $explodedLine = explode (" ", $line);
+            try
+            {
+                while (($line = fgets($handle)) !== false) {
+                    $line = str_replace("\r","", $line);
+                    $line = str_replace("\n","", $line);
+                    $explodedLine = explode (" ", $line);
 
-                if (count($explodedLine) != 2)
-                    continue;
+                    if (count($explodedLine) != 2)
+                        continue;
 
-                $ip = $explodedLine[0];
-                $domain = $explodedLine[1];
+                    $ip = $explodedLine[0];
+                    $domain = $explodedLine[1];
 
-                pihole_execute("-a removecustomdns ".$ip." ".$domain);
+                    pihole_execute("-a removecustomdns ".$ip." ".$domain);
+                }
             }
-        }
-        catch (\Exception $ex)
-        {
-            return returnError($ex->getMessage());
-        }
+            catch (\Exception $ex)
+            {
+                return errorJsonResponse($ex->getMessage());
+            }
 
-        fclose($handle);
+            fclose($handle);
+        }
     }
 
     return returnSuccess();

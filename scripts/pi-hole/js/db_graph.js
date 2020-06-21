@@ -5,15 +5,13 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global Chart:false, moment:false */
+/* global utils:false, Chart:false, moment:false */
 
 var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf() / 1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf() / 1000;
 var interval = 0;
-
-var timeoutWarning = $("#timeoutWarning");
 
 var dateformat = "MMMM Do YYYY, HH:mm";
 
@@ -52,28 +50,6 @@ $(function () {
   );
 });
 
-function padNumber(num) {
-  return ("00" + num).substr(-2, 2);
-}
-
-// Helper function needed for converting the Objects to Arrays
-
-function objectToArray(p) {
-  var keys = Object.keys(p);
-  keys.sort(function (a, b) {
-    return a - b;
-  });
-
-  var arr = [],
-    idx = [];
-  for (var i = 0; i < keys.length; i++) {
-    arr.push(p[keys[i]]);
-    idx.push(keys[i]);
-  }
-
-  return [idx, arr];
-}
-
 var timeLineChart;
 
 function compareNumbers(a, b) {
@@ -81,6 +57,8 @@ function compareNumbers(a, b) {
 }
 
 function updateQueriesOverTime() {
+  var timeoutWarning = $("#timeoutWarning");
+
   $("#queries-over-time .overlay").show();
   timeoutWarning.show();
 
@@ -110,8 +88,8 @@ function updateQueriesOverTime() {
     "api_db.php?getGraphData&from=" + from + "&until=" + until + "&interval=" + interval,
     function (data) {
       // convert received objects to arrays
-      data.domains_over_time = objectToArray(data.domains_over_time);
-      data.ads_over_time = objectToArray(data.ads_over_time);
+      data.domains_over_time = utils.objectToArray(data.domains_over_time);
+      data.ads_over_time = utils.objectToArray(data.ads_over_time);
       // Remove possibly already existing data
       timeLineChart.data.labels = [];
       timeLineChart.data.datasets[0].data = [];
@@ -122,14 +100,14 @@ function updateQueriesOverTime() {
 
       for (hour in data.domains_over_time[0]) {
         if (Object.prototype.hasOwnProperty.call(data.domains_over_time[0], hour)) {
-          dates.push(parseInt(data.domains_over_time[0][hour]));
+          dates.push(parseInt(data.domains_over_time[0][hour], 10));
         }
       }
 
       for (hour in data.ads_over_time[0]) {
         if (Object.prototype.hasOwnProperty.call(data.ads_over_time[0], hour)) {
-          if (dates.indexOf(parseInt(data.ads_over_time[0][hour])) === -1) {
-            dates.push(parseInt(data.ads_over_time[0][hour]));
+          if (dates.indexOf(parseInt(data.ads_over_time[0][hour], 10)) === -1) {
+            dates.push(parseInt(data.ads_over_time[0][hour], 10));
           }
         }
       }
@@ -168,12 +146,12 @@ function updateQueriesOverTime() {
   );
 }
 
-$(document).ready(function () {
+$(function () {
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   var blockedColor = "#999";
   var permittedColor = "#00a65a";
   timeLineChart = new Chart(ctx, {
-    type: "bar",
+    type: utils.getGraphType(),
     data: {
       labels: [],
       datasets: [
@@ -212,40 +190,40 @@ $(document).ready(function () {
           title: function (tooltipItem) {
             var label = tooltipItem[0].xLabel;
             var time = new Date(label);
-            var from_date =
+            var fromDate =
               time.getFullYear() +
               "-" +
-              padNumber(time.getMonth() + 1) +
+              utils.padNumber(time.getMonth() + 1) +
               "-" +
-              padNumber(time.getDate());
-            var from_time =
-              padNumber(time.getHours()) +
+              utils.padNumber(time.getDate());
+            var fromTime =
+              utils.padNumber(time.getHours()) +
               ":" +
-              padNumber(time.getMinutes()) +
+              utils.padNumber(time.getMinutes()) +
               ":" +
-              padNumber(time.getSeconds());
+              utils.padNumber(time.getSeconds());
             time = new Date(time.valueOf() + 1000 * interval);
-            var until_date =
+            var untilDate =
               time.getFullYear() +
               "-" +
-              padNumber(time.getMonth() + 1) +
+              utils.padNumber(time.getMonth() + 1) +
               "-" +
-              padNumber(time.getDate());
-            var until_time =
-              padNumber(time.getHours()) +
+              utils.padNumber(time.getDate());
+            var untilTime =
+              utils.padNumber(time.getHours()) +
               ":" +
-              padNumber(time.getMinutes()) +
+              utils.padNumber(time.getMinutes()) +
               ":" +
-              padNumber(time.getSeconds());
+              utils.padNumber(time.getSeconds());
 
-            if (from_date === until_date) {
+            if (fromDate === untilDate) {
               // Abbreviated form for intervals on the same day
               // We split title in two lines on small screens
               if ($(window).width() < 992) {
-                until_time += "\n";
+                untilTime += "\n";
               }
 
-              return ("Queries from " + from_time + " to " + until_time + " on " + from_date).split(
+              return ("Queries from " + fromTime + " to " + untilTime + " on " + fromDate).split(
                 "\n "
               );
             }
@@ -253,27 +231,27 @@ $(document).ready(function () {
             // Full tooltip for intervals spanning more than one day
             // We split title in two lines on small screens
             if ($(window).width() < 992) {
-              from_date += "\n";
+              fromDate += "\n";
             }
 
             return (
               "Queries from " +
-              from_date +
+              fromDate +
               " " +
-              from_time +
+              fromTime +
               " to " +
-              until_date +
+              untilDate +
               " " +
-              until_time
+              untilTime
             ).split("\n ");
           },
           label: function (tooltipItems, data) {
             if (tooltipItems.datasetIndex === 0) {
-              var percentage = 0.0;
-              var permitted = parseInt(data.datasets[1].data[tooltipItems.index]);
-              var blocked = parseInt(data.datasets[0].data[tooltipItems.index]);
+              var percentage = 0;
+              var permitted = parseInt(data.datasets[1].data[tooltipItems.index], 10);
+              var blocked = parseInt(data.datasets[0].data[tooltipItems.index], 10);
               if (permitted + blocked > 0) {
-                percentage = (100.0 * blocked) / (permitted + blocked);
+                percentage = (100 * blocked) / (permitted + blocked);
               }
 
               return (

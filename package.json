@@ -15,13 +15,26 @@
   },
   "homepage": "https://github.com/pi-hole/AdminLTE#readme",
   "scripts": {
+    "prefix": "postcss \"style/*.css\" \"style/themes/*.css\" --use autoprefixer --no-map --replace",
+    "prettier:check": "prettier -l \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**/*.js\"",
+    "prettier:fix": "prettier --write \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**/*.js\"",
     "xo": "xo",
     "xo:fix": "npm run xo -- --fix",
-    "test": "npm run xo"
+    "test": "npm run prettier:check && npm run xo"
   },
   "devDependencies": {
-    "xo": "^0.30.0"
+    "autoprefixer": "^9.8.1",
+    "eslint-plugin-compat": "^3.7.0",
+    "postcss-cli": "^7.1.1",
+    "prettier": "2.0.4",
+    "xo": "^0.32.0"
   },
+  "browserslist": [
+    "defaults",
+    "Explorer >= 11",
+    "not ExplorerMobile <= 11",
+    "not Safari 5.1"
+  ],
   "prettier": {
     "arrowParens": "avoid",
     "bracketSpacing": true,
@@ -35,6 +48,9 @@
       "browser",
       "jquery"
     ],
+    "extends": [
+      "plugin:compat/recommended"
+    ],
     "parserOptions": {
       "ecmaVersion": 5,
       "sourceType": "script"
@@ -46,13 +62,23 @@
       "**/vendor/**"
     ],
     "rules": {
-      "camelcase": "off",
+      "camelcase": [
+        "error",
+        {
+          "properties": "never"
+        }
+      ],
       "capitalized-comments": "off",
-      "new-cap": "off",
+      "new-cap": [
+        "error",
+        {
+          "properties": false
+        }
+      ],
       "no-alert": "off",
+      "no-console": "error",
       "no-negated-condition": "off",
       "one-var": "off",
-      "radix": "off",
       "spaced-comment": "off",
       "unicorn/explicit-length-check": [
         "error",
@@ -63,7 +89,6 @@
       "unicorn/filename-case": "off",
       "unicorn/no-fn-reference-in-iterator": "off",
       "unicorn/no-for-loop": "off",
-      "unicorn/no-zero-fractions": "off",
       "unicorn/prefer-includes": "off",
       "unicorn/prefer-node-append": "off",
       "unicorn/prefer-number-properties": "off",
