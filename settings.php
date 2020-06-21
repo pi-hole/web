@@ -985,7 +985,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                    the size of your log might increase significantly
                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
                                                    <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
-                                                <label>Conditional forwarding</label>
+                                                <h4>Conditional forwarding</h4>
                                                 <p>If not configured as your DHCP server, Pi-hole  typically won't be able to
                                                    determine the names of devices on your local network.  As a
                                                    result, tables such as Top Clients will only show IP addresses.</p>
@@ -1020,22 +1020,21 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                           <th>Local domain name (optional)</th>
                                                         </tr>
                                                         <tr>
-                                                          <div class="input-group">
-                                                            <td>
-                                                              <input type="text" name="rev_server_cidr" placeholder="192.168.0.0/16" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                              <?php if(isset($rev_server_cidr)){ ?>value="<?php echo $rev_server_cidr; ?>"<?php } ?>
-                                                              <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
-                                                            </td>
-                                                            <td>
-                                                              <input type="text" name="rev_server_target" placeholder="192.168.0.1" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                              <?php if(isset($rev_server_target)){ ?>value="<?php echo $rev_server_target; ?>"<?php } ?>
-                                                              <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
-                                                            </td>
-                                                            <td><input type="text" name="rev_server_domain" placeholder="local" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                              <?php if(isset($rev_server_domain)){ ?>value="<?php echo $rev_server_domain; ?>"<?php } ?>
-                                                              <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
-                                                            </td>
-                                                          </div>
+                                                          <td>
+                                                            <input type="text" name="rev_server_cidr" placeholder="192.168.0.0/16" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
+                                                            <?php if(isset($rev_server_cidr)){ ?>value="<?php echo $rev_server_cidr; ?>"<?php } ?>
+                                                            <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
+                                                          </td>
+                                                          <td>
+                                                            <input type="text" name="rev_server_target" placeholder="192.168.0.1" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
+                                                            <?php if(isset($rev_server_target)){ ?>value="<?php echo $rev_server_target; ?>"<?php } ?>
+                                                            <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
+                                                          </td>
+                                                          <td>
+                                                            <input type="text" name="rev_server_domain" placeholder="local" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
+                                                            <?php if(isset($rev_server_domain)){ ?>value="<?php echo $rev_server_domain; ?>"<?php } ?>
+                                                            <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
+                                                          </td>
                                                         </tr>
                                                       </table>
                                                     </div>
