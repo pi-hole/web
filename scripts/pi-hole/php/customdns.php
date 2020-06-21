@@ -2,8 +2,6 @@
 
     require_once "func.php";
 
-    $customDNSFile = "/etc/pihole/custom.list";
-
     require_once('auth.php');
 
     // Authentication checks

@@ -5,6 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global utils:false */
+
 var table;
 var token = $("#token").text();
 
@@ -37,7 +39,7 @@ function showAlert(type, message) {
   alertElement.delay(8000).fadeOut(2000);
 }
 
-$(document).ready(function () {
+$(function () {
   $("#btnAdd").on("click", addCustomCNAME);
 
   table = $("#customCNAMETable").DataTable({
@@ -52,7 +54,7 @@ $(document).ready(function () {
         targets: 2,
         render: function (data, type, row) {
           return (
-            '<button class="btn btn-danger btn-xs deleteCustomCNAME" type="button" data-domain=\'' +
+            '<button type="button" class="btn btn-danger btn-xs deleteCustomCNAME" data-domain=\'' +
             row[0] +
             "' data-target='" +
             row[1] +
@@ -76,15 +78,15 @@ $(document).ready(function () {
 });
 
 function addCustomCNAME() {
-  var target = $("#target").val();
-  var domain = $("#domain").val();
+  var domain = utils.escapeHtml($("#domain").val());
+  var target = utils.escapeHtml($("#target").val());
 
   showAlert("info");
   $.ajax({
     url: "scripts/pi-hole/php/customcname.php",
     method: "post",
     dataType: "json",
-    data: { action: "add", target: target, domain: domain, token: token },
+    data: { action: "add", domain: domain, target: target, token: token },
     success: function (response) {
       if (response.success) {
         showAlert("success");
@@ -98,8 +100,8 @@ function addCustomCNAME() {
 }
 
 function deleteCustomCNAME() {
-  var target = $(this).attr("data-target");
   var domain = $(this).attr("data-domain");
+  var target = $(this).attr("data-target");
 
   showAlert("info");
   $.ajax({
@@ -115,7 +117,7 @@ function deleteCustomCNAME() {
     },
     error: function (jqXHR, exception) {
       showAlert("error", "Error while deleting this custom CNAME record");
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }

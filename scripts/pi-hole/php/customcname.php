@@ -12,7 +12,8 @@
         log_and_die('Not allowed (login session invalid or expired, please relogin on the Pi-hole dashboard)!');
     }
 
-    switch ($_REQUEST['action'])
+
+    switch ($_POST['action'])
     {
         case 'get':     echo json_encode(echoCustomCNAMEEntries()); break;
         case 'add':     echo json_encode(addCustomCNAMEEntry());    break;
@@ -20,4 +21,6 @@
         default:
             die("Wrong action");
     }
+
+
 ?>
