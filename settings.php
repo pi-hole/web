@@ -985,6 +985,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                    the size of your log might increase significantly
                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
                                                    <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
+                                                <br>
                                                 <h4>Conditional forwarding</h4>
                                                 <p>If not configured as your DHCP server, Pi-hole  typically won't be able to
                                                    determine the names of devices on your local network.  As a
