@@ -385,7 +385,7 @@ pre {
   color: #007997 !important;
 }
 td.highlight {
-  background-color: yellow;
+  background-color: rgba(255, 204, 0, 0.333);
 }
 .btn-default {
   box-shadow: none;

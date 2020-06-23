@@ -198,7 +198,14 @@ function stateLoadCallback(itemName) {
     return null;
   }
 
+  // Parse JSON string
   data = JSON.parse(data);
+
+  // Clear possible filtering settings
+  data.columns.forEach(function (value, index) {
+    data.columns[index].search.search = "";
+  });
+
   // Always start on the first page to show most recent queries
   data.start = 0;
   // Always start with empty search field
