@@ -376,16 +376,8 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				{
 					$IPs = implode (",", $DNSservers);
 					$return = pihole_execute("-a setdns \"".$IPs."\" ".$extra);
-					if(!empty($return))
-					{
-						$success .= htmlspecialchars(end($return))."<br>";
-						$success .= "The DNS settings have been updated (using ".$DNSservercount." DNS servers)";
-					}
-					else
-					{
-						$success .= "Updating DNS settings failed. Result:";
-						$success .= implode($return);
-					}
+					$success .= htmlspecialchars(end($return))."<br>";
+					$success .= "The DNS settings have been updated (using ".$DNSservercount." DNS servers)";
 				}
 				else
 				{
