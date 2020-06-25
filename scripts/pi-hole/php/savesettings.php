@@ -263,25 +263,27 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					{
 						$exploded = explode("#", $_POST["custom".$i."val"], 2);
 						$IP = trim($exploded[0]);
-						if(count($exploded) > 1)
-						{
-							$port = trim($exploded[1]);
-						}
-						else
-						{
-							$port = "53";
-						}
+
 						if(!validIP($IP))
 						{
 							$error .= "IP (".htmlspecialchars($IP).") is invalid!<br>";
 						}
-						elseif(!is_numeric($port))
-						{
-							$error .= "Port (".htmlspecialchars($port).") is invalid!<br>";
-						}
 						else
 						{
-							array_push($DNSservers,$IP."#".$port);
+							if(count($exploded) > 1)
+							{
+								$port = trim($exploded[1]);
+								if(!is_numeric($port))
+								{
+									$error .= "Port (".htmlspecialchars($port).") is invalid!<br>";
+								}
+								else
+								{
+									$IP = $IP."#".$port;
+								}
+							}
+
+							array_push($DNSservers,$IP);
 						}
 					}
 				}
