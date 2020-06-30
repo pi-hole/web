@@ -279,7 +279,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 								}
 								else
 								{
-									$IP = $IP."#".$port;
+									$IP .= "#".$port;
 								}
 							}
 
