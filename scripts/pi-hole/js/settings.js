@@ -229,17 +229,6 @@ $(function () {
   $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
 });
 
-// Change "?tab=" parameter in URL for save and reload
-$(".nav-tabs a").on("shown.bs.tab", function (e) {
-  var tab = e.target.hash.substring(1);
-  window.history.pushState("", "", "?tab=" + tab);
-  if (tab === "piholedhcp") {
-    window.location.reload();
-  }
-
-  window.scrollTo(0, 0);
-});
-
 // Auto dismissal for info notifications
 $(function () {
   var alInfo = $("#alInfo");
@@ -255,6 +244,25 @@ $(function () {
   input.setAttribute("autocorrect", "off");
   input.setAttribute("autocapitalize", "off");
   input.setAttribute("spellcheck", false);
+
+  // En-/disable conditional forwarding input fields based
+  // on the checkbox state
+  $('input[name="rev_server"]').click(function () {
+    $('input[name="rev_server_cidr"]').prop("disabled", !this.checked);
+    $('input[name="rev_server_target"]').prop("disabled", !this.checked);
+    $('input[name="rev_server_domain"]').prop("disabled", !this.checked);
+  });
+});
+
+// Change "?tab=" parameter in URL for save and reload
+$(".nav-tabs a").on("shown.bs.tab", function (e) {
+  var tab = e.target.hash.substring(1);
+  window.history.pushState("", "", "?tab=" + tab);
+  if (tab === "piholedhcp") {
+    window.location.reload();
+  }
+
+  window.scrollTo(0, 0);
 });
 
 // Bar/Smooth chart toggle

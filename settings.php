@@ -164,12 +164,13 @@ if (isset($setupVars["DNSMASQ_LISTENING"])) {
 } else {
     $DNSinterface = "single";
 }
-if (isset($setupVars["CONDITIONAL_FORWARDING"]) && ($setupVars["CONDITIONAL_FORWARDING"] == 1)) {
-    $conditionalForwarding = true;
-    $conditionalForwardingDomain = $setupVars["CONDITIONAL_FORWARDING_DOMAIN"];
-    $conditionalForwardingIP = $setupVars["CONDITIONAL_FORWARDING_IP"];
+if (isset($setupVars["REV_SERVER"]) && ($setupVars["REV_SERVER"] == 1)) {
+    $rev_server = true;
+    $rev_server_cidr   = $setupVars["REV_SERVER_CIDR"];
+    $rev_server_target = $setupVars["REV_SERVER_TARGET"];
+    $rev_server_domain = $setupVars["REV_SERVER_DOMAIN"];
 } else {
-    $conditionalForwarding = false;
+    $rev_server = false;
 }
 ?>
 
@@ -975,38 +976,69 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     when enabling DNSSEC. A DNSSEC resolver test can be found
                                                     <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
                                                 </div>
-                                                <strong>Conditional Forwarding</strong>
-                                                <p>If not configured as your DHCP server, Pi-hole won't be able to
+                                                <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
+                                                   queries, Pi-hole requests the DNSSEC records needed to validate
+                                                   the replies. If a domain fails validation or the upstream does not
+                                                   support DNSSEC, this setting can cause issues resolving domains.
+                                                   Use Google, Cloudflare, DNS.WATCH, Quad9, or another DNS
+                                                   server which supports DNSSEC when activating DNSSEC. Note that
+                                                   the size of your log might increase significantly
+                                                   when enabling DNSSEC. A DNSSEC resolver test can be found
+                                                   <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
+                                                <br>
+                                                <h4>Conditional forwarding</h4>
+                                                <p>If not configured as your DHCP server, Pi-hole  typically won't be able to
                                                    determine the names of devices on your local network.  As a
                                                    result, tables such as Top Clients will only show IP addresses.</p>
                                                 <p>One solution for this is to configure Pi-hole to forward these
-	                                                 requests to your DHCP server (most likely your router), but only for devices on your
-	                                                 home network.  To configure this we will need to know the IP
-	                                                 address of your DHCP server and the name of your local network.</p>
-                                                <p>Note: The local domain name must match the domain name specified
-                                                        in your DHCP server, likely found within the DHCP settings.</p>
-                                                <div>
-                                                    <input type="checkbox" name="conditionalForwarding" id="conditionalForwarding" value="conditionalForwarding" <?php if(isset($conditionalForwarding) && ($conditionalForwarding == true)){ ?>checked<?php } ?>>
-                                                    <label for="conditionalForwarding"><strong>Use Conditional Forwarding</strong></label>
-                                                </div>
-                                                <div class="input-group">
-                                                    <table class="table table-bordered">
-                                                    <tr>
-                                                        <th>IP of your router</th>
-                                                        <th>Local domain name</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <div class="input-group">
-                                                        <td>
-                                                            <input type="text" name="conditionalForwardingIP" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                            <?php if(isset($conditionalForwardingIP)){ ?>value="<?php echo $conditionalForwardingIP; ?>"<?php } ?>>
-                                                        </td>
-                                                        <td><input type="text" name="conditionalForwardingDomain" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                            <?php if(isset($conditionalForwardingDomain)){ ?>value="<?php echo $conditionalForwardingDomain; ?>"<?php } ?>>
-                                                        </td>
-                                                        </div>
-                                                    </tr>
-                                                    </table>
+	                                               requests to your DHCP server (most likely your router), but only for devices on your
+	                                               home network.  To configure this we will need to know the IP
+	                                               address of your DHCP server and which addresses belong to your local network.
+                                                   Exemplary inout is given below as placeholder in the text boxes (if empty).</p>
+                                                <p>If your local network spans 192.168.0.1 - 192.168.0.255, then you will have to input
+                                                   <code>192.168.0.0/24</code>. If your local network is 192.168.47.1 - 192.168.47.255, it will
+                                                   be <code>192.168.47.0/24</code> and similar. If your network is larger, the CIDR has to be
+                                                   different, for instance a range of 10.8.0.1 - 10.8.255.255 results in <code>10.8.0.0/16</code>,
+                                                   whereas an even wider network of 10.0.0.1 - 10.255.255.255 results in <code>10.0.0.0/8</code>.
+                                                   Setting up IPv6 ranges is exactly similar to setting up IPv4 here and fully supported.
+                                                   Feel free to reach out to us on our
+                                                   <a href="https://discourse.pi-hole.net" target="_blank">Discourse forum</a>
+                                                   in case you need any assistance setting up local host name resolution for your particular system.</p>
+                                                <p>You can also specify a local domain name (like <code>fritz.box</code>) to ensure queries to
+                                                   devices ending in your local domain name will not leave your network, however, this is optional.
+                                                   The local domain name must match the domain name specified
+                                                   in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
+                                                <div class="form-group">
+                                                    <div>
+                                                        <input type="checkbox" name="rev_server" id="rev_server" value="rev_server" <?php if(isset($rev_server) && ($rev_server == true)){ ?>checked<?php } ?>>
+                                                        <label for="rev_server"><strong>Use Conditional Forwarding</strong></label>
+                                                    </div>
+                                                    <div class="input-group">
+                                                      <table class="table table-bordered">
+                                                        <tr>
+                                                          <th>Local network in <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" target="_blank">CIDR notation</a></th>
+                                                          <th>IP address of your DHCP server (router)</th>
+                                                          <th>Local domain name (optional)</th>
+                                                        </tr>
+                                                        <tr>
+                                                          <td>
+                                                            <input type="text" name="rev_server_cidr" placeholder="192.168.0.0/16" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
+                                                            <?php if(isset($rev_server_cidr)){ ?>value="<?php echo $rev_server_cidr; ?>"<?php } ?>
+                                                            <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
+                                                          </td>
+                                                          <td>
+                                                            <input type="text" name="rev_server_target" placeholder="192.168.0.1" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
+                                                            <?php if(isset($rev_server_target)){ ?>value="<?php echo $rev_server_target; ?>"<?php } ?>
+                                                            <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
+                                                          </td>
+                                                          <td>
+                                                            <input type="text" name="rev_server_domain" placeholder="local" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
+                                                            <?php if(isset($rev_server_domain)){ ?>value="<?php echo $rev_server_domain; ?>"<?php } ?>
+                                                            <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
+                                                          </td>
+                                                        </tr>
+                                                      </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
