@@ -501,7 +501,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                         } else {
                             $DHCP_rapid_commit = false;
                         }
-
+                        if (isset($setupVars["DHCP_expand_hosts"])) {
+                            $DHCP_expand_hosts = $setupVars["DHCP_expand_hosts"];
+                        } else {
+                            $DHCP_expand_hosts = false;
+                        }
                     } else {
                         $DHCP = false;
                         // Try to guess initial settings
@@ -518,6 +522,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                         $DHCPleasetime = 24;
                         $DHCPIPv6 = false;
                         $DHCP_rapid_commit = false;
+                        $DHCP_expand_hosts = false;
                     }
                     if (isset($setupVars["PIHOLE_DOMAIN"])) {
                         $piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
@@ -599,6 +604,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                                <?php if (!$DHCP){ ?>disabled<?php } ?>>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div><input type="checkbox" name="DHCP_expand_hosts" id="DHCP_expand_hosts" class="DHCPgroup" <?php if ($DHCP_expand_hosts){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="DHCP_expand_hosts"><strong>Add the domain to host names without a period</strong></label></div>
                                             </div>
                                         </div>
                                         <div class="row">

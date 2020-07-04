@@ -688,9 +688,18 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 						$rapidcommit = "false";
 					}
 
+					if(isset($_POST["DHCP_expand_hosts"]))
+					{
+						$expandhosts = "true";
+					}
+					else
+					{
+						$expandhosts = "false";
+					}
+
 					if(!strlen($error))
 					{
-						pihole_execute("-a enabledhcp ".$from." ".$to." ".$router." ".$leasetime." ".$domain." ".$ipv6." ".$rapidcommit);
+						pihole_execute("-a enabledhcp ".$from." ".$to." ".$router." ".$leasetime." ".$domain." ".$ipv6." ".$rapidcommit." ".$expandhosts);
 						$success .= "The DHCP server has been activated ".htmlspecialchars($type);
 					}
 				}
