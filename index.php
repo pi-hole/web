@@ -7,7 +7,7 @@
 *    Please see LICENSE file for your rights under this license. */
     $indexpage = true;
     require "scripts/pi-hole/php/header.php";
-    require_once("scripts/pi-hole/php/gravity.php");
+    require_once "scripts/pi-hole/php/gravity.php";
 
     function getinterval()
     {
