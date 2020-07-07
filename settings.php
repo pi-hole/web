@@ -1383,6 +1383,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     <input type="checkbox" name="localdnsrecords" id="tele_localdnsrecords" value="true" checked>
                                                     <label for="tele_localdnsrecords">Local DNS Records</label>
                                                 </div>
+                                                <div>
+                                                    <input type="checkbox" name="localcnamerecords" id="tele_localcnamerecords" value="true" checked>
+                                                    <label for="tele_localcnamerecords">Local CNAME Records</label>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row">

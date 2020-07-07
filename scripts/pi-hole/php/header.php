@@ -601,6 +601,27 @@ if($auth) {
                         <i class="fa fa-cogs"></i> <span>Settings</span>
                     </a>
                 </li>
+                <!-- Local DNS Records -->
+                <li class="treeview <?php if(in_array($scriptname, array("dns_records.php", "cname_records.php"))){ ?>active<?php } ?>">
+                  <a href="#">
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-down pull-right" style="padding-right: 5px;"></i>
+                    </span>
+                    <i class="fa fa-address-book"></i> <span>Local DNS</span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li<?php if($scriptname === "dns_records.php"){ ?> class="active"<?php } ?>>
+                        <a href="dns_records.php">
+                            <i class="fa fa-address-book"></i> <span>DNS Records</span>
+                        </a>
+                    </li>
+                    <li<?php if($scriptname === "cname_records.php"){ ?> class="active"<?php } ?>>
+                        <a href="cname_records.php">
+                            <i class="fa fa-address-book"></i> <span>CNAME Records</span>
+                        </a>
+                    </li>
+                  </ul>
+                </li>
                 <!-- Logout -->
                 <?php
                 // Show Logout button if $auth is set and authorization is required
