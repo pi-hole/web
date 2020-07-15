@@ -8,9 +8,9 @@
 /* global utils:false */
 
 var table;
-var token = $("#token").html();
+var token = $("#token").text();
 
-$(document).ready(function() {
+$(function () {
   $("#btnAdd").on("click", addGroup);
 
   table = $("#groupsTable").DataTable({
@@ -27,16 +27,16 @@ $(document).ready(function() {
       { data: "description" },
       { data: null, width: "60px", orderable: false }
     ],
-    drawCallback: function() {
+    drawCallback: function () {
       $('button[id^="deleteGroup_"]').on("click", deleteGroup);
     },
-    rowCallback: function(row, data) {
+    rowCallback: function (row, data) {
       $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
-        utils.datetime(data.date_added) +
+        utils.datetime(data.date_added, false) +
         "\nLast modified: " +
-        utils.datetime(data.date_modified) +
+        utils.datetime(data.date_modified, false) +
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
@@ -69,10 +69,10 @@ $(document).ready(function() {
       $("td:eq(3)", row).empty();
       if (data.id !== 0) {
         var button =
-          '<button class="btn btn-danger btn-xs" type="button" id="deleteGroup_' +
+          '<button type="button" class="btn btn-danger btn-xs" id="deleteGroup_' +
           data.id +
           '">' +
-          '<span class="glyphicon glyphicon-trash"></span>' +
+          '<span class="far fa-trash-alt"></span>' +
           "</button>";
         $("td:eq(3)", row).html(button);
       }
@@ -86,23 +86,16 @@ $(document).ready(function() {
       [10, 25, 50, 100, "All"]
     ],
     stateSave: true,
-    stateSaveCallback: function(settings, data) {
-      // Store current state in client's local storage area
-      localStorage.setItem("groups-table", JSON.stringify(data));
+    stateSaveCallback: function (settings, data) {
+      utils.stateSaveCallback("groups-table", data);
     },
-    stateLoadCallback: function() {
-      // Receive previous state from client's local storage area
-      var data = localStorage.getItem("groups-table");
+    stateLoadCallback: function () {
+      var data = utils.stateLoadCallback("groups-table");
       // Return if not available
       if (data === null) {
         return null;
       }
 
-      data = JSON.parse(data);
-      // Always start on the first page to show most recent queries
-      data.start = 0;
-      // Always start with empty search field
-      data.search.search = "";
       // Reset visibility of ID column
       data.columns[0].visible = false;
       // Apply loaded state to table
@@ -110,23 +103,32 @@ $(document).ready(function() {
     }
   });
 
-  table.on("order.dt", function() {
+  // Disable autocorrect in the search box
+  var input = document.querySelector("input[type=search]");
+  if (input !== null) {
+    input.setAttribute("autocomplete", "off");
+    input.setAttribute("autocorrect", "off");
+    input.setAttribute("autocapitalize", "off");
+    input.setAttribute("spellcheck", false);
+  }
+
+  table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
-      $("#resetButton").show();
+      $("#resetButton").removeClass("hidden");
     } else {
-      $("#resetButton").hide();
+      $("#resetButton").addClass("hidden");
     }
   });
-  $("#resetButton").on("click", function() {
+  $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
-    $("#resetButton").hide();
+    $("#resetButton").addClass("hidden");
   });
 });
 
 function addGroup() {
-  var name = $("#new_name").val();
-  var desc = $("#new_desc").val();
+  var name = utils.escapeHtml($("#new_name").val());
+  var desc = utils.escapeHtml($("#new_desc").val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding group...", name);
@@ -141,10 +143,10 @@ function addGroup() {
     method: "post",
     dataType: "json",
     data: { action: "add_group", name: name, desc: desc, token: token },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "glyphicon glyphicon-plus", "Successfully added group", name);
+        utils.showAlert("success", "fas fa-plus", "Successfully added group", name);
         $("#new_name").val("");
         $("#new_desc").val("");
         table.ajax.reload();
@@ -152,10 +154,10 @@ function addGroup() {
         utils.showAlert("error", "", "Error while adding new group", response.message);
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new group", jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -164,30 +166,30 @@ function editGroup() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var name = tr.find("#name_" + id).val();
+  var name = utils.escapeHtml(tr.find("#name_" + id).val());
   var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
-  var desc = tr.find("#desc_" + id).val();
+  var desc = utils.escapeHtml(tr.find("#desc_" + id).val());
 
   var done = "edited";
-  var not_done = "editing";
+  var notDone = "editing";
   switch (elem) {
     case "status_" + id:
       if (status === 0) {
         done = "disabled";
-        not_done = "disabling";
+        notDone = "disabling";
       } else if (status === 1) {
         done = "enabled";
-        not_done = "enabling";
+        notDone = "enabling";
       }
 
       break;
     case "name_" + id:
       done = "edited name of";
-      not_done = "editing name of";
+      notDone = "editing name of";
       break;
     case "desc_" + id:
       done = "edited description of";
-      not_done = "editing description of";
+      notDone = "editing description of";
       break;
     default:
       alert("bad element or invalid data-id!");
@@ -208,33 +210,28 @@ function editGroup() {
       status: status,
       token: token
     },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert(
-          "success",
-          "glyphicon glyphicon-pencil",
-          "Successfully " + done + " group",
-          name
-        );
+        utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " group", name);
       } else {
         utils.showAlert(
           "error",
           "",
-          "Error while " + not_done + " group with ID " + id,
+          "Error while " + notDone + " group with ID " + id,
           response.message
         );
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert(
         "error",
         "",
-        "Error while " + not_done + " group with ID " + id,
+        "Error while " + notDone + " group with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -242,7 +239,7 @@ function editGroup() {
 function deleteGroup() {
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var name = tr.find("#name_" + id).val();
+  var name = utils.escapeHtml(tr.find("#name_" + id).val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Deleting group...", name);
@@ -251,27 +248,19 @@ function deleteGroup() {
     method: "post",
     dataType: "json",
     data: { action: "delete_group", id: id, token: token },
-    success: function(response) {
+    success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert(
-          "success",
-          "glyphicon glyphicon-trash",
-          "Successfully deleted group ",
-          name
-        );
-        table
-          .row(tr)
-          .remove()
-          .draw(false);
+        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted group ", name);
+        table.row(tr).remove().draw(false);
       } else {
         utils.showAlert("error", "", "Error while deleting group with ID " + id, response.message);
       }
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting group with ID " + id, jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }

@@ -6,14 +6,43 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
+$piholeFTLConfFile = "/etc/pihole/pihole-FTL.conf";
+
+function piholeFTLConfig()
+{
+	static $piholeFTLConfig;
+	global $piholeFTLConfFile;
+
+	if(isset($piholeFTLConfig))
+	{
+		return $piholeFTLConfig;
+	}
+
+	if(is_readable($piholeFTLConfFile))
+	{
+		$piholeFTLConfig = parse_ini_file($piholeFTLConfFile);
+	}
+	else
+	{
+		$piholeFTLConfig = array();
+	}
+
+	return $piholeFTLConfig;
+}
+
 function connectFTL($address, $port=4711)
 {
 	if($address == "127.0.0.1")
 	{
+		$config = piholeFTLConfig();
 		// Read port
-		$portfile = file_get_contents("/var/run/pihole-FTL.port");
-		if(is_numeric($portfile))
-			$port = intval($portfile);
+		$portfileName = isset($config['PORTFILE']) ? $config['PORTFILE'] : '';
+		if ($portfileName != '')
+		{
+			$portfileContents = file_get_contents($portfileName);
+			if(is_numeric($portfileContents))
+				$port = intval($portfileContents);
+		}
 	}
 
 	// Open Internet socket connection
@@ -21,6 +50,7 @@ function connectFTL($address, $port=4711)
 
 	return $socket;
 }
+
 function sendRequestFTL($requestin)
 {
 	global $socket;

@@ -52,4 +52,209 @@ if(!function_exists('hash_equals')) {
    }
 }
 
+/**
+ * More safely execute a command with pihole shell script.
+ *
+ * For example,
+ *
+ *   pihole_execute("-h");
+ *
+ * would execute command
+ *
+ *   sudo pihole -h
+ *
+ * and returns output of that command as a string.
+ *
+ * @param $argument_string String of arguments to run pihole with.
+ * @param $error_on_failure If true, a warning is raised if command execution fails. Defaults to true.
+ */
+function pihole_execute($argument_string, $error_on_failure = true) {
+    $escaped = escapeshellcmd($argument_string);
+    $output = null;
+    $return_status = -1;
+    $command = "sudo pihole " . $escaped;
+    exec($command, $output, $return_status);
+    if($return_status !== 0)
+    {
+        trigger_error("Executing {$command} failed.", E_USER_WARNING);
+    }
+    return $output;
+}
+
+function echoCustomDNSEntries()
+{
+    $entries = getCustomDNSEntries();
+
+    $data = [];
+    foreach ($entries as $entry)
+        $data[] = [ $entry->domain, $entry->ip ];
+
+    return [ "data" => $data ];
+}
+
+function getCustomDNSEntries()
+{
+    global $customDNSFile;
+
+    $entries = [];
+
+    $handle = fopen($customDNSFile, "r");
+    if ($handle)
+    {
+        while (($line = fgets($handle)) !== false) {
+            $line = str_replace("\r","", $line);
+            $line = str_replace("\n","", $line);
+            $explodedLine = explode (" ", $line);
+
+            if (count($explodedLine) != 2)
+                continue;
+
+            $data = new \stdClass();
+            $data->ip = $explodedLine[0];
+            $data->domain = $explodedLine[1];
+            $entries[] = $data;
+        }
+
+        fclose($handle);
+    }
+
+    return $entries;
+}
+
+function addCustomDNSEntry($ip="", $domain="", $json_reply=true)
+{
+    function error($msg)
+    {
+        global $json_reply;
+        if($json_reply)
+            return errorJsonResponse($msg);
+        else {
+            echo $msg."<br>";
+            return false;
+        }
+    }
+
+    try
+    {
+        if(isset($_REQUEST['ip']))
+            $ip = trim($_REQUEST['ip']);
+
+        if(isset($_REQUEST['domain']))
+            $domain = trim($_REQUEST['domain']);
+
+        if (empty($ip))
+            return error("IP must be set");
+
+        $ipType = get_ip_type($ip);
+
+        if (!$ipType)
+            return error("IP must be valid");
+
+        if (empty($domain))
+            return error("Domain must be set");
+
+        if (!is_valid_domain_name($domain))
+            return error("Domain must be valid");
+
+        // Only check for duplicates if adding new records from the web UI (not through Teleporter)
+        if(isset($_REQUEST['ip']) || isset($_REQUEST['domain']))
+        {
+            $existingEntries = getCustomDNSEntries();
+            foreach ($existingEntries as $entry)
+                if ($entry->domain == $domain && get_ip_type($entry->ip) == $ipType)
+                    return error("This domain already has a custom DNS entry for an IPv" . $ipType);
+        }
+
+        // Add record
+        pihole_execute("-a addcustomdns ".$ip." ".$domain);
+
+        return $json_reply ? successJsonResponse() : true;
+    }
+    catch (\Exception $ex)
+    {
+        return error($ex->getMessage());
+    }
+}
+
+function deleteCustomDNSEntry()
+{
+    try
+    {
+        $ip = !empty($_REQUEST['ip']) ? $_REQUEST['ip']: "";
+        $domain = !empty($_REQUEST['domain']) ? $_REQUEST['domain']: "";
+
+        if (empty($ip))
+            return errorJsonResponse("IP must be set");
+
+        if (empty($domain))
+            return errorJsonResponse("Domain must be set");
+
+        $existingEntries = getCustomDNSEntries();
+
+        $found = false;
+        foreach ($existingEntries as $entry)
+            if ($entry->domain == $domain)
+                if ($entry->ip == $ip) {
+                    $found = true;
+                    break;
+                }
+
+        if (!$found)
+            return errorJsonResponse("This domain/ip association does not exist");
+
+        pihole_execute("-a removecustomdns ".$ip." ".$domain);
+
+        return successJsonResponse();
+    }
+    catch (\Exception $ex)
+    {
+        return errorJsonResponse($ex->getMessage());
+    }
+}
+
+function deleteAllCustomDNSEntries()
+{
+    if (isset($customDNSFile))
+    {
+        $handle = fopen($customDNSFile, "r");
+        if ($handle)
+        {
+            try
+            {
+                while (($line = fgets($handle)) !== false) {
+                    $line = str_replace("\r","", $line);
+                    $line = str_replace("\n","", $line);
+                    $explodedLine = explode (" ", $line);
+
+                    if (count($explodedLine) != 2)
+                        continue;
+
+                    $ip = $explodedLine[0];
+                    $domain = $explodedLine[1];
+
+                    pihole_execute("-a removecustomdns ".$ip." ".$domain);
+                }
+            }
+            catch (\Exception $ex)
+            {
+                return errorJsonResponse($ex->getMessage());
+            }
+
+            fclose($handle);
+        }
+    }
+
+    return successJsonResponse();
+}
+
+function successJsonResponse($message = "")
+{
+    return [ "success" => true, "message" => $message ];
+}
+
+function errorJsonResponse($message = "")
+{
+    return [ "success" => false, "message" => $message ];
+}
+
 ?>

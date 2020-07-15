@@ -28,7 +28,7 @@
     if(isset($_GET["logout"]))
     {
         session_unset();
-        setcookie('persistentlogin', '');
+        setcookie('persistentlogin', '', 1);
         header('Location: index.php');
         exit();
     }
@@ -52,7 +52,7 @@
             {
                 // Invalid cookie
                 $auth = false;
-                setcookie('persistentlogin', '');
+                setcookie('persistentlogin', '', 1);
             }
         }
         // Compare doubly hashes password input with saved hash

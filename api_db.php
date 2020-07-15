@@ -269,7 +269,7 @@ if (isset($_GET['topAds']) && $auth)
 	{
 		$limit = " AND timestamp <= :until";
 	}
-	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE (STATUS == 1 OR STATUS == 4)'.$limit.' GROUP by domain order by count(domain) desc limit 10');
+	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE (STATUS == 1 OR STATUS > 3)'.$limit.' GROUP by domain order by count(domain) desc limit 10');
 	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
 	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
@@ -401,7 +401,7 @@ if (isset($_GET['getGraphData']) && $auth)
 	$data = array_merge($data, $result);
 
 	// Count blocked queries in intervals
-	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status == 1 OR status == 4 OR status == 5)'.$limit.' GROUP by interval ORDER by interval');
+	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status == 1 OR status > 3)'.$limit.' GROUP by interval ORDER by interval');
 	$stmt->bindValue(":from", $from, SQLITE3_INTEGER);
 	$stmt->bindValue(":until", $until, SQLITE3_INTEGER);
 	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
@@ -411,6 +411,37 @@ if (isset($_GET['getGraphData']) && $auth)
 
 	$result = array('ads_over_time' => $addomains);
 	$data = array_merge($data, $result);
+}
+
+if (isset($_GET['status']))
+{
+	$results = $db->query('SELECT COUNT(*) FROM message;');
+
+	if(!is_bool($results))
+		$result = array('message_count' => $results->fetchArray()[0]);
+	else
+		$result = array();
+
+	$data = array_merge($data, $result);
+}
+
+if(isset($_GET["messages"]) && $auth)
+{
+	$messages = array();
+	$results = $db->query('SELECT * FROM message');
+
+	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
+	{
+		// Convert string to to UTF-8 encoding to ensure php-json can handle it.
+		// Furthermore, convert special characters to HTML entities to prevent XSS attacks.
+		foreach ($res as $key => $value) {
+			if (is_string($value))
+				$res[$key] = htmlspecialchars(utf8_encode($value));
+		}
+		array_push($messages, $res);
+	}
+
+	$data = array_merge($data, array('messages' => $messages));
 }
 
 if(isset($_GET["jsonForceObject"]))

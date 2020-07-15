@@ -6,8 +6,8 @@ Please read and understand the contribution guide before creating an issue or pu
 
 ## Etiquette
 
-- Our goal for Pi-hole is **stability before features**.  This means we focus on squashing critical bugs before adding new features.  Often, we can do both in tandem, but bugs will take priority over a new feature.
-- Pi-hole is open source and [powered by donations](https://pi-hole.net/donate/), and as such, we give our **free time** to build, maintain, and **provide user support** for this project.  It would be extremely unfair for us to suffer abuse or anger for our hard work, so please take a moment to consider that.
+- Our goal for Pi-hole is **stability before features**. This means we focus on squashing critical bugs before adding new features. Often, we can do both in tandem, but bugs will take priority over a new feature.
+- Pi-hole is open source and [powered by donations](https://pi-hole.net/donate/), and as such, we give our **free time** to build, maintain, and **provide user support** for this project. It would be extremely unfair for us to suffer abuse or anger for our hard work, so please take a moment to consider that.
 - Please be considerate towards the developers and other users when raising issues or presenting pull requests.
 - Respect our decision(s), and do not be upset or abusive if your submission is not used.
 
