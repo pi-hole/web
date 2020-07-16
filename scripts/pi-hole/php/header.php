@@ -454,12 +454,6 @@ if($auth) {
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
-                <!-- Local DNS Records -->
-                <li<?php if($scriptname === "dns_records.php"){ ?> class="active"<?php } ?>>
-                    <a href="dns_records.php">
-                        <i class="fa fa-address-book"></i> <span>Local DNS Records</span>
-                    </a>
-                </li>
                 <!-- Group Management -->
                 <li class="treeview<?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?> active<?php } ?>">
                   <a href="#">
