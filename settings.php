@@ -318,7 +318,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">Time FTL started:</th>
-                                                        <td><?php print_r(get_FTL_data("start")); ?></td>
+                                                        <td><?php print_r(get_FTL_data("lstart")); ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">User / Group:</th>
