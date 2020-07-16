@@ -306,9 +306,11 @@ function updateQueryTypesPie() {
     }
 
     Object.keys(iter).forEach(function (key) {
-      v.push(iter[key]);
-      c.push(THEME_COLORS[i++ % THEME_COLORS.length]);
-      k.push(key);
+      if (iter[key] > 0) {
+        v.push(iter[key]);
+        c.push(THEME_COLORS[i++ % THEME_COLORS.length]);
+        k.push(key);
+      }
     });
 
     // Build a single dataset with the data to be pushed

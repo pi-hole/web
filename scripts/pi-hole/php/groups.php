@@ -58,7 +58,8 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_group') {
     // Add new group
     try {
-        $names = str_getcsv(trim($_POST['name']), ' ');
+        $input = html_entity_decode(trim($_POST['name']));
+        $names = str_getcsv($input, ' ');
         $total = count($names);
         $added = 0;
         $stmt = $db->prepare('INSERT INTO "group" (name,description) VALUES (:name,:desc)');
@@ -96,6 +97,9 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'edit_group') {
     // Edit group identified by ID
     try {
+        $name = html_entity_decode($_POST['name']);
+        $desc = html_entity_decode($_POST['desc']);
+
         $stmt = $db->prepare('UPDATE "group" SET enabled=:enabled, name=:name, description=:desc WHERE id = :id');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -106,11 +110,10 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While binding enabled: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':name', $_POST['name'], SQLITE3_TEXT)) {
+        if (!$stmt->bindValue(':name', $name, SQLITE3_TEXT)) {
             throw new Exception('While binding name: ' . $db->lastErrorMsg());
         }
 
-        $desc = $_POST['desc'];
         if (strlen($desc) === 0) {
             // Store NULL in database for empty descriptions
             $desc = null;
@@ -263,7 +266,7 @@ if ($_POST['action'] == 'get_groups') {
                 throw new Exception('While binding ip: ' . $db->lastErrorMsg());
             }
 
-            $comment = $_POST['comment'];
+            $comment = html_entity_decode($_POST['comment']);
             if (strlen($comment) === 0) {
                     // Store NULL in database for empty comments
                     $comment = null;
@@ -293,7 +296,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
-        $comment = $_POST['comment'];
+        $comment = html_entity_decode($_POST['comment']);
         if (strlen($comment) === 0) {
                 // Store NULL in database for empty comments
                 $comment = null;
@@ -453,7 +456,7 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_domain') {
     // Add new domain
     try {
-        $domains = explode(' ', trim($_POST['domain']));
+        $domains = explode(' ', html_entity_decode(trim($_POST['domain'])));
         $before = intval($db->querySingle("SELECT COUNT(*) FROM domainlist;"));
         $total = count($domains);
         $added = 0;
@@ -474,7 +477,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While binding type: ' . $db->lastErrorMsg());
         }
 
-        $comment = $_POST['comment'];
+        $comment = html_entity_decode($_POST['comment']);
         if (strlen($comment) === 0) {
             // Store NULL in database for empty comments
             $comment = null;
@@ -573,7 +576,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While binding enabled: ' . $db->lastErrorMsg());
         }
 
-        $comment = $_POST['comment'];
+        $comment = html_entity_decode($_POST['comment']);
         if (strlen($comment) === 0) {
                 // Store NULL in database for empty comments
                 $comment = null;
@@ -742,7 +745,7 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_adlist') {
     // Add new adlist
     try {
-        $addresses = explode(' ', trim($_POST['address']));
+        $addresses = explode(' ', html_entity_decode(trim($_POST['address'])));
         $total = count($addresses);
         $added = 0;
 
@@ -751,7 +754,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
-        $comment = $_POST['comment'];
+        $comment = html_entity_decode($_POST['comment']);
         if (strlen($comment) === 0) {
             // Store NULL in database for empty comments
             $comment = null;
@@ -800,7 +803,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While binding enabled: ' . $db->lastErrorMsg());
         }
 
-        $comment = $_POST['comment'];
+        $comment = html_entity_decode($_POST['comment']);
         if (strlen($comment) === 0) {
                 // Store NULL in database for empty comments
                 $comment = null;

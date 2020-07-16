@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false, utils:false */
+/* global utils:false */
 
 var tableApi;
 
@@ -161,7 +161,7 @@ $(function () {
         width: "8%",
         render: function (data, type) {
           if (type === "display") {
-            return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
+            return utils.datetime(data);
           }
 
           return data;
@@ -172,7 +172,7 @@ $(function () {
         width: "8%",
         render: function (data, type) {
           if (type === "display") {
-            return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
+            return utils.datetime(data);
           }
 
           return data;

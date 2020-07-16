@@ -104,8 +104,9 @@ function showAlert(type, icon, title, message) {
   }
 }
 
-function datetime(date) {
-  return moment.unix(Math.floor(date)).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
+function datetime(date, html) {
+  var format = html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
+  return moment.unix(Math.floor(date)).format(format);
 }
 
 function disableAll() {
@@ -198,7 +199,14 @@ function stateLoadCallback(itemName) {
     return null;
   }
 
+  // Parse JSON string
   data = JSON.parse(data);
+
+  // Clear possible filtering settings
+  data.columns.forEach(function (value, index) {
+    data.columns[index].search.search = "";
+  });
+
   // Always start on the first page to show most recent queries
   data.start = 0;
   // Always start with empty search field

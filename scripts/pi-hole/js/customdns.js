@@ -5,6 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global utils:false */
+
 var table;
 var token = $("#token").text();
 
@@ -76,8 +78,8 @@ $(function () {
 });
 
 function addCustomDNS() {
-  var ip = $("#ip").val();
-  var domain = $("#domain").val();
+  var ip = utils.escapeHtml($("#ip").val());
+  var domain = utils.escapeHtml($("#domain").val());
 
   showAlert("info");
   $.ajax({
