@@ -976,15 +976,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     when enabling DNSSEC. A DNSSEC resolver test can be found
                                                     <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
                                                 </div>
-                                                <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
-                                                   queries, Pi-hole requests the DNSSEC records needed to validate
-                                                   the replies. If a domain fails validation or the upstream does not
-                                                   support DNSSEC, this setting can cause issues resolving domains.
-                                                   Use Google, Cloudflare, DNS.WATCH, Quad9, or another DNS
-                                                   server which supports DNSSEC when activating DNSSEC. Note that
-                                                   the size of your log might increase significantly
-                                                   when enabling DNSSEC. A DNSSEC resolver test can be found
-                                                   <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
                                                 <br>
                                                 <h4>Conditional forwarding</h4>
                                                 <p>If not configured as your DHCP server, Pi-hole  typically won't be able to
