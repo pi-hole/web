@@ -5,7 +5,10 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global utils:false */
+
 var table;
+var token = $("#token").text();
 
 function showAlert(type, message) {
   var alertElement = null;
@@ -36,51 +39,61 @@ function showAlert(type, message) {
   alertElement.delay(8000).fadeOut(2000);
 }
 
-$(document).ready(function() {
+$(function () {
   $("#btnAdd").on("click", addCustomDNS);
 
   table = $("#customDNSTable").DataTable({
-    ajax: "scripts/pi-hole/php/customdns.php?action=get",
-    columns: [{}, {}, { orderable: false, searchable: false }],
+    ajax: {
+      url: "scripts/pi-hole/php/customdns.php",
+      data: { action: "get", token: token },
+      type: "POST"
+    },
+    columns: [{}, { type: "ip-address" }, { orderable: false, searchable: false }],
     columnDefs: [
       {
         targets: 2,
-        render: function(data, type, row) {
+        render: function (data, type, row) {
           return (
-            '<button class="btn btn-danger btn-xs deleteCustomDNS" type="button" data-domain=\'' +
+            '<button type="button" class="btn btn-danger btn-xs deleteCustomDNS" data-domain=\'' +
             row[0] +
             "' data-ip='" +
             row[1] +
             "'>" +
-            '<span class="glyphicon glyphicon-trash"></span>' +
+            '<span class="far fa-trash-alt"></span>' +
             "</button>"
           );
         }
       }
     ],
-    drawCallback: function() {
+    drawCallback: function () {
       $(".deleteCustomDNS").on("click", deleteCustomDNS);
     }
   });
+  // Disable autocorrect in the search box
+  var input = document.querySelector("input[type=search]");
+  input.setAttribute("autocomplete", "off");
+  input.setAttribute("autocorrect", "off");
+  input.setAttribute("autocapitalize", "off");
+  input.setAttribute("spellcheck", false);
 });
 
 function addCustomDNS() {
-  var ip = $("#ip").val();
-  var domain = $("#domain").val();
+  var ip = utils.escapeHtml($("#ip").val());
+  var domain = utils.escapeHtml($("#domain").val());
 
   showAlert("info");
   $.ajax({
     url: "scripts/pi-hole/php/customdns.php",
     method: "post",
     dataType: "json",
-    data: { action: "add", ip: ip, domain: domain },
-    success: function(response) {
+    data: { action: "add", ip: ip, domain: domain, token: token },
+    success: function (response) {
       if (response.success) {
         showAlert("success");
         table.ajax.reload();
       } else showAlert("error", response.message);
     },
-    error: function() {
+    error: function () {
       showAlert("error", "Error while adding this custom DNS entry");
     }
   });
@@ -95,16 +108,16 @@ function deleteCustomDNS() {
     url: "scripts/pi-hole/php/customdns.php",
     method: "post",
     dataType: "json",
-    data: { action: "delete", domain: domain, ip: ip },
-    success: function(response) {
+    data: { action: "delete", domain: domain, ip: ip, token: token },
+    success: function (response) {
       if (response.success) {
         showAlert("success");
         table.ajax.reload();
       } else showAlert("error", response.message);
     },
-    error: function(jqXHR, exception) {
+    error: function (jqXHR, exception) {
       showAlert("error", "Error while deleting this custom DNS entry");
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }

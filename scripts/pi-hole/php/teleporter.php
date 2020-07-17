@@ -40,11 +40,11 @@ function archive_add_table($name, $table, $type=-1)
 
 	if($type > -1)
 	{
-		$querystr = "SELECT * FROM $table WHERE type = $type;";
+		$querystr = "SELECT * FROM \"$table\" WHERE type = $type;";
 	}
 	else
 	{
-		$querystr = "SELECT * FROM $table;";
+		$querystr = "SELECT * FROM \"$table\";";
 	}
 	$results = $db->query($querystr);
 
@@ -87,31 +87,58 @@ function archive_restore_table($file, $table, $flush=false)
 	// Flush table if requested, only flush each table once
 	if($flush && !in_array($table, $flushed_tables))
 	{
-		$db->exec("DELETE FROM ".$table);
+		$db->exec("DELETE FROM \"".$table."\"");
 		array_push($flushed_tables, $table);
 	}
 
-	// Prepare field name for domain/address depending on the table we restore to
+	// Prepare fields depending on the table we restore to
 	if($table === "adlist")
 	{
 		$sql  = "INSERT OR IGNORE INTO adlist";
 		$sql  .= " (id,address,enabled,date_added,comment)";
 		$sql  .= " VALUES (:id,:address,:enabled,:date_added,:comment);";
-		$field = "address";
 	}
 	elseif($table === "domain_audit")
 	{
 		$sql  = "INSERT OR IGNORE INTO domain_audit";
 		$sql  .= " (id,domain,date_added)";
 		$sql  .= " VALUES (:id,:domain,:date_added);";
-		$field = "domain";
 	}
 	elseif($table === "domainlist")
 	{
 		$sql  = "INSERT OR IGNORE INTO domainlist";
 		$sql  .= " (id,domain,enabled,date_added,comment,type)";
 		$sql  .= " VALUES (:id,:domain,:enabled,:date_added,:comment,:type);";
-		$field = "domain";
+	}
+	elseif($table === "group")
+	{
+		$sql  = "INSERT OR IGNORE INTO \"group\"";
+		$sql  .= " (id,name,date_added,description)";
+		$sql  .= " VALUES (:id,:name,:date_added,:description);";
+	}
+	elseif($table === "client")
+	{
+		$sql  = "INSERT OR IGNORE INTO client";
+		$sql  .= " (id,ip,date_added,comment)";
+		$sql  .= " VALUES (:id,:ip,:date_added,:comment);";
+	}
+	elseif($table === "domainlist_by_group")
+	{
+		$sql  = "INSERT OR IGNORE INTO domainlist_by_group";
+		$sql  .= " (domainlist_id,group_id)";
+		$sql  .= " VALUES (:domainlist_id,:group_id);";
+	}
+	elseif($table === "client_by_group")
+	{
+		$sql  = "INSERT OR IGNORE INTO client_by_group";
+		$sql  .= " (client_id,group_id)";
+		$sql  .= " VALUES (:client_id,:group_id);";
+	}
+	elseif($table === "adlist_by_group")
+	{
+		$sql  = "INSERT OR IGNORE INTO adlist_by_group";
+		$sql  .= " (adlist_id,group_id)";
+		$sql  .= " VALUES (:adlist_id,:group_id);";
 	}
 	else
 	{
@@ -146,26 +173,30 @@ function archive_restore_table($file, $table, $flush=false)
 	foreach($contents as $row)
 	{
 		// Limit max length for a domain entry to 253 chars
-		if(strlen($row[$field]) > 253)
+		if(isset($field) && strlen($row[$field]) > 253)
 			continue;
 
-		$stmt->bindValue(":id", $row["id"], SQLITE3_INTEGER);
-		$stmt->bindValue(":date_added", $row["date_added"], SQLITE3_INTEGER);
-		$stmt->bindValue(":".$field, $row[$field], SQLITE3_TEXT);
-
-		if($table !== "domain_audit")
-		{
-			$stmt->bindValue(":enabled", $row["enabled"], SQLITE3_INTEGER);
-			if(is_null($row["comment"]))
-				$type = SQLITE3_NULL;
-			else
-				$type = SQLITE3_TEXT;
-			$stmt->bindValue(":comment", $row["comment"], $type);
-		}
-
-		if($table === "domainlist")
-		{
-			$stmt->bindValue(":type", $row["type"], SQLITE3_INTEGER);
+		// Bind properties from JSON data
+		// Note that only defined above are actually used
+		// so even maliciously modified Teleporter files
+		// cannot be dangerous in any way
+		foreach($row as $key => $value) {
+			$type = gettype($value);
+			$sqltype=NULL;
+			switch($type) {
+				case "integer":
+					$sqltype = SQLITE3_INTEGER;
+				break;
+				case "string":
+					$sqltype = SQLITE3_TEXT;
+				break;
+				case "NULL":
+					$sqltype = SQLITE3_NULL;
+				break;
+				default:
+					$sqltype = "UNK";
+			}
+			$stmt->bindValue(":".$key, htmlentities($value), $sqltype);
 		}
 
 		if($stmt->execute() && $stmt->reset() && $stmt->clear())
@@ -248,10 +279,10 @@ function flush_table($table, $type=null)
 	if(!in_array($table, $flushed_tables))
 	{
 		if($type !== null) {
-			$sql = "DELETE FROM ".$table." WHERE type = ".$type;
+			$sql = "DELETE FROM \"".$table."\" WHERE type = ".$type;
 			array_push($flushed_tables, $table.$type);
 		} else {
-			$sql = "DELETE FROM ".$table;
+			$sql = "DELETE FROM \"".$table."\"";
 			array_push($flushed_tables, $table);
 		}
 		$db->exec($sql);
@@ -411,6 +442,43 @@ if(isset($_POST["action"]))
 				$importedsomething = true;
 			}
 
+			if(isset($_POST["group"]) && $file->getFilename() === "group.json")
+			{
+				$num = archive_restore_table($file, "group", $flushtables);
+				echo "Processed group (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["client"]) && $file->getFilename() === "client.json")
+			{
+				$num = archive_restore_table($file, "client", $flushtables);
+				echo "Processed client (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["client"]) && $file->getFilename() === "client_by_group.json")
+			{
+				$num = archive_restore_table($file, "client_by_group", $flushtables);
+				echo "Processed client group assignments (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if((isset($_POST["whitelist"]) || isset($_POST["regex_whitelist"]) ||
+				isset($_POST["blacklist"]) || isset($_POST["regex_blacklist"])) &&
+				$file->getFilename() === "domainlist_by_group.json")
+			{
+				$num = archive_restore_table($file, "domainlist_by_group", $flushtables);
+				echo "Processed black-/whitelist group assignments (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
+			if(isset($_POST["adlist"]) && $file->getFilename() === "adlist_by_group.json")
+			{
+				$num = archive_restore_table($file, "adlist_by_group", $flushtables);
+				echo "Processed adlist group assignments (".$num." entries)<br>\n";
+				$importedsomething = true;
+			}
+
 			if(isset($_POST["staticdhcpleases"]) && $file->getFilename() === "04-pihole-static-dhcp.conf")
 			{
 				if($flushtables) {
@@ -435,11 +503,31 @@ if(isset($_POST["action"]))
 					$importedsomething = true;
 				}
 			}
+
+			if(isset($_POST["localdnsrecords"]) && $file->getFilename() === "custom.list")
+			{
+				if($flushtables) {
+					// Defined in func.php included via auth.php
+					deleteAllCustomDNSEntries();
+				}
+				$num = 0;
+				$localdnsrecords = process_file(file_get_contents($file));
+				foreach($localdnsrecords as $record) {
+					list($ip,$domain) = explode(" ",$record);
+					if(addCustomDNSEntry($ip, $domain, false))
+						$num++;
+				}
+
+				echo "Processed local DNS records (".$num." entries)<br>\n";
+				if($num > 0) {
+					$importedsomething = true;
+				}
+			}
 		}
 
 		if($importedsomething)
 		{
-			exec("sudo pihole restartdns reload");
+			pihole_execute("restartdns reload");
 		}
 
 		unlink($fullfilename);
@@ -452,7 +540,8 @@ if(isset($_POST["action"]))
 }
 else
 {
-	$tarname = "pi-hole-teleporter_".date("Y-m-d_h-i-s").".tar";
+	$hostname = gethostname() ? gethostname()."-" : "";
+	$tarname = "pi-hole-".$hostname."teleporter_".date("Y-m-d_H-i-s").".tar";
 	$filename = $tarname.".gz";
 	$archive_file_name = sys_get_temp_dir() ."/". $tarname;
 	$archive = new PharData($archive_file_name);
@@ -467,8 +556,18 @@ else
 	archive_add_table("blacklist.regex.json", "domainlist", ListType::regex_blacklist);
 	archive_add_table("adlist.json", "adlist");
 	archive_add_table("domain_audit.json", "domain_audit");
+	archive_add_table("group.json", "group");
+	archive_add_table("client.json", "client");
+
+	// Group linking tables
+	archive_add_table("domainlist_by_group.json", "domainlist_by_group");
+	archive_add_table("adlist_by_group.json", "adlist_by_group");
+	archive_add_table("client_by_group.json", "client_by_group");
+
 	archive_add_file("/etc/pihole/","setupVars.conf");
 	archive_add_file("/etc/pihole/","dhcp.leases");
+	archive_add_file("/etc/pihole/","custom.list");
+	archive_add_file("/etc/pihole/","pihole-FTL.conf");
 	archive_add_file("/etc/","hosts","etc/");
 	archive_add_directory("/etc/dnsmasq.d/","dnsmasq.d/");
 

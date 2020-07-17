@@ -6,7 +6,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-require "scripts/pi-hole/php/database.php";
+require_once("scripts/pi-hole/php/database.php");
 
 function gravity_last_update($raw = false)
 {

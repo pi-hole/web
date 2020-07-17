@@ -1,42 +1,85 @@
+/*
+Generated with https://google-webfonts-helper.herokuapp.com/fonts/source-sans-pro
+(Modern Browsers option) and added `font-display: swap;` after that.
+
+The `font-weight`s are taken from the official AdminLTE 2 Google Font docs:
+
+https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic
+*/
+
+/* source-sans-pro-300 - latin */
 @font-face {
-  font-family: 'Source Sans Pro';
+  font-family: "Source Sans Pro";
   font-style: normal;
   font-weight: 300;
-  src: local('Source Sans Pro Light'), local('SourceSansPro-Light'), url(SourceSansPro-Light.ttf) format('truetype');
+  font-display: swap;
+  src: local("Source Sans Pro Light"), local("SourceSansPro-Light"),
+       url("source-sans-pro-v13-latin-300.woff2") format("woff2"), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url("source-sans-pro-v13-latin-300.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
+
+/* source-sans-pro-300italic - latin */
 @font-face {
-  font-family: 'Source Sans Pro';
+  font-family: "Source Sans Pro";
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: local("Source Sans Pro Light Italic"), local("SourceSansPro-LightItalic"),
+       url("source-sans-pro-v13-latin-300italic.woff2") format("woff2"), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url("source-sans-pro-v13-latin-300italic.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* source-sans-pro-regular - latin */
+@font-face {
+  font-family: "Source Sans Pro";
   font-style: normal;
   font-weight: 400;
-  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(SourceSansPro-Regular.ttf) format('truetype');
+  font-display: swap;
+  src: local("Source Sans Pro Regular"), local("SourceSansPro-Regular"),
+       url("source-sans-pro-v13-latin-regular.woff2") format("woff2"), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url("source-sans-pro-v13-latin-regular.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
+
+/* source-sans-pro-italic - latin */
 @font-face {
-  font-family: 'Source Sans Pro';
+  font-family: "Source Sans Pro";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Source Sans Pro Italic"), local("SourceSansPro-Italic"),
+       url("source-sans-pro-v13-latin-italic.woff2") format("woff2"), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url("source-sans-pro-v13-latin-italic.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* source-sans-pro-600 - latin */
+@font-face {
+  font-family: "Source Sans Pro";
   font-style: normal;
   font-weight: 600;
-  src: local('Source Sans Pro Semibold'), local('SourceSansPro-Semibold'), url(SourceSansPro-Semibold.ttf) format('truetype');
+  font-display: swap;
+  src: local("Source Sans Pro SemiBold"), local("SourceSansPro-SemiBold"),
+       url("source-sans-pro-v13-latin-600.woff2") format("woff2"), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url("source-sans-pro-v13-latin-600.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
+
+/* source-sans-pro-600italic - latin */
 @font-face {
-  font-family: 'Source Sans Pro';
+  font-family: "Source Sans Pro";
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: local("Source Sans Pro SemiBold Italic"), local("SourceSansPro-SemiBoldItalic"),
+       url("source-sans-pro-v13-latin-600italic.woff2") format("woff2"), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url("source-sans-pro-v13-latin-600italic.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* source-sans-pro-700 - latin */
+@font-face {
+  font-family: "Source Sans Pro";
   font-style: normal;
   font-weight: 700;
-  src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(SourceSansPro-Bold.ttf) format('truetype');
-}
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: italic;
-  font-weight: 300;
-  src: local('Source Sans Pro Light Italic'), local('SourceSansPro-LightIt'), url(SourceSansPro-LightItalic.ttf) format('truetype');
-}
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: italic;
-  font-weight: 400;
-  src: local('Source Sans Pro Italic'), local('SourceSansPro-It'), url(SourceSansPro-Italic.ttf) format('truetype');
-}
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: italic;
-  font-weight: 600;
-  src: local('Source Sans Pro Semibold Italic'), local('SourceSansPro-SemiboldIt'), url(SourceSansPro-SemiboldItalic.ttf) format('truetype');
+  font-display: swap;
+  src: local("Source Sans Pro Bold"), local("SourceSansPro-Bold"),
+       url("source-sans-pro-v13-latin-700.woff2") format("woff2"), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url("source-sans-pro-v13-latin-700.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }

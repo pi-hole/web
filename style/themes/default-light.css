@@ -1,0 +1,219 @@
+/* Pi-hole: A black hole for Internet advertisements
+*  (c) 2020 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license. */
+
+.main-header .navbar {
+  background-color: #3c8dbc;
+}
+.main-header .navbar .nav > li > a,
+.main-header .navbar .nav > li > .navbar-text {
+  color: #fff;
+}
+.main-header .navbar .nav > li > a:hover,
+.main-header .navbar .nav > li > a:active,
+.main-header .navbar .nav > li > a:focus,
+.main-header .navbar .nav .open > a,
+.main-header .navbar .nav .open > a:hover,
+.main-header .navbar .nav .open > a:focus {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #f6f6f6;
+}
+.main-header .navbar .sidebar-toggle {
+  color: #fff;
+}
+.main-header .navbar .sidebar-toggle:hover {
+  color: #f6f6f6;
+  background-color: rgba(0, 0, 0, 0.1);
+  background-color: #367fa9;
+}
+@media (max-width: 767px) {
+  .main-header .navbar .dropdown-menu li.divider {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  .main-header .navbar .dropdown-menu li a {
+    color: #fff;
+  }
+  .main-header .navbar .dropdown-menu li a:hover {
+    background-color: #367fa9;
+  }
+}
+.main-header .logo {
+  background-color: #367fa9;
+  color: #fff;
+  border-bottom: 0 solid transparent;
+}
+.main-header .logo:hover {
+  background-color: #357ca5;
+}
+.main-header li.user-header {
+  background-color: #3c8dbc;
+}
+.content-header {
+  background-color: transparent;
+}
+.wrapper,
+.main-sidebar,
+.left-side {
+  background-color: #222d32;
+}
+.user-panel > .info,
+.user-panel > .info > a {
+  color: #fff;
+}
+.sidebar-menu > li.header {
+  color: #4b646f;
+  background-color: #1a2226;
+}
+.sidebar-menu > li > a {
+  border-left: 3px solid transparent;
+}
+.sidebar-menu > li:hover > a,
+.sidebar-menu > li.active > a {
+  color: #fff;
+  background-color: #1e282c;
+  border-left-color: #3c8dbc;
+}
+.sidebar-menu > li > .treeview-menu {
+  margin: 0 1px;
+  background-color: #2c3b41;
+}
+.sidebar a {
+  color: #b8c7ce;
+}
+.sidebar a:hover {
+  text-decoration: none;
+}
+.treeview-menu > li > a {
+  color: #8aa4af;
+}
+.treeview-menu > li.active > a,
+.treeview-menu > li > a:hover {
+  color: #fff;
+}
+.sidebar-form {
+  border-radius: 3px;
+  border: 1px solid #374850;
+  margin: 10px;
+}
+.sidebar-form input[type="text"],
+.sidebar-form .btn {
+  box-shadow: none;
+  background-color: #374850;
+  border: 1px solid transparent;
+  height: 35px;
+  transition: all 0.3s ease-in-out;
+}
+.sidebar-form input[type="text"] {
+  color: #666;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 2px;
+}
+.sidebar-form input[type="text"]:focus,
+.sidebar-form input[type="text"]:focus + .input-group-btn .btn {
+  background-color: #fff;
+  color: #666;
+}
+.sidebar-form input[type="text"]:focus + .input-group-btn .btn {
+  border-left-color: #fff;
+}
+.sidebar-form .btn {
+  color: #999;
+  border-top-left-radius: 0;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 0;
+}
+.layout-top-nav .main-header > .logo {
+  background-color: #3c8dbc;
+  color: #fff;
+  border-bottom: 0 solid transparent;
+}
+.layout-top-nav .main-header > .logo:hover {
+  background-color: #3b8ab8;
+}
+
+.not-used {
+  background-color: #eee;
+}
+.not-used:hover {
+  background-color: #c5c5c5;
+}
+.used {
+  background-color: #fff;
+}
+.used:hover {
+  background-color: #ddd;
+}
+
+.graphs-grid {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.graphs-ticks {
+  color: #000;
+}
+.queries-permitted {
+  background-color: #00a65a;
+}
+.queries-blocked {
+  background-color: #999;
+}
+.progress {
+  background-color: #eee;
+}
+
+/* Used in the Query Log table */
+.text-black {
+  color: #000 !important;
+}
+
+.text-green-light {
+  color: #7fff00 !important;
+}
+
+.text-green {
+  color: #080 !important;
+}
+
+.text-orange {
+  color: #ffa500 !important;
+}
+
+.text-red {
+  color: #f00 !important;
+}
+
+.text-vivid-blue {
+  color: #36f !important;
+}
+
+td.highlight {
+  background-color: rgba(255, 204, 0, 0.333);
+}
+
+.network-never {
+  background-color: #ffbfaa;
+}
+.network-recent {
+  background-color: #e7ffde;
+}
+.network-old {
+  background-color: #ffffdf;
+}
+.network-older {
+  background-color: #ffedd9;
+}
+.network-gradient {
+  background-image: linear-gradient(to right, #e7ffde 0%, #ffffdf 100%);
+}
+
+.icheckbox_minimal-blue {
+  margin-right: 10px;
+}
+.iradio_minimal-blue {
+  margin-right: 8px;
+}

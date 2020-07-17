@@ -5,19 +5,21 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false */
+/* global utils:false */
 
 var tableApi;
 
-var APIstring = "api_db.php?network";
+var API_STRING = "api_db.php?network";
 
 // How many IPs do we show at most per device?
 var MAXIPDISPLAY = 3;
 
+var DAY_IN_SECONDS = 24 * 60 * 60;
+
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
-  } else if (xhr.responseText.indexOf("Connection refused") >= 0) {
+  } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
     alert("An error occured while loading the data: Connection refused. Is FTL running?");
   } else {
     alert("An unknown error occured while loading the data.\n" + xhr.responseText);
@@ -30,7 +32,7 @@ function handleAjaxError(xhr, textStatus) {
 
 function getTimestamp() {
   if (!Date.now) {
-    Date.now = function() {
+    Date.now = function () {
       return new Date().getTime();
     };
   }
@@ -49,43 +51,54 @@ function rgbToHex(values) {
 
 function mixColors(ratio, rgb1, rgb2) {
   return [
-    (1.0 - ratio) * rgb1[0] + ratio * rgb2[0],
-    (1.0 - ratio) * rgb1[1] + ratio * rgb2[1],
-    (1.0 - ratio) * rgb1[2] + ratio * rgb2[2]
+    (1 - ratio) * rgb1[0] + ratio * rgb2[0],
+    (1 - ratio) * rgb1[1] + ratio * rgb2[1],
+    (1 - ratio) * rgb1[2] + ratio * rgb2[2]
   ];
 }
 
-$(document).ready(function() {
+function parseColor(input) {
+  var match = input.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+
+  if (match) {
+    return [match[1], match[2], match[3]];
+  }
+}
+
+$(function () {
   tableApi = $("#network-entries").DataTable({
-    rowCallback: function(row, data) {
-      var color,
-        mark,
-        lastQuery = parseInt(data.lastQuery);
+    rowCallback: function (row, data) {
+      var color;
+      var iconClasses;
+      var lastQuery = parseInt(data.lastQuery, 10);
+      var diff = getTimestamp() - lastQuery;
+      var networkRecent = $(".network-recent").css("background-color");
+      var networkOld = $(".network-old").css("background-color");
+      var networkOlder = $(".network-older").css("background-color");
+      var networkNever = $(".network-never").css("background-color");
+
       if (lastQuery > 0) {
-        var diff = getTimestamp() - lastQuery;
-        if (diff <= 86400) {
-          // Last query came in within the last 24 hours (24*60*60 = 86400)
+        if (diff <= DAY_IN_SECONDS) {
+          // Last query came in within the last 24 hours
           // Color: light-green to light-yellow
-          var ratio = Number(diff) / 86400;
-          var lightgreen = [0xe7, 0xff, 0xde];
-          var lightyellow = [0xff, 0xff, 0xdf];
-          color = rgbToHex(mixColors(ratio, lightgreen, lightyellow));
-          mark = "&#x2714;";
+          var ratio = Number(diff) / DAY_IN_SECONDS;
+          color = rgbToHex(mixColors(ratio, parseColor(networkRecent), parseColor(networkOld)));
+          iconClasses = "fas fa-check";
         } else {
           // Last query was longer than 24 hours ago
           // Color: light-orange
-          color = "#ffedd9";
-          mark = "<strong>?</strong>";
+          color = networkOlder;
+          iconClasses = "fas fa-question";
         }
       } else {
         // This client has never sent a query to Pi-hole, color light-red
-        color = "#ffbfaa";
-        mark = "&#x2718;";
+        color = networkNever;
+        iconClasses = "fas fa-check";
       }
 
       // Set determined background color
       $(row).css("background-color", color);
-      $("td:eq(7)", row).html(mark);
+      $("td:eq(7)", row).html('<i class="' + iconClasses + '"></i>');
 
       // Insert "Never" into Last Query field when we have
       // never seen a query from this device
@@ -115,7 +128,7 @@ $(document).ready(function() {
       }
 
       $("td:eq(0)", row).html(ips.join("<br>"));
-      $("td:eq(0)", row).hover(function() {
+      $("td:eq(0)", row).hover(function () {
         this.title = data.ip.join("\n");
       });
 
@@ -134,7 +147,7 @@ $(document).ready(function() {
       "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-    ajax: { url: APIstring, error: handleAjaxError, dataSrc: "network" },
+    ajax: { url: API_STRING, error: handleAjaxError, dataSrc: "network" },
     autoWidth: false,
     processing: true,
     order: [[5, "desc"]],
@@ -146,9 +159,9 @@ $(document).ready(function() {
       {
         data: "firstSeen",
         width: "8%",
-        render: function(data, type) {
+        render: function (data, type) {
           if (type === "display") {
-            return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
+            return utils.datetime(data);
           }
 
           return data;
@@ -157,9 +170,9 @@ $(document).ready(function() {
       {
         data: "lastQuery",
         width: "8%",
-        render: function(data, type) {
+        render: function (data, type) {
           if (type === "display") {
-            return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
+            return utils.datetime(data);
           }
 
           return data;
@@ -173,25 +186,11 @@ $(document).ready(function() {
       [10, 25, 50, 100, "All"]
     ],
     stateSave: true,
-    stateSaveCallback: function(settings, data) {
-      // Store current state in client's local storage area
-      localStorage.setItem("network_table", JSON.stringify(data));
+    stateSaveCallback: function (settings, data) {
+      utils.stateSaveCallback("network_table", data);
     },
-    stateLoadCallback: function() {
-      // Receive previous state from client's local storage area
-      var data = localStorage.getItem("network_table");
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
-
-      data = JSON.parse(data);
-      // Always start on the first page
-      data.start = 0;
-      // Always start with empty search field
-      data.search.search = "";
-      // Apply loaded state to table
-      return data;
+    stateLoadCallback: function () {
+      return utils.stateLoadCallback("network_table");
     },
     columnDefs: [
       {
@@ -201,4 +200,10 @@ $(document).ready(function() {
       }
     ]
   });
+  // Disable autocorrect in the search box
+  var input = document.querySelector("input[type=search]");
+  input.setAttribute("autocomplete", "off");
+  input.setAttribute("autocorrect", "off");
+  input.setAttribute("autocapitalize", "off");
+  input.setAttribute("spellcheck", false);
 });
