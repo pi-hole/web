@@ -674,7 +674,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                             $type = 4;
                                         }
 
-                                        $host = $line[3];
+                                        $host = htmlentities($line[3]);
                                         if ($host == "*") {
                                             $host = "<i>unknown</i>";
                                         }
@@ -715,7 +715,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                             title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>">
                                                             <td id="MAC"><?php echo $lease["hwaddr"]; ?></td>
                                                             <td id="IP" data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
-                                                            <td id="HOST"><?php echo htmlentities($lease["host"]); ?></td>
+                                                            <td id="HOST"><?php echo $lease["host"]; ?></td>
                                                             <td>
                                                                 <button type="button" id="button" class="btn btn-warning btn-xs" data-static="alert">
                                                                     <span class="fas fas fa-file-import"></span>
