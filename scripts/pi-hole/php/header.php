@@ -293,7 +293,7 @@ if($auth) {
                                 <!-- PayPal -->
                                 <div class="text-center">
                                     <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
-                                        <img src="img/donate.gif" alt="Donate" width="147" height="47">
+                                        <img src="img/donate.png" alt="Donate" width="147" height="47">
                                     </a>
                                 </div>
                             </li>
