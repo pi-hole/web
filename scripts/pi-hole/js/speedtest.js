@@ -45,6 +45,7 @@ var speedChart = new Chart(speedChartctx, {
             data: downloadspeed,
             backgroundColor: 'rgba(75, 192, 192, 0.1)',
             borderColor: 'rgba(75, 192, 192, 1)',
+            fillColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 1,
             cubicInterpolationMode: 'monotone',
             yAxisID: "y-axis-1"
@@ -54,6 +55,7 @@ var speedChart = new Chart(speedChartctx, {
                 data: uploadspeed,
                 backgroundColor: 'rgba(255, 99, 132, 0.1)',
                 borderColor: 'rgba(255,99,132,1)',
+                fillColor: 'rgba(255,99,132,1)',
                 borderWidth: 1,
                 yAxisID: "y-axis-1"
             },
@@ -62,6 +64,7 @@ var speedChart = new Chart(speedChartctx, {
                 data: serverPing,
                 backgroundColor: 'rgba(69,237,33,0.0)',
                 borderColor: 'rgba(69,237,33,1)',
+                fillColor: 'rgba(69,237,33,1)',
                 borderWidth: 1,
                 borderDash: [5, 5],
                 yAxisID: "y-axis-2"
