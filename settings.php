@@ -1013,10 +1013,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                    The local domain name must match the domain name specified
                                                    in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
                                                 <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label><input type="checkbox" name="conditionalForwarding" value="conditionalForwarding"
-                                                                      <?php if(isset($conditionalForwarding) && ($conditionalForwarding == true)){ ?>checked<?php }
-                                                            ?>>Use Conditional Forwarding</label>
                                                     <div>
                                                         <input type="checkbox" name="rev_server" id="rev_server" value="rev_server" <?php if(isset($rev_server) && ($rev_server == true)){ ?>checked<?php } ?>>
                                                         <label for="rev_server"><strong>Use Conditional Forwarding</strong></label>
@@ -1412,6 +1408,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     <div class="box-footer clearfix">
                                         <button type="submit" class="btn btn-default" name="action" value="in">Restore</button>
                                     </div>
+                                </div>
                                 </div>
                             </form>
                         <?php } else { ?>
