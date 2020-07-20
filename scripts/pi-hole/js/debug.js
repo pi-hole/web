@@ -5,31 +5,6 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global ActiveXObject: false */
-
-// Credit: http://stackoverflow.com/a/10642418/2087442
-function httpGet(ta, theUrl) {
-  var xmlhttp;
-  if (window.XMLHttpRequest) {
-    // code for IE7+
-    xmlhttp = new XMLHttpRequest();
-  } else {
-    // code for IE6, IE5
-    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-
-  xmlhttp.onreadystatechange = function() {
-    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-      ta.show();
-      ta.empty();
-      ta.append(xmlhttp.responseText);
-    }
-  };
-
-  xmlhttp.open("GET", theUrl, false);
-  xmlhttp.send();
-}
-
 function eventsource() {
   var ta = $("#output");
   var upload = $("#upload");
@@ -42,10 +17,19 @@ function eventsource() {
 
   // IE does not support EventSource - load whole content at once
   if (typeof EventSource !== "function") {
-    httpGet(ta, "scripts/pi-hole/php/debug.php?IE&token=" + token + "&" + checked);
+    $.ajax({
+      method: "GET",
+      url: "scripts/pi-hole/php/debug.php?IE&token=" + token + "&" + checked,
+      async: false
+    }).done(function (data) {
+      ta.show();
+      ta.empty();
+      ta.append(data);
+    });
     return;
   }
 
+  // eslint-disable-next-line compat/compat
   var source = new EventSource("scripts/pi-hole/php/debug.php?&token=" + token + "&" + checked);
 
   // Reset and show field
@@ -54,7 +38,7 @@ function eventsource() {
 
   source.addEventListener(
     "message",
-    function(e) {
+    function (e) {
       ta.append(e.data);
     },
     false
@@ -63,15 +47,15 @@ function eventsource() {
   // Will be called when script has finished
   source.addEventListener(
     "error",
-    function() {
+    function () {
       source.close();
     },
     false
   );
 }
 
-$("#debugBtn").on("click", function() {
-  $("#debugBtn").attr("disabled", true);
-  $("#upload").attr("disabled", true);
+$("#debugBtn").on("click", function () {
+  $("#debugBtn").prop("disabled", true);
+  $("#upload").prop("disabled", true);
   eventsource();
 });

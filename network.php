@@ -6,15 +6,13 @@
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
-
-// Generate CSRF token
-if(empty($_SESSION['token'])) {
-    $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
-}
-$token = $_SESSION['token'];
 ?>
-<!-- Send PHP info to JS -->
-<div id="token" hidden><?php echo $token ?></div>
+
+<!-- Sourceing CSS colors from stylesheet to be used in JS code -->
+<span class="queries-permitted"></span>
+<span class="queries-blocked"></span>
+<span class="graphs-grid"></span>
+<span class="graphs-ticks"></span>
 
 <div class="row">
     <div class="col-md-12">
@@ -24,7 +22,7 @@ $token = $_SESSION['token'];
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <table id="network-entries" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+            <table id="network-entries" class="table table-striped table-bordered" width="100%">
                 <thead>
                     <tr>
                         <th>IP address</th>
@@ -53,11 +51,11 @@ $token = $_SESSION['token'];
             <label>Background color: Last query from this device seen ...</label>
         <table width="100%">
           <tr class="text-center">
-            <td style="background: #e7ffde;" width="15%">just now</td>
-            <td style="background-image: linear-gradient(to right, #e7ffde 0%, #ffffdf 100%)" width="30%"><center>... to ...</center></td>
-            <td style="background: #ffffdf;" width="15%">24 hours ago</td>
-            <td style="background: #ffedd9;" width="20%">&gt; 24 hours ago</td>
-            <td style="background: #ffbfaa;" width="20%">Device does not use Pi-hole</td>
+            <td class="network-recent" width="15%">just now</td>
+            <td class="network-gradient" width="30%">... to ...</td>
+            <td class="network-old" width="15%">24 hours ago</td>
+            <td class="network-older" width="20%">&gt; 24 hours ago</td>
+            <td class="network-never" width="20%">Device does not use Pi-hole</td>
           </tr>
         </table>
         </div>
@@ -68,10 +66,10 @@ $token = $_SESSION['token'];
 </div>
 <!-- /.row -->
 
+<script src="scripts/pi-hole/js/utils.js"></script>
+<script src="scripts/pi-hole/js/ip-address-sorting.js"></script>
+<script src="scripts/pi-hole/js/network.js"></script>
+
 <?php
     require "scripts/pi-hole/php/footer.php";
 ?>
-
-<script src="scripts/vendor/moment.min.js"></script>
-<script src="scripts/pi-hole/js/ip-address-sorting.js"></script>
-<script src="scripts/pi-hole/js/network.js"></script>

@@ -8,15 +8,9 @@
 /* global moment:false */
 
 var start__ = moment().subtract(6, "days");
-var from =
-  moment(start__)
-    .utc()
-    .valueOf() / 1000;
+var from = moment(start__).utc().valueOf() / 1000;
 var end__ = moment();
-var until =
-  moment(end__)
-    .utc()
-    .valueOf() / 1000;
+var until = moment(end__).utc().valueOf() / 1000;
 var instantquery = false;
 var daterange;
 
@@ -29,19 +23,19 @@ var GETDict = {};
 window.location.search
   .substr(1)
   .split("&")
-  .forEach(function(item) {
+  .forEach(function (item) {
     GETDict[item.split("=")[0]] = item.split("=")[1];
   });
 
 if ("from" in GETDict && "until" in GETDict) {
-  from = parseInt(GETDict.from);
-  until = parseInt(GETDict.until);
+  from = parseInt(GETDict.from, 10);
+  until = parseInt(GETDict.until, 10);
   start__ = moment(1000 * from);
   end__ = moment(1000 * until);
   instantquery = true;
 }
 
-$(function() {
+$(function () {
   daterange = $("#querytime").daterangepicker(
     {
       timePicker: true,
@@ -52,23 +46,15 @@ $(function() {
       ranges: {
         Today: [moment().startOf("day"), moment()],
         Yesterday: [
-          moment()
-            .subtract(1, "days")
-            .startOf("day"),
-          moment()
-            .subtract(1, "days")
-            .endOf("day")
+          moment().subtract(1, "days").startOf("day"),
+          moment().subtract(1, "days").endOf("day")
         ],
         "Last 7 Days": [moment().subtract(6, "days"), moment()],
         "Last 30 Days": [moment().subtract(29, "days"), moment()],
         "This Month": [moment().startOf("month"), moment()],
         "Last Month": [
-          moment()
-            .subtract(1, "month")
-            .startOf("month"),
-          moment()
-            .subtract(1, "month")
-            .endOf("month")
+          moment().subtract(1, "month").startOf("month"),
+          moment().subtract(1, "month").endOf("month")
         ],
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()]
@@ -77,15 +63,9 @@ $(function() {
       showDropdowns: true,
       autoUpdateInput: false
     },
-    function(startt, endt) {
-      from =
-        moment(startt)
-          .utc()
-          .valueOf() / 1000;
-      until =
-        moment(endt)
-          .utc()
-          .valueOf() / 1000;
+    function (startt, endt) {
+      from = moment(startt).utc().valueOf() / 1000;
+      until = moment(endt).utc().valueOf() / 1000;
     }
   );
 });
@@ -112,39 +92,42 @@ function add(domain, list) {
   alSuccess.hide();
   alFailure.hide();
   $.ajax({
-    url: "scripts/pi-hole/php/add.php",
+    url: "scripts/pi-hole/php/groups.php",
     method: "post",
-    data: { domain: domain, list: list, token: token },
-    success: function(response) {
-      if (
-        response.indexOf("not a valid argument") >= 0 ||
-        response.indexOf("is not a valid domain") >= 0
-      ) {
+    data: {
+      domain: domain,
+      list: list,
+      token: token,
+      action: "add_domain",
+      comment: "Added from Long-Term-Data Query Log"
+    },
+    success: function (response) {
+      if (!response.success) {
         alFailure.show();
-        err.html(response);
-        alFailure.delay(4000).fadeOut(2000, function() {
+        err.html(response.message);
+        alFailure.delay(4000).fadeOut(2000, function () {
           alFailure.hide();
         });
       } else {
         alSuccess.show();
-        alSuccess.delay(1000).fadeOut(2000, function() {
+        alSuccess.delay(1000).fadeOut(2000, function () {
           alSuccess.hide();
         });
       }
 
-      alInfo.delay(1000).fadeOut(2000, function() {
+      alInfo.delay(1000).fadeOut(2000, function () {
         alInfo.hide();
         alList.html("");
         alDomain.html("");
       });
     },
-    error: function() {
+    error: function () {
       alFailure.show();
       err.html("");
-      alFailure.delay(1000).fadeOut(2000, function() {
+      alFailure.delay(1000).fadeOut(2000, function () {
         alFailure.hide();
       });
-      alInfo.delay(1000).fadeOut(2000, function() {
+      alInfo.delay(1000).fadeOut(2000, function () {
         alInfo.hide();
         alList.html("");
         alDomain.html("");
@@ -156,10 +139,14 @@ function add(domain, list) {
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
-  } else if (xhr.responseText.indexOf("Connection refused") >= 0) {
+  } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
     alert("An error occurred while loading the data: Connection refused. Is FTL running?");
   } else {
-    alert("An unknown error occurred while loading the data.\n" + xhr.responseText);
+    alert(
+      "An unknown error occurred while loading the data.\n" +
+        xhr.responseText +
+        "\nCheck the server's log files (/var/log/lighttpd/error.log when you're using the default Pi-hole web server) for details. You may need to increase the memory available for Pi-hole in case you requested a lot of data."
+    );
   }
 
   $("#all-queries_processing").hide();
@@ -210,18 +197,18 @@ function getQueryTypes() {
   return queryType.join(",");
 }
 
-var reloadCallback = function() {
+var reloadCallback = function () {
   timeoutWarning.hide();
   statistics = [0, 0, 0, 0];
   var data = tableApi.rows().data();
   for (var i = 0; i < data.length; i++) {
-    statistics[0]++;
-    if (data[i][4] === 1) {
-      statistics[2]++;
+    statistics[0]++; // TOTAL query
+    if (data[i][4] === 1 || (data[i][4] > 4 && data[i][4] !== 10)) {
+      statistics[2]++; // EXACT blocked
     } else if (data[i][4] === 3) {
-      statistics[1]++;
-    } else if (data[i][4] === 4) {
-      statistics[3]++;
+      statistics[1]++; // CACHE query
+    } else if (data[i][4] === 4 || data[i][4] === 10) {
+      statistics[3]++; // REGEX blocked
     }
   }
 
@@ -229,16 +216,12 @@ var reloadCallback = function() {
   $("h3#ads_blocked_exact").text(statistics[2].toLocaleString());
   $("h3#ads_wildcard_blocked").text(statistics[3].toLocaleString());
 
-  var percent = 0.0;
+  var percent = 0;
   if (statistics[2] + statistics[3] > 0) {
-    percent = (100.0 * (statistics[2] + statistics[3])) / statistics[0];
+    percent = (100 * (statistics[2] + statistics[3])) / statistics[0];
   }
 
-  $("h3#ads_percentage_today").text(
-    parseFloat(percent)
-      .toFixed(1)
-      .toLocaleString() + " %"
-  );
+  $("h3#ads_percentage_today").text(parseFloat(percent).toFixed(1).toLocaleString() + " %");
 };
 
 function refreshTableData() {
@@ -254,7 +237,7 @@ function refreshTableData() {
   tableApi.ajax.url(APIstring).load(reloadCallback);
 }
 
-$(document).ready(function() {
+$(function () {
   var APIstring;
 
   if (instantquery) {
@@ -271,7 +254,7 @@ $(document).ready(function() {
   }
 
   tableApi = $("#all-queries").DataTable({
-    rowCallback: function(row, data) {
+    rowCallback: function (row, data) {
       var fieldtext, buttontext, color;
       switch (data[4]) {
         case 1:
@@ -363,9 +346,9 @@ $(document).ready(function() {
     ajax: {
       url: APIstring,
       error: handleAjaxError,
-      dataSrc: function(data) {
+      dataSrc: function (data) {
         var dataIndex = 0;
-        return data.data.map(function(x) {
+        return data.data.map(function (x) {
           x[0] = x[0] * 1e6 + dataIndex++;
           return x;
         });
@@ -378,7 +361,7 @@ $(document).ready(function() {
     columns: [
       {
         width: "15%",
-        render: function(data, type) {
+        render: function (data, type) {
           if (type === "display") {
             return moment
               .unix(Math.floor(data / 1e6))
@@ -407,7 +390,7 @@ $(document).ready(function() {
     ],
     initComplete: reloadCallback
   });
-  $("#all-queries tbody").on("click", "button", function() {
+  $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();
     if (data[4] === 1 || data[4] === 4 || data[5] === 5) {
       add(data[2], "white");
@@ -421,7 +404,7 @@ $(document).ready(function() {
   }
 });
 
-$("#querytime").on("apply.daterangepicker", function(ev, picker) {
+$("#querytime").on("apply.daterangepicker", function (ev, picker) {
   $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
   refreshTableData();
 });

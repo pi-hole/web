@@ -43,7 +43,7 @@ function piholeChanged(action) {
 function countDown() {
   var ena = $("#enableLabel");
   var enaT = $("#enableTimer");
-  var target = new Date(parseInt(enaT.html()));
+  var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
 
   if (seconds > 0) {
@@ -65,7 +65,7 @@ function piholeChange(action, duration) {
     case "enable":
       btnStatus = $("#flip-status-enable");
       btnStatus.html("<i class='fa fa-spinner'> </i>");
-      $.getJSON("api.php?enable&token=" + token, function(data) {
+      $.getJSON("api.php?enable&token=" + token, function (data) {
         if (data.status === "enabled") {
           btnStatus.html("");
           piholeChanged("enabled");
@@ -76,7 +76,7 @@ function piholeChange(action, duration) {
     case "disable":
       btnStatus = $("#flip-status-disable");
       btnStatus.html("<i class='fa fa-spinner'> </i>");
-      $.getJSON("api.php?disable=" + duration + "&token=" + token, function(data) {
+      $.getJSON("api.php?disable=" + duration + "&token=" + token, function (data) {
         if (data.status === "disabled") {
           btnStatus.html("");
           piholeChanged("disabled");
@@ -93,38 +93,162 @@ function piholeChange(action, duration) {
   }
 }
 
-$(document).ready(function() {
+function checkMessages() {
+  $.getJSON("api_db.php?status", function (data) {
+    if ("message_count" in data && data.message_count > 0) {
+      var title;
+      if (data.message_count > 1) {
+        title = "There are " + data.message_count + " warnings. Click for further details.";
+      } else {
+        title = "There is one warning. Click for further details.";
+      }
+
+      $("#pihole-diagnosis").prop("title", title);
+      $("#pihole-diagnosis-count").text(data.message_count);
+      $("#pihole-diagnosis").removeClass("hidden");
+    }
+  });
+}
+
+function testCookies() {
+  if (navigator.cookieEnabled) {
+    return true;
+  }
+
+  // set and read cookie
+  document.cookie = "cookietest=1";
+  var ret = document.cookie.indexOf("cookietest=") !== -1;
+
+  // delete cookie
+  document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+
+  return ret;
+}
+
+function initCheckboxRadioStyle() {
+  function getCheckboxURL(style) {
+    var extra = style.startsWith("material-") ? "material" : "bootstrap";
+    return "style/vendor/icheck-" + extra + ".min.css";
+  }
+
+  function applyCheckboxRadioStyle(style) {
+    boxsheet.attr("href", getCheckboxURL(style));
+    var sel = $("input[type='radio'],input[type='checkbox']");
+    sel.parent().removeClass();
+    sel.parent().addClass("icheck-" + style);
+  }
+
+  // Read from local storage, initialize if needed
+  var chkboxStyle = localStorage.getItem("theme_icheck");
+  if (chkboxStyle === null) {
+    chkboxStyle = "primary";
+  }
+
+  var boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet" />');
+  boxsheet.appendTo("head");
+
+  applyCheckboxRadioStyle(chkboxStyle);
+
+  // Add handler when on settings page
+  var iCheckStyle = $("#iCheckStyle");
+  if (iCheckStyle !== null) {
+    iCheckStyle.val(chkboxStyle);
+    iCheckStyle.change(function () {
+      var themename = $(this).val();
+      localStorage.setItem("theme_icheck", themename);
+      applyCheckboxRadioStyle(themename);
+    });
+  }
+}
+
+function initCPUtemp() {
+  function setCPUtemp(unit) {
+    localStorage.setItem("tempunit", tempunit);
+    var temperature = parseFloat($("#rawtemp").text());
+    var displaytemp = $("#tempdisplay");
+    if (!isNaN(temperature)) {
+      switch (unit) {
+        case "K":
+          temperature += 273.15;
+          displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;K");
+          break;
+
+        case "F":
+          temperature = (temperature * 9) / 5 + 32;
+          displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;F");
+          break;
+
+        default:
+          displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;C");
+          break;
+      }
+    }
+  }
+
+  // Read from local storage, initialize if needed
+  var tempunit = localStorage.getItem("tempunit");
+  if (tempunit === null) {
+    tempunit = "C";
+  }
+
+  setCPUtemp(tempunit);
+
+  // Add handler when on settings page
+  var tempunitSelector = $("#tempunit-selector");
+  if (tempunitSelector !== null) {
+    tempunitSelector.val(tempunit);
+    tempunitSelector.change(function () {
+      tempunit = $(this).val();
+      setCPUtemp(tempunit);
+    });
+  }
+}
+
+$(function () {
   var enaT = $("#enableTimer");
-  var target = new Date(parseInt(enaT.html()));
+  var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
   if (seconds > 0) {
     setTimeout(countDown, 100);
   }
+
+  if (!testCookies() && $("#cookieInfo").length > 0) {
+    $("#cookieInfo").show();
+  }
+
+  // Apply per-browser styling settings
+  initCheckboxRadioStyle();
+  initCPUtemp();
+
+  // Run check immediately after page loading ...
+  checkMessages();
+  // ... and once again with five seconds delay
+  setTimeout(checkMessages, 5000);
 });
 
 // Handle Enable/Disable
-$("#pihole-enable").on("click", function(e) {
+$("#pihole-enable").on("click", function (e) {
   e.preventDefault();
   localStorage.removeItem("countDownTarget");
   piholeChange("enable", "");
 });
-$("#pihole-disable-permanently").on("click", function(e) {
+$("#pihole-disable-indefinitely").on("click", function (e) {
   e.preventDefault();
   piholeChange("disable", "0");
 });
-$("#pihole-disable-10s").on("click", function(e) {
+$("#pihole-disable-10s").on("click", function (e) {
   e.preventDefault();
   piholeChange("disable", "10");
 });
-$("#pihole-disable-30s").on("click", function(e) {
+$("#pihole-disable-30s").on("click", function (e) {
   e.preventDefault();
   piholeChange("disable", "30");
 });
-$("#pihole-disable-5m").on("click", function(e) {
+$("#pihole-disable-5m").on("click", function (e) {
   e.preventDefault();
   piholeChange("disable", "300");
 });
-$("#pihole-disable-custom").on("click", function(e) {
+$("#pihole-disable-custom").on("click", function (e) {
   e.preventDefault();
   var custVal = $("#customTimeout").val();
   custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
@@ -133,7 +257,7 @@ $("#pihole-disable-custom").on("click", function(e) {
 
 // Session timer
 var sessionTimerCounter = document.getElementById("sessiontimercounter");
-var sessionvalidity = parseInt(sessionTimerCounter.textContent);
+var sessionvalidity = parseInt(sessionTimerCounter.textContent, 10);
 var start = new Date();
 
 function updateSessionTimer() {
@@ -145,7 +269,7 @@ if (sessionvalidity > 0) {
   // setSeconds will correctly handle wrap-around cases
   updateSessionTimer();
 
-  setInterval(function() {
+  setInterval(function () {
     var current = new Date();
     var totalseconds = (start - current) / 1000;
     var minutes = Math.floor(totalseconds / 60);
@@ -169,30 +293,9 @@ if (sessionvalidity > 0) {
 }
 
 // Handle Strg + Enter button on Login page
-$(document).keypress(function(e) {
+$(document).keypress(function (e) {
   if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
     $("#loginform").attr("action", "settings.php");
     $("#loginform").submit();
-  }
-});
-
-function testCookies() {
-  if (navigator.cookieEnabled) {
-    return true;
-  }
-
-  // set and read cookie
-  document.cookie = "cookietest=1";
-  var ret = document.cookie.indexOf("cookietest=") !== -1;
-
-  // delete cookie
-  document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
-
-  return ret;
-}
-
-$(function() {
-  if (!testCookies() && $("#cookieInfo").length) {
-    $("#cookieInfo").show();
   }
 });
