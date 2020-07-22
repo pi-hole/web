@@ -108,7 +108,7 @@ $(function () {
 
       // Set hostname to "unknown" if not available
       if (!data.name || data.name.length === 0) {
-        $("td:eq(3)", row).html("<em>unknown</em>");
+        $("td:eq(3)", row).text("unknown").css("font-style", "italic");
       }
 
       // Set number of queries to localized string (add thousand separators)
