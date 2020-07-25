@@ -37,13 +37,14 @@ setInterval(function () {
 
 var speedChartctx = document.getElementById("speedtestChart");
 var speedChart = new Chart(speedChartctx, {
-    type: 'bar',
+    type: 'line',
     data: {
         labels: speedlabels,
         datasets: [{
             label: 'Download Mbps',
             data: downloadspeed,
             backgroundColor: 'rgb(60, 141, 188)',
+            fill: false,
             borderColor: 'rgb(60, 141, 188)',
             borderWidth: 1,
             cubicInterpolationMode: 'monotone',
@@ -53,6 +54,7 @@ var speedChart = new Chart(speedChartctx, {
                 label: 'Upload Mbps',
                 data: uploadspeed,
                 backgroundColor: 'rgba(255, 99, 132, 1)',
+                fill: false,
                 borderColor: 'rgba(255,99,132,1)',
                 borderWidth: 1,
                 yAxisID: "y-axis-1"
@@ -61,6 +63,7 @@ var speedChart = new Chart(speedChartctx, {
                 label: 'Ping ms',
                 data: serverPing,
                 backgroundColor: 'rgba(69,237,33,1)',
+                fill: false,
                 borderColor: 'rgba(69,237,33,1)',
                 borderWidth: 1,
                 borderDash: [5, 5],
