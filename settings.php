@@ -1516,7 +1516,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <div class="form-group col-md-12">
 
                                                     <div class="form-group">
-                                                        <div class="checkbox text-danger" ><label><input type="checkbox"  name="clearspeedtests" value="yes"> Flush Speedtest history</label></div>
+                                                            <input type="checkbox"  name="clearspeedtests" id="clearspeedtests" value="yes"/> 
+                                                            <label for="clearspeedtests" class="text-danger">Flush Speedtest history</label>
                                                     </div>
                                                 </div>
                                                 <h4>Speedtest Mode (Beta)</h4>
