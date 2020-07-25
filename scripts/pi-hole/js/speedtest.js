@@ -43,8 +43,8 @@ var speedChart = new Chart(speedChartctx, {
         datasets: [{
             label: 'Download Mbps',
             data: downloadspeed,
-            backgroundColor: 'rgba(75, 192, 192, 1)',
-            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgb(60, 141, 188)',
+            borderColor: 'rgb(60, 141, 188)',
             borderWidth: 1,
             cubicInterpolationMode: 'monotone',
             yAxisID: "y-axis-1"
