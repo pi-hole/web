@@ -40,6 +40,7 @@ $(function () {
     {
       timePicker: true,
       timePickerIncrement: 15,
+      timePicker24Hour: true,
       locale: { format: dateformat },
       startDate: start__,
       endDate: end__,
