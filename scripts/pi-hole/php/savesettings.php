@@ -19,6 +19,30 @@ function validIP($address){
 	return !filter_var($address, FILTER_VALIDATE_IP) === false;
 }
 
+function validCIDRIP($address){
+	// This validation strategy has been taken from ../js/groups-common.js
+	$isIPv6 = strpos($address, ":") !== false;
+	if($isIPv6) {
+		// One IPv6 element is 16bit: 0000 - FFFF
+		$v6elem = "[0-9A-Fa-f]{1,4}";
+		// CIDR for IPv6 is any multiple of 4 from 4 up to 128 bit
+		$v6cidr = "(4";
+		for ($i=8; $i <= 128; $i+=4) { 
+			$v6cidr .= "|$i";
+		}
+		$v6cidr .= ")";
+		$validator = "/^(((?:$v6elem))((?::$v6elem))*::((?:$v6elem))((?::$v6elem))*|((?:$v6elem))((?::$v6elem)){7})\/$v6cidr$/";
+		return preg_match($validator, $address);
+	} else {
+		// One IPv4 element is 8bit: 0 - 256
+		$v4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
+		// Note that rev-server accepts only /8, /16, /24, and /32
+		$allowedv4cidr = "(8|16|24|32)";
+		$validator = "/^$v4elem\.$v4elem\.$v4elem\.$v4elem\/$allowedv4cidr$/";
+		return preg_match($validator, $address);
+	}
+}
+
 // Check for existance of variable
 // and test it only if it exists
 function istrue(&$argument) {
@@ -263,25 +287,27 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					{
 						$exploded = explode("#", $_POST["custom".$i."val"], 2);
 						$IP = trim($exploded[0]);
-						if(count($exploded) > 1)
-						{
-							$port = trim($exploded[1]);
-						}
-						else
-						{
-							$port = "53";
-						}
+
 						if(!validIP($IP))
 						{
 							$error .= "IP (".htmlspecialchars($IP).") is invalid!<br>";
 						}
-						elseif(!is_numeric($port))
-						{
-							$error .= "Port (".htmlspecialchars($port).") is invalid!<br>";
-						}
 						else
 						{
-							array_push($DNSservers,$IP."#".$port);
+							if(count($exploded) > 1)
+							{
+								$port = trim($exploded[1]);
+								if(!is_numeric($port))
+								{
+									$error .= "Port (".htmlspecialchars($port).") is invalid!<br>";
+								}
+								else
+								{
+									$IP .= "#".$port;
+								}
+							}
+
+							array_push($DNSservers,$IP);
 						}
 					}
 				}
@@ -323,28 +349,35 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					$extra .= "no-dnssec";
 				}
 
-				// Check if Conditional Forwarding is requested
-				if(isset($_POST["conditionalForwarding"]))
+				// Check if rev-server is requested
+				if(isset($_POST["rev_server"]))
 				{
-					$conditionalForwardingIP = trim($_POST["conditionalForwardingIP"]);
-					$conditionalForwardingDomain = trim($_POST["conditionalForwardingDomain"]);
-
-					// Validate conditional forwarding IP
-					if (!validIP($conditionalForwardingIP))
+					// Validate CIDR IP
+					$cidr = trim($_POST["rev_server_cidr"]);
+					if (!validCIDRIP($cidr))
 					{
-						$error .= "Conditional forwarding IP (".htmlspecialchars($conditionalForwardingIP).") is invalid!<br>";
+						$error .= "Conditional forwarding subnet (\"".htmlspecialchars($cidr)."\") is invalid!<br>".
+						          "This field requires CIDR notation for local subnets (e.g., 192.168.0.0/16).<br>".
+						          "Please use only subnets /8, /16, /24, and /32.<br>";
 					}
 
-					// Validate conditional forwarding domain name
-					if(!validDomain($conditionalForwardingDomain))
+					// Validate target IP
+					$target = trim($_POST["rev_server_target"]);
+					if (!validIP($target))
 					{
-						$error .= "Conditional forwarding domain name (".htmlspecialchars($conditionalForwardingDomain).") is invalid!<br>";
+						$error .= "Conditional forwarding target IP (\"".htmlspecialchars($target)."\") is invalid!<br>";
 					}
+
+					// Validate conditional forwarding domain name (empty is okay)
+					$domain = trim($_POST["rev_server_domain"]);
+					if(strlen($domain) > 0 && !validDomain($domain))
+					{
+						$error .= "Conditional forwarding domain name (\"".htmlspecialchars($domain)."\") is invalid!<br>";
+					}
+
 					if(!$error)
 					{
-						$addressArray = explode(".", $conditionalForwardingIP);
-						$reverseAddress = $addressArray[2].".".$addressArray[1].".".$addressArray[0].".in-addr.arpa";
-						$extra .= " conditional_forwarding ".$conditionalForwardingIP." ".$conditionalForwardingDomain." $reverseAddress";
+						$extra .= " rev-server ".$cidr." ".$target." ".$domain;
 					}
 				}
 
@@ -376,16 +409,8 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				{
 					$IPs = implode (",", $DNSservers);
 					$return = pihole_execute("-a setdns \"".$IPs."\" ".$extra);
-					if(!empty($return))
-					{
-						$success .= htmlspecialchars(end($return))."<br>";
-						$success .= "The DNS settings have been updated (using ".$DNSservercount." DNS servers)";
-					}
-					else
-					{
-						$success .= "Updating DNS settings failed. Result:";
-						$success .= implode($return);
-					}
+					$success .= htmlspecialchars(end($return))."<br>";
+					$success .= "The DNS settings have been updated (using ".$DNSservercount." DNS servers)";
 				}
 				else
 				{
@@ -712,7 +737,8 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				break;
 			// Flush network table
 			case "flusharp":
-				pihole_execute("arpflush quiet", $output);
+				$output = pihole_execute("arpflush quiet");
+				$error = "";
 				if(is_array($output))
 				{
 					$error = implode("<br>", $output);

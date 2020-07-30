@@ -58,7 +58,8 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_group') {
     // Add new group
     try {
-        $names = str_getcsv(trim($_POST['name']), ' ');
+        $input = html_entity_decode(trim($_POST['name']));
+        $names = str_getcsv($input, ' ');
         $total = count($names);
         $added = 0;
         $stmt = $db->prepare('INSERT INTO "group" (name,description) VALUES (:name,:desc)');
@@ -96,6 +97,9 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'edit_group') {
     // Edit group identified by ID
     try {
+        $name = html_entity_decode($_POST['name']);
+        $desc = html_entity_decode($_POST['desc']);
+
         $stmt = $db->prepare('UPDATE "group" SET enabled=:enabled, name=:name, description=:desc WHERE id = :id');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -106,11 +110,10 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While binding enabled: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':name', $_POST['name'], SQLITE3_TEXT)) {
+        if (!$stmt->bindValue(':name', $name, SQLITE3_TEXT)) {
             throw new Exception('While binding name: ' . $db->lastErrorMsg());
         }
 
-        $desc = $_POST['desc'];
         if (strlen($desc) === 0) {
             // Store NULL in database for empty descriptions
             $desc = null;
@@ -307,7 +310,7 @@ if ($_POST['action'] == 'get_groups') {
                 throw new Exception('While binding ip: ' . $db->lastErrorMsg());
             }
 
-            $comment = $_POST['comment'];
+            $comment = html_entity_decode($_POST['comment']);
             if (strlen($comment) === 0) {
                     // Store NULL in database for empty comments
                     $comment = null;
@@ -337,7 +340,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
-        $comment = $_POST['comment'];
+        $comment = html_entity_decode($_POST['comment']);
         if (strlen($comment) === 0) {
                 // Store NULL in database for empty comments
                 $comment = null;
@@ -497,7 +500,7 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_domain') {
     // Add new domain
     try {
-        $domains = explode(' ', trim($_POST['domain']));
+        $domains = explode(' ', html_entity_decode(trim($_POST['domain'])));
         $before = intval($db->querySingle("SELECT COUNT(*) FROM domainlist;"));
         $total = count($domains);
         $added = 0;
@@ -518,7 +521,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While binding type: ' . $db->lastErrorMsg());
         }
 
-        $comment = $_POST['comment'];
+        $comment = html_entity_decode($_POST['comment']);
         if (strlen($comment) === 0) {
             // Store NULL in database for empty comments
             $comment = null;
@@ -617,7 +620,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While binding enabled: ' . $db->lastErrorMsg());
         }
 
-        $comment = $_POST['comment'];
+        $comment = html_entity_decode($_POST['comment']);
         if (strlen($comment) === 0) {
                 // Store NULL in database for empty comments
                 $comment = null;
@@ -786,16 +789,16 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_adlist') {
     // Add new adlist
     try {
-        $addresses = explode(' ', trim($_POST['address']));
+        $addresses = explode(' ', html_entity_decode(trim($_POST['address'])));
         $total = count($addresses);
         $added = 0;
 
-        $stmt = $db->prepare('INSERT INTO adlist (address,comment) VALUES (:address,:comment)');
+        $stmt = $db->prepare('INSERT OR IGNORE INTO adlist (address,comment) VALUES (:address,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
 
-        $comment = $_POST['comment'];
+        $comment = html_entity_decode($_POST['comment']);
         if (strlen($comment) === 0) {
             // Store NULL in database for empty comments
             $comment = null;
@@ -844,7 +847,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While binding enabled: ' . $db->lastErrorMsg());
         }
 
-        $comment = $_POST['comment'];
+        $comment = html_entity_decode($_POST['comment']);
         if (strlen($comment) === 0) {
                 // Store NULL in database for empty comments
                 $comment = null;
@@ -934,6 +937,53 @@ if ($_POST['action'] == 'get_groups') {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
+} elseif ($_POST['action'] == 'add_audit') {
+        // Add new domain
+        try {
+            $domains = explode(' ', html_entity_decode(trim($_POST['domain'])));
+            $before = intval($db->querySingle("SELECT COUNT(*) FROM domain_audit;"));
+            $total = count($domains);
+            $added = 0;
+            $stmt = $db->prepare('REPLACE INTO domain_audit (domain) VALUES (:domain)');
+            if (!$stmt) {
+                throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
+            }
+
+            foreach ($domains as $domain) {
+                $input = $domain;
+
+                if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
+                    throw new Exception('While binding domain: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                    'Added ' . $added . " out of ". $total . " domains");
+                }
+
+                if (!$stmt->execute()) {
+                    throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                    'Added ' . $added . " out of ". $total . " domains");
+                }
+                $added++;
+            }
+
+            $after = intval($db->querySingle("SELECT COUNT(*) FROM domain_audit;"));
+            $difference = $after - $before;
+            if($total === 1) {
+                if($difference !== 1) {
+                        $msg = "Not adding ". htmlentities(utf8_encode($domain)) . " as it is already on the list";
+                } else {
+                        $msg = "Added " . htmlentities(utf8_encode($domain));
+                }
+            } else {
+                if($difference !== $total) {
+                        $msg = "Added " . ($after-$before) . " out of ". $total . " domains (skipped duplicates)";
+                } else {
+                        $msg = "Added " . $total . " domains";
+                }
+            }
+            $reload = true;
+            JSON_success($msg);
+        } catch (\Exception $ex) {
+            JSON_error($ex->getMessage());
+        }
 } else {
     log_and_die('Requested action not supported!');
 }

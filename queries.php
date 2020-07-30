@@ -138,11 +138,11 @@ if(strlen($showing) > 0)
                     </tr>
                 </tfoot>
             </table>
-            <div>
-                <input type="checkbox" id="autofilter">
-                <label for="autofilter">Apply filtering on click on Type, Domain, and Clients</label>
-            </div>
-            <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear Filters</button>
+            <p><strong>Filtering options:</strong></p>
+            <ul>
+                <li>Use <kbd>Ctrl</kbd> or <kbd>&#8984;</kbd> + <i class="fas fa-mouse-pointer"></i> to add columns to the current filter</li>
+                <li>Use <kbd>Shift</kbd> + <i class="fas fa-mouse-pointer"></i> to remove columns from the current filter</li>
+            </ul><br/><button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear filters</button>
         </div>
         <!-- /.box-body -->
       </div>
@@ -150,7 +150,7 @@ if(strlen($showing) > 0)
     </div>
 </div>
 <!-- /.row -->
-
+<script src="scripts/pi-hole/js/ip-address-sorting.js"></script>
 <script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/queries.js"></script>
 

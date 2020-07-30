@@ -4,7 +4,6 @@
  *
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
-/* global initpage:false */
 
 //The following functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
@@ -220,10 +219,6 @@ $(function () {
   // Apply per-browser styling settings
   initCheckboxRadioStyle();
   initCPUtemp();
-
-  if (typeof initpage === "function") {
-    setTimeout(initpage, 100);
-  }
 
   // Run check immediately after page loading ...
   checkMessages();

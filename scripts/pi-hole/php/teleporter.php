@@ -173,7 +173,7 @@ function archive_restore_table($file, $table, $flush=false)
 	foreach($contents as $row)
 	{
 		// Limit max length for a domain entry to 253 chars
-		if(strlen($row[$field]) > 253)
+		if(isset($field) && strlen($row[$field]) > 253)
 			continue;
 
 		// Bind properties from JSON data
@@ -196,7 +196,7 @@ function archive_restore_table($file, $table, $flush=false)
 				default:
 					$sqltype = "UNK";
 			}
-			$stmt->bindValue(":".$key, $value, $sqltype);
+			$stmt->bindValue(":".$key, htmlentities($value), $sqltype);
 		}
 
 		if($stmt->execute() && $stmt->reset() && $stmt->clear())
@@ -540,7 +540,7 @@ if(isset($_POST["action"]))
 }
 else
 {
-	$hostname = gethostname() ? gethostname()."-" : "";
+	$hostname = gethostname() ? str_replace(".", "_", gethostname())."-" : "";
 	$tarname = "pi-hole-".$hostname."teleporter_".date("Y-m-d_H-i-s").".tar";
 	$filename = $tarname.".gz";
 	$archive_file_name = sys_get_temp_dir() ."/". $tarname;

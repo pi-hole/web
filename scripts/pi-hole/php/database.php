@@ -161,9 +161,9 @@ function add_to_table($db, $table, $domains, $comment=null, $wildcardstyle=false
 		if($wildcardstyle)
 			$domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
 
-		$stmt->bindValue(":$field", $domain, SQLITE3_TEXT);
+		$stmt->bindValue(":$field", htmlentities($domain), SQLITE3_TEXT);
 		if($bindcomment) {
-			$stmt->bindValue(":comment", $comment, SQLITE3_TEXT);
+			$stmt->bindValue(":comment", htmlentities($comment), SQLITE3_TEXT);
 		}
 
 		if($stmt->execute() && $stmt->reset())

@@ -85,9 +85,9 @@ function initTable() {
       $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
-        utils.datetime(data.date_added) +
+        utils.datetime(data.date_added, false) +
         "\nLast modified: " +
-        utils.datetime(data.date_modified) +
+        utils.datetime(data.date_modified, false) +
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
@@ -318,8 +318,8 @@ function addDomain() {
     commentEl = $("#new_regex_comment");
   }
 
-  var domain = domainEl.val();
-  var comment = commentEl.val();
+  var domain = utils.escapeHtml(domainEl.val());
+  var comment = utils.escapeHtml(commentEl.val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding " + domainRegex + "...", domain);
@@ -385,10 +385,10 @@ function editDomain() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var domain = tr.find("#domain_" + id).text();
+  var domain = utils.escapeHtml(tr.find("#domain_" + id).text());
   var type = tr.find("#type_" + id).val();
   var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
-  var comment = tr.find("#comment_" + id).val();
+  var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
 
   // Show group assignment field only if in full domain management mode
   // if not included, just use the row data.
@@ -485,7 +485,7 @@ function editDomain() {
 function deleteDomain() {
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var domain = tr.find("#domain_" + id).text();
+  var domain = utils.escapeHtml(tr.find("#domain_" + id).text());
   var type = tr.find("#type_" + id).val();
 
   var domainRegex;
