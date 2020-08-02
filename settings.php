@@ -210,7 +210,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 ?>
 
 <?php
-if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "dns", "rev_server", "piholedhcp", "api", "privacy", "teleporter"))) {
+if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "dns", "advanced_dns", "piholedhcp", "api", "privacy", "teleporter"))) {
     $tab = $_GET['tab'];
 } else {
     $tab = "sysadmin";
@@ -229,8 +229,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                 <li role="presentation"<?php if($tab === "dns"){ ?> class="active"<?php } ?>>
                     <a href="#dns" aria-controls="dns" aria-expanded="<?php echo $tab === "dns" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DNS</a>
                 </li>
-                <li role="presentation"<?php if($tab === "rev_server"){ ?> class="active"<?php } ?>>
-                    <a href="#rev_server" aria-controls="rev_server" aria-expanded="<?php echo $tab === "rev_server" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Conditional forwarding</a>
+                <li role="presentation"<?php if($tab === "advanced_dns"){ ?> class="active"<?php } ?>>
+                    <a href="#advanced_dns" aria-controls="advanced_dns" aria-expanded="<?php echo $tab === "advanced_dns" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Advanced DNS settings</a>
                 </li>
                 <li role="presentation"<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>>
                     <a href="#piholedhcp" aria-controls="piholedhcp" aria-expanded="<?php echo $tab === "piholedhcp" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DHCP</a>
@@ -830,6 +830,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     <?php } ?>
                                                 </table>
                                                 <p>ECS (Extended Client Subnet) defines a mechanism for recursive resolvers to send partial client IP address information to authoritative DNS name servers. Content Delivery Networks (CDNs) and latency-sensitive services use this to give geo-located responses when responding to name lookups coming through public DNS resolvers. <em>Note that ECS may result in reduced privacy.</em></p>
+                                                <input type="hidden" name="field" value="DNS">
+                                                <input type="hidden" name="token" value="<?php echo $token ?>">
+                                                <button type="submit" class="btn btn-primary pull-right">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -937,60 +940,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="box box-warning">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">Advanced DNS settings</h3>
-                                    </div>
-                                    <div class="box-body">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div>
-                                                    <input type="checkbox" name="DNSrequiresFQDN" id="DNSrequiresFQDN" title="domain-needed" <?php if ($DNSrequiresFQDN){ ?>checked<?php } ?>>
-                                                    <label for="DNSrequiresFQDN"><strong>Never forward non-FQDNs</strong></label>
-                                                </div>
-                                                <div>
-                                                    <input type="checkbox" name="DNSbogusPriv" id="DNSbogusPriv" title="bogus-priv" <?php if ($DNSbogusPriv){ ?>checked<?php } ?>>
-                                                    <label for="DNSbogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
-                                                    <p>Note that enabling these two options may increase your privacy
-                                                    slightly, but may also prevent you from being able to access
-                                                    local hostnames if the Pi-hole is not used as DHCP server</p>
-                                                </div>
-                                                <div>
-                                                    <input type="checkbox" name="DNSSEC" id="DNSSEC" <?php if ($DNSSEC){ ?>checked<?php } ?>>
-                                                    <label for="DNSSEC"><strong>Use DNSSEC</strong></label>
-                                                    <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
-                                                    queries, Pi-hole requests the DNSSEC records needed to validate
-                                                    the replies. If a domain fails validation or the upstream does not
-                                                    support DNSSEC, this setting can cause issues resolving domains.
-                                                    Use Google, Cloudflare, DNS.WATCH, Quad9, or another DNS
-                                                    server which supports DNSSEC when activating DNSSEC. Note that
-                                                    the size of your log might increase significantly
-                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
-                                                    <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
-                                                </div>
-                                                <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
-                                                   queries, Pi-hole requests the DNSSEC records needed to validate
-                                                   the replies. If a domain fails validation or the upstream does not
-                                                   support DNSSEC, this setting can cause issues resolving domains.
-                                                   Use Google, Cloudflare, DNS.WATCH, Quad9, or another DNS
-                                                   server which supports DNSSEC when activating DNSSEC. Note that
-                                                   the size of your log might increase significantly
-                                                   when enabling DNSSEC. A DNSSEC resolver test can be found
-                                                   <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="field" value="DNS">
-                                <input type="hidden" name="token" value="<?php echo $token ?>">
-                                <button type="submit" class="btn btn-primary pull-right">Save</button>
-                            </div>
-                        </div>
                     </form>
                 </div>
-                <!-- ######################################################### Conditional forwarding ######################################################### -->
+<!-- ######################################################### Advanced DNS settings ######################################################### -->
 <?
 $rev_server = false;
 if (isset($setupVars["REV_SERVER"]) && ($setupVars["REV_SERVER"] == 1))
@@ -1026,17 +978,54 @@ for ($i = 0; $i < $REV_SERVER_COUNT; $i++)
         array_push($rev_server_domain, NULL);
 }
 ?>
-                <div id="rev_server" class="tab-pane fade<?php if($tab === "rev_server"){ ?> in active<?php } ?>">
+                <div id="advanced_dns" class="tab-pane fade<?php if($tab === "advanced_dns"){ ?> in active<?php } ?>">
                     <form role="form" method="post">
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Advanced DNS settings</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div>
+                                                    <input type="checkbox" name="DNSrequiresFQDN" id="DNSrequiresFQDN" title="domain-needed" <?php if ($DNSrequiresFQDN){ ?>checked<?php } ?>>
+                                                    <label for="DNSrequiresFQDN"><strong>Never forward non-FQDNs</strong></label>
+                                                </div>
+                                                <div>
+                                                    <input type="checkbox" name="DNSbogusPriv" id="DNSbogusPriv" title="bogus-priv" <?php if ($DNSbogusPriv){ ?>checked<?php } ?>>
+                                                    <label for="DNSbogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
+                                                </div>
+                                                <p>Note that enabling these two options may increase your privacy
+                                                slightly, but may also prevent you from being able to access
+                                                local hostnames if the Pi-hole is not used as DHCP server</p>
+                                                <div>
+                                                    <input type="checkbox" name="DNSSEC" id="DNSSEC" <?php if ($DNSSEC){ ?>checked<?php } ?>>
+                                                    <label for="DNSSEC"><strong>Use DNSSEC</strong></label>
+                                                </div>
+                                                <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
+                                                queries, Pi-hole requests the DNSSEC records needed to validate
+                                                the replies. If a domain fails validation or the upstream does not
+                                                support DNSSEC, this setting can cause issues resolving domains.
+                                                Use Google, Cloudflare, DNS.WATCH, Quad9, or another DNS
+                                                server which supports DNSSEC when activating DNSSEC. Note that
+                                                the size of your log might increase significantly
+                                                when enabling DNSSEC. A DNSSEC resolver test can be found
+                                                <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
                                         <h1 class="box-title">Conditional forwarding</h1>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-12">
                                                 <p>If not configured as your DHCP server, Pi-hole  typically won't be able to
                                                    determine the names of devices on your local network.  As a
                                                    result, tables such as Top Clients will only show IP addresses.</p>
@@ -1057,13 +1046,11 @@ for ($i = 0; $i < $REV_SERVER_COUNT; $i++)
                                                 <p>You can also specify a local domain name (like <code>fritz.box</code>) to ensure queries to
                                                    devices ending in your local domain name will not leave your network, however, this is optional.
                                                    The local domain name must match the domain name specified
-                                                   in your DHCP server for this to work. You can likely find it within the DHCP settings.</p><br>
+                                                   in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
                                                 <div>
                                                     <input type="checkbox" name="rev_server_chk" id="rev_server_chk" value="rev_server" <?php if(isset($rev_server) && ($rev_server == true)){ ?>checked<?php } ?>>
                                                     <label for="rev_server_chk"><strong>Use Conditional Forwarding</strong></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
+                                                </div><br>
                                                 <table class="table table-bordered">
                                                 <tr>
                                                     <th>Local network in <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" target="_blank">CIDR notation</a></th>
