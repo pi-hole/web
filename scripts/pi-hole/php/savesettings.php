@@ -321,36 +321,6 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					$error .= "No DNS server has been selected.<br>";
 				}
 
-				// Check if domain-needed is requested
-				if(isset($_POST["DNSrequiresFQDN"]))
-				{
-					$extra = "domain-needed ";
-				}
-				else
-				{
-					$extra = "domain-not-needed ";
-				}
-
-				// Check if domain-needed is requested
-				if(isset($_POST["DNSbogusPriv"]))
-				{
-					$extra .= "bogus-priv ";
-				}
-				else
-				{
-					$extra .= "no-bogus-priv ";
-				}
-
-				// Check if DNSSEC is requested
-				if(isset($_POST["DNSSEC"]))
-				{
-					$extra .= "dnssec";
-				}
-				else
-				{
-					$extra .= "no-dnssec";
-				}
-
 				// Check if DNSinterface is set
 				if(isset($_POST["DNSinterface"]))
 				{
@@ -389,10 +359,40 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 
 				break;
 
-			// Conditional forwarding
-			case "rev-server":
+			// Advanced DNS settings
+			case "advanced_dns":
+
+				// Check if domain-needed is requested
+				if(isset($_POST["DNSrequiresFQDN"]))
+				{
+					$extra = "domain-needed ";
+				}
+				else
+				{
+					$extra = "domain-not-needed ";
+				}
+
+				// Check if domain-needed is requested
+				if(isset($_POST["DNSbogusPriv"]))
+				{
+					$extra .= "bogus-priv ";
+				}
+				else
+				{
+					$extra .= "no-bogus-priv ";
+				}
+
+				// Check if DNSSEC is requested
+				if(isset($_POST["DNSSEC"]))
+				{
+					$extra .= "dnssec";
+				}
+				else
+				{
+					$extra .= "no-dnssec";
+				}
+
 				// Check if rev-server is requested
-				$extra = "";
 				if(isset($_POST["rev_server_chk"]))
 				{
 					// Loop over available fields
@@ -437,9 +437,9 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				// If there has been no error we can save the new settings
 				if(!strlen($error))
 				{
-					$return = pihole_execute("-a setrev ".$extra);
+					$return = pihole_execute("-a setadvanced ".$extra);
 					$success .= htmlspecialchars(end($return))."<br>";
-					$success .= "The conditional forwarding settings have been updated";
+					$success .= "The advanced DNS settings have been updated";
 				}
 				else
 				{

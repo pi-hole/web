@@ -1081,7 +1081,7 @@ for ($i = 0; $i < $REV_SERVER_COUNT; $i++)
                                         </div>
                                     </div>
                                 </div>
-                                <input type="hidden" name="field" value="rev_server">
+                                <input type="hidden" name="field" value="advanced_dns">
                                 <input type="hidden" name="token" value="<?php echo $token ?>">
                                 <button type="submit" class="btn btn-primary pull-right">Save</button>
                             </div>
