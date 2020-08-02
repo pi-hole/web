@@ -6,6 +6,8 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
+$REV_SERVER_COUNT = 6;
+
 if(!in_array(basename($_SERVER['SCRIPT_FILENAME']), ["settings.php", "teleporter.php"], true))
 {
 	die("Direct access to this script is forbidden!");
@@ -349,38 +351,6 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					$extra .= "no-dnssec";
 				}
 
-				// Check if rev-server is requested
-				if(isset($_POST["rev_server"]))
-				{
-					// Validate CIDR IP
-					$cidr = trim($_POST["rev_server_cidr"]);
-					if (!validCIDRIP($cidr))
-					{
-						$error .= "Conditional forwarding subnet (\"".htmlspecialchars($cidr)."\") is invalid!<br>".
-						          "This field requires CIDR notation for local subnets (e.g., 192.168.0.0/16).<br>".
-						          "Please use only subnets /8, /16, /24, and /32.<br>";
-					}
-
-					// Validate target IP
-					$target = trim($_POST["rev_server_target"]);
-					if (!validIP($target))
-					{
-						$error .= "Conditional forwarding target IP (\"".htmlspecialchars($target)."\") is invalid!<br>";
-					}
-
-					// Validate conditional forwarding domain name (empty is okay)
-					$domain = trim($_POST["rev_server_domain"]);
-					if(strlen($domain) > 0 && !validDomain($domain))
-					{
-						$error .= "Conditional forwarding domain name (\"".htmlspecialchars($domain)."\") is invalid!<br>";
-					}
-
-					if(!$error)
-					{
-						$extra .= " rev-server ".$cidr." ".$target." ".$domain;
-					}
-				}
-
 				// Check if DNSinterface is set
 				if(isset($_POST["DNSinterface"]))
 				{
@@ -418,6 +388,63 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				}
 
 				break;
+
+			// Conditional forwarding
+			case "rev-server":
+				// Check if rev-server is requested
+				$extra = "";
+				if(isset($_POST["rev_server_chk"]))
+				{
+					// Loop over available fields
+					for($i = 0; $i < $REV_SERVER_COUNT; $i++)
+					{
+						// Get IP in CIDR notation
+						$cidr = trim($_POST["rev_server_cidr".$i]);
+
+						// Skip empty fields
+						if(strlen($cidr) == 0)
+							continue;
+
+						// Validate CIDR IP
+						if (!validCIDRIP($cidr))
+						{
+							$error .= "Conditional forwarding subnet (\"".htmlspecialchars($cidr)."\") is invalid!<br>".
+							          "This field requires CIDR notation for local subnets (e.g., 192.168.0.0/16).<br>".
+							          "Please use only subnets /8, /16, /24, and /32.<br>";
+						}
+
+						// Validate target IP
+						$target = trim($_POST["rev_server_target".$i]);
+						if (!validIP($target))
+						{
+							$error .= "Conditional forwarding target IP (\"".htmlspecialchars($target)."\") is invalid!<br>";
+						}
+
+						// Validate conditional forwarding domain name (empty is okay)
+						$domain = trim($_POST["rev_server_domain".$i]);
+						if(strlen($domain) > 0 && !validDomain($domain))
+						{
+							$error .= "Conditional forwarding domain name (\"".htmlspecialchars($domain)."\") is invalid!<br>";
+						}
+
+						if(!$error)
+						{
+							$extra .= " rev-server ".$cidr." ".$target." ".$domain;
+						}
+					}
+				}
+
+				// If there has been no error we can save the new settings
+				if(!strlen($error))
+				{
+					$return = pihole_execute("-a setrev ".$extra);
+					$success .= htmlspecialchars(end($return))."<br>";
+					$success .= "The conditional forwarding settings have been updated";
+				}
+				else
+				{
+					$error .= "The settings have been reset to their previous values";
+				}
 
 			// Set query logging
 			case "Logging":

@@ -247,10 +247,10 @@ $(function () {
 
   // En-/disable conditional forwarding input fields based
   // on the checkbox state
-  $('input[name="rev_server"]').click(function () {
-    $('input[name="rev_server_cidr"]').prop("disabled", !this.checked);
-    $('input[name="rev_server_target"]').prop("disabled", !this.checked);
-    $('input[name="rev_server_domain"]').prop("disabled", !this.checked);
+  $('input[name^="rev_server_chk"]').click(function () {
+    $('input[name^="rev_server_cidr"]').prop("disabled", !this.checked);
+    $('input[name^="rev_server_target"]').prop("disabled", !this.checked);
+    $('input[name^="rev_server_domain"]').prop("disabled", !this.checked);
   });
 });
 

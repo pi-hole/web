@@ -9,7 +9,6 @@ require "scripts/pi-hole/php/header.php";
 require "scripts/pi-hole/php/savesettings.php";
 require_once "scripts/pi-hole/php/FTL.php";
 // Reread ini file as things might have been changed
-$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
 $piholeFTLConf = piholeFTLConfig();
 
 // Handling of PHP internal errors
@@ -164,14 +163,6 @@ if (isset($setupVars["DNSMASQ_LISTENING"])) {
 } else {
     $DNSinterface = "single";
 }
-if (isset($setupVars["REV_SERVER"]) && ($setupVars["REV_SERVER"] == 1)) {
-    $rev_server = true;
-    $rev_server_cidr   = $setupVars["REV_SERVER_CIDR"];
-    $rev_server_target = $setupVars["REV_SERVER_TARGET"];
-    $rev_server_domain = $setupVars["REV_SERVER_DOMAIN"];
-} else {
-    $rev_server = false;
-}
 ?>
 
 <?php
@@ -219,7 +210,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 ?>
 
 <?php
-if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "dns", "piholedhcp", "api", "privacy", "teleporter"))) {
+if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "dns", "rev_server", "piholedhcp", "api", "privacy", "teleporter"))) {
     $tab = $_GET['tab'];
 } else {
     $tab = "sysadmin";
@@ -237,6 +228,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                 </li>
                 <li role="presentation"<?php if($tab === "dns"){ ?> class="active"<?php } ?>>
                     <a href="#dns" aria-controls="dns" aria-expanded="<?php echo $tab === "dns" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DNS</a>
+                </li>
+                <li role="presentation"<?php if($tab === "rev_server"){ ?> class="active"<?php } ?>>
+                    <a href="#rev_server" aria-controls="rev_server" aria-expanded="<?php echo $tab === "rev_server" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Conditional forwarding</a>
                 </li>
                 <li role="presentation"<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>>
                     <a href="#piholedhcp" aria-controls="piholedhcp" aria-expanded="<?php echo $tab === "piholedhcp" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DHCP</a>
@@ -985,8 +979,64 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                    the size of your log might increase significantly
                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
                                                    <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
-                                                <br>
-                                                <h4>Conditional forwarding</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="field" value="DNS">
+                                <input type="hidden" name="token" value="<?php echo $token ?>">
+                                <button type="submit" class="btn btn-primary pull-right">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- ######################################################### Conditional forwarding ######################################################### -->
+<?
+$rev_server = false;
+if (isset($setupVars["REV_SERVER"]) && ($setupVars["REV_SERVER"] == 1))
+    $rev_server = true;
+
+$rev_server_cidr = array();
+$rev_server_target = array();
+$rev_server_domain = array();
+for ($i = 0; $i < $REV_SERVER_COUNT; $i++)
+{
+    // 1st elements are "REV_SERVER_CIDR,  REV_SERVER_TARGET,  REV_SERVER_DOMAIN"
+    // 2nd elements are "REV_SERVER_CIDR2, REV_SERVER_TARGET2, REV_SERVER_DOMAIN2"
+    // 3rd elements are "REV_SERVER_CIDR3, REV_SERVER_TARGET3, REV_SERVER_DOMAIN3"
+    // etc. (for backwards-compatibility)
+    if($i == 0)
+        $extra = "";
+    else
+        $extra = $i + 1;
+
+    if(isset($setupVars["REV_SERVER_CIDR".$extra]))
+        array_push($rev_server_cidr, $setupVars["REV_SERVER_CIDR".$extra]);
+    else
+        array_push($rev_server_cidr, NULL);
+
+    if(isset($setupVars["REV_SERVER_TARGET".$extra]))
+        array_push($rev_server_target, $setupVars["REV_SERVER_TARGET".$extra]);
+    else
+        array_push($rev_server_target, NULL);
+
+    if(isset($setupVars["REV_SERVER_DOMAIN".$extra]))
+        array_push($rev_server_domain, $setupVars["REV_SERVER_DOMAIN".$extra]);
+    else
+        array_push($rev_server_domain, NULL);
+}
+?>
+                <div id="rev_server" class="tab-pane fade<?php if($tab === "rev_server"){ ?> in active<?php } ?>">
+                    <form role="form" method="post">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h1 class="box-title">Conditional forwarding</h1>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-lg-6">
                                                 <p>If not configured as your DHCP server, Pi-hole  typically won't be able to
                                                    determine the names of devices on your local network.  As a
                                                    result, tables such as Top Clients will only show IP addresses.</p>
@@ -1000,51 +1050,51 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                    be <code>192.168.47.0/24</code> and similar. If your network is larger, the CIDR has to be
                                                    different, for instance a range of 10.8.0.1 - 10.8.255.255 results in <code>10.8.0.0/16</code>,
                                                    whereas an even wider network of 10.0.0.1 - 10.255.255.255 results in <code>10.0.0.0/8</code>.
-                                                   Setting up IPv6 ranges is exactly similar to setting up IPv4 here and fully supported.
+                                                   Setting up <strong>IPv6</strong> ranges is exactly similar to setting up <strong>IPv4</strong> here and fully supported.
                                                    Feel free to reach out to us on our
                                                    <a href="https://discourse.pi-hole.net" target="_blank">Discourse forum</a>
                                                    in case you need any assistance setting up local host name resolution for your particular system.</p>
                                                 <p>You can also specify a local domain name (like <code>fritz.box</code>) to ensure queries to
                                                    devices ending in your local domain name will not leave your network, however, this is optional.
                                                    The local domain name must match the domain name specified
-                                                   in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
-                                                <div class="form-group">
-                                                    <div>
-                                                        <input type="checkbox" name="rev_server" id="rev_server" value="rev_server" <?php if(isset($rev_server) && ($rev_server == true)){ ?>checked<?php } ?>>
-                                                        <label for="rev_server"><strong>Use Conditional Forwarding</strong></label>
-                                                    </div>
-                                                    <div class="input-group">
-                                                      <table class="table table-bordered">
-                                                        <tr>
-                                                          <th>Local network in <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" target="_blank">CIDR notation</a></th>
-                                                          <th>IP address of your DHCP server (router)</th>
-                                                          <th>Local domain name (optional)</th>
-                                                        </tr>
-                                                        <tr>
-                                                          <td>
-                                                            <input type="text" name="rev_server_cidr" placeholder="192.168.0.0/16" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                            <?php if(isset($rev_server_cidr)){ ?>value="<?php echo $rev_server_cidr; ?>"<?php } ?>
-                                                            <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
-                                                          </td>
-                                                          <td>
-                                                            <input type="text" name="rev_server_target" placeholder="192.168.0.1" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                            <?php if(isset($rev_server_target)){ ?>value="<?php echo $rev_server_target; ?>"<?php } ?>
-                                                            <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
-                                                          </td>
-                                                          <td>
-                                                            <input type="text" name="rev_server_domain" placeholder="local" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                            <?php if(isset($rev_server_domain)){ ?>value="<?php echo $rev_server_domain; ?>"<?php } ?>
-                                                            <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
-                                                          </td>
-                                                        </tr>
-                                                      </table>
-                                                    </div>
+                                                   in your DHCP server for this to work. You can likely find it within the DHCP settings.</p><br>
+                                                <div>
+                                                    <input type="checkbox" name="rev_server_chk" id="rev_server_chk" value="rev_server" <?php if(isset($rev_server) && ($rev_server == true)){ ?>checked<?php } ?>>
+                                                    <label for="rev_server_chk"><strong>Use Conditional Forwarding</strong></label>
                                                 </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <table class="table table-bordered">
+                                                <tr>
+                                                    <th>Local network in <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" target="_blank">CIDR notation</a></th>
+                                                    <th>IP address of your DHCP server (router)</th>
+                                                    <th>Local domain name (optional)</th>
+                                                </tr>
+<?php for($i = 0; $i < $REV_SERVER_COUNT; $i++) { ?>
+                                                <tr>
+                                                    <td>
+                                                    <input type="text" name="rev_server_cidr<?=$i;?>" placeholder="192.168.0.0/16" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
+                                                    <?php if($rev_server_cidr[$i] !== NULL){ ?>value="<?php echo $rev_server_cidr[$i]; ?>"<?php } ?>
+                                                    <?php if(!$rev_server){ ?>disabled<?php } ?>>
+                                                    </td>
+                                                    <td>
+                                                    <input type="text" name="rev_server_target<?=$i;?>" placeholder="192.168.0.1" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
+                                                    <?php if($rev_server_target[$i] !== NULL){ ?>value="<?php echo $rev_server_target[$i]; ?>"<?php } ?>
+                                                    <?php if(!$rev_server){ ?>disabled<?php } ?>>
+                                                    </td>
+                                                    <td>
+                                                    <input type="text" name="rev_server_domain<?=$i;?>" placeholder="local" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
+                                                    <?php if($rev_server_domain[$i] !== NULL){ ?>value="<?php echo $rev_server_domain[$i]; ?>"<?php } ?>
+                                                    <?php if(!$rev_server){ ?>disabled<?php } ?>>
+                                                    </td>
+                                                </tr>
+<?php } ?>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <input type="hidden" name="field" value="DNS">
+                                <input type="hidden" name="field" value="rev_server">
                                 <input type="hidden" name="token" value="<?php echo $token ?>">
                                 <button type="submit" class="btn btn-primary pull-right">Save</button>
                             </div>
