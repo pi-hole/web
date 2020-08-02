@@ -996,6 +996,24 @@ $(function () {
     return false;
   });
 
+  $("#clientsChart").click(function (evt) {
+    var activePoints = clientsChart.getElementAtEvent(evt);
+    if (activePoints.length > 0) {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]._index;
+
+      //get specific label by index
+      var label = clientsChart.data.labels[clickedElementindex];
+
+      //get value by index
+      var from = label / 1000 - 300;
+      var until = label / 1000 + 300;
+      window.location.href = "queries.php?from=" + from + "&until=" + until;
+    }
+
+    return false;
+  });
+
   if (document.getElementById("queryTypePieChart")) {
     ctx = document.getElementById("queryTypePieChart").getContext("2d");
     queryTypePieChart = new Chart(ctx, {
