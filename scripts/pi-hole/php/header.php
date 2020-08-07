@@ -487,13 +487,13 @@ if($auth) {
                 <!-- Whitelist -->
                 <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
                     <a href="groups-domains.php?type=white">
-                        <i class="fa fa-check-circle "></i> <span>Whitelist</span>
+                        <i class="fa fa-check-circle "></i> <span>Allowlist</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
                 <li<?php if($scriptname === "blacklist"){ ?> class="active"<?php } ?>>
                     <a href="groups-domains.php?type=black">
-                        <i class="fa fa-ban"></i> <span>Blacklist</span>
+                        <i class="fa fa-ban"></i> <span>Denylist</span>
                     </a>
                 </li>
                 <!-- Group Management -->
