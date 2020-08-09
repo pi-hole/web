@@ -373,7 +373,7 @@ $(function () {
       },
       { width: "10%" },
       { width: "40%" },
-      { width: "20%" },
+      { width: "20%", type: "ip-address" },
       { width: "10%" },
       { width: "5%" }
     ],
