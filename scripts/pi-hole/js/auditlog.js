@@ -99,7 +99,7 @@ function add(domain, list) {
       domain: domain,
       list: list,
       token: token,
-      action: "add_domain",
+      action: list === "audit" ? "add_audit" : "add_domain",
       comment: "Added from Audit Log"
     },
     success: function () {
