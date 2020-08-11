@@ -99,6 +99,6 @@
 
 </div>
 <!-- ./wrapper -->
-<script src="scripts/pi-hole/js/footer.js"></script>
+<script src="scripts/pi-hole/js/footer.js?v=<?=$cacheVer?>"></script>
 </body>
 </html>

@@ -24,7 +24,7 @@
     <label for="chk2">Automatic scrolling on update</label>
 </div>
 
-<script src="scripts/pi-hole/js/taillog-FTL.js"></script>
+<script src="scripts/pi-hole/js/taillog-FTL.js?v=<?=$cacheVer?>"></script>
 
 <?php
     require "scripts/pi-hole/php/footer.php";

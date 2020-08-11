@@ -76,9 +76,9 @@
 
 <script src="scripts/vendor/bootstrap-select.min.js"></script>
 <script src="scripts/vendor/bootstrap-toggle.min.js"></script>
-<script src="scripts/pi-hole/js/ip-address-sorting.js"></script>
-<script src="scripts/pi-hole/js/utils.js"></script>
-<script src="scripts/pi-hole/js/groups-clients.js"></script>
+<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/groups-clients.js?v=<?=$cacheVer?>"></script>
 
 <?php
 require "scripts/pi-hole/php/footer.php";

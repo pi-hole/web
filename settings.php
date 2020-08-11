@@ -1422,8 +1422,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
 </div>
 
 <script src="scripts/vendor/jquery.confirm.min.js"></script>
-<script src="scripts/pi-hole/js/utils.js"></script>
-<script src="scripts/pi-hole/js/settings.js"></script>
+<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/settings.js?v=<?=$cacheVer?>"></script>
 
 <?php
 require "scripts/pi-hole/php/footer.php";
