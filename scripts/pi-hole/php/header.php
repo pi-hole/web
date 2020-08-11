@@ -14,6 +14,9 @@
     $hostname = gethostname() ? gethostname() : "";
 
     check_cors();
+    
+    // Create cache busting version
+    $cacheVer = filectime(__FILE__);
 
     // Generate CSRF token
     if(empty($_SESSION['token'])) {
@@ -190,15 +193,15 @@
     <link rel="stylesheet" href="style/vendor/font-awesome/css/all.min.css">
     <link rel="stylesheet" href="style/vendor/datatables.min.css">
     <link rel="stylesheet" href="style/vendor/daterangepicker.min.css">
-    <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
+    <link rel="stylesheet" href="style/vendor/AdminLTE.min.css?v=<?=$cacheVer?>">
 
 <?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?>
     <link rel="stylesheet" href="style/vendor/animate.min.css">
     <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css">
     <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css">
 <?php } ?>
-    <link rel="stylesheet" href="style/pi-hole.css">
-    <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css">
+    <link rel="stylesheet" href="style/pi-hole.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css?v=<?=$cacheVer?>">
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
 
     <script src="scripts/vendor/jquery.min.js"></script>
