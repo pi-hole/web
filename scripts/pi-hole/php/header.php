@@ -16,7 +16,7 @@
     check_cors();
     
     // Create cache busting version
-    $cacheVer = filectime(__FILE__);
+    $cacheVer = filemtime(__FILE__);
 
     // Generate CSRF token
     if(empty($_SESSION['token'])) {
