@@ -150,7 +150,7 @@ function validateIPv6CIDR(ip) {
   var ipv6validator = new RegExp(
     "^(((?:" +
       ipv6elem +
-      "))((?::" +
+      "))*((?::" +
       ipv6elem +
       "))*::((?:" +
       ipv6elem +

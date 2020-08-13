@@ -893,6 +893,53 @@ if ($_POST['action'] == 'get_groups') {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
+} elseif ($_POST['action'] == 'add_audit') {
+        // Add new domain
+        try {
+            $domains = explode(' ', html_entity_decode(trim($_POST['domain'])));
+            $before = intval($db->querySingle("SELECT COUNT(*) FROM domain_audit;"));
+            $total = count($domains);
+            $added = 0;
+            $stmt = $db->prepare('REPLACE INTO domain_audit (domain) VALUES (:domain)');
+            if (!$stmt) {
+                throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
+            }
+
+            foreach ($domains as $domain) {
+                $input = $domain;
+
+                if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
+                    throw new Exception('While binding domain: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                    'Added ' . $added . " out of ". $total . " domains");
+                }
+
+                if (!$stmt->execute()) {
+                    throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                    'Added ' . $added . " out of ". $total . " domains");
+                }
+                $added++;
+            }
+
+            $after = intval($db->querySingle("SELECT COUNT(*) FROM domain_audit;"));
+            $difference = $after - $before;
+            if($total === 1) {
+                if($difference !== 1) {
+                        $msg = "Not adding ". htmlentities(utf8_encode($domain)) . " as it is already on the list";
+                } else {
+                        $msg = "Added " . htmlentities(utf8_encode($domain));
+                }
+            } else {
+                if($difference !== $total) {
+                        $msg = "Added " . ($after-$before) . " out of ". $total . " domains (skipped duplicates)";
+                } else {
+                        $msg = "Added " . $total . " domains";
+                }
+            }
+            $reload = true;
+            JSON_success($msg);
+        } catch (\Exception $ex) {
+            JSON_error($ex->getMessage());
+        }
 } else {
     log_and_die('Requested action not supported!');
 }
