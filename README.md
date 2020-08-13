@@ -1,8 +1,10 @@
-# About the project
+## This project is part of
 
-So [project](https://blog.arevindh.com/2017/07/13/add-speedtest-to-pihole-webui/) is just another fun project integrating speedtest to PiHole Web UI.
+https://github.com/arevindh/pihole-speedtest
 
-Note : It’s just a quick solution , nowhere near perfect . If you made it better please let me know [here](https://github.com/arevindh/pihole-speedtest/issues)
+## About the project
+
+This project is just another fun project integrating speedtest to PiHole Web UI.
 
 It will be using speedtest.net on background for testing. More frequent the speed tests more data will used.
 
@@ -13,15 +15,9 @@ What does this mod have in extra ?
 3. Detailed speedtest results page.
 4. Ability to schedule speedtest interval.
 
-# By me a coffee 
+## Wiki
 
-Buy me a ☕️ if you like my projects :)
-
-https://www.buymeacoffee.com/itsmesid
-
-[Install Instructions](https://github.com/arevindh/pihole-speedtest/wiki/Installing-Speedtest-Mod)
-
-[Update Instructions](https://github.com/arevindh/pihole-speedtest/wiki/Updating--Speedtest-Mod)
+Wiki is available here https://github.com/arevindh/pihole-speedtest/wiki
 
 ## Disclaimer
 
