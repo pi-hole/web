@@ -287,6 +287,7 @@ function updateQueriesOverTime() {
     });
 }
 
+var querytypeids = [];
 function updateQueryTypesPie() {
   $.getJSON("api.php?getQueryTypes", function (data) {
     if ("FTLnotrunning" in data) {
@@ -305,12 +306,16 @@ function updateQueryTypesPie() {
       iter = data;
     }
 
+    querytypeids = [];
     Object.keys(iter).forEach(function (key) {
       if (iter[key] > 0) {
         v.push(iter[key]);
-        c.push(THEME_COLORS[i++ % THEME_COLORS.length]);
+        c.push(THEME_COLORS[i % THEME_COLORS.length]);
         k.push(key);
+        querytypeids.push(i + 1);
       }
+
+      i++;
     });
 
     // Build a single dataset with the data to be pushed
@@ -342,7 +347,7 @@ function updateQueryTypesPie() {
         ci.update();
       } else if (e.which === 1) {
         // which == 1 is left mouse button
-        window.open("queries.php?querytype=" + ($(this).index() + 1), "_self");
+        window.open("queries.php?querytype=" + querytypeids[$(this).index()], "_self");
       }
     });
   }).done(function () {
