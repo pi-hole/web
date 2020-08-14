@@ -59,7 +59,7 @@ function archive_add_table($name, $table, $type=-1)
 		array_push($content, $row);
 	}
 
-	$archive[$name] = json_encode($content);
+	$archive[$name] = json_encode($content, JSON_PRETTY_PRINT);
 }
 
 /**
