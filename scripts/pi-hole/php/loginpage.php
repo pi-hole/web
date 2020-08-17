@@ -38,7 +38,7 @@
           </ul>
           </div>
           <div class="col-xs-12 col-md-4">
-              <div class="pull-right">
+              <div class="pull-left">
                 <div>
                   <input type="checkbox" id="logincookie" name="persistentlogin">
                   <label for="logincookie">Remember me for 7 days</label>
