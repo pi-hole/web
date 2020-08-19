@@ -456,12 +456,6 @@ if($auth) {
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
-                <!-- Local DNS Records -->
-                <li<?php if($scriptname === "dns_records.php"){ ?> class="active"<?php } ?>>
-                    <a href="dns_records.php">
-                        <i class="fa fa-address-book"></i> <span>Local DNS Records</span>
-                    </a>
-                </li>
                 <!-- Group Management -->
                 <li class="treeview<?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?> active<?php } ?>">
                   <a href="#">
@@ -602,6 +596,27 @@ if($auth) {
                     <a href="settings.php">
                         <i class="fa fa-cogs"></i> <span>Settings</span>
                     </a>
+                </li>
+                <!-- Local DNS Records -->
+                <li class="treeview <?php if(in_array($scriptname, array("dns_records.php", "cname_records.php"))){ ?>active<?php } ?>">
+                  <a href="#">
+                    <i class="fa fa-address-book"></i> <span>Local DNS</span>                    
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>               
+                  </a>
+                  <ul class="treeview-menu">
+                    <li<?php if($scriptname === "dns_records.php"){ ?> class="active"<?php } ?>>
+                        <a href="dns_records.php">
+                            <i class="fa fa-address-book"></i> <span>DNS Records</span>
+                        </a>
+                    </li>
+                    <li<?php if($scriptname === "cname_records.php"){ ?> class="active"<?php } ?>>
+                        <a href="cname_records.php">
+                            <i class="fa fa-address-book"></i> <span>CNAME Records</span>
+                        </a>
+                    </li>
+                  </ul>
                 </li>
                 <!-- Logout -->
                 <?php

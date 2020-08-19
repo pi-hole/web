@@ -28,6 +28,10 @@ if(isset($setupVars["API_QUERY_LOG_SHOW"]))
 		$showing = "showing no queries (due to setting)";
 	}
 }
+else if(isset($_GET["type"]) && $_GET["type"] === "blocked")
+{
+	$showing = "showing blocked";
+}
 else
 {
 	// If filter variable is not set, we
@@ -43,6 +47,24 @@ if(isset($_GET["all"]))
 else if(isset($_GET["client"]))
 {
 	$showing .= " queries for client ".htmlentities($_GET["client"]);
+}
+else if(isset($_GET["forwarddest"]))
+{
+	if($_GET["forwarddest"] === "blocklist")
+		$showing .= " queries answered from blocklists";
+	elseif($_GET["forwarddest"] === "cache")
+		$showing .= " queries answered from cache";
+	else
+		$showing .= " queries for upstream destination ".htmlentities($_GET["forwarddest"]);
+}
+else if(isset($_GET["querytype"]))
+{
+	$qtypes = ["A (IPv4)", "AAAA (IPv6)", "ANY", "SRV", "SOA", "PTR", "TXT", "NAPTR"];
+	$qtype = intval($_GET["querytype"]);
+	if($qtype > 0 && $qtype <= count($qtypes))
+		$showing .= " ".$qtypes[$qtype-1]." queries";
+	else
+		$showing .= " type ".$qtype." queries";
 }
 else if(isset($_GET["domain"]))
 {
