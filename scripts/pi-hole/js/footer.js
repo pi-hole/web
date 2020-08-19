@@ -170,7 +170,7 @@ function initCPUtemp() {
       switch (unit) {
         case "K":
           temperature += 273.15;
-          displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;K");
+          displaytemp.html(temperature.toFixed(1) + "&nbsp;K");
           break;
 
         case "F":
