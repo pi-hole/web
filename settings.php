@@ -994,7 +994,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
 	                                               requests to your DHCP server (most likely your router), but only for devices on your
 	                                               home network.  To configure this we will need to know the IP
 	                                               address of your DHCP server and which addresses belong to your local network.
-                                                   Exemplary inout is given below as placeholder in the text boxes (if empty).</p>
+                                                   Exemplary input is given below as placeholder in the text boxes (if empty).</p>
                                                 <p>If your local network spans 192.168.0.1 - 192.168.0.255, then you will have to input
                                                    <code>192.168.0.0/24</code>. If your local network is 192.168.47.1 - 192.168.47.255, it will
                                                    be <code>192.168.47.0/24</code> and similar. If your network is larger, the CIDR has to be
