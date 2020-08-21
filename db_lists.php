@@ -139,7 +139,7 @@ else
     <!-- /.col -->
 </div>
 
-<script src="scripts/vendor/daterangepicker.min.js"></script>
+<script src="scripts/vendor/daterangepicker.min.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/db_lists.js?v=<?=$cacheVer?>"></script>
 

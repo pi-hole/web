@@ -1421,7 +1421,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
     </div>
 </div>
 
-<script src="scripts/vendor/jquery.confirm.min.js"></script>
+<script src="scripts/vendor/jquery.confirm.min.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/settings.js?v=<?=$cacheVer?>"></script>
 
