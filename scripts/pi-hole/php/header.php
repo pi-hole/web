@@ -191,6 +191,7 @@
     <link rel="stylesheet" href="style/vendor/datatables.min.css">
     <link rel="stylesheet" href="style/vendor/daterangepicker.min.css">
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
+    <link rel="stylesheet" href="style/vendor/select2.min.css">
 
 <?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?>
     <link rel="stylesheet" href="style/vendor/animate.min.css">
@@ -205,6 +206,7 @@
     <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="scripts/vendor/adminlte.min.js"></script>
     <script src="scripts/vendor/bootstrap-notify.min.js"></script>
+    <script src="scripts/vendor/select2.min.js"></script>
     <script src="scripts/vendor/datatables.min.js"></script>
     <script src="scripts/vendor/moment.min.js"></script>
     <script src="scripts/vendor/Chart.min.js"></script>
