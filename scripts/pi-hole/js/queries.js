@@ -515,13 +515,11 @@ function tooltipText(index, text) {
 }
 
 function addColumnFilter(event, colID, filterstring) {
-  if (event.ctrlKey || event.metaKey)
-  {
+  if (event.ctrlKey || event.metaKey) {
     return;
   }
 
-  if (tableFilters[colID] === filterstring)
-  {
+  if (tableFilters[colID] === filterstring) {
     filterstring = "";
   }
 
