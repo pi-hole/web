@@ -515,12 +515,13 @@ function tooltipText(index, text) {
 }
 
 function addColumnFilter(event, colID, filterstring) {
-  // Don't do anything when NOT explicitly requesting multi-selection functions
-  if (!event.ctrlKey && !event.metaKey && !event.shiftKey) {
+  if (event.ctrlKey || event.metaKey)
+  {
     return;
   }
 
-  if (event.shiftKey) {
+  if (tableFilters[colID] === filterstring)
+  {
     filterstring = "";
   }
 

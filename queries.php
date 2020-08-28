@@ -162,8 +162,8 @@ if(strlen($showing) > 0)
             </table>
             <p><strong>Filtering options:</strong></p>
             <ul>
-                <li>Use <kbd>Ctrl</kbd> or <kbd>&#8984;</kbd> + <i class="fas fa-mouse-pointer"></i> to add columns to the current filter</li>
-                <li>Use <kbd>Shift</kbd> + <i class="fas fa-mouse-pointer"></i> to remove columns from the current filter</li>
+                <li>Click a value in a column to add/remove that value to/from the filter</li>
+                <li>Use <kbd>Ctrl</kbd> or <kbd>&#8984;</kbd> + <i class="fas fa-mouse-pointer"></i> to enable highlighting for copy paste</li>
             </ul><br/><button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear filters</button>
         </div>
         <!-- /.box-body -->
