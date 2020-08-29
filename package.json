@@ -26,7 +26,7 @@
     "autoprefixer": "^9.8.5",
     "eslint-plugin-compat": "^3.8.0",
     "postcss-cli": "^7.1.1",
-    "prettier": "2.0.4",
+    "prettier": "2.1.1",
     "xo": "^0.32.1"
   },
   "browserslist": [
