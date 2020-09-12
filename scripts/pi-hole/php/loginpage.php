@@ -44,20 +44,18 @@
             </ul>
           </div>
           <div class="col-xs-12 col-md-4">
-              <div>
-                <input type="checkbox" id="logincookie" name="persistentlogin">
-                <label for="logincookie">Remember me for 7 days</label>
-              </div>
+            <div>
+              <input type="checkbox" id="logincookie" name="persistentlogin">
+              <label for="logincookie">Remember me for 7 days</label>
+            </div>
           </div>
         </div>
         <br>
         <div class="row">
           <div class="col-xs-12">
-            <div class="box box-<?php if (!$wrongpassword) { ?>info<?php } else { ?>danger<?php }
-                                                                                        if (!$wrongpassword) { ?> collapsed-box<?php } ?>">
+            <div class="box box-<?php if (!$wrongpassword) { ?>info collapsed-box<?php } else { ?>danger<?php }?>">
               <div class="box-header with-border">
                 <h3 class="box-title">Forgot password?</h3>
-
                 <div class="box-tools pull-right">
                   <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa <?php if ($wrongpassword) { ?>fa-minus<?php } else { ?>fa-plus<?php } ?>"></i>
                   </button>
