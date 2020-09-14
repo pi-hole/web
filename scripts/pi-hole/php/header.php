@@ -14,6 +14,9 @@
     $hostname = gethostname() ? gethostname() : "";
 
     check_cors();
+    
+    // Create cache busting version
+    $cacheVer = filemtime(__FILE__);
 
     // Generate CSRF token
     if(empty($_SESSION['token'])) {
@@ -185,31 +188,31 @@
         html { background-color: #000; }
     </style>
 <?php } ?>
-    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css">
-    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style/vendor/font-awesome/css/all.min.css">
-    <link rel="stylesheet" href="style/vendor/datatables.min.css">
-    <link rel="stylesheet" href="style/vendor/daterangepicker.min.css">
-    <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
-    <link rel="stylesheet" href="style/vendor/select2.min.css">
+    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/font-awesome/css/all.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/datatables.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/daterangepicker.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/AdminLTE.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/select2.min.css?v=<?=$cacheVer?>">
 
 <?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?>
-    <link rel="stylesheet" href="style/vendor/animate.min.css">
-    <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css">
-    <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css">
+    <link rel="stylesheet" href="style/vendor/animate.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css?v=<?=$cacheVer?>">
 <?php } ?>
-    <link rel="stylesheet" href="style/pi-hole.css">
-    <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css">
-    <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
+    <link rel="stylesheet" href="style/pi-hole.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css?v=<?=$cacheVer?>">
+    <noscript><link rel="stylesheet" href="style/vendor/js-warn.css?v=<?=$cacheVer?>"></noscript>
 
-    <script src="scripts/vendor/jquery.min.js"></script>
-    <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="scripts/vendor/adminlte.min.js"></script>
-    <script src="scripts/vendor/bootstrap-notify.min.js"></script>
-    <script src="scripts/vendor/select2.min.js"></script>
-    <script src="scripts/vendor/datatables.min.js"></script>
-    <script src="scripts/vendor/moment.min.js"></script>
-    <script src="scripts/vendor/Chart.min.js"></script>
+    <script src="scripts/vendor/jquery.min.js?v=<?=$cacheVer?>"></script>
+    <script src="style/vendor/bootstrap/js/bootstrap.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/adminlte.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/bootstrap-notify.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/select2.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/datatables.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/moment.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/Chart.min.js?v=<?=$cacheVer?>"></script>
 </head>
 <body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <noscript>

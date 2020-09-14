@@ -159,9 +159,9 @@
     </div>
 </div>
 <!-- /.row -->
-<script src="scripts/pi-hole/js/ip-address-sorting.js"></script>
-<script src="scripts/vendor/daterangepicker.min.js"></script>
-<script src="scripts/pi-hole/js/db_queries.js"></script>
+<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/vendor/daterangepicker.min.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/db_queries.js?v=<?=$cacheVer?>"></script>
 
 <?php
     require "scripts/pi-hole/php/footer.php";
