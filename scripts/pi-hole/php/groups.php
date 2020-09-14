@@ -184,7 +184,7 @@ if ($_POST['action'] == 'get_groups') {
                 throw new Exception('Error while querying gravity\'s client_by_group table: ' . $db->lastErrorMsg());
             }
 
-            $stmt = $FTLdb->prepare('SELECT name FROM network WHERE id = (SELECT network_id FROM network_addresses WHERE ip = :ip);');
+            $stmt = $FTLdb->prepare('SELECT name FROM network_addresses WHERE ip = :ip;');
             if (!$stmt) {
                 throw new Exception('Error while preparing network table statement: ' . $db->lastErrorMsg());
             }
@@ -206,6 +206,7 @@ if ($_POST['action'] == 'get_groups') {
             while ($gres = $group_query->fetchArray(SQLITE3_ASSOC)) {
                 array_push($groups, $gres['group_id']);
             }
+            $group_query->finalize();
             $res['groups'] = $groups;
             array_push($data, $res);
         }
@@ -221,7 +222,7 @@ if ($_POST['action'] == 'get_groups') {
         $QUERYDB = getQueriesDBFilename();
         $FTLdb = SQLite3_connect($QUERYDB);
 
-        $query = $FTLdb->query('SELECT DISTINCT ip,network.name FROM network_addresses AS name LEFT JOIN network ON network.id = network_id ORDER BY ip ASC;');
+        $query = $FTLdb->query('SELECT DISTINCT id,hwaddr,macVendor FROM network ORDER BY firstSeen DESC;');
         if (!$query) {
             throw new Exception('Error while querying FTL\'s database: ' . $db->lastErrorMsg());
         }
@@ -229,7 +230,47 @@ if ($_POST['action'] == 'get_groups') {
         // Loop over results
         $ips = array();
         while ($res = $query->fetchArray(SQLITE3_ASSOC)) {
-            $ips[$res['ip']] = $res['name'] !== null ? $res['name'] : '';
+            $id = intval($res["id"]);
+
+            // Get possibly associated IP addresses and hostnames for this client
+            $query_ips = $FTLdb->query("SELECT ip,name FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC;");
+            $addresses = [];
+            $names = [];
+            while ($res_ips = $query_ips->fetchArray(SQLITE3_ASSOC)) {
+                array_push($addresses, utf8_encode($res_ips["ip"]));
+                if($res_ips["name"] !== null)
+                    array_push($names,utf8_encode($res_ips["name"]));
+            }
+            $query_ips->finalize();
+
+            // Prepare extra information
+            $extrainfo = "";
+            // Add list of associated host names to info string (if available)
+            if(count($names) === 1)
+                $extrainfo .= "hostname: ".$names[0];
+            else if(count($names) > 0)
+                $extrainfo .= "hostnames: ".implode(", ", $names);
+
+            // Add device vendor to info string (if available)
+            if (strlen($res["macVendor"]) > 0) {
+                if (count($names) > 0)
+                    $extrainfo .= "; ";
+                $extrainfo .= "vendor: ".htmlspecialchars($res["macVendor"]);
+            }
+
+            // Add list of associated host names to info string (if available and if this is not a mock device)
+            if (stripos($res["hwaddr"], "ip-") === FALSE) {
+
+                if ((count($names) > 0 || strlen($res["macVendor"]) > 0) && count($addresses) > 0)
+                    $extrainfo .= "; ";
+
+                if(count($addresses) === 1)
+                    $extrainfo .= "address: ".$addresses[0];
+                else if(count($addresses) > 0)
+                    $extrainfo .= "addresses: ".implode(", ", $addresses);
+            }
+
+            $ips[strtoupper($res['hwaddr'])] = $extrainfo;
         }
         $FTLdb->close();
 
@@ -242,6 +283,9 @@ if ($_POST['action'] == 'get_groups') {
         while (($res = $query->fetchArray(SQLITE3_ASSOC)) !== false) {
             if (isset($ips[$res['ip']])) {
                 unset($ips[$res['ip']]);
+            }
+            if (isset($ips["IP-".$res['ip']])) {
+                unset($ips["IP-".$res['ip']]);
             }
         }
 

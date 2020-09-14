@@ -31,33 +31,33 @@
           <span class="fa fa-key form-control-feedback"></span>
         </div>
         <div class="row">
+          <div class="col-xs-12 col-md-12">
+            <button type="submit" class="btn btn-primary form-control"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in</button>
+          </div>
+        </div>
+        <br>
+        <div class="row">
           <div class="col-xs-8 hidden-xs hidden-sm">
-          <ul>
-            <li><kbd>Return</kbd> &rarr; Log in and go to requested page (<?php echo $scriptname; ?>)</li>
-            <li><kbd>Ctrl</kbd>+<kbd>Return</kbd> &rarr; Log in and go to Settings page</li>
-          </ul>
+            <ul>
+              <li><kbd>Return</kbd> &rarr; Log in and go to requested page (<?php echo $scriptname; ?>)</li>
+              <li><kbd>Ctrl</kbd>+<kbd>Return</kbd> &rarr; Log in and go to Settings page</li>
+            </ul>
           </div>
           <div class="col-xs-12 col-md-4">
-              <div class="pull-right">
-                <div>
-                  <input type="checkbox" id="logincookie" name="persistentlogin">
-                  <label for="logincookie">Remember me for 7 days</label>
-                </div>
+            <div>
+              <input type="checkbox" id="logincookie" name="persistentlogin">
+              <label for="logincookie">Remember me for 7 days</label>
             </div>
-            <button type="submit" class="btn btn-primary pull-right"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in</button>
           </div>
         </div>
         <br>
         <div class="row">
           <div class="col-xs-12">
-            <div class="box box-<?php if (!$wrongpassword) { ?>info<?php } else { ?>danger<?php }
-            if (!$wrongpassword) { ?> collapsed-box<?php } ?> box-solid">
+            <div class="box box-<?php if (!$wrongpassword) { ?>info collapsed-box<?php } else { ?>danger<?php }?>">
               <div class="box-header with-border">
-                <h3 class="box-title">Forgot password</h3>
-
+                <h3 class="box-title">Forgot password?</h3>
                 <div class="box-tools pull-right">
-                  <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
-                      class="fa <?php if ($wrongpassword) { ?>fa-minus<?php } else { ?>fa-plus<?php } ?>"></i>
+                  <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa <?php if ($wrongpassword) { ?>fa-minus<?php } else { ?>fa-plus<?php } ?>"></i>
                   </button>
                 </div>
               </div>
