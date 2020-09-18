@@ -164,7 +164,7 @@ function addCustomDNSEntry($ip="", $domain="", $json=true)
     }
     catch (\Exception $ex)
     {
-        return error($ex->getMessage(), $json);
+        return returnError($ex->getMessage(), $json);
     }
 }
 
@@ -229,7 +229,7 @@ function deleteAllCustomDNSEntries()
             }
             catch (\Exception $ex)
             {
-                return errorJsonResponse($ex->getMessage());
+                return returnError($ex->getMessage());
             }
 
             fclose($handle);
@@ -387,7 +387,7 @@ function returnSuccess($message = "", $json = true)
     if ($json) {
         return [ "success" => true, "message" => $message ];
     } else {
-        echo $msg."<br>";
+        echo $message."<br>";
         return true;
     }
 }
@@ -397,7 +397,7 @@ function returnError($message = "", $json = true)
     if ($json) {
         return [ "success" => false, "message" => $message ];
     } else {
-        echo $msg."<br>";
+        echo $message."<br>";
         return false;
     }
 }
