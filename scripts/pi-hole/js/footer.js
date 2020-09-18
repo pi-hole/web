@@ -133,6 +133,7 @@ function initCheckboxRadioStyle() {
 
   function applyCheckboxRadioStyle(style) {
     boxsheet.attr("href", getCheckboxURL(style));
+    // Get all radio/checkboxes for theming, with the exception of the two radio buttons on the custom disable timer
     var sel = $("input[type='radio'],input[type='checkbox']").not("#selSec").not("#selMin");
     sel.parent().removeClass();
     sel.parent().addClass("icheck-" + style);
