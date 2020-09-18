@@ -133,7 +133,7 @@ function initCheckboxRadioStyle() {
 
   function applyCheckboxRadioStyle(style) {
     boxsheet.attr("href", getCheckboxURL(style));
-    var sel = $("input[type='radio'],input[type='checkbox']");
+    var sel = $("input[type='radio'],input[type='checkbox']").not("#selSec").not("#selMin");
     sel.parent().removeClass();
     sel.parent().addClass("icheck-" + style);
   }
