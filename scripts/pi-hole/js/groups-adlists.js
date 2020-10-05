@@ -213,7 +213,7 @@ function initTable() {
 
 function addAdlist() {
   var address = utils.escapeHtml($("#new_address").val());
-  var comment = utils.escapeHtml($("#new_comment").val());
+  var comment = $("#new_comment").val();
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding adlist...", address);
