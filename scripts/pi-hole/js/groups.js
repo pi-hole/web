@@ -134,6 +134,8 @@ function addGroup() {
   utils.showAlert("info", "", "Adding group...", name);
 
   if (name.length === 0) {
+    // enable the ui elements again
+    utils.enableAll();
     utils.showAlert("warning", "", "Warning", "Please specify a group name");
     return;
   }
