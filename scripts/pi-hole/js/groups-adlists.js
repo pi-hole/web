@@ -56,8 +56,10 @@ function initTable() {
       var tooltip =
         "Added: " +
         utils.datetime(data.date_added, false) +
-        "\nLast modified: " +
+        "\nLast modified (database entry): " +
         utils.datetime(data.date_modified, false) +
+        "\nLast updated (list content): " +
+        (data.date_updated !== null ? utils.datetime(data.date_updated, false) : "N/A") +
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
