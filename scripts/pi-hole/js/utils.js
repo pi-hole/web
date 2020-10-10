@@ -230,13 +230,13 @@ function getGraphType() {
   return localStorage.getItem("barchart_chkbox") === "false" ? "line" : "bar";
 }
 
-function textToClipboard (text) {
+function textToClipboard(text) {
   var tmpTextarea = document.createElement("textarea");
   document.body.appendChild(tmpTextarea);
   tmpTextarea.value = text;
   tmpTextarea.select();
   document.execCommand("copy");
-  document.body.removeChild(tmpTextarea);
+  tmpTextarea.remove();
 }
 
 window.utils = (function () {
