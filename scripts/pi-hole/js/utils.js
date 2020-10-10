@@ -230,6 +230,15 @@ function getGraphType() {
   return localStorage.getItem("barchart_chkbox") === "false" ? "line" : "bar";
 }
 
+function textToClipboard (text) {
+  var tmpTextarea = document.createElement("textarea");
+  document.body.appendChild(tmpTextarea);
+  tmpTextarea.value = text;
+  tmpTextarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(tmpTextarea);
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -246,6 +255,7 @@ window.utils = (function () {
     stateLoadCallback: stateLoadCallback,
     getGraphType: getGraphType,
     validateMAC: validateMAC,
-    validateHostname: validateHostname
+    validateHostname: validateHostname,
+    textToClipboard: textToClipboard
   };
 })();
