@@ -95,7 +95,7 @@ $(function () {
       } else {
         // This client has never sent a query to Pi-hole, color light-red
         color = networkNever;
-        iconClasses = "fas fa-check";
+        iconClasses = "fas fa-times";
       }
 
       // Set determined background color
