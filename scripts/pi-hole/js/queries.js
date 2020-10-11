@@ -516,8 +516,8 @@ function tooltipText(index, text) {
 
 function addColumnFilter(event, colID, filterstring) {
   if (event.ctrlKey || event.metaKey) {
-    if (colID === 2) {
-      // If it is the domain column, copy value to clipboard
+    if (colID === 2 || colID === 3) {
+      // If it is the domain or client column, copy value to clipboard
       utils.textToClipboard(filterstring);
       utils.showAlert("info", "", "Copied '" + filterstring + "' to clipboard", "");
     }

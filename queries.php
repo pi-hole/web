@@ -163,7 +163,7 @@ if(strlen($showing) > 0)
             <p><strong>Filtering options:</strong></p>
             <ul>
                 <li>Click a value in a column to add/remove that value to/from the filter</li>
-                <li>On a computer: Use <kbd>Ctrl</kbd> or <kbd>&#8984;</kbd> + <i class="fas fa-mouse-pointer"></i> on the domain column to copy the domain to the clipboard</li>
+                <li>On a computer: Use <kbd>Ctrl</kbd> or <kbd>&#8984;</kbd> + <i class="fas fa-mouse-pointer"></i> on the domain/client columns to copy the value to the clipboard</li>
                 <li>On a mobile: Long press to highlight the domain to enable copying to clipboard
             </ul><br/><button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear filters</button>
         </div>
