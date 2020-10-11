@@ -508,10 +508,10 @@ function tooltipText(index, text) {
   }
 
   if (index in tableFilters && tableFilters[index].length > 0) {
-    return "Clear filter on " + colTypes[index] + ' "' + text + '" using Shift + Click.';
+    return "Click to remove " + colTypes[index] + ' "' + text + '" from filter.';
   }
 
-  return "Add filter on " + colTypes[index] + ' "' + text + '" using Ctrl + Click.';
+  return "Click to add " + colTypes[index] + ' "' + text + '" to filter.';
 }
 
 function addColumnFilter(event, colID, filterstring) {
