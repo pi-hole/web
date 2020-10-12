@@ -132,7 +132,7 @@ function initTable() {
 
       $("td:eq(1)", row).html('<input id="comment_' + data.id + '" class="form-control">');
       var commentEl = $("#comment_" + data.id, row);
-      commentEl.val(data.comment);
+      commentEl.val(utils.unescapeHtml(data.comment));
       commentEl.on("change", editClient);
 
       $("td:eq(2)", row).empty();

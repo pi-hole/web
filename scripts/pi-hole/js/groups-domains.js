@@ -149,7 +149,7 @@ function initTable() {
 
       $("td:eq(3)", row).html('<input id="comment_' + data.id + '" class="form-control">');
       var commentEl = $("#comment_" + data.id, row);
-      commentEl.val(data.comment);
+      commentEl.val(utils.unescapeHtml(data.comment));
       commentEl.on("change", editDomain);
 
       // Show group assignment field only if in full domain management mode
