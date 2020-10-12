@@ -508,19 +508,19 @@ function tooltipText(index, text) {
   }
 
   if (index in tableFilters && tableFilters[index].length > 0) {
-    return "Clear filter on " + colTypes[index] + ' "' + text + '" using Shift + Click.';
+    return "Click to remove " + colTypes[index] + ' "' + text + '" from filter.';
   }
 
-  return "Add filter on " + colTypes[index] + ' "' + text + '" using Ctrl + Click.';
+  return "Click to add " + colTypes[index] + ' "' + text + '" to filter.';
 }
 
 function addColumnFilter(event, colID, filterstring) {
-  // Don't do anything when NOT explicitly requesting multi-selection functions
-  if (!event.ctrlKey && !event.metaKey && !event.shiftKey) {
+  // If the below modifier keys are held down, do nothing
+  if (event.ctrlKey || event.metaKey) {
     return;
   }
 
-  if (event.shiftKey) {
+  if (tableFilters[colID] === filterstring) {
     filterstring = "";
   }
 
