@@ -343,7 +343,7 @@ if($auth) {
                                 {
                                     echo "text-vivid-blue";
                                 }
-                                ?>"></i> Temp:&nbsp;</span><span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span><?php
+                                ?>"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span></span><?php
                             }
                         }
                         else
