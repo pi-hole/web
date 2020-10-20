@@ -258,8 +258,6 @@ function initTable() {
 
       // Reset visibility of ID column
       data.columns[0].visible = false;
-      // Show group assignment column only on full page
-      data.columns[5].visible = showtype === "all";
       // Apply loaded state to table
       return data;
     },
