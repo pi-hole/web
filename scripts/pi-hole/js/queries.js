@@ -261,6 +261,16 @@ $(function () {
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
           break;
+        case 12:
+          colorClass = "text-green";
+          fieldtext = "Retried";
+          buttontext = "";
+          break;
+        case 13:
+          colorClass = "text-green";
+          fieldtext = "Retried <br class='hidden-lg'>(ignored)";
+          buttontext = "";
+          break;
         default:
           colorClass = false;
           fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";

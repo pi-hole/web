@@ -195,6 +195,12 @@ function getQueryTypes() {
     queryType.push(11);
   }
 
+  if ($("#type_retried").prop("checked")) {
+    // Multiple IDs correspond to this status
+    // We request queries with all of them
+    queryType.push([12, 13]);
+  }
+
   return queryType.join(",");
 }
 
@@ -320,6 +326,16 @@ $(function () {
           fieldtext = "Blocked <br class='hidden-lg'>(exact blacklist, CNAME)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+          break;
+        case 12:
+          color = "green";
+          fieldtext = "Retried";
+          buttontext = "";
+          break;
+        case 13:
+          color = "green";
+          fieldtext = "Retried <br class='hidden-lg'>(ignored)";
+          buttontext = "";
           break;
         default:
           color = "black";
