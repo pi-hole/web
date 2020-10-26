@@ -41,12 +41,7 @@ function add(domain, list) {
     return;
   }
 
-  var listtype;
-  if (list === "white") {
-    listtype = "Whitelist";
-  } else {
-    listtype = "Blacklist";
-  }
+  var listtype = list === "white" ? "Whitelist" : "Blacklist";
 
   alProcessing.children(alDomain).html(domain);
   alProcessing.children(alList).html(listtype);
@@ -311,14 +306,9 @@ $(function () {
       }
 
       // Check for existence of sixth column and display only if not Pi-holed
-      var replytext,
-        replyid = data[5];
-
-      if (replyid >= 0 && replyid < replyTypes.length) {
-        replytext = replyTypes[replyid];
-      } else {
-        replytext = "? (" + replyid + ")";
-      }
+      var replyid = data[5];
+      var replytext =
+        replyid >= 0 && replyid < replyTypes.length ? replyTypes[replyid] : "? (" + replyid + ")";
 
       replytext += '<input type="hidden" name="id" value="' + replyid + '">';
 

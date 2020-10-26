@@ -239,13 +239,9 @@ function refreshTableData() {
 }
 
 $(function () {
-  var APIstring;
-
-  if (instantquery) {
-    APIstring = "api_db.php?getAllQueries&from=" + from + "&until=" + until;
-  } else {
-    APIstring = "api_db.php?getAllQueries=empty";
-  }
+  var APIstring = instantquery
+    ? "api_db.php?getAllQueries&from=" + from + "&until=" + until
+    : "api_db.php?getAllQueries=empty";
 
   // Check if query type filtering is enabled
   var queryType = getQueryTypes();
