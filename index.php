@@ -7,7 +7,6 @@
 *    Please see LICENSE file for your rights under this license. */
     $indexpage = true;
     require "scripts/pi-hole/php/header.php";
-    require_once("scripts/pi-hole/php/gravity.php");
 
     function getinterval()
     {
@@ -70,7 +69,7 @@
     <!-- ./col -->
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-red" title="<?php echo gravity_last_update(); ?>">
+        <div class="small-box bg-red">
             <div class="inner">
                 <p>Domains on Blocklist</p>
                 <h3 class="statistic"><span id="gravity_size">---</span></h3>

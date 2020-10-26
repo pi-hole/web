@@ -220,7 +220,7 @@ var customTooltips = function (tooltip) {
 
 var failures = 0;
 function updateQueriesOverTime() {
-  $.getJSON("api/stats/overTime/history", function (data) {
+  $.getJSON("/api/stats/overTime/history", function (data) {
     // remove last data point since it not representative
     data.splice(-1, 1);
 
@@ -261,7 +261,7 @@ function updateQueriesOverTime() {
 }
 
 function updateQueryTypesPie() {
-  $.getJSON("api/stats/query_types", function (data) {
+  $.getJSON("/api/stats/query_types", function (data) {
     var v = [],
       c = [],
       k = [],
@@ -273,11 +273,14 @@ function updateQueryTypesPie() {
       sum += item.count;
     });
 
-    // Fill chart with data
+    // Fill chart with data (only include query types which appeared recently)
     data.forEach(function (item) {
-      v.push((100 * item.count) / sum);
-      c.push(colors[i++ % colors.length]);
-      k.push(item.name);
+      if(item.count > 0) {
+        v.push((100 * item.count) / sum);
+        c.push(colors[i % colors.length]);
+        k.push(item.name);
+      }
+      i++;
     });
 
     // Build a single dataset with the data to be pushed
@@ -320,7 +323,7 @@ function updateQueryTypesPie() {
 }
 
 function updateClientsOverTime() {
-  $.getJSON("api/stats/overTime/clients", function (data) {
+  $.getJSON("/api/stats/overTime/clients", function (data) {
     // Remove graph if there are no results (e.g. new
     // installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.over_time)) {
@@ -398,7 +401,7 @@ function updateClientsOverTime() {
 }
 
 function updateForwardDestinationsPie() {
-  $.getJSON("api/stats/upstreams", function (data) {
+  $.getJSON("/api/stats/upstreams", function (data) {
     var v = [],
       c = [],
       k = [],
@@ -485,140 +488,34 @@ function escapeHtml(text) {
   });
 }
 
-function updateTopClientsChart() {
-  $.getJSON("api/stats/overTime/clients", function (data) {
-    // Clear tables before filling them with data
-    $("#client-frequency td").parent().remove();
-    var clienttable = $("#client-frequency").find("tbody:last");
-    var client, percentage, clientname, clientip, idx, url;
-    for (client in data.top_sources) {
-      if (Object.prototype.hasOwnProperty.call(data.top_sources, client)) {
-        // Sanitize client
-        if (escapeHtml(client) !== client) {
-          // Make a copy with the escaped index if necessary
-          data.top_sources[escapeHtml(client)] = data.top_sources[client];
-        }
-
-        client = escapeHtml(client);
-        if (client.indexOf("|") !== -1) {
-          idx = client.indexOf("|");
-          clientname = client.substr(0, idx);
-          clientip = client.substr(idx + 1, client.length - idx);
-        } else {
-          clientname = client;
-          clientip = client;
-        }
-
-        url =
-          '<a href="queries.php?client=' +
-          clientip +
-          '" title="' +
-          clientip +
-          '">' +
-          clientname +
-          "</a>";
-        percentage = (data.top_sources[client] / data.dns_queries_today) * 100;
-        clienttable.append(
-          "<tr> <td>" +
-            url +
-            "</td> <td>" +
-            data.top_sources[client] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            data.dns_queries_today +
-            '"> <div class="progress-bar progress-bar-blue" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
-        );
-      }
-    }
-
-    // Clear tables before filling them with data
-    $("#client-frequency-blocked td").parent().remove();
-    var clientblockedtable = $("#client-frequency-blocked").find("tbody:last");
-    for (client in data.top_sources_blocked) {
-      if (Object.prototype.hasOwnProperty.call(data.top_sources_blocked, client)) {
-        // Sanitize client
-        if (escapeHtml(client) !== client) {
-          // Make a copy with the escaped index if necessary
-          data.top_sources_blocked[escapeHtml(client)] = data.top_sources_blocked[client];
-        }
-
-        client = escapeHtml(client);
-        if (client.indexOf("|") !== -1) {
-          idx = client.indexOf("|");
-          clientname = client.substr(0, idx);
-          clientip = client.substr(idx + 1, client.length - idx);
-        } else {
-          clientname = client;
-          clientip = client;
-        }
-
-        url =
-          '<a href="queries.php?client=' +
-          clientip +
-          '" title="' +
-          clientip +
-          '">' +
-          clientname +
-          "</a>";
-        percentage = (data.top_sources_blocked[client] / data.ads_blocked_today) * 100;
-        clientblockedtable.append(
-          "<tr> <td>" +
-            url +
-            "</td> <td>" +
-            data.top_sources_blocked[client] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            data.ads_blocked_today +
-            '"> <div class="progress-bar progress-bar-blue" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
-        );
-      }
-    }
-
-    // Remove table if there are no results (e.g. privacy mode enabled)
-    if (jQuery.isEmptyObject(data.top_sources)) {
-      $("#client-frequency").parent().remove();
-    }
-
-    // Remove table if there are no results (e.g. privacy mode enabled)
-    if (jQuery.isEmptyObject(data.top_sources_blocked)) {
-      $("#client-frequency-blocked").parent().remove();
-    }
-
-    $("#client-frequency .overlay").hide();
-    $("#client-frequency-blocked .overlay").hide();
-    // Update top clients list data every ten seconds
-    setTimeout(updateTopClientsChart, 10000);
-  });
-}
-
 function updateTopLists() {
   // Update blocked domains
-  updateTopList(true);
+  updateTopDomainsTable(true);
 
   // Update permitted domains
-  updateTopList(false);
+  updateTopDomainsTable(false);
+
+  // Update blocked clients
+  updateTopClientsTable(true);
+
+  // Update permitted clients
+  updateTopClientsTable(false);
 
   // Update top lists data every 10 seconds
   setTimeout(updateTopLists, 10000);
 }
 
-function updateTopList(blocked) {
+function updateTopDomainsTable(blocked) {
   var api, style, tablecontent, table, overlay, domaintable;
   if (blocked) {
-    api = "api/stats/top_domains?blocked=true";
+    api = "/api/stats/top_domains?blocked=true";
     style = "queries-blocked";
     tablecontent = $("#ad-frequency td").parent();
     table = $("#ad-frequency td").parent();
     overlay = $("#ad-frequency .overlay");
     domaintable = $("#ad-frequency").find("tbody:last");
   } else {
-    api = "api/stats/top_domains";
+    api = "/api/stats/top_domains";
     style = "queries-permitted";
     tablecontent = $("#domain-frequency td").parent();
     table = $("#domain-frequency td").parent();
@@ -629,16 +526,15 @@ function updateTopList(blocked) {
   $.getJSON(api, function (data) {
     // Clear tables before filling them with data
     tablecontent.remove();
-    console.log(data);
     var url,
       domain,
       percentage,
       urlText,
       sum = 0;
 
-    // Remove table if there are no results (e.g. privacy mode enabled)
+    // Add note if there are no results (e.g. privacy mode enabled)
     if (jQuery.isEmptyObject(data.top_domains)) {
-      table.parent().remove();
+      domaintable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
     }
 
     // Compute total number of queries
@@ -676,6 +572,75 @@ function updateTopList(blocked) {
   });
 }
 
+function updateTopClientsTable(blocked) {
+  var api, style, tablecontent, table, overlay, clienttable;
+  if (blocked) {
+    api = "/api/stats/top_clients?blocked=true";
+    style = "queries-blocked";
+    tablecontent = $("#client-frequency-blocked td").parent();
+    table = $("#client-frequency-blocked td").parent();
+    overlay = $("#client-frequency-blocked .overlay");
+    clienttable = $("#client-frequency-blocked").find("tbody:last");
+  } else {
+    api = "/api/stats/top_clients";
+    style = "queries-permitted";
+    tablecontent = $("#client-frequency td").parent();
+    table = $("#client-frequency td").parent();
+    overlay = $("#client-frequency .overlay");
+    clienttable = $("#client-frequency").find("tbody:last");
+  }
+
+  $.getJSON(api, function (data) {
+    // Clear tables before filling them with data
+    tablecontent.remove();
+    var url,
+      domain,
+      percentage,
+      sum = 0;
+
+    // Add note if there are no results (e.g. privacy mode enabled)
+    if (jQuery.isEmptyObject(data.top_clients)) {
+      clienttable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
+    }
+
+    // Compute total number of queries
+    data.top_clients.forEach(function (client) {
+      sum += client.count;
+    });
+
+    // Populate table with content
+    data.top_clients.forEach(function (client) {
+      console.log([blocked, client]);
+      // Sanitize domain
+      clientname = escapeHtml(client.name);
+      clientip = escapeHtml(client.ip);
+      if(clientname.length < 1)
+        clientname = clientip;
+      url = '<a href="queries.php?client=' + clientip + '">' + clientname + "</a>";
+      percentage = (client.count / sum) * 100;
+
+      clienttable.append(
+        "<tr> <td>" +
+          url +
+          "</td> <td>" +
+          client.count +
+          '</td> <td> <div class="progress progress-sm" title="' +
+          percentage.toFixed(1) +
+          "% of " +
+          sum +
+          '"> <div class="progress-bar ' +
+          style +
+          '" style="width: ' +
+          percentage +
+          '%"></div> </div> </td> </tr> '
+      );
+    });
+
+    overlay.hide();
+  });
+}
+
+
 var FTLoffline = false;
 function updateSummaryData(runOnce) {
   var setTimer = function (timeInSeconds) {
@@ -684,10 +649,11 @@ function updateSummaryData(runOnce) {
     }
   };
 
-  $.getJSON("api/stats/summary", function (data) {
+  $.getJSON("/api/stats/summary", function (data) {
     updateSessionTimer();
 
     //Element name might have a different name to the property of the API so we split it at |
+    var intl = new Intl.NumberFormat;
     ["blocked_queries", "dns_queries", "percent_blocked", "total_clients", "gravity_size"].forEach(
       function (arrayItem) {
         var textData = data[arrayItem];
@@ -697,9 +663,11 @@ function updateSummaryData(runOnce) {
           Object.entries(data.total_queries).forEach(function (arrayItem) {
             sum += arrayItem[1];
           });
-          textData = sum;
+          textData = intl.format(sum);
         } else if (arrayItem === "percent_blocked") {
           textData = textData.toFixed(1) + "%";
+        } else {
+          textData = intl.format(textData);
         }
 
         if ($todayElement.text() !== textData) {
@@ -932,14 +900,11 @@ $(document).ready(function () {
     updateClientsOverTime();
   }
 
-  // Create / load "Top Domains" and "Top Advertisers" only if authorized
-  if (document.getElementById("domain-frequency") && document.getElementById("ad-frequency")) {
+  // Create / load "Top Domains", "Top Advertisers", and "Top Clients" only if authorized
+  if (document.getElementById("domain-frequency") &&
+      document.getElementById("ad-frequency") &&
+      document.getElementById("client-frequency")) {
     updateTopLists();
-  }
-
-  // Create / load "Top Clients" only if authorized
-  if (document.getElementById("client-frequency")) {
-    updateTopClientsChart();
   }
 
   $("#queryOverTimeChart").click(function (evt) {
