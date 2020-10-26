@@ -96,12 +96,10 @@ function piholeChange(action, duration) {
 function checkMessages() {
   $.getJSON("api_db.php?status", function (data) {
     if ("message_count" in data && data.message_count > 0) {
-      var title;
-      if (data.message_count > 1) {
-        title = "There are " + data.message_count + " warnings. Click for further details.";
-      } else {
-        title = "There is one warning. Click for further details.";
-      }
+      var title =
+        data.message_count > 1
+          ? "There are " + data.message_count + " warnings. Click for further details."
+          : "There is one warning. Click for further details.";
 
       $("#pihole-diagnosis").prop("title", title);
       $("#pihole-diagnosis-count").text(data.message_count);
