@@ -7,8 +7,7 @@
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
 ?>
-<!-- Send PHP info to JS -->
-<div id="token" hidden><?php echo $token ?></div>
+
 <!-- Title -->
 <div class="page-header">
     <h1>Audit log (showing live data)</h1>
@@ -73,7 +72,8 @@
 </div>
 <!-- /.row -->
 
-<script src="scripts/pi-hole/js/auditlog.js"></script>
+<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/auditlog.js?v=<?=$cacheVer?>"></script>
 
 <?php
     require "scripts/pi-hole/php/footer.php";

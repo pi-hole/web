@@ -10,7 +10,7 @@
 var table;
 var token = $("#token").text();
 
-$(document).ready(function () {
+$(function () {
   $("#btnAdd").on("click", addGroup);
 
   table = $("#groupsTable").DataTable({
@@ -34,9 +34,9 @@ $(document).ready(function () {
       $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
-        utils.datetime(data.date_added) +
+        utils.datetime(data.date_added, false) +
         "\nLast modified: " +
-        utils.datetime(data.date_modified) +
+        utils.datetime(data.date_modified, false) +
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
@@ -127,8 +127,8 @@ $(document).ready(function () {
 });
 
 function addGroup() {
-  var name = $("#new_name").val();
-  var desc = $("#new_desc").val();
+  var name = utils.escapeHtml($("#new_name").val());
+  var desc = utils.escapeHtml($("#new_desc").val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding group...", name);
@@ -157,7 +157,7 @@ function addGroup() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new group", jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -166,9 +166,9 @@ function editGroup() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var name = tr.find("#name_" + id).val();
+  var name = utils.escapeHtml(tr.find("#name_" + id).val());
   var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
-  var desc = tr.find("#desc_" + id).val();
+  var desc = utils.escapeHtml(tr.find("#desc_" + id).val());
 
   var done = "edited";
   var notDone = "editing";
@@ -231,7 +231,7 @@ function editGroup() {
         "Error while " + notDone + " group with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -239,7 +239,7 @@ function editGroup() {
 function deleteGroup() {
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var name = tr.find("#name_" + id).val();
+  var name = utils.escapeHtml(tr.find("#name_" + id).val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Deleting group...", name);
@@ -260,7 +260,7 @@ function deleteGroup() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting group with ID " + id, jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false */
+/* global utils:false, moment:false */
 
 var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf() / 1000;
@@ -22,6 +22,7 @@ $(function () {
     {
       timePicker: true,
       timePickerIncrement: 15,
+      timePicker24Hour: true,
       locale: { format: dateformat },
       startDate: start__,
       endDate: end__,
@@ -52,21 +53,6 @@ $(function () {
   );
 });
 
-// Credit: http://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406
-function escapeHtml(text) {
-  var map = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  };
-
-  return text.replace(/[&<>"']/g, function (m) {
-    return map[m];
-  });
-}
-
 function updateTopClientsChart() {
   $("#client-frequency .overlay").show();
   $.getJSON("api_db.php?topClients&from=" + from + "&until=" + until, function (data) {
@@ -84,10 +70,10 @@ function updateTopClientsChart() {
     for (client in data.top_sources) {
       if (Object.prototype.hasOwnProperty.call(data.top_sources, client)) {
         // Sanitize client
-        client = escapeHtml(client);
-        if (escapeHtml(client) !== client) {
+        client = utils.escapeHtml(client);
+        if (utils.escapeHtml(client) !== client) {
           // Make a copy with the escaped index if necessary
-          data.top_sources[escapeHtml(client)] = data.top_sources[client];
+          data.top_sources[utils.escapeHtml(client)] = data.top_sources[client];
         }
 
         if (client.indexOf("|") !== -1) {
@@ -138,10 +124,10 @@ function updateTopDomainsChart() {
     for (domain in data.top_domains) {
       if (Object.prototype.hasOwnProperty.call(data.top_domains, domain)) {
         // Sanitize domain
-        domain = escapeHtml(domain);
-        if (escapeHtml(domain) !== domain) {
+        domain = utils.escapeHtml(domain);
+        if (utils.escapeHtml(domain) !== domain) {
           // Make a copy with the escaped index if necessary
-          data.top_domains[escapeHtml(domain)] = data.top_domains[domain];
+          data.top_domains[utils.escapeHtml(domain)] = data.top_domains[domain];
         }
 
         percentage = (data.top_domains[domain] / sum) * 100;
@@ -185,10 +171,10 @@ function updateTopAdsChart() {
     for (ad in data.top_ads) {
       if (Object.prototype.hasOwnProperty.call(data.top_ads, ad)) {
         // Sanitize ad
-        ad = escapeHtml(ad);
-        if (escapeHtml(ad) !== ad) {
+        ad = utils.escapeHtml(ad);
+        if (utils.escapeHtml(ad) !== ad) {
           // Make a copy with the escaped index if necessary
-          data.top_ads[escapeHtml(ad)] = data.top_ads[ad];
+          data.top_ads[utils.escapeHtml(ad)] = data.top_ads[ad];
         }
 
         percentage = (data.top_ads[ad] / sum) * 100;

@@ -5,23 +5,10 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global utils:false */
+
 // Define global variables
 var auditTimeout = null;
-
-// Credit: http://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406
-function escapeHtml(text) {
-  var map = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  };
-
-  return text.replace(/[&<>"']/g, function (m) {
-    return map[m];
-  });
-}
 
 function updateTopLists() {
   $.getJSON("api.php?topItems=audit", function (data) {
@@ -38,7 +25,7 @@ function updateTopLists() {
     for (domain in data.top_queries) {
       if (Object.prototype.hasOwnProperty.call(data.top_queries, domain)) {
         // Sanitize domain
-        domain = escapeHtml(domain);
+        domain = utils.escapeHtml(domain);
         url = '<a href="queries.php?domain=' + domain + '">' + domain + "</a>";
         domaintable.append(
           "<tr><td>" +
@@ -57,7 +44,7 @@ function updateTopLists() {
       if (Object.prototype.hasOwnProperty.call(data.top_ads, domain)) {
         var input = domain.split(" ");
         // Sanitize domain
-        var printdomain = escapeHtml(input[0]);
+        var printdomain = utils.escapeHtml(input[0]);
         if (input.length > 1) {
           url =
             '<a href="queries.php?domain=' +
@@ -106,14 +93,20 @@ function updateTopLists() {
 function add(domain, list) {
   var token = $("#token").text();
   $.ajax({
-    url: "scripts/pi-hole/php/add.php",
+    url: "scripts/pi-hole/php/groups.php",
     method: "post",
-    data: { domain: domain, list: list, token: token },
+    data: {
+      domain: domain,
+      list: list,
+      token: token,
+      action: list === "audit" ? "add_audit" : "add_domain",
+      comment: "Added from Audit Log"
+    },
     success: function () {
       updateTopLists();
     },
     error: function (jqXHR, exception) {
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -134,22 +127,24 @@ function auditUrl(url) {
   add(url, "audit");
 }
 
-$(document).ready(function () {
+$(function () {
   // Pull in data via AJAX
   updateTopLists();
 
-  $("#domain-frequency tbody").on("click", "button", function () {
+  $("#domain-frequency tbody").on("click", "button", function (event) {
     var url = $(this).parents("tr")[0].textContent.split(" ")[0];
-    if ($(this).context.textContent === " Blacklist") {
+
+    if (event.target.textContent.trim() === "Blacklist") {
       blacklistUrl(url);
     } else {
       auditUrl(url);
     }
   });
 
-  $("#ad-frequency tbody").on("click", "button", function () {
+  $("#ad-frequency tbody").on("click", "button", function (event) {
     var url = $(this).parents("tr")[0].textContent.split(" ")[0];
-    if ($(this).context.textContent === " Whitelist") {
+
+    if (event.target.textContent.trim() === "Whitelist") {
       whitelistUrl(url);
     } else {
       auditUrl(url);

@@ -40,23 +40,23 @@ function showAlert(type, message) {
 }
 
 $(function () {
-  $("#btnAdd").on("click", addCustomDNS);
+  $("#btnAdd").on("click", addCustomCNAME);
 
-  table = $("#customDNSTable").DataTable({
+  table = $("#customCNAMETable").DataTable({
     ajax: {
-      url: "scripts/pi-hole/php/customdns.php",
+      url: "scripts/pi-hole/php/customcname.php",
       data: { action: "get", token: token },
       type: "POST"
     },
-    columns: [{}, { type: "ip-address" }, { orderable: false, searchable: false }],
+    columns: [{}, {}, { orderable: false, searchable: false }],
     columnDefs: [
       {
         targets: 2,
         render: function (data, type, row) {
           return (
-            '<button type="button" class="btn btn-danger btn-xs deleteCustomDNS" data-domain=\'' +
+            '<button type="button" class="btn btn-danger btn-xs deleteCustomCNAME" data-domain=\'' +
             row[0] +
-            "' data-ip='" +
+            "' data-target='" +
             row[1] +
             "'>" +
             '<span class="far fa-trash-alt"></span>' +
@@ -70,7 +70,7 @@ $(function () {
       [10, 25, 50, 100, "All"]
     ],
     drawCallback: function () {
-      $(".deleteCustomDNS").on("click", deleteCustomDNS);
+      $(".deleteCustomCNAME").on("click", deleteCustomCNAME);
     }
   });
   // Disable autocorrect in the search box
@@ -81,16 +81,16 @@ $(function () {
   input.setAttribute("spellcheck", false);
 });
 
-function addCustomDNS() {
-  var ip = utils.escapeHtml($("#ip").val());
+function addCustomCNAME() {
   var domain = utils.escapeHtml($("#domain").val());
+  var target = utils.escapeHtml($("#target").val());
 
   showAlert("info");
   $.ajax({
-    url: "scripts/pi-hole/php/customdns.php",
+    url: "scripts/pi-hole/php/customcname.php",
     method: "post",
     dataType: "json",
-    data: { action: "add", ip: ip, domain: domain, token: token },
+    data: { action: "add", domain: domain, target: target, token: token },
     success: function (response) {
       if (response.success) {
         showAlert("success");
@@ -98,21 +98,21 @@ function addCustomDNS() {
       } else showAlert("error", response.message);
     },
     error: function () {
-      showAlert("error", "Error while adding this custom DNS entry");
+      showAlert("error", "Error while adding this custom CNAME record");
     }
   });
 }
 
-function deleteCustomDNS() {
-  var ip = $(this).attr("data-ip");
+function deleteCustomCNAME() {
   var domain = $(this).attr("data-domain");
+  var target = $(this).attr("data-target");
 
   showAlert("info");
   $.ajax({
-    url: "scripts/pi-hole/php/customdns.php",
+    url: "scripts/pi-hole/php/customcname.php",
     method: "post",
     dataType: "json",
-    data: { action: "delete", domain: domain, ip: ip, token: token },
+    data: { action: "delete", domain: domain, target: target, token: token },
     success: function (response) {
       if (response.success) {
         showAlert("success");
@@ -120,7 +120,7 @@ function deleteCustomDNS() {
       } else showAlert("error", response.message);
     },
     error: function (jqXHR, exception) {
-      showAlert("error", "Error while deleting this custom DNS entry");
+      showAlert("error", "Error while deleting this custom CNAME record");
       console.log(exception); // eslint-disable-line no-console
     }
   });

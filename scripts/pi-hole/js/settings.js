@@ -149,11 +149,11 @@ function loadCacheInfo() {
     }
 
     // Fill table with obtained values
-    $("#cache-size").text(parseInt(data.cacheinfo["cache-size"]));
-    $("#cache-inserted").text(parseInt(data.cacheinfo["cache-inserted"]));
+    $("#cache-size").text(parseInt(data.cacheinfo["cache-size"], 10));
+    $("#cache-inserted").text(parseInt(data.cacheinfo["cache-inserted"], 10));
 
     // Highlight early cache removals when present
-    var cachelivefreed = parseInt(data.cacheinfo["cache-live-freed"]);
+    var cachelivefreed = parseInt(data.cacheinfo["cache-live-freed"], 10);
     $("#cache-live-freed").text(cachelivefreed);
     if (cachelivefreed > 0) {
       $("#cache-live-freed").parent("tr").addClass("lookatme");
@@ -167,7 +167,7 @@ function loadCacheInfo() {
 }
 
 var leasetable, staticleasetable;
-$(document).ready(function () {
+$(function () {
   if (document.getElementById("DHCPLeasesTable")) {
     leasetable = $("#DHCPLeasesTable").DataTable({
       dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-6'i><'col-sm-6'f>>",
@@ -225,23 +225,12 @@ $(function () {
 });
 
 // DHCP leases tooltips
-$(document).ready(function () {
+$(function () {
   $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
 });
 
-// Change "?tab=" parameter in URL for save and reload
-$(".nav-tabs a").on("shown.bs.tab", function (e) {
-  var tab = e.target.hash.substring(1);
-  window.history.pushState("", "", "?tab=" + tab);
-  if (tab === "piholedhcp") {
-    window.location.reload();
-  }
-
-  window.scrollTo(0, 0);
-});
-
 // Auto dismissal for info notifications
-$(document).ready(function () {
+$(function () {
   var alInfo = $("#alInfo");
   if (alInfo.length > 0) {
     alInfo.delay(3000).fadeOut(2000, function () {
@@ -255,6 +244,25 @@ $(document).ready(function () {
   input.setAttribute("autocorrect", "off");
   input.setAttribute("autocapitalize", "off");
   input.setAttribute("spellcheck", false);
+
+  // En-/disable conditional forwarding input fields based
+  // on the checkbox state
+  $('input[name="rev_server"]').click(function () {
+    $('input[name="rev_server_cidr"]').prop("disabled", !this.checked);
+    $('input[name="rev_server_target"]').prop("disabled", !this.checked);
+    $('input[name="rev_server_domain"]').prop("disabled", !this.checked);
+  });
+});
+
+// Change "?tab=" parameter in URL for save and reload
+$(".nav-tabs a").on("shown.bs.tab", function (e) {
+  var tab = e.target.hash.substring(1);
+  window.history.pushState("", "", "?tab=" + tab);
+  if (tab === "piholedhcp") {
+    window.location.reload();
+  }
+
+  window.scrollTo(0, 0);
 });
 
 // Bar/Smooth chart toggle

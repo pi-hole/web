@@ -9,13 +9,6 @@
   background: url("../img/boxed-bg.jpg") repeat fixed;
 }
 
-.small-box {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
 .small-box span {
   transition-duration: 0.5s;
 }
@@ -149,13 +142,6 @@
   animation: fa-spin 1s infinite linear;
 }
 
-.extratooltipcanvas {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
 .chartjs-tooltip {
   opacity: 0;
   position: absolute;
@@ -248,9 +234,11 @@
   text-decoration: line-through !important;
 }
 
-.fa-paypal-icon {
-  width: 18px;
-  margin-left: 2px;
+/* These are needed because AdmintLTE 2.x doesn't support Font Awesome 5.x */
+.sidebar-menu > li > a > .fab,
+.sidebar-menu > li > a > .far,
+.sidebar-menu > li > a > .fas {
+  width: 20px;
 }
 
 /* Utilities */
@@ -262,6 +250,13 @@
   white-space: pre-wrap;
   word-break: break-all;
   word-wrap: break-word;
+}
+
+.no-user-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .pointer {
@@ -294,4 +289,18 @@
 
 .version-info {
   margin-top: 10px;
+}
+
+.daterangepicker {
+  font-family: inherit;
+}
+
+.form-inline .form-control {
+  display: inline-block;
+  width: 100%;
+  vertical-align: middle;
+}
+
+.select2-container--default .select2-results > .select2-results__options {
+  max-height: 400px;
 }

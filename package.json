@@ -23,14 +23,15 @@
     "test": "npm run prettier:check && npm run xo"
   },
   "devDependencies": {
-    "autoprefixer": "^9.8.0",
-    "postcss-cli": "^7.1.1",
+    "autoprefixer": "^9.8.6",
+    "eslint-plugin-compat": "^3.8.0",
+    "postcss-cli": "^7.1.2",
     "prettier": "2.0.4",
-    "xo": "^0.30.0"
+    "xo": "^0.34.1"
   },
   "browserslist": [
     "defaults",
-    "Explorer >= 10",
+    "Explorer >= 11",
     "not ExplorerMobile <= 11",
     "not Safari 5.1"
   ],
@@ -46,6 +47,9 @@
     "envs": [
       "browser",
       "jquery"
+    ],
+    "extends": [
+      "plugin:compat/recommended"
     ],
     "parserOptions": {
       "ecmaVersion": 5,
@@ -72,9 +76,9 @@
         }
       ],
       "no-alert": "off",
+      "no-console": "error",
       "no-negated-condition": "off",
       "one-var": "off",
-      "radix": "off",
       "spaced-comment": "off",
       "unicorn/explicit-length-check": [
         "error",

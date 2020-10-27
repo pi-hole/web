@@ -385,7 +385,7 @@ pre {
   color: #007997 !important;
 }
 td.highlight {
-  background-color: yellow;
+  background-color: rgba(255, 204, 0, 0.333);
 }
 .btn-default {
   box-shadow: none;
@@ -461,9 +461,9 @@ fieldset[disabled] .form-control {
   opacity: 1;
 }
 .dropdown-menu {
-  background-color: #353c42;
+  background-color: #4c5761;
   color: #bec5cb;
-  border: 1px solid #353c42;
+  border: 1px solid #171c20;
 }
 .table-striped > tbody > tr:nth-of-type(2n + 1) {
   background-color: #2d343a;
@@ -518,6 +518,12 @@ fieldset[disabled] .form-control {
   border-radius: 3px;
 }
 .box .overlay > .fa,
-.overlay-wrapper .overlay > .fa {
-  color: #bec5cb;
+.overlay-wrapper .overlay > .fa,
+.navbar-nav > .user-menu > .dropdown-menu > .user-body a {
+  color: #bec5cb !important;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer {
+  background-color: #353c42bb;
+  padding: 10px;
 }

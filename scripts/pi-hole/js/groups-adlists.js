@@ -23,7 +23,7 @@ function getGroups() {
   );
 }
 
-$(document).ready(function () {
+$(function () {
   $("#btnAdd").on("click", addAdlist);
 
   utils.setBsSelectDefaults();
@@ -55,9 +55,11 @@ function initTable() {
       $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
-        utils.datetime(data.date_added) +
-        "\nLast modified: " +
-        utils.datetime(data.date_modified) +
+        utils.datetime(data.date_added, false) +
+        "\nLast modified (database entry): " +
+        utils.datetime(data.date_modified, false) +
+        "\nLast updated (list content): " +
+        (data.date_updated !== null ? utils.datetime(data.date_updated, false) : "N/A") +
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
@@ -212,8 +214,8 @@ function initTable() {
 }
 
 function addAdlist() {
-  var address = $("#new_address").val();
-  var comment = $("#new_comment").val();
+  var address = utils.escapeHtml($("#new_address").val());
+  var comment = utils.escapeHtml($("#new_comment").val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding adlist...", address);
@@ -248,7 +250,7 @@ function addAdlist() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new adlist: ", jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -258,9 +260,9 @@ function editAdlist() {
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
   var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
-  var comment = tr.find("#comment_" + id).val();
+  var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
   var groups = tr.find("#multiselect_" + id).val();
-  var address = tr.find("#address_" + id).text();
+  var address = utils.escapeHtml(tr.find("#address_" + id).text());
 
   var done = "edited";
   var notDone = "editing";
@@ -330,7 +332,7 @@ function editAdlist() {
         "Error while " + notDone + " adlist with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -338,7 +340,7 @@ function editAdlist() {
 function deleteAdlist() {
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var address = tr.find("#address_" + id).text();
+  var address = utils.escapeHtml(tr.find("#address_" + id).text());
 
   utils.disableAll();
   utils.showAlert("info", "", "Deleting adlist...", address);
@@ -359,7 +361,7 @@ function deleteAdlist() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting adlist with ID " + id, jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }

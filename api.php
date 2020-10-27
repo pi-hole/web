@@ -7,10 +7,10 @@
 *    Please see LICENSE file for your rights under this license */
 
 $api = true;
-header('Content-type: application/json');
-require("scripts/pi-hole/php/FTL.php");
-require("scripts/pi-hole/php/password.php");
-require("scripts/pi-hole/php/auth.php");
+require_once("scripts/pi-hole/php/FTL.php");
+require_once("scripts/pi-hole/php/password.php");
+require_once("scripts/pi-hole/php/database.php");
+require_once("scripts/pi-hole/php/auth.php");
 check_cors();
 
 $FTL_IP = "127.0.0.1";
@@ -52,7 +52,10 @@ elseif (isset($_GET['enable']) && $auth)
 	}
 	pihole_execute('enable');
 	$data = array_merge($data, array("status" => "enabled"));
-	unlink("../custom_disable_timer");
+	if (file_exists("../custom_disable_timer"))
+	{
+		unlink("../custom_disable_timer");
+	}
 }
 elseif (isset($_GET['disable']) && $auth)
 {
@@ -77,7 +80,10 @@ elseif (isset($_GET['disable']) && $auth)
 	else
 	{
 		pihole_execute('disable');
-		unlink("../custom_disable_timer");
+		if (file_exists("../custom_disable_timer"))
+		{
+			unlink("../custom_disable_timer");
+		}
 	}
 	$data = array_merge($data, array("status" => "disabled"));
 }
@@ -107,29 +113,49 @@ elseif (isset($_GET['versions']))
 }
 elseif (isset($_GET['list']))
 {
+	if (!$auth)
+		die("Not authorized!");
+
+	if(!isset($_GET["list"]))
+		die("List has not been specified.");
+
+	switch ($_GET["list"]) {
+		case 'black':
+			$_POST['type'] = ListType::blacklist;
+			break;
+		case 'regex_black':
+			$_POST['type'] = ListType::regex_blacklist;
+			break;
+		case 'white':
+			$_POST['type'] = ListType::whitelist;
+			break;
+		case 'regex_white':
+			$_POST['type'] = ListType::regex_whitelist;
+			break;
+
+		default:
+			die("Invalid list [supported: black, regex_black, white, regex_white]");
+	}
+
 	if (isset($_GET['add']))
 	{
-		if (!$auth)
-			die("Not authorized!");
-
 		// Set POST parameters and invoke script to add domain to list
 		$_POST['domain'] = $_GET['add'];
-		$_POST['list'] = $_GET['list'];
-		require("scripts/pi-hole/php/add.php");
+		$_POST['action'] = 'add_domain';
+		require("scripts/pi-hole/php/groups.php");
 	}
 	elseif (isset($_GET['sub']))
 	{
-		if (!$auth)
-			die("Not authorized!");
-
 		// Set POST parameters and invoke script to remove domain from list
 		$_POST['domain'] = $_GET['sub'];
-		$_POST['list'] = $_GET['list'];
-		require("scripts/pi-hole/php/sub.php");
+		$_POST['action'] = 'delete_domain_string';
+		require("scripts/pi-hole/php/groups.php");
 	}
 	else
 	{
-		require("scripts/pi-hole/php/get.php");
+		// Set POST parameters and invoke script to get all domains
+		$_POST['action'] = 'get_domains';
+		require("scripts/pi-hole/php/groups.php");
 	}
 
 	return;
@@ -138,6 +164,7 @@ elseif (isset($_GET['list']))
 // Other API functions
 require("api_FTL.php");
 
+header('Content-type: application/json');
 if(isset($_GET["jsonForceObject"]))
 {
 	echo json_encode($data, JSON_FORCE_OBJECT);
