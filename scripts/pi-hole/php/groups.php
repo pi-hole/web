@@ -497,7 +497,7 @@ if ($_POST['action'] == 'get_groups') {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ($_POST['action'] == 'add_domain') {
+} elseif ($_POST['action'] == 'add_domain' || $_POST['action'] == 'replace_domain') {
     // Add new domain
     try {
         $domains = explode(' ', html_entity_decode(trim($_POST['domain'])));
@@ -507,6 +507,14 @@ if ($_POST['action'] == 'get_groups') {
         $stmt = $db->prepare('REPLACE INTO domainlist (domain,type,comment) VALUES (:domain,:type,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
+        }
+
+        $delstmt = null;
+        if($_POST['action'] == 'replace_domain') {
+            $delstmt = $db->prepare('DELETE FROM domainlist WHERE domain = :domain');
+            if (!$delstmt) {
+                throw new Exception('While preparing delete statement: ' . $db->lastErrorMsg());
+            }
         }
 
         if (isset($_POST['type'])) {
@@ -571,6 +579,20 @@ if ($_POST['action'] == 'get_groups') {
                 }
             }
 
+            // First try to delete any occurrences of this domain if we're in replace mode
+            if($_POST['action'] == 'replace_domain') {
+                if (!$delstmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
+                    throw new Exception('While binding domain: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                    'Added ' . $added . " out of ". $total . " domains");
+                }
+
+                if (!$delstmt->execute()) {
+                    throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                    'Added ' . $added . " out of ". $total . " domains");
+                }
+            }
+
+            // Add domain with specific type and comment (both were already bound above)
             if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
                 throw new Exception('While binding domain: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
                 'Added ' . $added . " out of ". $total . " domains");

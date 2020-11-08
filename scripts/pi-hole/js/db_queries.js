@@ -99,7 +99,7 @@ function add(domain, list) {
       domain: domain,
       list: list,
       token: token,
-      action: "add_domain",
+      action: "replace_domain",
       comment: "Added from Long-Term-Data Query Log"
     },
     success: function (response) {
