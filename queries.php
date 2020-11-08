@@ -163,7 +163,7 @@ if(strlen($showing) > 0)
             <p><strong>Filtering options:</strong></p>
             <ul>
                 <li>Click a value in a column to add/remove that value to/from the filter</li>
-                <li>On a computer: Hold down <kbd>Ctrl</kbd> or <kbd>&#8984;</kbd> to allow highlighting for copying to clipboard</li>
+                <li>On a computer: Hold down <kbd>Ctrl</kbd>, <kbd>Alt</kbd>, or <kbd>&#8984;</kbd> to allow highlighting for copying to clipboard</li>
                 <li>On a mobile: Long press to highlight the text and enable copying to clipboard
             </ul><br/><button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear filters</button>
         </div>
