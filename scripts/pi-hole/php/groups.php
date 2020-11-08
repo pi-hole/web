@@ -77,6 +77,11 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         foreach ($names as $name) {
+            // Silently skip this entry when it is empty or not a string (e.g. NULL)
+            if(!is_string($name) || strlen($name) == 0) {
+                continue;
+            }
+
             if (!$stmt->bindValue(':name', $name, SQLITE3_TEXT)) {
                 throw new Exception('While binding name: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
                 'Added ' . $added . " out of ". $total . " groups");
@@ -306,6 +311,11 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         foreach ($ips as $ip) {
+            // Silently skip this entry when it is empty or not a string (e.g. NULL)
+            if(!is_string($ip) || strlen($ip) == 0) {
+                continue;
+            }
+
             if (!$stmt->bindValue(':ip', $ip, SQLITE3_TEXT)) {
                 throw new Exception('While binding ip: ' . $db->lastErrorMsg());
             }
@@ -531,6 +541,11 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         foreach ($domains as $domain) {
+            // Silently skip this entry when it is empty or not a string (e.g. NULL)
+            if(!is_string($domain) || strlen($domain) == 0) {
+                continue;
+            }
+
             $input = $domain;
             // Convert domain name to IDNA ASCII form for international domains
             if (extension_loaded("intl")) {
@@ -808,6 +823,11 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         foreach ($addresses as $address) {
+            // Silently skip this entry when it is empty or not a string (e.g. NULL)
+            if(!is_string($address) || strlen($address) == 0) {
+                continue;
+            }
+
             if(preg_match("/[^a-zA-Z0-9:\/?&%=~._()-;]/", $address) !== 0) {
                 throw new Exception('<strong>Invalid adlist URL ' . htmlentities($address) . '</strong><br>'.
                 'Added ' . $added . " out of ". $total . " adlists");
@@ -950,7 +970,10 @@ if ($_POST['action'] == 'get_groups') {
             }
 
             foreach ($domains as $domain) {
-                $input = $domain;
+                // Silently skip this entry when it is empty or not a string (e.g. NULL)
+                if(!is_string($domain) || strlen($domain) == 0) {
+                    continue;
+                }
 
                 if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
                     throw new Exception('While binding domain: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
