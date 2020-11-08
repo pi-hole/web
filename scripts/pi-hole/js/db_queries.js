@@ -405,7 +405,7 @@ $(function () {
   });
   $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();
-    if (data[4] === 1 || data[4] === 4 || data[5] === 5) {
+    if ([1, 4, 5, 9, 10, 11].indexOf(data[4]) !== -1) {
       add(data[2], "white");
     } else {
       add(data[2], "black");
