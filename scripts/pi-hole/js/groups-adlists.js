@@ -222,6 +222,8 @@ function addAdlist() {
   utils.showAlert("info", "", "Adding adlist...", address);
 
   if (address.length === 0) {
+    // enable the ui elements again
+    utils.enableAll();
     utils.showAlert("warning", "", "Warning", "Please specify an adlist address");
     return;
   }
