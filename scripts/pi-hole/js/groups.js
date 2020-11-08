@@ -43,7 +43,7 @@ $(function () {
         '<input id="name_' + data.id + '" title="' + tooltip + '" class="form-control">'
       );
       var nameEl = $("#name_" + data.id, row);
-      nameEl.val(data.name);
+      nameEl.val(utils.unescapeHtml(data.name));
       nameEl.on("change", editGroup);
 
       var disabled = data.enabled === 0;
@@ -63,7 +63,7 @@ $(function () {
       $("td:eq(2)", row).html('<input id="desc_' + data.id + '" class="form-control">');
       var desc = data.description !== null ? data.description : "";
       var descEl = $("#desc_" + data.id, row);
-      descEl.val(desc);
+      descEl.val(utils.unescapeHtml(desc));
       descEl.on("change", editGroup);
 
       $("td:eq(3)", row).empty();

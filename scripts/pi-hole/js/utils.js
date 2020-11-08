@@ -22,6 +22,20 @@ function escapeHtml(text) {
   });
 }
 
+function unescapeHtml(text) {
+  var map = {
+    "&amp;": "&",
+    "&lt;": "<",
+    "&gt;": ">",
+    "&quot;": '"',
+    "&#039;": "'"
+  };
+
+  return text.replace(/&(?:amp|lt|gt|quot|#039);/g, function (m) {
+    return map[m];
+  });
+}
+
 // Helper function for converting Objects to Arrays after sorting the keys
 function objectToArray(obj) {
   var arr = [];
@@ -233,6 +247,7 @@ function getGraphType() {
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
+    unescapeHtml: unescapeHtml,
     objectToArray: objectToArray,
     padNumber: padNumber,
     showAlert: showAlert,
