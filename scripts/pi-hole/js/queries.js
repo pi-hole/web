@@ -506,7 +506,7 @@ function tooltipText(index, text) {
 
 function addColumnFilter(event, colID, filterstring) {
   // If the below modifier keys are held down, do nothing
-  if (event.ctrlKey || event.metaKey) {
+  if (event.ctrlKey || event.metaKey || event.altKey) {
     return;
   }
 
