@@ -69,6 +69,14 @@ $(function () {
       [10, 25, 50, 100, -1],
       [10, 25, 50, 100, "All"]
     ],
+    order: [[0, "asc"]],
+    stateSave: true,
+    stateSaveCallback: function (settings, data) {
+      utils.stateSaveCallback("LocalCNAMETable", data);
+    },
+    stateLoadCallback: function () {
+      return utils.stateLoadCallback("LocalCNAMETable");
+    },
     drawCallback: function () {
       $(".deleteCustomCNAME").on("click", deleteCustomCNAME);
     }
