@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="new_address">Address:</label>
-                        <input id="new_address" type="text" class="form-control" placeholder="http://..., https://..., file://..." autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                        <input id="new_address" type="text" class="form-control" placeholder="URL or space-separated URLs" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="new_comment">Comment:</label>
@@ -37,7 +37,11 @@
                 </div>
             </div>
             <div class="box-footer clearfix">
-                <strong>Hint:</strong>&nbsp;Please run <code>pihole -g</code> or update your gravity list <a href="gravity.php">online</a> after modifying your adlists.
+                <strong>Hints:</strong>
+                <ol>
+                    <li>Please run <code>pihole -g</code> or update your gravity list <a href="gravity.php">online</a> after modifying your adlists.</li>
+                    <li>Multiple adlists can be added by separating each <i>unique</i> URL with a space</li>
+                </ol>
                 <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
             </div>
         </div>
@@ -73,8 +77,10 @@
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/utils.js"></script>
-<script src="scripts/pi-hole/js/groups-adlists.js"></script>
+<script src="scripts/vendor/bootstrap-select.min.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/vendor/bootstrap-toggle.min.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/groups-adlists.js?v=<?=$cacheVer?>"></script>
 
 <?php
 require "scripts/pi-hole/php/footer.php";

@@ -288,6 +288,11 @@ else
 			// Get specific domain only
 			sendRequestFTL("getallqueries-domain ".$_GET['domain']);
 		}
+		else if(isset($_GET['client']) && (isset($_GET['type']) && $_GET['type'] === "blocked"))
+		{
+			// Get specific client only
+			sendRequestFTL("getallqueries-client-blocked ".$_GET['client']);
+		}
 		else if(isset($_GET['client']))
 		{
 			// Get specific client only

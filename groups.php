@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="new_name">Name:</label>
-                        <input id="new_name" type="text" class="form-control" placeholder="Group name">
+                        <input id="new_name" type="text" class="form-control" placeholder="Group name or space-separated group names">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="new_desc">Description:</label>
@@ -37,6 +37,11 @@
                 </div>
             </div>
             <div class="box-footer clearfix">
+                <strong>Hints:</strong>
+                <ol>
+                    <li>Multiple groups can be added by separating each group name with a space</li>
+                    <li>Group names can have spaces if entered in quotes. e.g "My New Group"</li>
+                </ol>
                 <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
             </div>
         </div>
@@ -71,8 +76,10 @@
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/utils.js"></script>
-<script src="scripts/pi-hole/js/groups.js"></script>
+<script src="scripts/vendor/bootstrap-select.min.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/vendor/bootstrap-toggle.min.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/groups.js?v=<?=$cacheVer?>"></script>
 
 <?php
 require "scripts/pi-hole/php/footer.php";

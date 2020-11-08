@@ -7,7 +7,44 @@
 
 /* global moment:false */
 
-var info = null;
+// Credit: https://stackoverflow.com/a/4835406
+function escapeHtml(text) {
+  var map = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  };
+
+  return text.replace(/[&<>"']/g, function (m) {
+    return map[m];
+  });
+}
+
+// Helper function for converting Objects to Arrays after sorting the keys
+function objectToArray(obj) {
+  var arr = [];
+  var idx = [];
+  var keys = Object.keys(obj);
+
+  keys.sort(function (a, b) {
+    return a - b;
+  });
+
+  for (var i = 0; i < keys.length; i++) {
+    arr.push(obj[keys[i]]);
+    idx.push(keys[i]);
+  }
+
+  return [idx, arr];
+}
+
+function padNumber(num) {
+  return ("00" + num).substr(-2, 2);
+}
+
+var info = null; // TODO clear this up; there shouldn't be a global var here
 function showAlert(type, icon, title, message) {
   var opts = {};
   title = "&nbsp;<strong>" + title + "</strong><br>";
@@ -67,27 +104,28 @@ function showAlert(type, icon, title, message) {
   }
 }
 
-function datetime(date) {
-  return moment.unix(Math.floor(date)).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
+function datetime(date, html) {
+  var format = html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
+  return moment.unix(Math.floor(date)).format(format);
 }
 
 function disableAll() {
-  $("input").attr("disabled", true);
-  $("select").attr("disabled", true);
-  $("button").attr("disabled", true);
-  $("textarea").attr("disabled", true);
+  $("input").prop("disabled", true);
+  $("select").prop("disabled", true);
+  $("button").prop("disabled", true);
+  $("textarea").prop("disabled", true);
 }
 
 function enableAll() {
-  $("input").attr("disabled", false);
-  $("select").attr("disabled", false);
-  $("button").attr("disabled", false);
-  $("textarea").attr("disabled", false);
+  $("input").prop("disabled", false);
+  $("select").prop("disabled", false);
+  $("button").prop("disabled", false);
+  $("textarea").prop("disabled", false);
 
   // Enable custom input field only if applicable
   var ip = $("#select") ? $("#select").val() : null;
   if (ip !== null && ip !== "custom") {
-    $("#ip-custom").attr("disabled", true);
+    $("#ip-custom").prop("disabled", true);
   }
 }
 
@@ -112,7 +150,7 @@ function validateIPv6CIDR(ip) {
   var ipv6validator = new RegExp(
     "^(((?:" +
       ipv6elem +
-      "))((?::" +
+      "))*((?::" +
       ipv6elem +
       "))*::((?:" +
       ipv6elem +
@@ -127,6 +165,16 @@ function validateIPv6CIDR(ip) {
       "$"
   );
   return ipv6validator.test(ip);
+}
+
+function validateMAC(mac) {
+  var macvalidator = new RegExp(/^([\da-fA-F]{2}:){5}([\da-fA-F]{2})$/);
+  return macvalidator.test(mac);
+}
+
+function validateHostname(name) {
+  var namevalidator = new RegExp(/[^<>;"]/);
+  return namevalidator.test(name);
 }
 
 // set bootstrap-select defaults
@@ -161,7 +209,14 @@ function stateLoadCallback(itemName) {
     return null;
   }
 
+  // Parse JSON string
   data = JSON.parse(data);
+
+  // Clear possible filtering settings
+  data.columns.forEach(function (value, index) {
+    data.columns[index].search.search = "";
+  });
+
   // Always start on the first page to show most recent queries
   data.start = 0;
   // Always start with empty search field
@@ -170,8 +225,16 @@ function stateLoadCallback(itemName) {
   return data;
 }
 
+function getGraphType() {
+  // Only return line if `barchart_chkbox` is explicitly set to false. Else return bar
+  return localStorage.getItem("barchart_chkbox") === "false" ? "line" : "bar";
+}
+
 window.utils = (function () {
   return {
+    escapeHtml: escapeHtml,
+    objectToArray: objectToArray,
+    padNumber: padNumber,
     showAlert: showAlert,
     datetime: datetime,
     disableAll: disableAll,
@@ -180,6 +243,9 @@ window.utils = (function () {
     validateIPv6CIDR: validateIPv6CIDR,
     setBsSelectDefaults: setBsSelectDefaults,
     stateSaveCallback: stateSaveCallback,
-    stateLoadCallback: stateLoadCallback
+    stateLoadCallback: stateLoadCallback,
+    getGraphType: getGraphType,
+    validateMAC: validateMAC,
+    validateHostname: validateHostname
   };
 })();

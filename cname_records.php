@@ -11,8 +11,8 @@
 
 <!-- Title -->
 <div class="page-header">
-    <h1>Local DNS Records</h1>
-    <small>On this page, you can add domain/IP associations</small>
+    <h1>Local CNAME Records</h1>
+    <small>On this page, you can add CNAME records.</small>
 </div>
 
 <!-- Domain Input -->
@@ -22,7 +22,7 @@
             <!-- /.box-header -->
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    Add a new domain/IP combination
+                    Add a new CNAME record
                 </h3>
             </div>
             <!-- /.box-header -->
@@ -33,8 +33,8 @@
                         <input id="domain" type="url" class="form-control" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="ip">IP Address:</label>
-                        <input id="ip" type="text" class="form-control" placeholder="Associated IP address" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                        <label for="target">Target Domain:</label>
+                        <input id="target" type="url" class="form-control" placeholder="Associated Target Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
 <!-- Alerts -->
 <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Updating the custom DNS entries...
+    Updating CNAME records...
 </div>
 <div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden>
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -67,16 +67,16 @@
         <div class="box" id="recent-queries">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of local DNS domains
+                    List of local CNAME records
                 </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="customDNSTable" class="table table-striped table-bordered" width="100%">
+                <table id="customCNAMETable" class="table table-striped table-bordered" width="100%">
                     <thead>
                     <tr>
                         <th>Domain</th>
-                        <th>IP</th>
+                        <th>Target</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -90,8 +90,7 @@
 </div>
 
 <script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/customdns.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/customcname.js?v=<?=$cacheVer?>"></script>
 
 <?php
 require "scripts/pi-hole/php/footer.php";

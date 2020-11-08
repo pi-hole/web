@@ -25,7 +25,7 @@ function getGroups() {
   );
 }
 
-$(document).ready(function () {
+$(function () {
   window.location.search
     .substr(1)
     .split("&")
@@ -85,9 +85,9 @@ function initTable() {
       $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
-        utils.datetime(data.date_added) +
+        utils.datetime(data.date_added, false) +
         "\nLast modified: " +
-        utils.datetime(data.date_modified) +
+        utils.datetime(data.date_modified, false) +
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
@@ -221,7 +221,7 @@ function initTable() {
       var applyBtn = "#btn_apply_" + data.id;
 
       // Highlight row (if url parameter "domainid=" is used)
-      if ("domainid" in GETDict && data.id === parseInt(GETDict.domainid)) {
+      if ("domainid" in GETDict && data.id === parseInt(GETDict.domainid, 10)) {
         $(row).find("td").addClass("highlight");
       }
 
@@ -251,7 +251,12 @@ function initTable() {
     },
     stateLoadCallback: function () {
       var data = utils.stateLoadCallback("groups-domains-table");
-      if (data === null) return null;
+
+      // Return if not available
+      if (data === null) {
+        return null;
+      }
+
       // Reset visibility of ID column
       data.columns[0].visible = false;
       // Show group assignment column only on full page
@@ -261,7 +266,10 @@ function initTable() {
     },
     initComplete: function () {
       if ("domainid" in GETDict) {
-        var pos = table.column(0, { order: "current" }).data().indexOf(parseInt(GETDict.domainid));
+        var pos = table
+          .column(0, { order: "current" })
+          .data()
+          .indexOf(parseInt(GETDict.domainid, 10));
         if (pos >= 0) {
           var page = Math.floor(pos / table.page.info().length);
           table.page(page).draw(false);
@@ -311,8 +319,8 @@ function addDomain() {
     commentEl = $("#new_regex_comment");
   }
 
-  var domain = domainEl.val();
-  var comment = commentEl.val();
+  var domain = utils.escapeHtml(domainEl.val());
+  var comment = utils.escapeHtml(commentEl.val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding " + domainRegex + "...", domain);
@@ -357,7 +365,7 @@ function addDomain() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Successfully added " + domainRegex, domain);
+        utils.showAlert("success", "fas fa-plus", "Success!", response.message);
         domainEl.val("");
         commentEl.val("");
         wildcardEl.prop("checked", false);
@@ -369,7 +377,7 @@ function addDomain() {
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new " + domainRegex, jqXHR.responseText);
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -378,10 +386,10 @@ function editDomain() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var domain = tr.find("#domain_" + id).text();
+  var domain = utils.escapeHtml(tr.find("#domain_" + id).text());
   var type = tr.find("#type_" + id).val();
   var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
-  var comment = tr.find("#comment_" + id).val();
+  var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
 
   // Show group assignment field only if in full domain management mode
   // if not included, just use the row data.
@@ -470,7 +478,7 @@ function editDomain() {
         "Error while " + notDone + " " + domainRegex + " with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }
@@ -478,7 +486,7 @@ function editDomain() {
 function deleteDomain() {
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var domain = tr.find("#domain_" + id).text();
+  var domain = utils.escapeHtml(tr.find("#domain_" + id).text());
   var type = tr.find("#type_" + id).val();
 
   var domainRegex;
@@ -522,7 +530,7 @@ function deleteDomain() {
         "Error while deleting " + domainRegex + " with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception);
+      console.log(exception); // eslint-disable-line no-console
     }
   });
 }

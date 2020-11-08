@@ -135,7 +135,7 @@ While we are primarily reachable on our <a href="https://discourse.pi-hole.net/"
   <img src="https://pi-hole.github.io/graphics/Screenshots/audit-log.png" alt="Pi-hole Web interface">
 </p>
 
-## Long Term Statistics to view data over user defined time ranges
+## Long-term statistics to view data over user defined time ranges
 
 <p align="center">
   <img src="https://pi-hole.github.io/graphics/Screenshots/long-term-stats.png" alt="Long-term stats">

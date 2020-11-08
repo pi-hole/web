@@ -6,16 +6,7 @@
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
-
-// Generate CSRF token
-if(empty($_SESSION['token'])) {
-    $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
-}
-$token = $_SESSION['token'];
-
 ?>
-<!-- Send PHP info to JS -->
-<div id="token" hidden><?php echo $token ?></div>
 
 <div class="page-header">
     <h1>Compute graphical statistics from the Pi-hole query database</h1>
@@ -76,8 +67,9 @@ $token = $_SESSION['token'];
   </div>
 </div>
 
-<script src="scripts/vendor/daterangepicker.js"></script>
-<script src="scripts/pi-hole/js/db_graph.js"></script>
+<script src="scripts/vendor/daterangepicker.min.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/db_graph.js?v=<?=$cacheVer?>"></script>
 
 <?php
     require "scripts/pi-hole/php/footer.php";

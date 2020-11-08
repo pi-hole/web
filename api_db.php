@@ -62,18 +62,27 @@ if(isset($_GET["network"]) && $auth)
 
 	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
 	{
-		$id = $res["id"];
-		// Empty array for holding the IP addresses
+		$id = intval($res["id"]);
+
+		// Get IP addresses and host names for this device
 		$res["ip"] = array();
-		// Get IP addresses for this device
-		$network_addresses = $db->query("SELECT ip FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC");
-		while($network_addresses !== false && $ip = $network_addresses->fetchArray(SQLITE3_ASSOC))
-			array_push($res["ip"],$ip["ip"]);
-		// UTF-8 encode host name and vendor
-		$res["name"] = utf8_encode($res["name"]);
+		$res["name"] = array();
+		$network_addresses = $db->query("SELECT ip,name FROM network_addresses WHERE network_id = $id ORDER BY lastSeen DESC");
+		while($network_addresses !== false && $network_address = $network_addresses->fetchArray(SQLITE3_ASSOC))
+		{
+			array_push($res["ip"],$network_address["ip"]);
+			if($network_address["name"] !== null)
+				array_push($res["name"],utf8_encode($network_address["name"]));
+			else
+				array_push($res["name"],"");
+		}
+		$network_addresses->finalize();
+
+		// UTF-8 encode vendor
 		$res["macVendor"] = utf8_encode($res["macVendor"]);
 		array_push($network, $res);
 	}
+	$results->finalize();
 
 	$data = array_merge($data, array('network' => $network));
 }
@@ -269,7 +278,7 @@ if (isset($_GET['topAds']) && $auth)
 	{
 		$limit = " AND timestamp <= :until";
 	}
-	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE (STATUS == 1 OR STATUS == 4)'.$limit.' GROUP by domain order by count(domain) desc limit 10');
+	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE (STATUS == 1 OR STATUS > 3)'.$limit.' GROUP by domain order by count(domain) desc limit 10');
 	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
 	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
@@ -401,7 +410,7 @@ if (isset($_GET['getGraphData']) && $auth)
 	$data = array_merge($data, $result);
 
 	// Count blocked queries in intervals
-	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status == 1 OR status == 4 OR status == 5)'.$limit.' GROUP by interval ORDER by interval');
+	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status == 1 OR status > 3)'.$limit.' GROUP by interval ORDER by interval');
 	$stmt->bindValue(":from", $from, SQLITE3_INTEGER);
 	$stmt->bindValue(":until", $until, SQLITE3_INTEGER);
 	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);

@@ -7,12 +7,6 @@
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
 
-// Generate CSRF token
-if(empty($_SESSION['token'])) {
-    $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
-}
-$token = $_SESSION['token'];
-
 $showing = "";
 
 if(isset($setupVars["API_QUERY_LOG_SHOW"]))
@@ -34,6 +28,10 @@ if(isset($setupVars["API_QUERY_LOG_SHOW"]))
 		$showing = "showing no queries (due to setting)";
 	}
 }
+else if(isset($_GET["type"]) && $_GET["type"] === "blocked")
+{
+	$showing = "showing blocked";
+}
 else
 {
 	// If filter variable is not set, we
@@ -49,6 +47,24 @@ if(isset($_GET["all"]))
 else if(isset($_GET["client"]))
 {
 	$showing .= " queries for client ".htmlentities($_GET["client"]);
+}
+else if(isset($_GET["forwarddest"]))
+{
+	if($_GET["forwarddest"] === "blocklist")
+		$showing .= " queries answered from blocklists";
+	elseif($_GET["forwarddest"] === "cache")
+		$showing .= " queries answered from cache";
+	else
+		$showing .= " queries for upstream destination ".htmlentities($_GET["forwarddest"]);
+}
+else if(isset($_GET["querytype"]))
+{
+	$qtypes = ["A (IPv4)", "AAAA (IPv6)", "ANY", "SRV", "SOA", "PTR", "TXT", "NAPTR"];
+	$qtype = intval($_GET["querytype"]);
+	if($qtype > 0 && $qtype <= count($qtypes))
+		$showing .= " ".$qtypes[$qtype-1]." queries";
+	else
+		$showing .= " type ".$qtype." queries";
 }
 else if(isset($_GET["domain"]))
 {
@@ -80,8 +96,6 @@ if(strlen($showing) > 0)
 		$showing .= ", <a href=\"?all\">show all</a>";
 }
 ?>
-<!-- Send PHP info to JS -->
-<div id="token" hidden><?php echo $token ?></div>
 
 <!-- Alert Modal -->
 <div id="alertModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -146,8 +160,12 @@ if(strlen($showing) > 0)
                     </tr>
                 </tfoot>
             </table>
-            <label><input type="checkbox" id="autofilter">&nbsp;Apply filtering on click on Type, Domain, and Clients</label><br/>
-            <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear Filters</button>
+            <p><strong>Filtering options:</strong></p>
+            <ul>
+                <li>Click a value in a column to add/remove that value to/from the filter</li>
+                <li>On a computer: Hold down <kbd>Ctrl</kbd> or <kbd>&#8984;</kbd> to allow highlighting for copying to clipboard</li>
+                <li>On a mobile: Long press to highlight the text and enable copying to clipboard
+            </ul><br/><button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear filters</button>
         </div>
         <!-- /.box-body -->
       </div>
@@ -155,9 +173,9 @@ if(strlen($showing) > 0)
     </div>
 </div>
 <!-- /.row -->
-
-<script src="scripts/pi-hole/js/utils.js"></script>
-<script src="scripts/pi-hole/js/queries.js"></script>
+<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/queries.js?v=<?=$cacheVer?>"></script>
 
 <?php
     require "scripts/pi-hole/php/footer.php";

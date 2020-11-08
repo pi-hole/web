@@ -5,14 +5,16 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false, utils:false */
+/* global utils:false */
 
 var tableApi;
 
-var APIstring = "api_db.php?network";
+var API_STRING = "api_db.php?network";
 
 // How many IPs do we show at most per device?
 var MAXIPDISPLAY = 3;
+
+var DAY_IN_SECONDS = 24 * 60 * 60;
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
@@ -56,32 +58,33 @@ function mixColors(ratio, rgb1, rgb2) {
 }
 
 function parseColor(input) {
-  var m;
-  m = input.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
-  if (m) {
-    return [m[1], m[2], m[3]];
+  var match = input.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+
+  if (match) {
+    return [match[1], match[2], match[3]];
   }
 }
 
-$(document).ready(function () {
+$(function () {
   tableApi = $("#network-entries").DataTable({
     rowCallback: function (row, data) {
-      var color,
-        iconClasses,
-        lastQuery = parseInt(data.lastQuery);
+      var color;
+      var index;
+      var maxiter;
+      var iconClasses;
+      var lastQuery = parseInt(data.lastQuery, 10);
+      var diff = getTimestamp() - lastQuery;
       var networkRecent = $(".network-recent").css("background-color");
       var networkOld = $(".network-old").css("background-color");
       var networkOlder = $(".network-older").css("background-color");
       var networkNever = $(".network-never").css("background-color");
+
       if (lastQuery > 0) {
-        var diff = getTimestamp() - lastQuery;
-        if (diff <= 86400) {
-          // Last query came in within the last 24 hours (24*60*60 = 86400)
+        if (diff <= DAY_IN_SECONDS) {
+          // Last query came in within the last 24 hours
           // Color: light-green to light-yellow
-          var ratio = Number(diff) / 86400;
-          var lightgreen = parseColor(networkRecent);
-          var lightyellow = parseColor(networkOld);
-          color = rgbToHex(mixColors(ratio, lightgreen, lightyellow));
+          var ratio = Number(diff) / DAY_IN_SECONDS;
+          color = rgbToHex(mixColors(ratio, parseColor(networkRecent), parseColor(networkOld)));
           iconClasses = "fas fa-check";
         } else {
           // Last query was longer than 24 hours ago
@@ -92,7 +95,7 @@ $(document).ready(function () {
       } else {
         // This client has never sent a query to Pi-hole, color light-red
         color = networkNever;
-        iconClasses = "fas fa-check";
+        iconClasses = "fas fa-times";
       }
 
       // Set determined background color
@@ -108,14 +111,47 @@ $(document).ready(function () {
       // Set hostname to "unknown" if not available
       if (!data.name || data.name.length === 0) {
         $("td:eq(3)", row).html("<em>unknown</em>");
+      } else {
+        var names = [];
+        var name = "";
+        maxiter = Math.min(data.name.length, MAXIPDISPLAY);
+        index = 0;
+        for (index = 0; index < maxiter; index++) {
+          name = data.name[index];
+          if (name.length === 0) continue;
+          names.push('<a href="queries.php?client=' + name + '">' + name + "</a>");
+        }
+
+        if (data.name.length > MAXIPDISPLAY) {
+          // We hit the maximum above, add "..." to symbolize we would
+          // have more to show here
+          names.push("...");
+        }
+
+        maxiter = Math.min(data.ip.length, data.name.length);
+        var allnames = [];
+        for (index = 0; index < maxiter; index++) {
+          name = data.name[index];
+          if (name.length > 0) {
+            allnames.push(name + " (" + data.ip[index] + ")");
+          } else {
+            allnames.push("No host name for " + data.ip[index] + " known");
+          }
+        }
+
+        $("td:eq(3)", row).html(names.join("<br>"));
+        $("td:eq(3)", row).hover(function () {
+          this.title = allnames.join("\n");
+        });
       }
 
       // Set number of queries to localized string (add thousand separators)
       $("td:eq(6)", row).html(data.numQueries.toLocaleString());
 
       var ips = [];
-      var maxiter = Math.min(data.ip.length, MAXIPDISPLAY);
-      for (var index = 0; index < maxiter; index++) {
+      maxiter = Math.min(data.ip.length, MAXIPDISPLAY);
+      index = 0;
+      for (index = 0; index < maxiter; index++) {
         var ip = data.ip[index];
         ips.push('<a href="queries.php?client=' + ip + '">' + ip + "</a>");
       }
@@ -146,7 +182,7 @@ $(document).ready(function () {
       "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-    ajax: { url: APIstring, error: handleAjaxError, dataSrc: "network" },
+    ajax: { url: API_STRING, error: handleAjaxError, dataSrc: "network" },
     autoWidth: false,
     processing: true,
     order: [[5, "desc"]],
@@ -160,7 +196,7 @@ $(document).ready(function () {
         width: "8%",
         render: function (data, type) {
           if (type === "display") {
-            return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
+            return utils.datetime(data);
           }
 
           return data;
@@ -171,7 +207,7 @@ $(document).ready(function () {
         width: "8%",
         render: function (data, type) {
           if (type === "display") {
-            return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
+            return utils.datetime(data);
           }
 
           return data;

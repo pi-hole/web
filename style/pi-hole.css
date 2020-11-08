@@ -6,281 +6,301 @@
 *  Please see LICENSE file for your rights under this license. */
 
 .layout-boxed {
-    background: url('../img/boxed-bg.jpg') repeat fixed;
+  background: url("../img/boxed-bg.jpg") repeat fixed;
 }
 
-.small-box {
-	cursor: default;
-	-webkit-user-select: none; /* Chrome/Safari */
-	-moz-user-select: none; /* Firefox */
-	-ms-user-select: none; /* IE10+ */
-
-	/* Rules below not implemented in browsers yet */
-	-o-user-select: none;
-	user-select: none;
-}
 .small-box span {
-	-webkit-transition-duration: 500ms;
-	-o-transition-duration: 500ms;
-	transition-duration: 500ms;
+  transition-duration: 0.5s;
 }
+
 .small-box span.glow {
-	text-shadow: 0 0 5px currentColor;
+  text-shadow: 0 0 5px currentColor;
 }
 
-.list-group-item:hover {
-	background: #ddd;
+@-webkit-keyframes Pulse {
+  from {
+    color: #630030;
+    text-shadow: 0 0 2px transparent;
+  }
+
+  50% {
+    color: #e33100;
+    text-shadow: 0 0 5px #e33100;
+  }
+
+  to {
+    color: #630030;
+    text-shadow: 0 0 2px transparent;
+  }
 }
 
-@-webkit-keyframes Pulse{
-	from {color:#630030;-webkit-text-shadow:0 0 2px transparent;}
-	50% {color:#e33100;-webkit-text-shadow:0 0 5px #e33100;}
-	to {color:#630030;-webkit-text-shadow:0 0 2px transparent;}
+@keyframes Pulse {
+  from {
+    color: #630030;
+    text-shadow: 0 0 2px transparent;
+  }
+
+  50% {
+    color: #e33100;
+    text-shadow: 0 0 5px #e33100;
+  }
+
+  to {
+    color: #630030;
+    text-shadow: 0 0 2px transparent;
+  }
 }
-@-o-keyframes Pulse{
-	from {color:#630030;text-shadow:0 0 2px transparent;}
-	50% {color:#e33100;text-shadow:0 0 5px #e33100;}
-	to {color:#630030;text-shadow:0 0 2px transparent;}
-}
-@keyframes Pulse{
-	from {color:#630030;text-shadow:0 0 2px transparent;}
-	50% {color:#e33100;text-shadow:0 0 5px #e33100;}
-	to {color:#630030;text-shadow:0 0 2px transparent;}
-}
+
 .lookatme {
-	-webkit-animation-name: Pulse;
-	-o-animation-name: Pulse;
-	animation-name: Pulse;
-	-webkit-animation-duration: 2s;
-	-o-animation-duration: 2s;
-	animation-duration: 2s;
-	-webkit-animation-iteration-count: infinite;
-	-o-animation-iteration-count: infinite;
-	animation-iteration-count: infinite;
+  -webkit-animation: 2s infinite Pulse;
+  animation: 2s infinite Pulse;
 }
 
 .table-responsive {
-    -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Optimize Queries-Table for small screens */
-#all-queries td:nth-of-type(1),  /* Time column */
-#all-queries td:nth-of-type(5) { /* Status column */
-    white-space: nowrap;
+/* Time column */
+#all-queries td:nth-of-type(1),
+/* Status column */
+#all-queries td:nth-of-type(5) {
+  white-space: nowrap;
 }
-#all-queries td:nth-of-type(3) { /* Domain column */
-    min-width: 200px;
-    word-break: break-all;
-    white-space: pre-wrap;
+
+/* Domain column */
+#all-queries td:nth-of-type(3) {
+  min-width: 200px;
+  word-break: break-all;
+  white-space: pre-wrap;
 }
-#all-queries_info { /* Allow Info String to wrap (useful while filtering entries on small screen) */
-	white-space: unset;
+
+/* Allow Info String to wrap (useful while filtering entries on small screen) */
+#all-queries_info {
+  white-space: unset;
 }
-#all-queries_wrapper .pagination > li > a { /* adjust the buttons width */
-    padding-left: 6px;
-    padding-right: 6px;
-    min-width: 34px;
-    text-align: center;
+
+/* adjust the buttons width */
+#all-queries_wrapper .pagination > li > a {
+  padding-left: 6px;
+  padding-right: 6px;
+  min-width: 34px;
+  text-align: center;
 }
-@media screen and (max-width: 500px),
-       screen and (min-width: 767px) and (max-width: 1000px) {
-     /* Hide "Previous" & "Next"-Buttons in Pagination */
-    #all-queries_wrapper .pagination > li.previous,
-    #all-queries_wrapper .pagination > li.next {
-        display: none;
-    }
-    #all-queries_wrapper .pagination > li:nth-of-type(2) a {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-    }
-    #all-queries_wrapper .pagination > li:nth-last-of-type(2) a {
-        border-top-right-radius: 4px;
-        border-bottom-right-radius: 4px;
-    }
+
+@media screen and (max-width: 500px), screen and (min-width: 767px) and (max-width: 1000px) {
+  /* Hide "Previous" & "Next"-Buttons in Pagination */
+  #all-queries_wrapper .pagination > li.previous,
+  #all-queries_wrapper .pagination > li.next {
+    display: none;
+  }
+
+  #all-queries_wrapper .pagination > li:nth-of-type(2) a {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  #all-queries_wrapper .pagination > li:nth-last-of-type(2) a {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
 }
 
 #resetButton {
-	font-weight: 700;
+  font-weight: 700;
 }
 
 .vertical-alignment-helper {
-    display: table;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+  display: table;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
+
 .vertical-alignment-helper > .vertical-align-center {
-    display: table-cell;
-    vertical-align: middle;
+  display: table-cell;
+  vertical-align: middle;
 }
+
 .vertical-alignment-helper > .vertical-align-center > .modal-content {
-    width: 250px;
-    margin-left: auto;
-    margin-right: auto;
-    word-wrap: break-word;
-    pointer-events: all;
+  width: 250px;
+  margin-left: auto;
+  margin-right: auto;
+  word-wrap: break-word;
+  pointer-events: all;
 }
 
 .alSpinner {
-    top: 0.1em;
-    left: 0.1em;
-    width: 0.8em;
-    height: 0.8em;
-    border-radius: 50%;
-    border: 4px solid #c0c0c0;
-    border-right-color: transparent;
-    -webkit-animation: fa-spin 1s infinite linear;
-    -o-animation: fa-spin 1s infinite linear;
-    animation: fa-spin 1s infinite linear;
-}
-
-.extratooltipcanvas{
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none
+  top: 0.1em;
+  left: 0.1em;
+  width: 0.8em;
+  height: 0.8em;
+  border-radius: 50%;
+  border: 4px solid #c0c0c0;
+  border-right-color: transparent;
+  -webkit-animation: fa-spin 1s infinite linear;
+  animation: fa-spin 1s infinite linear;
 }
 
 .chartjs-tooltip {
-    opacity: 0;
-    position: absolute;
-    pointer-events: none;
-    color: #fff;
-    background-color: rgba(0,0,0,0.8);
-    max-width: 95%;
-    z-index: 900;
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.8);
+  max-width: 95%;
+  z-index: 900;
 }
 
 .chartjs-tooltip th {
-    padding-bottom: 3px;
+  padding-bottom: 3px;
 }
 
 .chartjs-tooltip,
 .chartjs-tooltip .arrow {
-    -webkit-transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
-    transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .chartjs-tooltip .arrow {
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-color: transparent;
-    border-style: solid;
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
 }
 
 .chartjs-tooltip.bottom .arrow {
-    top: 100%;
-    left: 50%;
-    margin: 0 -5px -5px;
-    border-width: 5px 5px 0;
-    border-top-color: rgba(0, 0, 0, .8);
+  top: 100%;
+  left: 50%;
+  margin: 0 -5px -5px;
+  border-width: 5px 5px 0;
+  border-top-color: rgba(0, 0, 0, 0.8);
 }
 
 .chartjs-tooltip.top .arrow {
-    top: 0;
-    left: 50%;
-    border-width: 0 5px 5px;
-    margin: -5px -5px 0;
-    border-bottom-color: rgba(0, 0, 0, .8);
+  top: 0;
+  left: 50%;
+  border-width: 0 5px 5px;
+  margin: -5px -5px 0;
+  border-bottom-color: rgba(0, 0, 0, 0.8);
 }
 
 .chartjs-tooltip.right.center .arrow {
-    top: 50%;
-    left: 100%;
-    margin: -5px -5px -5px 0;
-    border-width: 5px 0 5px 5px;
-    border-left-color: rgba(0, 0, 0, .8);
+  top: 50%;
+  left: 100%;
+  margin: -5px -5px -5px 0;
+  border-width: 5px 0 5px 5px;
+  border-left-color: rgba(0, 0, 0, 0.8);
 }
 
 .chartjs-tooltip.left.center .arrow {
-    top: 50%;
-    left: 0;
-    margin: -5px 0 -5px -5px;
-    border-width: 5px 5px 5px 0;
-    border-right-color: rgba(0, 0, 0, .8);
+  top: 50%;
+  left: 0;
+  margin: -5px 0 -5px -5px;
+  border-width: 5px 5px 5px 0;
+  border-right-color: rgba(0, 0, 0, 0.8);
 }
 
 .chartjs-tooltip-key {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    margin-right: 3px;
-    vertical-align: text-top;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 3px;
+  vertical-align: text-top;
 }
 
 .chart-legend {
-    height: 250px;
-    overflow: auto;
+  height: 250px;
+  overflow: auto;
 }
 
 .chart-legend ul {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 .chart-legend li {
-    cursor: pointer;
-    word-break: break-all;
+  cursor: pointer;
+  word-break: break-all;
 }
 
 .chart-legend li span {
-    display: inline-block;
-    width: 20px;
-    height: 12px;
-    margin-right: 5px;
+  display: inline-block;
+  width: 20px;
+  height: 12px;
+  margin-right: 5px;
 }
 
 .strike {
-    text-decoration: line-through !important;
+  text-decoration: line-through !important;
 }
 
-.fa-paypal-icon {
-    width: 18px;
-    margin-left: 2px;
+/* These are needed because AdmintLTE 2.x doesn't support Font Awesome 5.x */
+.sidebar-menu > li > a > .fab,
+.sidebar-menu > li > a > .far,
+.sidebar-menu > li > a > .fas {
+  width: 20px;
 }
 
 /* Utilities */
 .text-underline {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .breakall {
-    white-space: -moz-pre-wrap;
-    white-space: -pre-wrap;
-    white-space: -o-pre-wrap;
-    white-space: pre-wrap;
-    word-break: break-all;
-    word-wrap: break-word; /* Internet Explorer 5.5+ */
+  white-space: pre-wrap;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+.no-user-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .pointer {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .bootstrap-select.bs-container.align-right {
-    left: unset !important;
-    right: 10px;
+  left: unset !important;
+  right: 10px;
 }
 
 .input-group-addon {
-	padding: 0 12px;
+  padding: 0 12px;
 }
 
 .user-panel > .info > span {
-    padding-right: 5px;
-    margin-top: 3px;
-    font-size: 11px;
+  padding-right: 5px;
+  margin-top: 3px;
+  font-size: 11px;
 }
 
 .user-panel > .info i {
-    margin-right: 3px;
+  margin-right: 3px;
 }
 
-.row-centered > div[class^=col-] {
-    display: inline-block;
-    float: none;
+.row-centered > div[class^="col-"] {
+  display: inline-block;
+  float: none;
 }
 
 .version-info {
-    margin-top: 10px;
+  margin-top: 10px;
+}
+
+.daterangepicker {
+  font-family: inherit;
+}
+
+.form-inline .form-control {
+  display: inline-block;
+  width: 100%;
+  vertical-align: middle;
+}
+
+.select2-container--default .select2-results > .select2-results__options {
+  max-height: 400px;
 }

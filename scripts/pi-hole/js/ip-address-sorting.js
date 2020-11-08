@@ -7,10 +7,15 @@
 
 // This code has been taken from
 // https://datatables.net/plug-ins/sorting/ip-address
-jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+// and was modified by the Pi-hole team to support
+// CIDR notation and be more robust against invalid
+// input data (like empty IP addresses)
+$.extend($.fn.dataTableExt.oSort, {
   "ip-address-pre": function (a) {
-    if (!a) {
-      return 0;
+    // Skip empty fields (IP address might have expired or
+    // reassigned to a differenct device)
+    if (!a || a.length === 0) {
+      return Infinity;
     }
 
     var i, item;
@@ -99,8 +104,6 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
           x += item;
         }
       }
-
-      console.log([a, n, xa, count, x]);
     }
 
     return x;

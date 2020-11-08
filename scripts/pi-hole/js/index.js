@@ -5,12 +5,13 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global utils:false, Chart:false, updateSessionTimer:false */
+
 // Define global variables
-/* global Chart:false, updateSessionTimer:false */
 var timeLineChart, clientsChart;
 var queryTypePieChart, forwardDestinationPieChart;
 
-var colors = [
+var THEME_COLORS = [
   "#3c8dbc",
   "#f56954",
   "#00a65a",
@@ -28,28 +29,6 @@ var colors = [
   "#222222",
   "#d2d6de"
 ];
-
-function padNumber(num) {
-  return ("00" + num).substr(-2, 2);
-}
-
-// Helper function needed for converting the Objects to Arrays
-
-function objectToArray(p) {
-  var keys = Object.keys(p);
-  keys.sort(function (a, b) {
-    return a - b;
-  });
-
-  var arr = [],
-    idx = [];
-  for (var i = 0; i < keys.length; i++) {
-    arr.push(p[keys[i]]);
-    idx.push(keys[i]);
-  }
-
-  return [idx, arr];
-}
 
 var customTooltips = function (tooltip) {
   var tooltipEl = document.getElementById(this._chart.canvas.id + "-customTooltip");
@@ -83,14 +62,12 @@ var customTooltips = function (tooltip) {
   tooltipEl.classList.remove("left", "right", "center", "top", "bottom");
   tooltipEl.classList.add(tooltip.xAlign, tooltip.yAlign);
 
-  function getBody(bodyItem) {
-    return bodyItem.lines;
-  }
-
   // Set Text
   if (tooltip.body) {
     var titleLines = tooltip.title || [];
-    var bodyLines = tooltip.body.map(getBody);
+    var bodyLines = tooltip.body.map(function (bodyItem) {
+      return bodyItem.lines;
+    });
     var innerHtml = "<thead>";
 
     titleLines.forEach(function (title) {
@@ -101,9 +78,9 @@ var customTooltips = function (tooltip) {
 
     var devicePixel = (1 / window.devicePixelRatio).toFixed(1);
     bodyLines.forEach(function (body, i) {
-      var colors = tooltip.labelColors[i];
-      var style = "background: " + colors.backgroundColor;
-      style += "; outline: 1px solid " + colors.backgroundColor;
+      var labelColors = tooltip.labelColors[i];
+      var style = "background-color: " + labelColors.backgroundColor;
+      style += "; outline: 1px solid " + labelColors.backgroundColor;
       style += "; border: " + devicePixel + "px solid #fff";
       var span = "<span class='chartjs-tooltip-key' style='" + style + "'></span>";
 
@@ -244,27 +221,41 @@ function updateQueriesOverTime() {
     }
 
     // convert received objects to arrays
-    data.domains_over_time = objectToArray(data.domains_over_time);
-    data.ads_over_time = objectToArray(data.ads_over_time);
+    data.domains_over_time = utils.objectToArray(data.domains_over_time);
+    data.ads_over_time = utils.objectToArray(data.ads_over_time);
     // remove last data point since it not representative
     data.ads_over_time[0].splice(-1, 1);
     // Remove possibly already existing data
     timeLineChart.data.labels = [];
-    timeLineChart.data.datasets[0].data = [];
-    timeLineChart.data.datasets[1].data = [];
+    timeLineChart.data.datasets = [];
+
+    var labels = ["Blocked DNS Queries", "Permitted DNS Queries"];
+    var blockedColor = $(".queries-blocked").css("background-color");
+    var permittedColor = $(".queries-permitted").css("background-color");
+    var colors = [blockedColor, permittedColor];
+
+    // Collect values and colors, and labels
+    for (var i = 0; i < labels.length; i++) {
+      timeLineChart.data.datasets.push({
+        data: [],
+        // If we ran out of colors, make a random one
+        backgroundColor: colors[i],
+        pointRadius: 0,
+        pointHitRadius: 5,
+        pointHoverRadius: 5,
+        label: labels[i],
+        cubicInterpolationMode: "monotone"
+      });
+    }
 
     // Add data for each hour that is available
     for (var hour in data.ads_over_time[0]) {
       if (Object.prototype.hasOwnProperty.call(data.ads_over_time[0], hour)) {
-        var d, h;
-        h = parseInt(data.domains_over_time[0][hour]);
-        if (parseInt(data.ads_over_time[0][0]) < 1200) {
-          // Fallback - old style
-          d = new Date().setHours(Math.floor(h / 6), 10 * (h % 6), 0, 0);
-        } else {
-          // New style: Get Unix timestamps
-          d = new Date(1000 * h);
-        }
+        var h = parseInt(data.domains_over_time[0][hour], 10);
+        var d =
+          parseInt(data.ads_over_time[0][0], 10) < 1200
+            ? new Date().setHours(Math.floor(h / 6), 10 * (h % 6), 0, 0)
+            : new Date(1000 * h);
 
         timeLineChart.data.labels.push(d);
         var blocked = data.ads_over_time[1][hour];
@@ -292,6 +283,7 @@ function updateQueriesOverTime() {
     });
 }
 
+var querytypeids = [];
 function updateQueryTypesPie() {
   $.getJSON("api.php?getQueryTypes", function (data) {
     if ("FTLnotrunning" in data) {
@@ -301,27 +293,28 @@ function updateQueryTypesPie() {
     var v = [],
       c = [],
       k = [],
-      i = 0,
-      iter;
+      i = 0;
     // Collect values and colors, and labels
-    if (Object.prototype.hasOwnProperty.call(data, "querytypes")) {
-      iter = data.querytypes;
-    } else {
-      iter = data;
-    }
+    var iter = Object.prototype.hasOwnProperty.call(data, "querytypes") ? data.querytypes : data;
 
-    $.each(iter, function (key, value) {
-      v.push(value);
-      c.push(colors[i++ % colors.length]);
-      k.push(key);
+    querytypeids = [];
+    Object.keys(iter).forEach(function (key) {
+      if (iter[key] > 0) {
+        v.push(iter[key]);
+        c.push(THEME_COLORS[i % THEME_COLORS.length]);
+        k.push(key);
+        querytypeids.push(i + 1);
+      }
+
+      i++;
     });
+
     // Build a single dataset with the data to be pushed
     var dd = { data: v, backgroundColor: c };
     // and push it at once
     queryTypePieChart.data.datasets[0] = dd;
     queryTypePieChart.data.labels = k;
     $("#query-types-pie .overlay").hide();
-    queryTypePieChart.update();
     queryTypePieChart.chart.config.options.cutoutPercentage = 50;
     queryTypePieChart.update();
     // Don't use rotation animation for further updates
@@ -345,7 +338,7 @@ function updateQueryTypesPie() {
         ci.update();
       } else if (e.which === 1) {
         // which == 1 is left mouse button
-        window.open("queries.php?querytype=" + ($(this).index() + 1), "_self");
+        window.open("queries.php?querytype=" + querytypeids[$(this).index()], "_self");
       }
     });
   }).done(function () {
@@ -367,50 +360,39 @@ function updateClientsOverTime() {
     }
 
     // convert received objects to arrays
-    data.over_time = objectToArray(data.over_time);
+    data.over_time = utils.objectToArray(data.over_time);
 
     // remove last data point since it not representative
     data.over_time[0].splice(-1, 1);
     var timestamps = data.over_time[0];
     var plotdata = data.over_time[1];
     var labels = [];
-    var key, i, j;
+    var key;
+
     for (key in data.clients) {
-      if (!Object.prototype.hasOwnProperty.call(data.clients, key)) {
-        continue;
+      if (Object.prototype.hasOwnProperty.call(data.clients, key)) {
+        var client = data.clients[key];
+        labels.push(client.name.length > 0 ? client.name : client.ip);
       }
-
-      var clientname;
-      if (data.clients[key].name.length > 0) {
-        clientname = data.clients[key].name;
-      } else {
-        clientname = data.clients[key].ip;
-      }
-
-      labels.push(clientname);
     }
 
     // Remove possibly already existing data
     clientsChart.data.labels = [];
-    clientsChart.data.datasets[0].data = [];
-    for (i = 1; i < clientsChart.data.datasets.length; i++) {
-      clientsChart.data.datasets[i].data = [];
-    }
+    clientsChart.data.datasets = [];
 
     // Collect values and colors, and labels
-    clientsChart.data.datasets[0].backgroundColor = colors[0];
-    clientsChart.data.datasets[0].pointRadius = 0;
-    clientsChart.data.datasets[0].pointHitRadius = 5;
-    clientsChart.data.datasets[0].pointHoverRadius = 5;
-    clientsChart.data.datasets[0].label = labels[0];
+    var numClients = 0;
+    if (plotdata.length > 0) {
+      numClients = plotdata[0].length;
+    }
 
-    for (i = clientsChart.data.datasets.length; plotdata.length && i < plotdata[0].length; i++) {
+    for (var i = 0; i < numClients; i++) {
       clientsChart.data.datasets.push({
         data: [],
         // If we ran out of colors, make a random one
         backgroundColor:
-          i < colors.length
-            ? colors[i]
+          i < THEME_COLORS.length
+            ? THEME_COLORS[i]
             : "#" + (0x1000000 + Math.random() * 0xffffff).toString(16).substr(1, 6),
         pointRadius: 0,
         pointHitRadius: 5,
@@ -421,20 +403,18 @@ function updateClientsOverTime() {
     }
 
     // Add data for each dataset that is available
-    for (j in timestamps) {
+    for (var j in timestamps) {
       if (!Object.prototype.hasOwnProperty.call(timestamps, j)) {
         continue;
       }
 
       for (key in plotdata[j]) {
-        if (!Object.prototype.hasOwnProperty.call(plotdata[j], key)) {
-          continue;
+        if (Object.prototype.hasOwnProperty.call(plotdata[j], key)) {
+          clientsChart.data.datasets[key].data.push(plotdata[j][key]);
         }
-
-        clientsChart.data.datasets[key].data.push(plotdata[j][key]);
       }
 
-      var d = new Date(1000 * parseInt(timestamps[j]));
+      var d = new Date(1000 * parseInt(timestamps[j], 10));
       clientsChart.data.labels.push(d);
     }
 
@@ -469,16 +449,18 @@ function updateForwardDestinationsPie() {
       values = [];
 
     // Collect values and colors
-    $.each(data.forward_destinations, function (key, value) {
+    Object.keys(data.forward_destinations).forEach(function (key) {
+      var value = data.forward_destinations[key];
+
       if (key.indexOf("|") !== -1) {
         key = key.substr(0, key.indexOf("|"));
       }
 
-      values.push([key, value, colors[i++ % colors.length]]);
+      values.push([key, value, THEME_COLORS[i++ % THEME_COLORS.length]]);
     });
 
     // Split data into individual arrays for the graphs
-    $.each(values, function (key, value) {
+    values.forEach(function (value) {
       k.push(value[0]);
       v.push(value[1]);
       c.push(value[2]);
@@ -491,7 +473,6 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.data.datasets[0] = dd;
     // and push it at once
     $("#forward-destinations-pie .overlay").hide();
-    forwardDestinationPieChart.update();
     forwardDestinationPieChart.chart.config.options.cutoutPercentage = 50;
     forwardDestinationPieChart.update();
     // Don't use rotation animation for further updates
@@ -525,21 +506,6 @@ function updateForwardDestinationsPie() {
   });
 }
 
-// Credit: http://stackoverflow.com/questions/1787322/htmlspecialchars-equivalent-in-javascript/4835406#4835406
-function escapeHtml(text) {
-  var map = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  };
-
-  return text.replace(/[&<>"']/g, function (m) {
-    return map[m];
-  });
-}
-
 function updateTopClientsChart() {
   $.getJSON("api.php?summaryRaw&getQuerySources&topClientsBlocked", function (data) {
     if ("FTLnotrunning" in data) {
@@ -553,12 +519,12 @@ function updateTopClientsChart() {
     for (client in data.top_sources) {
       if (Object.prototype.hasOwnProperty.call(data.top_sources, client)) {
         // Sanitize client
-        if (escapeHtml(client) !== client) {
+        if (utils.escapeHtml(client) !== client) {
           // Make a copy with the escaped index if necessary
-          data.top_sources[escapeHtml(client)] = data.top_sources[client];
+          data.top_sources[utils.escapeHtml(client)] = data.top_sources[client];
         }
 
-        client = escapeHtml(client);
+        client = utils.escapeHtml(client);
         if (client.indexOf("|") !== -1) {
           idx = client.indexOf("|");
           clientname = client.substr(0, idx);
@@ -599,12 +565,12 @@ function updateTopClientsChart() {
     for (client in data.top_sources_blocked) {
       if (Object.prototype.hasOwnProperty.call(data.top_sources_blocked, client)) {
         // Sanitize client
-        if (escapeHtml(client) !== client) {
+        if (utils.escapeHtml(client) !== client) {
           // Make a copy with the escaped index if necessary
-          data.top_sources_blocked[escapeHtml(client)] = data.top_sources_blocked[client];
+          data.top_sources_blocked[utils.escapeHtml(client)] = data.top_sources_blocked[client];
         }
 
-        client = escapeHtml(client);
+        client = utils.escapeHtml(client);
         if (client.indexOf("|") !== -1) {
           idx = client.indexOf("|");
           clientname = client.substr(0, idx);
@@ -617,7 +583,7 @@ function updateTopClientsChart() {
         url =
           '<a href="queries.php?client=' +
           clientip +
-          '" title="' +
+          '&type=blocked" title="' +
           clientip +
           '">' +
           clientname +
@@ -671,12 +637,12 @@ function updateTopLists() {
     for (domain in data.top_queries) {
       if (Object.prototype.hasOwnProperty.call(data.top_queries, domain)) {
         // Sanitize domain
-        if (escapeHtml(domain) !== domain) {
+        if (utils.escapeHtml(domain) !== domain) {
           // Make a copy with the escaped index if necessary
-          data.top_queries[escapeHtml(domain)] = data.top_queries[domain];
+          data.top_queries[utils.escapeHtml(domain)] = data.top_queries[domain];
         }
 
-        domain = escapeHtml(domain);
+        domain = utils.escapeHtml(domain);
         urlText = domain === "" ? "." : domain;
         url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
         percentage = (data.top_queries[domain] / data.dns_queries_today) * 100;
@@ -704,12 +670,12 @@ function updateTopLists() {
     for (domain in data.top_ads) {
       if (Object.prototype.hasOwnProperty.call(data.top_ads, domain)) {
         // Sanitize domain
-        if (escapeHtml(domain) !== domain) {
+        if (utils.escapeHtml(domain) !== domain) {
           // Make a copy with the escaped index if necessary
-          data.top_ads[escapeHtml(domain)] = data.top_ads[domain];
+          data.top_ads[utils.escapeHtml(domain)] = data.top_ads[domain];
         }
 
-        domain = escapeHtml(domain);
+        domain = utils.escapeHtml(domain);
         urlText = domain === "" ? "." : domain;
         url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
         percentage = (data.top_ads[domain] / data.ads_blocked_today) * 100;
@@ -803,7 +769,7 @@ function updateSummaryData(runOnce) {
       );
     }
 
-    window.setTimeout(function () {
+    setTimeout(function () {
       $("span.glow").removeClass("glow");
     }, 500);
   })
@@ -819,46 +785,18 @@ function updateSummaryData(runOnce) {
     });
 }
 
-$(document).ready(function () {
+$(function () {
   // Pull in data via AJAX
   updateSummaryData();
 
-  var blockedColor = $(".queries-blocked").css("background-color");
-  var permittedColor = $(".queries-permitted").css("background-color");
   var gridColor = $(".graphs-grid").css("background-color");
   var ticksColor = $(".graphs-ticks").css("color");
-
-  var graphType = localStorage.getItem("barchart_chkbox") === "true" ? "bar" : "line";
-
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   timeLineChart = new Chart(ctx, {
-    type: graphType,
+    type: utils.getGraphType(),
     data: {
       labels: [],
-      datasets: [
-        {
-          label: "Blocked DNS Queries",
-          fill: true,
-          backgroundColor: blockedColor,
-          borderColor: blockedColor,
-          pointBorderColor: blockedColor,
-          pointRadius: 1,
-          pointHoverRadius: 5,
-          data: [],
-          pointHitRadius: 5
-        },
-        {
-          label: "Permitted DNS Queries",
-          fill: true,
-          backgroundColor: permittedColor,
-          borderColor: permittedColor,
-          pointBorderColor: permittedColor,
-          pointRadius: 1,
-          pointHoverRadius: 5,
-          data: [],
-          pointHitRadius: 5
-        }
-      ]
+      datasets: [{ data: [] }]
     },
     options: {
       tooltips: {
@@ -873,15 +811,15 @@ $(document).ready(function () {
             var time = label.match(/(\d?\d):?(\d?\d?)/);
             var h = parseInt(time[1], 10);
             var m = parseInt(time[2], 10) || 0;
-            var from = padNumber(h) + ":" + padNumber(m - 5) + ":00";
-            var to = padNumber(h) + ":" + padNumber(m + 4) + ":59";
+            var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
+            var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
             return "Queries from " + from + " to " + to;
           },
           label: function (tooltipItems, data) {
             if (tooltipItems.datasetIndex === 0) {
               var percentage = 0;
-              var permitted = parseInt(data.datasets[1].data[tooltipItems.index]);
-              var blocked = parseInt(data.datasets[0].data[tooltipItems.index]);
+              var permitted = parseInt(data.datasets[1].data[tooltipItems.index], 10);
+              var blocked = parseInt(data.datasets[0].data[tooltipItems.index], 10);
               var total = permitted + blocked;
               if (total > 0) {
                 percentage = (100 * blocked) / total;
@@ -950,7 +888,7 @@ $(document).ready(function () {
   if (clientsChartEl) {
     ctx = clientsChartEl.getContext("2d");
     clientsChart = new Chart(ctx, {
-      type: graphType,
+      type: utils.getGraphType(),
       data: {
         labels: [],
         datasets: [{ data: [] }]
@@ -970,8 +908,8 @@ $(document).ready(function () {
               var time = label.match(/(\d?\d):?(\d?\d?)/);
               var h = parseInt(time[1], 10);
               var m = parseInt(time[2], 10) || 0;
-              var from = padNumber(h) + ":" + padNumber(m - 5) + ":00";
-              var to = padNumber(h) + ":" + padNumber(m + 4) + ":59";
+              var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
+              var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
               return "Client activity from " + from + " to " + to;
             },
             label: function (tooltipItems, data) {
@@ -1044,6 +982,24 @@ $(document).ready(function () {
 
       //get specific label by index
       var label = timeLineChart.data.labels[clickedElementindex];
+
+      //get value by index
+      var from = label / 1000 - 300;
+      var until = label / 1000 + 300;
+      window.location.href = "queries.php?from=" + from + "&until=" + until;
+    }
+
+    return false;
+  });
+
+  $("#clientsChart").click(function (evt) {
+    var activePoints = clientsChart.getElementAtEvent(evt);
+    if (activePoints.length > 0) {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]._index;
+
+      //get specific label by index
+      var label = clientsChart.data.labels[clickedElementindex];
 
       //get value by index
       var from = label / 1000 - 300;

@@ -29,6 +29,7 @@ function eventsource() {
     return;
   }
 
+  // eslint-disable-next-line compat/compat
   var source = new EventSource("scripts/pi-hole/php/debug.php?&token=" + token + "&" + checked);
 
   // Reset and show field
@@ -54,7 +55,7 @@ function eventsource() {
 }
 
 $("#debugBtn").on("click", function () {
-  $("#debugBtn").attr("disabled", true);
-  $("#upload").attr("disabled", true);
+  $("#debugBtn").prop("disabled", true);
+  $("#upload").prop("disabled", true);
   eventsource();
 });

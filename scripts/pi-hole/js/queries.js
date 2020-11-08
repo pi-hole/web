@@ -8,6 +8,22 @@
 /* global moment:false, utils:false */
 
 var tableApi;
+var tableFilters = [];
+
+var replyTypes = [
+  "N/A",
+  "NODATA",
+  "NXDOMAIN",
+  "CNAME",
+  "IP",
+  "DOMAIN",
+  "RRNAME",
+  "SERVFAIL",
+  "REFUSED",
+  "NOTIMP",
+  "upstream error"
+];
+var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
 
 function add(domain, list) {
   var token = $("#token").text();
@@ -25,12 +41,7 @@ function add(domain, list) {
     return;
   }
 
-  var listtype;
-  if (list === "white") {
-    listtype = "Whitelist";
-  } else {
-    listtype = "Blacklist";
-  }
+  var listtype = list === "white" ? "Whitelist" : "Blacklist";
 
   alProcessing.children(alDomain).html(domain);
   alProcessing.children(alList).html(listtype);
@@ -39,19 +50,21 @@ function add(domain, list) {
   // add Domain to List after Modal has faded in
   alertModal.one("shown.bs.modal", function () {
     $.ajax({
-      url: "scripts/pi-hole/php/add.php",
+      url: "scripts/pi-hole/php/groups.php",
       method: "post",
-      data: { domain: domain, list: list, token: token },
+      data: {
+        domain: domain,
+        list: list,
+        token: token,
+        action: "add_domain",
+        comment: "Added from Query Log"
+      },
       success: function (response) {
         alProcessing.hide();
-        if (
-          response.indexOf("not a valid argument") !== -1 ||
-          response.indexOf("is not a valid domain") !== -1 ||
-          response.indexOf("Wrong token") !== -1
-        ) {
+        if (!response.success) {
           // Failure
           alNetworkErr.hide();
-          alCustomErr.html(response.replace("[✗]", ""));
+          alCustomErr.html(response.message);
           alFailure.fadeIn(1000);
           setTimeout(function () {
             alertModal.modal("hide");
@@ -101,11 +114,7 @@ function handleAjaxError(xhr, textStatus) {
   tableApi.draw();
 }
 
-function autofilter() {
-  return $("#autofilter").prop("checked");
-}
-
-$(document).ready(function () {
+$(function () {
   // Do we want to filter queries?
   var GETDict = {};
   window.location.search
@@ -134,11 +143,15 @@ $(document).ready(function () {
     APIstring += "=100";
   }
 
+  if ("type" in GETDict) {
+    APIstring += "&type=" + GETDict.type;
+  }
+
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
       // DNSSEC status
       var dnssecStatus;
-      switch (data[5]) {
+      switch (data[6]) {
         case "1":
           dnssecStatus = '<br><span class="text-green">SECURE</span>';
           break;
@@ -160,37 +173,32 @@ $(document).ready(function () {
       }
 
       // Query status
-      var blocked,
-        fieldtext,
+      var fieldtext,
         buttontext,
-        colorClass,
+        colorClass = false,
         isCNAME = false,
         regexLink = false;
 
       switch (data[4]) {
         case "1":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked (gravity)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case "2":
-          blocked = false;
           colorClass = "text-green";
           fieldtext = "OK <br class='hidden-lg'>(forwarded)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case "3":
-          blocked = false;
           colorClass = "text-green";
           fieldtext = "OK <br class='hidden-lg'>(cached)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case "4":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist)";
 
@@ -202,32 +210,27 @@ $(document).ready(function () {
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case "5":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(exact blacklist)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case "6":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
           buttontext = "";
           break;
         case "7":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
           buttontext = "";
           break;
         case "8":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
           buttontext = "";
           break;
         case "9":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked (gravity, CNAME)";
           buttontext =
@@ -235,7 +238,6 @@ $(document).ready(function () {
           isCNAME = true;
           break;
         case "10":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist, CNAME)";
 
@@ -248,7 +250,6 @@ $(document).ready(function () {
           isCNAME = true;
           break;
         case "11":
-          blocked = true;
           colorClass = "text-red";
           fieldtext = "Blocked <br class='hidden-lg'>(exact blacklist, CNAME)";
           buttontext =
@@ -256,11 +257,12 @@ $(document).ready(function () {
           isCNAME = true;
           break;
         default:
-          blocked = false;
           colorClass = false;
-          fieldtext = "Unknown (" + parseInt(data[4]) + ")";
+          fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
           buttontext = "";
       }
+
+      fieldtext += '<input type="hidden" name="id" value="' + data[4] + '">';
 
       if (colorClass !== false) {
         $(row).addClass(colorClass);
@@ -304,52 +306,15 @@ $(document).ready(function () {
       }
 
       // Check for existence of sixth column and display only if not Pi-holed
-      var replytext;
-      if (data.length > 6 && !blocked) {
-        switch (data[6]) {
-          case "0":
-            replytext = "N/A";
-            break;
-          case "1":
-            replytext = "NODATA";
-            break;
-          case "2":
-            replytext = "NXDOMAIN";
-            break;
-          case "3":
-            replytext = "CNAME";
-            break;
-          case "4":
-            replytext = "IP";
-            break;
-          case "5":
-            replytext = "DOMAIN";
-            break;
-          case "6":
-            replytext = "RRNAME";
-            break;
-          case "7":
-            replytext = "SERVFAIL";
-            break;
-          case "8":
-            replytext = "REFUSED";
-            break;
-          case "9":
-            replytext = "NOTIMP";
-            break;
-          case "10":
-            replytext = "upstream error";
-            break;
-          default:
-            replytext = "? (" + parseInt(data[6]) + ")";
-        }
-      } else {
-        replytext = "-";
-      }
+      var replyid = data[5];
+      var replytext =
+        replyid >= 0 && replyid < replyTypes.length ? replyTypes[replyid] : "? (" + replyid + ")";
+
+      replytext += '<input type="hidden" name="id" value="' + replyid + '">';
 
       $("td:eq(5)", row).html(replytext);
 
-      if (data.length > 7 && data[7] > 0) {
+      if (data.length > 7) {
         var content = $("td:eq(5)", row).html();
         $("td:eq(5)", row).html(content + " (" + (0.1 * data[7]).toFixed(1) + "ms)");
       }
@@ -366,6 +331,10 @@ $(document).ready(function () {
         var dataIndex = 0;
         return data.data.map(function (x) {
           x[0] = x[0] * 1e6 + dataIndex++;
+          var dnssec = x[5];
+          var reply = x[6];
+          x[5] = reply;
+          x[6] = dnssec;
           return x;
         });
       }
@@ -388,7 +357,7 @@ $(document).ready(function () {
       },
       { width: "4%" },
       { width: "36%", render: $.fn.dataTable.render.text() },
-      { width: "8%", render: $.fn.dataTable.render.text() },
+      { width: "8%", type: "ip-address", render: $.fn.dataTable.render.text() },
       { width: "14%", orderData: 4 },
       { width: "8%", orderData: 6 },
       { width: "10%", orderData: 4 }
@@ -413,76 +382,99 @@ $(document).ready(function () {
     ],
     initComplete: function () {
       var api = this.api();
+
       // Query type IPv4 / IPv6
-      api.$("td:eq(1)").click(function () {
-        if (autofilter()) {
-          api.search(this.textContent).draw();
-          $("#resetButton").removeClass("hidden");
-        }
-      });
-      api.$("td:eq(1)").hover(
-        function () {
-          if (autofilter()) {
-            this.title = "Click to show only " + this.textContent + " queries";
-            this.style.color = "#72afd2";
-          } else {
-            this.title = "";
-            this.style.color = "";
+      api
+        .$("td:eq(1)")
+        .click(function (event) {
+          addColumnFilter(event, 1, this.textContent);
+        })
+        .hover(
+          function () {
+            $(this).addClass("pointer").attr("title", tooltipText(1, this.textContent));
+          },
+          function () {
+            $(this).removeClass("pointer");
           }
-        },
-        function () {
-          this.style.color = "";
-        }
-      );
-      api.$("td:eq(1)").addClass("pointer");
+        );
+
       // Domain
-      api.$("td:eq(2)").click(function () {
-        if (autofilter()) {
-          var domain = this.textContent.split("\n")[0];
-          api.search(domain).draw();
-          $("#resetButton").removeClass("hidden");
-        }
-      });
-      api.$("td:eq(2)").hover(
-        function () {
-          if (autofilter()) {
-            var domain = this.textContent.split("\n")[0];
-            this.title = "Click to show only queries with domain " + domain;
-            this.style.color = "#72afd2";
-          } else {
-            this.title = "";
-            this.style.color = "";
+      api
+        .$("td:eq(2)")
+        .click(function (event) {
+          addColumnFilter(event, 2, this.textContent.split("\n")[0]);
+        })
+        .hover(
+          function () {
+            $(this).addClass("pointer").attr("title", tooltipText(2, this.textContent));
+          },
+          function () {
+            $(this).removeClass("pointer");
           }
-        },
-        function () {
-          this.style.color = "";
-        }
-      );
-      api.$("td:eq(2)").addClass("pointer");
+        );
+
       // Client
-      api.$("td:eq(3)").click(function () {
-        if (autofilter()) {
-          api.search(this.textContent).draw();
-          $("#resetButton").removeClass("hidden");
-        }
-      });
-      api.$("td:eq(3)").hover(
-        function () {
-          if (autofilter()) {
-            this.title = "Click to show only queries made by " + this.textContent;
-            this.style.color = "#72afd2";
-          } else {
-            this.title = "";
-            this.style.color = "";
+      api
+        .$("td:eq(3)")
+        .click(function (event) {
+          addColumnFilter(event, 3, this.textContent);
+        })
+        .hover(
+          function () {
+            $(this).addClass("pointer").attr("title", tooltipText(3, this.textContent));
+          },
+          function () {
+            $(this).removeClass("pointer");
           }
-        },
-        function () {
-          this.style.color = "";
-        }
-      );
-      api.$("td:eq(3)").addClass("pointer");
+        );
+
+      // Status
+      api
+        .$("td:eq(4)")
+        .click(function (event) {
+          var id = this.children.id.value;
+          var text = this.textContent;
+          addColumnFilter(event, 4, id + "#" + text);
+        })
+        .hover(
+          function () {
+            $(this).addClass("pointer").attr("title", tooltipText(4, this.textContent));
+          },
+          function () {
+            $(this).removeClass("pointer");
+          }
+        );
+
+      // Reply type
+      api
+        .$("td:eq(5)")
+        .click(function (event) {
+          var id = this.children.id.value;
+          var text = this.textContent.split(" ")[0];
+          addColumnFilter(event, 5, id + "#" + text);
+        })
+        .hover(
+          function () {
+            $(this).addClass("pointer").attr("title", tooltipText(5, this.textContent));
+          },
+          function () {
+            $(this).removeClass("pointer");
+          }
+        );
+
+      // Disable autocorrect in the search box
+      var input = $("input[type=search]");
+      if (input !== null) {
+        input.attr("autocomplete", "off");
+        input.attr("autocorrect", "off");
+        input.attr("autocapitalize", "off");
+        input.attr("spellcheck", false);
+        input.attr("placeholder", "Type / Domain / Client");
+      }
     }
   });
+
+  resetColumnsFilters();
 
   $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();
@@ -494,28 +486,84 @@ $(document).ready(function () {
   });
 
   $("#resetButton").click(function () {
-    tableApi.search("").draw();
-    $("#resetButton").addClass("hidden");
-  });
-
-  // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
-  input.setAttribute("autocomplete", "off");
-  input.setAttribute("autocorrect", "off");
-  input.setAttribute("autocapitalize", "off");
-  input.setAttribute("spellcheck", false);
-
-  var chkboxData = localStorage.getItem("query_log_filter_chkbox");
-  if (chkboxData !== null) {
-    // Restore checkbox state
-    $("#autofilter").prop("checked", chkboxData === "true");
-  } else {
-    // Initialize checkbox
-    $("#autofilter").prop("checked", true);
-    localStorage.setItem("query_log_filter_chkbox", true);
-  }
-
-  $("#autofilter").click(function () {
-    localStorage.setItem("query_log_filter_chkbox", $("#autofilter").prop("checked"));
+    tableApi.search("");
+    resetColumnsFilters();
   });
 });
+
+function tooltipText(index, text) {
+  if (index === 5) {
+    // Strip reply time from tooltip text
+    text = text.split(" ")[0];
+  }
+
+  if (index in tableFilters && tableFilters[index].length > 0) {
+    return "Click to remove " + colTypes[index] + ' "' + text + '" from filter.';
+  }
+
+  return "Click to add " + colTypes[index] + ' "' + text + '" to filter.';
+}
+
+function addColumnFilter(event, colID, filterstring) {
+  // If the below modifier keys are held down, do nothing
+  if (event.ctrlKey || event.metaKey) {
+    return;
+  }
+
+  if (tableFilters[colID] === filterstring) {
+    filterstring = "";
+  }
+
+  tableFilters[colID] = filterstring;
+
+  applyColumnFiltering();
+}
+
+function resetColumnsFilters() {
+  tableFilters.forEach(function (value, index) {
+    tableFilters[index] = "";
+  });
+
+  // Clear filter reset button
+  applyColumnFiltering();
+}
+
+function applyColumnFiltering() {
+  var showReset = false;
+  tableFilters.forEach(function (value, index) {
+    // Prepare regex filter string
+    var regex = "";
+
+    // Split filter string if we received a combined ID#Name column
+    var valArr = value.split("#");
+    if (valArr.length > 0) {
+      value = valArr[0];
+    }
+
+    if (value.length > 0) {
+      // Exact matching
+      regex = "^" + value + "$";
+
+      // Add background color
+      tableApi.$("td:eq(" + index + ")").addClass("highlight");
+
+      // Remember to show reset button
+      showReset = true;
+    } else {
+      // Clear background color
+      tableApi.$("td:eq(" + index + ")").removeClass("highlight");
+    }
+
+    // Apply filtering on this column (regex may be empty -> no filtering)
+    tableApi.column(index).search(regex, true, true);
+  });
+
+  if (showReset) {
+    $("#resetButton").removeClass("hidden");
+  } else {
+    $("#resetButton").addClass("hidden");
+  }
+
+  // Trigger table update
+  tableApi.draw();
+}

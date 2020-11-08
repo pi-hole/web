@@ -173,7 +173,7 @@ function archive_restore_table($file, $table, $flush=false)
 	foreach($contents as $row)
 	{
 		// Limit max length for a domain entry to 253 chars
-		if(strlen($row[$field]) > 253)
+		if(isset($field) && strlen($row[$field]) > 253)
 			continue;
 
 		// Bind properties from JSON data
@@ -196,7 +196,7 @@ function archive_restore_table($file, $table, $flush=false)
 				default:
 					$sqltype = "UNK";
 			}
-			$stmt->bindValue(":".$key, $value, $sqltype);
+			$stmt->bindValue(":".$key, htmlentities($value), $sqltype);
 		}
 
 		if($stmt->execute() && $stmt->reset() && $stmt->clear())
@@ -523,6 +523,34 @@ if(isset($_POST["action"]))
 					$importedsomething = true;
 				}
 			}
+
+			if(isset($_POST["localcnamerecords"]) && $file->getFilename() === "05-pihole-custom-cname.conf")
+			{
+				if($flushtables) {
+					// Defined in func.php included via auth.php
+					deleteAllCustomCNAMEEntries();
+				}
+
+				$num = 0;
+				$localcnamerecords = process_file(file_get_contents($file));
+				foreach($localcnamerecords as $record) {
+					$line = str_replace("cname=","", $record);
+					$line = str_replace("\r","", $line);
+					$line = str_replace("\n","", $line);
+					$explodedLine = explode (",", $line);
+					
+					$domain = implode(",", array_slice($explodedLine, 0, -1));
+					$target = $explodedLine[count($explodedLine)-1];
+
+					if(addCustomCNAMEEntry($domain, $target, false))
+						$num++;
+				}
+
+				echo "Processed local CNAME records (".$num." entries)<br>\n";
+				if($num > 0) {
+					$importedsomething = true;
+				}
+			}
 		}
 
 		if($importedsomething)
@@ -540,7 +568,8 @@ if(isset($_POST["action"]))
 }
 else
 {
-	$tarname = "pi-hole-teleporter_".date("Y-m-d_H-i-s").".tar";
+	$hostname = gethostname() ? str_replace(".", "_", gethostname())."-" : "";
+	$tarname = "pi-hole-".$hostname."teleporter_".date("Y-m-d_H-i-s").".tar";
 	$filename = $tarname.".gz";
 	$archive_file_name = sys_get_temp_dir() ."/". $tarname;
 	$archive = new PharData($archive_file_name);
