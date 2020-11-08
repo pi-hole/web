@@ -91,6 +91,7 @@ $(function () {
     },
     stateLoadCallback: function () {
       var data = utils.stateLoadCallback("groups-table");
+
       // Return if not available
       if (data === null) {
         return null;

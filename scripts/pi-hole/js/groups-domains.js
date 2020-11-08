@@ -73,7 +73,7 @@ function initTable() {
       { data: "type", searchable: false },
       { data: "enabled", searchable: false },
       { data: "comment" },
-      { data: "groups", searchable: false },
+      { data: "groups", searchable: false, visible: showtype === "all" },
       { data: null, width: "80px", orderable: false }
     ],
     drawCallback: function () {
@@ -251,6 +251,7 @@ function initTable() {
     },
     stateLoadCallback: function () {
       var data = utils.stateLoadCallback("groups-domains-table");
+
       // Return if not available
       if (data === null) {
         return null;

@@ -222,6 +222,7 @@ function initTable() {
     },
     stateLoadCallback: function () {
       var data = utils.stateLoadCallback("groups-clients-table");
+
       // Return if not available
       if (data === null) {
         return null;

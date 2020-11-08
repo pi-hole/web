@@ -178,6 +178,7 @@ function initTable() {
     },
     stateLoadCallback: function () {
       var data = utils.stateLoadCallback("groups-adlists-table");
+
       // Return if not available
       if (data === null) {
         return null;
