@@ -616,7 +616,7 @@ if ($_POST['action'] == 'get_groups') {
                 // Check return value of CHECK query (0 = only default group, 1 = special group assignments)
                 $only_default_group = (($check_result->fetchArray(SQLITE3_NUM)[0]) == 0) ? true : false;
                 if(!$only_default_group) {
-                    throw new Exception('Domain ' . $domain . 'is configured with special group settings.<br>'.
+                    throw new Exception('Domain ' . $domain . ' is configured with special group settings.<br>'.
                     'Please modify the domain on the respective group management pages.');
                 }
 

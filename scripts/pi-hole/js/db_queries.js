@@ -106,7 +106,7 @@ function add(domain, list) {
       if (!response.success) {
         alFailure.show();
         err.html(response.message);
-        alFailure.delay(4000).fadeOut(2000, function () {
+        alFailure.delay(10000).fadeOut(2000, function () {
           alFailure.hide();
         });
       } else {
@@ -125,7 +125,7 @@ function add(domain, list) {
     error: function () {
       alFailure.show();
       err.html("");
-      alFailure.delay(1000).fadeOut(2000, function () {
+      alFailure.delay(10000).fadeOut(2000, function () {
         alFailure.hide();
       });
       alInfo.delay(1000).fadeOut(2000, function () {

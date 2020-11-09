@@ -68,7 +68,7 @@ function add(domain, list) {
           alFailure.fadeIn(1000);
           setTimeout(function () {
             alertModal.modal("hide");
-          }, 3000);
+          }, 10000);
         } else {
           // Success
           alSuccess.children(alDomain).html(domain);
@@ -86,7 +86,7 @@ function add(domain, list) {
         alFailure.fadeIn(1000);
         setTimeout(function () {
           alertModal.modal("hide");
-        }, 3000);
+        }, 10000);
       }
     });
   });
