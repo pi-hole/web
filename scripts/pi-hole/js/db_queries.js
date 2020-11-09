@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false */
+/* global moment:false, utils:false */
 
 var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf() / 1000;
@@ -72,70 +72,6 @@ $(function () {
 });
 
 var tableApi, statistics;
-
-function add(domain, list) {
-  var token = $("#token").text();
-  var alInfo = $("#alInfo");
-  var alList = $("#alList");
-  var alDomain = $("#alDomain");
-  alDomain.html(domain);
-  var alSuccess = $("#alSuccess");
-  var alFailure = $("#alFailure");
-  var err = $("#err");
-
-  if (list === "white") {
-    alList.html("Whitelist");
-  } else {
-    alList.html("Blacklist");
-  }
-
-  alInfo.show();
-  alSuccess.hide();
-  alFailure.hide();
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    data: {
-      domain: domain,
-      list: list,
-      token: token,
-      action: "replace_domain",
-      comment: "Added from Long-Term-Data Query Log"
-    },
-    success: function (response) {
-      if (!response.success) {
-        alFailure.show();
-        err.html(response.message);
-        alFailure.delay(10000).fadeOut(2000, function () {
-          alFailure.hide();
-        });
-      } else {
-        alSuccess.show();
-        alSuccess.delay(1000).fadeOut(2000, function () {
-          alSuccess.hide();
-        });
-      }
-
-      alInfo.delay(1000).fadeOut(2000, function () {
-        alInfo.hide();
-        alList.html("");
-        alDomain.html("");
-      });
-    },
-    error: function () {
-      alFailure.show();
-      err.html("");
-      alFailure.delay(10000).fadeOut(2000, function () {
-        alFailure.hide();
-      });
-      alInfo.delay(1000).fadeOut(2000, function () {
-        alInfo.hide();
-        alList.html("");
-        alDomain.html("");
-      });
-    }
-  });
-}
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
@@ -406,9 +342,9 @@ $(function () {
   $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();
     if ([1, 4, 5, 9, 10, 11].indexOf(data[4]) !== -1) {
-      add(data[2], "white");
+      utils.addFromQueryLog(data[2], "white");
     } else {
-      add(data[2], "black");
+      utils.addFromQueryLog(data[2], "black");
     }
   });
 
