@@ -521,7 +521,7 @@ if ($_POST['action'] == 'get_groups') {
         $delete_stmt = null;
         if($_POST['action'] == 'replace_domain') {
             // Check statement will reveal any group associations for a given (domain,type) which do NOT belong to the default group
-            $check_stmt = $db->prepare('SELECT EXISTS(SELECT * FROM domainlist_by_group WHERE domainlist_id = (SELECT id FROM domainlist WHERE domain = :domain) AND group_id != 0)');
+            $check_stmt = $db->prepare('SELECT EXISTS(SELECT domain FROM domainlist_by_group dlbg JOIN domainlist dl on dlbg.domainlist_id = dl.id WHERE dl.domain = :domain AND dlbg.group_id != 0)');
             if (!$check_stmt) {
                 throw new Exception('While preparing check statement: ' . $db->lastErrorMsg());
             }
