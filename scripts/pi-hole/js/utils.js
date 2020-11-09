@@ -17,6 +17,8 @@ function escapeHtml(text) {
     "'": "&#039;"
   };
 
+  if (text === null) return null;
+
   return text.replace(/[&<>"']/g, function (m) {
     return map[m];
   });
@@ -30,6 +32,8 @@ function unescapeHtml(text) {
     "&quot;": '"',
     "&#039;": "'"
   };
+
+  if (text === null) return null;
 
   return text.replace(/&(?:amp|lt|gt|quot|#039);/g, function (m) {
     return map[m];
