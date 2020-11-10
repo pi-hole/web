@@ -506,7 +506,7 @@ if ($_POST['action'] == 'get_groups') {
         $added = 0;
 
         // Prepare INSERT INTO statement
-        $insert_stmt = $db->prepare('REPLACE INTO domainlist (domain,type) VALUES (:domain,:type)');
+        $insert_stmt = $db->prepare('INSERT OR IGNORE INTO domainlist (domain,type) VALUES (:domain,:type)');
         if (!$insert_stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
