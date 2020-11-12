@@ -94,7 +94,7 @@ if (isset($_GET['getAllQueries']) && $auth)
 	{
 		$from = intval($_GET["from"]);
 		$until = intval($_GET["until"]);
-		$dbquery = "SELECT timestamp, type, domain, client, status FROM queries WHERE timestamp >= :from AND timestamp <= :until ";
+		$dbquery = "SELECT timestamp, type, domain, client, status, forward FROM queries WHERE timestamp >= :from AND timestamp <= :until ";
 		if(isset($_GET["types"]))
 		{
 			$types = $_GET["types"];
@@ -153,8 +153,8 @@ if (isset($_GET['getAllQueries']) && $auth)
 						$query_type = "UNKN";
 						break;
 				}
-				// array:        time     type         domain                client           status
-				$allQueries[] = [$row[0], $query_type, utf8_encode($row[2]), utf8_encode($c), $row[4]];
+				// array:        time     type         domain                client           status   upstream destination
+				$allQueries[] = [$row[0], $query_type, utf8_encode($row[2]), utf8_encode($c), $row[4], utf8_encode($row[5])];
 			}
 	}
 	$result = array('data' => $allQueries);

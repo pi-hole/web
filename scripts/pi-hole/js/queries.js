@@ -188,7 +188,11 @@ $(function () {
           break;
         case "2":
           colorClass = "text-green";
-          fieldtext = "OK <br class='hidden-lg'>(forwarded)" + dnssecStatus;
+          fieldtext =
+            "OK <br class='hidden-lg'>(forwarded to " +
+            (data.length > 10 && data[10] !== "N/A" ? data[10] : "") +
+            ")" +
+            dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
