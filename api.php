@@ -162,27 +162,27 @@ elseif (isset($_GET['list']))
 }
 elseif (isset($_GET['customdns']))
 {
-    if(isset($_GET["auth"]))
-    {
-        if($_GET["auth"] !== $pwhash)
-            die("Not authorized!");
-    }
-    else
-    {
-        // Skip token validation if explicit auth string is given
-        check_csrf($_GET['token']);
-    }
+	if(isset($_GET["auth"]))
+	{
+		if($_GET["auth"] !== $pwhash)
+			die("Not authorized!");
+	}
+	else
+	{
+		// Skip token validation if explicit auth string is given
+		check_csrf($_GET['token']);
+	}
 
-    $customDNSFile = "/etc/pihole/custom.list";
-    require_once("scripts/pi-hole/php/func.php");
-    switch ($_POST['action'])
-    {
-        case 'get':  $data = echoCustomDNSEntries(); break;
-        case 'add':  $data = addCustomDNSEntry(); break;
-        case 'delete': $data = deleteCustomDNSEntry(); break;
-        default:
-            die("Wrong action");
-    }
+	$customDNSFile = "/etc/pihole/custom.list";
+	require_once("scripts/pi-hole/php/func.php");
+	switch ($_POST['action'])
+	{
+		case 'get':  $data = echoCustomDNSEntries(); break;
+		case 'add':  $data = addCustomDNSEntry(); break;
+		case 'delete': $data = deleteCustomDNSEntry(); break;
+		default:
+			die("Wrong action");
+	}
 }
 
 
