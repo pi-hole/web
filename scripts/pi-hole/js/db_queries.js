@@ -268,7 +268,10 @@ $(function () {
           break;
         case 2:
           color = "green";
-          fieldtext = "OK <br class='hidden-lg'>(forwarded)";
+          fieldtext =
+            "OK <br class='hidden-lg'>(forwarded to " +
+            (data.length > 5 && data[5] !== "N/A" ? data[5] : "") +
+            ")";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
