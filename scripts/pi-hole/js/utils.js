@@ -167,6 +167,16 @@ function validateIPv6CIDR(ip) {
   return ipv6validator.test(ip);
 }
 
+function validateMAC(mac) {
+  var macvalidator = new RegExp(/^([\da-fA-F]{2}:){5}([\da-fA-F]{2})$/);
+  return macvalidator.test(mac);
+}
+
+function validateHostname(name) {
+  var namevalidator = new RegExp(/[^<>;"]/);
+  return namevalidator.test(name);
+}
+
 // set bootstrap-select defaults
 function setBsSelectDefaults() {
   var bsSelectDefaults = $.fn.selectpicker.Constructor.DEFAULTS;
@@ -234,6 +244,8 @@ window.utils = (function () {
     setBsSelectDefaults: setBsSelectDefaults,
     stateSaveCallback: stateSaveCallback,
     stateLoadCallback: stateLoadCallback,
-    getGraphType: getGraphType
+    getGraphType: getGraphType,
+    validateMAC: validateMAC,
+    validateHostname: validateHostname
   };
 })();

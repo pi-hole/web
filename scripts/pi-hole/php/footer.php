@@ -22,10 +22,10 @@
                         <input id="customTimeout" class="form-control" type="number" value="60">
                             <div class="input-group-btn" data-toggle="buttons">
                                 <label class="btn btn-default">
-                                    <input type="radio"> Secs
+                                    <input id="selSec" type="radio"> Secs
                                 </label>
                                 <label id="btnMins" class="btn btn-default active">
-                                    <input type="radio"> Mins
+                                    <input id="selMin" type="radio"> Mins
                                 </label>
                             </div>
                     </div>
@@ -99,6 +99,6 @@
 
 </div>
 <!-- ./wrapper -->
-<script src="scripts/pi-hole/js/footer.js"></script>
+<script src="scripts/pi-hole/js/footer.js?v=<?=$cacheVer?>"></script>
 </body>
 </html>

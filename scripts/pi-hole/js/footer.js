@@ -133,7 +133,8 @@ function initCheckboxRadioStyle() {
 
   function applyCheckboxRadioStyle(style) {
     boxsheet.attr("href", getCheckboxURL(style));
-    var sel = $("input[type='radio'],input[type='checkbox']");
+    // Get all radio/checkboxes for theming, with the exception of the two radio buttons on the custom disable timer
+    var sel = $("input[type='radio'],input[type='checkbox']").not("#selSec").not("#selMin");
     sel.parent().removeClass();
     sel.parent().addClass("icheck-" + style);
   }
@@ -170,7 +171,7 @@ function initCPUtemp() {
       switch (unit) {
         case "K":
           temperature += 273.15;
-          displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;K");
+          displaytemp.html(temperature.toFixed(1) + "&nbsp;K");
           break;
 
         case "F":

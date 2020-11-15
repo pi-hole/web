@@ -738,7 +738,11 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 			// Flush network table
 			case "flusharp":
 				$output = pihole_execute("arpflush quiet");
-				$error = implode("<br>", $output);
+				$error = "";
+				if(is_array($output))
+				{
+					$error = implode("<br>", $output);
+				}
 				if(strlen($error) == 0)
 				{
 					$success .= "The network table has been flushed";
