@@ -416,6 +416,13 @@ else
 		$data = array_merge($data, $result);
 	}
 
+	if (isset($_GET['delete_lease']) && $auth)
+	{
+		sendRequestFTL("delete-lease ".$_GET['delete_lease']);
+		$return = getResponseFTL();
+		$data["delete_lease"] = $return[0];
+	}
+
 	disconnectFTL();
 }
 ?>

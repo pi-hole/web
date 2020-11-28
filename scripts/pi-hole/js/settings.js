@@ -6,6 +6,7 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils:false */
+var token = $("#token").text();
 
 $(function () {
   $("[data-static]").on("click", function () {
@@ -281,5 +282,50 @@ $(function () {
 
   bargraphs.click(function () {
     localStorage.setItem("barchart_chkbox", bargraphs.prop("checked"));
+  });
+});
+
+// Delete dynamic DHCP lease
+$('button[id="removedynamic"]').on("click", function () {
+  var tr = $(this).closest("tr");
+  var ipaddr = utils.escapeHtml(tr.children("#IP").text());
+  var name = utils.escapeHtml(tr.children("#HOST").text());
+  var ipname = name + " (" + ipaddr + ")";
+
+  utils.disableAll();
+  utils.showAlert("info", "", "Deleting DHCP lease...", ipname);
+  $.ajax({
+    url: "api.php",
+    method: "get",
+    dataType: "json",
+    data: {
+      delete_lease: ipaddr,
+      token: token
+    },
+    success: function (response) {
+      utils.enableAll();
+      if (response.delete_lease.startsWith("OK")) {
+        utils.showAlert(
+          "success",
+          "far fa-trash-alt",
+          "Successfully deleted DHCP lease for ",
+          ipname
+        );
+        // Remove column on success
+        tr.remove();
+        // We have to hide the tooltips explicitly or they will stay there forever as
+        // the onmouseout event does not fire when the element is already gone
+        $.each($(".tooltip"), function () {
+          $(this).remove();
+        });
+      } else {
+        utils.showAlert("error", "Error while deleting DHCP lease for " + ipname, response);
+      }
+    },
+    error: function (jqXHR, exception) {
+      utils.enableAll();
+      utils.showAlert("error", "Error while deleting DHCP lease for " + ipname, jqXHR.responseText);
+      console.log(exception); // eslint-disable-line no-console
+    }
   });
 });

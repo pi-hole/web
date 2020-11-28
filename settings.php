@@ -717,6 +717,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                             <td id="IP" data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
                                                             <td id="HOST"><?php echo $lease["host"]; ?></td>
                                                             <td>
+                                                                <button type="button" class="btn btn-danger btn-xs" id="removedynamic">
+                                                                    <span class="fas fas fa-trash-alt"></span>
+                                                                </button>
                                                                 <button type="button" id="button" class="btn btn-warning btn-xs" data-static="alert">
                                                                     <span class="fas fas fa-file-import"></span>
                                                                 </button>
