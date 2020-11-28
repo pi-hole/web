@@ -96,12 +96,10 @@ function piholeChange(action, duration) {
 function checkMessages() {
   $.getJSON("api_db.php?status", function (data) {
     if ("message_count" in data && data.message_count > 0) {
-      var title;
-      if (data.message_count > 1) {
-        title = "There are " + data.message_count + " warnings. Click for further details.";
-      } else {
-        title = "There is one warning. Click for further details.";
-      }
+      var title =
+        data.message_count > 1
+          ? "There are " + data.message_count + " warnings. Click for further details."
+          : "There is one warning. Click for further details.";
 
       $("#pihole-diagnosis").prop("title", title);
       $("#pihole-diagnosis-count").text(data.message_count);
@@ -133,7 +131,8 @@ function initCheckboxRadioStyle() {
 
   function applyCheckboxRadioStyle(style) {
     boxsheet.attr("href", getCheckboxURL(style));
-    var sel = $("input[type='radio'],input[type='checkbox']");
+    // Get all radio/checkboxes for theming, with the exception of the two radio buttons on the custom disable timer
+    var sel = $("input[type='radio'],input[type='checkbox']").not("#selSec").not("#selMin");
     sel.parent().removeClass();
     sel.parent().addClass("icheck-" + style);
   }
@@ -170,7 +169,7 @@ function initCPUtemp() {
       switch (unit) {
         case "K":
           temperature += 273.15;
-          displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;K");
+          displaytemp.html(temperature.toFixed(1) + "&nbsp;K");
           break;
 
         case "F":

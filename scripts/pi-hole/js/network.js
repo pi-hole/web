@@ -69,6 +69,8 @@ $(function () {
   tableApi = $("#network-entries").DataTable({
     rowCallback: function (row, data) {
       var color;
+      var index;
+      var maxiter;
       var iconClasses;
       var lastQuery = parseInt(data.lastQuery, 10);
       var diff = getTimestamp() - lastQuery;
@@ -93,7 +95,7 @@ $(function () {
       } else {
         // This client has never sent a query to Pi-hole, color light-red
         color = networkNever;
-        iconClasses = "fas fa-check";
+        iconClasses = "fas fa-times";
       }
 
       // Set determined background color
@@ -109,14 +111,47 @@ $(function () {
       // Set hostname to "unknown" if not available
       if (!data.name || data.name.length === 0) {
         $("td:eq(3)", row).html("<em>unknown</em>");
+      } else {
+        var names = [];
+        var name = "";
+        maxiter = Math.min(data.name.length, MAXIPDISPLAY);
+        index = 0;
+        for (index = 0; index < maxiter; index++) {
+          name = data.name[index];
+          if (name.length === 0) continue;
+          names.push('<a href="queries.php?client=' + name + '">' + name + "</a>");
+        }
+
+        if (data.name.length > MAXIPDISPLAY) {
+          // We hit the maximum above, add "..." to symbolize we would
+          // have more to show here
+          names.push("...");
+        }
+
+        maxiter = Math.min(data.ip.length, data.name.length);
+        var allnames = [];
+        for (index = 0; index < maxiter; index++) {
+          name = data.name[index];
+          if (name.length > 0) {
+            allnames.push(name + " (" + data.ip[index] + ")");
+          } else {
+            allnames.push("No host name for " + data.ip[index] + " known");
+          }
+        }
+
+        $("td:eq(3)", row).html(names.join("<br>"));
+        $("td:eq(3)", row).hover(function () {
+          this.title = allnames.join("\n");
+        });
       }
 
       // Set number of queries to localized string (add thousand separators)
       $("td:eq(6)", row).html(data.numQueries.toLocaleString());
 
       var ips = [];
-      var maxiter = Math.min(data.ip.length, MAXIPDISPLAY);
-      for (var index = 0; index < maxiter; index++) {
+      maxiter = Math.min(data.ip.length, MAXIPDISPLAY);
+      index = 0;
+      for (index = 0; index < maxiter; index++) {
         var ip = data.ip[index];
         ips.push('<a href="queries.php?client=' + ip + '">' + ip + "</a>");
       }

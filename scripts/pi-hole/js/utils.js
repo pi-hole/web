@@ -17,7 +17,25 @@ function escapeHtml(text) {
     "'": "&#039;"
   };
 
+  if (text === null) return null;
+
   return text.replace(/[&<>"']/g, function (m) {
+    return map[m];
+  });
+}
+
+function unescapeHtml(text) {
+  var map = {
+    "&amp;": "&",
+    "&lt;": "<",
+    "&gt;": ">",
+    "&quot;": '"',
+    "&#039;": "'"
+  };
+
+  if (text === null) return null;
+
+  return text.replace(/&(?:amp|lt|gt|quot|#039);/g, function (m) {
     return map[m];
   });
 }
@@ -167,6 +185,16 @@ function validateIPv6CIDR(ip) {
   return ipv6validator.test(ip);
 }
 
+function validateMAC(mac) {
+  var macvalidator = new RegExp(/^([\da-fA-F]{2}:){5}([\da-fA-F]{2})$/);
+  return macvalidator.test(mac);
+}
+
+function validateHostname(name) {
+  var namevalidator = new RegExp(/[^<>;"]/);
+  return namevalidator.test(name);
+}
+
 // set bootstrap-select defaults
 function setBsSelectDefaults() {
   var bsSelectDefaults = $.fn.selectpicker.Constructor.DEFAULTS;
@@ -220,9 +248,85 @@ function getGraphType() {
   return localStorage.getItem("barchart_chkbox") === "false" ? "line" : "bar";
 }
 
+function addFromQueryLog(domain, list) {
+  var token = $("#token").text();
+  var alertModal = $("#alertModal");
+  var alProcessing = alertModal.find(".alProcessing");
+  var alSuccess = alertModal.find(".alSuccess");
+  var alFailure = alertModal.find(".alFailure");
+  var alNetworkErr = alertModal.find(".alFailure #alNetErr");
+  var alCustomErr = alertModal.find(".alFailure #alCustomErr");
+  var alList = "#alList";
+  var alDomain = "#alDomain";
+
+  // Exit the function here if the Modal is already shown (multiple running interlock)
+  if (alertModal.css("display") !== "none") {
+    return;
+  }
+
+  var listtype = list === "white" ? "Whitelist" : "Blacklist";
+
+  alProcessing.children(alDomain).html(domain);
+  alProcessing.children(alList).html(listtype);
+  alertModal.modal("show");
+
+  // add Domain to List after Modal has faded in
+  alertModal.one("shown.bs.modal", function () {
+    $.ajax({
+      url: "scripts/pi-hole/php/groups.php",
+      method: "post",
+      data: {
+        domain: domain,
+        list: list,
+        token: token,
+        action: "replace_domain",
+        comment: "Added from Query Log"
+      },
+      success: function (response) {
+        alProcessing.hide();
+        if (!response.success) {
+          // Failure
+          alNetworkErr.hide();
+          alCustomErr.html(response.message);
+          alFailure.fadeIn(1000);
+          setTimeout(function () {
+            alertModal.modal("hide");
+          }, 10000);
+        } else {
+          // Success
+          alSuccess.children(alDomain).html(domain);
+          alSuccess.children(alList).html(listtype);
+          alSuccess.fadeIn(1000);
+          setTimeout(function () {
+            alertModal.modal("hide");
+          }, 2000);
+        }
+      },
+      error: function () {
+        // Network Error
+        alProcessing.hide();
+        alNetworkErr.show();
+        alFailure.fadeIn(1000);
+        setTimeout(function () {
+          alertModal.modal("hide");
+        }, 8000);
+      }
+    });
+  });
+
+  // Reset Modal after it has faded out
+  alertModal.one("hidden.bs.modal", function () {
+    alProcessing.show();
+    alSuccess.add(alFailure).hide();
+    alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
+    alCustomErr.html("");
+  });
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
+    unescapeHtml: unescapeHtml,
     objectToArray: objectToArray,
     padNumber: padNumber,
     showAlert: showAlert,
@@ -234,6 +338,9 @@ window.utils = (function () {
     setBsSelectDefaults: setBsSelectDefaults,
     stateSaveCallback: stateSaveCallback,
     stateLoadCallback: stateLoadCallback,
-    getGraphType: getGraphType
+    getGraphType: getGraphType,
+    validateMAC: validateMAC,
+    validateHostname: validateHostname,
+    addFromQueryLog: addFromQueryLog
   };
 })();

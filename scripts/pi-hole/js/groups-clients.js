@@ -17,28 +17,35 @@ function reloadClientSuggestions() {
     { action: "get_unconfigured_clients", token: token },
     function (data) {
       var sel = $("#select");
-      var customWasSelected = sel.val() === "custom";
       sel.empty();
+
+      // In order for the placeholder value to appear, we have to have a blank
+      // <option> as the first option in our <select> control. This is because
+      // the browser tries to select the first option by default. If our first
+      // option were non-empty, the browser would display this instead of the
+      // placeholder.
+      sel.append($("<option />"));
+
+      // Add data obtained from API
       for (var key in data) {
         if (!Object.prototype.hasOwnProperty.call(data, key)) {
           continue;
         }
 
         var text = key;
+        var keyPlain = key;
+        if (key.startsWith("IP-")) {
+          // Mock MAC address for address-only devices
+          keyPlain = key.substring(3);
+          text = keyPlain;
+        }
+
+        // Append host name if available
         if (data[key].length > 0) {
           text += " (" + data[key] + ")";
         }
 
-        sel.append($("<option />").val(key).text(text));
-      }
-
-      if (data.length === 0) {
-        $("#ip-custom").prop("disabled", false);
-      }
-
-      sel.append($("<option />").val("custom").text("Custom, specified below..."));
-      if (customWasSelected) {
-        sel.val("custom");
+        sel.append($("<option />").val(keyPlain).text(text));
       }
     },
     "json"
@@ -59,6 +66,11 @@ function getGroups() {
 
 $(function () {
   $("#btnAdd").on("click", addClient);
+  $("select").select2({
+    tags: true,
+    placeholder: "Select client...",
+    allowClear: true
+  });
 
   reloadClientSuggestions();
   utils.setBsSelectDefaults();
@@ -120,7 +132,7 @@ function initTable() {
 
       $("td:eq(1)", row).html('<input id="comment_' + data.id + '" class="form-control">');
       var commentEl = $("#comment_" + data.id, row);
-      commentEl.val(data.comment);
+      commentEl.val(utils.unescapeHtml(data.comment));
       commentEl.on("change", editClient);
 
       $("td:eq(2)", row).empty();
@@ -210,6 +222,7 @@ function initTable() {
     },
     stateLoadCallback: function () {
       var data = utils.stateLoadCallback("groups-clients-table");
+
       // Return if not available
       if (data === null) {
         return null;
@@ -221,6 +234,7 @@ function initTable() {
       return data;
     }
   });
+
   // Disable autocorrect in the search box
   var input = document.querySelector("input[type=search]");
   if (input !== null) {
@@ -238,6 +252,7 @@ function initTable() {
       $("#resetButton").addClass("hidden");
     }
   });
+
   $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").addClass("hidden");
@@ -245,33 +260,34 @@ function initTable() {
 }
 
 function addClient() {
-  var ip = $("#select").val();
+  var ip = $("#select").val().trim();
   var comment = utils.escapeHtml($("#new_comment").val());
-  if (ip === "custom") {
-    ip = utils.escapeHtml($("#ip-custom").val().trim());
-  }
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding client...", ip);
 
   if (ip.length === 0) {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify a client IP address");
+    utils.showAlert("warning", "", "Warning", "Please specify a client IP or MAC address");
     return;
   }
 
-  // Validate IP address (may contain CIDR details)
-  var ipv6format = ip.includes(":");
-
-  if (!ipv6format && !utils.validateIPv4CIDR(ip)) {
+  // Validate input, can be:
+  // - IPv4 address (with and without CIDR)
+  // - IPv6 address (with and without CIDR)
+  // - MAC address (in the form AA:BB:CC:DD:EE:FF)
+  // - host name (arbitrary form, we're only checking against some reserved charaters)
+  if (utils.validateIPv4CIDR(ip) || utils.validateIPv6CIDR(ip) || utils.validateMAC(ip)) {
+    // Convert input to upper case (important for MAC addresses)
+    ip = ip.toUpperCase();
+  } else if (!utils.validateHostname(ip)) {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Invalid IPv4 address!");
-    return;
-  }
-
-  if (ipv6format && !utils.validateIPv6CIDR(ip)) {
-    utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Invalid IPv6 address!");
+    utils.showAlert(
+      "warning",
+      "",
+      "Warning",
+      "Input is neither a valid IP or MAC address nor a valid host name!"
+    );
     return;
   }
 

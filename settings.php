@@ -14,7 +14,7 @@ $piholeFTLConf = piholeFTLConfig();
 
 // Handling of PHP internal errors
 $last_error = error_get_last();
-if($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR)
+if(isset($last_error) && ($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR))
 {
 	$error .= "There was a problem applying your settings.<br>Debugging information:<br>PHP error (".htmlspecialchars($last_error["type"])."): ".htmlspecialchars($last_error["message"])." in ".htmlspecialchars($last_error["file"]).":".htmlspecialchars($last_error["line"]);
 }
@@ -318,7 +318,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">Time FTL started:</th>
-                                                        <td><?php print_r(get_FTL_data("start")); ?></td>
+                                                        <td><?php print_r(get_FTL_data("lstart")); ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">User / Group:</th>
@@ -397,7 +397,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     <br/>
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <button type="button" class="btn btn-danger confirm-flushlogs btn-block">Flush logs</button>
+                                            <button type="button" class="btn btn-danger confirm-flushlogs btn-block">Flush logs (last 24 hours)</button>
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
                                         <div class="col-md-4">
@@ -618,8 +618,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div><input type="checkbox" name="useIPv6" id="useIPv6" class="DHCPgroup" <?php if ($DHCPIPv6){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="useIPv6"><strong>Enable IPv6 support (SLAAC + RA)</strong></label></div>
-                                                <div><input type="checkbox" name="DHCP_rapid_commit" id="DHCP_rapid_commit" class="DHCPgroup" <?php if ($DHCP_rapid_commit){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="DHCP_rapid_commit"><strong>Enable DHCP rapid commit (fast address assignment)</strong></label></div>
+                                              <div><input type="checkbox" name="DHCP_rapid_commit" id="DHCP_rapid_commit" class="DHCPgroup" <?php if ($DHCP_rapid_commit){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="DHCP_rapid_commit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
+                                              <div><input type="checkbox" name="useIPv6" id="useIPv6" class="DHCPgroup" <?php if ($DHCPIPv6){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="useIPv6"><strong>Enable IPv6 support (SLAAC + RA)</strong></label></div>
                                             </div>
                                         </div>
                                     </div>
@@ -674,7 +674,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                             $type = 4;
                                         }
 
-                                        $host = $line[3];
+                                        $host = htmlentities($line[3]);
                                         if ($host == "*") {
                                             $host = "<i>unknown</i>";
                                         }
@@ -715,8 +715,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                             title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>">
                                                             <td id="MAC"><?php echo $lease["hwaddr"]; ?></td>
                                                             <td id="IP" data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
-                                                            <td id="HOST"><?php echo htmlentities($lease["host"]); ?></td>
+                                                            <td id="HOST"><?php echo $lease["host"]; ?></td>
                                                             <td>
+                                                                <button type="button" class="btn btn-danger btn-xs" id="removedynamic">
+                                                                    <span class="fas fas fa-trash-alt"></span>
+                                                                </button>
                                                                 <button type="button" id="button" class="btn btn-warning btn-xs" data-static="alert">
                                                                     <span class="fas fas fa-file-import"></span>
                                                                 </button>
@@ -970,21 +973,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     queries, Pi-hole requests the DNSSEC records needed to validate
                                                     the replies. If a domain fails validation or the upstream does not
                                                     support DNSSEC, this setting can cause issues resolving domains.
-                                                    Use Google, Cloudflare, DNS.WATCH, Quad9, or another DNS
-                                                    server which supports DNSSEC when activating DNSSEC. Note that
+                                                    Use an upstream DNS server which supports DNSSEC when activating DNSSEC. Note that
                                                     the size of your log might increase significantly
                                                     when enabling DNSSEC. A DNSSEC resolver test can be found
                                                     <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
                                                 </div>
-                                                <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
-                                                   queries, Pi-hole requests the DNSSEC records needed to validate
-                                                   the replies. If a domain fails validation or the upstream does not
-                                                   support DNSSEC, this setting can cause issues resolving domains.
-                                                   Use Google, Cloudflare, DNS.WATCH, Quad9, or another DNS
-                                                   server which supports DNSSEC when activating DNSSEC. Note that
-                                                   the size of your log might increase significantly
-                                                   when enabling DNSSEC. A DNSSEC resolver test can be found
-                                                   <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
                                                 <br>
                                                 <h4>Conditional forwarding</h4>
                                                 <p>If not configured as your DHCP server, Pi-hole  typically won't be able to
@@ -994,7 +987,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
 	                                               requests to your DHCP server (most likely your router), but only for devices on your
 	                                               home network.  To configure this we will need to know the IP
 	                                               address of your DHCP server and which addresses belong to your local network.
-                                                   Exemplary inout is given below as placeholder in the text boxes (if empty).</p>
+                                                   Exemplary input is given below as placeholder in the text boxes (if empty).</p>
                                                 <p>If your local network spans 192.168.0.1 - 192.168.0.255, then you will have to input
                                                    <code>192.168.0.0/24</code>. If your local network is 192.168.47.1 - 192.168.47.255, it will
                                                    be <code>192.168.47.0/24</code> and similar. If your network is larger, the CIDR has to be
@@ -1383,6 +1376,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     <input type="checkbox" name="localdnsrecords" id="tele_localdnsrecords" value="true" checked>
                                                     <label for="tele_localdnsrecords">Local DNS Records</label>
                                                 </div>
+                                                <div>
+                                                    <input type="checkbox" name="localcnamerecords" id="tele_localcnamerecords" value="true" checked>
+                                                    <label for="tele_localcnamerecords">Local CNAME Records</label>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1426,9 +1423,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
     </div>
 </div>
 
-<script src="scripts/vendor/jquery.confirm.min.js"></script>
-<script src="scripts/pi-hole/js/utils.js"></script>
-<script src="scripts/pi-hole/js/settings.js"></script>
+<script src="scripts/vendor/jquery.confirm.min.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/settings.js?v=<?=$cacheVer?>"></script>
 
 <?php
 require "scripts/pi-hole/php/footer.php";

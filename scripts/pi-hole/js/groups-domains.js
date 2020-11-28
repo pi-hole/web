@@ -73,7 +73,7 @@ function initTable() {
       { data: "type", searchable: false },
       { data: "enabled", searchable: false },
       { data: "comment" },
-      { data: "groups", searchable: false },
+      { data: "groups", searchable: false, visible: showtype === "all" },
       { data: null, width: "80px", orderable: false }
     ],
     drawCallback: function () {
@@ -149,7 +149,7 @@ function initTable() {
 
       $("td:eq(3)", row).html('<input id="comment_' + data.id + '" class="form-control">');
       var commentEl = $("#comment_" + data.id, row);
-      commentEl.val(data.comment);
+      commentEl.val(utils.unescapeHtml(data.comment));
       commentEl.on("change", editDomain);
 
       // Show group assignment field only if in full domain management mode
@@ -251,6 +251,7 @@ function initTable() {
     },
     stateLoadCallback: function () {
       var data = utils.stateLoadCallback("groups-domains-table");
+
       // Return if not available
       if (data === null) {
         return null;

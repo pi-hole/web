@@ -300,3 +300,7 @@
   width: 100%;
   vertical-align: middle;
 }
+
+.select2-container--default .select2-results > .select2-results__options {
+  max-height: 400px;
+}

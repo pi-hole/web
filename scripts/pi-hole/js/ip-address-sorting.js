@@ -5,12 +5,17 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-// This code has been adapted from
+// This code has been taken from
 // https://datatables.net/plug-ins/sorting/ip-address
+// and was modified by the Pi-hole team to support
+// CIDR notation and be more robust against invalid
+// input data (like empty IP addresses)
 $.extend($.fn.dataTableExt.oSort, {
   "ip-address-pre": function (a) {
-    if (!a) {
-      return 0;
+    // Skip empty fields (IP address might have expired or
+    // reassigned to a differenct device)
+    if (!a || a.length === 0) {
+      return Infinity;
     }
 
     var i, item;

@@ -73,6 +73,9 @@ function renderMessage(data, type, row) {
         "&uarr;</pre>"
       );
 
+    case "DNSMASQ_CONFIG":
+      return "FTL failed to start due to " + row.message;
+
     default:
       return "Unknown message type<pre>" + JSON.stringify(row) + "</pre>";
   }

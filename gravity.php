@@ -25,7 +25,7 @@
 <button type="button" id="gravityBtn" class="btn btn-lg btn-primary btn-block">Update</button>
 <pre id="output" style="width: 100%; height: 100%;" hidden></pre>
 
-<script src="scripts/pi-hole/js/gravity.js"></script>
+<script src="scripts/pi-hole/js/gravity.js?v=<?=$cacheVer?>"></script>
 
 <?php
     require "scripts/pi-hole/php/footer.php";

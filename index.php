@@ -7,7 +7,7 @@
 *    Please see LICENSE file for your rights under this license. */
     $indexpage = true;
     require "scripts/pi-hole/php/header.php";
-    require_once("scripts/pi-hole/php/gravity.php");
+    require_once "scripts/pi-hole/php/gravity.php";
 
     function getinterval()
     {
@@ -294,8 +294,8 @@ else
 <!-- /.row -->
 <?php } ?>
 
-<script src="scripts/pi-hole/js/utils.js"></script>
-<script src="scripts/pi-hole/js/index.js"></script>
+<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/index.js?v=<?=$cacheVer?>"></script>
 
 <?php
     require "scripts/pi-hole/php/footer.php";

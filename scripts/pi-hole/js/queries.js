@@ -25,86 +25,6 @@ var replyTypes = [
 ];
 var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
 
-function add(domain, list) {
-  var token = $("#token").text();
-  var alertModal = $("#alertModal");
-  var alProcessing = alertModal.find(".alProcessing");
-  var alSuccess = alertModal.find(".alSuccess");
-  var alFailure = alertModal.find(".alFailure");
-  var alNetworkErr = alertModal.find(".alFailure #alNetErr");
-  var alCustomErr = alertModal.find(".alFailure #alCustomErr");
-  var alList = "#alList";
-  var alDomain = "#alDomain";
-
-  // Exit the function here if the Modal is already shown (multiple running interlock)
-  if (alertModal.css("display") !== "none") {
-    return;
-  }
-
-  var listtype;
-  if (list === "white") {
-    listtype = "Whitelist";
-  } else {
-    listtype = "Blacklist";
-  }
-
-  alProcessing.children(alDomain).html(domain);
-  alProcessing.children(alList).html(listtype);
-  alertModal.modal("show");
-
-  // add Domain to List after Modal has faded in
-  alertModal.one("shown.bs.modal", function () {
-    $.ajax({
-      url: "scripts/pi-hole/php/groups.php",
-      method: "post",
-      data: {
-        domain: domain,
-        list: list,
-        token: token,
-        action: "add_domain",
-        comment: "Added from Query Log"
-      },
-      success: function (response) {
-        alProcessing.hide();
-        if (!response.success) {
-          // Failure
-          alNetworkErr.hide();
-          alCustomErr.html(response.message);
-          alFailure.fadeIn(1000);
-          setTimeout(function () {
-            alertModal.modal("hide");
-          }, 3000);
-        } else {
-          // Success
-          alSuccess.children(alDomain).html(domain);
-          alSuccess.children(alList).html(listtype);
-          alSuccess.fadeIn(1000);
-          setTimeout(function () {
-            alertModal.modal("hide");
-          }, 2000);
-        }
-      },
-      error: function () {
-        // Network Error
-        alProcessing.hide();
-        alNetworkErr.show();
-        alFailure.fadeIn(1000);
-        setTimeout(function () {
-          alertModal.modal("hide");
-        }, 3000);
-      }
-    });
-  });
-
-  // Reset Modal after it has faded out
-  alertModal.one("hidden.bs.modal", function () {
-    alProcessing.show();
-    alSuccess.add(alFailure).hide();
-    alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
-    alCustomErr.html("");
-  });
-}
-
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
@@ -148,6 +68,10 @@ $(function () {
     APIstring += "=100";
   }
 
+  if ("type" in GETDict) {
+    APIstring += "&type=" + GETDict.type;
+  }
+
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
       // DNSSEC status
@@ -189,7 +113,11 @@ $(function () {
           break;
         case "2":
           colorClass = "text-green";
-          fieldtext = "OK <br class='hidden-lg'>(forwarded)" + dnssecStatus;
+          fieldtext =
+            "OK <br class='hidden-lg'>(forwarded to " +
+            (data.length > 10 && data[10] !== "N/A" ? data[10] : "") +
+            ")" +
+            dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
@@ -257,6 +185,16 @@ $(function () {
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
           break;
+        case 12:
+          colorClass = "text-green";
+          fieldtext = "Retried";
+          buttontext = "";
+          break;
+        case 13:
+          colorClass = "text-green";
+          fieldtext = "Retried <br class='hidden-lg'>(ignored)";
+          buttontext = "";
+          break;
         default:
           colorClass = false;
           fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
@@ -307,14 +245,9 @@ $(function () {
       }
 
       // Check for existence of sixth column and display only if not Pi-holed
-      var replytext,
-        replyid = data[5];
-
-      if (replyid >= 0 && replyid < replyTypes.length) {
-        replytext = replyTypes[replyid];
-      } else {
-        replytext = "? (" + replyid + ")";
-      }
+      var replyid = data[5];
+      var replytext =
+        replyid >= 0 && replyid < replyTypes.length ? replyTypes[replyid] : "? (" + replyid + ")";
 
       replytext += '<input type="hidden" name="id" value="' + replyid + '">';
 
@@ -485,9 +418,9 @@ $(function () {
   $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();
     if (data[4] === "2" || data[4] === "3") {
-      add(data[2], "black");
+      utils.addFromQueryLog(data[2], "black");
     } else {
-      add(data[2], "white");
+      utils.addFromQueryLog(data[2], "white");
     }
   });
 
@@ -504,19 +437,19 @@ function tooltipText(index, text) {
   }
 
   if (index in tableFilters && tableFilters[index].length > 0) {
-    return "Clear filter on " + colTypes[index] + ' "' + text + '" using Shift + Click.';
+    return "Click to remove " + colTypes[index] + ' "' + text + '" from filter.';
   }
 
-  return "Add filter on " + colTypes[index] + ' "' + text + '" using Ctrl + Click.';
+  return "Click to add " + colTypes[index] + ' "' + text + '" to filter.';
 }
 
 function addColumnFilter(event, colID, filterstring) {
-  // Don't do anything when NOT explicitly requesting multi-selection functions
-  if (!event.ctrlKey && !event.metaKey && !event.shiftKey) {
+  // If the below modifier keys are held down, do nothing
+  if (event.ctrlKey || event.metaKey || event.altKey) {
     return;
   }
 
-  if (event.shiftKey) {
+  if (tableFilters[colID] === filterstring) {
     filterstring = "";
   }
 

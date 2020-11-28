@@ -251,15 +251,11 @@ function updateQueriesOverTime() {
     // Add data for each hour that is available
     for (var hour in data.ads_over_time[0]) {
       if (Object.prototype.hasOwnProperty.call(data.ads_over_time[0], hour)) {
-        var d, h;
-        h = parseInt(data.domains_over_time[0][hour], 10);
-        if (parseInt(data.ads_over_time[0][0], 10) < 1200) {
-          // Fallback - old style
-          d = new Date().setHours(Math.floor(h / 6), 10 * (h % 6), 0, 0);
-        } else {
-          // New style: Get Unix timestamps
-          d = new Date(1000 * h);
-        }
+        var h = parseInt(data.domains_over_time[0][hour], 10);
+        var d =
+          parseInt(data.ads_over_time[0][0], 10) < 1200
+            ? new Date().setHours(Math.floor(h / 6), 10 * (h % 6), 0, 0)
+            : new Date(1000 * h);
 
         timeLineChart.data.labels.push(d);
         var blocked = data.ads_over_time[1][hour];
@@ -297,14 +293,9 @@ function updateQueryTypesPie() {
     var v = [],
       c = [],
       k = [],
-      i = 0,
-      iter;
+      i = 0;
     // Collect values and colors, and labels
-    if (Object.prototype.hasOwnProperty.call(data, "querytypes")) {
-      iter = data.querytypes;
-    } else {
-      iter = data;
-    }
+    var iter = Object.prototype.hasOwnProperty.call(data, "querytypes") ? data.querytypes : data;
 
     querytypeids = [];
     Object.keys(iter).forEach(function (key) {
@@ -592,7 +583,7 @@ function updateTopClientsChart() {
         url =
           '<a href="queries.php?client=' +
           clientip +
-          '" title="' +
+          '&type=blocked" title="' +
           clientip +
           '">' +
           clientname +
@@ -991,6 +982,24 @@ $(function () {
 
       //get specific label by index
       var label = timeLineChart.data.labels[clickedElementindex];
+
+      //get value by index
+      var from = label / 1000 - 300;
+      var until = label / 1000 + 300;
+      window.location.href = "queries.php?from=" + from + "&until=" + until;
+    }
+
+    return false;
+  });
+
+  $("#clientsChart").click(function (evt) {
+    var activePoints = clientsChart.getElementAtEvent(evt);
+    if (activePoints.length > 0) {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]._index;
+
+      //get specific label by index
+      var label = clientsChart.data.labels[clickedElementindex];
 
       //get value by index
       var from = label / 1000 - 300;

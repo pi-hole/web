@@ -41,8 +41,8 @@
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/utils.js"></script>
-<script src="scripts/pi-hole/js/messages.js"></script>
+<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/messages.js?v=<?=$cacheVer?>"></script>
 
 <?php
     require "scripts/pi-hole/php/footer.php";

@@ -23,11 +23,11 @@
     "test": "npm run prettier:check && npm run xo"
   },
   "devDependencies": {
-    "autoprefixer": "^9.8.5",
+    "autoprefixer": "^9.8.6",
     "eslint-plugin-compat": "^3.8.0",
-    "postcss-cli": "^7.1.1",
-    "prettier": "2.0.4",
-    "xo": "^0.32.1"
+    "postcss-cli": "^7.1.2",
+    "prettier": "2.2.1",
+    "xo": "^0.35.0"
   },
   "browserslist": [
     "defaults",

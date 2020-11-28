@@ -15,13 +15,24 @@
   <div class="col-md-12">
     <div class="box">
       <div class="box-body">
-        <div class="form-group">
-          <div class="input-group">
-            <input id="domain" type="text" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)">
+        <!-- Domain Input <992px -->
+        <div class="visible-xs-block visible-sm-block">
+          <div class="input-group-block">
+            <input id="domain_1" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" style="margin-bottom: 5px">
             <input id="quiet" type="hidden" value="no">
+            <div class="text-center" style="display: block; width: 100%">
+              <button type="button" id="btnSearch_1" class="btn btn-default">Search partial match</button>
+              <button type="button" id="btnSearchExact_1" class="btn btn-default">Search exact match</button>
+            </div>
+          </div>
+        </div>
+        <!-- Domain Input >=992px -->
+        <div class="visible-md-block visible-lg-block">
+          <div class="input-group">
+            <input id="domain_2" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
             <span class="input-group-btn">
-              <button type="button" id="btnSearch" class="btn btn-default">Search partial match</button>
-              <button type="button" id="btnSearchExact" class="btn btn-default">Search exact match</button>
+              <button type="button" id="btnSearch_2" class="btn btn-default">Search partial match</button>
+              <button type="button" id="btnSearchExact_2" class="btn btn-default">Search exact match</button>
             </span>
           </div>
         </div>
@@ -32,7 +43,7 @@
 
 <pre id="output" style="width: 100%; height: 100%;" hidden></pre>
 
-<script src="scripts/pi-hole/js/queryads.js"></script>
+<script src="scripts/pi-hole/js/queryads.js?v=<?=$cacheVer?>"></script>
 
 <?php
     require "scripts/pi-hole/php/footer.php";

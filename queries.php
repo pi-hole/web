@@ -28,6 +28,10 @@ if(isset($setupVars["API_QUERY_LOG_SHOW"]))
 		$showing = "showing no queries (due to setting)";
 	}
 }
+else if(isset($_GET["type"]) && $_GET["type"] === "blocked")
+{
+	$showing = "showing blocked";
+}
 else
 {
 	// If filter variable is not set, we
@@ -43,6 +47,24 @@ if(isset($_GET["all"]))
 else if(isset($_GET["client"]))
 {
 	$showing .= " queries for client ".htmlentities($_GET["client"]);
+}
+else if(isset($_GET["forwarddest"]))
+{
+	if($_GET["forwarddest"] === "blocklist")
+		$showing .= " queries answered from blocklists";
+	elseif($_GET["forwarddest"] === "cache")
+		$showing .= " queries answered from cache";
+	else
+		$showing .= " queries for upstream destination ".htmlentities($_GET["forwarddest"]);
+}
+else if(isset($_GET["querytype"]))
+{
+	$qtypes = ["A (IPv4)", "AAAA (IPv6)", "ANY", "SRV", "SOA", "PTR", "TXT", "NAPTR"];
+	$qtype = intval($_GET["querytype"]);
+	if($qtype > 0 && $qtype <= count($qtypes))
+		$showing .= " ".$qtypes[$qtype-1]." queries";
+	else
+		$showing .= " type ".$qtype." queries";
 }
 else if(isset($_GET["domain"]))
 {
@@ -101,6 +123,9 @@ if(strlen($showing) > 0)
                         <span id="alCustomErr"></span>
                     </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -140,8 +165,9 @@ if(strlen($showing) > 0)
             </table>
             <p><strong>Filtering options:</strong></p>
             <ul>
-                <li>Use <kbd>Ctrl</kbd> or <kbd>&#8984;</kbd> + <i class="fas fa-mouse-pointer"></i> to add columns to the current filter</li>
-                <li>Use <kbd>Shift</kbd> + <i class="fas fa-mouse-pointer"></i> to remove columns from the current filter</li>
+                <li>Click a value in a column to add/remove that value to/from the filter</li>
+                <li>On a computer: Hold down <kbd>Ctrl</kbd>, <kbd>Alt</kbd>, or <kbd>&#8984;</kbd> to allow highlighting for copying to clipboard</li>
+                <li>On a mobile: Long press to highlight the text and enable copying to clipboard
             </ul><br/><button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear filters</button>
         </div>
         <!-- /.box-body -->
@@ -150,9 +176,9 @@ if(strlen($showing) > 0)
     </div>
 </div>
 <!-- /.row -->
-<script src="scripts/pi-hole/js/ip-address-sorting.js"></script>
-<script src="scripts/pi-hole/js/utils.js"></script>
-<script src="scripts/pi-hole/js/queries.js"></script>
+<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/queries.js?v=<?=$cacheVer?>"></script>
 
 <?php
     require "scripts/pi-hole/php/footer.php";
