@@ -970,8 +970,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     queries, Pi-hole requests the DNSSEC records needed to validate
                                                     the replies. If a domain fails validation or the upstream does not
                                                     support DNSSEC, this setting can cause issues resolving domains.
-                                                    Use Google, Cloudflare, DNS.WATCH, Quad9, or another DNS
-                                                    server which supports DNSSEC when activating DNSSEC. Note that
+                                                    Use an upstream DNS server which supports DNSSEC when activating DNSSEC. Note that
                                                     the size of your log might increase significantly
                                                     when enabling DNSSEC. A DNSSEC resolver test can be found
                                                     <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
