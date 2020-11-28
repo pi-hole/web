@@ -507,16 +507,39 @@ if ($_POST['action'] == 'get_groups') {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ($_POST['action'] == 'add_domain') {
+} elseif ($_POST['action'] == 'add_domain' || $_POST['action'] == 'replace_domain') {
     // Add new domain
     try {
         $domains = explode(' ', html_entity_decode(trim($_POST['domain'])));
         $before = intval($db->querySingle("SELECT COUNT(*) FROM domainlist;"));
         $total = count($domains);
         $added = 0;
-        $stmt = $db->prepare('REPLACE INTO domainlist (domain,type,comment) VALUES (:domain,:type,:comment)');
-        if (!$stmt) {
+
+        // Prepare INSERT INTO statement
+        $insert_stmt = $db->prepare('INSERT OR IGNORE INTO domainlist (domain,type) VALUES (:domain,:type)');
+        if (!$insert_stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
+        }
+
+        // Prepare UPDATE statement
+        $update_stmt = $db->prepare('UPDATE domainlist SET comment = :comment WHERE domain = :domain AND type = :type');
+        if (!$update_stmt) {
+            throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
+        }
+
+        $check_stmt = null;
+        $delete_stmt = null;
+        if($_POST['action'] == 'replace_domain') {
+            // Check statement will reveal any group associations for a given (domain,type) which do NOT belong to the default group
+            $check_stmt = $db->prepare('SELECT EXISTS(SELECT domain FROM domainlist_by_group dlbg JOIN domainlist dl on dlbg.domainlist_id = dl.id WHERE dl.domain = :domain AND dlbg.group_id != 0)');
+            if (!$check_stmt) {
+                throw new Exception('While preparing check statement: ' . $db->lastErrorMsg());
+            }
+            // Delete statement will remove this domain from any type of list
+            $delete_stmt = $db->prepare('DELETE FROM domainlist WHERE domain = :domain');
+            if (!$delete_stmt) {
+                throw new Exception('While preparing delete statement: ' . $db->lastErrorMsg());
+            }
         }
 
         if (isset($_POST['type'])) {
@@ -527,7 +550,8 @@ if ($_POST['action'] == 'get_groups') {
             $type = ListType::blacklist;
         }
 
-        if (!$stmt->bindValue(':type', $type, SQLITE3_TEXT)) {
+        if (!$insert_stmt->bindValue(':type', $type, SQLITE3_TEXT) ||
+            !$update_stmt->bindValue(':type', $type, SQLITE3_TEXT)) {
             throw new Exception('While binding type: ' . $db->lastErrorMsg());
         }
 
@@ -536,7 +560,7 @@ if ($_POST['action'] == 'get_groups') {
             // Store NULL in database for empty comments
             $comment = null;
         }
-        if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
+        if (!$update_stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
             throw new Exception('While binding comment: ' . $db->lastErrorMsg());
         }
 
@@ -563,7 +587,7 @@ if ($_POST['action'] == 'get_groups') {
                 }
             }
 
-            if(strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
+            if(isset($_POST['type']) && strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
             {
                 // Apply wildcard-style formatting
                 $domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
@@ -586,13 +610,62 @@ if ($_POST['action'] == 'get_groups') {
                 }
             }
 
-            if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
+            // First try to delete any occurrences of this domain if we're in
+            // replace mode. Only do this when the domain to be replaced is in
+            // the default group! Otherwise, we would shuffle group settings and
+            // just throw an error at the user to tell them to change this
+            // domain manually. This ensures user's will really get what they
+            // want from us.
+            if($_POST['action'] == 'replace_domain') {
+                if (!$check_stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
+                    throw new Exception('While binding domain to check: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                    'Added ' . $added . " out of ". $total . " domains");
+                }
+
+                $check_result = $check_stmt->execute();
+                if (!$check_result) {
+                    throw new Exception('While executing check: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                    'Added ' . $added . " out of ". $total . " domains");
+                }
+
+                // Check return value of CHECK query (0 = only default group, 1 = special group assignments)
+                $only_default_group = (($check_result->fetchArray(SQLITE3_NUM)[0]) == 0) ? true : false;
+                if(!$only_default_group) {
+                    throw new Exception('Domain ' . $domain . ' is configured with special group settings.<br>'.
+                    'Please modify the domain on the respective group management pages.');
+                }
+
+                if (!$delete_stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
+                    throw new Exception('While binding domain: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                    'Added ' . $added . " out of ". $total . " domains");
+                }
+
+                if (!$delete_stmt->execute()) {
+                    throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                    'Added ' . $added . " out of ". $total . " domains");
+                }
+            }
+
+
+            if (!$insert_stmt->bindValue(':domain', $domain, SQLITE3_TEXT) ||
+                !$update_stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
                 throw new Exception('While binding domain: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
                 'Added ' . $added . " out of ". $total . " domains");
             }
 
-            if (!$stmt->execute()) {
-                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+            // First execute INSERT OR IGNORE statement to create a record for
+            // this domain (ignore if already existing)
+            if (!$insert_stmt->execute()) {
+                throw new Exception('While executing INSERT OT IGNORE: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                'Added ' . $added . " out of ". $total . " domains");
+            }
+
+            // Then update the record with a new comment (and modification date
+            // due to the trigger event) We are not using REPLACE INTO to avoid
+            // the initial DELETE event (loosing group assignments in case an
+            // entry did already exist).
+            if (!$update_stmt->execute()) {
+                throw new Exception('While executing UPDATE: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
                 'Added ' . $added . " out of ". $total . " domains");
             }
             $added++;
