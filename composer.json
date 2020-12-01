@@ -1,0 +1,19 @@
+{
+    "name": "pi-hole/adminlte",
+    "type": "project",
+    "description": "Pi-hole Dashboard for stats and more",
+    "require": {
+        "php": ">=5.4",
+        "phpstan/phpstan": "^0.12.42"
+    },
+    "license": "EUPL-1.2",
+    "minimum-stability": "stable",
+    "autoload": {
+        "files": [
+            "scripts/vendor/qrcode.php"
+        ]
+    },
+    "scripts": {
+        "phpstan": "vendor/phpstan/phpstan/phpstan analyse -c phpstan.neon.dist"
+    }
+}
