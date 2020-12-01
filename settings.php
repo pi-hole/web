@@ -958,14 +958,23 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <div>
                                                     <input type="checkbox" name="DNSrequiresFQDN" id="DNSrequiresFQDN" title="domain-needed" <?php if ($DNSrequiresFQDN){ ?>checked<?php } ?>>
                                                     <label for="DNSrequiresFQDN"><strong>Never forward non-FQDNs</strong></label>
+                                                    <p>When there is a Pi-hole domain set and this box is
+                                                    ticked, this asks FTL that this domain is purely
+                                                    local and FTL may answer queries from <code>/etc/hosts</code> or DHCP leases
+                                                    but should never forward queries on that domain to any upstream servers.</p>
                                                 </div>
                                                 <div>
                                                     <input type="checkbox" name="DNSbogusPriv" id="DNSbogusPriv" title="bogus-priv" <?php if ($DNSbogusPriv){ ?>checked<?php } ?>>
                                                     <label for="DNSbogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
-                                                    <p>Note that enabling these two options may increase your privacy
-                                                    slightly, but may also prevent you from being able to access
-                                                    local hostnames if the Pi-hole is not used as DHCP server</p>
+                                                    <p>All reverse lookups for private IP ranges (i.e., <code>192.168.0.x/24</code>, etc.)
+                                                    which are not found in <code>/etc/hosts</code> or the DHCP leases are answered
+                                                    with "no such domain" rather than being forwarded upstream. The set
+                                                    of prefixes affected is the list given in <a href="https://tools.ietf.org/html/rfc6303">RFC6303</a>.</p>
+                                                    <p><strong>Important</strong>: Enabling these two options may increase your privacy,
+                                                    but may also prevent you from being able to access
+                                                    local hostnames if the Pi-hole is not used as DHCP server.</p>
                                                 </div>
+                                                <br>
                                                 <div>
                                                     <input type="checkbox" name="DNSSEC" id="DNSSEC" <?php if ($DNSSEC){ ?>checked<?php } ?>>
                                                     <label for="DNSSEC"><strong>Use DNSSEC</strong></label>
