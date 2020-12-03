@@ -970,26 +970,28 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While executing DELETE statement: ' . $db->lastErrorMsg());
         }
 
-        $db->query('BEGIN TRANSACTION;');
-        foreach ($_POST['groups'] as $gid) {
-            $stmt = $db->prepare('INSERT INTO adlist_by_group (adlist_id,group_id) VALUES(:id,:gid);');
-            if (!$stmt) {
-                throw new Exception('While preparing INSERT INTO statement: ' . $db->lastErrorMsg());
-            }
+        if (!empty($_POST['groups'])) {
+            $db->query('BEGIN TRANSACTION;');
+            foreach ($_POST['groups'] as $gid) {
+                $stmt = $db->prepare('INSERT INTO adlist_by_group (adlist_id,group_id) VALUES(:id,:gid);');
+                if (!$stmt) {
+                    throw new Exception('While preparing INSERT INTO statement: ' . $db->lastErrorMsg());
+                }
 
-            if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
-                throw new Exception('While binding id: ' . $db->lastErrorMsg());
-            }
+                if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
+                    throw new Exception('While binding id: ' . $db->lastErrorMsg());
+                }
 
-            if (!$stmt->bindValue(':gid', intval($gid), SQLITE3_INTEGER)) {
-                throw new Exception('While binding gid: ' . $db->lastErrorMsg());
-            }
+                if (!$stmt->bindValue(':gid', intval($gid), SQLITE3_INTEGER)) {
+                    throw new Exception('While binding gid: ' . $db->lastErrorMsg());
+                }
 
-            if (!$stmt->execute()) {
-                throw new Exception('While executing INSERT INTO statement: ' . $db->lastErrorMsg());
+                if (!$stmt->execute()) {
+                    throw new Exception('While executing INSERT INTO statement: ' . $db->lastErrorMsg());
+                }
             }
+            $db->query('COMMIT;');
         }
-        $db->query('COMMIT;');
 
         $reload = true;
         JSON_success();
