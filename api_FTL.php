@@ -333,7 +333,7 @@ else
 		$data = array_merge($data, $result);
 	}
 
-	if(isset($_GET["recentBlocked"]))
+	if(isset($_GET["recentBlocked"]) && $auth)
 	{
 		sendRequestFTL("recentBlocked");
 		die(utf8_encode(getResponseFTL()[0]));
