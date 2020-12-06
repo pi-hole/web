@@ -42,7 +42,7 @@
         // Check for and authorize from persistent cookie 
         if (isset($_COOKIE["persistentlogin"]))
         {
-            if ($pwhash === $_COOKIE["persistentlogin"])
+            if (hash_equals($pwhash, $_COOKIE["persistentlogin"]))
             {
                 $auth = true;
                 // Refresh cookie with new expiry
