@@ -12,8 +12,8 @@ var timeLineChart, clientsChart;
 var queryTypePieChart, forwardDestinationPieChart;
 
 var THEME_COLORS = [
-  "#3c8dbc",
   "#f56954",
+  "#3c8dbc",
   "#00a65a",
   "#00c0ef",
   "#f39c12",
