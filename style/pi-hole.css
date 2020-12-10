@@ -304,3 +304,25 @@
 .select2-container--default .select2-results > .select2-results__options {
   max-height: 400px;
 }
+
+/* Work around code that expects icon fonts rather than SVG.
+   Newer versions of AdminLTE have support for SVG icons,
+   https://github.com/ColorlibHQ/AdminLTE/pull/2920
+   so this code will only be needed temporarily. */
+
+.sidebar-menu li > a > .fa-angle-left,
+.sidebar-menu li > a > .pull-right-container > .fa-angle-left {
+  height: 1em;
+}
+
+.sidebar-toggle-svg {
+  color: #fff;
+  float: left;
+  background: none;
+  padding: 15px;
+}
+
+.sidebar-toggle-svg:hover {
+  color: #f6f6f6;
+  background: #367fa9;
+}
