@@ -303,7 +303,7 @@ function addCustomCNAMEEntry($domain="", $target="", $json=true)
             return returnError("Target must be set", $json);
 
         if (!is_valid_domain_name($target))
-            return returnError("Trget must be valid", $json);
+            return returnError("Target must be valid", $json);
 
         // Check if each submitted domain is valid
         $domains = array_map('trim', explode(",", $domain));
