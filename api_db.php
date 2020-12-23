@@ -154,7 +154,7 @@ if (isset($_GET['getAllQueries']) && $auth)
 						break;
 				}
 				// array:        time     type         domain                client           status   upstream destination
-				$allQueries[] = [$row[0], $query_type, utf8_encode($row[2]), utf8_encode($c), $row[4], utf8_encode($row[5])];
+				$allQueries[] = [$row[0], $query_type, utf8_encode(str_replace("~"," ",$row[2])), utf8_encode($c), $row[4], utf8_encode($row[5])];
 			}
 	}
 	$result = array('data' => $allQueries);
