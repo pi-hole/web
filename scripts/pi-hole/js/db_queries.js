@@ -324,8 +324,8 @@ $(function () {
         }
       },
       { width: "10%" },
-      { width: "40%" },
-      { width: "20%", type: "ip-address" },
+      { width: "40%", render: $.fn.dataTable.render.text() },
+      { width: "20%", type: "ip-address", render: $.fn.dataTable.render.text() },
       { width: "10%" },
       { width: "5%" }
     ],
