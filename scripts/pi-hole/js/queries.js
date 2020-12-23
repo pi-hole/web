@@ -201,7 +201,7 @@ $(function () {
           buttontext = "";
       }
 
-      fieldtext += '<input type="hidden" name="id" value="' + data[4] + '">';
+      fieldtext += '<input type="hidden" name="id" value="' + parseInt(data[4], 10) + '">';
 
       if (colorClass !== false) {
         $(row).addClass(colorClass);
