@@ -345,6 +345,8 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'edit_client') {
     // Edit client identified by ID
     try {
+        $db->query('BEGIN TRANSACTION;');
+
         $stmt = $db->prepare('UPDATE client SET comment=:comment WHERE id = :id');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -380,7 +382,6 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While executing DELETE statement: ' . $db->lastErrorMsg());
         }
 
-        $db->query('BEGIN TRANSACTION;');
         foreach ($_POST['groups'] as $gid) {
             $stmt = $db->prepare('INSERT INTO client_by_group (client_id,group_id) VALUES(:id,:gid);');
             if (!$stmt) {
@@ -409,6 +410,8 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'delete_client') {
     // Delete client identified by ID
     try {
+        $db->query('BEGIN TRANSACTION;');
+
         $stmt = $db->prepare('DELETE FROM client_by_group WHERE client_id=:id');
         if (!$stmt) {
             throw new Exception('While preparing client_by_group statement: ' . $db->lastErrorMsg());
@@ -434,6 +437,7 @@ if ($_POST['action'] == 'get_groups') {
         if (!$stmt->execute()) {
             throw new Exception('While executing client statement: ' . $db->lastErrorMsg());
         }
+        $db->query('COMMIT;');
 
         $reload = true;
         JSON_success();
@@ -514,6 +518,8 @@ if ($_POST['action'] == 'get_groups') {
         $before = intval($db->querySingle("SELECT COUNT(*) FROM domainlist;"));
         $total = count($domains);
         $added = 0;
+
+        $db->query('BEGIN TRANSACTION;');
 
         // Prepare INSERT INTO statement
         $insert_stmt = $db->prepare('INSERT OR IGNORE INTO domainlist (domain,type) VALUES (:domain,:type)');
@@ -671,6 +677,8 @@ if ($_POST['action'] == 'get_groups') {
             $added++;
         }
 
+        $db->query('COMMIT;');
+
         $after = intval($db->querySingle("SELECT COUNT(*) FROM domainlist;"));
         $difference = $after - $before;
         if($total === 1) {
@@ -694,6 +702,8 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'edit_domain') {
     // Edit domain identified by ID
     try {
+        $db->query('BEGIN TRANSACTION;');
+
         $stmt = $db->prepare('UPDATE domainlist SET enabled=:enabled, comment=:comment, type=:type WHERE id = :id');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -743,7 +753,6 @@ if ($_POST['action'] == 'get_groups') {
                 throw new Exception('While executing DELETE statement: ' . $db->lastErrorMsg());
             }
 
-            $db->query('BEGIN TRANSACTION;');
             foreach ($_POST['groups'] as $gid) {
                 $stmt = $db->prepare('INSERT INTO domainlist_by_group (domainlist_id,group_id) VALUES(:id,:gid);');
                 if (!$stmt) {
@@ -773,6 +782,8 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'delete_domain') {
     // Delete domain identified by ID
     try {
+        $db->query('BEGIN TRANSACTION;');
+
         $stmt = $db->prepare('DELETE FROM domainlist_by_group WHERE domainlist_id=:id');
         if (!$stmt) {
             throw new Exception('While preparing domainlist_by_group statement: ' . $db->lastErrorMsg());
@@ -799,6 +810,8 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While executing domainlist statement: ' . $db->lastErrorMsg());
         }
 
+        $db->query('COMMIT;');
+
         $reload = true;
         JSON_success();
     } catch (\Exception $ex) {
@@ -807,6 +820,8 @@ if ($_POST['action'] == 'get_groups') {
 }  elseif ($_POST['action'] == 'delete_domain_string') {
     // Delete domain identified by the domain string itself
     try {
+        $db->query('BEGIN TRANSACTION;');
+
         $stmt = $db->prepare('DELETE FROM domainlist_by_group WHERE domainlist_id=(SELECT id FROM domainlist WHERE domain=:domain AND type=:type);');
         if (!$stmt) {
             throw new Exception('While preparing domainlist_by_group statement: ' . $db->lastErrorMsg());
@@ -840,6 +855,8 @@ if ($_POST['action'] == 'get_groups') {
         if (!$stmt->execute()) {
             throw new Exception('While executing domainlist statement: ' . $db->lastErrorMsg());
         }
+
+        $db->query('COMMIT;');
 
         $reload = true;
         JSON_success();
@@ -877,6 +894,8 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_adlist') {
     // Add new adlist
     try {
+        $db->query('BEGIN TRANSACTION;');
+
         $addresses = explode(' ', html_entity_decode(trim($_POST['address'])));
         $total = count($addresses);
         $added = 0;
@@ -918,6 +937,8 @@ if ($_POST['action'] == 'get_groups') {
             $added++;
         }
 
+        $db->query('COMMIT;');
+
         $reload = true;
         JSON_success();
     } catch (\Exception $ex) {
@@ -926,6 +947,8 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'edit_adlist') {
     // Edit adlist identified by ID
     try {
+        $db->query('BEGIN TRANSACTION;');
+
         $stmt = $db->prepare('UPDATE adlist SET enabled=:enabled, comment=:comment WHERE id = :id');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -970,7 +993,6 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While executing DELETE statement: ' . $db->lastErrorMsg());
         }
 
-        $db->query('BEGIN TRANSACTION;');
         foreach ($_POST['groups'] as $gid) {
             $stmt = $db->prepare('INSERT INTO adlist_by_group (adlist_id,group_id) VALUES(:id,:gid);');
             if (!$stmt) {
@@ -989,6 +1011,7 @@ if ($_POST['action'] == 'get_groups') {
                 throw new Exception('While executing INSERT INTO statement: ' . $db->lastErrorMsg());
             }
         }
+
         $db->query('COMMIT;');
 
         $reload = true;
@@ -999,6 +1022,8 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'delete_adlist') {
     // Delete adlist identified by ID
     try {
+        $db->query('BEGIN TRANSACTION;');
+
         $stmt = $db->prepare('DELETE FROM adlist_by_group WHERE adlist_id=:id');
         if (!$stmt) {
             throw new Exception('While preparing adlist_by_group statement: ' . $db->lastErrorMsg());
@@ -1025,6 +1050,8 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While executing adlist statement: ' . $db->lastErrorMsg());
         }
 
+        $db->query('COMMIT;');
+
         $reload = true;
         JSON_success();
     } catch (\Exception $ex) {
@@ -1037,6 +1064,9 @@ if ($_POST['action'] == 'get_groups') {
             $before = intval($db->querySingle("SELECT COUNT(*) FROM domain_audit;"));
             $total = count($domains);
             $added = 0;
+
+            $db->query('BEGIN TRANSACTION;');
+
             $stmt = $db->prepare('REPLACE INTO domain_audit (domain) VALUES (:domain)');
             if (!$stmt) {
                 throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
@@ -1060,6 +1090,8 @@ if ($_POST['action'] == 'get_groups') {
                 $added++;
             }
 
+            $db->query('COMMIT;');
+
             $after = intval($db->querySingle("SELECT COUNT(*) FROM domain_audit;"));
             $difference = $after - $before;
             if($total === 1) {
@@ -1075,7 +1107,9 @@ if ($_POST['action'] == 'get_groups') {
                         $msg = "Added " . $total . " domains";
                 }
             }
-            $reload = true;
+
+            // Reloading isn't necessary for audit domains (no effect on blocking)
+            $reload = false;
             JSON_success($msg);
         } catch (\Exception $ex) {
             JSON_error($ex->getMessage());
