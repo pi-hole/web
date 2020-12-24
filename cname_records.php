@@ -43,6 +43,7 @@
                   <p>The target of a <code>CNAME</code> must be a domain that the Pi-hole knows the <code>A</code> value for, or is authoritative for that domain.</p>
                   <p>Pi-hole will not do additional queries if you set the target to a domain that isn't already known. It will return the information it knows at the time of the query,
                     without having to send additional queries to an upstream for resolution. That means, for example, target domains that exist as DHCP leases only will not be fully resolved until you specify an explicit DNS entry.</p>
+                    <p>Additionally, you can't <code>CNAME</code> external domains (<code>bing.com</code> to <code>google.com</code>) successfully as this would result in an invalid SSL certificate error.
                 <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
             </div>
         </div>
