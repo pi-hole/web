@@ -30,6 +30,52 @@ $(function () {
   getGroups();
 });
 
+function format(data) {
+  // Generate human-friendly status string
+  var statusText = "Unknown";
+  if (data.status !== null) {
+    switch (parseInt(data.status, 10)) {
+      case 1:
+        statusText = "List download was successful (OK)";
+        break;
+      case 2:
+        statusText = "List unchanged upstream, Pi-hole used a local copy (OK)";
+        break;
+      case 3:
+        statusText = "List unavailable, Pi-hole used a local copy";
+        break;
+      case 4:
+        statusText =
+          "List unavailable, there is no local copy of this list available on your Pi-hole";
+        break;
+
+      default:
+        statusText = "Unknown (" + parseInt(data.status, 10) + ")";
+        break;
+    }
+  }
+
+  // Compile extra info for displaying
+  return (
+    '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+    "<tr><td>Health status of this list:</td><td>" +
+    statusText +
+    "</td></tr><tr><td>This list was added to Pi-hole on&nbsp;&nbsp;</td><td>" +
+    utils.datetime(data.date_added, false) +
+    "</td></tr><tr><td>Database entry was last modified on&nbsp;&nbsp;</td><td>" +
+    utils.datetime(data.date_modified, false) +
+    "</td></tr><tr><td>The list contents were last updated on&nbsp;&nbsp;</td><td>" +
+    (data.date_updated !== null ? utils.datetime(data.date_updated, false) : "N/A") +
+    "</td></tr><tr><td>Number of valid domains on this list:&nbsp;&nbsp;</td><td>" +
+    (data.number !== null ? data.number : "N/A") +
+    "</td></tr><tr><td>Number of invalid domains on this list:&nbsp;&nbsp;</td><td>" +
+    (data.invalid_domains !== null ? data.invalid_domains : "N/A") +
+    "</td></tr><tr><td>Database ID of this list:</td><td>" +
+    data.id +
+    "</td></tr></table>"
+  );
+}
+
 function initTable() {
   table = $("#adlistsTable").DataTable({
     ajax: {
@@ -40,6 +86,7 @@ function initTable() {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
+      { data: null, orderable: false, searchable: false, class: "details-control" },
       { data: "address" },
       { data: "enabled", searchable: false },
       { data: "comment" },
@@ -53,27 +100,29 @@ function initTable() {
     },
     rowCallback: function (row, data) {
       $(row).attr("data-id", data.id);
-      var tooltip =
-        "Added: " +
-        utils.datetime(data.date_added, false) +
-        "\nLast modified (database entry): " +
-        utils.datetime(data.date_modified, false) +
-        "\nLast updated (list content): " +
-        (data.date_updated !== null ? utils.datetime(data.date_updated, false) : "N/A") +
-        "\nDatabase ID: " +
-        data.id;
-      $("td:eq(0)", row).html(
-        '<code id="address_' +
-          data.id +
-          '" title="' +
-          tooltip +
-          '" class="breakall">' +
-          data.address +
-          "</code>"
-      );
 
       var disabled = data.enabled === 0;
+      var statusCode = 0;
+      // If there is no status or the list is disabled, we keep
+      // status 0 (== unknown)
+      if (data.status !== null && disabled !== true) {
+        statusCode = parseInt(data.status, 10);
+      }
+
+      $("td:eq(0)", row).addClass("list-status-" + statusCode);
+      $("td:eq(0)", row).html("<i class='fa fa-info-circle'></i>");
+
       $("td:eq(1)", row).html(
+        '<a id="address_' +
+          data.id +
+          '" class="breakall" href="' +
+          data.address +
+          '">' +
+          data.address +
+          "</a>"
+      );
+
+      $("td:eq(2)", row).html(
         '<input type="checkbox" id="status_' + data.id + '"' + (disabled ? "" : " checked") + ">"
       );
       var statusEl = $("#status_" + data.id, row);
@@ -86,13 +135,13 @@ function initTable() {
       });
       statusEl.on("change", editAdlist);
 
-      $("td:eq(2)", row).html('<input id="comment_' + data.id + '" class="form-control">');
+      $("td:eq(3)", row).html('<input id="comment_' + data.id + '" class="form-control">');
       var commentEl = $("#comment_" + data.id, row);
       commentEl.val(utils.unescapeHtml(data.comment));
       commentEl.on("change", editAdlist);
 
-      $("td:eq(3)", row).empty();
-      $("td:eq(3)", row).append(
+      $("td:eq(4)", row).empty();
+      $("td:eq(4)", row).append(
         '<select class="selectpicker" id="multiselect_' + data.id + '" multiple></select>'
       );
       var selectEl = $("#multiselect_" + data.id, row);
@@ -162,7 +211,7 @@ function initTable() {
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
-      $("td:eq(4)", row).html(button);
+      $("td:eq(5)", row).html(button);
     },
     dom:
       "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
@@ -202,6 +251,22 @@ function initTable() {
   $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").addClass("hidden");
+  });
+
+  // Add event listener for opening and closing details
+  $("#adlistsTable tbody").on("click", "td.details-control", function () {
+    var tr = $(this).closest("tr");
+    var row = table.row(tr);
+
+    if (row.child.isShown()) {
+      // This row is already open - close it
+      row.child.hide();
+      tr.removeClass("shown");
+    } else {
+      // Open this row
+      row.child(format(row.data())).show();
+      tr.addClass("shown");
+    }
   });
 
   // Disable autocorrect in the search box
