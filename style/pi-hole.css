@@ -354,3 +354,7 @@
 td.details-control {
   cursor: pointer;
 }
+
+.dataTables-child td {
+  padding: 2px 5px;
+}

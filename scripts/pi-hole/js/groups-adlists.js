@@ -33,44 +33,63 @@ $(function () {
 function format(data) {
   // Generate human-friendly status string
   var statusText = "Unknown";
+  var PrintNumbers = true;
   if (data.status !== null) {
     switch (parseInt(data.status, 10)) {
+      case 0:
+        if(data.enabled === 0) {
+          statusText = 'List is disabled and not checked';
+        } else {
+          statusText = 'List was not downloaded so far';
+        }
+        PrintNumbers = false;
+        break;
       case 1:
-        statusText = "List download was successful (OK)";
+        statusText = 'List download was successful (<span class="list-status-1">OK</span>)';
         break;
       case 2:
-        statusText = "List unchanged upstream, Pi-hole used a local copy (OK)";
+        statusText = 'List unchanged upstream, Pi-hole used a local copy (<span class="list-status-2">OK</span>)';
         break;
       case 3:
-        statusText = "List unavailable, Pi-hole used a local copy";
+        statusText = 'List unavailable, Pi-hole used a local copy (<span class="list-status-3">check list</span>)';
         break;
       case 4:
         statusText =
-          "List unavailable, there is no local copy of this list available on your Pi-hole";
+          'List unavailable, there is no local copy of this list available on your Pi-hole (<span class="list-status-4">replace list</span>)';
+        PrintNumbers = false;
         break;
 
       default:
-        statusText = "Unknown (" + parseInt(data.status, 10) + ")";
+        statusText = 'Unknown (<span class="list-status-0">' + parseInt(data.status, 10) + '</span>)';
         break;
     }
   }
 
   // Compile extra info for displaying
   return (
-    '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-    "<tr><td>Health status of this list:</td><td>" +
+    '<table>' +
+    '<tr class="dataTables-child"><td>Health status of this list:</td><td>' +
     statusText +
-    "</td></tr><tr><td>This list was added to Pi-hole on&nbsp;&nbsp;</td><td>" +
+    '</td></tr><tr class="dataTables-child"><td>This list was added to Pi-hole&nbsp;&nbsp;</td><td>' +
+    utils.datetimeRelative(data.date_added) +
+    "&nbsp;(" +
     utils.datetime(data.date_added, false) +
-    "</td></tr><tr><td>Database entry was last modified on&nbsp;&nbsp;</td><td>" +
+    ')</td></tr><tr class="dataTables-child"><td>Database entry was last modified&nbsp;&nbsp;</td><td>' +
+    utils.datetimeRelative(data.date_modified) +
+    "&nbsp;(" +
     utils.datetime(data.date_modified, false) +
-    "</td></tr><tr><td>The list contents were last updated on&nbsp;&nbsp;</td><td>" +
-    (data.date_updated !== null ? utils.datetime(data.date_updated, false) : "N/A") +
-    "</td></tr><tr><td>Number of valid domains on this list:&nbsp;&nbsp;</td><td>" +
-    (data.number !== null ? data.number : "N/A") +
-    "</td></tr><tr><td>Number of invalid domains on this list:&nbsp;&nbsp;</td><td>" +
-    (data.invalid_domains !== null ? data.invalid_domains : "N/A") +
-    "</td></tr><tr><td>Database ID of this list:</td><td>" +
+    ')</td></tr><tr class="dataTables-child"><td>The list contents were last updated&nbsp;&nbsp;</td><td>' +
+    (data.date_updated !== null
+      ? utils.datetimeRelative(data.date_updated) +
+        "&nbsp;(" +
+        utils.datetime(data.date_updated) +
+        ")"
+      : "N/A") +
+    '</td></tr><tr class="dataTables-child"><td>Number of valid domains on this list:&nbsp;&nbsp;</td><td>' +
+    (data.number !== null && PrintNumbers === true ? data.number : "N/A") +
+    '</td></tr><tr class="dataTables-child"><td>Number of invalid domains on this list:&nbsp;&nbsp;</td><td>' +
+    (data.invalid_domains !== null && PrintNumbers === true ? data.invalid_domains : "N/A") +
+    '</td></tr><tr class="dataTables-child"><td>Database ID of this list:</td><td>' +
     data.id +
     "</td></tr></table>"
   );

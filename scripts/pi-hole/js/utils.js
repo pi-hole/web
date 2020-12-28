@@ -124,7 +124,11 @@ function showAlert(type, icon, title, message) {
 
 function datetime(date, html) {
   var format = html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
-  return moment.unix(Math.floor(date)).format(format);
+  return moment.unix(Math.floor(date)).format(format).trim();
+}
+
+function datetimeRelative(date) {
+  return moment.unix(Math.floor(date)).fromNow();
 }
 
 function disableAll() {
@@ -331,6 +335,7 @@ window.utils = (function () {
     padNumber: padNumber,
     showAlert: showAlert,
     datetime: datetime,
+    datetimeRelative: datetimeRelative,
     disableAll: disableAll,
     enableAll: enableAll,
     validateIPv4CIDR: validateIPv4CIDR,
