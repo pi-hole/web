@@ -67,6 +67,11 @@ function format(data) {
     }
   }
 
+  var invalidStyle =
+    data.invalid_domains !== null && numbers === true
+      ? ' style="color:red; font-weight:bold;"'
+      : "";
+
   // Compile extra info for displaying
   return (
     "<table>" +
@@ -89,7 +94,10 @@ function format(data) {
       : "N/A") +
     '</td></tr><tr class="dataTables-child"><td>Number of valid domains on this list:&nbsp;&nbsp;</td><td>' +
     (data.number !== null && numbers === true ? data.number : "N/A") +
-    '</td></tr><tr class="dataTables-child"><td>Number of invalid domains on this list:&nbsp;&nbsp;</td><td>' +
+    '</td></tr><tr class="dataTables-child"' +
+    invalidStyle +
+    "><td>Number of invalid domains on this list:&nbsp;&nbsp;</td>" +
+    "<td>" +
     (data.invalid_domains !== null && numbers === true ? data.invalid_domains : "N/A") +
     '</td></tr><tr class="dataTables-child"><td>Database ID of this list:</td><td>' +
     data.id +
@@ -131,7 +139,6 @@ function initTable() {
         statusCode = parseInt(data.status, 10);
       }
 
-      $("td:eq(0)", row).addClass("list-status-" + statusCode);
       switch (statusCode) {
         default:
         case 0:
@@ -151,7 +158,14 @@ function initTable() {
           break;
       }
 
-      $("td:eq(0)", row).html("<i class='fa " + statusIcon + "'></i>");
+      // Always overwrite icon with red exclamation-triangle when there are invalid lines in a list
+      var extra = "";
+      if (data.invalid_domains !== null && data.invalid_domains > 0) {
+        extra = "<i class='fa fa-exclamation-triangle list-status-3'></i>";
+      }
+
+      $("td:eq(0)", row).addClass("list-status-" + statusCode);
+      $("td:eq(0)", row).html("<i class='fa " + statusIcon + "'></i>" + extra);
 
       $("td:eq(1)", row).html(
         '<a id="address_' +
