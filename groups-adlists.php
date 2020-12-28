@@ -41,7 +41,7 @@
                 <ol>
                     <li>Please run <code>pihole -g</code> or update your gravity list <a href="gravity.php">online</a> after modifying your adlists.</li>
                     <li>Multiple adlists can be added by separating each <i>unique</i> URL with a space</li>
-                    <li>Click on <i class='fa fa-info-circle'></i> to get additional information about your lists. The color of the icon corresponds to the health of the list.</li>
+                    <li>Click on the icon in the first column to get additional information about your lists. The icons correspond to the health of the list.</li>
                 </ol>
                 <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
             </div>

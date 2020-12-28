@@ -33,41 +33,43 @@ $(function () {
 function format(data) {
   // Generate human-friendly status string
   var statusText = "Unknown";
-  var PrintNumbers = true;
+  var numbers = true;
   if (data.status !== null) {
     switch (parseInt(data.status, 10)) {
       case 0:
-        if(data.enabled === 0) {
-          statusText = 'List is disabled and not checked';
-        } else {
-          statusText = 'List was not downloaded so far';
-        }
-        PrintNumbers = false;
+        statusText =
+          data.enabled === 0
+            ? "List is disabled and not checked"
+            : "List was not downloaded so far";
+        numbers = false;
         break;
       case 1:
         statusText = 'List download was successful (<span class="list-status-1">OK</span>)';
         break;
       case 2:
-        statusText = 'List unchanged upstream, Pi-hole used a local copy (<span class="list-status-2">OK</span>)';
+        statusText =
+          'List unchanged upstream, Pi-hole used a local copy (<span class="list-status-2">OK</span>)';
         break;
       case 3:
-        statusText = 'List unavailable, Pi-hole used a local copy (<span class="list-status-3">check list</span>)';
+        statusText =
+          'List unavailable, Pi-hole used a local copy (<span class="list-status-3">check list</span>)';
         break;
       case 4:
         statusText =
           'List unavailable, there is no local copy of this list available on your Pi-hole (<span class="list-status-4">replace list</span>)';
-        PrintNumbers = false;
+        numbers = false;
         break;
 
       default:
-        statusText = 'Unknown (<span class="list-status-0">' + parseInt(data.status, 10) + '</span>)';
+        statusText =
+          'Unknown (<span class="list-status-0">' + parseInt(data.status, 10) + "</span>)";
         break;
     }
   }
 
   // Compile extra info for displaying
   return (
-    '<table>' +
+    "<table>" +
     '<tr class="dataTables-child"><td>Health status of this list:</td><td>' +
     statusText +
     '</td></tr><tr class="dataTables-child"><td>This list was added to Pi-hole&nbsp;&nbsp;</td><td>' +
@@ -86,9 +88,9 @@ function format(data) {
         ")"
       : "N/A") +
     '</td></tr><tr class="dataTables-child"><td>Number of valid domains on this list:&nbsp;&nbsp;</td><td>' +
-    (data.number !== null && PrintNumbers === true ? data.number : "N/A") +
+    (data.number !== null && numbers === true ? data.number : "N/A") +
     '</td></tr><tr class="dataTables-child"><td>Number of invalid domains on this list:&nbsp;&nbsp;</td><td>' +
-    (data.invalid_domains !== null && PrintNumbers === true ? data.invalid_domains : "N/A") +
+    (data.invalid_domains !== null && numbers === true ? data.invalid_domains : "N/A") +
     '</td></tr><tr class="dataTables-child"><td>Database ID of this list:</td><td>' +
     data.id +
     "</td></tr></table>"
@@ -121,7 +123,8 @@ function initTable() {
       $(row).attr("data-id", data.id);
 
       var disabled = data.enabled === 0;
-      var statusCode = 0;
+      var statusCode = 0,
+        statusIcon;
       // If there is no status or the list is disabled, we keep
       // status 0 (== unknown)
       if (data.status !== null && disabled !== true) {
@@ -129,7 +132,26 @@ function initTable() {
       }
 
       $("td:eq(0)", row).addClass("list-status-" + statusCode);
-      $("td:eq(0)", row).html("<i class='fa fa-info-circle'></i>");
+      switch (statusCode) {
+        default:
+        case 0:
+          statusIcon = "fa-question-circle";
+          break;
+        case 1:
+          statusIcon = "fa-check";
+          break;
+        case 2:
+          statusIcon = "fa-history";
+          break;
+        case 3:
+          statusIcon = "fa-exclamation-circle";
+          break;
+        case 4:
+          statusIcon = "fa-times";
+          break;
+      }
+
+      $("td:eq(0)", row).html("<i class='fa " + statusIcon + "'></i>");
 
       $("td:eq(1)", row).html(
         '<a id="address_' +
