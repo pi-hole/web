@@ -68,7 +68,7 @@ function format(data) {
   }
 
   var invalidStyle =
-    data.invalid_domains !== null && numbers === true
+    data.invalid_domains !== null && data.invalid_domains > 0 && numbers === true
       ? ' style="color:red; font-weight:bold;"'
       : "";
 
@@ -93,12 +93,14 @@ function format(data) {
         ")"
       : "N/A") +
     '</td></tr><tr class="dataTables-child"><td>Number of valid domains on this list:&nbsp;&nbsp;</td><td>' +
-    (data.number !== null && numbers === true ? data.number : "N/A") +
+    (data.number !== null && numbers === true ? parseInt(data.number, 10) : "N/A") +
     '</td></tr><tr class="dataTables-child"' +
     invalidStyle +
     "><td>Number of invalid domains on this list:&nbsp;&nbsp;</td>" +
     "<td>" +
-    (data.invalid_domains !== null && numbers === true ? data.invalid_domains : "N/A") +
+    (data.invalid_domains !== null && numbers === true
+      ? parseInt(data.invalid_domains, 10)
+      : "N/A") +
     '</td></tr><tr class="dataTables-child"><td>Database ID of this list:</td><td>' +
     data.id +
     "</td></tr></table>"
@@ -115,7 +117,7 @@ function initTable() {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: null, orderable: false, searchable: false, class: "details-control" },
+      { data: "status", searchable: false, class: "details-control" },
       { data: "address" },
       { data: "enabled", searchable: false },
       { data: "comment" },
@@ -172,7 +174,7 @@ function initTable() {
           data.id +
           '" class="breakall" href="' +
           data.address +
-          '">' +
+          '" target="_blank" rel="noopener noreferrer">' +
           data.address +
           "</a>"
       );
