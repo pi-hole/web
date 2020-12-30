@@ -531,11 +531,9 @@ fieldset[disabled] .form-control {
 .modal-content {
   background: #272c30;
 }
-
 .modal-header {
   border-bottom-color: #353c42;
 }
-
 .modal-footer {
   border-top-color: #353c42;
 }
