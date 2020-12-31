@@ -35,7 +35,7 @@ class QRCode {
 
     var $qrDataList;
 
-    function QRCode() {
+    function __construct() {
         $this->typeNumber = 1;
         $this->errorCorrectLevel = QR_ERROR_CORRECT_LEVEL_H;
         $this->qrDataList = array();
@@ -973,7 +973,7 @@ class QRRSBlock {
 
 	);
 
-    function QRRSBlock($totalCount, $dataCount) {
+    function __construct($totalCount, $dataCount) {
         $this->totalCount = $totalCount;
         $this->dataCount  = $dataCount;
     }
@@ -1030,8 +1030,8 @@ class QRRSBlock {
 
 class QRNumber extends QRData {
 
-    function QRNumber($data) {
-        QRData::QRData(QR_MODE_NUMBER, $data);
+    function __construct($data) {
+        QRData::__construct(QR_MODE_NUMBER, $data);
     }
 
     function write(&$buffer) {
@@ -1087,8 +1087,8 @@ class QRNumber extends QRData {
 
 class QRKanji extends QRData {
 
-    function QRKanji($data) {
-        QRData::QRData(QR_MODE_KANJI, $data);
+    function __construct($data) {
+        QRData::__construct(QR_MODE_KANJI, $data);
     }
 
     function write(&$buffer) {
@@ -1132,8 +1132,8 @@ class QRKanji extends QRData {
 
 class QRAlphaNum extends QRData {
 
-    function QRAlphaNum($data) {
-        QRData::QRData(QR_MODE_ALPHA_NUM, $data);
+    function __construct($data) {
+        QRData::__construct(QR_MODE_ALPHA_NUM, $data);
     }
 
     function write(&$buffer) {
@@ -1189,8 +1189,8 @@ class QRAlphaNum extends QRData {
 
 class QR8BitByte extends QRData {
 
-    function QR8BitByte($data) {
-        QRData::QRData(QR_MODE_8BIT_BYTE, $data);
+    function __construct($data) {
+        QRData::__construct(QR_MODE_8BIT_BYTE, $data);
     }
 
     function write(&$buffer) {
@@ -1216,7 +1216,7 @@ class QRData {
 
     var $data;
 
-    function QRData($mode, $data) {
+    function __construct($mode, $data) {
         $this->mode = $mode;
         $this->data = $data;
     }
@@ -1358,7 +1358,7 @@ class QRPolynomial {
 
     var $num;
 
-    function QRPolynomial($num, $shift = 0) {
+    function __construct($num, $shift = 0) {
 
         $offset = 0;
 
@@ -1492,7 +1492,7 @@ class QRBitBuffer {
     var $buffer;
     var $length;
 
-    function QRBitBuffer() {
+    function __construct() {
         $this->buffer = array();
         $this->length = 0;
     }
