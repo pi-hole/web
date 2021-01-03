@@ -106,10 +106,11 @@ function updateQueriesOverTime() {
       }
 
       for (hour in data.ads_over_time[0]) {
-        if (Object.prototype.hasOwnProperty.call(data.ads_over_time[0], hour)) {
-          if (dates.indexOf(parseInt(data.ads_over_time[0][hour], 10)) === -1) {
-            dates.push(parseInt(data.ads_over_time[0][hour], 10));
-          }
+        if (
+          Object.prototype.hasOwnProperty.call(data.ads_over_time[0], hour) &&
+          dates.indexOf(parseInt(data.ads_over_time[0][hour], 10)) === -1
+        ) {
+          dates.push(parseInt(data.ads_over_time[0][hour], 10));
         }
       }
 
