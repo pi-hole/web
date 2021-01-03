@@ -169,15 +169,23 @@ function initTable() {
       $("td:eq(0)", row).addClass("list-status-" + statusCode);
       $("td:eq(0)", row).html("<i class='fa " + statusIcon + "'></i>" + extra);
 
-      $("td:eq(1)", row).html(
-        '<a id="address_' +
-          data.id +
-          '" class="breakall" href="' +
-          data.address +
-          '" target="_blank" rel="noopener noreferrer">' +
-          data.address +
-          "</a>"
-      );
+      if (data.address.startsWith("file://")) {
+        // Local files cannot be downloaded from a distant client so don't show
+        // a link to such a list here
+        $("td:eq(1)", row).html(
+          '<code id="address_' + data.id + '" class="breakall">' + data.address + "</code>"
+        );
+      } else {
+        $("td:eq(1)", row).html(
+          '<a id="address_' +
+            data.id +
+            '" class="breakall" href="' +
+            data.address +
+            '" target="_blank" rel="noopener noreferrer">' +
+            data.address +
+            "</a>"
+        );
+      }
 
       $("td:eq(2)", row).html(
         '<input type="checkbox" id="status_' + data.id + '"' + (disabled ? "" : " checked") + ">"
