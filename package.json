@@ -28,7 +28,7 @@
     "postcss": "^8.2.1",
     "postcss-cli": "^8.3.0",
     "prettier": "2.2.1",
-    "xo": "^0.36.1"
+    "xo": "^0.37.1"
   },
   "browserslist": [
     "defaults",
