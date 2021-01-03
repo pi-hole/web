@@ -87,6 +87,7 @@ if(isset($_GET["network"]) && $auth)
 	$data = array_merge($data, array('network' => $network));
 }
 
+$qtypes = ["A", "AAAA", "ANY", "SRV", "SOA", "PTR", "TXT", "NAPTR", "MX", "DS", "RRSIG", "DNSKEY", "NS", "OTHER", "SVCB", "HTTPS"];
 if (isset($_GET['getAllQueries']) && $auth)
 {
 	$allQueries = array();
@@ -124,35 +125,12 @@ if (isset($_GET['getAllQueries']) && $auth)
 
 				// Convert query type ID to name
 				// Names taken from FTL's query type names
-				switch($row[1]) {
-					case 1:
-						$query_type = "A";
-						break;
-					case 2:
-						$query_type = "AAAA";
-						break;
-					case 3:
-						$query_type = "ANY";
-						break;
-					case 4:
-						$query_type = "SRV";
-						break;
-					case 5:
-						$query_type = "SOA";
-						break;
-					case 6:
-						$query_type = "PTR";
-						break;
-					case 7:
-						$query_type = "TXT";
-						break;
-					case 8:
-						$query_type = "NAPTR";
-						break;
-					default:
-						$query_type = "UNKN";
-						break;
-				}
+				$qtype = intval($row[1]);
+				if($qtype > 0 && $qtype <= count($qtypes))
+					$query_type = $qtypes[$qtype-1];
+				else
+					$query_type = "TYPE".(intval($row[1]) - 100);
+
 				// array:        time     type         domain                client           status   upstream destination
 				$allQueries[] = [$row[0], $query_type, utf8_encode(str_replace("~"," ",$row[2])), utf8_encode($c), $row[4], utf8_encode($row[5])];
 			}
