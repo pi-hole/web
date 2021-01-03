@@ -49,7 +49,7 @@ var customTooltips = function (tooltip) {
     tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
     // append Tooltip next to canvas-containing box
     tooltipEl.ancestor = this._chart.canvas.closest(".box[id]").parentNode;
-    tooltipEl.ancestor.appendChild(tooltipEl);
+    tooltipEl.ancestor.append(tooltipEl);
   }
 
   // Hide if no tooltip
