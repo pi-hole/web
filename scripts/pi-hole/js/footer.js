@@ -44,7 +44,7 @@ function countDown() {
   var ena = $("#enableLabel");
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
-  var seconds = Math.round((target.getTime() - Date.now() / 1000);
+  var seconds = Math.round((target.getTime() - Date.now()) / 1000);
 
   if (seconds > 0) {
     setTimeout(countDown, 1000);
