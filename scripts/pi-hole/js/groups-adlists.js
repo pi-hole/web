@@ -142,10 +142,6 @@ function initTable() {
       }
 
       switch (statusCode) {
-        default:
-        case 0:
-          statusIcon = "fa-question-circle";
-          break;
         case 1:
           statusIcon = "fa-check";
           break;
@@ -158,16 +154,22 @@ function initTable() {
         case 4:
           statusIcon = "fa-times";
           break;
+        case 0:
+        default:
+          statusIcon = "fa-question-circle";
+          break;
       }
 
-      // Always overwrite icon with red exclamation-triangle when there are invalid lines in a list
+      // Append red exclamation-triangle when there are invalid lines on the list
       var extra = "";
       if (data.invalid_domains !== null && data.invalid_domains > 0) {
         extra = "<i class='fa fa-exclamation-triangle list-status-3'></i>";
       }
 
       $("td:eq(0)", row).addClass("list-status-" + statusCode);
-      $("td:eq(0)", row).html("<i class='fa " + statusIcon + "'></i>" + extra);
+      $("td:eq(0)", row).html(
+        "<i class='fa " + statusIcon + "' title='Click for details about this list'></i>" + extra
+      );
 
       if (data.address.startsWith("file://")) {
         // Local files cannot be downloaded from a distant client so don't show
