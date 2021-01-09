@@ -516,6 +516,11 @@ fieldset[disabled] .form-control {
   z-index: 50;
   background-color: rgba(53, 60, 66, 0.733);
   border-radius: 3px;
+  
+  /* Content centering */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .box .overlay > .fa,
 .overlay-wrapper .overlay > .fa,
