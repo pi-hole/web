@@ -213,6 +213,7 @@
     <script src="scripts/vendor/datatables.min.js?v=<?=$cacheVer?>"></script>
     <script src="scripts/vendor/moment.min.js?v=<?=$cacheVer?>"></script>
     <script src="scripts/vendor/Chart.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/geraintluff-sha256.min.js?v=<?=$cacheVer?>"></script>
 </head>
 <body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <noscript>
@@ -401,10 +402,6 @@ if($auth) {
                 {
                     $scriptname = "blacklist";
                 }
-            }
-            if(!$auth && (!isset($indexpage) || isset($_GET['login'])))
-            {
-                $scriptname = "login";
             }
             ?>
             <ul class="sidebar-menu" data-widget="tree">
@@ -637,7 +634,7 @@ if($auth) {
                 // Show Login button if $auth is *not* set and authorization is required
                 if(strlen($pwhash) > 0 && !$auth) { ?>
                 <li<?php if($scriptname === "login"){ ?> class="active"<?php } ?>>
-                    <a href="index.php?login">
+                    <a href="login.php">
                         <i class="fa fa-user"></i> <span>Login</span>
                     </a>
                 </li>
@@ -662,19 +659,3 @@ if($auth) {
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
-<?php
-    // If password is not equal to the password set
-    // in the setupVars.conf file, then we skip any
-    // content and just complete the page. If no
-    // password is set at all, we keep the current
-    // behavior: everything is always authorized
-    // and will be displayed
-    //
-    // If auth is required and not set, i.e. no successfully logged in,
-    // we show the reduced version of the summary (index) page
-    if(!$auth && (!isset($indexpage) || isset($_GET['login']))){
-        require "scripts/pi-hole/php/loginpage.php";
-        require "footer.php";
-        exit();
-    }
-?>

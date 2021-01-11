@@ -294,12 +294,13 @@ function updateQueryTypesPie() {
     // Fill chart with data (only include query types which appeared recently)
     querytypeids = [];
     data.forEach(function (item) {
-      if(item.count > 0) {
+      if (item.count > 0) {
         v.push((100 * item.count) / sum);
         c.push(THEME_COLORS[i % THEME_COLORS.length]);
         k.push(item.name);
         querytypeids.push(i + 1);
       }
+
       i++;
     });
 
@@ -612,8 +613,7 @@ function updateTopClientsTable(blocked) {
       // Sanitize ckient
       clientname = escapeHtml(client.name);
       clientip = escapeHtml(client.ip);
-      if(clientname.length < 1)
-        clientname = clientip;
+      if (clientname.length === 0) clientname = clientip;
       url = '<a href="queries.php?client=' + clientip + '">' + clientname + "</a>";
       percentage = (client.count / sum) * 100;
 
@@ -638,7 +638,6 @@ function updateTopClientsTable(blocked) {
   });
 }
 
-
 var FTLoffline = false;
 function updateSummaryData(runOnce) {
   var setTimer = function (timeInSeconds) {
@@ -651,7 +650,7 @@ function updateSummaryData(runOnce) {
     updateSessionTimer();
 
     //Element name might have a different name to the property of the API so we split it at |
-    var intl = new Intl.NumberFormat;
+    var intl = new Intl.NumberFormat();
     ["blocked_queries", "dns_queries", "percent_blocked", "total_clients", "gravity_size"].forEach(
       function (arrayItem) {
         var textData = data[arrayItem];
@@ -871,9 +870,11 @@ $(function () {
   }
 
   // Create / load "Top Domains", "Top Advertisers", and "Top Clients" only if authorized
-  if (document.getElementById("domain-frequency") &&
-      document.getElementById("ad-frequency") &&
-      document.getElementById("client-frequency")) {
+  if (
+    document.getElementById("domain-frequency") &&
+    document.getElementById("ad-frequency") &&
+    document.getElementById("client-frequency")
+  ) {
     updateTopLists();
   }
 

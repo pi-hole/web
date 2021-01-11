@@ -94,7 +94,7 @@ function piholeChange(action, duration) {
 }
 
 function checkMessages() {
-/*
+  /*
   $.getJSON("api_db.php?status", function (data) {
     if ("message_count" in data && data.message_count > 0) {
       var title =
