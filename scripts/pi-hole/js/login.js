@@ -27,7 +27,23 @@ $("#loginform").submit(function (e) {
     })
       .done(function () {
         // Login succeeded
-        window.location.replace("index.php");
+        var GETDict = {};
+        window.location.search
+          .substr(1)
+          .split("&")
+          .forEach(function (item) {
+            GETDict[item.split("=")[0]] = item.split("=")[1];
+          });
+
+        // Default: Send back to index.php (dashboard)
+        var target = "index.php";
+
+        // If specified: Send to requested page
+        if ("target" in GETDict) {
+          target = GETDict.target;
+        }
+
+        window.location.replace(target);
       })
       .fail(function (data) {
         if (data.status === 401) {
