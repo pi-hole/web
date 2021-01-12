@@ -22,7 +22,6 @@
     if(empty($_SESSION['token'])) {
         $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
     }
-    $token = $_SESSION['token'];
 
     // Try to get temperature value from different places (OS dependent)
     if(file_exists("/sys/class/thermal/thermal_zone0/temp"))
@@ -103,17 +102,6 @@
     else
     {
         $memory_usage = -1;
-    }
-
-    if($auth) {
-        // For session timer
-        $maxlifetime = ini_get("session.gc_maxlifetime");
-
-        // Generate CSRF token
-        if(empty($_SESSION['token'])) {
-            $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
-        }
-        $token = $_SESSION['token'];
     }
 
     if(isset($setupVars['WEBUIBOXEDLAYOUT']))
@@ -226,11 +214,6 @@
     </div>
     <!-- /JS Warning -->
 </noscript>
-<?php
-if($auth) {
-    echo "<div id=\"token\" hidden>$token</div>";
-}
-?>
 
 <!-- Send token to JS -->
 <div id="enableTimer" hidden><?php if(file_exists("../custom_disable_timer")){ echo file_get_contents("../custom_disable_timer"); } ?></div>
@@ -288,9 +271,6 @@ if($auth) {
                                     </div>
                                     <div class="col-xs-4 text-center">
                                         <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank">Updates</a>
-                                    </div>
-                                    <div id="sessiontimer" class="col-xs-12 text-center">
-                                        <strong>Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></strong>
                                     </div>
                                 </div>
                             </li>
@@ -412,7 +392,6 @@ if($auth) {
                         <i class="fa fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
-                <?php if($auth){ ?>
                 <!-- Query Log -->
                 <li<?php if($scriptname === "queries.php"){ ?> class="active"<?php } ?>>
                     <a href="queries.php">
@@ -618,27 +597,18 @@ if($auth) {
                     </li>
                   </ul>
                 </li>
-                <!-- Logout -->
-                <?php
-                // Show Logout button if $auth is set and authorization is required
-                if(strlen($pwhash) > 0) { ?>
-                <li>
-                    <a href="?logout">
-                        <i class="fa fa-user-times"></i> <span>Logout</span>
-                    </a>
-                </li>
-                <?php } ?>
-                <?php } ?>
                 <!-- Login -->
-                <?php
-                // Show Login button if $auth is *not* set and authorization is required
-                if(strlen($pwhash) > 0 && !$auth) { ?>
                 <li<?php if($scriptname === "login"){ ?> class="active"<?php } ?>>
                     <a href="login.php">
                         <i class="fa fa-user"></i> <span>Login</span>
                     </a>
                 </li>
-                <?php } ?>
+                <!-- Logout -->
+                <li>
+                    <a href="index.php?logout">
+                        <i class="fa fa-user-times"></i> <span>Logout</span>
+                    </a>
+                </li>
                 <!-- Donate -->
                 <li>
                     <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">

@@ -93,29 +93,6 @@ function check_cors() {
     // If there's no HTTP_ORIGIN, CORS should not be used
 }
 
-function check_csrf($token) {
-    // Check CSRF token
-    $session_started = function_exists("session_status") ?
-        session_status() == PHP_SESSION_ACTIVE :
-        session_id() == "";
-
-    if(!$session_started) {
-        session_start();
-    }
-
-    if(!isset($_SESSION['token'])) {
-        log_and_die("Session expired! Please re-login on the Pi-hole dashboard.");
-    }
-
-    if(empty($token)) {
-        log_and_die("Empty token! Check if cookies are enabled on your system.");
-    }
-
-    if(!hash_equals($_SESSION['token'], $token)) {
-        log_and_die("Wrong token! Please re-login on the Pi-hole dashboard.");
-    }
-}
-
 function check_domain(&$domains) {
     foreach($domains as &$domain)
     {

@@ -100,16 +100,10 @@
       </div>
     </div>
 </div>
-<?php
-  // If the user is logged in, then we show the more detailed index page.
-  // Even if we would include them here anyhow, there would be nothing to
-  // show since the API will respect the privacy of the user if he defines
-  // a password
-  if($auth){ ?>
 
 <div class="row">
     <div class="col-md-12">
-    <div class="box" id="clients">
+    <div class="box" id="clients-over-time">
         <div class="box-header with-border">
           <h3 class="box-title">Client activity over last <?php echo getinterval(); ?> hours</h3>
         </div>
@@ -291,7 +285,6 @@ else
     <!-- /.col -->
 </div>
 <!-- /.row -->
-<?php } ?>
 
 <script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/index.js?v=<?=$cacheVer?>"></script>

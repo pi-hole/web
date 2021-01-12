@@ -30,10 +30,6 @@ var THEME_COLORS = [
   "#d2d6de"
 ];
 
-function padNumber(num) {
-  return ("00" + num).substr(-2, 2);
-}
-
 var customTooltips = function (tooltip) {
   var tooltipEl = document.getElementById(this._chart.canvas.id + "-customTooltip");
   if (!tooltipEl) {
@@ -347,7 +343,7 @@ function updateClientsOverTime() {
     // Remove graph if there are no results (e.g. new
     // installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.over_time)) {
-      $("#clients").parent().remove();
+      $("#clients-over-time").parent().remove();
       return;
     }
 
@@ -517,19 +513,17 @@ function updateTopLists() {
 }
 
 function updateTopDomainsTable(blocked) {
-  var api, style, tablecontent, table, overlay, domaintable;
+  var api, style, tablecontent, overlay, domaintable;
   if (blocked) {
     api = "/api/stats/top_domains?blocked=true";
     style = "queries-blocked";
     tablecontent = $("#ad-frequency td").parent();
-    table = $("#ad-frequency td").parent();
     overlay = $("#ad-frequency .overlay");
     domaintable = $("#ad-frequency").find("tbody:last");
   } else {
     api = "/api/stats/top_domains";
     style = "queries-permitted";
     tablecontent = $("#domain-frequency td").parent();
-    table = $("#domain-frequency td").parent();
     overlay = $("#domain-frequency .overlay");
     domaintable = $("#domain-frequency").find("tbody:last");
   }
@@ -579,19 +573,17 @@ function updateTopDomainsTable(blocked) {
 }
 
 function updateTopClientsTable(blocked) {
-  var api, style, tablecontent, table, overlay, clienttable;
+  var api, style, tablecontent, overlay, clienttable;
   if (blocked) {
     api = "/api/stats/top_clients?blocked=true";
     style = "queries-blocked";
     tablecontent = $("#client-frequency-blocked td").parent();
-    table = $("#client-frequency-blocked td").parent();
     overlay = $("#client-frequency-blocked .overlay");
     clienttable = $("#client-frequency-blocked").find("tbody:last");
   } else {
     api = "/api/stats/top_clients";
     style = "queries-permitted";
     tablecontent = $("#client-frequency td").parent();
-    table = $("#client-frequency td").parent();
     overlay = $("#client-frequency .overlay");
     clienttable = $("#client-frequency").find("tbody:last");
   }
@@ -610,9 +602,9 @@ function updateTopClientsTable(blocked) {
 
     // Populate table with content
     data.top_clients.forEach(function (client) {
-      // Sanitize ckient
-      clientname = escapeHtml(client.name);
-      clientip = escapeHtml(client.ip);
+      // Sanitize client
+      var clientname = escapeHtml(client.name);
+      var clientip = escapeHtml(client.ip);
       if (clientname.length === 0) clientname = clientip;
       url = '<a href="queries.php?client=' + clientip + '">' + clientname + "</a>";
       percentage = (client.count / sum) * 100;
@@ -690,9 +682,31 @@ function updateSummaryData(runOnce) {
     });
 }
 
+function checkAuth() {
+  $.getJSON("/api/auth")
+    .done(function (data) {
+      // Okay, trigger updates of the advanced graphs
+      updateClientsOverTime();
+      updateTopLists();
+      updateQueryTypesPie();
+      updateForwardDestinationsPie();
+    })
+    .fail(function (data) {
+      // Not authenticated, remove advanced graphs
+      $("#clients-over-time").hide();
+      $("#query-types-pie").hide();
+      $("#domain-frequency").hide();
+      $("#ad-frequency").hide();
+      $("#client-frequency").hide();
+      $("#client-frequency-blocked").hide();
+      $("#forward-destinations-pie").hide();
+    });
+}
+
 $(function () {
-  // Pull in data via AJAX
+  checkAuth();
   updateSummaryData();
+  updateQueriesOverTime();
 
   var gridColor = $(".graphs-grid").css("background-color");
   var ticksColor = $(".graphs-ticks").css("color");
@@ -784,100 +798,82 @@ $(function () {
     }
   });
 
-  // Pull in data via AJAX
-
-  updateQueriesOverTime();
-
-  // Create / load "Top Clients over Time" only if authorized
-  var clientsChartEl = document.getElementById("clientsChart");
-  if (clientsChartEl) {
-    ctx = clientsChartEl.getContext("2d");
-    clientsChart = new Chart(ctx, {
-      type: utils.getGraphType(),
-      data: {
-        labels: [],
-        datasets: [{ data: [] }]
-      },
-      options: {
-        tooltips: {
-          enabled: false,
-          mode: "x-axis",
-          custom: customTooltips,
-          yAlign: "top",
-          itemSort: function (a, b) {
-            return b.yLabel - a.yLabel;
+  // Create "Top Clients over Time" only if authorized
+  ctx = document.getElementById("clientsChart").getContext("2d");
+  clientsChart = new Chart(ctx, {
+    type: utils.getGraphType(),
+    data: {
+      labels: [],
+      datasets: [{ data: [] }]
+    },
+    options: {
+      tooltips: {
+        enabled: false,
+        mode: "x-axis",
+        custom: customTooltips,
+        yAlign: "top",
+        itemSort: function (a, b) {
+          return b.yLabel - a.yLabel;
+        },
+        callbacks: {
+          title: function (tooltipItem) {
+            var label = tooltipItem[0].xLabel;
+            var time = label.match(/(\d?\d):?(\d?\d?)/);
+            var h = parseInt(time[1], 10);
+            var m = parseInt(time[2], 10) || 0;
+            var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
+            var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
+            return "Client activity from " + from + " to " + to;
           },
-          callbacks: {
-            title: function (tooltipItem) {
-              var label = tooltipItem[0].xLabel;
-              var time = label.match(/(\d?\d):?(\d?\d?)/);
-              var h = parseInt(time[1], 10);
-              var m = parseInt(time[2], 10) || 0;
-              var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
-              var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
-              return "Client activity from " + from + " to " + to;
+          label: function (tooltipItems, data) {
+            return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
+          }
+        }
+      },
+      legend: {
+        display: false
+      },
+      scales: {
+        xAxes: [
+          {
+            type: "time",
+            stacked: true,
+            time: {
+              unit: "hour",
+              displayFormats: {
+                hour: "HH:mm"
+              },
+              tooltipFormat: "HH:mm"
             },
-            label: function (tooltipItems, data) {
-              return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
+            gridLines: {
+              color: gridColor
+            },
+            ticks: {
+              fontColor: ticksColor
             }
           }
-        },
-        legend: {
-          display: false
-        },
-        scales: {
-          xAxes: [
-            {
-              type: "time",
-              stacked: true,
-              time: {
-                unit: "hour",
-                displayFormats: {
-                  hour: "HH:mm"
-                },
-                tooltipFormat: "HH:mm"
-              },
-              gridLines: {
-                color: gridColor
-              },
-              ticks: {
-                fontColor: ticksColor
-              }
+        ],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+              fontColor: ticksColor
+            },
+            stacked: true,
+            gridLines: {
+              color: gridColor
             }
-          ],
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-                fontColor: ticksColor
-              },
-              stacked: true,
-              gridLines: {
-                color: gridColor
-              }
-            }
-          ]
-        },
-        maintainAspectRatio: false,
-        hover: {
-          animationDuration: 0
-        }
+          }
+        ]
+      },
+      maintainAspectRatio: false,
+      hover: {
+        animationDuration: 0
       }
-    });
+    }
+  });
 
-    // Pull in data via AJAX
-    updateClientsOverTime();
-  }
-
-  // Create / load "Top Domains", "Top Advertisers", and "Top Clients" only if authorized
-  if (
-    document.getElementById("domain-frequency") &&
-    document.getElementById("ad-frequency") &&
-    document.getElementById("client-frequency")
-  ) {
-    updateTopLists();
-  }
-
+  // Create "Top Domains", "Top Advertisers", and "Top Clients"
   $("#queryOverTimeChart").click(function (evt) {
     var activePoints = timeLineChart.getElementAtEvent(evt);
     if (activePoints.length > 0) {
@@ -914,89 +910,80 @@ $(function () {
     return false;
   });
 
-  if (document.getElementById("queryTypePieChart")) {
-    ctx = document.getElementById("queryTypePieChart").getContext("2d");
-    queryTypePieChart = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: [],
-        datasets: [{ data: [] }]
+  ctx = document.getElementById("queryTypePieChart").getContext("2d");
+  queryTypePieChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: [],
+      datasets: [{ data: [] }]
+    },
+    options: {
+      elements: {
+        arc: {
+          borderColor: $(".box").css("background-color")
+        }
       },
-      options: {
-        elements: {
-          arc: {
-            borderColor: $(".box").css("background-color")
-          }
-        },
-        legend: {
-          display: false
-        },
-        tooltips: {
-          enabled: false,
-          custom: customTooltips,
-          callbacks: {
-            title: function () {
-              return "Query types";
-            },
-            label: function (tooltipItems, data) {
-              var dataset = data.datasets[tooltipItems.datasetIndex];
-              var label = data.labels[tooltipItems.index];
-              return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
-            }
-          }
-        },
-        animation: {
-          duration: 750
-        },
-        cutoutPercentage: 0
-      }
-    });
-
-    // Pull in data via AJAX
-    updateQueryTypesPie();
-  }
-
-  if (document.getElementById("forwardDestinationPieChart")) {
-    ctx = document.getElementById("forwardDestinationPieChart").getContext("2d");
-    forwardDestinationPieChart = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: [],
-        datasets: [{ data: [] }]
+      legend: {
+        display: false
       },
-      options: {
-        elements: {
-          arc: {
-            borderColor: $(".box").css("background-color")
+      tooltips: {
+        enabled: false,
+        custom: customTooltips,
+        callbacks: {
+          title: function () {
+            return "Query types";
+          },
+          label: function (tooltipItems, data) {
+            var dataset = data.datasets[tooltipItems.datasetIndex];
+            var label = data.labels[tooltipItems.index];
+            return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
           }
-        },
-        legend: {
-          display: false
-        },
-        tooltips: {
-          enabled: false,
-          custom: customTooltips,
-          callbacks: {
-            title: function () {
-              return "Forward destinations";
-            },
-            label: function (tooltipItems, data) {
-              var dataset = data.datasets[tooltipItems.datasetIndex];
-              var label = data.labels[tooltipItems.index];
-              return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
-            }
-          }
-        },
-        animation: {
-          duration: 750
-        },
-        cutoutPercentage: 0
-      }
-    });
+        }
+      },
+      animation: {
+        duration: 750
+      },
+      cutoutPercentage: 0
+    }
+  });
 
-    // Pull in data via AJAX
-    updateForwardDestinationsPie();
-  }
+  ctx = document.getElementById("forwardDestinationPieChart").getContext("2d");
+  forwardDestinationPieChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: [],
+      datasets: [{ data: [] }]
+    },
+    options: {
+      elements: {
+        arc: {
+          borderColor: $(".box").css("background-color")
+        }
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false,
+        custom: customTooltips,
+        callbacks: {
+          title: function () {
+            return "Forward destinations";
+          },
+          label: function (tooltipItems, data) {
+            var dataset = data.datasets[tooltipItems.datasetIndex];
+            var label = data.labels[tooltipItems.index];
+            return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
+          }
+        }
+      },
+      animation: {
+        duration: 750
+      },
+      cutoutPercentage: 0
+    }
+  });
+
 });
 
 //destroy all chartjs customTooltips on window resize
