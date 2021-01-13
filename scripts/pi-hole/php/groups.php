@@ -921,7 +921,7 @@ if ($_POST['action'] == 'get_groups') {
             }
 
             // this will remove first @ that is after schema and before domain
-          ￼ // $1 is optional schema, $2 is userinfo
+           // $1 is optional schema, $2 is userinfo
             $check_address = preg_replace("|([^:/]*://)?([^/]+)@|", "$1$2", $address, 1);
 
             if(preg_match("/[^a-zA-Z0-9:\/?&%=~._()-;]/", $check_address) !== 0) {
