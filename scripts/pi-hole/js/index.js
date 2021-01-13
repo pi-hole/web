@@ -390,7 +390,7 @@ function updateClientsOverTime() {
       clientsChart.data.labels.push(d);
     });
 
-    $("#clients .overlay").hide();
+    $("#clients-over-time .overlay").hide();
     clientsChart.update();
   })
     .done(function () {
@@ -684,14 +684,22 @@ function updateSummaryData(runOnce) {
 
 function checkAuth() {
   $.getJSON("/api/auth")
-    .done(function (data) {
-      // Okay, trigger updates of the advanced graphs
+    .done(function () {
+      // Okay, show graphs ...
+      $("#clients-over-time").show();
+      $("#query-types-pie").show();
+      $("#domain-frequency").show();
+      $("#ad-frequency").show();
+      $("#client-frequency").show();
+      $("#client-frequency-blocked").show();
+      $("#forward-destinations-pie").show();
+      // ... and trigger updates of the advanced graphs
       updateClientsOverTime();
       updateTopLists();
       updateQueryTypesPie();
       updateForwardDestinationsPie();
     })
-    .fail(function (data) {
+    .fail(function () {
       // Not authenticated, remove advanced graphs
       $("#clients-over-time").hide();
       $("#query-types-pie").hide();
@@ -705,6 +713,7 @@ function checkAuth() {
 
 $(function () {
   checkAuth();
+  // These two can always be done, even without authentication
   updateSummaryData();
   updateQueriesOverTime();
 
@@ -798,7 +807,25 @@ $(function () {
     }
   });
 
-  // Create "Top Clients over Time" only if authorized
+  $("#queryOverTimeChart").click(function (evt) {
+    var activePoints = timeLineChart.getElementAtEvent(evt);
+    if (activePoints.length > 0) {
+      //get the internal index of slice in pie chart
+      var clickedElementindex = activePoints[0]._index;
+
+      //get specific label by index
+      var label = timeLineChart.data.labels[clickedElementindex];
+
+      //get value by index
+      var from = label / 1000 - 300;
+      var until = label / 1000 + 300;
+      window.location.href = "queries.php?from=" + from + "&until=" + until;
+    }
+
+    return false;
+  });
+
+  // Create "Top Clients over Time"
   ctx = document.getElementById("clientsChart").getContext("2d");
   clientsChart = new Chart(ctx, {
     type: utils.getGraphType(),
@@ -871,25 +898,6 @@ $(function () {
         animationDuration: 0
       }
     }
-  });
-
-  // Create "Top Domains", "Top Advertisers", and "Top Clients"
-  $("#queryOverTimeChart").click(function (evt) {
-    var activePoints = timeLineChart.getElementAtEvent(evt);
-    if (activePoints.length > 0) {
-      //get the internal index of slice in pie chart
-      var clickedElementindex = activePoints[0]._index;
-
-      //get specific label by index
-      var label = timeLineChart.data.labels[clickedElementindex];
-
-      //get value by index
-      var from = label / 1000 - 300;
-      var until = label / 1000 + 300;
-      window.location.href = "queries.php?from=" + from + "&until=" + until;
-    }
-
-    return false;
   });
 
   $("#clientsChart").click(function (evt) {
@@ -983,7 +991,6 @@ $(function () {
       cutoutPercentage: 0
     }
   });
-
 });
 
 //destroy all chartjs customTooltips on window resize

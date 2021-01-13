@@ -103,7 +103,7 @@
 
 <div class="row">
     <div class="col-md-12">
-    <div class="box" id="clients-over-time">
+    <div class="box" id="clients-over-time" hidden="true">
         <div class="box-header with-border">
           <h3 class="box-title">Client activity over last <?php echo getinterval(); ?> hours</h3>
         </div>
@@ -122,7 +122,7 @@
 
 <div class="row">
     <div class="col-md-6">
-    <div class="box" id="query-types-pie">
+    <div class="box" id="query-types-pie" hidden="true">
         <div class="box-header with-border">
           <h3 class="box-title">Query Types</h3>
         </div>
@@ -141,7 +141,7 @@
       </div>
     </div>
     <div class="col-md-6">
-    <div class="box" id="forward-destinations-pie">
+    <div class="box" id="forward-destinations-pie" hidden="true">
         <div class="box-header with-border">
           <h3 class="box-title">Queries answered by</h3>
         </div>
@@ -173,7 +173,7 @@ else
 ?>
 <div class="row">
     <div class="<?php echo $tablelayout; ?>">
-      <div class="box" id="domain-frequency">
+      <div class="box" id="domain-frequency" hidden="true">
         <div class="box-header with-border">
           <h3 class="box-title">Top Permitted Domains</h3>
         </div>
@@ -200,7 +200,7 @@ else
     </div>
     <!-- /.col -->
     <div class="<?php echo $tablelayout; ?>">
-      <div class="box" id="ad-frequency">
+      <div class="box" id="ad-frequency" hidden="true">
         <div class="box-header with-border">
           <h3 class="box-title">Top Blocked Domains</h3>
         </div>
@@ -229,7 +229,7 @@ else
 <div class="row">
     <!-- /.col -->
     <div class="<?php echo $tablelayout; ?>">
-      <div class="box" id="client-frequency">
+      <div class="box" id="client-frequency" hidden="true">
         <div class="box-header with-border">
           <h3 class="box-title">Top Clients (total)</h3>
         </div>
@@ -257,7 +257,7 @@ else
     <!-- /.col -->
     <!-- /.col -->
     <div class="<?php echo $tablelayout; ?>">
-      <div class="box" id="client-frequency-blocked">
+      <div class="box" id="client-frequency-blocked" hidden="true">
         <div class="box-header with-border">
           <h3 class="box-title">Top Clients (blocked only)</h3>
         </div>
