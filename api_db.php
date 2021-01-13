@@ -120,40 +120,14 @@ if (isset($_GET['getAllQueries']) && $auth)
 		if(!is_bool($results))
 			while ($row = $results->fetchArray())
 			{
+				// Try to resolve host name of this client
 				$c = resolveHostname($row[3],false);
 
 				// Convert query type ID to name
-				// Names taken from FTL's query type names
-				switch($row[1]) {
-					case 1:
-						$query_type = "A";
-						break;
-					case 2:
-						$query_type = "AAAA";
-						break;
-					case 3:
-						$query_type = "ANY";
-						break;
-					case 4:
-						$query_type = "SRV";
-						break;
-					case 5:
-						$query_type = "SOA";
-						break;
-					case 6:
-						$query_type = "PTR";
-						break;
-					case 7:
-						$query_type = "TXT";
-						break;
-					case 8:
-						$query_type = "NAPTR";
-						break;
-					default:
-						$query_type = "UNKN";
-						break;
-				}
-				// array:        time     type         domain                client           status   upstream destination
+				$query_type = getQueryTypeStr($row[1]);
+
+				// Insert into array
+				// array:        time     type         domain                                     client           status   upstream destination
 				$allQueries[] = [$row[0], $query_type, utf8_encode(str_replace("~"," ",$row[2])), utf8_encode($c), $row[4], utf8_encode($row[5])];
 			}
 	}

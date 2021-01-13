@@ -405,4 +405,45 @@ function returnError($message = "", $json = true)
     }
 }
 
+function getQueryTypeStr($querytype)
+{
+    $qtype = intval($querytype);
+    switch ($qtype) {
+        case 1:
+            return "A (IPv4)";
+        case 2:
+            return "AAAA (IPv6)";
+        case 3:
+            return "ANY";
+        case 4:
+            return "SRV";
+        case 5:
+            return "SOA";
+        case 6:
+            return "PTR";
+        case 7:
+            return "TXT";
+        case 8:
+            return "NAPTR";
+        case 9:
+            return "MX";
+        case 10:
+            return "DS";
+        case 11:
+            return "RRSIG";
+        case 12:
+            return "DNSKEY";
+        case 13:
+            return "NS";
+        case 14:
+            return "OTHER";
+        case 15:
+            return "SVCB";
+        case 16:
+            return "HTTPS";
+        default:
+            return "UNKN (".$qtype.")";
+    }
+}
+
 ?>
