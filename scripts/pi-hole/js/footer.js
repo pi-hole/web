@@ -236,51 +236,46 @@ function updateSysInfo() {
     url: "/api/ftl/system"
   }).done(function (data) {
     var memory = 100.0 * data.memory.ram.used / data.memory.ram.total;
-    $("#memory").html(memory.toFixed(1) + "&thinsp;%");
     var totalGB = 1e-9*data.memory.ram.total;
-    $("#memory").prop("title", "Total memory: " + totalGB.toFixed(1) + " GB");
+    var swap = data.memory.swap.total > 0 ? (1e-9*data.memory.swap.used/data.memory.swap.total).toFixed(1) + " %" : "N/A";
+    var color;
     if(memory > 75)
-    {
-      $("#memory_icon").addClass("text-red");
-      $("#memory_icon").removeClass("text-green-light");
-    }
+      color = "text-red";
     else
-    {
-      $("#memory_icon").removeClass("text-red");
-      $("#memory_icon").addClass("text-green-light");
-    }
-    $("#cpu").html(data.cpu.percent[0].toFixed(1) + "&thinsp;%&nbsp;&nbsp;" + data.cpu.percent[1].toFixed(1) + "&thinsp;%&nbsp;&nbsp;" + data.cpu.percent[2].toFixed(1) + "&thinsp;%");
-    $("#cpu").prop("title", "Load: " + data.cpu.load[0].toFixed(2) + " " + data.cpu.load[1].toFixed(2) + " " + data.cpu.load[2].toFixed(2) + ", number of cores: " + data.cpu.nprocs);
+      color = "text-green-light";
+    $("#memory").html('<i class="fa fa-circle ' + color + '"></i>&nbsp;Memory usage:&nbsp;' + memory.toFixed(1) + "&thinsp;%");
+    $("#memory").prop("title", "Total memory: " + totalGB.toFixed(1) + " GB, Swap usage: " + swap);
+
     if(data.cpu.percent[0] > 100)
-    {
-      $("#cpu_icon").addClass("text-red");
-      $("#cpu_icon").removeClass("text-green-light");
-    }
+      color = "text-red";
     else
-    {
-      $("#cpu_icon").removeClass("text-red");
-      $("#cpu_icon").addClass("text-green-light");
-    }
+      color = "text-green-light";
+    $("#cpu").html('<i class="fa fa-circle ' + color + '"></i>&nbsp;CPU:&nbsp;' + data.cpu.percent[0].toFixed(1) + "&thinsp;%&nbsp;&nbsp;" + data.cpu.percent[1].toFixed(1) + "&thinsp;%&nbsp;&nbsp;" + data.cpu.percent[2].toFixed(1) + "&thinsp;%");
+    $("#cpu").prop("title", "Load: " + data.cpu.load[0].toFixed(2) + " " + data.cpu.load[1].toFixed(2) + " " + data.cpu.load[2].toFixed(2) + " on " + data.cpu.nprocs + " cores running " + data.procs + " processes");
+
     if(data.sensors.length > 0)
     {
-      $("#temperature").html(data.sensors[0].value + "&thinsp;&deg;C");
+      var temp = data.sensors[0].value.toFixed(1) + "&thinsp;&deg;C";
       if(data.sensors[0].value > 50)
-      {
-        $("#temperature_icon").addClass("text-red");
-        $("#temperature_icon").removeClass("text-vivid-blue");
-      }
+        color = "text-red";
       else
-      {
-        $("#temperature_icon").removeClass("text-red");
-        $("#temperature_icon").addClass("text-vivid-blue");
-      }
+        color = "text-vivid-blue";
+      $("#temperature").html('<i class="fa fa-fire ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp);
+    }
+    else
+      $("#temperature").html('<i class="fa fa-fire"></i>&nbsp;Temp:&nbsp;N/A');
+    $("#temperature").prop("title", "System uptime: " + moment.duration(1000*data.uptime).humanize());
+
+    if(data.dns.blocking === true)
+    {
+      $("#status").html('<i class="fa fa-circle text-green-light"></i>&nbsp;Enabled');
+      $("#status").prop("title", data.dns.gravity_size + " gravity domains loaded");
     }
     else
     {
-      $("#temperature").html("N/A");
-      $("#temperature_icon").addClass("text-vivid-blue");
+      $("#status").html('<i class="fa fa-circle text-red"></i>&nbsp;Disabled');
+      $("#status").prop("title", "Not blocking");
     }
-    $("#temperature").prop("title", "System uptime: " + moment.duration(1000*data.uptime).humanize());
 
     // Update every 60 seconds
     setTimeout(updateSysInfo, 60000);

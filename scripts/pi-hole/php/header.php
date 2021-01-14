@@ -179,23 +179,10 @@
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
-                        <?php
-                        $pistatus = "N/A"; // TODO
-                        if ($pistatus === "1") {
-                            echo '<span id="status"><i class="fa fa-circle text-green-light"></i> Active</span>';
-                        } elseif ($pistatus === "0") {
-                            echo '<span id="status"><i class="fa fa-circle text-red"></i> Offline</span>';
-                        } elseif ($pistatus === "-1") {
-                            echo '<span id="status"><i class="fa fa-circle text-red"></i> DNS service not running</span>';
-                        } else {
-                            echo '<span id="status"><i class="fa fa-circle text-orange"></i> Unknown</span>';
-                        }
-
-                        ?><span><i class="fa fa-fire" id="temperature_icon"></i> Temp:&nbsp;<span id="temperature"></span></span>
-                    <br/>
-                    <span><i class="fa fa-circle" id="cpu_icon"></i> CPU:&nbsp;&nbsp;<span id="cpu"></span></span>
-                    <br/>
-                    <span><i class="fa fa-circle" id="memory_icon"></i> Memory usage:&nbsp;&nbsp;<span id="memory"></span></span>
+                    <span id="status"></span>
+                    <span id="temperature"></span><br/>
+                    <span id="cpu"></span><br/>
+                    <span id="memory"></span>
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
