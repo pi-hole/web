@@ -281,6 +281,9 @@ function updateSysInfo() {
       $("#temperature_icon").addClass("text-vivid-blue");
     }
     $("#temperature").prop("title", "System uptime: " + moment.duration(1000*data.uptime).humanize());
+
+    // Update every 60 seconds
+    setTimeout(updateSysInfo, 60000);
   });
 }
 
