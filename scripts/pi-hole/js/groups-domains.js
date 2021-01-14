@@ -9,16 +9,14 @@
 
 var table;
 var groups = [];
-var token = $("#token").text();
 var GETDict = {};
 var showtype = "all";
 
 function getGroups() {
-  $.post(
-    "scripts/pi-hole/php/groups.php",
-    { action: "get_groups", token: token },
+  $.get(
+    "/api/group",
     function (data) {
-      groups = data.data;
+      groups = data.groups;
       initTable();
     },
     "json"
@@ -33,38 +31,46 @@ $(function () {
       GETDict[item.split("=")[0]] = item.split("=")[1];
     });
 
-  if ("type" in GETDict && (GETDict.type === "white" || GETDict.type === "black")) {
+  if ("type" in GETDict && (GETDict.type === "allow" || GETDict.type === "deny")) {
     showtype = GETDict.type;
   }
 
-  // sync description fields, reset inactive inputs on tab change
+  // sync input fields
   $('a[data-toggle="tab"]').on("shown.bs.tab", function () {
     var tabHref = $(this).attr("href");
     var val;
     if (tabHref === "#tab_domain") {
       val = $("#new_regex_comment").val();
       $("#new_domain_comment").val(val);
-      $("#new_regex").val("");
+      val = $("#new_regex").val();
+      $("#new_domain").val(val);
     } else if (tabHref === "#tab_regex") {
       val = $("#new_domain_comment").val();
       $("#new_regex_comment").val(val);
-      $("#new_domain").val("");
+      val = $("#new_domain").val();
+      $("#new_regex").val(val);
       $("#wildcard_checkbox").prop("checked", false);
     }
   });
 
-  $("#add2black, #add2white").on("click", addDomain);
+  $("#add2deny, #add2allow").on("click", addDomain);
 
   utils.setBsSelectDefaults();
   getGroups();
 });
 
 function initTable() {
+  var url;
+  if(showtype === "all")
+    url = "/api/list";
+    else if(showtype === "allow")
+      url = "/api/list/allow";
+    else if(showtype === "deny")
+      url = "/api/list/deny";
   table = $("#domainsTable").DataTable({
     ajax: {
-      url: "scripts/pi-hole/php/groups.php",
-      data: { action: "get_domains", showtype: showtype, token: token },
-      type: "POST"
+      url: "/api/list",
+      dataSrc: "domains"
     },
     order: [[0, "asc"]],
     columns: [
@@ -73,7 +79,7 @@ function initTable() {
       { data: "type", searchable: false },
       { data: "enabled", searchable: false },
       { data: "comment" },
-      { data: "groups", searchable: false },
+      { data: "group_ids[, ]", searchable: false },
       { data: null, width: "80px", orderable: false }
     ],
     drawCallback: function () {
@@ -100,42 +106,41 @@ function initTable() {
           "</code>"
       );
 
-      var whitelistOptions = "";
-      if (showtype === "all" || showtype === "white") {
-        whitelistOptions =
-          '<option value="0"' +
-          (data.type === 0 ? " selected" : "") +
-          ">Exact whitelist</option>" +
-          '<option value="2"' +
-          (data.type === 2 ? " selected" : "") +
-          ">Regex whitelist</option>";
+      var allowlistOptions = "";
+      if (showtype === "all" || showtype === "allow") {
+        allowlistOptions =
+          '<option value="allow/exact"' +
+          (data.type === "allow/exact" ? " selected" : "") +
+          ">Exact allowlist</option>" +
+          '<option value="allow/regex"' +
+          (data.type === "allow/regex" ? " selected" : "") +
+          ">Regex allowlist</option>";
       }
 
-      var blacklistOptions = "";
-      if (showtype === "all" || showtype === "black") {
-        blacklistOptions =
-          '<option value="1"' +
-          (data.type === 1 ? " selected " : " ") +
-          ">Exact blacklist</option>" +
-          '<option value="3"' +
-          (data.type === 3 ? " selected" : "") +
-          ">Regex blacklist</option>";
+      var denylistOptions = "";
+      if (showtype === "all" || showtype === "deny") {
+        denylistOptions =
+          '<option value="deny/exact"' +
+          (data.type === "deny/exact" ? " selected " : " ") +
+          ">Exact denylist</option>" +
+          '<option value="deny/regex"' +
+          (data.type === "deny/regex" ? " selected" : "") +
+          ">Regex denylist</option>";
       }
 
       $("td:eq(1)", row).html(
         '<select id="type_' +
           data.id +
           '" class="form-control">' +
-          whitelistOptions +
-          blacklistOptions +
+          allowlistOptions +
+          denylistOptions +
           "</select>"
       );
       var typeEl = $("#type_" + data.id, row);
       typeEl.on("change", editDomain);
 
-      var disabled = data.enabled === 0;
       $("td:eq(2)", row).html(
-        '<input type="checkbox" id="status_' + data.id + '"' + (disabled ? "" : " checked") + ">"
+        '<input type="checkbox" id="status_' + data.id + '"' + (data.enabled ? " checked" : "") + ">"
       );
       var statusEl = $("#status_" + data.id, row);
       statusEl.bootstrapToggle({
@@ -174,7 +179,7 @@ function initTable() {
         }
 
         // Select assigned groups
-        selectEl.val(data.groups);
+        selectEl.val(data.group_ids);
         // Initialize bootstrap-select
         selectEl
           // fix dropdown if it would stick out right of the viewport
@@ -331,18 +336,15 @@ function addDomain() {
     }
 
     // determine list type
-    if (domainRegex === "domain" && action === "add2black" && wildcardChecked) {
-      type = "3W";
-    } else if (domainRegex === "domain" && action === "add2black" && !wildcardChecked) {
-      type = "1";
-    } else if (domainRegex === "domain" && action === "add2white" && wildcardChecked) {
-      type = "2W";
-    } else if (domainRegex === "domain" && action === "add2white" && !wildcardChecked) {
-      type = "0";
-    } else if (domainRegex === "regex" && action === "add2black") {
-      type = "3";
-    } else if (domainRegex === "regex" && action === "add2white") {
-      type = "2";
+    if (action === "add2deny") {
+      type = "deny";
+    } else if (action === "add2allow") {
+      type = "allow";
+    }
+    if (domainRegex === "domain") {
+      type += "/exact";
+    } else if (action === "add2allow") {
+      type = "/regex";
     }
   } else {
     utils.enableAll();
@@ -351,15 +353,12 @@ function addDomain() {
   }
 
   $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
+    url: "/api/list/" + type,
     method: "post",
     dataType: "json",
     data: {
-      action: "add_domain",
-      domain: domain,
-      type: type,
-      comment: comment,
-      token: token
+      "domain": domain,
+      "comment": comment
     },
     success: function (response) {
       utils.enableAll();
