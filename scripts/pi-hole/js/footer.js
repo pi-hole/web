@@ -231,8 +231,62 @@ function doLogout() {
   });
 }
 
+function updateSysInfo() {
+  $.ajax({
+    url: "/api/ftl/system"
+  }).done(function (data) {
+    var memory = 100.0 * data.memory.ram.used / data.memory.ram.total;
+    $("#memory").html(memory.toFixed(1) + "&thinsp;%");
+    var totalGB = 1e-9*data.memory.ram.total;
+    $("#memory").prop("title", "Total memory: " + totalGB.toFixed(1) + " GB");
+    if(memory > 75)
+    {
+      $("#memory_icon").addClass("text-red");
+      $("#memory_icon").removeClass("text-green-light");
+    }
+    else
+    {
+      $("#memory_icon").removeClass("text-red");
+      $("#memory_icon").addClass("text-green-light");
+    }
+    $("#cpu").html(data.cpu.percent[0].toFixed(1) + "&thinsp;%&nbsp;&nbsp;" + data.cpu.percent[1].toFixed(1) + "&thinsp;%&nbsp;&nbsp;" + data.cpu.percent[2].toFixed(1) + "&thinsp;%");
+    $("#cpu").prop("title", "Load: " + data.cpu.load[0].toFixed(2) + " " + data.cpu.load[1].toFixed(2) + " " + data.cpu.load[2].toFixed(2) + ", number of cores: " + data.cpu.nprocs);
+    if(data.cpu.percent[0] > 100)
+    {
+      $("#cpu_icon").addClass("text-red");
+      $("#cpu_icon").removeClass("text-green-light");
+    }
+    else
+    {
+      $("#cpu_icon").removeClass("text-red");
+      $("#cpu_icon").addClass("text-green-light");
+    }
+    if(data.sensors.length > 0)
+    {
+      $("#temperature").html(data.sensors[0].value + "&thinsp;&deg;C");
+      if(data.sensors[0].value > 50)
+      {
+        $("#temperature_icon").addClass("text-red");
+        $("#temperature_icon").removeClass("text-vivid-blue");
+      }
+      else
+      {
+        $("#temperature_icon").removeClass("text-red");
+        $("#temperature_icon").addClass("text-vivid-blue");
+      }
+    }
+    else
+    {
+      $("#temperature").html("N/A");
+      $("#temperature_icon").addClass("text-vivid-blue");
+    }
+    $("#temperature").prop("title", "System uptime: " + moment.duration(1000*data.uptime).humanize());
+  });
+}
+
 $(function () {
   checkAuth();
+  updateSysInfo();
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);

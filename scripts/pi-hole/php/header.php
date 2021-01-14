@@ -191,62 +191,11 @@
                             echo '<span id="status"><i class="fa fa-circle text-orange"></i> Unknown</span>';
                         }
 
-                        // CPU Temp
-                        $FTL = true;
-                        $celsius = 20;
-                        if($FTL)
-                        {
-                            if ($celsius >= -273.15) {
-                                echo "<span id=\"temperature\"><i class=\"fa fa-fire ";
-                                if ($celsius > $temperaturelimit) {
-                                    echo "text-red";
-                                }
-                                else
-                                {
-                                    echo "text-vivid-blue";
-                                }
-                                ?>"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span></span><?php
-                            }
-                        }
-                        else
-                        {
-                            echo '<span id=\"temperature\"><i class="fa fa-circle text-red"></i> FTL offline</span>';
-                        }
-                    ?>
+                        ?><span><i class="fa fa-fire" id="temperature_icon"></i> Temp:&nbsp;<span id="temperature"></span></span>
                     <br/>
-                    <?php
-                    $nproc = 0;
-                    $loaddata = array (0,0,0);
-                    echo "<span title=\"Detected $nproc cores\"><i class=\"fa fa-circle ";
-                        if ($loaddata[0] > $nproc) {
-                            echo "text-red";
-                        }
-                        else
-                        {
-                            echo "text-green-light";
-                        }
-                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</span>";
-                    ?>
+                    <span><i class="fa fa-circle" id="cpu_icon"></i> CPU:&nbsp;&nbsp;<span id="cpu"></span></span>
                     <br/>
-                    <?php
-                    $memory_usage = 0.5;
-                    echo "<span><i class=\"fa fa-circle ";
-                        if ($memory_usage > 0.75 || $memory_usage < 0.0) {
-                            echo "text-red";
-                        }
-                        else
-                        {
-                            echo "text-green-light";
-                        }
-                        if($memory_usage > 0.0)
-                        {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</span>";
-                        }
-                        else
-                        {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp; N/A</span>";
-                        }
-                    ?>
+                    <span><i class="fa fa-circle" id="memory_icon"></i> Memory usage:&nbsp;&nbsp;<span id="memory"></span></span>
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
