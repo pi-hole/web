@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, Chart:false, updateSessionTimer:false */
+/* global utils:false, Chart:false */
 
 // Define global variables
 var timeLineChart, clientsChart;
@@ -639,8 +639,6 @@ function updateSummaryData(runOnce) {
   };
 
   $.getJSON("/api/stats/summary", function (data) {
-    updateSessionTimer();
-
     //Element name might have a different name to the property of the API so we split it at |
     var intl = new Intl.NumberFormat();
     ["blocked_queries", "dns_queries", "percent_blocked", "total_clients", "gravity_size"].forEach(
@@ -682,37 +680,37 @@ function updateSummaryData(runOnce) {
     });
 }
 
-function checkAuth() {
-  $.getJSON("/api/auth")
-    .done(function () {
-      // Okay, show graphs ...
-      $("#clients-over-time").show();
-      $("#query-types-pie").show();
-      $("#domain-frequency").show();
-      $("#ad-frequency").show();
-      $("#client-frequency").show();
-      $("#client-frequency-blocked").show();
-      $("#forward-destinations-pie").show();
-      // ... and trigger updates of the advanced graphs
-      updateClientsOverTime();
-      updateTopLists();
-      updateQueryTypesPie();
-      updateForwardDestinationsPie();
-    })
-    .fail(function () {
-      // Not authenticated, remove advanced graphs
-      $("#clients-over-time").hide();
-      $("#query-types-pie").hide();
-      $("#domain-frequency").hide();
-      $("#ad-frequency").hide();
-      $("#client-frequency").hide();
-      $("#client-frequency-blocked").hide();
-      $("#forward-destinations-pie").hide();
-    });
+function onAuth(okay) {
+  if(okay === true)
+  {
+    // Okay, show graphs ...
+    $("#clients-over-time").show();
+    $("#query-types-pie").show();
+    $("#domain-frequency").show();
+    $("#ad-frequency").show();
+    $("#client-frequency").show();
+    $("#client-frequency-blocked").show();
+    $("#forward-destinations-pie").show();
+    // ... and trigger updates of the advanced graphs
+    updateClientsOverTime();
+    updateTopLists();
+    updateQueryTypesPie();
+    updateForwardDestinationsPie();
+  }
+  else
+  {
+    // Hide graphs
+    $("#clients-over-time").hide();
+    $("#query-types-pie").hide();
+    $("#domain-frequency").hide();
+    $("#ad-frequency").hide();
+    $("#client-frequency").hide();
+    $("#client-frequency-blocked").hide();
+    $("#forward-destinations-pie").hide();
+  }
 }
 
 $(function () {
-  checkAuth();
   // These two can always be done, even without authentication
   updateSummaryData();
   updateQueriesOverTime();

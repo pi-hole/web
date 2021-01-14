@@ -5,6 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global onAuth:false */
+
 //The following functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
 
@@ -205,7 +207,32 @@ function initCPUtemp() {
   }
 }
 
+function checkAuth() {
+  $.getJSON("/api/auth")
+    .done(function(data) {
+      onAuth(data.session.valid);
+      if(data.session.valid) {
+        $(".needs-auth").show();
+        $(".menu-login").hide();
+      } else {
+        $(".needs-auth").hide();
+        $(".menu-login").show();
+      }
+    });
+}
+
+function doLogout() {
+  $.ajax({
+    url: "/api/auth",
+    method: "DELETE"
+  }).fail(function (data) {
+    if(data.status == 410)
+      location.reload();
+  });
+}
+
 $(function () {
+  checkAuth();
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
@@ -254,49 +281,4 @@ $("#pihole-disable-custom").on("click", function (e) {
   var custVal = $("#customTimeout").val();
   custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
   piholeChange("disable", custVal);
-});
-
-// Session timer
-var sessionTimerCounter = document.getElementById("sessiontimercounter");
-var sessionvalidity = parseInt(sessionTimerCounter.textContent, 10);
-var start = new Date();
-
-function updateSessionTimer() {
-  start = new Date();
-  start.setSeconds(start.getSeconds() + sessionvalidity);
-}
-
-if (sessionvalidity > 0) {
-  // setSeconds will correctly handle wrap-around cases
-  updateSessionTimer();
-
-  setInterval(function () {
-    var current = new Date();
-    var totalseconds = (start - current) / 1000;
-    var minutes = Math.floor(totalseconds / 60);
-    if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
-
-    var seconds = Math.floor(totalseconds % 60);
-    if (seconds < 10) {
-      seconds = "0" + seconds;
-    }
-
-    if (totalseconds > 0) {
-      sessionTimerCounter.textContent = minutes + ":" + seconds;
-    } else {
-      sessionTimerCounter.textContent = "-- : --";
-    }
-  }, 1000);
-} else {
-  document.getElementById("sessiontimer").style.display = "none";
-}
-
-// Handle Strg + Enter button on Login page
-$(document).keypress(function (e) {
-  if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
-    $("#loginform").attr("action", "settings.php");
-    $("#loginform").submit();
-  }
 });

@@ -387,18 +387,18 @@
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">Main navigation</li>
                 <!-- Home Page -->
-                <li<?php if($scriptname === "index.php"){ ?> class="active"<?php } ?>>
+                <li class="<?php if($scriptname === "index.php"){ ?> active<?php } ?>">
                     <a href="index.php">
                         <i class="fa fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
                 <!-- Query Log -->
-                <li<?php if($scriptname === "queries.php"){ ?> class="active"<?php } ?>>
+                <li class="needs-auth<?php if($scriptname === "queries.php"){ ?> active<?php } ?>">
                     <a href="queries.php">
                         <i class="fa fa-file-alt"></i> <span>Query Log</span>
                     </a>
                 </li>
-                <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php"){ ?> active<?php } ?>">
+                <li class="treeview needs-auth<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php"){ ?> active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-clock"></i> <span>Long-term data</span>
                     <span class="pull-right-container">
@@ -406,17 +406,17 @@
                     </span>
                   </a>
                   <ul class="treeview-menu">
-                    <li<?php if($scriptname === "db_graph.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "db_graph.php"){ ?> active<?php } ?>">
                         <a href="db_graph.php">
                             <i class="fa fa-file-alt"></i> Graphics
                         </a>
                     </li>
-                    <li<?php if($scriptname === "db_queries.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "db_queries.php"){ ?> active<?php } ?>">
                         <a href="db_queries.php">
                             <i class="fa fa-file-alt"></i> Query Log
                         </a>
                     </li>
-                    <li<?php if($scriptname === "db_lists.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "db_lists.php"){ ?> active<?php } ?>">
                         <a href="db_lists.php">
                             <i class="fa fa-file-alt"></i> Top Lists
                         </a>
@@ -424,19 +424,19 @@
                   </ul>
                 </li>
                 <!-- Whitelist -->
-                <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
+                <li class="needs-auth <?php if($scriptname === "whitelist"){ ?> active<?php } ?>">
                     <a href="groups-domains.php?type=white">
                         <i class="fa fa-check-circle "></i> <span>Whitelist</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
-                <li<?php if($scriptname === "blacklist"){ ?> class="active"<?php } ?>>
+                <li class="needs-auth <?php if($scriptname === "blacklist"){ ?> active<?php } ?>">
                     <a href="groups-domains.php?type=black">
                         <i class="fa fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
                 <!-- Group Management -->
-                <li class="treeview<?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?> active<?php } ?>">
+                <li class="treeview needs-auth<?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?> active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-users-cog"></i> <span>Group Management</span>
                     <span class="pull-right-container">
@@ -444,22 +444,22 @@
                     </span>
                   </a>
                   <ul class="treeview-menu">
-                    <li<?php if($scriptname === "groups.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "groups.php"){ ?> active<?php } ?>">
                         <a href="groups.php">
                             <i class="fa fa-user-friends"></i> Groups
                         </a>
                     </li>
-                    <li<?php if($scriptname === "groups-clients.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "groups-clients.php"){ ?> active<?php } ?>">
                         <a href="groups-clients.php">
                             <i class="fa fa-laptop"></i> Clients
                         </a>
                     </li>
-                    <li<?php if($scriptname === "groups-domains.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "groups-domains.php"){ ?> active<?php } ?>">
                         <a href="groups-domains.php">
                             <i class="fa fa-list"></i> Domains
                         </a>
                     </li>
-                    <li<?php if($scriptname === "groups-adlists.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "groups-adlists.php"){ ?> active<?php } ?>">
                         <a href="groups-adlists.php">
                             <i class="fa fa-shield-alt"></i> Adlists
                         </a>
@@ -467,7 +467,7 @@
                   </ul>
                 </li>
                 <!-- Toggle -->
-                <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden<?php } ?>>
+                <li id="pihole-disable" class="treeview needs-auth"<?php if ($pistatus == "0") { ?> hidden<?php } ?>>
                   <a href="#">
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
@@ -503,7 +503,7 @@
                   </ul>
                     <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
-                <li id="pihole-enable" class="treeview"<?php if ($pistatus == "1") { ?> hidden<?php } ?>>
+                <li id="pihole-enable" class="treeview needs-auth"<?php if ($pistatus == "1") { ?> hidden<?php } ?>>
                     <a href="#">
                       <i class="fa fa-play"></i>
                       <span id="enableLabel">Enable&nbsp;&nbsp;&nbsp;
@@ -512,7 +512,7 @@
                     </a>
                 </li>
                 <!-- Tools -->
-                <li class="treeview<?php if (in_array($scriptname, array("messages.php", "gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php", "network.php"))){ ?> active<?php } ?>">
+                <li class="treeview needs-auth<?php if (in_array($scriptname, array("messages.php", "gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php", "network.php"))){ ?> active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-folder"></i> <span>Tools</span>
                     <span class="pull-right-container">
@@ -521,49 +521,49 @@
                   </a>
                   <ul class="treeview-menu">
                     <!-- Pi-hole diagnosis -->
-                    <li<?php if($scriptname === "messages.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "messages.php"){ ?> active<?php } ?>">
                         <a href="messages.php">
                             <i class="fa fa-stethoscope"></i> Pi-hole diagnosis
                         </a>
                     </li>
                     <!-- Run gravity.sh -->
-                    <li<?php if($scriptname === "gravity.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "gravity.php"){ ?> active<?php } ?>">
                         <a href="gravity.php">
                             <i class="fa fa-arrow-circle-down"></i> Update Gravity
                         </a>
                     </li>
                     <!-- Query Lists -->
-                    <li<?php if($scriptname === "queryads.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "queryads.php"){ ?> active<?php } ?>">
                         <a href="queryads.php">
                             <i class="fa fa-search"></i> Query Lists
                         </a>
                     </li>
                     <!-- Audit log -->
-                    <li<?php if($scriptname === "auditlog.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "auditlog.php"){ ?> active<?php } ?>">
                         <a href="auditlog.php">
                             <i class="fa fa-balance-scale"></i> Audit log
                         </a>
                     </li>
                     <!-- Tail pihole.log -->
-                    <li<?php if($scriptname === "taillog.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "taillog.php"){ ?> active<?php } ?>">
                         <a href="taillog.php">
                             <i class="fa fa-list-ul"></i> Tail pihole.log
                         </a>
                     </li>
                     <!-- Tail pihole-FTL.log -->
-                    <li<?php if($scriptname === "taillog-FTL.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "taillog-FTL.php"){ ?> active<?php } ?>">
                         <a href="taillog-FTL.php">
                             <i class="fa fa-list-ul"></i> Tail pihole-FTL.log
                         </a>
                     </li>
                     <!-- Generate debug log -->
-                    <li<?php if($scriptname === "debug.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "debug.php"){ ?> active<?php } ?>">
                         <a href="debug.php">
                             <i class="fa fa-ambulance"></i> Generate debug log
                         </a>
                     </li>
                     <!-- Network -->
-                    <li<?php if($scriptname === "network.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "network.php"){ ?> active<?php } ?>">
                         <a href="network.php">
                             <i class="fa fa-network-wired"></i> Network
                         </a>
@@ -571,13 +571,13 @@
                   </ul>
                 </li>
                 <!-- Settings -->
-                <li<?php if($scriptname === "settings.php"){ ?> class="active"<?php } ?>>
+                <li class="needs-auth <?php if($scriptname === "settings.php"){ ?> active<?php } ?>">
                     <a href="settings.php">
                         <i class="fa fa-cogs"></i> <span>Settings</span>
                     </a>
                 </li>
                 <!-- Local DNS Records -->
-                <li class="treeview <?php if(in_array($scriptname, array("dns_records.php", "cname_records.php"))){ ?>active<?php } ?>">
+                <li class="treeview needs-auth <?php if(in_array($scriptname, array("dns_records.php", "cname_records.php"))){ ?>active<?php } ?>">
                   <a href="#">
                     <i class="fa fa-address-book"></i> <span>Local DNS</span>                    
                     <span class="pull-right-container">
@@ -585,12 +585,12 @@
                     </span>               
                   </a>
                   <ul class="treeview-menu">
-                    <li<?php if($scriptname === "dns_records.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "dns_records.php"){ ?> active<?php } ?>">
                         <a href="dns_records.php">
                             <i class="fa fa-address-book"></i> <span>DNS Records</span>
                         </a>
                     </li>
-                    <li<?php if($scriptname === "cname_records.php"){ ?> class="active"<?php } ?>>
+                    <li class="<?php if($scriptname === "cname_records.php"){ ?> active<?php } ?>">
                         <a href="cname_records.php">
                             <i class="fa fa-address-book"></i> <span>CNAME Records</span>
                         </a>
@@ -598,14 +598,14 @@
                   </ul>
                 </li>
                 <!-- Login -->
-                <li<?php if($scriptname === "login"){ ?> class="active"<?php } ?>>
+                <li class="menu-login<?php if($scriptname === "login"){ ?> active<?php } ?>">
                     <a href="login.php">
                         <i class="fa fa-user"></i> <span>Login</span>
                     </a>
                 </li>
                 <!-- Logout -->
-                <li>
-                    <a href="index.php?logout">
+                <li class="needs-auth">
+                    <a href="" onclick="doLogout();">
                         <i class="fa fa-user-times"></i> <span>Logout</span>
                     </a>
                 </li>

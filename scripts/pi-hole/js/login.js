@@ -7,6 +7,21 @@
 
 /* global sha256:false */
 
+function onAuth() {
+  ;
+}
+
+function getParams() {
+  var GETDict = {};
+  window.location.search
+    .substr(1)
+    .split("&")
+    .forEach(function (item) {
+      GETDict[item.split("=")[0]] = item.split("=")[1];
+    });
+  return GETDict;
+}
+
 function computeResponse(challenge)
 {
   // Compute password hash twice to mitigate rainbow
@@ -16,21 +31,14 @@ function computeResponse(challenge)
   return response;
 }
 
-function loginOkay()
+function redirect()
 {
   // Login succeeded or not needed (empty password)
-  var GETDict = {};
-  window.location.search
-    .substr(1)
-    .split("&")
-    .forEach(function (item) {
-      GETDict[item.split("=")[0]] = item.split("=")[1];
-    });
-
   // Default: Send back to index.php (dashboard)
   var target = "index.php";
 
   // If specified: Send to requested page
+  var GETDict = getParams();
   if ("target" in GETDict) {
     target = GETDict.target;
   }
@@ -42,11 +50,12 @@ function loginOkay()
 function doLogin(response)
 {
   $.ajax({
-    url: "/api/auth/login",
+    url: "/api/auth",
+    method: "POST",
     data: { response: response }
   })
     .done(function () {
-      loginOkay();
+      redirect();
     })
     .fail(function (data) {
       if (data.status === 401) {
@@ -64,18 +73,17 @@ $("#loginform").submit(function (e) {
 
   // Get challenge
   $.ajax({
-    url: "/api/auth/login"
+    url: "/api/auth",
+    method: "GET"
   }).done(function (data) {
     if("challenge" in data)
     {
       var response = computeResponse(data.challenge);
       doLogin(response);
     }
-    else if(data.status === "success")
-    {
+    else if(data.session.valid === true)
       // Password may have been remove meanwhile
-      loginOkay();
-    }
+      redirect();
   });
 });
 
@@ -84,9 +92,7 @@ $(function () {
   $.ajax({
     url: "/api/auth"
   }).done(function (data) {
-    if(data.status === "success" && "sid" in data)
-    {
-      loginOkay();
-    }
+    if(data.session.valid === true)
+      redirect();
   });
 });
