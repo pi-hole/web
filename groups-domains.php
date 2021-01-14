@@ -9,7 +9,7 @@
     $type = "all";
     $pagetitle = "Domain";
     $adjective = "";
-    if (isset($_GET['type']) && ($_GET['type'] === "white" || $_GET['type'] === "black")) {
+    if (isset($_GET['type']) && ($_GET['type'] === "allow" || $_GET['type'] === "deny")) {
         $type = $_GET['type'];
         $pagetitle = ucfirst($type)."list";
         $adjective = $type."listed";
@@ -89,13 +89,13 @@
                     </div>
                 </div>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
-                    <?php if ( $type !== "white" ) { ?>
+                    <?php if ( $type !== "allow" ) { ?>
                     <div class="btn-group" role="group" aria-label="Third group">
-                        <button type="button" class="btn btn-primary" id="add2black">Add to Blacklist</button>
+                        <button type="button" class="btn btn-primary" id="add2deny">Add to Denylist</button>
                     </div>
-                    <?php } if ( $type !== "black" ) { ?>
+                    <?php } if ( $type !== "deny" ) { ?>
                     <div class="btn-group" role="group" aria-label="Third group">
-                        <button type="button" class="btn btn-primary" id="add2white">Add to Whitelist</button>
+                        <button type="button" class="btn btn-primary" id="add2allow">Add to Allowlist</button>
                     </div>
                     <?php } ?>
                 </div>
@@ -112,7 +112,7 @@
         <div class="box" id="domains-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of <?php echo $adjective; ?> entries
+                    <?php if(strlen($adjective) > 0) echo ucfirst($adjective); else echo "List"; ?> entries
                 </h3>
             </div>
             <!-- /.box-header -->

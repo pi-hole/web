@@ -1,5 +1,5 @@
 <?php
-/* Pi-hole: A black hole for Internet advertisements
+/* Pi-hole: A deny hole for Internet advertisements
 *  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *  Network-wide ad blocking via your own hardware.
 *
@@ -22,7 +22,7 @@
     $piholeFTLConf = piholeFTLConfig();
 ?>
 <!doctype html>
-<!-- Pi-hole: A black hole for Internet advertisements
+<!-- Pi-hole: A deny hole for Internet advertisements
 *  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *  Network-wide ad blocking via your own hardware.
 *
@@ -189,13 +189,13 @@
             <?php
             if($scriptname === "groups-domains.php" && isset($_GET['type']))
             {
-                if($_GET["type"] === "white")
+                if($_GET["type"] === "Allow")
                 {
-                    $scriptname = "whitelist";
+                    $scriptname = "allowlist";
                 }
-                elseif($_GET["type"] === "black")
+                elseif($_GET["type"] === "deny")
                 {
-                    $scriptname = "blacklist";
+                    $scriptname = "denylist";
                 }
             }
             ?>
@@ -238,16 +238,16 @@
                     </li>
                   </ul>
                 </li>
-                <!-- Whitelist -->
-                <li class="needs-auth <?php if($scriptname === "whitelist"){ ?> active<?php } ?>">
-                    <a href="groups-domains.php?type=white">
-                        <i class="fa fa-check-circle "></i> <span>Whitelist</span>
+                <!-- Allowlist -->
+                <li class="needs-auth <?php if($scriptname === "allowlist"){ ?> active<?php } ?>">
+                    <a href="groups-domains.php?type=allow">
+                        <i class="fa fa-check-circle "></i> <span>Allowlist</span>
                     </a>
                 </li>
-                <!-- Blacklist -->
-                <li class="needs-auth <?php if($scriptname === "blacklist"){ ?> active<?php } ?>">
-                    <a href="groups-domains.php?type=black">
-                        <i class="fa fa-ban"></i> <span>Blacklist</span>
+                <!-- denylist -->
+                <li class="needs-auth <?php if($scriptname === "denylist"){ ?> active<?php } ?>">
+                    <a href="groups-domains.php?type=deny">
+                        <i class="fa fa-ban"></i> <span>Denylist</span>
                     </a>
                 </li>
                 <!-- Group Management -->

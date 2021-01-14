@@ -210,7 +210,8 @@ function initCPUtemp() {
 function checkAuth() {
   $.getJSON("/api/auth")
     .done(function(data) {
-      onAuth(data.session.valid);
+      if(typeof onAuth === "function")
+        onAuth(data.session.valid);
       if(data.session.valid) {
         $(".needs-auth").show();
         $(".menu-login").hide();

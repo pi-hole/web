@@ -7,10 +7,6 @@
 
 /* global sha256:false */
 
-function onAuth() {
-  ;
-}
-
 function getParams() {
   var GETDict = {};
   window.location.search
