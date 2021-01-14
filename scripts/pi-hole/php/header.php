@@ -7,7 +7,6 @@
 *  Please see LICENSE file for your rights under this license. */
 
     require "scripts/pi-hole/php/auth.php";
-    require "scripts/pi-hole/php/password.php";
     require_once "scripts/pi-hole/php/FTL.php";
     require "scripts/pi-hole/php/theme.php";
     $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
@@ -18,127 +17,7 @@
     // Create cache busting version
     $cacheVer = filemtime(__FILE__);
 
-    // Generate CSRF token
-    if(empty($_SESSION['token'])) {
-        $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
-    }
-
-    // Try to get temperature value from different places (OS dependent)
-    if(file_exists("/sys/class/thermal/thermal_zone0/temp"))
-    {
-        $output = rtrim(file_get_contents("/sys/class/thermal/thermal_zone0/temp"));
-    }
-    elseif (file_exists("/sys/class/hwmon/hwmon0/temp1_input"))
-    {
-        $output = rtrim(file_get_contents("/sys/class/hwmon/hwmon0/temp1_input"));
-    }
-    else
-    {
-        $output = "";
-    }
-
-    // Test if we succeeded in getting the temperature
-    if(is_numeric($output))
-    {
-        // $output could be either 4-5 digits or 2-3, and we only divide by 1000 if it's 4-5
-        // ex. 39007 vs 39
-        $celsius = intval($output);
-
-        // If celsius is greater than 1 degree and is in the 4-5 digit format
-        if($celsius > 1000) {
-            // Use multiplication to get around the division-by-zero error
-            $celsius *= 1e-3;
-        }
-
-        // Get user-defined temperature limit if set
-        if(isset($setupVars['TEMPERATURE_LIMIT']))
-        {
-            $temperaturelimit = intval($setupVars['TEMPERATURE_LIMIT']);
-        }
-        else
-        {
-            $temperaturelimit = 60;
-        }
-    }
-    else
-    {
-        // Nothing can be colder than -273.15 degree Celsius (= 0 Kelvin)
-        // This is the minimum temperature possible (AKA absolute zero)
-        $celsius = -273.16;
-    }
-
-    // Get load
-    $loaddata = sys_getloadavg();
-    foreach ($loaddata as $key => $value) {
-        $loaddata[$key] = round($value, 2);
-    }
-    // Get number of processing units available to PHP
-    // (may be less than the number of online processors)
-    $nproc = shell_exec('nproc');
-    if(!is_numeric($nproc))
-    {
-        $cpuinfo = file_get_contents('/proc/cpuinfo');
-        preg_match_all('/^processor/m', $cpuinfo, $matches);
-        $nproc = count($matches[0]);
-    }
-
-    // Get memory usage
-    $data = explode("\n", file_get_contents("/proc/meminfo"));
-    $meminfo = array();
-    if(count($data) > 0)
-    {
-        foreach ($data as $line) {
-            $expl = explode(":", trim($line));
-            if(count($expl) == 2)
-            {
-                // remove " kB" from the end of the string and make it an integer
-                $meminfo[$expl[0]] = intval(substr($expl[1],0, -3));
-            }
-        }
-        $memory_used = $meminfo["MemTotal"]-$meminfo["MemFree"]-$meminfo["Buffers"]-$meminfo["Cached"];
-        $memory_total = $meminfo["MemTotal"];
-        $memory_usage = $memory_used/$memory_total;
-    }
-    else
-    {
-        $memory_usage = -1;
-    }
-
-    if(isset($setupVars['WEBUIBOXEDLAYOUT']))
-    {
-        if($setupVars['WEBUIBOXEDLAYOUT'] === "boxed")
-        {
-            $boxedlayout = true;
-        }
-        else
-        {
-            $boxedlayout = false;
-        }
-    }
-    else
-    {
-        $boxedlayout = true;
-    }
-
-    // Override layout setting if layout is changed via Settings page
-    if(isset($_POST["field"]))
-    {
-        if($_POST["field"] === "webUI" && isset($_POST["boxedlayout"]))
-        {
-            $boxedlayout = true;
-        }
-        elseif($_POST["field"] === "webUI" && !isset($_POST["boxedlayout"]))
-        {
-            $boxedlayout = false;
-        }
-    }
-
-    function pidofFTL()
-    {
-        return shell_exec("pidof pihole-FTL");
-    }
-    $FTLpid = intval(pidofFTL());
-    $FTL = ($FTLpid !== 0 ? true : false);
+    $boxedlayout = true;
 
     $piholeFTLConf = piholeFTLConfig();
 ?>
@@ -301,12 +180,7 @@
                 <div class="pull-left info">
                     <p>Status</p>
                         <?php
-                        $pistatus = pihole_execute('status web');
-                        if (isset($pistatus[0])) {
-                            $pistatus = $pistatus[0];
-                        } else {
-                            $pistatus = null;
-                        }
+                        $pistatus = "N/A"; // TODO
                         if ($pistatus === "1") {
                             echo '<span id="status"><i class="fa fa-circle text-green-light"></i> Active</span>';
                         } elseif ($pistatus === "0") {
@@ -318,6 +192,8 @@
                         }
 
                         // CPU Temp
+                        $FTL = true;
+                        $celsius = 20;
                         if($FTL)
                         {
                             if ($celsius >= -273.15) {
@@ -339,6 +215,8 @@
                     ?>
                     <br/>
                     <?php
+                    $nproc = 0;
+                    $loaddata = array (0,0,0);
                     echo "<span title=\"Detected $nproc cores\"><i class=\"fa fa-circle ";
                         if ($loaddata[0] > $nproc) {
                             echo "text-red";
@@ -351,6 +229,7 @@
                     ?>
                     <br/>
                     <?php
+                    $memory_usage = 0.5;
                     echo "<span><i class=\"fa fa-circle ";
                         if ($memory_usage > 0.75 || $memory_usage < 0.0) {
                             echo "text-red";

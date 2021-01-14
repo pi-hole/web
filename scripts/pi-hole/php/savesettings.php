@@ -88,16 +88,6 @@ function formatMAC($mac_addr)
 	return null;
 }
 
-function validEmail($email)
-{
-	return filter_var($email, FILTER_VALIDATE_EMAIL)
-		// Make sure that the email does not contain special characters which
-		// may be used to execute shell commands, even though they may be valid
-		// in an email address. If the escaped email does not equal the original
-		// email, it is not safe to store in setupVars.
-		&& escapeshellcmd($email) === $email;
-}
-
 $dhcp_static_leases = array();
 function readStaticLeasesFile($origin_file="/etc/dnsmasq.d/04-pihole-static-dhcp.conf")
 {

@@ -116,7 +116,6 @@ function list_verify($type) {
     }
     elseif(isset($_POST['pw']))
     {
-        require("password.php");
         if($wrongpassword || !$auth)
         {
             log_and_die("Wrong password - ".htmlspecialchars($type)."listing of ".htmlspecialchars($_POST['domain'])." not permitted");

@@ -52,35 +52,6 @@ if(!function_exists('hash_equals')) {
    }
 }
 
-/**
- * More safely execute a command with pihole shell script.
- *
- * For example,
- *
- *   pihole_execute("-h");
- *
- * would execute command
- *
- *   sudo pihole -h
- *
- * and returns output of that command as a string.
- *
- * @param $argument_string String of arguments to run pihole with.
- * @param $error_on_failure If true, a warning is raised if command execution fails. Defaults to true.
- */
-function pihole_execute($argument_string, $error_on_failure = true) {
-    $escaped = escapeshellcmd($argument_string);
-    $output = null;
-    $return_status = -1;
-    $command = "sudo pihole " . $escaped;
-    exec($command, $output, $return_status);
-    if($return_status !== 0)
-    {
-        trigger_error("Executing {$command} failed.", E_USER_WARNING);
-    }
-    return $output;
-}
-
 // Custom DNS
 $customDNSFile = "/etc/pihole/custom.list";
 
@@ -227,7 +198,7 @@ function deleteAllCustomDNSEntries()
                     pihole_execute("-a removecustomdns ".$ip." ".$domain);
                 }
             }
-            catch (\Exception $ex)
+            catch (Exception $ex)
             {
                 return errorJsonResponse($ex->getMessage());
             }
@@ -246,18 +217,18 @@ function echoCustomCNAMEEntries()
 {
     $entries = getCustomCNAMEEntries();
 
-    $data = [];
+    $data = array();
     foreach ($entries as $entry)
-        $data[] = [ $entry->domain, $entry->target ];
+        $data[] = array( $entry->domain, $entry->target );
 
-    return [ "data" => $data ];
+    return array( "data" => $data );
 }
 
 function getCustomCNAMEEntries()
 {
     global $customCNAMEFile;
 
-    $entries = [];
+    $entries = array();
 
     if (!file_exists($customCNAMEFile)) return $entries;
 
@@ -273,10 +244,10 @@ function getCustomCNAMEEntries()
             if (count($explodedLine) <= 1)
                 continue;
 
-            $data = new \stdClass();
-            $data->domains = array_slice($explodedLine, 0, -1);
-            $data->domain = implode(",", $data->domains);
-            $data->target = $explodedLine[count($explodedLine)-1];
+            $data = array();
+            $data["domains"] = array_slice($explodedLine, 0, -1);
+            $data["domain"] = implode(",", $data["domains"]);
+            $data["target"] = $explodedLine[count($explodedLine)-1];
             $entries[] = $data;
         }
 
@@ -321,7 +292,7 @@ function addCustomCNAMEEntry($domain="", $target="", $json=true)
 
         return returnSuccess("", $json);
     }
-    catch (\Exception $ex)
+    catch (Exception $ex)
     {
         return returnError($ex->getMessage(), $json);
     }
@@ -357,7 +328,7 @@ function deleteCustomCNAMEEntry()
 
         return returnSuccess();
     }
-    catch (\Exception $ex)
+    catch (Exception $ex)
     {
         return returnError($ex->getMessage());
     }
@@ -374,7 +345,7 @@ function deleteAllCustomCNAMEEntries()
         }
 
     }
-    catch (\Exception $ex)
+    catch (Exception $ex)
     {
         return returnError($ex->getMessage());
     }
@@ -385,7 +356,7 @@ function deleteAllCustomCNAMEEntries()
 function returnSuccess($message = "", $json = true)
 {
     if ($json) {
-        return [ "success" => true, "message" => $message ];
+        return array( "success" => true, "message" => $message );
     } else {
         echo $msg."<br>";
         return true;
@@ -395,7 +366,7 @@ function returnSuccess($message = "", $json = true)
 function returnError($message = "", $json = true)
 {
     if ($json) {
-        return [ "success" => false, "message" => $message ];
+        return array( "success" => false, "message" => $message );
     } else {
         echo $msg."<br>";
         return false;

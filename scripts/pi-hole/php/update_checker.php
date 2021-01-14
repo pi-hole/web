@@ -62,7 +62,7 @@ else
 	{
 		// This logic allows the local core version to be newer than the upstream version
 		// The update indicator is only shown if the upstream version is NEWER
-		$core_update = (version_compare($core_current, $core_latest) < 0);
+		$core_update = (strcasecmp($core_current, $core_latest) < 0);
 	}
 	else
 	{
@@ -74,7 +74,7 @@ else
 	{
 		// This logic allows the local core version to be newer than the upstream version
 		// The update indicator is only shown if the upstream version is NEWER
-		$web_update = (version_compare($web_current, $web_latest) < 0);
+		$web_update = (strcasecmp($web_current, $web_latest) < 0);
 	}
 	else
 	{
@@ -86,7 +86,7 @@ else
 	// The update indicator is only shown if the upstream version is NEWER
 	if($FTL_current !== "vDev")
 	{
-		$FTL_update = (version_compare($FTL_current, $FTL_latest) < 0);
+		$FTL_update = (strcasecmp($FTL_current, $FTL_latest) < 0);
 	}
 	else
 	{
