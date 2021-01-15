@@ -44,7 +44,7 @@ function countDown() {
   var ena = $("#enableLabel");
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
-  var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
+  var seconds = Math.round((target.getTime() - Date.now()) / 1000);
 
   if (seconds > 0) {
     setTimeout(countDown, 1000);
@@ -81,7 +81,7 @@ function piholeChange(action, duration) {
           btnStatus.html("");
           piholeChanged("disabled");
           if (duration > 0) {
-            enaT.html(new Date().getTime() + duration * 1000);
+            enaT.html(Date.now() + duration * 1000);
             setTimeout(countDown, 100);
           }
         }
@@ -206,7 +206,7 @@ function initCPUtemp() {
 $(function () {
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
-  var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
+  var seconds = Math.round((target.getTime() - Date.now()) / 1000);
   if (seconds > 0) {
     setTimeout(countDown, 100);
   }

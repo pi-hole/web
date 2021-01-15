@@ -210,7 +210,6 @@
 }
 
 .chart-legend {
-  height: 250px;
   overflow: auto;
 }
 
@@ -325,4 +324,9 @@
 .sidebar-toggle-svg:hover {
   color: #f6f6f6;
   background: #367fa9;
+}
+
+.box,
+.small-box {
+  border-radius: 10px;
 }

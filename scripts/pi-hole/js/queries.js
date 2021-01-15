@@ -298,7 +298,7 @@ $(function () {
       { width: "36%", render: $.fn.dataTable.render.text() },
       { width: "8%", type: "ip-address", render: $.fn.dataTable.render.text() },
       { width: "14%", orderData: 4 },
-      { width: "8%", orderData: 6 },
+      { width: "8%", orderData: 5 },
       { width: "10%", orderData: 4 }
     ],
     lengthMenu: [
