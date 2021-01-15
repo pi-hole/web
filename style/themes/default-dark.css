@@ -97,7 +97,6 @@ h4 {
 .sidebar-menu > li.active > a {
   color: #fff;
   background-color: #22272a;
-  border-left-color: #272c30;
 }
 .sidebar-menu > li > .treeview-menu {
   margin: 0 1px;
@@ -175,7 +174,6 @@ h4 {
 .box-solid > .box-header,
 .box > .box-header {
   color: #bec5cb;
-  background-color: #272c30;
 }
 .box-solid > .box-header a,
 .box > .box-header a,
