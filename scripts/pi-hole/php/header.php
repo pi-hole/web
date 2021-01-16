@@ -420,7 +420,7 @@
                 </li>
                 <!-- Logout -->
                 <li class="needs-auth">
-                    <a href="" onclick="doLogout();">
+                    <a href="" onclick="utils.doLogout();">
                         <i class="fa fa-user-times"></i> <span>Logout</span>
                     </a>
                 </li>

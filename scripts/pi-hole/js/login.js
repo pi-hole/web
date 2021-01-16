@@ -18,8 +18,7 @@ function getParams() {
   return GETDict;
 }
 
-function computeResponse(challenge)
-{
+function computeResponse(challenge) {
   // Compute password hash twice to mitigate rainbow
   // table vulnerability
   var pwhash = sha256(sha256($("#loginpw").val()));
@@ -27,8 +26,7 @@ function computeResponse(challenge)
   return response;
 }
 
-function redirect()
-{
+function redirect() {
   // Login succeeded or not needed (empty password)
   // Default: Send back to index.php (dashboard)
   var target = "index.php";
@@ -43,8 +41,7 @@ function redirect()
   window.location.replace(target);
 }
 
-function doLogin(response)
-{
+function doLogin(response) {
   $.ajax({
     url: "/api/auth",
     method: "POST",
@@ -72,12 +69,10 @@ $("#loginform").submit(function (e) {
     url: "/api/auth",
     method: "GET"
   }).done(function (data) {
-    if("challenge" in data)
-    {
+    if ("challenge" in data) {
       var response = computeResponse(data.challenge);
       doLogin(response);
-    }
-    else if(data.session.valid === true)
+    } else if (data.session.valid === true)
       // Password may have been remove meanwhile
       redirect();
   });
@@ -88,7 +83,6 @@ $(function () {
   $.ajax({
     url: "/api/auth"
   }).done(function (data) {
-    if(data.session.valid === true)
-      redirect();
+    if (data.session.valid === true) redirect();
   });
 });

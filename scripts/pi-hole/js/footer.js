@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global onAuth:false */
+/* global onAuth:false, moment: false */
 
 //The following functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
@@ -208,27 +208,15 @@ function initCPUtemp() {
 }
 
 function checkAuth() {
-  $.getJSON("/api/auth")
-    .done(function(data) {
-      if(typeof onAuth === "function")
-        onAuth(data.session.valid);
-      if(data.session.valid) {
-        $(".needs-auth").show();
-        $(".menu-login").hide();
-      } else {
-        $(".needs-auth").hide();
-        $(".menu-login").show();
-      }
-    });
-}
-
-function doLogout() {
-  $.ajax({
-    url: "/api/auth",
-    method: "DELETE"
-  }).fail(function (data) {
-    if(data.status == 410)
-      location.reload();
+  $.getJSON("/api/auth").done(function (data) {
+    if (typeof onAuth === "function") onAuth(data.session.valid);
+    if (data.session.valid) {
+      $(".needs-auth").show();
+      $(".menu-login").hide();
+    } else {
+      $(".needs-auth").hide();
+      $(".menu-login").show();
+    }
   });
 }
 
@@ -236,44 +224,60 @@ function updateSysInfo() {
   $.ajax({
     url: "/api/ftl/system"
   }).done(function (data) {
-    var memory = 100.0 * data.memory.ram.used / data.memory.ram.total;
-    var totalGB = 1e-9*data.memory.ram.total;
-    var swap = data.memory.swap.total > 0 ? (1e-9*data.memory.swap.used/data.memory.swap.total).toFixed(1) + " %" : "N/A";
+    var memory = (100 * data.memory.ram.used) / data.memory.ram.total;
+    var totalGB = 1e-9 * data.memory.ram.total;
+    var swap =
+      data.memory.swap.total > 0
+        ? ((1e-9 * data.memory.swap.used) / data.memory.swap.total).toFixed(1) + " %"
+        : "N/A";
     var color;
-    if(memory > 75)
-      color = "text-red";
-    else
-      color = "text-green-light";
-    $("#memory").html('<i class="fa fa-circle ' + color + '"></i>&nbsp;Memory usage:&nbsp;' + memory.toFixed(1) + "&thinsp;%");
+    color = memory > 75 ? "text-red" : "text-green-light";
+    $("#memory").html(
+      '<i class="fa fa-circle ' +
+        color +
+        '"></i>&nbsp;Memory usage:&nbsp;' +
+        memory.toFixed(1) +
+        "&thinsp;%"
+    );
     $("#memory").prop("title", "Total memory: " + totalGB.toFixed(1) + " GB, Swap usage: " + swap);
 
-    if(data.cpu.percent[0] > 100)
-      color = "text-red";
-    else
-      color = "text-green-light";
-    $("#cpu").html('<i class="fa fa-circle ' + color + '"></i>&nbsp;CPU:&nbsp;' + data.cpu.percent[0].toFixed(1) + "&thinsp;%&nbsp;&nbsp;" + data.cpu.percent[1].toFixed(1) + "&thinsp;%&nbsp;&nbsp;" + data.cpu.percent[2].toFixed(1) + "&thinsp;%");
-    $("#cpu").prop("title", "Load: " + data.cpu.load[0].toFixed(2) + " " + data.cpu.load[1].toFixed(2) + " " + data.cpu.load[2].toFixed(2) + " on " + data.cpu.nprocs + " cores running " + data.procs + " processes");
+    color = data.cpu.percent[0] > 100 ? "text-red" : "text-green-light";
+    $("#cpu").html(
+      '<i class="fa fa-circle ' +
+        color +
+        '"></i>&nbsp;CPU:&nbsp;' +
+        data.cpu.percent[0].toFixed(1) +
+        "&thinsp;%"
+    );
+    $("#cpu").prop(
+      "title",
+      "Load: " +
+        data.cpu.load[0].toFixed(2) +
+        " " +
+        data.cpu.load[1].toFixed(2) +
+        " " +
+        data.cpu.load[2].toFixed(2) +
+        " on " +
+        data.cpu.nprocs +
+        " cores running " +
+        data.procs +
+        " processes"
+    );
 
-    if(data.sensors.length > 0)
-    {
+    if (data.sensors.length > 0) {
       var temp = data.sensors[0].value.toFixed(1) + "&thinsp;&deg;C";
-      if(data.sensors[0].value > 50)
-        color = "text-red";
-      else
-        color = "text-vivid-blue";
+      color = data.sensors[0].value > 50 ? "text-red" : "text-vivid-blue";
       $("#temperature").html('<i class="fa fa-fire ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp);
-    }
-    else
-      $("#temperature").html('<i class="fa fa-fire"></i>&nbsp;Temp:&nbsp;N/A');
-    $("#temperature").prop("title", "System uptime: " + moment.duration(1000*data.uptime).humanize());
+    } else $("#temperature").html('<i class="fa fa-fire"></i>&nbsp;Temp:&nbsp;N/A');
+    $("#temperature").prop(
+      "title",
+      "System uptime: " + moment.duration(1000 * data.uptime).humanize()
+    );
 
-    if(data.dns.blocking === true)
-    {
+    if (data.dns.blocking === true) {
       $("#status").html('<i class="fa fa-circle text-green-light"></i>&nbsp;Enabled');
       $("#status").prop("title", data.dns.gravity_size + " gravity domains loaded");
-    }
-    else
-    {
+    } else {
       $("#status").html('<i class="fa fa-circle text-red"></i>&nbsp;Disabled');
       $("#status").prop("title", "Not blocking");
     }

@@ -230,6 +230,15 @@ function getGraphType() {
   return localStorage.getItem("barchart_chkbox") === "false" ? "line" : "bar";
 }
 
+function doLogout() {
+  $.ajax({
+    url: "/api/auth",
+    method: "DELETE"
+  }).fail(function (data) {
+    if (data.status === 410) location.reload();
+  });
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -246,6 +255,7 @@ window.utils = (function () {
     stateLoadCallback: stateLoadCallback,
     getGraphType: getGraphType,
     validateMAC: validateMAC,
-    validateHostname: validateHostname
+    validateHostname: validateHostname,
+    doLogout: doLogout
   };
 })();

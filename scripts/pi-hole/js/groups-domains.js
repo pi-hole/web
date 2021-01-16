@@ -61,15 +61,12 @@ $(function () {
 
 function initTable() {
   var url;
-  if(showtype === "all")
-    url = "/api/list";
-    else if(showtype === "allow")
-      url = "/api/list/allow";
-    else if(showtype === "deny")
-      url = "/api/list/deny";
+  if (showtype === "all") url = "/api/list";
+  else if (showtype === "allow") url = "/api/list/allow";
+  else if (showtype === "deny") url = "/api/list/deny";
   table = $("#domainsTable").DataTable({
     ajax: {
-      url: "/api/list",
+      url: url,
       dataSrc: "domains"
     },
     order: [[0, "asc"]],
@@ -140,7 +137,11 @@ function initTable() {
       typeEl.on("change", editDomain);
 
       $("td:eq(2)", row).html(
-        '<input type="checkbox" id="status_' + data.id + '"' + (data.enabled ? " checked" : "") + ">"
+        '<input type="checkbox" id="status_' +
+          data.id +
+          '"' +
+          (data.enabled ? " checked" : "") +
+          ">"
       );
       var statusEl = $("#status_" + data.id, row);
       statusEl.bootstrapToggle({
@@ -341,6 +342,7 @@ function addDomain() {
     } else if (action === "add2allow") {
       type = "allow";
     }
+
     if (domainRegex === "domain") {
       type += "/exact";
     } else if (action === "add2allow") {
@@ -357,8 +359,8 @@ function addDomain() {
     method: "post",
     dataType: "json",
     data: {
-      "domain": domain,
-      "comment": comment
+      domain: domain,
+      comment: comment
     },
     success: function (response) {
       utils.enableAll();
@@ -447,8 +449,7 @@ function editDomain() {
       type: type,
       comment: comment,
       status: status,
-      groups: groups,
-      token: token
+      groups: groups
     },
     success: function (response) {
       utils.enableAll();
@@ -500,7 +501,7 @@ function deleteDomain() {
     url: "scripts/pi-hole/php/groups.php",
     method: "post",
     dataType: "json",
-    data: { action: "delete_domain", id: id, token: token },
+    data: { action: "delete_domain", id: id },
     success: function (response) {
       utils.enableAll();
       if (response.success) {

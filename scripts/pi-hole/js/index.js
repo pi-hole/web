@@ -216,9 +216,6 @@ var customTooltips = function (tooltip) {
 var failures = 0;
 function updateQueriesOverTime() {
   $.getJSON("/api/stats/overTime/history", function (data) {
-    // remove last data point since it not representative
-    data.splice(-1, 1);
-
     // Remove possibly already existing data
     timeLineChart.data.labels = [];
     timeLineChart.data.datasets = [];
@@ -242,18 +239,16 @@ function updateQueriesOverTime() {
       });
     }
 
-    // Add data for each hour that is available
-    for (var idx in data) {
-      if (Object.prototype.hasOwnProperty.call(data, idx)) {
-        var timestamp = new Date(1000 * parseInt(data[idx].timestamp, 10));
+    // Add data for each dataset that is available
+    data.data.forEach(function (item) {
+      var timestamp = new Date(1000 * parseInt(item.timestamp, 10));
 
-        timeLineChart.data.labels.push(timestamp);
-        var blocked = data[idx].blocked_queries;
-        var permitted = data[idx].total_queries - blocked;
-        timeLineChart.data.datasets[0].data.push(blocked);
-        timeLineChart.data.datasets[1].data.push(permitted);
-      }
-    }
+      timeLineChart.data.labels.push(timestamp);
+      var blocked = item.blocked_queries;
+      var permitted = item.total_queries - blocked;
+      timeLineChart.data.datasets[0].data.push(blocked);
+      timeLineChart.data.datasets[1].data.push(permitted);
+    });
 
     $("#queries-over-time .overlay").hide();
     timeLineChart.update();
@@ -342,13 +337,10 @@ function updateClientsOverTime() {
   $.getJSON("/api/stats/overTime/clients", function (data) {
     // Remove graph if there are no results (e.g. new
     // installation or privacy mode enabled)
-    if (jQuery.isEmptyObject(data.over_time)) {
+    if (jQuery.isEmptyObject(data.data)) {
       $("#clients-over-time").parent().remove();
       return;
     }
-
-    // remove last data point since it not representative
-    data.over_time.splice(-1, 1);
 
     var i,
       labels = [];
@@ -380,12 +372,14 @@ function updateClientsOverTime() {
     }
 
     // Add data for each dataset that is available
-    data.over_time.forEach(function (item) {
-      data.clients.forEach(function (i, clientKey) {
-        var val = item.data[clientKey];
-        clientsChart.data.datasets[clientKey].data.push(val);
+    data.clients.forEach(function (i, c) {
+      data.data.forEach(function (item) {
+        clientsChart.data.datasets[c].data.push(item.data[c]);
       });
+    });
 
+    // Extract data timestamps
+    data.data.forEach(function (item) {
       var d = new Date(1000 * parseInt(item.timestamp, 10));
       clientsChart.data.labels.push(d);
     });
@@ -680,9 +674,10 @@ function updateSummaryData(runOnce) {
     });
 }
 
+/*eslint-disable no-unused-vars*/
 function onAuth(okay) {
-  if(okay === true)
-  {
+  /*eslint-enable no-unused-vars*/
+  if (okay === true) {
     // Okay, show graphs ...
     $("#clients-over-time").show();
     $("#query-types-pie").show();
@@ -692,13 +687,9 @@ function onAuth(okay) {
     $("#client-frequency-blocked").show();
     $("#forward-destinations-pie").show();
     // ... and trigger updates of the advanced graphs
-    updateClientsOverTime();
+    createAdvancedGraphs();
     updateTopLists();
-    updateQueryTypesPie();
-    updateForwardDestinationsPie();
-  }
-  else
-  {
+  } else {
     // Hide graphs
     $("#clients-over-time").hide();
     $("#query-types-pie").hide();
@@ -822,9 +813,14 @@ $(function () {
 
     return false;
   });
+});
+
+function createAdvancedGraphs() {
+  var gridColor = $(".graphs-grid").css("background-color");
+  var ticksColor = $(".graphs-ticks").css("color");
 
   // Create "Top Clients over Time"
-  ctx = document.getElementById("clientsChart").getContext("2d");
+  var ctx = document.getElementById("clientsChart").getContext("2d");
   clientsChart = new Chart(ctx, {
     type: utils.getGraphType(),
     data: {
@@ -897,6 +893,7 @@ $(function () {
       }
     }
   });
+  updateClientsOverTime();
 
   $("#clientsChart").click(function (evt) {
     var activePoints = clientsChart.getElementAtEvent(evt);
@@ -952,6 +949,7 @@ $(function () {
       cutoutPercentage: 0
     }
   });
+  updateQueryTypesPie();
 
   ctx = document.getElementById("forwardDestinationPieChart").getContext("2d");
   forwardDestinationPieChart = new Chart(ctx, {
@@ -989,7 +987,8 @@ $(function () {
       cutoutPercentage: 0
     }
   });
-});
+  updateForwardDestinationsPie();
+}
 
 //destroy all chartjs customTooltips on window resize
 window.addEventListener("resize", function () {
