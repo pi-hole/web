@@ -813,7 +813,7 @@ function doughnutTooltip(tooltipItems, data) {
     dataset.data[tooltipItems.index].toFixed(1) +
     "% of all queries<br>- " +
     ((dataset.data[tooltipItems.index] * 100) / (total - scale)).toFixed(1) +
-    "% of displayed query types"
+    "% of shown items"
   );
 }
 
