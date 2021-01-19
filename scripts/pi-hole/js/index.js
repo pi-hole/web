@@ -497,7 +497,9 @@ function updateForwardDestinationsPie() {
       } else if (e.which === 1) {
         // which == 1 is left mouse button
         var obj = encodeURIComponent(e.target.textContent);
-        window.open("queries.php?forwarddest=" + obj, "_self");
+        if (obj.length > 0) {
+          window.open("queries.php?forwarddest=" + obj, "_self");
+        }
       }
     });
   }).done(function () {
