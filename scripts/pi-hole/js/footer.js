@@ -220,83 +220,89 @@ function checkAuth() {
   });
 }
 
-function updateSysInfo() {
+function fetchSysInfo() {
   $.ajax({
     url: "/api/ftl/system"
   }).done(function (data) {
-    var memory = (100 * data.memory.ram.used) / data.memory.ram.total;
-    var totalGB = 1e-6 * data.memory.ram.total;
-    var swap =
-      data.memory.swap.total > 0
-        ? ((1e-6 * data.memory.swap.used) / data.memory.swap.total).toFixed(1) + " %"
-        : "N/A";
-    var color;
-    color = memory > 75 ? "text-red" : "text-green-light";
-    $("#memory").html(
-      '<i class="fa fa-circle ' +
-        color +
-        '"></i>&nbsp;Memory usage:&nbsp;' +
-        memory.toFixed(1) +
-        "&thinsp;%"
-    );
-    $("#memory").prop("title", "Total memory: " + totalGB.toFixed(1) + " GB, Swap usage: " + swap);
+    updateSysInfo(data.system);
 
-    color = data.cpu.percent[0] > 100 ? "text-red" : "text-green-light";
-    $("#cpu").html(
-      '<i class="fa fa-circle ' +
-        color +
-        '"></i>&nbsp;CPU:&nbsp;' +
-        data.cpu.percent[0].toFixed(1) +
-        "&thinsp;%"
-    );
-    $("#cpu").prop(
-      "title",
-      "Load: " +
-        data.cpu.load[0].toFixed(2) +
-        " " +
-        data.cpu.load[1].toFixed(2) +
-        " " +
-        data.cpu.load[2].toFixed(2) +
-        " on " +
-        data.cpu.nprocs +
-        " cores running " +
-        data.procs +
-        " processes"
-    );
-
-    if (data.sensors.length > 0) {
-      var temp = data.sensors[0].value.toFixed(1) + "&thinsp;&deg;C";
-      color = data.sensors[0].value > 50 ? "text-red" : "text-vivid-blue";
-      $("#temperature").html('<i class="fa fa-fire ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp);
-    } else $("#temperature").html('<i class="fa fa-fire"></i>&nbsp;Temp:&nbsp;N/A');
-    var startdate = moment()
-      .subtract(data.uptime, "seconds")
-      .format("dddd, MMMM Do YYYY, HH:mm:ss");
-    $("#temperature").prop(
-      "title",
-      "System uptime: " +
-        moment.duration(1000 * data.uptime).humanize() +
-        " (running since " +
-        startdate +
-        ")"
-    );
-
-    if (data.dns.blocking === true) {
-      $("#status").html('<i class="fa fa-circle text-green-light"></i>&nbsp;Enabled');
-      $("#status").prop("title", data.dns.gravity_size + " gravity domains loaded");
-    } else {
-      $("#status").html('<i class="fa fa-circle text-red"></i>&nbsp;Disabled');
-      $("#status").prop("title", "Not blocking");
-    }
-
-    // Update every 60 seconds
-    setTimeout(updateSysInfo, 60000);
+    // Update every 5 seconds
+    setTimeout(fetchSysInfo, 5000);
   });
+
+}
+
+function updateSysInfo(data) {
+  var memory = (100 * data.memory.ram.used) / data.memory.ram.total;
+  var totalGB = 1e-6 * data.memory.ram.total;
+  var swap =
+    data.memory.swap.total > 0
+      ? ((1e-6 * data.memory.swap.used) / data.memory.swap.total).toFixed(1) + " %"
+      : "N/A";
+  var color;
+  color = memory > 75 ? "text-red" : "text-green-light";
+  $("#memory").html(
+    '<i class="fa fa-circle ' +
+      color +
+      '"></i>&nbsp;Memory usage:&nbsp;' +
+      memory.toFixed(1) +
+      "&thinsp;%"
+  );
+  $("#memory").prop("title", "Total memory: " + totalGB.toFixed(1) + " GB, Swap usage: " + swap);
+
+  color = data.cpu.load.percent[0] > 100 ? "text-red" : "text-green-light";
+  $("#cpu").html(
+    '<i class="fa fa-circle ' +
+      color +
+      '"></i>&nbsp;CPU:&nbsp;' +
+      data.cpu.load.percent[0].toFixed(1) +
+      "&thinsp;%"
+  );
+  $("#cpu").prop(
+    "title",
+    "Load: " +
+      data.cpu.load.raw[0].toFixed(2) +
+      " " +
+      data.cpu.load.raw[1].toFixed(2) +
+      " " +
+      data.cpu.load.raw[2].toFixed(2) +
+      " on " +
+      data.cpu.nprocs +
+      " cores running " +
+      data.procs +
+      " processes"
+  );
+
+  if (data.sensors.length > 0) {
+    var temp = data.sensors[0].value.toFixed(1) + "&thinsp;&deg;C";
+    color = data.sensors[0].value > 50 ? "text-red" : "text-vivid-blue";
+    $("#temperature").html('<i class="fa fa-fire ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp);
+  } else $("#temperature").html('<i class="fa fa-fire"></i>&nbsp;Temp:&nbsp;N/A');
+  var startdate = moment()
+    .subtract(data.uptime, "seconds")
+    .format("dddd, MMMM Do YYYY, HH:mm:ss");
+  $("#temperature").prop(
+    "title",
+    "System uptime: " +
+      moment.duration(1000 * data.uptime).humanize() +
+      " (running since " +
+      startdate +
+      ")"
+  );
+
+  if (data.dns.blocking === true) {
+    $("#status").html('<i class="fa fa-circle text-green-light"></i>&nbsp;Enabled');
+    $("#status").prop("title", data.dns.gravity_size + " gravity domains loaded");
+  } else {
+    $("#status").html('<i class="fa fa-circle text-red"></i>&nbsp;Disabled');
+    $("#status").prop("title", "Not blocking");
+  }
 }
 
 $(function () {
   checkAuth();
-  updateSysInfo();
+  if(typeof window.index_page == 'undefined')
+    fetchSysInfo();
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - Date.now()) / 1000);

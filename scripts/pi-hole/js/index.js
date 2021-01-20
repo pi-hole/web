@@ -10,6 +10,7 @@
 // Define global variables
 var timeLineChart, clientsChart;
 var queryTypePieChart, forwardDestinationPieChart;
+var index_page;
 
 var THEME_COLORS = [
   "#f56954",
@@ -662,6 +663,8 @@ function updateSummaryData(runOnce) {
       }
     );
 
+    updateSysInfo(data.system);
+
     setTimeout(function () {
       $("span.glow").removeClass("glow");
     }, 500);
@@ -734,6 +737,9 @@ function doughnutTooltip(tooltipItems, data) {
 }
 
 $(function () {
+  // Signal footer.js that this is the index page which takes
+  // care of updating the system information itself
+  index_page = true;
   // These two can always be done, even without authentication
   updateSummaryData();
   updateQueriesOverTime();
