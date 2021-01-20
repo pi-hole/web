@@ -115,9 +115,7 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li id="pihole-diagnosis" class="hidden">
-                        <a href="messages.php">
-                            <i class="fa fa-exclamation-triangle"></i>
-                            <span class="label label-warning" id="pihole-diagnosis-count"></span>
+                        <a href="messages.php"><i class="fa fa-exclamation-triangle"></i><span class="label label-warning" id="pihole-diagnosis-count"></span>
                         </a>
                     </li>
                     <li<?php echo !$hostname ? ' class="hidden"' : "" ?>>
@@ -204,238 +202,134 @@
                 <li class="header text-uppercase">Main navigation</li>
                 <!-- Home Page -->
                 <li class="<?php if($scriptname === "index.php"){ ?> active<?php } ?>">
-                    <a href="index.php">
-                        <i class="fa fa-fw fa-home"></i> <span>Dashboard</span>
-                    </a>
+                    <a href="index.php"><i class="fa fa-fw fa-home"></i>&nbsp;&nbsp;Dashboard</a>
                 </li>
+                <!-- Login -->
+                <li class="menu-login<?php if($scriptname === "login"){ ?> active<?php } ?>">
+                    <a href="login.php"><i class="fa fa-fw fa-user"></i>&nbsp;&nbsp;Login</a>
+                </li>
+                <!-- Logout -->
+                <li class="needs-auth">
+                    <a href="" onclick="utils.doLogout();"><i class="fa fa-fw fa-user-times"></i>&nbsp;&nbsp;Logout</a>
+                </li>
+                <!-- Donate -->
+                <li>
+                    <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank"><i class="fab fa-fw fa-paypal"></i>&nbsp;&nbsp;Donate</a>
+                </li>
+                 <!-- Docs -->
+                 <li>
+                    <a href="https://docs.pi-hole.net/" rel="noopener" target="_blank"><i class="fa fa-fw fa-question-circle"></i>&nbsp;&nbsp;Documentation</a>
+                </li>
+                <li class="header text-uppercase">Analysis</li>
                 <!-- Query Log -->
                 <li class="needs-auth<?php if($scriptname === "queries.php"){ ?> active<?php } ?>">
-                    <a href="queries.php">
-                        <i class="fa fa-fw fa-file-alt"></i> <span>Query Log</span>
-                    </a>
+                    <a href="queries.php"><i class="fa fa-fw fa-file-alt"></i>&nbsp;&nbsp;Query Log</a>
                 </li>
                 <li class="treeview needs-auth<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php"){ ?> active<?php } ?>">
                   <a href="#">
-                    <i class="fa fa-clock"></i> <span>Long-term data</span>
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
+                    <i class="fa fa-fw fa-clock"></i>&nbsp;&nbsp;Long-term data
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                   </a>
                   <ul class="treeview-menu">
                     <li class="<?php if($scriptname === "db_graph.php"){ ?> active<?php } ?>">
-                        <a href="db_graph.php">
-                            <i class="fa fa-fw fa-file-alt"></i> Graphics
-                        </a>
+                        <a href="db_graph.php"><i class="fa fa-fw fa-file-alt"></i>&nbsp;&nbsp;Graphics</a>
                     </li>
                     <li class="<?php if($scriptname === "db_queries.php"){ ?> active<?php } ?>">
-                        <a href="db_queries.php">
-                            <i class="fa fa-fw fa-file-alt"></i> Query Log
-                        </a>
+                        <a href="db_queries.php"><i class="fa fa-fw fa-file-alt"></i>&nbsp;&nbsp;Query Log</a>
                     </li>
                     <li class="<?php if($scriptname === "db_lists.php"){ ?> active<?php } ?>">
-                        <a href="db_lists.php">
-                            <i class="fa fa-fw fa-file-alt"></i> Top Lists
-                        </a>
+                        <a href="db_lists.php"><i class="fa fa-fw fa-file-alt"></i>&nbsp;&nbsp;Top Lists</a>
                     </li>
                   </ul>
                 </li>
-                <!-- Allowlist -->
-                <li class="needs-auth <?php if($scriptname === "allowlist"){ ?> active<?php } ?>">
-                    <a href="groups-domains.php?type=allow">
-                        <i class="fa fa-fw fa-check-circle "></i> <span>Allowlist</span>
-                    </a>
+                <li class="header text-uppercase">Management</li>
+                <li class="needs-auth <?php if($scriptname === "groups.php"){ ?> active<?php } ?>">
+                    <a href="groups.php"><i class="fa fa-fw fa-user-friends"></i>&nbsp;&nbsp;Groups</a>
                 </li>
-                <!-- denylist -->
-                <li class="needs-auth <?php if($scriptname === "denylist"){ ?> active<?php } ?>">
-                    <a href="groups-domains.php?type=deny">
-                        <i class="fa fa-fw fa-ban"></i> <span>Denylist</span>
-                    </a>
+                <li class="needs-auth <?php if($scriptname === "groups-clients.php"){ ?> active<?php } ?>">
+                    <a href="groups-clients.php"><i class="fa fa-fw fa-laptop"></i>&nbsp;&nbsp;Clients</a>
                 </li>
-                <!-- Group Management -->
-                <li class="treeview needs-auth<?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?> active<?php } ?>">
-                  <a href="#">
-                    <i class="fa fa-fw fa-users-cog"></i> <span>Group Management</span>
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                  </a>
-                  <ul class="treeview-menu">
-                    <li class="<?php if($scriptname === "groups.php"){ ?> active<?php } ?>">
-                        <a href="groups.php">
-                            <i class="fa fa-fw fa-user-friends"></i> Groups
-                        </a>
-                    </li>
-                    <li class="<?php if($scriptname === "groups-clients.php"){ ?> active<?php } ?>">
-                        <a href="groups-clients.php">
-                            <i class="fa fa-fw fa-laptop"></i> Clients
-                        </a>
-                    </li>
-                    <li class="<?php if($scriptname === "groups-domains.php"){ ?> active<?php } ?>">
-                        <a href="groups-domains.php">
-                            <i class="fa fa-fw fa-list"></i> Domains
-                        </a>
-                    </li>
-                    <li class="<?php if($scriptname === "groups-adlists.php"){ ?> active<?php } ?>">
-                        <a href="groups-adlists.php">
-                            <i class="fa fa-fw fa-shield-alt"></i> Adlists
-                        </a>
-                    </li>
-                  </ul>
+                <li class="needs-auth <?php if($scriptname === "groups-domains.php"){ ?> active<?php } ?>">
+                    <a href="groups-domains.php"><i class="fa fa-fw fa-list"></i>&nbsp;&nbsp;Domains</a>
                 </li>
+                <li class="needs-auth <?php if($scriptname === "groups-adlists.php"){ ?> active<?php } ?>">
+                    <a href="groups-adlists.php"><i class="fa fa-fw fa-shield-alt"></i>&nbsp;&nbsp;Adlists</a>
+                </li>
+                <li class="header text-uppercase">DNS control</li>
                 <!-- Toggle -->
                 <li id="pihole-disable" class="treeview needs-auth"<?php if ($pistatus == "0") { ?> hidden<?php } ?>>
                   <a href="#">
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                    <i class="fa fa-fw fa-stop"></i> <span>Disable&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    <i class="fa fa-fw fa-stop"></i>&nbsp;&nbsp;<span>Disable<span id="flip-status-disable"></span></span>
                   </a>
                   <ul class="treeview-menu">
-                    <li>
-                        <a href="#" id="pihole-disable-indefinitely">
-                            <i class="fa fa-fw fa-stop"></i> Indefinitely
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" id="pihole-disable-10s">
-                            <i class="fa fa-fw fa-clock"></i> For 10 seconds
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" id="pihole-disable-30s">
-                            <i class="fa fa-fw fa-clock"></i> For 30 seconds
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" id="pihole-disable-5m">
-                            <i class="fa fa-fw fas fa-clock"></i> For 5 minutes
-                        </a>
-                    </li>
-                    <li>
-                      <a href="#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal">
-                            <i class="fa fa-fw fa-clock"></i> <span>Custom time</span>
-                      </a>
-                    </li>
+                    <li><a href="#" id="pihole-disable-indefinitely"><i class="fa fa-fw fa-stop"></i>&nbsp;&nbsp;Indefinitely</a></li>
+                    <li><a href="#" id="pihole-disable-10s"><i class="fa fa-fw fa-clock"></i>&nbsp;&nbsp;For 10 seconds</a></li>
+                    <li><a href="#" id="pihole-disable-30s"><i class="fa fa-fw fa-clock"></i>&nbsp;&nbsp;For 30 seconds</a></li>
+                    <li><a href="#" id="pihole-disable-5m"><i class="fa fa-fw fas fa-clock"></i>&nbsp;&nbsp;For 5 minutes</a></li>
+                    <li><a href="#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal"><i class="fa fa-fw fa-clock"></i>&nbsp;&nbsp;<span>Custom time</span></a></li>
                   </ul>
-                    <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
+                    <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i>&nbsp;&nbsp;<span>Disable</span></a> -->
                 </li>
                 <li id="pihole-enable" class="treeview needs-auth"<?php if ($pistatus == "1") { ?> hidden<?php } ?>>
-                    <a href="#">
-                      <i class="fa fa-fw fa-play"></i>
-                      <span id="enableLabel">Enable&nbsp;&nbsp;&nbsp;
-                        <span id="flip-status-enable"></span>
-                      </span>
-                    </a>
+                    <a href="#"><i class="fa fa-fw fa-play"></i>&nbsp;&nbsp;<span id="enableLabel">Enable&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></span></a>
+                </li>
+                <li class="header text-uppercase">System</li>
+                <!-- Settings -->
+                <li class="needs-auth <?php if($scriptname === "settings.php"){ ?> active<?php } ?>">
+                    <a href="settings.php"><i class="fa fa-fw fa-cogs"></i>&nbsp;&nbsp;Settings</a>
                 </li>
                 <!-- Tools -->
                 <li class="treeview needs-auth<?php if (in_array($scriptname, array("messages.php", "gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php", "network.php"))){ ?> active<?php } ?>">
-                  <a href="#">
-                    <i class="fa fa-fw fa-folder"></i> <span>Tools</span>
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                  </a>
+                  <a href="#"><i class="fa fa-fw fa-folder"></i>&nbsp;&nbsp;<span>Tools</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                   <ul class="treeview-menu">
                     <!-- Pi-hole diagnosis -->
                     <li class="<?php if($scriptname === "messages.php"){ ?> active<?php } ?>">
-                        <a href="messages.php">
-                            <i class="fa fa-fw fa-stethoscope"></i> Pi-hole diagnosis
-                        </a>
+                        <a href="messages.php"><i class="fa fa-fw fa-stethoscope"></i>&nbsp;&nbsp;Pi-hole diagnosis</a>
                     </li>
                     <!-- Run gravity.sh -->
                     <li class="<?php if($scriptname === "gravity.php"){ ?> active<?php } ?>">
-                        <a href="gravity.php">
-                            <i class="fa fa-fw fa-arrow-circle-down"></i> Update Gravity
-                        </a>
+                        <a href="gravity.php"><i class="fa fa-fw fa-arrow-circle-down"></i>&nbsp;&nbsp;Update Gravity</a>
                     </li>
                     <!-- Query Lists -->
                     <li class="<?php if($scriptname === "queryads.php"){ ?> active<?php } ?>">
-                        <a href="queryads.php">
-                            <i class="fa fa-fw fa-search"></i> Query Lists
-                        </a>
+                        <a href="queryads.php"><i class="fa fa-fw fa-search"></i>&nbsp;&nbsp;Query Lists</a>
                     </li>
                     <!-- Audit log -->
                     <li class="<?php if($scriptname === "auditlog.php"){ ?> active<?php } ?>">
-                        <a href="auditlog.php">
-                            <i class="fa fa-fw fa-balance-scale"></i> Audit log
-                        </a>
+                        <a href="auditlog.php"><i class="fa fa-fw fa-balance-scale"></i>&nbsp;&nbsp;Audit log</a>
                     </li>
                     <!-- Tail pihole.log -->
                     <li class="<?php if($scriptname === "taillog.php"){ ?> active<?php } ?>">
-                        <a href="taillog.php">
-                            <i class="fa fa-fw fa-list-ul"></i> Tail pihole.log
-                        </a>
+                        <a href="taillog.php"><i class="fa fa-fw fa-list-ul"></i>&nbsp;&nbsp;Tail pihole.log</a>
                     </li>
                     <!-- Tail pihole-FTL.log -->
                     <li class="<?php if($scriptname === "taillog-FTL.php"){ ?> active<?php } ?>">
-                        <a href="taillog-FTL.php">
-                            <i class="fa fa-fw fa-list-ul"></i> Tail pihole-FTL.log
-                        </a>
+                        <a href="taillog-FTL.php"><i class="fa fa-fw fa-list-ul"></i>&nbsp;&nbsp;Tail pihole-FTL.log</a>
                     </li>
                     <!-- Generate debug log -->
                     <li class="<?php if($scriptname === "debug.php"){ ?> active<?php } ?>">
-                        <a href="debug.php">
-                            <i class="fa fa-fw fa-ambulance"></i> Generate debug log
-                        </a>
+                        <a href="debug.php"><i class="fa fa-fw fa-ambulance"></i>&nbsp;&nbsp;Generate debug log</a>
                     </li>
                     <!-- Network -->
                     <li class="<?php if($scriptname === "network.php"){ ?> active<?php } ?>">
-                        <a href="network.php">
-                            <i class="fa fa-fw fa-network-wired"></i> Network
-                        </a>
+                        <a href="network.php"><i class="fa fa-fw fa-network-wired"></i>&nbsp;&nbsp;Network</a>
                     </li>
                   </ul>
-                </li>
-                <!-- Settings -->
-                <li class="needs-auth <?php if($scriptname === "settings.php"){ ?> active<?php } ?>">
-                    <a href="settings.php">
-                        <i class="fa fa-fw fa-cogs"></i> <span>Settings</span>
-                    </a>
                 </li>
                 <!-- Local DNS Records -->
                 <li class="treeview needs-auth <?php if(in_array($scriptname, array("dns_records.php", "cname_records.php"))){ ?>active<?php } ?>">
                   <a href="#">
-                    <i class="fa fa-fw fa-address-book"></i> <span>Local DNS</span>                    
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>               
+                    <i class="fa fa-fw fa-address-book"></i>&nbsp;&nbsp;Local DNS<span class="pull-right-container">&nbsp;&nbsp;<i class="fa fa-angle-left pull-right"></i></span>
                   </a>
                   <ul class="treeview-menu">
                     <li class="<?php if($scriptname === "dns_records.php"){ ?> active<?php } ?>">
-                        <a href="dns_records.php">
-                            <i class="fa fa-fw fa-address-book"></i> <span>DNS Records</span>
-                        </a>
+                        <a href="dns_records.php">&nbsp;&nbsp;<i class="fa fa-fw fa-address-book"></i> DNS Records</a>
                     </li>
                     <li class="<?php if($scriptname === "cname_records.php"){ ?> active<?php } ?>">
-                        <a href="cname_records.php">
-                            <i class="fa fa-fw fa-address-book"></i> <span>CNAME Records</span>
-                        </a>
+                        <a href="cname_records.php">&nbsp;&nbsp;<i class="fa fa-fw fa-address-book"></i> CNAME Records</a>
                     </li>
                   </ul>
-                </li>
-                <!-- Login -->
-                <li class="menu-login<?php if($scriptname === "login"){ ?> active<?php } ?>">
-                    <a href="login.php">
-                        <i class="fa fa-fw fa-user"></i> <span>Login</span>
-                    </a>
-                </li>
-                <!-- Logout -->
-                <li class="needs-auth">
-                    <a href="" onclick="utils.doLogout();">
-                        <i class="fa fa-fw fa-user-times"></i> <span>Logout</span>
-                    </a>
-                </li>
-                <!-- Donate -->
-                <li>
-                    <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
-                        <i class="fab fa-fw fa-paypal"></i> <span>Donate</span>
-                    </a>
-                </li>
-                 <!-- Docs -->
-                 <li>
-                    <a href="https://docs.pi-hole.net/" rel="noopener" target="_blank">
-                        <i class="fa fa-fw fa-question-circle"></i> <span>Documentation</span>
-                    </a>
                 </li>
             </ul>
         </section>
