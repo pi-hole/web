@@ -68,6 +68,12 @@
         }
       ],
       "capitalized-comments": "off",
+      "no-unused-expressions" : [
+        "error",
+        {
+          "allowShortCircuit": true
+        }
+      ],
       "new-cap": [
         "error",
         {

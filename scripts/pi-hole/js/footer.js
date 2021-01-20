@@ -229,7 +229,6 @@ function fetchSysInfo() {
     // Update every 5 seconds
     setTimeout(fetchSysInfo, 5000);
   });
-
 }
 
 function updateSysInfo(data) {
@@ -278,9 +277,7 @@ function updateSysInfo(data) {
     color = data.sensors[0].value > 50 ? "text-red" : "text-vivid-blue";
     $("#temperature").html('<i class="fa fa-fire ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp);
   } else $("#temperature").html('<i class="fa fa-fire"></i>&nbsp;Temp:&nbsp;N/A');
-  var startdate = moment()
-    .subtract(data.uptime, "seconds")
-    .format("dddd, MMMM Do YYYY, HH:mm:ss");
+  var startdate = moment().subtract(data.uptime, "seconds").format("dddd, MMMM Do YYYY, HH:mm:ss");
   $("#temperature").prop(
     "title",
     "System uptime: " +
@@ -301,8 +298,7 @@ function updateSysInfo(data) {
 
 $(function () {
   checkAuth();
-  if(typeof window.index_page == 'undefined')
-    fetchSysInfo();
+  if (typeof window.indexPage === "undefined") fetchSysInfo();
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - Date.now()) / 1000);

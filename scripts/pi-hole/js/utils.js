@@ -252,7 +252,7 @@ function doLogout() {
   $.ajax({
     url: "/api/auth",
     method: "DELETE"
-  }).complete(function (data) {
+  }).always(function (data) {
     if (data.status === 410) location.reload();
   });
 }
@@ -332,6 +332,15 @@ function addFromQueryLog(domain, list) {
   });
 }
 
+function exists(data) {
+  return data !== null && data !== undefined;
+}
+
+function upper(s) {
+  if (typeof s !== "string") return "";
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -351,6 +360,8 @@ window.utils = (function () {
     validateMAC: validateMAC,
     validateHostname: validateHostname,
     doLogout: doLogout,
-    addFromQueryLog: addFromQueryLog
+    addFromQueryLog: addFromQueryLog,
+    exists: exists,
+    upper: upper
   };
 })();

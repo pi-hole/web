@@ -5,12 +5,12 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, Chart:false */
+/* global utils:false, Chart:false, updateSysInfo: false */
 
 // Define global variables
 var timeLineChart, clientsChart;
 var queryTypePieChart, forwardDestinationPieChart;
-var index_page;
+var indexPage;
 
 var THEME_COLORS = [
   "#f56954",
@@ -739,7 +739,7 @@ function doughnutTooltip(tooltipItems, data) {
 $(function () {
   // Signal footer.js that this is the index page which takes
   // care of updating the system information itself
-  index_page = true;
+  indexPage = true; // eslint-disable-line no-unused-vars
   // These two can always be done, even without authentication
   updateSummaryData();
   updateQueriesOverTime();

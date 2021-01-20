@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, group_actions: false */
 
 var table;
 var groups = [];
@@ -86,6 +86,7 @@ function initTable() {
     },
     rowCallback: function (row, data) {
       $(row).attr("data-id", data.id);
+      $(row).attr("data-type", data.type);
       var tooltip =
         "Added: " +
         utils.datetime(data.date_added, false) +
@@ -314,13 +315,13 @@ function addDomain() {
   var type;
 
   // current tab's inputs
-  var domainRegex, domainEl, commentEl;
+  var displayType, domainEl, commentEl;
   if (tabHref === "#tab_domain") {
-    domainRegex = "domain";
+    displayType = "domain";
     domainEl = $("#new_domain");
     commentEl = $("#new_domain_comment");
   } else if (tabHref === "#tab_regex") {
-    domainRegex = "regex";
+    displayType = "regex";
     domainEl = $("#new_regex");
     commentEl = $("#new_regex_comment");
   }
@@ -328,58 +329,39 @@ function addDomain() {
   var domain = utils.escapeHtml(domainEl.val());
   var comment = utils.escapeHtml(commentEl.val());
 
-  utils.disableAll();
-  utils.showAlert("info", "", "Adding " + domainRegex + "...", domain);
-
   if (domain.length > 0) {
-    // strip "*." if specified by user in wildcard mode
-    if (domainRegex === "domain" && wildcardChecked && domain.startsWith("*.")) {
-      domain = domain.substr(2);
+    if (wildcardChecked) {
+      // strip "*." if specified by user in wildcard mode
+      if (domain.startsWith("*.")) {
+        domain = domain.substr(2);
+      }
+
+      // Convert domain regex when wildcard domain is requested
+      domain = "(\\.|^)" + domain.replace(".", "\\.") + "$";
+      displayType = "regex";
     }
 
     // determine list type
-    if (action === "add2deny") {
-      type = "deny";
-    } else if (action === "add2allow") {
-      type = "allow";
-    }
+    type = action === "add2allow" ? "allow" : "deny";
 
-    if (domainRegex === "domain") {
-      type += "/exact";
-    } else if (action === "add2allow") {
-      type = "/regex";
-    }
+    type += displayType === "domain" ? "/exact" : "/regex";
   } else {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify a " + domainRegex);
+    utils.showAlert("warning", "", "Warning", "Please specify a " + displayType);
     return;
   }
 
-  $.ajax({
-    url: "/api/list/" + type,
-    method: "post",
-    dataType: "json",
-    data: {
-      domain: domain,
-      comment: comment
-    },
-    success: function (response) {
-      utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Success!", response.message);
-        domainEl.val("");
-        commentEl.val("");
-        wildcardEl.prop("checked", false);
-        table.ajax.reload(null, false);
-      } else {
-        utils.showAlert("error", "", "Error while adding new " + domainRegex, response.message);
-      }
-    },
-    error: function (jqXHR, exception) {
-      utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new " + domainRegex, jqXHR.responseText);
-      console.log(exception); // eslint-disable-line no-console
-    }
+  var data = JSON.stringify({
+    comment: comment,
+    enabled: true
+  });
+
+  var url = "/api/list/" + type + "/" + encodeURIComponent(domain);
+  group_actions.addEntry(url, domain, displayType, data, function () {
+    domainEl.val("");
+    commentEl.val("");
+    wildcardEl.prop("checked", false);
+    table.ajax.reload(null, false);
   });
 }
 
@@ -387,99 +369,62 @@ function editDomain() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
+  var oldtype = tr.attr("data-type");
   var domain = utils.escapeHtml(tr.find("#domain_" + id).text());
   var type = tr.find("#type_" + id).val();
-  var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
+  var enabled = tr.find("#status_" + id).is(":checked");
   var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
 
   // Show group assignment field only if in full domain management mode
   // if not included, just use the row data.
-  var rowData = table.row(tr).data();
-  var groups = table.column(5).visible() ? tr.find("#multiselect_" + id).val() : rowData.groups;
+  var groups = table.column(5).visible() ? tr.find("#multiselect_" + id).val() : null;
 
-  var domainRegex;
-  if (type === "0" || type === "1") {
-    domainRegex = "domain";
-  } else if (type === "2" || type === "3") {
-    domainRegex = "regex";
-  }
+  var displayType = type.search("/exact$") !== -1 ? " domain" : " regex";
 
   var done = "edited";
   var notDone = "editing";
   switch (elem) {
     case "status_" + id:
-      if (status === 0) {
+      if (!enabled) {
         done = "disabled";
         notDone = "disabling";
-      } else if (status === 1) {
+      } else {
         done = "enabled";
         notDone = "enabling";
       }
 
       break;
     case "name_" + id:
-      done = "edited name of";
-      notDone = "editing name of";
+      done = "edited name of" + displayType;
+      notDone = "editing name of" + displayType;
       break;
     case "comment_" + id:
-      done = "edited comment of";
-      notDone = "editing comment of";
+      done = "edited comment of" + displayType;
+      notDone = "editing comment of" + displayType;
       break;
     case "type_" + id:
-      done = "edited type of";
-      notDone = "editing type of";
+      done = "edited type";
+      notDone = "editing type";
       break;
     case "multiselect_" + id:
-      done = "edited groups of";
-      notDone = "editing groups of";
+      done = "edited groups of" + displayType;
+      notDone = "editing groups of" + displayType;
       break;
     default:
       alert("bad element or invalid data-id!");
       return;
   }
 
-  utils.disableAll();
-  utils.showAlert("info", "", "Editing " + domainRegex + "...", name);
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: {
-      action: "edit_domain",
-      id: id,
-      type: type,
-      comment: comment,
-      status: status,
-      groups: groups
-    },
-    success: function (response) {
-      utils.enableAll();
-      if (response.success) {
-        utils.showAlert(
-          "success",
-          "fas fa-pencil-alt",
-          "Successfully " + done + " " + domainRegex,
-          domain
-        );
-        table.ajax.reload(null, false);
-      } else
-        utils.showAlert(
-          "error",
-          "",
-          "Error while " + notDone + " " + domainRegex + " with ID " + id,
-          response.message
-        );
-    },
-    error: function (jqXHR, exception) {
-      utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while " + notDone + " " + domainRegex + " with ID " + id,
-        jqXHR.responseText
-      );
-      console.log(exception); // eslint-disable-line no-console
-    }
+  var data = JSON.stringify({
+    oldtype: oldtype,
+    comment: comment,
+    enabled: enabled,
+    groups: groups
+  });
+
+  var url = "/api/list/" + type + "/" + encodeURIComponent(domain);
+  group_actions.editEntry(url, domain, displayType, data, done, notDone, function () {
+    table.ajax.reload(null, false);
   });
 }
 
@@ -489,48 +434,9 @@ function deleteDomain() {
   var domain = utils.escapeHtml(tr.find("#domain_" + id).text());
   var type = tr.find("#type_" + id).val();
 
-  var domainRegex;
-  if (type === "0" || type === "1") {
-    domainRegex = "domain";
-  } else if (type === "2" || type === "3") {
-    domainRegex = "regex";
-  }
-
-  utils.disableAll();
-  utils.showAlert("info", "", "Deleting " + domainRegex + "...", domain);
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: { action: "delete_domain", id: id },
-    success: function (response) {
-      utils.enableAll();
-      if (response.success) {
-        utils.showAlert(
-          "success",
-          "far fa-trash-alt",
-          "Successfully deleted " + domainRegex,
-          domain
-        );
-        table.row(tr).remove().draw(false).ajax.reload(null, false);
-      } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while deleting " + domainRegex + " with ID " + id,
-          response.message
-        );
-      }
-    },
-    error: function (jqXHR, exception) {
-      utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while deleting " + domainRegex + " with ID " + id,
-        jqXHR.responseText
-      );
-      console.log(exception); // eslint-disable-line no-console
-    }
+  var displayType = type.search("/exact$") !== -1 ? " domain" : " regex";
+  var url = "/api/list/" + type + "/" + encodeURIComponent(domain);
+  group_actions.delEntry(url, domain, displayType, function () {
+    table.ajax.reload(null, false);
   });
 }
