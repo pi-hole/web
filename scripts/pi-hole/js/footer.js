@@ -46,7 +46,7 @@ function countDown() {
   var ena = $("#enableLabel");
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
-  var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
+  var seconds = Math.round((target.getTime() - Date.now()) / 1000);
 
   if (seconds > 0) {
     setTimeout(countDown, 1000);
@@ -83,7 +83,7 @@ function piholeChange(action, duration) {
           btnStatus.html("");
           piholeChanged("disabled");
           if (duration > 0) {
-            enaT.html(new Date().getTime() + duration * 1000);
+            enaT.html(Date.now() + duration * 1000);
             setTimeout(countDown, 100);
           }
         }
@@ -225,10 +225,10 @@ function updateSysInfo() {
     url: "/api/ftl/system"
   }).done(function (data) {
     var memory = (100 * data.memory.ram.used) / data.memory.ram.total;
-    var totalGB = 1e-9 * data.memory.ram.total;
+    var totalGB = 1e-6 * data.memory.ram.total;
     var swap =
       data.memory.swap.total > 0
-        ? ((1e-9 * data.memory.swap.used) / data.memory.swap.total).toFixed(1) + " %"
+        ? ((1e-6 * data.memory.swap.used) / data.memory.swap.total).toFixed(1) + " %"
         : "N/A";
     var color;
     color = memory > 75 ? "text-red" : "text-green-light";
@@ -269,9 +269,16 @@ function updateSysInfo() {
       color = data.sensors[0].value > 50 ? "text-red" : "text-vivid-blue";
       $("#temperature").html('<i class="fa fa-fire ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp);
     } else $("#temperature").html('<i class="fa fa-fire"></i>&nbsp;Temp:&nbsp;N/A');
+    var startdate = moment()
+      .subtract(data.uptime, "seconds")
+      .format("dddd, MMMM Do YYYY, HH:mm:ss");
     $("#temperature").prop(
       "title",
-      "System uptime: " + moment.duration(1000 * data.uptime).humanize()
+      "System uptime: " +
+        moment.duration(1000 * data.uptime).humanize() +
+        " (running since " +
+        startdate +
+        ")"
     );
 
     if (data.dns.blocking === true) {
@@ -292,7 +299,7 @@ $(function () {
   updateSysInfo();
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
-  var seconds = Math.round((target.getTime() - new Date().getTime()) / 1000);
+  var seconds = Math.round((target.getTime() - Date.now()) / 1000);
   if (seconds > 0) {
     setTimeout(countDown, 100);
   }

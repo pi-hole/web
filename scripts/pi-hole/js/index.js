@@ -12,8 +12,8 @@ var timeLineChart, clientsChart;
 var queryTypePieChart, forwardDestinationPieChart;
 
 var THEME_COLORS = [
-  "#3c8dbc",
   "#f56954",
+  "#3c8dbc",
   "#00a65a",
   "#00c0ef",
   "#f39c12",
@@ -49,7 +49,7 @@ var customTooltips = function (tooltip) {
     tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
     // append Tooltip next to canvas-containing box
     tooltipEl.ancestor = this._chart.canvas.closest(".box[id]").parentNode;
-    tooltipEl.ancestor.appendChild(tooltipEl);
+    tooltipEl.ancestor.append(tooltipEl);
   }
 
   // Hide if no tooltip
@@ -313,13 +313,14 @@ function updateQueryTypesPie() {
         $(this).toggleClass("strike");
         var index = $(this).index();
         var ci = e.view.queryTypePieChart;
-        var meta = ci.data.datasets[0]._meta;
-        for (var i in meta) {
-          if (Object.prototype.hasOwnProperty.call(meta, i)) {
-            var curr = meta[i].data[index];
-            curr.hidden = !curr.hidden;
-          }
-        }
+        var mobj = ci.data.datasets[0]._meta;
+        var metas = Object.keys(mobj).map(function (e) {
+          return mobj[e];
+        });
+        metas.forEach(function (meta) {
+          var curr = meta.data[index];
+          curr.hidden = !curr.hidden;
+        });
 
         ci.update();
       } else if (e.which === 1) {
@@ -453,19 +454,22 @@ function updateForwardDestinationsPie() {
         $(this).toggleClass("strike");
         var index = $(this).index();
         var ci = e.view.forwardDestinationPieChart;
-        var meta = ci.data.datasets[0]._meta;
-        for (var i in meta) {
-          if (Object.prototype.hasOwnProperty.call(meta, i)) {
-            var curr = meta[i].data[index];
-            curr.hidden = !curr.hidden;
-          }
-        }
+        var mobj = ci.data.datasets[0]._meta;
+        var metas = Object.keys(mobj).map(function (e) {
+          return mobj[e];
+        });
+        metas.forEach(function (meta) {
+          var curr = meta.data[index];
+          curr.hidden = !curr.hidden;
+        });
 
         ci.update();
       } else if (e.which === 1) {
         // which == 1 is left mouse button
         var obj = encodeURIComponent(e.target.textContent);
-        window.open("queries.php?forwarddest=" + obj, "_self");
+        if (obj.length > 0) {
+          window.open("queries.php?forwarddest=" + obj, "_self");
+        }
       }
     });
   }).done(function () {
@@ -699,6 +703,34 @@ function onAuth(okay) {
     $("#client-frequency-blocked").hide();
     $("#forward-destinations-pie").hide();
   }
+}
+
+function doughnutTooltip(tooltipItems, data) {
+  var dataset = data.datasets[tooltipItems.datasetIndex];
+  var label = data.labels[tooltipItems.index];
+  // Compute share of total and of displayed
+  var scale = 0,
+    total = 0;
+  var metas = Object.keys(dataset._meta).map(function (e) {
+    return dataset._meta[e];
+  });
+  metas.forEach(function (meta) {
+    meta.data.forEach(function (val, i) {
+      if (val.hidden) scale += dataset.data[i];
+      total += dataset.data[i];
+    });
+  });
+  if (scale === 0)
+    // All items shown
+    return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
+  return (
+    label +
+    ":<br>- " +
+    dataset.data[tooltipItems.index].toFixed(1) +
+    "% of all queries<br>- " +
+    ((dataset.data[tooltipItems.index] * 100) / (total - scale)).toFixed(1) +
+    "% of shown items"
+  );
 }
 
 $(function () {
@@ -937,9 +969,7 @@ function createAdvancedGraphs() {
             return "Query types";
           },
           label: function (tooltipItems, data) {
-            var dataset = data.datasets[tooltipItems.datasetIndex];
-            var label = data.labels[tooltipItems.index];
-            return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
+            return doughnutTooltip(tooltipItems, data);
           }
         }
       },
@@ -975,9 +1005,7 @@ function createAdvancedGraphs() {
             return "Forward destinations";
           },
           label: function (tooltipItems, data) {
-            var dataset = data.datasets[tooltipItems.datasetIndex];
-            var label = data.labels[tooltipItems.index];
-            return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
+            return doughnutTooltip(tooltipItems, data);
           }
         }
       },

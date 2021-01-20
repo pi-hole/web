@@ -14,7 +14,7 @@ $piholeFTLConf = piholeFTLConfig();
 
 // Handling of PHP internal errors
 $last_error = error_get_last();
-if($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR)
+if(isset($last_error) && ($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR))
 {
 	$error .= "There was a problem applying your settings.<br>Debugging information:<br>PHP error (".htmlspecialchars($last_error["type"])."): ".htmlspecialchars($last_error["message"])." in ".htmlspecialchars($last_error["file"]).":".htmlspecialchars($last_error["line"]);
 }
@@ -618,8 +618,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div><input type="checkbox" name="useIPv6" id="useIPv6" class="DHCPgroup" <?php if ($DHCPIPv6){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="useIPv6"><strong>Enable IPv6 support (SLAAC + RA)</strong></label></div>
-                                                <div><input type="checkbox" name="DHCP_rapid_commit" id="DHCP_rapid_commit" class="DHCPgroup" <?php if ($DHCP_rapid_commit){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="DHCP_rapid_commit"><strong>Enable DHCP rapid commit (fast address assignment)</strong></label></div>
+                                              <div><input type="checkbox" name="DHCP_rapid_commit" id="DHCP_rapid_commit" class="DHCPgroup" <?php if ($DHCP_rapid_commit){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="DHCP_rapid_commit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
+                                              <div><input type="checkbox" name="useIPv6" id="useIPv6" class="DHCPgroup" <?php if ($DHCPIPv6){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="useIPv6"><strong>Enable IPv6 support (SLAAC + RA)</strong></label></div>
                                             </div>
                                         </div>
                                     </div>
@@ -717,6 +717,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                             <td id="IP" data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
                                                             <td id="HOST"><?php echo $lease["host"]; ?></td>
                                                             <td>
+                                                                <button type="button" class="btn btn-danger btn-xs" id="removedynamic">
+                                                                    <span class="fas fas fa-trash-alt"></span>
+                                                                </button>
                                                                 <button type="button" id="button" class="btn btn-warning btn-xs" data-static="alert">
                                                                     <span class="fas fas fa-file-import"></span>
                                                                 </button>
@@ -955,14 +958,23 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <div>
                                                     <input type="checkbox" name="DNSrequiresFQDN" id="DNSrequiresFQDN" title="domain-needed" <?php if ($DNSrequiresFQDN){ ?>checked<?php } ?>>
                                                     <label for="DNSrequiresFQDN"><strong>Never forward non-FQDNs</strong></label>
+                                                    <p>When there is a Pi-hole domain set and this box is
+                                                    ticked, this asks FTL that this domain is purely
+                                                    local and FTL may answer queries from <code>/etc/hosts</code> or DHCP leases
+                                                    but should never forward queries on that domain to any upstream servers.</p>
                                                 </div>
                                                 <div>
                                                     <input type="checkbox" name="DNSbogusPriv" id="DNSbogusPriv" title="bogus-priv" <?php if ($DNSbogusPriv){ ?>checked<?php } ?>>
                                                     <label for="DNSbogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
-                                                    <p>Note that enabling these two options may increase your privacy
-                                                    slightly, but may also prevent you from being able to access
-                                                    local hostnames if the Pi-hole is not used as DHCP server</p>
+                                                    <p>All reverse lookups for private IP ranges (i.e., <code>192.168.0.x/24</code>, etc.)
+                                                    which are not found in <code>/etc/hosts</code> or the DHCP leases are answered
+                                                    with "no such domain" rather than being forwarded upstream. The set
+                                                    of prefixes affected is the list given in <a href="https://tools.ietf.org/html/rfc6303">RFC6303</a>.</p>
+                                                    <p><strong>Important</strong>: Enabling these two options may increase your privacy,
+                                                    but may also prevent you from being able to access
+                                                    local hostnames if the Pi-hole is not used as DHCP server.</p>
                                                 </div>
+                                                <br>
                                                 <div>
                                                     <input type="checkbox" name="DNSSEC" id="DNSSEC" <?php if ($DNSSEC){ ?>checked<?php } ?>>
                                                     <label for="DNSSEC"><strong>Use DNSSEC</strong></label>
@@ -970,8 +982,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     queries, Pi-hole requests the DNSSEC records needed to validate
                                                     the replies. If a domain fails validation or the upstream does not
                                                     support DNSSEC, this setting can cause issues resolving domains.
-                                                    Use Google, Cloudflare, DNS.WATCH, Quad9, or another DNS
-                                                    server which supports DNSSEC when activating DNSSEC. Note that
+                                                    Use an upstream DNS server which supports DNSSEC when activating DNSSEC. Note that
                                                     the size of your log might increase significantly
                                                     when enabling DNSSEC. A DNSSEC resolver test can be found
                                                     <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>

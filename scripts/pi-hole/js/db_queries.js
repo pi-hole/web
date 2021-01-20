@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false */
+/* global moment:false, utils:false */
 
 var start__ = moment().subtract(6, "days");
 var from = moment(start__).utc().valueOf() / 1000;
@@ -73,70 +73,6 @@ $(function () {
 
 var tableApi, statistics;
 
-function add(domain, list) {
-  var token = $("#token").text();
-  var alInfo = $("#alInfo");
-  var alList = $("#alList");
-  var alDomain = $("#alDomain");
-  alDomain.html(domain);
-  var alSuccess = $("#alSuccess");
-  var alFailure = $("#alFailure");
-  var err = $("#err");
-
-  if (list === "white") {
-    alList.html("Whitelist");
-  } else {
-    alList.html("Blacklist");
-  }
-
-  alInfo.show();
-  alSuccess.hide();
-  alFailure.hide();
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    data: {
-      domain: domain,
-      list: list,
-      token: token,
-      action: "add_domain",
-      comment: "Added from Long-Term-Data Query Log"
-    },
-    success: function (response) {
-      if (!response.success) {
-        alFailure.show();
-        err.html(response.message);
-        alFailure.delay(4000).fadeOut(2000, function () {
-          alFailure.hide();
-        });
-      } else {
-        alSuccess.show();
-        alSuccess.delay(1000).fadeOut(2000, function () {
-          alSuccess.hide();
-        });
-      }
-
-      alInfo.delay(1000).fadeOut(2000, function () {
-        alInfo.hide();
-        alList.html("");
-        alDomain.html("");
-      });
-    },
-    error: function () {
-      alFailure.show();
-      err.html("");
-      alFailure.delay(1000).fadeOut(2000, function () {
-        alFailure.hide();
-      });
-      alInfo.delay(1000).fadeOut(2000, function () {
-        alInfo.hide();
-        alList.html("");
-        alDomain.html("");
-      });
-    }
-  });
-}
-
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
@@ -193,6 +129,12 @@ function getQueryTypes() {
 
   if ($("#type_blacklist_CNAME").prop("checked")) {
     queryType.push(11);
+  }
+
+  if ($("#type_retried").prop("checked")) {
+    // Multiple IDs correspond to this status
+    // We request queries with all of them
+    queryType.push([12, 13]);
   }
 
   return queryType.join(",");
@@ -262,7 +204,10 @@ $(function () {
           break;
         case 2:
           color = "green";
-          fieldtext = "OK <br class='hidden-lg'>(forwarded)";
+          fieldtext =
+            "OK <br class='hidden-lg'>(forwarded to " +
+            (data.length > 5 && data[5] !== "N/A" ? data[5] : "") +
+            ")";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
@@ -317,6 +262,16 @@ $(function () {
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
+        case 12:
+          color = "green";
+          fieldtext = "Retried";
+          buttontext = "";
+          break;
+        case 13:
+          color = "green";
+          fieldtext = "Retried <br class='hidden-lg'>(ignored)";
+          buttontext = "";
+          break;
         default:
           color = "black";
           fieldtext = "Unknown";
@@ -369,8 +324,8 @@ $(function () {
         }
       },
       { width: "10%" },
-      { width: "40%" },
-      { width: "20%", type: "ip-address" },
+      { width: "40%", render: $.fn.dataTable.render.text() },
+      { width: "20%", type: "ip-address", render: $.fn.dataTable.render.text() },
       { width: "10%" },
       { width: "5%" }
     ],
@@ -389,10 +344,10 @@ $(function () {
   });
   $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();
-    if (data[4] === 1 || data[4] === 4 || data[5] === 5) {
-      add(data[2], "white");
+    if ([1, 4, 5, 9, 10, 11].indexOf(data[4]) !== -1) {
+      utils.addFromQueryLog(data[2], "white");
     } else {
-      add(data[2], "black");
+      utils.addFromQueryLog(data[2], "black");
     }
   });
 

@@ -69,6 +69,14 @@ $(function () {
       [10, 25, 50, 100, -1],
       [10, 25, 50, 100, "All"]
     ],
+    order: [[0, "asc"]],
+    stateSave: true,
+    stateSaveCallback: function (settings, data) {
+      utils.stateSaveCallback("LocalDNSTable", data);
+    },
+    stateLoadCallback: function () {
+      return utils.stateLoadCallback("LocalDNSTable");
+    },
     drawCallback: function () {
       $(".deleteCustomDNS").on("click", deleteCustomDNS);
     }

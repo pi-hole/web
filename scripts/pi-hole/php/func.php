@@ -135,7 +135,7 @@ function addCustomDNSEntry($ip="", $domain="", $json=true)
     }
     catch (Exception $ex)
     {
-        return error($ex->getMessage(), $json);
+        return returnError($ex->getMessage(), $json);
     }
 }
 
@@ -200,7 +200,7 @@ function deleteAllCustomDNSEntries()
             }
             catch (Exception $ex)
             {
-                return errorJsonResponse($ex->getMessage());
+                return returnError($ex->getMessage());
             }
 
             fclose($handle);
@@ -272,6 +272,9 @@ function addCustomCNAMEEntry($domain="", $target="", $json=true)
 
         if (empty($target))
             return returnError("Target must be set", $json);
+
+        if (!is_valid_domain_name($target))
+            return returnError("Target must be valid", $json);
 
         // Check if each submitted domain is valid
         $domains = array_map('trim', explode(",", $domain));
@@ -358,7 +361,7 @@ function returnSuccess($message = "", $json = true)
     if ($json) {
         return array( "success" => true, "message" => $message );
     } else {
-        echo $msg."<br>";
+        echo $message."<br>";
         return true;
     }
 }
@@ -368,9 +371,19 @@ function returnError($message = "", $json = true)
     if ($json) {
         return array( "success" => false, "message" => $message );
     } else {
-        echo $msg."<br>";
+        echo $message."<br>";
         return false;
     }
+}
+
+function getQueryTypeStr($querytype)
+{
+    $qtypes = ["A (IPv4)", "AAAA (IPv6)", "ANY", "SRV", "SOA", "PTR", "TXT", "NAPTR", "MX", "DS", "RRSIG", "DNSKEY", "NS", "OTHER", "SVCB", "HTTPS"];
+    $qtype = intval($querytype);
+    if($qtype > 0 && $qtype <= count($qtypes))
+        return $qtypes[$qtype-1];
+    else
+        return "TYPE".($qtype - 100);
 }
 
 ?>

@@ -97,7 +97,6 @@ h4 {
 .sidebar-menu > li.active > a {
   color: #fff;
   background-color: #22272a;
-  border-left-color: #272c30;
 }
 .sidebar-menu > li > .treeview-menu {
   margin: 0 1px;
@@ -175,7 +174,6 @@ h4 {
 .box-solid > .box-header,
 .box > .box-header {
   color: #bec5cb;
-  background-color: #272c30;
 }
 .box-solid > .box-header a,
 .box > .box-header a,
@@ -526,4 +524,18 @@ fieldset[disabled] .form-control {
 .navbar-nav > .user-menu > .dropdown-menu > .user-footer {
   background-color: #353c42bb;
   padding: 10px;
+}
+
+.modal-content {
+  background: #272c30;
+}
+.modal-header {
+  border-bottom-color: #353c42;
+}
+.modal-footer {
+  border-top-color: #353c42;
+}
+
+.close {
+  color: #383838;
 }

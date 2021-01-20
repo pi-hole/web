@@ -21,7 +21,8 @@ function quietfilter(ta, data) {
 
 function eventsource() {
   var ta = $("#output");
-  var domain = $("#domain").val().trim();
+  // process with the current visible domain input field
+  var domain = $("input[id^='domain']:visible").val().trim();
   var q = $("#quiet");
 
   if (domain.length === 0) {
@@ -38,7 +39,7 @@ function eventsource() {
   if (typeof EventSource !== "function") {
     $.ajax({
       method: "GET",
-      url: "scripts/pi-hole/php/queryads.php?domain=" + domain.toLowerCase() + exact + "&IE",
+      url: "scripts/pi-hole/php/queryads.php?domain=" + domain.toLowerCase() + "&" + exact + "&IE",
       async: false
     }).done(function (data) {
       ta.show();
@@ -86,41 +87,22 @@ function eventsource() {
   exact = "";
 }
 
-// Handle enter button
-$(document).keypress(function (e) {
-  if (e.which === 13 && $("#domain").is(":focus")) {
+// Handle enter key
+$("#domain_1, #domain_2").keypress(function (e) {
+  if (e.which === 13) {
     // Enter was pressed, and the input has focus
     exact = "";
     eventsource();
   }
 });
-// Handle button
-$("#btnSearch").on("click", function () {
-  exact = "";
-  eventsource();
-});
-// Handle exact button
-$("#btnSearchExact").on("click", function () {
-  exact = "exact";
-  eventsource();
-});
 
-// Wrap form-group's buttons to next line when viewed on a small screen
-$(window).on("resize", function () {
-  if ($(window).width() < 992) {
-    $(".form-group.input-group").removeClass("input-group").addClass("input-group-block");
-    $(".form-group.input-group-block > input").css("margin-bottom", "5px");
-    $(".form-group.input-group-block > .input-group-btn")
-      .removeClass("input-group-btn")
-      .addClass("btn-block text-center");
-  } else {
-    $(".form-group.input-group-block").removeClass("input-group-block").addClass("input-group");
-    $(".form-group.input-group > input").css("margin-bottom", "");
-    $(".form-group.input-group > .btn-block.text-center")
-      .removeClass("btn-block text-center")
-      .addClass("input-group-btn");
+// Handle search buttons
+$("button[id^='btnSearch']").on("click", function () {
+  exact = "";
+
+  if (this.id.match("^btnSearchExact")) {
+    exact = "exact";
   }
-});
-$(function () {
-  $(window).trigger("resize");
+
+  eventsource();
 });

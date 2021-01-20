@@ -323,7 +323,7 @@ else
 		{
 			$tmp = explode(" ",$line);
 			// UTF-8 encode domain
-			$tmp[2] = utf8_encode($tmp[2]);
+			$tmp[2] = utf8_encode(str_replace("~"," ",$tmp[2]));
 			// UTF-8 encode client host name
 			$tmp[3] = utf8_encode($tmp[3]);
 			array_push($allQueries,$tmp);
@@ -333,7 +333,7 @@ else
 		$data = array_merge($data, $result);
 	}
 
-	if(isset($_GET["recentBlocked"]))
+	if(isset($_GET["recentBlocked"]) && $auth)
 	{
 		sendRequestFTL("recentBlocked");
 		die(utf8_encode(getResponseFTL()[0]));
@@ -414,6 +414,13 @@ else
 		}
 		$result = array('over_time' => $over_time);
 		$data = array_merge($data, $result);
+	}
+
+	if (isset($_GET['delete_lease']) && $auth)
+	{
+		sendRequestFTL("delete-lease ".$_GET['delete_lease']);
+		$return = getResponseFTL();
+		$data["delete_lease"] = $return[0];
 	}
 
 	disconnectFTL();
