@@ -12,8 +12,21 @@ if(!isset($api))
 	die("Direct call to api_FTL.php is not allowed!");
 }
 
+$FTL_PORT = 4711;
+// check if /etc/pihole/pihole-FTL.conf exists and FTLPORT is set
+if (file_exists('/etc/pihole/pihole-FTL.conf')) {
+	foreach (explode("\n", file_get_contents('/etc/pihole/pihole-FTL.conf')) as $line) {
+		if (strstr($line, '=')) {
+			$data = explode('=', $line);
+			if ($data[0] == 'FTLPORT') {
+				$FTL_PORT = $data[1];
+			}
+		}
+	}
+}
+
 // $FTL_IP is defined in api.php
-$socket = connectFTL($FTL_IP);
+$socket = connectFTL($FTL_IP, $FTL_PORT);
 
 if(!is_resource($socket))
 {
