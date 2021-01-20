@@ -377,7 +377,14 @@ function editDomain() {
 
   // Show group assignment field only if in full domain management mode
   // if not included, just use the row data.
-  var groups = table.column(5).visible() ? tr.find("#multiselect_" + id).val() : null;
+  var groups = table.column(5).visible()
+    ? tr
+        .find("#multiselect_" + id)
+        .val()
+        .map(function (val) {
+          return parseInt(val, 10);
+        })
+    : null;
 
   var displayType = type.search("/exact$") !== -1 ? " domain" : " regex";
 

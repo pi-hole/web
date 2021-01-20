@@ -5,19 +5,17 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, group_actions: false */
 
 var table;
-var token = $("#token").text();
 
 $(function () {
   $("#btnAdd").on("click", addGroup);
 
   table = $("#groupsTable").DataTable({
     ajax: {
-      url: "scripts/pi-hole/php/groups.php",
-      data: { action: "get_groups", token: token },
-      type: "POST"
+      url: "/api/group",
+      dataSrc: "groups"
     },
     order: [[0, "asc"]],
     columns: [
@@ -40,15 +38,21 @@ $(function () {
         "\nDatabase ID: " +
         data.id;
       $("td:eq(0)", row).html(
-        '<input id="name_' + data.id + '" title="' + tooltip + '" class="form-control">'
+        '<code id="name_' +
+          data.id +
+          '" title="' +
+          tooltip +
+          '" class="breakall">' +
+          utils.escapeHtml(data.name) +
+          "</code>"
       );
-      var nameEl = $("#name_" + data.id, row);
-      nameEl.val(utils.unescapeHtml(data.name));
-      nameEl.on("change", editGroup);
 
-      var disabled = data.enabled === 0;
       $("td:eq(1)", row).html(
-        '<input type="checkbox" id="status_' + data.id + '"' + (disabled ? "" : " checked") + ">"
+        '<input type="checkbox" id="status_' +
+          data.id +
+          '"' +
+          (data.enabled ? " checked" : "") +
+          ">"
       );
       var statusEl = $("#status_" + data.id, row);
       statusEl.bootstrapToggle({
@@ -131,9 +135,6 @@ function addGroup() {
   var name = utils.escapeHtml($("#new_name").val());
   var desc = utils.escapeHtml($("#new_desc").val());
 
-  utils.disableAll();
-  utils.showAlert("info", "", "Adding group...", name);
-
   if (name.length === 0) {
     // enable the ui elements again
     utils.enableAll();
@@ -141,27 +142,16 @@ function addGroup() {
     return;
   }
 
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: { action: "add_group", name: name, desc: desc, token: token },
-    success: function (response) {
-      utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Successfully added group", name);
-        $("#new_name").val("");
-        $("#new_desc").val("");
-        table.ajax.reload();
-      } else {
-        utils.showAlert("error", "", "Error while adding new group", response.message);
-      }
-    },
-    error: function (jqXHR, exception) {
-      utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new group", jqXHR.responseText);
-      console.log(exception); // eslint-disable-line no-console
-    }
+  var data = JSON.stringify({
+    name: name,
+    description: desc,
+    enabled: true
+  });
+  var url = "/api/group/" + encodeURIComponent(name);
+  group_actions.addEntry(url, name, "group", data, function () {
+    $("#new_name").val("");
+    $("#new_desc").val("");
+    table.ajax.reload(null, false);
   });
 }
 
@@ -169,18 +159,18 @@ function editGroup() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var name = utils.escapeHtml(tr.find("#name_" + id).val());
-  var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
+  var name = utils.escapeHtml(tr.find("#name_" + id).text());
+  var enabled = tr.find("#status_" + id).is(":checked");
   var desc = utils.escapeHtml(tr.find("#desc_" + id).val());
 
   var done = "edited";
   var notDone = "editing";
   switch (elem) {
     case "status_" + id:
-      if (status === 0) {
+      if (enabled) {
         done = "disabled";
         notDone = "disabling";
-      } else if (status === 1) {
+      } else {
         done = "enabled";
         notDone = "enabling";
       }
@@ -199,71 +189,25 @@ function editGroup() {
       return;
   }
 
-  utils.disableAll();
-  utils.showAlert("info", "", "Editing group...", name);
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: {
-      action: "edit_group",
-      id: id,
-      name: name,
-      desc: desc,
-      status: status,
-      token: token
-    },
-    success: function (response) {
-      utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " group", name);
-      } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while " + notDone + " group with ID " + id,
-          response.message
-        );
-      }
-    },
-    error: function (jqXHR, exception) {
-      utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while " + notDone + " group with ID " + id,
-        jqXHR.responseText
-      );
-      console.log(exception); // eslint-disable-line no-console
-    }
+  var data = JSON.stringify({
+    name: name,
+    description: desc,
+    enabled: enabled
+  });
+
+  var url = "/api/group/" + encodeURIComponent(name);
+  group_actions.editEntry(url, name, "group", data, done, notDone, function () {
+    table.ajax.reload(null, false);
   });
 }
 
 function deleteGroup() {
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var name = utils.escapeHtml(tr.find("#name_" + id).val());
+  var name = utils.escapeHtml(tr.find("#name_" + id).text());
 
-  utils.disableAll();
-  utils.showAlert("info", "", "Deleting group...", name);
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: { action: "delete_group", id: id, token: token },
-    success: function (response) {
-      utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted group ", name);
-        table.row(tr).remove().draw(false);
-      } else {
-        utils.showAlert("error", "", "Error while deleting group with ID " + id, response.message);
-      }
-    },
-    error: function (jqXHR, exception) {
-      utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting group with ID " + id, jqXHR.responseText);
-      console.log(exception); // eslint-disable-line no-console
-    }
+  var url = "/api/group/" + encodeURIComponent(name);
+  group_actions.delEntry(url, name, "group", function () {
+    table.ajax.reload(null, false);
   });
 }
