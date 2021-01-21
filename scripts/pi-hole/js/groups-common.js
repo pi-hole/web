@@ -39,7 +39,7 @@ function editEntry(url, argument, displayType, data, done, notDone, onSuccess) {
   utils.showAlert("info", "", utils.upper(notDone) + " " + displayType + "...", argument);
   $.ajax({
     url: url,
-    method: "patch",
+    method: "put",
     dataType: "json",
     data: data
   })

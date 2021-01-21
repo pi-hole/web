@@ -76,7 +76,7 @@ function initTable() {
       { data: "type", searchable: false },
       { data: "enabled", searchable: false },
       { data: "comment" },
-      { data: "group_ids[, ]", searchable: false, visible: showtype === "all" },
+      { data: "groups[, ]", searchable: false, visible: showtype === "all" },
       { data: null, width: "80px", orderable: false }
     ],
     drawCallback: function () {
@@ -181,7 +181,7 @@ function initTable() {
         }
 
         // Select assigned groups
-        selectEl.val(data.group_ids);
+        selectEl.val(data.groups);
         // Initialize bootstrap-select
         selectEl
           // fix dropdown if it would stick out right of the viewport

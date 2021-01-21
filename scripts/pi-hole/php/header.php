@@ -220,7 +220,7 @@
                  <li>
                     <a href="https://docs.pi-hole.net/" rel="noopener" target="_blank"><i class="fa fa-fw fa-question-circle"></i>&nbsp;&nbsp;Documentation</a>
                 </li>
-                <li class="header text-uppercase">Analysis</li>
+                <li class="header needs-auth text-uppercase">Analysis</li>
                 <!-- Query Log -->
                 <li class="needs-auth<?php if($scriptname === "queries.php"){ ?> active<?php } ?>">
                     <a href="queries.php"><i class="fa fa-fw fa-file-alt"></i>&nbsp;&nbsp;Query Log</a>
@@ -242,7 +242,7 @@
                     </li>
                   </ul>
                 </li>
-                <li class="header text-uppercase">Management</li>
+                <li class="header needs-auth text-uppercase">Management</li>
                 <li class="needs-auth <?php if($scriptname === "groups.php"){ ?> active<?php } ?>">
                     <a href="groups.php"><i class="fa fa-fw fa-user-friends"></i>&nbsp;&nbsp;Groups</a>
                 </li>
@@ -255,7 +255,7 @@
                 <li class="needs-auth <?php if($scriptname === "groups-adlists.php"){ ?> active<?php } ?>">
                     <a href="groups-adlists.php"><i class="fa fa-fw fa-shield-alt"></i>&nbsp;&nbsp;Blocklists</a>
                 </li>
-                <li class="header text-uppercase">DNS control</li>
+                <li class="header needs-auth text-uppercase">DNS control</li>
                 <!-- Toggle -->
                 <li id="pihole-disable" class="treeview needs-auth"<?php if ($pistatus == "0") { ?> hidden<?php } ?>>
                   <a href="#">
@@ -274,7 +274,7 @@
                 <li id="pihole-enable" class="treeview needs-auth"<?php if ($pistatus == "1") { ?> hidden<?php } ?>>
                     <a href="#"><i class="fa fa-fw fa-play"></i>&nbsp;&nbsp;<span id="enableLabel">Enable&nbsp;&nbsp;&nbsp;<span id="flip-status-enable"></span></span></a>
                 </li>
-                <li class="header text-uppercase">System</li>
+                <li class="header needs-auth text-uppercase">System</li>
                 <!-- Settings -->
                 <li class="needs-auth <?php if($scriptname === "settings.php"){ ?> active<?php } ?>">
                     <a href="settings.php"><i class="fa fa-fw fa-cogs"></i>&nbsp;&nbsp;Settings</a>

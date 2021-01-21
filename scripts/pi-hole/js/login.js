@@ -18,12 +18,10 @@ function getParams() {
   return GETDict;
 }
 
-function computeResponse(challenge) {
+function computeResponse(password, challenge) {
   // Compute password hash twice to mitigate rainbow
   // table vulnerability
-  var pwhash = sha256(sha256($("#loginpw").val()));
-  var response = sha256(challenge + ":" + pwhash);
-  return response;
+  return sha256(challenge + ":" + sha256(sha256(password)));
 }
 
 function redirect() {
@@ -70,7 +68,7 @@ $("#loginform").submit(function (e) {
     method: "GET"
   }).done(function (data) {
     if ("challenge" in data) {
-      var response = computeResponse(data.challenge);
+      var response = computeResponse($("#loginpw").val(), data.challenge);
       doLogin(response);
     } else if (data.session.valid === true)
       // Password may have been remove meanwhile
