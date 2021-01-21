@@ -14,7 +14,7 @@ $(function () {
 
   table = $("#groupsTable").DataTable({
     ajax: {
-      url: "/api/group",
+      url: "/api/groups",
       dataSrc: "groups"
     },
     order: [[0, "asc"]],
@@ -147,7 +147,7 @@ function addGroup() {
     description: desc,
     enabled: true
   });
-  var url = "/api/group/" + encodeURIComponent(name);
+  var url = "/api/groups/" + encodeURIComponent(name);
   group_actions.addEntry(url, name, "group", data, function () {
     $("#new_name").val("");
     $("#new_desc").val("");
@@ -195,7 +195,7 @@ function editGroup() {
     enabled: enabled
   });
 
-  var url = "/api/group/" + encodeURIComponent(name);
+  var url = "/api/groups/" + encodeURIComponent(name);
   group_actions.editEntry(url, name, "group", data, done, notDone, function () {
     table.ajax.reload(null, false);
   });
@@ -206,7 +206,7 @@ function deleteGroup() {
   var id = tr.attr("data-id");
   var name = utils.escapeHtml(tr.find("#name_" + id).text());
 
-  var url = "/api/group/" + encodeURIComponent(name);
+  var url = "/api/groups/" + encodeURIComponent(name);
   group_actions.delEntry(url, name, "group", function () {
     table.ajax.reload(null, false);
   });

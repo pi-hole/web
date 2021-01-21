@@ -253,7 +253,7 @@
                     <a href="groups-domains.php"><i class="fa fa-fw fa-list"></i>&nbsp;&nbsp;Domains</a>
                 </li>
                 <li class="needs-auth <?php if($scriptname === "groups-adlists.php"){ ?> active<?php } ?>">
-                    <a href="groups-adlists.php"><i class="fa fa-fw fa-shield-alt"></i>&nbsp;&nbsp;Adlists</a>
+                    <a href="groups-adlists.php"><i class="fa fa-fw fa-shield-alt"></i>&nbsp;&nbsp;Blocklists</a>
                 </li>
                 <li class="header text-uppercase">DNS control</li>
                 <!-- Toggle -->

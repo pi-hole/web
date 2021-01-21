@@ -14,7 +14,7 @@ var showtype = "all";
 
 function getGroups() {
   $.get(
-    "/api/group",
+    "/api/groups",
     function (data) {
       groups = data.groups;
       initTable();
@@ -61,9 +61,9 @@ $(function () {
 
 function initTable() {
   var url;
-  if (showtype === "all") url = "/api/list";
-  else if (showtype === "allow") url = "/api/list/allow";
-  else if (showtype === "deny") url = "/api/list/deny";
+  if (showtype === "all") url = "/api/domains";
+  else if (showtype === "allow") url = "/api/domains/allow";
+  else if (showtype === "deny") url = "/api/domains/deny";
   table = $("#domainsTable").DataTable({
     ajax: {
       url: url,
@@ -356,7 +356,7 @@ function addDomain() {
     enabled: true
   });
 
-  var url = "/api/list/" + type + "/" + encodeURIComponent(domain);
+  var url = "/api/domains/" + type + "/" + encodeURIComponent(domain);
   group_actions.addEntry(url, domain, displayType, data, function () {
     domainEl.val("");
     commentEl.val("");
@@ -429,7 +429,7 @@ function editDomain() {
     groups: groups
   });
 
-  var url = "/api/list/" + type + "/" + encodeURIComponent(domain);
+  var url = "/api/domains/" + type + "/" + encodeURIComponent(domain);
   group_actions.editEntry(url, domain, displayType, data, done, notDone, function () {
     table.ajax.reload(null, false);
   });
@@ -442,7 +442,7 @@ function deleteDomain() {
   var type = tr.find("#type_" + id).val();
 
   var displayType = type.search("/exact$") !== -1 ? " domain" : " regex";
-  var url = "/api/list/" + type + "/" + encodeURIComponent(domain);
+  var url = "/api/domains/" + type + "/" + encodeURIComponent(domain);
   group_actions.delEntry(url, domain, displayType, function () {
     table.ajax.reload(null, false);
   });
