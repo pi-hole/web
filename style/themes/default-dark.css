@@ -334,11 +334,15 @@ h4 {
 .graphs-ticks {
   color: #b8c7ce;
 }
+/*
+	* Changes the Queries Permitted and Queries Blocked colours to match the colours on the 'Queries answered by' pi chart
+	* @DeanReid
+ */
 .queries-permitted {
-  background-color: #00a65a;
+  background-color: #0B9B00;
 }
 .queries-blocked {
-  background-color: #999;
+  background-color: #F36758;
 }
 .progress {
   background-color: #333;
