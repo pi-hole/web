@@ -12,8 +12,5 @@
         "files": [
             "scripts/vendor/qrcode.php"
         ]
-    },
-    "scripts": {
-        "phpstan": "vendor/phpstan/phpstan/phpstan analyse -c phpstan.neon.dist"
     }
 }
