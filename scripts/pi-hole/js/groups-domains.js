@@ -10,7 +10,6 @@
 var table;
 var groups = [];
 var GETDict = {};
-var showtype = "all";
 
 function reload() {
   table.ajax.reload(null, false);
@@ -30,16 +29,13 @@ function getGroups() {
 }
 
 $(function () {
+  // We use the GETDict for possible domain highlighting
   window.location.search
     .substr(1)
     .split("&")
     .forEach(function (item) {
       GETDict[item.split("=")[0]] = item.split("=")[1];
     });
-
-  if ("type" in GETDict && (GETDict.type === "allow" || GETDict.type === "deny")) {
-    showtype = GETDict.type;
-  }
 
   // sync input fields
   $('a[data-toggle="tab"]').on("shown.bs.tab", function () {
@@ -70,13 +66,9 @@ $(function () {
 });
 
 function initTable() {
-  var url;
-  if (showtype === "all") url = "/api/domains";
-  else if (showtype === "allow") url = "/api/domains/allow";
-  else if (showtype === "deny") url = "/api/domains/deny";
   table = $("#domainsTable").DataTable({
     ajax: {
-      url: url,
+      url: "/api/domains",
       dataSrc: "domains"
     },
     order: [[0, "asc"]],
@@ -86,7 +78,7 @@ function initTable() {
       { data: "type", searchable: false },
       { data: "enabled", searchable: false },
       { data: "comment" },
-      { data: "groups[, ]", searchable: false, visible: showtype === "all" },
+      { data: "groups[, ]", searchable: false },
       { data: null, width: "80px", orderable: false }
     ],
     drawCallback: function () {
@@ -114,27 +106,21 @@ function initTable() {
           "</code>"
       );
 
-      var allowlistOptions = "";
-      if (showtype === "all" || showtype === "allow") {
-        allowlistOptions =
-          '<option value="allow/exact"' +
-          (data.type === "allow/exact" ? " selected" : "") +
-          ">Allow (exact)</option>" +
-          '<option value="allow/regex"' +
-          (data.type === "allow/regex" ? " selected" : "") +
-          ">Allow (regex)</option>";
-      }
+      var allowlistOptions =
+        '<option value="allow/exact"' +
+        (data.type === "allow/exact" ? " selected" : "") +
+        ">Allow (exact)</option>" +
+        '<option value="allow/regex"' +
+        (data.type === "allow/regex" ? " selected" : "") +
+        ">Allow (regex)</option>";
 
-      var denylistOptions = "";
-      if (showtype === "all" || showtype === "deny") {
-        denylistOptions =
-          '<option value="deny/exact"' +
-          (data.type === "deny/exact" ? " selected " : " ") +
-          ">Deny (exact)</option>" +
-          '<option value="deny/regex"' +
-          (data.type === "deny/regex" ? " selected" : "") +
-          ">Deny (regex)</option>";
-      }
+      var denylistOptions =
+        '<option value="deny/exact"' +
+        (data.type === "deny/exact" ? " selected " : " ") +
+        ">Deny (exact)</option>" +
+        '<option value="deny/regex"' +
+        (data.type === "deny/regex" ? " selected" : "") +
+        ">Deny (regex)</option>";
 
       $("td:eq(1)", row).html(
         '<select id="type_' +
@@ -276,8 +262,8 @@ function initTable() {
 
       // Reset visibility of ID column
       data.columns[0].visible = false;
-      // Show group assignment column only on full page
-      data.columns[5].visible = showtype === "all";
+      // Show group assignment column
+      data.columns[5].visible = true;
       // Apply loaded state to table
       return data;
     },
@@ -336,8 +322,8 @@ function addDomain() {
     commentEl = $("#new_regex_comment");
   }
 
-  var domain = utils.escapeHtml(domainEl.val());
-  var comment = utils.escapeHtml(commentEl.val());
+  var domain = utils.escapeHtml(domainEl.val().trim());
+  var comment = utils.escapeHtml(commentEl.val().trim());
 
   if (domain.length > 0) {
     if (wildcardChecked) {
@@ -356,7 +342,6 @@ function addDomain() {
 
     type += displayType === "domain" ? "/exact" : "/regex";
   } else {
-    utils.enableAll();
     utils.showAlert("warning", "", "Warning", "Please specify a " + displayType);
     return;
   }
@@ -384,17 +369,12 @@ function editDomain() {
   var type = tr.find("#type_" + id).val();
   var enabled = tr.find("#status_" + id).is(":checked");
   var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
-
-  // Show group assignment field only if in full domain management mode
-  // if not included, just use the row data.
-  var groups = table.column(5).visible()
-    ? tr
-        .find("#multiselect_" + id)
-        .val()
-        .map(function (val) {
-          return parseInt(val, 10);
-        })
-    : null;
+  var groups = tr
+    .find("#multiselect_" + id)
+    .val()
+    .map(function (val) {
+      return parseInt(val, 10);
+    });
 
   var displayType = type.search("/exact$") !== -1 ? " domain" : " regex";
 

@@ -5,59 +5,22 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, group_actions: false, fetchInfo: false */
 
 var table;
 var groups = [];
-var token = $("#token").text();
 
-function reloadClientSuggestions() {
-  $.post(
-    "scripts/pi-hole/php/groups.php",
-    { action: "get_unconfigured_clients", token: token },
-    function (data) {
-      var sel = $("#select");
-      sel.empty();
-
-      // In order for the placeholder value to appear, we have to have a blank
-      // <option> as the first option in our <select> control. This is because
-      // the browser tries to select the first option by default. If our first
-      // option were non-empty, the browser would display this instead of the
-      // placeholder.
-      sel.append($("<option />"));
-
-      // Add data obtained from API
-      for (var key in data) {
-        if (!Object.prototype.hasOwnProperty.call(data, key)) {
-          continue;
-        }
-
-        var text = key;
-        var keyPlain = key;
-        if (key.startsWith("IP-")) {
-          // Mock MAC address for address-only devices
-          keyPlain = key.substring(3);
-          text = keyPlain;
-        }
-
-        // Append host name if available
-        if (data[key].length > 0) {
-          text += " (" + data[key] + ")";
-        }
-
-        sel.append($("<option />").val(keyPlain).text(text));
-      }
-    },
-    "json"
-  );
+function reload() {
+  table.ajax.reload(null, false);
+  // Give FTL two seconds for reloading
+  setTimeout(fetchInfo, 2000);
 }
 
 function getGroups() {
-  $.post(
-    "scripts/pi-hole/php/groups.php",
-    { action: "get_groups", token: token },
+  $.get(
+    "/api/groups",
     function (data) {
-      groups = data.data;
+      groups = data.groups;
       initTable();
     },
     "json"
@@ -65,37 +28,31 @@ function getGroups() {
 }
 
 $(function () {
-  $("#btnAdd").on("click", addClient);
   $("select").select2({
     tags: true,
     placeholder: "Select client...",
     allowClear: true
   });
 
-  reloadClientSuggestions();
+  $("#btnAdd").on("click", addClient);
+
   utils.setBsSelectDefaults();
   getGroups();
-
-  $("#select").on("change", function () {
-    $("#ip-custom").val("");
-    $("#ip-custom").prop("disabled", $("#select option:selected").val() !== "custom");
-  });
 });
 
 function initTable() {
   table = $("#clientsTable").DataTable({
     ajax: {
-      url: "scripts/pi-hole/php/groups.php",
-      data: { action: "get_clients", token: token },
-      type: "POST"
+      url: "/api/clients",
+      dataSrc: "clients"
     },
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
       { data: "ip", type: "ip-address" },
       { data: "comment" },
-      { data: "groups", searchable: false },
-      { data: "name", width: "80px", orderable: false }
+      { data: "groups[, ]", searchable: false },
+      { data: null, width: "80px", orderable: false }
     ],
     drawCallback: function () {
       $('button[id^="deleteClient_"]').on("click", deleteClient);
@@ -260,14 +217,12 @@ function initTable() {
 }
 
 function addClient() {
-  var ip = $("#select").val().trim();
-  var comment = utils.escapeHtml($("#new_comment").val());
+  var clientEl = $("#new_client");
+  var client = utils.escapeHtml(clientEl.val().trim());
+  var commentEl = $("#new_comment");
+  var comment = utils.escapeHtml(commentEl.val().trim());
 
-  utils.disableAll();
-  utils.showAlert("info", "", "Adding client...", ip);
-
-  if (ip.length === 0) {
-    utils.enableAll();
+  if (client.length === 0) {
     utils.showAlert("warning", "", "Warning", "Please specify a client IP or MAC address");
     return;
   }
@@ -277,11 +232,13 @@ function addClient() {
   // - IPv6 address (with and without CIDR)
   // - MAC address (in the form AA:BB:CC:DD:EE:FF)
   // - host name (arbitrary form, we're only checking against some reserved charaters)
-  if (utils.validateIPv4CIDR(ip) || utils.validateIPv6CIDR(ip) || utils.validateMAC(ip)) {
-    // Convert input to upper case (important for MAC addresses)
-    ip = ip.toUpperCase();
-  } else if (!utils.validateHostname(ip)) {
-    utils.enableAll();
+  if (utils.validateIPv4CIDR(client) || utils.validateIPv6CIDR(client)) {
+    // Convert input to lower case
+    client = client.toLowerCase();
+  } else if (utils.validateMAC(client)) {
+    // Convert input to upper case
+    client = client.toUpperCase();
+  } else if (!utils.validateHostname(client)) {
     utils.showAlert(
       "warning",
       "",
@@ -291,26 +248,15 @@ function addClient() {
     return;
   }
 
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: { action: "add_client", ip: ip, comment: comment, token: token },
-    success: function (response) {
-      utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Successfully added client", ip);
-        reloadClientSuggestions();
-        table.ajax.reload(null, false);
-      } else {
-        utils.showAlert("error", "", "Error while adding new client", response.message);
-      }
-    },
-    error: function (jqXHR, exception) {
-      utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new client", jqXHR.responseText);
-      console.log(exception); // eslint-disable-line no-console
-    }
+  var data = JSON.stringify({
+    comment: comment
+  });
+
+  var url = "/api/clients/" + encodeURIComponent(client);
+  group_actions.addEntry(url, client, "client", data, function () {
+    clientEl.val("");
+    commentEl.val("");
+    reload();
   });
 }
 
@@ -318,10 +264,15 @@ function editClient() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var groups = tr.find("#multiselect_" + id).val();
   var ip = utils.escapeHtml(tr.find("#ip_" + id).text());
   var name = utils.escapeHtml(tr.find("#name_" + id).text());
   var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
+  var groups = tr
+    .find("#multiselect_" + id)
+    .val()
+    .map(function (val) {
+      return parseInt(val, 10);
+    });
 
   var done = "edited";
   var notDone = "editing";
@@ -339,46 +290,19 @@ function editClient() {
       return;
   }
 
+  var displayName = ip;
   if (name.length > 0) {
-    ip += " (" + name + ")";
+    displayName += " (" + name + ")";
   }
 
-  utils.disableAll();
-  utils.showAlert("info", "", "Editing client...", ip);
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: {
-      action: "edit_client",
-      id: id,
-      groups: groups,
-      token: token,
-      comment: comment
-    },
-    success: function (response) {
-      utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " client", ip);
-        table.ajax.reload(null, false);
-      } else {
-        utils.showAlert(
-          "error",
-          "Error while " + notDone + " client with ID " + id,
-          response.message
-        );
-      }
-    },
-    error: function (jqXHR, exception) {
-      utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while " + notDone + " client with ID " + id,
-        jqXHR.responseText
-      );
-      console.log(exception); // eslint-disable-line no-console
-    }
+  var data = JSON.stringify({
+    comment: comment,
+    groups: groups
+  });
+
+  var url = "/api/clients/" + encodeURIComponent(ip);
+  group_actions.editEntry(url, displayName, "client", data, done, notDone, function () {
+    reload();
   });
 }
 
@@ -388,31 +312,13 @@ function deleteClient() {
   var ip = tr.find("#ip_" + id).text();
   var name = utils.escapeHtml(tr.find("#name_" + id).text());
 
+  var displayName = ip;
   if (name.length > 0) {
-    ip += " (" + name + ")";
+    displayName += " (" + name + ")";
   }
 
-  utils.disableAll();
-  utils.showAlert("info", "", "Deleting client...", ip);
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: { action: "delete_client", id: id, token: token },
-    success: function (response) {
-      utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted client ", ip);
-        table.row(tr).remove().draw(false).ajax.reload(null, false);
-        reloadClientSuggestions();
-      } else {
-        utils.showAlert("error", "", "Error while deleting client with ID " + id, response.message);
-      }
-    },
-    error: function (jqXHR, exception) {
-      utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting client with ID " + id, jqXHR.responseText);
-      console.log(exception); // eslint-disable-line no-console
-    }
+  var url = "/api/clients/" + encodeURIComponent(ip);
+  group_actions.delEntry(url, displayName, "group", function () {
+    reload();
   });
 }

@@ -27,10 +27,8 @@
             <div class="box-body">
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label for="select">Known clients:</label>
-                        <select id="select" class="form-control" placeholder="">
-                            <option disabled selected>Loading...</option>
-                        </select>
+                        <label for="new_client">Client:</label>
+                        <input id="new_client" class="form-control active" placeholder="Client to be added" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="new_comment">Comment:</label>
@@ -39,7 +37,6 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <p>You can select an existing client or add a custom one by typing into the field above and confirming your entry with <kbd>&#x23CE;</kbd>.</p>
                         <p>Clients may be described either by their IP addresses (IPv4 and IPv6 are supported),
                            IP subnets (CIDR notation, like <code>192.168.2.0/24</code>),
                            their MAC addresses (like <code>12:34:56:78:9A:BC</code>),

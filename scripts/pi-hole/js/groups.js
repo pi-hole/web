@@ -138,8 +138,10 @@ $(function () {
 });
 
 function addGroup() {
-  var name = utils.escapeHtml($("#new_name").val());
-  var desc = utils.escapeHtml($("#new_desc").val());
+  var nameEl = $("#new_name");
+  var name = utils.escapeHtml(nameEl.val());
+  var descEl = $("#new_desc");
+  var desc = utils.escapeHtml(descEl.val());
 
   if (name.length === 0) {
     // enable the ui elements again
@@ -155,8 +157,8 @@ function addGroup() {
   });
   var url = "/api/groups/" + encodeURIComponent(name);
   group_actions.addEntry(url, name, "group", data, function () {
-    $("#new_name").val("");
-    $("#new_desc").val("");
+    nameEl.val("");
+    descEl.val("");
     reload();
   });
 }
