@@ -6,19 +6,11 @@
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
-    $type = "all";
-    $pagetitle = "Domain";
-    $adjective = "";
-    if (isset($_GET['type']) && ($_GET['type'] === "allow" || $_GET['type'] === "deny")) {
-        $type = $_GET['type'];
-        $pagetitle = ucfirst($type)."list";
-        $adjective = $type."listed";
-    }
 ?>
 
 <!-- Title -->
 <div class="page-header">
-    <h1><?php echo $pagetitle; ?> management</h1>
+    <h1>Domain management</h1>
 </div>
 
 <!-- Domain Input -->
@@ -27,7 +19,7 @@
         <div class="box" id="add-group">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    Add a new <?php echo $adjective; ?> domain or regex filter
+                    Add a new domain or regex filter
                 </h3>
             </div>
             <!-- /.box-header -->
@@ -38,7 +30,7 @@
                             <a href="#tab_domain" aria-controls="tab_domain" aria-expanded="true" role="tab" data-toggle="tab">Domain</a>
                         </li>
                         <li role="presentation">
-                            <a href="#tab_regex" aria-controls="tab_regex" aria-expanded="false" role="tab" data-toggle="tab">RegEx filter</a>
+                            <a href="#tab_regex" aria-controls="tab_regex" aria-expanded="false" role="tab" data-toggle="tab">Regex</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -61,21 +53,21 @@
                                     <div>
                                         <input type="checkbox" id="wildcard_checkbox">
                                         <label for="wildcard_checkbox"><strong>Add domain as wildcard</strong></label>
-                                        <p>Check this box if you want to involve all subdomains. The entered domain will be converted to a RegEx filter while adding.</p>
+                                        <p>Check this box if you want to involve all subdomains. The entered domain will be converted to a Regex while adding.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- RegEx tab -->
+                        <!-- Regex tab -->
                         <div id="tab_regex" class="tab-pane fade">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="new_regex">Regular Expression:</label>
-                                        <input id="new_regex" type="text" class="form-control active" placeholder="RegEx to be added">
+                                        <input id="new_regex" type="text" class="form-control active" placeholder="Regex to be added">
                                     </div>
                                     <div class="form-group">
-                                        <strong>Hint:</strong> Need help to write a proper RegEx rule? Have a look at our online
+                                        <strong>Hint:</strong> Need help to write a proper regex rule? Have a look at our online
                                         <a href="https://docs.pi-hole.net/ftldns/regex/tutorial" rel="noopener" target="_blank">
                                             regular expressions tutorial</a>.
                                     </div>
@@ -112,7 +104,7 @@
         <div class="box" id="domains-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    <?php if(strlen($adjective) > 0) echo ucfirst($adjective); else echo "List"; ?> entries
+                    Domains and regular expressions used by your Pi-hole
                 </h3>
             </div>
             <!-- /.box-header -->

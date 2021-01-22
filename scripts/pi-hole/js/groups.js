@@ -5,9 +5,15 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, group_actions: false */
+/* global utils:false, group_actions: false, fetchInfo: false */
 
 var table;
+
+function reload() {
+  table.ajax.reload(null, false);
+  // Give FTL two seconds for reloading
+  setTimeout(fetchInfo, 2000);
+}
 
 $(function () {
   $("#btnAdd").on("click", addGroup);
@@ -151,7 +157,7 @@ function addGroup() {
   group_actions.addEntry(url, name, "group", data, function () {
     $("#new_name").val("");
     $("#new_desc").val("");
-    table.ajax.reload(null, false);
+    reload();
   });
 }
 
@@ -197,7 +203,7 @@ function editGroup() {
 
   var url = "/api/groups/" + encodeURIComponent(name);
   group_actions.editEntry(url, name, "group", data, done, notDone, function () {
-    table.ajax.reload(null, false);
+    reload();
   });
 }
 
@@ -208,6 +214,6 @@ function deleteGroup() {
 
   var url = "/api/groups/" + encodeURIComponent(name);
   group_actions.delEntry(url, name, "group", function () {
-    table.ajax.reload(null, false);
+    reload();
   });
 }

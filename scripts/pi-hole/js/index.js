@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, Chart:false, updateSysInfo: false */
+/* global utils:false, Chart:false, updateInfo: false */
 
 // Define global variables
 var timeLineChart, clientsChart;
@@ -666,7 +666,7 @@ function updateSummaryData(runOnce) {
       }
     );
 
-    updateSysInfo(data.system);
+    updateInfo(data);
 
     setTimeout(function () {
       $("span.glow").removeClass("glow");

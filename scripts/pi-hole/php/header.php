@@ -244,16 +244,34 @@
                 </li>
                 <li class="header needs-auth text-uppercase">Management</li>
                 <li class="needs-auth <?php if($scriptname === "groups.php"){ ?> active<?php } ?>">
-                    <a href="groups.php"><i class="fa fa-fw fa-user-friends"></i>&nbsp;&nbsp;Groups</a>
+                    <a href="groups.php">
+                        <i class="fa fa-fw fa-user-friends"></i>&nbsp;&nbsp;Groups
+                        <span class="pull-right-container">
+                            <span class="label label-primary pull-right" id="num_groups"></span>
+                        </span>
+                    </a>
                 </li>
                 <li class="needs-auth <?php if($scriptname === "groups-clients.php"){ ?> active<?php } ?>">
-                    <a href="groups-clients.php"><i class="fa fa-fw fa-laptop"></i>&nbsp;&nbsp;Clients</a>
+                    <a href="groups-clients.php"><i class="fa fa-fw fa-laptop"></i>&nbsp;&nbsp;Clients
+                        <span class="pull-right-container">
+                            <span class="label label-primary pull-right" id="num_clients"></span>
+                        </span>
+                    </a>
                 </li>
                 <li class="needs-auth <?php if($scriptname === "groups-domains.php"){ ?> active<?php } ?>">
-                    <a href="groups-domains.php"><i class="fa fa-fw fa-list"></i>&nbsp;&nbsp;Domains</a>
+                    <a href="groups-domains.php"><i class="fa fa-fw fa-list"></i>&nbsp;&nbsp;Domains
+                        <span class="pull-right-container">
+                            <span class="label bg-red pull-right" id="num_denied"></span>
+                            <span class="label bg-green pull-right" id="num_allowed"></span>
+                        </span>
+                    </a>
                 </li>
                 <li class="needs-auth <?php if($scriptname === "groups-adlists.php"){ ?> active<?php } ?>">
-                    <a href="groups-adlists.php"><i class="fa fa-fw fa-shield-alt"></i>&nbsp;&nbsp;Blocklists</a>
+                    <a href="groups-adlists.php"><i class="fa fa-fw fa-shield-alt"></i>&nbsp;&nbsp;Blocklists
+                    <span class="pull-right-container">
+                            <span class="label bg-yellow pull-right" id="num_adlists"></span>
+                        </span>
+                    </a>
                 </li>
                 <li class="header needs-auth text-uppercase">DNS control</li>
                 <!-- Toggle -->

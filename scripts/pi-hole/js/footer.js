@@ -220,23 +220,27 @@ function checkAuth() {
   });
 }
 
-function fetchSysInfo() {
+var infoTimer;
+function fetchInfo() {
   $.ajax({
     url: "/api/ftl/system"
   }).done(function (data) {
-    updateSysInfo(data.system);
+    updateInfo(data);
 
-    // Update every 5 seconds
-    setTimeout(fetchSysInfo, 5000);
+    // Update every 5 seconds, clear timer first to make it safe to run this
+    // function more often
+    clearTimeout(infoTimer);
+    infoTimer = setTimeout(fetchInfo, 5000);
   });
 }
 
-function updateSysInfo(data) {
-  var memory = (100 * data.memory.ram.used) / data.memory.ram.total;
-  var totalGB = 1e-6 * data.memory.ram.total;
+function updateInfo(data) {
+  var system = data.system;
+  var memory = (100 * system.memory.ram.used) / system.memory.ram.total;
+  var totalGB = 1e-6 * system.memory.ram.total;
   var swap =
-    data.memory.swap.total > 0
-      ? ((1e-6 * data.memory.swap.used) / data.memory.swap.total).toFixed(1) + " %"
+    system.memory.swap.total > 0
+      ? ((1e-6 * system.memory.swap.used) / system.memory.swap.total).toFixed(1) + " %"
       : "N/A";
   var color;
   color = memory > 75 ? "text-red" : "text-green-light";
@@ -249,56 +253,65 @@ function updateSysInfo(data) {
   );
   $("#memory").prop("title", "Total memory: " + totalGB.toFixed(1) + " GB, Swap usage: " + swap);
 
-  color = data.cpu.load.percent[0] > 100 ? "text-red" : "text-green-light";
+  color = system.cpu.load.percent[0] > 100 ? "text-red" : "text-green-light";
   $("#cpu").html(
     '<i class="fa fa-circle ' +
       color +
       '"></i>&nbsp;CPU:&nbsp;' +
-      data.cpu.load.percent[0].toFixed(1) +
+      system.cpu.load.percent[0].toFixed(1) +
       "&thinsp;%"
   );
   $("#cpu").prop(
     "title",
     "Load: " +
-      data.cpu.load.raw[0].toFixed(2) +
+      system.cpu.load.raw[0].toFixed(2) +
       " " +
-      data.cpu.load.raw[1].toFixed(2) +
+      system.cpu.load.raw[1].toFixed(2) +
       " " +
-      data.cpu.load.raw[2].toFixed(2) +
+      system.cpu.load.raw[2].toFixed(2) +
       " on " +
-      data.cpu.nprocs +
+      system.cpu.nprocs +
       " cores running " +
-      data.procs +
+      system.procs +
       " processes"
   );
 
-  if (data.sensors.length > 0) {
-    var temp = data.sensors[0].value.toFixed(1) + "&thinsp;&deg;C";
-    color = data.sensors[0].value > 50 ? "text-red" : "text-vivid-blue";
+  if (system.sensors.length > 0) {
+    var temp = system.sensors[0].value.toFixed(1) + "&thinsp;&deg;C";
+    color = system.sensors[0].value > 50 ? "text-red" : "text-vivid-blue";
     $("#temperature").html('<i class="fa fa-fire ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp);
   } else $("#temperature").html('<i class="fa fa-fire"></i>&nbsp;Temp:&nbsp;N/A');
-  var startdate = moment().subtract(data.uptime, "seconds").format("dddd, MMMM Do YYYY, HH:mm:ss");
+  var startdate = moment()
+    .subtract(system.uptime, "seconds")
+    .format("dddd, MMMM Do YYYY, HH:mm:ss");
   $("#temperature").prop(
     "title",
     "System uptime: " +
-      moment.duration(1000 * data.uptime).humanize() +
+      moment.duration(1000 * system.uptime).humanize() +
       " (running since " +
       startdate +
       ")"
   );
 
-  if (data.dns.blocking === true) {
+  if (system.dns.blocking === true) {
     $("#status").html('<i class="fa fa-circle text-green-light"></i>&nbsp;Enabled');
-    $("#status").prop("title", data.dns.gravity_size + " gravity domains loaded");
+    $("#status").prop("title", system.dns.gravity_size + " gravity domains loaded");
   } else {
     $("#status").html('<i class="fa fa-circle text-red"></i>&nbsp;Disabled');
     $("#status").prop("title", "Not blocking");
   }
+
+  var ftl = data.ftl;
+  $("#num_groups").text(parseInt(ftl.groups, 10));
+  $("#num_clients").text(parseInt(ftl.clients, 10));
+  $("#num_adlists").text(parseInt(ftl.adlists, 10));
+  $("#num_allowed").text(parseInt(ftl.domains.allowed, 10));
+  $("#num_denied").text(parseInt(ftl.domains.denied, 10));
 }
 
 $(function () {
   checkAuth();
-  if (typeof window.indexPage === "undefined") fetchSysInfo();
+  if (typeof window.indexPage === "undefined") fetchInfo();
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - Date.now()) / 1000);

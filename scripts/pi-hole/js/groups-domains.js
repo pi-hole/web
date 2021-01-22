@@ -5,12 +5,18 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, group_actions: false */
+/* global utils:false, group_actions: false, fetchInfo: false */
 
 var table;
 var groups = [];
 var GETDict = {};
 var showtype = "all";
+
+function reload() {
+  table.ajax.reload(null, false);
+  // Give FTL two seconds for reloading
+  setTimeout(fetchInfo, 2000);
+}
 
 function getGroups() {
   $.get(
@@ -365,7 +371,7 @@ function addDomain() {
     domainEl.val("");
     commentEl.val("");
     wildcardEl.prop("checked", false);
-    table.ajax.reload(null, false);
+    reload();
   });
 }
 
@@ -435,7 +441,7 @@ function editDomain() {
 
   var url = "/api/domains/" + type + "/" + encodeURIComponent(domain);
   group_actions.editEntry(url, domain, displayType, data, done, notDone, function () {
-    table.ajax.reload(null, false);
+    reload();
   });
 }
 
@@ -448,6 +454,6 @@ function deleteDomain() {
   var displayType = type.search("/exact$") !== -1 ? " domain" : " regex";
   var url = "/api/domains/" + type + "/" + encodeURIComponent(domain);
   group_actions.delEntry(url, domain, displayType, function () {
-    table.ajax.reload(null, false);
+    reload();
   });
 }
