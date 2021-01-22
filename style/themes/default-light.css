@@ -159,6 +159,9 @@
 .queries-permitted {
   background-color: #00a65a;
 }
+.queries-cached {
+  background-color: #7ccbff;
+}
 .queries-blocked {
   background-color: #999;
 }

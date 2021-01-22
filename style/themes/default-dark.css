@@ -337,6 +337,9 @@ h4 {
 .queries-permitted {
   background-color: #00a65a;
 }
+.queries-cached {
+  background-color: #0064a6;
+}
 .queries-blocked {
   background-color: #999;
 }

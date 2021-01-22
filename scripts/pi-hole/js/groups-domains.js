@@ -44,12 +44,16 @@ $(function () {
       $("#new_domain_comment").val(val);
       val = $("#new_regex").val();
       $("#new_domain").val(val);
+      $("#displayType1").text("domain");
+      $("#displayType2").text("domain");
     } else if (tabHref === "#tab_regex") {
       val = $("#new_domain_comment").val();
       $("#new_regex_comment").val(val);
       val = $("#new_domain").val();
       $("#new_regex").val(val);
       $("#wildcard_checkbox").prop("checked", false);
+      $("#displayType1").text("regex");
+      $("#displayType2").text("regex");
     }
   });
 
@@ -109,10 +113,10 @@ function initTable() {
         allowlistOptions =
           '<option value="allow/exact"' +
           (data.type === "allow/exact" ? " selected" : "") +
-          ">Exact allowlist</option>" +
+          ">Allow (exact)</option>" +
           '<option value="allow/regex"' +
           (data.type === "allow/regex" ? " selected" : "") +
-          ">Regex allowlist</option>";
+          ">Allow (regex)</option>";
       }
 
       var denylistOptions = "";
@@ -120,10 +124,10 @@ function initTable() {
         denylistOptions =
           '<option value="deny/exact"' +
           (data.type === "deny/exact" ? " selected " : " ") +
-          ">Exact denylist</option>" +
+          ">Deny (exact)</option>" +
           '<option value="deny/regex"' +
           (data.type === "deny/regex" ? " selected" : "") +
-          ">Regex denylist</option>";
+          ">Deny (regex)</option>";
       }
 
       $("td:eq(1)", row).html(

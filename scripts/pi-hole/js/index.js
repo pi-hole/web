@@ -221,10 +221,11 @@ function updateQueriesOverTime() {
     timeLineChart.data.labels = [];
     timeLineChart.data.datasets = [];
 
-    var labels = ["Blocked DNS Queries", "Permitted DNS Queries"];
+    var labels = ["Blocked DNS Queries", "Cached DNS Queries", "Forwarded DNS Queries"];
     var blockedColor = $(".queries-blocked").css("background-color");
+    var cachedColor = $(".queries-cached").css("background-color");
     var permittedColor = $(".queries-permitted").css("background-color");
-    var colors = [blockedColor, permittedColor];
+    var colors = [blockedColor, cachedColor, permittedColor];
 
     // Collect values and colors, and labels
     for (var i = 0; i < labels.length; i++) {
@@ -245,10 +246,12 @@ function updateQueriesOverTime() {
       var timestamp = new Date(1000 * parseInt(item.timestamp, 10));
 
       timeLineChart.data.labels.push(timestamp);
-      var blocked = item.blocked_queries;
-      var permitted = item.total_queries - blocked;
+      var blocked = item.blocked;
+      var cached = item.cached;
+      var permitted = item.total - (blocked + cached);
       timeLineChart.data.datasets[0].data.push(blocked);
-      timeLineChart.data.datasets[1].data.push(permitted);
+      timeLineChart.data.datasets[1].data.push(cached);
+      timeLineChart.data.datasets[2].data.push(permitted);
     });
 
     $("#queries-over-time .overlay").hide();
@@ -771,26 +774,24 @@ $(function () {
             return "Queries from " + from + " to " + to;
           },
           label: function (tooltipItems, data) {
-            if (tooltipItems.datasetIndex === 0) {
-              var percentage = 0;
-              var permitted = parseInt(data.datasets[1].data[tooltipItems.index], 10);
-              var blocked = parseInt(data.datasets[0].data[tooltipItems.index], 10);
-              var total = permitted + blocked;
-              if (total > 0) {
-                percentage = (100 * blocked) / total;
-              }
-
-              return (
-                data.datasets[tooltipItems.datasetIndex].label +
-                ": " +
-                tooltipItems.yLabel +
-                " (" +
-                percentage.toFixed(1) +
-                "%)"
-              );
+            var percentage = 0;
+            var current = parseInt(tooltipItems.yLabel, 10);
+            var blocked = parseInt(data.datasets[0].data[tooltipItems.index], 10);
+            var cached = parseInt(data.datasets[1].data[tooltipItems.index], 10);
+            var forwarded = parseInt(data.datasets[2].data[tooltipItems.index], 10);
+            var total = blocked + cached + forwarded;
+            if (total > 0) {
+              percentage = (100 * current) / total;
             }
 
-            return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
+            return (
+              data.datasets[tooltipItems.datasetIndex].label +
+              ": " +
+              current +
+              " (" +
+              percentage.toFixed(1) +
+              "%)"
+            );
           }
         }
       },

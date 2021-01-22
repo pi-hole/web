@@ -91,11 +91,11 @@
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
                     <?php if ( $type !== "allow" ) { ?>
                     <div class="btn-group" role="group" aria-label="Third group">
-                        <button type="button" class="btn btn-primary" id="add2deny">Add to Denylist</button>
+                        <button type="button" class="btn btn-primary btn-danger" id="add2deny">Deny <span id="displayType1">domain</span></button>
                     </div>
                     <?php } if ( $type !== "deny" ) { ?>
                     <div class="btn-group" role="group" aria-label="Third group">
-                        <button type="button" class="btn btn-primary" id="add2allow">Add to Allowlist</button>
+                        <button type="button" class="btn btn-primary btn-success" id="add2allow">Allow <span id="displayType2">domain</span></button>
                     </div>
                     <?php } ?>
                 </div>
