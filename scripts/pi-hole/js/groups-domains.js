@@ -335,7 +335,7 @@ function addDomain() {
     domainEl.val("");
     commentEl.val("");
     wildcardEl.prop("checked", false);
-    group_utils.reload();
+    group_utils.reload(table);
   });
 }
 
@@ -400,7 +400,7 @@ function editDomain() {
 
   var url = "/api/domains/" + type + "/" + encodeURIComponent(domain);
   group_utils.editEntry(url, domain, displayType, data, done, notDone, function () {
-    group_utils.reload();
+    group_utils.reload(table);
   });
 }
 
@@ -413,6 +413,6 @@ function deleteDomain() {
   var displayType = type.search("/exact$") !== -1 ? " domain" : " regex";
   var url = "/api/domains/" + type + "/" + encodeURIComponent(domain);
   group_utils.delEntry(url, domain, displayType, function () {
-    group_utils.reload();
+    group_utils.reload(table);
   });
 }

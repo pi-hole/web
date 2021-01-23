@@ -7,6 +7,18 @@
 
 /* global utils:false, fetchInfo: false */
 
+function getError(response) {
+  var error = response.message;
+  if (utils.exists(response.data) && response.data !== null) {
+    if (utils.exists(response.data.sql_msg))
+      error += "<br><strong>" + response.data.sql_msg + "</strong>";
+    if (utils.exists(response.data.regex_msg))
+      error += "<br><strong>" + response.data.regex_msg + "</strong>";
+  }
+
+  return error;
+}
+
 function addEntry(url, argument, displayType, data, onSuccess) {
   utils.disableAll();
   utils.showAlert("info", "", "Adding " + displayType + "...", argument);
@@ -23,11 +35,7 @@ function addEntry(url, argument, displayType, data, onSuccess) {
     })
     .fail(function (jqXHR, textStatus) {
       var response = jqXHR.responseJSON;
-      var error = response.error;
-      error =
-        utils.exists(error.data) && error.data !== null && utils.exists(error.data.sql_msg)
-          ? error.message + "<br><strong>" + error.data.sql_msg + "</strong>"
-          : error.message;
+      var error = getError(response.error);
       utils.showAlert("error", "", "Error while adding new " + displayType, error);
       utils.enableAll();
       console.log([textStatus, jqXHR]); // eslint-disable-line no-console
@@ -50,11 +58,7 @@ function editEntry(url, argument, displayType, data, done, notDone, onSuccess) {
     })
     .fail(function (jqXHR, textStatus) {
       var response = jqXHR.responseJSON;
-      var error = response.error;
-      error =
-        utils.exists(error.data) && error.data !== null && utils.exists(error.data.sql_msg)
-          ? error.message + "<br><strong>" + error.data.sql_msg + "</strong>"
-          : error.message;
+      var error = getError(response.error);
       utils.showAlert("error", "", "Error while " + notDone, error);
       utils.enableAll();
       console.log([textStatus, jqXHR]); // eslint-disable-line no-console
@@ -75,11 +79,7 @@ function delEntry(url, argument, displayType, onSuccess) {
     })
     .fail(function (jqXHR, textStatus) {
       var response = jqXHR.responseJSON;
-      var error = response.error;
-      error =
-        utils.exists(error.data) && error.data !== null && utils.exists(error.data.sql_msg)
-          ? error.message + "<br><strong>" + error.data.sql_msg + "</strong>"
-          : error.message;
+      var error = getError(response.error);
       utils.showAlert("error", "", "Error while deleting" + displayType, error);
       utils.enableAll();
       console.log([textStatus, jqXHR]); // eslint-disable-line no-console
