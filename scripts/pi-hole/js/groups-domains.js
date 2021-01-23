@@ -154,50 +154,51 @@ function initTable(groups) {
             .val(groups[i].id)
             .text(groups[i].name)
         );
-        // Select assigned groups
-        selectEl.val(data.groups);
-        // Initialize bootstrap-select
-        selectEl
-          // fix dropdown if it would stick out right of the viewport
-          .on("show.bs.select", function () {
-            var winWidth = $(window).width();
-            var dropdownEl = $("body > .bootstrap-select.dropdown");
-            if (dropdownEl.length > 0) {
-              dropdownEl.removeClass("align-right");
-              var width = dropdownEl.width();
-              var left = dropdownEl.offset().left;
-              if (left + width > winWidth) {
-                dropdownEl.addClass("align-right");
-              }
-            }
-          })
-          .on("changed.bs.select", function () {
-            // enable Apply button
-            if ($(applyBtn).prop("disabled")) {
-              $(applyBtn)
-                .addClass("btn-success")
-                .prop("disabled", false)
-                .on("click", function () {
-                  editDomain.call(selectEl);
-                });
-            }
-          })
-          .on("hide.bs.select", function () {
-            // Restore values if drop-down menu is closed without clicking the Apply button
-            if (!$(applyBtn).prop("disabled")) {
-              $(this).val(data.groups).selectpicker("refresh");
-              $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
-            }
-          })
-          .selectpicker()
-          .siblings(".dropdown-menu")
-          .find(".bs-actionsbox")
-          .prepend(
-            '<button type="button" id=btn_apply_' +
-              data.id +
-              ' class="btn btn-block btn-sm" disabled>Apply</button>'
-          );
       }
+
+      // Select assigned groups
+      selectEl.val(data.groups);
+      // Initialize bootstrap-select
+      selectEl
+        // fix dropdown if it would stick out right of the viewport
+        .on("show.bs.select", function () {
+          var winWidth = $(window).width();
+          var dropdownEl = $("body > .bootstrap-select.dropdown");
+          if (dropdownEl.length > 0) {
+            dropdownEl.removeClass("align-right");
+            var width = dropdownEl.width();
+            var left = dropdownEl.offset().left;
+            if (left + width > winWidth) {
+              dropdownEl.addClass("align-right");
+            }
+          }
+        })
+        .on("changed.bs.select", function () {
+          // enable Apply button
+          if ($(applyBtn).prop("disabled")) {
+            $(applyBtn)
+              .addClass("btn-success")
+              .prop("disabled", false)
+              .on("click", function () {
+                editDomain.call(selectEl);
+              });
+          }
+        })
+        .on("hide.bs.select", function () {
+          // Restore values if drop-down menu is closed without clicking the Apply button
+          if (!$(applyBtn).prop("disabled")) {
+            $(this).val(data.groups).selectpicker("refresh");
+            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+          }
+        })
+        .selectpicker()
+        .siblings(".dropdown-menu")
+        .find(".bs-actionsbox")
+        .prepend(
+          '<button type="button" id=btn_apply_' +
+            data.id +
+            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+        );
 
       var applyBtn = "#btn_apply_" + data.id;
 
