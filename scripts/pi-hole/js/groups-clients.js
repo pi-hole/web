@@ -5,42 +5,18 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, group_actions: false, fetchInfo: false */
+/* global utils:false, group_utils: false */
 
 var table;
-var groups = [];
-
-function reload() {
-  table.ajax.reload(null, false);
-  // Give FTL two seconds for reloading
-  setTimeout(fetchInfo, 2000);
-}
-
-function getGroups() {
-  $.get(
-    "/api/groups",
-    function (data) {
-      groups = data.groups;
-      initTable();
-    },
-    "json"
-  );
-}
 
 $(function () {
-  $("select").select2({
-    tags: true,
-    placeholder: "Select client...",
-    allowClear: true
-  });
-
   $("#btnAdd").on("click", addClient);
 
   utils.setBsSelectDefaults();
-  getGroups();
+  group_utils.getGroups(initTable);
 });
 
-function initTable() {
+function initTable(groups) {
   table = $("#clientsTable").DataTable({
     ajax: {
       url: "/api/clients",
@@ -253,10 +229,10 @@ function addClient() {
   });
 
   var url = "/api/clients/" + encodeURIComponent(client);
-  group_actions.addEntry(url, client, "client", data, function () {
+  group_utils.addEntry(url, client, "client", data, function () {
     clientEl.val("");
     commentEl.val("");
-    reload();
+    group_utils.reload(table);
   });
 }
 
@@ -301,8 +277,8 @@ function editClient() {
   });
 
   var url = "/api/clients/" + encodeURIComponent(ip);
-  group_actions.editEntry(url, displayName, "client", data, done, notDone, function () {
-    reload();
+  group_utils.editEntry(url, displayName, "client", data, done, notDone, function () {
+    group_utils.reload(table);
   });
 }
 
@@ -318,7 +294,7 @@ function deleteClient() {
   }
 
   var url = "/api/clients/" + encodeURIComponent(ip);
-  group_actions.delEntry(url, displayName, "group", function () {
-    reload();
+  group_utils.delEntry(url, displayName, "client", function () {
+    group_utils.reload(table);
   });
 }

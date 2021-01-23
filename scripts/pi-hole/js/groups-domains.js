@@ -5,28 +5,10 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, group_actions: false, fetchInfo: false */
+/* global utils:false, group_utils: false */
 
 var table;
-var groups = [];
 var GETDict = {};
-
-function reload() {
-  table.ajax.reload(null, false);
-  // Give FTL two seconds for reloading
-  setTimeout(fetchInfo, 2000);
-}
-
-function getGroups() {
-  $.get(
-    "/api/groups",
-    function (data) {
-      groups = data.groups;
-      initTable();
-    },
-    "json"
-  );
-}
 
 $(function () {
   // We use the GETDict for possible domain highlighting
@@ -62,10 +44,10 @@ $(function () {
   $("#add2deny, #add2allow").on("click", addDomain);
 
   utils.setBsSelectDefaults();
-  getGroups();
+  group_utils.getGroups(initTable);
 });
 
-function initTable() {
+function initTable(groups) {
   table = $("#domainsTable").DataTable({
     ajax: {
       url: "/api/domains",
@@ -155,27 +137,23 @@ function initTable() {
       commentEl.val(utils.unescapeHtml(data.comment));
       commentEl.on("change", editDomain);
 
-      // Show group assignment field only if in full domain management mode
-      if (table.column(5).visible()) {
-        $("td:eq(4)", row).empty();
-        $("td:eq(4)", row).append(
-          '<select class="selectpicker" id="multiselect_' + data.id + '" multiple></select>'
-        );
-        var selectEl = $("#multiselect_" + data.id, row);
-        // Add all known groups
-        for (var i = 0; i < groups.length; i++) {
-          var dataSub = "";
-          if (!groups[i].enabled) {
-            dataSub = 'data-subtext="(disabled)"';
-          }
-
-          selectEl.append(
-            $("<option " + dataSub + "/>")
-              .val(groups[i].id)
-              .text(groups[i].name)
-          );
+      $("td:eq(4)", row).empty();
+      $("td:eq(4)", row).append(
+        '<select class="selectpicker" id="multiselect_' + data.id + '" multiple></select>'
+      );
+      var selectEl = $("#multiselect_" + data.id, row);
+      // Add all known groups
+      for (var i = 0; i < groups.length; i++) {
+        var dataSub = "";
+        if (!groups[i].enabled) {
+          dataSub = 'data-subtext="(disabled)"';
         }
 
+        selectEl.append(
+          $("<option " + dataSub + "/>")
+            .val(groups[i].id)
+            .text(groups[i].name)
+        );
         // Select assigned groups
         selectEl.val(data.groups);
         // Initialize bootstrap-select
@@ -352,11 +330,11 @@ function addDomain() {
   });
 
   var url = "/api/domains/" + type + "/" + encodeURIComponent(domain);
-  group_actions.addEntry(url, domain, displayType, data, function () {
+  group_utils.addEntry(url, domain, displayType, data, function () {
     domainEl.val("");
     commentEl.val("");
     wildcardEl.prop("checked", false);
-    reload();
+    group_utils.reload();
   });
 }
 
@@ -420,8 +398,8 @@ function editDomain() {
   });
 
   var url = "/api/domains/" + type + "/" + encodeURIComponent(domain);
-  group_actions.editEntry(url, domain, displayType, data, done, notDone, function () {
-    reload();
+  group_utils.editEntry(url, domain, displayType, data, done, notDone, function () {
+    group_utils.reload();
   });
 }
 
@@ -433,7 +411,7 @@ function deleteDomain() {
 
   var displayType = type.search("/exact$") !== -1 ? " domain" : " regex";
   var url = "/api/domains/" + type + "/" + encodeURIComponent(domain);
-  group_actions.delEntry(url, domain, displayType, function () {
-    reload();
+  group_utils.delEntry(url, domain, displayType, function () {
+    group_utils.reload();
   });
 }

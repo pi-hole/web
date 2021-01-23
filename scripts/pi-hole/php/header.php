@@ -62,7 +62,7 @@
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/vendor/select2.min.css?v=<?=$cacheVer?>">
 
-<?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?>
+<?php if (in_array($scriptname, array("groups.php", "groups-lists.php", "groups-clients.php", "groups-domains.php"))){ ?>
     <link rel="stylesheet" href="style/vendor/animate.min.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css?v=<?=$cacheVer?>">
@@ -266,10 +266,10 @@
                         </span>
                     </a>
                 </li>
-                <li class="needs-auth <?php if($scriptname === "groups-adlists.php"){ ?> active<?php } ?>">
-                    <a href="groups-adlists.php"><i class="fa fa-fw fa-shield-alt"></i>&nbsp;&nbsp;Blocklists
+                <li class="needs-auth <?php if($scriptname === "groups-lists.php"){ ?> active<?php } ?>">
+                    <a href="groups-lists.php"><i class="fa fa-fw fa-shield-alt"></i>&nbsp;&nbsp;Lists
                     <span class="pull-right-container">
-                            <span class="label bg-yellow pull-right" id="num_adlists"></span>
+                            <span class="label bg-yellow pull-right" id="num_lists"></span>
                         </span>
                     </a>
                 </li>

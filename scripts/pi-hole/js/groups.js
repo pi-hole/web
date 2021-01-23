@@ -5,15 +5,9 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, group_actions: false, fetchInfo: false */
+/* global utils:false, group_utils: false */
 
 var table;
-
-function reload() {
-  table.ajax.reload(null, false);
-  // Give FTL two seconds for reloading
-  setTimeout(fetchInfo, 2000);
-}
 
 $(function () {
   $("#btnAdd").on("click", addGroup);
@@ -156,10 +150,10 @@ function addGroup() {
     enabled: true
   });
   var url = "/api/groups/" + encodeURIComponent(name);
-  group_actions.addEntry(url, name, "group", data, function () {
+  group_utils.addEntry(url, name, "group", data, function () {
     nameEl.val("");
     descEl.val("");
-    reload();
+    group_utils.reload(table);
   });
 }
 
@@ -204,8 +198,8 @@ function editGroup() {
   });
 
   var url = "/api/groups/" + encodeURIComponent(name);
-  group_actions.editEntry(url, name, "group", data, done, notDone, function () {
-    reload();
+  group_utils.editEntry(url, name, "group", data, done, notDone, function () {
+    group_utils.reload(table);
   });
 }
 
@@ -215,7 +209,7 @@ function deleteGroup() {
   var name = utils.escapeHtml(tr.find("#name_" + id).text());
 
   var url = "/api/groups/" + encodeURIComponent(name);
-  group_actions.delEntry(url, name, "group", function () {
-    reload();
+  group_utils.delEntry(url, name, "group", function () {
+    group_utils.reload(table);
   });
 }

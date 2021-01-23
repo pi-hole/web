@@ -235,6 +235,8 @@ function fetchInfo() {
 }
 
 function updateInfo(data) {
+  var intl = new Intl.NumberFormat();
+  var ftl = data.ftl;
   var system = data.system;
   var memory = (100 * system.memory.ram.used) / system.memory.ram.total;
   var totalGB = 1e-6 * system.memory.ram.total;
@@ -295,16 +297,15 @@ function updateInfo(data) {
 
   if (system.dns.blocking === true) {
     $("#status").html('<i class="fa fa-circle text-green-light"></i>&nbsp;Enabled');
-    $("#status").prop("title", system.dns.gravity_size + " gravity domains loaded");
+    $("#status").prop("title", intl.format(ftl.gravity) + " gravity domains loaded");
   } else {
     $("#status").html('<i class="fa fa-circle text-red"></i>&nbsp;Disabled');
     $("#status").prop("title", "Not blocking");
   }
 
-  var ftl = data.ftl;
   $("#num_groups").text(parseInt(ftl.groups, 10));
   $("#num_clients").text(parseInt(ftl.clients, 10));
-  $("#num_adlists").text(parseInt(ftl.adlists, 10));
+  $("#num_lists").text(parseInt(ftl.lists, 10));
   $("#num_allowed").text(parseInt(ftl.domains.allowed, 10));
   $("#num_denied").text(parseInt(ftl.domains.denied, 10));
 }

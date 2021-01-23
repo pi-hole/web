@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, fetchInfo: false */
 
 function addEntry(url, argument, displayType, data, onSuccess) {
   utils.disableAll();
@@ -86,10 +86,28 @@ function delEntry(url, argument, displayType, onSuccess) {
     });
 }
 
-window.group_actions = (function () {
+function reload(table) {
+  table.ajax.reload(null, false);
+  // Give FTL two seconds for reloading
+  setTimeout(fetchInfo, 2000);
+}
+
+function getGroups(callback) {
+  $.get(
+    "/api/groups",
+    function (data) {
+      callback(data.groups);
+    },
+    "json"
+  );
+}
+
+window.group_utils = (function () {
   return {
     addEntry: addEntry,
     editEntry: editEntry,
-    delEntry: delEntry
+    delEntry: delEntry,
+    reload: reload,
+    getGroups: getGroups
   };
 })();

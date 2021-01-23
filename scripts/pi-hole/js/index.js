@@ -645,8 +645,9 @@ function updateSummaryData(runOnce) {
     var intl = new Intl.NumberFormat();
     ["blocked_queries", "dns_queries", "percent_blocked", "total_clients", "gravity_size"].forEach(
       function (arrayItem) {
-        var textData = data[arrayItem];
         var $todayElement = $("span#" + arrayItem);
+        var textData = "";
+        textData = arrayItem === "gravity_size" ? data.ftl.gravity : data[arrayItem];
         if (arrayItem === "dns_queries") {
           var sum = 0;
           Object.entries(data.total_queries).forEach(function (arrayItem) {

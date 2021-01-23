@@ -10,7 +10,7 @@
 
 <!-- Title -->
 <div class="page-header">
-    <h1>Adlist group management</h1>
+    <h1>Lists management</h1>
 </div>
 
 <!-- Domain Input -->
@@ -20,7 +20,7 @@
             <!-- /.box-header -->
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    Add a new adlist
+                    Add a new list
                 </h3>
             </div>
             <!-- /.box-header -->
@@ -32,15 +32,16 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for="new_comment">Comment:</label>
-                        <input id="new_comment" type="text" class="form-control" placeholder="Adlist description (optional)">
+                        <input id="new_comment" type="text" class="form-control" placeholder="List description (optional)">
                     </div>
                 </div>
             </div>
             <div class="box-footer clearfix">
                 <strong>Hints:</strong>
                 <ol>
-                    <li>Please run <code>pihole -g</code> or update your gravity list <a href="gravity.php">online</a> after modifying your adlists.</li>
-                    <li>Multiple adlists can be added by separating each <i>unique</i> URL with a space</li>
+                    <li>Please run <code>pihole -g</code> or update <a href="gravity.php">online</a> after modifying your lists.</li>
+                    <li>Multiple lists can be added by separating each <i>unique</i> URL with a space. Multi-line pasting into the field is supported for mass-insertion.</li>
+                    <li>Deleting a list here automatically removes the associated domains.</li>
                 </ol>
                 <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
             </div>
@@ -49,15 +50,15 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="adlists-list">
+        <div class="box" id="lists-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of configured adlists
+                    Lists used by your Pi-hole
                 </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="adlistsTable" class="table table-striped table-bordered" width="100%">
+                <table id="listsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -81,7 +82,7 @@
 <script src="scripts/vendor/bootstrap-toggle.min.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/groups-common.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/groups-adlists.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/groups-lists.js?v=<?=$cacheVer?>"></script>
 
 <?php
 require "scripts/pi-hole/php/footer.php";
