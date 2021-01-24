@@ -145,11 +145,11 @@ function addGroup() {
   }
 
   var data = JSON.stringify({
-    name: name,
+    item: name,
     description: desc,
     enabled: true
   });
-  var url = "/api/groups/" + encodeURIComponent(name);
+  var url = "/api/groups/";
   group_utils.addEntry(url, name, "group", data, function () {
     nameEl.val("");
     descEl.val("");

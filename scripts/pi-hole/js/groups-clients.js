@@ -225,10 +225,11 @@ function addClient() {
   }
 
   var data = JSON.stringify({
+    item: client,
     comment: comment
   });
 
-  var url = "/api/clients/" + encodeURIComponent(client);
+  var url = "/api/clients/";
   group_utils.addEntry(url, client, "client", data, function () {
     clientEl.val("");
     commentEl.val("");

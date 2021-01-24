@@ -215,11 +215,12 @@ function addList() {
   }
 
   var data = JSON.stringify({
+    item: address,
     comment: comment,
     enabled: true
   });
 
-  var url = "/api/lists/" + encodeURIComponent(address);
+  var url = "/api/lists/";
   group_utils.addEntry(url, address, "list", data, function () {
     addressEl.val("");
     commentEl.val("");

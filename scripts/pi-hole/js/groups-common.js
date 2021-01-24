@@ -19,9 +19,9 @@ function getError(response) {
   return error;
 }
 
-function addEntry(url, argument, displayType, data, onSuccess) {
+function addEntry(url, item, displayType, data, onSuccess) {
   utils.disableAll();
-  utils.showAlert("info", "", "Adding " + displayType + "...", argument);
+  utils.showAlert("info", "", "Adding " + displayType + "...", item);
   $.ajax({
     url: url,
     method: "post",
@@ -30,7 +30,7 @@ function addEntry(url, argument, displayType, data, onSuccess) {
   })
     .done(function () {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-plus", "Success!", "");
+      utils.showAlert("success", "fas fa-plus", "Successfully added new " + displayType, item);
       typeof onSuccess === "function" && onSuccess();
     })
     .fail(function (jqXHR, textStatus) {
@@ -42,9 +42,9 @@ function addEntry(url, argument, displayType, data, onSuccess) {
     });
 }
 
-function editEntry(url, argument, displayType, data, done, notDone, onSuccess) {
+function editEntry(url, item, displayType, data, done, notDone, onSuccess) {
   utils.disableAll();
-  utils.showAlert("info", "", utils.upper(notDone) + " " + displayType + "...", argument);
+  utils.showAlert("info", "", utils.upper(notDone) + " " + displayType + "...", item);
   $.ajax({
     url: url,
     method: "put",
@@ -53,7 +53,7 @@ function editEntry(url, argument, displayType, data, done, notDone, onSuccess) {
   })
     .done(function () {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-plus", "Successfully " + done, argument);
+      utils.showAlert("success", "fas fa-plus", "Successfully " + done, item);
       typeof onSuccess === "function" && onSuccess();
     })
     .fail(function (jqXHR, textStatus) {
@@ -65,16 +65,16 @@ function editEntry(url, argument, displayType, data, done, notDone, onSuccess) {
     });
 }
 
-function delEntry(url, argument, displayType, onSuccess) {
+function delEntry(url, item, displayType, onSuccess) {
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting " + displayType + "...", argument);
+  utils.showAlert("info", "", "Deleting " + displayType + "...", item);
   $.ajax({
     url: url,
     method: "delete"
   })
     .done(function () {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-plus", "Successfully deleted " + displayType, argument);
+      utils.showAlert("success", "fas fa-plus", "Successfully deleted " + displayType, item);
       typeof onSuccess === "function" && onSuccess();
     })
     .fail(function (jqXHR, textStatus) {

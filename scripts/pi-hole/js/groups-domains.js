@@ -326,11 +326,12 @@ function addDomain() {
   }
 
   var data = JSON.stringify({
+    item: domain,
     comment: comment,
     enabled: true
   });
 
-  var url = "/api/domains/" + type + "/" + encodeURIComponent(domain);
+  var url = "/api/domains/" + type;
   group_utils.addEntry(url, domain, displayType, data, function () {
     domainEl.val("");
     commentEl.val("");
