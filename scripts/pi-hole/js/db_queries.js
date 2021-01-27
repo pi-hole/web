@@ -98,7 +98,7 @@ function getQueryTypes() {
   }
 
   if ($("#type_forwarded").prop("checked")) {
-    queryType.push(2);
+    queryType.push([2, 14]);
   }
 
   if ($("#type_cached").prop("checked")) {
@@ -271,6 +271,12 @@ $(function () {
           color = "green";
           fieldtext = "Retried <br class='hidden-lg'>(ignored)";
           buttontext = "";
+          break;
+        case 14:
+          color = "green";
+          fieldtext = "OK <br class='hidden-lg'>(already forwarded)";
+          buttontext =
+            '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         default:
           color = "black";

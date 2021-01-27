@@ -195,6 +195,12 @@ $(function () {
           fieldtext = "Retried <br class='hidden-lg'>(ignored)";
           buttontext = "";
           break;
+        case "14":
+          colorClass = "text-green";
+          fieldtext = "OK <br class='hidden-lg'>(already forwarded)" + dnssecStatus;
+          buttontext =
+            '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
+          break;
         default:
           colorClass = false;
           fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
