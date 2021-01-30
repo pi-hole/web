@@ -63,7 +63,7 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Status</th>
-                        <th>Description</th>
+                        <th>Comment</th>
                         <th>Action</th>
                     </tr>
                     </thead>

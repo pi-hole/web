@@ -22,7 +22,7 @@ $(function () {
       { data: "id", visible: false },
       { data: "name" },
       { data: "enabled", searchable: false },
-      { data: "description" },
+      { data: "comment" },
       { data: null, width: "60px", orderable: false }
     ],
     drawCallback: function () {
@@ -65,7 +65,7 @@ $(function () {
       statusEl.on("change", editGroup);
 
       $("td:eq(2)", row).html('<input id="desc_' + data.id + '" class="form-control">');
-      var desc = data.description !== null ? data.description : "";
+      var desc = data.comment !== null ? data.comment : "";
       var descEl = $("#desc_" + data.id, row);
       descEl.val(utils.unescapeHtml(desc));
       descEl.on("change", editGroup);
@@ -146,7 +146,7 @@ function addGroup() {
 
   var data = JSON.stringify({
     item: name,
-    description: desc,
+    comment: desc,
     enabled: true
   });
   var url = "/api/groups/";
@@ -183,8 +183,8 @@ function editGroup() {
       notDone = "editing name of";
       break;
     case "desc_" + id:
-      done = "edited description of";
-      notDone = "editing description of";
+      done = "edited comment of";
+      notDone = "editing comment of";
       break;
     default:
       alert("bad element or invalid data-id!");
@@ -193,7 +193,7 @@ function editGroup() {
 
   var data = JSON.stringify({
     name: name,
-    description: desc,
+    comment: desc,
     enabled: enabled
   });
 

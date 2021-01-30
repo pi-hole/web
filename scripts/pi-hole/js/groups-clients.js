@@ -25,7 +25,7 @@ function initTable(groups) {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: "ip", type: "ip-address" },
+      { data: "client" },
       { data: "comment" },
       { data: "groups[, ]", searchable: false },
       { data: null, width: "80px", orderable: false }
@@ -50,7 +50,7 @@ function initTable(groups) {
         '" title="' +
         tooltip +
         '" class="breakall">' +
-        data.ip +
+        data.client +
         "</code>";
       if (data.name !== null && data.name.length > 0)
         ipName +=

@@ -223,7 +223,7 @@ function checkAuth() {
 var infoTimer;
 function fetchInfo() {
   $.ajax({
-    url: "/api/ftl/system"
+    url: "/api/ftl/sysinfo"
   }).done(function (data) {
     updateInfo(data);
 
@@ -297,17 +297,20 @@ function updateInfo(data) {
 
   if (system.dns.blocking === true) {
     $("#status").html('<i class="fa fa-circle text-green-light"></i>&nbsp;Enabled');
-    $("#status").prop("title", intl.format(ftl.gravity) + " gravity domains loaded");
+    $("#status").prop(
+      "title",
+      intl.format(parseInt(ftl.database.gravity, 10)) + " gravity domains loaded"
+    );
   } else {
     $("#status").html('<i class="fa fa-circle text-red"></i>&nbsp;Disabled');
     $("#status").prop("title", "Not blocking");
   }
 
-  $("#num_groups").text(parseInt(ftl.groups, 10));
-  $("#num_clients").text(parseInt(ftl.clients, 10));
-  $("#num_lists").text(parseInt(ftl.lists, 10));
-  $("#num_allowed").text(parseInt(ftl.domains.allowed, 10));
-  $("#num_denied").text(parseInt(ftl.domains.denied, 10));
+  $("#num_groups").text(parseInt(ftl.database.groups, 10));
+  $("#num_clients").text(parseInt(ftl.database.clients, 10));
+  $("#num_lists").text(parseInt(ftl.database.lists, 10));
+  $("#num_allowed").text(parseInt(ftl.database.domains.allowed, 10));
+  $("#num_denied").text(parseInt(ftl.database.domains.denied, 10));
 }
 
 $(function () {

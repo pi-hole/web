@@ -216,7 +216,7 @@ var customTooltips = function (tooltip) {
 
 var failures = 0;
 function updateQueriesOverTime() {
-  $.getJSON("/api/stats/overTime/history", function (data) {
+  $.getJSON("/api/history", function (data) {
     // Remove possibly already existing data
     timeLineChart.data.labels = [];
     timeLineChart.data.datasets = [];
@@ -242,7 +242,7 @@ function updateQueriesOverTime() {
     }
 
     // Add data for each dataset that is available
-    data.data.forEach(function (item) {
+    data.history.forEach(function (item) {
       var timestamp = new Date(1000 * parseInt(item.timestamp, 10));
 
       timeLineChart.data.labels.push(timestamp);
@@ -282,17 +282,17 @@ function updateQueryTypesPie() {
       sum = 0;
 
     // Compute total number of queries
-    data.forEach(function (item) {
-      sum += item.count;
+    Object.keys(data.types).forEach(function (item) {
+      sum += data.types[item];
     });
 
     // Fill chart with data (only include query types which appeared recently)
     querytypeids = [];
-    data.forEach(function (item) {
-      if (item.count > 0) {
-        v.push((100 * item.count) / sum);
+    Object.keys(data.types).forEach(function (item) {
+      if (data.types[item] > 0) {
+        v.push((100 * data.types[item]) / sum);
         c.push(THEME_COLORS[i % THEME_COLORS.length]);
-        k.push(item.name);
+        k.push(item);
         querytypeids.push(i + 1);
       }
 
@@ -339,10 +339,10 @@ function updateQueryTypesPie() {
 }
 
 function updateClientsOverTime() {
-  $.getJSON("/api/stats/overTime/clients", function (data) {
+  $.getJSON("/api/history/clients", function (data) {
     // Remove graph if there are no results (e.g. new
     // installation or privacy mode enabled)
-    if (jQuery.isEmptyObject(data.data)) {
+    if (jQuery.isEmptyObject(data.history)) {
       $("#clients-over-time").parent().remove();
       return;
     }
@@ -350,7 +350,7 @@ function updateClientsOverTime() {
     var i,
       labels = [];
     data.clients.forEach(function (client) {
-      labels.push(client.name.length > 0 ? client.name : client.ip);
+      labels.push(client.name !== null ? client.name : client.ip);
     });
 
     // Remove possibly already existing data
@@ -378,13 +378,13 @@ function updateClientsOverTime() {
 
     // Add data for each dataset that is available
     data.clients.forEach(function (i, c) {
-      data.data.forEach(function (item) {
+      data.history.forEach(function (item) {
         clientsChart.data.datasets[c].data.push(item.data[c]);
       });
     });
 
     // Extract data timestamps
-    data.data.forEach(function (item) {
+    data.history.forEach(function (item) {
       var d = new Date(1000 * parseInt(item.timestamp, 10));
       clientsChart.data.labels.push(d);
     });
@@ -632,6 +632,13 @@ function updateTopClientsTable(blocked) {
   });
 }
 
+function glowIfChanged(elem, textData) {
+  if (elem.text() !== textData) {
+    elem.addClass("glow");
+    elem.text(textData);
+  }
+}
+
 var FTLoffline = false;
 function updateSummaryData(runOnce) {
   var setTimer = function (timeInSeconds) {
@@ -643,29 +650,15 @@ function updateSummaryData(runOnce) {
   $.getJSON("/api/stats/summary", function (data) {
     //Element name might have a different name to the property of the API so we split it at |
     var intl = new Intl.NumberFormat();
-    ["blocked_queries", "dns_queries", "percent_blocked", "total_clients", "gravity_size"].forEach(
-      function (arrayItem) {
-        var $todayElement = $("span#" + arrayItem);
-        var textData = "";
-        textData = arrayItem === "gravity_size" ? data.ftl.gravity : data[arrayItem];
-        if (arrayItem === "dns_queries") {
-          var sum = 0;
-          Object.entries(data.total_queries).forEach(function (arrayItem) {
-            sum += arrayItem[1];
-          });
-          textData = intl.format(sum);
-        } else if (arrayItem === "percent_blocked") {
-          textData = textData.toFixed(1) + "%";
-        } else {
-          textData = intl.format(textData);
-        }
 
-        if ($todayElement.text() !== textData) {
-          $todayElement.addClass("glow");
-          $todayElement.text(textData);
-        }
-      }
+    glowIfChanged($("span#dns_queries"), intl.format(parseInt(data.queries.sum, 10)));
+    glowIfChanged($("span#total_clients"), parseInt(data.ftl.clients.total, 10));
+    glowIfChanged($("span#blocked_queries"), intl.format(parseFloat(data.queries.blocked)));
+    glowIfChanged(
+      $("span#percent_blocked"),
+      parseFloat(data.queries.percent_blocked).toFixed(1) + "%"
     );
+    glowIfChanged($("span#gravity_size"), intl.format(parseInt(data.ftl.database.gravity, 10)));
 
     updateInfo(data);
 
