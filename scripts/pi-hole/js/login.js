@@ -43,7 +43,7 @@ function doLogin(response) {
   $.ajax({
     url: "/api/auth",
     method: "POST",
-    data: { response: response }
+    data: JSON.stringify({ response: response })
   })
     .done(function () {
       redirect();

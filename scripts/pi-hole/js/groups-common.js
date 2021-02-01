@@ -9,11 +9,8 @@
 
 function getError(response) {
   var error = response.message;
-  if (utils.exists(response.data) && response.data !== null) {
-    if (utils.exists(response.data.sql_msg))
-      error += "<br><strong>" + response.data.sql_msg + "</strong>";
-    if (utils.exists(response.data.regex_msg))
-      error += "<br><strong>" + response.data.regex_msg + "</strong>";
+  if (response.hint !== null) {
+    error += "<br><strong>" + response.hint + "</strong>";
   }
 
   return error;

@@ -71,6 +71,7 @@ function initTable(groups) {
     rowCallback: function (row, data) {
       $(row).attr("data-id", data.id);
       $(row).attr("data-type", data.type);
+      $(row).attr("data-kind", data.kind);
       var tooltip =
         "Added: " +
         utils.datetime(data.date_added, false) +
@@ -90,18 +91,18 @@ function initTable(groups) {
 
       var allowlistOptions =
         '<option value="allow/exact"' +
-        (data.type === "allow/exact" ? " selected" : "") +
+        (data.type === "allow" && data.kind === "exact" ? " selected" : "") +
         ">Allow (exact)</option>" +
         '<option value="allow/regex"' +
-        (data.type === "allow/regex" ? " selected" : "") +
+        (data.type === "allow" && data.kind === "regex" ? " selected" : "") +
         ">Allow (regex)</option>";
 
       var denylistOptions =
         '<option value="deny/exact"' +
-        (data.type === "deny/exact" ? " selected " : " ") +
+        (data.type === "deny" && data.kind === "exact" ? " selected " : "") +
         ">Deny (exact)</option>" +
         '<option value="deny/regex"' +
-        (data.type === "deny/regex" ? " selected" : "") +
+        (data.type === "deny" && data.kind === "regex" ? " selected" : "") +
         ">Deny (regex)</option>";
 
       $("td:eq(1)", row).html(
@@ -326,7 +327,7 @@ function addDomain() {
   }
 
   var data = JSON.stringify({
-    item: domain,
+    domain: domain,
     comment: comment,
     enabled: true
   });
@@ -344,9 +345,10 @@ function editDomain() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var oldtype = tr.attr("data-type");
+  var type = tr.attr("data-type");
+  var kind = tr.attr("data-kind");
   var domain = utils.escapeHtml(tr.find("#domain_" + id).text());
-  var type = tr.find("#type_" + id).val();
+  var newtype = tr.find("#type_" + id).val();
   var enabled = tr.find("#status_" + id).is(":checked");
   var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
   var groups = tr
@@ -356,7 +358,7 @@ function editDomain() {
       return parseInt(val, 10);
     });
 
-  var displayType = type.search("/exact$") !== -1 ? " domain" : " regex";
+  var displayType = kind === "exact" ? " domain" : " regex";
 
   var done = "edited";
   var notDone = "editing";
@@ -393,13 +395,14 @@ function editDomain() {
   }
 
   var data = JSON.stringify({
-    oldtype: oldtype,
+    type: type,
+    kind: kind,
     comment: comment,
     enabled: enabled,
     groups: groups
   });
 
-  var url = "/api/domains/" + type + "/" + encodeURIComponent(domain);
+  var url = "/api/domains/" + newtype + "/" + encodeURIComponent(domain);
   group_utils.editEntry(url, domain, displayType, data, done, notDone, function () {
     group_utils.reload(table);
   });
