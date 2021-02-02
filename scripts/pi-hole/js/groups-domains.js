@@ -305,26 +305,32 @@ function addDomain() {
   var domain = utils.escapeHtml(domainEl.val().trim());
   var comment = utils.escapeHtml(commentEl.val().trim());
 
-  if (domain.length > 0) {
-    if (wildcardChecked) {
-      // strip "*." if specified by user in wildcard mode
-      if (domain.startsWith("*.")) {
-        domain = domain.substr(2);
-      }
-
-      // Convert domain regex when wildcard domain is requested
-      domain = "(\\.|^)" + domain.replace(".", "\\.") + "$";
-      displayType = "regex";
-    }
-
-    // determine list type
-    type = action === "add2allow" ? "allow" : "deny";
-
-    type += displayType === "domain" ? "/exact" : "/regex";
-  } else {
+  if (domain.length === 0) {
     utils.showAlert("warning", "", "Warning", "Please specify a " + displayType);
     return;
   }
+
+  if (wildcardChecked) {
+    // strip "*." if specified by user in wildcard mode
+    if (domain.startsWith("*.")) {
+      domain = domain.substr(2);
+    }
+
+    // Convert domain regex when wildcard domain is requested
+    domain = "(\\.|^)" + domain.replace(".", "\\.") + "$";
+    displayType = "regex";
+  }
+
+  // Reject pseudo-wildcards still containing * somewhere
+  // (see AdminLTE#1727)
+  if (displayType === "domain" && domain.search("\\*") !== -1) {
+    utils.showAlert("warning", "", "Warning", "Specified domain is invalid, consider using a RegEx instead.");
+    return;
+  }
+
+  // determine list type
+  type = action === "add2allow" ? "allow" : "deny";
+  type += displayType === "domain" ? "/exact" : "/regex";
 
   var data = JSON.stringify({
     domain: domain,
