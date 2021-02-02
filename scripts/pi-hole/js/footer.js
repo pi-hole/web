@@ -216,6 +216,14 @@ function checkAuth() {
     } else {
       $(".needs-auth").hide();
       $(".menu-login").show();
+
+      // Account for both / and \ in paths
+      var pathname = window.location.pathname;
+      var filename = pathname.split("\\").pop().split("/").pop();
+      if (filename !== "" && filename !== "index.php" && filename !== "login.php") {
+        // Redirect to login page. We are not allowed to be here
+        location.href = "login.php?target=" + pathname;
+      }
     }
   });
 }

@@ -324,7 +324,12 @@ function addDomain() {
   // Reject pseudo-wildcards still containing * somewhere
   // (see AdminLTE#1727)
   if (displayType === "domain" && domain.search("\\*") !== -1) {
-    utils.showAlert("warning", "", "Warning", "Specified domain is invalid, consider using a RegEx instead.");
+    utils.showAlert(
+      "warning",
+      "",
+      "Warning",
+      "Specified domain is invalid, consider using a RegEx instead."
+    );
     return;
   }
 
