@@ -65,6 +65,13 @@
             $postinput = hash('sha256',hash('sha256',$_POST["pw"]));
             if(hash_equals($pwhash, $postinput))
             {
+                // Regenerate session ID to prevent session fixation
+                session_regenerate_id();
+
+                // Clear the old session
+                $_SESSION = array();
+
+                // Set hash in new session
                 $_SESSION["hash"] = $pwhash;
 
                 // Login successful, redirect the user to the homepage to discard the POST request
