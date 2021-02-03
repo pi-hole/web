@@ -330,3 +330,22 @@
 .small-box {
   border-radius: 10px;
 }
+
+.nav-tabs-custom {
+  border-radius: 10px !important;
+}
+
+.nav-tabs-custom > .nav-tabs {
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+}
+
+.nav-tabs-custom > .tab-content { 
+  border-bottom-left-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
+}
+
+.box-footer {
+  border-bottom-left-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
+}
