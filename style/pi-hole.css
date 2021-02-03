@@ -330,3 +330,7 @@
 .small-box {
   border-radius: 10px;
 }
+
+.btn {
+  border-radius: 6px !important;
+}
