@@ -16,6 +16,9 @@ check_cors();
 // Set maximum execution time to 10 minutes
 ini_set("max_execution_time","600");
 
+$WHERE_blocked = "(status == 1 OR (status > 3 AND status < 12))";
+$WHERE_permitt = "(status = 2 OR status = 3 OR (status >= 12 AND status <= 14))";
+
 $data = array();
 $clients = array();
 function resolveHostname($clientip, $printIP)
@@ -202,7 +205,7 @@ if (isset($_GET['topDomains']) && $auth)
 	{
 		$limit = " AND timestamp <= :until";
 	}
-	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE (STATUS == 2 OR STATUS == 3)'.$limit.' GROUP by domain order by count(domain) desc limit 20');
+	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE '.$WHERE_permitt.''.$limit.' GROUP by domain order by count(domain) desc limit 20');
 	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
 	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
@@ -252,7 +255,7 @@ if (isset($_GET['topAds']) && $auth)
 	{
 		$limit = " AND timestamp <= :until";
 	}
-	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE (STATUS == 1 OR STATUS > 3)'.$limit.' GROUP by domain order by count(domain) desc limit 10');
+	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE '.$WHERE_blocked.''.$limit.' GROUP by domain order by count(domain) desc limit 10');
 	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
 	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
@@ -341,7 +344,7 @@ if (isset($_GET['getGraphData']) && $auth)
 	$from = intval((intval($_GET['from'])/$interval)*$interval);
 	$until = intval((intval($_GET['until'])/$interval)*$interval);
 
-	// Count permitted queries in intervals
+	// Count total queries in intervals
 	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status != 0 )'.$limit.' GROUP by interval ORDER by interval');
 	$stmt->bindValue(":from", $from, SQLITE3_INTEGER);
 	$stmt->bindValue(":until", $until, SQLITE3_INTEGER);
@@ -384,7 +387,7 @@ if (isset($_GET['getGraphData']) && $auth)
 	$data = array_merge($data, $result);
 
 	// Count blocked queries in intervals
-	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status == 1 OR status > 3)'.$limit.' GROUP by interval ORDER by interval');
+	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE '.$WHERE_blocked.''.$limit.' GROUP by interval ORDER by interval');
 	$stmt->bindValue(":from", $from, SQLITE3_INTEGER);
 	$stmt->bindValue(":until", $until, SQLITE3_INTEGER);
 	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
