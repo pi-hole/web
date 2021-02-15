@@ -338,7 +338,7 @@ if($auth) {
                         }
 
                         // CPU Temp
-                        if($FTL)
+                        if($celsius)
                         {
                             if ($celsius >= -273.15) {
                                 echo "<span id=\"temperature\"><i class=\"fa fa-fire ";
@@ -354,7 +354,7 @@ if($auth) {
                         }
                         else
                         {
-                            echo '<span id=\"temperature\"><i class="fa fa-circle text-red"></i> FTL offline</span>';
+                            echo '<span id=\"temperature\"><i class="fa fa-circle text-red"></i> No temperature detected</span>';
                         }
                     ?>
                     <br/>
