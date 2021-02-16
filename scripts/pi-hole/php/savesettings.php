@@ -727,7 +727,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					}
 					else
 					{
-						$success .= "The privacy level has been not been changed";
+						$success .= "The privacy level has not been changed";
 					}
 				}
 				else
