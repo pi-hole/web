@@ -83,7 +83,7 @@ function check_cors() {
         $server_origin = str_replace(array("[","]","http://","https://"), array("","","",""), $server_origin);
 
         if(!in_array($server_origin, $AUTHORIZED_HOSTNAMES)) {
-            log_and_die("Failed CORS: " . $server_origin .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
+            log_and_die("Failed CORS: " . htmlspecialchars($server_origin) .' vs '. join(', ', $AUTHORIZED_HOSTNAMES));
         }
         header("Access-Control-Allow-Origin: ${_SERVER['HTTP_ORIGIN']}");
     }
@@ -97,6 +97,11 @@ function check_csrf($token) {
         session_id() == "";
 
     if(!$session_started) {
+        // Start a new PHP session (or continue an existing one)
+        // Prevents javascript XSS attacks aimed to steal the session ID
+        ini_set('session.cookie_httponly', 1);
+        // Prevent Session ID from being passed through  URLs
+        ini_set('session.use_only_cookies', 1);
         session_start();
     }
 
