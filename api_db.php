@@ -203,7 +203,7 @@ if (isset($_GET['topDomains']) && $auth)
 		$limit = " AND timestamp <= :until";
 	}
 	// Select top permitted domains only
-	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE STATUS IN (2,3,12,13,14)'.$limit.' GROUP by domain order by count(domain) desc limit 20');
+	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE status IN (2,3,12,13,14)'.$limit.' GROUP by domain order by count(domain) desc limit 20');
 	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
 	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
@@ -253,7 +253,7 @@ if (isset($_GET['topAds']) && $auth)
 	{
 		$limit = " AND timestamp <= :until";
 	}
-	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE STATUS IN (1,4,5,6,7,8,9,10,11)'.$limit.' GROUP by domain order by count(domain) desc limit 10');
+	$stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE status IN (1,4,5,6,7,8,9,10,11)'.$limit.' GROUP by domain order by count(domain) desc limit 10');
 	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
 	$stmt->bindValue(":until", intval($_GET['until']), SQLITE3_INTEGER);
 	$results = $stmt->execute();
@@ -385,7 +385,7 @@ if (isset($_GET['getGraphData']) && $auth)
 	$data = array_merge($data, $result);
 
 	// Count blocked queries in intervals
-	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE STATUS IN (1,4,5,6,7,8,9,10,11)'.$limit.' GROUP by interval ORDER by interval');
+	$stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE status IN (1,4,5,6,7,8,9,10,11)'.$limit.' GROUP by interval ORDER by interval');
 	$stmt->bindValue(":from", $from, SQLITE3_INTEGER);
 	$stmt->bindValue(":until", $until, SQLITE3_INTEGER);
 	$stmt->bindValue(":interval", $interval, SQLITE3_INTEGER);
