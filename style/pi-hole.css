@@ -9,7 +9,7 @@
   background: url("../img/boxed-bg.jpg") repeat fixed;
 }
 
-.small-box span {
+.span {
   transition-duration: 0.5s;
 }
 
@@ -329,4 +329,14 @@
 .box,
 .small-box {
   border-radius: 10px;
+}
+
+/* Work around code to make the scaling of SVG icons in the
+   top row on the dashboard much more natural. I'll post a
+   pull request to the parent theme, so this should only be
+   needed temporarily */
+
+.small-box:hover .icon {
+  top: -13px;
+  right: 7px;
 }
