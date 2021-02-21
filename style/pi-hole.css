@@ -9,7 +9,7 @@
   background: url("../img/boxed-bg.jpg") repeat fixed;
 }
 
-.span {
+.small-box span {
   transition-duration: 0.5s;
 }
 
