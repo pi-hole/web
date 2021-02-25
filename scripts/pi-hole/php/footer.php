@@ -92,6 +92,9 @@
                         <?php if ($FTL_update) { ?> &middot; <a class="lookatme" href="<?php echo $ftlReleasesUrl . "/latest"; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                 </ul>
+                <?php if($core_update || $web_update || $FTL_update) { ?>
+                    <p>To install updates, run <a  href="https://docs.pi-hole.net/main/update/">pihole -up</a>.</p>
+                <?php } ?>
                 <?php } ?>
             </div>
         </div>
