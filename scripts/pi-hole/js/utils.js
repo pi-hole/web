@@ -266,7 +266,7 @@ function addFromQueryLog(domain, list) {
     return;
   }
 
-  var listtype = list === "white" ? "Whitelist" : "Blacklist";
+  var listtype = list === "allow" ? "Allowlist" : "Denylist";
 
   alProcessing.children(alDomain).html(domain);
   alProcessing.children(alList).html(listtype);
@@ -334,6 +334,55 @@ function upper(s) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+var typesList = [
+  "A",
+  "AAAA",
+  "ANY",
+  "SRV",
+  "SOA",
+  "PTR",
+  "TXT",
+  "NAPTR",
+  "MX",
+  "DS",
+  "RRSIG",
+  "DNSKEY",
+  "NS",
+  "OTHER",
+  "SVCB",
+  "HTTPS"
+];
+var statusList = [
+  "UNKNOWN",
+  "GRAVITY",
+  "FORWARDED",
+  "CACHE",
+  "REGEX",
+  "DENYLIST",
+  "EXTERNAL_BLOCKED_IP",
+  "EXTERNAL_BLOCKED_NULL",
+  "EXTERNAL_BLOCKED_NXRA",
+  "GRAVITY_CNAME",
+  "REGEX_CNAME",
+  "DENYLIST_CNAME",
+  "RETRIED",
+  "RETRIED_DNSSEC",
+  "IN_PROGRESS"
+];
+var repliesList = [
+  "UNKNOWN",
+  "NODATA",
+  "NXDOMAIN",
+  "CNAME",
+  "IP",
+  "DOMAIN",
+  "RRNAME",
+  "SERVFAIL",
+  "REFUSED",
+  "NOTIMP",
+  "OTHER"
+];
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -355,6 +404,9 @@ window.utils = (function () {
     doLogout: doLogout,
     addFromQueryLog: addFromQueryLog,
     exists: exists,
-    upper: upper
+    upper: upper,
+    typesList: typesList,
+    repliesList: repliesList,
+    statusList: statusList
   };
 })();

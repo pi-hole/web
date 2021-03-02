@@ -39,12 +39,7 @@ else
 	$showing = "showing";
 }
 
-$showall = false;
-if(isset($_GET["all"]))
-{
-	$showing .= " all queries within the Pi-hole log";
-}
-else if(isset($_GET["client"]))
+if(isset($_GET["client"]))
 {
 	$showing .= " queries for client ".htmlentities($_GET["client"]);
 }
@@ -71,8 +66,7 @@ else if(isset($_GET["from"]) || isset($_GET["until"]))
 }
 else
 {
-	$showing .= " up to 100 queries";
-	$showall = true;
+	$showing .= " all queries within the Pi-hole log";
 }
 
 if(isset($setupVars["API_PRIVACY_MODE"]))
@@ -87,8 +81,6 @@ if(isset($setupVars["API_PRIVACY_MODE"]))
 if(strlen($showing) > 0)
 {
 	$showing = "(".$showing.")";
-	if($showall)
-		$showing .= ", <a href=\"?all\">show all</a>";
 }
 ?>
 
@@ -130,7 +122,7 @@ if(strlen($showing) > 0)
     <div class="col-md-12">
       <div class="box" id="recent-queries">
         <div class="box-header with-border">
-          <h3 class="box-title">Recent Queries <?php echo $showing; ?></h3>
+          <h3 class="box-title">Recent Queries <?php echo $showing; ?> (<a id="refresh" href="#">refresh</a>)</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
