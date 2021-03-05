@@ -6,84 +6,7 @@
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
-
-$showing = "";
-
-if(isset($setupVars["API_QUERY_LOG_SHOW"]))
-{
-	if($setupVars["API_QUERY_LOG_SHOW"] === "all")
-	{
-		$showing = "showing";
-	}
-	elseif($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly")
-	{
-		$showing = "showing permitted";
-	}
-	elseif($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly")
-	{
-		$showing = "showing blocked";
-	}
-	elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
-	{
-		$showing = "showing no queries (due to setting)";
-	}
-}
-else if(isset($_GET["type"]) && $_GET["type"] === "blocked")
-{
-	$showing = "showing blocked";
-}
-else
-{
-	// If filter variable is not set, we
-	// automatically show all queries
-	$showing = "showing";
-}
-
-if(isset($_GET["client"]))
-{
-	$showing .= " queries for client ".htmlentities($_GET["client"]);
-}
-else if(isset($_GET["forwarddest"]))
-{
-	if($_GET["forwarddest"] === "blocklist")
-		$showing .= " queries answered from blocklists";
-	elseif($_GET["forwarddest"] === "cache")
-		$showing .= " queries answered from cache";
-	else
-		$showing .= " queries for upstream destination ".htmlentities($_GET["forwarddest"]);
-}
-else if(isset($_GET["querytype"]))
-{
-	$showing .= " type ".getQueryTypeStr($_GET["querytype"])." queries";
-}
-else if(isset($_GET["domain"]))
-{
-	$showing .= " queries for domain ".htmlentities($_GET["domain"]);
-}
-else if(isset($_GET["from"]) || isset($_GET["until"]))
-{
-	$showing .= " queries within specified time interval";
-}
-else
-{
-	$showing .= " all queries within the Pi-hole log";
-}
-
-if(isset($setupVars["API_PRIVACY_MODE"]))
-{
-	if($setupVars["API_PRIVACY_MODE"])
-	{
-		// Overwrite string from above
-		$showing .= ", privacy mode enabled";
-	}
-}
-
-if(strlen($showing) > 0)
-{
-	$showing = "(".$showing.")";
-}
 ?>
-
 <!-- Alert Modal -->
 <div id="alertModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="vertical-alignment-helper">
@@ -122,10 +45,11 @@ if(strlen($showing) > 0)
     <div class="col-md-12">
       <div class="box" id="recent-queries">
         <div class="box-header with-border">
-          <h3 class="box-title">Recent Queries <?php echo $showing; ?> (<a id="refresh" href="#">refresh</a>)</h3>
+          <h3 class="box-title">Recent Queries (<a id="refresh" href="#">refresh</a>)</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
+            <p>Click on a query log item to obtain additional information for this query.</p>
             <table id="all-queries" class="table table-striped table-bordered" width="100%">
                 <thead>
                     <tr>
@@ -133,9 +57,6 @@ if(strlen($showing) > 0)
                         <th>Type</th>
                         <th>Domain</th>
                         <th>Client</th>
-                        <th>Status</th>
-                        <th>Reply</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -144,18 +65,9 @@ if(strlen($showing) > 0)
                         <th>Type</th>
                         <th>Domain</th>
                         <th>Client</th>
-                        <th>Status</th>
-                        <th>Reply</th>
-                        <th>Action</th>
                     </tr>
                 </tfoot>
             </table>
-            <p><strong>Filtering options:</strong></p>
-            <ul>
-                <li>Click a value in a column to add/remove that value to/from the filter</li>
-                <li>On a computer: Hold down <kbd>Ctrl</kbd>, <kbd>Alt</kbd>, or <kbd>&#8984;</kbd> to allow highlighting for copying to clipboard</li>
-                <li>On a mobile: Long press to highlight the text and enable copying to clipboard
-            </ul><br/><button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear filters</button>
         </div>
         <!-- /.box-body -->
       </div>

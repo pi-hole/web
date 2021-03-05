@@ -68,7 +68,7 @@
         }
       ],
       "capitalized-comments": "off",
-      "no-unused-expressions" : [
+      "no-unused-expressions": [
         "error",
         {
           "allowShortCircuit": true
