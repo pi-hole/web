@@ -243,7 +243,7 @@ $(function () {
       GETDict[item.split("=")[0]] = item.split("=")[1];
     });
 
-  var APIstring = "/api/history/queries?";
+  var APIstring = "/api/queries?";
 
   if ("from" in GETDict && "until" in GETDict) {
     APIstring += "&from=" + GETDict.from;
