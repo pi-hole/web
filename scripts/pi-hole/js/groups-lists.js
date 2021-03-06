@@ -215,7 +215,7 @@ function addList() {
   }
 
   var data = JSON.stringify({
-    item: address,
+    address: address,
     comment: comment,
     enabled: true
   });

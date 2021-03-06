@@ -132,7 +132,6 @@ function parseQueryStatus(data) {
 }
 
 function formatInfo(data) {
-  row = 0;
   // DNSSEC status
   var dnssecStatus, dnssecClass;
   switch (data.dnssec) {
