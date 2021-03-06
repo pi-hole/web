@@ -294,7 +294,7 @@ function addCustomCNAMEEntry($domain="", $target="", $json=true)
             $domain = $_REQUEST['domain'];
 
         if(isset($_REQUEST['target']))
-            $target = $_REQUEST['target'];
+            $target = trim($_REQUEST['target']);
 
         if (empty($domain))
             return returnError("Domain must be set", $json);
