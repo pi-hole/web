@@ -2,16 +2,17 @@
 .idea
 /nbproject/private/
 /nbproject/
+
+# Test dependencies
 /node_modules/
-TODO
-*.zip
-test.html
-*.log
 
 # Intellij IDEA Project Files
 *.iml
 *.ipr
 *.iws
+
+# VSCode settings
+.vscode
 
 # vim
 *.swp
