@@ -27,7 +27,10 @@
     <div class="panel-body">
       <form action="" id="loginform" method="post">
         <div class="form-group has-feedback <?php if ($wrongpassword) { ?>has-error<?php } ?>">
-          <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" autofocus>
+          <?php if ($ldapAuth) { ?>
+          <input id="username" name="username" class="form-control" placeholder="Username" autofocus>
+          <?php } ?>
+          <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password">
           <span class="fa fa-key form-control-feedback"></span>
         </div>
         <div class="row">
@@ -62,10 +65,14 @@
                 </div>
               </div>
               <div class="box-body">
-                After installing Pi-hole for the first time, a password is generated and displayed to the user. The
-                password cannot be retrieved later on, but it is possible to set a new password (or explicitly disable
-                the password by setting an empty password) using the command
-                <pre>sudo pihole -a -p</pre>
+                  <?php if ($ldapAuth) { ?>
+                      Ask LDAP administrator to reset your password
+                  <?php } else { ?>
+                      After installing Pi-hole for the first time, a password is generated and displayed to the user. The
+                      password cannot be retrieved later on, but it is possible to set a new password (or explicitly disable
+                      the password by setting an empty password) using the command
+                      <pre>sudo pihole -a -p</pre>
+                  <?php } ?>
               </div>
             </div>
           </div>

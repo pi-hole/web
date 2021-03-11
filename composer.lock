@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba7e1b2ae29157ca9224ed7c390d5b78",
+    "content-hash": "42dc1206dd70bb60d01635a332df119b",
     "packages": [
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.58",
+            "version": "0.12.81",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "2a4847df6047b30af28854ed9dc95304cdb56ae5"
+                "reference": "0dd5b0ebeff568f7000022ea5f04aa86ad3124b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/2a4847df6047b30af28854ed9dc95304cdb56ae5",
-                "reference": "2a4847df6047b30af28854ed9dc95304cdb56ae5",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0dd5b0ebeff568f7000022ea5f04aa86ad3124b8",
+                "reference": "0dd5b0ebeff568f7000022ea5f04aa86ad3124b8",
                 "shasum": ""
             },
             "require": {
@@ -48,7 +48,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.58"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.81"
             },
             "funding": [
                 {
@@ -64,7 +64,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-29T13:32:03+00:00"
+            "time": "2021-03-08T22:03:02+00:00"
         }
     ],
     "packages-dev": [],
@@ -74,7 +74,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "ext-ldap": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
