@@ -290,7 +290,7 @@ if($auth) {
                                         <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank">Updates</a>
                                     </div>
                                     <div id="sessiontimer" class="col-xs-12 text-center">
-                                        <strong>Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></strong>
+                                        <strong>Session is valid for <span id="sessiontimercounter"><?php if($auth && $authEnabled){echo $maxlifetime;}else{echo "0";} ?></span></strong>
                                     </div>
                                 </div>
                             </li>
@@ -624,8 +624,7 @@ if($auth) {
                 </li>
                 <!-- Logout -->
                 <?php
-                // Show Logout button if $auth is set and authorization is required
-                if(strlen($pwhash) > 0) { ?>
+                if($authEnabled) { ?>
                 <li>
                     <a href="?logout">
                         <i class="fa fa-fw fa-user-times"></i> <span>Logout</span>
@@ -636,7 +635,7 @@ if($auth) {
                 <!-- Login -->
                 <?php
                 // Show Login button if $auth is *not* set and authorization is required
-                if(strlen($pwhash) > 0 && !$auth) { ?>
+                if($authEnabled && !$auth) { ?>
                 <li<?php if($scriptname === "login"){ ?> class="active"<?php } ?>>
                     <a href="index.php?login">
                         <i class="fa fa-fw fa-user"></i> <span>Login</span>
