@@ -4,7 +4,8 @@
     "description": "Pi-hole Dashboard for stats and more",
     "require": {
         "php": ">=5.4",
-        "phpstan/phpstan": "1.*"
+        "phpstan/phpstan": "1.*",
+        "ext-ldap": "*"
     },
     "license": "EUPL-1.2",
     "minimum-stability": "stable",

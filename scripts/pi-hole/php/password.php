@@ -22,12 +22,21 @@ if (isset($setupVars['WEBPASSWORD'])) {
     $pwhash = '';
 }
 
-function verifyPassword($pwhash, $use_api = false)
+$ldapAuth = false;
+$ldapServer = '';
+$ldapBindDn = '';
+if (isset($setupVars['LDAP_AUTH'])) {
+    $ldapAuth = $setupVars['LDAP_AUTH'] == 1;
+    $ldapServer = $setupVars['LDAP_SERVER'];
+    $ldapBindDn = $setupVars['LDAP_BIND_DN'];
+}
+
+function verifyPassword($pwhash, $use_api, $ldapAuth, $ldapServer, $ldapBindDn)
 {
     $validpassword = true;
 
     // Test if password is set
-    if (strlen($pwhash) > 0) {
+    if (strlen($pwhash) > 0 || $ldapAuth) {
         // Check for and authorize from persistent cookie
         if (isset($_COOKIE['persistentlogin'])) {
             if (checkValidityPersistentLoginToken($_COOKIE['persistentlogin'])) {
@@ -41,7 +50,7 @@ function verifyPassword($pwhash, $use_api = false)
             // Compare doubly hashes password input with saved hash
             $postinput = hash('sha256', hash('sha256', $_POST['pw']));
 
-            if (hash_equals($pwhash, $postinput)) {
+            if (hash_equals($pwhash, $postinput) || authenticateLdap($_POST["username"], $_POST["pw"], $ldapServer, $ldapBindDn)) {
                 // Save previously accessed page, before clear the session
                 $redirect_url = 'index.php';
                 if (isset($_SESSION['prev_url'])) {
@@ -104,5 +113,14 @@ function verifyPassword($pwhash, $use_api = false)
     return $validpassword;
 }
 
-$wrongpassword = !verifyPassword($pwhash, isset($api));
+function authenticateLdap($username, $password, $ldapServer, $ldapBindDn)
+{
+    $ldap = ldap_connect($ldapServer);
+    ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+    ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
+    $bindDn = sprintf($ldapBindDn, $username);
+    return @ldap_bind($ldap, $bindDn, $password);
+}
+
+$wrongpassword = !verifyPassword($pwhash, isset($api), $ldapAuth, $ldapServer, $ldapBindDn);
 $auth = $_SESSION['auth'];

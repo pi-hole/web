@@ -76,7 +76,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "ext-ldap": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
