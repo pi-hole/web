@@ -86,7 +86,7 @@ function format(data) {
     "&nbsp;(" +
     utils.datetime(data.date_modified, false) +
     ')</td></tr><tr class="dataTables-child"><td>The list contents were last updated&nbsp;&nbsp;</td><td>' +
-    (data.date_updated !== null
+    (data.date_updated > 0
       ? utils.datetimeRelative(data.date_updated) +
         "&nbsp;(" +
         utils.datetime(data.date_updated) +
