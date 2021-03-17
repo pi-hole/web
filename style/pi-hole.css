@@ -330,3 +330,31 @@
 .small-box {
   border-radius: 10px;
 }
+
+.list-status-0 {
+  color: #7d7d7d;
+}
+
+.list-status-1 {
+  color: #74c700;
+}
+
+.list-status-2 {
+  color: #98ca52;
+}
+
+.list-status-3 {
+  color: #ff8c00;
+}
+
+.list-status-4 {
+  color: #cc0000;
+}
+
+td.details-control {
+  cursor: pointer;
+}
+
+.dataTables-child td {
+  padding: 2px 5px;
+}
