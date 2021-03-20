@@ -769,18 +769,6 @@ function updateSummaryData(runOnce) {
       }
     }
 
-    // .forEach(function (arrayItem, idx) {
-    //   var apiElName = arrayItem.split("|");
-    //   var apiName = apiElName[0];
-    //   var elName = apiElName[1];
-    //   var $todayElement = elName ? $("span#" + elName) : $("span#" + apiName);
-    //   var textData = idx === 2 && data[apiName] !== "to" ? data[apiName] + "%" : data[apiName];
-    //   if ($todayElement.text() !== textData && $todayElement.text() !== textData + "%") {
-    //     $todayElement.addClass("glow");
-    //     $todayElement.text(textData);
-    //   }
-    // });
-
     if (Object.prototype.hasOwnProperty.call(data, "dns_queries_all_types")) {
       $("#total_queries").prop(
         "title",
