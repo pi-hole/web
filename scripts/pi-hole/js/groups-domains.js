@@ -26,12 +26,9 @@ function getGroups() {
 }
 
 $(function () {
-  window.location.search
-    .substr(1)
-    .split("&")
-    .forEach(function (item) {
-      GETDict[item.split("=")[0]] = item.split("=")[1];
-    });
+  for (const item of window.location.search.substr(1).split("&")) {
+    GETDict[item.split("=")[0]] = item.split("=")[1];
+  }
 
   if ("type" in GETDict && (GETDict.type === "white" || GETDict.type === "black")) {
     showtype = GETDict.type;

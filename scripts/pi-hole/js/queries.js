@@ -42,12 +42,10 @@ function handleAjaxError(xhr, textStatus) {
 $(function () {
   // Do we want to filter queries?
   var GETDict = {};
-  window.location.search
-    .substr(1)
-    .split("&")
-    .forEach(function (item) {
-      GETDict[item.split("=")[0]] = item.split("=")[1];
-    });
+
+  for (const item of window.location.search.substr(1).split("&")) {
+    GETDict[item.split("=")[0]] = item.split("=")[1];
+  }
 
   var APIstring = "api.php?getAllQueries";
 
@@ -465,9 +463,11 @@ function addColumnFilter(event, colID, filterstring) {
 }
 
 function resetColumnsFilters() {
-  tableFilters.forEach(function (value, index) {
-    tableFilters[index] = "";
-  });
+  for (let tablefilter in tableFilters) {
+    if (Object.prototype.hasOwnProperty.call(tableFilters, tablefilter)) {
+      tableFilters[tablefilter] = "";
+    }
+  }
 
   // Clear filter reset button
   applyColumnFiltering();
@@ -475,19 +475,21 @@ function resetColumnsFilters() {
 
 function applyColumnFiltering() {
   var showReset = false;
-  tableFilters.forEach(function (value, index) {
+
+  for (const [index, value] of tableFilters.entries()) {
+    let val = value; // value needs to be manipulated below, which cannot be done with a const
     // Prepare regex filter string
     var regex = "";
 
     // Split filter string if we received a combined ID#Name column
-    var valArr = value.split("#");
-    if (valArr.length > 0) {
-      value = valArr[0];
+    if (val !== undefined) {
+      let valArr = val.split("#");
+      val = valArr[0];
     }
 
-    if (value.length > 0) {
+    if (val !== undefined && val.length > 0) {
       // Exact matching
-      regex = "^" + value + "$";
+      regex = "^" + val + "$";
 
       // Add background color
       tableApi.$("td:eq(" + index + ")").addClass("highlight");
@@ -501,7 +503,7 @@ function applyColumnFiltering() {
 
     // Apply filtering on this column (regex may be empty -> no filtering)
     tableApi.column(index).search(regex, true, true);
-  });
+  }
 
   if (showReset) {
     $("#resetButton").removeClass("hidden");

@@ -70,15 +70,18 @@ var customTooltips = function (tooltip) {
     });
     var innerHtml = "<thead>";
 
-    titleLines.forEach(function (title) {
-      innerHtml += "<tr><th>" + title + "</th></tr>";
-    });
+    for (const titleLine of titleLines) {
+      innerHtml += "<tr><th>" + titleLine + "</th></tr>";
+    }
+
     innerHtml += "</thead><tbody>";
     var printed = 0;
 
     var devicePixel = (1 / window.devicePixelRatio).toFixed(1);
-    bodyLines.forEach(function (body, i) {
+
+    for (const [i, body] of bodyLines.entries()) {
       var labelColors = tooltip.labelColors[i];
+
       var style = "background-color: " + labelColors.backgroundColor;
       style += "; outline: 1px solid " + labelColors.backgroundColor;
       style += "; border: " + devicePixel + "px solid #fff";
@@ -91,7 +94,8 @@ var customTooltips = function (tooltip) {
         innerHtml += "<tr><td>" + span + body + "</td></tr>";
         printed++;
       }
-    });
+    }
+
     if (printed < 1) {
       innerHtml += "<tr><td>No activity recorded</td></tr>";
     }
@@ -298,7 +302,7 @@ function updateQueryTypesPie() {
     var iter = Object.prototype.hasOwnProperty.call(data, "querytypes") ? data.querytypes : data;
 
     querytypeids = [];
-    Object.keys(iter).forEach(function (key) {
+    for (const key of Object.keys(iter)) {
       if (iter[key] > 0) {
         v.push(iter[key]);
         c.push(THEME_COLORS[i % THEME_COLORS.length]);
@@ -307,7 +311,7 @@ function updateQueryTypesPie() {
       }
 
       i++;
-    });
+    }
 
     // Build a single dataset with the data to be pushed
     var dd = { data: v, backgroundColor: c };
@@ -331,10 +335,10 @@ function updateQueryTypesPie() {
         var metas = Object.keys(mobj).map(function (e) {
           return mobj[e];
         });
-        metas.forEach(function (meta) {
+        for (const meta of metas) {
           var curr = meta.data[index];
           curr.hidden = !curr.hidden;
-        });
+        }
 
         ci.update();
       } else if (e.which === 1) {
@@ -450,22 +454,19 @@ function updateForwardDestinationsPie() {
       values = [];
 
     // Collect values and colors
-    Object.keys(data.forward_destinations).forEach(function (key) {
-      var value = data.forward_destinations[key];
+    for (const key of Object.keys(data.forward_destinations)) {
+      let value = data.forward_destinations[key];
+      let altKey = key.indexOf("|") !== -1 ? key.substr(0, key.indexOf("|")) : key;
 
-      if (key.indexOf("|") !== -1) {
-        key = key.substr(0, key.indexOf("|"));
-      }
-
-      values.push([key, value, THEME_COLORS[i++ % THEME_COLORS.length]]);
-    });
+      values.push([altKey, value, THEME_COLORS[i++ % THEME_COLORS.length]]);
+    }
 
     // Split data into individual arrays for the graphs
-    values.forEach(function (value) {
+    for (const value of values) {
       k.push(value[0]);
       v.push(value[1]);
       c.push(value[2]);
-    });
+    }
 
     // Build a single dataset with the data to be pushed
     var dd = { data: v, backgroundColor: c };
@@ -490,10 +491,10 @@ function updateForwardDestinationsPie() {
         var metas = Object.keys(mobj).map(function (e) {
           return mobj[e];
         });
-        metas.forEach(function (meta) {
+        for (const meta of metas) {
           var curr = meta.data[index];
           curr.hidden = !curr.hidden;
-        });
+        }
 
         ci.update();
       } else if (e.which === 1) {
@@ -748,13 +749,15 @@ function updateSummaryData(runOnce) {
     }
 
     //Element name might have a different name to the property of the API so we split it at |
-    [
+    var arr = [
       "ads_blocked_today|queries_blocked_today",
       "dns_queries_today",
       "ads_percentage_today|percentage_blocked_today",
       "unique_clients",
       "domains_being_blocked"
-    ].forEach(function (arrayItem, idx) {
+    ];
+
+    for (const [idx, arrayItem] of arr.entries()) {
       var apiElName = arrayItem.split("|");
       var apiName = apiElName[0];
       var elName = apiElName[1];
@@ -764,7 +767,19 @@ function updateSummaryData(runOnce) {
         $todayElement.addClass("glow");
         $todayElement.text(textData);
       }
-    });
+    }
+
+    // .forEach(function (arrayItem, idx) {
+    //   var apiElName = arrayItem.split("|");
+    //   var apiName = apiElName[0];
+    //   var elName = apiElName[1];
+    //   var $todayElement = elName ? $("span#" + elName) : $("span#" + apiName);
+    //   var textData = idx === 2 && data[apiName] !== "to" ? data[apiName] + "%" : data[apiName];
+    //   if ($todayElement.text() !== textData && $todayElement.text() !== textData + "%") {
+    //     $todayElement.addClass("glow");
+    //     $todayElement.text(textData);
+    //   }
+    // });
 
     if (Object.prototype.hasOwnProperty.call(data, "dns_queries_all_types")) {
       $("#total_queries").prop(
@@ -798,12 +813,13 @@ function doughnutTooltip(tooltipItems, data) {
   var metas = Object.keys(dataset._meta).map(function (e) {
     return dataset._meta[e];
   });
-  metas.forEach(function (meta) {
-    meta.data.forEach(function (val, i) {
+  for (const meta of metas) {
+    for (const [i, val] of meta.data) {
       if (val.hidden) scale += dataset.data[i];
       total += dataset.data[i];
-    });
-  });
+    }
+  }
+
   if (scale === 0)
     // All items shown
     return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";

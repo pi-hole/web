@@ -235,9 +235,9 @@ function stateLoadCallback(itemName) {
   data = JSON.parse(data);
 
   // Clear possible filtering settings
-  data.columns.forEach(function (value, index) {
-    data.columns[index].search.search = "";
-  });
+  for (const column of data.columns) {
+    column.search.search = "";
+  }
 
   // Always start on the first page to show most recent queries
   data.start = 0;
