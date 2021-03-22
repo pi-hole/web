@@ -163,6 +163,7 @@ elseif (isset($_GET['list']))
 
 // Other API functions
 require("api_FTL.php");
+require("api_FTLGroups.php");
 
 header('Content-type: application/json');
 if(isset($_GET["jsonForceObject"]))
