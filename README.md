@@ -31,7 +31,7 @@ The Web interface is enabled by default when you install Pi-hole.
 There are several ways to [access the dashboard](https://discourse.pi-hole.net/t/how-do-i-access-pi-holes-dashboard-admin-interface/3168):
 
 1. `http://<IP_ADDPRESS_OF_YOUR_PI_HOLE>/admin/`
-2. `http:/pi.hole/admin/` (when using Pi-hole as your DNS server)
+2. `http://pi.hole/admin/` (when using Pi-hole as your DNS server)
 3. `http://pi.hole/` (when using Pi-hole as your DNS server)
 
 Once logged in (forgot your password?), you can view your network stats to see things like:
