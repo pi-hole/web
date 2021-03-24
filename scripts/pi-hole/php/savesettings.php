@@ -150,10 +150,9 @@ function isequal(&$argument, &$compareto) {
 function isinserverlist($addr) {
 	global $DNSserverslist;
 	foreach ($DNSserverslist as $key => $value) {
-		if (isequal($value['v4_1'],$addr) || isequal($value['v4_2'],$addr))
-			return true;
-		if (isequal($value['v6_1'],$addr) || isequal($value['v6_2'],$addr))
-			return true;
+		foreach (['v4_1','v4_2','v6_1','v6_2'] as $type) {
+			if (isset($value[$type]) && isequal($value[$type],$addr)) return true;
+		}
 	}
 	return false;
 }
@@ -273,7 +272,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				{
 					foreach(["v4_1", "v4_2", "v6_1", "v6_2"] as $type)
 					{
-						if(@array_key_exists("DNSserver".str_replace(".","_",$value[$type]),$_POST))
+						if(isset($value[$type]) && @array_key_exists("DNSserver".str_replace(".","_",$value[$type]),$_POST))
 						{
 							array_push($DNSservers,$value[$type]);
 						}
