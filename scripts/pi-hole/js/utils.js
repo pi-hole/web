@@ -270,8 +270,8 @@ function addFromQueryLog(domain, list) {
 
   var listtype = list === "white" ? "Whitelist" : "Blacklist";
 
-  alProcessing.children(alDomain).html(domain);
-  alProcessing.children(alList).html(listtype);
+  alProcessing.children(alDomain).text(domain);
+  alProcessing.children(alList).text(listtype);
   alertModal.modal("show");
 
   // add Domain to List after Modal has faded in
@@ -298,8 +298,8 @@ function addFromQueryLog(domain, list) {
           }, 10000);
         } else {
           // Success
-          alSuccess.children(alDomain).html(domain);
-          alSuccess.children(alList).html(listtype);
+          alSuccess.children(alDomain).text(domain);
+          alSuccess.children(alList).text(listtype);
           alSuccess.fadeIn(1000);
           setTimeout(function () {
             alertModal.modal("hide");
