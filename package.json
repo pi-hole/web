@@ -86,6 +86,7 @@
         }
       ],
       "unicorn/filename-case": "off",
+      "unicorn/no-array-for-each": "off",
       "unicorn/no-fn-reference-in-iterator": "off",
       "unicorn/no-for-loop": "off",
       "unicorn/prefer-includes": "off",

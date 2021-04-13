@@ -58,6 +58,7 @@ function renderMessage(data, type, row) {
       );
 
     case "HOSTNAME":
+      // eslint-disable-next-line unicorn/no-new-array
       var hint = new Array(row.blob2 + row.message.length + 3).join(" ");
       return (
         "Hostname contains invalid character <code>" +
