@@ -175,8 +175,6 @@ h4 {
 .box > .box-header {
   color: #bec5cb;
 }
-.box-solid > .box-header a,
-.box > .box-header a,
 .box-solid > .box-header .btn,
 .box > .box-header .btn {
   color: #bec5cb;

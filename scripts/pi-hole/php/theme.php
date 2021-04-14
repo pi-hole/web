@@ -15,6 +15,7 @@ $available_themes = array();
 */
 $available_themes["default-light"] = array("Pi-hole default theme (light, default)", false, "default-light");
 $available_themes["default-dark"] = array("Pi-hole midnight theme (dark)", true, "default-dark");
+$available_themes["default-darker"] = array("Pi-hole deep-midnight theme (dark)", true, "default-darker");
 
 $webtheme = "";
 // Try to load theme settings from setupVars.conf

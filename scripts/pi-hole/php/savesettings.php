@@ -230,7 +230,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 		foreach($dhcp_static_leases as $lease) {
 			if($lease["hwaddr"] === $mac)
 			{
-				throw new Exception("Static release for MAC address (".htmlspecialchars($mac).") already defined!<br>", 4);
+				throw new Exception("Static lease for MAC address (".htmlspecialchars($mac).") already defined!<br>", 4);
 			}
 			if($ip !== "noip" && $lease["IP"] === $ip)
 			{
@@ -727,7 +727,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					}
 					else
 					{
-						$success .= "The privacy level has been not been changed";
+						$success .= "The privacy level has not been changed";
 					}
 				}
 				else
