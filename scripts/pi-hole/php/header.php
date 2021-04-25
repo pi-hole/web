@@ -13,7 +13,7 @@
     $hostname = gethostname() ? gethostname() : "";
 
     check_cors();
-    
+
     // Create cache busting version
     $cacheVer = filemtime(__FILE__);
 
@@ -220,6 +220,10 @@
                  <li>
                     <a href="https://docs.pi-hole.net/" rel="noopener" target="_blank"><i class="fa fa-fw fa-question-circle"></i>&nbsp;&nbsp;Documentation</a>
                 </li>
+                <!-- API Docs -->
+                <li>
+                   <a href="/api/docs/" rel="noopener" target="_blank"><i class="fa fa-fw fa-question-circle"></i>&nbsp;&nbsp;API Documentation</a>
+               </li>
                 <li class="header needs-auth text-uppercase">Analysis</li>
                 <!-- Query Log -->
                 <li class="needs-auth<?php if($scriptname === "queries.php"){ ?> active<?php } ?>">
