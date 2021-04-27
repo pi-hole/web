@@ -42,6 +42,7 @@
                     <li>Please run <code>pihole -g</code> or update <a href="gravity.php">online</a> after modifying your lists.</li>
                     <li>Multiple lists can be added by separating each <i>unique</i> URL with a space. Multi-line pasting into the field is supported for mass-insertion.</li>
                     <li>Deleting a list here automatically removes the associated domains.</li>
+                    <li>Click on the icon in the first column to get additional information about your lists. The icons correspond to the health of the list.</li>
                 </ol>
                 <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
             </div>
@@ -62,6 +63,7 @@
                     <thead>
                     <tr>
                         <th>ID</th>
+                        <th></th>
                         <th>Address</th>
                         <th>Status</th>
                         <th>Comment</th>

@@ -146,7 +146,7 @@ var reloadCallback = function () {
   var data = tableApi.rows().data();
   for (var i = 0; i < data.length; i++) {
     statistics[0]++; // TOTAL query
-    if (data[i][4] === 1 || (data[i][4] > 4 && data[i][4] !== 10)) {
+    if (data[i][4] === 1 || (data[i][4] > 4 && ![10, 12, 13, 14].includes(data[i][4]))) {
       statistics[2]++; // EXACT blocked
     } else if (data[i][4] === 3) {
       statistics[1]++; // CACHE query

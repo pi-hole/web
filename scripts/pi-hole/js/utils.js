@@ -117,7 +117,11 @@ function showAlert(type, icon, title, message) {
 
 function datetime(date, html) {
   var format = html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
-  return moment.unix(Math.floor(date)).format(format);
+  return moment.unix(Math.floor(date)).format(format).trim();
+}
+
+function datetimeRelative(date) {
+  return moment.unix(Math.floor(date)).fromNow();
 }
 
 function disableAll() {
@@ -268,8 +272,8 @@ function addFromQueryLog(domain, list) {
 
   var listtype = list === "allow" ? "Allowlist" : "Denylist";
 
-  alProcessing.children(alDomain).html(domain);
-  alProcessing.children(alList).html(listtype);
+  alProcessing.children(alDomain).text(domain);
+  alProcessing.children(alList).text(listtype);
   alertModal.modal("show");
 
   // add Domain to List after Modal has faded in
@@ -296,8 +300,8 @@ function addFromQueryLog(domain, list) {
           }, 10000);
         } else {
           // Success
-          alSuccess.children(alDomain).html(domain);
-          alSuccess.children(alList).html(listtype);
+          alSuccess.children(alDomain).text(domain);
+          alSuccess.children(alList).text(listtype);
           alSuccess.fadeIn(1000);
           setTimeout(function () {
             alertModal.modal("hide");
@@ -391,6 +395,7 @@ window.utils = (function () {
     padNumber: padNumber,
     showAlert: showAlert,
     datetime: datetime,
+    datetimeRelative: datetimeRelative,
     disableAll: disableAll,
     enableAll: enableAll,
     validateIPv4CIDR: validateIPv4CIDR,
