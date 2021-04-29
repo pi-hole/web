@@ -43,9 +43,133 @@
 
 <div class="row">
     <div class="col-md-12">
+        <div class="box box-warning collapsed-box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title">Advanced filtering</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                </div>
+                <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Domain</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <select id="domain_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Client</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <select id="client_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Upstream</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <select id="upstream_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Type</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="form-group" id="type_filter"></div>
+                                <a href="#" id="type_all" class="btn btn-sm btn-default btn-flat">All</a>
+                                <a href="#" id="type_none" class="btn btn-sm btn-default btn-flat">None</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Status</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="form-group" id="status_filter"></div>
+                                <a href="#" id="stat_all" class="btn btn-sm btn-default btn-flat">All</a>
+                                <a href="#" id="stat_none" class="btn btn-sm btn-default btn-flat">None</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Reply</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="form-group" id="reply_filter"></div>
+                                <a href="#" id="reply_all" class="btn btn-sm btn-default btn-flat">All</a>
+                                <a href="#" id="reply_none" class="btn btn-sm btn-default btn-flat">None</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">DNSSEC</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="form-group" id="dnssec_filter"></div>
+                                <a href="#" id="dnssec_all" class="btn btn-sm btn-default btn-flat">All</a>
+                                <a href="#" id="dnssec_none" class="btn btn-sm btn-default btn-flat">None</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- /.box-body -->
+        <div class="box-footer clearfix">
+            <span class="pull-right">Click "Refresh" below to apply.</span>
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->
+
+<div class="row">
+    <div class="col-md-12">
       <div class="box" id="recent-queries">
         <div class="box-header with-border">
-          <h3 class="box-title">Recent Queries (<a id="refresh" href="#">refresh</a>)</h3>
+          <h3 class="box-title">Recent Queries</h3>
+          <a id="refresh" href="#" class="btn btn-sm btn-info btn-flat pull-right">Refresh</a>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
@@ -75,6 +199,8 @@
     </div>
 </div>
 <!-- /.row -->
+
+<script src="scripts/vendor/bootstrap-select.min.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/queries.js?v=<?=$cacheVer?>"></script>

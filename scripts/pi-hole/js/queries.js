@@ -13,8 +13,6 @@ var cursor = null;
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
-  } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
-    alert("An error occured while loading the data: Connection refused. Is FTL running?");
   } else {
     alert("An unknown error occured while loading the data.\n" + xhr.responseText);
   }
@@ -40,7 +38,7 @@ function parseQueryStatus(data) {
       break;
     case "FORWARDED":
       colorClass = "text-green";
-      fieldtext = "Forwarded to " + data.upstream;
+      fieldtext = "Forwarded to <code>" + data.upstream + "</code>";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
       break;
@@ -133,26 +131,22 @@ function parseQueryStatus(data) {
 
 function formatInfo(data) {
   // DNSSEC status
-  var dnssecStatus, dnssecClass;
+  var dnssecStatus = data.dnssec,
+    dnssecClass;
   switch (data.dnssec) {
     case "SECURE":
-      dnssecStatus = "SECURE";
       dnssecClass = "text-green";
       break;
     case "INSECURE":
-      dnssecStatus = "INSECURE";
       dnssecClass = "text-orange";
       break;
     case "BOGUS":
-      dnssecStatus = "BOGUS";
       dnssecClass = "text-red";
       break;
     case "ABANDONED":
-      dnssecStatus = "ABANDONED";
       dnssecClass = "text-red";
       break;
     case "UNKNOWN":
-      dnssecStatus = "UNKNOWN";
       dnssecClass = "text-orange";
       break;
     default:
@@ -232,6 +226,149 @@ function formatInfo(data) {
   );
 }
 
+function addSelectSuggestion(name, dict, data) {
+  var obj = $("#" + name + "_filter"),
+    value = "";
+  obj.empty();
+
+  // In order for the placeholder value to appear, we have to have a blank
+  // <option> as the first option in our <select> control. This is because
+  // the browser tries to select the first option by default. If our first
+  // option were non-empty, the browser would display this instead of the
+  // placeholder.
+  obj.append($("<option />"));
+
+  // Add GET parameter as first suggestion (if present and not already included)
+  if (name in dict) {
+    value = decodeURIComponent(dict[name]);
+    if (!data.includes(value)) data.unshift(value);
+  }
+
+  // Add data obtained from API
+  for (var key in data) {
+    if (!Object.prototype.hasOwnProperty.call(data, key)) {
+      continue;
+    }
+
+    var text = data[key];
+    obj.append($("<option />").val(text).text(text));
+  }
+
+  // Select GET parameter (if present)
+  if (name in dict) {
+    obj.val(value);
+  }
+}
+
+function addChkboxSuggestion(name, data) {
+  var obj = $("#" + name + "_filter");
+  obj.empty();
+
+  // Add data obtained from API
+  for (var key in data) {
+    if (!Object.prototype.hasOwnProperty.call(data, key)) {
+      continue;
+    }
+
+    var text = data[key];
+    obj.append(
+      '<div class="checkbox"><label><input type="checkbox" checked id="' +
+        name +
+        "_" +
+        key +
+        '">' +
+        text +
+        "</label></div>"
+    );
+  }
+}
+
+function getSuggestions(dict) {
+  $.get(
+    "/api/queries/suggestions",
+    function (data) {
+      addSelectSuggestion("domain", dict, data.domains);
+      addSelectSuggestion("client", dict, data.clients);
+      addSelectSuggestion("upstream", dict, data.upstreams);
+      addChkboxSuggestion("type", data.types);
+      addChkboxSuggestion("status", data.status);
+      addChkboxSuggestion("reply", data.replies);
+      addChkboxSuggestion("dnssec", data.dnssec);
+    },
+    "json"
+  );
+}
+
+function parseFilters() {
+  var filter = {};
+  filter.domain = $("#domain_filter").val();
+  filter.client = $("#client_filter").val();
+  filter.upstream = $("#upstream_filter").val();
+  filter.type = [];
+  // Type needs incrementing by one (A = 1, AAAA = 2, etc.)
+  $("input[id^=type_]").each(function (i) {
+    filter.type.push(i + 1);
+  });
+  filter.status = [];
+  $("input[id^=status_]").each(function (i) {
+    filter.status.push(i);
+  });
+  filter.reply = [];
+  $("input[id^=reply_]").each(function (i) {
+    filter.reply.push(i);
+  });
+  filter.dnssec = [];
+  $("input[id^=dnssec_]").each(function (i) {
+    filter.dnssec.push(i);
+  });
+
+  return filter;
+}
+
+function checkAll() {
+  var action = this.id.split("_");
+  if (action.length === 2) $("[id^=" + action[0] + "]").prop("checked", action[1] === "all");
+}
+
+function getAPIURL(dict) {
+  var apiurl = "/api/queries?";
+
+  if ("from" in dict && "until" in dict) {
+    apiurl += "&from=" + dict.from;
+    apiurl += "&until=" + dict.until;
+  }
+
+  if ("client" in dict && dict.client !== null && dict.client.length > 0) {
+    apiurl += "&client=" + dict.client;
+  }
+
+  if ("domain" in dict && dict.domain !== null && dict.domain.length > 0) {
+    apiurl += "&domain=" + dict.domain;
+  }
+
+  if ("upstream" in dict && dict.upstream !== null && dict.upstream.length > 0) {
+    apiurl += "&upstream=" + dict.upstream;
+  }
+
+  if ("type" in dict) {
+    apiurl += "&type=" + dict.type;
+  }
+
+  if ("status" in dict) {
+    apiurl += "&status=" + dict.status;
+  }
+
+  if ("reply" in dict) {
+    apiurl += "&reply=" + dict.reply;
+  }
+
+  if ("dnssec" in dict) {
+    apiurl += "&dnssec=" + dict.dnssec;
+  }
+
+  return encodeURI(apiurl);
+}
+
 $(function () {
   // Do we want to filter queries?
   var GETDict = {};
@@ -242,32 +379,25 @@ $(function () {
       GETDict[item.split("=")[0]] = item.split("=")[1];
     });
 
-  var APIstring = "/api/queries?";
-
-  if ("from" in GETDict && "until" in GETDict) {
-    APIstring += "&from=" + GETDict.from;
-    APIstring += "&until=" + GETDict.until;
-  } else if ("client" in GETDict) {
-    APIstring += "&client=" + GETDict.client;
-  } else if ("domain" in GETDict) {
-    APIstring += "&domain=" + GETDict.domain;
-  } else if ("querytype" in GETDict) {
-    APIstring += "&querytype=" + GETDict.querytype;
-  } else if ("forwarddest" in GETDict) {
-    APIstring += "&forwarddest=" + GETDict.forwarddest;
-  }
-  // If we don't ask filtering and also not for all queries, just request the most recent 100 queries
-  else if ("all" in GETDict) {
-    APIstring += "n=-1";
+  var selects = ["domain", "client", "upstream"];
+  for (var sel in selects) {
+    if (Object.hasOwnProperty.call(selects, sel)) {
+      var element = selects[sel];
+      $("#" + element + "_filter").select2({
+        width: "100%",
+        tags: true,
+        placeholder: "Select " + element + "...",
+        allowClear: true
+      });
+    }
   }
 
-  if ("type" in GETDict) {
-    APIstring += "&type=" + GETDict.type;
-  }
+  getSuggestions(GETDict);
+  var apiurl = getAPIURL(GETDict);
 
   table = $("#all-queries").DataTable({
     ajax: {
-      url: APIstring,
+      url: apiurl,
       error: handleAjaxError,
       dataSrc: "queries",
       data: function (d) {
@@ -361,44 +491,19 @@ $(function () {
     }
   });
 
-  // function genSelect(which) {
-  //   var arr = [],
-  //     select = '<select><option value="">all</option>';
-  //   if (which === "Type") arr = utils.typesList;
-  //   else if (which === "Status") arr = utils.statusList;
-  //   else if (which === "Reply") arr = utils.repliesList;
-  //   for (var i = 0, l = arr.length; i < l; i++)
-  //     select += '<option value="' + arr[i] + '">' + arr[i] + "</option>";
-  //   select += "</select>";
-  //   return select;
-  // }
-  //  // Add search fields
-  //  $("#all-queries tfoot th").each(function () {
-  //    var title = $(this).text();
-  //    if (title === "Time" || title === "Action") $(this).html("");
-  //    else if (title === "Type" /* || title === "Status" || title === "Reply" */)
-  //      $(this).html(genSelect(title));
-  //    else if (title === "Domain" || title === "Client")
-  //      $(this).html('<input type="text" placeholder="Search ' + title + '" />');
-  //    else $(this).html(""); // Clear field
-  //  });
-  //  var r = $("#all-queries tfoot tr");
-  //  $("#all-queries thead").append(r);
-  //  /* Apply the search for individual columns*/
-  //  table.columns().every(function () {
-  //    var that = this;
-  //    $("input", this.header()).on("keydown", function (ev) {
-  //      if (ev.keyCode === 13) {
-  //        //only on enter keypress (code 13)
-  //        that.search(this.value).draw();
-  //      }
-  //    });
-  //  });
   $("#refresh").on("click", refreshTable);
+  $("#apply").on("click", refreshTable);
+  $("[id$=_all]").on("click", checkAll);
+  $("[id$=_none]").on("click", checkAll);
 });
 
 function refreshTable() {
   cursor = null;
+
+  // Clear table
   table.clear();
-  table.draw();
+  // Source data from API
+  var filters = parseFilters();
+  var apiurl = getAPIURL(filters);
+  table.ajax.url(apiurl).draw();
 }
