@@ -104,9 +104,9 @@
                             </div>
                             <!-- /.box-header -->
                             <div class="box-body">
-                                <div class="form-group" id="type_filter"></div>
-                                <a href="#" id="type_all" class="btn btn-sm btn-default btn-flat">All</a>
-                                <a href="#" id="type_none" class="btn btn-sm btn-default btn-flat">None</a>
+                                <select id="type_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -118,9 +118,9 @@
                             </div>
                             <!-- /.box-header -->
                             <div class="box-body">
-                                <div class="form-group" id="status_filter"></div>
-                                <a href="#" id="stat_all" class="btn btn-sm btn-default btn-flat">All</a>
-                                <a href="#" id="stat_none" class="btn btn-sm btn-default btn-flat">None</a>
+                                <select id="status_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -132,33 +132,34 @@
                             </div>
                             <!-- /.box-header -->
                             <div class="box-body">
-                                <div class="form-group" id="reply_filter"></div>
-                                <a href="#" id="reply_all" class="btn btn-sm btn-default btn-flat">All</a>
-                                <a href="#" id="reply_none" class="btn btn-sm btn-default btn-flat">None</a>
+                                <select id="reply_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="box box-default box-solid">
                             <div class="box-header with-border">
-                                <h3 class="box-title">DNSSEC</h3>
+                                <h3 class="box-title">DNSSEC status</h3>
                                 <!-- /.box-tools -->
                             </div>
                             <!-- /.box-header -->
                             <div class="box-body">
-                                <div class="form-group" id="dnssec_filter"></div>
-                                <a href="#" id="dnssec_all" class="btn btn-sm btn-default btn-flat">All</a>
-                                <a href="#" id="dnssec_none" class="btn btn-sm btn-default btn-flat">None</a>
+                                <select id="dnssec_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        <!-- /.box-body -->
-        <div class="box-footer clearfix">
-            <span class="pull-right">Click "Refresh" below to apply.</span>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+                <span class="pull-right">Click "Refresh" below to apply.</span>
+            </div>
+            <!-- /.box -->
         </div>
-        <!-- /.box -->
     </div>
     <!-- /.col -->
 </div>
@@ -194,9 +195,8 @@
             </table>
         </div>
         <!-- /.box-body -->
-      </div>
-      <!-- /.box -->
     </div>
+    <!-- /.box -->
 </div>
 <!-- /.row -->
 

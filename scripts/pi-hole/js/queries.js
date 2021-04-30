@@ -9,6 +9,17 @@
 
 var table = null;
 var cursor = null;
+var filters = [
+  "from",
+  "until",
+  "client",
+  "domain",
+  "upstream",
+  "type",
+  "status",
+  "reply",
+  "dnssec"
+];
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
@@ -260,6 +271,7 @@ function addSelectSuggestion(name, dict, data) {
   }
 }
 
+/*
 function addChkboxSuggestion(name, data) {
   var obj = $("#" + name + "_filter");
   obj.empty();
@@ -282,18 +294,17 @@ function addChkboxSuggestion(name, data) {
     );
   }
 }
-
+*/
 function getSuggestions(dict) {
   $.get(
     "/api/queries/suggestions",
     function (data) {
-      addSelectSuggestion("domain", dict, data.domains);
-      addSelectSuggestion("client", dict, data.clients);
-      addSelectSuggestion("upstream", dict, data.upstreams);
-      addChkboxSuggestion("type", data.types);
-      addChkboxSuggestion("status", data.status);
-      addChkboxSuggestion("reply", data.replies);
-      addChkboxSuggestion("dnssec", data.dnssec);
+      for (var key in filters) {
+        if (Object.hasOwnProperty.call(filters, key)) {
+          var f = filters[key];
+          addSelectSuggestion(f, dict, data[f]);
+        }
+      }
     },
     "json"
   );
@@ -301,69 +312,27 @@ function getSuggestions(dict) {
 
 function parseFilters() {
   var filter = {};
-  filter.domain = $("#domain_filter").val();
-  filter.client = $("#client_filter").val();
-  filter.upstream = $("#upstream_filter").val();
-  filter.type = [];
-  // Type needs incrementing by one (A = 1, AAAA = 2, etc.)
-  $("input[id^=type_]").each(function (i) {
-    filter.type.push(i + 1);
-  });
-  filter.status = [];
-  $("input[id^=status_]").each(function (i) {
-    filter.status.push(i);
-  });
-  filter.reply = [];
-  $("input[id^=reply_]").each(function (i) {
-    filter.reply.push(i);
-  });
-  filter.dnssec = [];
-  $("input[id^=dnssec_]").each(function (i) {
-    filter.dnssec.push(i);
-  });
+  for (var key in filters) {
+    if (Object.hasOwnProperty.call(filters, key)) {
+      var f = filters[key];
+      filter[f] = $("#" + f + "_filter").val();
+    }
+  }
 
   return filter;
 }
 
-function checkAll() {
-  var action = this.id.split("_");
-  if (action.length === 2) $("[id^=" + action[0] + "]").prop("checked", action[1] === "all");
+function filterOn(param, dict) {
+  return param in dict && typeof dict[param] === "string" && dict[param].length > 0;
 }
 
 function getAPIURL(dict) {
   var apiurl = "/api/queries?";
-
-  if ("from" in dict && "until" in dict) {
-    apiurl += "&from=" + dict.from;
-    apiurl += "&until=" + dict.until;
-  }
-
-  if ("client" in dict && dict.client !== null && dict.client.length > 0) {
-    apiurl += "&client=" + dict.client;
-  }
-
-  if ("domain" in dict && dict.domain !== null && dict.domain.length > 0) {
-    apiurl += "&domain=" + dict.domain;
-  }
-
-  if ("upstream" in dict && dict.upstream !== null && dict.upstream.length > 0) {
-    apiurl += "&upstream=" + dict.upstream;
-  }
-
-  if ("type" in dict) {
-    apiurl += "&type=" + dict.type;
-  }
-
-  if ("status" in dict) {
-    apiurl += "&status=" + dict.status;
-  }
-
-  if ("reply" in dict) {
-    apiurl += "&reply=" + dict.reply;
-  }
-
-  if ("dnssec" in dict) {
-    apiurl += "&dnssec=" + dict.dnssec;
+  for (var key in filters) {
+    if (Object.hasOwnProperty.call(filters, key)) {
+      var filter = filters[key];
+      if (filterOn(filter, dict)) apiurl += "&" + filter + "=" + dict[filter];
+    }
   }
 
   return encodeURI(apiurl);
@@ -379,14 +348,13 @@ $(function () {
       GETDict[item.split("=")[0]] = item.split("=")[1];
     });
 
-  var selects = ["domain", "client", "upstream"];
-  for (var sel in selects) {
-    if (Object.hasOwnProperty.call(selects, sel)) {
-      var element = selects[sel];
+  for (var sel in filters) {
+    if (Object.hasOwnProperty.call(filters, sel)) {
+      var element = filters[sel];
       $("#" + element + "_filter").select2({
         width: "100%",
-        tags: true,
-        placeholder: "Select " + element + "...",
+        tags: sel < 3, // Only the first three are allowed to freely specify input
+        placeholder: "Select...",
         allowClear: true
       });
     }
@@ -492,9 +460,6 @@ $(function () {
   });
 
   $("#refresh").on("click", refreshTable);
-  $("#apply").on("click", refreshTable);
-  $("[id$=_all]").on("click", checkAll);
-  $("[id$=_none]").on("click", checkAll);
 });
 
 function refreshTable() {
