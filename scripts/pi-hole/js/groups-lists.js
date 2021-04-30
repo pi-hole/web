@@ -201,7 +201,6 @@ function initTable() {
         '<select class="selectpicker" id="multiselect_' + data.id + '" multiple></select>'
       );
       var selectEl = $("#multiselect_" + data.id, row);
-      console.log(data.groups);
       // Add all known groups
       for (var i = 0; i < data.groups.length; i++) {
         var dataSub = "";
@@ -296,15 +295,6 @@ function initTable() {
       return data;
     }
   });
-
-  // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
-  if (input !== null) {
-    input.setAttribute("autocomplete", "off");
-    input.setAttribute("autocorrect", "off");
-    input.setAttribute("autocapitalize", "off");
-    input.setAttribute("spellcheck", false);
-  }
 
   table.on("order.dt", function () {
     var order = table.order();
