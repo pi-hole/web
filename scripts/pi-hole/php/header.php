@@ -153,6 +153,15 @@
     $FTL = ($FTLpid !== 0 ? true : false);
 
     $piholeFTLConf = piholeFTLConfig();
+
+    //Calculate Uptime
+    function calculateUptime($uptime)
+    {
+        $interval = date_diff(date_create("@0"), date_create("@$uptime"));
+        $days = $interval->d . ($interval->d == 1 ? " day " : " days ");
+        $time = [sprintf("%02d", $interval->h), sprintf("%02d", $interval->i), sprintf("%02d", $interval->s)];
+        return (isset($days) ? $days : NULL) . (isset($time) ? implode(':', $time) : NULL);
+    }
 ?>
 <!doctype html>
 <!-- Pi-hole: A black hole for Internet advertisements
@@ -386,6 +395,15 @@ if($auth) {
                         else
                         {
                             echo "\"></i> Memory usage:&nbsp;&nbsp; N/A</span>";
+                        }
+                    ?>
+                    <br/>
+                    <?php
+                        // uptime if FTL process is running. format is (0 days HH:MM:SS)
+                        if($FTL)
+                        {
+                            echo "<span><i class=\"fa fa-circle text-green-light\"></i>&nbsp;Uptime:&nbsp;&nbsp;";
+                            echo calculateUptime(trim(exec("ps -p " . $FTLpid . " -o etimes")));
                         }
                     ?>
                 </div>

@@ -281,6 +281,11 @@
   margin-right: 3px;
 }
 
+/* Increased image margin bottom to get space to show FTL Uptime */
+.user-panel > .image {
+  margin-bottom: 15px;
+}
+
 .row-centered > div[class^="col-"] {
   display: inline-block;
   float: none;
