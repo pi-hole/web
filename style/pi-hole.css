@@ -318,6 +318,10 @@
   height: 1em;
 }
 
+.sidebar-menu .fa-fw {
+  margin-right: 5px;
+}
+
 .sidebar-toggle-svg {
   color: #fff;
   float: left;
