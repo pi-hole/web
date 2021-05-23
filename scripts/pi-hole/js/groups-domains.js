@@ -53,90 +53,90 @@ function initTable(groups) {
       url: "/api/domains",
       dataSrc: "domains"
     },
+
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: "domain" },
-      { data: "type", searchable: false },
-      { data: "enabled", searchable: false },
-      { data: "comment" },
-      { data: "groups[, ]", searchable: false },
-      { data: null, width: "80px", orderable: false }
+      {
+        data: "domain", title: "Domain/Regex",
+        render: function (data, type, row) {
+          var tooltip =
+            "Added: " +
+            utils.datetime(data.date_added, false) +
+            "\nLast modified: " +
+            utils.datetime(data.date_modified, false) +
+            "\nDatabase ID: " +
+            data.id;
+
+          return '<code id="domain_' + row.id + '" title="' + tooltip + '" class="breakall">' + data + "</code>"
+        }
+      },
+      {
+        data: "type", title: "Type", searchable: false,
+        render: function (data, type, row) {
+          var allowlistOptions =
+            '<option value="allow/exact"' +
+            (data.type === "allow" && data.kind === "exact" ? " selected" : "") +
+            ">Allow (exact)</option>" +
+            '<option value="allow/regex"' +
+            (data.type === "allow" && data.kind === "regex" ? " selected" : "") +
+            ">Allow (regex)</option>";
+
+          var denylistOptions =
+            '<option value="deny/exact"' +
+            (data.type === "deny" && data.kind === "exact" ? " selected " : "") +
+            ">Deny (exact)</option>" +
+            '<option value="deny/regex"' +
+            (data.type === "deny" && data.kind === "regex" ? " selected" : "") +
+            ">Deny (regex)</option>";
+
+          return '<select id="type_' + row.id + '" class="form-control">' + allowlistOptions + denylistOptions + "</select>"
+        }
+      },
+      {
+        data: "enabled", title: "Status", searchable: false,
+        render: function (data, type, row) {
+          return '<input type="checkbox" id="status_' + row.id + '"' + (data ? " checked" : "") + '>'
+        }
+      },
+      {
+        data: "comment", title: "Comment",
+        render: function (data, type, row) {
+          return '<input id="comment_' + row.id + '" class="form-control" value="' + data + '">'
+        }
+      },
+      {
+        data: "groups[, ]", title: "Group Assignment", searchable: false,
+      },
+      {
+        data: null, title: "Action", width: "80px", orderable: false,
+        render: function (data, type, row) {
+          return '<button type="button" class="btn btn-danger btn-xs" id="deleteDomain_' + row.id + '">' +
+            '<span class="far fa-trash-alt"></span>' +
+            "</button>";
+        },
+      }
     ],
     drawCallback: function () {
       $('button[id^="deleteDomain_"]').on("click", deleteDomain);
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
-    },
-    rowCallback: function (row, data) {
-      $(row).attr("data-id", data.id);
-      $(row).attr("data-type", data.type);
-      $(row).attr("data-kind", data.kind);
-      var tooltip =
-        "Added: " +
-        utils.datetime(data.date_added, false) +
-        "\nLast modified: " +
-        utils.datetime(data.date_modified, false) +
-        "\nDatabase ID: " +
-        data.id;
-      $("td:eq(0)", row).html(
-        '<code id="domain_' +
-          data.id +
-          '" title="' +
-          tooltip +
-          '" class="breakall">' +
-          data.domain +
-          "</code>"
-      );
 
-      var allowlistOptions =
-        '<option value="allow/exact"' +
-        (data.type === "allow" && data.kind === "exact" ? " selected" : "") +
-        ">Allow (exact)</option>" +
-        '<option value="allow/regex"' +
-        (data.type === "allow" && data.kind === "regex" ? " selected" : "") +
-        ">Allow (regex)</option>";
-
-      var denylistOptions =
-        '<option value="deny/exact"' +
-        (data.type === "deny" && data.kind === "exact" ? " selected " : "") +
-        ">Deny (exact)</option>" +
-        '<option value="deny/regex"' +
-        (data.type === "deny" && data.kind === "regex" ? " selected" : "") +
-        ">Deny (regex)</option>";
-
-      $("td:eq(1)", row).html(
-        '<select id="type_' +
-          data.id +
-          '" class="form-control">' +
-          allowlistOptions +
-          denylistOptions +
-          "</select>"
-      );
-      var typeEl = $("#type_" + data.id, row);
-      typeEl.on("change", editDomain);
-
-      $("td:eq(2)", row).html(
-        '<input type="checkbox" id="status_' +
-          data.id +
-          '"' +
-          (data.enabled ? " checked" : "") +
-          ">"
-      );
-      var statusEl = $("#status_" + data.id, row);
-      statusEl.bootstrapToggle({
+      $('[id^="comment_"]').on("change", editDomain);
+      $('[id^="status_"]').on("change", editDomain);
+      $('[id^="type_"]').on("change", editDomain);
+      $('[id^="status_"]').bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px"
       });
-      statusEl.on("change", editDomain);
-
-      $("td:eq(3)", row).html('<input id="comment_' + data.id + '" class="form-control">');
-      var commentEl = $("#comment_" + data.id, row);
-      commentEl.val(utils.unescapeHtml(data.comment));
-      commentEl.on("change", editDomain);
+    },
+    rowCallback: function (row, data) {
+      $(row).attr("data-id", data.id);
+      $(row).attr("data-type", data.type);
+      $(row).attr("data-kind", data.kind);
 
       $("td:eq(4)", row).empty();
       $("td:eq(4)", row).append(
@@ -197,8 +197,8 @@ function initTable(groups) {
         .find(".bs-actionsbox")
         .prepend(
           '<button type="button" id=btn_apply_' +
-            data.id +
-            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+          data.id +
+          ' class="btn btn-block btn-sm" disabled>Apply</button>'
         );
 
       var applyBtn = "#btn_apply_" + data.id;
@@ -206,18 +206,6 @@ function initTable(groups) {
       // Highlight row (if url parameter "domainid=" is used)
       if ("domainid" in GETDict && data.id === parseInt(GETDict.domainid, 10)) {
         $(row).find("td").addClass("highlight");
-      }
-
-      var button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteDomain_' +
-        data.id +
-        '">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
-      if (table.column(5).visible()) {
-        $("td:eq(5)", row).html(button);
-      } else {
-        $("td:eq(4)", row).html(button);
       }
     },
     dom:

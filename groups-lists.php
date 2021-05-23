@@ -59,19 +59,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="listsTable" class="table table-striped table-bordered" width="100%">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th></th>
-                        <th>Address</th>
-                        <th>Status</th>
-                        <th>Comment</th>
-                        <th>Group assignment</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                </table>
+                <table id="listsTable" class="table table-striped table-bordered" width="100%"></table>
                 <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Reset sorting</button>
             </div>
             <!-- /.box-body -->

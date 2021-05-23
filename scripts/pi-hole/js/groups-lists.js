@@ -74,9 +74,9 @@ function format(data) {
     ')</td></tr><tr class="dataTables-child"><td>The list contents were last updated&nbsp;&nbsp;</td><td>' +
     (data.date_updated > 0
       ? utils.datetimeRelative(data.date_updated) +
-        "&nbsp;(" +
-        utils.datetime(data.date_updated) +
-        ")"
+      "&nbsp;(" +
+      utils.datetime(data.date_updated) +
+      ")"
       : "N/A") +
     '</td></tr><tr class="dataTables-child"><td>Number of valid domains on this list:&nbsp;&nbsp;</td><td>' +
     (data.number !== null && numbers === true ? parseInt(data.number, 10) : "N/A") +
@@ -102,99 +102,102 @@ function initTable() {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: "status", searchable: false, class: "details-control" },
-      { data: "address" },
-      { data: "enabled", searchable: false },
-      { data: "comment" },
+      {
+        data: "status", searchable: false, class: "details-control",
+        render: function (data, type, row) {
+          var disabled = row.enabled === 0;
+          var statusCode = 0,
+            statusIcon;
+          // If there is no status or the list is disabled, we keep
+          // status 0 (== unknown)
+          if (row.status !== null && disabled !== true) {
+            statusCode = parseInt(row.status, 10);
+          }
+
+          switch (statusCode) {
+            case 1:
+              statusIcon = "fa-check";
+              break;
+            case 2:
+              statusIcon = "fa-history";
+              break;
+            case 3:
+              statusIcon = "fa-exclamation-circle";
+              break;
+            case 4:
+              statusIcon = "fa-times";
+              break;
+            case 0:
+            default:
+              statusIcon = "fa-question-circle";
+              break;
+          }
+
+          // Append red exclamation-triangle when there are invalid lines on the list
+          var extra = "";
+          if (row.invalid_domains !== null && row.invalid_domains > 0) {
+            extra = "<i class='fa fa-exclamation-triangle list-status-3'></i>";
+          }
+
+          return '<i class="fa ' + statusIcon + ' list-status-' + statusCode + '" title="Click for details about this list"></i>' + extra
+
+        }
+      },
+      {
+        data: "address", title: "Address",
+        render: function (data, type, row) {
+          if (data.startsWith("file://")) {
+            // Local files cannot be downloaded from a distant client so don't show// a link to such a list here
+            return '<code id="address_' + row.id + '" class="breakall">' + data + "</code>"
+
+          } else {
+            return '<a id="address_' +
+              row.id + '" class="breakall" href="' + data + '" target="_blank" rel="noopener noreferrer">' + data + "</a>"
+          }
+        }
+      },
+      {
+        data: "enabled", title: "Status", searchable: false,
+        render: function (data, type, row) {
+          console.log(data)
+          return '<input type="checkbox" id="status_' + row.id + '"' + (data ? " checked" : "") + '>'
+        }
+      },
+      {
+        data: "comment", title: "Comment",
+        render: function (data, type, row) {
+          return '<input id="comment_' + row.id + '" class="form-control" value="' +data + '">'
+        }
+      },
       { data: "groups[, ]", searchable: false },
-      { data: null, width: "80px", orderable: false }
+      {
+        data: null, width: "80px", orderable: false,
+        render: function (data, type, row) {
+          return '<button type="button" class="btn btn-danger btn-xs" id="deleteList_' +
+            row.id +
+            '">' +
+            '<span class="far fa-trash-alt"></span>' +
+            "</button>";
+        }
+      }
     ],
     drawCallback: function () {
       $('button[id^="deleteList_"]').on("click", deleteList);
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
-    },
-    rowCallback: function (row, data) {
-      $(row).attr("data-id", data.id);
-
-      var disabled = data.enabled === 0;
-      var statusCode = 0,
-        statusIcon;
-      // If there is no status or the list is disabled, we keep
-      // status 0 (== unknown)
-      if (data.status !== null && disabled !== true) {
-        statusCode = parseInt(data.status, 10);
-      }
-
-      switch (statusCode) {
-        case 1:
-          statusIcon = "fa-check";
-          break;
-        case 2:
-          statusIcon = "fa-history";
-          break;
-        case 3:
-          statusIcon = "fa-exclamation-circle";
-          break;
-        case 4:
-          statusIcon = "fa-times";
-          break;
-        case 0:
-        default:
-          statusIcon = "fa-question-circle";
-          break;
-      }
-
-      // Append red exclamation-triangle when there are invalid lines on the list
-      var extra = "";
-      if (data.invalid_domains !== null && data.invalid_domains > 0) {
-        extra = "<i class='fa fa-exclamation-triangle list-status-3'></i>";
-      }
-
-      $("td:eq(0)", row).addClass("list-status-" + statusCode);
-      $("td:eq(0)", row).html(
-        "<i class='fa " + statusIcon + "' title='Click for details about this list'></i>" + extra
-      );
-
-      if (data.address.startsWith("file://")) {
-        // Local files cannot be downloaded from a distant client so don't show
-        // a link to such a list here
-        $("td:eq(1)", row).html(
-          '<code id="address_' + data.id + '" class="breakall">' + data.address + "</code>"
-        );
-      } else {
-        $("td:eq(1)", row).html(
-          '<a id="address_' +
-            data.id +
-            '" class="breakall" href="' +
-            data.address +
-            '" target="_blank" rel="noopener noreferrer">' +
-            data.address +
-            "</a>"
-        );
-      }
-
-      $("td:eq(2)", row).html(
-        '<input type="checkbox" id="status_' +
-          data.id +
-          '"' +
-          (data.enabled ? " checked" : "") +
-          ">"
-      );
-      var statusEl = $("#status_" + data.id, row);
-      statusEl.bootstrapToggle({
+      $('[id^="comment_"]').on("change", editList);
+      $('[id^="status_"]').on("change", editList);
+      $('[id^="type_"]').on("change", editList);
+      $('[id^="status_"]').bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px"
       });
-      statusEl.on("change", editList);
-
-      $("td:eq(3)", row).html('<input id="comment_' + data.id + '" class="form-control">');
-      var commentEl = $("#comment_" + data.id, row);
-      commentEl.val(utils.unescapeHtml(data.comment));
-      commentEl.on("change", editList);
+    },
+    rowCallback: function (row, data) {
+      $(row).attr("data-id", data.id);
 
       $("td:eq(4)", row).empty();
       $("td:eq(4)", row).append(
@@ -255,19 +258,12 @@ function initTable() {
         .find(".bs-actionsbox")
         .prepend(
           '<button type="button" id=btn_apply_' +
-            data.id +
-            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+          data.id +
+          ' class="btn btn-block btn-sm" disabled>Apply</button>'
         );
 
       var applyBtn = "#btn_apply_" + data.id;
 
-      var button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteList_' +
-        data.id +
-        '">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
-      $("td:eq(5)", row).html(button);
     },
     dom:
       "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
@@ -366,8 +362,8 @@ function editList() {
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
   var enabled = tr.find("#status_" + id).is(":checked");
-  var comment = utils.unescapeHtml(tr.find("#comment_" + id).val());
-  var address = utils.unescapeHtml(tr.find("#address_" + id).text());
+  var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
+  var address = utils.escapeHtml(tr.find("#address_" + id).text());
   var groups = tr
     .find("#multiselect_" + id)
     .val()
@@ -416,7 +412,7 @@ function editList() {
 function deleteList() {
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var address = utils.unescapeHtml(tr.find("#address_" + id).text());
+  var address = utils.escapeHtml(tr.find("#address_" + id).text());
 
   var url = "/api/lists/" + encodeURIComponent(address);
   group_utils.delEntry(url, address, "list", function () {
