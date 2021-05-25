@@ -296,15 +296,6 @@ function initTable() {
     }
   });
 
-  // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
-  if (input !== null) {
-    input.setAttribute("autocomplete", "off");
-    input.setAttribute("autocorrect", "off");
-    input.setAttribute("autocapitalize", "off");
-    input.setAttribute("spellcheck", false);
-  }
-
   table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {

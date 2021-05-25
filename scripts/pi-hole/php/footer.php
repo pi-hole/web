@@ -93,7 +93,7 @@
                     </li>
                 </ul>
                 <?php if($core_update || $web_update || $FTL_update) { ?>
-                    <p>To install updates, run <a  href="https://docs.pi-hole.net/main/update/">pihole -up</a>.</p>
+                    <p>To install updates, run <a  href="https://docs.pi-hole.net/main/update/" rel="noopener" target="_blank">pihole -up</a>.</p>
                 <?php } ?>
                 <?php } ?>
             </div>
