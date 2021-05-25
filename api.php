@@ -142,6 +142,10 @@ elseif (isset($_GET['list']))
 		// Set POST parameters and invoke script to add domain to list
 		$_POST['domain'] = $_GET['add'];
 		$_POST['action'] = 'add_domain';
+		if (isset($_GET['comment']))
+		{
+		    $_POST['comment'] = $_GET['comment'];
+		}
 		require("scripts/pi-hole/php/groups.php");
 	}
 	elseif (isset($_GET['sub']))
