@@ -651,7 +651,7 @@ function updateSummaryData(runOnce) {
     //Element name might have a different name to the property of the API so we split it at |
     var intl = new Intl.NumberFormat();
 
-    glowIfChanged($("span#dns_queries"), intl.format(parseInt(data.queries.sum, 10)));
+    glowIfChanged($("span#dns_queries"), intl.format(parseInt(data.queries.total, 10)));
     glowIfChanged($("span#total_clients"), parseInt(data.ftl.clients.total, 10));
     glowIfChanged($("span#blocked_queries"), intl.format(parseFloat(data.queries.blocked)));
     glowIfChanged(

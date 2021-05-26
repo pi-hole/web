@@ -7,19 +7,54 @@
 
 /* global moment:false, utils:false */
 
+var beginningOfTime = 0; // Jan 01 1970, 00:00
+var endOfTime = 2147483647 * 1000; // Jan 19, 2038, 03:14
+var from = beginningOfTime;
+var until = endOfTime;
+
+var dateformat = "MMMM Do YYYY, HH:mm";
+
 var table = null;
 var cursor = null;
-var filters = [
-  "from",
-  "until",
-  "client",
-  "domain",
-  "upstream",
-  "type",
-  "status",
-  "reply",
-  "dnssec"
-];
+var filters = ["client", "domain", "upstream", "type", "status", "reply", "dnssec"];
+
+$(function () {
+  $("#querytime").daterangepicker(
+    {
+      timePicker: true,
+      timePickerIncrement: 5,
+      timePicker24Hour: true,
+      locale: { format: dateformat },
+      startDate: moment(beginningOfTime),
+      endDate: moment(endOfTime),
+      ranges: {
+        "Last 10 Minutes": [moment().subtract(10, "minutes"), moment()],
+        "Last Hour": [moment().subtract(1, "hours"), moment()],
+        Today: [moment().startOf("day"), moment().endOf("day")],
+        Yesterday: [
+          moment().subtract(1, "days").startOf("day"),
+          moment().subtract(1, "days").endOf("day")
+        ],
+        "Last 7 Days": [moment().subtract(6, "days"), moment().endOf("day")],
+        "Last 30 Days": [moment().subtract(29, "days"), moment().endOf("day")],
+        "This Month": [moment().startOf("month"), moment().endOf("month")],
+        "Last Month": [
+          moment().subtract(1, "month").startOf("month"),
+          moment().subtract(1, "month").endOf("month")
+        ],
+        "This Year": [moment().startOf("year"), moment().endOf("year")],
+        "All Time": [moment(beginningOfTime), moment(endOfTime)]
+      },
+      opens: "center",
+      showDropdowns: true,
+      autoUpdateInput: true
+    },
+    function (startt, endt) {
+      from = moment(startt).utc().valueOf() / 1000;
+      until = moment(endt).utc().valueOf() / 1000;
+    }
+  );
+});
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
@@ -49,7 +84,7 @@ function parseQueryStatus(data) {
       break;
     case "FORWARDED":
       colorClass = "text-green";
-      fieldtext = "Forwarded to <code>" + data.upstream + "</code>";
+      fieldtext = "Forwarded to " + data.upstream;
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
       break;
@@ -168,6 +203,12 @@ function formatInfo(data) {
 
   // Parse Query Status
   var queryStatus = parseQueryStatus(data);
+  var statusInfo =
+    '</td></tr><tr class="dataTables-child"><td>Query status:</td><td class="' +
+    queryStatus.colorClass +
+    '">' +
+    queryStatus.fieldtext;
+
   var regexInfo = "",
     cnameInfo = "";
   if (queryStatus.regexLink) {
@@ -191,10 +232,19 @@ function formatInfo(data) {
   var ttlInfo = "";
   if (data.ttl > 0) {
     ttlInfo =
-      '</td></tr><tr class="dataTables-child"><td>Time-to-live (TTL):</td><td>' + data.ttl + "s";
+      '</td></tr><tr class="dataTables-child"><td>Time-to-live (TTL):</td><td>' +
+      moment.duration(data.ttl, "s").humanize() +
+      " (" +
+      data.ttl +
+      "s)";
   }
 
-  // Show TTL if applicable
+  // Show client information, show hostname only if available
+  var ipInfo =
+    data.client.name !== null ? data.client.name + " (" + data.client.ip + ")" : data.client.ip;
+  var clientInfo = '</td></tr><tr class="dataTables-child"><td>Client:</td><td>' + ipInfo;
+
+  // Show DNSSEC status if applicable
   var dnssecInfo = "";
   if (data.dnssecClass !== false) {
     dnssecInfo =
@@ -207,7 +257,7 @@ function formatInfo(data) {
   // Show long-term database information if applicable
   var dbInfo = "";
   if (data.dbid !== false) {
-    dbInfo = '</td></tr><tr class="dataTables-child"><td>Database ID:</td><td>' + data.dbid;
+    dbInfo = '</td></tr><tr class="dataTables-child"><td>Database ID:</td><td>' + data.id;
   }
 
   // Always show reply info, add reply delay if applicable
@@ -216,7 +266,7 @@ function formatInfo(data) {
   if (data.reply.time >= 0) {
     replyInfo +=
       '</td></tr><tr class="dataTables-child"><td>Reply delay:</td><td>' +
-      data.reply.time.toFixed(1) +
+      (1000 * data.reply.time).toFixed(1) +
       "ms";
   }
 
@@ -225,8 +275,8 @@ function formatInfo(data) {
     "<table><tbody>" +
     '<tr class="dataTables-child"><td>Query received on:&nbsp;&nbsp;</td><td>' +
     moment.unix(data.time).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss.SSS z") +
-    '</td></tr><tr class="dataTables-child"><td>Query status:</td><td>' +
-    queryStatus.fieldtext +
+    statusInfo +
+    clientInfo +
     cnameInfo +
     regexInfo +
     ttlInfo +
@@ -335,6 +385,11 @@ function getAPIURL(dict) {
     }
   }
 
+  // Omit from/until filtering if we cannot reach these times. This will speed
+  // up the database lookups notably on slow devices.
+  if (from > beginningOfTime) apiurl += "&from=" + from;
+  if (until > beginningOfTime && until < endOfTime) apiurl += "&until=" + until;
+
   return encodeURI(apiurl);
 }
 
@@ -371,10 +426,10 @@ $(function () {
       data: function (d) {
         if (cursor !== null) d.cursor = cursor;
       },
-      dataFilter: function (data) {
-        var json = jQuery.parseJSON(data);
-        cursor = json.recordsTotal; // Extract cursor from
-        return data;
+      dataFilter: function (d) {
+        var json = jQuery.parseJSON(d);
+        cursor = json.cursor; // Extract cursor from original data
+        return d;
       }
     },
     serverSide: true,
@@ -399,7 +454,7 @@ $(function () {
       },
       { data: "type", width: "5%" },
       { data: "domain", width: "40%" },
-      { data: "client", width: "35%", type: "ip-address", render: $.fn.dataTable.render.text() }
+      { data: "client.ip", width: "35%", type: "ip-address", render: $.fn.dataTable.render.text() }
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],
@@ -427,6 +482,11 @@ $(function () {
         $("td:eq(2)", row).text(domain + "\n(blocked " + data.cname + ")");
       } else {
         $("td:eq(2)", row).text(domain);
+      }
+
+      // Show hostname instead of IP if available
+      if (data.client.name !== null) {
+        $("td:eq(3)", row).text(data.client.name);
       }
     }
   });
@@ -463,10 +523,12 @@ $(function () {
 });
 
 function refreshTable() {
+  // Set cursor to NULL so we pick up newer queries
   cursor = null;
 
   // Clear table
   table.clear();
+
   // Source data from API
   var filters = parseFilters();
   var apiurl = getAPIURL(filters);

@@ -54,6 +54,16 @@
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="row">
+                    <div class="form-group col-md-12">
+                        <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="far fa-clock"></i>
+                        </div>
+                        <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-4">
                         <div class="box box-default box-solid">
                             <div class="box-header with-border">
@@ -202,6 +212,7 @@
 
 <script src="scripts/vendor/bootstrap-select.min.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/vendor/daterangepicker.min.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/queries.js?v=<?=$cacheVer?>"></script>
 
