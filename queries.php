@@ -54,13 +54,16 @@
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-6">
                         <div class="input-group">
                         <div class="input-group-addon">
                             <i class="far fa-clock"></i>
                         </div>
                         <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
                         </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div><input type="checkbox" id="disk"><label for="disk">Query on-disk data. This is <em>a lot</em> slower but necessary if you want to obtain queries older than 24 hours.</label></div>
                     </div>
                 </div>
                 <div class="row">

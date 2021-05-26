@@ -193,21 +193,22 @@ function formatInfo(data) {
       dnssecClass = "text-red";
       break;
     case "UNKNOWN":
-      dnssecClass = "text-orange";
-      break;
     default:
-      // No DNSSEC
+      // No DNSSEC or UNKNOWN
       dnssecStatus = "N/A";
       dnssecClass = false;
   }
 
   // Parse Query Status
   var queryStatus = parseQueryStatus(data);
-  var statusInfo =
-    '</td></tr><tr class="dataTables-child"><td>Query status:</td><td class="' +
-    queryStatus.colorClass +
-    '">' +
-    queryStatus.fieldtext;
+  var statusInfo = "";
+  if (queryStatus.colorClass !== false) {
+    statusInfo =
+      '</td></tr><tr class="dataTables-child"><td>Query status:</td><td class="' +
+      queryStatus.colorClass +
+      '">' +
+      queryStatus.fieldtext;
+  }
 
   var regexInfo = "",
     cnameInfo = "";
@@ -246,7 +247,7 @@ function formatInfo(data) {
 
   // Show DNSSEC status if applicable
   var dnssecInfo = "";
-  if (data.dnssecClass !== false) {
+  if (dnssecClass !== false) {
     dnssecInfo =
       '</td></tr><tr class="dataTables-child"><td>DNSSEC status:</td><td class="' +
       dnssecClass +
@@ -261,13 +262,17 @@ function formatInfo(data) {
   }
 
   // Always show reply info, add reply delay if applicable
-  var replyInfo =
-    '</td></tr><tr class="dataTables-child"><td>Reply type:</td><td>' + data.reply.type;
-  if (data.reply.time >= 0) {
-    replyInfo +=
-      '</td></tr><tr class="dataTables-child"><td>Reply delay:</td><td>' +
-      (1000 * data.reply.time).toFixed(1) +
-      "ms";
+  var replyInfo = "";
+  if (data.reply.type !== "UNKNOWN") {
+    replyInfo = '</td></tr><tr class="dataTables-child"><td>Reply type:</td><td>' + data.reply.type;
+    if (data.reply.time >= 0 && data.reply.type !== "UNKNOWN") {
+      replyInfo +=
+        '</td></tr><tr class="dataTables-child"><td>Reply delay:</td><td>' +
+        (1000 * data.reply.time).toFixed(data.reply.time < 0.002 ? 3 : 1) +
+        "ms";
+    }
+  } else {
+    replyInfo = '</td></tr><tr class="dataTables-child"><td>Reply type:</td><td>No reply received';
   }
 
   // Compile extra info for displaying
@@ -281,8 +286,8 @@ function formatInfo(data) {
     regexInfo +
     ttlInfo +
     dnssecInfo +
-    dbInfo +
     replyInfo +
+    dbInfo +
     "</td></tr></tbody></table>"
   );
 }
@@ -389,6 +394,8 @@ function getAPIURL(dict) {
   // up the database lookups notably on slow devices.
   if (from > beginningOfTime) apiurl += "&from=" + from;
   if (until > beginningOfTime && until < endOfTime) apiurl += "&until=" + until;
+
+  if ($("#disk").prop("checked")) apiurl += "&disk=true";
 
   return encodeURI(apiurl);
 }
