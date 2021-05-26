@@ -256,7 +256,7 @@
                     </a>
                 </li>
                 <li class="needs-auth <?php if($scriptname === "groups-clients.php"){ ?> active<?php } ?>">
-                    <a href="groups-clients.php"><i class="fa fa-fw fa-laptop"></i>;Clients
+                    <a href="groups-clients.php"><i class="fa fa-fw fa-laptop"></i>Clients
                         <span class="pull-right-container">
                             <span class="label label-primary pull-right" id="num_clients"></span>
                         </span>
