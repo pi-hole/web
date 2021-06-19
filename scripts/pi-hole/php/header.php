@@ -181,7 +181,13 @@
     <link rel="shortcut icon" href="img/favicons/favicon.ico">
     <meta name="msapplication-TileColor" content="#367fa9">
     <meta name="msapplication-TileImage" content="img/favicons/mstile-150x150.png">
+<?php if ($theme == "default-light") { ?>
     <meta name="theme-color" content="#367fa9">
+<?php } elseif ($theme == "default-dark") { ?>
+    <meta name="theme-color" content="#272c30">
+<?php } elseif ($theme == "default-darker") { ?>
+    <meta name="theme-color" content="#2e6786">
+<?php } ?>
 
 <?php if ($darkmode) { ?>
     <style>
