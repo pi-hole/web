@@ -2,6 +2,5 @@
 
 /* Assume light mode by default */
 @import "default-light.css" screen;
-/* Supersede dark mode when applicable */  
+/* Supersede dark mode when applicable */
 @import "default-dark.css" screen and (prefers-color-scheme: dark);
-
