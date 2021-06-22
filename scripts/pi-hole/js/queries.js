@@ -22,6 +22,7 @@ var replyTypes = [
   "REFUSED",
   "NOTIMP",
   "upstream error",
+  "DNSSEC",
 ];
 var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
 
