@@ -1,0 +1,6 @@
+/* Code courtesy of https://blog.jim-nielsen.com/2019/conditional-syntax-highlighting-in-dark-mode-with-css-imports/ */
+
+/* Assume light mode by default */
+@import "default-light.css" screen;
+/* Supersede dark mode when applicable */
+@import "default-dark.css" screen and (prefers-color-scheme: dark);

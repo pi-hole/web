@@ -16,6 +16,8 @@ $available_themes = array();
 $available_themes["default-light"] = array("Pi-hole default theme (light, default)", false, "default-light");
 $available_themes["default-dark"] = array("Pi-hole midnight theme (dark)", true, "default-dark");
 $available_themes["default-darker"] = array("Pi-hole deep-midnight theme (dark)", true, "default-darker");
+// Option to have the theme go with the device dark mode setting, always set the background to black to avoid flashing
+$available_themes["default-auto"] = array("Pi-hole auto theme (light/dark)", true, "default-auto");
 
 $webtheme = "";
 // Try to load theme settings from setupVars.conf
@@ -45,4 +47,5 @@ function theme_selection() {
         <label for="webtheme_<?php echo $key; ?>"><strong><?php echo $value[0]; ?></strong></label></div><?php
     }
 }
+
 ?>
