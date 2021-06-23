@@ -48,21 +48,21 @@ $(function () {
         Today: [moment().startOf("day"), moment()],
         Yesterday: [
           moment().subtract(1, "days").startOf("day"),
-          moment().subtract(1, "days").endOf("day")
+          moment().subtract(1, "days").endOf("day"),
         ],
         "Last 7 Days": [moment().subtract(6, "days"), moment()],
         "Last 30 Days": [moment().subtract(29, "days"), moment()],
         "This Month": [moment().startOf("month"), moment()],
         "Last Month": [
           moment().subtract(1, "month").startOf("month"),
-          moment().subtract(1, "month").endOf("month")
+          moment().subtract(1, "month").endOf("month"),
         ],
         "This Year": [moment().startOf("year"), moment()],
-        "All Time": [moment(0), moment()]
+        "All Time": [moment(0), moment()],
       },
       opens: "center",
       showDropdowns: true,
-      autoUpdateInput: false
+      autoUpdateInput: false,
     },
     function (startt, endt) {
       from = moment(startt).utc().valueOf() / 1000;
@@ -310,7 +310,7 @@ $(function () {
           x[0] = x[0] * 1e6 + dataIndex++;
           return x;
         });
-      }
+      },
     },
     autoWidth: false,
     processing: true,
@@ -327,26 +327,26 @@ $(function () {
           }
 
           return data;
-        }
+        },
       },
       { width: "10%" },
       { width: "40%", render: $.fn.dataTable.render.text() },
       { width: "20%", type: "ip-address", render: $.fn.dataTable.render.text() },
       { width: "10%" },
-      { width: "5%" }
+      { width: "5%" },
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"]
+      [10, 25, 50, 100, "All"],
     ],
     columnDefs: [
       {
         targets: -1,
         data: null,
-        defaultContent: ""
-      }
+        defaultContent: "",
+      },
     ],
-    initComplete: reloadCallback
+    initComplete: reloadCallback,
   });
   $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();

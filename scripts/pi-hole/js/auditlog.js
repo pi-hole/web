@@ -100,14 +100,14 @@ function add(domain, list) {
       list: list,
       token: token,
       action: list === "audit" ? "add_audit" : "add_domain",
-      comment: "Added from Audit Log"
+      comment: "Added from Audit Log",
     },
     success: function () {
       updateTopLists();
     },
     error: function (jqXHR, exception) {
       console.log(exception); // eslint-disable-line no-console
-    }
+    },
   });
 }
 

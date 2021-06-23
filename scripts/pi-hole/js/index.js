@@ -27,7 +27,7 @@ var THEME_COLORS = [
   "#8e24aa",
   "#d81b60",
   "#222222",
-  "#d2d6de"
+  "#d2d6de",
 ];
 
 var customTooltips = function (tooltip) {
@@ -244,7 +244,7 @@ function updateQueriesOverTime() {
         pointHitRadius: 5,
         pointHoverRadius: 5,
         label: labels[i],
-        cubicInterpolationMode: "monotone"
+        cubicInterpolationMode: "monotone",
       });
     }
 
@@ -399,7 +399,7 @@ function updateClientsOverTime() {
         pointHitRadius: 5,
         pointHoverRadius: 5,
         label: labels[i],
-        cubicInterpolationMode: "monotone"
+        cubicInterpolationMode: "monotone",
       });
     }
 
@@ -753,7 +753,7 @@ function updateSummaryData(runOnce) {
       "dns_queries_today",
       "ads_percentage_today|percentage_blocked_today",
       "unique_clients",
-      "domains_being_blocked"
+      "domains_being_blocked",
     ].forEach(function (arrayItem, idx) {
       var apiElName = arrayItem.split("|");
       var apiName = apiElName[0];
@@ -828,7 +828,7 @@ $(function () {
     type: utils.getGraphType(),
     data: {
       labels: [],
-      datasets: [{ data: [] }]
+      datasets: [{ data: [] }],
     },
     options: {
       tooltips: {
@@ -868,11 +868,11 @@ $(function () {
             }
 
             return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
-          }
-        }
+          },
+        },
       },
       legend: {
-        display: false
+        display: false,
       },
       scales: {
         xAxes: [
@@ -882,33 +882,33 @@ $(function () {
             time: {
               unit: "hour",
               displayFormats: {
-                hour: "HH:mm"
+                hour: "HH:mm",
               },
-              tooltipFormat: "HH:mm"
+              tooltipFormat: "HH:mm",
             },
             gridLines: {
-              color: gridColor
+              color: gridColor,
             },
             ticks: {
-              fontColor: ticksColor
-            }
-          }
+              fontColor: ticksColor,
+            },
+          },
         ],
         yAxes: [
           {
             stacked: true,
             ticks: {
               beginAtZero: true,
-              fontColor: ticksColor
+              fontColor: ticksColor,
             },
             gridLines: {
-              color: gridColor
-            }
-          }
-        ]
+              color: gridColor,
+            },
+          },
+        ],
       },
-      maintainAspectRatio: false
-    }
+      maintainAspectRatio: false,
+    },
   });
 
   // Pull in data via AJAX
@@ -923,7 +923,7 @@ $(function () {
       type: utils.getGraphType(),
       data: {
         labels: [],
-        datasets: [{ data: [] }]
+        datasets: [{ data: [] }],
       },
       options: {
         tooltips: {
@@ -946,11 +946,11 @@ $(function () {
             },
             label: function (tooltipItems, data) {
               return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
-            }
-          }
+            },
+          },
         },
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           xAxes: [
@@ -960,36 +960,36 @@ $(function () {
               time: {
                 unit: "hour",
                 displayFormats: {
-                  hour: "HH:mm"
+                  hour: "HH:mm",
                 },
-                tooltipFormat: "HH:mm"
+                tooltipFormat: "HH:mm",
               },
               gridLines: {
-                color: gridColor
+                color: gridColor,
               },
               ticks: {
-                fontColor: ticksColor
-              }
-            }
+                fontColor: ticksColor,
+              },
+            },
           ],
           yAxes: [
             {
               ticks: {
                 beginAtZero: true,
-                fontColor: ticksColor
+                fontColor: ticksColor,
               },
               stacked: true,
               gridLines: {
-                color: gridColor
-              }
-            }
-          ]
+                color: gridColor,
+              },
+            },
+          ],
         },
         maintainAspectRatio: false,
         hover: {
-          animationDuration: 0
-        }
-      }
+          animationDuration: 0,
+        },
+      },
     });
 
     // Pull in data via AJAX
@@ -1048,16 +1048,16 @@ $(function () {
       type: "doughnut",
       data: {
         labels: [],
-        datasets: [{ data: [] }]
+        datasets: [{ data: [] }],
       },
       options: {
         elements: {
           arc: {
-            borderColor: $(".box").css("background-color")
-          }
+            borderColor: $(".box").css("background-color"),
+          },
         },
         legend: {
-          display: false
+          display: false,
         },
         tooltips: {
           enabled: false,
@@ -1068,14 +1068,14 @@ $(function () {
             },
             label: function (tooltipItems, data) {
               return doughnutTooltip(tooltipItems, data);
-            }
-          }
+            },
+          },
         },
         animation: {
-          duration: 750
+          duration: 750,
         },
-        cutoutPercentage: 0
-      }
+        cutoutPercentage: 0,
+      },
     });
 
     // Pull in data via AJAX
@@ -1088,16 +1088,16 @@ $(function () {
       type: "doughnut",
       data: {
         labels: [],
-        datasets: [{ data: [] }]
+        datasets: [{ data: [] }],
       },
       options: {
         elements: {
           arc: {
-            borderColor: $(".box").css("background-color")
-          }
+            borderColor: $(".box").css("background-color"),
+          },
         },
         legend: {
-          display: false
+          display: false,
         },
         tooltips: {
           enabled: false,
@@ -1108,14 +1108,14 @@ $(function () {
             },
             label: function (tooltipItems, data) {
               return doughnutTooltip(tooltipItems, data);
-            }
-          }
+            },
+          },
         },
         animation: {
-          duration: 750
+          duration: 750,
         },
-        cutoutPercentage: 0
-      }
+        cutoutPercentage: 0,
+      },
     });
 
     // Pull in data via AJAX

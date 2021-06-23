@@ -40,7 +40,7 @@ function eventsource() {
     $.ajax({
       method: "GET",
       url: "scripts/pi-hole/php/queryads.php?domain=" + domain.toLowerCase() + "&" + exact + "&IE",
-      async: false
+      async: false,
     }).done(function (data) {
       ta.show();
       ta.empty();

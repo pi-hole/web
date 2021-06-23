@@ -17,7 +17,7 @@ $(function () {
     ajax: {
       url: "scripts/pi-hole/php/groups.php",
       data: { action: "get_groups", token: token },
-      type: "POST"
+      type: "POST",
     },
     order: [[0, "asc"]],
     columns: [
@@ -25,7 +25,7 @@ $(function () {
       { data: "name" },
       { data: "enabled", searchable: false },
       { data: "description" },
-      { data: null, width: "60px", orderable: false }
+      { data: null, width: "60px", orderable: false },
     ],
     drawCallback: function () {
       $('button[id^="deleteGroup_"]').on("click", deleteGroup);
@@ -56,7 +56,7 @@ $(function () {
         off: "Disabled",
         size: "small",
         onstyle: "success",
-        width: "80px"
+        width: "80px",
       });
       statusEl.on("change", editGroup);
 
@@ -83,7 +83,7 @@ $(function () {
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     lengthMenu: [
       [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"]
+      [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
     stateSaveCallback: function (settings, data) {
@@ -101,7 +101,7 @@ $(function () {
       data.columns[0].visible = false;
       // Apply loaded state to table
       return data;
-    }
+    },
   });
 
   // Disable autocorrect in the search box
@@ -161,7 +161,7 @@ function addGroup() {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new group", jqXHR.responseText);
       console.log(exception); // eslint-disable-line no-console
-    }
+    },
   });
 }
 
@@ -211,7 +211,7 @@ function editGroup() {
       name: name,
       desc: desc,
       status: status,
-      token: token
+      token: token,
     },
     success: function (response) {
       utils.enableAll();
@@ -235,7 +235,7 @@ function editGroup() {
         jqXHR.responseText
       );
       console.log(exception); // eslint-disable-line no-console
-    }
+    },
   });
 }
 
@@ -264,6 +264,6 @@ function deleteGroup() {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting group with ID " + id, jqXHR.responseText);
       console.log(exception); // eslint-disable-line no-console
-    }
+    },
   });
 }

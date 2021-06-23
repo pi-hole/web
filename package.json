@@ -40,7 +40,7 @@
     "endOfLine": "auto",
     "printWidth": 100,
     "singleQuote": false,
-    "trailingComma": "none"
+    "trailingComma": "es5"
   },
   "xo": {
     "envs": [

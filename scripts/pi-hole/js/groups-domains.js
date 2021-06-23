@@ -64,7 +64,7 @@ function initTable() {
     ajax: {
       url: "scripts/pi-hole/php/groups.php",
       data: { action: "get_domains", showtype: showtype, token: token },
-      type: "POST"
+      type: "POST",
     },
     order: [[0, "asc"]],
     columns: [
@@ -74,7 +74,7 @@ function initTable() {
       { data: "enabled", searchable: false },
       { data: "comment" },
       { data: "groups", searchable: false, visible: showtype === "all" },
-      { data: null, width: "80px", orderable: false }
+      { data: null, width: "80px", orderable: false },
     ],
     drawCallback: function () {
       $('button[id^="deleteDomain_"]').on("click", deleteDomain);
@@ -143,7 +143,7 @@ function initTable() {
         off: "Disabled",
         size: "small",
         onstyle: "success",
-        width: "80px"
+        width: "80px",
       });
       statusEl.on("change", editDomain);
 
@@ -243,7 +243,7 @@ function initTable() {
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     lengthMenu: [
       [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"]
+      [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
     stateSaveCallback: function (settings, data) {
@@ -275,7 +275,7 @@ function initTable() {
           table.page(page).draw(false);
         }
       }
-    }
+    },
   });
   // Disable autocorrect in the search box
   var input = document.querySelector("input[type=search]");
@@ -360,7 +360,7 @@ function addDomain() {
       domain: domain,
       type: type,
       comment: comment,
-      token: token
+      token: token,
     },
     success: function (response) {
       utils.enableAll();
@@ -378,7 +378,7 @@ function addDomain() {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new " + domainRegex, jqXHR.responseText);
       console.log(exception); // eslint-disable-line no-console
-    }
+    },
   });
 }
 
@@ -450,7 +450,7 @@ function editDomain() {
       comment: comment,
       status: status,
       groups: groups,
-      token: token
+      token: token,
     },
     success: function (response) {
       utils.enableAll();
@@ -479,7 +479,7 @@ function editDomain() {
         jqXHR.responseText
       );
       console.log(exception); // eslint-disable-line no-console
-    }
+    },
   });
 }
 
@@ -531,6 +531,6 @@ function deleteDomain() {
         jqXHR.responseText
       );
       console.log(exception); // eslint-disable-line no-console
-    }
+    },
   });
 }
