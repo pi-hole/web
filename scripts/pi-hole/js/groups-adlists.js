@@ -112,7 +112,7 @@ function initTable() {
     ajax: {
       url: "scripts/pi-hole/php/groups.php",
       data: { action: "get_adlists", token: token },
-      type: "POST"
+      type: "POST",
     },
     order: [[0, "asc"]],
     columns: [
@@ -122,7 +122,7 @@ function initTable() {
       { data: "enabled", searchable: false },
       { data: "comment" },
       { data: "groups", searchable: false },
-      { data: null, width: "80px", orderable: false }
+      { data: null, width: "80px", orderable: false },
     ],
     drawCallback: function () {
       $('button[id^="deleteAdlist_"]').on("click", deleteAdlist);
@@ -198,7 +198,7 @@ function initTable() {
         off: "Disabled",
         size: "small",
         onstyle: "success",
-        width: "80px"
+        width: "80px",
       });
       statusEl.on("change", editAdlist);
 
@@ -286,7 +286,7 @@ function initTable() {
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     lengthMenu: [
       [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"]
+      [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
     stateSaveCallback: function (settings, data) {
@@ -304,7 +304,7 @@ function initTable() {
       data.columns[0].visible = false;
       // Apply loaded state to table
       return data;
-    }
+    },
   });
 
   table.on("order.dt", function () {
@@ -368,7 +368,7 @@ function addAdlist() {
       action: "add_adlist",
       address: address,
       comment: comment,
-      token: token
+      token: token,
     },
     success: function (response) {
       utils.enableAll();
@@ -386,7 +386,7 @@ function addAdlist() {
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new adlist: ", jqXHR.responseText);
       console.log(exception); // eslint-disable-line no-console
-    }
+    },
   });
 }
 
@@ -438,7 +438,7 @@ function editAdlist() {
       comment: comment,
       status: status,
       groups: groups,
-      token: token
+      token: token,
     },
     success: function (response) {
       utils.enableAll();
@@ -468,7 +468,7 @@ function editAdlist() {
         jqXHR.responseText
       );
       console.log(exception); // eslint-disable-line no-console
-    }
+    },
   });
 }
 
@@ -497,6 +497,6 @@ function deleteAdlist() {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting adlist with ID " + id, jqXHR.responseText);
       console.log(exception); // eslint-disable-line no-console
-    }
+    },
   });
 }

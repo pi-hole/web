@@ -21,7 +21,7 @@ var replyTypes = [
   "SERVFAIL",
   "REFUSED",
   "NOTIMP",
-  "upstream error"
+  "upstream error",
 ];
 var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
 
@@ -282,7 +282,7 @@ $(function () {
           x[6] = dnssec;
           return x;
         });
-      }
+      },
     },
     autoWidth: false,
     processing: true,
@@ -298,18 +298,18 @@ $(function () {
           }
 
           return data;
-        }
+        },
       },
       { width: "4%" },
       { width: "36%", render: $.fn.dataTable.render.text() },
       { width: "8%", type: "ip-address", render: $.fn.dataTable.render.text() },
       { width: "14%", orderData: 4 },
       { width: "8%", orderData: 5 },
-      { width: "10%", orderData: 4 }
+      { width: "10%", orderData: 4 },
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"]
+      [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
     stateSaveCallback: function (settings, data) {
@@ -322,8 +322,8 @@ $(function () {
       {
         targets: -1,
         data: null,
-        defaultContent: ""
-      }
+        defaultContent: "",
+      },
     ],
     initComplete: function () {
       var api = this.api();
@@ -416,7 +416,7 @@ $(function () {
         input.attr("spellcheck", false);
         input.attr("placeholder", "Type / Domain / Client");
       }
-    }
+    },
   });
 
   resetColumnsFilters();

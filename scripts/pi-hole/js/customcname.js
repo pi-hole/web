@@ -46,7 +46,7 @@ $(function () {
     ajax: {
       url: "scripts/pi-hole/php/customcname.php",
       data: { action: "get", token: token },
-      type: "POST"
+      type: "POST",
     },
     columns: [{}, {}, { orderable: false, searchable: false }],
     columnDefs: [
@@ -62,12 +62,12 @@ $(function () {
             '<span class="far fa-trash-alt"></span>' +
             "</button>"
           );
-        }
-      }
+        },
+      },
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"]
+      [10, 25, 50, 100, "All"],
     ],
     order: [[0, "asc"]],
     stateSave: true,
@@ -79,7 +79,7 @@ $(function () {
     },
     drawCallback: function () {
       $(".deleteCustomCNAME").on("click", deleteCustomCNAME);
-    }
+    },
   });
   // Disable autocorrect in the search box
   var input = document.querySelector("input[type=search]");
@@ -107,7 +107,7 @@ function addCustomCNAME() {
     },
     error: function () {
       showAlert("error", "Error while adding this custom CNAME record");
-    }
+    },
   });
 }
 
@@ -130,6 +130,6 @@ function deleteCustomCNAME() {
     error: function (jqXHR, exception) {
       showAlert("error", "Error while deleting this custom CNAME record");
       console.log(exception); // eslint-disable-line no-console
-    }
+    },
   });
 }

@@ -88,7 +88,7 @@ $(function () {
       url: "api_db.php?messages",
       data: { token: token },
       type: "POST",
-      dataSrc: "messages"
+      dataSrc: "messages",
     },
     order: [[0, "asc"]],
     columns: [
@@ -100,7 +100,7 @@ $(function () {
       { data: "blob2", visible: false },
       { data: "blob3", visible: false },
       { data: "blob4", visible: false },
-      { data: "blob5", visible: false }
+      { data: "blob5", visible: false },
     ],
     dom:
       "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
@@ -108,10 +108,10 @@ $(function () {
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     lengthMenu: [
       [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"]
+      [10, 25, 50, 100, "All"],
     ],
     language: {
-      emptyTable: "No issues found."
+      emptyTable: "No issues found.",
     },
     stateSave: true,
     stateSaveCallback: function (settings, data) {
@@ -134,6 +134,6 @@ $(function () {
 
       // Apply loaded state to table
       return data;
-    }
+    },
   });
 });

@@ -30,21 +30,21 @@ $(function () {
         Today: [moment().startOf("day"), moment()],
         Yesterday: [
           moment().subtract(1, "days").startOf("day"),
-          moment().subtract(1, "days").endOf("day")
+          moment().subtract(1, "days").endOf("day"),
         ],
         "Last 7 Days": [moment().subtract(6, "days"), moment()],
         "Last 30 Days": [moment().subtract(29, "days"), moment()],
         "This Month": [moment().startOf("month"), moment()],
         "Last Month": [
           moment().subtract(1, "month").startOf("month"),
-          moment().subtract(1, "month").endOf("month")
+          moment().subtract(1, "month").endOf("month"),
         ],
         "This Year": [moment().startOf("year"), moment()],
-        "All Time": [moment(0), moment()]
+        "All Time": [moment(0), moment()],
       },
       opens: "center",
       showDropdowns: true,
-      autoUpdateInput: false
+      autoUpdateInput: false,
     },
     function (startt, endt) {
       from = moment(startt).utc().valueOf() / 1000;
