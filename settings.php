@@ -63,41 +63,6 @@ if (isset($_POST["submit"])) {
     </div>
 <?php } ?>
 
-
-<?php
-// Networking
-if (isset($setupVars["PIHOLE_INTERFACE"])) {
-    $piHoleInterface = $setupVars["PIHOLE_INTERFACE"];
-} else {
-    $piHoleInterface = "unknown";
-}
-if (isset($setupVars["IPV4_ADDRESS"])) {
-    $piHoleIPv4 = $setupVars["IPV4_ADDRESS"];
-} else {
-    $piHoleIPv4 = "unknown";
-}
-$IPv6connectivity = false;
-if (isset($setupVars["IPV6_ADDRESS"])) {
-    $piHoleIPv6 = $setupVars["IPV6_ADDRESS"];
-    sscanf($piHoleIPv6, "%2[0-9a-f]", $hexstr);
-    if (strlen($hexstr) == 2) {
-        // Convert HEX string to number
-        $hex = hexdec($hexstr);
-        // Global Unicast Address (2000::/3, RFC 4291)
-        $GUA = (($hex & 0x70) === 0x20);
-        // Unique Local Address   (fc00::/7, RFC 4193)
-        $ULA = (($hex & 0xfe) === 0xfc);
-        if ($GUA || $ULA) {
-            // Scope global address detected
-            $IPv6connectivity = true;
-        }
-    }
-} else {
-    $piHoleIPv6 = "unknown";
-}
-$hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
-?>
-
 <?php
 // DNS settings
 $DNSservers = [];
@@ -255,40 +220,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                 <!-- ######################################################### System admin ######################################################### -->
                 <div id="sysadmin" class="tab-pane fade<?php if($tab === "sysadmin"){ ?> in active<?php } ?>">
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Network Information</h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <table class="table table-striped table-bordered nowrap">
-                                                <tbody>
-                                                <tr>
-                                                    <th scope="row">Pi-hole Ethernet Interface:</th>
-                                                    <td><?php echo htmlentities($piHoleInterface); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Pi-hole IPv4 address:</th>
-                                                    <td><?php echo htmlentities($piHoleIPv4); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Pi-hole IPv6 address:</th>
-                                                    <td class="breakall"><?php echo htmlentities($piHoleIPv6); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Pi-hole hostname:</th>
-                                                    <td><?php echo htmlentities($hostname); ?></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">FTL Information</h3>
@@ -822,14 +754,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     <?php } ?>
                                                     <?php if (isset($value["v6_1"])) { ?>
                                                         <td title="<?php echo $value["v6_1"]; ?>">
-                                                            <div><input type="checkbox" name="DNSserver<?php echo $value["v6_1"]; ?>" id="DNS6server<?php echo $value["v6_1"]; ?>" value="true" <?php if (in_array($value["v6_1"], $DNSactive) && $IPv6connectivity){ ?>checked<?php } if (!$IPv6connectivity) { ?> disabled <?php } ?>><label for="DNS6server<?php echo $value["v6_1"]; ?>"></label></div>
+                                                            <div><input type="checkbox" name="DNSserver<?php echo $value["v6_1"]; ?>" id="DNS6server<?php echo $value["v6_1"]; ?>" value="true" <?php if (in_array($value["v6_1"], $DNSactive)){ ?>checked<?php } ?>><label for="DNS6server<?php echo $value["v6_1"]; ?>"></label></div>
                                                         </td>
                                                     <?php } else { ?>
                                                         <td></td>
                                                     <?php } ?>
                                                     <?php if (isset($value["v6_2"])) { ?>
                                                         <td title="<?php echo $value["v6_2"]; ?>">
-                                                            <div><input type="checkbox" name="DNSserver<?php echo $value["v6_2"]; ?>" id="DNS6server<?php echo $value["v6_2"]; ?>" value="true" <?php if (in_array($value["v6_2"], $DNSactive) && $IPv6connectivity){ ?>checked<?php } if (!$IPv6connectivity) { ?> disabled <?php } ?>><label for="DNS6server<?php echo $value["v6_2"]; ?>"></label></div>
+                                                            <div><input type="checkbox" name="DNSserver<?php echo $value["v6_2"]; ?>" id="DNS6server<?php echo $value["v6_2"]; ?>" value="true" <?php if (in_array($value["v6_2"], $DNSactive)){ ?>checked<?php } ?>><label for="DNS6server<?php echo $value["v6_2"]; ?>"></label></div>
                                                         </td>
                                                     <?php } else { ?>
                                                         <td></td>
