@@ -104,6 +104,7 @@ $(function () {
         colorClass = false,
         isCNAME = false,
         regexLink = false;
+      var replyid = parseInt(data[5], 10);
 
       switch (data[4]) {
         case "1":
@@ -114,11 +115,11 @@ $(function () {
           break;
         case "2":
           colorClass = "text-green";
-          fieldtext =
-            "OK <br class='hidden-lg'>(forwarded to " +
-            (data.length > 10 && data[10] !== "N/A" ? data[10] : "") +
-            ")" +
-            dnssecStatus;
+          if(replyid === 0) // This query has not received an answer
+            fieldtext = "OK, sent to ";
+          else
+            fieldtext = "OK, answered by ";
+          fieldtext += "<br class='hidden-lg'>" + (data.length > 10 && data[10] !== "N/A" ? data[10] : "") + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
@@ -252,7 +253,6 @@ $(function () {
       }
 
       // Check for existence of sixth column and display only if not Pi-holed
-      var replyid = data[5];
       var replytext =
         replyid >= 0 && replyid < replyTypes.length ? replyTypes[replyid] : "? (" + replyid + ")";
 

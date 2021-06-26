@@ -150,7 +150,7 @@
     <div class="col-md-6">
     <div class="box" id="forward-destinations-pie">
         <div class="box-header with-border">
-          <h3 class="box-title">Queries answered by</h3>
+          <h3 class="box-title">Upstream servers</h3>
         </div>
         <div class="box-body">
           <div class="pull-left" style="width:50%">
