@@ -77,25 +77,31 @@ $(function () {
     rowCallback: function (row, data) {
       // DNSSEC status
       var dnssecStatus;
+      var ede = data[11];
       switch (data[6]) {
         case "1":
-          dnssecStatus = '<br><span class="text-green">SECURE</span>';
+          dnssecStatus = '<br><span class="text-green">SECURE';
           break;
         case "2":
-          dnssecStatus = '<br><span class="text-orange">INSECURE</span>';
+          dnssecStatus = '<br><span class="text-orange">INSECURE';
           break;
         case "3":
-          dnssecStatus = '<br><span class="text-red">BOGUS</span>';
+          dnssecStatus = '<br><span class="text-red">BOGUS';
           break;
         case "4":
-          dnssecStatus = '<br><span class="text-red">ABANDONED</span>';
+          dnssecStatus = '<br><span class="text-red">ABANDONED';
           break;
         case "5":
-          dnssecStatus = '<br><span class="text-orange">UNKNOWN</span>';
+          dnssecStatus = '<br><span class="text-orange">UNKNOWN';
           break;
         default:
           // No DNSSEC
           dnssecStatus = "";
+      }
+
+      if (dnssecStatus.length > 0) {
+        if (ede.length > 0) dnssecStatus += " (" + ede + ")";
+        dnssecStatus += "</span>";
       }
 
       // Query status
@@ -115,11 +121,11 @@ $(function () {
           break;
         case "2":
           colorClass = "text-green";
-          if(replyid === 0) // This query has not received an answer
-            fieldtext = "OK, sent to ";
-          else
-            fieldtext = "OK, answered by ";
-          fieldtext += "<br class='hidden-lg'>" + (data.length > 10 && data[10] !== "N/A" ? data[10] : "") + dnssecStatus;
+          fieldtext = replyid === 0 ? "OK, sent to " : "OK, answered by ";
+          fieldtext +=
+            "<br class='hidden-lg'>" +
+            (data.length > 10 && data[10] !== "N/A" ? data[10] : "") +
+            dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
@@ -208,6 +214,9 @@ $(function () {
           fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
           buttontext = "";
       }
+
+      // Add EDE here if available and not included in dnssecStatus
+      if (ede.length > 0 && dnssecStatus.length === 0) fieldtext += " (" + ede + ")";
 
       fieldtext += '<input type="hidden" name="id" value="' + parseInt(data[4], 10) + '">';
 
