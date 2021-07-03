@@ -59,7 +59,7 @@
         <!-- small box -->
         <div class="small-box bg-yellow no-user-select">
             <div class="inner">
-                <p>Percent Blocked</p>
+                <p>Percentage Blocked</p>
                 <h3 class="statistic"><span id="percentage_blocked_today">---</span></h3>
             </div>
             <div class="icon">
