@@ -75,6 +75,7 @@ $(function () {
 
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
+      var replyid = parseInt(data[5], 10);
       // DNSSEC status
       var dnssecStatus;
       var ede = data[11];
@@ -101,6 +102,7 @@ $(function () {
 
       if (dnssecStatus.length > 0) {
         if (ede.length > 0) dnssecStatus += " (" + ede + ")";
+        else if (replyid === 7) dnssecStatus += " (refused upstream)";
         dnssecStatus += "</span>";
       }
 
@@ -110,7 +112,6 @@ $(function () {
         colorClass = false,
         isCNAME = false,
         regexLink = false;
-      var replyid = parseInt(data[5], 10);
 
       switch (data[4]) {
         case "1":
