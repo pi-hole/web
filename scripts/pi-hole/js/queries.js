@@ -219,6 +219,9 @@ $(function () {
       // Add EDE here if available and not included in dnssecStatus
       if (ede.length > 0 && dnssecStatus.length === 0) fieldtext += " (" + ede + ")";
 
+      // Cannot block internal queries of this type
+      if ((data[1] === "DNSKEY" || data[1] === "DS") && data[3] === "pi.hole") buttontext = "";
+
       fieldtext += '<input type="hidden" name="id" value="' + parseInt(data[4], 10) + '">';
 
       if (colorClass !== false) {
