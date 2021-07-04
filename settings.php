@@ -219,7 +219,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 ?>
 
 <?php
-if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "dns", "piholedhcp", "api", "privacy", "teleporter"))) {
+if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piholedhcp", "api", "privacy", "teleporter"))) {
     $tab = $_GET['tab'];
 } else {
     $tab = "sysadmin";
@@ -231,9 +231,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation"<?php if($tab === "sysadmin"){ ?> class="active"<?php } ?>>
                     <a href="#sysadmin" aria-controls="sysadmin" aria-expanded="<?php echo $tab === "sysadmin" ? "true" : "false"; ?>" role="tab" data-toggle="tab">System</a>
-                </li>
-                <li role="presentation"<?php if($tab === "adlists"){ ?> class="active"<?php } ?>>
-                    <a href="#adlists" aria-controls="adlists" aria-expanded="<?php echo $tab === "adlists" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Adlists</a>
                 </li>
                 <li role="presentation"<?php if($tab === "dns"){ ?> class="active"<?php } ?>>
                     <a href="#dns" aria-controls="dns" aria-expanded="<?php echo $tab === "dns" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DNS</a>
@@ -434,21 +431,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         <input type="hidden" name="field" value="restartdns">
                                         <input type="hidden" name="token" value="<?php echo $token ?>">
                                     </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- ######################################################### Adlists ######################################################### -->
-                <div id="adlists" class="tab-pane fade<?php if($tab === "adlists"){ ?> in active<?php } ?>">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Adlists used to generate Pi-hole's Gravity</h3>
-                                </div>
-                                <div class="box-body">
-                                    <p>Please use the <a href="groups-adlists.php">group management pages</a> to edit the adlists used by Pi-hole.</p>
                                 </div>
                             </div>
                         </div>
