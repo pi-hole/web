@@ -510,6 +510,9 @@ if ($_POST['action'] == 'get_groups') {
                     $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
                 }
             }
+            // Prevent domain and comment fields from returning any arbitary javascript code which could be executed on the browser.
+            $res['domain'] = htmlentities($res['domain']);
+            $res['comment'] = htmlentities($res['comment']);
             array_push($data, $res);
         }
 
