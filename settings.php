@@ -64,6 +64,17 @@ if (isset($_POST["submit"])) {
 <?php } ?>
 
 <?php
+f (isset($setupVars["PIHOLE_INTERFACE"])) {
+    $piHoleInterface = $setupVars["PIHOLE_INTERFACE"];
+} else {
+    $piHoleInterface = "unknown";
+}
+if (isset($setupVars["IPV4_ADDRESS"])) {
+    $piHoleIPv4 = $setupVars["IPV4_ADDRESS"];
+} else {
+    $piHoleIPv4 = "unknown";
+}
+
 // DNS settings
 $DNSservers = [];
 $DNSactive = [];
