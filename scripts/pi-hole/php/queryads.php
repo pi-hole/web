@@ -9,6 +9,7 @@
 while (ob_get_level() > 0) {
     ob_end_flush();
 }
+require_once("func.php");
 ini_set("output_buffering", "0");
 ob_implicit_flush(true);
 header('Content-Type: text/event-stream');
@@ -19,16 +20,6 @@ function echoEvent($datatext) {
       echo "data: ".implode("\ndata: ", explode("\n", $datatext))."\n\n";
     else
       echo $datatext;
-}
-
-// Credit: http://stackoverflow.com/a/4694816/2087442
-ini_set("pcre.recursion_limit", 1500);
-function validDomain($domain_name)
-{
-    return ($domain_name[0] !== '-' // Don't allow domains to appear as command line options
-            && preg_match("/^((-|_)*[a-z\d]((-|_)*[a-z\d])*(-|_)*)(\.(-|_)*([a-z\d]((-|_)*[a-z\d])*))*$/i", $domain_name) // Valid chars check
-            && preg_match("/^.{1,253}$/", $domain_name) // Overall length check
-            && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)   ); // Length of each label
 }
 
 // Test if domain is set

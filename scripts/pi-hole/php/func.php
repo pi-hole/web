@@ -8,12 +8,27 @@
 
 // Credit: http://stackoverflow.com/a/4694816/2087442
 // Modified because of https://github.com/pi-hole/AdminLTE/pull/533
-function validDomain($domain_name)
+ini_set("pcre.recursion_limit", 1500);
+function validDomain($domain_name, &$message = NULL)
 {
-	$validChars = preg_match("/^((-|_)*[a-z\d]((-|_)*[a-z\d])*(-|_)*)(\.(-|_)*([a-z\d]((-|_)*[a-z\d])*))*$/i", $domain_name);
-	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
-	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
-	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
+	if(!preg_match("/^((-|_)*[a-z\d]((-|_)*[a-z\d])*(-|_)*)(\.(-|_)*([a-z\d]((-|_)*[a-z\d])*))*$/i", $domain_name)) {
+		if($message !== NULL)
+			$message = "it contains invalid characters";
+		return false;
+	}
+	if(!preg_match("/^.{1,253}$/", $domain_name)) {
+		if($message !== NULL)
+			$message = "its length is invalid";
+		return false;
+	}
+	if(!preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)) {
+		if($message !== NULL)
+			$message = "at least one label is of invalid length";
+		return false;
+	}
+
+	// everything is okay
+	return true;
 }
 
 function validDomainWildcard($domain_name)

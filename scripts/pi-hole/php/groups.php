@@ -646,15 +646,16 @@ if ($_POST['action'] == 'get_groups') {
             {
                 // If adding to the exact lists, we convert the domain lower case and check whether it is valid
                 $domain = strtolower($domain);
-                if(validDomain($domain))
+                $msg = "";
+                if(!validDomain($domain, $msg))
                 {
                     // This is the case when idn_to_ascii() modified the string
                     if($input !== $domain && strlen($domain) > 0)
-                        $errormsg = 'Domain ' . htmlentities($input) . ' (converted to "' . htmlentities(utf8_encode($domain)) . '") is not a valid domain.';
+                        $errormsg = 'Domain ' . htmlentities($input) . ' (converted to "' . htmlentities(utf8_encode($domain)) . '") is not a valid domain because ' . $msg . '.';
                     elseif($input !== $domain)
-                        $errormsg = 'Domain ' . htmlentities($input) . ' is not a valid domain.';
+                        $errormsg = 'Domain ' . htmlentities($input) . ' is not a valid domain because ' . $msg . '.';
                     else
-                        $errormsg = 'Domain ' . htmlentities(utf8_encode($domain)) . ' is not a valid domain.';
+                        $errormsg = 'Domain ' . htmlentities(utf8_encode($domain)) . ' is not a valid domain because ' . $msg . '.';
                     throw new Exception($errormsg . '<br>Added ' . $added . " out of ". $total . " domains");
                 }
             }
