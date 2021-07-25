@@ -646,7 +646,7 @@ if ($_POST['action'] == 'get_groups') {
             {
                 // If adding to the exact lists, we convert the domain lower case and check whether it is valid
                 $domain = strtolower($domain);
-                if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)
+                if(validDomain($domain))
                 {
                     // This is the case when idn_to_ascii() modified the string
                     if($input !== $domain && strlen($domain) > 0)

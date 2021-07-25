@@ -23,7 +23,7 @@ function echoEvent($datatext) {
 
 // Credit: http://stackoverflow.com/a/4694816/2087442
 ini_set("pcre.recursion_limit", 1500);
-function is_valid_domain_name($domain_name)
+function validDomain($domain_name)
 {
     return ($domain_name[0] !== '-' // Don't allow domains to appear as command line options
             && preg_match("/^((-|_)*[a-z\d]((-|_)*[a-z\d])*(-|_)*)(\.(-|_)*([a-z\d]((-|_)*[a-z\d])*))*$/i", $domain_name) // Valid chars check
@@ -36,7 +36,7 @@ if(isset($_GET["domain"]))
 {
     // Is this a valid domain?
     $url = $_GET["domain"];
-    if(!is_valid_domain_name($url))
+    if(!validDomain($url))
     {
         echoEvent("Invalid domain!");
         die();
