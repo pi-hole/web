@@ -64,7 +64,7 @@ if (isset($_POST["submit"])) {
 <?php } ?>
 
 <?php
-f (isset($setupVars["PIHOLE_INTERFACE"])) {
+if (isset($setupVars["PIHOLE_INTERFACE"])) {
     $piHoleInterface = $setupVars["PIHOLE_INTERFACE"];
 } else {
     $piHoleInterface = "unknown";
