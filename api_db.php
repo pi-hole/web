@@ -11,7 +11,7 @@ header('Content-type: application/json');
 require("scripts/pi-hole/php/database.php");
 require("scripts/pi-hole/php/password.php");
 require("scripts/pi-hole/php/auth.php");
-require("scripts/pi-hole/php/func.php");
+require_once("scripts/pi-hole/php/func.php");
 check_cors();
 
 // Set maximum execution time to 10 minutes
