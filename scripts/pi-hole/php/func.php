@@ -34,7 +34,7 @@ function validDomain($domain_name, &$message = NULL)
 function validDomainWildcard($domain_name)
 {
 	// There has to be either no or at most one "*" at the beginning of a line
-	$validChars = preg_match("/^((\*.)?[_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([_a-z\d])*)*$/i", $domain_name);
+	$validChars = preg_match("/^((\*\.)?[_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([_a-z\d])*)*$/i", $domain_name);
 	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
 	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
 	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
