@@ -321,7 +321,7 @@ else
 		$allQueries = array();
 		foreach($return as $line)
 		{
-			$tmp = explode(" ",$line);
+			$tmp = str_getcsv($line," ");
 			// UTF-8 encode domain
 			$tmp[2] = utf8_encode(str_replace("~"," ",$tmp[2]));
 			// UTF-8 encode client host name

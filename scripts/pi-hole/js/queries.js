@@ -75,27 +75,35 @@ $(function () {
 
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
+      var replyid = parseInt(data[5], 10);
       // DNSSEC status
       var dnssecStatus;
+      var ede = data[11];
       switch (data[6]) {
         case "1":
-          dnssecStatus = '<br><span class="text-green">SECURE</span>';
+          dnssecStatus = '<br><span class="text-green">SECURE';
           break;
         case "2":
-          dnssecStatus = '<br><span class="text-orange">INSECURE</span>';
+          dnssecStatus = '<br><span class="text-orange">INSECURE';
           break;
         case "3":
-          dnssecStatus = '<br><span class="text-red">BOGUS</span>';
+          dnssecStatus = '<br><span class="text-red">BOGUS';
           break;
         case "4":
-          dnssecStatus = '<br><span class="text-red">ABANDONED</span>';
+          dnssecStatus = '<br><span class="text-red">ABANDONED';
           break;
         case "5":
-          dnssecStatus = '<br><span class="text-orange">UNKNOWN</span>';
+          dnssecStatus = '<br><span class="text-orange">UNKNOWN';
           break;
         default:
           // No DNSSEC
           dnssecStatus = "";
+      }
+
+      if (dnssecStatus.length > 0) {
+        if (ede.length > 0) dnssecStatus += " (" + ede + ")";
+        else if (replyid === 7) dnssecStatus += " (refused upstream)";
+        dnssecStatus += "</span>";
       }
 
       // Query status
@@ -114,10 +122,10 @@ $(function () {
           break;
         case "2":
           colorClass = "text-green";
-          fieldtext =
-            "OK <br class='hidden-lg'>(forwarded to " +
+          fieldtext = replyid === 0 ? "OK, sent to " : "OK, answered by ";
+          fieldtext +=
+            "<br class='hidden-lg'>" +
             (data.length > 10 && data[10] !== "N/A" ? data[10] : "") +
-            ")" +
             dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
@@ -208,6 +216,12 @@ $(function () {
           buttontext = "";
       }
 
+      // Add EDE here if available and not included in dnssecStatus
+      if (ede.length > 0 && dnssecStatus.length === 0) fieldtext += " (" + ede + ")";
+
+      // Cannot block internal queries of this type
+      if ((data[1] === "DNSKEY" || data[1] === "DS") && data[3] === "pi.hole") buttontext = "";
+
       fieldtext += '<input type="hidden" name="id" value="' + parseInt(data[4], 10) + '">';
 
       if (colorClass !== false) {
@@ -252,7 +266,6 @@ $(function () {
       }
 
       // Check for existence of sixth column and display only if not Pi-holed
-      var replyid = data[5];
       var replytext =
         replyid >= 0 && replyid < replyTypes.length ? replyTypes[replyid] : "? (" + replyid + ")";
 
