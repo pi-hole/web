@@ -27,7 +27,7 @@ function validCIDRIP($address){
 		$v6elem = "[0-9A-Fa-f]{1,4}";
 		// CIDR for IPv6 is any multiple of 4 from 4 up to 128 bit
 		$v6cidr = "(4";
-		for ($i=8; $i <= 128; $i+=4) { 
+		for ($i=8; $i <= 128; $i+=4) {
 			$v6cidr .= "|$i";
 		}
 		$v6cidr .= ")";
@@ -68,7 +68,7 @@ function validDomain($domain_name)
 function validDomainWildcard($domain_name)
 {
 	// There has to be either no or at most one "*" at the beginning of a line
-	$validChars = preg_match("/^((\*.)?[_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([_a-z\d])*)*$/i", $domain_name);
+	$validChars = preg_match("/^((\*\.)?[_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([_a-z\d])*)*$/i", $domain_name);
 	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
 	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
 	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
