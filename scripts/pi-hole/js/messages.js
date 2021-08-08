@@ -6,7 +6,7 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils:false */
-
+var table;
 var token = $("#token").text();
 
 function renderTimestamp(data, type) {
@@ -94,7 +94,7 @@ function renderMessage(data, type, row) {
 }
 
 $(function () {
-  $("#messagesTable").DataTable({
+  table = $("#messagesTable").DataTable({
     ajax: {
       url: "api_db.php?messages",
       data: { token: token },
