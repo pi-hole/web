@@ -111,11 +111,11 @@ $(function () {
     rowCallback: function (row, data) {
       $(row).attr("data-id", data.id);
       var button =
-          '<button type="button" class="btn btn-danger btn-xs" id="deleteMessage_' +
-          data.id +
-          '">' +
-          '<span class="far fa-trash-alt"></span>' +
-          "</button>";
+        '<button type="button" class="btn btn-danger btn-xs" id="deleteMessage_' +
+        data.id +
+        '">' +
+        '<span class="far fa-trash-alt"></span>' +
+        "</button>";
       $("td:eq(3)", row).html(button);
     },
     dom:
@@ -159,7 +159,7 @@ function deleteMessage() {
   var id = tr.attr("data-id");
 
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting message # ",id);
+  utils.showAlert("info", "", "Deleting message # ", id);
   $.ajax({
     url: "scripts/pi-hole/php/message.php",
     method: "post",
@@ -171,13 +171,23 @@ function deleteMessage() {
         utils.showAlert("success", "far fa-trash-alt", "Successfully deleted message # ", id);
         table.row(tr).remove().draw(false).ajax.reload(null, false);
       } else {
-        utils.showAlert("error", "", "Error while deleting message with ID " + id, response.message);
+        utils.showAlert(
+          "error",
+          "",
+          "Error while deleting message with ID " + id,
+          response.message
+        );
       }
     },
     error: function (jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting message with ID " + id, jqXHR.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting message with ID " + id,
+        jqXHR.responseText
+      );
       console.log(exception); // eslint-disable-line no-console
-    }
+    },
   });
-};
+}
