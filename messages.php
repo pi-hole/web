@@ -31,6 +31,7 @@
                         <th>Data3</th>
                         <th>Data4</th>
                         <th>Data5</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
                 </table>
