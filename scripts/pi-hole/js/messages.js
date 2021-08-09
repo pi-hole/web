@@ -170,7 +170,7 @@ function deleteMessage() {
   var id = tr.attr("data-id");
 
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting message # ", id);
+  utils.showAlert("info", "", "Deleting message with ID " + parseInt(id, 10), "...");
   $.ajax({
     url: "scripts/pi-hole/php/message.php",
     method: "post",
