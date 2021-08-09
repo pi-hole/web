@@ -42,10 +42,9 @@ function JSON_error($message = null)
     echo json_encode($response);
 }
 
-if ($_POST['action'] == 'delete_message') {
+if ($_POST['action'] == 'delete_message' && isset($_POST['id'])) {
 // Delete message identified by ID
     try {
-        $db->query('BEGIN TRANSACTION;');
 
         $stmt = $db->prepare('DELETE FROM message WHERE id=:id');
         if (!$stmt) {
@@ -60,9 +59,6 @@ if ($_POST['action'] == 'delete_message') {
             throw new Exception('While executing message statement: ' . $db->lastErrorMsg());
         }
 
-        if(!$db->query('COMMIT;')) {
-            throw new Exception('While commiting changes to the database: ' . $db->lastErrorMsg());
-        }
 
         $reload = true;
         JSON_success();
