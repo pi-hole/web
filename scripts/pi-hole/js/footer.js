@@ -51,6 +51,7 @@ function countDown() {
     ena.text("Enable");
     return;
   }
+
   if (seconds > 0) {
     setTimeout(countDown, 1000);
     ena.text("Enable (" + secondsTimeSpanToHMS(seconds) + ")");
