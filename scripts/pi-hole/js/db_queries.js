@@ -137,6 +137,12 @@ function getQueryTypes() {
     queryType.push([12, 13]);
   }
 
+  // 14 is defined above
+
+  if ($("#type_dbbusy").prop("checked")) {
+    queryType.push(15);
+  }
+
   return queryType.join(",");
 }
 
@@ -172,7 +178,7 @@ function refreshTableData() {
   var APIstring = "api_db.php?getAllQueries&from=" + from + "&until=" + until;
   // Check if query type filtering is enabled
   var queryType = getQueryTypes();
-  if (queryType !== "1,2,3,4,5,6") {
+  if (queryType !== "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15") {
     APIstring += "&types=" + queryType;
   }
 
@@ -194,7 +200,9 @@ $(function () {
 
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
-      var fieldtext, buttontext, color;
+      var fieldtext,
+        buttontext = "",
+        color;
       switch (data[4]) {
         case 1:
           color = "red";
@@ -232,17 +240,14 @@ $(function () {
         case 6:
           color = "red";
           fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
-          buttontext = "";
           break;
         case 7:
           color = "red";
           fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
-          buttontext = "";
           break;
         case 8:
           color = "red";
           fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
-          buttontext = "";
           break;
         case 9:
           color = "red";
@@ -265,7 +270,6 @@ $(function () {
         case 12:
           color = "green";
           fieldtext = "Retried";
-          buttontext = "";
           break;
         case 13:
           color = "green";
@@ -278,10 +282,13 @@ $(function () {
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
+        case 15:
+          color = "text-orange";
+          fieldtext = "Blocked <br class='hidden-lg'>(database is busy)";
+          break;
         default:
           color = "black";
           fieldtext = "Unknown";
-          buttontext = "";
       }
 
       $(row).css("color", color);

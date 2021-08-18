@@ -23,6 +23,7 @@ var replyTypes = [
   "NOTIMP",
   "upstream error",
   "DNSSEC",
+  "NONE",
 ];
 var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
 
@@ -78,7 +79,7 @@ $(function () {
       var replyid = parseInt(data[5], 10);
       // DNSSEC status
       var dnssecStatus;
-      var ede = data[11];
+      var ede = data[11] ? data[11] : "";
       switch (data[6]) {
         case "1":
           dnssecStatus = '<br><span class="text-green">SECURE';
@@ -108,7 +109,7 @@ $(function () {
 
       // Query status
       var fieldtext,
-        buttontext,
+        buttontext = "",
         colorClass = false,
         isCNAME = false,
         regexLink = false;
@@ -197,12 +198,10 @@ $(function () {
         case "12":
           colorClass = "text-green";
           fieldtext = "Retried";
-          buttontext = "";
           break;
         case "13":
           colorClass = "text-green";
           fieldtext = "Retried <br class='hidden-lg'>(ignored)";
-          buttontext = "";
           break;
         case "14":
           colorClass = "text-green";
@@ -210,10 +209,13 @@ $(function () {
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
+        case "15":
+          colorClass = "text-orange";
+          fieldtext = "Blocked <br class='hidden-lg'>(database is busy)";
+          break;
         default:
           colorClass = false;
           fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
-          buttontext = "";
       }
 
       // Add EDE here if available and not included in dnssecStatus
