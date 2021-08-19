@@ -46,6 +46,12 @@ function countDown() {
   var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - Date.now()) / 1000);
 
+  //Stop and remove timer when user enabled early
+  if ($("#pihole-enable").is(":hidden")) {
+    ena.text("Enable");
+    return;
+  }
+
   if (seconds > 0) {
     setTimeout(countDown, 1000);
     ena.text("Enable (" + secondsTimeSpanToHMS(seconds) + ")");
