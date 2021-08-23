@@ -45,11 +45,12 @@
         <div class="col-md-3">
             <div><input type="checkbox" id="type_forwarded" checked><label for="type_forwarded">Permitted: forwarded</label><br></div>
             <div><input type="checkbox" id="type_cached" checked><label for="type_cached">Permitted: cached</label></div>
-            <div><input type="checkbox" id="type_retried" checked><label for="type_retried">Permitted: Retried</label></div>
+            <div><input type="checkbox" id="type_retried" checked><label for="type_retried">Permitted: retried</label></div>
         </div>
         <div class="col-md-3">
             <div><input type="checkbox" id="type_gravity" checked><label for="type_gravity">Blocked: gravity</label><br></div>
             <div><input type="checkbox" id="type_external" checked><label for="type_external">Blocked: external</label></div>
+            <div><input type="checkbox" id="type_dbbusy" checked><label for="type_dbbusy">Blocked: database busy</label></div>
         </div>
         <div class="col-md-3">
             <div><input type="checkbox" id="type_blacklist" checked><label for="type_blacklist">Blocked: exact blacklist</label><br></div>
