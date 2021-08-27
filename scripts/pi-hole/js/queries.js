@@ -275,7 +275,8 @@ $(function () {
 
       $("td:eq(5)", row).html(replytext);
 
-      if (data.length > 7) {
+      // Show response time only when reply is not N/A
+      if (data.length > 7 && replyid !== 0) {
         var content = $("td:eq(5)", row).html();
         $("td:eq(5)", row).html(content + " (" + (0.1 * data[7]).toFixed(1) + "ms)");
       }
