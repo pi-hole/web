@@ -24,6 +24,7 @@ var replyTypes = [
   "upstream error",
   "DNSSEC",
   "NONE",
+  "BLOB",
 ];
 var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
 
