@@ -39,6 +39,15 @@
                 </div>
             </div>
             <div class="box-footer clearfix">
+              <strong>Note:</strong>
+              <p>The order of locally defined DNS records is: </p>
+              <ol>
+                  <li>The device's host name and <code>pi.hole</code></li>
+                  <li>Configured in a config file in <code>/etc/dnsmasq.d/</code></li>
+                  <li>Read from <code>/etc/hosts</code></li>
+                  <li>Read from the "Local (custom) DNS" list (stored in <code>/etc/pihole/custom.list</code>)</li>
+              </ol>
+              <p>Only the first record will trigger an address-to-name association.</p>
                 <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
             </div>
         </div>
