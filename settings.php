@@ -904,7 +904,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     <p>When there is a Pi-hole domain set and this box is
                                                     ticked, this asks FTL that this domain is purely
                                                     local and FTL may answer queries from <code>/etc/hosts</code> or DHCP leases
-                                                    but should never forward queries on that domain to any upstream servers.</p>
+                                                    but should never forward queries on that domain to any upstream servers.
+                                                    If Conditional Fowarding is enabled, unticking this box may cause a partial
+                                                    DNS loop under certain circumstances (e.g. if a client would send TLD DNSSEC queries).</p>
                                                 </div>
                                                 <div>
                                                     <input type="checkbox" name="DNSbogusPriv" id="DNSbogusPriv" title="bogus-priv" <?php if ($DNSbogusPriv){ ?>checked<?php } ?>>
@@ -953,6 +955,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                    devices ending in your local domain name will not leave your network, however, this is optional.
                                                    The local domain name must match the domain name specified
                                                    in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
+                                                <p>Enabling Conditional Fowarding will also forward all hostnames (i.e., non-FQDNs) to the router
+                                                   when "Never forward non-FQDNs" is <em>not</em> enable.</p>
                                                 <div class="form-group">
                                                     <div>
                                                         <input type="checkbox" name="rev_server" id="rev_server" value="rev_server" <?php if(isset($rev_server) && ($rev_server == true)){ ?>checked<?php } ?>>
