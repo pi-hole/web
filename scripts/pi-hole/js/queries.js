@@ -122,8 +122,7 @@ $(function () {
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case "2":
-          colorClass = "text-green";
-          fieldtext = replyid === 0 ? "OK, sent to " : "OK, answered by ";
+          fieldtext = replyid === 0 ? "<span class='text-green'>OK</span>, sent to " : "<span class='text-green'>OK</span>, answered by ";
           fieldtext +=
             "<br class='hidden-lg'>" +
             (data.length > 10 && data[10] !== "N/A" ? data[10] : "") +
@@ -132,8 +131,7 @@ $(function () {
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case "3":
-          colorClass = "text-green";
-          fieldtext = "OK <br class='hidden-lg'>(cached)" + dnssecStatus;
+          fieldtext = "<span class='text-green'>OK</span> <br class='hidden-lg'>(cache)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
@@ -196,16 +194,13 @@ $(function () {
           isCNAME = true;
           break;
         case "12":
-          colorClass = "text-green";
-          fieldtext = "Retried";
+          fieldtext = "<span class='text-green'>Retried</span>";
           break;
         case "13":
-          colorClass = "text-green";
-          fieldtext = "Retried <br class='hidden-lg'>(ignored)";
+          fieldtext = "<span class='text-green'>Retried</span> <br class='hidden-lg'>(ignored)";
           break;
         case "14":
-          colorClass = "text-green";
-          fieldtext = "OK <br class='hidden-lg'>(already forwarded)" + dnssecStatus;
+          fieldtext = "<span class='text-green'>OK</span> <br class='hidden-lg'>(already forwarded)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
@@ -227,7 +222,7 @@ $(function () {
       fieldtext += '<input type="hidden" name="id" value="' + parseInt(data[4], 10) + '">';
 
       if (colorClass !== false) {
-        $(row).addClass(colorClass);
+        $("td:eq(4)", row).addClass(colorClass);
       }
 
       $("td:eq(4)", row).html(fieldtext);
