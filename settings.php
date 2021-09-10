@@ -956,7 +956,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                    The local domain name must match the domain name specified
                                                    in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
                                                 <p>Enabling Conditional Fowarding will also forward all hostnames (i.e., non-FQDNs) to the router
-                                                   when "Never forward non-FQDNs" is <em>not</em> enable.</p>
+                                                   when "Never forward non-FQDNs" is <em>not</em> enabled.</p>
                                                 <div class="form-group">
                                                     <div>
                                                         <input type="checkbox" name="rev_server" id="rev_server" value="rev_server" <?php if(isset($rev_server) && ($rev_server == true)){ ?>checked<?php } ?>>
