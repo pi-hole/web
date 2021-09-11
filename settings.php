@@ -41,7 +41,7 @@ if (isset($_POST["submit"])) {
         <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
         </button>
         <h4><i class="icon fa fa-exclamation-triangle"></i> Debug</h4>
-        <pre><?php print_r($_POST); ?></pre>
+        <pre><?php print_r(htmlentities($_POST)); ?></pre>
     </div>
 <?php } ?>
 
