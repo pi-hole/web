@@ -147,7 +147,7 @@
 
     function pidofFTL()
     {
-        return shell_exec("pidof pihole-FTL");
+        return shell_exec("pgrep pihole-FTL");
     }
     $FTLpid = intval(pidofFTL());
     $FTL = ($FTLpid !== 0 ? true : false);
@@ -347,7 +347,7 @@ if($auth) {
                         if($FTL)
                         {
                             if ($celsius >= -273.15) {
-                                echo "<span id=\"temperature\"><i class=\"fa fa-fire ";
+                                echo '<span id="temperature"><i class="fa fa-fire ';
                                 if ($celsius > $temperaturelimit) {
                                     echo "text-red";
                                 }
@@ -355,12 +355,12 @@ if($auth) {
                                 {
                                     echo "text-vivid-blue";
                                 }
-                                ?>"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span></span><?php
+                                echo '"></i> Temp:&nbsp;<span id="rawtemp" hidden>', $celsius, '</span><span id="tempdisplay"></span></span>';
                             }
                         }
                         else
                         {
-                            echo '<span id=\"temperature\"><i class="fa fa-circle text-red"></i> FTL offline</span>';
+                            echo '<span id="temperature"><i class="fa fa-circle text-red"></i> FTL offline</span>';
                         }
                     ?>
                     <br/>
