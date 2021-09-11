@@ -25,10 +25,10 @@
   "devDependencies": {
     "autoprefixer": "^10.2.5",
     "eslint-plugin-compat": "^3.9.0",
-    "postcss": "^8.2.9",
+    "postcss": "^8.2.15",
     "postcss-cli": "^8.3.1",
-    "prettier": "2.2.1",
-    "xo": "^0.37.1"
+    "prettier": "2.3.1",
+    "xo": "^0.38.2"
   },
   "browserslist": [
     "defaults",
@@ -40,7 +40,7 @@
     "endOfLine": "auto",
     "printWidth": 100,
     "singleQuote": false,
-    "trailingComma": "none"
+    "trailingComma": "es5"
   },
   "xo": {
     "envs": [
@@ -86,6 +86,7 @@
         }
       ],
       "unicorn/filename-case": "off",
+      "unicorn/no-array-for-each": "off",
       "unicorn/no-fn-reference-in-iterator": "off",
       "unicorn/no-for-loop": "off",
       "unicorn/prefer-includes": "off",

@@ -46,7 +46,7 @@ $(function () {
     ajax: {
       url: "scripts/pi-hole/php/customdns.php",
       data: { action: "get", token: token },
-      type: "POST"
+      type: "POST",
     },
     columns: [{}, { type: "ip-address" }, { orderable: false, searchable: false }],
     columnDefs: [
@@ -62,12 +62,12 @@ $(function () {
             '<span class="far fa-trash-alt"></span>' +
             "</button>"
           );
-        }
-      }
+        },
+      },
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"]
+      [10, 25, 50, 100, "All"],
     ],
     order: [[0, "asc"]],
     stateSave: true,
@@ -79,7 +79,7 @@ $(function () {
     },
     drawCallback: function () {
       $(".deleteCustomDNS").on("click", deleteCustomDNS);
-    }
+    },
   });
   // Disable autocorrect in the search box
   var input = document.querySelector("input[type=search]");
@@ -107,7 +107,7 @@ function addCustomDNS() {
     },
     error: function () {
       showAlert("error", "Error while adding this custom DNS entry");
-    }
+    },
   });
 }
 
@@ -130,6 +130,6 @@ function deleteCustomDNS() {
     error: function (jqXHR, exception) {
       showAlert("error", "Error while deleting this custom DNS entry");
       console.log(exception); // eslint-disable-line no-console
-    }
+    },
   });
 }

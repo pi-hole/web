@@ -58,6 +58,7 @@ function renderMessage(data, type, row) {
       );
 
     case "HOSTNAME":
+      // eslint-disable-next-line unicorn/no-new-array
       var hint = new Array(row.blob2 + row.message.length + 3).join(" ");
       return (
         "Hostname contains invalid character <code>" +
@@ -76,6 +77,17 @@ function renderMessage(data, type, row) {
     case "DNSMASQ_CONFIG":
       return "FTL failed to start due to " + row.message;
 
+    case "RATE_LIMIT":
+      return (
+        "Client " +
+        row.message +
+        " has been rate-limited (current config allows up to " +
+        parseInt(row.blob1, 10) +
+        " queries in " +
+        parseInt(row.blob2, 10) +
+        " seconds)"
+      );
+
     default:
       return "Unknown message type<pre>" + JSON.stringify(row) + "</pre>";
   }
@@ -87,7 +99,7 @@ $(function () {
       url: "api_db.php?messages",
       data: { token: token },
       type: "POST",
-      dataSrc: "messages"
+      dataSrc: "messages",
     },
     order: [[0, "asc"]],
     columns: [
@@ -99,7 +111,7 @@ $(function () {
       { data: "blob2", visible: false },
       { data: "blob3", visible: false },
       { data: "blob4", visible: false },
-      { data: "blob5", visible: false }
+      { data: "blob5", visible: false },
     ],
     dom:
       "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
@@ -107,10 +119,10 @@ $(function () {
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     lengthMenu: [
       [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"]
+      [10, 25, 50, 100, "All"],
     ],
     language: {
-      emptyTable: "No issues found."
+      emptyTable: "No issues found.",
     },
     stateSave: true,
     stateSaveCallback: function (settings, data) {
@@ -133,6 +145,6 @@ $(function () {
 
       // Apply loaded state to table
       return data;
-    }
+    },
   });
 });

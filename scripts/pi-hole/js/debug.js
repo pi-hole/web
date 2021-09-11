@@ -20,7 +20,7 @@ function eventsource() {
     $.ajax({
       method: "GET",
       url: "scripts/pi-hole/php/debug.php?IE&token=" + token + "&" + checked,
-      async: false
+      async: false,
     }).done(function (data) {
       ta.show();
       ta.empty();

@@ -203,9 +203,45 @@ if ($_POST['action'] == 'get_groups') {
                 throw new Exception('While executing network table statement: ' . $db->lastErrorMsg());
             }
 
-            // There will always be a result. Unknown host names are NULL
+            // Check if got a hostname from the database. This may not be the case if the client is
+            // specified by MAC address, a hostname or via a more general selector like an interface.
             $name_result = $result->fetchArray(SQLITE3_ASSOC);
-            $res['name'] = $name_result['name'];
+            if(!is_bool($name_result))
+            {
+                $res['name'] = $name_result['name'];
+                error_log("IP: ".$name_result['name']);
+            }
+            else
+            {
+                // Check if we can get a host name from the database when looking up the MAC
+                // address of this client instead.
+                $stmt = $FTLdb->prepare('SELECT name FROM network n JOIN network_addresses na ON na.network_id = n.id WHERE hwaddr=:hwaddr COLLATE NOCASE AND name IS NOT NULL;');
+                if (!$stmt) {
+                    throw new Exception('Error while preparing network table statement: ' . $db->lastErrorMsg());
+                }
+
+                if (!$stmt->bindValue(':hwaddr', $res['ip'], SQLITE3_TEXT)) {
+                    throw new Exception('While binding to network table statement: ' . $db->lastErrorMsg());
+                }
+
+                $result = $stmt->execute();
+                if (!$result) {
+                    throw new Exception('While executing network table statement: ' . $db->lastErrorMsg());
+                }
+
+                // Check if we found a result. There may be multiple entries for
+                // this client in the network_addresses table. We use the first
+                // hostname we find for the sake of simplicity.
+                $name_result = $result->fetchArray(SQLITE3_ASSOC);
+                if(!is_bool($name_result))
+                {
+                    $res['name'] = $name_result['name'];
+                }
+                else
+                {
+                    $res['name'] = null;
+                }
+            }
 
             $groups = array();
             while ($gres = $group_query->fetchArray(SQLITE3_ASSOC)) {
@@ -613,15 +649,16 @@ if ($_POST['action'] == 'get_groups') {
             {
                 // If adding to the exact lists, we convert the domain lower case and check whether it is valid
                 $domain = strtolower($domain);
-                if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)
+                $msg = "";
+                if(!validDomain($domain, $msg))
                 {
                     // This is the case when idn_to_ascii() modified the string
                     if($input !== $domain && strlen($domain) > 0)
-                        $errormsg = 'Domain ' . htmlentities($input) . ' (converted to "' . htmlentities(utf8_encode($domain)) . '") is not a valid domain.';
+                        $errormsg = 'Domain ' . htmlentities($input) . ' (converted to "' . htmlentities(utf8_encode($domain)) . '") is not a valid domain because ' . $msg . '.';
                     elseif($input !== $domain)
-                        $errormsg = 'Domain ' . htmlentities($input) . ' is not a valid domain.';
+                        $errormsg = 'Domain ' . htmlentities($input) . ' is not a valid domain because ' . $msg . '.';
                     else
-                        $errormsg = 'Domain ' . htmlentities(utf8_encode($domain)) . ' is not a valid domain.';
+                        $errormsg = 'Domain ' . htmlentities(utf8_encode($domain)) . ' is not a valid domain because ' . $msg . '.';
                     throw new Exception($errormsg . '<br>Added ' . $added . " out of ". $total . " domains");
                 }
             }

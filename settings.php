@@ -41,7 +41,7 @@ if (isset($_POST["submit"])) {
         <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
         </button>
         <h4><i class="icon fa fa-exclamation-triangle"></i> Debug</h4>
-        <pre><?php print_r($_POST); ?></pre>
+        <pre><?php print_r(htmlentities($_POST)); ?></pre>
     </div>
 <?php } ?>
 
@@ -63,9 +63,7 @@ if (isset($_POST["submit"])) {
     </div>
 <?php } ?>
 
-
 <?php
-// Networking
 if (isset($setupVars["PIHOLE_INTERFACE"])) {
     $piHoleInterface = $setupVars["PIHOLE_INTERFACE"];
 } else {
@@ -76,29 +74,7 @@ if (isset($setupVars["IPV4_ADDRESS"])) {
 } else {
     $piHoleIPv4 = "unknown";
 }
-$IPv6connectivity = false;
-if (isset($setupVars["IPV6_ADDRESS"])) {
-    $piHoleIPv6 = $setupVars["IPV6_ADDRESS"];
-    sscanf($piHoleIPv6, "%2[0-9a-f]", $hexstr);
-    if (strlen($hexstr) == 2) {
-        // Convert HEX string to number
-        $hex = hexdec($hexstr);
-        // Global Unicast Address (2000::/3, RFC 4291)
-        $GUA = (($hex & 0x70) === 0x20);
-        // Unique Local Address   (fc00::/7, RFC 4193)
-        $ULA = (($hex & 0xfe) === 0xfc);
-        if ($GUA || $ULA) {
-            // Scope global address detected
-            $IPv6connectivity = true;
-        }
-    }
-} else {
-    $piHoleIPv6 = "unknown";
-}
-$hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
-?>
 
-<?php
 // DNS settings
 $DNSservers = [];
 $DNSactive = [];
@@ -255,40 +231,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                 <!-- ######################################################### System admin ######################################################### -->
                 <div id="sysadmin" class="tab-pane fade<?php if($tab === "sysadmin"){ ?> in active<?php } ?>">
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Network Information</h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <table class="table table-striped table-bordered nowrap">
-                                                <tbody>
-                                                <tr>
-                                                    <th scope="row">Pi-hole Ethernet Interface:</th>
-                                                    <td><?php echo htmlentities($piHoleInterface); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Pi-hole IPv4 address:</th>
-                                                    <td><?php echo htmlentities($piHoleIPv4); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Pi-hole IPv6 address:</th>
-                                                    <td class="breakall"><?php echo htmlentities($piHoleIPv6); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Pi-hole hostname:</th>
-                                                    <td><?php echo htmlentities($hostname); ?></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">FTL Information</h3>
@@ -822,14 +765,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     <?php } ?>
                                                     <?php if (isset($value["v6_1"])) { ?>
                                                         <td title="<?php echo $value["v6_1"]; ?>">
-                                                            <div><input type="checkbox" name="DNSserver<?php echo $value["v6_1"]; ?>" id="DNS6server<?php echo $value["v6_1"]; ?>" value="true" <?php if (in_array($value["v6_1"], $DNSactive) && $IPv6connectivity){ ?>checked<?php } if (!$IPv6connectivity) { ?> disabled <?php } ?>><label for="DNS6server<?php echo $value["v6_1"]; ?>"></label></div>
+                                                            <div><input type="checkbox" name="DNSserver<?php echo $value["v6_1"]; ?>" id="DNS6server<?php echo $value["v6_1"]; ?>" value="true" <?php if (in_array($value["v6_1"], $DNSactive)){ ?>checked<?php } ?>><label for="DNS6server<?php echo $value["v6_1"]; ?>"></label></div>
                                                         </td>
                                                     <?php } else { ?>
                                                         <td></td>
                                                     <?php } ?>
                                                     <?php if (isset($value["v6_2"])) { ?>
                                                         <td title="<?php echo $value["v6_2"]; ?>">
-                                                            <div><input type="checkbox" name="DNSserver<?php echo $value["v6_2"]; ?>" id="DNS6server<?php echo $value["v6_2"]; ?>" value="true" <?php if (in_array($value["v6_2"], $DNSactive) && $IPv6connectivity){ ?>checked<?php } if (!$IPv6connectivity) { ?> disabled <?php } ?>><label for="DNS6server<?php echo $value["v6_2"]; ?>"></label></div>
+                                                            <div><input type="checkbox" name="DNSserver<?php echo $value["v6_2"]; ?>" id="DNS6server<?php echo $value["v6_2"]; ?>" value="true" <?php if (in_array($value["v6_2"], $DNSactive)){ ?>checked<?php } ?>><label for="DNS6server<?php echo $value["v6_2"]; ?>"></label></div>
                                                         </td>
                                                     <?php } else { ?>
                                                         <td></td>
@@ -961,7 +904,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     <p>When there is a Pi-hole domain set and this box is
                                                     ticked, this asks FTL that this domain is purely
                                                     local and FTL may answer queries from <code>/etc/hosts</code> or DHCP leases
-                                                    but should never forward queries on that domain to any upstream servers.</p>
+                                                    but should never forward queries on that domain to any upstream servers.
+                                                    If Conditional Fowarding is enabled, unticking this box may cause a partial
+                                                    DNS loop under certain circumstances (e.g. if a client would send TLD DNSSEC queries).</p>
                                                 </div>
                                                 <div>
                                                     <input type="checkbox" name="DNSbogusPriv" id="DNSbogusPriv" title="bogus-priv" <?php if ($DNSbogusPriv){ ?>checked<?php } ?>>
@@ -1010,6 +955,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                    devices ending in your local domain name will not leave your network, however, this is optional.
                                                    The local domain name must match the domain name specified
                                                    in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
+                                                <p>Enabling Conditional Fowarding will also forward all hostnames (i.e., non-FQDNs) to the router
+                                                   when "Never forward non-FQDNs" is <em>not</em> enabled.</p>
                                                 <div class="form-group">
                                                     <div>
                                                         <input type="checkbox" name="rev_server" id="rev_server" value="rev_server" <?php if(isset($rev_server) && ($rev_server == true)){ ?>checked<?php } ?>>

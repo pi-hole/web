@@ -6,41 +6,11 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
+require_once("func.php");
+
 if(!in_array(basename($_SERVER['SCRIPT_FILENAME']), ["settings.php", "teleporter.php"], true))
 {
 	die("Direct access to this script is forbidden!");
-}
-
-function validIP($address){
-	if (preg_match('/[.:0]/', $address) && !preg_match('/[1-9a-f]/', $address)) {
-		// Test if address contains either `:` or `0` but not 1-9 or a-f
-		return false;
-	}
-	return !filter_var($address, FILTER_VALIDATE_IP) === false;
-}
-
-function validCIDRIP($address){
-	// This validation strategy has been taken from ../js/groups-common.js
-	$isIPv6 = strpos($address, ":") !== false;
-	if($isIPv6) {
-		// One IPv6 element is 16bit: 0000 - FFFF
-		$v6elem = "[0-9A-Fa-f]{1,4}";
-		// CIDR for IPv6 is any multiple of 4 from 4 up to 128 bit
-		$v6cidr = "(4";
-		for ($i=8; $i <= 128; $i+=4) {
-			$v6cidr .= "|$i";
-		}
-		$v6cidr .= ")";
-		$validator = "/^(((?:$v6elem))((?::$v6elem))*::((?:$v6elem))((?::$v6elem))*|((?:$v6elem))((?::$v6elem)){7})\/$v6cidr$/";
-		return preg_match($validator, $address);
-	} else {
-		// One IPv4 element is 8bit: 0 - 256
-		$v4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
-		// Note that rev-server accepts only /8, /16, /24, and /32
-		$allowedv4cidr = "(8|16|24|32)";
-		$validator = "/^$v4elem\.$v4elem\.$v4elem\.$v4elem\/$allowedv4cidr$/";
-		return preg_match($validator, $address);
-	}
 }
 
 // Check for existance of variable
@@ -56,46 +26,12 @@ function istrue(&$argument) {
 	return false;
 }
 
-// Credit: http://stackoverflow.com/a/4694816/2087442
-function validDomain($domain_name)
-{
-	$validChars = preg_match("/^([_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([_a-z\d])*)*$/i", $domain_name);
-	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
-	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
-	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
-}
-
-function validDomainWildcard($domain_name)
-{
-	// There has to be either no or at most one "*" at the beginning of a line
-	$validChars = preg_match("/^((\*\.)?[_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([_a-z\d])*)*$/i", $domain_name);
-	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
-	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
-	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
-}
-
-function validMAC($mac_addr)
-{
-  // Accepted input format: 00:01:02:1A:5F:FF (characters may be lower case)
-  return !filter_var($mac_addr, FILTER_VALIDATE_MAC) === false;
-}
-
 function formatMAC($mac_addr)
 {
 	preg_match("/([0-9a-fA-F]{2}[:]){5}([0-9a-fA-F]{2})/", $mac_addr, $matches);
 	if(count($matches) > 0)
 		return $matches[0];
 	return null;
-}
-
-function validEmail($email)
-{
-	return filter_var($email, FILTER_VALIDATE_EMAIL)
-		// Make sure that the email does not contain special characters which
-		// may be used to execute shell commands, even though they may be valid
-		// in an email address. If the escaped email does not equal the original
-		// email, it is not safe to store in setupVars.
-		&& escapeshellcmd($email) === $email;
 }
 
 $dhcp_static_leases = array();

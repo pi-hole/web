@@ -47,7 +47,7 @@ function mixColors(ratio, rgb1, rgb2) {
   return [
     (1 - ratio) * rgb1[0] + ratio * rgb2[0],
     (1 - ratio) * rgb1[1] + ratio * rgb2[1],
-    (1 - ratio) * rgb1[2] + ratio * rgb2[2]
+    (1 - ratio) * rgb1[2] + ratio * rgb2[2],
   ];
 }
 
@@ -194,7 +194,7 @@ $(function () {
           }
 
           return data;
-        }
+        },
       },
       {
         data: "lastQuery",
@@ -205,14 +205,14 @@ $(function () {
           }
 
           return data;
-        }
+        },
       },
       { data: "numQueries", width: "9%", render: $.fn.dataTable.render.text() },
-      { data: "", width: "6%", orderable: false }
+      { data: "", width: "6%", orderable: false },
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"]
+      [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
     stateSaveCallback: function (settings, data) {
@@ -225,9 +225,9 @@ $(function () {
       {
         targets: -1,
         data: null,
-        defaultContent: ""
-      }
-    ]
+        defaultContent: "",
+      },
+    ],
   });
   // Disable autocorrect in the search box
   var input = document.querySelector("input[type=search]");

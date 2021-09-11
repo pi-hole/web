@@ -11,6 +11,7 @@ header('Content-type: application/json');
 require("scripts/pi-hole/php/database.php");
 require("scripts/pi-hole/php/password.php");
 require("scripts/pi-hole/php/auth.php");
+require_once("scripts/pi-hole/php/func.php");
 check_cors();
 
 // Set maximum execution time to 10 minutes
@@ -31,7 +32,7 @@ function resolveHostname($clientip, $printIP)
 		return $clientname;
 	}
 
-	else if(filter_var($clientip, FILTER_VALIDATE_IP))
+	else if(validIP($clientip))
 	{
 		// Get host name of client and convert to lower case
 		$clientname = strtolower(gethostbyaddr($ipaddr));
