@@ -572,20 +572,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                 if (!is_resource($dhcpleases))
                                     $leasesfile = false;
 
-                                function convertseconds($argument)
-                                {
-                                    $seconds = round($argument);
-                                    if ($seconds < 60) {
-                                        return sprintf('%ds', $seconds);
-                                    } elseif ($seconds < 3600) {
-                                        return sprintf('%dm %ds', ($seconds / 60), ($seconds % 60));
-                                    } elseif ($seconds < 86400) {
-                                        return sprintf('%dh %dm %ds', ($seconds / 3600 % 24), ($seconds / 60 % 60), ($seconds % 60));
-                                    } else {
-                                        return sprintf('%dd %dh %dm %ds', ($seconds / 86400), ($seconds / 3600 % 24), ($seconds / 60 % 60), ($seconds % 60));
-                                    }
-                                }
-
                                 while (!feof($dhcpleases) && $leasesfile) {
                                     $line = explode(" ", trim(fgets($dhcpleases)));
                                     if (count($line) == 5) {
