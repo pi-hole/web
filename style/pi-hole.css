@@ -271,14 +271,10 @@
   padding: 0 12px;
 }
 
-.user-panel > .info > span {
+.user-panel > .info span {
   padding-right: 5px;
   margin-top: 3px;
   font-size: 11px;
-}
-
-.user-panel > .info i {
-  margin-right: 3px;
 }
 
 .row-centered > div[class^="col-"] {

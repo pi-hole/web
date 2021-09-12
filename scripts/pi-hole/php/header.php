@@ -14,7 +14,7 @@
     $hostname = gethostname() ? gethostname() : "";
 
     check_cors();
-    
+
     // Create cache busting version
     $cacheVer = filemtime(__FILE__);
 
@@ -23,87 +23,6 @@
         $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
     }
     $token = $_SESSION['token'];
-
-    // Try to get temperature value from different places (OS dependent)
-    if(file_exists("/sys/class/thermal/thermal_zone0/temp"))
-    {
-        $output = rtrim(file_get_contents("/sys/class/thermal/thermal_zone0/temp"));
-    }
-    elseif (file_exists("/sys/class/hwmon/hwmon0/temp1_input"))
-    {
-        $output = rtrim(file_get_contents("/sys/class/hwmon/hwmon0/temp1_input"));
-    }
-    else
-    {
-        $output = "";
-    }
-
-    // Test if we succeeded in getting the temperature
-    if(is_numeric($output))
-    {
-        // $output could be either 4-5 digits or 2-3, and we only divide by 1000 if it's 4-5
-        // ex. 39007 vs 39
-        $celsius = intval($output);
-
-        // If celsius is greater than 1 degree and is in the 4-5 digit format
-        if($celsius > 1000) {
-            // Use multiplication to get around the division-by-zero error
-            $celsius *= 1e-3;
-        }
-
-        // Get user-defined temperature limit if set
-        if(isset($setupVars['TEMPERATURE_LIMIT']))
-        {
-            $temperaturelimit = intval($setupVars['TEMPERATURE_LIMIT']);
-        }
-        else
-        {
-            $temperaturelimit = 60;
-        }
-    }
-    else
-    {
-        // Nothing can be colder than -273.15 degree Celsius (= 0 Kelvin)
-        // This is the minimum temperature possible (AKA absolute zero)
-        $celsius = -273.16;
-    }
-
-    // Get load
-    $loaddata = sys_getloadavg();
-    foreach ($loaddata as $key => $value) {
-        $loaddata[$key] = round($value, 2);
-    }
-    // Get number of processing units available to PHP
-    // (may be less than the number of online processors)
-    $nproc = shell_exec('nproc');
-    if(!is_numeric($nproc))
-    {
-        $cpuinfo = file_get_contents('/proc/cpuinfo');
-        preg_match_all('/^processor/m', $cpuinfo, $matches);
-        $nproc = count($matches[0]);
-    }
-
-    // Get memory usage
-    $data = explode("\n", file_get_contents("/proc/meminfo"));
-    $meminfo = array();
-    if(count($data) > 0)
-    {
-        foreach ($data as $line) {
-            $expl = explode(":", trim($line));
-            if(count($expl) == 2)
-            {
-                // remove " kB" from the end of the string and make it an integer
-                $meminfo[$expl[0]] = intval(substr($expl[1],0, -3));
-            }
-        }
-        $memory_used = $meminfo["MemTotal"]-$meminfo["MemFree"]-$meminfo["Buffers"]-$meminfo["Cached"];
-        $memory_total = $meminfo["MemTotal"];
-        $memory_usage = $memory_used/$memory_total;
-    }
-    else
-    {
-        $memory_usage = -1;
-    }
 
     if($auth) {
         // For session timer
@@ -145,12 +64,13 @@
         }
     }
 
-    function pidofFTL()
-    {
-        return shell_exec("pgrep pihole-FTL");
-    }
-    $FTLpid = intval(pidofFTL());
-    $FTL = ($FTLpid !== 0 ? true : false);
+    $piholeFTLStatus = piholeFTLStatus();
+    $piholeFTLTemperature = piholeFTLTemperature();
+    $piholeFTLTemperatureLimit = isset( $setupVars['TEMPERATURE_LIMIT'] ) ? (int)$setupVars['TEMPERATURE_LIMIT'] : null;
+    $piholeFTLLoad = piholeFTLLoad();
+    $piholeFTLLoadLimit = piholeFTLLoadLimit();
+    $piholeFTLMemoryUsage = piholeFTLMemoryUsage();
+    $piholeFTLMemoryUsageLimit = piholeFTLMemoryUsageLimit();
 
     $piholeFTLConf = piholeFTLConfig();
 ?>
@@ -326,74 +246,46 @@ if($auth) {
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
-                        <?php
-                        $pistatus = pihole_execute('status web');
-                        if (isset($pistatus[0])) {
-                            $pistatus = $pistatus[0];
-                        } else {
-                            $pistatus = null;
-                        }
-                        if ($pistatus === "1") {
-                            echo '<span id="status"><i class="fa fa-circle text-green-light"></i> Active</span>';
-                        } elseif ($pistatus === "0") {
-                            echo '<span id="status"><i class="fa fa-circle text-red"></i> Offline</span>';
-                        } elseif ($pistatus === "-1") {
-                            echo '<span id="status"><i class="fa fa-circle text-red"></i> DNS service not running</span>';
-                        } else {
-                            echo '<span id="status"><i class="fa fa-circle text-orange"></i> Unknown</span>';
-                        }
-
-                        // CPU Temp
-                        if($FTL)
-                        {
-                            if ($celsius >= -273.15) {
-                                echo '<span id="temperature"><i class="fa fa-fire ';
-                                if ($celsius > $temperaturelimit) {
-                                    echo "text-red";
-                                }
-                                else
-                                {
-                                    echo "text-vivid-blue";
-                                }
-                                echo '"></i> Temp:&nbsp;<span id="rawtemp" hidden>', $celsius, '</span><span id="tempdisplay"></span></span>';
-                            }
-                        }
-                        else
-                        {
-                            echo '<span id="temperature"><i class="fa fa-circle text-red"></i> FTL offline</span>';
-                        }
-                    ?>
-                    <br/>
-                    <?php
-                    echo "<span title=\"Detected $nproc cores\"><i class=\"fa fa-circle ";
-                        if ($loaddata[0] > $nproc) {
-                            echo "text-red";
-                        }
-                        else
-                        {
-                            echo "text-green-light";
-                        }
-                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</span>";
-                    ?>
-                    <br/>
-                    <?php
-                    echo "<span><i class=\"fa fa-circle ";
-                        if ($memory_usage > 0.75 || $memory_usage < 0.0) {
-                            echo "text-red";
-                        }
-                        else
-                        {
-                            echo "text-green-light";
-                        }
-                        if($memory_usage > 0.0)
-                        {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</span>";
-                        }
-                        else
-                        {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp; N/A</span>";
-                        }
-                    ?>
+                    <div>
+                        <span id="status">
+                            <?php if( $piholeFTLStatus == 1 ): ?>
+                                <i class="fa fa-circle fa-fw text-green-light"></i> Enabled
+                            <?php elseif( $piholeFTLStatus == 0 ): ?>
+                                <i class="fa fa-circle fa-fw text-orange"></i> Disabled
+                            <?php elseif ($piholeFTLStatus === -1 ): ?>
+                                <i class="fa fa-circle fa-fw text-red"></i> Offline
+                            <?php else: ?>
+                                <i class="fa fa-circle fa-fw text-gray"></i> Unknown
+                            <?php endif ?>
+                        </span>
+                        <?php if( isset( $piholeFTLTemperature )): ?>
+                            <span id="temperature">
+                                <i class="fa fa-fw fa-thermometer-half <?php echo isset( $piholeFTLTemperatureLimit ) && ( $piholeFTLTemperature > $piholeFTLTemperatureLimit ) ? 'text-red' : 'text-vivid-blue' ?>"></i>
+                                <span id="rawtemp" hidden><?php echo $piholeFTLTemperature ?></span>
+                                <span id="tempdisplay"></span>
+                            </span>
+                        <?php endif ?>
+                    </div>
+                    <div>
+                        <span id="loaddata">
+                            <i class="fa fa-fw fa-tachometer-alt <?php echo ( $piholeFTLLoad[0] > $piholeFTLLoadLimit ) ? 'text-red' : 'text-green-light' ?>"></i>
+                            Load <?php echo number_format( $piholeFTLLoad[0], 2 ),  ' / ', number_format( $piholeFTLLoad[1], 2 ), ' / ', number_format( $piholeFTLLoad[2], 2 ) ?>
+                        </span>
+                    </div>
+                    <div>
+                        <span id="memory_usage">
+                            <?php if( $piholeFTLMemoryUsage > 0 ): ?>
+                                <?php if( $piholeFTLMemoryUsage > $piholeFTLMemoryUsageLimit ): ?>
+                                    <i class="fa fa-fw fa-microchip text-red"></i>
+                                <?php else: ?>
+                                    <i class="fa fa-fw fa-microchip text-green-light "></i>
+                                <?php endif ?>
+                                Memory <?php echo number_format( $piholeFTLMemoryUsage * 100, 1 ) ?>%
+                            <?php else: ?>
+                                <i class="fa fa-fw fa-microchip text-gray"></i> N/A
+                            <?php endif ?>
+                        </span>
+                    </div>
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -498,7 +390,7 @@ if($auth) {
                   </ul>
                 </li>
                 <!-- Toggle -->
-                <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden<?php } ?>>
+                <li id="pihole-disable" class="treeview"<?php if ( $piholeFTLStatus == 0 ) { echo ' hidden'; } ?>>
                   <a href="#">
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
@@ -534,7 +426,7 @@ if($auth) {
                   </ul>
                     <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
-                <li id="pihole-enable" class="treeview"<?php if ($pistatus == "1") { ?> hidden<?php } ?>>
+                <li id="pihole-enable" class="treeview"<?php if( $piholeFTLStatus > 0 ) { echo ' hidden'; } ?>>
                     <a href="#">
                       <i class="fa fa-fw fa-play"></i>
                       <span id="enableLabel">Enable&nbsp;&nbsp;&nbsp;
@@ -610,10 +502,10 @@ if($auth) {
                 <!-- Local DNS Records -->
                 <li class="treeview <?php if(in_array($scriptname, array("dns_records.php", "cname_records.php"))){ ?>active<?php } ?>">
                   <a href="#">
-                    <i class="fa fa-fw fa-address-book"></i> <span>Local DNS</span>                    
+                    <i class="fa fa-fw fa-address-book"></i> <span>Local DNS</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
-                    </span>               
+                    </span>
                   </a>
                   <ul class="treeview-menu">
                     <li<?php if($scriptname === "dns_records.php"){ ?> class="active"<?php } ?>>

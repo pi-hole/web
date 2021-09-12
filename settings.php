@@ -239,72 +239,63 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <?php
-                                            if ($FTL) {
-                                                function get_FTL_data($arg)
-                                                {
-                                                    global $FTLpid;
-                                                    return trim(exec("ps -p " . $FTLpid . " -o " . $arg));
-                                                }
-
-                                                $FTLversion = exec("/usr/bin/pihole-FTL version");
-                                            ?>
-                                            <table class="table table-striped table-bordered nowrap">
-                                                <tbody>
-                                                    <tr>
-                                                        <th scope="row">FTL version:</th>
-                                                        <td><?php echo $FTLversion; ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Process identifier (PID):</th>
-                                                        <td><?php echo $FTLpid; ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Time FTL started:</th>
-                                                        <td><?php print_r(get_FTL_data("lstart")); ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">User / Group:</th>
-                                                        <td><?php print_r(get_FTL_data("euser")); ?> / <?php print_r(get_FTL_data("egroup")); ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Total CPU utilization:</th>
-                                                        <td><?php print_r(get_FTL_data("%cpu")); ?>%</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Memory utilization:</th>
-                                                        <td><?php print_r(get_FTL_data("%mem")); ?>%</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory:</span>
-                                                        </th>
-                                                        <td><?php echo formatSizeUnits(1e3 * floatval(get_FTL_data("rss"))); ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span title="Size of the DNS domain cache">DNS cache size:</span>
-                                                        </th>
-                                                        <td id="cache-size">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span title="Number of cache insertions">DNS cache insertions:</span>
-                                                        </th>
-                                                        <td id="cache-inserted">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span title="Number of cache entries that had to be removed although they are not expired (increase cache size to reduce this number)">DNS cache evictions:</span>
-                                                        </th>
-                                                        <td id="cache-live-freed">&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
-                                            <?php } else { ?>
-                                            <div>The FTL service is offline!</div>
-                                            <?php } ?>
+                                            <?php if( piholeFTLActive() ): ?>
+                                                <table class="table table-striped table-bordered nowrap">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">FTL version:</th>
+                                                            <td><?php echo piholeFTLVersion(); ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Process identifier (PID):</th>
+                                                            <td><?php echo piholeFTLPid(); ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Time FTL started:</th>
+                                                            <td><?php echo strftime( "%c", piholeFTLStart()); ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">User / Group:</th>
+                                                            <td><?php echo piholeFTLUser(); ?> / <?php echo piholeFTLGroup(); ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Total CPU utilization:</th>
+                                                            <td><?php echo number_format( piholeFTLCpu(), 1 ); ?>%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Memory utilization:</th>
+                                                            <td><?php echo number_format( piholeFTLMem(), 1 ); ?>%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                <span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory:</span>
+                                                            </th>
+                                                            <td><?php echo formatSizeUnits( piholeFTLRss() ); ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                <span title="Size of the DNS domain cache">DNS cache size:</span>
+                                                            </th>
+                                                            <td id="cache-size">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                <span title="Number of cache insertions">DNS cache insertions:</span>
+                                                            </th>
+                                                            <td id="cache-inserted">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                <span title="Number of cache entries that had to be removed although they are not expired (increase cache size to reduce this number)">DNS cache evictions:</span>
+                                                            </th>
+                                                            <td id="cache-live-freed">&nbsp;</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
+                                            <?php else: ?>
+                                                <div>The FTL service is offline!</div>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
