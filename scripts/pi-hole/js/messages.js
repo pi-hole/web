@@ -77,6 +77,17 @@ function renderMessage(data, type, row) {
     case "DNSMASQ_CONFIG":
       return "FTL failed to start due to " + row.message;
 
+    case "RATE_LIMIT":
+      return (
+        "Client " +
+        row.message +
+        " has been rate-limited (current config allows up to " +
+        parseInt(row.blob1, 10) +
+        " queries in " +
+        parseInt(row.blob2, 10) +
+        " seconds)"
+      );
+
     default:
       return "Unknown message type<pre>" + JSON.stringify(row) + "</pre>";
   }

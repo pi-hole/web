@@ -472,6 +472,7 @@ function returnSuccess($message = "", $json = true)
 
 function returnError($message = "", $json = true)
 {
+    $message = htmlentities($message) ;
     if ($json) {
         return [ "success" => false, "message" => $message ];
     } else {
