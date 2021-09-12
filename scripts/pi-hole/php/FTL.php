@@ -118,10 +118,7 @@ function readPiholeFTLProcessInfo()
 {
 	$pid = piholeFTLPid();
 
-	if( $pid < 0 )
-	{
-		return array();
-	}
+	if( $pid < 0 ) return array();
 
 	// Output of ps is split by spaces!
 	// `ps` man page: "The following ... specifiers may contain spaces:
@@ -142,10 +139,7 @@ function readPiholeFTLProcessInfo()
 		count( $keys )
 	);
 
-	if( $ps === false )
-	{
-		return array();
-	}
+	if( $ps === false ) return array();
 
 	$info = [];
 	foreach( array_keys( $keys ) as $idx => $key )
@@ -221,12 +215,7 @@ function readPiholeFTLTemperature()
 function piholeFTLLoad()
 {
 	$load = sys_getloadavg();
-
-	if( $load === false )
-	{
-		return array( null, null, null );
-	}
-
+	if( $load === false ) return array( null, null, null );
 	return $load;
 }
 
@@ -274,10 +263,7 @@ function readPiholeFTLMemoryUsage()
 {
 	$meminfo = file( "/proc/meminfo", FILE_IGNORE_NEW_LINES );
 
-	if( $meminfo === false )
-	{
-		return null;
-	}
+	if( $meminfo === false ) return null;
 
 	$memTotal = null;
 	$memAvaliable = null;
@@ -290,23 +276,13 @@ function readPiholeFTLMemoryUsage()
 		if( preg_match( '/^MemTotal:\s+(\d+) kB/', $line, $matches ))
 		{
 			$memTotal = (int)$matches[1];
-
-			if( !( $memTotal > 0 ))
-			{
-				return null;
-			}
-
+			if( !( $memTotal > 0 )) return null;
 			continue;
 		}
 
 		if( preg_match( '/^MemAvailable:\s+(\d+) kB/', $line, $matches ))
 		{
 			$memAvaliable = (int)$matches[1];
-
-			if( isset( $memTotal ))
-			{
-			}
-
 			continue;
 		}
 
