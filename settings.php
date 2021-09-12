@@ -882,7 +882,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                             <div class="col-lg-12">
                                                 <div>
                                                     <input type="checkbox" name="DNSrequiresFQDN" id="DNSrequiresFQDN" title="domain-needed" <?php if ($DNSrequiresFQDN){ ?>checked<?php } ?>>
-                                                    <label for="DNSrequiresFQDN"><strong>Never forward non-FQDNs</strong></label>
+                                                    <label for="DNSrequiresFQDN"><strong>Never forward non-FQDN <code>A</code> and <code>AAAA</code> queries</strong></label>
                                                     <p>When there is a Pi-hole domain set and this box is
                                                     ticked, this asks FTL that this domain is purely
                                                     local and FTL may answer queries from <code>/etc/hosts</code> or DHCP leases
