@@ -59,20 +59,38 @@ $.extend($.fn.dataTableExt.oSort, {
           xa += ":";
         }
 
-        if (item.length === 0) {
-          count += 0;
-        } else if (item.length === 1) {
-          xa += "000" + item;
-          count += 4;
-        } else if (item.length === 2) {
-          xa += "00" + item;
-          count += 4;
-        } else if (item.length === 3) {
-          xa += "0" + item;
-          count += 4;
-        } else {
-          xa += item;
-          count += 4;
+        switch (item.length) {
+          case 0: {
+            count += 0;
+
+            break;
+          }
+
+          case 1: {
+            xa += "000" + item;
+            count += 4;
+
+            break;
+          }
+
+          case 2: {
+            xa += "00" + item;
+            count += 4;
+
+            break;
+          }
+
+          case 3: {
+            xa += "0" + item;
+            count += 4;
+
+            break;
+          }
+
+          default: {
+            xa += item;
+            count += 4;
+          }
         }
       }
 

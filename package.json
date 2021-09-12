@@ -28,7 +28,7 @@
     "postcss": "^8.3.6",
     "postcss-cli": "^8.3.1",
     "prettier": "2.4.0",
-    "xo": "^0.38.2"
+    "xo": "^0.44.0"
   },
   "browserslist": [
     "defaults",
@@ -54,7 +54,6 @@
       "ecmaVersion": 5,
       "sourceType": "script"
     },
-    "esnext": false,
     "prettier": true,
     "space": 2,
     "ignores": [
@@ -77,7 +76,10 @@
       "no-alert": "off",
       "no-console": "error",
       "no-negated-condition": "off",
+      "no-var": "off",
+      "object-shorthand": "off",
       "one-var": "off",
+      "prefer-arrow-callback": "off",
       "spaced-comment": "off",
       "unicorn/explicit-length-check": [
         "error",
@@ -87,8 +89,9 @@
       ],
       "unicorn/filename-case": "off",
       "unicorn/no-array-for-each": "off",
-      "unicorn/no-fn-reference-in-iterator": "off",
       "unicorn/no-for-loop": "off",
+      "unicorn/no-document-cookie": "off",
+      "unicorn/numeric-separators-style": "off",
       "unicorn/prefer-includes": "off",
       "unicorn/prefer-node-append": "off",
       "unicorn/prefer-number-properties": "off",
