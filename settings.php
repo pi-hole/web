@@ -1172,6 +1172,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div>
+                                                <input type="checkbox" name="colorfulQueryLog" id="colorfulQueryLog" value="no">
+                                                <label for="colorfulQueryLog"><strong>Colorful Query Log</strong></label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

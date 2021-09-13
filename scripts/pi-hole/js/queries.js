@@ -111,12 +111,14 @@ $(function () {
       // Query status
       var fieldtext,
         buttontext = "",
+        colorClass = "text-green",
         isCNAME = false,
         regexLink = false;
 
       switch (data[4]) {
         case "1":
           fieldtext = "<span class='text-red'>Blocked (gravity)</span>";
+          colorClass = "text-red";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
@@ -140,6 +142,7 @@ $(function () {
           break;
         case "4":
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist)";
+          colorClass = "text-red";
 
           if (data.length > 9 && data[9] > 0) {
             regexLink = true;
@@ -150,25 +153,30 @@ $(function () {
           break;
         case "5":
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist)";
+          colorClass = "text-red";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case "6":
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(external, IP)";
+          colorClass = "text-red";
           buttontext = "";
           break;
         case "7":
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(external, NULL)</span>";
+          colorClass = "text-red";
           buttontext = "";
           break;
         case "8":
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(external, NXRA)</span>";
+          colorClass = "text-red";
           buttontext = "";
           break;
         case "9":
           fieldtext = "<span class='text-red'>Blocked (gravity, CNAME)</span>";
+          colorClass = "text-red";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
@@ -176,6 +184,7 @@ $(function () {
         case "10":
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist, CNAME)</span>";
+          colorClass = "text-red";
 
           if (data.length > 9 && data[9] > 0) {
             regexLink = true;
@@ -188,6 +197,7 @@ $(function () {
         case "11":
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist, CNAME)</span>";
+          colorClass = "text-red";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
@@ -202,15 +212,18 @@ $(function () {
           fieldtext =
             "<span class='text-green'>OK</span> <br class='hidden-lg'>(already forwarded)" +
             dnssecStatus;
+          colorClass = "text-red";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case "15":
           fieldtext =
-            "<span class='text-red'>Blocked <br class='hidden-lg'>(database is busy)</span>";
+            "<span class='text-orange'>Blocked <br class='hidden-lg'>(database is busy)</span>";
+          colorClass = "text-orange";
           break;
         default:
           fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
+          colorClass = false;
       }
 
       // Add EDE here if available and not included in dnssecStatus
@@ -220,6 +233,10 @@ $(function () {
       if ((data[1] === "DNSKEY" || data[1] === "DS") && data[3] === "pi.hole") buttontext = "";
 
       fieldtext += '<input type="hidden" name="id" value="' + parseInt(data[4], 10) + '">';
+
+      if (colorClass !== false && localStorage.getItem("colorfulQueryLog_chkbox") === "true") {
+        $(row).addClass(colorClass);
+      }
 
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(6)", row).html(buttontext);
