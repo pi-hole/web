@@ -293,7 +293,7 @@ if (sessionvalidity > 0) {
   document.getElementById("sessiontimer").style.display = "none";
 }
 
-// Handle Strg + Enter button on Login page
+// Handle Ctrl + Enter button on Login page
 $(document).keypress(function (e) {
   if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
     $("#loginform").attr("action", "settings.php");
