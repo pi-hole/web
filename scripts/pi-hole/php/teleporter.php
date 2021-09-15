@@ -157,7 +157,7 @@ function archive_restore_table($file, $table, $flush=false)
 		$field = "domain";
 	}
 
-	// Prepare SQLite statememt
+	// Prepare SQLite statement
 	$stmt = $db->prepare($sql);
 
 	// Return early if we fail to prepare the SQLite statement

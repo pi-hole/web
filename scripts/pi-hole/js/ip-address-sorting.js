@@ -13,7 +13,7 @@
 $.extend($.fn.dataTableExt.oSort, {
   "ip-address-pre": function (a) {
     // Skip empty fields (IP address might have expired or
-    // reassigned to a differenct device)
+    // reassigned to a different device)
     if (!a || a.length === 0) {
       return Infinity;
     }
