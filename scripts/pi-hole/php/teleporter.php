@@ -538,7 +538,7 @@ if(isset($_POST["action"]))
 					$line = str_replace("\r","", $line);
 					$line = str_replace("\n","", $line);
 					$explodedLine = explode (",", $line);
-					
+
 					$domain = implode(",", array_slice($explodedLine, 0, -1));
 					$target = $explodedLine[count($explodedLine)-1];
 
