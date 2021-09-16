@@ -212,15 +212,15 @@ $(function () {
           rowClass = "blocked-row";
           break;
         case 2:
-          fieldtext = "<span class='text-green'>OK</span> (forwarded to <br class='hidden-lg'>" +
+          fieldtext =
+            "<span class='text-green'>OK</span> (forwarded to <br class='hidden-lg'>" +
             (data.length > 5 && data[5] !== "N/A" ? data[5] : "") +
             ")";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case 3:
-          fieldtext =
-            "<span class='text-green'>OK</span> <br class='hidden-lg'>(cache)";
+          fieldtext = "<span class='text-green'>OK</span> <br class='hidden-lg'>(cache)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
