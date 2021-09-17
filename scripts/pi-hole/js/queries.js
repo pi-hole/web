@@ -111,7 +111,7 @@ $(function () {
       // Query status
       var fieldtext,
         buttontext = "",
-        rowClass = "allowed-row",
+        blocked = false,
         isCNAME = false,
         regexLink = false;
 
@@ -120,7 +120,7 @@ $(function () {
           fieldtext = "<span class='text-red'>Blocked (gravity)</span>";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
-          rowClass = "blocked-row";
+          blocked = true;
           break;
         case "2":
           fieldtext =
@@ -142,7 +142,7 @@ $(function () {
           break;
         case "4":
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist)";
-          rowClass = "blocked-row";
+          blocked = true;
           if (data.length > 9 && data[9] > 0) {
             regexLink = true;
           }
@@ -152,30 +152,30 @@ $(function () {
           break;
         case "5":
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist)";
-          rowClass = "blocked-row";
+          blocked = true;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case "6":
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(external, IP)";
-          rowClass = "blocked-row";
+          blocked = true;
           buttontext = "";
           break;
         case "7":
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(external, NULL)</span>";
-          rowClass = "blocked-row";
+          blocked = true;
           buttontext = "";
           break;
         case "8":
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(external, NXRA)</span>";
-          rowClass = "blocked-row";
+          blocked = true;
           buttontext = "";
           break;
         case "9":
           fieldtext = "<span class='text-red'>Blocked (gravity, CNAME)</span>";
-          rowClass = "blocked-row";
+          blocked = true;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
@@ -195,7 +195,7 @@ $(function () {
         case "11":
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist, CNAME)</span>";
-          rowClass = "blocked-row";
+          blocked = true;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
@@ -215,8 +215,8 @@ $(function () {
           break;
         case "15":
           fieldtext =
-            "<span class='text-red'>Blocked <br class='hidden-lg'>(database is busy)</span>";
-          rowClass = "blocked-row";
+            "<span class='text-orange'>Blocked <br class='hidden-lg'>(database is busy)</span>";
+          blocked = true;
           break;
         default:
           fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
@@ -230,7 +230,10 @@ $(function () {
 
       fieldtext += '<input type="hidden" name="id" value="' + parseInt(data[4], 10) + '">';
 
-      $(row).addClass(rowClass);
+      $(row).addClass(blocked === true ? "blocked-row" : "allowed-row");
+      if (localStorage.getItem("colorfulQueryLog_chkbox") === "true") {
+        $(row).addClass(blocked === true ? "text-red" : "text-green");
+      }
 
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(6)", row).html(buttontext);
