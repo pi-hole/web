@@ -180,17 +180,13 @@ function getCustomDNSEntries()
     if ($handle)
     {
         while (($line = fgets($handle)) !== false) {
-            $line = str_replace("\r","", $line);
-            $line = str_replace("\n","", $line);
-            $explodedLine = explode (" ", $line);
-
-            if (count($explodedLine) != 2)
-                continue;
-
-            $data = new \stdClass();
-            $data->ip = $explodedLine[0];
-            $data->domain = $explodedLine[1];
-            $entries[] = $data;
+            if (preg_match('/^([a-f0-9.:]+)\h+([^\#\s]+)/', $line, $match))
+            {
+                $entries[] = (object) [
+                    'ip'     => $match[1],
+                    'domain' => $match[2]
+                ];
+            }
         }
 
         fclose($handle);
