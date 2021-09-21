@@ -55,14 +55,14 @@ function validCIDRIP($address){
 		// One IPv6 element is 16bit: 0000 - FFFF
 		$v6elem = "[0-9A-Fa-f]{1,4}";
 		// dnsmasq allows arbitrary prefix-length since https://thekelleys.org.uk/gitweb/?p=dnsmasq.git;a=commit;h=35f93081dc9a52e64ac3b7196ad1f5c1106f8932
-		$v6cidr = "([1-128])";
+		$v6cidr = "([1-9]|[1-9][0-9]|1[01][0-9]|12[0-8])";
 		$validator = "/^(((?:$v6elem))((?::$v6elem))*::((?:$v6elem))((?::$v6elem))*|((?:$v6elem))((?::$v6elem)){7})\/$v6cidr$/";
 		return preg_match($validator, $address);
 	} else {
 		// One IPv4 element is 8bit: 0 - 256
 		$v4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
 		// dnsmasq allows arbitrary prefix-length
-		$allowedv4cidr = "([1-32])";
+		$allowedv4cidr = "(([1-9]|[12][0-9]|3[0-2]))";
 		$validator = "/^$v4elem\.$v4elem\.$v4elem\.$v4elem\/$allowedv4cidr$/";
 		return preg_match($validator, $address);
 	}
