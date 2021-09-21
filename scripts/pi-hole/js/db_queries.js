@@ -202,96 +202,100 @@ $(function () {
     rowCallback: function (row, data) {
       var fieldtext,
         buttontext = "",
-        color;
+        blocked = true;
       switch (data[4]) {
         case 1:
-          color = "red";
-          fieldtext = "Blocked (gravity)";
+          fieldtext = "<span class='text-red'>Blocked (gravity)</span>";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+          blocked = true;
           break;
         case 2:
-          color = "green";
           fieldtext =
-            "OK <br class='hidden-lg'>(forwarded to " +
+            "<span class='text-green'>OK</span> (forwarded to <br class='hidden-lg'>" +
             (data.length > 5 && data[5] !== "N/A" ? data[5] : "") +
             ")";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case 3:
-          color = "green";
-          fieldtext = "OK <br class='hidden-lg'>(cached)";
+          fieldtext = "<span class='text-green'>OK</span> <br class='hidden-lg'>(cache)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case 4:
-          color = "red";
-          fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist)";
+          fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+          blocked = true;
           break;
         case 5:
-          color = "red";
-          fieldtext = "Blocked <br class='hidden-lg'>(exact blacklist)";
+          fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+          blocked = true;
           break;
         case 6:
-          color = "red";
-          fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
+          fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(external, IP)";
+          blocked = true;
           break;
         case 7:
-          color = "red";
-          fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
+          fieldtext =
+            "<span class='text-red'>Blocked <br class='hidden-lg'>(external, NULL)</span>";
+          blocked = true;
           break;
         case 8:
-          color = "red";
-          fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
+          fieldtext =
+            "<span class='text-red'>Blocked <br class='hidden-lg'>(external, NXRA)</span>";
+          blocked = true;
           break;
         case 9:
-          color = "red";
-          fieldtext = "Blocked (gravity, CNAME)";
+          fieldtext = "<span class='text-red'>Blocked (gravity, CNAME)</span>";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+          blocked = true;
           break;
         case 10:
-          color = "red";
-          fieldtext = "Blocked <br class='hidden-lg'>(regex blacklist, CNAME)";
+          fieldtext =
+            "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist, CNAME)</span>";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+          blocked = true;
           break;
         case 11:
-          color = "red";
-          fieldtext = "Blocked <br class='hidden-lg'>(exact blacklist, CNAME)";
+          fieldtext =
+            "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist, CNAME)</span>";
+          blocked = true;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+          blocked = true;
           break;
         case 12:
-          color = "green";
-          fieldtext = "Retried";
+          fieldtext = "<span class='text-green'>Retried</span>";
           break;
         case 13:
-          color = "green";
-          fieldtext = "Retried <br class='hidden-lg'>(ignored)";
-          buttontext = "";
+          fieldtext = "<span class='text-green'>Retried</span> <br class='hidden-lg'>(ignored)";
           break;
         case 14:
-          color = "green";
-          fieldtext = "OK <br class='hidden-lg'>(already forwarded)";
+          fieldtext =
+            "<span class='text-green'>OK</span> <br class='hidden-lg'>(already forwarded)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case 15:
-          color = "text-orange";
-          fieldtext = "Blocked <br class='hidden-lg'>(database is busy)";
+          fieldtext =
+            "<span class='text-orange'>Blocked <br class='hidden-lg'>(database is busy)</span>";
+          blocked = true;
           break;
         default:
-          color = "black";
           fieldtext = "Unknown";
       }
 
-      $(row).css("color", color);
+      $(row).addClass(blocked === true ? "blocked-row" : "allowed-row");
+      if (localStorage.getItem("colorfulQueryLog_chkbox") === "true") {
+        $(row).addClass(blocked === true ? "text-red" : "text-green");
+      }
+
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(5)", row).html(buttontext);
 
