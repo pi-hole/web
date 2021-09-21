@@ -358,3 +358,11 @@ td.details-control {
 .dataTables-child td {
   padding: 2px 5px;
 }
+
+.blocked-row {
+  background-color: rgb(229, 83, 75, 0.1) !important;
+}
+
+.allowed-row {
+  background-color: rgb(70, 149, 74, 0.1) !important;
+}
