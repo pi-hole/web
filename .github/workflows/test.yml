@@ -10,21 +10,22 @@ on:
       - "**"
 
 env:
-  CI: true
+  FORCE_COLOR: 2
 
 jobs:
   run:
-    name: Node ${{ matrix.node }}
+    name: Node
     runs-on: ubuntu-latest
 
     steps:
       - name: Clone repository
         uses: actions/checkout@v2
 
-      - name: Set Node.js version
-        uses: actions/setup-node@v1
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: "12.x"
+          node-version: "14.x"
+          cache: npm
 
       - name: Install npm dependencies
         run: npm ci
