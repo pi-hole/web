@@ -293,8 +293,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					if (!validCIDRIP($cidr))
 					{
 						$error .= "Conditional forwarding subnet (\"".htmlspecialchars($cidr)."\") is invalid!<br>".
-						          "This field requires CIDR notation for local subnets (e.g., 192.168.0.0/16).<br>".
-						          "Please use only subnets /8, /16, /24, and /32.<br>";
+						          "This field requires CIDR notation for local subnets (e.g., 192.168.0.0/16).<br>";
 					}
 
 					// Validate target IP
