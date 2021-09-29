@@ -47,17 +47,17 @@
     require "scripts/pi-hole/php/update_checker.php";
 
     $coreVersionStr = $core_current . (isset($core_commit) ? " (" . $core_branch . ", " . $core_commit . ")" : "");
-    $webVersionStr = $web_current . (isset($web_commit) ? " (" . $web_branch . ", " . $web_commit . ")" : "");
     $ftlVersionStr = $FTL_current . (isset($FTL_commit) ? " (" . $FTL_branch . ", " . $FTL_commit . ")" : "");
+    $webVersionStr = $web_current . (isset($web_commit) ? " (" . $web_branch . ", " . $web_commit . ")" : "");
 
     $githubBaseUrl = "https://github.com/pi-hole";
     $coreUrl = $githubBaseUrl . "/pi-hole";
-    $webUrl = $githubBaseUrl . "/AdminLTE";
     $ftlUrl = $githubBaseUrl . "/FTL";
+    $webUrl = $githubBaseUrl . "/AdminLTE";
 
     $coreReleasesUrl = $coreUrl . "/releases";
-    $webReleasesUrl = $webUrl . "/releases";
     $ftlReleasesUrl = $ftlUrl . "/releases";
+    $webReleasesUrl = $webUrl . "/releases";
 ?>
     <footer class="main-footer">
         <div class="row row-centered text-center">
@@ -71,8 +71,8 @@
                 <?php if (isset($core_commit) || isset($web_commit) || isset($FTL_commit)) { ?>
                 <ul class="list-unstyled">
                     <li><strong>Pi-hole</strong> <?php echo $coreVersionStr; ?></li>
-                    <li><strong>Web Interface</strong> <?php echo $webVersionStr; ?></li>
                     <li><strong>FTL</strong> <?php echo $ftlVersionStr; ?></li>
+                    <li><strong>Web Interface</strong> <?php echo $webVersionStr; ?></li>
                 </ul>
                 <?php } else { ?>
                 <ul class="list-inline">
@@ -82,18 +82,18 @@
                         <?php if ($core_update) { ?> &middot; <a class="lookatme" href="<?php echo $coreReleasesUrl . "/latest"; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                     <li>
-                        <strong>Web Interface</strong>
-                        <a href="<?php echo $webReleasesUrl . "/" . $web_current; ?>" rel="noopener" target="_blank"><?php echo $web_current; ?></a>
-                        <?php if ($web_update) { ?> &middot; <a class="lookatme" href="<?php echo $webReleasesUrl . "/latest"; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
-                    </li>
-                    <li>
                         <strong>FTL</strong>
                         <a href="<?php echo $ftlReleasesUrl . "/" . $FTL_current; ?>" rel="noopener" target="_blank"><?php echo $FTL_current; ?></a>
                         <?php if ($FTL_update) { ?> &middot; <a class="lookatme" href="<?php echo $ftlReleasesUrl . "/latest"; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
+                    <li>
+                        <strong>Web Interface</strong>
+                        <a href="<?php echo $webReleasesUrl . "/" . $web_current; ?>" rel="noopener" target="_blank"><?php echo $web_current; ?></a>
+                        <?php if ($web_update) { ?> &middot; <a class="lookatme" href="<?php echo $webReleasesUrl . "/latest"; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
+                    </li>
                 </ul>
                 <?php if($core_update || $web_update || $FTL_update) { ?>
-                    <p>To install updates, run <code><a href="https://docs.pi-hole.net/main/update/">pihole -up</a></code>.</p>
+                    <p>To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener" target="_blank">pihole -up</a></code>.</p>
                 <?php } ?>
                 <?php } ?>
             </div>

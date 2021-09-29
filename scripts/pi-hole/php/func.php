@@ -54,19 +54,15 @@ function validCIDRIP($address){
 	if($isIPv6) {
 		// One IPv6 element is 16bit: 0000 - FFFF
 		$v6elem = "[0-9A-Fa-f]{1,4}";
-		// CIDR for IPv6 is any multiple of 4 from 4 up to 128 bit
-		$v6cidr = "(4";
-		for ($i=8; $i <= 128; $i+=4) {
-			$v6cidr .= "|$i";
-		}
-		$v6cidr .= ")";
+		// dnsmasq allows arbitrary prefix-length since https://thekelleys.org.uk/gitweb/?p=dnsmasq.git;a=commit;h=35f93081dc9a52e64ac3b7196ad1f5c1106f8932
+		$v6cidr = "([1-9]|[1-9][0-9]|1[01][0-9]|12[0-8])";
 		$validator = "/^(((?:$v6elem))((?::$v6elem))*::((?:$v6elem))((?::$v6elem))*|((?:$v6elem))((?::$v6elem)){7})\/$v6cidr$/";
 		return preg_match($validator, $address);
 	} else {
 		// One IPv4 element is 8bit: 0 - 256
 		$v4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
-		// Note that rev-server accepts only /8, /16, /24, and /32
-		$allowedv4cidr = "(8|16|24|32)";
+		// dnsmasq allows arbitrary prefix-length
+		$allowedv4cidr = "(([1-9]|[12][0-9]|3[0-2]))";
 		$validator = "/^$v4elem\.$v4elem\.$v4elem\.$v4elem\/$allowedv4cidr$/";
 		return preg_match($validator, $address);
 	}

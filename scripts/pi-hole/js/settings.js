@@ -284,6 +284,24 @@ $(function () {
   });
 });
 
+$(function () {
+  var colorfulQueryLog = $("#colorfulQueryLog");
+  var chkboxData = localStorage.getItem("colorfulQueryLog_chkbox");
+
+  if (chkboxData !== null) {
+    // Restore checkbox state
+    colorfulQueryLog.prop("checked", chkboxData === "true");
+  } else {
+    // Initialize checkbox
+    colorfulQueryLog.prop("checked", false);
+    localStorage.setItem("colorfulQueryLog_chkbox", false);
+  }
+
+  colorfulQueryLog.click(function () {
+    localStorage.setItem("colorfulQueryLog_chkbox", colorfulQueryLog.prop("checked"));
+  });
+});
+
 // Delete dynamic DHCP lease
 $('button[id="removedynamic"]').on("click", function () {
   var tr = $(this).closest("tr");

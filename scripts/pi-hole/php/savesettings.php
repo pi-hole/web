@@ -13,7 +13,7 @@ if(!in_array(basename($_SERVER['SCRIPT_FILENAME']), ["settings.php", "teleporter
 	die("Direct access to this script is forbidden!");
 }
 
-// Check for existance of variable
+// Check for existence of variable
 // and test it only if it exists
 function istrue(&$argument) {
 	if(isset($argument))
@@ -293,8 +293,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					if (!validCIDRIP($cidr))
 					{
 						$error .= "Conditional forwarding subnet (\"".htmlspecialchars($cidr)."\") is invalid!<br>".
-						          "This field requires CIDR notation for local subnets (e.g., 192.168.0.0/16).<br>".
-						          "Please use only subnets /8, /16, /24, and /32.<br>";
+						          "This field requires CIDR notation for local subnets (e.g., 192.168.0.0/16).<br>";
 					}
 
 					// Validate target IP

@@ -440,7 +440,7 @@ if ($_POST['action'] == 'get_groups') {
             }
         }
         if(!$db->query('COMMIT;')) {
-            throw new Exception('While commiting changes to the database: ' . $db->lastErrorMsg());
+            throw new Exception('While committing changes to the database: ' . $db->lastErrorMsg());
         }
 
         $reload = true;
@@ -479,7 +479,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While executing client statement: ' . $db->lastErrorMsg());
         }
         if(!$db->query('COMMIT;')) {
-            throw new Exception('While commiting changes to the database: ' . $db->lastErrorMsg());
+            throw new Exception('While committing changes to the database: ' . $db->lastErrorMsg());
         }
 
         $reload = true;
@@ -533,7 +533,7 @@ if ($_POST['action'] == 'get_groups') {
                 }
 
                 // If conversion failed, try with the (deprecated!) IDNA 2003 variant
-                // We have to check for its existance as support of this variant is
+                // We have to check for its existence as support of this variant is
                 // scheduled for removal with PHP 8.0
                 // see https://wiki.php.net/rfc/deprecate-and-remove-intl_idna_variant_2003
                 if ($utf8_domain === false && defined("INTL_IDNA_VARIANT_2003")) {
@@ -546,7 +546,7 @@ if ($_POST['action'] == 'get_groups') {
                     $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
                 }
             }
-            // Prevent domain and comment fields from returning any arbitary javascript code which could be executed on the browser.
+            // Prevent domain and comment fields from returning any arbitrary javascript code which could be executed on the browser.
             $res['domain'] = htmlentities($res['domain']);
             $res['comment'] = htmlentities($res['comment']);
             array_push($data, $res);
@@ -715,7 +715,7 @@ if ($_POST['action'] == 'get_groups') {
 
             // Then update the record with a new comment (and modification date
             // due to the trigger event) We are not using REPLACE INTO to avoid
-            // the initial DELETE event (loosing group assignments in case an
+            // the initial DELETE event (losing group assignments in case an
             // entry did already exist).
             if (!$update_stmt->execute()) {
                 throw new Exception('While executing UPDATE: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
@@ -725,7 +725,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         if(!$db->query('COMMIT;')) {
-            throw new Exception('While commiting changes to the database: ' . $db->lastErrorMsg());
+            throw new Exception('While committing changes to the database: ' . $db->lastErrorMsg());
         }
 
         $after = intval($db->querySingle("SELECT COUNT(*) FROM domainlist;"));
@@ -824,7 +824,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         if(!$db->query('COMMIT;')) {
-            throw new Exception('While commiting changes to the database: ' . $db->lastErrorMsg());
+            throw new Exception('While committing changes to the database: ' . $db->lastErrorMsg());
         }
 
         $reload = true;
@@ -864,7 +864,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         if(!$db->query('COMMIT;')) {
-            throw new Exception('While commiting changes to the database: ' . $db->lastErrorMsg());
+            throw new Exception('While committing changes to the database: ' . $db->lastErrorMsg());
         }
 
         $reload = true;
@@ -912,7 +912,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         if(!$db->query('COMMIT;')) {
-            throw new Exception('While commiting changes to the database: ' . $db->lastErrorMsg());
+            throw new Exception('While committing changes to the database: ' . $db->lastErrorMsg());
         }
 
         $reload = true;
@@ -999,7 +999,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         if(!$db->query('COMMIT;')) {
-            throw new Exception('While commiting changes to the database: ' . $db->lastErrorMsg());
+            throw new Exception('While committing changes to the database: ' . $db->lastErrorMsg());
         }
 
         $reload = true;
@@ -1079,7 +1079,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         if(!$db->query('COMMIT;')) {
-            throw new Exception('While commiting changes to the database: ' . $db->lastErrorMsg());
+            throw new Exception('While committing changes to the database: ' . $db->lastErrorMsg());
         }
 
         $reload = true;
@@ -1119,7 +1119,7 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         if(!$db->query('COMMIT;')) {
-            throw new Exception('While commiting changes to the database: ' . $db->lastErrorMsg());
+            throw new Exception('While committing changes to the database: ' . $db->lastErrorMsg());
         }
 
         $reload = true;
@@ -1161,7 +1161,7 @@ if ($_POST['action'] == 'get_groups') {
             }
 
             if(!$db->query('COMMIT;')) {
-                throw new Exception('While commiting changes to the database: ' . $db->lastErrorMsg());
+                throw new Exception('While committing changes to the database: ' . $db->lastErrorMsg());
             }
 
             $after = intval($db->querySingle("SELECT COUNT(*) FROM domain_audit;"));

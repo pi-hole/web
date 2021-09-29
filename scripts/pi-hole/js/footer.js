@@ -287,17 +287,13 @@ if (sessionvalidity > 0) {
       seconds = "0" + seconds;
     }
 
-    if (totalseconds > 0) {
-      sessionTimerCounter.textContent = minutes + ":" + seconds;
-    } else {
-      sessionTimerCounter.textContent = "-- : --";
-    }
+    sessionTimerCounter.textContent = totalseconds > 0 ? minutes + ":" + seconds : "-- : --";
   }, 1000);
 } else {
   document.getElementById("sessiontimer").style.display = "none";
 }
 
-// Handle Strg + Enter button on Login page
+// Handle Ctrl + Enter button on Login page
 $(document).keypress(function (e) {
   if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
     $("#loginform").attr("action", "settings.php");

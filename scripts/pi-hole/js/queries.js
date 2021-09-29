@@ -32,9 +32,9 @@ function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
   } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
-    alert("An error occured while loading the data: Connection refused. Is FTL running?");
+    alert("An error occurred while loading the data: Connection refused. Is FTL running?");
   } else {
-    alert("An unknown error occured while loading the data.\n" + xhr.responseText);
+    alert("An unknown error occurred while loading the data.\n" + xhr.responseText);
   }
 
   $("#all-queries_processing").hide();
@@ -111,6 +111,7 @@ $(function () {
       // Query status
       var fieldtext,
         buttontext = "",
+        blocked = false,
         isCNAME = false,
         regexLink = false;
 
@@ -119,6 +120,7 @@ $(function () {
           fieldtext = "<span class='text-red'>Blocked (gravity)</span>";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+          blocked = true;
           break;
         case "2":
           fieldtext =
@@ -140,7 +142,7 @@ $(function () {
           break;
         case "4":
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist)";
-
+          blocked = true;
           if (data.length > 9 && data[9] > 0) {
             regexLink = true;
           }
@@ -150,25 +152,30 @@ $(function () {
           break;
         case "5":
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist)";
+          blocked = true;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case "6":
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(external, IP)";
+          blocked = true;
           buttontext = "";
           break;
         case "7":
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(external, NULL)</span>";
+          blocked = true;
           buttontext = "";
           break;
         case "8":
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(external, NXRA)</span>";
+          blocked = true;
           buttontext = "";
           break;
         case "9":
           fieldtext = "<span class='text-red'>Blocked (gravity, CNAME)</span>";
+          blocked = true;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
@@ -188,6 +195,7 @@ $(function () {
         case "11":
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist, CNAME)</span>";
+          blocked = true;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
@@ -207,7 +215,8 @@ $(function () {
           break;
         case "15":
           fieldtext =
-            "<span class='text-red'>Blocked <br class='hidden-lg'>(database is busy)</span>";
+            "<span class='text-orange'>Blocked <br class='hidden-lg'>(database is busy)</span>";
+          blocked = true;
           break;
         default:
           fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
@@ -220,6 +229,11 @@ $(function () {
       if ((data[1] === "DNSKEY" || data[1] === "DS") && data[3] === "pi.hole") buttontext = "";
 
       fieldtext += '<input type="hidden" name="id" value="' + parseInt(data[4], 10) + '">';
+
+      $(row).addClass(blocked === true ? "blocked-row" : "allowed-row");
+      if (localStorage.getItem("colorfulQueryLog_chkbox") === "true") {
+        $(row).addClass(blocked === true ? "text-red" : "text-green");
+      }
 
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(6)", row).html(buttontext);

@@ -171,14 +171,14 @@ if (isset($setupVars["API_EXCLUDE_DOMAINS"])) {
     $excludedDomains = [];
 }
 
-// Exluded clients in API Query Log call
+// Excluded clients in API Query Log call
 if (isset($setupVars["API_EXCLUDE_CLIENTS"])) {
     $excludedClients = explode(",", $setupVars["API_EXCLUDE_CLIENTS"]);
 } else {
     $excludedClients = [];
 }
 
-// Exluded clients
+// Excluded clients
 if (isset($setupVars["API_QUERY_LOG_SHOW"])) {
     $queryLog = $setupVars["API_QUERY_LOG_SHOW"];
 } else {
@@ -195,7 +195,7 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 ?>
 
 <?php
-if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "dns", "piholedhcp", "api", "privacy", "teleporter"))) {
+if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piholedhcp", "api", "privacy", "teleporter"))) {
     $tab = $_GET['tab'];
 } else {
     $tab = "sysadmin";
@@ -207,9 +207,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation"<?php if($tab === "sysadmin"){ ?> class="active"<?php } ?>>
                     <a href="#sysadmin" aria-controls="sysadmin" aria-expanded="<?php echo $tab === "sysadmin" ? "true" : "false"; ?>" role="tab" data-toggle="tab">System</a>
-                </li>
-                <li role="presentation"<?php if($tab === "adlists"){ ?> class="active"<?php } ?>>
-                    <a href="#adlists" aria-controls="adlists" aria-expanded="<?php echo $tab === "adlists" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Adlists</a>
                 </li>
                 <li role="presentation"<?php if($tab === "dns"){ ?> class="active"<?php } ?>>
                     <a href="#dns" aria-controls="dns" aria-expanded="<?php echo $tab === "dns" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DNS</a>
@@ -382,21 +379,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                         </div>
                     </div>
                 </div>
-                <!-- ######################################################### Adlists ######################################################### -->
-                <div id="adlists" class="tab-pane fade<?php if($tab === "adlists"){ ?> in active<?php } ?>">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Adlists used to generate Pi-hole's Gravity</h3>
-                                </div>
-                                <div class="box-body">
-                                    <p>Please use the <a href="groups-adlists.php">group management pages</a> to edit the adlists used by Pi-hole.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <!-- ######################################################### DHCP ######################################################### -->
                 <div id="piholedhcp" class="tab-pane fade<?php if($tab === "piholedhcp"){ ?> in active<?php } ?>">
                     <?php
@@ -407,7 +389,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                         } else {
                             $DHCP = false;
                         }
-                        // Read setings from config file
+                        // Read settings from config file
                         if (isset($setupVars["DHCP_START"])) {
                             $DHCPstart = $setupVars["DHCP_START"];
                         } else {
@@ -900,12 +882,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                             <div class="col-lg-12">
                                                 <div>
                                                     <input type="checkbox" name="DNSrequiresFQDN" id="DNSrequiresFQDN" title="domain-needed" <?php if ($DNSrequiresFQDN){ ?>checked<?php } ?>>
-                                                    <label for="DNSrequiresFQDN"><strong>Never forward non-FQDNs</strong></label>
+                                                    <label for="DNSrequiresFQDN"><strong>Never forward non-FQDN <code>A</code> and <code>AAAA</code> queries</strong></label>
                                                     <p>When there is a Pi-hole domain set and this box is
                                                     ticked, this asks FTL that this domain is purely
                                                     local and FTL may answer queries from <code>/etc/hosts</code> or DHCP leases
                                                     but should never forward queries on that domain to any upstream servers.
-                                                    If Conditional Fowarding is enabled, unticking this box may cause a partial
+                                                    If Conditional Forwarding is enabled, unticking this box may cause a partial
                                                     DNS loop under certain circumstances (e.g. if a client would send TLD DNSSEC queries).</p>
                                                 </div>
                                                 <div>
@@ -934,7 +916,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 </div>
                                                 <br>
                                                 <h4>Conditional forwarding</h4>
-                                                <p>If not configured as your DHCP server, Pi-hole  typically won't be able to
+                                                <p>If not configured as your DHCP server, Pi-hole typically won't be able to
                                                    determine the names of devices on your local network.  As a
                                                    result, tables such as Top Clients will only show IP addresses.</p>
                                                 <p>One solution for this is to configure Pi-hole to forward these
@@ -955,7 +937,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                    devices ending in your local domain name will not leave your network, however, this is optional.
                                                    The local domain name must match the domain name specified
                                                    in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
-                                                <p>Enabling Conditional Fowarding will also forward all hostnames (i.e., non-FQDNs) to the router
+                                                <p>Enabling Conditional Forwarding will also forward all hostnames (i.e., non-FQDNs) to the router
                                                    when "Never forward non-FQDNs" is <em>not</em> enabled.</p>
                                                 <div class="form-group">
                                                     <div>
@@ -1187,6 +1169,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                             <div>
                                                 <input type="checkbox" name="bargraphs" id="bargraphs" value="yes">
                                                 <label for="bargraphs"><strong>Use new Bar charts on dashboard</strong></label>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12">
+                                            <div>
+                                                <input type="checkbox" name="colorfulQueryLog" id="colorfulQueryLog" value="no">
+                                                <label for="colorfulQueryLog"><strong>Colorful Query Log</strong></label>
                                             </div>
                                         </div>
                                     </div>

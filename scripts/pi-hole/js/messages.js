@@ -6,7 +6,7 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils:false */
-
+var table;
 var token = $("#token").text();
 
 function renderTimestamp(data, type) {
@@ -94,7 +94,7 @@ function renderMessage(data, type, row) {
 }
 
 $(function () {
-  $("#messagesTable").DataTable({
+  table = $("#messagesTable").DataTable({
     ajax: {
       url: "api_db.php?messages",
       data: { token: token },
@@ -112,7 +112,23 @@ $(function () {
       { data: "blob3", visible: false },
       { data: "blob4", visible: false },
       { data: "blob5", visible: false },
+      { data: null, width: "80px", orderable: false },
     ],
+    drawCallback: function () {
+      $('button[id^="deleteMessage_"]').on("click", deleteMessage);
+      // Remove visible dropdown to prevent orphaning
+      $("body > .bootstrap-select.dropdown").remove();
+    },
+    rowCallback: function (row, data) {
+      $(row).attr("data-id", data.id);
+      var button =
+        '<button type="button" class="btn btn-danger btn-xs" id="deleteMessage_' +
+        data.id +
+        '">' +
+        '<span class="far fa-trash-alt"></span>' +
+        "</button>";
+      $("td:eq(3)", row).html(button);
+    },
     dom:
       "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
@@ -148,3 +164,41 @@ $(function () {
     },
   });
 });
+
+function deleteMessage() {
+  var tr = $(this).closest("tr");
+  var id = tr.attr("data-id");
+
+  utils.disableAll();
+  utils.showAlert("info", "", "Deleting message with ID " + parseInt(id, 10), "...");
+  $.ajax({
+    url: "scripts/pi-hole/php/message.php",
+    method: "post",
+    dataType: "json",
+    data: { action: "delete_message", id: id, token: token },
+    success: function (response) {
+      utils.enableAll();
+      if (response.success) {
+        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted message # ", id);
+        table.row(tr).remove().draw(false).ajax.reload(null, false);
+      } else {
+        utils.showAlert(
+          "error",
+          "",
+          "Error while deleting message with ID " + id,
+          response.message
+        );
+      }
+    },
+    error: function (jqXHR, exception) {
+      utils.enableAll();
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting message with ID " + id,
+        jqXHR.responseText
+      );
+      console.log(exception); // eslint-disable-line no-console
+    },
+  });
+}
