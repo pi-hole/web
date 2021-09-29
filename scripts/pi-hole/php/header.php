@@ -14,7 +14,7 @@
     $hostname = gethostname() ? gethostname() : "";
 
     check_cors();
-    
+
     // Create cache busting version
     $cacheVer = filemtime(__FILE__);
 
@@ -610,10 +610,10 @@ if($auth) {
                 <!-- Local DNS Records -->
                 <li class="treeview <?php if(in_array($scriptname, array("dns_records.php", "cname_records.php"))){ ?>active<?php } ?>">
                   <a href="#">
-                    <i class="fa fa-fw fa-address-book"></i> <span>Local DNS</span>                    
+                    <i class="fa fa-fw fa-address-book"></i> <span>Local DNS</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
-                    </span>               
+                    </span>
                   </a>
                   <ul class="treeview-menu">
                     <li<?php if($scriptname === "dns_records.php"){ ?> class="active"<?php } ?>>

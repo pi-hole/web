@@ -13,7 +13,7 @@ if(!in_array(basename($_SERVER['SCRIPT_FILENAME']), ["settings.php", "teleporter
 	die("Direct access to this script is forbidden!");
 }
 
-// Check for existance of variable
+// Check for existence of variable
 // and test it only if it exists
 function istrue(&$argument) {
 	if(isset($argument))

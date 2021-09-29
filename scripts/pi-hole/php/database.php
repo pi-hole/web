@@ -128,7 +128,7 @@ function add_to_table($db, $table, $domains, $comment=null, $wildcardstyle=false
 	}
 	$initialcount = intval($db->querySingle($countquery));
 
-	// Prepare INSERT SQLite statememt
+	// Prepare INSERT SQLite statement
 	$bindcomment = false;
 	if($table === "domain_audit") {
 		$querystr = "INSERT OR IGNORE INTO $table ($field) VALUES (:$field);";
@@ -251,7 +251,7 @@ function remove_from_table($db, $table, $domains, $returnnum=false, $type=-1)
 	}
 	$initialcount = intval($db->querySingle($countquery));
 
-	// Prepare SQLite statememt
+	// Prepare SQLite statement
 	if($type === -1)
 	{
 		$querystr = "DELETE FROM $table WHERE domain = :domain AND type = $type;";

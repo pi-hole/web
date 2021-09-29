@@ -157,7 +157,7 @@ function archive_restore_table($file, $table, $flush=false)
 		$field = "domain";
 	}
 
-	// Prepare SQLite statememt
+	// Prepare SQLite statement
 	$stmt = $db->prepare($sql);
 
 	// Return early if we fail to prepare the SQLite statement
@@ -538,7 +538,7 @@ if(isset($_POST["action"]))
 					$line = str_replace("\r","", $line);
 					$line = str_replace("\n","", $line);
 					$explodedLine = explode (",", $line);
-					
+
 					$domain = implode(",", array_slice($explodedLine, 0, -1));
 					$target = $explodedLine[count($explodedLine)-1];
 

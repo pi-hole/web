@@ -171,14 +171,14 @@ if (isset($setupVars["API_EXCLUDE_DOMAINS"])) {
     $excludedDomains = [];
 }
 
-// Exluded clients in API Query Log call
+// Excluded clients in API Query Log call
 if (isset($setupVars["API_EXCLUDE_CLIENTS"])) {
     $excludedClients = explode(",", $setupVars["API_EXCLUDE_CLIENTS"]);
 } else {
     $excludedClients = [];
 }
 
-// Exluded clients
+// Excluded clients
 if (isset($setupVars["API_QUERY_LOG_SHOW"])) {
     $queryLog = $setupVars["API_QUERY_LOG_SHOW"];
 } else {
@@ -389,7 +389,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                         } else {
                             $DHCP = false;
                         }
-                        // Read setings from config file
+                        // Read settings from config file
                         if (isset($setupVars["DHCP_START"])) {
                             $DHCPstart = $setupVars["DHCP_START"];
                         } else {
@@ -887,7 +887,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     ticked, this asks FTL that this domain is purely
                                                     local and FTL may answer queries from <code>/etc/hosts</code> or DHCP leases
                                                     but should never forward queries on that domain to any upstream servers.
-                                                    If Conditional Fowarding is enabled, unticking this box may cause a partial
+                                                    If Conditional Forwarding is enabled, unticking this box may cause a partial
                                                     DNS loop under certain circumstances (e.g. if a client would send TLD DNSSEC queries).</p>
                                                 </div>
                                                 <div>
@@ -916,7 +916,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 </div>
                                                 <br>
                                                 <h4>Conditional forwarding</h4>
-                                                <p>If not configured as your DHCP server, Pi-hole  typically won't be able to
+                                                <p>If not configured as your DHCP server, Pi-hole typically won't be able to
                                                    determine the names of devices on your local network.  As a
                                                    result, tables such as Top Clients will only show IP addresses.</p>
                                                 <p>One solution for this is to configure Pi-hole to forward these
@@ -937,7 +937,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                    devices ending in your local domain name will not leave your network, however, this is optional.
                                                    The local domain name must match the domain name specified
                                                    in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
-                                                <p>Enabling Conditional Fowarding will also forward all hostnames (i.e., non-FQDNs) to the router
+                                                <p>Enabling Conditional Forwarding will also forward all hostnames (i.e., non-FQDNs) to the router
                                                    when "Never forward non-FQDNs" is <em>not</em> enabled.</p>
                                                 <div class="form-group">
                                                     <div>

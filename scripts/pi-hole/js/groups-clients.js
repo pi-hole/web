@@ -276,7 +276,7 @@ function addClient() {
   // - IPv4 address (with and without CIDR)
   // - IPv6 address (with and without CIDR)
   // - MAC address (in the form AA:BB:CC:DD:EE:FF)
-  // - host name (arbitrary form, we're only checking against some reserved charaters)
+  // - host name (arbitrary form, we're only checking against some reserved characters)
   if (utils.validateIPv4CIDR(ip) || utils.validateIPv6CIDR(ip) || utils.validateMAC(ip)) {
     // Convert input to upper case (important for MAC addresses)
     ip = ip.toUpperCase();

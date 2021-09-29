@@ -44,7 +44,7 @@
                            IP subnets (CIDR notation, like <code>192.168.2.0/24</code>),
                            their MAC addresses (like <code>12:34:56:78:9A:BC</code>),
                            by their hostnames (like <code>localhost</code>), or by the interface they are connected to (prefaced with a colon, like <code>:eth0</code>).</p>
-                        <p>Note that client recognition by IP addresses (incl. subnet ranges) are prefered over MAC address, host name or interface recognition as
+                        <p>Note that client recognition by IP addresses (incl. subnet ranges) are preferred over MAC address, host name or interface recognition as
                            the two latter will only be available after some time.
                            Furthermore, MAC address recognition only works for devices at most one networking hop away from your Pi-hole.</p>
                     </div>
