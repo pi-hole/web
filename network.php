@@ -25,6 +25,7 @@
             <table id="network-entries" class="table table-striped table-bordered" width="100%">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>IP address</th>
                         <th>Hardware address</th>
                         <th>Interface</th>
@@ -33,10 +34,12 @@
                         <th>Last Query</th>
                         <th>Number of queries</th>
                         <th>Uses Pi-hole</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
+                        <th>ID</th>
                         <th>IP address</th>
                         <th>Hardware address</th>
                         <th>Interface</th>
@@ -45,6 +48,7 @@
                         <th>Last Query</th>
                         <th>Number of queries</th>
                         <th>Uses Pi-hole</th>
+                        <th>Action</th>
                     </tr>
                 </tfoot>
             </table>
