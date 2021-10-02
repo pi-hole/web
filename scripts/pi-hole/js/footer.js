@@ -137,8 +137,9 @@ function initCheckboxRadioStyle() {
 
   function applyCheckboxRadioStyle(style) {
     boxsheet.attr("href", getCheckboxURL(style));
-    // Get all radio/checkboxes for theming, with the exception of the two radio buttons on the custom disable timer
-    var sel = $("input[type='radio'],input[type='checkbox']").not("#selSec").not("#selMin");
+    // Get all radio/checkboxes for theming, with the exception of the two radio buttons on the custom disable timer,
+    // as well as every element with an id that starts with "status_"
+    var sel = $("input[type='radio'],input[type='checkbox']").not("#selSec").not("#selMin").not('[id^=status_]');
     sel.parent().removeClass();
     sel.parent().addClass("icheck-" + style);
   }
