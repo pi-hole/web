@@ -106,7 +106,7 @@ if (isset($setupVars["DNS_FQDN_REQUIRED"])) {
         $DNSrequiresFQDN = false;
     }
 } else {
-    $DNSrequiresFQDN = true;
+    $DNSrequiresFQDN = false;
 }
 
 if (isset($setupVars["DNS_BOGUS_PRIV"])) {
@@ -116,7 +116,7 @@ if (isset($setupVars["DNS_BOGUS_PRIV"])) {
         $DNSbogusPriv = false;
     }
 } else {
-    $DNSbogusPriv = true;
+    $DNSbogusPriv = false;
 }
 
 if (isset($setupVars["DNSSEC"])) {
