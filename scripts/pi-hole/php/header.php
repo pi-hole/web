@@ -152,7 +152,7 @@
     $FTLpid = intval(pidofFTL());
     $FTL = ($FTLpid !== 0 ? true : false);
 
-    $piholeFTLConf = piholeFTLConfig();
+    $piholeFTLConf = FTLConfig::get_config();
 ?>
 <!doctype html>
 <!-- Pi-hole: A black hole for Internet advertisements

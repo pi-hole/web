@@ -650,6 +650,8 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 
 					// Store privacy level
 					pihole_execute("-a privacylevel ".$level);
+					// Update cached config
+					FTLConfig::update();
 
 					if($privacylevel > $level)
 					{

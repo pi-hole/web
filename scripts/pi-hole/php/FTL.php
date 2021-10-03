@@ -6,35 +6,45 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
-$piholeFTLConfFile = "/etc/pihole/pihole-FTL.conf";
 
-function piholeFTLConfig()
-{
-	static $piholeFTLConfig;
-	global $piholeFTLConfFile;
+class FTLConfig {
+	private static $piholeFTLConfig = null;
+	public static $piholeFTLConfFile = "/etc/pihole/pihole-FTL.conf";
 
-	if(isset($piholeFTLConfig))
-	{
-		return $piholeFTLConfig;
+	/**
+	 * Returns the FTL config, either from the static field or by reading it from disk.
+	 */
+	public static function get_config() {
+		if(isset(self::$piholeFTLConfig))
+		{
+			return self::$piholeFTLConfig;
+		}
+
+		return self::update();
 	}
 
-	if(is_readable($piholeFTLConfFile))
-	{
-		$piholeFTLConfig = parse_ini_file($piholeFTLConfFile);
+	/**
+	 * Reads the config file from disk.
+	 * Should be called after there were changes made to the config file on disk.
+	 */
+	public static function update() {
+		if(is_readable(self::$piholeFTLConfFile))
+		{
+			self::$piholeFTLConfig = parse_ini_file(self::$piholeFTLConfFile);
+		}
+		else
+		{
+			self::$piholeFTLConfig = array();
+		}
+		return self::$piholeFTLConfig;
 	}
-	else
-	{
-		$piholeFTLConfig = array();
-	}
-
-	return $piholeFTLConfig;
 }
 
 function connectFTL($address, $port=4711)
 {
 	if($address == "127.0.0.1")
 	{
-		$config = piholeFTLConfig();
+		$config = FTLConfig::get_config();
 		// Read port
 		$portfileName = isset($config['PORTFILE']) ? $config['PORTFILE'] : '';
 		if ($portfileName != '')
