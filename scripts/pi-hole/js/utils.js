@@ -15,13 +15,6 @@ function escapeHtml(text) {
     ">": "&gt;",
     '"': "&quot;",
     "'": "&#039;",
-    Ü: "&Uuml;",
-    ü: "&uuml;",
-    Ä: "&Auml;",
-    ä: "&auml;",
-    Ö: "&Ouml;",
-    ö: "&ouml;",
-    ß: "&szlig;",
   };
 
   if (text === null) return null;
