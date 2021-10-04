@@ -158,7 +158,7 @@ if(strlen($showing) > 0)
                     </tr>
                 </tfoot>
             </table>
-            <p>Note: Queries for <code>pi.hole</code> are never logged.</p>
+            <p>Note: Queries for <code>pi.hole</code> and the hostename are never logged.</p>
             <p><strong>Filtering options:</strong></p>
             <ul>
                 <li>Click a value in a column to add/remove that value to/from the filter</li>
