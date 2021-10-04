@@ -15,13 +15,13 @@ function escapeHtml(text) {
     ">": "&gt;",
     '"': "&quot;",
     "'": "&#039;",
-    "Ü": "&Uuml;",
-    "ü": "&uuml;",
-    "Ä": "&Auml;",
-    "ä": "&auml;",
-    "Ö": "&Ouml;",
-    "Ö": "&ouml;",
-    "ß": "&szlig;",
+    Ü: "&Uuml;",
+    ü: "&uuml;",
+    Ä: "&Auml;",
+    ä: "&auml;",
+    Ö: "&Ouml;",
+    ö: "&ouml;",
+    ß: "&szlig;",
   };
 
   if (text === null) return null;
@@ -49,9 +49,12 @@ function unescapeHtml(text) {
 
   if (text === null) return null;
 
-  return text.replace(/&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/g, function (m) {
-    return map[m];
-  });
+  return text.replace(
+    /&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/g,
+    function (m) {
+      return map[m];
+    }
+  );
 }
 
 // Helper function for converting Objects to Arrays after sorting the keys
