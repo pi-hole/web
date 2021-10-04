@@ -260,7 +260,7 @@ function initTable() {
 }
 
 function addClient() {
-  var ip = $("#select").val().trim();
+  var ip = utils.escapeHtml(tr.find("#ip_" + id).text());
   var comment = utils.escapeHtml($("#new_comment").val());
 
   utils.disableAll();
