@@ -202,7 +202,7 @@ $(function () {
     rowCallback: function (row, data) {
       var fieldtext,
         buttontext = "",
-        blocked = true;
+        blocked = false;
       switch (data[4]) {
         case 1:
           fieldtext = "<span class='text-red'>Blocked (gravity)</span>";
@@ -265,7 +265,6 @@ $(function () {
         case 11:
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist, CNAME)</span>";
-          blocked = true;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           blocked = true;
