@@ -30,7 +30,7 @@ $(function () {
   $('iframe[name="teleporter_iframe"]').on("load", function () {
     var font = {
       "font-family": $("pre").css("font-family"),
-      "font-size": $("pre").css("font-size")
+      "font-size": $("pre").css("font-size"),
     };
     var contents = $(this).contents();
     contents.find("body").css(font);
