@@ -1250,7 +1250,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                         <?php if (extension_loaded('Phar')) { ?>
                         <form role="form" method="post" id="takeoutform"
                               action="scripts/pi-hole/php/teleporter.php"
-                              target="_blank" enctype="multipart/form-data">
+                              target="teleporter_iframe" enctype="multipart/form-data">
                             <input type="hidden" name="token" value="<?php echo $token ?>">
                             <div class="col-lg-6 col-md-12">
                                 <div class="box box-warning">
@@ -1331,7 +1331,15 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <label for="zip_file">File input</label>
-                                                <input type="file" name="zip_file" id="zip_file">
+                                                <div class="input-group">
+                                                    <span class="input-group-btn">
+                                                        <span class="btn btn-default btn-file" tabindex="0">Browse...
+                                                            <input type="file" name="zip_file" id="zip_file" accept="application/gzip" tabindex="-1">
+                                                        </span>
+                                                    </span>
+                                                    <input type="text" id="zip_filename" class="form-control"
+                                                           placeholder="no file selected" readonly="readonly" tabindex="-1">
+                                                </div>
                                                 <p class="help-block">Upload only Pi-hole backup files.</p>
                                             </div>
                                         </div>
@@ -1345,11 +1353,40 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                         </div>
                                     </div>
                                     <div class="box-footer clearfix">
-                                        <button type="submit" class="btn btn-default" name="action" value="in">Restore</button>
+                                        <button type="submit" class="btn btn-default" name="action"
+                                                value="in" data-toggle="modal" data-target="#teleporterModal">Restore
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </form>
+                        <div class="modal fade" id="teleporterModal" role="dialog" data-keyboard="false"
+                             tabindex="-1" data-backdrop="static" aria-labelledby="teleporterModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="exampleModalLabel">Teleporter Import</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label class="control-label">Output:</label>
+                                        <div class="box no-margin no-border no-shadow">
+                                            <pre class="no-margin no-padding"><iframe class="col-xs-12 no-border no-padding"
+                                                                                      name="teleporter_iframe" height="100"
+                                                                                      tabindex="-1"></iframe></pre>
+                                            <div class="overlay">
+                                                <i class="fa fa-spinner fa-pulse"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+                                        <button type="button" data-dismiss="modal" class="btn btn-default hidden">
+                                            <i class="fas fa-sync"></i> Reload page
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <?php } else { ?>
                         <div class="col-lg-12">
                             <div class="box box-warning">
