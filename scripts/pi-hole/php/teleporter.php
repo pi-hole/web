@@ -517,6 +517,7 @@ if(isset($_POST["action"]))
 
 			if(isset($_POST["localdnsrecords"]) && $file->getFilename() === "custom.list")
 			{
+				ob_start();
 				if($flushtables) {
 					// Defined in func.php included via auth.php
 					deleteAllCustomDNSEntries();
@@ -528,7 +529,7 @@ if(isset($_POST["action"]))
 					if(addCustomDNSEntry($ip, $domain, false))
 						$num++;
 				}
-
+				ob_end_clean();
 				echo "Processed local DNS records (".$num.noun($num).")<br>\n";
 				if($num > 0) {
 					$importedsomething = true;
@@ -537,6 +538,7 @@ if(isset($_POST["action"]))
 
 			if(isset($_POST["localcnamerecords"]) && $file->getFilename() === "05-pihole-custom-cname.conf")
 			{
+				ob_start();
 				if($flushtables) {
 					// Defined in func.php included via auth.php
 					deleteAllCustomCNAMEEntries();
@@ -556,7 +558,7 @@ if(isset($_POST["action"]))
 					if(addCustomCNAMEEntry($domain, $target, false))
 						$num++;
 				}
-
+				ob_end_clean();
 				echo "Processed local CNAME records (".$num.noun($num).")<br>\n";
 				if($num > 0) {
 					$importedsomething = true;
