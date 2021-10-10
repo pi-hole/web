@@ -455,21 +455,21 @@ if(isset($_POST["action"]))
 			if(isset($_POST["group"]) && $file->getFilename() === "group.json")
 			{
 				$num = archive_restore_table($file, "group", $flushtables);
-				echo "Processed group (".$num." entries)<br>\n";
+				echo "Processed group (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["client"]) && $file->getFilename() === "client.json")
 			{
 				$num = archive_restore_table($file, "client", $flushtables);
-				echo "Processed client (".$num." entries)<br>\n";
+				echo "Processed client (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["client"]) && $file->getFilename() === "client_by_group.json")
 			{
 				$num = archive_restore_table($file, "client_by_group", $flushtables);
-				echo "Processed client group assignments (".$num." entries)<br>\n";
+				echo "Processed client group assignments (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
@@ -478,14 +478,14 @@ if(isset($_POST["action"]))
 				$file->getFilename() === "domainlist_by_group.json")
 			{
 				$num = archive_restore_table($file, "domainlist_by_group", $flushtables);
-				echo "Processed black-/whitelist group assignments (".$num." entries)<br>\n";
+				echo "Processed black-/whitelist group assignments (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
 			if(isset($_POST["adlist"]) && $file->getFilename() === "adlist_by_group.json")
 			{
 				$num = archive_restore_table($file, "adlist_by_group", $flushtables);
-				echo "Processed adlist group assignments (".$num." entries)<br>\n";
+				echo "Processed adlist group assignments (".$num.noun($num).")<br>\n";
 				$importedsomething = true;
 			}
 
@@ -529,7 +529,7 @@ if(isset($_POST["action"]))
 						$num++;
 				}
 
-				echo "Processed local DNS records (".$num." entries)<br>\n";
+				echo "Processed local DNS records (".$num.noun($num).")<br>\n";
 				if($num > 0) {
 					$importedsomething = true;
 				}
@@ -557,7 +557,7 @@ if(isset($_POST["action"]))
 						$num++;
 				}
 
-				echo "Processed local CNAME records (".$num." entries)<br>\n";
+				echo "Processed local CNAME records (".$num.noun($num).")<br>\n";
 				if($num > 0) {
 					$importedsomething = true;
 				}
