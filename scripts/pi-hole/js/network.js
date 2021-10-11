@@ -8,6 +8,7 @@
 /* global utils:false */
 
 var tableApi;
+var token = $("#token").text();
 
 var API_STRING = "api_db.php?network";
 
@@ -59,7 +60,48 @@ function parseColor(input) {
   }
 }
 
-function deleteNetworkEntry() {}
+function deleteNetworkEntry() {
+  var tr = $(this).closest("tr");
+  var id = tr.attr("data-id");
+
+  utils.disableAll();
+  utils.showAlert("info", "", "Deleting network table entry with ID " + parseInt(id, 10), "...");
+  $.ajax({
+    url: "scripts/pi-hole/php/network.php",
+    method: "post",
+    dataType: "json",
+    data: { action: "delete_network_entry", id: id, token: token },
+    success: function (response) {
+      utils.enableAll();
+      if (response.success) {
+        utils.showAlert(
+          "success",
+          "far fa-trash-alt",
+          "Successfully deleted network table entry # ",
+          id
+        );
+        tableApi.row(tr).remove().draw(false).ajax.reload(null, false);
+      } else {
+        utils.showAlert(
+          "error",
+          "",
+          "Error while network table entry with ID " + id,
+          response.message
+        );
+      }
+    },
+    error: function (jqXHR, exception) {
+      utils.enableAll();
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting network table entry with ID " + id,
+        jqXHR.responseText
+      );
+      console.log(exception); // eslint-disable-line no-console
+    },
+  });
+}
 
 $(function () {
   tableApi = $("#network-entries").DataTable({
