@@ -361,6 +361,7 @@ if(isset($_POST["action"]))
 		$archive = new PharData($fullfilename);
 
 		$importedsomething = false;
+		$fullpiholerestart = false;
 		$reloadsettingspage = false;
 
 		$flushtables = isset($_POST["flushtables"]);
@@ -520,19 +521,22 @@ if(isset($_POST["action"]))
 				ob_start();
 				if($flushtables) {
 					// Defined in func.php included via auth.php
+					// will not restart Pi-hole
 					deleteAllCustomDNSEntries();
 				}
 				$num = 0;
 				$localdnsrecords = process_file(file_get_contents($file));
+				$reload="false";
 				foreach($localdnsrecords as $record) {
 					list($ip,$domain) = explode(" ",$record);
-					if(addCustomDNSEntry($ip, $domain, false))
+					if(addCustomDNSEntry($ip, $domain, $reload, false))
 						$num++;
 				}
 				ob_end_clean();
 				echo "Processed local DNS records (".$num.noun($num).")<br>\n";
 				if($num > 0) {
-					$importedsomething = true;
+					// we need a full pihole restart
+					$fullpiholerestart = true;
 				}
 			}
 
@@ -541,11 +545,13 @@ if(isset($_POST["action"]))
 				ob_start();
 				if($flushtables) {
 					// Defined in func.php included via auth.php
+					// will not restart Pi-hole
 					deleteAllCustomCNAMEEntries();
 				}
 
 				$num = 0;
 				$localcnamerecords = process_file(file_get_contents($file));
+				$reload="false";
 				foreach($localcnamerecords as $record) {
 					$line = str_replace("cname=","", $record);
 					$line = str_replace("\r","", $line);
@@ -555,21 +561,29 @@ if(isset($_POST["action"]))
 					$domain = implode(",", array_slice($explodedLine, 0, -1));
 					$target = $explodedLine[count($explodedLine)-1];
 
-					if(addCustomCNAMEEntry($domain, $target, false))
+					if(addCustomCNAMEEntry($domain, $target, $reload, false))
 						$num++;
 				}
 				ob_end_clean();
 				echo "Processed local CNAME records (".$num.noun($num).")<br>\n";
 				if($num > 0) {
-					$importedsomething = true;
+					// we need a full pihole restart
+					$fullpiholerestart = true;
 				}
 			}
 		}
 
-		if($importedsomething)
+		// do we need a full restart of Pi-hole or reloading the lists?
+		if($fullpiholerestart)
 		{
-			pihole_execute("restartdns reload");
+			pihole_execute("restartdns");
+		} else {
+			if($importedsomething)
+			{
+				pihole_execute("restartdns reload");
+			}
 		}
+
 
 		unlink($fullfilename);
 		echo "OK";

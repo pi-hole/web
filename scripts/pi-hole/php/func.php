@@ -195,7 +195,7 @@ function getCustomDNSEntries()
     return $entries;
 }
 
-function addCustomDNSEntry($ip="", $domain="", $json=true)
+function addCustomDNSEntry($ip="", $domain="", $reload="", $json=true)
 {
     try
     {
@@ -204,6 +204,9 @@ function addCustomDNSEntry($ip="", $domain="", $json=true)
 
         if(isset($_REQUEST['domain']))
             $domain = trim($_REQUEST['domain']);
+
+				if(isset($_REQUEST['reload']))
+		            $reload = $_REQUEST['reload'];
 
         if (empty($ip))
             return returnError("IP must be set", $json);
@@ -229,7 +232,7 @@ function addCustomDNSEntry($ip="", $domain="", $json=true)
         }
 
         // Add record
-        pihole_execute("-a addcustomdns ".$ip." ".$domain);
+        pihole_execute("-a addcustomdns ".$ip." ".$domain." ".$reload);
 
         return returnSuccess("", $json);
     }
@@ -280,9 +283,9 @@ function deleteAllCustomDNSEntries()
 	try
 	{
 			$existingEntries = getCustomDNSEntries();
-
+			// passing false to pihole_execute stops pihole from reloading after each enty has been deleted
 			foreach ($existingEntries as $entry) {
-					pihole_execute("-a removecustomdns ".$entry->ip." ".$entry->domain);
+					pihole_execute("-a removecustomdns ".$entry->ip." ".$entry->domain." false");
 				}
 
 	}
@@ -341,7 +344,7 @@ function getCustomCNAMEEntries()
     return $entries;
 }
 
-function addCustomCNAMEEntry($domain="", $target="", $json=true)
+function addCustomCNAMEEntry($domain="", $target="", $reload="", $json=true)
 {
     try
     {
@@ -350,6 +353,9 @@ function addCustomCNAMEEntry($domain="", $target="", $json=true)
 
         if(isset($_REQUEST['target']))
             $target = trim($_REQUEST['target']);
+
+				if(isset($_REQUEST['reload']))
+						$reload = $_REQUEST['reload'];
 
         if (empty($domain))
             return returnError("Domain must be set", $json);
@@ -375,7 +381,7 @@ function addCustomCNAMEEntry($domain="", $target="", $json=true)
                 if (in_array($d, $entry->domains))
                     return returnError("There is already a CNAME record for '$d'", $json);
 
-        pihole_execute("-a addcustomcname ".$domain." ".$target);
+        pihole_execute("-a addcustomcname ".$domain." ".$target." ".$reload);
 
         return returnSuccess("", $json);
     }
@@ -426,9 +432,9 @@ function deleteAllCustomCNAMEEntries()
     try
     {
         $existingEntries = getCustomCNAMEEntries();
-
+				// passing false to pihole_execute stops pihole from reloading after each enty has been deleted
         foreach ($existingEntries as $entry) {
-            pihole_execute("-a removecustomcname ".$entry->domain." ".$entry->target);
+            pihole_execute("-a removecustomcname ".$entry->domain." ".$entry->target." false");
         }
 
     }
