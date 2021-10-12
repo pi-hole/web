@@ -277,37 +277,21 @@ function deleteCustomDNSEntry()
 
 function deleteAllCustomDNSEntries()
 {
-    if (isset($customDNSFile))
-    {
-        $handle = fopen($customDNSFile, "r");
-        if ($handle)
-        {
-            try
-            {
-                while (($line = fgets($handle)) !== false) {
-                    $line = str_replace("\r","", $line);
-                    $line = str_replace("\n","", $line);
-                    $explodedLine = explode (" ", $line);
+	try
+	{
+			$existingEntries = getCustomDNSEntries();
 
-                    if (count($explodedLine) != 2)
-                        continue;
+			foreach ($existingEntries as $entry) {
+					pihole_execute("-a removecustomdns ".$entry->ip." ".$entry->domain);
+				}
 
-                    $ip = $explodedLine[0];
-                    $domain = $explodedLine[1];
+	}
+	catch (\Exception $ex)
+	{
+			return returnError($ex->getMessage());
+	}
 
-                    pihole_execute("-a removecustomdns ".$ip." ".$domain);
-                }
-            }
-            catch (\Exception $ex)
-            {
-                return returnError($ex->getMessage());
-            }
-
-            fclose($handle);
-        }
-    }
-
-    return returnSuccess();
+	return returnSuccess();
 }
 
 // CNAME
