@@ -519,14 +519,14 @@ if(isset($_POST["action"]))
 			if(isset($_POST["localdnsrecords"]) && $file->getFilename() === "custom.list")
 			{
 				ob_start();
+				$reload="false";
 				if($flushtables) {
 					// Defined in func.php included via auth.php
-					// will not restart Pi-hole
-					deleteAllCustomDNSEntries();
+					// passing reload="false" will not restart Pi-hole
+					deleteAllCustomDNSEntries($reload);
 				}
 				$num = 0;
 				$localdnsrecords = process_file(file_get_contents($file));
-				$reload="false";
 				foreach($localdnsrecords as $record) {
 					list($ip,$domain) = explode(" ",$record);
 					if(addCustomDNSEntry($ip, $domain, $reload, false))
@@ -543,15 +543,15 @@ if(isset($_POST["action"]))
 			if(isset($_POST["localcnamerecords"]) && $file->getFilename() === "05-pihole-custom-cname.conf")
 			{
 				ob_start();
+				$reload="false";
 				if($flushtables) {
 					// Defined in func.php included via auth.php
-					// will not restart Pi-hole
-					deleteAllCustomCNAMEEntries();
+					//passing reload="false" will not restart Pi-hole
+					deleteAllCustomCNAMEEntries($reload);
 				}
 
 				$num = 0;
 				$localcnamerecords = process_file(file_get_contents($file));
-				$reload="false";
 				foreach($localcnamerecords as $record) {
 					$line = str_replace("cname=","", $record);
 					$line = str_replace("\r","", $line);
