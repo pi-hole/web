@@ -205,8 +205,8 @@ function addCustomDNSEntry($ip="", $domain="", $reload="", $json=true)
         if(isset($_REQUEST['domain']))
             $domain = trim($_REQUEST['domain']);
 
-				if(isset($_REQUEST['reload']))
-		            $reload = $_REQUEST['reload'];
+        if(isset($_REQUEST['reload']))
+            $reload = $_REQUEST['reload'];
 
         if (empty($ip))
             return returnError("IP must be set", $json);
@@ -280,24 +280,24 @@ function deleteCustomDNSEntry()
 
 function deleteAllCustomDNSEntries($reload="")
 {
-	try
-	{
-		if(isset($_REQUEST['reload']))
-				$reload = $_REQUEST['reload'];
+    try
+		{
+        if(isset($_REQUEST['reload']))
+            $reload = $_REQUEST['reload'];
 
-			$existingEntries = getCustomDNSEntries();
-			// passing false to pihole_execute stops pihole from reloading after each enty has been deleted
-			foreach ($existingEntries as $entry) {
-					pihole_execute("-a removecustomdns ".$entry->ip." ".$entry->domain." ".$reload);
-				}
+        $existingEntries = getCustomDNSEntries();
+        // passing false to pihole_execute stops pihole from reloading after each enty has been deleted
+        foreach ($existingEntries as $entry) {
+            pihole_execute("-a removecustomdns ".$entry->ip." ".$entry->domain." ".$reload);
+        }
 
-	}
-	catch (\Exception $ex)
-	{
-			return returnError($ex->getMessage());
-	}
+    }
+    catch (\Exception $ex)
+    {
+        return returnError($ex->getMessage());
+    }
 
-	return returnSuccess();
+    return returnSuccess();
 }
 
 // CNAME
@@ -357,8 +357,8 @@ function addCustomCNAMEEntry($domain="", $target="", $reload="", $json=true)
         if(isset($_REQUEST['target']))
             $target = trim($_REQUEST['target']);
 
-				if(isset($_REQUEST['reload']))
-						$reload = $_REQUEST['reload'];
+        if(isset($_REQUEST['reload']))
+            $reload = $_REQUEST['reload'];
 
         if (empty($domain))
             return returnError("Domain must be set", $json);
@@ -434,11 +434,11 @@ function deleteAllCustomCNAMEEntries($reload="")
 {
     try
     {
-			if(isset($_REQUEST['reload']))
-					$reload = $_REQUEST['reload'];
-					
+        if(isset($_REQUEST['reload']))
+            $reload = $_REQUEST['reload'];
+
         $existingEntries = getCustomCNAMEEntries();
-				// passing false to pihole_execute stops pihole from reloading after each enty has been deleted
+        // passing false to pihole_execute stops pihole from reloading after each enty has been deleted
         foreach ($existingEntries as $entry) {
             pihole_execute("-a removecustomcname ".$entry->domain." ".$entry->target." ".$reload);
         }
