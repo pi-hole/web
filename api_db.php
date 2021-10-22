@@ -18,37 +18,6 @@ check_cors();
 ini_set("max_execution_time","600");
 
 $data = array();
-$clients = array();
-function resolveHostname($clientip, $printIP)
-{
-	global $clients;
-	$ipaddr = strtolower($clientip);
-	if(array_key_exists($clientip, $clients))
-	{
-		// Entry already exists
-		$clientname = $clients[$ipaddr];
-		if($printIP)
-			return $clientname."|".$clientip;
-		return $clientname;
-	}
-
-	else if(validIP($clientip))
-	{
-		// Get host name of client and convert to lower case
-		$clientname = strtolower(gethostbyaddr($ipaddr));
-	}
-	else
-	{
-		// This is already a host name
-		$clientname = $ipaddr;
-	}
-	// Buffer result
-	$clients[$ipaddr] = $clientname;
-
-	if($printIP)
-		return $clientname."|".$clientip;
-	return $clientname;
-}
 
 // Needs package php5-sqlite, e.g.
 //    sudo apt-get install php5-sqlite
@@ -121,15 +90,12 @@ if (isset($_GET['getAllQueries']) && $auth)
 		if(!is_bool($results))
 			while ($row = $results->fetchArray())
 			{
-				// Try to resolve host name of this client
-				$c = resolveHostname($row[3],false);
-
 				// Convert query type ID to name
 				$query_type = getQueryTypeStr($row[1]);
 
 				// Insert into array
 				// array:        time     type         domain                                     client           status   upstream destination
-				$allQueries[] = [$row[0], $query_type, utf8_encode(str_replace("~"," ",$row[2])), utf8_encode($c), $row[4], utf8_encode($row[5])];
+				$allQueries[] = [$row[0], $query_type, utf8_encode(str_replace("~"," ",$row[2])), $row[3], $row[4], utf8_encode($row[5])];
 			}
 	}
 	$result = array('data' => $allQueries);
@@ -162,18 +128,17 @@ if (isset($_GET['topClients']) && $auth)
 	if(!is_bool($results))
 		while ($row = $results->fetchArray())
 		{
-			// Try to resolve host name and convert to UTF-8
-			$c = utf8_encode(resolveHostname($row[0],false));
+			// $row[0] is the client IP
 
-			if(array_key_exists($c, $clientnums))
+			if(array_key_exists($row[0], $clientnums))
 			{
 				// Entry already exists, add to it (might appear multiple times due to mixed capitalization in the database)
-				$clientnums[$c] += intval($row[1]);
+				$clientnums[$row[0]] += intval($row[1]);
 			}
 			else
 			{
 				// Entry does not yet exist
-				$clientnums[$c] = intval($row[1]);
+				$clientnums[$row[0]] = intval($row[1]);
 			}
 		}
 
