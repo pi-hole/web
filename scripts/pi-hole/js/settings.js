@@ -31,6 +31,7 @@ $(function () {
     var font = {
       "font-family": $("pre").css("font-family"),
       "font-size": $("pre").css("font-size"),
+      color: $("pre").css("color"),
     };
     var contents = $(this).contents();
     contents.find("body").css(font);

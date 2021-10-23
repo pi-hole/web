@@ -20,7 +20,7 @@
     "prettier:fix": "prettier --write \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**/*.js\"",
     "xo": "xo",
     "xo:fix": "npm run xo -- --fix",
-    "test": "npm run prettier:check && npm run xo"
+    "test": "npm run xo"
   },
   "devDependencies": {
     "autoprefixer": "^10.3.7",
