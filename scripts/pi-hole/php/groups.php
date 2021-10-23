@@ -347,6 +347,8 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         foreach ($ips as $ip) {
+            // Encode $ip variable to prevent XSS
+            $ip = htmlspecialchars($ip);
             // Silently skip this entry when it is empty or not a string (e.g. NULL)
             if(!is_string($ip) || strlen($ip) == 0) {
                 continue;
