@@ -329,6 +329,17 @@
 .box,
 .small-box {
   border-radius: 10px;
+  z-index: 0; /* fix the small-box z-index (related to '.small-box .icon') */
+}
+
+.small-box .icon {
+  z-index: -1; /* sends the icon behind the text */
+}
+
+/*** Icons grow on hover, but remain centered ***/
+.small-box:hover .icon {
+  font-size: 90px; /* keep the same font-size, to avoid shifting the position */
+  transform: scale(106%);
 }
 
 .list-status-0 {
@@ -359,10 +370,10 @@ td.details-control {
   padding: 2px 5px;
 }
 
-.blocked-row {
-  background-color: rgb(229, 83, 75, 0.1) !important;
+.blocked-row td {
+  background-color: rgb(229, 83, 75, 0.1);
 }
 
-.allowed-row {
-  background-color: rgb(70, 149, 74, 0.1) !important;
+.allowed-row td {
+  background-color: rgb(70, 149, 74, 0.1);
 }

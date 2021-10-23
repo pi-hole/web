@@ -75,14 +75,15 @@
                 // Set hash in new session
                 $_SESSION["hash"] = $pwhash;
 
+                // Set persistent cookie if selected
+                if (isset($_POST['persistentlogin']))
+                {
+                    // setcookie( $name, $value, $expire, $path, $domain, $secure, $httponly )
+                    setcookie('persistentlogin', $pwhash, time()+60*60*24*7, null, null, null, true );
+                }
+
                 // Login successful, redirect the user to the homepage to discard the POST request
                 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['QUERY_STRING'] === 'login') {
-                    // Set persistent cookie if selected
-                    if (isset($_POST['persistentlogin']))
-                    {
-                        // setcookie( $name, $value, $expire, $path, $domain, $secure, $httponly )
-                        setcookie('persistentlogin', $pwhash, time()+60*60*24*7, null, null, null, true );
-                    }
                     header('Location: index.php');
                     exit();
                 }

@@ -260,7 +260,7 @@ function initTable() {
 }
 
 function addClient() {
-  var ip = $("#select").val().trim();
+  var ip = utils.escapeHtml($("#select").val().trim());
   var comment = utils.escapeHtml($("#new_comment").val());
 
   utils.disableAll();
@@ -385,7 +385,7 @@ function editClient() {
 function deleteClient() {
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var ip = tr.find("#ip_" + id).text();
+  var ip = utils.escapeHtml(tr.find("#ip_" + id).text());
   var name = utils.escapeHtml(tr.find("#name_" + id).text());
 
   if (name.length > 0) {

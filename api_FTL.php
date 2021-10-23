@@ -104,6 +104,7 @@ else
 		foreach($return as $line)
 		{
 			$tmp = explode(" ",$line);
+			if(count($tmp) == 2) $tmp[2]="";
 			$domain = utf8_encode($tmp[2]);
 			$top_queries[$domain] = intval($tmp[1]);
 		}

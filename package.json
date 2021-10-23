@@ -20,15 +20,15 @@
     "prettier:fix": "prettier --write \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**/*.js\"",
     "xo": "xo",
     "xo:fix": "npm run xo -- --fix",
-    "test": "npm run prettier:check && npm run xo"
+    "test": "npm run xo"
   },
   "devDependencies": {
-    "autoprefixer": "^10.3.6",
+    "autoprefixer": "^10.3.7",
     "eslint-plugin-compat": "^3.13.0",
-    "postcss": "^8.3.8",
-    "postcss-cli": "^8.3.1",
+    "postcss": "^8.3.9",
+    "postcss-cli": "^9.0.1",
     "prettier": "2.4.1",
-    "xo": "^0.44.0"
+    "xo": "^0.45.0"
   },
   "browserslist": [
     "defaults",

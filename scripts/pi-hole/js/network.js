@@ -8,6 +8,7 @@
 /* global utils:false */
 
 var tableApi;
+var token = $("#token").text();
 
 var API_STRING = "api_db.php?network";
 
@@ -57,6 +58,49 @@ function parseColor(input) {
   if (match) {
     return [match[1], match[2], match[3]];
   }
+}
+
+function deleteNetworkEntry() {
+  var tr = $(this).closest("tr");
+  var id = tr.attr("data-id");
+
+  utils.disableAll();
+  utils.showAlert("info", "", "Deleting network table entry with ID " + parseInt(id, 10), "...");
+  $.ajax({
+    url: "scripts/pi-hole/php/network.php",
+    method: "post",
+    dataType: "json",
+    data: { action: "delete_network_entry", id: id, token: token },
+    success: function (response) {
+      utils.enableAll();
+      if (response.success) {
+        utils.showAlert(
+          "success",
+          "far fa-trash-alt",
+          "Successfully deleted network table entry # ",
+          id
+        );
+        tableApi.row(tr).remove().draw(false).ajax.reload(null, false);
+      } else {
+        utils.showAlert(
+          "error",
+          "",
+          "Error while network table entry with ID " + id,
+          response.message
+        );
+      }
+    },
+    error: function (jqXHR, exception) {
+      utils.enableAll();
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting network table entry with ID " + id,
+        jqXHR.responseText
+      );
+      console.log(exception); // eslint-disable-line no-console
+    },
+  });
 }
 
 $(function () {
@@ -170,6 +214,16 @@ $(function () {
       if (data.hwaddr.startsWith("ip-")) {
         $("td:eq(1)", row).text("N/A");
       }
+
+      // Add delete button
+      $(row).attr("data-id", data.id);
+      var button =
+        '<button type="button" class="btn btn-danger btn-xs" id="deleteNetworkEntry_' +
+        data.id +
+        '">' +
+        '<span class="far fa-trash-alt"></span>' +
+        "</button>";
+      $("td:eq(8)", row).html(button);
     },
     dom:
       "<'row'<'col-sm-12'f>>" +
@@ -179,8 +233,9 @@ $(function () {
     ajax: { url: API_STRING, error: handleAjaxError, dataSrc: "network" },
     autoWidth: false,
     processing: true,
-    order: [[5, "desc"]],
+    order: [[6, "desc"]],
     columns: [
+      { data: "id", visible: false },
       { data: "ip", type: "ip-address", width: "10%", render: $.fn.dataTable.render.text() },
       { data: "hwaddr", width: "10%", render: $.fn.dataTable.render.text() },
       { data: "interface", width: "4%", render: $.fn.dataTable.render.text() },
@@ -209,7 +264,13 @@ $(function () {
       },
       { data: "numQueries", width: "9%", render: $.fn.dataTable.render.text() },
       { data: "", width: "6%", orderable: false },
+      { data: "", width: "6%", orderable: false },
     ],
+    drawCallback: function () {
+      $('button[id^="deleteNetworkEntry_"]').on("click", deleteNetworkEntry);
+      // Remove visible dropdown to prevent orphaning
+      $("body > .bootstrap-select.dropdown").remove();
+    },
     lengthMenu: [
       [10, 25, 50, 100, -1],
       [10, 25, 50, 100, "All"],
@@ -223,7 +284,7 @@ $(function () {
     },
     columnDefs: [
       {
-        targets: -1,
+        targets: [-1, -2],
         data: null,
         defaultContent: "",
       },

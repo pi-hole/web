@@ -18,6 +18,51 @@ $(function () {
     $('input[name="AddIP"]').val(ip);
     $('input[name="AddMAC"]').val(mac);
   });
+
+  // prepare Teleporter Modal & iframe for operation
+  $("#teleporterModal").on("show.bs.modal", function () {
+    $('iframe[name="teleporter_iframe"]').removeAttr("style").contents().find("body").html("");
+    $(this).find("button").prop("disabled", true);
+    $(this).find(".overlay").show();
+  });
+
+  // set Teleporter iframe's font, enable Modal's button(s), ...
+  $('iframe[name="teleporter_iframe"]').on("load", function () {
+    var font = {
+      "font-family": $("pre").css("font-family"),
+      "font-size": $("pre").css("font-size"),
+      color: $("pre").css("color"),
+    };
+    var contents = $(this).contents();
+    contents.find("body").css(font);
+    $("#teleporterModal").find(".overlay").hide();
+    var BtnEls = $(this).parents(".modal-content").find("button").prop("disabled", false);
+
+    // force user to reload the page if necessary
+    var reloadEl = contents.find("span[data-forcereload]");
+    if (reloadEl.length > 0) {
+      var msg = "The page must now be reloaded to display the imported entries";
+      reloadEl.append(msg);
+      BtnEls.toggleClass("hidden")
+        .not(".hidden")
+        .on("click", function () {
+          // window.location.href avoids a browser warning for resending form data
+          window.location = window.location.href;
+        });
+    }
+
+    // expand iframe's height
+    var contentHeight = contents.find("html").height();
+    if (contentHeight > $(this).height()) {
+      $(this).height(contentHeight);
+    }
+  });
+
+  // display selected import file on button's adjacent textfield
+  $("#zip_file").change(function () {
+    var fileName = $(this)[0].files.length === 1 ? $(this)[0].files[0].name : "";
+    $("#zip_filename").val(fileName);
+  });
 });
 $(".confirm-poweroff").confirm({
   text: "Are you sure you want to send a poweroff command to your Pi-hole?",
@@ -258,10 +303,6 @@ $(function () {
 $(".nav-tabs a").on("shown.bs.tab", function (e) {
   var tab = e.target.hash.substring(1);
   window.history.pushState("", "", "?tab=" + tab);
-  if (tab === "piholedhcp") {
-    window.location.reload();
-  }
-
   window.scrollTo(0, 0);
 });
 
