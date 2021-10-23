@@ -195,7 +195,7 @@ function getCustomDNSEntries()
     return $entries;
 }
 
-function addCustomDNSEntry($ip="", $domain="", $json=true)
+function addCustomDNSEntry($ip="", $domain="", $reload="", $json=true)
 {
     try
     {
@@ -204,6 +204,9 @@ function addCustomDNSEntry($ip="", $domain="", $json=true)
 
         if(isset($_REQUEST['domain']))
             $domain = trim($_REQUEST['domain']);
+
+        if(isset($_REQUEST['reload']))
+            $reload = $_REQUEST['reload'];
 
         if (empty($ip))
             return returnError("IP must be set", $json);
@@ -229,7 +232,7 @@ function addCustomDNSEntry($ip="", $domain="", $json=true)
         }
 
         // Add record
-        pihole_execute("-a addcustomdns ".$ip." ".$domain);
+        pihole_execute("-a addcustomdns ".$ip." ".$domain." ".$reload);
 
         return returnSuccess("", $json);
     }
@@ -275,36 +278,23 @@ function deleteCustomDNSEntry()
     }
 }
 
-function deleteAllCustomDNSEntries()
+function deleteAllCustomDNSEntries($reload="")
 {
-    if (isset($customDNSFile))
-    {
-        $handle = fopen($customDNSFile, "r");
-        if ($handle)
-        {
-            try
-            {
-                while (($line = fgets($handle)) !== false) {
-                    $line = str_replace("\r","", $line);
-                    $line = str_replace("\n","", $line);
-                    $explodedLine = explode (" ", $line);
+    try
+		{
+        if(isset($_REQUEST['reload']))
+            $reload = $_REQUEST['reload'];
 
-                    if (count($explodedLine) != 2)
-                        continue;
-
-                    $ip = $explodedLine[0];
-                    $domain = $explodedLine[1];
-
-                    pihole_execute("-a removecustomdns ".$ip." ".$domain);
-                }
-            }
-            catch (\Exception $ex)
-            {
-                return returnError($ex->getMessage());
-            }
-
-            fclose($handle);
+        $existingEntries = getCustomDNSEntries();
+        // passing false to pihole_execute stops pihole from reloading after each enty has been deleted
+        foreach ($existingEntries as $entry) {
+            pihole_execute("-a removecustomdns ".$entry->ip." ".$entry->domain." ".$reload);
         }
+
+    }
+    catch (\Exception $ex)
+    {
+        return returnError($ex->getMessage());
     }
 
     return returnSuccess();
@@ -357,7 +347,7 @@ function getCustomCNAMEEntries()
     return $entries;
 }
 
-function addCustomCNAMEEntry($domain="", $target="", $json=true)
+function addCustomCNAMEEntry($domain="", $target="", $reload="", $json=true)
 {
     try
     {
@@ -366,6 +356,9 @@ function addCustomCNAMEEntry($domain="", $target="", $json=true)
 
         if(isset($_REQUEST['target']))
             $target = trim($_REQUEST['target']);
+
+        if(isset($_REQUEST['reload']))
+            $reload = $_REQUEST['reload'];
 
         if (empty($domain))
             return returnError("Domain must be set", $json);
@@ -391,7 +384,7 @@ function addCustomCNAMEEntry($domain="", $target="", $json=true)
                 if (in_array($d, $entry->domains))
                     return returnError("There is already a CNAME record for '$d'", $json);
 
-        pihole_execute("-a addcustomcname ".$domain." ".$target);
+        pihole_execute("-a addcustomcname ".$domain." ".$target." ".$reload);
 
         return returnSuccess("", $json);
     }
@@ -437,14 +430,17 @@ function deleteCustomCNAMEEntry()
     }
 }
 
-function deleteAllCustomCNAMEEntries()
+function deleteAllCustomCNAMEEntries($reload="")
 {
     try
     {
-        $existingEntries = getCustomCNAMEEntries();
+        if(isset($_REQUEST['reload']))
+            $reload = $_REQUEST['reload'];
 
+        $existingEntries = getCustomCNAMEEntries();
+        // passing false to pihole_execute stops pihole from reloading after each enty has been deleted
         foreach ($existingEntries as $entry) {
-            pihole_execute("-a removecustomcname ".$entry->domain." ".$entry->target);
+            pihole_execute("-a removecustomcname ".$entry->domain." ".$entry->target." ".$reload);
         }
 
     }
