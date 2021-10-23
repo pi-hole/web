@@ -49,7 +49,7 @@
     $coreVersionStr = $core_current . (isset($core_commit) ? " (" . $core_branch . ", " . $core_commit . ")" : "");
     $ftlVersionStr = $FTL_current . (isset($FTL_commit) ? " (" . $FTL_branch . ", " . $FTL_commit . ")" : "");
     $webVersionStr = $web_current . (isset($web_commit) ? " (" . $web_branch . ", " . $web_commit . ")" : "");
-    $dockerTag = getenv('PIHOLE_DOCKER_TAG') == true ? getenv('PIHOLE_DOCKER_TAG') : "";
+    $dockerTag = getenv('PIHOLE_DOCKER_TAG');
 
     $githubBaseUrl = "https://github.com/pi-hole";
     $coreUrl = $githubBaseUrl . "/pi-hole";
