@@ -132,7 +132,7 @@ td code {
 kbd {
   color: #000;
   background-color: #9AB;
-  box-shadow: inset -1px -1px 2px 0px rgba(0, 0, 0, .5);
+  box-shadow: inset -1px -1px 2px 0 rgba(0, 0, 0, .5);
   vertical-align: middle;
 }
 
@@ -213,7 +213,7 @@ th {
 .allowed-row .btn-default.text-red,
 .blocked-row .btn-default.text-green {
   background-color: #BCD;
-  text-shadow: 0px 0px 1px #FFF;
+  text-shadow: 0 0 1px #FFF;
 }
 
 #domain-frequency table button,
@@ -344,10 +344,6 @@ label {
 
 .layout-boxed .form-group.has-error.login-box-msg::before {
   padding: calc(50% - .5em) 0 0;
-}
-
-#loginform .has-error + .row .btn {
-  background: #D43;
 }
 
 #loginform .has-error + .row .btn {
@@ -533,7 +529,7 @@ label {
 }
 
 .main-header .navbar .nav > li > a > .label {
-  top: 0px;
+  top: 0;
   right: 0;
   font-size: 1em;
   padding: .25em;
@@ -619,7 +615,7 @@ label {
 }
 
 .sidebar {
-  padding: 0 0 4px 0;
+  padding: 0 0 4px;
   background: #000;
   font-weight: bold;
   text-transform: uppercase;
@@ -754,7 +750,7 @@ label {
 .user-panel {
   padding: 30px 10%;
   background: #CCE6FF;
-  border-radius: 75px 0 0 0;
+  border-radius: 75px 0 0;
   z-index: 0;
 }
 
@@ -1402,8 +1398,6 @@ table.dataTable {
     padding: 0;
   }
   .main-header {
-    background-size: auto;
-    background-position: 0 0;
     background-image: linear-gradient(to right, #000 4px, #8BF 4px);
     background-size: 100% 100%;
     background-position: 300px 0;
