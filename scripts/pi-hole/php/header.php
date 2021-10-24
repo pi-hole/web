@@ -187,6 +187,10 @@
     <meta name="theme-color" content="#272c30">
 <?php } elseif ($theme == "default-darker") { ?>
     <meta name="theme-color" content="#2e6786">
+<?php } elseif ($theme == "lcars") { ?>
+    <meta name="theme-color" content="#4488FF">
+    <link rel="stylesheet" href="style/vendor/fonts/ubuntu-mono/ubuntu-mono.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/fonts/antonio/antonio.css?v=<?=$cacheVer?>">
 <?php } ?>
 
 <?php if ($darkmode) { ?>
