@@ -339,6 +339,7 @@
 /*** Icons grow on hover, but remain centered ***/
 .small-box:hover .icon {
   font-size: 90px; /* keep the same font-size, to avoid shifting the position */
+  -webkit-transform: scale(1.06, 1.06);
   transform: scale(106%);
 }
 
