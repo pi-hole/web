@@ -32,8 +32,8 @@ $(function () {
           moment().subtract(1, "days").startOf("day"),
           moment().subtract(1, "days").endOf("day"),
         ],
-        "Last 7 Days": [moment().subtract(6, "days"), moment()],
-        "Last 30 Days": [moment().subtract(29, "days"), moment()],
+        "Last 7 Days": [moment().subtract(7, "days"), moment()],
+        "Last 30 Days": [moment().subtract(30, "days"), moment()],
         "This Month": [moment().startOf("month"), moment()],
         "Last Month": [
           moment().subtract(1, "month").startOf("month"),
