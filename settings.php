@@ -185,13 +185,6 @@ if (isset($setupVars["API_QUERY_LOG_SHOW"])) {
     $queryLog = "all";
 }
 
-// Privacy Mode
-if (isset($setupVars["API_PRIVACY_MODE"])) {
-    $privacyMode = $setupVars["API_PRIVACY_MODE"];
-} else {
-    $privacyMode = false;
-}
-
 ?>
 
 <?php
