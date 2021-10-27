@@ -141,6 +141,7 @@ $(function () {
       emptyTable: "No issues found.",
     },
     stateSave: true,
+    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("messages-table", data);
     },
