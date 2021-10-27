@@ -223,7 +223,6 @@ $(function () {
       scrollX: true,
       order: [[2, "asc"]],
       stateSave: true,
-      stateDuration: 0,
       stateSaveCallback: function (settings, data) {
         utils.stateSaveCallback("activeDhcpLeaseTable", data);
       },

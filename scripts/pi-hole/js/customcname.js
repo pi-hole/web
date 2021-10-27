@@ -71,7 +71,6 @@ $(function () {
     ],
     order: [[0, "asc"]],
     stateSave: true,
-    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("LocalCNAMETable", data);
     },

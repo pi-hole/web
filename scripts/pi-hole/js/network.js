@@ -276,7 +276,6 @@ $(function () {
       [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
-    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("network_table", data);
     },
