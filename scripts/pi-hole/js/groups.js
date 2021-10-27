@@ -92,11 +92,6 @@ $(function () {
     stateLoadCallback: function () {
       var data = utils.stateLoadCallback("groups-table");
 
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
-
       // Reset visibility of ID column
       data.columns[0].visible = false;
       // Apply loaded state to table
