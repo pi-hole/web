@@ -64,6 +64,10 @@ $(function () {
           );
         },
       },
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],
@@ -81,6 +85,7 @@ $(function () {
       $(".deleteCustomCNAME").on("click", deleteCustomCNAME);
     },
   });
+
   // Disable autocorrect in the search box
   var input = document.querySelector("input[type=search]");
   input.setAttribute("autocomplete", "off");

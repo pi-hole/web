@@ -236,10 +236,10 @@ $(function () {
     order: [[6, "desc"]],
     columns: [
       { data: "id", visible: false },
-      { data: "ip", type: "ip-address", width: "10%", render: $.fn.dataTable.render.text() },
-      { data: "hwaddr", width: "10%", render: $.fn.dataTable.render.text() },
-      { data: "interface", width: "4%", render: $.fn.dataTable.render.text() },
-      { data: "name", width: "15%", render: $.fn.dataTable.render.text() },
+      { data: "ip", type: "ip-address", width: "10%" },
+      { data: "hwaddr", width: "10%" },
+      { data: "interface", width: "4%" },
+      { data: "name", width: "15%" },
       {
         data: "firstSeen",
         width: "8%",
@@ -266,6 +266,7 @@ $(function () {
       { data: "", width: "6%", orderable: false },
       { data: "", width: "6%", orderable: false },
     ],
+
     drawCallback: function () {
       $('button[id^="deleteNetworkEntry_"]').on("click", deleteNetworkEntry);
       // Remove visible dropdown to prevent orphaning
@@ -287,6 +288,10 @@ $(function () {
         targets: [-1, -2],
         data: null,
         defaultContent: "",
+      },
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
       },
     ],
   });

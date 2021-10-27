@@ -124,6 +124,16 @@ function initTable() {
       { data: "groups", searchable: false },
       { data: null, width: "80px", orderable: false },
     ],
+    columnDefs: [
+      {
+        targets: [0, 2],
+        orderable: false,
+      },
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
+    ],
     drawCallback: function () {
       $('button[id^="deleteAdlist_"]').on("click", deleteAdlist);
       // Remove visible dropdown to prevent orphaning

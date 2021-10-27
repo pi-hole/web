@@ -216,7 +216,13 @@ $(function () {
   if (document.getElementById("DHCPLeasesTable")) {
     leasetable = $("#DHCPLeasesTable").DataTable({
       dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-6'i><'col-sm-6'f>>",
-      columnDefs: [{ bSortable: false, orderable: false, targets: -1 }],
+      columnDefs: [
+        { bSortable: false, orderable: false, targets: -1 },
+        {
+          targets: "_all",
+          render: $.fn.dataTable.render.text(),
+        },
+      ],
       paging: false,
       scrollCollapse: true,
       scrollY: "200px",
@@ -235,7 +241,13 @@ $(function () {
   if (document.getElementById("DHCPStaticLeasesTable")) {
     staticleasetable = $("#DHCPStaticLeasesTable").DataTable({
       dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-12'i>>",
-      columnDefs: [{ bSortable: false, orderable: false, targets: -1 }],
+      columnDefs: [
+        { bSortable: false, orderable: false, targets: -1 },
+        {
+          targets: "_all",
+          render: $.fn.dataTable.render.text(),
+        },
+      ],
       paging: false,
       scrollCollapse: true,
       scrollY: "200px",
