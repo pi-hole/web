@@ -246,16 +246,12 @@ function initTable() {
       [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
+    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("groups-domains-table", data);
     },
     stateLoadCallback: function () {
       var data = utils.stateLoadCallback("groups-domains-table");
-
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
 
       // Reset visibility of ID column
       data.columns[0].visible = false;
