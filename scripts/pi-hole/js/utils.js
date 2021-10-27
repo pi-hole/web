@@ -234,8 +234,8 @@ function stateSaveCallback(itemName, data) {
 }
 
 function stateLoadCallback(itemName) {
-  // local storage data should be valid indefinitely 
-  stateDuration: 0,
+  // local storage data should be valid indefinitely
+  stateDuration: 0;
   // Receive previous state from client's local storage area
   var data = localStorage.getItem(itemName);
   // Return if not available
