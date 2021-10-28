@@ -114,6 +114,12 @@ $(function () {
       { data: "blob5", visible: false },
       { data: null, width: "80px", orderable: false },
     ],
+    columnDefs: [
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
+    ],
     drawCallback: function () {
       $('button[id^="deleteMessage_"]').on("click", deleteMessage);
       // Remove visible dropdown to prevent orphaning

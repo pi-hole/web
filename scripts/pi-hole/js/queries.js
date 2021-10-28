@@ -323,8 +323,8 @@ $(function () {
         },
       },
       { width: "4%" },
-      { width: "36%", render: $.fn.dataTable.render.text() },
-      { width: "8%", type: "ip-address", render: $.fn.dataTable.render.text() },
+      { width: "36%" },
+      { width: "8%", type: "ip-address" },
       { width: "14%", orderData: 4 },
       { width: "8%", orderData: 5 },
       { width: "10%", orderData: 4 },
@@ -346,6 +346,10 @@ $(function () {
         targets: -1,
         data: null,
         defaultContent: "",
+      },
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
       },
     ],
     initComplete: function () {

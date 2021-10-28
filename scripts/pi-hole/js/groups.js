@@ -27,6 +27,12 @@ $(function () {
       { data: "description" },
       { data: null, width: "60px", orderable: false },
     ],
+    columnDefs: [
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
+    ],
     drawCallback: function () {
       $('button[id^="deleteGroup_"]').on("click", deleteGroup);
     },

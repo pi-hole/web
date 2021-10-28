@@ -64,6 +64,10 @@ $(function () {
           );
         },
       },
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],

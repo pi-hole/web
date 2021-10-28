@@ -76,6 +76,12 @@ function initTable() {
       { data: "groups", searchable: false, visible: showtype === "all" },
       { data: null, width: "80px", orderable: false },
     ],
+    columnDefs: [
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
+    ],
     drawCallback: function () {
       $('button[id^="deleteDomain_"]').on("click", deleteDomain);
       // Remove visible dropdown to prevent orphaning
