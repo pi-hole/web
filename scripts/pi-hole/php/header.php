@@ -599,6 +599,12 @@ if($auth) {
                             <i class="fa fa-fw fa-network-wired"></i> Network
                         </a>
                     </li>
+										<!-- Update -->
+                    <li<?php if($scriptname === "update.php"){ ?> class="active"<?php } ?>>
+                        <a href="update.php">
+                            <i class="fa fa-fw fa-download"></i> Update Pi-hole
+                        </a>
+                    </li>
                   </ul>
                 </li>
                 <!-- Settings -->
