@@ -187,6 +187,7 @@ $(function () {
           if (data.length > 9 && data[9] > 0) {
             regexLink = true;
           }
+
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
