@@ -3470,6 +3470,10 @@ a:focus {
   background-image: none;
   color: rgb(168, 160, 149);
 }
+.nav-tabs-custom > .nav-tabs > li > a:focus, .nav-tabs-custom > .nav-tabs > li.active > a:focus  {
+  color: rgb(95, 142, 170);
+}
+
 .nav-tabs-custom.tab-primary > .nav-tabs > li.active {
   border-top-color: rgb(44, 103, 137);
 }
@@ -5764,6 +5768,10 @@ hr {
 .treeview-menu > li > a:hover {
   color: rgb(232, 230, 227);
 }
+.sidebar-menu > li > a:focus, .treeview-menu > li > a:focus {
+  color: #FFF;
+}
+
 .sidebar-form {
   border-color: rgb(118, 109, 97);
 }

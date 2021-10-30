@@ -128,6 +128,14 @@
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 0;
 }
+.sidebar-menu > li > a:focus, .treeview-menu > li > a:focus {
+  color: #FFF;
+  border-color: #b8c7ce;
+}
+.nav-tabs-custom > .nav-tabs > li > a:focus {
+  color: #60a4cc;
+}
+
 .layout-top-nav .main-header > .logo {
   background-color: #3c8dbc;
   color: #fff;

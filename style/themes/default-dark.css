@@ -116,6 +116,10 @@ h4 {
 .treeview-menu > li > a:hover {
   color: #fff;
 }
+.sidebar-menu > li > a:focus, .treeview-menu > li > a:focus {
+  color: #FFF;
+  border-color: #bec5cb;
+}
 .sidebar-form {
   border-radius: 3px;
   border: 1px solid #3e464c;
@@ -274,6 +278,9 @@ h4 {
 }
 .nav-tabs-custom > .nav-tabs > li > a {
   color: #bec5cb;
+}
+.nav-tabs-custom > .nav-tabs > li > a:focus {
+  background: #353c42;
 }
 .list-group {
   color: #bec5cb;
