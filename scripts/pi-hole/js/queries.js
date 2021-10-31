@@ -183,7 +183,7 @@ $(function () {
         case "10":
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist, CNAME)</span>";
-
+          blocked = true;
           if (data.length > 9 && data[9] > 0) {
             regexLink = true;
           }
