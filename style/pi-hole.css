@@ -377,3 +377,20 @@ td.details-control {
 .allowed-row td {
   background-color: rgb(70, 149, 74, 0.1);
 }
+
+@media screen and (max-width: 991px) {
+  #domain-search-block {
+    display: block;
+  }
+  #domain {
+    margin: 5px 0;
+  }
+  #domain-search-block .input-group-btn {
+    margin: 5px 0;
+    text-align: center;
+  }
+  #domain-search-block .input-group-btn button {
+    margin: 0 2px;
+    border-radius: 3px;
+  }
+}
