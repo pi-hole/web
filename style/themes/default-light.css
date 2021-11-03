@@ -71,6 +71,7 @@
   border-left: 3px solid transparent;
 }
 .sidebar-menu > li:hover > a,
+.sidebar-menu > li > a:focus,
 .sidebar-menu > li.active > a {
   color: #fff;
   background-color: #1e282c;
@@ -90,7 +91,8 @@
   color: #8aa4af;
 }
 .treeview-menu > li.active > a,
-.treeview-menu > li > a:hover {
+.treeview-menu > li > a:hover,
+.treeview-menu > li > a:focus {
   color: #fff;
 }
 .sidebar-form {
@@ -127,10 +129,6 @@
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 0;
-}
-.sidebar-menu > li > a:focus, .treeview-menu > li > a:focus {
-  color: #FFF;
-  border-color: #b8c7ce;
 }
 .nav-tabs-custom > .nav-tabs > li > a:focus {
   color: #60a4cc;
