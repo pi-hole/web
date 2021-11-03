@@ -3470,6 +3470,10 @@ a:focus {
   background-image: none;
   color: rgb(168, 160, 149);
 }
+.nav-tabs-custom > .nav-tabs > li > a:focus, .nav-tabs-custom > .nav-tabs > li.active > a:focus  {
+  color: rgb(95, 142, 170);
+}
+
 .nav-tabs-custom.tab-primary > .nav-tabs > li.active {
   border-top-color: rgb(44, 103, 137);
 }
@@ -5740,9 +5744,10 @@ hr {
   background-color: rgb(21, 27, 30);
 }
 .sidebar-menu > li > a {
-  border-left-color: transparent;
+  border-left: 3px solid transparent;
 }
 .sidebar-menu > li:hover > a,
+.sidebar-menu > li > a:focus,
 .sidebar-menu > li.active > a {
   color: rgb(232, 230, 227);
   background-color: rgb(24, 32, 35);
@@ -5761,9 +5766,11 @@ hr {
   color: rgb(170, 162, 151);
 }
 .treeview-menu > li.active > a,
-.treeview-menu > li > a:hover {
+.treeview-menu > li > a:hover, 
+.treeview-menu > li > a:focus {
   color: rgb(232, 230, 227);
 }
+
 .sidebar-form {
   border-color: rgb(118, 109, 97);
 }
