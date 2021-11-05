@@ -383,10 +383,10 @@ $("#querytime").on("apply.daterangepicker", function (ev, picker) {
   refreshTableData();
 });
 
-$("input[id^=type]").change(function (){
+$("input[id^=type]").change(function () {
   reloadBox.show();
 });
 
-$(".bt-reload").click(function (){
+$(".bt-reload").click(function () {
   refreshTableData();
 });
