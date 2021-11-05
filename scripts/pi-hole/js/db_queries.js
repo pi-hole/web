@@ -15,6 +15,7 @@ var instantquery = false;
 var daterange;
 
 var timeoutWarning = $("#timeoutWarning");
+var reloadBox = $(".reload-box");
 
 var dateformat = "MMMM Do YYYY, HH:mm";
 
@@ -148,6 +149,7 @@ function getQueryTypes() {
 
 var reloadCallback = function () {
   timeoutWarning.hide();
+  reloadBox.hide();
   statistics = [0, 0, 0, 0];
   var data = tableApi.rows().data();
   for (var i = 0; i < data.length; i++) {
@@ -378,5 +380,13 @@ $(function () {
 
 $("#querytime").on("apply.daterangepicker", function (ev, picker) {
   $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
+  refreshTableData();
+});
+
+$("input[id^=type]").change(function (){
+  reloadBox.show();
+});
+
+$(".bt-reload").click(function (){
   refreshTableData();
 });

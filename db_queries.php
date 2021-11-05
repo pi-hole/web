@@ -64,6 +64,16 @@
     </div>
 </div>
 
+<div class="row reload-box">
+    <div class="col-sm-9 col-xs-8">
+       New options selected. Please, reload the data or choose a another time range.
+    </div>
+    <div class="col-sm-3 col-xs-4">
+        <button type="button" class="btn btn-primary bt-reload">Reload Data</button>
+    </div>
+</div>
+<br>
+
 <div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden>
     Depending on how large of a range you specified, the request may time out while Pi-hole tries to retrieve all the data.<br/><span id="err"></span>
 </div>

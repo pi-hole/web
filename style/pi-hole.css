@@ -378,6 +378,14 @@ td.details-control {
   background-color: rgb(70, 149, 74, 0.1);
 }
 
+.bt-reload-box {
+  display: none;
+  margin-top: 10px;
+}
+.bt-reload-box .col-xs-4 {
+  text-align: right;
+}
+
 @media screen and (max-width: 991px) {
   #domain-search-block {
     display: block;
