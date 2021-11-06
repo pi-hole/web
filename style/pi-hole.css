@@ -378,12 +378,16 @@ td.details-control {
   background-color: rgb(70, 149, 74, 0.1);
 }
 
-.bt-reload-box {
+.reload-box {
   display: none;
-  margin-top: 10px;
 }
-.bt-reload-box .col-xs-4 {
-  text-align: right;
+.reload-box div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.reload-box span {
+  padding-right: 20px;
 }
 
 @media screen and (max-width: 991px) {

@@ -16,6 +16,7 @@ var daterange;
 
 var timeoutWarning = $("#timeoutWarning");
 var reloadBox = $(".reload-box");
+var datepickerManuallySelected = false;
 
 var dateformat = "MMMM Do YYYY, HH:mm";
 
@@ -149,7 +150,6 @@ function getQueryTypes() {
 
 var reloadCallback = function () {
   timeoutWarning.hide();
-  reloadBox.hide();
   statistics = [0, 0, 0, 0];
   var data = tableApi.rows().data();
   for (var i = 0; i < data.length; i++) {
@@ -177,6 +177,7 @@ var reloadCallback = function () {
 
 function refreshTableData() {
   timeoutWarning.show();
+  reloadBox.hide();
   var APIstring = "api_db.php?getAllQueries&from=" + from + "&until=" + until;
   // Check if query type filtering is enabled
   var queryType = getQueryTypes();
@@ -380,11 +381,14 @@ $(function () {
 
 $("#querytime").on("apply.daterangepicker", function (ev, picker) {
   $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
+  datepickerManuallySelected = true;
   refreshTableData();
 });
 
 $("input[id^=type]").change(function () {
-  reloadBox.show();
+  if (datepickerManuallySelected) {
+    reloadBox.show();
+  }
 });
 
 $(".bt-reload").click(function () {
