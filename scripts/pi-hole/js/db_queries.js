@@ -7,7 +7,7 @@
 
 /* global moment:false, utils:false */
 
-var start__ = moment().subtract(6, "days");
+var start__ = moment().subtract(7, "days");
 var from = moment(start__).utc().valueOf() / 1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf() / 1000;
