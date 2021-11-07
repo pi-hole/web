@@ -24,7 +24,7 @@
       <div class="box-body">
         <div class="alert alert-info reload-box">
             <div>
-                <span><i class="fa fa-exclamation-circle"></i>&nbsp; New options selected. Please, reload the data or choose a another time range.</span>
+                <span><i class="fa fa-exclamation-circle"></i>&nbsp; New options selected. Please reload the data or choose another time range.</span>
                 <button type="button" class="btn btn-primary bt-reload">Reload Data</button>
             </div>
         </div>
