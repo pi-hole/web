@@ -3470,7 +3470,8 @@ a:focus {
   background-image: none;
   color: rgb(168, 160, 149);
 }
-.nav-tabs-custom > .nav-tabs > li > a:focus, .nav-tabs-custom > .nav-tabs > li.active > a:focus  {
+.nav-tabs-custom > .nav-tabs > li > a:focus,
+.nav-tabs-custom > .nav-tabs > li.active > a:focus {
   color: rgb(95, 142, 170);
 }
 
@@ -5766,7 +5767,7 @@ hr {
   color: rgb(170, 162, 151);
 }
 .treeview-menu > li.active > a,
-.treeview-menu > li > a:hover, 
+.treeview-menu > li > a:hover,
 .treeview-menu > li > a:focus {
   color: rgb(232, 230, 227);
 }
