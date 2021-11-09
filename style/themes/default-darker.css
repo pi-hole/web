@@ -5642,7 +5642,8 @@ hr {
   border-color: rgb(4, 60, 150);
 }
 .layout-boxed {
-    background: linear-gradient(rgba(20, 30, 34, .6), rgba(20, 30, 34, .6)), url(../../img/boxed-bg-dark.jpg) fixed;
+  background: linear-gradient(rgba(20, 30, 34, 0.6), rgba(20, 30, 34, 0.6)),
+    url(../../img/boxed-bg-dark.jpg) fixed;
 }
 .alSpinner {
   border-color: rgb(66, 71, 74) transparent rgb(66, 71, 74) rgb(66, 71, 74);
