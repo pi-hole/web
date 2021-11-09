@@ -35,6 +35,7 @@
                     </tr>
                     </thead>
                 </table>
+                <p>Note: If errors are shown, use the tab on the left to generate a debug log, which will show a more thorough Pi-hole evaluation.</p>
             </div>
             <!-- /.box-body -->
         </div>
