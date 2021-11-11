@@ -41,9 +41,7 @@ button {
   color: #e8e6e3;
 }
 a {
-  color: #3391ff;
   background-color: transparent;
-  color: rgb(105, 166, 213);
   text-decoration-color: currentcolor;
   color: rgb(85, 158, 201);
 }
@@ -158,11 +156,9 @@ input::-moz-focus-inner {
   border-color: currentcolor;
 }
 fieldset {
-  border-color: rgb(66, 71, 74);
   border-color: currentcolor;
 }
 legend {
-  border-color: currentcolor;
   color: rgb(200, 195, 188);
   border-color: currentcolor currentcolor rgb(55, 60, 62);
 }
@@ -353,11 +349,9 @@ caption {
 .table > tfoot > tr > th,
 .table > thead > tr > td,
 .table > thead > tr > th {
-  border-top-color: rgb(58, 62, 65);
   border-top-color: rgb(51, 55, 57);
 }
 .table > thead > tr > th {
-  border-bottom-color: rgb(58, 62, 65);
   border-bottom-color: rgb(51, 55, 57);
 }
 .table > caption + thead > tr:first-child > td,
@@ -375,7 +369,6 @@ caption {
   background-color: rgb(24, 26, 27);
 }
 .table-bordered {
-  border-color: rgb(58, 62, 65);
   border-color: rgb(51, 55, 57);
 }
 .table-bordered > tbody > tr > td,
@@ -384,7 +377,6 @@ caption {
 .table-bordered > tfoot > tr > th,
 .table-bordered > thead > tr > td,
 .table-bordered > thead > tr > th {
-  border-color: rgb(58, 62, 65);
   border-color: rgb(51, 55, 57);
 }
 .table-striped > tbody > tr:nth-of-type(2n + 1) {
@@ -533,17 +525,12 @@ output {
 }
 .form-control {
   color: rgb(178, 172, 162);
-  background-color: rgb(24, 26, 27);
   background-image: none;
-  border-color: rgb(62, 68, 70);
-  box-shadow: rgba(0, 0, 0, 0.07) 0 1px 1 inset;
   box-shadow: none;
   border-color: rgb(59, 64, 66);
 }
 .form-control:focus {
-  border-color: rgb(19, 84, 135);
   outline-color: currentcolor;
-  box-shadow: rgba(0, 0, 0, 0.07) 0 1px 1px inset, rgba(20, 85, 136, 0.6) 0 0 8px;
   border-color: rgb(44, 103, 137);
   box-shadow: none;
 }
@@ -668,9 +655,6 @@ fieldset[disabled] .btn {
   box-shadow: none;
 }
 .btn-default {
-  color: rgb(200, 195, 188);
-  background-color: rgb(24, 26, 27);
-  border-color: rgb(62, 68, 70);
   background-color: rgb(30, 33, 34);
   color: rgb(189, 183, 175);
   border-color: rgb(58, 62, 65);
@@ -725,8 +709,6 @@ fieldset[disabled] .btn-default:hover {
 }
 .btn-primary {
   color: rgb(232, 230, 227);
-  background-color: rgb(41, 98, 146);
-  border-color: rgb(42, 100, 150);
   background-color: rgb(48, 113, 150);
   border-color: rgb(46, 107, 143);
 }
@@ -780,8 +762,6 @@ fieldset[disabled] .btn-primary:hover {
 }
 .btn-success {
   color: rgb(232, 230, 227);
-  background-color: rgb(77, 133, 58);
-  border-color: rgb(55, 125, 55);
   background-color: rgb(0, 133, 72);
   border-color: rgb(0, 213, 115);
 }
@@ -835,8 +815,6 @@ fieldset[disabled] .btn-success:hover {
 }
 .btn-info {
   color: rgb(232, 230, 227);
-  background-color: rgb(28, 115, 141);
-  border-color: rgb(28, 115, 140);
   background-color: rgb(0, 154, 191);
   border-color: rgb(0, 153, 191);
 }
@@ -890,8 +868,6 @@ fieldset[disabled] .btn-info:hover {
 }
 .btn-warning {
   color: rgb(232, 230, 227);
-  background-color: rgb(153, 95, 13);
-  border-color: rgb(154, 96, 13);
   background-color: rgb(191, 121, 10);
   border-color: rgb(176, 111, 9);
 }
@@ -945,8 +921,6 @@ fieldset[disabled] .btn-warning:hover {
 }
 .btn-danger {
   color: rgb(232, 230, 227);
-  background-color: rgb(148, 35, 32);
-  border-color: rgb(143, 35, 31);
   background-color: rgb(162, 43, 28);
   border-color: rgb(153, 41, 26);
 }
@@ -1040,8 +1014,6 @@ fieldset[disabled] .btn-link:hover {
 .dropdown-menu {
   list-style-image: none;
   background-color: rgb(24, 26, 27);
-  border-color: rgba(140, 130, 115, 0.15);
-  box-shadow: rgba(0, 0, 0, 0.18) 0 6px 12px;
   box-shadow: none;
   border-color: rgb(53, 57, 59);
 }
@@ -1212,9 +1184,7 @@ fieldset[disabled] .btn-link:hover {
   text-decoration-color: currentcolor;
 }
 .navbar-toggle {
-  background-color: transparent;
   background-image: none;
-  border-color: transparent;
   color: rgb(232, 230, 227);
   border-color: currentcolor;
 }
@@ -1515,7 +1485,6 @@ a.label:hover {
   text-decoration-color: currentcolor;
 }
 .label-default {
-  background-color: rgb(90, 97, 101);
   background-color: rgb(46, 50, 52);
   color: rgb(189, 183, 175);
 }
@@ -1608,7 +1577,6 @@ a.thumbnail:hover {
 .alert-success {
   color: rgb(139, 196, 140);
   background-color: rgb(41, 60, 23);
-  border-color: rgb(60, 91, 35);
   border-color: rgb(0, 213, 115);
 }
 .alert-success hr {
@@ -1620,7 +1588,6 @@ a.thumbnail:hover {
 .alert-info {
   color: rgb(117, 178, 208);
   background-color: rgb(14, 48, 65);
-  border-color: rgb(22, 90, 104);
   border-color: rgb(0, 153, 191);
 }
 .alert-info hr {
@@ -1632,7 +1599,6 @@ a.thumbnail:hover {
 .alert-warning {
   color: rgb(198, 171, 123);
   background-color: rgb(63, 54, 7);
-  border-color: rgb(108, 76, 11);
   border-color: rgb(176, 111, 9);
 }
 .alert-warning hr {
@@ -1653,7 +1619,6 @@ a.thumbnail:hover {
   color: rgb(204, 127, 126);
 }
 .progress {
-  background-color: rgb(30, 32, 33);
   box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px inset;
   background-color: rgb(34, 36, 38);
 }
@@ -1816,7 +1781,7 @@ button.list-group-item-success:hover {
   color: rgb(139, 196, 140);
   background-color: rgb(48, 71, 27);
 }
-a.list-group-item-success.active,p
+a.list-group-item-success.active,
 a.list-group-item-success.active:focus,
 a.list-group-item-success.active:hover,
 button.list-group-item-success.active,
@@ -2168,8 +2133,6 @@ button.close {
 }
 .modal-content {
   background-color: rgb(24, 26, 27);
-  border-color: rgba(140, 130, 115, 0.2);
-  box-shadow: rgba(0, 0, 0, 0.5) 0 3px 9px;
   outline-color: currentcolor;
   box-shadow: rgba(0, 0, 0, 0.13) 0 2px 3px;
   border-color: currentcolor;
@@ -2178,11 +2141,9 @@ button.close {
   background-color: rgb(0, 0, 0);
 }
 .modal-header {
-  border-bottom-color: rgb(55, 60, 62);
   border-bottom-color: rgb(51, 55, 57);
 }
 .modal-footer {
-  border-top-color: rgb(55, 60, 62);
   border-top-color: rgb(51, 55, 57);
 }
 @media (min-width: 768px) {
@@ -2448,7 +2409,6 @@ div.dataTables_scrollFoot > .dataTables_scrollFootInner > table {
   box-shadow: rgba(0, 0, 0, 0.5) 0 0 8px;
 }
 .layout-boxed {
-  background-color: rgb(27, 29, 30);
   background: linear-gradient(rgba(20, 30, 34, 0.6), rgba(20, 30, 34, 0.6)),
     url(../../img/boxed-bg-dark.jpg) fixed;
 }
@@ -3702,8 +3662,8 @@ a:focus {
   border-right-color: rgba(140, 130, 115, 0.2);
 }
 .btn-social-icon > :first-child {
-  border-right-color: rgba(140, 130, 115, 0.2);
   border-color: currentcolor;
+  border-right-color: rgba(140, 130, 115, 0.2);
 }
 .btn-adn {
   color: rgb(232, 230, 227);
@@ -4821,12 +4781,10 @@ fieldset[disabled] .btn-yahoo.focus {
   border-color: rgb(44, 103, 137);
 }
 .select2-dropdown {
-  border-color: rgb(59, 64, 66);
   background-color: rgb(24, 26, 27);
   border-color: rgb(72, 78, 81);
 }
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-  background-color: rgb(48, 113, 150);
   color: rgb(232, 230, 227);
   background-color: rgb(4, 60, 150);
 }
@@ -4853,7 +4811,6 @@ fieldset[disabled] .btn-yahoo.focus {
   color: rgb(189, 183, 175);
 }
 .select2-container--default .select2-selection--multiple {
-  border-color: rgb(59, 64, 66);
   background-color: rgb(24, 26, 27);
   border-color: rgb(72, 78, 81);
 }
@@ -4861,23 +4818,18 @@ fieldset[disabled] .btn-yahoo.focus {
   border-color: rgb(44, 103, 137);
 }
 .select2-container--default.select2-container--focus .select2-selection--multiple {
-  border-color: rgb(59, 64, 66);
   border-color: rgb(140, 130, 115);
   outline-color: currentcolor;
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
-  background-color: rgb(48, 113, 150);
-  border-color: rgb(46, 107, 143);
   color: rgb(232, 230, 227);
   background-color: rgb(39, 43, 44);
   border-color: rgb(72, 78, 81);
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-  color: rgba(232, 230, 227, 0.7);
   color: rgb(168, 160, 149);
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
-  color: rgb(232, 230, 227);
   color: rgb(200, 195, 188);
 }
 .box .datepicker-inline td:hover,
@@ -5088,7 +5040,6 @@ fieldset[disabled] .btn-yahoo.focus {
   background-color: rgb(162, 20, 72) !important;
 }
 .text-red {
-  color: rgb(224, 89, 73) !important;
   color: rgb(255, 26, 26) !important;
 }
 .text-yellow {
@@ -5108,7 +5059,6 @@ fieldset[disabled] .btn-yahoo.focus {
   color: rgb(85, 158, 201) !important;
 }
 .text-green {
-  color: rgb(88, 255, 178) !important;
   color: rgb(109, 255, 109) !important;
 }
 .text-gray {
@@ -5126,10 +5076,6 @@ fieldset[disabled] .btn-yahoo.focus {
 .text-lime {
   color: rgb(26, 255, 126) !important;
 }
-.text-orange {
-  color: rgb(255, 142, 44) !important;
-  color: rgb(255, 174, 26) !important;
-}
 .text-fuchsia {
   color: rgb(241, 41, 196) !important;
 }
@@ -5139,10 +5085,10 @@ fieldset[disabled] .btn-yahoo.focus {
 .text-maroon {
   color: rgb(230, 58, 121) !important;
 }
-..text-orange {
-  color: rgb(255, 142, 44) !important;
+.text-orange {
   color: rgb(255, 174, 26) !important;
-}link-muted {
+}
+link-muted {
   color: rgb(159, 151, 138);
 }
 .link-muted:hover,
