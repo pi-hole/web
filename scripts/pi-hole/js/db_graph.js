@@ -18,7 +18,7 @@ var dateformat = "MMMM Do YYYY, HH:mm";
 // get the database min timestamp
 var mintimestamp;
 $.getJSON("api_db.php?getMinTimestamp", function (ts) {
-  mintimestamp = ((ts.mintimestamp) * 1000) || 0; // return the timestamp in milliseconds or zero (in case of NaN)
+  mintimestamp = ts.mintimestamp * 1000 || 0; // return the timestamp in milliseconds or zero (in case of NaN)
 });
 
 $(function () {
