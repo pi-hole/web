@@ -156,10 +156,30 @@ function updateQueriesOverTime() {
       timeoutWarning.hide();
       timeLineChart.update();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   );
 }
 
-$(function () {
+$(function
+
+
+
+
+
+  () {
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   var blockedColor = "#999";
   var permittedColor = "#00a65a";
