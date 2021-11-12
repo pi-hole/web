@@ -17,12 +17,9 @@ var dateformat = "MMMM Do YYYY, HH:mm";
 
 // get the database min timestamp
 var mintimestamp;
-$.getJSON(
-  "http://192.168.0.201/admin/api_db.php?getMinTimestamp=true",
-  function (ts) {
-    mintimestamp = ((ts.mintimestamp) * 1000) || 0; // return the number times 1000 or zero (in case of NaN)
-  }
-);
+$.getJSON("api_db.php?getMinTimestamp", function (ts) {
+    mintimestamp = ((ts.mintimestamp) * 1000) || 0; // return the timestamp in milliseconds or zero (in case of NaN)
+});
 
 $(function () {
   $("#querytime").daterangepicker(
