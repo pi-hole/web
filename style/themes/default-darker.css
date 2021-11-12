@@ -528,6 +528,7 @@ output {
   background-image: none;
   box-shadow: none;
   border-color: rgb(59, 64, 66);
+  background-color: rgb(24, 26, 27);
 }
 .form-control:focus {
   outline-color: currentcolor;
@@ -5576,7 +5577,7 @@ link-muted {
   background-color: rgb(43, 47, 49);
 }
 .graphs-grid {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(232, 230, 227, 0.1);
 }
 .graphs-ticks {
   color: rgb(232, 230, 227);
