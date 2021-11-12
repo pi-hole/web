@@ -78,7 +78,7 @@ function updateQueriesOverTime() {
   timeLineChart.options.scales.xAxes[0].time.unit = "hour";
 
   // Xaxis scaling based on selected daterange
-  if (num * interval >= 5 * 365 * 24 * 60 *60) {
+  if (num * interval >= 5 * 365 * 24 * 60 * 60) {
     // If the requested data is more than 5 years, set ticks interval to year
     timeLineChart.options.scales.xAxes[0].time.unit = "year";
   } else if (num * interval >= 366 * 24 * 60 * 60) {
