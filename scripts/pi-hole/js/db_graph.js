@@ -45,6 +45,7 @@ $(function () {
           moment().subtract(1, "month").startOf("month"),
           moment().subtract(1, "month").endOf("month"),
         ],
+
         "This Year": [moment().startOf("year"), moment()],
         "All Time": [moment(0), moment()],
       },

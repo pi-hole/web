@@ -11,7 +11,19 @@ var table;
 var groups = [];
 var token = $("#token").text();
 
-function reloadClientSuggestions() {
+function
+
+
+
+
+
+
+
+
+
+
+
+reloadClientSuggestions  () {
   $.post(
     "scripts/pi-hole/php/groups.php",
     { action: "get_unconfigured_clients", token: token },
