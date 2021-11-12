@@ -21,6 +21,8 @@ jobs:
       -
         name: Clone repository
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }}
       -
         name: Set up Node.js
         uses: actions/setup-node@v2
@@ -35,9 +37,10 @@ jobs:
         run: npm run prettier:fix
       -
         name: Commit changes (if any)
+        id: auto-commit-action
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: '[skip ci] Autofix prettier issues'
+          commit_message: 'Autofix prettier issues'
           branch: ${{ github.head_ref }}
           commit_options: '--no-verify --signoff'
           commit_user_name: Pralor
@@ -45,4 +48,6 @@ jobs:
           commit_author: Pralor <pralor-bot@users.noreply.github.com>
       -
         name: Run tests
+        # No sense in running test if we're going to run it again on the autocommit
+        if: steps.auto-commit-action.outputs.changes_detected == 'false'
         run: npm test
