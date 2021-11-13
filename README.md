@@ -30,7 +30,7 @@ The Web interface is enabled by default when you install Pi-hole.
 
 There are several ways to [access the dashboard](https://discourse.pi-hole.net/t/how-do-i-access-pi-holes-dashboard-admin-interface/3168):
 
-1. `http://<IP_ADDPRESS_OF_YOUR_PI_HOLE>/admin/`
+1. `http://<IP_ADDRESS_OF_YOUR_PI_HOLE>/admin/`
 2. `http:/pi.hole/admin/` (when using Pi-hole as your DNS server)
 3. `http://pi.hole/` (when using Pi-hole as your DNS server)
 
@@ -46,7 +46,7 @@ Once logged in (forgot your password?), you can view your network stats to see t
 
 ## Pi-hole is free, but powered by your support
 
-There are many reoccurring costs involved with maintaining free, open source, and privacy respecting software; expenses which [our volunteer developers](https://github.com/orgs/pi-hole/people) pitch in to cover out-of-pocket. This is just one example of how strongly we feel about our software, as well as the importance of keeping it maintained.
+There are many reoccurring costs involved with maintaining free, open source, and privacy-respecting software; expenses which [our volunteer developers](https://github.com/orgs/pi-hole/people) pitch in to cover out-of-pocket. This is just one example of how strongly we feel about our software, as well as the importance of keeping it maintained.
 
 Make no mistake: **your support is absolutely vital to help keep us innovating!**
 
@@ -73,7 +73,7 @@ If you'd rather not [donate](https://pi-hole.net/donate/) (_which is okay!_), th
 
 We welcome _everyone_ to contribute to issue reports, suggest new features, and create pull requests.
 
-If you have something to add - anything from a typo through to a whole new feature, we're happy to check it out! Just make sure to fill out our template when submitting your request; the questions that it asks will help the volunteers quickly understand what you're aiming to achieve.
+If you have something to add - anything from a typo through to a whole new feature - we're happy to check it out! Just make sure to fill out our template when submitting your request; the questions that it asks will help the volunteers quickly understand what you're aiming to achieve.
 
 ### Presentations about Pi-hole
 
