@@ -88,8 +88,8 @@ function renderMessage(data, type, row) {
         " seconds)"
       );
 
-      case "DNSMASQ_WARN":
-        return "Warning in <code>dnsmasq</code> core:<pre>" + row.message + "</pre>";
+    case "DNSMASQ_WARN":
+      return "Warning in <code>dnsmasq</code> core:<pre>" + row.message + "</pre>";
 
     default:
       return "Unknown message type<pre>" + JSON.stringify(row) + "</pre>";
