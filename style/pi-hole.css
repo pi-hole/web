@@ -406,3 +406,8 @@ td.details-control {
     border-radius: 3px;
   }
 }
+
+/* Fix the icon position (login password field) */
+.form-control-feedback {
+  right: 12px;
+}
