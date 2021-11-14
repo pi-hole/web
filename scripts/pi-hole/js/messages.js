@@ -156,6 +156,10 @@ $(function () {
     },
     stateLoadCallback: function () {
       var data = utils.stateLoadCallback("messages-table");
+      // Return if not available
+      if (data === null) {
+        return null;
+      }
 
       // Reset visibility of ID and blob columns
       var hiddenCols = [0, 4, 5, 6, 7, 8];

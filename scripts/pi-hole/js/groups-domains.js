@@ -259,6 +259,11 @@ function initTable() {
     stateLoadCallback: function () {
       var data = utils.stateLoadCallback("groups-domains-table");
 
+      // Return if not available
+      if (data === null) {
+        return null;
+      }
+
       // Reset visibility of ID column
       data.columns[0].visible = false;
       // Show group assignment column only on full page
