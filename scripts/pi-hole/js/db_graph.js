@@ -30,8 +30,6 @@ $(function () {
       locale: { format: dateformat },
       startDate: start__,
       endDate: end__,
-      minDate: moment(mintimestamp), // Use the oldest timestamp found in database as initial date
-      maxDate: moment(), // Use now as maximum date
       ranges: {
         Today: [moment().startOf("day"), moment()],
         Yesterday: [
@@ -46,7 +44,7 @@ $(function () {
           moment().subtract(1, "month").endOf("month"),
         ],
         "This Year": [moment().startOf("year"), moment()],
-        "All Time": [moment(0), moment()],
+        "All Time": [moment(mintimestamp), moment()],
       },
       opens: "center",
       showDropdowns: true,
@@ -78,8 +76,8 @@ function updateQueriesOverTime() {
   timeLineChart.options.scales.xAxes[0].time.unit = "hour";
 
   // Xaxis scaling based on selected daterange
-  if (num * interval >= 5 * 365 * 24 * 60 * 60) {
-    // If the requested data is more than 5 years, set ticks interval to year
+  if (num * interval > 4 * 365 * 24 * 60 * 60) {
+    // If the requested data is more than 4 years, set ticks interval to year
     timeLineChart.options.scales.xAxes[0].time.unit = "year";
   } else if (num * interval >= 366 * 24 * 60 * 60) {
     // If the requested data is more than 1 year, set ticks interval to quarter
@@ -296,8 +294,8 @@ $(function () {
                 day: "MMM DD",
                 week: "MMM DD",
                 month: "MMM",
-                quarter: "MMM",
-                year: "YYYY MMM",
+                quarter: "YYYY MMM",
+                year: "YYYY",
               },
             },
           },
