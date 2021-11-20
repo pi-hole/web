@@ -75,15 +75,6 @@ else
 	$showall = true;
 }
 
-if(isset($setupVars["API_PRIVACY_MODE"]))
-{
-	if($setupVars["API_PRIVACY_MODE"])
-	{
-		// Overwrite string from above
-		$showing .= ", privacy mode enabled";
-	}
-}
-
 if(strlen($showing) > 0)
 {
 	$showing = "(".$showing.")";

@@ -439,26 +439,12 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				if(isset($_POST["querylog-permitted"]) && isset($_POST["querylog-blocked"]))
 				{
 					pihole_execute("-a setquerylog all");
-					if(!isset($_POST["privacyMode"]))
-					{
-						$success .= "All entries will be shown in Query Log";
-					}
-					else
-					{
-						$success .= "Only blocked entries will be shown in Query Log";
-					}
+					$success .= "All entries will be shown in Query Log";
 				}
 				elseif(isset($_POST["querylog-permitted"]))
 				{
 					pihole_execute("-a setquerylog permittedonly");
-					if(!isset($_POST["privacyMode"]))
-					{
-						$success .= "Only permitted will be shown in Query Log";
-					}
-					else
-					{
-						$success .= "No entries will be shown in Query Log";
-					}
+					$success .= "Only permitted will be shown in Query Log";
 				}
 				elseif(isset($_POST["querylog-blocked"]))
 				{
@@ -469,17 +455,6 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				{
 					pihole_execute("-a setquerylog nothing");
 					$success .= "No entries will be shown in Query Log";
-				}
-
-
-				if(isset($_POST["privacyMode"]))
-				{
-					pihole_execute("-a privacymode true");
-					$success .= " (privacy mode enabled)";
-				}
-				else
-				{
-					pihole_execute("-a privacymode false");
 				}
 
 				break;
