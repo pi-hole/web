@@ -160,6 +160,9 @@ $(function () {
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   var blockedColor = "#999";
   var permittedColor = "#00a65a";
+  var gridColor = $(".graphs-grid").css("background-color");
+  var ticksColor = $(".graphs-ticks").css("color");
+
   timeLineChart = new Chart(ctx, {
     type: utils.getGraphType(),
     data: {
@@ -298,6 +301,13 @@ $(function () {
                 year: "YYYY",
               },
             },
+            gridLines: {
+              color: gridColor,
+              zeroLineColor: gridColor,
+            },
+            ticks: {
+              fontColor: ticksColor,
+            },
           },
         ],
         yAxes: [
@@ -305,6 +315,10 @@ $(function () {
             stacked: true,
             ticks: {
               beginAtZero: true,
+              fontColor: ticksColor,
+            },
+            gridLines: {
+              color: gridColor,
             },
           },
         ],

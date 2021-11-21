@@ -7,6 +7,9 @@
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
 ?>
+<!-- Sourceing CSS colors from stylesheet to be used in JS code -->
+<span class="graphs-grid"></span>
+<span class="graphs-ticks"></span>
 
 <div class="page-header">
     <h1>Compute graphical statistics from the Pi-hole query database</h1>
