@@ -219,7 +219,7 @@ $(function () {
       columnDefs: [
         { bSortable: false, orderable: false, targets: -1 },
         {
-          targets: "_all",
+          targets: [0, 1, 2],
           render: $.fn.dataTable.render.text(),
         },
       ],
@@ -245,7 +245,7 @@ $(function () {
       columnDefs: [
         { bSortable: false, orderable: false, targets: -1 },
         {
-          targets: "_all",
+          targets: [0, 1, 2],
           render: $.fn.dataTable.render.text(),
         },
       ],
