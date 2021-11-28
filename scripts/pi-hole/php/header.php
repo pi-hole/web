@@ -263,7 +263,7 @@ if($auth) {
                 <ul class="nav navbar-nav">
                     <li id="pihole-diagnosis" class="hidden">
                         <a href="messages.php">
-                            <i class="fa fa-exclamation-triangle"></i>
+                            <i class="fa fa-exclamation-triangle fa-2x icon-bounce"></i>
                             <span class="label label-warning" id="pihole-diagnosis-count"></span>
                         </a>
                     </li>
