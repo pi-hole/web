@@ -91,6 +91,37 @@ function renderMessage(data, type, row) {
     case "DNSMASQ_WARN":
       return "Warning in <code>dnsmasq</code> core:<pre>" + row.message + "</pre>";
 
+    case "LOAD":
+      return (
+        "Long-term load (15min avg) larger than number of processors: <strong>" +
+        parseFloat(row.blob1).toFixed(1) +
+        " &gt; " +
+        parseInt(row.blob2, 10) +
+        "</strong><br>This may slow down DNS resolution and can cause bottlenecks."
+      );
+
+    case "SHMEM":
+      return (
+        "RAM shortage (<code>" +
+        utils.escapeHtml(row.message) +
+        "</code>) ahead: <strong>" +
+        parseInt(row.blob1, 10) +
+        "% used</strong><pre>" +
+        utils.escapeHtml(row.blob2) +
+        "</pre>"
+      );
+
+    case "DISK":
+      return (
+        "Disk shortage (<code>" +
+        utils.escapeHtml(row.message) +
+        "</code>) ahead: <strong>" +
+        parseInt(row.blob1, 10) +
+        "% used</strong><pre>" +
+        utils.escapeHtml(row.blob2) +
+        "</pre>"
+      );
+
     default:
       return "Unknown message type<pre>" + JSON.stringify(row) + "</pre>";
   }
