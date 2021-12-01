@@ -339,7 +339,7 @@ function updateQueryTypesPie() {
         ci.update();
       } else if (e.which === 1) {
         // which == 1 is left mouse button
-        window.open("queries.php?querytype=" + querytypeids[$(this).index()], "_self");
+        window.location.href = "queries.php?querytype=" + querytypeids[$(this).index()];
       }
     });
   }).done(function () {
@@ -500,7 +500,7 @@ function updateForwardDestinationsPie() {
         // which == 1 is left mouse button
         var obj = encodeURIComponent(e.target.textContent);
         if (obj.length > 0) {
-          window.open("queries.php?forwarddest=" + obj, "_self");
+          window.location.href = "queries.php?forwarddest=" + obj;
         }
       }
     });
