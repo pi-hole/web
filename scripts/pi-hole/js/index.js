@@ -322,10 +322,10 @@ function updateQueryTypesPie() {
     // Generate legend in separate div
     $("#query-types-legend").html(queryTypePieChart.generateLegend());
     $("#query-types-legend > ul > li").prepend(function() {
-      return`
-        <span class="eyeConWrapper" onclick="hidePieSlice(event)">
-          <i class='fa fa-eye'></i>
-        </span>`;
+      return "\
+        <span class='eyeConWrapper' onclick='hidePieSlice(event)'>\
+          <i class='fa fa-eye'></i>\
+        </span>";
     });
     $("#query-types-legend > ul > li").on("mousedown", function (e) {
       if (isEyeCon(e.target)) {
@@ -519,10 +519,10 @@ function updateForwardDestinationsPie() {
     // Generate legend in separate div
     $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
     $("#forward-destinations-legend > ul > li").prepend(function() {
-      return `
-        <span class="eyeConWrapper" onclick="hidePieSlice(event)">
-          <i class='fa fa-eye'></i>
-        </span>`;
+      return "\
+        <span class='eyeConWrapper' onclick='hidePieSlice(event)'>\
+          <i class='fa fa-eye'></i>\
+        </span>";
     });
     $("#forward-destinations-legend > ul > li").on("mousedown", function (e) {
       if (isEyeCon(e.target)) {
