@@ -331,6 +331,7 @@ function updateQueryTypesPie() {
       if (isEyeCon(e.target)) {
         return false;
       } else if (e.which === 1) {
+        // which == 1 is left mouse button
         window.location.href = "queries.php?querytype=" + querytypeids[$(this).index()];
       }
     });
@@ -527,6 +528,7 @@ function updateForwardDestinationsPie() {
       if (isEyeCon(e.target)) {
         return false;
       } else if (e.which === 1) {
+        // which == 1 is left mouse button
         var obj = encodeURIComponent(e.target.textContent);
         if (obj.length > 0) {
           window.location.href = "queries.php?forwarddest=" + obj;
