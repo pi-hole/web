@@ -85,17 +85,11 @@ function updateTopClientsChart() {
 
         percentage = (data.top_sources[client] / sum) * 100;
         clienttable.append(
-          "<tr> <td>" +
-            clientname +
-            "</td> <td>" +
-            data.top_sources[client] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            sum +
-            '"> <div class="progress-bar progress-bar-blue" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            addTD(clientname) +
+            addTD(data.top_sources[client]) +
+            addTD(colorBar(percentage, sum, "progress-bar-blue")) +
+            "</tr> "
         );
       }
     }
@@ -132,17 +126,11 @@ function updateTopDomainsChart() {
 
         percentage = (data.top_domains[domain] / sum) * 100;
         domaintable.append(
-          "<tr> <td>" +
-            domain +
-            "</td> <td>" +
-            data.top_domains[domain] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            sum +
-            '"> <div class="progress-bar queries-permitted" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            addTD(domain) +
+            addTD(data.top_domains[domain]) +
+            addTD(colorBar(percentage, sum, "queries-permitted")) +
+            "</tr> "
         );
       }
     }
@@ -179,17 +167,11 @@ function updateTopAdsChart() {
 
         percentage = (data.top_ads[ad] / sum) * 100;
         adtable.append(
-          "<tr> <td>" +
-            ad +
-            "</td> <td>" +
-            data.top_ads[ad] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            sum +
-            '"> <div class="progress-bar queries-blocked" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            addTD(ad) +
+            addTD(data.top_ads[ad]) +
+            addTD(colorBar(percentage, sum, "queries-blocked")) +
+            "</tr> "
         );
       }
     }
