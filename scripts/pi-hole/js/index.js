@@ -919,6 +919,7 @@ $(function () {
             },
             gridLines: {
               color: gridColor,
+              zeroLineColor: gridColor,
             },
             ticks: {
               fontColor: ticksColor,
@@ -997,6 +998,7 @@ $(function () {
               },
               gridLines: {
                 color: gridColor,
+                zeroLineColor: gridColor,
               },
               ticks: {
                 fontColor: ticksColor,

@@ -187,6 +187,10 @@
     <meta name="theme-color" content="#272c30">
 <?php } elseif ($theme == "default-darker") { ?>
     <meta name="theme-color" content="#2e6786">
+<?php } elseif ($theme == "lcars") { ?>
+    <meta name="theme-color" content="#4488FF">
+    <link rel="stylesheet" href="style/vendor/fonts/ubuntu-mono/ubuntu-mono.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/fonts/antonio/antonio.css?v=<?=$cacheVer?>">
 <?php } ?>
 
 <?php if ($darkmode) { ?>
@@ -259,7 +263,7 @@ if($auth) {
                 <ul class="nav navbar-nav">
                     <li id="pihole-diagnosis" class="hidden">
                         <a href="messages.php">
-                            <i class="fa fa-exclamation-triangle"></i>
+                            <i class="fa fa-exclamation-triangle fa-2x icon-bounce"></i>
                             <span class="label label-warning" id="pihole-diagnosis-count"></span>
                         </a>
                     </li>

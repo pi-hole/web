@@ -124,6 +124,16 @@ function initTable() {
       { data: "groups", searchable: false },
       { data: null, width: "80px", orderable: false },
     ],
+    columnDefs: [
+      {
+        targets: [0, 2],
+        orderable: false,
+      },
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
+    ],
     drawCallback: function () {
       $('button[id^="deleteAdlist_"]').on("click", deleteAdlist);
       // Remove visible dropdown to prevent orphaning
@@ -289,6 +299,7 @@ function initTable() {
       [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
+    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("groups-adlists-table", data);
     },

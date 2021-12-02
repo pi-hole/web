@@ -64,6 +64,10 @@ $(function () {
           );
         },
       },
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],
@@ -71,6 +75,7 @@ $(function () {
     ],
     order: [[0, "asc"]],
     stateSave: true,
+    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("LocalDNSTable", data);
     },

@@ -76,6 +76,12 @@ function initTable() {
       { data: "groups", searchable: false, visible: showtype === "all" },
       { data: null, width: "80px", orderable: false },
     ],
+    columnDefs: [
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
+    ],
     drawCallback: function () {
       $('button[id^="deleteDomain_"]').on("click", deleteDomain);
       // Remove visible dropdown to prevent orphaning
@@ -246,6 +252,7 @@ function initTable() {
       [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
+    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("groups-domains-table", data);
     },

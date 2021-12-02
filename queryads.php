@@ -15,27 +15,16 @@
   <div class="col-md-12">
     <div class="box">
       <div class="box-body">
-        <!-- Domain Input <992px -->
-        <div class="visible-xs-block visible-sm-block">
-          <div class="input-group-block">
-            <input id="domain_1" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" style="margin-bottom: 5px">
-            <input id="quiet" type="hidden" value="no">
-            <div class="text-center" style="display: block; width: 100%">
-              <button type="button" id="btnSearch_1" class="btn btn-default">Search partial match</button>
-              <button type="button" id="btnSearchExact_1" class="btn btn-default">Search exact match</button>
-            </div>
-          </div>
+        <!-- domain-search-block - Single search field mobile/desktop -->
+        <div id="domain-search-block" class="input-group">
+          <input id="domain" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+          <input id="quiet" type="hidden" value="no">
+          <span class="input-group-btn">
+            <button type="button" id="btnSearch" class="btn btn-default">Search partial match</button>
+            <button type="button" id="btnSearchExact" class="btn btn-default">Search exact match</button>
+          </span>
         </div>
-        <!-- Domain Input >=992px -->
-        <div class="visible-md-block visible-lg-block">
-          <div class="input-group">
-            <input id="domain_2" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-            <span class="input-group-btn">
-              <button type="button" id="btnSearch_2" class="btn btn-default">Search partial match</button>
-              <button type="button" id="btnSearchExact_2" class="btn btn-default">Search exact match</button>
-            </span>
-          </div>
-        </div>
+        <!-- /domain-search-block -->
       </div>
     </div>
   </div>

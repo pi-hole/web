@@ -339,7 +339,7 @@
 /*** Icons grow on hover, but remain centered ***/
 .small-box:hover .icon {
   font-size: 90px; /* keep the same font-size, to avoid shifting the position */
-  transform: scale(106%);
+  transform: scale(1.06);
 }
 
 .list-status-0 {
@@ -376,6 +376,70 @@ td.details-control {
 
 .allowed-row td {
   background-color: rgb(70, 149, 74, 0.1);
+}
+
+.reload-box {
+  display: none;
+}
+.reload-box div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.reload-box span {
+  padding-right: 20px;
+}
+
+@media screen and (max-width: 991px) {
+  #domain-search-block {
+    display: block;
+  }
+  #domain {
+    margin: 5px 0;
+  }
+  #domain-search-block .input-group-btn {
+    margin: 5px 0;
+    text-align: center;
+  }
+  #domain-search-block .input-group-btn button {
+    margin: 0 2px;
+    border-radius: 3px;
+  }
+}
+
+/* Fix the icon position (login password field) */
+.form-control-feedback {
+  right: 12px;
+}
+
+.icon-bounce {
+  display: inline-block;
+  position: relative;
+  animation: icon-bounce 1.5s infinite linear;
+}
+
+@keyframes icon-bounce {
+  0%,
+  20%,
+  50%,
+  70%,
+  90%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-15px);
+  }
+  60% {
+    transform: translateY(-8px);
+  }
+  80% {
+    transform: translateY(-4px);
+  }
+}
+
+.navbar-nav {
+  height: 50px;
 }
 
 .eyeConWrapper {
