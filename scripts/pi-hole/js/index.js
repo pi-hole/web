@@ -323,7 +323,7 @@ function updateQueryTypesPie() {
     $("#query-types-legend").html(queryTypePieChart.generateLegend());
     $("#query-types-legend > ul > li").prepend(function() {
       return`
-        <span class="eyeConWrapper" onclick="hideQueryPieSlice(event)">
+        <span class="eyeConWrapper" onclick="hidePieSlice(event)">
           <i class='fa fa-eye'></i>
         </span>`;
     });
@@ -340,14 +340,22 @@ function updateQueryTypesPie() {
   });
 }
 
-function hidePieSlice(event, canvas) {
+function hidePieSlice(event) {
   toggleEyeCon(event.target);
+
+  var ci;
+  var legendID = $(event.target).closest(".chart-legend").attr('id');
+  if (legendID === "query-types-legend") {
+    ci = event.view.queryTypePieChart;
+  } else {
+    ci = event.view.forwardDestinationPieChart
+  }
 
   listItemParent = $(event.target).closest("li");
   $(listItemParent).toggleClass("strike");
 
   var index = $(listItemParent).index();
-  var mobj = canvas.data.datasets[0]._meta;
+  var mobj = ci.data.datasets[0]._meta;
   var metas = Object.keys(mobj).map(function (e) {
     return mobj[e];
   });
@@ -356,15 +364,7 @@ function hidePieSlice(event, canvas) {
     curr.hidden = !curr.hidden;
   });
 
-  canvas.update();
-}
-
-// TODO: Is there a way to determine the right view when event fires?
-function hideQueryPieSlice(event) {
-  hidePieSlice(event, event.view.queryTypePieChart);
-}
-function hideDestinationsPieSlice(event) {
-  hidePieSlice(event, event.view.forwardDestinationPieChart);
+  ci.update();
 }
 
 function toggleEyeCon(target) {
@@ -519,7 +519,7 @@ function updateForwardDestinationsPie() {
     $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
     $("#forward-destinations-legend > ul > li").prepend(function() {
       return `
-        <span class="eyeConWrapper" onclick="hideDestinationsPieSlice(event)">
+        <span class="eyeConWrapper" onclick="hidePieSlice(event)">
           <i class='fa fa-eye'></i>
         </span>`;
     });
