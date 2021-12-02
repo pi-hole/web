@@ -158,8 +158,8 @@ function updateQueriesOverTime() {
 
 $(function () {
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
-  var blockedColor = "#999";
-  var permittedColor = "#00a65a";
+  var blockedColor = $(".queries-blocked").css("background-color");
+  var permittedColor = $(".queries-permitted").css("background-color");
   var gridColor = $(".graphs-grid").css("background-color");
   var ticksColor = $(".graphs-ticks").css("color");
 
