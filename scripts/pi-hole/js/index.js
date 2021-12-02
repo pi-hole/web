@@ -321,7 +321,7 @@ function updateQueryTypesPie() {
     queryTypePieChart.options.animation.duration = 0;
     // Generate legend in separate div
     $("#query-types-legend").html(queryTypePieChart.generateLegend());
-    $("#query-types-legend > ul > li").prepend(function() {
+    $("#query-types-legend > ul > li").prepend(function () {
       return "\
         <span class='eyeConWrapper' onclick='hidePieSlice(event)'>\
           <i class='fa fa-eye'></i>\
@@ -345,11 +345,11 @@ function hidePieSlice(event) {
   toggleEyeCon(event.target);
 
   var ci;
-  var legendID = $(event.target).closest(".chart-legend").attr('id');
+  var legendID = $(event.target).closest(".chart-legend").attr("id");
   if (legendID === "query-types-legend") {
     ci = event.view.queryTypePieChart;
   } else {
-    ci = event.view.forwardDestinationPieChart
+    ci = event.view.forwardDestinationPieChart;
   }
 
   listItemParent = $(event.target).closest("li");
@@ -371,7 +371,7 @@ function hidePieSlice(event) {
 function toggleEyeCon(target) {
   var parentListItem = $(target).closest("li");
   var eyeCon = $(parentListItem).find(".fa-eye, .fa-eye-slash");
-  
+
   if (eyeCon) {
     $(eyeCon).toggleClass("fa-eye");
     $(eyeCon).toggleClass("fa-eye-slash");
@@ -518,7 +518,7 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.options.animation.duration = 0;
     // Generate legend in separate div
     $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
-    $("#forward-destinations-legend > ul > li").prepend(function() {
+    $("#forward-destinations-legend > ul > li").prepend(function () {
       return "\
         <span class='eyeConWrapper' onclick='hidePieSlice(event)'>\
           <i class='fa fa-eye'></i>\
