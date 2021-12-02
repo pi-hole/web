@@ -86,9 +86,9 @@ function updateTopClientsChart() {
         percentage = (data.top_sources[client] / sum) * 100;
         clienttable.append(
           "<tr> " +
-            addTD(clientname) +
-            addTD(data.top_sources[client]) +
-            addTD(colorBar(percentage, sum, "progress-bar-blue")) +
+            utils.addTD(clientname) +
+            utils.addTD(data.top_sources[client]) +
+            utils.addTD(utils.colorBar(percentage, sum, "progress-bar-blue")) +
             "</tr> "
         );
       }
@@ -127,9 +127,9 @@ function updateTopDomainsChart() {
         percentage = (data.top_domains[domain] / sum) * 100;
         domaintable.append(
           "<tr> " +
-            addTD(domain) +
-            addTD(data.top_domains[domain]) +
-            addTD(colorBar(percentage, sum, "queries-permitted")) +
+            utils.addTD(domain) +
+            utils.addTD(data.top_domains[domain]) +
+            utils.addTD(utils.colorBar(percentage, sum, "queries-permitted")) +
             "</tr> "
         );
       }
@@ -168,9 +168,9 @@ function updateTopAdsChart() {
         percentage = (data.top_ads[ad] / sum) * 100;
         adtable.append(
           "<tr> " +
-            addTD(ad) +
-            addTD(data.top_ads[ad]) +
-            addTD(colorBar(percentage, sum, "queries-blocked")) +
+            utils.addTD(ad) +
+            utils.addTD(data.top_ads[ad]) +
+            utils.addTD(utils.colorBar(percentage, sum, "queries-blocked")) +
             "</tr> "
         );
       }

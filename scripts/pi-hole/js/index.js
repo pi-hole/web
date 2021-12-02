@@ -549,9 +549,9 @@ function updateTopClientsChart() {
         percentage = (data.top_sources[client] / data.dns_queries_today) * 100;
         clienttable.append(
           "<tr> " +
-            addTD(url) +
-            addTD(data.top_sources[client]) +
-            addTD(colorBar(percentage, data.dns_queries_today, "progress-bar-blue")) +
+            utils.addTD(url) +
+            utils.addTD(data.top_sources[client]) +
+            utils.addTD(utils.colorBar(percentage, data.dns_queries_today, "progress-bar-blue")) +
             "</tr> "
         );
       }
@@ -589,9 +589,9 @@ function updateTopClientsChart() {
         percentage = (data.top_sources_blocked[client] / data.ads_blocked_today) * 100;
         clientblockedtable.append(
           "<tr> " +
-            addTD(url) +
-            addTD(data.top_sources_blocked[client]) +
-            addTD(colorBar(percentage, data.ads_blocked_today, "progress-bar-blue")) +
+            utils.addTD(url) +
+            utils.addTD(data.top_sources_blocked[client]) +
+            utils.addTD(utils.colorBar(percentage, data.ads_blocked_today, "progress-bar-blue")) +
             "</tr> "
         );
       }
@@ -640,9 +640,9 @@ function updateTopLists() {
         percentage = (data.top_queries[domain] / data.dns_queries_today) * 100;
         domaintable.append(
           "<tr> " +
-            addTD(url) +
-            addTD(data.top_queries[domain]) +
-            addTD(colorBar(percentage, data.dns_queries_today, "queries-permitted")) +
+            utils.addTD(url) +
+            utils.addTD(data.top_queries[domain]) +
+            utils.addTD(utils.colorBar(percentage, data.dns_queries_today, "queries-permitted")) +
             "</tr> "
         );
       }
@@ -667,9 +667,9 @@ function updateTopLists() {
         percentage = (data.top_ads[domain] / data.ads_blocked_today) * 100;
         adtable.append(
           "<tr> " +
-            addTD(url) +
-            addTD(data.top_ads[domain]) +
-            addTD(colorBar(percentage, data.ads_blocked_today, "queries-blocked")) +
+            utils.addTD(url) +
+            utils.addTD(data.top_ads[domain]) +
+            utils.addTD(utils.colorBar(percentage, data.ads_blocked_today, "queries-blocked")) +
             "</tr> "
         );
       }
