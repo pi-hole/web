@@ -338,16 +338,16 @@ function addFromQueryLog(domain, list) {
 }
 
 // Helper functions to format the progress bars used on the Dashboard and Long-term Lists
-function addTD(content, cssClass="") {
+function addTD(content, cssClass = "") {
   // optional class
-  var cls = cssClass ? ' class="' + cssClass + '"' : '';
-  return '<td' + cls + '>' + content + '</td> ';
+  var cls = cssClass ? ' class="' + cssClass + '"' : "";
+  return "<td" + cls + ">" + content + "</td> ";
 }
 
 function colorBar(percentage, total, cssClass) {
-  var title = percentage.toFixed(1) + '% of ' + total;
+  var title = percentage.toFixed(1) + "% of " + total;
   var bar = '<div class="progress-bar ' + cssClass + '" style="width: ' + percentage + '%"></div>';
-  return '<div class="progress progress-sm" title="' + title + '"> ' + bar + ' </div>';
+  return '<div class="progress progress-sm" title="' + title + '"> ' + bar + " </div>";
 }
 
 window.utils = (function () {
