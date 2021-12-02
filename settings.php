@@ -185,13 +185,6 @@ if (isset($setupVars["API_QUERY_LOG_SHOW"])) {
     $queryLog = "all";
 }
 
-// Privacy Mode
-if (isset($setupVars["API_PRIVACY_MODE"])) {
-    $privacyMode = $setupVars["API_PRIVACY_MODE"];
-} else {
-    $privacyMode = false;
-}
-
 ?>
 
 <?php
@@ -933,7 +926,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                    whereas an even wider network of 10.0.0.1 - 10.255.255.255 results in <code>10.0.0.0/8</code>.
                                                    Setting up IPv6 ranges is exactly similar to setting up IPv4 here and fully supported.
                                                    Feel free to reach out to us on our
-                                                   <a href="https://discourse.pi-hole.net" target="_blank">Discourse forum</a>
+                                                   <a href="https://discourse.pi-hole.net" rel="noopener" target="_blank">Discourse forum</a>
                                                    in case you need any assistance setting up local host name resolution for your particular system.</p>
                                                 <p>You can also specify a local domain name (like <code>fritz.box</code>) to ensure queries to
                                                    devices ending in your local domain name will not leave your network, however, this is optional.

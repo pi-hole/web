@@ -183,7 +183,7 @@ $(function () {
         case "10":
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist, CNAME)</span>";
-
+          blocked = true;
           if (data.length > 9 && data[9] > 0) {
             regexLink = true;
           }
@@ -323,8 +323,8 @@ $(function () {
         },
       },
       { width: "4%" },
-      { width: "36%", render: $.fn.dataTable.render.text() },
-      { width: "8%", type: "ip-address", render: $.fn.dataTable.render.text() },
+      { width: "36%" },
+      { width: "8%", type: "ip-address" },
       { width: "14%", orderData: 4 },
       { width: "8%", orderData: 5 },
       { width: "10%", orderData: 4 },
@@ -334,6 +334,7 @@ $(function () {
       [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
+    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("query_log_table", data);
     },
@@ -345,6 +346,10 @@ $(function () {
         targets: -1,
         data: null,
         defaultContent: "",
+      },
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
       },
     ],
     initComplete: function () {

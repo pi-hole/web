@@ -95,9 +95,11 @@ h4 {
   border-left: 3px solid transparent;
 }
 .sidebar-menu > li:hover > a,
+.sidebar-menu > li > a:focus,
 .sidebar-menu > li.active > a {
   color: #fff;
   background-color: #22272a;
+  border-color: #3c8dbc;
 }
 .sidebar-menu > li > .treeview-menu {
   margin: 0 1px;
@@ -113,7 +115,8 @@ h4 {
   color: #949fa8;
 }
 .treeview-menu > li.active > a,
-.treeview-menu > li > a:hover {
+.treeview-menu > li > a:hover,
+.treeview-menu > li > a:focus {
   color: #fff;
 }
 .sidebar-form {
@@ -274,6 +277,9 @@ h4 {
 }
 .nav-tabs-custom > .nav-tabs > li > a {
   color: #bec5cb;
+}
+.nav-tabs-custom > .nav-tabs > li > a:focus {
+  background: #404850;
 }
 .list-group {
   color: #bec5cb;
