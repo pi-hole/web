@@ -378,6 +378,6 @@ td.details-control {
   background-color: rgb(70, 149, 74, 0.1);
 }
 
-.fa-eye, .fa-eye-slash {
-  display: inline-block;
+.eyeConWrapper {
+  font-size: 17px;
 }

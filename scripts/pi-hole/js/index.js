@@ -336,17 +336,11 @@ function updateQueryTypesPie() {
     });
   }).done(function () {
     // Reload graph after minute
-    // setTimeout(updateQueryTypesPie, 60000);
-    console.log("Don't update!");
+    setTimeout(updateQueryTypesPie, 60000);
   });
 }
 
 function hidePieSlice(event, canvas) {
-  // TODO: figure out which of these stop the occasional redirection to queries.php
-  event.stopPropagation();
-  event.preventDefault();
-  event.stopImmediatePropagation();
-
   toggleEyeCon(event.target);
 
   listItemParent = $(event.target).closest("li");
@@ -374,9 +368,8 @@ function hideDestinationsPieSlice(event) {
 }
 
 function toggleEyeCon(target) {
-  var eyeCon;
-  var parentListItem = $(target).closest("li")[0];
-  var eyeCon = $(parentListItem).find(".fa-eye, .fa-eye-slash")[0];
+  var parentListItem = $(target).closest("li");
+  var eyeCon = $(parentListItem).find(".fa-eye, .fa-eye-slash");
   
   if (eyeCon) {
     $(eyeCon).toggleClass("fa-eye");
