@@ -377,3 +377,7 @@ td.details-control {
 .allowed-row td {
   background-color: rgb(70, 149, 74, 0.1);
 }
+
+.fa-eye, .fa-eye-slash {
+  display: inline-block;
+}

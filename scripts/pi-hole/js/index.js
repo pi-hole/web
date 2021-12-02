@@ -321,31 +321,75 @@ function updateQueryTypesPie() {
     queryTypePieChart.options.animation.duration = 0;
     // Generate legend in separate div
     $("#query-types-legend").html(queryTypePieChart.generateLegend());
+    $("#query-types-legend > ul > li").prepend(function() {
+      return`
+        <span class="eyeConWrapper" onclick="hideQueryPieSlice(event)">
+          <i class='fa fa-eye'></i>
+        </span>`;
+    });
     $("#query-types-legend > ul > li").on("mousedown", function (e) {
-      if (e.which === 2) {
-        // which == 2 is middle mouse button
-        $(this).toggleClass("strike");
-        var index = $(this).index();
-        var ci = e.view.queryTypePieChart;
-        var mobj = ci.data.datasets[0]._meta;
-        var metas = Object.keys(mobj).map(function (e) {
-          return mobj[e];
-        });
-        metas.forEach(function (meta) {
-          var curr = meta.data[index];
-          curr.hidden = !curr.hidden;
-        });
-
-        ci.update();
+      if (isEyeCon(e.target)) {
+        return false;
       } else if (e.which === 1) {
-        // which == 1 is left mouse button
         window.location.href = "queries.php?querytype=" + querytypeids[$(this).index()];
       }
     });
   }).done(function () {
     // Reload graph after minute
-    setTimeout(updateQueryTypesPie, 60000);
+    // setTimeout(updateQueryTypesPie, 60000);
+    console.log("Don't update!");
   });
+}
+
+function hidePieSlice(event, canvas) {
+  // TODO: figure out which of these stop the occasional redirection to queries.php
+  event.stopPropagation();
+  event.preventDefault();
+  event.stopImmediatePropagation();
+
+  toggleEyeCon(event.target);
+
+  listItemParent = $(event.target).closest("li");
+  $(listItemParent).toggleClass("strike");
+
+  var index = $(listItemParent).index();
+  var mobj = canvas.data.datasets[0]._meta;
+  var metas = Object.keys(mobj).map(function (e) {
+    return mobj[e];
+  });
+  metas.forEach(function (meta) {
+    var curr = meta.data[index];
+    curr.hidden = !curr.hidden;
+  });
+
+  canvas.update();
+}
+
+// TODO: Is there a way to determine the right view when event fires?
+function hideQueryPieSlice(event) {
+  hidePieSlice(event, event.view.queryTypePieChart);
+}
+function hideDestinationsPieSlice(event) {
+  hidePieSlice(event, event.view.forwardDestinationPieChart);
+}
+
+function toggleEyeCon(target) {
+  var eyeCon;
+  var parentListItem = $(target).closest("li")[0];
+  var eyeCon = $(parentListItem).find(".fa-eye, .fa-eye-slash")[0];
+  
+  if (eyeCon) {
+    $(eyeCon).toggleClass("fa-eye");
+    $(eyeCon).toggleClass("fa-eye-slash");
+  }
+}
+
+function isEyeCon(target) {
+  // See if click happened on eyeConWrapper or child SVG
+  if ($(target).closest(".eyeConWrapper")[0]) {
+    return true;
+  }
+  return false;
 }
 
 function updateClientsOverTime() {
@@ -480,24 +524,16 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.options.animation.duration = 0;
     // Generate legend in separate div
     $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
+    $("#forward-destinations-legend > ul > li").prepend(function() {
+      return `
+        <span class="eyeConWrapper" onclick="hideDestinationsPieSlice(event)">
+          <i class='fa fa-eye'></i>
+        </span>`;
+    });
     $("#forward-destinations-legend > ul > li").on("mousedown", function (e) {
-      if (e.which === 2) {
-        // which == 2 is middle mouse button
-        $(this).toggleClass("strike");
-        var index = $(this).index();
-        var ci = e.view.forwardDestinationPieChart;
-        var mobj = ci.data.datasets[0]._meta;
-        var metas = Object.keys(mobj).map(function (e) {
-          return mobj[e];
-        });
-        metas.forEach(function (meta) {
-          var curr = meta.data[index];
-          curr.hidden = !curr.hidden;
-        });
-
-        ci.update();
+      if (isEyeCon(e.target)) {
+        return false;
       } else if (e.which === 1) {
-        // which == 1 is left mouse button
         var obj = encodeURIComponent(e.target.textContent);
         if (obj.length > 0) {
           window.location.href = "queries.php?forwarddest=" + obj;
