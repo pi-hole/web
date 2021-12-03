@@ -322,15 +322,12 @@ function updateQueryTypesPie() {
     // Generate legend in separate div
     $("#query-types-legend").html(queryTypePieChart.generateLegend());
     $("#query-types-legend > ul > li").prepend(createEyeConElement());
-    $("#query-types-legend > ul > li").on("mousedown", function (e) {
+    $("#query-types-legend > ul > li").click(function (e) {
       if (isEyeCon(e.target)) {
         return false;
       }
 
-      if (e.which === 1) {
-        // which == 1 is left mouse button
-        window.location.href = "queries.php?querytype=" + querytypeids[$(this).index()];
-      }
+      window.location.href = "queries.php?querytype=" + querytypeids[$(this).index()];
     });
   }).done(function () {
     // Reload graph after minute
@@ -525,17 +522,14 @@ function updateForwardDestinationsPie() {
     // Generate legend in separate div
     $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
     $("#forward-destinations-legend > ul > li").prepend(createEyeConElement());
-    $("#forward-destinations-legend > ul > li").on("mousedown", function (e) {
+    $("#forward-destinations-legend > ul > li").click(function (e) {
       if (isEyeCon(e.target)) {
         return false;
       }
 
-      if (e.which === 1) {
-        // which == 1 is left mouse button
-        var obj = encodeURIComponent(e.target.textContent);
-        if (obj.length > 0) {
-          window.location.href = "queries.php?forwarddest=" + obj;
-        }
+      var obj = encodeURIComponent(e.target.textContent);
+      if (obj.length > 0) {
+        window.location.href = "queries.php?forwarddest=" + obj;
       }
     });
   }).done(function () {
