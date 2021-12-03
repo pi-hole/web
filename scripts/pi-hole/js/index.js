@@ -321,16 +321,13 @@ function updateQueryTypesPie() {
     queryTypePieChart.options.animation.duration = 0;
     // Generate legend in separate div
     $("#query-types-legend").html(queryTypePieChart.generateLegend());
-    $("#query-types-legend > ul > li").prepend(function () {
-      return "\
-        <span class='eyeConWrapper' onclick='hidePieSlice(event)'>\
-          <i class='fa fa-eye'></i>\
-        </span>";
-    });
+    $("#query-types-legend > ul > li").prepend(createEyeConElement());
     $("#query-types-legend > ul > li").on("mousedown", function (e) {
       if (isEyeCon(e.target)) {
         return false;
-      } else if (e.which === 1) {
+      }
+
+      if (e.which === 1) {
         // which == 1 is left mouse button
         window.location.href = "queries.php?querytype=" + querytypeids[$(this).index()];
       }
@@ -344,15 +341,13 @@ function updateQueryTypesPie() {
 function hidePieSlice(event) {
   toggleEyeCon(event.target);
 
-  var ci;
   var legendID = $(event.target).closest(".chart-legend").attr("id");
-  if (legendID === "query-types-legend") {
-    ci = event.view.queryTypePieChart;
-  } else {
-    ci = event.view.forwardDestinationPieChart;
-  }
+  var ci =
+    legendID === "query-types-legend"
+      ? event.view.queryTypePieChart
+      : event.view.forwardDestinationPieChart;
 
-  listItemParent = $(event.target).closest("li");
+  var listItemParent = $(event.target).closest("li");
   $(listItemParent).toggleClass("strike");
 
   var index = $(listItemParent).index();
@@ -383,6 +378,7 @@ function isEyeCon(target) {
   if ($(target).closest(".eyeConWrapper")[0]) {
     return true;
   }
+
   return false;
 }
 
@@ -475,6 +471,16 @@ function updateClientsOverTime() {
     });
 }
 
+function createEyeConElement() {
+  var eyeConWrapper = $("<span></span>")
+    .addClass("eyeConWrapper")
+    .click(function (e) {
+      hidePieSlice(e);
+    });
+  eyeConWrapper.append($("<i class='fa fa-eye'></i>"));
+  return eyeConWrapper;
+}
+
 function updateForwardDestinationsPie() {
   $.getJSON("api.php?getForwardDestinations", function (data) {
     if ("FTLnotrunning" in data) {
@@ -518,16 +524,13 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.options.animation.duration = 0;
     // Generate legend in separate div
     $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
-    $("#forward-destinations-legend > ul > li").prepend(function () {
-      return "\
-        <span class='eyeConWrapper' onclick='hidePieSlice(event)'>\
-          <i class='fa fa-eye'></i>\
-        </span>";
-    });
+    $("#forward-destinations-legend > ul > li").prepend(createEyeConElement());
     $("#forward-destinations-legend > ul > li").on("mousedown", function (e) {
       if (isEyeCon(e.target)) {
         return false;
-      } else if (e.which === 1) {
+      }
+
+      if (e.which === 1) {
         // which == 1 is left mouse button
         var obj = encodeURIComponent(e.target.textContent);
         if (obj.length > 0) {
