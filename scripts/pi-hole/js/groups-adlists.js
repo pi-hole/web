@@ -384,7 +384,23 @@ function addAdlist() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Successfully added adlist", address);
+        if (response.message) {
+          // If there is a message, we have ignored adlists. Showing them in a warning.
+          utils.showAlert(
+            "warning",
+            "fas fa-plus",
+            "Warning - duplicated adlist(s) ignored:",
+            response.message + "<br><b>Adlists successfully processed.<b>"
+          );
+        } else {
+          utils.showAlert(
+            "success",
+            "fas fa-plus",
+            "Successfully added adlist",
+            "<small>" + address.split(" ").filter(Boolean).join("<br>") + "</small>"
+          );
+        }
+
         table.ajax.reload(null, false);
         $("#new_address").val("");
         $("#new_comment").val("");

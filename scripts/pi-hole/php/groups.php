@@ -959,7 +959,7 @@ if ($_POST['action'] == 'get_groups') {
         $total = count($addresses);
         $added = 0;
 
-        $stmt = $db->prepare('INSERT OR IGNORE INTO adlist (address,comment) VALUES (:address,:comment)');
+        $stmt = $db->prepare('INSERT INTO adlist (address,comment) VALUES (:address,:comment)');
         if (!$stmt) {
             throw new Exception('While preparing statement: ' . $db->lastErrorMsg());
         }
@@ -973,6 +973,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While binding comment: ' . $db->lastErrorMsg());
         }
 
+        $ignored_list = "";
         foreach ($addresses as $address) {
             // Silently skip this entry when it is empty or not a string (e.g. NULL)
             if(!is_string($address) || strlen($address) == 0) {
@@ -980,7 +981,7 @@ if ($_POST['action'] == 'get_groups') {
             }
 
             // this will remove first @ that is after schema and before domain
-           // $1 is optional schema, $2 is userinfo
+            // $1 is optional schema, $2 is userinfo
             $check_address = preg_replace("|([^:/]*://)?([^/]+)@|", "$1$2", $address, 1);
 
             if(preg_match("/[^a-zA-Z0-9:\/?&%=~._()-;]/", $check_address) !== 0) {
@@ -994,8 +995,15 @@ if ($_POST['action'] == 'get_groups') {
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
-                'Added ' . $added . " out of ". $total . " adlists");
+                if ($db->lastErrorCode() == 19) {
+                    // ErrorCode 19 is "Constraint violation", here the unique constraint of `address` 
+                    //   is violated (https://www.sqlite.org/rescode.html#constraint).
+                    // If the list is already in database, add to ignored list, but don't throw error
+                    $ignored_list .= "<small><i>" . $address . "</i></small><br>";
+                } else {
+                    throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                    'Added ' . $added . " out of " . $total . " adlists");
+                }
             }
             $added++;
         }
@@ -1005,7 +1013,9 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $reload = true;
-        JSON_success();
+
+        // Send Success or the ignored list as message
+        JSON_success($ignored_list);
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
