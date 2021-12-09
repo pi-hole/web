@@ -445,3 +445,9 @@ td.details-control {
 .eyeConWrapper {
   font-size: 17px;
 }
+
+#apiTokenIframe {
+  width: 100%;
+  border: 0;
+  height: 500px;
+}

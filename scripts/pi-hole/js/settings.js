@@ -169,7 +169,7 @@ $(".api-token").confirm({
   text: "Make sure that nobody else can scan this code around you. They will have full access to the API without having to know the password. Note that the generation of the QR code will take some time.",
   title: "Confirmation required",
   confirm: function () {
-    window.open("scripts/pi-hole/php/api_token.php", "_blank");
+    $("#apiTokenModal").modal("show");
   },
   cancel: function () {
     // nothing to do
@@ -180,6 +180,17 @@ $(".api-token").confirm({
   confirmButtonClass: "btn-danger",
   cancelButtonClass: "btn-success",
   dialogClass: "modal-dialog",
+});
+
+$("#apiTokenModal").on("show.bs.modal", function () {
+  var font = {
+    "font-family": $("body").css("font-family"),
+  };
+  $('iframe[name="apiToken_iframe"]').contents().find("body").css(font);
+  var table = {
+    margin: "auto",
+  };
+  $('iframe[name="apiToken_iframe"]').contents().find("table").css(table);
 });
 
 $("#DHCPchk").click(function () {
