@@ -451,3 +451,7 @@ td.details-control {
   border: 0;
   height: 500px;
 }
+
+#apiTokenModal pre {
+  background: #fff;
+}
