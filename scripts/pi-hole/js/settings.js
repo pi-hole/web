@@ -183,14 +183,15 @@ $(".api-token").confirm({
 });
 
 $("#apiTokenModal").on("show.bs.modal", function () {
-  var font = {
+  var bodyStyle = {
     "font-family": $("body").css("font-family"),
+    "background-color": "white",
   };
-  $('iframe[name="apiToken_iframe"]').contents().find("body").css(font);
-  var table = {
+  $('iframe[name="apiToken_iframe"]').contents().find("body").css(bodyStyle);
+  var qrCodeStyle = {
     margin: "auto",
   };
-  $('iframe[name="apiToken_iframe"]').contents().find("table").css(table);
+  $('iframe[name="apiToken_iframe"]').contents().find("table").css(qrCodeStyle);
 });
 
 $("#DHCPchk").click(function () {
