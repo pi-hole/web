@@ -384,7 +384,14 @@ function addAdlist() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Successfully added adlist", address);
+        if (response.warning) {
+          // Ignored items found! Showing ignored and added items in a warning.
+          utils.showAlert("warning", "fas fa-plus", "Warning", response.message);
+        } else {
+          // All items added.
+          utils.showAlert("success", "fas fa-plus", "Successfully added adlist", response.message);
+        }
+
         table.ajax.reload(null, false);
         $("#new_address").val("");
         $("#new_comment").val("");
