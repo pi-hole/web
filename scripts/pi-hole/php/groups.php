@@ -31,6 +31,16 @@ function JSON_success($message = null)
     echo json_encode(array('success' => true, 'message' => $message));
 }
 
+function JSON_warning($message = null)
+{
+    header('Content-type: application/json');
+    echo json_encode(array(
+        'success' => true,
+        'warning' => true,
+        'message' => $message,
+    ));
+}
+
 function JSON_error($message = null)
 {
     header('Content-type: application/json');
@@ -958,6 +968,7 @@ if ($_POST['action'] == 'get_groups') {
         $addresses = explode(' ', html_entity_decode(trim($_POST['address'])));
         $total = count($addresses);
         $added = 0;
+        $ignored = 0;
 
         $stmt = $db->prepare('INSERT INTO adlist (address,comment) VALUES (:address,:comment)');
         if (!$stmt) {
@@ -973,6 +984,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While binding comment: ' . $db->lastErrorMsg());
         }
 
+        $added_list = "";
         $ignored_list = "";
         foreach ($addresses as $address) {
             // Silently skip this entry when it is empty or not a string (e.g. NULL)
@@ -999,13 +1011,16 @@ if ($_POST['action'] == 'get_groups') {
                     // ErrorCode 19 is "Constraint violation", here the unique constraint of `address` 
                     //   is violated (https://www.sqlite.org/rescode.html#constraint).
                     // If the list is already in database, add to ignored list, but don't throw error
-                    $ignored_list .= "<small><i>" . $address . "</i></small><br>";
+                    $ignored++;
+                    $ignored_list .= "<small>" . $address . "</small><br>";
                 } else {
                     throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
                     'Added ' . $added . " out of " . $total . " adlists");
                 }
+            } else {
+                $added++;
+                $added_list .= "<small>" . $address . "</small><br>";
             }
-            $added++;
         }
 
         if(!$db->query('COMMIT;')) {
@@ -1013,9 +1028,20 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         $reload = true;
+        if ($ignored_list != "") {
+            // Send added and ignored lists
+            $msg = "<b>Ignored duplicated adlists: " . $ignored . "</b><br>" . $ignored_list;
+            if ($added_list != "") {
+              $msg .= "<br><b>Added adlists: " . $added . "</b><br>" . $added_list;
+            }
+            $msg .= "<br><b>Total: " . $total . " adlist(s) processed.</b>";
+            JSON_warning($msg);
+        } else {
+            // All adlists added
+            $msg = $added_list . "<br><b>Total: " . $total . " adlist(s) processed.</b>";
+            JSON_success($msg);
+        }
 
-        // Send Success or the ignored list as message
-        JSON_success($ignored_list);
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
