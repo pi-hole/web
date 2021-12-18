@@ -337,6 +337,17 @@ function addFromQueryLog(domain, list) {
   });
 }
 
+// Helper functions to format the progress bars used on the Dashboard and Long-term Lists
+function addTD(content) {
+  return "<td>" + content + "</td> ";
+}
+
+function colorBar(percentage, total, cssClass) {
+  var title = percentage.toFixed(1) + "% of " + total;
+  var bar = '<div class="progress-bar ' + cssClass + '" style="width: ' + percentage + '%"></div>';
+  return '<div class="progress progress-sm" title="' + title + '"> ' + bar + " </div>";
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -357,5 +368,7 @@ window.utils = (function () {
     validateMAC: validateMAC,
     validateHostname: validateHostname,
     addFromQueryLog: addFromQueryLog,
+    addTD: addTD,
+    colorBar: colorBar,
   };
 })();
