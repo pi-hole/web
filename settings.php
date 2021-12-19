@@ -830,7 +830,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                             <div class="col-lg-6">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
-                                        <h1 class="box-title">Interface listening behavior</h1>
+                                        <h1 class="box-title">Interface settings</h1>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
@@ -839,25 +839,26 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     <div>
                                                         <input type="radio" name="DNSinterface" id="DNSinterface1" value="local"
                                                                 <?php if ($DNSinterface == "local"){ ?>checked<?php } ?>>
-                                                        <label for="DNSinterface1"><strong>Listen on all interfaces</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
+                                                        <label for="DNSinterface1"><strong>Allow only local requests</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
                                                     </div>
                                                     <div>
                                                         <input type="radio" name="DNSinterface" id="DNSinterface2" value="single"
                                                                 <?php if ($DNSinterface == "single"){ ?>checked<?php } ?>>
-                                                        <label for="DNSinterface2"><strong>Listen only on interface <?php echo htmlentities($piHoleInterface); ?></strong></label>
+                                                        <label for="DNSinterface2"><strong>Respond only on interface <?php echo htmlentities($piHoleInterface); ?></strong><br>Make sure device is behind a firewall!</label>
                                                     </div>
                                                     <div>
                                                         <input type="radio" name="DNSinterface" id="DNSinterface3" value="all"
                                                                 <?php if ($DNSinterface == "all"){ ?>checked<?php } ?>>
-                                                        <label for="DNSinterface3"><strong>Listen on all interfaces, permit all origins</strong></label>
+                                                        <label for="DNSinterface3"><strong>Permit all origins</strong><br>Make sure device is behind a firewall!</label>
                                                     </div>
                                                 </div>
-                                                <p>Note that the last option should not be used on devices which are
-                                                   directly connected to the Internet. This option is safe if your
-                                                   Pi-hole is located within your local network, i.e. protected behind
-                                                   your router, and you have not forwarded port 53 to this device. In
-                                                   virtually all other cases you have to make sure that your Pi-hole is
-                                                   properly firewalled.</p>
+                                                <p>The last two options are dangerous on devices which are
+                                                   directly connected to the Internet and are only safe if your
+                                                   Pi-hole is properly firewalled. In a typical at-home setup this can,
+                                                   for instance, be achieved where your Pi-hole is located within your
+                                                   local network, and you have <strong>not</strong> forwarded port 53
+                                                   in your router.</p>
+                                                <p>Pi-hole binds to the wildcard address by default. See <a href="https://docs.pi-hole.net/ftldns/interfaces/" target="_blank">our documentation</a> for further technical details.</p>
                                             </div>
                                         </div>
                                     </div>
