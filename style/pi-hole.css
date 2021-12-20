@@ -441,3 +441,21 @@ td.details-control {
 .navbar-nav {
   height: 50px;
 }
+
+.no-danger-area {
+  margin: 0.5em 0 1em;
+  border-left: 2px solid green;
+  border-right: 2px solid green;
+  padding: 1px 1em 0.5em;
+  box-shadow: 0 0 2px -1px #bbb;
+  border-radius: 6px;
+}
+
+.danger-area {
+  margin: 0.5em 0 1em;
+  border-left: 2px solid red;
+  border-right: 2px solid red;
+  padding: 1px 1em 0.5em;
+  box-shadow: 0 0 2px -1px #bbb;
+  border-radius: 6px;
+}
