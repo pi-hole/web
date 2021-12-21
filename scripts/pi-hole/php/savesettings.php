@@ -332,6 +332,10 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					{
 						$DNSinterface = "single";
 					}
+					elseif($_POST["DNSinterface"] === "bind")
+					{
+						$DNSinterface = "bind";
+					}
 					elseif($_POST["DNSinterface"] === "all")
 					{
 						$DNSinterface = "all";

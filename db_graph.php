@@ -8,6 +8,8 @@
     require "scripts/pi-hole/php/header.php";
 ?>
 <!-- Sourceing CSS colors from stylesheet to be used in JS code -->
+<span class="queries-permitted"></span>
+<span class="queries-blocked"></span>
 <span class="graphs-grid"></span>
 <span class="graphs-ticks"></span>
 

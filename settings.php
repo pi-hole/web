@@ -132,6 +132,8 @@ if (isset($setupVars["DNSSEC"])) {
 if (isset($setupVars["DNSMASQ_LISTENING"])) {
     if ($setupVars["DNSMASQ_LISTENING"] === "single") {
         $DNSinterface = "single";
+    } elseif ($setupVars["DNSMASQ_LISTENING"] === "bind") {
+        $DNSinterface = "bind";
     } elseif ($setupVars["DNSMASQ_LISTENING"] === "all") {
         $DNSinterface = "all";
     } else {
@@ -717,11 +719,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <table class="table table-bordered">
+                                                  <thead>
                                                     <tr>
                                                         <th colspan="2">IPv4</th>
                                                         <th colspan="2">IPv6</th>
                                                         <th>Name</th>
                                                     </tr>
+                                                  </thead>
                                                     <?php foreach ($DNSserverslist as $key => $value) { ?>
                                                     <tr>
                                                     <?php if (isset($value["v4_1"])) { ?>
@@ -830,34 +834,45 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                             <div class="col-lg-6">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
-                                        <h1 class="box-title">Interface listening behavior</h1>
+                                        <h1 class="box-title">Interface settings</h1>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="form-group">
-                                                    <div>
-                                                        <input type="radio" name="DNSinterface" id="DNSinterface1" value="local"
-                                                                <?php if ($DNSinterface == "local"){ ?>checked<?php } ?>>
-                                                        <label for="DNSinterface1"><strong>Listen on all interfaces</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
+                                                    <div class="no-danger-area">
+                                                        <h4>Recommended setting</h4>
+                                                        <div>
+                                                            <input type="radio" name="DNSinterface" id="DNSinterface1" value="local"
+                                                                    <?php if ($DNSinterface == "local"){ ?>checked<?php } ?>>
+                                                            <label for="DNSinterface1"><strong>Allow only local requests</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <input type="radio" name="DNSinterface" id="DNSinterface2" value="single"
-                                                                <?php if ($DNSinterface == "single"){ ?>checked<?php } ?>>
-                                                        <label for="DNSinterface2"><strong>Listen only on interface <?php echo htmlentities($piHoleInterface); ?></strong></label>
-                                                    </div>
-                                                    <div>
-                                                        <input type="radio" name="DNSinterface" id="DNSinterface3" value="all"
-                                                                <?php if ($DNSinterface == "all"){ ?>checked<?php } ?>>
-                                                        <label for="DNSinterface3"><strong>Listen on all interfaces, permit all origins</strong></label>
+                                                    <div class="danger-area">
+                                                        <h4>Potentially dangerous options</h4>Make sure your Pi-hole is properly firewalled!
+                                                        <div>
+                                                            <input type="radio" name="DNSinterface" id="DNSinterface2" value="single"
+                                                                    <?php if ($DNSinterface == "single"){ ?>checked<?php } ?>>
+                                                            <label for="DNSinterface2"><strong>Respond only on interface <?php echo htmlentities($piHoleInterface); ?></strong></label>
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" name="DNSinterface" id="DNSinterface3" value="bind"
+                                                                    <?php if ($DNSinterface == "bind"){ ?>checked<?php } ?>>
+                                                            <label for="DNSinterface3"><strong>Bind only to interface <?php echo htmlentities($piHoleInterface); ?></strong></label>
+                                                        </div>
+                                                        <div>
+                                                            <input type="radio" name="DNSinterface" id="DNSinterface4" value="all"
+                                                                    <?php if ($DNSinterface == "all"){ ?>checked<?php } ?>>
+                                                            <label for="DNSinterface4"><strong>Permit all origins</strong></label>
+                                                        </div>
+                                                        <p>These options are dangerous on devices
+                                                           directly connected to the Internet such as cloud instances and are only safe if your
+                                                           Pi-hole is properly firewalled. In a typical at-home setup where your Pi-hole is
+                                                           located within your local network (and you have <strong>not</strong> forwarded port 53
+                                                           in your router!) they are safe to use.</p>
                                                     </div>
                                                 </div>
-                                                <p>Note that the last option should not be used on devices which are
-                                                   directly connected to the Internet. This option is safe if your
-                                                   Pi-hole is located within your local network, i.e. protected behind
-                                                   your router, and you have not forwarded port 53 to this device. In
-                                                   virtually all other cases you have to make sure that your Pi-hole is
-                                                   properly firewalled.</p>
+                                                <p>See <a href="https://docs.pi-hole.net/ftldns/interfaces/" target="_blank">our documentation</a> for further technical details.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -939,11 +954,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     </div>
                                                     <div class="input-group">
                                                       <table class="table table-bordered">
-                                                        <tr>
-                                                          <th>Local network in <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" rel="noopener" target="_blank">CIDR notation</a></th>
-                                                          <th>IP address of your DHCP server (router)</th>
-                                                          <th>Local domain name (optional)</th>
-                                                        </tr>
+                                                        <thead>
+                                                          <tr>
+                                                            <th>Local network in <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" target="_blank">CIDR notation</a></th>
+                                                            <th>IP address of your DHCP server (router)</th>
+                                                            <th>Local domain name (optional)</th>
+                                                          </tr>
+                                                        </thead>
                                                         <tr>
                                                           <td>
                                                             <input type="text" name="rev_server_cidr" placeholder="192.168.0.0/16" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"

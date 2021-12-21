@@ -576,17 +576,11 @@ function updateTopClientsChart() {
           "</a>";
         percentage = (data.top_sources[client] / data.dns_queries_today) * 100;
         clienttable.append(
-          "<tr> <td>" +
-            url +
-            "</td> <td>" +
-            data.top_sources[client] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            data.dns_queries_today +
-            '"> <div class="progress-bar progress-bar-blue" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            utils.addTD(url) +
+            utils.addTD(data.top_sources[client]) +
+            utils.addTD(utils.colorBar(percentage, data.dns_queries_today, "progress-bar-blue")) +
+            "</tr> "
         );
       }
     }
@@ -622,17 +616,11 @@ function updateTopClientsChart() {
           "</a>";
         percentage = (data.top_sources_blocked[client] / data.ads_blocked_today) * 100;
         clientblockedtable.append(
-          "<tr> <td>" +
-            url +
-            "</td> <td>" +
-            data.top_sources_blocked[client] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            data.ads_blocked_today +
-            '"> <div class="progress-bar progress-bar-blue" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            utils.addTD(url) +
+            utils.addTD(data.top_sources_blocked[client]) +
+            utils.addTD(utils.colorBar(percentage, data.ads_blocked_today, "progress-bar-blue")) +
+            "</tr> "
         );
       }
     }
@@ -679,17 +667,11 @@ function updateTopLists() {
         url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
         percentage = (data.top_queries[domain] / data.dns_queries_today) * 100;
         domaintable.append(
-          "<tr> <td>" +
-            url +
-            "</td> <td>" +
-            data.top_queries[domain] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            data.dns_queries_today +
-            '"> <div class="progress-bar queries-permitted" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            utils.addTD(url) +
+            utils.addTD(data.top_queries[domain]) +
+            utils.addTD(utils.colorBar(percentage, data.dns_queries_today, "queries-permitted")) +
+            "</tr> "
         );
       }
     }
@@ -712,17 +694,11 @@ function updateTopLists() {
         url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
         percentage = (data.top_ads[domain] / data.ads_blocked_today) * 100;
         adtable.append(
-          "<tr> <td>" +
-            url +
-            "</td> <td>" +
-            data.top_ads[domain] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            data.ads_blocked_today +
-            '"> <div class="progress-bar queries-blocked" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            utils.addTD(url) +
+            utils.addTD(data.top_ads[domain]) +
+            utils.addTD(utils.colorBar(percentage, data.ads_blocked_today, "queries-blocked")) +
+            "</tr> "
         );
       }
     }

@@ -92,7 +92,7 @@ function format(data) {
         utils.datetime(data.date_updated) +
         ")"
       : "N/A") +
-    '</td></tr><tr class="dataTables-child"><td>Number of valid domains on this list:&nbsp;&nbsp;</td><td>' +
+    '</td></tr><tr class="dataTables-child"><td>Number of domains on this list:&nbsp;&nbsp;</td><td>' +
     (data.number !== null && numbers === true ? parseInt(data.number, 10) : "N/A") +
     '</td></tr><tr class="dataTables-child"' +
     invalidStyle +
@@ -384,7 +384,14 @@ function addAdlist() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Successfully added adlist", address);
+        if (response.warning) {
+          // Ignored items found! Showing ignored and added items in a warning.
+          utils.showAlert("warning", "fas fa-plus", "Warning", response.message);
+        } else {
+          // All items added.
+          utils.showAlert("success", "fas fa-plus", "Successfully added adlist", response.message);
+        }
+
         table.ajax.reload(null, false);
         $("#new_address").val("");
         $("#new_comment").val("");
