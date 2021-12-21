@@ -719,11 +719,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <table class="table table-bordered">
+                                                  <thead>
                                                     <tr>
                                                         <th colspan="2">IPv4</th>
                                                         <th colspan="2">IPv6</th>
                                                         <th>Name</th>
                                                     </tr>
+                                                  </thead>
                                                     <?php foreach ($DNSserverslist as $key => $value) { ?>
                                                     <tr>
                                                     <?php if (isset($value["v4_1"])) { ?>
@@ -952,11 +954,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     </div>
                                                     <div class="input-group">
                                                       <table class="table table-bordered">
-                                                        <tr>
-                                                          <th>Local network in <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" rel="noopener" target="_blank">CIDR notation</a></th>
-                                                          <th>IP address of your DHCP server (router)</th>
-                                                          <th>Local domain name (optional)</th>
-                                                        </tr>
+                                                        <thead>
+                                                          <tr>
+                                                            <th>Local network in <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" target="_blank">CIDR notation</a></th>
+                                                            <th>IP address of your DHCP server (router)</th>
+                                                            <th>Local domain name (optional)</th>
+                                                          </tr>
+                                                        </thead>
                                                         <tr>
                                                           <td>
                                                             <input type="text" name="rev_server_cidr" placeholder="192.168.0.0/16" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
