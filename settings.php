@@ -1064,6 +1064,22 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                     </div>
                                 </div>
                             </form>
+                            <div class="modal fade" id="apiTokenModal" role="dialog" data-keyboard="false"
+                                tabindex="-1" data-backdrop="static" aria-labelledby="apiTokenModal">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="apiTokenModalHeaderLabel">API Token</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                        <pre><iframe id="apiTokenIframe" name="apiToken_iframe" src="scripts/pi-hole/php/api_token.php"></iframe></pre>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <form role="form" method="post">
