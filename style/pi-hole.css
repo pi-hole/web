@@ -339,7 +339,7 @@
 /*** Icons grow on hover, but remain centered ***/
 .small-box:hover .icon {
   font-size: 90px; /* keep the same font-size, to avoid shifting the position */
-  transform: scale(106%);
+  transform: scale(1.06);
 }
 
 .list-status-0 {
@@ -376,4 +376,100 @@ td.details-control {
 
 .allowed-row td {
   background-color: rgb(70, 149, 74, 0.1);
+}
+
+.reload-box {
+  display: none;
+}
+.reload-box div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.reload-box span {
+  padding-right: 20px;
+}
+
+@media screen and (max-width: 991px) {
+  #domain-search-block {
+    display: block;
+  }
+  #domain {
+    margin: 5px 0;
+  }
+  #domain-search-block .input-group-btn {
+    margin: 5px 0;
+    text-align: center;
+  }
+  #domain-search-block .input-group-btn button {
+    margin: 0 2px;
+    border-radius: 3px;
+  }
+}
+
+/* Fix the icon position (login password field) */
+.form-control-feedback {
+  right: 12px;
+}
+
+.icon-bounce {
+  display: inline-block;
+  position: relative;
+  animation: icon-bounce 1.5s infinite linear;
+}
+
+@keyframes icon-bounce {
+  0%,
+  20%,
+  50%,
+  70%,
+  90%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-15px);
+  }
+  60% {
+    transform: translateY(-8px);
+  }
+  80% {
+    transform: translateY(-4px);
+  }
+}
+
+.navbar-nav {
+  height: 50px;
+}
+
+.eyeConWrapper {
+  font-size: 14px;
+}
+
+#apiTokenIframe {
+  width: 100%;
+  border: 0;
+  height: 500px;
+}
+
+#apiTokenModal pre {
+  background: #fff;
+}
+
+.no-danger-area {
+  margin: 0.5em 0 1em;
+  border-left: 2px solid green;
+  border-right: 2px solid green;
+  padding: 1px 1em 0.5em;
+  box-shadow: 0 0 2px -1px #bbb;
+  border-radius: 6px;
+}
+
+.danger-area {
+  margin: 0.5em 0 1em;
+  border-left: 2px solid red;
+  border-right: 2px solid red;
+  padding: 1px 1em 0.5em;
+  box-shadow: 0 0 2px -1px #bbb;
+  border-radius: 6px;
 }

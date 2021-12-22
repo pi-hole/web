@@ -169,7 +169,7 @@ $(".api-token").confirm({
   text: "Make sure that nobody else can scan this code around you. They will have full access to the API without having to know the password. Note that the generation of the QR code will take some time.",
   title: "Confirmation required",
   confirm: function () {
-    window.open("scripts/pi-hole/php/api_token.php");
+    $("#apiTokenModal").modal("show");
   },
   cancel: function () {
     // nothing to do
@@ -180,6 +180,18 @@ $(".api-token").confirm({
   confirmButtonClass: "btn-danger",
   cancelButtonClass: "btn-success",
   dialogClass: "modal-dialog",
+});
+
+$("#apiTokenModal").on("show.bs.modal", function () {
+  var bodyStyle = {
+    "font-family": $("body").css("font-family"),
+    "background-color": "white",
+  };
+  $('iframe[name="apiToken_iframe"]').contents().find("body").css(bodyStyle);
+  var qrCodeStyle = {
+    margin: "auto",
+  };
+  $('iframe[name="apiToken_iframe"]').contents().find("table").css(qrCodeStyle);
 });
 
 $("#DHCPchk").click(function () {
@@ -216,13 +228,20 @@ $(function () {
   if (document.getElementById("DHCPLeasesTable")) {
     leasetable = $("#DHCPLeasesTable").DataTable({
       dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-6'i><'col-sm-6'f>>",
-      columnDefs: [{ bSortable: false, orderable: false, targets: -1 }],
+      columnDefs: [
+        { bSortable: false, orderable: false, targets: -1 },
+        {
+          targets: [0, 1, 2],
+          render: $.fn.dataTable.render.text(),
+        },
+      ],
       paging: false,
       scrollCollapse: true,
       scrollY: "200px",
       scrollX: true,
       order: [[2, "asc"]],
       stateSave: true,
+      stateDuration: 0,
       stateSaveCallback: function (settings, data) {
         utils.stateSaveCallback("activeDhcpLeaseTable", data);
       },
@@ -235,7 +254,13 @@ $(function () {
   if (document.getElementById("DHCPStaticLeasesTable")) {
     staticleasetable = $("#DHCPStaticLeasesTable").DataTable({
       dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-12'i>>",
-      columnDefs: [{ bSortable: false, orderable: false, targets: -1 }],
+      columnDefs: [
+        { bSortable: false, orderable: false, targets: -1 },
+        {
+          targets: [0, 1, 2],
+          render: $.fn.dataTable.render.text(),
+        },
+      ],
       paging: false,
       scrollCollapse: true,
       scrollY: "200px",

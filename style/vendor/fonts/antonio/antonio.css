@@ -1,0 +1,32 @@
+/* antonio-100 - latin-ext_latin */
+@font-face {
+  font-family: 'Antonio';
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: local('Antonio Light'),
+       url('antonio-v1-latin-ext_latin-100.woff2') format('woff2'), /* Super Modern Browsers */
+       url('antonio-v1-latin-ext_latin-100.woff') format('woff') /* Modern Browsers */
+}
+
+/* antonio-regular - latin-ext_latin */
+@font-face {
+  font-family: 'Antonio';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Antonio'),
+       url('antonio-v1-latin-ext_latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('antonio-v1-latin-ext_latin-regular.woff') format('woff') /* Modern Browsers */
+}
+
+/* antonio-700 - latin-ext_latin */
+@font-face {
+  font-family: 'Antonio';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Antonio Bold'),
+       url('antonio-v1-latin-ext_latin-700.woff2') format('woff2'), /* Super Modern Browsers */
+       url('antonio-v1-latin-ext_latin-700.woff') format('woff') /* Modern Browsers */
+}

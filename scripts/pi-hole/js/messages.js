@@ -88,6 +88,40 @@ function renderMessage(data, type, row) {
         " seconds)"
       );
 
+    case "DNSMASQ_WARN":
+      return "Warning in <code>dnsmasq</code> core:<pre>" + row.message + "</pre>";
+
+    case "LOAD":
+      return (
+        "Long-term load (15min avg) larger than number of processors: <strong>" +
+        parseFloat(row.blob1).toFixed(1) +
+        " &gt; " +
+        parseInt(row.blob2, 10) +
+        "</strong><br>This may slow down DNS resolution and can cause bottlenecks."
+      );
+
+    case "SHMEM":
+      return (
+        "RAM shortage (<code>" +
+        utils.escapeHtml(row.message) +
+        "</code>) ahead: <strong>" +
+        parseInt(row.blob1, 10) +
+        "% used</strong><pre>" +
+        utils.escapeHtml(row.blob2) +
+        "</pre>"
+      );
+
+    case "DISK":
+      return (
+        "Disk shortage (<code>" +
+        utils.escapeHtml(row.message) +
+        "</code>) ahead: <strong>" +
+        parseInt(row.blob1, 10) +
+        "% used</strong><pre>" +
+        utils.escapeHtml(row.blob2) +
+        "</pre>"
+      );
+
     default:
       return "Unknown message type<pre>" + JSON.stringify(row) + "</pre>";
   }
@@ -113,6 +147,12 @@ $(function () {
       { data: "blob4", visible: false },
       { data: "blob5", visible: false },
       { data: null, width: "80px", orderable: false },
+    ],
+    columnDefs: [
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
     ],
     drawCallback: function () {
       $('button[id^="deleteMessage_"]').on("click", deleteMessage);
@@ -141,6 +181,7 @@ $(function () {
       emptyTable: "No issues found.",
     },
     stateSave: true,
+    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("messages-table", data);
     },

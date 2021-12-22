@@ -97,6 +97,12 @@ function initTable() {
       { data: "groups", searchable: false },
       { data: "name", width: "80px", orderable: false },
     ],
+    columnDefs: [
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
+    ],
     drawCallback: function () {
       $('button[id^="deleteClient_"]').on("click", deleteClient);
       // Remove visible dropdown to prevent orphaning
@@ -217,6 +223,7 @@ function initTable() {
       [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
+    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("groups-clients-table", data);
     },

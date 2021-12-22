@@ -18,6 +18,8 @@ $available_themes["default-dark"] = array("Pi-hole midnight theme (dark)", true,
 $available_themes["default-darker"] = array("Pi-hole deep-midnight theme (dark)", true, "default-darker");
 // Option to have the theme go with the device dark mode setting, always set the background to black to avoid flashing
 $available_themes["default-auto"] = array("Pi-hole auto theme (light/dark)", true, "default-auto");
+$available_themes["lcars"] = array("Star Trek LCARS theme (dark)", true, "lcars");
+
 
 $webtheme = "";
 // Try to load theme settings from setupVars.conf
@@ -34,7 +36,7 @@ if(isset($_POST["field"]) &&
 if(!array_key_exists($webtheme,$available_themes)) {
         // Fallback to default (light) theme is property is not set
         // or requested theme is not among the available
-        $webtheme = "default-light";
+        $webtheme = "default-auto";
 }
 
 $darkmode = $available_themes[$webtheme][1];

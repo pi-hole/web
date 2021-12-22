@@ -7,13 +7,19 @@
 
 /* global utils:false, Chart:false, moment:false */
 
-var start__ = moment().subtract(6, "days");
+var start__ = moment().subtract(7, "days");
 var from = moment(start__).utc().valueOf() / 1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf() / 1000;
 var interval = 0;
 
 var dateformat = "MMMM Do YYYY, HH:mm";
+
+// get the database min timestamp
+var mintimestamp;
+$.getJSON("api_db.php?getMinTimestamp", function (ts) {
+  mintimestamp = ts.mintimestamp * 1000 || 0; // return the timestamp in milliseconds or zero (in case of NaN)
+});
 
 $(function () {
   $("#querytime").daterangepicker(
@@ -30,15 +36,15 @@ $(function () {
           moment().subtract(1, "days").startOf("day"),
           moment().subtract(1, "days").endOf("day"),
         ],
-        "Last 7 Days": [moment().subtract(6, "days"), moment()],
-        "Last 30 Days": [moment().subtract(29, "days"), moment()],
+        "Last 7 Days": [moment().subtract(7, "days"), moment()],
+        "Last 30 Days": [moment().subtract(30, "days"), moment()],
         "This Month": [moment().startOf("month"), moment()],
         "Last Month": [
           moment().subtract(1, "month").startOf("month"),
           moment().subtract(1, "month").endOf("month"),
         ],
         "This Year": [moment().startOf("year"), moment()],
-        "All Time": [moment(0), moment()],
+        "All Time": [moment(mintimestamp), moment()],
       },
       opens: "center",
       showDropdowns: true,
@@ -69,19 +75,21 @@ function updateQueriesOverTime() {
   // Default displaying axis scaling
   timeLineChart.options.scales.xAxes[0].time.unit = "hour";
 
-  if (num * interval >= 6 * 29 * 24 * 60 * 60) {
-    // If the requested data is more than 3 months, set ticks interval to quarterly
+  // Xaxis scaling based on selected daterange
+  if (num * interval > 4 * 365 * 24 * 60 * 60) {
+    // If the requested data is more than 4 years, set ticks interval to year
+    timeLineChart.options.scales.xAxes[0].time.unit = "year";
+  } else if (num * interval >= 366 * 24 * 60 * 60) {
+    // If the requested data is more than 1 year, set ticks interval to quarter
     timeLineChart.options.scales.xAxes[0].time.unit = "quarter";
-  } else if (num * interval >= 3 * 29 * 24 * 60 * 60) {
+  } else if (num * interval >= 92 * 24 * 60 * 60) {
     // If the requested data is more than 3 months, set ticks interval to months
     timeLineChart.options.scales.xAxes[0].time.unit = "month";
-  }
-
-  if (num * interval >= 29 * 24 * 60 * 60) {
-    // If the requested data is more than 1 month, set ticks interval to weeks
+  } else if (num * interval >= 31 * 24 * 60 * 60) {
+    // If the requested data is 1 month or more, set ticks interval to weeks
     timeLineChart.options.scales.xAxes[0].time.unit = "week";
-  } else if (num * interval >= 6 * 24 * 60 * 60) {
-    // If the requested data is more than 1 week, set ticks interval to days
+  } else if (num * interval > 3 * 24 * 60 * 60) {
+    // If the requested data is more than 3 days (72 hours), set ticks interval to days
     timeLineChart.options.scales.xAxes[0].time.unit = "day";
   }
 
@@ -150,8 +158,11 @@ function updateQueriesOverTime() {
 
 $(function () {
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
-  var blockedColor = "#999";
-  var permittedColor = "#00a65a";
+  var blockedColor = $(".queries-blocked").css("background-color");
+  var permittedColor = $(".queries-permitted").css("background-color");
+  var gridColor = $(".graphs-grid").css("background-color");
+  var ticksColor = $(".graphs-ticks").css("color");
+
   timeLineChart = new Chart(ctx, {
     type: utils.getGraphType(),
     data: {
@@ -286,9 +297,16 @@ $(function () {
                 day: "MMM DD",
                 week: "MMM DD",
                 month: "MMM",
-                quarter: "MMM",
-                year: "YYYY MMM",
+                quarter: "YYYY MMM",
+                year: "YYYY",
               },
+            },
+            gridLines: {
+              color: gridColor,
+              zeroLineColor: gridColor,
+            },
+            ticks: {
+              fontColor: ticksColor,
             },
           },
         ],
@@ -297,6 +315,10 @@ $(function () {
             stacked: true,
             ticks: {
               beginAtZero: true,
+              fontColor: ticksColor,
+            },
+            gridLines: {
+              color: gridColor,
             },
           },
         ],

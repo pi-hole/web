@@ -321,31 +321,62 @@ function updateQueryTypesPie() {
     queryTypePieChart.options.animation.duration = 0;
     // Generate legend in separate div
     $("#query-types-legend").html(queryTypePieChart.generateLegend());
-    $("#query-types-legend > ul > li").on("mousedown", function (e) {
-      if (e.which === 2) {
-        // which == 2 is middle mouse button
-        $(this).toggleClass("strike");
-        var index = $(this).index();
-        var ci = e.view.queryTypePieChart;
-        var mobj = ci.data.datasets[0]._meta;
-        var metas = Object.keys(mobj).map(function (e) {
-          return mobj[e];
-        });
-        metas.forEach(function (meta) {
-          var curr = meta.data[index];
-          curr.hidden = !curr.hidden;
-        });
-
-        ci.update();
-      } else if (e.which === 1) {
-        // which == 1 is left mouse button
-        window.open("queries.php?querytype=" + querytypeids[$(this).index()], "_self");
+    $("#query-types-legend > ul > li").prepend(createEyeConElement());
+    $("#query-types-legend > ul > li").click(function (e) {
+      if (isEyeCon(e.target)) {
+        return false;
       }
+
+      window.location.href = "queries.php?querytype=" + querytypeids[$(this).index()];
     });
   }).done(function () {
     // Reload graph after minute
     setTimeout(updateQueryTypesPie, 60000);
   });
+}
+
+function hidePieSlice(event) {
+  toggleEyeCon(event.target);
+
+  var legendID = $(event.target).closest(".chart-legend").attr("id");
+  var ci =
+    legendID === "query-types-legend"
+      ? event.view.queryTypePieChart
+      : event.view.forwardDestinationPieChart;
+
+  var listItemParent = $(event.target).closest("li");
+  $(listItemParent).toggleClass("strike");
+
+  var index = $(listItemParent).index();
+  var mobj = ci.data.datasets[0]._meta;
+  var metas = Object.keys(mobj).map(function (e) {
+    return mobj[e];
+  });
+  metas.forEach(function (meta) {
+    var curr = meta.data[index];
+    curr.hidden = !curr.hidden;
+  });
+
+  ci.update();
+}
+
+function toggleEyeCon(target) {
+  var parentListItem = $(target).closest("li");
+  var eyeCon = $(parentListItem).find(".fa-eye, .fa-eye-slash");
+
+  if (eyeCon) {
+    $(eyeCon).toggleClass("fa-eye");
+    $(eyeCon).toggleClass("fa-eye-slash");
+  }
+}
+
+function isEyeCon(target) {
+  // See if click happened on eyeConWrapper or child SVG
+  if ($(target).closest(".eyeConWrapper")[0]) {
+    return true;
+  }
+
+  return false;
 }
 
 function updateClientsOverTime() {
@@ -437,6 +468,16 @@ function updateClientsOverTime() {
     });
 }
 
+function createEyeConElement() {
+  var eyeConWrapper = $("<span></span>")
+    .addClass("eyeConWrapper")
+    .click(function (e) {
+      hidePieSlice(e);
+    });
+  eyeConWrapper.append($("<i class='fa fa-eye'></i>"));
+  return eyeConWrapper;
+}
+
 function updateForwardDestinationsPie() {
   $.getJSON("api.php?getForwardDestinations", function (data) {
     if ("FTLnotrunning" in data) {
@@ -480,28 +521,15 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.options.animation.duration = 0;
     // Generate legend in separate div
     $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
-    $("#forward-destinations-legend > ul > li").on("mousedown", function (e) {
-      if (e.which === 2) {
-        // which == 2 is middle mouse button
-        $(this).toggleClass("strike");
-        var index = $(this).index();
-        var ci = e.view.forwardDestinationPieChart;
-        var mobj = ci.data.datasets[0]._meta;
-        var metas = Object.keys(mobj).map(function (e) {
-          return mobj[e];
-        });
-        metas.forEach(function (meta) {
-          var curr = meta.data[index];
-          curr.hidden = !curr.hidden;
-        });
+    $("#forward-destinations-legend > ul > li").prepend(createEyeConElement());
+    $("#forward-destinations-legend > ul > li").click(function (e) {
+      if (isEyeCon(e.target)) {
+        return false;
+      }
 
-        ci.update();
-      } else if (e.which === 1) {
-        // which == 1 is left mouse button
-        var obj = encodeURIComponent(e.target.textContent);
-        if (obj.length > 0) {
-          window.open("queries.php?forwarddest=" + obj, "_self");
-        }
+      var obj = encodeURIComponent(e.target.textContent);
+      if (obj.length > 0) {
+        window.location.href = "queries.php?forwarddest=" + obj;
       }
     });
   }).done(function () {
@@ -548,17 +576,11 @@ function updateTopClientsChart() {
           "</a>";
         percentage = (data.top_sources[client] / data.dns_queries_today) * 100;
         clienttable.append(
-          "<tr> <td>" +
-            url +
-            "</td> <td>" +
-            data.top_sources[client] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            data.dns_queries_today +
-            '"> <div class="progress-bar progress-bar-blue" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            utils.addTD(url) +
+            utils.addTD(data.top_sources[client]) +
+            utils.addTD(utils.colorBar(percentage, data.dns_queries_today, "progress-bar-blue")) +
+            "</tr> "
         );
       }
     }
@@ -594,17 +616,11 @@ function updateTopClientsChart() {
           "</a>";
         percentage = (data.top_sources_blocked[client] / data.ads_blocked_today) * 100;
         clientblockedtable.append(
-          "<tr> <td>" +
-            url +
-            "</td> <td>" +
-            data.top_sources_blocked[client] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            data.ads_blocked_today +
-            '"> <div class="progress-bar progress-bar-blue" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            utils.addTD(url) +
+            utils.addTD(data.top_sources_blocked[client]) +
+            utils.addTD(utils.colorBar(percentage, data.ads_blocked_today, "progress-bar-blue")) +
+            "</tr> "
         );
       }
     }
@@ -651,17 +667,11 @@ function updateTopLists() {
         url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
         percentage = (data.top_queries[domain] / data.dns_queries_today) * 100;
         domaintable.append(
-          "<tr> <td>" +
-            url +
-            "</td> <td>" +
-            data.top_queries[domain] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            data.dns_queries_today +
-            '"> <div class="progress-bar queries-permitted" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            utils.addTD(url) +
+            utils.addTD(data.top_queries[domain]) +
+            utils.addTD(utils.colorBar(percentage, data.dns_queries_today, "queries-permitted")) +
+            "</tr> "
         );
       }
     }
@@ -684,17 +694,11 @@ function updateTopLists() {
         url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
         percentage = (data.top_ads[domain] / data.ads_blocked_today) * 100;
         adtable.append(
-          "<tr> <td>" +
-            url +
-            "</td> <td>" +
-            data.top_ads[domain] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            data.ads_blocked_today +
-            '"> <div class="progress-bar queries-blocked" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            utils.addTD(url) +
+            utils.addTD(data.top_ads[domain]) +
+            utils.addTD(utils.colorBar(percentage, data.ads_blocked_today, "queries-blocked")) +
+            "</tr> "
         );
       }
     }
@@ -888,6 +892,7 @@ $(function () {
             },
             gridLines: {
               color: gridColor,
+              zeroLineColor: gridColor,
             },
             ticks: {
               fontColor: ticksColor,
@@ -966,6 +971,7 @@ $(function () {
               },
               gridLines: {
                 color: gridColor,
+                zeroLineColor: gridColor,
               },
               ticks: {
                 fontColor: ticksColor,

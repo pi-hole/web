@@ -7,7 +7,7 @@
 
 /* global utils:false, moment:false */
 
-var start__ = moment().subtract(6, "days");
+var start__ = moment().subtract(7, "days");
 var from = moment(start__).utc().valueOf() / 1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf() / 1000;
@@ -32,8 +32,8 @@ $(function () {
           moment().subtract(1, "days").startOf("day"),
           moment().subtract(1, "days").endOf("day"),
         ],
-        "Last 7 Days": [moment().subtract(6, "days"), moment()],
-        "Last 30 Days": [moment().subtract(29, "days"), moment()],
+        "Last 7 Days": [moment().subtract(7, "days"), moment()],
+        "Last 30 Days": [moment().subtract(30, "days"), moment()],
         "This Month": [moment().startOf("month"), moment()],
         "Last Month": [
           moment().subtract(1, "month").startOf("month"),
@@ -85,17 +85,11 @@ function updateTopClientsChart() {
 
         percentage = (data.top_sources[client] / sum) * 100;
         clienttable.append(
-          "<tr> <td>" +
-            clientname +
-            "</td> <td>" +
-            data.top_sources[client] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            sum +
-            '"> <div class="progress-bar progress-bar-blue" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            utils.addTD(clientname) +
+            utils.addTD(data.top_sources[client]) +
+            utils.addTD(utils.colorBar(percentage, sum, "progress-bar-blue")) +
+            "</tr> "
         );
       }
     }
@@ -132,17 +126,11 @@ function updateTopDomainsChart() {
 
         percentage = (data.top_domains[domain] / sum) * 100;
         domaintable.append(
-          "<tr> <td>" +
-            domain +
-            "</td> <td>" +
-            data.top_domains[domain] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            sum +
-            '"> <div class="progress-bar queries-blocked" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            utils.addTD(domain) +
+            utils.addTD(data.top_domains[domain]) +
+            utils.addTD(utils.colorBar(percentage, sum, "queries-permitted")) +
+            "</tr> "
         );
       }
     }
@@ -179,17 +167,11 @@ function updateTopAdsChart() {
 
         percentage = (data.top_ads[ad] / sum) * 100;
         adtable.append(
-          "<tr> <td>" +
-            ad +
-            "</td> <td>" +
-            data.top_ads[ad] +
-            '</td> <td> <div class="progress progress-sm" title="' +
-            percentage.toFixed(1) +
-            "% of " +
-            sum +
-            '"> <div class="progress-bar queries-permitted" style="width: ' +
-            percentage +
-            '%"></div> </div> </td> </tr> '
+          "<tr> " +
+            utils.addTD(ad) +
+            utils.addTD(data.top_ads[ad]) +
+            utils.addTD(utils.colorBar(percentage, sum, "queries-blocked")) +
+            "</tr> "
         );
       }
     }

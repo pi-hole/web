@@ -7,7 +7,7 @@
 
 /* global moment:false, utils:false */
 
-var start__ = moment().subtract(6, "days");
+var start__ = moment().subtract(7, "days");
 var from = moment(start__).utc().valueOf() / 1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf() / 1000;
@@ -15,6 +15,8 @@ var instantquery = false;
 var daterange;
 
 var timeoutWarning = $("#timeoutWarning");
+var reloadBox = $(".reload-box");
+var datepickerManuallySelected = false;
 
 var dateformat = "MMMM Do YYYY, HH:mm";
 
@@ -50,8 +52,8 @@ $(function () {
           moment().subtract(1, "days").startOf("day"),
           moment().subtract(1, "days").endOf("day"),
         ],
-        "Last 7 Days": [moment().subtract(6, "days"), moment()],
-        "Last 30 Days": [moment().subtract(29, "days"), moment()],
+        "Last 7 Days": [moment().subtract(7, "days"), moment()],
+        "Last 30 Days": [moment().subtract(30, "days"), moment()],
         "This Month": [moment().startOf("month"), moment()],
         "Last Month": [
           moment().subtract(1, "month").startOf("month"),
@@ -175,6 +177,7 @@ var reloadCallback = function () {
 
 function refreshTableData() {
   timeoutWarning.show();
+  reloadBox.hide();
   var APIstring = "api_db.php?getAllQueries&from=" + from + "&until=" + until;
   // Check if query type filtering is enabled
   var queryType = getQueryTypes();
@@ -340,8 +343,8 @@ $(function () {
         },
       },
       { width: "10%" },
-      { width: "40%", render: $.fn.dataTable.render.text() },
-      { width: "20%", type: "ip-address", render: $.fn.dataTable.render.text() },
+      { width: "40%" },
+      { width: "20%", type: "ip-address" },
       { width: "10%" },
       { width: "5%" },
     ],
@@ -354,6 +357,10 @@ $(function () {
         targets: -1,
         data: null,
         defaultContent: "",
+      },
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
       },
     ],
     initComplete: reloadCallback,
@@ -374,5 +381,16 @@ $(function () {
 
 $("#querytime").on("apply.daterangepicker", function (ev, picker) {
   $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
+  datepickerManuallySelected = true;
+  refreshTableData();
+});
+
+$("input[id^=type]").change(function () {
+  if (datepickerManuallySelected) {
+    reloadBox.show();
+  }
+});
+
+$(".bt-reload").click(function () {
   refreshTableData();
 });
