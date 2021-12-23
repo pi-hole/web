@@ -824,7 +824,7 @@ label {
   left: 0;
   width: 88px;
   z-index: -1;
-  background-image: linear-gradient(to right, #cce6ff 70%, transparent 100%);
+  background-image: linear-gradient(to right, rgb(204, 230, 255) 70%, rgba(204, 230, 255, 0) 100%);
 }
 
 .user-panel > .info,
