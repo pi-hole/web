@@ -19,41 +19,58 @@
 
 @-webkit-keyframes Pulse {
   from {
-    color: #630030;
-    text-shadow: 0 0 2px transparent;
+    opacity: 0;
   }
 
   50% {
-    color: #e33100;
-    text-shadow: 0 0 5px #e33100;
+    opacity: 1;
   }
 
   to {
-    color: #630030;
-    text-shadow: 0 0 2px transparent;
+    opacity: 0;
   }
 }
 
 @keyframes Pulse {
   from {
-    color: #630030;
-    text-shadow: 0 0 2px transparent;
+    opacity: 0;
   }
 
   50% {
-    color: #e33100;
-    text-shadow: 0 0 5px #e33100;
+    opacity: 1;
   }
 
   to {
-    color: #630030;
-    text-shadow: 0 0 2px transparent;
+    opacity: 0;
   }
 }
 
 .lookatme {
-  -webkit-animation: 2s infinite Pulse;
-  animation: 2s infinite Pulse;
+  color: #630030;
+  opacity: 1;
+  position: relative;
+  display: inline-block;
+}
+
+td.lookatme {
+  display: table-cell;
+}
+
+/* this pseudo element will be faded in and out in front /*
+/* of the lookatme element to create an efficient animation. */
+.lookatme:after {
+  color: #e33100;
+  text-shadow: 0 0 5px #e33100;
+  /* in the html, the lookatme-text attribute must */
+  /* contain the same text as the .lookatme element */
+  content: attr(lookatme-text);
+  padding: inherit;
+  position: absolute;
+  inset: 0 0 0 0;
+  z-index: 1;
+  /* 20 steps / 2 seconds = 10fps */
+  -webkit-animation: 2s infinite Pulse steps(20);
+  animation: 2s infinite Pulse steps(20);
 }
 
 .table-responsive {
