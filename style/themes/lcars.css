@@ -848,8 +848,9 @@ label {
   margin: 20px 0 0;
 }
 
-.user-panel .info span svg {
-  filter: drop-shadow(0 0 0.4px rgba(0, 68, 255, 0.4));
+.user-panel .fa-circle path {
+  stroke: rgba(0, 0, 0, 0.5);
+  stroke-width: 5%;
 }
 
 .user-panel svg.text-orange,
