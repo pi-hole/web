@@ -3644,6 +3644,12 @@ a:focus {
 .register-box-body .form-control-feedback {
   color: rgb(157, 148, 136);
 }
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  background: #b1aca3;
+}
+input[type="password"]::-webkit-caps-lock-indicator {
+  filter: invert(100%);
+}
 .invoice {
   background-color: rgb(24, 26, 27);
   background-image: none;
