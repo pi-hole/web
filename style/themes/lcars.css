@@ -504,6 +504,7 @@ label {
   justify-content: space-between;
   align-items: center;
   width: 359.5px;
+  height: auto;
   position: absolute;
   right: 0;
   top: 0;
@@ -538,17 +539,25 @@ label {
   color: #fff;
 }
 
+.fa-exclamation-triangle.fa-2x {
+  font-size: 1.2em;
+}
+
+.icon-bounce {
+  animation: none;
+}
+
 .main-header .navbar .nav > li > a > .label {
-  padding: 0.25em 0.15em;
+  padding: 0.25em;
   min-width: 1.6em;
   min-height: 1.6em;
   top: auto;
-  bottom: -0.75em;
-  right: -0.75em;
-  font-size: 12px;
+  bottom: -0.7em;
+  right: -0.7em;
+  font-size: 14px;
   line-height: 1;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
-  border-radius: 50%;
+  border-radius: 0.8em;
 }
 
 .main-header .navbar .sidebar-toggle {
@@ -1330,6 +1339,16 @@ table.dataTable {
   transition: all ease-in-out 1s;
   margin: 10px 0 20px;
   color: #000 !important;
+}
+
+.no-danger-area {
+  box-shadow: none;
+  background: rgba(127, 127, 127, 0.05);
+}
+
+.danger-area {
+  box-shadow: none;
+  background: rgba(127, 127, 127, 0.05);
 }
 
 /*** Animation keyframes ***/
