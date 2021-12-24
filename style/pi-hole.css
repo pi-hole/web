@@ -473,3 +473,7 @@ td.details-control {
   box-shadow: 0 0 2px -1px #bbb;
   border-radius: 6px;
 }
+
+.menu-icon {
+  margin-right: 0.5em;
+}
