@@ -494,7 +494,10 @@ label {
   color: #000;
   padding: 0;
   margin: 0;
-  font-size: 1.3em;
+  line-height: 1.2;
+  font-size: 1em;
+  text-align: center;
+  word-break: break-word;
 }
 
 .nav.navbar-nav {
@@ -512,10 +515,32 @@ label {
   background: #48f;
 }
 
+.navbar-custom-menu > .navbar-nav > li {
+  padding: 0 4px;
+}
+
+#pihole-diagnosis {
+  min-width: 50px;
+}
+
+#pihole-diagnosis svg {
+  font-size: 28px;
+}
+
+.icon-bounce {
+  animation: none;
+}
+
+.dropdown.user.user-menu {
+  min-width: 84px;
+}
+
 .navbar-text code {
+  display: inline-block;
   padding: 0;
   margin: 0;
   font-size: inherit;
+  line-height: 0.95;
   background: none;
   font-family: inherit;
   color: #cce6ff;
@@ -524,7 +549,7 @@ label {
 .navbar-nav > .user-menu .user-image {
   float: none;
   width: 1em;
-  height: 1em;
+  height: 22px;
   margin: 0;
   vertical-align: baseline;
 }
@@ -539,21 +564,13 @@ label {
   color: #fff;
 }
 
-.fa-exclamation-triangle.fa-2x {
-  font-size: 1.2em;
-}
-
-.icon-bounce {
-  animation: none;
-}
-
 .main-header .navbar .nav > li > a > .label {
   padding: 0.25em;
   min-width: 1.6em;
   min-height: 1.6em;
   top: auto;
   bottom: -0.7em;
-  right: -0.7em;
+  right: -0.3em;
   font-size: 14px;
   line-height: 1;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
@@ -758,6 +775,10 @@ label {
   display: none;
 }
 
+.menu-icon {
+  margin-right: 0;
+}
+
 .treeview-menu li a svg {
   display: inherit;
   position: absolute;
@@ -833,7 +854,7 @@ label {
   left: 0;
   width: 88px;
   z-index: -1;
-  background-image: linear-gradient(to right, rgb(204, 230, 255) 70%, rgba(204, 230, 255, 0) 100%);
+  background-image: linear-gradient(to right, #cce6ff 70%, transparent 100%);
 }
 
 .user-panel > .info,
@@ -1522,6 +1543,7 @@ table.dataTable {
   }
   .nav.navbar-nav {
     width: auto;
+    max-width: calc(100vw - 210px);
     top: 0;
     bottom: -10px;
     right: 0;
@@ -1533,6 +1555,9 @@ table.dataTable {
   }
   .nav > li > a {
     padding: 6px 10px;
+  }
+  .dropdown.user.user-menu {
+    min-width: 40px;
   }
   .user-panel {
     border-radius: 0;
