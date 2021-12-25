@@ -235,7 +235,7 @@ function stateSaveCallback(itemName, data) {
 
 function stateLoadCallback(itemName) {
   // Receive previous state from client's local storage area
-  var data = localStorage.getItem(itemName);
+  var data = localStorage ? localStorage.getItem(itemName) : null;
   // Return if not available
   if (data === null) {
     return null;
@@ -259,7 +259,7 @@ function stateLoadCallback(itemName) {
 
 function getGraphType() {
   // Only return line if `barchart_chkbox` is explicitly set to false. Else return bar
-  return localStorage.getItem("barchart_chkbox") === "false" ? "line" : "bar";
+  return localStorage && localStorage.getItem("barchart_chkbox") === "false" ? "line" : "bar";
 }
 
 function addFromQueryLog(domain, list) {

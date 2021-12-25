@@ -334,7 +334,7 @@ $(".nav-tabs a").on("shown.bs.tab", function (e) {
 // Bar/Smooth chart toggle
 $(function () {
   var bargraphs = $("#bargraphs");
-  var chkboxData = localStorage.getItem("barchart_chkbox");
+  var chkboxData = localStorage ? localStorage.getItem("barchart_chkbox") : null;
 
   if (chkboxData !== null) {
     // Restore checkbox state
@@ -342,7 +342,9 @@ $(function () {
   } else {
     // Initialize checkbox
     bargraphs.prop("checked", true);
-    localStorage.setItem("barchart_chkbox", true);
+    if (localStorage) {
+      localStorage.setItem("barchart_chkbox", true);
+    }
   }
 
   bargraphs.click(function () {
@@ -352,7 +354,7 @@ $(function () {
 
 $(function () {
   var colorfulQueryLog = $("#colorfulQueryLog");
-  var chkboxData = localStorage.getItem("colorfulQueryLog_chkbox");
+  var chkboxData = localStorage ? localStorage.getItem("colorfulQueryLog_chkbox") : null;
 
   if (chkboxData !== null) {
     // Restore checkbox state
@@ -360,7 +362,9 @@ $(function () {
   } else {
     // Initialize checkbox
     colorfulQueryLog.prop("checked", false);
-    localStorage.setItem("colorfulQueryLog_chkbox", false);
+    if (localStorage) {
+      localStorage.setItem("colorfulQueryLog_chkbox", false);
+    }
   }
 
   colorfulQueryLog.click(function () {
