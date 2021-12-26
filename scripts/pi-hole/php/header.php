@@ -145,13 +145,6 @@
         }
     }
 
-    function pidofFTL()
-    {
-        return shell_exec("pidof pihole-FTL");
-    }
-    $FTLpid = intval(pidofFTL());
-    $FTL = ($FTLpid !== 0 ? true : false);
-
     $piholeFTLConf = piholeFTLConfig();
 ?>
 <!doctype html>
@@ -346,30 +339,23 @@ if($auth) {
                         } elseif ($pistatus === "-2") {
                             echo '<span id="status"><i class="fa fa-circle text-red"></i> Unknown</span>';
                         } else {
-                            echo '<span id="status"><i class="fa fa-circle text-orange"></i> DNS service running on port '; echo $pistatus; echo '</span>';
+                            echo '<span id="status"><i class="fa fa-circle text-orange"></i> DNS service on port '; echo $pistatus; echo '</span>';
                         }
                         ?>
                       <br/>
                     <?php
                       // CPU Temp
-                      if($FTL)
-                      {
-                          if ($celsius >= -273.15) {
-                              echo "<span id=\"temperature\"><i class=\"fa fa-fire ";
-                              if ($celsius > $temperaturelimit) {
-                                  echo "text-red";
-                              }
-                              else
-                              {
-                                  echo "text-vivid-blue";
-                              }
-                              ?>"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span></span><?php
-                          }
-                      }
-                      else
-                      {
-                          echo '<span id=\"temperature\"><i class="fa fa-circle text-red"></i> FTL offline</span>';
-                      }
+                        if ($celsius >= -273.15) {
+                            echo "<span id=\"temperature\"><i class=\"fa fa-fire ";
+                            if ($celsius > $temperaturelimit) {
+                                echo "text-red";
+                            }
+                            else
+                            {
+                                echo "text-vivid-blue";
+                            }
+                            ?>"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span></span><?php
+                        }
                     ?>
                     <br/>
                     <?php
@@ -542,7 +528,7 @@ if($auth) {
                   </ul>
                     <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> Disable</a> -->
                 </li>
-                <li id="pihole-enable" class="treeview"<?php if ($pistatus == "1") { ?> hidden<?php } ?>>
+                <li id="pihole-enable" class="treeview"<?php if (!in_array($pistatus,["0","-1","-2"])) { ?> hidden<?php } ?>>
                     <a href="#">
                       <i class="fa fa-fw menu-icon fa-play"></i>
                       <span id="enableLabel">Enable&nbsp;&nbsp;&nbsp;
