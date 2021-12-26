@@ -346,28 +346,30 @@ if($auth) {
                         } elseif ($pistatus === "-2") {
                             echo '<span id="status"><i class="fa fa-circle text-red"></i> Unknown</span>';
                         } else {
-                            echo '<span id="status"><i class="fa fa-circle text-orange"></i> DNS service running on port </span>' <?php echo $pistatus;?>;
+                            echo '<span id="status"><i class="fa fa-circle text-orange"></i> DNS service running on port '; echo $pistatus; echo '</span>';
                         }
-
-                        // CPU Temp
-                        if($FTL)
-                        {
-                            if ($celsius >= -273.15) {
-                                echo "<span id=\"temperature\"><i class=\"fa fa-fire ";
-                                if ($celsius > $temperaturelimit) {
-                                    echo "text-red";
-                                }
-                                else
-                                {
-                                    echo "text-vivid-blue";
-                                }
-                                ?>"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span></span><?php
-                            }
-                        }
-                        else
-                        {
-                            echo '<span id=\"temperature\"><i class="fa fa-circle text-red"></i> FTL offline</span>';
-                        }
+                        ?>
+                      <br/>
+                    <?php
+                      // CPU Temp
+                      if($FTL)
+                      {
+                          if ($celsius >= -273.15) {
+                              echo "<span id=\"temperature\"><i class=\"fa fa-fire ";
+                              if ($celsius > $temperaturelimit) {
+                                  echo "text-red";
+                              }
+                              else
+                              {
+                                  echo "text-vivid-blue";
+                              }
+                              ?>"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span></span><?php
+                          }
+                      }
+                      else
+                      {
+                          echo '<span id=\"temperature\"><i class="fa fa-circle text-red"></i> FTL offline</span>';
+                      }
                     ?>
                     <br/>
                     <?php
