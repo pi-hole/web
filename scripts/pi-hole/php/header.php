@@ -145,6 +145,13 @@
         }
     }
 
+    function pidofFTL()
+    {
+        return shell_exec("pidof pihole-FTL");
+    }
+    $FTLpid = intval(pidofFTL());
+    $FTL = ($FTLpid !== 0 ? true : false);
+    
     $piholeFTLConf = piholeFTLConfig();
 ?>
 <!doctype html>
