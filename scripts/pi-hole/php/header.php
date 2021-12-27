@@ -326,24 +326,24 @@ if($auth) {
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="img/logo.svg" alt="Pi-hole logo" width="45" height="67" style="height: 90px;">
+                    <img src="img/logo.svg" alt="Pi-hole logo" width="45" height="90" style="height: 90px;">
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
                         <?php
                         $pistatus = pihole_execute('status web');
                         if (isset($pistatus[0])) {
-                            $pistatus = $pistatus[0];
+                            $pistatus = intval($pistatus[0]);
                         } else {
                             $pistatus = null;
                         }
-                        if ($pistatus === "53") {
+                        if ($pistatus == "53") {
                             echo '<span id="status"><i class="fa fa-circle text-green-light"></i> Active</span>';
-                        } elseif ($pistatus === "0") {
+                        } elseif ($pistatus == "0") {
                             echo '<span id="status"><i class="fa fa-circle text-red"></i> Offline</span>';
-                        } elseif ($pistatus === "-1") {
+                        } elseif ($pistatus == "-1") {
                             echo '<span id="status"><i class="fa fa-circle text-red"></i> DNS service not running</span>';
-                        } elseif ($pistatus === "-2" || is_null($pistatus)) {
+                        } elseif ($pistatus == "-2" || is_null($pistatus)) {
                             echo '<span id="status"><i class="fa fa-circle text-red"></i> Unknown</span>';
                         } else {
                             echo '<span id="status"><i class="fa fa-circle text-orange"></i> DNS service on port '.$pistatus.'</span>';
