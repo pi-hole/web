@@ -151,7 +151,7 @@
     }
     $FTLpid = intval(pidofFTL());
     $FTL = ($FTLpid !== 0 ? true : false);
-    
+
     $piholeFTLConf = piholeFTLConfig();
 ?>
 <!doctype html>
@@ -350,24 +350,16 @@ if($auth) {
                         }
                         ?>
                       <br/>
-                    <?php
-                      // CPU Temp
-                        if ($celsius >= -273.15) {
-                            echo "<span id=\"temperature\"><i class=\"fa fa-fire ";
-                            if ($celsius > $temperaturelimit) {
-                                echo "text-red";
-                            }
-                            else
-                            {
-                                echo "text-vivid-blue";
-                            }
-                            ?>"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span></span><?php
-                        } else {
-                            echo "<span id=\"temperature\"><i class=\"fa fa-fire ";
-                            echo "text-vivid-blue";
-                            ?>"></i> No temp sensor found<span id="tempdisplay"></span><?php
-                        }
-                    ?>
+                      <?php $tempcolor = "text-vivid-blue";
+                      if ($celsius > $temperaturelimit) {
+                          $tempcolor = "text-red";}
+                      echo "<span id=\"temperature\"><i class=\"fa fa-fire ".$tempcolor."\"></i>";
+                      ?>
+                      <?php if ($celsius >= -273.15) {
+                        echo "Temp:&nbsp;<span id=\"rawtemp\" hidden>" .$celsius. "</span><span id=\"tempdisplay\"></span>";
+                      } else {
+                        echo "No temp sensor found<span id=\"tempdisplay\"></span>";}
+                      ?></span>
                     <br/>
                     <?php
                     echo "<span title=\"Detected $nproc cores\"><i class=\"fa fa-circle ";
