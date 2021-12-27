@@ -355,6 +355,10 @@ if($auth) {
                                 echo "text-vivid-blue";
                             }
                             ?>"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span></span><?php
+                        } else {
+                            echo "<span id=\"temperature\"><i class=\"fa fa-fire ";
+                            echo "text-vivid-blue";
+                            ?>"></i> No temp sensor found<span id="tempdisplay"></span><?php
                         }
                     ?>
                     <br/>
