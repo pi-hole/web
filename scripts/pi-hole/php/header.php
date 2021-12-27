@@ -336,10 +336,10 @@ if($auth) {
                             echo '<span id="status"><i class="fa fa-circle text-red"></i> Offline</span>';
                         } elseif ($pistatus === "-1") {
                             echo '<span id="status"><i class="fa fa-circle text-red"></i> DNS service not running</span>';
-                        } elseif ($pistatus === "-2") {
+                        } elseif ($pistatus === "-2" || is_null($pistatus)) {
                             echo '<span id="status"><i class="fa fa-circle text-red"></i> Unknown</span>';
                         } else {
-                            echo '<span id="status"><i class="fa fa-circle text-orange"></i> DNS service on port '; echo $pistatus; echo '</span>';
+                            echo '<span id="status"><i class="fa fa-circle text-orange"></i> DNS service on port '.$pistatus.'</span>';
                         }
                         ?>
                       <br/>
