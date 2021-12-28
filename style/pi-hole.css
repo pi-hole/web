@@ -215,21 +215,54 @@
 
 .chart-legend ul {
   list-style-type: none;
+  padding-left: 45px;
 }
 
 .chart-legend li {
   cursor: pointer;
-  word-break: break-all;
+  position: relative;
+  line-height: 1;
+  margin: 0 0 6px;
 }
 
 .chart-legend li span {
   display: inline-block;
-  width: 20px;
   height: 12px;
+}
+
+.colorBoxWrapper {
+  font-size: 14px;
+}
+
+.colorBoxWrapper:hover {
+  transform: scale(1.15);
+}
+
+.chart-legend li .colorBoxWrapper {
+  position: absolute;
+  width: 20px;
+  left: -20px;
+  top: 0;
+  line-height: 1;
+}
+
+.chart-legend li .legend-color-box {
+  display: none;
+  width: 12px;
   margin-right: 5px;
 }
 
-.strike {
+.chart-legend li .legend-label-text {
+  line-height: 1;
+  word-break: break-word;
+}
+
+.chart-legend li .legend-label-text:hover {
+  text-decoration: underline;
+}
+
+.strike,
+.strike span {
   text-decoration: line-through !important;
 }
 
@@ -440,10 +473,6 @@ td.details-control {
 
 .navbar-nav {
   height: 50px;
-}
-
-.eyeConWrapper {
-  font-size: 14px;
 }
 
 #apiTokenIframe {
