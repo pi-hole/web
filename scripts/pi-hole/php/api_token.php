@@ -3,6 +3,7 @@
 <style>
 body {
   background: #fff;
+  margin: 10px 0;
 }
 
 .qrcode {
@@ -32,7 +33,8 @@ if($auth) {
     echo '<div class="qrcode">';
     require_once("../../vendor/qrcode.php");
     $qr = QRCode::getMinimumQRCode($pwhash, QR_ERROR_CORRECT_LEVEL_Q);
-    $qr->printSVG("10px");
+    // The size of each block (in pixels) should be an integer
+    $qr->printSVG(10);
     echo "</div>";
     echo 'Raw API Token: <code class="token">' . $pwhash . "</code></div>";
   } else {
