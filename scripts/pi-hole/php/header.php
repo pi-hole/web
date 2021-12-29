@@ -337,13 +337,13 @@ if($auth) {
                         } else {
                             $pistatus = null;
                         }
-                        if ($pistatus == "53") {
+                        if ($pistatus == 53) {
                             echo '<span id="status"><i class="fa fa-circle text-green-light"></i> Active</span>';
-                        } elseif ($pistatus == "0") {
+                        } elseif ($pistatus == 0) {
                             echo '<span id="status"><i class="fa fa-circle text-red"></i> Offline</span>';
-                        } elseif ($pistatus == "-1") {
+                        } elseif ($pistatus == -1) {
                             echo '<span id="status"><i class="fa fa-circle text-red"></i> DNS service not running</span>';
-                        } elseif ($pistatus == "-2" || is_null($pistatus)) {
+                        } elseif ($pistatus == -2 || is_null($pistatus)) {
                             echo '<span id="status"><i class="fa fa-circle text-red"></i> Unknown</span>';
                         } else {
                             echo '<span id="status"><i class="fa fa-circle text-orange"></i> DNS service on port '.$pistatus.'</span>';
