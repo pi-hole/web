@@ -326,47 +326,40 @@ if($auth) {
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="img/logo.svg" alt="Pi-hole logo" width="45" height="67" style="height: 67px;">
+                    <img src="img/logo.svg" alt="Pi-hole logo" width="45" height="90" style="height: 90px;">
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
                         <?php
                         $pistatus = pihole_execute('status web');
                         if (isset($pistatus[0])) {
-                            $pistatus = $pistatus[0];
+                            $pistatus = intval($pistatus[0]);
                         } else {
                             $pistatus = null;
                         }
-                        if ($pistatus === "1") {
+                        if ($pistatus == 53) {
                             echo '<span id="status"><i class="fa fa-circle text-green-light"></i> Active</span>';
-                        } elseif ($pistatus === "0") {
+                        } elseif ($pistatus == 0) {
                             echo '<span id="status"><i class="fa fa-circle text-red"></i> Offline</span>';
-                        } elseif ($pistatus === "-1") {
+                        } elseif ($pistatus == -1) {
                             echo '<span id="status"><i class="fa fa-circle text-red"></i> DNS service not running</span>';
+                        } elseif ($pistatus == -2 || is_null($pistatus)) {
+                            echo '<span id="status"><i class="fa fa-circle text-red"></i> Unknown</span>';
                         } else {
-                            echo '<span id="status"><i class="fa fa-circle text-orange"></i> Unknown</span>';
+                            echo '<span id="status"><i class="fa fa-circle text-orange"></i> DNS service on port '.$pistatus.'</span>';
                         }
-
-                        // CPU Temp
-                        if($FTL)
-                        {
-                            if ($celsius >= -273.15) {
-                                echo "<span id=\"temperature\"><i class=\"fa fa-fire ";
-                                if ($celsius > $temperaturelimit) {
-                                    echo "text-red";
-                                }
-                                else
-                                {
-                                    echo "text-vivid-blue";
-                                }
-                                ?>"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span></span><?php
-                            }
-                        }
-                        else
-                        {
-                            echo '<span id=\"temperature\"><i class="fa fa-circle text-red"></i> FTL offline</span>';
-                        }
-                    ?>
+                        ?>
+                      <br/>
+                      <?php $tempcolor = "text-vivid-blue";
+                      if ($celsius > $temperaturelimit) {
+                          $tempcolor = "text-red";}
+                      echo "<span id=\"temperature\"><i class=\"fa fa-fire ".$tempcolor."\"></i>";
+                      ?>
+                      <?php if ($celsius >= -273.15) {
+                        echo "Temp:&nbsp;<span id=\"rawtemp\" hidden>" .$celsius. "</span><span id=\"tempdisplay\"></span>";
+                      } else {
+                        echo "No temp sensor found<span id=\"tempdisplay\"></span>";}
+                      ?></span>
                     <br/>
                     <?php
                     echo "<span title=\"Detected $nproc cores\"><i class=\"fa fa-circle ";
@@ -538,7 +531,7 @@ if($auth) {
                   </ul>
                     <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> Disable</a> -->
                 </li>
-                <li id="pihole-enable" class="treeview"<?php if ($pistatus == "1") { ?> hidden<?php } ?>>
+                <li id="pihole-enable" class="treeview"<?php if (!in_array($pistatus,["0","-1","-2"])) { ?> hidden<?php } ?>>
                     <a href="#">
                       <i class="fa fa-fw menu-icon fa-play"></i>
                       <span id="enableLabel">Enable&nbsp;&nbsp;&nbsp;
