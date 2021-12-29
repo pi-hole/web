@@ -101,6 +101,10 @@ code {
   font-family: "Ubuntu Mono", Consolas, "Courier New", monospace;
 }
 
+footer code {
+  text-transform: none;
+}
+
 pre {
   padding: 10px 3px;
   border: none;
