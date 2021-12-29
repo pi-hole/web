@@ -41,9 +41,26 @@ else
 			$tmp = explode(" ",$line);
 
 			if(($tmp[0] === "domains_being_blocked" && !is_numeric($tmp[1])) || $tmp[0] === "status")
-				$stats[$tmp[0]] = $tmp[1]; // Expect string response
+			{
+				$stats[$tmp[0]] = $tmp[1];
+				continue;
+			}
+
+			if(isset($_GET['summary']))
+			{
+				if($tmp[0] !== "ads_percentage_today")
+				{
+					$stats[$tmp[0]] = number_format($tmp[1]);
+				}
+				else
+				{
+					$stats[$tmp[0]] = number_format($tmp[1], 1, '.', '');
+				}
+			}
 			else
-				$stats[$tmp[0]] = floatval($tmp[1]); // Expect float response
+			{
+				$stats[$tmp[0]] = floatval($tmp[1]);
+			}
 		}
 		$stats['gravity_last_updated'] = gravity_last_update(true);
 		$data = array_merge($data,$stats);

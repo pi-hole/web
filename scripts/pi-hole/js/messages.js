@@ -89,11 +89,7 @@ function renderMessage(data, type, row) {
       );
 
     case "DNSMASQ_WARN":
-      return (
-        "Warning in <code>dnsmasq</code> core:<pre>" +
-        row.message +
-        '</pre> Check out <a href="https://docs.pi-hole.net/ftldns/dnsmasq_warn/" target="_blank">our documentation</a> for further information.'
-      );
+      return "Warning in <code>dnsmasq</code> core:<pre>" + row.message + "</pre>";
 
     case "LOAD":
       return (

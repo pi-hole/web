@@ -163,18 +163,16 @@ var reloadCallback = function () {
     }
   }
 
-  var formatter = new Intl.NumberFormat();
-  $("h3#dns_queries").text(formatter.format(statistics[0]));
-  $("h3#queries_blocked_exact").text(formatter.format(statistics[2]));
-  $("h3#queries_wildcard_blocked").text(formatter.format(statistics[3]));
+  $("h3#dns_queries").text(statistics[0].toLocaleString());
+  $("h3#ads_blocked_exact").text(statistics[2].toLocaleString());
+  $("h3#ads_wildcard_blocked").text(statistics[3].toLocaleString());
 
   var percent = 0;
   if (statistics[2] + statistics[3] > 0) {
     percent = (100 * (statistics[2] + statistics[3])) / statistics[0];
   }
 
-  var percentage = formatter.format(Math.round(percent * 10) / 10);
-  $("h3#queries_percentage_today").text(percentage + " %");
+  $("h3#ads_percentage_today").text(parseFloat(percent).toFixed(1).toLocaleString() + " %");
 };
 
 function refreshTableData() {
