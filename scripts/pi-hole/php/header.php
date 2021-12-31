@@ -326,70 +326,67 @@ if($auth) {
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="img/logo.svg" alt="Pi-hole logo" width="45" height="90" style="height: 90px;">
+                    <img src="img/logo.svg" alt="Pi-hole logo">
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
-                        <?php
-                        $pistatus = pihole_execute('status web');
-                        if (isset($pistatus[0])) {
-                            $pistatus = intval($pistatus[0]);
-                        } else {
-                            $pistatus = null;
-                        }
-                        if ($pistatus == 53) {
-                            echo '<span id="status"><i class="fa fa-circle text-green-light"></i> Active</span>';
-                        } elseif ($pistatus == 0) {
-                            echo '<span id="status"><i class="fa fa-circle text-red"></i> Offline</span>';
-                        } elseif ($pistatus == -1) {
-                            echo '<span id="status"><i class="fa fa-circle text-red"></i> DNS service not running</span>';
-                        } elseif ($pistatus == -2 || is_null($pistatus)) {
-                            echo '<span id="status"><i class="fa fa-circle text-red"></i> Unknown</span>';
-                        } else {
-                            echo '<span id="status"><i class="fa fa-circle text-orange"></i> DNS service on port '.$pistatus.'</span>';
-                        }
-                        ?>
-                      <br/>
-                      <?php $tempcolor = "text-vivid-blue";
-                      if ($celsius > $temperaturelimit) {
-                          $tempcolor = "text-red";}
-                      echo "<span id=\"temperature\"><i class=\"fa fa-fire ".$tempcolor."\"></i>";
-                      ?>
-                      <?php if ($celsius >= -273.15) {
-                        echo "Temp:&nbsp;<span id=\"rawtemp\" hidden>" .$celsius. "</span><span id=\"tempdisplay\"></span>";
-                      } else {
-                        echo "No temp sensor found<span id=\"tempdisplay\"></span>";}
-                      ?></span>
-                    <br/>
                     <?php
-                    echo "<span title=\"Detected $nproc cores\"><i class=\"fa fa-circle ";
-                        if ($loaddata[0] > $nproc) {
-                            echo "text-red";
-                        }
-                        else
-                        {
-                            echo "text-green-light";
-                        }
-                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</span>";
+                    $pistatus = pihole_execute('status web');
+                    if (isset($pistatus[0])) {
+                        $pistatus = intval($pistatus[0]);
+                    } else {
+                        $pistatus = null;
+                    }
+                    if ($pistatus == 53) {
+                        echo '<span id="status"><i class="fa fa-w fa-circle text-green-light"></i> Active</span>';
+                    } elseif ($pistatus == 0) {
+                        echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Offline</span>';
+                    } elseif ($pistatus == -1) {
+                        echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> DNS service not running</span>';
+                    } elseif ($pistatus == -2 || is_null($pistatus)) {
+                        echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Unknown</span>';
+                    } else {
+                        echo '<span id="status"><i class="fa fa-w fa-circle text-orange"></i> DNS service on port '.$pistatus.'</span>';
+                    }
                     ?>
                     <br/>
                     <?php
-                    echo "<span><i class=\"fa fa-circle ";
-                        if ($memory_usage > 0.75 || $memory_usage < 0.0) {
-                            echo "text-red";
-                        }
-                        else
-                        {
-                            echo "text-green-light";
-                        }
-                        if($memory_usage > 0.0)
-                        {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</span>";
-                        }
-                        else
-                        {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp; N/A</span>";
-                        }
+                    echo '<span title="Detected $nproc cores"><i class="fa fa-w fa-circle ';
+                    if ($loaddata[0] > $nproc) {
+                        echo "text-red";
+                    } else {
+                        echo "text-green-light";
+                    }
+                    echo '"></i> Load:&nbsp;&nbsp;' . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</span>";
+                    ?>
+                    <br/>
+                    <?php
+                    echo '<span><i class="fa fa-w fa-circle ';
+                    if ($memory_usage > 0.75 || $memory_usage < 0.0) {
+                        echo "text-red";
+                    } else {
+                        echo "text-green-light";
+                    }
+                    if($memory_usage > 0.0) {
+                        echo '"></i> Memory usage:&nbsp;&nbsp;' . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</span>";
+                    } else {
+                        echo '"></i> Memory usage:&nbsp;&nbsp; N/A</span>';
+                    }
+                    ?>
+                    <br/>
+                    <?php
+                    $tempcolor = "text-vivid-blue";
+                    if ($celsius > $temperaturelimit) {
+                        $tempcolor = "text-red";
+                    }
+                    echo '<span id="temperature"><i class="fa fa-w fa-fire '.$tempcolor.'" style="width: 1em !important"></i> ';
+
+                    if ($celsius >= -273.15) {
+                        echo 'Temp:&nbsp;<span id="rawtemp" hidden>' .$celsius. '</span>';
+                    } else {
+                        echo "No temp sensor found";
+                    }
+                    echo '<span id="tempdisplay"></span></span>';
                     ?>
                 </div>
             </div>
@@ -416,19 +413,19 @@ if($auth) {
                 <!-- Home Page -->
                 <li<?php if($scriptname === "index.php"){ ?> class="active"<?php } ?>>
                     <a href="index.php">
-                        <i class="fa fa-fw menu-icon fa-home"></i> Dashboard
+                        <i class="fa fa-fw menu-icon fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
                 <?php if($auth){ ?>
                 <!-- Query Log -->
                 <li<?php if($scriptname === "queries.php"){ ?> class="active"<?php } ?>>
                     <a href="queries.php">
-                        <i class="fa fa-fw menu-icon fa-file-alt"></i> Query Log
+                        <i class="fa fa-fw menu-icon fa-file-alt"></i> <span>Query Log</span>
                     </a>
                 </li>
                 <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php"){ ?> active<?php } ?>">
                   <a href="#">
-                    <i class="fa fa-fw menu-icon fa-clock"></i> Long-term data
+                    <i class="fa fa-fw menu-icon fa-clock"></i> <span>Long-term data</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -454,19 +451,19 @@ if($auth) {
                 <!-- Whitelist -->
                 <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
                     <a href="groups-domains.php?type=white">
-                        <i class="fa fa-fw menu-icon fa-check-circle"></i> <span>Whitelist
+                        <i class="fa fa-fw menu-icon fa-check-circle"></i> <span>Whitelist</span>
                     </a>
                 </li>
                 <!-- Blacklist -->
                 <li<?php if($scriptname === "blacklist"){ ?> class="active"<?php } ?>>
                     <a href="groups-domains.php?type=black">
-                        <i class="fa fa-fw menu-icon fa-ban"></i> <span>Blacklist
+                        <i class="fa fa-fw menu-icon fa-ban"></i> <span>Blacklist</span>
                     </a>
                 </li>
                 <!-- Group Management -->
                 <li class="treeview<?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?> active<?php } ?>">
                   <a href="#">
-                    <i class="fa fa-fw menu-icon fa-users-cog"></i> Group Management
+                    <i class="fa fa-fw menu-icon fa-users-cog"></i> <span>Group Management</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -497,10 +494,10 @@ if($auth) {
                 <!-- Toggle -->
                 <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden<?php } ?>>
                   <a href="#">
+                    <i class="fa fa-fw menu-icon fa-stop"></i> <span>Disable&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
                     </span>
-                    <i class="fa fa-fw menu-icon fa-stop"></i> Disable&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span>
                   </a>
                   <ul class="treeview-menu">
                     <li>
@@ -525,11 +522,11 @@ if($auth) {
                     </li>
                     <li>
                       <a href="#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal">
-                            <i class="fa fa-fw menu-icon fa-clock"></i> Custom time
+                            <i class="fa fa-fw menu-icon fa-clock"></i> <span>Custom time</span>
                       </a>
                     </li>
                   </ul>
-                    <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> Disable</a> -->
+                    <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
                 <li id="pihole-enable" class="treeview"<?php if (!in_array($pistatus,["0","-1","-2"])) { ?> hidden<?php } ?>>
                     <a href="#">
@@ -542,7 +539,7 @@ if($auth) {
                 <!-- Tools -->
                 <li class="treeview<?php if (in_array($scriptname, array("messages.php", "gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php", "network.php"))){ ?> active<?php } ?>">
                   <a href="#">
-                    <i class="fa fa-fw menu-icon fa-folder"></i> Tools
+                    <i class="fa fa-fw menu-icon fa-folder"></i> <span>Tools</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -601,13 +598,13 @@ if($auth) {
                 <!-- Settings -->
                 <li<?php if($scriptname === "settings.php"){ ?> class="active"<?php } ?>>
                     <a href="settings.php">
-                        <i class="fa fa-fw menu-icon fa-cogs"></i> Settings
+                        <i class="fa fa-fw menu-icon fa-cogs"></i> <span>Settings</span>
                     </a>
                 </li>
                 <!-- Local DNS Records -->
                 <li class="treeview <?php if(in_array($scriptname, array("dns_records.php", "cname_records.php"))){ ?>active<?php } ?>">
                   <a href="#">
-                    <i class="fa fa-fw menu-icon fa-address-book"></i> Local DNS
+                    <i class="fa fa-fw menu-icon fa-address-book"></i> <span>Local DNS</span>
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -631,7 +628,7 @@ if($auth) {
                 if(strlen($pwhash) > 0) { ?>
                 <li>
                     <a href="?logout">
-                        <i class="fa fa-fw menu-icon fa-user-times"></i> Logout
+                        <i class="fa fa-fw menu-icon fa-user-times"></i> <span>Logout</span>
                     </a>
                 </li>
                 <?php } ?>
@@ -642,20 +639,20 @@ if($auth) {
                 if(strlen($pwhash) > 0 && !$auth) { ?>
                 <li<?php if($scriptname === "login"){ ?> class="active"<?php } ?>>
                     <a href="index.php?login">
-                        <i class="fa fa-fw menu-icon fa-user"></i> Login
+                        <i class="fa fa-fw menu-icon fa-user"></i> <span>Login</span>
                     </a>
                 </li>
                 <?php } ?>
                 <!-- Donate -->
                 <li>
                     <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
-                        <i class="fab fa-fw menu-icon fa-paypal"></i> Donate
+                        <i class="fab fa-fw menu-icon fa-paypal"></i> <span>Donate</span>
                     </a>
                 </li>
                  <!-- Docs -->
                  <li>
                     <a href="https://docs.pi-hole.net/" rel="noopener" target="_blank">
-                        <i class="fa fa-fw menu-icon fa-question-circle"></i> Documentation
+                        <i class="fa fa-fw menu-icon fa-question-circle"></i> <span>Documentation</span>
                     </a>
                 </li>
             </ul>

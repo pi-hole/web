@@ -843,39 +843,34 @@ label {
 
 /*--- user-panel ---*/
 .user-panel {
-  padding: 30px 10%;
+  padding: 30px 0;
   background: #cce6ff;
   border-radius: 75px 0 0;
   z-index: 0;
-}
-
-.user-panel::before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 88px;
-  z-index: -1;
-  background-image: linear-gradient(to right, rgb(204, 230, 255) 70%, rgba(204, 230, 255, 0) 100%);
 }
 
 .user-panel > .info,
 .user-panel > .info > a {
   color: #000;
   left: auto;
-  right: 10%;
   z-index: -2;
 }
 
+.user-panel > .info > span {
+  margin: 0;
+}
+
 .user-panel .pull-left.image {
-  margin: 20px 0 0;
+  margin-top: 20px;
 }
 
 .user-panel .fa-circle path {
   stroke: rgba(0, 0, 0, 0.5);
   stroke-width: 5%;
+}
+
+.user-panel .svg-inline--fa {
+  margin-right: 2px;
 }
 
 .user-panel svg.text-orange,
