@@ -271,9 +271,39 @@
   padding: 0 12px;
 }
 
+.user-panel {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.user-panel .image {
+  flex: 1 0 25%;
+  margin: 0 10px;
+  text-align: center;
+}
+
+.user-panel > .image > img {
+  max-width: 52px;
+  min-width: 30px;
+}
+
+.user-panel > .info {
+  padding: 0;
+  position: relative;
+  line-height: 1.05;
+  flex: 1 1 auto;
+  left: auto;
+}
+
+.user-panel > .info > p {
+  margin-bottom: 6px;
+}
+
 .user-panel > .info > span {
-  padding-right: 5px;
-  margin-top: 3px;
+  display: inline-block;
+  padding: 0;
+  margin: 2px 0;
   font-size: 11px;
 }
 
@@ -472,4 +502,8 @@ td.details-control {
   padding: 1px 1em 0.5em;
   box-shadow: 0 0 2px -1px #bbb;
   border-radius: 6px;
+}
+
+.menu-icon {
+  margin-right: 0.5em;
 }
