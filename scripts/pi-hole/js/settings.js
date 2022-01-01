@@ -227,7 +227,7 @@ var leasetable, staticleasetable;
 $(function () {
   if (document.getElementById("DHCPLeasesTable")) {
     leasetable = $("#DHCPLeasesTable").DataTable({
-      dom: 
+      dom:
         "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
         "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
         "<'row'<'col-sm-5'i><'col-sm-7'p>>",
@@ -257,7 +257,7 @@ $(function () {
 
   if (document.getElementById("DHCPStaticLeasesTable")) {
     staticleasetable = $("#DHCPStaticLeasesTable").DataTable({
-      dom: 
+      dom:
         "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
         "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
         "<'row'<'col-sm-5'i><'col-sm-7'p>>",
