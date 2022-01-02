@@ -79,7 +79,7 @@
         <!-- small box -->
         <div class="small-box bg-aqua no-user-select">
             <div class="inner">
-                <h3 class="statistic" id="ads_blocked_exact">---</h3>
+                <h3 class="statistic" id="queries_blocked_exact">---</h3>
                 <p>Queries Blocked</p>
             </div>
             <div class="icon">
@@ -92,7 +92,7 @@
         <!-- small box -->
         <div class="small-box bg-aqua no-user-select">
             <div class="inner">
-                <h3 class="statistic" id="ads_wildcard_blocked">---</h3>
+                <h3 class="statistic" id="queries_wildcard_blocked">---</h3>
                 <p>Queries Blocked (Wildcards)</p>
             </div>
             <div class="icon">
@@ -118,7 +118,7 @@
         <!-- small box -->
         <div class="small-box bg-yellow no-user-select">
             <div class="inner">
-                <h3 class="statistic" id="ads_percentage_today">---</h3>
+                <h3 class="statistic" id="queries_percentage_today">---</h3>
                 <p>Queries Blocked</p>
             </div>
             <div class="icon">
