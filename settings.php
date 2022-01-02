@@ -1241,7 +1241,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 <div>
                                                     <input type="radio" name="privacylevel" id="privacylevel_1" value="1" <?php if ($privacylevel === 1){ ?>checked<?php } ?>>
                                                     <label for="privacylevel_1"><strong>Hide domains: Display and store all domains as "hidden"</strong></label>
-                                                    <p>This disables the Top Domains and Top Ads tables on the dashboard</p>
+                                                    <p>This disables the Top Domains and Top Blocked Domains tables on the dashboard</p>
                                                 </div>
                                                 <div>
                                                     <input type="radio" name="privacylevel" id="privacylevel_2" value="2" <?php if ($privacylevel === 2){ ?>checked<?php } ?>>
