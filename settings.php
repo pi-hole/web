@@ -614,12 +614,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                             <div class="col-md-12">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">DHCP leases</h3>
+                                        <h3 class="box-title">Currently active DHCP leases</h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label>Currently active DHCP leases</label>
                                                 <table id="DHCPLeasesTable" class="table table-striped table-bordered nowrap" width="100%">
                                                     <thead>
                                                         <tr>
@@ -648,10 +647,19 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                         <?php } ?>
                                                     </tbody>
                                                 </table>
-                                                <br>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Static DHCP leases configuration</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
                                             <div class="col-md-12">
-                                                <label>Static DHCP leases configuration</label>
                                                 <table id="DHCPStaticLeasesTable" class="table table-striped table-bordered nowrap" width="100%">
                                                     <thead>
                                                     <tr>
