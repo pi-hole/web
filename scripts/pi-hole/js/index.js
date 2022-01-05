@@ -731,8 +731,6 @@ function updateSummaryData(runOnce) {
       data.ads_blocked_today = "connection";
       data.ads_percentage_today = "to";
       data.domains_being_blocked = "API";
-      // Adjust text
-      $("#temperature").html('<i class="fa fa-circle text-red"></i> FTL offline');
       // Show spinner
       $("#queries-over-time .overlay").show();
       $("#forward-destinations-pie .overlay").show();
@@ -745,12 +743,12 @@ function updateSummaryData(runOnce) {
     } else if (FTLoffline) {
       // FTL was previously offline
       FTLoffline = false;
-      $("#temperature").text(" ");
       updateQueriesOverTime();
       updateTopClientsChart();
       updateTopLists();
     }
 
+    var formatter = new Intl.NumberFormat();
     //Element name might have a different name to the property of the API so we split it at |
     [
       "ads_blocked_today|queries_blocked_today",
@@ -763,7 +761,9 @@ function updateSummaryData(runOnce) {
       var apiName = apiElName[0];
       var elName = apiElName[1];
       var $todayElement = elName ? $("span#" + elName) : $("span#" + apiName);
-      var textData = idx === 2 && data[apiName] !== "to" ? data[apiName] + "%" : data[apiName];
+      // Round to one decimal place and format locale-aware
+      var text = formatter.format(Math.round(data[apiName] * 10) / 10);
+      var textData = idx === 2 && data[apiName] !== "to" ? text + "%" : text;
       if ($todayElement.text() !== textData && $todayElement.text() !== textData + "%") {
         $todayElement.addClass("glow");
         $todayElement.text(textData);

@@ -101,6 +101,10 @@ code {
   font-family: "Ubuntu Mono", Consolas, "Courier New", monospace;
 }
 
+footer code {
+  text-transform: none;
+}
+
 pre {
   padding: 10px 3px;
   border: none;
@@ -494,7 +498,10 @@ label {
   color: #000;
   padding: 0;
   margin: 0;
-  font-size: 1.3em;
+  line-height: 1.2;
+  font-size: 1em;
+  text-align: center;
+  word-break: break-word;
 }
 
 .nav.navbar-nav {
@@ -504,6 +511,7 @@ label {
   justify-content: space-between;
   align-items: center;
   width: 359.5px;
+  height: auto;
   position: absolute;
   right: 0;
   top: 0;
@@ -511,10 +519,32 @@ label {
   background: #48f;
 }
 
+.navbar-custom-menu > .navbar-nav > li {
+  padding: 0 4px;
+}
+
+#pihole-diagnosis {
+  min-width: 50px;
+}
+
+#pihole-diagnosis svg {
+  font-size: 28px;
+}
+
+.icon-bounce {
+  animation: none;
+}
+
+.dropdown.user.user-menu {
+  min-width: 84px;
+}
+
 .navbar-text code {
+  display: inline-block;
   padding: 0;
   margin: 0;
   font-size: inherit;
+  line-height: 0.95;
   background: none;
   font-family: inherit;
   color: #cce6ff;
@@ -523,7 +553,7 @@ label {
 .navbar-nav > .user-menu .user-image {
   float: none;
   width: 1em;
-  height: 1em;
+  height: 22px;
   margin: 0;
   vertical-align: baseline;
 }
@@ -539,16 +569,16 @@ label {
 }
 
 .main-header .navbar .nav > li > a > .label {
-  padding: 0.25em 0.15em;
+  padding: 0.25em;
   min-width: 1.6em;
   min-height: 1.6em;
   top: auto;
-  bottom: -0.75em;
-  right: -0.75em;
-  font-size: 12px;
+  bottom: -0.7em;
+  right: -0.3em;
+  font-size: 14px;
   line-height: 1;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
-  border-radius: 50%;
+  border-radius: 0.8em;
 }
 
 .main-header .navbar .sidebar-toggle {
@@ -749,6 +779,10 @@ label {
   display: none;
 }
 
+.menu-icon {
+  margin-right: 0;
+}
+
 .treeview-menu li a svg {
   display: inherit;
   position: absolute;
@@ -809,38 +843,34 @@ label {
 
 /*--- user-panel ---*/
 .user-panel {
-  padding: 30px 10%;
+  padding: 30px 0;
   background: #cce6ff;
   border-radius: 75px 0 0;
   z-index: 0;
-}
-
-.user-panel::before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 88px;
-  z-index: -1;
-  background-image: linear-gradient(to right, #cce6ff 70%, transparent 100%);
 }
 
 .user-panel > .info,
 .user-panel > .info > a {
   color: #000;
   left: auto;
-  right: 10%;
   z-index: -2;
 }
 
-.user-panel .pull-left.image {
-  margin: 20px 0 0;
+.user-panel > .info > span {
+  margin: 0;
 }
 
-.user-panel .info span svg {
-  filter: drop-shadow(0 0 0.4px rgba(0, 68, 255, 0.4));
+.user-panel .pull-left.image {
+  margin-top: 20px;
+}
+
+.user-panel .fa-circle path {
+  stroke: rgba(0, 0, 0, 0.5);
+  stroke-width: 5%;
+}
+
+.user-panel .svg-inline--fa {
+  margin-right: 2px;
 }
 
 .user-panel svg.text-orange,
@@ -1332,6 +1362,16 @@ table.dataTable {
   color: #000 !important;
 }
 
+.no-danger-area {
+  box-shadow: none;
+  background: rgba(127, 127, 127, 0.05);
+}
+
+.danger-area {
+  box-shadow: none;
+  background: rgba(127, 127, 127, 0.05);
+}
+
 /*** Animation keyframes ***/
 @-webkit-keyframes flash {
   0% {
@@ -1502,6 +1542,7 @@ table.dataTable {
   }
   .nav.navbar-nav {
     width: auto;
+    max-width: calc(100vw - 210px);
     top: 0;
     bottom: -10px;
     right: 0;
@@ -1513,6 +1554,9 @@ table.dataTable {
   }
   .nav > li > a {
     padding: 6px 10px;
+  }
+  .dropdown.user.user-menu {
+    min-width: 40px;
   }
   .user-panel {
     border-radius: 0;
@@ -1707,6 +1751,14 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   appearance: none;
   margin: 0;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  background: white;
+}
+
+input[type="password"]::-webkit-caps-lock-indicator {
+  filter: invert(100%);
 }
 
 /*** ----------------------------------------------------- ***/

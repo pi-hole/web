@@ -227,7 +227,14 @@ var leasetable, staticleasetable;
 $(function () {
   if (document.getElementById("DHCPLeasesTable")) {
     leasetable = $("#DHCPLeasesTable").DataTable({
-      dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-6'i><'col-sm-6'f>>",
+      dom:
+        "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
+        "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+      lengthMenu: [
+        [5, 10, 25, 50, 100, -1],
+        [5, 10, 25, 50, 100, "All"],
+      ],
       columnDefs: [
         { bSortable: false, orderable: false, targets: -1 },
         {
@@ -235,10 +242,7 @@ $(function () {
           render: $.fn.dataTable.render.text(),
         },
       ],
-      paging: false,
-      scrollCollapse: true,
-      scrollY: "200px",
-      scrollX: true,
+      paging: true,
       order: [[2, "asc"]],
       stateSave: true,
       stateDuration: 0,
@@ -253,7 +257,14 @@ $(function () {
 
   if (document.getElementById("DHCPStaticLeasesTable")) {
     staticleasetable = $("#DHCPStaticLeasesTable").DataTable({
-      dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-12'i>>",
+      dom:
+        "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
+        "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+      lengthMenu: [
+        [5, 10, 25, 50, 100, -1],
+        [5, 10, 25, 50, 100, "All"],
+      ],
       columnDefs: [
         { bSortable: false, orderable: false, targets: -1 },
         {
@@ -261,10 +272,7 @@ $(function () {
           render: $.fn.dataTable.render.text(),
         },
       ],
-      paging: false,
-      scrollCollapse: true,
-      scrollY: "200px",
-      scrollX: true,
+      paging: true,
       order: [[2, "asc"]],
       stateSave: true,
       stateSaveCallback: function (settings, data) {

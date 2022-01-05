@@ -614,12 +614,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                             <div class="col-md-12">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">DHCP leases</h3>
+                                        <h3 class="box-title">Currently active DHCP leases</h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label>Currently active DHCP leases</label>
                                                 <table id="DHCPLeasesTable" class="table table-striped table-bordered nowrap" width="100%">
                                                     <thead>
                                                         <tr>
@@ -648,10 +647,19 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                         <?php } ?>
                                                     </tbody>
                                                 </table>
-                                                <br>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Static DHCP leases configuration</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
                                             <div class="col-md-12">
-                                                <label>Static DHCP leases configuration</label>
                                                 <table id="DHCPStaticLeasesTable" class="table table-striped table-bordered nowrap" width="100%">
                                                     <thead>
                                                     <tr>
@@ -1241,7 +1249,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 <div>
                                                     <input type="radio" name="privacylevel" id="privacylevel_1" value="1" <?php if ($privacylevel === 1){ ?>checked<?php } ?>>
                                                     <label for="privacylevel_1"><strong>Hide domains: Display and store all domains as "hidden"</strong></label>
-                                                    <p>This disables the Top Domains and Top Ads tables on the dashboard</p>
+                                                    <p>This disables the Top Permitted Domains and Top Blocked Domains tables on the dashboard</p>
                                                 </div>
                                                 <div>
                                                     <input type="radio" name="privacylevel" id="privacylevel_2" value="2" <?php if ($privacylevel === 2){ ?>checked<?php } ?>>
