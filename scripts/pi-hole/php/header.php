@@ -351,7 +351,7 @@ if($auth) {
                     ?>
                     <br/>
                     <?php
-                    echo '<span title="Detected $nproc cores"><i class="fa fa-w fa-circle ';
+                    echo '<span title="Detected '.$nproc.' cores"><i class="fa fa-w fa-circle ';
                     if ($loaddata[0] > $nproc) {
                         echo "text-red";
                     } else {
