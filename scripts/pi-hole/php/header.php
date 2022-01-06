@@ -66,6 +66,8 @@
         // Nothing can be colder than -273.15 degree Celsius (= 0 Kelvin)
         // This is the minimum temperature possible (AKA absolute zero)
         $celsius = -273.16;
+        // Set templimit to null if no tempsensor was found
+        $temperaturelimit = null;
     }
 
     // Get load
@@ -376,7 +378,7 @@ if($auth) {
                     <br/>
                     <?php
                     $tempcolor = "text-vivid-blue";
-                    if ($celsius > $temperaturelimit) {
+                    if (isset($temperaturelimit) && $celsius > $temperaturelimit) {
                         $tempcolor = "text-red";
                     }
                     echo '<span id="temperature"><i class="fa fa-w fa-fire '.$tempcolor.'" style="width: 1em !important"></i> ';
