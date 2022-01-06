@@ -19,15 +19,17 @@ $data = array();
 
 // Common API functions
 if (isset($_GET['status'])) {
+    // Receive the return of "pihole status web"
     $pistatus = pihole_execute('status web');
 
-    // Start with status="Unknown" (-2)
-    $returncode = -2;
     if (isset($pistatus[0])) {
-        $returncode = intval($pistatus[0]);
+        $pistatus = intval($pistatus[0]);
+    } else {
+        // If no response, status="Unknown" (-2)
+        $pistatus = -2;
     }
 
-    switch ($returncode) {
+    switch ($pistatus) {
         case -2: // Unkown
         case -1: // DNS service not running"
         case 0: // Offline
