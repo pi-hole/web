@@ -18,28 +18,30 @@ $FTL_IP = "127.0.0.1";
 $data = array();
 
 // Common API functions
-if (isset($_GET['status']))
-{
-	$pistatus = pihole_execute('status web');
-	if(isset($pistatus[0]))
-    {
-        $pistatus = $pistatus[0];
+if (isset($_GET['status'])) {
+    // Receive the return of "pihole status web"
+    $pistatus = pihole_execute('status web');
+
+    if (isset($pistatus[0])) {
+        $pistatus = intval($pistatus[0]);
+    } else {
+        // If no response, status="Unknown" (-2)
+        $pistatus = -2;
     }
-    else
-    {
-        $pistatus = null;
+
+    switch ($pistatus) {
+        case -2: // Unkown
+        case -1: // DNS service not running"
+        case 0: // Offline
+            $data = array_merge($data, array("status" => "disabled"));
+            break;
+
+        default:
+            // DNS service on port $returncode
+            $data = array_merge($data, array("status" => "enabled"));
     }
-	if ($pistatus === "1")
-	{
-		$data = array_merge($data, array("status" => "enabled"));
-	}
-	else
-	{
-		$data = array_merge($data, array("status" => "disabled"));
-	}
-}
-elseif (isset($_GET['enable']) && $auth)
-{
+
+} elseif (isset($_GET['enable']) && $auth) {
 	if(isset($_GET["auth"]))
 	{
 	if($_GET["auth"] !== $pwhash)
@@ -165,12 +167,9 @@ elseif (isset($_GET['list']))
 require("api_FTL.php");
 
 header('Content-type: application/json');
-if(isset($_GET["jsonForceObject"]))
-{
-	echo json_encode($data, JSON_FORCE_OBJECT);
-}
-else
-{
-	echo json_encode($data);
+if(isset($_GET["jsonForceObject"])) {
+    echo json_encode($data, JSON_FORCE_OBJECT);
+} else {
+    echo json_encode($data);
 }
 ?>
