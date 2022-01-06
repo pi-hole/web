@@ -21,20 +21,22 @@ $data = array();
 if (isset($_GET['status'])) {
     $pistatus = pihole_execute('status web');
 
+    // Start with status="Unknown" (-2)
+    $returncode = -2;
     if (isset($pistatus[0])) {
-        $pistatus = intval($pistatus[0]);
-    } else {
-        $pistatus = null;
+        $returncode = intval($pistatus[0]);
     }
 
-    if ($pistatus == -2 || is_null($pistatus)) {
-        $data = array_merge($data, array("status" => "Unknown"));
-    } elseif ($pistatus == -1) {
-        $data = array_merge($data, array("status" => "DNS service not running"));
-    } elseif ($pistatus == 0) {
-        $data = array_merge($data, array("status" => "Offline"));
-    } else {
-        $data = array_merge($data, array("status" => "DNS service on port ".$pistatus));
+    switch ($returncode) {
+        case -2: // Unkown
+        case -1: // DNS service not running"
+        case 0: // Offline
+            $data = array_merge($data, array("status" => "disabled"));
+            break;
+
+        default:
+            // DNS service on port $returncode
+            $data = array_merge($data, array("status" => "enabled"));
     }
 
 } elseif (isset($_GET['enable']) && $auth) {
