@@ -375,19 +375,19 @@ if($auth) {
                         echo '"></i> Memory usage:&nbsp;&nbsp; N/A</span>';
                     }
                     ?>
-                    <!-- Only show temp info if any data is available -->
-                    if ($celsius >= -273.15) {
-                      <br/>
-                      <?php
-                      $tempcolor = "text-vivid-blue";
-                      if (isset($temperaturelimit) && $celsius > $temperaturelimit) {
+                    <br/>
+                    <?php
+                      if ($celsius >= -273.15) {
+                        // Only show temp info if any data is available -->
+                        $tempcolor = "text-vivid-blue";
+                        if (isset($temperaturelimit) && $celsius > $temperaturelimit) {
                           $tempcolor = "text-red";
+                        }
+                        echo '<span id="temperature"><i class="fa fa-w fa-fire '.$tempcolor.'" style="width: 1em !important"></i> ';
+                        echo 'Temp:&nbsp;<span id="rawtemp" hidden>' .$celsius. '</span>';
+                        echo '<span id="tempdisplay"></span></span>';
                       }
-                      echo '<span id="temperature"><i class="fa fa-w fa-fire '.$tempcolor.'" style="width: 1em !important"></i> ';
-                      echo 'Temp:&nbsp;<span id="rawtemp" hidden>' .$celsius. '</span>';
-                      echo '<span id="tempdisplay"></span></span>';
                     ?>
-                  }
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
