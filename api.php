@@ -27,12 +27,14 @@ if (isset($_GET['status'])) {
         $pistatus = null;
     }
 
-    if ($pistatus == -2 || $pistatus == -1 || $pistatus == 0 || is_null($pistatus)) {
-        $data = array_merge($data, array("status" => "disabled"));
-    } elseif ($pistatus == 53) {
-        $data = array_merge($data, array("status" => "enabled"));
+    if ($pistatus == -2 || is_null($pistatus)) {
+        $data = array_merge($data, array("status" => "Unknown"));
+    } elseif ($pistatus == -1) {
+        $data = array_merge($data, array("status" => "DNS service not running"));
+    } elseif ($pistatus == 0) {
+        $data = array_merge($data, array("status" => "Offline"));
     } else {
-        $data = array_merge($data, array("status" => "enabled on port ".$pistatus));
+        $data = array_merge($data, array("status" => "DNS service on port ".$pistatus));
     }
 
 } elseif (isset($_GET['enable']) && $auth) {
@@ -161,12 +163,9 @@ elseif (isset($_GET['list']))
 require("api_FTL.php");
 
 header('Content-type: application/json');
-if(isset($_GET["jsonForceObject"]))
-{
-	echo json_encode($data, JSON_FORCE_OBJECT);
-}
-else
-{
-	echo json_encode($data);
+if(isset($_GET["jsonForceObject"])) {
+    echo json_encode($data, JSON_FORCE_OBJECT);
+} else {
+    echo json_encode($data);
 }
 ?>
