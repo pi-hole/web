@@ -18,28 +18,24 @@ $FTL_IP = "127.0.0.1";
 $data = array();
 
 // Common API functions
-if (isset($_GET['status']))
-{
-	$pistatus = pihole_execute('status web');
-	if(isset($pistatus[0]))
-    {
-        $pistatus = $pistatus[0];
-    }
-    else
-    {
+if (isset($_GET['status'])) {
+    $pistatus = pihole_execute('status web');
+
+    if (isset($pistatus[0])) {
+        $pistatus = intval($pistatus[0]);
+    } else {
         $pistatus = null;
     }
-	if ($pistatus === "1")
-	{
-		$data = array_merge($data, array("status" => "enabled"));
-	}
-	else
-	{
-		$data = array_merge($data, array("status" => "disabled"));
-	}
-}
-elseif (isset($_GET['enable']) && $auth)
-{
+
+    if ($pistatus == -2 || $pistatus == -1 || $pistatus == 0 || is_null($pistatus)) {
+        $data = array_merge($data, array("status" => "disabled"));
+    } elseif ($pistatus == 53) {
+        $data = array_merge($data, array("status" => "enabled"));
+    } else {
+        $data = array_merge($data, array("status" => "enabled on port ".$pistatus));
+    }
+
+} elseif (isset($_GET['enable']) && $auth) {
 	if(isset($_GET["auth"]))
 	{
 	if($_GET["auth"] !== $pwhash)
