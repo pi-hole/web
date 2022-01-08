@@ -341,7 +341,7 @@ if($auth) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Offline</span>';
                     } elseif ($pistatus == -1) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> DNS service not running</span>';
-                    } elseif ($pistatus == -2 || is_null($pistatus)) {
+                    } elseif ($pistatus == -2) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Unknown</span>';
                     } else {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-orange"></i> DNS service on port '.$pistatus.'</span>';
