@@ -9,6 +9,7 @@
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
     require_once "scripts/pi-hole/php/FTL.php";
+    require_once "scripts/pi-hole/php/func.php";
     require "scripts/pi-hole/php/theme.php";
     $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
     $hostname = gethostname() ? gethostname() : "";
@@ -333,12 +334,7 @@ if($auth) {
                 <div class="pull-left info">
                     <p>Status</p>
                     <?php
-                    $pistatus = pihole_execute('status web');
-                    if (isset($pistatus[0])) {
-                        $pistatus = intval($pistatus[0]);
-                    } else {
-                        $pistatus = null;
-                    }
+                    $pistatus = piholeStatus();
                     if ($pistatus == 53) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-green-light"></i> Active</span>';
                     } elseif ($pistatus == 0) {
