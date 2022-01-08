@@ -19,28 +19,7 @@ $data = array();
 
 // Common API functions
 if (isset($_GET['status'])) {
-    // Receive the return of "pihole status web"
-    $pistatus = pihole_execute('status web');
-
-    if (isset($pistatus[0])) {
-        $pistatus = intval($pistatus[0]);
-    } else {
-        // If no response, status="Unknown" (-2)
-        $pistatus = -2;
-    }
-
-    switch ($pistatus) {
-        case -2: // Unkown
-        case -1: // DNS service not running"
-        case 0: // Offline
-            $data = array_merge($data, array("status" => "disabled"));
-            break;
-
-        default:
-            // DNS service on port $returncode
-            $data = array_merge($data, array("status" => "enabled"));
-    }
-
+    $data = array_merge($data, array("status" => piholeStatusAPI()));
 } elseif (isset($_GET['enable']) && $auth) {
 	if(isset($_GET["auth"]))
 	{
