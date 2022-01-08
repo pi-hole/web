@@ -29,21 +29,22 @@ else
 		$data["version"] = 3;
 	}
 
-	if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))
-	{
+	if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET)) {
 		require_once("scripts/pi-hole/php/gravity.php");
 		sendRequestFTL("stats");
 		$return = getResponseFTL();
 
 		$stats = [];
-		foreach($return as $line)
-		{
+		foreach($return as $line) {
 			$tmp = explode(" ",$line);
 
-			if(($tmp[0] === "domains_being_blocked" && !is_numeric($tmp[1])) || $tmp[0] === "status")
+			if($tmp[0] === "domains_being_blocked" && !is_numeric($tmp[1])) {
 				$stats[$tmp[0]] = $tmp[1]; // Expect string response
-			else
+			} elseif ($tmp[0] === "status") {
+				$stats[$tmp[0]] = piholeStatusAPI();
+			} else {
 				$stats[$tmp[0]] = floatval($tmp[1]); // Expect float response
+			}
 		}
 		$stats['gravity_last_updated'] = gravity_last_update(true);
 		$data = array_merge($data,$stats);
