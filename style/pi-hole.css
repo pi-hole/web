@@ -445,7 +445,7 @@ td.details-control {
 .icon-bounce {
   display: inline-block;
   position: relative;
-  animation: icon-bounce 1.5s infinite linear;
+  animation: icon-bounce 1.5s 2 linear;
 }
 
 @keyframes icon-bounce {
