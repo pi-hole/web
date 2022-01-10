@@ -1,6 +1,7 @@
 changelog:
   exclude:
     labels:
-      - ignore-for-release
+      - internal
     authors:
       - dependabot
+      - github-actions
