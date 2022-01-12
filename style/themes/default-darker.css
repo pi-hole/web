@@ -3335,7 +3335,7 @@ a:focus {
 }
 .nav-tabs-custom > .nav-tabs > li {
   border-top-color: transparent;
-  margin-right: 1px
+  margin-right: 1px;
 }
 .nav-tabs-custom > .nav-tabs > li.disabled > a {
   color: rgb(157, 148, 136);
@@ -3355,7 +3355,7 @@ a:focus {
   color: rgb(168, 160, 149);
 }
 .nav-tabs-custom > .nav-tabs > li:not(.active):hover {
-  background: rgb(24, 32, 35)
+  background: rgb(24, 32, 35);
 }
 .nav-tabs-custom > .nav-tabs > li.active {
   border-top-color: rgb(44, 103, 137);
