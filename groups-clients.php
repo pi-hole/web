@@ -73,7 +73,7 @@
                         <th title="Acceptable values are: IP address, subnet (CIDR notation), MAC address (AA:BB:CC:DD:EE:FF format) or host names.">Client</th>
                         <th>Comment</th>
                         <th>Group assignment</th>
-                        <th>Action</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                 </table>
