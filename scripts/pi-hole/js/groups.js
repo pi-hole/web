@@ -25,7 +25,7 @@ $(function () {
       { data: "name" },
       { data: "enabled", searchable: false },
       { data: "description" },
-      { data: null, width: "60px", orderable: false },
+      { data: null, width: "22px", orderable: false },
     ],
     columnDefs: [
       {

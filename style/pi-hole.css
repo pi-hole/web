@@ -448,6 +448,85 @@ td.details-control {
   animation: icon-bounce 1.5s 2 linear;
 }
 
+/* Fix some datatables layout on small screens */
+@media screen and (max-width: 660px), screen and (min-width: 767px) and (max-width: 960px) {
+  #domainsTable_wrapper .table-responsive {
+    border: none;
+    overflow: unset;
+  }
+  #domainsTable {
+    border: 0;
+    box-sizing: border-box;
+  }
+  #domainsTable thead {
+    display: none;
+  }
+  #domainsTable tr {
+    display: flex;
+    padding: 15px 0;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    align-items: end;
+    border: 1px solid rgba(127, 127, 127, 0.4);
+    margin: 10px 0;
+    border-radius: 6px;
+  }
+  #domainsTable td {
+    flex: 1 1 auto;
+    width: 100px;
+    display: block;
+    border: none;
+    box-sizing: border-box;
+    order: 2;
+    text-align: right;
+    padding: 4px 8px;
+  }
+  #domainsTable td:nth-child(2n) {
+    width: calc(100% - 120px);
+  }
+  #domainsTable td:first-child {
+    width: calc(100% - 40px);
+    order: 1;
+    text-align: left;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(127, 127, 127, 0.25);
+    margin-bottom: 5px;
+  }
+  #domainsTable td:last-child {
+    width: 40px;
+    order: 1;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(127, 127, 127, 0.25);
+    margin-bottom: 5px;
+  }
+  #domainsTable td:nth-child(2),
+  #domainsTable td:nth-child(4) {
+    text-align: left;
+  }
+  #domainsTable td::before {
+    display: block;
+    font-weight: bold;
+    font-size: smaller;
+  }
+  #domainsTable td:nth-child(2)::before {
+    content: "Type:";
+  }
+  #domainsTable td:nth-child(4)::before {
+    content: "Comment:";
+  }
+}
+@media screen and (min-width: 767px) {
+  #domainsTable select.form-control {
+    padding: 0 0 0 5px;
+    width: auto;
+  }
+}
+@media screen and (max-width: 767px) {
+  #domainsTable th {
+    white-space: normal;
+  }
+}
+
 @keyframes icon-bounce {
   0%,
   20%,
