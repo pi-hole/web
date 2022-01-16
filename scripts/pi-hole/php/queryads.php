@@ -17,7 +17,7 @@ header('Cache-Control: no-cache');
 
 function echoEvent($datatext) {
     if(!isset($_GET["IE"]))
-      echo "data: ".implode("\ndata: ", explode("\n", $datatext))."\n\n";
+      echo "data:".implode("\ndata:", explode("\n", $datatext))."\n\n";
     else
       echo $datatext;
 }
