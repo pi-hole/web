@@ -3330,18 +3330,16 @@ a:focus {
   box-shadow: rgba(0, 0, 0, 0.1) 0 1px 1px;
 }
 .nav-tabs-custom > .nav-tabs {
-  background: rgb(30, 40, 44);
   border-bottom-color: rgb(51, 55, 57);
 }
 .nav-tabs-custom > .nav-tabs > li {
   border-top-color: transparent;
-  margin-right: 1px;
 }
 .nav-tabs-custom > .nav-tabs > li.disabled > a {
   color: rgb(157, 148, 136);
 }
 .nav-tabs-custom > .nav-tabs > li > a {
-  color: rgb(140, 144, 154);
+  color: rgb(189, 183, 175);
 }
 .nav-tabs-custom > .nav-tabs > li > a.text-muted {
   color: rgb(168, 160, 149);
@@ -3354,8 +3352,10 @@ a:focus {
 .nav-tabs-custom > .nav-tabs > li > a:hover {
   color: rgb(168, 160, 149);
 }
-.nav-tabs-custom > .nav-tabs > li:not(.active):hover {
-  background: rgb(24, 32, 35);
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:hover,
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:focus,
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a:active {
+  border-color: transparent;
 }
 .nav-tabs-custom > .nav-tabs > li.active {
   border-top-color: rgb(44, 103, 137);
@@ -3392,7 +3392,7 @@ a:focus {
 }
 .nav-tabs-custom > .nav-tabs > li > a:focus,
 .nav-tabs-custom > .nav-tabs > li.active > a:focus {
-  color: rgb(60, 140, 188);
+  color: rgb(95, 142, 170);
 }
 
 .nav-tabs-custom.tab-primary > .nav-tabs > li.active {

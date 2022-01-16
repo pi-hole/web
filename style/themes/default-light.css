@@ -130,23 +130,8 @@
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 0;
 }
-
-.nav-tabs-custom > .nav-tabs {
-  background: #e4e8f0;
-}
-.nav-tabs-custom > .nav-tabs > li {
-  margin-right: 1px;
-}
-.nav-tabs-custom > .nav-tabs > li:not(.active):hover {
-  background: #fff;
-  border-top-color: #d2d6de;
-}
-.nav-tabs-custom > .nav-tabs > li > a,
-.nav-tabs-custom > .nav-tabs > li > a:hover {
-  color: #567;
-}
 .nav-tabs-custom > .nav-tabs > li > a:focus {
-  color: #3c8dbc;
+  color: #60a4cc;
 }
 
 .layout-top-nav .main-header > .logo {

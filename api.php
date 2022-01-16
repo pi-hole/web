@@ -18,9 +18,28 @@ $FTL_IP = "127.0.0.1";
 $data = array();
 
 // Common API functions
-if (isset($_GET['status'])) {
-    $data = array_merge($data, array("status" => piholeStatusAPI()));
-} elseif (isset($_GET['enable']) && $auth) {
+if (isset($_GET['status']))
+{
+	$pistatus = pihole_execute('status web');
+	if(isset($pistatus[0]))
+    {
+        $pistatus = $pistatus[0];
+    }
+    else
+    {
+        $pistatus = null;
+    }
+	if ($pistatus === "1")
+	{
+		$data = array_merge($data, array("status" => "enabled"));
+	}
+	else
+	{
+		$data = array_merge($data, array("status" => "disabled"));
+	}
+}
+elseif (isset($_GET['enable']) && $auth)
+{
 	if(isset($_GET["auth"]))
 	{
 	if($_GET["auth"] !== $pwhash)
@@ -146,9 +165,12 @@ elseif (isset($_GET['list']))
 require("api_FTL.php");
 
 header('Content-type: application/json');
-if(isset($_GET["jsonForceObject"])) {
-    echo json_encode($data, JSON_FORCE_OBJECT);
-} else {
-    echo json_encode($data);
+if(isset($_GET["jsonForceObject"]))
+{
+	echo json_encode($data, JSON_FORCE_OBJECT);
+}
+else
+{
+	echo json_encode($data);
 }
 ?>

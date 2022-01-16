@@ -126,7 +126,7 @@
                         <th>Status</th>
                         <th>Comment</th>
                         <th>Group assignment</th>
-                        <th>&nbsp;</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
                 </table>

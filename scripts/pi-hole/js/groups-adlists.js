@@ -122,7 +122,7 @@ function initTable() {
       { data: "enabled", searchable: false },
       { data: "comment" },
       { data: "groups", searchable: false },
-      { data: null, width: "22px", orderable: false },
+      { data: null, width: "80px", orderable: false },
     ],
     columnDefs: [
       {

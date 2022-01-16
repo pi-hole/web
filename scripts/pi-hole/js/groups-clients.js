@@ -95,7 +95,7 @@ function initTable() {
       { data: "ip", type: "ip-address" },
       { data: "comment" },
       { data: "groups", searchable: false },
-      { data: "name", width: "22px", orderable: false },
+      { data: "name", width: "80px", orderable: false },
     ],
     columnDefs: [
       {

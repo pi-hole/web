@@ -9,7 +9,6 @@
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
     require_once "scripts/pi-hole/php/FTL.php";
-    require_once "scripts/pi-hole/php/func.php";
     require "scripts/pi-hole/php/theme.php";
     $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
     $hostname = gethostname() ? gethostname() : "";
@@ -67,8 +66,6 @@
         // Nothing can be colder than -273.15 degree Celsius (= 0 Kelvin)
         // This is the minimum temperature possible (AKA absolute zero)
         $celsius = -273.16;
-        // Set templimit to null if no tempsensor was found
-        $temperaturelimit = null;
     }
 
     // Get load
@@ -334,14 +331,19 @@ if($auth) {
                 <div class="pull-left info">
                     <p>Status</p>
                     <?php
-                    $pistatus = piholeStatus();
+                    $pistatus = pihole_execute('status web');
+                    if (isset($pistatus[0])) {
+                        $pistatus = intval($pistatus[0]);
+                    } else {
+                        $pistatus = null;
+                    }
                     if ($pistatus == 53) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-green-light"></i> Active</span>';
                     } elseif ($pistatus == 0) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Offline</span>';
                     } elseif ($pistatus == -1) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> DNS service not running</span>';
-                    } elseif ($pistatus == -2) {
+                    } elseif ($pistatus == -2 || is_null($pistatus)) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Unknown</span>';
                     } else {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-orange"></i> DNS service on port '.$pistatus.'</span>';
@@ -373,16 +375,18 @@ if($auth) {
                     ?>
                     <br/>
                     <?php
-                      if ($celsius >= -273.15) {
-                        // Only show temp info if any data is available -->
-                        $tempcolor = "text-vivid-blue";
-                        if (isset($temperaturelimit) && $celsius > $temperaturelimit) {
-                          $tempcolor = "text-red";
-                        }
-                        echo '<span id="temperature"><i class="fa fa-w fa-fire '.$tempcolor.'" style="width: 1em !important"></i> ';
+                    $tempcolor = "text-vivid-blue";
+                    if ($celsius > $temperaturelimit) {
+                        $tempcolor = "text-red";
+                    }
+                    echo '<span id="temperature"><i class="fa fa-w fa-fire '.$tempcolor.'" style="width: 1em !important"></i> ';
+
+                    if ($celsius >= -273.15) {
                         echo 'Temp:&nbsp;<span id="rawtemp" hidden>' .$celsius. '</span>';
-                        echo '<span id="tempdisplay"></span></span>';
-                      }
+                    } else {
+                        echo "No temp sensor found";
+                    }
+                    echo '<span id="tempdisplay"></span></span>';
                     ?>
                 </div>
             </div>

@@ -1670,16 +1670,6 @@ table.dataTable {
   }
 }
 
-/*** Fix some datatables layout on small screens ***/
-@media screen and (max-width: 660px), screen and (min-width: 767px) and (max-width: 960px) {
-  #domainsTable td::before {
-    margin: 0 5px 2px;
-  }
-  #domainsTable td:nth-child(2n) {
-    width: calc(100% - 160px);
-  }
-}
-
 /*** Used by the long-term pages ***/
 .daterangepicker {
   background-color: #345;
