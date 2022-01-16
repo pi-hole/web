@@ -723,7 +723,7 @@ function updateSummaryData(runOnce) {
     }
   };
 
-  $.getJSON("api.php?summary", function (data) {
+  $.getJSON("api.php?summaryRaw", function (data) {
     updateSessionTimer();
 
     if ("FTLnotrunning" in data) {
