@@ -337,18 +337,15 @@ if(isset($_POST["action"]))
 		$source = $_FILES["zip_file"]["tmp_name"];
 		$type = mime_content_type($source);
 
-		$name = explode(".", $filename);
+		// verify the file mime type
 		$accepted_types = array('application/gzip', 'application/tar', 'application/x-compressed', 'application/x-gzip');
-		$okay = false;
-		foreach($accepted_types as $mime_type) {
-			if($mime_type == $type) {
-				$okay = true;
-				break;
-			}
-		}
+		$mime_valid = in_array($type, $accepted_types);
 
-		$continue = strtolower($name[1]) == 'tar' && strtolower($name[2]) == 'gz' ? true : false;
-		if(!$continue || !$okay) {
+		// verify the file extension (Looking for ".tar.gz" at the end of the file name)
+		$ext = array_slice(explode(".", $filename), -2, 2);
+		$ext_valid = strtolower($ext[0]) == "tar" && strtolower($ext[1]) == "gz" ? true : false;
+
+		if(!$ext_valid || !$mime_valid) {
 			die("The file you are trying to upload is not a .tar.gz file (filename: ".htmlentities($filename).", type: ".htmlentities($type)."). Please try again.");
 		}
 
