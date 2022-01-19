@@ -334,6 +334,10 @@ if($auth) {
                 <div class="pull-left info">
                     <p>Status</p>
                     <?php
+                        echo "<span>Stardate: " . date("Y-m-d H:i") . "</span>"
+                    ?>
+                    <br/>
+                    <?php
                     $pistatus = piholeStatus();
                     if ($pistatus == 53) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-green-light"></i> Active</span>';
