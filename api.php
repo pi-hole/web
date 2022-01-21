@@ -143,13 +143,11 @@ elseif (isset($_GET['list']))
 }
 elseif(isset($_GET['customdns']) && $auth)
 {
-	if(isset($_GET["auth"]))
-	{
-	if($_GET["auth"] !== $pwhash)
-		die("Not authorized!");
-	}
-	else
-	{
+	if (isset($_GET["auth"])) {
+		if ($_GET["auth"] !== $pwhash) {
+			die("Not authorized!");
+		}
+	} else {
 		// Skip token validation if explicit auth string is given
 		check_csrf($_GET['token']);
 	}
@@ -170,13 +168,11 @@ elseif(isset($_GET['customdns']) && $auth)
 }
 elseif(isset($_GET['customcname']) && $auth)
 {
-	if(isset($_GET["auth"]))
-	{
-	if($_GET["auth"] !== $pwhash)
-		die("Not authorized!");
-	}
-	else
-	{
+	if (isset($_GET["auth"])) {
+		if ($_GET["auth"] !== $pwhash) {
+			die("Not authorized!");
+		}
+	} else {
 		// Skip token validation if explicit auth string is given
 		check_csrf($_GET['token']);
 	}
