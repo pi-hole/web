@@ -1460,30 +1460,46 @@ table.dataTable {
 
 @-webkit-keyframes warningPulse {
   0% {
-    border-color: rgba(255, 153, 0, 0.4);
+    opacity: 0;
   }
   50% {
-    border-color: rgba(255, 150, 0, 1);
+    opacity: 1;
   }
   100% {
-    border-color: rgba(255, 153, 0, 0.4);
+    opacity: 0;
   }
 }
 
 @keyframes warningPulse {
   0% {
-    border-color: rgba(255, 153, 0, 0.4);
+    opacity: 0;
   }
   50% {
-    border-color: rgba(255, 150, 0, 1);
+    opacity: 1;
   }
   100% {
-    border-color: rgba(255, 153, 0, 0.4);
+    opacity: 0;
   }
 }
 
-.box-warning {
-  animation: 3s infinite warningPulse;
+.box.box-warning {
+  border-top-color: #71480a;
+  position: relative;
+}
+
+.box.box-warning:after {
+  content: "";
+  border-top: 3px solid #f89201;
+  border-radius: 12px;
+  position: absolute;
+  margin-top: -3px;
+  inset: 0 0 0 0;
+  z-index: -1;
+  animation: 3s infinite warningPulse steps(30);
+}
+
+.box.box-warning div {
+  z-index: 2;
 }
 
 /*** MEDIA QUERIES ***/
