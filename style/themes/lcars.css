@@ -1657,13 +1657,11 @@ table.dataTable {
   }
 }
 
-@media (min-width: 1920px) {
+@media (min-width: 1960px) {
   .layout-boxed .form-group.has-error.login-box-msg::before {
     font-size: calc((1920px - var(--sidebar-width) - 60px) / 12);
   }
-}
 
-@media (min-width: 1960px) {
   .layout-boxed .wrapper {
     box-shadow: none;
     max-width: 1920px;
