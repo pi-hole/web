@@ -45,15 +45,23 @@
   }
 }
 
+p#dhcpnotice[hidden] {
+  display: none;
+}
+
+.lookatme #dhcpnotice {
+  display: block;
+}
+
+td.lookatme {
+  display: table-cell;
+}
+
 .lookatme {
   color: #630030;
   opacity: 1;
   position: relative;
   display: inline-block;
-}
-
-td.lookatme {
-  display: table-cell;
 }
 
 /* this pseudo element will be faded in and out in front /*
