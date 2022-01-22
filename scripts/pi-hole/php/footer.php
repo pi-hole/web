@@ -53,10 +53,12 @@
 
     $githubBaseUrl = "https://github.com/pi-hole";
     $coreUrl = $githubBaseUrl . "/pi-hole";
+    $dockerUrl = $githubBaseUrl . "/docker-pi-hole";
     $ftlUrl = $githubBaseUrl . "/FTL";
     $webUrl = $githubBaseUrl . "/AdminLTE";
 
     $coreReleasesUrl = $coreUrl . "/releases";
+    $dockerReleasesUrl = $dockerUrl . "/releases";
     $ftlReleasesUrl = $ftlUrl . "/releases";
     $webReleasesUrl = $webUrl . "/releases";
 ?>
@@ -78,7 +80,12 @@
                 </ul>
                 <?php } else { ?>
                 <ul class="list-inline">
-                    <?php if($dockerTag) { ?> <li><strong>Docker Tag</strong> <?php echo $dockerTag; ?></li> <?php } ?>
+                    <?php if($dockerTag) { ?>
+                    <li>
+                        <strong>Docker Tag</strong>
+                        <a href="<?php echo $dockerReleasesUrl . "/" . $dockerTag; ?>" rel="noopener" target="_blank"><?php echo $dockerTag; ?></a>
+                    </li>
+                    <?php } ?>
                     <li>
                         <strong>Pi-hole</strong>
                         <a href="<?php echo $coreReleasesUrl . "/" . $core_current; ?>" rel="noopener" target="_blank"><?php echo $core_current; ?></a>
