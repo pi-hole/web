@@ -5456,6 +5456,7 @@ link-muted {
 .main-header .navbar .nav > li > a,
 .main-header .navbar .nav > li > .navbar-text {
   color: rgb(232, 230, 227);
+  max-height: 50px;
 }
 .main-header .navbar .nav > li > a:hover,
 .main-header .navbar .nav > li > a:active,

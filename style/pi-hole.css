@@ -475,12 +475,6 @@ td.details-control {
   right: 12px;
 }
 
-.icon-bounce {
-  display: inline-block;
-  position: relative;
-  animation: icon-bounce 1.5s 2 linear;
-}
-
 /* Fix some datatables layout on small screens */
 @media screen and (max-width: 660px), screen and (min-width: 767px) and (max-width: 960px) {
   #domainsTable_wrapper .table-responsive {
@@ -560,23 +554,34 @@ td.details-control {
   }
 }
 
+.icon-bounce {
+  display: inline-block;
+  position: relative;
+  animation: icon-bounce 2.4s 3 ease-in-out;
+  font-size: 1.6em;
+}
+
 @keyframes icon-bounce {
   0%,
-  20%,
+  15%,
   50%,
-  70%,
-  90%,
   100% {
     transform: translateY(0);
   }
+  25% {
+    transform: translateY(-5px);
+  }
+  30% {
+    transform: translateY(4px);
+  }
+  35% {
+    transform: translateY(-3px);
+  }
   40% {
-    transform: translateY(-15px);
+    transform: translateY(2px);
   }
-  60% {
-    transform: translateY(-8px);
-  }
-  80% {
-    transform: translateY(-4px);
+  45% {
+    transform: translateY(-1px);
   }
 }
 
