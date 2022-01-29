@@ -268,8 +268,25 @@ $(function () {
       columnDefs: [
         { bSortable: false, orderable: false, targets: -1 },
         {
-          targets: [0, 1, 2],
+          targets: [0, 1],
           render: $.fn.dataTable.render.text(),
+        },
+        {
+          targets: 2,
+          render: function (data) {
+            // Show "unknown", when host is "*"
+            var str;
+            if (data === "*") {
+              str = "<i>unknown</i>";
+            } else {
+              str =
+                typeof data === "string"
+                  ? data.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+                  : data;
+            }
+
+            return str;
+          },
         },
       ],
       paging: true,
