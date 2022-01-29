@@ -279,10 +279,7 @@ $(function () {
             if (data === "*") {
               str = "<i>unknown</i>";
             } else {
-              str =
-                typeof data === "string"
-                  ? utils.escapeHtml(data)
-                  : data;
+              str = typeof data === "string" ? utils.escapeHtml(data) : data;
             }
 
             return str;
