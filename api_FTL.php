@@ -317,20 +317,12 @@ else
 		$data = array_merge($data, $result);
 	}
 
-    if(isset($_GET["recentBlocked"]) && $auth)
-    {
-        if(is_numeric($_GET['recentBlocked']))
-        {
-            sendRequestFTL("recentBlocked (".$_GET['recentBlocked'].")");
-            $data = getResponseFTL();
-        }
-        else
-        {
-            sendRequestFTL("recentBlocked");
-            die(utf8_encode(getResponseFTL()[0]));
-            unset($data);
-        }
-    }
+	if(isset($_GET["recentBlocked"]) && $auth)
+	{
+		sendRequestFTL("recentBlocked");
+		die(utf8_encode(getResponseFTL()[0]));
+		unset($data);
+	}
 
 	if (isset($_GET['getForwardDestinationNames']) && $auth)
 	{
