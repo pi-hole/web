@@ -281,7 +281,7 @@ $(function () {
             } else {
               str =
                 typeof data === "string"
-                  ? data.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+                  ? utils.escapeHtml(data)
                   : data;
             }
 
