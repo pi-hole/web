@@ -595,9 +595,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                         }
 
                                         $host = htmlentities($line[3]);
-                                        if ($host == "*") {
-                                            $host = "<i>unknown</i>";
-                                        }
 
                                         $clid = $line[4];
                                         if ($clid == "*") {
