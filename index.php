@@ -1,26 +1,24 @@
-<?php /*
+<?php
+/*
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
-    $indexpage = true;
-    require "scripts/pi-hole/php/header.php";
-    require_once "scripts/pi-hole/php/gravity.php";
+$indexpage = true;
+require "scripts/pi-hole/php/header.php";
+require_once "scripts/pi-hole/php/gravity.php";
 
-    function getinterval()
-    {
-        global $piholeFTLConf;
-        if(isset($piholeFTLConf["MAXLOGAGE"]))
-        {
-             return round(floatval($piholeFTLConf["MAXLOGAGE"]), 1);
-        }
-        else
-        {
-             return "24";
-        }
+function getinterval()
+{
+    global $piholeFTLConf;
+    if (isset($piholeFTLConf["MAXLOGAGE"])) {
+        return min(round(floatval($piholeFTLConf["MAXLOGAGE"]), 1), 24);
+    } else {
+        return "24";
     }
+}
 ?>
 <!-- Sourceing CSS colors from stylesheet to be used in JS code -->
 <span class="queries-permitted"></span>
