@@ -1,6 +1,5 @@
 <?php
-/*
-*    Pi-hole: A black hole for Internet advertisements
+/*   Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
