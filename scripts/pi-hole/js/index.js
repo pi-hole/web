@@ -862,8 +862,20 @@ function doughnutTooltip(tooltipItems, data) {
   );
 }
 
+var maxlogage = "24";
+function getMaxlogage() {
+  $.getJSON("api.php?getMaxlogage", function (data) {
+    if (!("FTLnotrunning" in data)) {
+      maxlogage = data.maxlogage;
+    }
+  }).done(function () {
+    $(".maxlogage-interval").html(maxlogage);
+  });
+}
+
 $(function () {
   // Pull in data via AJAX
+  getMaxlogage();
   updateSummaryData();
 
   var gridColor = $(".graphs-grid").css("background-color");

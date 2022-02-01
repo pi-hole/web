@@ -61,6 +61,16 @@ else
 		$data = array_merge($data,$stats);
 	}
 
+	if (isset($_GET["getMaxlogage"]) && $auth) {
+		sendRequestFTL("maxlogage");
+		// Convert seconds to hours and rounds to one decimal place.
+		$ret = round(intval(getResponseFTL()[0]) / 3600, 1);
+		// Return 24h if value is 0, empty, null or non numeric.
+		$ret = $ret ?: 24;
+
+		$data = array_merge($data, array("maxlogage" => $ret));
+	}
+
 	if (isset($_GET['overTimeData10mins']))
 	{
 		sendRequestFTL("overTime");
