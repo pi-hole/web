@@ -5,19 +5,10 @@
 *
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
+
 $indexpage = true;
 require "scripts/pi-hole/php/header.php";
 require_once "scripts/pi-hole/php/gravity.php";
-
-function getinterval()
-{
-    global $piholeFTLConf;
-    if (isset($piholeFTLConf["MAXLOGAGE"])) {
-        return min(round(floatval($piholeFTLConf["MAXLOGAGE"]), 1), 24);
-    } else {
-        return "24";
-    }
-}
 ?>
 <!-- Sourceing CSS colors from stylesheet to be used in JS code -->
 <span class="queries-permitted"></span>
@@ -84,7 +75,7 @@ function getinterval()
     <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
-          <h3 class="box-title">Total queries over last <?php echo getinterval(); ?> hours</h3>
+          <h3 class="box-title">Total queries over last <span class="maxlogage-interval">24</span> hours</h3>
         </div>
         <div class="box-body">
           <div class="chart">
@@ -109,7 +100,7 @@ function getinterval()
     <div class="col-md-12">
     <div class="box" id="clients">
         <div class="box-header with-border">
-          <h3 class="box-title">Client activity over last <?php echo getinterval(); ?> hours</h3>
+          <h3 class="box-title">Client activity over last <span class="maxlogage-interval">24</span> hours</h3>
         </div>
         <div class="box-body">
           <div class="chart">
