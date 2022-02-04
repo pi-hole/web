@@ -46,28 +46,66 @@ function readStaticLeasesFile($origin_file="/etc/dnsmasq.d/04-pihole-static-dhcp
 	if(!is_resource($dhcpstatic))
 		return false;
 
-	while(!feof($dhcpstatic))
+
+	while (($dhcpline = fgets($dhcpstatic)) !== false)
 	{
-		// Remove any possibly existing variable with this name
-		$mac = ""; $one = ""; $two = "";
-		sscanf(trim(fgets($dhcpstatic)),"dhcp-host=%[^,],%[^,],%[^,]",$mac,$one,$two);
-		if(strlen($mac) > 0 && validMAC($mac))
+		$mac = ""; $mac_array=[];
+		$dhcpparts=explode(",",trim($dhcpline));
+		// Remove the "dhcp-host=" part of the line
+		$dhcpparts[0]=explode("=",$dhcpparts[0])[1];
+
+		foreach ($dhcpparts as &$value)
 		{
-			if(validIP($one) && strlen($two) == 0)
-				// dhcp-host=mac,IP - no HOST
-				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>$one, "host"=>""]);
-			elseif(strlen($two) == 0)
-				// dhcp-host=mac,hostname - no IP
-				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>"", "host"=>$one]);
+			if (strlen($value) == 0)
+			{
+				// remove empty first argument, if exists
+				// that should never happen by the way
+				array_splice($dhcpparts, 0, 1);
+				continue;
+			}
+			else if (filter_var($value, FILTER_VALIDATE_MAC))
+			{
+				// add mac address to the array
+				array_push($mac_array, $value);
+				// and then remove it from the parts
+				array_splice($dhcpparts, 0, 1);
+			}
 			else
-				// dhcp-host=mac,IP,hostname
-				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>$one, "host"=>$two]);
+			{
+				// no more mac addresses
+				break;
+			}
 		}
-		else if(validIP($one) && validDomain($mac))
+		// concatenate the mac addresses in one string that is ok for dnsmasq
+		$mac = implode(",", $mac_array);
+		// no parts left, or no mac addresses, or too many commas. That is invalid line
+		// for pi-hole
+		if (count($dhcpparts) <= 0 || count($dhcpparts) > 2 || strlen($mac) == 0)
+			return false;
+
+		if (validIP($dhcpparts[0]))
 		{
-			// dhcp-host=hostname,IP - no MAC
-			array_push($dhcp_static_leases,["hwaddr"=>"", "IP"=>$one, "host"=>$mac]);
+			if (count($dhcpparts)==2)
+			{
+				// dhcp-host=mac,IP,hostname
+				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>$dhcpparts[0], "host"=>$dhcpparts[1]]);
+			} else {
+				// dhcp-host=mac,IP - no HOST
+				array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>$dhcpparts[0], "host"=>""]);
+			}
+		} else {
+			// dhcp-host=mac,hostname - no IP
+			array_push($dhcp_static_leases,["hwaddr"=>$mac, "IP"=>"", "host"=>$dhcpparts[0]]);
 		}
+
+		// As Pi-Hole does not allow entries without MAC address, this can never happen
+		// and if it happens because someone modified the file manually, it won't be able to be saved
+		// because pi-hole will find the lines invalid. Hence, I ignore these lines
+		// else if(validIP($one) && validDomain($mac))
+		//{
+			// dhcp-host=hostname,IP - no MAC
+			//array_push($dhcp_static_leases,["hwaddr"=>"", "IP"=>$one, "host"=>$mac]);
+		//}
 	}
 	return true;
 }
@@ -164,7 +202,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 		readStaticLeasesFile();
 
 		foreach($dhcp_static_leases as $lease) {
-			if($lease["hwaddr"] === $mac)
+			if(in_array($mac,  explode(",",$lease["hwaddr"]), true))
 			{
 				throw new Exception("Static lease for MAC address (".htmlspecialchars($mac).") already defined!<br>", 4);
 			}
@@ -546,7 +584,7 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 
 					if(!strlen($error))
 					{
-						pihole_execute("-a removestaticdhcp ".$mac);
+						pihole_execute("-a removestaticdhcp ".explode(",",$mac)[0]);
 						$success .= "The static address with MAC address ".htmlspecialchars($mac)." has been removed";
 					}
 					break;
