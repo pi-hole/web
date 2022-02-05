@@ -240,7 +240,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 }
 
                                                 $FTLversion = exec("/usr/bin/pihole-FTL version");
-																								$FTLstart = exec("date -r /proc/" . $FTLpid . " '+%a %d %b %Y %R %Z'");
+                                                $FTLstart = exec("date -r /proc/" . $FTLpid . " '+%a %d %b %Y %R %Z'");
                                             ?>
                                             <table class="table table-striped table-bordered nowrap">
                                                 <tbody>
