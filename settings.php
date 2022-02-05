@@ -240,6 +240,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 }
 
                                                 $FTLversion = exec("/usr/bin/pihole-FTL version");
+																								$FTLstart = exec("date -r /proc/" . $FTLpid . " '+%a %d %b %Y %R %Z'");
                                             ?>
                                             <table class="table table-striped table-bordered nowrap">
                                                 <tbody>
@@ -253,7 +254,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">Time FTL started:</th>
-                                                        <td><?php print_r(get_FTL_data("lstart")); ?></td>
+                                                        <td><?php echo $FTLstart; ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">User / Group:</th>
