@@ -239,9 +239,14 @@ function stateSaveCallback(itemName, data) {
 }
 
 function stateLoadCallback(itemName) {
+  var data;
   // Receive previous state from client's local storage area
-  var data =
-    localStorage === null ? backupStorage[itemName] || null : localStorage.getItem(itemName);
+  if (localStorage === null) {
+    var item = backupStorage[itemName];
+    data = typeof item === "undefined" ? null : item;
+  } else {
+    localStorage.getItem(itemName);
+  }
 
   // Return if not available
   if (data === null) {
