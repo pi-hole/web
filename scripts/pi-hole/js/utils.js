@@ -245,7 +245,7 @@ function stateLoadCallback(itemName) {
     var item = backupStorage[itemName];
     data = typeof item === "undefined" ? null : item;
   } else {
-    localStorage.getItem(itemName);
+    data = localStorage.getItem(itemName);
   }
 
   // Return if not available
