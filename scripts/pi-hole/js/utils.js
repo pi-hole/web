@@ -229,13 +229,20 @@ function setBsSelectDefaults() {
   };
 }
 
+var backupStorage = {};
 function stateSaveCallback(itemName, data) {
-  localStorage.setItem(itemName, JSON.stringify(data));
+  if (localStorage === null) {
+    backupStorage[itemName] = JSON.stringify(data);
+  } else {
+    localStorage.setItem(itemName, JSON.stringify(data));
+  }
 }
 
 function stateLoadCallback(itemName) {
   // Receive previous state from client's local storage area
-  var data = localStorage ? localStorage.getItem(itemName) : null;
+  var data =
+    localStorage === null ? backupStorage[itemName] || null : localStorage.getItem(itemName);
+
   // Return if not available
   if (data === null) {
     return null;
