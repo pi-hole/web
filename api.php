@@ -141,6 +141,56 @@ elseif (isset($_GET['list']))
 
 	return;
 }
+elseif(isset($_GET['customdns']) && $auth)
+{
+	if (isset($_GET["auth"])) {
+		if ($_GET["auth"] !== $pwhash) {
+			die("Not authorized!");
+		}
+	} else {
+		// Skip token validation if explicit auth string is given
+		check_csrf($_GET['token']);
+	}
+
+	switch ($_GET["action"]) {
+		case 'get':
+			$_POST['action'] = 'get';
+			break;
+		case 'add':
+			$_POST['action'] = 'add';
+			break;
+		case 'delete':
+			$_POST['action'] = 'delete';
+			break;
+		}
+
+	require("scripts/pi-hole/php/customdns.php");
+}
+elseif(isset($_GET['customcname']) && $auth)
+{
+	if (isset($_GET["auth"])) {
+		if ($_GET["auth"] !== $pwhash) {
+			die("Not authorized!");
+		}
+	} else {
+		// Skip token validation if explicit auth string is given
+		check_csrf($_GET['token']);
+	}
+
+	switch ($_GET["action"]) {
+		case 'get':
+			$_POST['action'] = 'get';
+			break;
+		case 'add':
+			$_POST['action'] = 'add';
+			break;
+		case 'delete':
+			$_POST['action'] = 'delete';
+			break;
+		}
+
+	require("scripts/pi-hole/php/customcname.php");
+}
 
 // Other API functions
 require("api_FTL.php");
