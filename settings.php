@@ -19,6 +19,12 @@ if(isset($last_error) && ($last_error["type"] === E_WARNING || $last_error["type
 	$error .= "There was a problem applying your settings.<br>Debugging information:<br>PHP error (".htmlspecialchars($last_error["type"])."): ".htmlspecialchars($last_error["message"])." in ".htmlspecialchars($last_error["file"]).":".htmlspecialchars($last_error["line"]);
 }
 
+# Timezone is set in docker via ENV otherwise get it from commandline
+$timezone=getenv("TZ");
+if (empty($timezone)) {
+	$timezone=shell_exec("date +'%Z'");
+}
+
 ?>
 <style>
 	.tooltip-inner {
@@ -240,7 +246,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 }
 
                                                 $FTLversion = exec("/usr/bin/pihole-FTL version");
-                                                $FTLstart = exec("date -r /proc/" . $FTLpid . " '+%a %d %b %Y %R %Z'");
                                             ?>
                                             <table class="table table-striped table-bordered nowrap">
                                                 <tbody>
@@ -254,7 +259,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">Time FTL started:</th>
-                                                        <td><?php echo $FTLstart; ?></td>
+                                                        <td><?php print_r(get_FTL_data("lstart")); echo " ".$timezone; ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">User / Group:</th>
