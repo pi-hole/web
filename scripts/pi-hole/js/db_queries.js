@@ -296,7 +296,7 @@ $(function () {
       }
 
       $(row).addClass(blocked === true ? "blocked-row" : "allowed-row");
-      if (localStorage.getItem("colorfulQueryLog_chkbox") === "true") {
+      if (localStorage && localStorage.getItem("colorfulQueryLog_chkbox") === "true") {
         $(row).addClass(blocked === true ? "text-red" : "text-green");
       }
 
