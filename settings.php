@@ -20,7 +20,7 @@ if(isset($last_error) && ($last_error["type"] === E_WARNING || $last_error["type
 }
 
 # Timezone is set in docker via ENV otherwise get it from commandline
-$timezone=getenv("TZ");
+$timezone=htmlspecialchars(getenv("TZ"));
 if (empty($timezone)) {
 	$timezone=shell_exec("date +'%Z'");
 }
