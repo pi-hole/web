@@ -70,8 +70,17 @@ function validCIDRIP($address){
 
 function validMAC($mac_addr)
 {
-  // Accepted input format: 00:01:02:1A:5F:FF (characters may be lower case)
-  return !filter_var($mac_addr, FILTER_VALIDATE_MAC) === false;
+  // Accepted input format: one or multiple comma seperated 00:01:02:1A:5F:FF (characters may be lower case)
+	$parts = explode(",", $mac_addr);
+	foreach ($parts as &$value)
+	{
+		if (filter_var($value, FILTER_VALIDATE_MAC) === false) 
+		{
+
+			return false;
+		}
+	}
+	return true;
 }
 
 function validEmail($email)
