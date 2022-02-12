@@ -64,7 +64,7 @@
                         <th>Name</th>
                         <th>Status</th>
                         <th>Description</th>
-                        <th>Action</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                 </table>

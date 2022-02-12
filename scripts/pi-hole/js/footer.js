@@ -58,7 +58,9 @@ function countDown() {
   } else {
     ena.text("Enable");
     piholeChanged("enabled");
-    localStorage.removeItem("countDownTarget");
+    if (localStorage) {
+      localStorage.removeItem("countDownTarget");
+    }
   }
 }
 
@@ -148,7 +150,7 @@ function initCheckboxRadioStyle() {
   }
 
   // Read from local storage, initialize if needed
-  var chkboxStyle = localStorage.getItem("theme_icheck");
+  var chkboxStyle = localStorage ? localStorage.getItem("theme_icheck") : null;
   if (chkboxStyle === null) {
     chkboxStyle = "primary";
   }
@@ -172,7 +174,10 @@ function initCheckboxRadioStyle() {
 
 function initCPUtemp() {
   function setCPUtemp(unit) {
-    localStorage.setItem("tempunit", tempunit);
+    if (localStorage) {
+      localStorage.setItem("tempunit", tempunit);
+    }
+
     var temperature = parseFloat($("#rawtemp").text());
     var displaytemp = $("#tempdisplay");
     if (!isNaN(temperature)) {
@@ -195,7 +200,7 @@ function initCPUtemp() {
   }
 
   // Read from local storage, initialize if needed
-  var tempunit = localStorage.getItem("tempunit");
+  var tempunit = localStorage ? localStorage.getItem("tempunit") : null;
   if (tempunit === null) {
     tempunit = "C";
   }

@@ -25,7 +25,7 @@ $(function () {
       { data: "name" },
       { data: "enabled", searchable: false },
       { data: "description" },
-      { data: null, width: "60px", orderable: false },
+      { data: null, width: "22px", orderable: false },
     ],
     columnDefs: [
       {
@@ -84,7 +84,8 @@ $(function () {
       }
     },
     dom:
-      "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
+      "<'row'<'col-sm-12'f>>" +
+      "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     lengthMenu: [

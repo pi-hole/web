@@ -1,26 +1,14 @@
-<?php /*
-*    Pi-hole: A black hole for Internet advertisements
+<?php
+/*   Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
-    $indexpage = true;
-    require "scripts/pi-hole/php/header.php";
-    require_once "scripts/pi-hole/php/gravity.php";
 
-    function getinterval()
-    {
-        global $piholeFTLConf;
-        if(isset($piholeFTLConf["MAXLOGAGE"]))
-        {
-             return round(floatval($piholeFTLConf["MAXLOGAGE"]), 1);
-        }
-        else
-        {
-             return "24";
-        }
-    }
+$indexpage = true;
+require "scripts/pi-hole/php/header.php";
+require_once "scripts/pi-hole/php/gravity.php";
 ?>
 <!-- Sourceing CSS colors from stylesheet to be used in JS code -->
 <span class="queries-permitted"></span>
@@ -72,7 +60,7 @@
         <!-- small box -->
         <div class="small-box bg-red no-user-select" title="<?php echo gravity_last_update(); ?>">
             <div class="inner">
-                <p>Domains on Blocklist</p>
+                <p>Domains on Adlists</p>
                 <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
             </div>
             <div class="icon">
@@ -87,7 +75,7 @@
     <div class="col-md-12">
     <div class="box" id="queries-over-time">
         <div class="box-header with-border">
-          <h3 class="box-title">Total queries over last <?php echo getinterval(); ?> hours</h3>
+          <h3 class="box-title">Total queries over last <span class="maxlogage-interval">24</span> hours</h3>
         </div>
         <div class="box-body">
           <div class="chart">
@@ -112,7 +100,7 @@
     <div class="col-md-12">
     <div class="box" id="clients">
         <div class="box-header with-border">
-          <h3 class="box-title">Client activity over last <?php echo getinterval(); ?> hours</h3>
+          <h3 class="box-title">Client activity over last <span class="maxlogage-interval">24</span> hours</h3>
         </div>
         <div class="box-body">
           <div class="chart">

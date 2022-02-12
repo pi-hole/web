@@ -122,7 +122,7 @@ function initTable() {
       { data: "enabled", searchable: false },
       { data: "comment" },
       { data: "groups", searchable: false },
-      { data: null, width: "80px", orderable: false },
+      { data: null, width: "22px", orderable: false },
     ],
     columnDefs: [
       {
@@ -291,7 +291,8 @@ function initTable() {
       $("td:eq(5)", row).html(button);
     },
     dom:
-      "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
+      "<'row'<'col-sm-12'f>>" +
+      "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     lengthMenu: [

@@ -211,6 +211,7 @@ h4 {
 .main-header .navbar .nav > li > a,
 .main-header .navbar .nav > li > .navbar-text {
   color: #bec5cb;
+  max-height: 50px;
 }
 .main-header .navbar .nav > li > a:hover,
 .main-header .navbar .nav > li > a:active,
@@ -263,24 +264,36 @@ h4 {
 .nav-tabs-custom .tab-content {
   background-color: #30383f;
 }
-.nav-tabs-custom > .nav-tabs > li.active > a {
-  border-left-color: #353c42;
-  border-right-color: #353c42;
-  background-color: #272c30;
-  color: #bec5cb;
-}
-.nav-tabs-custom > .nav-tabs.pull-right > li:first-of-type.active > a {
-  border-left-color: #353c42;
+.nav-tabs-custom > .nav-tabs {
+  background: rgba(64, 72, 80, 0.666);
 }
 .nav-tabs-custom > .nav-tabs > li {
+  margin-right: 1px;
   color: #bec5cb;
+}
+.nav-tabs-custom > .nav-tabs > li.active > a,
+.nav-tabs-custom > .nav-tabs > li.active:hover > a {
+  border-left-color: #30383f;
+  border-right-color: #30383f;
+  background-color: #30383f;
+  color: #bec5cb;
+}
+.nav-tabs-custom > .nav-tabs > li:not(.active):hover {
+  border-top-color: #d2d6de;
+  background-color: transparent;
 }
 .nav-tabs-custom > .nav-tabs > li > a {
-  color: #bec5cb;
+  color: #8e959b;
 }
 .nav-tabs-custom > .nav-tabs > li > a:focus {
-  background: #404850;
+  color: #3c8dbc;
 }
+.nav-tabs-custom > .nav-tabs > li:hover > a,
+.nav-tabs-custom > .nav-tabs > li.active:hover > a {
+  background-color: #353c42;
+  color: #bec5cb;
+}
+
 .list-group {
   color: #bec5cb;
   background-color: #272c30;
@@ -451,11 +464,6 @@ div.dataTables_wrapper div.dataTables_length select {
   background-color: #353c42;
   color: #bec5cb;
   border: 1px solid #3d444b;
-}
-.nav-tabs-custom > .nav-tabs > li:hover > a,
-.nav-tabs-custom > .nav-tabs > li.active:hover > a {
-  background-color: #353c42;
-  color: #bec5cb;
 }
 .form-control[disabled],
 .form-control[readonly],

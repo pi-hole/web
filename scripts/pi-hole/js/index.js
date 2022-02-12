@@ -319,15 +319,19 @@ function updateQueryTypesPie() {
     queryTypePieChart.update();
     // Don't use rotation animation for further updates
     queryTypePieChart.options.animation.duration = 0;
+    queryTypePieChart.options.legendCallback = customLegend;
+
     // Generate legend in separate div
     $("#query-types-legend").html(queryTypePieChart.generateLegend());
-    $("#query-types-legend > ul > li").prepend(createEyeConElement());
     $("#query-types-legend > ul > li").click(function (e) {
-      if (isEyeCon(e.target)) {
+      if (iscolorBox(e.target)) {
         return false;
       }
 
       window.location.href = "queries.php?querytype=" + querytypeids[$(this).index()];
+    });
+    $("#query-types-legend .colorBoxWrapper").click(function (e) {
+      hidePieSlice(e);
     });
   }).done(function () {
     // Reload graph after minute
@@ -335,8 +339,51 @@ function updateQueryTypesPie() {
   });
 }
 
+function customLegend(chart) {
+  var text = [];
+  var data = chart.data;
+  var datasets = data.datasets;
+  var labels = data.labels;
+
+  text.push('<ul class="' + chart.id + '-legend">');
+
+  if (datasets.length > 0) {
+    for (var i = 0; i < datasets[0].data.length; ++i) {
+      var color = datasets[0].backgroundColor[i];
+
+      var txt = "";
+
+      // legend box icon
+      txt =
+        '<span class="colorBoxWrapper" style="color: ' +
+        color +
+        '" title="Toggle visibility">' +
+        '<i class="fa fa-check-square"></i>' +
+        "</span>";
+
+      // color block
+      txt += '<span class="legend-color-box" style="background-color:' + color + '"></span>';
+
+      // label
+      if (labels[i]) {
+        txt +=
+          '<span class="legend-label-text" title="List ' +
+          labels[i] +
+          ' queries">' +
+          labels[i] +
+          "</span>";
+      }
+
+      text.push("<li>" + txt + "</li>");
+    }
+  }
+
+  text.push("</ul>");
+  return text.join("");
+}
+
 function hidePieSlice(event) {
-  toggleEyeCon(event.target);
+  togglecolorBox(event.target);
 
   var legendID = $(event.target).closest(".chart-legend").attr("id");
   var ci =
@@ -360,19 +407,19 @@ function hidePieSlice(event) {
   ci.update();
 }
 
-function toggleEyeCon(target) {
+function togglecolorBox(target) {
   var parentListItem = $(target).closest("li");
-  var eyeCon = $(parentListItem).find(".fa-eye, .fa-eye-slash");
+  var colorBox = $(parentListItem).find(".fa-check-square, .fa-square");
 
-  if (eyeCon) {
-    $(eyeCon).toggleClass("fa-eye");
-    $(eyeCon).toggleClass("fa-eye-slash");
+  if (colorBox) {
+    $(colorBox).toggleClass("fa-check-square");
+    $(colorBox).toggleClass("fa-square");
   }
 }
 
-function isEyeCon(target) {
-  // See if click happened on eyeConWrapper or child SVG
-  if ($(target).closest(".eyeConWrapper")[0]) {
+function iscolorBox(target) {
+  // See if click happened on colorBoxWrapper or child SVG
+  if ($(target).closest(".colorBoxWrapper")[0]) {
     return true;
   }
 
@@ -468,16 +515,6 @@ function updateClientsOverTime() {
     });
 }
 
-function createEyeConElement() {
-  var eyeConWrapper = $("<span></span>")
-    .addClass("eyeConWrapper")
-    .click(function (e) {
-      hidePieSlice(e);
-    });
-  eyeConWrapper.append($("<i class='fa fa-eye'></i>"));
-  return eyeConWrapper;
-}
-
 function updateForwardDestinationsPie() {
   $.getJSON("api.php?getForwardDestinations", function (data) {
     if ("FTLnotrunning" in data) {
@@ -519,11 +556,12 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.update();
     // Don't use rotation animation for further updates
     forwardDestinationPieChart.options.animation.duration = 0;
+    forwardDestinationPieChart.options.legendCallback = customLegend;
+
     // Generate legend in separate div
     $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
-    $("#forward-destinations-legend > ul > li").prepend(createEyeConElement());
     $("#forward-destinations-legend > ul > li").click(function (e) {
-      if (isEyeCon(e.target)) {
+      if (iscolorBox(e.target)) {
         return false;
       }
 
@@ -531,6 +569,9 @@ function updateForwardDestinationsPie() {
       if (obj.length > 0) {
         window.location.href = "queries.php?forwarddest=" + obj;
       }
+    });
+    $("#forward-destinations-legend .colorBoxWrapper").click(function (e) {
+      hidePieSlice(e);
     });
   }).done(function () {
     // Reload graph after one minute
@@ -723,7 +764,7 @@ function updateSummaryData(runOnce) {
     }
   };
 
-  $.getJSON("api.php?summary", function (data) {
+  $.getJSON("api.php?summaryRaw", function (data) {
     updateSessionTimer();
 
     if ("FTLnotrunning" in data) {
@@ -795,7 +836,7 @@ function updateSummaryData(runOnce) {
 
 function doughnutTooltip(tooltipItems, data) {
   var dataset = data.datasets[tooltipItems.datasetIndex];
-  var label = data.labels[tooltipItems.index];
+  var label = " " + data.labels[tooltipItems.index];
   // Compute share of total and of displayed
   var scale = 0,
     total = 0;
@@ -813,16 +854,28 @@ function doughnutTooltip(tooltipItems, data) {
     return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
   return (
     label +
-    ":<br>- " +
+    ":<br>&bull; " +
     dataset.data[tooltipItems.index].toFixed(1) +
-    "% of all queries<br>- " +
+    "% of all queries<br>&bull; " +
     ((dataset.data[tooltipItems.index] * 100) / (total - scale)).toFixed(1) +
     "% of shown items"
   );
 }
 
+var maxlogage = "24";
+function getMaxlogage() {
+  $.getJSON("api.php?getMaxlogage", function (data) {
+    if (!("FTLnotrunning" in data)) {
+      maxlogage = data.maxlogage;
+    }
+  }).done(function () {
+    $(".maxlogage-interval").html(maxlogage);
+  });
+}
+
 $(function () {
   // Pull in data via AJAX
+  getMaxlogage();
   updateSummaryData();
 
   var gridColor = $(".graphs-grid").css("background-color");

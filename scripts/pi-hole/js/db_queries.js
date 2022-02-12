@@ -84,7 +84,8 @@ function handleAjaxError(xhr, textStatus) {
     alert(
       "An unknown error occurred while loading the data.\n" +
         xhr.responseText +
-        "\nCheck the server's log files (/var/log/lighttpd/error.log when you're using the default Pi-hole web server) for details. You may need to increase the memory available for Pi-hole in case you requested a lot of data."
+        "\nCheck the server's log files (/var/log/lighttpd/error.log) for details.\n\nYou may need to increase PHP memory limit." +
+        "\n\nYou can find more info in pi-hole's FAQ:\nhttps://docs.pi-hole.net/main/faq/#error-while-loading-data-from-the-long-term-database"
     );
   }
 
@@ -296,7 +297,7 @@ $(function () {
       }
 
       $(row).addClass(blocked === true ? "blocked-row" : "allowed-row");
-      if (localStorage.getItem("colorfulQueryLog_chkbox") === "true") {
+      if (localStorage && localStorage.getItem("colorfulQueryLog_chkbox") === "true") {
         $(row).addClass(blocked === true ? "text-red" : "text-green");
       }
 

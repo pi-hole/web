@@ -312,6 +312,13 @@ label {
   font-weight: bold !important;
 }
 
+div .panel-title,
+p.login-box-msg,
+.form-group.has-error label {
+  position: relative;
+  z-index: 1;
+}
+
 .form-control::placeholder {
   color: #456;
 }
@@ -329,24 +336,34 @@ label {
 
 .form-group.has-error.login-box-msg::before {
   content: "ACCESS DENIED";
-  display: block;
   margin: -20px -20px 20px;
   padding: calc(45px + 0.7em) 0 0;
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 130px;
-  color: #d43;
+  inset: 0 0 0 0;
+  color: #630030;
   font-size: 3.825em;
   font-size: calc((100vw - var(--sidebar-width) - 60px) / 12);
   line-height: 1;
-  animation: 3s infinite Pulse;
   background: rgba(0, 0, 0, 0.88);
-  z-index: 0;
 }
 
-.layout-boxed .form-group.has-error.login-box-msg::before {
+.form-group.has-error.login-box-msg::after {
+  content: "ACCESS DENIED";
+  margin: -20px -20px 20px;
+  padding: calc(45px + 0.7em) 0 0;
+  position: absolute;
+  inset: 0 0 0 0;
+  color: #e33100;
+  font-size: 3.825em;
+  font-size: calc((100vw - var(--sidebar-width) - 60px) / 12);
+  line-height: 1;
+  text-shadow: 0 0 5px #e33100;
+  animation: 3s infinite Pulse steps(30);
+  z-index: 1;
+}
+
+.layout-boxed .form-group.has-error.login-box-msg::before,
+.layout-boxed .form-group.has-error.login-box-msg::after {
   padding: calc(50% - 0.5em) 0 0;
 }
 
@@ -1460,37 +1477,54 @@ table.dataTable {
 
 @-webkit-keyframes warningPulse {
   0% {
-    border-color: rgba(255, 153, 0, 0.4);
+    opacity: 0;
   }
   50% {
-    border-color: rgba(255, 150, 0, 1);
+    opacity: 1;
   }
   100% {
-    border-color: rgba(255, 153, 0, 0.4);
+    opacity: 0;
   }
 }
 
 @keyframes warningPulse {
   0% {
-    border-color: rgba(255, 153, 0, 0.4);
+    opacity: 0;
   }
   50% {
-    border-color: rgba(255, 150, 0, 1);
+    opacity: 1;
   }
   100% {
-    border-color: rgba(255, 153, 0, 0.4);
+    opacity: 0;
   }
 }
 
-.box-warning {
-  animation: 3s infinite warningPulse;
+.box.box-warning {
+  border-top-color: #71480a;
+  position: relative;
+}
+
+.box.box-warning:after {
+  content: "";
+  border-top: 3px solid #f89201;
+  border-radius: 12px;
+  position: absolute;
+  margin-top: -3px;
+  inset: 0 0 0 0;
+  z-index: -1;
+  animation: 3s infinite warningPulse steps(30);
+}
+
+.box.box-warning div {
+  z-index: 2;
 }
 
 /*** MEDIA QUERIES ***/
 
 /*--- Media - max-width ---*/
 @media (max-width: 991px) {
-  .form-group.has-error.login-box-msg::before {
+  .form-group.has-error.login-box-msg::before,
+  .form-group.has-error.login-box-msg::after {
     font-size: calc((100vw - var(--sidebar-width) - 60px) / 9);
   }
 }
@@ -1581,7 +1615,8 @@ table.dataTable {
   .main-footer {
     margin-left: 0;
   }
-  .form-group.has-error.login-box-msg::before {
+  .form-group.has-error.login-box-msg::before,
+  .form-group.has-error.login-box-msg::after {
     font-size: calc((100vw - 60px) / 6);
   }
 }
@@ -1652,21 +1687,31 @@ table.dataTable {
 }
 
 @media (min-width: 1320px) {
-  .layout-boxed .form-group.has-error.login-box-msg::before {
+  .layout-boxed .form-group.has-error.login-box-msg::before,
+  .layout-boxed .form-group.has-error.login-box-msg::after {
     font-size: calc((1320px - var(--sidebar-width) - 60px) / 12);
   }
 }
 
-@media (min-width: 1920px) {
-  .layout-boxed .form-group.has-error.login-box-msg::before {
+@media (min-width: 1960px) {
+  .layout-boxed .form-group.has-error.login-box-msg::before,
+  .layout-boxed .form-group.has-error.login-box-msg::after {
     font-size: calc((1920px - var(--sidebar-width) - 60px) / 12);
   }
-}
 
-@media (min-width: 1960px) {
   .layout-boxed .wrapper {
     box-shadow: none;
     max-width: 1920px;
+  }
+}
+
+/*** Fix some datatables layout on small screens ***/
+@media screen and (max-width: 660px), screen and (min-width: 767px) and (max-width: 960px) {
+  #domainsTable td::before {
+    margin: 0 5px 2px;
+  }
+  #domainsTable td:nth-child(2n) {
+    width: calc(100% - 160px);
   }
 }
 

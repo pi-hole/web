@@ -29,24 +29,46 @@ else
 		$data["version"] = 3;
 	}
 
-	if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET))
-	{
+	if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET)) {
 		require_once("scripts/pi-hole/php/gravity.php");
 		sendRequestFTL("stats");
 		$return = getResponseFTL();
 
 		$stats = [];
-		foreach($return as $line)
-		{
+		foreach($return as $line) {
 			$tmp = explode(" ",$line);
 
-			if(($tmp[0] === "domains_being_blocked" && !is_numeric($tmp[1])) || $tmp[0] === "status")
-				$stats[$tmp[0]] = $tmp[1]; // Expect string response
-			else
-				$stats[$tmp[0]] = floatval($tmp[1]); // Expect float response
+			if($tmp[0] === "domains_being_blocked" && !is_numeric($tmp[1])) {
+				// Expect string response
+				$stats[$tmp[0]] = $tmp[1];
+			} elseif ($tmp[0] === "status") {
+				// Expect string response
+				$stats[$tmp[0]] = piholeStatusAPI();
+			} elseif (isset($_GET['summary'])) {
+				// "summary" expects a formmated string response
+				if($tmp[0] !== "ads_percentage_today") {
+					$stats[$tmp[0]] = number_format($tmp[1]);
+				} else {
+					$stats[$tmp[0]] = number_format($tmp[1], 1, '.', '');
+				}
+			} else {
+				// Expect float response
+				$stats[$tmp[0]] = floatval($tmp[1]);
+			}
+
 		}
 		$stats['gravity_last_updated'] = gravity_last_update(true);
 		$data = array_merge($data,$stats);
+	}
+
+	if (isset($_GET["getMaxlogage"]) && $auth) {
+		sendRequestFTL("maxlogage");
+		// Convert seconds to hours and rounds to one decimal place.
+		$ret = round(intval(getResponseFTL()[0]) / 3600, 1);
+		// Return 24h if value is 0, empty, null or non numeric.
+		$ret = $ret ?: 24;
+
+		$data = array_merge($data, array("maxlogage" => $ret));
 	}
 
 	if (isset($_GET['overTimeData10mins']))
