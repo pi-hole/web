@@ -60,7 +60,7 @@ require_once "scripts/pi-hole/php/gravity.php";
         <!-- small box -->
         <div class="small-box bg-red no-user-select" title="<?php echo gravity_last_update(); ?>">
             <div class="inner">
-                <p>Domains on Blocklist</p>
+                <p>Domains on Adlists</p>
                 <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
             </div>
             <div class="icon">
