@@ -84,11 +84,15 @@ function archive_restore_table($file, $table, $flush=false)
 	if(is_null($contents))
 		return 0;
 
-	// Flush table if requested, only flush each table once
+	// Flush table if requested. Only flush each table once, and only if it exists
 	if($flush && !in_array($table, $flushed_tables))
 	{
-		$db->exec("DELETE FROM \"".$table."\"");
-		array_push($flushed_tables, $table);
+		$tableExists = $db->querySingle("SELECT name FROM sqlite_master WHERE type='table' AND name='".$table."';");
+		if ($tableExists)
+		{			
+			$db->exec("DELETE FROM \"".$table."\"");
+			array_push($flushed_tables, $table);
+		}
 	}
 
 	// Prepare fields depending on the table we restore to
