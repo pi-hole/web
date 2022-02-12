@@ -19,6 +19,12 @@ if(isset($last_error) && ($last_error["type"] === E_WARNING || $last_error["type
 	$error .= "There was a problem applying your settings.<br>Debugging information:<br>PHP error (".htmlspecialchars($last_error["type"])."): ".htmlspecialchars($last_error["message"])." in ".htmlspecialchars($last_error["file"]).":".htmlspecialchars($last_error["line"]);
 }
 
+# Timezone is set in docker via ENV otherwise get it from commandline
+$timezone=htmlspecialchars(getenv("TZ"));
+if (empty($timezone)) {
+	$timezone=shell_exec("date +'%Z'");
+}
+
 ?>
 <style>
 	.tooltip-inner {
@@ -253,7 +259,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">Time FTL started:</th>
-                                                        <td><?php print_r(get_FTL_data("lstart")); ?></td>
+                                                        <td><?php print_r(get_FTL_data("lstart")); echo " ".$timezone; ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">User / Group:</th>
