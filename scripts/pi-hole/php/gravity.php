@@ -47,15 +47,15 @@ function gravity_last_update($raw = false)
 	if($gravitydiff->d > 1)
 	{
 		// String output (more than one day ago)
-		return $gravitydiff->format("Blocking list updated %a days, %H:%I (hh:mm) ago");
+		return $gravitydiff->format("Adlists updated %a days, %H:%I (hh:mm) ago");
 	}
 	elseif($gravitydiff->d == 1)
 	{
 		// String output (one day ago)
-		return $gravitydiff->format("Blocking list updated one day, %H:%I (hh:mm) ago");
+		return $gravitydiff->format("Adlists updated one day, %H:%I (hh:mm) ago");
 	}
 
 	// String output (less than one day ago)
-	return $gravitydiff->format("Blocking list updated %H:%I (hh:mm) ago");
+	return $gravitydiff->format("Adlists updated %H:%I (hh:mm) ago");
 }
 ?>
