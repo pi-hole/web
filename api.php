@@ -154,17 +154,20 @@ elseif(isset($_GET['customdns']) && $auth)
 
 	switch ($_GET["action"]) {
 		case 'get':
-			$_POST['action'] = 'get';
+			$data = echoCustomDNSEntries();
 			break;
-		case 'add':
-			$_POST['action'] = 'add';
-			break;
-		case 'delete':
-			$_POST['action'] = 'delete';
-			break;
-		}
 
-	require("scripts/pi-hole/php/customdns.php");
+		case 'add':
+			$data = addCustomDNSEntry();
+			break;
+
+		case 'delete':
+			$data = deleteCustomDNSEntry();
+			break;
+
+		default:
+			die("Wrong action");
+	}
 }
 elseif(isset($_GET['customcname']) && $auth)
 {
@@ -179,17 +182,20 @@ elseif(isset($_GET['customcname']) && $auth)
 
 	switch ($_GET["action"]) {
 		case 'get':
-			$_POST['action'] = 'get';
+			$data = echoCustomCNAMEEntries();
 			break;
-		case 'add':
-			$_POST['action'] = 'add';
-			break;
-		case 'delete':
-			$_POST['action'] = 'delete';
-			break;
-		}
 
-	require("scripts/pi-hole/php/customcname.php");
+		case 'add':
+			$data = addCustomCNAMEEntry();
+			break;
+
+		case 'delete':
+			$data = deleteCustomCNAMEEntry();
+			break;
+
+		default:
+			die("Wrong action");
+	}
 }
 
 // Other API functions
