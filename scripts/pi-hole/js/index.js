@@ -583,7 +583,7 @@ function updateForwardDestinationsPie() {
 }
 
 function updateTopClientsChart() {
-  $.getJSON("api.php?summaryRaw&getQuerySources&topClientsBlocked", function (data) {
+  $.getJSON("api.php?getQuerySources&topClientsBlocked", function (data) {
     if ("FTLnotrunning" in data) {
       return;
     }
@@ -618,12 +618,14 @@ function updateTopClientsChart() {
           '">' +
           clientname +
           "</a>";
-        percentage = (data.top_sources[client] / data.dns_queries_today) * 100;
+        percentage = (data.top_sources[client] / summary.dns_queries_today) * 100;
         clienttable.append(
           "<tr> " +
             utils.addTD(url) +
             utils.addTD(data.top_sources[client]) +
-            utils.addTD(utils.colorBar(percentage, data.dns_queries_today, "progress-bar-blue")) +
+            utils.addTD(
+              utils.colorBar(percentage, summary.dns_queries_today, "progress-bar-blue")
+            ) +
             "</tr> "
         );
       }
@@ -658,12 +660,14 @@ function updateTopClientsChart() {
           '">' +
           clientname +
           "</a>";
-        percentage = (data.top_sources_blocked[client] / data.ads_blocked_today) * 100;
+        percentage = (data.top_sources_blocked[client] / summary.ads_blocked_today) * 100;
         clientblockedtable.append(
           "<tr> " +
             utils.addTD(url) +
             utils.addTD(data.top_sources_blocked[client]) +
-            utils.addTD(utils.colorBar(percentage, data.ads_blocked_today, "progress-bar-blue")) +
+            utils.addTD(
+              utils.colorBar(percentage, summary.ads_blocked_today, "progress-bar-blue")
+            ) +
             "</tr> "
         );
       }
@@ -687,7 +691,7 @@ function updateTopClientsChart() {
 }
 
 function updateTopLists() {
-  $.getJSON("api.php?summaryRaw&topItems", function (data) {
+  $.getJSON("api.php?topItems", function (data) {
     if ("FTLnotrunning" in data) {
       return;
     }
@@ -709,12 +713,14 @@ function updateTopLists() {
         domain = utils.escapeHtml(domain);
         urlText = domain === "" ? "." : domain;
         url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
-        percentage = (data.top_queries[domain] / data.dns_queries_today) * 100;
+        percentage = (data.top_queries[domain] / summary.dns_queries_today) * 100;
         domaintable.append(
           "<tr> " +
             utils.addTD(url) +
             utils.addTD(data.top_queries[domain]) +
-            utils.addTD(utils.colorBar(percentage, data.dns_queries_today, "queries-permitted")) +
+            utils.addTD(
+              utils.colorBar(percentage, summary.dns_queries_today, "queries-permitted")
+            ) +
             "</tr> "
         );
       }
@@ -736,12 +742,12 @@ function updateTopLists() {
         domain = utils.escapeHtml(domain);
         urlText = domain === "" ? "." : domain;
         url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
-        percentage = (data.top_ads[domain] / data.ads_blocked_today) * 100;
+        percentage = (data.top_ads[domain] / summary.ads_blocked_today) * 100;
         adtable.append(
           "<tr> " +
             utils.addTD(url) +
             utils.addTD(data.top_ads[domain]) +
-            utils.addTD(utils.colorBar(percentage, data.ads_blocked_today, "queries-blocked")) +
+            utils.addTD(utils.colorBar(percentage, summary.ads_blocked_today, "queries-blocked")) +
             "</tr> "
         );
       }
@@ -759,6 +765,7 @@ function updateTopLists() {
   });
 }
 
+var summary;
 var FTLoffline = false;
 function updateSummaryData(runOnce) {
   var setTimer = function (timeInSeconds) {
@@ -791,6 +798,9 @@ function updateSummaryData(runOnce) {
       updateTopClientsChart();
       updateTopLists();
     }
+
+    // use the same data to update all lists
+    summary = data;
 
     var formatter = new Intl.NumberFormat();
     //Element name might have a different name to the property of the API so we split it at |
