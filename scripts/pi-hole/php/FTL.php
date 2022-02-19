@@ -8,12 +8,12 @@
 
 $piholeFTLConfFile = "/etc/pihole/pihole-FTL.conf";
 
-function piholeFTLConfig()
+function piholeFTLConfig($force=false)
 {
 	static $piholeFTLConfig;
 	global $piholeFTLConfFile;
 
-	if(isset($piholeFTLConfig))
+	if(isset($piholeFTLConfig) && !$force)
 	{
 		return $piholeFTLConfig;
 	}

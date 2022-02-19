@@ -10,7 +10,7 @@ require "scripts/pi-hole/php/savesettings.php";
 require_once "scripts/pi-hole/php/FTL.php";
 // Reread ini file as things might have been changed
 $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
-$piholeFTLConf = piholeFTLConfig();
+$piholeFTLConf = piholeFTLConfig(true);
 
 // Handling of PHP internal errors
 $last_error = error_get_last();
@@ -957,7 +957,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 It is important to note that rate-limiting is happening on a
                                                 per-client basis. Other clients can continue to use FTL while
                                                 rate-limited clients are short-circuited at the same time.</p>
-                                                <p>Rate-limiting may be disabled altogether by setting both values to zero.</p>
+                                                <p>Rate-limiting may be disabled altogether by setting both
+                                                values to zero. See
+                                                <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" target="_blank">our documentation</a>
+                                                for further details.</p>
                                                 <br>
                                                 <h4>Conditional forwarding</h4>
                                                 <p>If not configured as your DHCP server, Pi-hole typically won't be able to
