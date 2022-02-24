@@ -8,6 +8,10 @@
 *  The colors used in this theme has been inspired by
 *  https://github.com/anvyst/adminlte-skin-midnight */
 
+:root {
+  --datatable-bgcolor: rgba(64, 76, 88, 0.8);
+}
+
 body {
   background-color: #353c42;
   color: #bec5cb;

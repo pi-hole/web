@@ -239,3 +239,19 @@ td.highlight {
 .iradio_minimal-blue {
   margin-right: 8px;
 }
+
+.datatable-bt,
+.datatable-bt:active,
+.datatable-bt:active:focus,
+.datatable-bt:focus {
+  background: #fff;
+  border-color: #ddd;
+  color: #345;
+}
+
+.datatable-bt:hover,
+.datatable-bt:active:hover {
+  background: #337ab7;
+  border-color: #337ab7;
+  color: #fff;
+}

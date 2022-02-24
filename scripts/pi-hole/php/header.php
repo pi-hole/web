@@ -204,6 +204,7 @@
     <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/vendor/datatables.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/datatables_extensions.min.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/vendor/daterangepicker.min.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/vendor/select2.min.css?v=<?=$cacheVer?>">
@@ -223,6 +224,8 @@
     <script src="scripts/vendor/bootstrap-notify.min.js?v=<?=$cacheVer?>"></script>
     <script src="scripts/vendor/select2.min.js?v=<?=$cacheVer?>"></script>
     <script src="scripts/vendor/datatables.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/datatables.select.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/datatables.buttons.min.js?v=<?=$cacheVer?>"></script>
     <script src="scripts/vendor/moment.min.js?v=<?=$cacheVer?>"></script>
     <script src="scripts/vendor/Chart.min.js?v=<?=$cacheVer?>"></script>
     <script src="style/vendor/font-awesome/js/all.min.js?v=<?=$cacheVer?>"></script>
