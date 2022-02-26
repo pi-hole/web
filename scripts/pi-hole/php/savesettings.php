@@ -352,6 +352,13 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				}
 				pihole_execute("-a -i ".$DNSinterface." -web");
 
+				// Add rate-limiting settings
+				if(isset($_POST["rate_limit_count"]) && isset($_POST["rate_limit_interval"]))
+				{
+					// Restart of FTL is delayed
+					pihole_execute("-a ratelimit " . intval($_POST["rate_limit_count"]) . " " . intval($_POST["rate_limit_interval"]) . " false");
+				}
+
 				// If there has been no error we can save the new DNS server IPs
 				if(!strlen($error))
 				{
