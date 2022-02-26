@@ -949,7 +949,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 <br>
                                                 <h4><a id="ratelimit"></a>Rate-limiting</h4>
                                                 <p>Block clients making more than <input type="number" name="rate_limit_count" value="<?=$rate_limit_count?>" min="0" step="10" style="width: 5em;"> queries within
-                                                <input type="number" name="rate_limit_interval" value="<?=$rate_limit_interval?>" min="0" step="10" style="width: 3em;"> seconds.</p>
+                                                <input type="number" name="rate_limit_interval" value="<?=$rate_limit_interval?>" min="0" step="10" style="width: 4em;"> seconds.</p>
                                                 <p>When a client makes too many queries in too short time, it
                                                 gets rate-limited. Rate-limited queries are answered with a
                                                 <code>REFUSED</code> reply and not further processed by FTL
