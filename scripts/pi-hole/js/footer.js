@@ -103,23 +103,20 @@ function piholeChange(action, duration) {
 
 function checkMessages() {
   var ignoreNonfatal = localStorage
-    ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox")
+    ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
-  $.getJSON(
-    "api_db.php?status" + (ignoreNonfatal === "true" ? "&ignore=DNSMASQ_WARN" : ""),
-    function (data) {
-      if ("message_count" in data && data.message_count > 0) {
-        var title =
-          data.message_count > 1
-            ? "There are " + data.message_count + " warnings. Click for further details."
-            : "There is one warning. Click for further details.";
+  $.getJSON("api_db.php?status" + (ignoreNonfatal ? "&ignore=DNSMASQ_WARN" : ""), function (data) {
+    if ("message_count" in data && data.message_count > 0) {
+      var title =
+        data.message_count > 1
+          ? "There are " + data.message_count + " warnings. Click for further details."
+          : "There is one warning. Click for further details.";
 
-        $("#pihole-diagnosis").prop("title", title);
-        $("#pihole-diagnosis-count").text(data.message_count);
-        $("#pihole-diagnosis").removeClass("hidden");
-      }
+      $("#pihole-diagnosis").prop("title", title);
+      $("#pihole-diagnosis-count").text(data.message_count);
+      $("#pihole-diagnosis").removeClass("hidden");
     }
-  );
+  });
 }
 
 function testCookies() {
