@@ -1131,7 +1131,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                         <div class="col-md-6">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Styling (auto saved, per-browser)</h3>
+                                    <h3 class="box-title">Per-browser settings (auto saved)</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="row">
@@ -1214,6 +1214,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                             <div>
                                                 <input type="checkbox" name="colorfulQueryLog" id="colorfulQueryLog" value="no">
                                                 <label for="colorfulQueryLog"><strong>Colorful Query Log</strong></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                      <div class="row">
+                                        <div class="col-md-12">
+                                            <div>
+                                                <input type="checkbox" name="hideNonfatalDnsmasqWarnings" id="hideNonfatalDnsmasqWarnings" value="no">
+                                                <label for="hideNonfatalDnsmasqWarnings"><strong>Hide non-fatal <code>dnsmasq</code> warnings</strong></label>
                                             </div>
                                         </div>
                                     </div>
