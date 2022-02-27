@@ -213,10 +213,13 @@ $(function () {
         className: "btn-sm datatable-bt",
         action: function () {
           // For each ".selected" row ...
+          var ids = [];
           $("tr.selected").each(function () {
-            // ... delete the row identified by "data-id".
-            delMsg($(this).attr("data-id"));
+            // ... add the row identified by "data-id".
+            ids.push(parseInt($(this).attr("data-id"), 10));
           });
+          // Delete all selected rows at once
+          delMsg(ids);
         },
       },
     ],
@@ -264,34 +267,50 @@ $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteMessage() {
   // Passes the button data-del-id attribute as ID
-  delMsg($(this).attr("data-del-id"));
+  var ids = [parseInt($(this).attr("data-del-id"), 10)];
+  delMsg(ids);
 }
 
-function delMsg(id) {
+function delMsg(ids) {
+  // Check input validity
+  if (!Array.isArray(ids)) return;
+
   // Finding out which <tr> should be deleted, based on ID
-  var tr = $("tr[data-id='" + id + "']");
+  var trs = [];
+  for (var id in ids) {
+    if (Object.hasOwnProperty.call(ids, id)) {
+      // Exploit prevention: Return early for non-numeric IDs
+      if (typeof ids[id] !== "number") return;
+      trs.push(ids[id]);
+    }
+  }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting message with ID " + parseInt(id, 10), "...");
+  var idstring = JSON.stringify(ids);
+  utils.showAlert("info", "", "Deleting messages: " + idstring, "...");
 
   $.ajax({
     url: "scripts/pi-hole/php/message.php",
     method: "post",
     dataType: "json",
-    data: { action: "delete_message", id: id, token: token },
+    data: { action: "delete_message", id: idstring, token: token },
   })
     .done(function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted message # " + id, "");
-        table.row(tr).remove().draw(false).ajax.reload(null, false);
-      } else {
         utils.showAlert(
-          "error",
-          "",
-          "Error while deleting message with ID " + id,
-          response.message
+          "success",
+          "far fa-trash-alt",
+          "Successfully deleted messages: " + idstring,
+          ""
         );
+        for (var tr in trs) {
+          if (Object.hasOwnProperty.call(trs, tr)) {
+            table.row(tr).remove().draw(false).ajax.reload(null, false);
+          }
+        }
+      } else {
+        utils.showAlert("error", "", "Error while deleting message: " + idstring, response.message);
       }
     })
     .done(
@@ -299,12 +318,7 @@ function delMsg(id) {
     )
     .fail(function (jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while deleting message with ID " + id,
-        jqXHR.responseText
-      );
+      utils.showAlert("error", "", "Error while deleting message: " + idstring, jqXHR.responseText);
       console.log(exception); // eslint-disable-line no-console
     });
 }

@@ -42,17 +42,19 @@ function JSON_error($message = null)
     echo json_encode($response);
 }
 
+// Delete message identified by IDs
 if ($_POST['action'] == 'delete_message' && isset($_POST['id'])) {
-// Delete message identified by ID
     try {
-
-        $stmt = $db->prepare('DELETE FROM message WHERE id=:id');
+        $ids = json_decode($_POST['id']);
+        // Explot prevention: Ensure all entries in the ID array are integers
+        foreach($ids as $value) {
+            if (!is_numeric($value)) {
+                throw new Exception('Invalid payload: id');
+            }
+        }
+        $stmt = $db->prepare('DELETE FROM message WHERE id IN ('.implode(",",$ids).')');
         if (!$stmt) {
             throw new Exception('While preparing message statement: ' . $db->lastErrorMsg());
-        }
-
-        if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
-            throw new Exception('While binding id to message statement: ' . $db->lastErrorMsg());
         }
 
         if (!$stmt->execute()) {
