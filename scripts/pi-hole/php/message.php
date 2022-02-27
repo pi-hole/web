@@ -45,22 +45,20 @@ function JSON_error($message = null)
 // Delete message identified by IDs
 if ($_POST['action'] == 'delete_message' && isset($_POST['id'])) {
     try {
+        if(!is_array($_POST['id']))
+            throw new Exception('Invalid payload: id is not an array');
         $ids = json_decode($_POST['id']);
         // Explot prevention: Ensure all entries in the ID array are integers
         foreach($ids as $value) {
-            if (!is_numeric($value)) {
-                throw new Exception('Invalid payload: id');
-            }
+            if (!is_numeric($value))
+                throw new Exception('Invalid payload: id contains non-numeric entries');
         }
         $stmt = $db->prepare('DELETE FROM message WHERE id IN ('.implode(",",$ids).')');
-        if (!$stmt) {
+        if (!$stmt)
             throw new Exception('While preparing message statement: ' . $db->lastErrorMsg());
-        }
 
-        if (!$stmt->execute()) {
+        if (!$stmt->execute())
             throw new Exception('While executing message statement: ' . $db->lastErrorMsg());
-        }
-
 
         $reload = true;
         JSON_success();
