@@ -275,14 +275,9 @@ function delMsg(ids) {
   // Check input validity
   if (!Array.isArray(ids)) return;
 
-  // Finding out which <tr> should be deleted, based on ID
-  var trs = [];
+  // Exploit prevention: Return early for non-numeric IDs
   for (var id in ids) {
-    if (Object.hasOwnProperty.call(ids, id)) {
-      // Exploit prevention: Return early for non-numeric IDs
-      if (typeof ids[id] !== "number") return;
-      trs.push(ids[id]);
-    }
+    if (Object.hasOwnProperty.call(ids, id) && typeof ids[id] !== "number") return;
   }
 
   utils.disableAll();
@@ -304,9 +299,9 @@ function delMsg(ids) {
           "Successfully deleted messages: " + idstring,
           ""
         );
-        for (var tr in trs) {
-          if (Object.hasOwnProperty.call(trs, tr)) {
-            table.row(tr).remove().draw(false).ajax.reload(null, false);
+        for (var id in ids) {
+          if (Object.hasOwnProperty.call(ids, id)) {
+            table.row(id).remove().draw(false).ajax.reload(null, false);
           }
         }
       } else {
