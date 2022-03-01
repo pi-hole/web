@@ -321,14 +321,14 @@ function delMsg(ids) {
   }
 
   utils.disableAll();
-  var idstring = JSON.stringify(ids);
+  var idstring = ids.join(", ");
   utils.showAlert("info", "", "Deleting messages: " + idstring, "...");
 
   $.ajax({
     url: "scripts/pi-hole/php/message.php",
     method: "post",
     dataType: "json",
-    data: { action: "delete_message", id: idstring, token: token },
+    data: { action: "delete_message", id: JSON.stringify(ids), token: token },
   })
     .done(function (response) {
       utils.enableAll();
