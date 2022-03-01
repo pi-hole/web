@@ -204,8 +204,8 @@ $(function () {
         },
       },
       {
-        text: '<span class="far fa-minus-square"></span>',
-        titleAttr: "Select More",
+        text: '<span class="far fa-plus-square"></span>',
+        titleAttr: "Select All",
         className: "btn-sm datatable-bt selectMore",
         action: function () {
           table.rows({ page: "current" }).select();
