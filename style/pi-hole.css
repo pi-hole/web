@@ -698,3 +698,8 @@ table.dataTable tbody > tr > .selected {
   background: none;
   background-image: linear-gradient(var(--datatable-bgcolor), var(--datatable-bgcolor));
 }
+
+#messagesTable pre {
+  word-break: break-word;
+  white-space: pre-wrap;
+}
