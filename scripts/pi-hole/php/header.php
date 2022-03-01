@@ -338,7 +338,7 @@ if($auth) {
                     if ($pistatus == 53) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-green-light"></i> Active</span>';
                     } elseif ($pistatus == 0) {
-                        echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Offline</span>';
+                        echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Blocking disabled</span>';
                     } elseif ($pistatus == -1) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> DNS service not running</span>';
                     } elseif ($pistatus == -2) {
