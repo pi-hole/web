@@ -196,21 +196,31 @@ $(function () {
     },
     buttons: [
       {
-        text: '<span class="far fa-check-square"></span>',
+        text: '<span class="far fa-square"></span>',
         titleAttr: "Select All",
-        className: "btn-sm datatable-bt",
+        className: "btn-sm datatable-bt selectAll",
         action: function () {
-          table
-            .rows({
-              page: "current",
-            })
-            .select();
+          table.rows({ page: "current" }).select();
         },
+      },
+      {
+        text: '<span class="far fa-minus-square"></span>',
+        titleAttr: "Select More",
+        className: "btn-sm datatable-bt selectMore",
+        action: function () {
+          table.rows({ page: "current" }).select();
+        },
+      },
+      {
+        extend: "selectNone",
+        text: '<span class="far fa-check-square"></span>',
+        titleAttr: "Deselect All",
+        className: "btn-sm datatable-bt removeAll",
       },
       {
         text: '<span class="far fa-trash-alt"></span>',
         titleAttr: "Delete Selected",
-        className: "btn-sm datatable-bt",
+        className: "btn-sm datatable-bt deleteSelected",
         action: function () {
           // For each ".selected" row ...
           var ids = [];
@@ -260,7 +270,37 @@ $(function () {
       return data;
     },
   });
+  table.on("init select deselect", function () {
+    changeButtonStates();
+  });
 });
+
+// Show only the appropriate buttons
+function changeButtonStates() {
+  var allRows = table.rows({ filter: "applied" }).data().length;
+  var pageLength = table.page.len();
+  var selectedRows = table.rows(".selected").data().length;
+
+  if (selectedRows === 0) {
+    // Nothing selected
+    $(".selectAll").removeClass("hidden");
+    $(".selectMore").addClass("hidden");
+    $(".removeAll").addClass("hidden");
+    $(".deleteSelected").addClass("hidden");
+  } else if (selectedRows >= pageLength || selectedRows === allRows) {
+    // Whole page is selected (or all available messages were selected)
+    $(".selectAll").addClass("hidden");
+    $(".selectMore").addClass("hidden");
+    $(".removeAll").removeClass("hidden");
+    $(".deleteSelected").removeClass("hidden");
+  } else {
+    // Some rows are selected, but not all
+    $(".selectAll").addClass("hidden");
+    $(".selectMore").removeClass("hidden");
+    $(".removeAll").addClass("hidden");
+    $(".deleteSelected").removeClass("hidden");
+  }
+}
 
 // Remove 'bnt-group' class from container, to avoid grouping
 $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
@@ -307,6 +347,10 @@ function delMsg(ids) {
       } else {
         utils.showAlert("error", "", "Error while deleting message: " + idstring, response.message);
       }
+
+      // Clear selection after deletion
+      table.rows().deselect();
+      changeButtonStates();
     })
     .done(
       utils.checkMessages // Update icon warnings count
