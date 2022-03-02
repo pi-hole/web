@@ -10,6 +10,7 @@
   --net-recent-color: #055;
   --net-old-color: #125;
   --net-older-color: #1c2228;
+  --datatable-bgcolor: var(--net-old-color);
 }
 
 .sidebar-collapse {
@@ -1226,7 +1227,6 @@ table.dataTable thead .sorting_desc_disabled:after {
 #ad-frequency table td:last-child,
 #ad-frequency table th:last-child {
   width: 130px !important;
-  width: auto;
 }
 
 #domain-frequency table td:first-child,
@@ -1768,6 +1768,22 @@ table.dataTable {
   border: none;
 }
 
+/*** datatables Select: row, checkbox and button ***/
+table.dataTable tbody > tr.selected td,
+table.dataTable tbody > tr > .selected td {
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.select-checkbox {
+  min-width: 8px;
+}
+
+.datatable-bt {
+  border-radius: 6px;
+  padding: 3px 10px;
+}
+
+/*** icheckbox ***/
 .icheckbox_minimal-blue {
   margin-right: 10px;
 }

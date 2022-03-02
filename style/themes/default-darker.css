@@ -99,6 +99,7 @@ select:-webkit-autofill {
   --darkreader-neutral-text: #d8d4cf;
   --darkreader-selection-background: #004daa;
   --darkreader-selection-text: #e8e6e3;
+  --datatable-bgcolor: rgb(35, 47, 52);
 }
 
 /* Modified CSS */

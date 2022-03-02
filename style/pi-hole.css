@@ -645,3 +645,61 @@ td.details-control {
 .menu-icon {
   margin-right: 0.5em;
 }
+
+/* Datatables Select - bgcolor */
+:root {
+  --datatable-bgcolor: #e0e8ee;
+}
+
+div.dt-buttons {
+  margin: 2px 0 5px;
+}
+@media screen and (max-width: 767px) {
+  div.dt-buttons {
+    margin-bottom: 5px;
+    float: none;
+    text-align: center;
+  }
+}
+
+/* Datatables Select - checkbox outline */
+table.dataTable tbody td.select-checkbox::before,
+table.dataTable tbody th.select-checkbox::before {
+  border-color: currentColor;
+  border-radius: 2px;
+  border-width: 2px;
+  width: 13px;
+  height: 13px;
+}
+
+table.dataTable tr.selected td.select-checkbox::after,
+table.dataTable tr.selected th.select-checkbox::after {
+  color: currentColor;
+  content: "";
+  text-shadow: none;
+  border-bottom: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  width: 4px;
+  height: 8px;
+  transform: rotate(45deg) translate(7px, 3px);
+}
+
+.datatable-bt {
+  padding: 3px 8px;
+}
+
+.datatable-bt span {
+  font-size: 17px;
+}
+
+/* Datatables Select - selected row bgcolor */
+table.dataTable tbody > tr.selected,
+table.dataTable tbody > tr > .selected {
+  background: none;
+  background-image: linear-gradient(var(--datatable-bgcolor), var(--datatable-bgcolor));
+}
+
+#messagesTable pre {
+  word-break: break-word;
+  white-space: pre-wrap;
+}
