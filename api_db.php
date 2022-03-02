@@ -319,7 +319,7 @@ if (isset($_GET['getGraphData']) && $auth)
 	if(isset($_GET["interval"]))
 	{
 		$q = intval($_GET["interval"]);
-		if($q > 10)
+		if($q >= 10)
 			$interval = $q;
 	}
 
