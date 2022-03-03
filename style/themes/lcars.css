@@ -381,6 +381,10 @@ p.login-box-msg,
   background: #f00;
 }
 
+.login-help p {
+  font-size: 13px;
+}
+
 .input-group .input-group-addon {
   border-radius: 8px 0 0 8px;
   border-right: none;

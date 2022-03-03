@@ -10,7 +10,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="text-center">
-        <img src="img/logo.svg" alt="Pi-hole logo" style="width: <?php if ($boxedlayout) { ?>50%<?php } else { ?>30%<?php } ?>;">
+        <img src="img/logo.svg" alt="Pi-hole logo" class="loginpage-logo">
       </div>
       <br>
 
@@ -26,31 +26,24 @@
 
     <div class="panel-body">
       <form action="" id="loginform" method="post">
-        <div class="form-group has-feedback <?php if ($wrongpassword) { ?>has-error<?php } ?>">
-          <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" autocomplete="current-password" autofocus>
-          <span class="fa fa-key form-control-feedback"></span>
-        </div>
-        <div class="row">
-          <div class="col-xs-12 col-md-12">
-            <button type="submit" class="btn btn-primary form-control"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in</button>
+        <div class="form-group login-options has-feedback<?php if ($wrongpassword) { ?> has-error<?php } ?>">
+          <div class="pwd-field">
+            <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" autocomplete="current-password" autofocus>
+            <span class="fa fa-key form-control-feedback"></span>
+          </div>
+          <div>
+            <input type="checkbox" id="logincookie" name="persistentlogin">
+            <label for="logincookie">Remember me for 7 days</label>
           </div>
         </div>
-        <br>
-        <div class="row">
-          <div class="col-xs-8 hidden-xs hidden-sm">
-            <ul>
-              <li><kbd>Return</kbd> &rarr; Log in and go to requested page (<?php echo $scriptname; ?>)</li>
-              <li><kbd>Ctrl</kbd>+<kbd>Return</kbd> &rarr; Log in and go to Settings page</li>
-            </ul>
-          </div>
-          <div class="col-xs-12 col-md-4">
-            <div>
-              <input type="checkbox" id="logincookie" name="persistentlogin">
-              <label for="logincookie">Remember me for 7 days</label>
-            </div>
-          </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary form-control"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in</button>
         </div>
-        <br>
+        <div class="box login-help hidden-xs">
+          <p><kbd>Return</kbd> &#10140; Log in and go to requested page (<?php echo $scriptname; ?>)</p>
+          <p><kbd>Ctrl</kbd> + <kbd>Return</kbd> &#10140; Log in and go to Settings page</p>
+        </div>
+
         <div class="row">
           <div class="col-xs-12">
             <div class="box box-<?php if (!$wrongpassword) { ?>info collapsed-box<?php } else { ?>danger<?php }?>">

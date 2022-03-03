@@ -495,9 +495,62 @@ td.details-control {
   }
 }
 
-/* Fix the icon position (login password field) */
+/*** Login form ***/
 .form-control-feedback {
   right: 12px;
+}
+
+.loginpage-logo {
+  width: 30%;
+}
+.layout-boxed .loginpage-logo {
+  width: 50%;
+}
+
+.login-options {
+  display: flex;
+  margin: 0 0 15px -15px;
+  flex-wrap: wrap;
+}
+
+.login-options div {
+  position: relative;
+  margin-left: 15px;
+}
+
+.login-options div:last-child {
+  margin-right: 2px;
+  margin-bottom: 0 !important;
+  flex: 0 1 auto;
+  font-size: 95%;
+}
+
+.pwd-field {
+  flex: 1 0 auto;
+}
+
+.login-help {
+  padding: 6px;
+  background: rgba(127, 127, 127,0.05);
+  text-align: center;
+}
+
+.login-help p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+@media screen and (min-width: 768px) {
+  .layout-boxed:not(.sidebar-collapse) .login-help p {
+    font-size: clamp(12px, (min(100vw, 1250px) - 230px) / 60, 15px);
+  }
+}
+
+/*** Accessibility - Add focus for checkboxes and radio buttons (icheck) ***/
+[class*=icheck-]>input:first-child:focus+label::before  {
+  outline: 1px #3c8dbc solid;
+  border-color: #3c8dbc;
 }
 
 /* Fix some datatables layout on small screens */
