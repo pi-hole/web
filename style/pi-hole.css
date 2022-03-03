@@ -531,7 +531,7 @@ td.details-control {
 
 .login-help {
   padding: 6px;
-  background: rgba(127, 127, 127,0.05);
+  background: rgba(127, 127, 127, 0.05);
   text-align: center;
 }
 
@@ -548,7 +548,7 @@ td.details-control {
 }
 
 /*** Accessibility - Add focus for checkboxes and radio buttons (icheck) ***/
-[class*=icheck-]>input:first-child:focus+label::before  {
+[class*="icheck-"] > input:first-child:focus + label::before {
   outline: 1px #3c8dbc solid;
   border-color: #3c8dbc;
 }
