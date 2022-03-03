@@ -645,7 +645,7 @@ if($auth) {
                 <!-- Donate -->
                 <li>
                     <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
-                        <i class="fab fa-fw menu-icon fa-paypal"></i> <span>Donate</span>
+                        <i class="fas fa-fw menu-icon fa-donate"></i> <span>Donate</span>
                     </a>
                 </li>
                  <!-- Docs -->
