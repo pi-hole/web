@@ -562,3 +562,16 @@ input[type="password"]::-webkit-caps-lock-indicator {
 .close {
   color: #383838;
 }
+
+/*** Fix login input visual misalignment ***/
+#loginform,
+#loginform input {
+  color: rgb(120, 127, 133);
+}
+
+.login-options input,
+.login-options [class*="icheck-"] > input:first-child + input[type="hidden"] + label::before,
+.login-options [class*="icheck-"] > input:first-child + label::before {
+  background: none;
+  border-color: rgb(120, 127, 133);
+}
