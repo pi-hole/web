@@ -537,13 +537,13 @@ td.details-control {
 
 .login-help p {
   margin: 0;
-  font-size: 15px;
+  font-size: clamp(11px, (100vw - 400px) / 45, 15px);
   line-height: 1.6;
 }
 
 @media screen and (min-width: 768px) {
   .layout-boxed:not(.sidebar-collapse) .login-help p {
-    font-size: clamp(12px, (min(100vw, 1250px) - 230px) / 60, 15px);
+    font-size: clamp(11px, (min(100vw, 1250px) - 380px) / 47, 15px);
   }
 }
 
