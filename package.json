@@ -52,7 +52,7 @@
       "plugin:compat/recommended"
     ],
     "parserOptions": {
-      "ecmaVersion": 5,
+      "ecmaVersion": "latest",
       "sourceType": "script"
     },
     "prettier": true,
