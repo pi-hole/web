@@ -13,14 +13,10 @@ require_once("scripts/pi-hole/php/database.php");
 require_once("scripts/pi-hole/php/auth.php");
 check_cors();
 
-$FTL_IP = "127.0.0.1";
-
 $data = array();
 
 // Common API functions
-if (isset($_GET['status'])) {
-    $data = array_merge($data, array("status" => piholeStatusAPI()));
-} elseif (isset($_GET['enable']) && $auth) {
+if (isset($_GET['enable']) && $auth) {
 	if(isset($_GET["auth"]))
 	{
 	if($_GET["auth"] !== $pwhash)
