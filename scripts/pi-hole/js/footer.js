@@ -31,7 +31,7 @@ function piholeChanged(action) {
       break;
 
     case "disabled":
-      status.html("<i class='fa fa-circle text-red'></i> Offline");
+      status.html("<i class='fa fa-circle text-red'></i> Blocking disabled");
       ena.show();
       dis.hide();
       break;
