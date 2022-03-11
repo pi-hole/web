@@ -1023,7 +1023,6 @@ fieldset[disabled] .btn-link:hover {
   background-color: rgb(39, 42, 44);
 }
 .dropdown-menu > li > a {
-  color: rgb(200, 195, 188);
   color: rgb(157, 148, 136);
 }
 .dropdown-menu > li > a:focus,
@@ -5060,7 +5059,6 @@ fieldset[disabled] .btn-yahoo.focus {
   color: rgb(76, 188, 255) !important;
 }
 .text-black {
-  color: rgb(221, 218, 214) !important;
   color: rgb(232, 230, 227) !important;
 }
 .text-light-blue {
@@ -5962,4 +5960,27 @@ td.highlight {
   background-color: #7b5300 !important;
   border-color: #d8b013 !important;
   color: #f3e8c8 !important;
+}
+
+/* Used in debug log page */
+.log-red {
+  color: #e22;
+}
+.log-green {
+  color: #0b0;
+}
+.log-yellow {
+  color: #fb0;
+}
+.log-blue {
+  color: #08c;
+}
+.log-purple {
+  color: #c6f;
+}
+.log-cyan {
+  color: #0df;
+}
+.log-gray {
+  color: #999;
 }

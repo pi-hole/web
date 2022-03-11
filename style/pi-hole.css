@@ -756,3 +756,9 @@ table.dataTable tbody > tr > .selected {
   word-break: break-word;
   white-space: pre-wrap;
 }
+
+#output {
+  margin: 5px 0;
+  min-height: 36px;
+  padding: 4px 8px;
+}
