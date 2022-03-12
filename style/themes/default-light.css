@@ -27,7 +27,6 @@
 }
 .main-header .navbar .sidebar-toggle:hover {
   color: #f6f6f6;
-  background-color: rgba(0, 0, 0, 0.1);
   background-color: #367fa9;
 }
 @media (max-width: 767px) {
@@ -211,6 +210,30 @@
 
 .text-vivid-blue {
   color: #36f !important;
+}
+
+/* Used in debug log page */
+.log-red {
+  color: #e00;
+}
+.log-green {
+  color: #093;
+}
+.log-yellow {
+  color: #e90;
+  font-weight: bold;
+}
+.log-blue {
+  color: #04d;
+}
+.log-purple {
+  color: #a0c;
+}
+.log-cyan {
+  color: #0ab;
+}
+.log-gray {
+  color: #999;
 }
 
 td.highlight {

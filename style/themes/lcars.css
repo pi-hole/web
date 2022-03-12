@@ -118,6 +118,8 @@ pre {
 #output {
   padding: 10px 3px;
   border-radius: 12px;
+  background: #181818;
+  color: #9ab;
 }
 
 td code {
@@ -1886,6 +1888,29 @@ input[type="password"]::-webkit-caps-lock-indicator {
 
 .text-vivid-blue {
   color: #36f !important;
+}
+
+/* Used in debug log page */
+.log-red {
+  color: #e22;
+}
+.log-green {
+  color: #0b0;
+}
+.log-yellow {
+  color: #fb0;
+}
+.log-blue {
+  color: #08c;
+}
+.log-purple {
+  color: #c6f;
+}
+.log-cyan {
+  color: #0df;
+}
+.log-gray {
+  color: #999;
 }
 
 div.dataTables_wrapper div.dataTables_paginate ul.pagination {

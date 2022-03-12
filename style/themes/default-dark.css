@@ -414,6 +414,34 @@ td.highlight {
   border: 1px solid #353c42;
 }
 
+/* Used in debug log page */
+.log-red {
+  color: #ff4038;
+}
+.log-green {
+  color: #4c4;
+}
+.log-yellow {
+  color: #fb0;
+}
+.log-blue {
+  color: #48f;
+}
+.log-purple {
+  color: #b8e;
+}
+.log-cyan {
+  color: #0df;
+}
+.log-gray {
+  color: #999;
+}
+
+#output {
+  border-color: #505458;
+  background: #272c30;
+}
+
 /* Used by the long-term pages */
 .daterangepicker {
   background-color: #3e464c;
