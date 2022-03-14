@@ -758,7 +758,31 @@ table.dataTable tbody > tr > .selected {
 }
 
 #output {
+  position: relative;
   margin: 5px 0;
   min-height: 36px;
   padding: 4px 8px;
+}
+
+.loading::before {
+  content: " ";
+  position: absolute;
+  padding: 1em;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  line-height: 1;
+  background: rgba(35, 60, 85, 0.8);
+  box-shadow: 0 0 6px -3px rgba(0, 0, 0, 0.5);
+}
+.loading::after {
+  content: "\1F553\FE0E  Loading...";
+  position: absolute;
+  padding: 1em;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: #fff;
+  line-height: 1;
+  animation: 2s infinite Pulse steps(20);
 }
