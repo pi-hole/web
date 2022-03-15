@@ -41,7 +41,7 @@ function eventsource() {
     function (e) {
       ta.append(e.data);
       // scroll page to the bottom (to the last received data)
-      $('html, body').scrollTop($(document).height());
+      $("html, body").scrollTop($(document).height());
     },
     false
   );
