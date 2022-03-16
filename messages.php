@@ -44,7 +44,6 @@
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/messages.js?v=<?=$cacheVer?>"></script>
 
 <?php

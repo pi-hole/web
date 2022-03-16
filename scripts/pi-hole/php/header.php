@@ -229,6 +229,7 @@
     <script src="scripts/vendor/moment.min.js?v=<?=$cacheVer?>"></script>
     <script src="scripts/vendor/Chart.min.js?v=<?=$cacheVer?>"></script>
     <script src="style/vendor/font-awesome/js/all.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 </head>
 <body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <noscript>
