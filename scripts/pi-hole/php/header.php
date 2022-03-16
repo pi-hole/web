@@ -662,6 +662,9 @@ if($auth) {
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
+          
+<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+
 <?php
     // If password is not equal to the password set
     // in the setupVars.conf file, then we skip any
