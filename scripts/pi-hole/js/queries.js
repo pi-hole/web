@@ -450,7 +450,7 @@ $(function () {
 
   $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();
-    if (data[4] === "2" || data[4] === "3") {
+    if (data[4] === "2" || data[4] === "3" || data[4] === "14") {
       utils.addFromQueryLog(data[2], "black");
     } else {
       utils.addFromQueryLog(data[2], "white");
