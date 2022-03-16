@@ -229,6 +229,7 @@
     <script src="scripts/vendor/moment.min.js?v=<?=$cacheVer?>"></script>
     <script src="scripts/vendor/Chart.min.js?v=<?=$cacheVer?>"></script>
     <script src="style/vendor/font-awesome/js/all.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 </head>
 <body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <noscript>
@@ -662,9 +663,6 @@ if($auth) {
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
-          
-<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
-
 <?php
     // If password is not equal to the password set
     // in the setupVars.conf file, then we skip any
