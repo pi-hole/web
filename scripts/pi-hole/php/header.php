@@ -204,6 +204,7 @@
     <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/vendor/datatables.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/datatables_extensions.min.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/vendor/daterangepicker.min.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css?v=<?=$cacheVer?>">
     <link rel="stylesheet" href="style/vendor/select2.min.css?v=<?=$cacheVer?>">
@@ -223,9 +224,12 @@
     <script src="scripts/vendor/bootstrap-notify.min.js?v=<?=$cacheVer?>"></script>
     <script src="scripts/vendor/select2.min.js?v=<?=$cacheVer?>"></script>
     <script src="scripts/vendor/datatables.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/datatables.select.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/datatables.buttons.min.js?v=<?=$cacheVer?>"></script>
     <script src="scripts/vendor/moment.min.js?v=<?=$cacheVer?>"></script>
     <script src="scripts/vendor/Chart.min.js?v=<?=$cacheVer?>"></script>
     <script src="style/vendor/font-awesome/js/all.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 </head>
 <body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <noscript>
@@ -338,7 +342,7 @@ if($auth) {
                     if ($pistatus == 53) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-green-light"></i> Active</span>';
                     } elseif ($pistatus == 0) {
-                        echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Offline</span>';
+                        echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Blocking disabled</span>';
                     } elseif ($pistatus == -1) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> DNS service not running</span>';
                     } elseif ($pistatus == -2) {
@@ -642,7 +646,7 @@ if($auth) {
                 <!-- Donate -->
                 <li>
                     <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
-                        <i class="fab fa-fw menu-icon fa-paypal"></i> <span>Donate</span>
+                        <i class="fas fa-fw menu-icon fa-donate"></i> <span>Donate</span>
                     </a>
                 </li>
                  <!-- Docs -->

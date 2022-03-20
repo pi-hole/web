@@ -81,7 +81,6 @@
 
 <script src="scripts/vendor/bootstrap-select.min.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/vendor/bootstrap-toggle.min.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/groups-adlists.js?v=<?=$cacheVer?>"></script>
 
 <?php
