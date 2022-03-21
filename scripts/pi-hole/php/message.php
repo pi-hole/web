@@ -1,4 +1,3 @@
-
 <?php
 /* Pi-hole: A black hole for Internet advertisements
 *  (c) 2021 Pi-hole, LLC (https://pi-hole.net)
@@ -8,6 +7,8 @@
 *  Please see LICENSE file for your rights under this license. */
 
 require_once('auth.php');
+require_once('func.php');
+require_once('database.php');
 
 // Authentication checks
 if (!isset($api)) {
@@ -21,8 +22,6 @@ if (!isset($api)) {
 
 $reload = false;
 
-require_once('func.php');
-require_once('database.php');
 $QueriesDB = getQueriesDBFilename();
 $db = SQLite3_connect($QueriesDB, SQLITE3_OPEN_READWRITE);
 
