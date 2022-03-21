@@ -132,9 +132,12 @@ function renderMessage(data, type, row) {
 }
 
 $(function () {
+  var ignoreNonfatal = localStorage
+    ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
+    : false;
   table = $("#messagesTable").DataTable({
     ajax: {
-      url: "api_db.php?messages",
+      url: "api_db.php?messages" + (ignoreNonfatal ? "&ignore=DNSMASQ_WARN" : ""),
       data: { token: token },
       type: "POST",
       dataSrc: "messages",

@@ -361,7 +361,10 @@ function colorBar(percentage, total, cssClass) {
 }
 
 function checkMessages() {
-  $.getJSON("api_db.php?status", function (data) {
+  var ignoreNonfatal = localStorage
+    ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
+    : false;
+  $.getJSON("api_db.php?status" + (ignoreNonfatal ? "&ignore=DNSMASQ_WARN" : ""), function (data) {
     if ("message_count" in data && data.message_count > 0) {
       var title =
         data.message_count > 1
