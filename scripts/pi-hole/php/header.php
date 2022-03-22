@@ -522,7 +522,7 @@ if($auth) {
                     </li>
                     <li>
                       <a href="#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal">
-                            <i class="fa fa-fw menu-icon user-clock"></i> Custom time
+                            <i class="fa fa-fw menu-icon fa-user-clock"></i> Custom time
                       </a>
                     </li>
                   </ul>
