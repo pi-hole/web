@@ -5,11 +5,13 @@
     require_once('auth.php');
 
     // Authentication checks
-    if (isset($_POST['token'])) {
-        check_cors();
-        check_csrf($_POST['token']);
-    } else {
-        log_and_die('Not allowed (login session invalid or expired, please relogin on the Pi-hole dashboard)!');
+    if (!isset($api)) {
+        if (isset($_POST['token'])) {
+            check_cors();
+            check_csrf($_POST['token']);
+        } else {
+            log_and_die('Not allowed (login session invalid or expired, please relogin on the Pi-hole dashboard)!');
+        }
     }
 
 

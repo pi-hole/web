@@ -92,7 +92,7 @@ function format(data) {
         utils.datetime(data.date_updated) +
         ")"
       : "N/A") +
-    '</td></tr><tr class="dataTables-child"><td>Number of valid domains on this list:&nbsp;&nbsp;</td><td>' +
+    '</td></tr><tr class="dataTables-child"><td>Number of domains on this list:&nbsp;&nbsp;</td><td>' +
     (data.number !== null && numbers === true ? parseInt(data.number, 10) : "N/A") +
     '</td></tr><tr class="dataTables-child"' +
     invalidStyle +
@@ -122,7 +122,17 @@ function initTable() {
       { data: "enabled", searchable: false },
       { data: "comment" },
       { data: "groups", searchable: false },
-      { data: null, width: "80px", orderable: false },
+      { data: null, width: "22px", orderable: false },
+    ],
+    columnDefs: [
+      {
+        targets: [0, 2],
+        orderable: false,
+      },
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
     ],
     drawCallback: function () {
       $('button[id^="deleteAdlist_"]').on("click", deleteAdlist);
@@ -281,7 +291,8 @@ function initTable() {
       $("td:eq(5)", row).html(button);
     },
     dom:
-      "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
+      "<'row'<'col-sm-12'f>>" +
+      "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     lengthMenu: [
@@ -289,6 +300,7 @@ function initTable() {
       [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
+    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("groups-adlists-table", data);
     },
@@ -373,7 +385,14 @@ function addAdlist() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Successfully added adlist", address);
+        if (response.warning) {
+          // Ignored items found! Showing ignored and added items in a warning.
+          utils.showAlert("warning", "fas fa-plus", "Warning", response.message);
+        } else {
+          // All items added.
+          utils.showAlert("success", "fas fa-plus", "Successfully added adlist", response.message);
+        }
+
         table.ajax.reload(null, false);
         $("#new_address").val("");
         $("#new_comment").val("");

@@ -209,10 +209,19 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				{
 					foreach(["v4_1", "v4_2", "v6_1", "v6_2"] as $type)
 					{
-						if(@array_key_exists("DNSserver".str_replace(".","_",$value[$type]),$_POST))
-						{
-							array_push($DNSservers,$value[$type]);
-						}
+						// Skip if this IP type does not
+						// exist (e.g. IPv4-only or only
+						// one IPv6 address upstream
+						// server)
+						if(!array_key_exists($type, $value))
+							continue;
+
+						// If server exists and is set
+						// (POST), we add it to the
+						// array of DNS servers
+						$server = str_replace(".", "_", $value[$type]);
+						if(array_key_exists("DNSserver".$server, $_POST))
+							array_push($DNSservers, $value[$type]);
 					}
 				}
 
@@ -322,6 +331,10 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 					if($_POST["DNSinterface"] === "single")
 					{
 						$DNSinterface = "single";
+					}
+					elseif($_POST["DNSinterface"] === "bind")
+					{
+						$DNSinterface = "bind";
 					}
 					elseif($_POST["DNSinterface"] === "all")
 					{
@@ -439,26 +452,12 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				if(isset($_POST["querylog-permitted"]) && isset($_POST["querylog-blocked"]))
 				{
 					pihole_execute("-a setquerylog all");
-					if(!isset($_POST["privacyMode"]))
-					{
-						$success .= "All entries will be shown in Query Log";
-					}
-					else
-					{
-						$success .= "Only blocked entries will be shown in Query Log";
-					}
+					$success .= "All entries will be shown in Query Log";
 				}
 				elseif(isset($_POST["querylog-permitted"]))
 				{
 					pihole_execute("-a setquerylog permittedonly");
-					if(!isset($_POST["privacyMode"]))
-					{
-						$success .= "Only permitted will be shown in Query Log";
-					}
-					else
-					{
-						$success .= "No entries will be shown in Query Log";
-					}
+					$success .= "Only permitted will be shown in Query Log";
 				}
 				elseif(isset($_POST["querylog-blocked"]))
 				{
@@ -469,17 +468,6 @@ function addStaticDHCPLease($mac, $ip, $hostname) {
 				{
 					pihole_execute("-a setquerylog nothing");
 					$success .= "No entries will be shown in Query Log";
-				}
-
-
-				if(isset($_POST["privacyMode"]))
-				{
-					pihole_execute("-a privacymode true");
-					$success .= " (privacy mode enabled)";
-				}
-				else
-				{
-					pihole_execute("-a privacymode false");
 				}
 
 				break;

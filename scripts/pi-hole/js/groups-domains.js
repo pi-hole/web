@@ -74,7 +74,13 @@ function initTable() {
       { data: "enabled", searchable: false },
       { data: "comment" },
       { data: "groups", searchable: false, visible: showtype === "all" },
-      { data: null, width: "80px", orderable: false },
+      { data: null, width: "22px", orderable: false },
+    ],
+    columnDefs: [
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
     ],
     drawCallback: function () {
       $('button[id^="deleteDomain_"]').on("click", deleteDomain);
@@ -238,7 +244,8 @@ function initTable() {
       }
     },
     dom:
-      "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
+      "<'row'<'col-sm-12'f>>" +
+      "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     lengthMenu: [
@@ -246,6 +253,7 @@ function initTable() {
       [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
+    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("groups-domains-table", data);
     },

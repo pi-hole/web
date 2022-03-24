@@ -58,7 +58,9 @@ function countDown() {
   } else {
     ena.text("Enable");
     piholeChanged("enabled");
-    localStorage.removeItem("countDownTarget");
+    if (localStorage) {
+      localStorage.removeItem("countDownTarget");
+    }
   }
 }
 
@@ -137,14 +139,18 @@ function initCheckboxRadioStyle() {
 
   function applyCheckboxRadioStyle(style) {
     boxsheet.attr("href", getCheckboxURL(style));
-    // Get all radio/checkboxes for theming, with the exception of the two radio buttons on the custom disable timer
-    var sel = $("input[type='radio'],input[type='checkbox']").not("#selSec").not("#selMin");
+    // Get all radio/checkboxes for theming, with the exception of the two radio buttons on the custom disable timer,
+    // as well as every element with an id that starts with "status_"
+    var sel = $("input[type='radio'],input[type='checkbox']")
+      .not("#selSec")
+      .not("#selMin")
+      .not("[id^=status_]");
     sel.parent().removeClass();
     sel.parent().addClass("icheck-" + style);
   }
 
   // Read from local storage, initialize if needed
-  var chkboxStyle = localStorage.getItem("theme_icheck");
+  var chkboxStyle = localStorage ? localStorage.getItem("theme_icheck") : null;
   if (chkboxStyle === null) {
     chkboxStyle = "primary";
   }
@@ -168,7 +174,10 @@ function initCheckboxRadioStyle() {
 
 function initCPUtemp() {
   function setCPUtemp(unit) {
-    localStorage.setItem("tempunit", tempunit);
+    if (localStorage) {
+      localStorage.setItem("tempunit", tempunit);
+    }
+
     var temperature = parseFloat($("#rawtemp").text());
     var displaytemp = $("#tempdisplay");
     if (!isNaN(temperature)) {
@@ -191,7 +200,7 @@ function initCPUtemp() {
   }
 
   // Read from local storage, initialize if needed
-  var tempunit = localStorage.getItem("tempunit");
+  var tempunit = localStorage ? localStorage.getItem("tempunit") : null;
   if (tempunit === null) {
     tempunit = "C";
   }

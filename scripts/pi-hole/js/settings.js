@@ -169,7 +169,7 @@ $(".api-token").confirm({
   text: "Make sure that nobody else can scan this code around you. They will have full access to the API without having to know the password. Note that the generation of the QR code will take some time.",
   title: "Confirmation required",
   confirm: function () {
-    window.open("scripts/pi-hole/php/api_token.php");
+    $("#apiTokenModal").modal("show");
   },
   cancel: function () {
     // nothing to do
@@ -180,6 +180,18 @@ $(".api-token").confirm({
   confirmButtonClass: "btn-danger",
   cancelButtonClass: "btn-success",
   dialogClass: "modal-dialog",
+});
+
+$("#apiTokenModal").on("show.bs.modal", function () {
+  var bodyStyle = {
+    "font-family": $("body").css("font-family"),
+    "background-color": "white",
+  };
+  $('iframe[name="apiToken_iframe"]').contents().find("body").css(bodyStyle);
+  var qrCodeStyle = {
+    margin: "auto",
+  };
+  $('iframe[name="apiToken_iframe"]').contents().find("table").css(qrCodeStyle);
 });
 
 $("#DHCPchk").click(function () {
@@ -201,9 +213,15 @@ function loadCacheInfo() {
     var cachelivefreed = parseInt(data.cacheinfo["cache-live-freed"], 10);
     $("#cache-live-freed").text(cachelivefreed);
     if (cachelivefreed > 0) {
-      $("#cache-live-freed").parent("tr").addClass("lookatme");
+      $("#cache-live-freed").parent("tr").children("th").children("span").addClass("lookatme");
+      $("#cache-live-freed").parent("tr").children("td").addClass("lookatme");
+      $("#cache-live-freed")
+        .parent("tr")
+        .children("td")
+        .attr("lookatme-text", cachelivefreed.toString());
     } else {
-      $("#cache-live-freed").parent("tr").removeClass("lookatme");
+      $("#cache-live-freed").parent("tr").children("th").children("span").removeClass("lookatme");
+      $("#cache-live-freed").parent("tr").children("td").removeClass("lookatme");
     }
 
     // Update cache info every 10 seconds
@@ -215,14 +233,40 @@ var leasetable, staticleasetable;
 $(function () {
   if (document.getElementById("DHCPLeasesTable")) {
     leasetable = $("#DHCPLeasesTable").DataTable({
-      dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-6'i><'col-sm-6'f>>",
-      columnDefs: [{ bSortable: false, orderable: false, targets: -1 }],
-      paging: false,
-      scrollCollapse: true,
-      scrollY: "200px",
-      scrollX: true,
+      dom:
+        "<'row'<'col-sm-12'f>>" +
+        "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
+        "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+      lengthMenu: [
+        [5, 10, 25, 50, 100, -1],
+        [5, 10, 25, 50, 100, "All"],
+      ],
+      columnDefs: [
+        { bSortable: false, orderable: false, targets: -1 },
+        {
+          targets: [0, 1],
+          render: $.fn.dataTable.render.text(),
+        },
+        {
+          targets: 2,
+          render: function (data) {
+            // Show "unknown", when host is "*"
+            var str;
+            if (data === "*") {
+              str = "<i>unknown</i>";
+            } else {
+              str = typeof data === "string" ? utils.escapeHtml(data) : data;
+            }
+
+            return str;
+          },
+        },
+      ],
+      paging: true,
       order: [[2, "asc"]],
       stateSave: true,
+      stateDuration: 0,
       stateSaveCallback: function (settings, data) {
         utils.stateSaveCallback("activeDhcpLeaseTable", data);
       },
@@ -234,12 +278,23 @@ $(function () {
 
   if (document.getElementById("DHCPStaticLeasesTable")) {
     staticleasetable = $("#DHCPStaticLeasesTable").DataTable({
-      dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-12'i>>",
-      columnDefs: [{ bSortable: false, orderable: false, targets: -1 }],
-      paging: false,
-      scrollCollapse: true,
-      scrollY: "200px",
-      scrollX: true,
+      dom:
+        "<'row'<'col-sm-12'f>>" +
+        "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
+        "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+      lengthMenu: [
+        [5, 10, 25, 50, 100, -1],
+        [5, 10, 25, 50, 100, "All"],
+      ],
+      columnDefs: [
+        { bSortable: false, orderable: false, targets: -1 },
+        {
+          targets: [0, 1, 2],
+          render: $.fn.dataTable.render.text(),
+        },
+      ],
+      paging: true,
       order: [[2, "asc"]],
       stateSave: true,
       stateSaveCallback: function (settings, data) {
@@ -309,7 +364,7 @@ $(".nav-tabs a").on("shown.bs.tab", function (e) {
 // Bar/Smooth chart toggle
 $(function () {
   var bargraphs = $("#bargraphs");
-  var chkboxData = localStorage.getItem("barchart_chkbox");
+  var chkboxData = localStorage ? localStorage.getItem("barchart_chkbox") : null;
 
   if (chkboxData !== null) {
     // Restore checkbox state
@@ -317,7 +372,9 @@ $(function () {
   } else {
     // Initialize checkbox
     bargraphs.prop("checked", true);
-    localStorage.setItem("barchart_chkbox", true);
+    if (localStorage) {
+      localStorage.setItem("barchart_chkbox", true);
+    }
   }
 
   bargraphs.click(function () {
@@ -327,7 +384,7 @@ $(function () {
 
 $(function () {
   var colorfulQueryLog = $("#colorfulQueryLog");
-  var chkboxData = localStorage.getItem("colorfulQueryLog_chkbox");
+  var chkboxData = localStorage ? localStorage.getItem("colorfulQueryLog_chkbox") : null;
 
   if (chkboxData !== null) {
     // Restore checkbox state
@@ -335,7 +392,9 @@ $(function () {
   } else {
     // Initialize checkbox
     colorfulQueryLog.prop("checked", false);
-    localStorage.setItem("colorfulQueryLog_chkbox", false);
+    if (localStorage) {
+      localStorage.setItem("colorfulQueryLog_chkbox", false);
+    }
   }
 
   colorfulQueryLog.click(function () {

@@ -229,13 +229,25 @@ function setBsSelectDefaults() {
   };
 }
 
+var backupStorage = {};
 function stateSaveCallback(itemName, data) {
-  localStorage.setItem(itemName, JSON.stringify(data));
+  if (localStorage === null) {
+    backupStorage[itemName] = JSON.stringify(data);
+  } else {
+    localStorage.setItem(itemName, JSON.stringify(data));
+  }
 }
 
 function stateLoadCallback(itemName) {
+  var data;
   // Receive previous state from client's local storage area
-  var data = localStorage.getItem(itemName);
+  if (localStorage === null) {
+    var item = backupStorage[itemName];
+    data = typeof item === "undefined" ? null : item;
+  } else {
+    data = localStorage.getItem(itemName);
+  }
+
   // Return if not available
   if (data === null) {
     return null;
@@ -259,7 +271,7 @@ function stateLoadCallback(itemName) {
 
 function getGraphType() {
   // Only return line if `barchart_chkbox` is explicitly set to false. Else return bar
-  return localStorage.getItem("barchart_chkbox") === "false" ? "line" : "bar";
+  return localStorage && localStorage.getItem("barchart_chkbox") === "false" ? "line" : "bar";
 }
 
 function addFromQueryLog(domain, list) {
@@ -337,6 +349,17 @@ function addFromQueryLog(domain, list) {
   });
 }
 
+// Helper functions to format the progress bars used on the Dashboard and Long-term Lists
+function addTD(content) {
+  return "<td>" + content + "</td> ";
+}
+
+function colorBar(percentage, total, cssClass) {
+  var title = percentage.toFixed(1) + "% of " + total;
+  var bar = '<div class="progress-bar ' + cssClass + '" style="width: ' + percentage + '%"></div>';
+  return '<div class="progress progress-sm" title="' + title + '"> ' + bar + " </div>";
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -357,5 +380,7 @@ window.utils = (function () {
     validateMAC: validateMAC,
     validateHostname: validateHostname,
     addFromQueryLog: addFromQueryLog,
+    addTD: addTD,
+    colorBar: colorBar,
   };
 })();

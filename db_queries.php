@@ -22,6 +22,12 @@
         </h3>
       </div>
       <div class="box-body">
+        <div class="alert alert-info reload-box">
+            <div>
+                <span><i class="fa fa-exclamation-circle"></i>&nbsp; New options selected. Please reload the data or choose another time range.</span>
+                <button type="button" class="btn btn-primary bt-reload">Reload Data</button>
+            </div>
+        </div>
         <div class="row">
           <div class="form-group col-md-12">
             <div class="input-group">
@@ -32,36 +38,35 @@
             </div>
           </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label>Query status:</label>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <div><input type="checkbox" id="type_forwarded" checked><label for="type_forwarded">Permitted: forwarded</label><br></div>
+                    <div><input type="checkbox" id="type_cached" checked><label for="type_cached">Permitted: cached</label></div>
+                    <div><input type="checkbox" id="type_retried" checked><label for="type_retried">Permitted: retried</label></div>
+                </div>
+                <div class="col-md-3">
+                    <div><input type="checkbox" id="type_gravity" checked><label for="type_gravity">Blocked: gravity</label><br></div>
+                    <div><input type="checkbox" id="type_external" checked><label for="type_external">Blocked: external</label></div>
+                    <div><input type="checkbox" id="type_dbbusy" checked><label for="type_dbbusy">Blocked: database busy</label></div>
+                </div>
+                <div class="col-md-3">
+                    <div><input type="checkbox" id="type_blacklist" checked><label for="type_blacklist">Blocked: exact blacklist</label><br></div>
+                    <div><input type="checkbox" id="type_regex" checked><label for="type_regex">Blocked: regex blacklist</label></div>
+                </div>
+                <div class="col-md-3">
+                    <div><input type="checkbox" id="type_gravity_CNAME" checked><label for="type_gravity_CNAME">Blocked: gravity (CNAME)</label><br></div>
+                    <div><input type="checkbox" id="type_blacklist_CNAME" checked><label for="type_blacklist_CNAME">Blocked: exact blacklist (CNAME)</label><br></div>
+                    <div><input type="checkbox" id="type_regex_CNAME" checked><label for="type_regex_CNAME">Blocked: regex blacklist (CNAME)</label></div>
+                </div>
+            </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <label>Query status:</label>
-    </div>
-    <div class="form-group">
-        <div class="col-md-3">
-            <div><input type="checkbox" id="type_forwarded" checked><label for="type_forwarded">Permitted: forwarded</label><br></div>
-            <div><input type="checkbox" id="type_cached" checked><label for="type_cached">Permitted: cached</label></div>
-            <div><input type="checkbox" id="type_retried" checked><label for="type_retried">Permitted: retried</label></div>
-        </div>
-        <div class="col-md-3">
-            <div><input type="checkbox" id="type_gravity" checked><label for="type_gravity">Blocked: gravity</label><br></div>
-            <div><input type="checkbox" id="type_external" checked><label for="type_external">Blocked: external</label></div>
-            <div><input type="checkbox" id="type_dbbusy" checked><label for="type_dbbusy">Blocked: database busy</label></div>
-        </div>
-        <div class="col-md-3">
-            <div><input type="checkbox" id="type_blacklist" checked><label for="type_blacklist">Blocked: exact blacklist</label><br></div>
-            <div><input type="checkbox" id="type_regex" checked><label for="type_regex">Blocked: regex blacklist</label></div>
-        </div>
-        <div class="col-md-3">
-            <div><input type="checkbox" id="type_gravity_CNAME" checked><label for="type_gravity_CNAME">Blocked: gravity (CNAME)</label><br></div>
-            <div><input type="checkbox" id="type_blacklist_CNAME" checked><label for="type_blacklist_CNAME">Blocked: exact blacklist (CNAME)</label><br></div>
-            <div><input type="checkbox" id="type_regex_CNAME" checked><label for="type_regex_CNAME">Blocked: regex blacklist (CNAME)</label></div>
-        </div>
-    </div>
 </div>
 
 <div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden>
@@ -74,7 +79,7 @@
         <!-- small box -->
         <div class="small-box bg-aqua no-user-select">
             <div class="inner">
-                <h3 class="statistic" id="ads_blocked_exact">---</h3>
+                <h3 class="statistic" id="queries_blocked_exact">---</h3>
                 <p>Queries Blocked</p>
             </div>
             <div class="icon">
@@ -87,7 +92,7 @@
         <!-- small box -->
         <div class="small-box bg-aqua no-user-select">
             <div class="inner">
-                <h3 class="statistic" id="ads_wildcard_blocked">---</h3>
+                <h3 class="statistic" id="queries_wildcard_blocked">---</h3>
                 <p>Queries Blocked (Wildcards)</p>
             </div>
             <div class="icon">
@@ -113,7 +118,7 @@
         <!-- small box -->
         <div class="small-box bg-yellow no-user-select">
             <div class="inner">
-                <h3 class="statistic" id="ads_percentage_today">---</h3>
+                <h3 class="statistic" id="queries_percentage_today">---</h3>
                 <p>Queries Blocked</p>
             </div>
             <div class="icon">

@@ -50,9 +50,9 @@ else if(isset($_GET["client"]))
 }
 else if(isset($_GET["forwarddest"]))
 {
-	if($_GET["forwarddest"] === "blocklist")
-		$showing .= " queries answered from blocklists";
-	elseif($_GET["forwarddest"] === "cache")
+	if($_GET["forwarddest"] === "blocked")
+		$showing .= " queries blocked by Pi-hole";
+	elseif($_GET["forwarddest"] === "cached")
 		$showing .= " queries answered from cache";
 	else
 		$showing .= " queries for upstream destination ".htmlentities($_GET["forwarddest"]);
@@ -73,15 +73,6 @@ else
 {
 	$showing .= " up to 100 queries";
 	$showall = true;
-}
-
-if(isset($setupVars["API_PRIVACY_MODE"]))
-{
-	if($setupVars["API_PRIVACY_MODE"])
-	{
-		// Overwrite string from above
-		$showing .= ", privacy mode enabled";
-	}
 }
 
 if(strlen($showing) > 0)

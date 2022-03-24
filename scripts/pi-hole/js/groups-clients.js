@@ -95,7 +95,13 @@ function initTable() {
       { data: "ip", type: "ip-address" },
       { data: "comment" },
       { data: "groups", searchable: false },
-      { data: "name", width: "80px", orderable: false },
+      { data: "name", width: "22px", orderable: false },
+    ],
+    columnDefs: [
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
     ],
     drawCallback: function () {
       $('button[id^="deleteClient_"]').on("click", deleteClient);
@@ -209,7 +215,8 @@ function initTable() {
       $("td:eq(3)", row).html(button);
     },
     dom:
-      "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
+      "<'row'<'col-sm-12'f>>" +
+      "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     lengthMenu: [
@@ -217,6 +224,7 @@ function initTable() {
       [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
+    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("groups-clients-table", data);
     },

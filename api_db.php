@@ -87,17 +87,36 @@ if (isset($_GET['getAllQueries']) && $auth)
 		$stmt->bindValue(":from", intval($from), SQLITE3_INTEGER);
 		$stmt->bindValue(":until", intval($until), SQLITE3_INTEGER);
 		$results = $stmt->execute();
-		if(!is_bool($results))
-			while ($row = $results->fetchArray())
-			{
-				// Convert query type ID to name
-				$query_type = getQueryTypeStr($row[1]);
+		if (!is_bool($results)) {
+			// Start the JSON string
+			echo '{"data":[';
 
-				// Insert into array
-				// array:        time     type         domain                                     client           status   upstream destination
-				$allQueries[] = [$row[0], $query_type, utf8_encode(str_replace("~"," ",$row[2])), $row[3], $row[4], utf8_encode($row[5])];
+			$first = true;
+			while ($row = $results->fetchArray()) {
+				// Insert a comma before the next record (except on the first one)
+				if (!$first) {
+					echo ",";
+				} else {
+					$first = false;
+				}
+
+				// Convert query type ID to name, encode domain, encode destination
+				$query_type = getQueryTypeStr($row[1]);
+				$domain = utf8_encode(str_replace("~"," ",$row[2]));
+				$destination = utf8_encode($row[5]);
+
+				// Insert into array and output it in JSON format
+				// array:         time     type         domain   client   status   upstream destination
+				echo json_encode([$row[0], $query_type, $domain, $row[3], $row[4], $destination]);
 			}
+
+			// Finish the JSON string
+			echo ']}';
+		}
+		// exit at the end
+		exit();
 	}
+	// only used if getAllQueries==empty
 	$result = array('data' => $allQueries);
 	$data = array_merge($data, $result);
 }

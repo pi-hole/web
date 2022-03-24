@@ -49,14 +49,16 @@
     $coreVersionStr = $core_current . (isset($core_commit) ? " (" . $core_branch . ", " . $core_commit . ")" : "");
     $ftlVersionStr = $FTL_current . (isset($FTL_commit) ? " (" . $FTL_branch . ", " . $FTL_commit . ")" : "");
     $webVersionStr = $web_current . (isset($web_commit) ? " (" . $web_branch . ", " . $web_commit . ")" : "");
-    $dockerTag = getenv('PIHOLE_DOCKER_TAG');
+    $dockerTag = htmlspecialchars(getenv('PIHOLE_DOCKER_TAG'));
 
     $githubBaseUrl = "https://github.com/pi-hole";
     $coreUrl = $githubBaseUrl . "/pi-hole";
+    $dockerUrl = $githubBaseUrl . "/docker-pi-hole";
     $ftlUrl = $githubBaseUrl . "/FTL";
     $webUrl = $githubBaseUrl . "/AdminLTE";
 
     $coreReleasesUrl = $coreUrl . "/releases";
+    $dockerReleasesUrl = $dockerUrl . "/releases";
     $ftlReleasesUrl = $ftlUrl . "/releases";
     $webReleasesUrl = $webUrl . "/releases";
 ?>
@@ -78,21 +80,26 @@
                 </ul>
                 <?php } else { ?>
                 <ul class="list-inline">
-                    <?php if($dockerTag) { ?> <li><strong>Docker Tag</strong> <?php echo $dockerTag; ?></li> <?php } ?>
+                    <?php if($dockerTag) { ?>
+                    <li>
+                        <strong>Docker Tag</strong>
+                        <a href="<?php echo $dockerReleasesUrl . "/" . $dockerTag; ?>" rel="noopener" target="_blank"><?php echo $dockerTag; ?></a>
+                    </li>
+                    <?php } ?>
                     <li>
                         <strong>Pi-hole</strong>
                         <a href="<?php echo $coreReleasesUrl . "/" . $core_current; ?>" rel="noopener" target="_blank"><?php echo $core_current; ?></a>
-                        <?php if ($core_update) { ?> &middot; <a class="lookatme" href="<?php echo $coreReleasesUrl . "/latest"; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
+                        <?php if ($core_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $coreReleasesUrl . "/latest"; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                     <li>
                         <strong>FTL</strong>
                         <a href="<?php echo $ftlReleasesUrl . "/" . $FTL_current; ?>" rel="noopener" target="_blank"><?php echo $FTL_current; ?></a>
-                        <?php if ($FTL_update) { ?> &middot; <a class="lookatme" href="<?php echo $ftlReleasesUrl . "/latest"; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
+                        <?php if ($FTL_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $ftlReleasesUrl . "/latest"; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                     <li>
                         <strong>Web Interface</strong>
                         <a href="<?php echo $webReleasesUrl . "/" . $web_current; ?>" rel="noopener" target="_blank"><?php echo $web_current; ?></a>
-                        <?php if ($web_update) { ?> &middot; <a class="lookatme" href="<?php echo $webReleasesUrl . "/latest"; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
+                        <?php if ($web_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $webReleasesUrl . "/latest"; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                 </ul>
                 <?php if($core_update || $web_update || $FTL_update) { ?>

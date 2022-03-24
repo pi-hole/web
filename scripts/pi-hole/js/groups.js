@@ -25,7 +25,13 @@ $(function () {
       { data: "name" },
       { data: "enabled", searchable: false },
       { data: "description" },
-      { data: null, width: "60px", orderable: false },
+      { data: null, width: "22px", orderable: false },
+    ],
+    columnDefs: [
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
     ],
     drawCallback: function () {
       $('button[id^="deleteGroup_"]').on("click", deleteGroup);
@@ -78,7 +84,8 @@ $(function () {
       }
     },
     dom:
-      "<'row'<'col-sm-4'l><'col-sm-8'f>>" +
+      "<'row'<'col-sm-12'f>>" +
+      "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     lengthMenu: [
@@ -86,6 +93,7 @@ $(function () {
       [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
+    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("groups-table", data);
     },

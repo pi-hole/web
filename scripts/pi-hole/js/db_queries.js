@@ -7,7 +7,7 @@
 
 /* global moment:false, utils:false */
 
-var start__ = moment().subtract(6, "days");
+var start__ = moment().subtract(7, "days");
 var from = moment(start__).utc().valueOf() / 1000;
 var end__ = moment();
 var until = moment(end__).utc().valueOf() / 1000;
@@ -15,6 +15,8 @@ var instantquery = false;
 var daterange;
 
 var timeoutWarning = $("#timeoutWarning");
+var reloadBox = $(".reload-box");
+var datepickerManuallySelected = false;
 
 var dateformat = "MMMM Do YYYY, HH:mm";
 
@@ -50,8 +52,8 @@ $(function () {
           moment().subtract(1, "days").startOf("day"),
           moment().subtract(1, "days").endOf("day"),
         ],
-        "Last 7 Days": [moment().subtract(6, "days"), moment()],
-        "Last 30 Days": [moment().subtract(29, "days"), moment()],
+        "Last 7 Days": [moment().subtract(7, "days"), moment()],
+        "Last 30 Days": [moment().subtract(30, "days"), moment()],
         "This Month": [moment().startOf("month"), moment()],
         "Last Month": [
           moment().subtract(1, "month").startOf("month"),
@@ -82,7 +84,8 @@ function handleAjaxError(xhr, textStatus) {
     alert(
       "An unknown error occurred while loading the data.\n" +
         xhr.responseText +
-        "\nCheck the server's log files (/var/log/lighttpd/error.log when you're using the default Pi-hole web server) for details. You may need to increase the memory available for Pi-hole in case you requested a lot of data."
+        "\nCheck the server's log files (/var/log/lighttpd/error.log) for details.\n\nYou may need to increase PHP memory limit." +
+        "\n\nYou can find more info in pi-hole's FAQ:\nhttps://docs.pi-hole.net/main/faq/#error-while-loading-data-from-the-long-term-database"
     );
   }
 
@@ -161,20 +164,23 @@ var reloadCallback = function () {
     }
   }
 
-  $("h3#dns_queries").text(statistics[0].toLocaleString());
-  $("h3#ads_blocked_exact").text(statistics[2].toLocaleString());
-  $("h3#ads_wildcard_blocked").text(statistics[3].toLocaleString());
+  var formatter = new Intl.NumberFormat();
+  $("h3#dns_queries").text(formatter.format(statistics[0]));
+  $("h3#queries_blocked_exact").text(formatter.format(statistics[2]));
+  $("h3#queries_wildcard_blocked").text(formatter.format(statistics[3]));
 
   var percent = 0;
   if (statistics[2] + statistics[3] > 0) {
     percent = (100 * (statistics[2] + statistics[3])) / statistics[0];
   }
 
-  $("h3#ads_percentage_today").text(parseFloat(percent).toFixed(1).toLocaleString() + " %");
+  var percentage = formatter.format(Math.round(percent * 10) / 10);
+  $("h3#queries_percentage_today").text(percentage + " %");
 };
 
 function refreshTableData() {
   timeoutWarning.show();
+  reloadBox.hide();
   var APIstring = "api_db.php?getAllQueries&from=" + from + "&until=" + until;
   // Check if query type filtering is enabled
   var queryType = getQueryTypes();
@@ -291,7 +297,7 @@ $(function () {
       }
 
       $(row).addClass(blocked === true ? "blocked-row" : "allowed-row");
-      if (localStorage.getItem("colorfulQueryLog_chkbox") === "true") {
+      if (localStorage && localStorage.getItem("colorfulQueryLog_chkbox") === "true") {
         $(row).addClass(blocked === true ? "text-red" : "text-green");
       }
 
@@ -340,8 +346,8 @@ $(function () {
         },
       },
       { width: "10%" },
-      { width: "40%", render: $.fn.dataTable.render.text() },
-      { width: "20%", type: "ip-address", render: $.fn.dataTable.render.text() },
+      { width: "40%" },
+      { width: "20%", type: "ip-address" },
       { width: "10%" },
       { width: "5%" },
     ],
@@ -354,6 +360,10 @@ $(function () {
         targets: -1,
         data: null,
         defaultContent: "",
+      },
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
       },
     ],
     initComplete: reloadCallback,
@@ -374,5 +384,16 @@ $(function () {
 
 $("#querytime").on("apply.daterangepicker", function (ev, picker) {
   $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
+  datepickerManuallySelected = true;
+  refreshTableData();
+});
+
+$("input[id^=type]").change(function () {
+  if (datepickerManuallySelected) {
+    reloadBox.show();
+  }
+});
+
+$(".bt-reload").click(function () {
   refreshTableData();
 });
