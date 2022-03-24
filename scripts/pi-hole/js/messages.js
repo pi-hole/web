@@ -179,7 +179,7 @@ function deleteMessage() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted message # ", id);
+        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted message #" + id,"");
         table.row(tr).remove().draw(false).ajax.reload(null, false);
       } else {
         utils.showAlert(
