@@ -374,8 +374,11 @@ function checkMessages() {
       $("#pihole-diagnosis").prop("title", title);
       $("#pihole-diagnosis-count").text(data.message_count);
       $("#pihole-diagnosis").removeClass("hidden");
+      $(".warning-count").text(data.message_count);
+      $(".warning-count").removeClass("hidden");
     } else {
       $("#pihole-diagnosis").addClass("hidden");
+      $(".warning-count").addClass("hidden");
     }
   });
 }

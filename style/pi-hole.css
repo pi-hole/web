@@ -545,6 +545,38 @@ td.details-control {
   .layout-boxed:not(.sidebar-collapse) .login-help p {
     font-size: clamp(11px, (min(100vw, 1250px) - 380px) / 47, 15px);
   }
+
+  /* hide warning icon only when logged in and menu is not collapsed */
+  .logged-in:not(.sidebar-collapse) #pihole-diagnosis,
+  .menu-open > a > span.warning-count {
+    display: none;
+  }
+}
+
+/*** Warning icon and count ***/
+.warning-count {
+  position: absolute;
+  display: inline-block;
+  text-align: center;
+  background: rgba(127, 127, 127, 0.3);
+  color: #e08e0b;
+  line-height: 1;
+  padding: 0.25em 0.5em;
+  margin: -0.7em 4px;
+  border-radius: 2em;
+  right: 3em;
+  top: 50%;
+  font-size: 12px;
+}
+
+.treeview-menu .warning-count {
+  margin-right: 0;
+  font-size: 10px;
+}
+
+/* hide warning count when hover a collapsed sidebar */
+.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu > li:hover > a > span.warning-count {
+  display: none !important;
 }
 
 /*** Accessibility - Add focus for checkboxes and radio buttons (icheck) ***/
