@@ -319,7 +319,7 @@ if (isset($_GET['getGraphData']) && $auth)
 	if(isset($_GET["interval"]))
 	{
 		$q = intval($_GET["interval"]);
-		if($q > 10)
+		if($q >= 10)
 			$interval = $q;
 	}
 
@@ -384,7 +384,10 @@ if (isset($_GET['getGraphData']) && $auth)
 
 if (isset($_GET['status']))
 {
-	$results = $db->query('SELECT COUNT(*) FROM message;');
+	$extra = ";";
+	if(isset($_GET["ignore"]) && $_GET["ignore"] === 'DNSMASQ_WARN')
+		$extra = "WHERE type != 'DNSMASQ_WARN';";
+	$results = $db->query('SELECT COUNT(*) FROM message '.$extra);
 
 	if(!is_bool($results))
 		$result = array('message_count' => $results->fetchArray()[0]);
@@ -396,8 +399,12 @@ if (isset($_GET['status']))
 
 if(isset($_GET["messages"]) && $auth)
 {
+	$extra = ";";
+	if(isset($_GET["ignore"]) && $_GET["ignore"] === 'DNSMASQ_WARN')
+		$extra = "WHERE type != 'DNSMASQ_WARN';";
+
 	$messages = array();
-	$results = $db->query('SELECT * FROM message');
+	$results = $db->query('SELECT * FROM message '.$extra);
 
 	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
 	{

@@ -40,6 +40,8 @@ function eventsource() {
     "message",
     function (e) {
       ta.append(e.data);
+      // scroll page to the bottom (to the last received data)
+      $("html, body").scrollTop($(document).height());
     },
     false
   );
@@ -49,6 +51,7 @@ function eventsource() {
     "error",
     function () {
       source.close();
+      $("#output").removeClass("loading");
     },
     false
   );
@@ -57,5 +60,6 @@ function eventsource() {
 $("#debugBtn").on("click", function () {
   $("#debugBtn").prop("disabled", true);
   $("#upload").prop("disabled", true);
+  $("#output").addClass("loading");
   eventsource();
 });

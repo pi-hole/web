@@ -5,6 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global utils:false */
 //The following functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
 
@@ -30,7 +31,7 @@ function piholeChanged(action) {
       break;
 
     case "disabled":
-      status.html("<i class='fa fa-circle text-red'></i> Offline");
+      status.html("<i class='fa fa-circle text-red'></i> Blocking disabled");
       ena.show();
       dis.hide();
       break;
@@ -99,21 +100,6 @@ function piholeChange(action, duration) {
     default:
     // nothing
   }
-}
-
-function checkMessages() {
-  $.getJSON("api_db.php?status", function (data) {
-    if ("message_count" in data && data.message_count > 0) {
-      var title =
-        data.message_count > 1
-          ? "There are " + data.message_count + " warnings. Click for further details."
-          : "There is one warning. Click for further details.";
-
-      $("#pihole-diagnosis").prop("title", title);
-      $("#pihole-diagnosis-count").text(data.message_count);
-      $("#pihole-diagnosis").removeClass("hidden");
-    }
-  });
 }
 
 function testCookies() {
@@ -235,9 +221,9 @@ $(function () {
   initCPUtemp();
 
   // Run check immediately after page loading ...
-  checkMessages();
+  utils.checkMessages();
   // ... and once again with five seconds delay
-  setTimeout(checkMessages, 5000);
+  setTimeout(utils.checkMessages, 5000);
 });
 
 // Handle Enable/Disable

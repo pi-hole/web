@@ -46,7 +46,19 @@ if(isset($_GET["all"]))
 }
 else if(isset($_GET["client"]))
 {
-	$showing .= " queries for client ".htmlentities($_GET["client"]);
+	// Add switch between showing all queries and blocked only
+	if (isset($_GET["type"]) && $_GET["type"] === "blocked")
+	{
+		// Show blocked queries for this client + link to all
+		$showing .= " blocked queries for client ".htmlentities($_GET["client"]);
+		$showing .= ", <a href=\"?client=".htmlentities($_GET["client"])."\">show all</a>";
+	}
+	else
+	{
+		// Show All queries for this client + link to show only blocked
+		$showing .= " all queries for client ".htmlentities($_GET["client"]);
+		$showing .= ", <a href=\"?client=".htmlentities($_GET["client"])."&type=blocked\">show blocked only</a>";
+	}
 }
 else if(isset($_GET["forwarddest"]))
 {
@@ -164,7 +176,6 @@ if(strlen($showing) > 0)
 </div>
 <!-- /.row -->
 <script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/queries.js?v=<?=$cacheVer?>"></script>
 
 <?php

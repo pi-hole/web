@@ -10,7 +10,7 @@ require "scripts/pi-hole/php/savesettings.php";
 require_once "scripts/pi-hole/php/FTL.php";
 // Reread ini file as things might have been changed
 $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
-$piholeFTLConf = piholeFTLConfig();
+$piholeFTLConf = piholeFTLConfig(true);
 
 // Handling of PHP internal errors
 $last_error = error_get_last();
@@ -718,6 +718,19 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                     </form>
                 </div>
                 <!-- ######################################################### DNS ######################################################### -->
+                <?php
+                    // Use default
+                    $rate_limit_count = 1000;
+                    $rate_limit_interval = 60;
+                    // Get rate limit from piholeFTL config array
+                    if (isset($piholeFTLConf["RATE_LIMIT"])) {
+                        $rl = explode("/", $piholeFTLConf["RATE_LIMIT"]);
+                        if(count($rl) == 2) {
+                            $rate_limit_count = intval($rl[0]);
+                            $rate_limit_interval = intval($rl[1]);
+                        }
+                    }
+                ?>
                 <div id="dns" class="tab-pane fade<?php if($tab === "dns"){ ?> in active<?php } ?>">
                     <form role="form" method="post">
                         <div class="row">
@@ -934,6 +947,21 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
                                                 </div>
                                                 <br>
+                                                <h4><a id="ratelimit"></a>Rate-limiting</h4>
+                                                <p>Block clients making more than <input type="number" name="rate_limit_count" value="<?=$rate_limit_count?>" min="0" step="10" style="width: 5em;"> queries within
+                                                <input type="number" name="rate_limit_interval" value="<?=$rate_limit_interval?>" min="0" step="10" style="width: 4em;"> seconds.</p>
+                                                <p>When a client makes too many queries in too short time, it
+                                                gets rate-limited. Rate-limited queries are answered with a
+                                                <code>REFUSED</code> reply and not further processed by FTL
+                                                and prevent Pi-holes getting overwhelmed by rogue clients.
+                                                It is important to note that rate-limiting is happening on a
+                                                per-client basis. Other clients can continue to use FTL while
+                                                rate-limited clients are short-circuited at the same time.</p>
+                                                <p>Rate-limiting may be disabled altogether by setting both
+                                                values to zero. See
+                                                <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" target="_blank">our documentation</a>
+                                                for further details.</p>
+                                                <br>
                                                 <h4>Conditional forwarding</h4>
                                                 <p>If not configured as your DHCP server, Pi-hole typically won't be able to
                                                    determine the names of devices on your local network.  As a
@@ -1131,7 +1159,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                         <div class="col-md-6">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Styling (auto saved, per-browser)</h3>
+                                    <h3 class="box-title">Per-browser settings (auto saved)</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="row">
@@ -1214,6 +1242,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                             <div>
                                                 <input type="checkbox" name="colorfulQueryLog" id="colorfulQueryLog" value="no">
                                                 <label for="colorfulQueryLog"><strong>Colorful Query Log</strong></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                      <div class="row">
+                                        <div class="col-md-12">
+                                            <div>
+                                                <input type="checkbox" name="hideNonfatalDnsmasqWarnings" id="hideNonfatalDnsmasqWarnings" value="no">
+                                                <label for="hideNonfatalDnsmasqWarnings"><strong>Hide non-fatal <code>dnsmasq</code> warnings (warnigs listed <a target="_blank" href="https://docs.pi-hole.net/ftldns/dnsmasq_warn">here</a>)</strong></label>
                                             </div>
                                         </div>
                                     </div>
@@ -1444,7 +1480,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
 </div>
 
 <script src="scripts/vendor/jquery.confirm.min.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/settings.js?v=<?=$cacheVer?>"></script>
 
 <?php

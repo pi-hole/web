@@ -484,30 +484,33 @@ function getQueryTypeStr($querytype)
 }
 
 // Returns an integer representing pihole blocking status
-function piholeStatus()
-{
-    // Receive the return of "pihole status web"
-    $pistatus = pihole_execute('status web');
-    return isset($pistatus[0]) ? intval($pistatus[0]) : -2;
-}
+function piholeStatus() {
+    // Retrieve DNS Port calling FTL API directly
+    $port = callFTLAPI("dns-port");
 
-// Returns pihole status, using only valid API responses (enabled/disabled)
-function piholeStatusAPI()
-{
-    // Receive the return of "pihole status web"
-    $pistatus = piholeStatus();
+    // Retrieve FTL status
+    $FTLstats = callFTLAPI("stats");
 
-    switch ($pistatus) {
-        case -2: // Unkown
-        case -1: // DNS service not running"
-        case 0: // Offline
-            $response = "disabled";
-            break;
-
-        default:
-            // DNS service running on port $returncode
-            $response = "enabled";
+    if (array_key_exists("FTLnotrunning", $port) || array_key_exists("FTLnotrunning", $FTLstats)){
+        // FTL is not running
+        $ret = -1;
+    } elseif (in_array("status enabled", $FTLstats)) {
+        // FTL is enabled
+        if (intval($port[0]) <= 0) {
+            // Port=0; FTL is not listening
+            $ret = -1;
+        } else {
+            // FTL is running on this port
+            $ret = intval($port[0]);
+        }
+    } elseif (in_array("status disabled", $FTLstats)) {
+        // FTL is disabled
+        $ret = 0;
+    } else {
+        // Unknown (unexpected) response
+        $ret = -2;
     }
-    return $response;
+
+    return $ret;
 }
 ?>

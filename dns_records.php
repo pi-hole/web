@@ -98,7 +98,6 @@
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/customdns.js?v=<?=$cacheVer?>"></script>
 

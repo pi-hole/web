@@ -1,3 +1,9 @@
+<?php
+require "auth.php";
+require "password.php";
+check_cors();
+?>
+
 <html>
 <head>
 <style>
@@ -24,10 +30,6 @@ body {
 </head>
 <body>
 <?php
-require "auth.php";
-require "password.php";
-check_cors();
-
 if($auth) {
   if(strlen($pwhash) > 0) {
     echo '<div class="qrcode">';
