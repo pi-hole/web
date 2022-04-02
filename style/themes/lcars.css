@@ -505,6 +505,10 @@ p.login-box-msg,
   box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.6);
 }
 
+.dropdown-toggle {
+  z-index: 2000;
+}
+
 .dropdown-menu > li > a {
   color: inherit;
 }
