@@ -20,71 +20,75 @@ if (isset($_GET['version'])) {
 
 if (isset($_GET['status'])) {
     $return = callFTLAPI("stats");
-
-    if (in_array("status enabled", $return)) {
-        $data = array_merge($data, array("status" => "enabled"));
-    } else {
-        $data = array_merge($data, array("status" => "disabled"));
-    }
+    if (!in_array("FTLnotrunning", $return )) {
+      if (in_array("status enabled", $return)) {
+          $data = array_merge($data, array("status" => "enabled"));
+      } else {
+          $data = array_merge($data, array("status" => "disabled"));
+      }
+  }
 }
 
 if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET)) {
     require_once("scripts/pi-hole/php/gravity.php");
 
     $return = callFTLAPI("stats");
+    if (!in_array("FTLnotrunning", $return )) {
+      $stats = [];
+      foreach ($return as $line) {
+          $tmp = explode(" ",$line);
 
-    $stats = [];
-    foreach ($return as $line) {
-        $tmp = explode(" ",$line);
+          if ($tmp[0] === "domains_being_blocked" && !is_numeric($tmp[1]) || $tmp[0] === "status") {
+              // Expect string response
+              $stats[$tmp[0]] = $tmp[1];
+          } elseif (isset($_GET['summary'])) {
+              // "summary" expects a formmated string response
+              if ($tmp[0] !== "ads_percentage_today") {
+                  $stats[$tmp[0]] = number_format($tmp[1]);
+              } else {
+                  $stats[$tmp[0]] = number_format($tmp[1], 1, '.', '');
+              }
+          } else {
+              // Expect float response
+              $stats[$tmp[0]] = floatval($tmp[1]);
+          }
 
-        if ($tmp[0] === "domains_being_blocked" && !is_numeric($tmp[1]) || $tmp[0] === "status") {
-            // Expect string response
-            $stats[$tmp[0]] = $tmp[1];
-        } elseif (isset($_GET['summary'])) {
-            // "summary" expects a formmated string response
-            if ($tmp[0] !== "ads_percentage_today") {
-                $stats[$tmp[0]] = number_format($tmp[1]);
-            } else {
-                $stats[$tmp[0]] = number_format($tmp[1], 1, '.', '');
-            }
-        } else {
-            // Expect float response
-            $stats[$tmp[0]] = floatval($tmp[1]);
-        }
-
+      }
+      $stats['gravity_last_updated'] = gravity_last_update(true);
+      $data = array_merge($data,$stats);
     }
-    $stats['gravity_last_updated'] = gravity_last_update(true);
-    $data = array_merge($data,$stats);
 }
 
 if (isset($_GET["getMaxlogage"]) && $auth) {
     $return = callFTLAPI("stats");
+    if (!in_array("FTLnotrunning", $return )) {
+      // Convert seconds to hours and rounds to one decimal place.
+      $ret = round(intval($return[0]) / 3600, 1);
+      // Return 24h if value is 0, empty, null or non numeric.
+      $ret = $ret ?: 24;
 
-    // Convert seconds to hours and rounds to one decimal place.
-    $ret = round(intval($return[0]) / 3600, 1);
-    // Return 24h if value is 0, empty, null or non numeric.
-    $ret = $ret ?: 24;
-
-    $data = array_merge($data, array("maxlogage" => $ret));
+      $data = array_merge($data, array("maxlogage" => $ret));
+  }
 }
 
 if (isset($_GET['overTimeData10mins'])) {
     $return = callFTLAPI("overTime");
+    if (!in_array("FTLnotrunning", $return )) {
+      $domains_over_time = array();
+      $ads_over_time = array();
+      foreach ($return as $line) {
+          $tmp = explode(" ",$line);
+          $domains_over_time[intval($tmp[0])] = intval($tmp[1]);
+          $ads_over_time[intval($tmp[0])] = intval($tmp[2]);
+      }
 
-    $domains_over_time = array();
-    $ads_over_time = array();
-    foreach ($return as $line) {
-        $tmp = explode(" ",$line);
-        $domains_over_time[intval($tmp[0])] = intval($tmp[1]);
-        $ads_over_time[intval($tmp[0])] = intval($tmp[2]);
-    }
+      $result = array(
+          'domains_over_time' => $domains_over_time,
+          'ads_over_time' => $ads_over_time
+      );
 
-    $result = array(
-        'domains_over_time' => $domains_over_time,
-        'ads_over_time' => $ads_over_time
-    );
-
-    $data = array_merge($data, $result);
+      $data = array_merge($data, $result);
+  }
 }
 
 if (isset($_GET['topItems']) && $auth) {
@@ -95,16 +99,17 @@ if (isset($_GET['topItems']) && $auth) {
     } else {
         $return = callFTLAPI("top-domains");
     }
-
-    $top_queries = array();
-    foreach ($return as $line) {
-        $tmp = explode(" ",$line);
-        if (count($tmp) == 2) {
-            $tmp[2]="";
-        }
-        $domain = utf8_encode($tmp[2]);
-        $top_queries[$domain] = intval($tmp[1]);
+    if (!in_array("FTLnotrunning", $return )) {
+      $top_queries = array();
+      foreach ($return as $line) {
+          $tmp = explode(" ",$line);
+          if (count($tmp) == 2) {
+              $tmp[2]="";
+          }
+          $domain = utf8_encode($tmp[2]);
+          $top_queries[$domain] = intval($tmp[1]);
     }
+  }
 
     if ($_GET['topItems'] === "audit") {
         $return = callFTLAPI("top-ads for audit");
@@ -113,24 +118,25 @@ if (isset($_GET['topItems']) && $auth) {
     } else {
         $return = callFTLAPI("top-ads");
     }
+    if (!in_array("FTLnotrunning", $return )) {
+      $top_ads = array();
+      foreach ($return as $line) {
+          $tmp = explode(" ",$line);
+          $domain = utf8_encode($tmp[2]);
+          if (count($tmp) > 3) {
+              $top_ads[$domain." (".$tmp[3].")"] = intval($tmp[1]);
+          } else {
+              $top_ads[$domain] = intval($tmp[1]);
+          }
+      }
 
-    $top_ads = array();
-    foreach ($return as $line) {
-        $tmp = explode(" ",$line);
-        $domain = utf8_encode($tmp[2]);
-        if (count($tmp) > 3) {
-            $top_ads[$domain." (".$tmp[3].")"] = intval($tmp[1]);
-        } else {
-            $top_ads[$domain] = intval($tmp[1]);
-        }
-    }
+      $result = array(
+          'top_queries' => $top_queries,
+          'top_ads' => $top_ads
+      );
 
-    $result = array(
-        'top_queries' => $top_queries,
-        'top_ads' => $top_ads
-    );
-
-    $data = array_merge($data, $result);
+      $data = array_merge($data, $result);
+  }
 }
 
 if ((isset($_GET['topClients']) || isset($_GET['getQuerySources'])) && $auth) {
@@ -146,21 +152,22 @@ if ((isset($_GET['topClients']) || isset($_GET['getQuerySources'])) && $auth) {
     } else {
         $return = callFTLAPI("top-clients");
     }
+    if (!in_array("FTLnotrunning", $return )) {
+      $top_clients = array();
+      foreach ($return as $line) {
+          $tmp = explode(" ",$line);
+          $clientip = utf8_encode($tmp[2]);
+          if (count($tmp) > 3 && strlen($tmp[3]) > 0) {
+              $clientname = utf8_encode($tmp[3]);
+              $top_clients[$clientname."|".$clientip] = intval($tmp[1]);
+          } else {
+              $top_clients[$clientip] = intval($tmp[1]);
+          }
+      }
 
-    $top_clients = array();
-    foreach ($return as $line) {
-        $tmp = explode(" ",$line);
-        $clientip = utf8_encode($tmp[2]);
-        if (count($tmp) > 3 && strlen($tmp[3]) > 0) {
-            $clientname = utf8_encode($tmp[3]);
-            $top_clients[$clientname."|".$clientip] = intval($tmp[1]);
-        } else {
-            $top_clients[$clientip] = intval($tmp[1]);
-        }
-    }
-
-    $result = array('top_sources' => $top_clients);
-    $data = array_merge($data, $result);
+      $result = array('top_sources' => $top_clients);
+      $data = array_merge($data, $result);
+  }
 }
 
 if (isset($_GET['topClientsBlocked']) && $auth) {
@@ -174,21 +181,22 @@ if (isset($_GET['topClientsBlocked']) && $auth) {
     } else {
         $return = callFTLAPI("top-clients blocked");
     }
+    if (!in_array("FTLnotrunning", $return )) {
+      $top_clients = array();
+      foreach ($return as $line) {
+          $tmp = explode(" ",$line);
+          $clientip = utf8_encode($tmp[2]);
+          if (count($tmp) > 3 && strlen($tmp[3]) > 0) {
+              $clientname = utf8_encode($tmp[3]);
+              $top_clients[$clientname."|".$clientip] = intval($tmp[1]);
+          } else {
+              $top_clients[$clientip] = intval($tmp[1]);
+          }
+      }
 
-    $top_clients = array();
-    foreach ($return as $line) {
-        $tmp = explode(" ",$line);
-        $clientip = utf8_encode($tmp[2]);
-        if (count($tmp) > 3 && strlen($tmp[3]) > 0) {
-            $clientname = utf8_encode($tmp[3]);
-            $top_clients[$clientname."|".$clientip] = intval($tmp[1]);
-        } else {
-            $top_clients[$clientip] = intval($tmp[1]);
-        }
-    }
-
-    $result = array('top_sources_blocked' => $top_clients);
-    $data = array_merge($data, $result);
+      $result = array('top_sources_blocked' => $top_clients);
+      $data = array_merge($data, $result);
+  }
 }
 
 if (isset($_GET['getForwardDestinations']) && $auth) {
@@ -197,48 +205,52 @@ if (isset($_GET['getForwardDestinations']) && $auth) {
     } else {
         $return = callFTLAPI("forward-dest");
     }
+    if (!in_array("FTLnotrunning", $return )) {
+      $forward_dest = array();
+      foreach ($return as $line) {
+          $tmp = explode(" ",$line);
+          $forwardip = utf8_encode($tmp[2]);
+          if (count($tmp) > 3 && strlen($tmp[3]) > 0) {
+              $forwardname = utf8_encode($tmp[3]);
+              $forward_dest[$forwardname."|".$forwardip] = floatval($tmp[1]);
+          } else {
+              $forward_dest[$forwardip] = floatval($tmp[1]);
+          }
+      }
 
-    $forward_dest = array();
-    foreach ($return as $line) {
-        $tmp = explode(" ",$line);
-        $forwardip = utf8_encode($tmp[2]);
-        if (count($tmp) > 3 && strlen($tmp[3]) > 0) {
-            $forwardname = utf8_encode($tmp[3]);
-            $forward_dest[$forwardname."|".$forwardip] = floatval($tmp[1]);
-        } else {
-            $forward_dest[$forwardip] = floatval($tmp[1]);
-        }
-    }
-
-    $result = array('forward_destinations' => $forward_dest);
-    $data = array_merge($data, $result);
+      $result = array('forward_destinations' => $forward_dest);
+      $data = array_merge($data, $result);
+  }
 }
 
 if (isset($_GET['getQueryTypes']) && $auth) {
     $return = callFTLAPI("querytypes");
+    if (!in_array("FTLnotrunning", $return )) {
+      $querytypes = array();
+      foreach ($return as $ret) {
+          $tmp = explode(": ",$ret);
+          // Reply cannot contain non-ASCII characters
+          $querytypes[$tmp[0]] = floatval($tmp[1]);
+      }
 
-    $querytypes = array();
-    foreach ($return as $ret) {
-        $tmp = explode(": ",$ret);
-        // Reply cannot contain non-ASCII characters
-        $querytypes[$tmp[0]] = floatval($tmp[1]);
-    }
-
-    $result = array('querytypes' => $querytypes);
-    $data = array_merge($data, $result);
+      $result = array('querytypes' => $querytypes);
+      $data = array_merge($data, $result);
+  }
 }
 
 if (isset($_GET['getCacheInfo']) && $auth) {
     $return = callFTLAPI("cacheinfo");
-    $cacheinfo = array();
-    foreach ($return as $ret) {
-        $tmp = explode(": ",$ret);
-        // Reply cannot contain non-ASCII characters
-        $cacheinfo[$tmp[0]] = floatval($tmp[1]);
-    }
+    if (!in_array("FTLnotrunning", $return )) {
+      $cacheinfo = array();
+      foreach ($return as $ret) {
+          $tmp = explode(": ",$ret);
+          // Reply cannot contain non-ASCII characters
+          $cacheinfo[$tmp[0]] = floatval($tmp[1]);
+      }
 
-    $result = array('cacheinfo' => $cacheinfo);
-    $data = array_merge($data, $result);
+      $result = array('cacheinfo' => $cacheinfo);
+      $data = array_merge($data, $result);
+  }
 }
 
 if (isset($_GET['getAllQueries']) && $auth) {
@@ -266,19 +278,20 @@ if (isset($_GET['getAllQueries']) && $auth) {
         // Get all queries
         $return = callFTLAPI("getallqueries");
     }
+    if (!in_array("FTLnotrunning", $return )) {
+      $allQueries = array();
+      foreach ($return as $line) {
+          $tmp = str_getcsv($line," ");
+          // UTF-8 encode domain
+          $tmp[2] = utf8_encode(str_replace("~"," ",$tmp[2]));
+          // UTF-8 encode client host name
+          $tmp[3] = utf8_encode($tmp[3]);
+          array_push($allQueries,$tmp);
+      }
 
-    $allQueries = array();
-    foreach ($return as $line) {
-        $tmp = str_getcsv($line," ");
-        // UTF-8 encode domain
-        $tmp[2] = utf8_encode(str_replace("~"," ",$tmp[2]));
-        // UTF-8 encode client host name
-        $tmp[3] = utf8_encode($tmp[3]);
-        array_push($allQueries,$tmp);
-    }
-
-    $result = array('data' => $allQueries);
-    $data = array_merge($data, $result);
+      $result = array('data' => $allQueries);
+      $data = array_merge($data, $result);
+  }
 }
 
 if (isset($_GET["recentBlocked"]) && $auth) {
@@ -288,73 +301,84 @@ if (isset($_GET["recentBlocked"]) && $auth) {
 
 if (isset($_GET['getForwardDestinationNames']) && $auth) {
     $return = callFTLAPI("forward-names");
+    if (!in_array("FTLnotrunning", $return )) {
+      $forward_dest = array();
+      foreach ($return as $line) {
+          $tmp = explode(" ",$line);
+          $forwardip = utf8_encode($tmp[2]);
+          if (count($tmp) > 3) {
+              $forwardname = utf8_encode($tmp[3]);
+              $forward_dest[$forwardname."|".$forwardip] = floatval($tmp[1]);
+          } else {
+              $forward_dest[$forwardip] = floatval($tmp[1]);
+          }
+      }
 
-    $forward_dest = array();
-    foreach ($return as $line) {
-        $tmp = explode(" ",$line);
-        $forwardip = utf8_encode($tmp[2]);
-        if (count($tmp) > 3) {
-            $forwardname = utf8_encode($tmp[3]);
-            $forward_dest[$forwardname."|".$forwardip] = floatval($tmp[1]);
-        } else {
-            $forward_dest[$forwardip] = floatval($tmp[1]);
-        }
-    }
-
-    $result = array('forward_destinations' => $forward_dest);
-    $data = array_merge($data, $result);
+      $result = array('forward_destinations' => $forward_dest);
+      $data = array_merge($data, $result);
+  }
 }
 
 if (isset($_GET['overTimeDataQueryTypes']) && $auth) {
     $return = callFTLAPI("QueryTypesoverTime");
     $over_time = array();
-
-    foreach ($return as $line) {
-        $tmp = explode(" ",$line);
-        for ($i=0; $i < count($tmp)-1; $i++) {
-            $over_time[intval($tmp[0])][$i] = floatval($tmp[$i+1]);
-        }
-    }
-    $result = array('over_time' => $over_time);
-    $data = array_merge($data, $result);
+    if (!in_array("FTLnotrunning", $return )) {
+      foreach ($return as $line) {
+          $tmp = explode(" ",$line);
+          for ($i=0; $i < count($tmp)-1; $i++) {
+              $over_time[intval($tmp[0])][$i] = floatval($tmp[$i+1]);
+          }
+      }
+      $result = array('over_time' => $over_time);
+      $data = array_merge($data, $result);
+  }
 }
 
 if (isset($_GET['getClientNames']) && $auth) {
     $return = callFTLAPI("client-names");
-    $client_names = array();
-    foreach ($return as $line) {
-        $tmp = explode(" ", $line);
-        $client_names[] = array(
-            "name" => utf8_encode($tmp[0]),
-            "ip" => utf8_encode($tmp[1])
-        );
-    }
+    if (!in_array("FTLnotrunning", $return )) {
+      $client_names = array();
+      foreach ($return as $line) {
+          $tmp = explode(" ", $line);
+          $client_names[] = array(
+              "name" => utf8_encode($tmp[0]),
+              "ip" => utf8_encode($tmp[1])
+          );
+      }
 
-    $result = array('clients' => $client_names);
-    $data = array_merge($data, $result);
+      $result = array('clients' => $client_names);
+      $data = array_merge($data, $result);
+  }
 }
 
 if (isset($_GET['overTimeDataClients']) && $auth) {
     $return = callFTLAPI("ClientsoverTime");
-    $over_time = array();
 
-    foreach ($return as $line) {
-        $tmp = explode(" ",$line);
-        for ($i=0; $i < count($tmp)-1; $i++) {
-            $over_time[intval($tmp[0])][$i] = floatval($tmp[$i+1]);
-        }
-    }
-    $result = array('over_time' => $over_time);
-    $data = array_merge($data, $result);
+    if (!in_array("FTLnotrunning", $return )) {
+      $over_time = array();
+
+      foreach ($return as $line) {
+          $tmp = explode(" ",$line);
+          for ($i=0; $i < count($tmp)-1; $i++) {
+              $over_time[intval($tmp[0])][$i] = floatval($tmp[$i+1]);
+          }
+      }
+      $result = array('over_time' => $over_time);
+      $data = array_merge($data, $result);
+  }
 }
 
 if (isset($_GET['delete_lease']) && $auth) {
     $return = callFTLAPI("delete-lease ".$_GET['delete_lease']);
-    $data["delete_lease"] = $return[0];
+    if (!in_array("FTLnotrunning", $return )) {
+      $data["delete_lease"] = $return[0];
+  }
 }
 
 if (isset($_GET['dns-port']) && $auth) {
     $return = callFTLAPI("dns-port");
-    $data["dns-port"] = $return[0];
+    if (!in_array("FTLnotrunning", $return )) {
+      $data["dns-port"] = $return[0];
+    }
 }
 ?>
