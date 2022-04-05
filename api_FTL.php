@@ -303,9 +303,13 @@ if (isset($_GET['getAllQueries']) && $auth) {
         $return = callFTLAPI("getallqueries");
     }
 
+<<<<<<< HEAD
     if (array_key_exists("FTLnotrunning", $return)) {
       $data = array("FTLnotrunning" => true);
     } else {
+=======
+    if (!in_array("FTLnotrunning", $return )) {
+>>>>>>> Add proper guarding
       // Start the JSON string
       echo '{"data":[';
       $first = true;
