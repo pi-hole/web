@@ -20,7 +20,9 @@ if (isset($_GET['version'])) {
 
 if (isset($_GET['status'])) {
     $return = callFTLAPI("stats");
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       if (in_array("status enabled", $return)) {
           $data = array_merge($data, array("status" => "enabled"));
       } else {
@@ -33,7 +35,9 @@ if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET)) {
     require_once("scripts/pi-hole/php/gravity.php");
 
     $return = callFTLAPI("stats");
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $stats = [];
       foreach ($return as $line) {
           $tmp = explode(" ",$line);
@@ -61,7 +65,9 @@ if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET)) {
 
 if (isset($_GET["getMaxlogage"]) && $auth) {
     $return = callFTLAPI("stats");
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       // Convert seconds to hours and rounds to one decimal place.
       $ret = round(intval($return[0]) / 3600, 1);
       // Return 24h if value is 0, empty, null or non numeric.
@@ -73,7 +79,9 @@ if (isset($_GET["getMaxlogage"]) && $auth) {
 
 if (isset($_GET['overTimeData10mins'])) {
     $return = callFTLAPI("overTime");
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $domains_over_time = array();
       $ads_over_time = array();
       foreach ($return as $line) {
@@ -99,7 +107,10 @@ if (isset($_GET['topItems']) && $auth) {
     } else {
         $return = callFTLAPI("top-domains");
     }
-    if (!in_array("FTLnotrunning", $return )) {
+
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $top_queries = array();
       foreach ($return as $line) {
           $tmp = explode(" ",$line);
@@ -118,7 +129,10 @@ if (isset($_GET['topItems']) && $auth) {
     } else {
         $return = callFTLAPI("top-ads");
     }
-    if (!in_array("FTLnotrunning", $return )) {
+
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $top_ads = array();
       foreach ($return as $line) {
           $tmp = explode(" ",$line);
@@ -152,7 +166,9 @@ if ((isset($_GET['topClients']) || isset($_GET['getQuerySources'])) && $auth) {
     } else {
         $return = callFTLAPI("top-clients");
     }
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $top_clients = array();
       foreach ($return as $line) {
           $tmp = explode(" ",$line);
@@ -181,7 +197,9 @@ if (isset($_GET['topClientsBlocked']) && $auth) {
     } else {
         $return = callFTLAPI("top-clients blocked");
     }
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $top_clients = array();
       foreach ($return as $line) {
           $tmp = explode(" ",$line);
@@ -205,7 +223,9 @@ if (isset($_GET['getForwardDestinations']) && $auth) {
     } else {
         $return = callFTLAPI("forward-dest");
     }
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $forward_dest = array();
       foreach ($return as $line) {
           $tmp = explode(" ",$line);
@@ -225,7 +245,9 @@ if (isset($_GET['getForwardDestinations']) && $auth) {
 
 if (isset($_GET['getQueryTypes']) && $auth) {
     $return = callFTLAPI("querytypes");
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $querytypes = array();
       foreach ($return as $ret) {
           $tmp = explode(": ",$ret);
@@ -240,7 +262,9 @@ if (isset($_GET['getQueryTypes']) && $auth) {
 
 if (isset($_GET['getCacheInfo']) && $auth) {
     $return = callFTLAPI("cacheinfo");
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $cacheinfo = array();
       foreach ($return as $ret) {
           $tmp = explode(": ",$ret);
@@ -278,7 +302,10 @@ if (isset($_GET['getAllQueries']) && $auth) {
         // Get all queries
         $return = callFTLAPI("getallqueries");
     }
-    if (!in_array("FTLnotrunning", $return )) {
+
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $allQueries = array();
       foreach ($return as $line) {
           $tmp = str_getcsv($line," ");
@@ -301,7 +328,10 @@ if (isset($_GET["recentBlocked"]) && $auth) {
 
 if (isset($_GET['getForwardDestinationNames']) && $auth) {
     $return = callFTLAPI("forward-names");
-    if (!in_array("FTLnotrunning", $return )) {
+
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $forward_dest = array();
       foreach ($return as $line) {
           $tmp = explode(" ",$line);
@@ -321,8 +351,10 @@ if (isset($_GET['getForwardDestinationNames']) && $auth) {
 
 if (isset($_GET['overTimeDataQueryTypes']) && $auth) {
     $return = callFTLAPI("QueryTypesoverTime");
-    $over_time = array();
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
+      $over_time = array();
       foreach ($return as $line) {
           $tmp = explode(" ",$line);
           for ($i=0; $i < count($tmp)-1; $i++) {
@@ -336,7 +368,9 @@ if (isset($_GET['overTimeDataQueryTypes']) && $auth) {
 
 if (isset($_GET['getClientNames']) && $auth) {
     $return = callFTLAPI("client-names");
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $client_names = array();
       foreach ($return as $line) {
           $tmp = explode(" ", $line);
@@ -354,9 +388,10 @@ if (isset($_GET['getClientNames']) && $auth) {
 if (isset($_GET['overTimeDataClients']) && $auth) {
     $return = callFTLAPI("ClientsoverTime");
 
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $over_time = array();
-
       foreach ($return as $line) {
           $tmp = explode(" ",$line);
           for ($i=0; $i < count($tmp)-1; $i++) {
@@ -370,14 +405,18 @@ if (isset($_GET['overTimeDataClients']) && $auth) {
 
 if (isset($_GET['delete_lease']) && $auth) {
     $return = callFTLAPI("delete-lease ".$_GET['delete_lease']);
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $data["delete_lease"] = $return[0];
   }
 }
 
 if (isset($_GET['dns-port']) && $auth) {
     $return = callFTLAPI("dns-port");
-    if (!in_array("FTLnotrunning", $return )) {
+    if (array_key_exists("FTLnotrunning", $return)) {
+      $data = array("FTLnotrunning" => true);
+    } else {
       $data["dns-port"] = $return[0];
     }
 }
