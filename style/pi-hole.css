@@ -403,6 +403,7 @@ td.lookatme {
 }
 
 .sidebar-toggle-svg {
+  position: relative;
   color: #fff;
   float: left;
   background: none;
@@ -547,7 +548,7 @@ td.details-control {
   }
 
   /* hide warning icon only when logged in and menu is not collapsed */
-  .logged-in:not(.sidebar-collapse) #pihole-diagnosis,
+  .logged-in:not(.sidebar-collapse) #top-warning-count,
   .menu-open > a > span.warning-count {
     display: none;
   }
@@ -567,6 +568,14 @@ td.details-control {
   right: 3em;
   top: 50%;
   font-size: 12px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+#top-warning-count {
+  top: 50%;
+  left: 50%;
+  right: unset;
+  margin: 0;
 }
 
 .treeview-menu .warning-count {

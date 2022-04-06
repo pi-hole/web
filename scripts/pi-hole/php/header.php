@@ -265,15 +265,10 @@ if($auth) {
             <a href="#" class="sidebar-toggle-svg" data-toggle="push-menu" role="button">
                 <i aria-hidden="true" class="fa fa-bars"></i>
                 <span class="sr-only">Toggle navigation</span>
+                <span class="warning-count hidden" id="top-warning-count"></span>
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li id="pihole-diagnosis" class="hidden">
-                        <a href="messages.php">
-                            <i class="fa fa-exclamation-triangle fa-2x icon-bounce"></i>
-                            <span class="label label-warning" id="pihole-diagnosis-count"></span>
-                        </a>
-                    </li>
                     <li<?php echo !$hostname ? ' class="hidden"' : "" ?>>
                         <p class="navbar-text">
                             <span class="hidden-xs hidden-sm">hostname:</span>
