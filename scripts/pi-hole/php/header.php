@@ -308,10 +308,10 @@ if($auth) {
                             </li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
-                                <!-- PayPal -->
+                                <!-- Donate Button -->
                                 <div class="text-center">
-                                    <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
-                                        <img src="img/donate.gif" alt="Donate" width="147" height="47">
+                                    <a class="btn btn-primary btn-lg donate" href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
+                                        <i class="fas fa-fw menu-icon fa-donate"></i> Donate
                                     </a>
                                 </div>
                             </li>

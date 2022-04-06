@@ -708,6 +708,33 @@ td.details-control {
   height: 50px;
 }
 
+.navbar-nav > .user-menu > .dropdown-menu > .user-body a {
+  background: transparent !important;
+}
+
+/*** Donate button - navbar ***/
+.main-header .navbar-custom-menu .user-footer .donate {
+  margin: 15px;
+  padding: 0.8em 1em;
+  width: calc(100% - 30px);
+  color: #fff;
+  background: #96060c;
+  border: none;
+  border-radius: 6px;
+}
+
+.main-header .navbar-custom-menu .user-footer .donate:hover,
+.main-header .navbar-custom-menu .user-footer .donate:active,
+.main-header .navbar-custom-menu .user-footer .donate:active:hover,
+.main-header .navbar-custom-menu .user-footer .donate:focus,
+.main-header .navbar-custom-menu .user-footer .donate:active:focus {
+  background: #f60d1a;
+}
+
+.navbar-custom-menu > .navbar-nav > li:nth-child(2) {
+  padding: 0 5px;
+}
+
 #apiTokenIframe {
   width: 100%;
   border: 0;

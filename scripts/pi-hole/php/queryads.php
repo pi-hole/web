@@ -26,10 +26,10 @@ function echoEvent($datatext) {
 if(isset($_GET["domain"]))
 {
     // Is this a valid domain?
-    $url = $_GET["domain"];
+    $url = idn_to_ascii($_GET["domain"]);
     if(!validDomain($url))
     {
-        echoEvent("Invalid domain!");
+        echoEvent("$url is an invalid domain!");
         die();
     }
 }
