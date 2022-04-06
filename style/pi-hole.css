@@ -548,8 +548,7 @@ td.details-control {
   }
 
   /* hide warning icon only when logged in and menu is not collapsed */
-  .logged-in:not(.sidebar-collapse) #top-warning-count,
-  .menu-open > a > span.warning-count {
+  .logged-in:not(.sidebar-collapse) #top-warning-count {
     display: none;
   }
 }
@@ -559,8 +558,8 @@ td.details-control {
   position: absolute;
   display: inline-block;
   text-align: center;
-  background: rgba(127, 127, 127, 0.3);
-  color: #e08e0b;
+  background: #e08e0b;
+  color: #fff;
   line-height: 1;
   padding: 0.25em 0.5em;
   margin: -0.7em 4px;
@@ -568,11 +567,10 @@ td.details-control {
   right: 3em;
   top: 50%;
   font-size: 12px;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 #top-warning-count {
-  top: 50%;
+  top: 55%;
   left: 50%;
   right: unset;
   margin: 0;
@@ -583,8 +581,21 @@ td.details-control {
   font-size: 10px;
 }
 
+.menu-open > a > span.warning-count {
+  display: none;
+}
+
+/* hide submenu warning count during animation */
+li:not(.menu-open) .treeview-menu .warning-count {
+  display: none;
+}
+
 /* hide warning count when hover a collapsed sidebar */
-.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu > li:hover > a > span.warning-count {
+.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse
+  .sidebar-menu
+  > li:hover
+  > a
+  > span.warning-count {
   display: none !important;
 }
 
@@ -731,8 +742,8 @@ td.details-control {
   background: #f60d1a;
 }
 
-.navbar-custom-menu > .navbar-nav > li:nth-child(2) {
-  padding: 0 5px;
+.navbar-custom-menu > .navbar-nav > li:nth-child(1) {
+  padding: 0 10px 0 0;
 }
 
 #apiTokenIframe {

@@ -559,8 +559,25 @@ p.login-box-msg,
   font-size: 28px;
 }
 
-.icon-bounce {
-  animation: none;
+.warning-count {
+  position: relative;
+  margin: 0;
+  padding: 0.2em 0.52em 0.3em;
+  right: 0;
+  top: 0;
+  background: #fa3;
+  color: #000;
+}
+
+.sidebar-menu li > a > .pull-right-container.warning-count {
+  transform: scale(1);
+  position: relative;
+  bottom: 0.15em;
+}
+
+#top-warning-count {
+  position: absolute;
+  top: 60%;
 }
 
 .dropdown.user.user-menu {

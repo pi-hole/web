@@ -372,12 +372,10 @@ function checkMessages() {
           ? "There are " + data.message_count + " warnings." + more
           : "There is one warning." + more;
 
-      $("#top-warning-count").prop("title", title);
-      $("#top-warning-count").removeClass("hidden");
+      $(".warning-count").prop("title", title);
       $(".warning-count").text(data.message_count);
       $(".warning-count").removeClass("hidden");
     } else {
-      $("#top-warning-count").addClass("hidden");
       $(".warning-count").addClass("hidden");
     }
   });
