@@ -295,15 +295,22 @@ $(function () {
       url: APIstring,
       error: handleAjaxError,
       dataSrc: function (data) {
-        var dataIndex = 0;
-        return data.data.map(function (x) {
-          x[0] = x[0] * 1e6 + dataIndex++;
-          var dnssec = x[5];
-          var reply = x[6];
-          x[5] = reply;
-          x[6] = dnssec;
-          return x;
-        });
+        if ("FTLnotrunning" in data) {
+          // if FTL is not running, return empyt array (empty table)
+          utils.showAlert("error","", "Error while deleting DHCP lease for ", "FTL is not running");
+          data = {};
+          return data;
+        } else {
+            var dataIndex = 0;
+            return data.data.map(function (x) {
+              x[0] = x[0] * 1e6 + dataIndex++;
+              var dnssec = x[5];
+              var reply = x[6];
+              x[5] = reply;
+              x[6] = dnssec;
+              return x;
+            });
+        }
       },
     },
     autoWidth: false,
