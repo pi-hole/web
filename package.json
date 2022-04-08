@@ -76,6 +76,7 @@
       ],
       "no-alert": "off",
       "no-console": "error",
+      "no-else-return": "off",
       "no-negated-condition": "off",
       "no-var": "off",
       "object-shorthand": "off",
