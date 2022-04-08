@@ -79,7 +79,9 @@ function getResponseFTL($socket) {
 }
 
 function disconnectFTL($socket) {
+  if (is_resource($socket)) {
     fclose($socket);
+  }
 }
 
 function callFTLAPI($request, $FTL_IP = DEFAULT_FTL_IP, $port = DEFAULT_FTL_PORT) {
@@ -92,7 +94,6 @@ function callFTLAPI($request, $FTL_IP = DEFAULT_FTL_IP, $port = DEFAULT_FTL_PORT
         $data = getResponseFTL($socket);
     }
     disconnectFTL($socket);
-
     return $data;
 }
 ?>
