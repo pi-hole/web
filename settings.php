@@ -1249,7 +1249,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                         <div class="col-md-12">
                                             <div>
                                                 <input type="checkbox" name="hideNonfatalDnsmasqWarnings" id="hideNonfatalDnsmasqWarnings" value="no">
-                                                <label for="hideNonfatalDnsmasqWarnings"><strong>Hide non-fatal <code>dnsmasq</code> warnings (warnigs listed <a target="_blank" href="https://docs.pi-hole.net/ftldns/dnsmasq_warn">here</a>)</strong></label>
+                                                <label for="hideNonfatalDnsmasqWarnings"><strong>Hide non-fatal <code>dnsmasq</code> warnings (warnings listed <a target="_blank" href="https://docs.pi-hole.net/ftldns/dnsmasq_warn">here</a>)</strong></label>
                                             </div>
                                         </div>
                                     </div>
