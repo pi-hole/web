@@ -332,9 +332,9 @@ if (isset($_GET['getAllQueries']) && $auth) {
       }
       // Finish the JSON string
       echo ']}';
+      // exit at the end
+      exit();
     }
-    // exit at the end
-    exit();
 }
 
 if (isset($_GET["recentBlocked"]) && $auth) {
