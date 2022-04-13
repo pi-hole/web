@@ -87,10 +87,11 @@ if (isset($_GET['getAllQueries']) && $auth)
 		$stmt->bindValue(":from", intval($from), SQLITE3_INTEGER);
 		$stmt->bindValue(":until", intval($until), SQLITE3_INTEGER);
 		$results = $stmt->execute();
-		if (!is_bool($results)) {
-			// Start the JSON string
-			echo '{"data":[';
 
+		// Start the JSON string
+		echo '{"data":[';
+
+		if (!is_bool($results)) {
 			$first = true;
 			while ($row = $results->fetchArray()) {
 				// Insert a comma before the next record (except on the first one)
@@ -109,10 +110,11 @@ if (isset($_GET['getAllQueries']) && $auth)
 				// array:         time     type         domain   client   status   upstream destination
 				echo json_encode([$row[0], $query_type, $domain, $row[3], $row[4], $destination]);
 			}
-
-			// Finish the JSON string
-			echo ']}';
 		}
+
+		// Finish the JSON string
+		echo ']}';
+
 		// exit at the end
 		exit();
 	}
