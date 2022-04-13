@@ -310,7 +310,6 @@ if (isset($_GET['getAllQueries']) && $auth) {
       echo '{"data":[';
       $first = true;
 
-      #foreach ($return as $line)
       foreach($return as $line) {
 
         // Insert a comma before the next record (except on the first one)
