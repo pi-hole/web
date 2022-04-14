@@ -366,16 +366,17 @@ function checkMessages() {
     : false;
   $.getJSON("api_db.php?status" + (ignoreNonfatal ? "&ignore=DNSMASQ_WARN" : ""), function (data) {
     if ("message_count" in data && data.message_count > 0) {
+      var more = '\nAccess "Tools/Pi-hole diganosis" for further details.';
       var title =
         data.message_count > 1
-          ? "There are " + data.message_count + " warnings. Click for further details."
-          : "There is one warning. Click for further details.";
+          ? "There are " + data.message_count + " warnings." + more
+          : "There is one warning." + more;
 
-      $("#pihole-diagnosis").prop("title", title);
-      $("#pihole-diagnosis-count").text(data.message_count);
-      $("#pihole-diagnosis").removeClass("hidden");
+      $(".warning-count").prop("title", title);
+      $(".warning-count").text(data.message_count);
+      $(".warning-count").removeClass("hidden");
     } else {
-      $("#pihole-diagnosis").addClass("hidden");
+      $(".warning-count").addClass("hidden");
     }
   });
 }
