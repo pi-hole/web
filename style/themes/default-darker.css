@@ -2411,7 +2411,7 @@ div.dataTables_scrollFoot > .dataTables_scrollFootInner > table {
 }
 .layout-boxed {
   background: linear-gradient(rgba(20, 30, 34, 0.6), rgba(20, 30, 34, 0.6)),
-    url(../../img/boxed-bg-dark.jpg) fixed;
+    url(../../img/boxed-bg-dark.png) fixed;
 }
 .content-wrapper {
   background-color: rgb(32, 35, 36);
