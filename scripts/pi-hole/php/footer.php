@@ -103,7 +103,11 @@
                     </li>
                 </ul>
                 <?php if($core_update || $web_update || $FTL_update) { ?>
+                <?php if($dockerTag) { ?>
+                    <p>To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading--reconfiguring" rel="noopener" target="_blank">replace this old container with a fresh upgraded image</a>.</p>
+                <?php } else { ?>
                     <p>To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener" target="_blank">pihole -up</a></code>.</p>
+                <?php } ?>
                 <?php } ?>
                 <?php } ?>
             </div>

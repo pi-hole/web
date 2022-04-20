@@ -8,6 +8,10 @@
 *  The colors used in this theme has been inspired by
 *  https://github.com/anvyst/adminlte-skin-midnight */
 
+:root {
+  --datatable-bgcolor: rgba(64, 76, 88, 0.8);
+}
+
 body {
   background-color: #353c42;
   color: #bec5cb;
@@ -331,7 +335,7 @@ h4 {
 }
 
 .layout-boxed {
-  background: url("../../img/boxed-bg-dark.jpg") repeat fixed;
+  background: url("../../img/boxed-bg-dark.png") repeat fixed;
 }
 .not-used {
   background-color: #eee;
@@ -410,6 +414,34 @@ td.highlight {
   border: 1px solid #353c42;
 }
 
+/* Used in debug log page */
+.log-red {
+  color: #ff4038;
+}
+.log-green {
+  color: #4c4;
+}
+.log-yellow {
+  color: #fb0;
+}
+.log-blue {
+  color: #48f;
+}
+.log-purple {
+  color: #b8e;
+}
+.log-cyan {
+  color: #0df;
+}
+.log-gray {
+  color: #999;
+}
+
+#output {
+  border-color: #505458;
+  background: #272c30;
+}
+
 /* Used by the long-term pages */
 .daterangepicker {
   background-color: #3e464c;
@@ -471,7 +503,7 @@ fieldset[disabled] .form-control {
   background-color: #353c42;
   opacity: 1;
 }
-.dropdown-menu {
+.navbar-custom-menu > .navbar-nav > li > .dropdown-menu {
   background-color: #4c5761;
   color: #bec5cb;
   border: 1px solid #171c20;
@@ -557,4 +589,17 @@ input[type="password"]::-webkit-caps-lock-indicator {
 
 .close {
   color: #383838;
+}
+
+/*** Fix login input visual misalignment ***/
+#loginform,
+#loginform input {
+  color: rgb(120, 127, 133);
+}
+
+.login-options input,
+.login-options [class*="icheck-"] > input:first-child + input[type="hidden"] + label::before,
+.login-options [class*="icheck-"] > input:first-child + label::before {
+  background: none;
+  border-color: rgb(120, 127, 133);
 }

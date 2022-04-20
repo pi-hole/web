@@ -290,7 +290,6 @@ else
 <!-- /.row -->
 <?php } ?>
 
-<script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
 <script src="scripts/pi-hole/js/index.js?v=<?=$cacheVer?>"></script>
 
 <?php

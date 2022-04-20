@@ -87,10 +87,11 @@ if (isset($_GET['getAllQueries']) && $auth)
 		$stmt->bindValue(":from", intval($from), SQLITE3_INTEGER);
 		$stmt->bindValue(":until", intval($until), SQLITE3_INTEGER);
 		$results = $stmt->execute();
-		if (!is_bool($results)) {
-			// Start the JSON string
-			echo '{"data":[';
 
+		// Start the JSON string
+		echo '{"data":[';
+
+		if (!is_bool($results)) {
 			$first = true;
 			while ($row = $results->fetchArray()) {
 				// Insert a comma before the next record (except on the first one)
@@ -109,10 +110,11 @@ if (isset($_GET['getAllQueries']) && $auth)
 				// array:         time     type         domain   client   status   upstream destination
 				echo json_encode([$row[0], $query_type, $domain, $row[3], $row[4], $destination]);
 			}
-
-			// Finish the JSON string
-			echo ']}';
 		}
+
+		// Finish the JSON string
+		echo ']}';
+
 		// exit at the end
 		exit();
 	}
@@ -319,7 +321,7 @@ if (isset($_GET['getGraphData']) && $auth)
 	if(isset($_GET["interval"]))
 	{
 		$q = intval($_GET["interval"]);
-		if($q > 10)
+		if($q >= 10)
 			$interval = $q;
 	}
 
@@ -384,7 +386,10 @@ if (isset($_GET['getGraphData']) && $auth)
 
 if (isset($_GET['status']))
 {
-	$results = $db->query('SELECT COUNT(*) FROM message;');
+	$extra = ";";
+	if(isset($_GET["ignore"]) && $_GET["ignore"] === 'DNSMASQ_WARN')
+		$extra = "WHERE type != 'DNSMASQ_WARN';";
+	$results = $db->query('SELECT COUNT(*) FROM message '.$extra);
 
 	if(!is_bool($results))
 		$result = array('message_count' => $results->fetchArray()[0]);
@@ -396,8 +401,12 @@ if (isset($_GET['status']))
 
 if(isset($_GET["messages"]) && $auth)
 {
+	$extra = ";";
+	if(isset($_GET["ignore"]) && $_GET["ignore"] === 'DNSMASQ_WARN')
+		$extra = "WHERE type != 'DNSMASQ_WARN';";
+
 	$messages = array();
-	$results = $db->query('SELECT * FROM message');
+	$results = $db->query('SELECT * FROM message '.$extra);
 
 	while($results !== false && $res = $results->fetchArray(SQLITE3_ASSOC))
 	{

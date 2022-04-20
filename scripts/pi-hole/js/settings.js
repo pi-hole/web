@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, checkMessages:false */
 var token = $("#token").text();
 
 $(function () {
@@ -444,5 +444,28 @@ $('button[id="removedynamic"]').on("click", function () {
       utils.showAlert("error", "Error while deleting DHCP lease for " + ipname, jqXHR.responseText);
       console.log(exception); // eslint-disable-line no-console
     },
+  });
+});
+
+// Non-fatal dnsmasq warnings toggle
+$(function () {
+  var nonfatalwarnigns = $("#hideNonfatalDnsmasqWarnings");
+  var chkboxData = localStorage ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") : null;
+
+  if (chkboxData !== null) {
+    // Restore checkbox state
+    nonfatalwarnigns.prop("checked", chkboxData === "true");
+  } else {
+    // Initialize checkbox
+    nonfatalwarnigns.prop("checked", false);
+    if (localStorage) {
+      localStorage.setItem("hideNonfatalDnsmasqWarnings_chkbox", false);
+    }
+  }
+
+  nonfatalwarnigns.click(function () {
+    localStorage.setItem("hideNonfatalDnsmasqWarnings_chkbox", nonfatalwarnigns.prop("checked"));
+    // Call check messages to make new setting effective
+    checkMessages();
   });
 });
