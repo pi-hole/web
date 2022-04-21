@@ -121,6 +121,7 @@
                     <thead>
                     <tr>
                         <th>ID</th>
+                        <th></th>
                         <th>Domain/RegEx</th>
                         <th>Type</th>
                         <th>Status</th>

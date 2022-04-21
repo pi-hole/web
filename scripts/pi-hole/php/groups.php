@@ -153,19 +153,24 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'delete_group') {
     // Delete group identified by ID
     try {
+        $ids = json_decode($_POST['id']);
+        // Exploit prevention: Ensure all entries in the ID array are integers
+        foreach($ids as $value) {
+            if (!is_numeric($value)) {
+                throw new Exception('Invalid payload: id');
+            }
+        }
+
         $table_name = ['domainlist_by_group', 'client_by_group', 'adlist_by_group', 'group'];
         $table_keys = ['group_id', 'group_id', 'group_id', 'id'];
+
         for ($i = 0; $i < count($table_name); $i++) {
             $table = $table_name[$i];
             $key = $table_keys[$i];
 
-            $stmt = $db->prepare("DELETE FROM \"$table\" WHERE $key = :id;");
+            $stmt = $db->prepare("DELETE FROM ".$table." WHERE ".$key." IN ('.implode(",",$ids).')'");
             if (!$stmt) {
                 throw new Exception("While preparing DELETE FROM $table statement: " . $db->lastErrorMsg());
-            }
-
-            if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
-                throw new Exception("While binding id to DELETE FROM $table statement: " . $db->lastErrorMsg());
             }
 
             if (!$stmt->execute()) {
@@ -463,28 +468,30 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'delete_client') {
     // Delete client identified by ID
     try {
-        $db->query('BEGIN TRANSACTION;');
-
-        $stmt = $db->prepare('DELETE FROM client_by_group WHERE client_id=:id');
-        if (!$stmt) {
-            throw new Exception('While preparing client_by_group statement: ' . $db->lastErrorMsg());
+        $ids = json_decode($_POST['id']);
+        // Exploit prevention: Ensure all entries in the ID array are integers
+        foreach($ids as $value) {
+            if (!is_numeric($value)) {
+                throw new Exception('Invalid payload: id');
+            }
         }
 
-        if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
-            throw new Exception('While binding id to client_by_group statement: ' . $db->lastErrorMsg());
+        $db->query('BEGIN TRANSACTION;');
+
+        // Delete from: client_by_group
+        $stmt = $db->prepare('DELETE FROM client_by_group WHERE client_id IN ('.implode(",",$ids).')');
+        if (!$stmt) {
+            throw new Exception('While preparing client_by_group statement: ' . $db->lastErrorMsg());
         }
 
         if (!$stmt->execute()) {
             throw new Exception('While executing client_by_group statement: ' . $db->lastErrorMsg());
         }
 
-        $stmt = $db->prepare('DELETE FROM client WHERE id=:id');
+        // Delete from: client
+        $stmt = $db->prepare('DELETE FROM client WHERE id IN ('.implode(",",$ids).')');
         if (!$stmt) {
             throw new Exception('While preparing client statement: ' . $db->lastErrorMsg());
-        }
-
-        if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
-            throw new Exception('While binding id to client statement: ' . $db->lastErrorMsg());
         }
 
         if (!$stmt->execute()) {
@@ -847,28 +854,30 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'delete_domain') {
     // Delete domain identified by ID
     try {
-        $db->query('BEGIN TRANSACTION;');
-
-        $stmt = $db->prepare('DELETE FROM domainlist_by_group WHERE domainlist_id=:id');
-        if (!$stmt) {
-            throw new Exception('While preparing domainlist_by_group statement: ' . $db->lastErrorMsg());
+        $ids = json_decode($_POST['id']);
+        // Exploit prevention: Ensure all entries in the ID array are integers
+        foreach($ids as $value) {
+            if (!is_numeric($value)) {
+                throw new Exception('Invalid payload: id');
+            }
         }
 
-        if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
-            throw new Exception('While binding id to domainlist_by_group statement: ' . $db->lastErrorMsg());
+        $db->query('BEGIN TRANSACTION;');
+
+        // Delete from: domainlist_by_group
+        $stmt = $db->prepare('DELETE FROM domainlist_by_group WHERE domainlist_id IN ('.implode(",",$ids).')');
+        if (!$stmt) {
+            throw new Exception('While preparing domainlist_by_group statement: ' . $db->lastErrorMsg());
         }
 
         if (!$stmt->execute()) {
             throw new Exception('While executing domainlist_by_group statement: ' . $db->lastErrorMsg());
         }
 
-        $stmt = $db->prepare('DELETE FROM domainlist WHERE id=:id');
+        // Delete from: domainlist
+        $stmt = $db->prepare('DELETE FROM domainlist WHERE id IN ('.implode(",",$ids).')');
         if (!$stmt) {
             throw new Exception('While preparing domainlist statement: ' . $db->lastErrorMsg());
-        }
-
-        if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
-            throw new Exception('While binding id to domainlist statement: ' . $db->lastErrorMsg());
         }
 
         if (!$stmt->execute()) {
@@ -1128,28 +1137,36 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'delete_adlist') {
     // Delete adlist identified by ID
     try {
-        $db->query('BEGIN TRANSACTION;');
-
-        $stmt = $db->prepare('DELETE FROM adlist_by_group WHERE adlist_id=:id');
-        if (!$stmt) {
-            throw new Exception('While preparing adlist_by_group statement: ' . $db->lastErrorMsg());
+        // Accept only an array
+        $ids = json_decode($_POST['id']);
+        if (!is_array($ids)) {
+           throw new Exception('Invalid payload: id is not an array');
         }
 
-        if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
-            throw new Exception('While binding id to adlist_by_group statement: ' . $db->lastErrorMsg());
+        // Exploit prevention: Ensure all entries in the ID array are integers
+        foreach ($ids as $value) {
+            if (!is_numeric($value)) {
+                throw new Exception('Invalid payload: id contains non-numeric entries');
+            }
+        }
+
+        $db->query('BEGIN TRANSACTION;');
+
+        // Delete from: adlists_by_group
+        $stmt = $db->prepare('DELETE FROM adlist_by_group WHERE adlist_id IN ('.implode(",",$ids).')');
+
+        if (!$stmt) {
+            throw new Exception('While preparing adlist_by_group statement: ' . $db->lastErrorMsg());
         }
 
         if (!$stmt->execute()) {
             throw new Exception('While executing adlist_by_group statement: ' . $db->lastErrorMsg());
         }
 
-        $stmt = $db->prepare('DELETE FROM adlist WHERE id=:id');
+        // Delete from: adlists
+        $stmt = $db->prepare('DELETE FROM adlist WHERE id IN ('.implode(",",$ids).')');
         if (!$stmt) {
             throw new Exception('While preparing adlist statement: ' . $db->lastErrorMsg());
-        }
-
-        if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
-            throw new Exception('While binding id to adlist statement: ' . $db->lastErrorMsg());
         }
 
         if (!$stmt->execute()) {
