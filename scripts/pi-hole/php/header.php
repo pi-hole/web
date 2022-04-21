@@ -569,7 +569,7 @@ if($auth) {
                     <!-- Tail pihole.log -->
                     <li<?php if($scriptname === "taillog.php"){ ?> class="active"<?php } ?>>
                         <a href="taillog.php">
-                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" x="0" y="0" width="200" height="200" viewBox="0 0 200 200" class="svg-inline--fa custom-menu-icon fa-w-20 fa-fw menu-icon">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" preserveAspectRatio="xMidYMid meet" height="14" viewBox="0 0 200 200" class="svg-inline--fa custom-menu-icon fa-w-20 fa-fw menu-icon">
                                 <g>
                                     <linearGradient id="svg_1_1_" gradientUnits="userSpaceOnUse" x1="-317.0903" y1="393.5137" x2="-316.0898" y2="393.5137" gradientTransform="matrix(94.8803 0 0 -56.7359 30129.9492 22362.8691)">
                                         <stop offset="0.051" style="stop-color:currentColor;stop-opacity:0.6"/>
@@ -588,7 +588,7 @@ if($auth) {
                     <!-- Tail pihole-FTL.log -->
                     <li<?php if($scriptname === "taillog-FTL.php"){ ?> class="active"<?php } ?>>
                         <a href="taillog-FTL.php">
-                            <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="400" height="340" viewBox="0 0 400 340" class="svg-inline--fa custom-menu-icon fa-w-20 fa-fw menu-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" preserveAspectRatio="xMidYMid meet" height="14" viewBox="0 0 400 340" class="svg-inline--fa custom-menu-icon fa-w-20 fa-fw menu-icon">
                                 <g fill="currentColor">
                                     <path opacity=".6" d="M42.315 11h111.078l-7.381 31.378H34.898L42.315 11z"/>
                                     <path d="M237.368 42.207q-13.098 62.242-26.23 124.486h-37.354q13.135-62.244 26.23-124.486h-39.652l7.381-31.174h132.055l-7.639 31.174h-54.791zm87.03 94.016L351.124 11h-37.18q-16.584 77.846-33.199 155.693h103.356v-30.47h-59.703zM32.428 67.509l-22.316 99.184h31.807l16.068-67.908h59.41l7.381-31.326-92.35.05z"/>
