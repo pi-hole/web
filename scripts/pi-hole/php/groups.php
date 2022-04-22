@@ -721,7 +721,7 @@ if ($_POST['action'] == 'get_groups') {
             // First execute INSERT OR IGNORE statement to create a record for
             // this domain (ignore if already existing)
             if (!$insert_stmt->execute()) {
-                throw new Exception('While executing INSERT OT IGNORE: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
+                throw new Exception('While executing INSERT OR IGNORE: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
                 'Added ' . $added . " out of ". $total . " domains");
             }
 

@@ -286,7 +286,7 @@ function deleteAllCustomDNSEntries($reload="")
             $reload = $_REQUEST['reload'];
 
         $existingEntries = getCustomDNSEntries();
-        // passing false to pihole_execute stops pihole from reloading after each enty has been deleted
+        // passing false to pihole_execute stops pihole from reloading after each entry has been deleted
         foreach ($existingEntries as $entry) {
             pihole_execute("-a removecustomdns ".$entry->ip." ".$entry->domain." ".$reload);
         }
@@ -438,7 +438,7 @@ function deleteAllCustomCNAMEEntries($reload="")
             $reload = $_REQUEST['reload'];
 
         $existingEntries = getCustomCNAMEEntries();
-        // passing false to pihole_execute stops pihole from reloading after each enty has been deleted
+        // passing false to pihole_execute stops pihole from reloading after each entry has been deleted
         foreach ($existingEntries as $entry) {
             pihole_execute("-a removecustomcname ".$entry->domain." ".$entry->target." ".$reload);
         }
