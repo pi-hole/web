@@ -631,7 +631,7 @@ else
 	archive_add_file("/etc/","hosts","etc/");
 	archive_add_directory("/etc/dnsmasq.d/","dnsmasq.d/");
 
-	$archive->compress(Phar::GZ); // Creates a gziped copy
+	$archive->compress(Phar::GZ); // Creates a gzipped copy
 	unlink($archive_file_name); // Unlink original tar file as it is not needed anymore
 	$archive_file_name .= ".gz"; // Append ".gz" extension to ".tar"
 

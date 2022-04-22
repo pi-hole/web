@@ -47,7 +47,7 @@ if ($_POST['action'] == 'delete_message' && isset($_POST['id'])) {
         $ids = json_decode($_POST['id']);
         if(!is_array($ids))
             throw new Exception('Invalid payload: id is not an array');
-        // Explot prevention: Ensure all entries in the ID array are integers
+        // Exploit prevention: Ensure all entries in the ID array are integers
         foreach($ids as $value) {
             if (!is_numeric($value))
                 throw new Exception('Invalid payload: id contains non-numeric entries');
