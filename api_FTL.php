@@ -306,6 +306,9 @@ if (isset($_GET['getAllQueries']) && $auth) {
     if (array_key_exists("FTLnotrunning", $return)) {
       $data = array("FTLnotrunning" => true);
     } else {
+      // Set the header
+      header('Content-type: application/json');
+
       // Start the JSON string
       echo '{"data":[';
       $first = true;
