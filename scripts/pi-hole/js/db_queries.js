@@ -292,8 +292,13 @@ $(function () {
             "<span class='text-orange'>Blocked <br class='hidden-lg'>(database is busy)</span>";
           blocked = true;
           break;
+        case 16:
+          fieldtext =
+            "<span class='text-orange'>Blocked <br class='hidden-lg'>(special domain)</span>";
+          blocked = true;
+          break;
         default:
-          fieldtext = "Unknown";
+          fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
       }
 
       $(row).addClass(blocked === true ? "blocked-row" : "allowed-row");
