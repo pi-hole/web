@@ -90,6 +90,11 @@
                                         <input id="new_regex_comment" type="text" class="form-control" placeholder="Description (optional)">
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>Note: The regular expression will be assigned to the Default Group. Other groups will need to be selected within Group Management > Domains.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
