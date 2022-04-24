@@ -146,6 +146,10 @@ function getQueryTypes() {
     queryType.push(15);
   }
 
+  if ($("#type_special_domain").prop("checked")) {
+    queryType.push(16);
+  }
+
   return queryType.join(",");
 }
 
@@ -184,7 +188,7 @@ function refreshTableData() {
   var APIstring = "api_db.php?getAllQueries&from=" + from + "&until=" + until;
   // Check if query type filtering is enabled
   var queryType = getQueryTypes();
-  if (queryType !== "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15") {
+  if (queryType !== "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16") {
     APIstring += "&types=" + queryType;
   }
 
@@ -292,8 +296,13 @@ $(function () {
             "<span class='text-orange'>Blocked <br class='hidden-lg'>(database is busy)</span>";
           blocked = true;
           break;
+        case 16:
+          fieldtext =
+            "<span class='text-orange'>Blocked <br class='hidden-lg'>(special domain)</span>";
+          blocked = true;
+          break;
         default:
-          fieldtext = "Unknown";
+          fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
       }
 
       $(row).addClass(blocked === true ? "blocked-row" : "allowed-row");
