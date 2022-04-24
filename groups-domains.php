@@ -58,11 +58,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <p>Note: The domain will be assigned to the Default Group. Other groups will need to be selected within Group Management > Domains.</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
                                     <div>
                                         <input type="checkbox" id="wildcard_checkbox">
                                         <label for="wildcard_checkbox"><strong>Add domain as wildcard</strong></label>
@@ -90,13 +85,13 @@
                                         <input id="new_regex_comment" type="text" class="form-control" placeholder="Description (optional)">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <p>Note: The regular expression will be assigned to the Default Group. Other groups will need to be selected within Group Management > Domains.</p>
-                                </div>
-                            </div>
                         </div>
                     </div>
+                </div>
+                <div>
+                    <p><strong>Note:</strong><br>
+                    The domain or regex filter will be assigned to the Default Group.<br>
+                    Other groups will need to be selected within <a href="groups-domains.php">Group Management > Domains</a>.</p>
                 </div>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
                     <?php if ( $type !== "white" ) { ?>
