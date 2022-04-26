@@ -543,7 +543,7 @@ function updateForwardDestinationsPie() {
       values.findIndex(arr => arr.includes("other")),
       1
     )[0];
-    if (other[1] != 0) {
+    if (other[1] !== 0) {
       values.push(other);
     }
 
