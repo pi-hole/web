@@ -538,8 +538,11 @@ function updateForwardDestinationsPie() {
       values.push([key, value, THEME_COLORS[i++ % THEME_COLORS.length]]);
     });
 
-    // Move the "other" element to the end of the array
-    values.push(values.splice(values.indexOf("other"), 1)[0]);
+    // Show "Other" destination as the last graphic item and only if it's different than zero
+    var other = values.splice(values.findIndex(arr => arr.includes("other")), 1)[0];
+    if (other[1] != 0) {
+      values.push(other);
+    }
 
     // Split data into individual arrays for the graphs
     values.forEach(function (value) {
