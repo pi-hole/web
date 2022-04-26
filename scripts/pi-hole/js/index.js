@@ -539,7 +539,10 @@ function updateForwardDestinationsPie() {
     });
 
     // Show "Other" destination as the last graphic item and only if it's different than zero
-    var other = values.splice(values.findIndex(arr => arr.includes("other")), 1)[0];
+    var other = values.splice(
+      values.findIndex(arr => arr.includes("other")),
+      1
+    )[0];
     if (other[1] != 0) {
       values.push(other);
     }
