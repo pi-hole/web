@@ -91,7 +91,7 @@
                 <div>
                     <p><strong>Note:</strong><br>
                     The domain or regex filter will be assigned to the Default Group only.<br>
-                    Other groups will need to be selected within <a href="groups-domains.php">Group Management > Domains</a>.</p>
+                    Other groups can optionally be assigned within <a href="groups-domains.php">Group Management > Domains</a>.</p>
                 </div>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
                     <?php if ( $type !== "white" ) { ?>
