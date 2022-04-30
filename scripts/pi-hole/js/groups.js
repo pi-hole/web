@@ -166,7 +166,7 @@ $(function () {
       }
 
       // Reset visibility of ID column
-      data.columns[1].visible = false;
+      data.columns[0].visible = false;
       // Apply loaded state to table
       return data;
     },
