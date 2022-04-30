@@ -214,7 +214,6 @@ function delItems(ids) {
   if (!Array.isArray(ids)) return;
 
   var items = "";
-  var name = "";
 
   for (var id of ids) {
     // Exploit prevention: Return early for non-numeric IDs
