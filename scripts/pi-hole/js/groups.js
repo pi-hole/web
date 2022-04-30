@@ -43,7 +43,7 @@ $(function () {
       },
     ],
     drawCallback: function () {
-      // Hide buttons if all messages were deleted
+      // Hide buttons if all groups were deleted
       var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 

@@ -118,7 +118,7 @@ function initTable() {
     columns: [
       { data: "id", visible: false },
       { data: null, visible: true, orderable: false, width: "15px" },
-      { data: "status", searchable: false, orderable: false, class: "details-control" },
+      { data: "status", searchable: false, class: "details-control" },
       { data: "address", orderable: false },
       { data: "enabled", searchable: false },
       { data: "comment" },
@@ -139,7 +139,7 @@ function initTable() {
       },
     ],
     drawCallback: function () {
-      // Hide buttons if all messages were deleted
+      // Hide buttons if all adlists were deleted
       var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
