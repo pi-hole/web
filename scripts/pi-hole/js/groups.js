@@ -220,14 +220,8 @@ function delItems(ids) {
     // Exploit prevention: Return early for non-numeric IDs
     if (typeof id !== "number") return;
 
-    // Retrieve details
-    name = utils.escapeHtml($("#name_" + id).text());
-    if (name.length > 0) {
-      name = " (<i>" + utils.escapeHtml($("#name_" + id).text()) + "</i>)";
-    }
-
-    // Add item
-    items += "<li>" + utils.escapeHtml($("#ip_" + id).text()) + name + "</li>";
+    // List deleted items
+    items += "<li><i>" + utils.escapeHtml($("#name_" + id).val()) + "</i></li>";
   }
 
   utils.disableAll();

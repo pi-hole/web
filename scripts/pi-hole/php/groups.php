@@ -161,14 +161,14 @@ if ($_POST['action'] == 'get_groups') {
             }
         }
 
-        $table_name = ['domainlist_by_group', 'client_by_group', 'adlist_by_group', 'group'];
+        $table_name = ['domainlist_by_group', 'client_by_group', 'adlist_by_group', '"group"']; //quote reserved word
         $table_keys = ['group_id', 'group_id', 'group_id', 'id'];
 
         for ($i = 0; $i < count($table_name); $i++) {
             $table = $table_name[$i];
             $key = $table_keys[$i];
 
-            $stmt = $db->prepare("DELETE FROM ".$table." WHERE ".$key." IN ('.implode(",",$ids).')'");
+            $stmt = $db->prepare("DELETE FROM ".$table." WHERE ".$key." IN ('".implode("','",$ids)."')");
             if (!$stmt) {
                 throw new Exception("While preparing DELETE FROM $table statement: " . $db->lastErrorMsg());
             }
