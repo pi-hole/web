@@ -223,8 +223,8 @@ function updateQueriesOverTime() {
     // convert received objects to arrays
     data.domains_over_time = utils.objectToArray(data.domains_over_time);
     data.ads_over_time = utils.objectToArray(data.ads_over_time);
-    // remove last data point since it not representative
-    data.ads_over_time[0].splice(-1, 1);
+    // remove last data point for line charts as it is not representative there
+    if (utils.getGraphType() === "line") data.ads_over_time[0].splice(-1, 1);
     // Remove possibly already existing data
     timeLineChart.data.labels = [];
     timeLineChart.data.datasets = [];
