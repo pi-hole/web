@@ -967,6 +967,7 @@ $(function () {
             ticks: {
               beginAtZero: true,
               fontColor: ticksColor,
+              precision: 0,
             },
             gridLines: {
               color: gridColor,
@@ -1045,6 +1046,7 @@ $(function () {
               ticks: {
                 beginAtZero: true,
                 fontColor: ticksColor,
+                precision: 0,
               },
               stacked: true,
               gridLines: {
