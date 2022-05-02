@@ -971,9 +971,16 @@ $(function () {
             },
             gridLines: {
               color: gridColor,
+              zeroLineColor: gridColor,
             },
           },
         ],
+      },
+      elements: {
+        line: {
+          borderWidth: 0,
+          spanGaps: false,
+        },
       },
       maintainAspectRatio: false,
     },
@@ -1051,9 +1058,16 @@ $(function () {
               stacked: true,
               gridLines: {
                 color: gridColor,
+                zeroLineColor: gridColor,
               },
             },
           ],
+        },
+        elements: {
+          line: {
+            borderWidth: 0,
+            spanGaps: false,
+          },
         },
         maintainAspectRatio: false,
         hover: {
