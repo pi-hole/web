@@ -441,8 +441,8 @@ function updateClientsOverTime() {
     // convert received objects to arrays
     data.over_time = utils.objectToArray(data.over_time);
 
-    // remove last data point since it not representative
-    data.over_time[0].splice(-1, 1);
+    // remove last data point for line charts as it is not representative there
+    if (utils.getGraphType() === "line") data.over_time[0].splice(-1, 1);
     var timestamps = data.over_time[0];
     var plotdata = data.over_time[1];
     var labels = [];
