@@ -443,6 +443,7 @@ function addClient() {
         utils.showAlert("success", "fas fa-plus", "Successfully added client", ip);
         reloadClientSuggestions();
         table.ajax.reload(null, false);
+        table.rows().deselect();
       } else {
         utils.showAlert("error", "", "Error while adding new client", response.message);
       }

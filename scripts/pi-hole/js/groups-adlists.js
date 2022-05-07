@@ -517,6 +517,7 @@ function addAdlist() {
         $("#new_address").val("");
         $("#new_comment").val("");
         table.ajax.reload();
+        table.rows().deselect();
       } else {
         utils.showAlert("error", "", "Error while adding new adlist: ", response.message);
       }

@@ -515,6 +515,7 @@ function addDomain() {
         commentEl.val("");
         wildcardEl.prop("checked", false);
         table.ajax.reload(null, false);
+        table.rows().deselect();
       } else {
         utils.showAlert("error", "", "Error while adding new " + domainRegex, response.message);
       }

@@ -288,6 +288,7 @@ function addGroup() {
         $("#new_name").val("");
         $("#new_desc").val("");
         table.ajax.reload();
+        table.rows().deselect();
       } else {
         utils.showAlert("error", "", "Error while adding new group", response.message);
       }
