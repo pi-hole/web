@@ -22,6 +22,7 @@ $(function () {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
+      { data: null, visible: true, orderable: false, width: "15px" },
       { data: "name" },
       { data: "enabled", searchable: false },
       { data: "description" },
@@ -29,11 +30,22 @@ $(function () {
     ],
     columnDefs: [
       {
+        targets: 1,
+        className: "select-checkbox",
+        render: function () {
+          return "";
+        },
+      },
+      {
         targets: "_all",
         render: $.fn.dataTable.render.text(),
       },
     ],
     drawCallback: function () {
+      // Hide buttons if all groups were deleted
+      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
+
       $('button[id^="deleteGroup_"]').on("click", deleteGroup);
     },
     rowCallback: function (row, data) {
@@ -45,7 +57,7 @@ $(function () {
         utils.datetime(data.date_modified, false) +
         "\nDatabase ID: " +
         data.id;
-      $("td:eq(0)", row).html(
+      $("td:eq(1)", row).html(
         '<input id="name_' + data.id + '" title="' + tooltip + '" class="form-control">'
       );
       var nameEl = $("#name_" + data.id, row);
@@ -53,7 +65,7 @@ $(function () {
       nameEl.on("change", editGroup);
 
       var disabled = data.enabled === 0;
-      $("td:eq(1)", row).html(
+      $("td:eq(2)", row).html(
         '<input type="checkbox" id="status_' + data.id + '"' + (disabled ? "" : " checked") + ">"
       );
       var statusEl = $("#status_" + data.id, row);
@@ -66,28 +78,75 @@ $(function () {
       });
       statusEl.on("change", editGroup);
 
-      $("td:eq(2)", row).html('<input id="desc_' + data.id + '" class="form-control">');
+      $("td:eq(3)", row).html('<input id="desc_' + data.id + '" class="form-control">');
       var desc = data.description !== null ? data.description : "";
       var descEl = $("#desc_" + data.id, row);
       descEl.val(utils.unescapeHtml(desc));
       descEl.on("change", editGroup);
 
-      $("td:eq(3)", row).empty();
+      $("td:eq(4)", row).empty();
       if (data.id !== 0) {
         var button =
           '<button type="button" class="btn btn-danger btn-xs" id="deleteGroup_' +
           data.id +
+          '" data-del-id="' +
+          data.id +
           '">' +
           '<span class="far fa-trash-alt"></span>' +
           "</button>";
-        $("td:eq(3)", row).html(button);
+        $("td:eq(4)", row).html(button);
       }
     },
+    select: {
+      style: "multi",
+      selector: "td:not(:last-child)",
+      info: false,
+    },
+    buttons: [
+      {
+        text: '<span class="far fa-square"></span>',
+        titleAttr: "Select All",
+        className: "btn-sm datatable-bt selectAll",
+        action: function () {
+          table.rows({ page: "current" }).select();
+        },
+      },
+      {
+        text: '<span class="far fa-plus-square"></span>',
+        titleAttr: "Select All",
+        className: "btn-sm datatable-bt selectMore",
+        action: function () {
+          table.rows({ page: "current" }).select();
+        },
+      },
+      {
+        extend: "selectNone",
+        text: '<span class="far fa-check-square"></span>',
+        titleAttr: "Deselect All",
+        className: "btn-sm datatable-bt removeAll",
+      },
+      {
+        text: '<span class="far fa-trash-alt"></span>',
+        titleAttr: "Delete Selected",
+        className: "btn-sm datatable-bt deleteSelected",
+        action: function () {
+          // For each ".selected" row ...
+          var ids = [];
+          $("tr.selected").each(function () {
+            // ... add the row identified by "data-id".
+            ids.push(parseInt($(this).attr("data-id"), 10));
+          });
+          // Delete all selected rows at once
+          delItems(ids);
+        },
+      },
+    ],
     dom:
-      "<'row'<'col-sm-12'f>>" +
-      "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
+      "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
-      "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
+      "<'row'<'col-sm-12'i>>",
     lengthMenu: [
       [10, 25, 50, 100, -1],
       [10, 25, 50, 100, "All"],
@@ -121,6 +180,10 @@ $(function () {
     input.setAttribute("spellcheck", false);
   }
 
+  table.on("init select deselect", function () {
+    utils.changeBulkDeleteStates(table);
+  });
+
   table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
@@ -129,11 +192,74 @@ $(function () {
       $("#resetButton").addClass("hidden");
     }
   });
+
   $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").addClass("hidden");
   });
 });
+
+// Remove 'bnt-group' class from container, to avoid grouping
+$.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
+
+function deleteGroup() {
+  // Passes the button data-del-id attribute as ID
+  var ids = [parseInt($(this).attr("data-del-id"), 10)];
+  delItems(ids);
+}
+
+function delItems(ids) {
+  // Check input validity
+  if (!Array.isArray(ids)) return;
+
+  var items = "";
+
+  for (var id of ids) {
+    // Exploit prevention: Return early for non-numeric IDs
+    if (typeof id !== "number") return;
+
+    // List deleted items
+    items += "<li><i>" + utils.escapeHtml($("#name_" + id).val()) + "</i></li>";
+  }
+
+  utils.disableAll();
+  var idstring = ids.join(", ");
+  utils.showAlert("info", "", "Deleting groups: " + idstring, "...");
+
+  $.ajax({
+    url: "scripts/pi-hole/php/groups.php",
+    method: "post",
+    dataType: "json",
+    data: { action: "delete_group", id: JSON.stringify(ids), token: token },
+  })
+    .done(function (response) {
+      utils.enableAll();
+      if (response.success) {
+        utils.showAlert(
+          "success",
+          "far fa-trash-alt",
+          "Successfully deleted groups: " + idstring,
+          "<ul>" + items + "</ul>"
+        );
+        for (var id in ids) {
+          if (Object.hasOwnProperty.call(ids, id)) {
+            table.row(id).remove().draw(false).ajax.reload(null, false);
+          }
+        }
+      } else {
+        utils.showAlert("error", "", "Error while deleting groups: " + idstring, response.message);
+      }
+
+      // Clear selection after deletion
+      table.rows().deselect();
+      utils.changeBulkDeleteStates(table);
+    })
+    .fail(function (jqXHR, exception) {
+      utils.enableAll();
+      utils.showAlert("error", "", "Error while deleting groups: " + idstring, jqXHR.responseText);
+      console.log(exception); // eslint-disable-line no-console
+    });
+}
 
 function addGroup() {
   var name = utils.escapeHtml($("#new_name").val());
@@ -161,6 +287,7 @@ function addGroup() {
         $("#new_name").val("");
         $("#new_desc").val("");
         table.ajax.reload();
+        table.rows().deselect();
       } else {
         utils.showAlert("error", "", "Error while adding new group", response.message);
       }
@@ -242,35 +369,6 @@ function editGroup() {
         "Error while " + notDone + " group with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception); // eslint-disable-line no-console
-    },
-  });
-}
-
-function deleteGroup() {
-  var tr = $(this).closest("tr");
-  var id = tr.attr("data-id");
-  var name = utils.escapeHtml(tr.find("#name_" + id).val());
-
-  utils.disableAll();
-  utils.showAlert("info", "", "Deleting group...", name);
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: { action: "delete_group", id: id, token: token },
-    success: function (response) {
-      utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted group ", name);
-        table.row(tr).remove().draw(false);
-      } else {
-        utils.showAlert("error", "", "Error while deleting group with ID " + id, response.message);
-      }
-    },
-    error: function (jqXHR, exception) {
-      utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting group with ID " + id, jqXHR.responseText);
       console.log(exception); // eslint-disable-line no-console
     },
   });

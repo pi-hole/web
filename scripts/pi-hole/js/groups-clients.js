@@ -92,6 +92,7 @@ function initTable() {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
+      { data: null, visible: true, orderable: false, width: "15px" },
       { data: "ip", type: "ip-address" },
       { data: "comment" },
       { data: "groups", searchable: false },
@@ -99,11 +100,22 @@ function initTable() {
     ],
     columnDefs: [
       {
+        targets: 1,
+        className: "select-checkbox",
+        render: function () {
+          return "";
+        },
+      },
+      {
         targets: "_all",
         render: $.fn.dataTable.render.text(),
       },
     ],
     drawCallback: function () {
+      // Hide buttons if all clients were deleted
+      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
+
       $('button[id^="deleteClient_"]').on("click", deleteClient);
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
@@ -134,15 +146,15 @@ function initTable() {
           '" class="breakall">' +
           data.name +
           "</code>";
-      $("td:eq(0)", row).html(ipName);
+      $("td:eq(1)", row).html(ipName);
 
-      $("td:eq(1)", row).html('<input id="comment_' + data.id + '" class="form-control">');
+      $("td:eq(2)", row).html('<input id="comment_' + data.id + '" class="form-control">');
       var commentEl = $("#comment_" + data.id, row);
       commentEl.val(utils.unescapeHtml(data.comment));
       commentEl.on("change", editClient);
 
-      $("td:eq(2)", row).empty();
-      $("td:eq(2)", row).append(
+      $("td:eq(3)", row).empty();
+      $("td:eq(3)", row).append(
         '<select class="selectpicker" id="multiselect_' + data.id + '" multiple></select>'
       );
       var selectEl = $("#multiselect_" + data.id, row);
@@ -209,16 +221,63 @@ function initTable() {
       var button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteClient_' +
         data.id +
+        '" data-del-id="' +
+        data.id +
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
-      $("td:eq(3)", row).html(button);
+      $("td:eq(4)", row).html(button);
     },
+    select: {
+      style: "multi",
+      selector: "td:not(:last-child)",
+      info: false,
+    },
+    buttons: [
+      {
+        text: '<span class="far fa-square"></span>',
+        titleAttr: "Select All",
+        className: "btn-sm datatable-bt selectAll",
+        action: function () {
+          table.rows({ page: "current" }).select();
+        },
+      },
+      {
+        text: '<span class="far fa-plus-square"></span>',
+        titleAttr: "Select All",
+        className: "btn-sm datatable-bt selectMore",
+        action: function () {
+          table.rows({ page: "current" }).select();
+        },
+      },
+      {
+        extend: "selectNone",
+        text: '<span class="far fa-check-square"></span>',
+        titleAttr: "Deselect All",
+        className: "btn-sm datatable-bt removeAll",
+      },
+      {
+        text: '<span class="far fa-trash-alt"></span>',
+        titleAttr: "Delete Selected",
+        className: "btn-sm datatable-bt deleteSelected",
+        action: function () {
+          // For each ".selected" row ...
+          var ids = [];
+          $("tr.selected").each(function () {
+            // ... add the row identified by "data-id".
+            ids.push(parseInt($(this).attr("data-id"), 10));
+          });
+          // Delete all selected rows at once
+          delItems(ids);
+        },
+      },
+    ],
     dom:
-      "<'row'<'col-sm-12'f>>" +
-      "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
+      "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
-      "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
+      "<'row'<'col-sm-12'i>>",
     lengthMenu: [
       [10, 25, 50, 100, -1],
       [10, 25, 50, 100, "All"],
@@ -252,6 +311,10 @@ function initTable() {
     input.setAttribute("spellcheck", false);
   }
 
+  table.on("init select deselect", function () {
+    utils.changeBulkDeleteStates(table);
+  });
+
   table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
@@ -265,6 +328,75 @@ function initTable() {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").addClass("hidden");
   });
+}
+
+// Remove 'bnt-group' class from container, to avoid grouping
+$.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
+
+function deleteClient() {
+  // Passes the button data-del-id attribute as ID
+  var ids = [parseInt($(this).attr("data-del-id"), 10)];
+  delItems(ids);
+}
+
+function delItems(ids) {
+  // Check input validity
+  if (!Array.isArray(ids)) return;
+
+  var items = "";
+  var name = "";
+
+  for (var id of ids) {
+    // Exploit prevention: Return early for non-numeric IDs
+    if (typeof id !== "number") return;
+
+    // Retrieve details
+    name = utils.escapeHtml($("#name_" + id).text());
+    if (name.length > 0) {
+      name = " (<i>" + utils.escapeHtml($("#name_" + id).text()) + "</i>)";
+    }
+
+    // Add client
+    items += "<li>" + utils.escapeHtml($("#ip_" + id).text()) + name + "</li>";
+  }
+
+  utils.disableAll();
+  var idstring = ids.join(", ");
+  utils.showAlert("info", "", "Deleting clients: " + idstring, "...");
+
+  $.ajax({
+    url: "scripts/pi-hole/php/groups.php",
+    method: "post",
+    dataType: "json",
+    data: { action: "delete_client", id: JSON.stringify(ids), token: token },
+  })
+    .done(function (response) {
+      utils.enableAll();
+      if (response.success) {
+        utils.showAlert(
+          "success",
+          "far fa-trash-alt",
+          "Successfully deleted clients: " + idstring,
+          "<ul>" + items + "</ul>"
+        );
+        for (var id in ids) {
+          if (Object.hasOwnProperty.call(ids, id)) {
+            table.row(id).remove().draw(false).ajax.reload(null, false);
+          }
+        }
+      } else {
+        utils.showAlert("error", "", "Error while deleting clients: " + idstring, response.message);
+      }
+
+      // Clear selection after deletion
+      table.rows().deselect();
+      utils.changeBulkDeleteStates(table);
+    })
+    .fail(function (jqXHR, exception) {
+      utils.enableAll();
+      utils.showAlert("error", "", "Error while deleting clients: " + idstring, jqXHR.responseText);
+      console.log(exception); // eslint-disable-line no-console
+    });
 }
 
 function addClient() {
@@ -310,6 +442,7 @@ function addClient() {
         utils.showAlert("success", "fas fa-plus", "Successfully added client", ip);
         reloadClientSuggestions();
         table.ajax.reload(null, false);
+        table.rows().deselect();
       } else {
         utils.showAlert("error", "", "Error while adding new client", response.message);
       }
@@ -385,41 +518,6 @@ function editClient() {
         "Error while " + notDone + " client with ID " + id,
         jqXHR.responseText
       );
-      console.log(exception); // eslint-disable-line no-console
-    },
-  });
-}
-
-function deleteClient() {
-  var tr = $(this).closest("tr");
-  var id = tr.attr("data-id");
-  var ip = utils.escapeHtml(tr.find("#ip_" + id).text());
-  var name = utils.escapeHtml(tr.find("#name_" + id).text());
-
-  if (name.length > 0) {
-    ip += " (" + name + ")";
-  }
-
-  utils.disableAll();
-  utils.showAlert("info", "", "Deleting client...", ip);
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: { action: "delete_client", id: id, token: token },
-    success: function (response) {
-      utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted client ", ip);
-        table.row(tr).remove().draw(false).ajax.reload(null, false);
-        reloadClientSuggestions();
-      } else {
-        utils.showAlert("error", "", "Error while deleting client with ID " + id, response.message);
-      }
-    },
-    error: function (jqXHR, exception) {
-      utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting client with ID " + id, jqXHR.responseText);
       console.log(exception); // eslint-disable-line no-console
     },
   });

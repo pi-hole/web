@@ -381,6 +381,33 @@ function checkMessages() {
   });
 }
 
+// Show only the appropriate delete buttons in datatables
+function changeBulkDeleteStates(table) {
+  var allRows = table.rows({ filter: "applied" }).data().length;
+  var pageLength = table.page.len();
+  var selectedRows = table.rows(".selected").data().length;
+
+  if (selectedRows === 0) {
+    // Nothing selected
+    $(".selectAll").removeClass("hidden");
+    $(".selectMore").addClass("hidden");
+    $(".removeAll").addClass("hidden");
+    $(".deleteSelected").addClass("hidden");
+  } else if (selectedRows >= pageLength || selectedRows === allRows) {
+    // Whole page is selected (or all available messages were selected)
+    $(".selectAll").addClass("hidden");
+    $(".selectMore").addClass("hidden");
+    $(".removeAll").removeClass("hidden");
+    $(".deleteSelected").removeClass("hidden");
+  } else {
+    // Some rows are selected, but not all
+    $(".selectAll").addClass("hidden");
+    $(".selectMore").removeClass("hidden");
+    $(".removeAll").addClass("hidden");
+    $(".deleteSelected").removeClass("hidden");
+  }
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -404,5 +431,6 @@ window.utils = (function () {
     addTD: addTD,
     colorBar: colorBar,
     checkMessages: checkMessages,
+    changeBulkDeleteStates: changeBulkDeleteStates,
   };
 })();
