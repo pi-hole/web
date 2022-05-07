@@ -6,7 +6,7 @@
 *  Please see LICENSE file for your rights under this license. */
 
 .layout-boxed {
-  background: url("../img/boxed-bg.jpg") repeat fixed;
+  background: url("../img/boxed-bg.png") repeat fixed;
 }
 
 .small-box span {
@@ -403,6 +403,7 @@ td.lookatme {
 }
 
 .sidebar-toggle-svg {
+  position: relative;
   color: #fff;
   float: left;
   background: none;
@@ -495,9 +496,113 @@ td.details-control {
   }
 }
 
-/* Fix the icon position (login password field) */
+/*** Login form ***/
 .form-control-feedback {
   right: 12px;
+}
+
+.loginpage-logo {
+  width: 30%;
+}
+.layout-boxed .loginpage-logo {
+  width: 50%;
+}
+
+.login-options {
+  display: flex;
+  margin: 0 0 15px -15px;
+  flex-wrap: wrap;
+}
+
+.login-options div {
+  position: relative;
+  margin-left: 15px;
+}
+
+.login-options div:last-child {
+  margin-right: 2px;
+  margin-bottom: 0 !important;
+  flex: 0 1 auto;
+  font-size: 95%;
+}
+
+.pwd-field {
+  flex: 1 0 auto;
+}
+
+.login-help {
+  padding: 6px;
+  background: rgba(127, 127, 127, 0.05);
+  text-align: center;
+}
+
+.login-help p {
+  margin: 0;
+  font-size: clamp(11px, (100vw - 400px) / 45, 15px);
+  line-height: 1.6;
+}
+
+@media screen and (min-width: 768px) {
+  .layout-boxed:not(.sidebar-collapse) .login-help p {
+    font-size: clamp(11px, (min(100vw, 1250px) - 380px) / 47, 15px);
+  }
+
+  /* hide warning icon only when logged in and menu is not collapsed */
+  .logged-in:not(.sidebar-collapse) #top-warning-count {
+    display: none;
+  }
+}
+
+/*** Warning icon and count ***/
+.warning-count {
+  position: absolute;
+  display: inline-block;
+  text-align: center;
+  background: #e08e0b;
+  color: #fff;
+  line-height: 1;
+  padding: 0.25em 0.5em;
+  margin: -0.7em 4px;
+  border-radius: 2em;
+  right: 3em;
+  top: 50%;
+  font-size: 12px;
+}
+
+#top-warning-count {
+  top: 55%;
+  left: 50%;
+  right: unset;
+  margin: 0;
+}
+
+.treeview-menu .warning-count {
+  margin-right: 0;
+  font-size: 10px;
+}
+
+.menu-open > a > span.warning-count {
+  display: none;
+}
+
+/* hide submenu warning count during animation */
+li:not(.menu-open) .treeview-menu .warning-count {
+  display: none;
+}
+
+/* hide warning count when hover a collapsed sidebar */
+.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse
+  .sidebar-menu
+  > li:hover
+  > a
+  > span.warning-count {
+  display: none !important;
+}
+
+/*** Accessibility - Add focus for checkboxes and radio buttons (icheck) ***/
+[class*="icheck-"] > input:first-child:focus + label::before {
+  outline: 1px #3c8dbc solid;
+  border-color: #3c8dbc;
 }
 
 /* Fix some datatables layout on small screens */
@@ -614,6 +719,33 @@ td.details-control {
   height: 50px;
 }
 
+.navbar-nav > .user-menu > .dropdown-menu > .user-body a {
+  background: transparent !important;
+}
+
+/*** Donate button - navbar ***/
+.main-header .navbar-custom-menu .user-footer .donate {
+  margin: 15px;
+  padding: 0.8em 1em;
+  width: calc(100% - 30px);
+  color: #fff;
+  background: #96060c;
+  border: none;
+  border-radius: 6px;
+}
+
+.main-header .navbar-custom-menu .user-footer .donate:hover,
+.main-header .navbar-custom-menu .user-footer .donate:active,
+.main-header .navbar-custom-menu .user-footer .donate:active:hover,
+.main-header .navbar-custom-menu .user-footer .donate:focus,
+.main-header .navbar-custom-menu .user-footer .donate:active:focus {
+  background: #f60d1a;
+}
+
+.navbar-custom-menu > .navbar-nav > li:nth-child(1) {
+  padding: 0 10px 0 0;
+}
+
 #apiTokenIframe {
   width: 100%;
   border: 0;
@@ -644,4 +776,92 @@ td.details-control {
 
 .menu-icon {
   margin-right: 0.5em;
+}
+
+/* Datatables Select - bgcolor */
+:root {
+  --datatable-bgcolor: #e0e8ee;
+}
+
+div.dt-buttons {
+  margin: 2px 0 5px;
+}
+@media screen and (max-width: 767px) {
+  div.dt-buttons {
+    margin-bottom: 5px;
+    float: none;
+    text-align: center;
+  }
+}
+
+/* Datatables Select - checkbox outline */
+table.dataTable tbody td.select-checkbox::before,
+table.dataTable tbody th.select-checkbox::before {
+  border-color: currentColor;
+  border-radius: 2px;
+  border-width: 2px;
+  width: 13px;
+  height: 13px;
+}
+
+table.dataTable tr.selected td.select-checkbox::after,
+table.dataTable tr.selected th.select-checkbox::after {
+  color: currentColor;
+  content: "";
+  text-shadow: none;
+  border-bottom: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  width: 4px;
+  height: 8px;
+  transform: rotate(45deg) translate(7px, 3px);
+}
+
+.datatable-bt {
+  padding: 3px 8px;
+}
+
+.datatable-bt span {
+  font-size: 17px;
+}
+
+/* Datatables Select - selected row bgcolor */
+table.dataTable tbody > tr.selected,
+table.dataTable tbody > tr > .selected {
+  background: none;
+  background-image: linear-gradient(var(--datatable-bgcolor), var(--datatable-bgcolor));
+}
+
+#messagesTable pre {
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+#output {
+  position: relative;
+  margin: 5px 0;
+  min-height: 36px;
+  padding: 4px 8px;
+}
+
+.loading::before {
+  content: " ";
+  position: absolute;
+  padding: 1em;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  line-height: 1;
+  background: rgba(35, 60, 85, 0.8);
+  box-shadow: 0 0 6px -3px rgba(0, 0, 0, 0.5);
+}
+.loading::after {
+  content: "\1F553\FE0E  Loading...";
+  position: absolute;
+  padding: 1em;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: #fff;
+  line-height: 1;
+  animation: 2s infinite Pulse steps(20);
 }

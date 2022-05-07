@@ -27,7 +27,6 @@
 }
 .main-header .navbar .sidebar-toggle:hover {
   color: #f6f6f6;
-  background-color: rgba(0, 0, 0, 0.1);
   background-color: #367fa9;
 }
 @media (max-width: 767px) {
@@ -213,6 +212,29 @@
   color: #36f !important;
 }
 
+/* Used in debug log page */
+.log-red {
+  color: #e00;
+}
+.log-green {
+  color: #093;
+}
+.log-yellow {
+  color: #f69600;
+}
+.log-blue {
+  color: #04d;
+}
+.log-purple {
+  color: #a0c;
+}
+.log-cyan {
+  color: #0ab;
+}
+.log-gray {
+  color: #999;
+}
+
 td.highlight {
   background-color: rgba(255, 204, 0, 0.333);
 }
@@ -238,4 +260,20 @@ td.highlight {
 }
 .iradio_minimal-blue {
   margin-right: 8px;
+}
+
+.datatable-bt,
+.datatable-bt:active,
+.datatable-bt:active:focus,
+.datatable-bt:focus {
+  background: #fff;
+  border-color: #ddd;
+  color: #345;
+}
+
+.datatable-bt:hover,
+.datatable-bt:active:hover {
+  background: #337ab7;
+  border-color: #337ab7;
+  color: #fff;
 }

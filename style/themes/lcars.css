@@ -10,6 +10,7 @@
   --net-recent-color: #055;
   --net-old-color: #125;
   --net-older-color: #1c2228;
+  --datatable-bgcolor: var(--net-old-color);
 }
 
 .sidebar-collapse {
@@ -117,6 +118,8 @@ pre {
 #output {
   padding: 10px 3px;
   border-radius: 12px;
+  background: #181818;
+  color: #9ab;
 }
 
 td code {
@@ -380,6 +383,10 @@ p.login-box-msg,
   background: #f00;
 }
 
+.login-help p {
+  font-size: 13px;
+}
+
 .input-group .input-group-addon {
   border-radius: 8px 0 0 8px;
   border-right: none;
@@ -498,6 +505,10 @@ p.login-box-msg,
   box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.6);
 }
 
+.dropdown-toggle {
+  z-index: 2000;
+}
+
 .dropdown-menu > li > a {
   color: inherit;
 }
@@ -548,8 +559,25 @@ p.login-box-msg,
   font-size: 28px;
 }
 
-.icon-bounce {
-  animation: none;
+.warning-count {
+  position: relative;
+  margin: 0;
+  padding: 0.2em 0.52em 0.3em;
+  right: 0;
+  top: 0;
+  background: #fa3;
+  color: #000;
+}
+
+.sidebar-menu li > a > .pull-right-container.warning-count {
+  transform: scale(1);
+  position: relative;
+  bottom: 0.15em;
+}
+
+#top-warning-count {
+  position: absolute;
+  top: 60%;
 }
 
 .dropdown.user.user-menu {
@@ -1226,7 +1254,6 @@ table.dataTable thead .sorting_desc_disabled:after {
 #ad-frequency table td:last-child,
 #ad-frequency table th:last-child {
   width: 130px !important;
-  width: auto;
 }
 
 #domain-frequency table td:first-child,
@@ -1768,6 +1795,22 @@ table.dataTable {
   border: none;
 }
 
+/*** datatables Select: row, checkbox and button ***/
+table.dataTable tbody > tr.selected td,
+table.dataTable tbody > tr > .selected td {
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.select-checkbox {
+  min-width: 8px;
+}
+
+.datatable-bt {
+  border-radius: 6px;
+  padding: 3px 10px;
+}
+
+/*** icheckbox ***/
 .icheckbox_minimal-blue {
   margin-right: 10px;
 }
@@ -1866,6 +1909,29 @@ input[type="password"]::-webkit-caps-lock-indicator {
 
 .text-vivid-blue {
   color: #36f !important;
+}
+
+/* Used in debug log page */
+.log-red {
+  color: #e22;
+}
+.log-green {
+  color: #0b0;
+}
+.log-yellow {
+  color: #fb0;
+}
+.log-blue {
+  color: #08c;
+}
+.log-purple {
+  color: #c6f;
+}
+.log-cyan {
+  color: #0df;
+}
+.log-gray {
+  color: #999;
 }
 
 div.dataTables_wrapper div.dataTables_paginate ul.pagination {

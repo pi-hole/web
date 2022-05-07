@@ -360,6 +360,27 @@ function colorBar(percentage, total, cssClass) {
   return '<div class="progress progress-sm" title="' + title + '"> ' + bar + " </div>";
 }
 
+function checkMessages() {
+  var ignoreNonfatal = localStorage
+    ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
+    : false;
+  $.getJSON("api_db.php?status" + (ignoreNonfatal ? "&ignore=DNSMASQ_WARN" : ""), function (data) {
+    if ("message_count" in data && data.message_count > 0) {
+      var more = '\nAccess "Tools/Pi-hole diganosis" for further details.';
+      var title =
+        data.message_count > 1
+          ? "There are " + data.message_count + " warnings." + more
+          : "There is one warning." + more;
+
+      $(".warning-count").prop("title", title);
+      $(".warning-count").text(data.message_count);
+      $(".warning-count").removeClass("hidden");
+    } else {
+      $(".warning-count").addClass("hidden");
+    }
+  });
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -382,5 +403,6 @@ window.utils = (function () {
     addFromQueryLog: addFromQueryLog,
     addTD: addTD,
     colorBar: colorBar,
+    checkMessages: checkMessages,
   };
 })();
