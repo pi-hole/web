@@ -119,7 +119,7 @@ function initTable() {
       { data: "id", visible: false },
       { data: null, visible: true, orderable: false, width: "15px" },
       { data: "status", searchable: false, class: "details-control" },
-      { data: "address", orderable: false },
+      { data: "address" },
       { data: "enabled", searchable: false },
       { data: "comment" },
       { data: "groups", searchable: false },

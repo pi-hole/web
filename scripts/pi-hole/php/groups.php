@@ -51,6 +51,20 @@ function JSON_error($message = null)
     echo json_encode($response);
 }
 
+function verify_ID_array($arr)
+{
+    if (!is_array($arr)) {
+        throw new Exception('Invalid payload: id is not an array');
+    }
+
+    // Exploit prevention: Ensure all entries in the ID array are integers
+    foreach ($arr as $value) {
+        if (!is_numeric($value)) {
+            throw new Exception('Invalid payload: id contains non-numeric entries');
+        }
+    }
+}
+
 if ($_POST['action'] == 'get_groups') {
     // List all available groups
     try {
@@ -154,12 +168,9 @@ if ($_POST['action'] == 'get_groups') {
     // Delete group identified by ID
     try {
         $ids = json_decode($_POST['id']);
+
         // Exploit prevention: Ensure all entries in the ID array are integers
-        foreach($ids as $value) {
-            if (!is_numeric($value)) {
-                throw new Exception('Invalid payload: id');
-            }
-        }
+        verify_ID_array($ids);
 
         $table_name = ['domainlist_by_group', 'client_by_group', 'adlist_by_group', '"group"']; //quote reserved word
         $table_keys = ['group_id', 'group_id', 'group_id', 'id'];
@@ -168,7 +179,7 @@ if ($_POST['action'] == 'get_groups') {
             $table = $table_name[$i];
             $key = $table_keys[$i];
 
-            $stmt = $db->prepare("DELETE FROM ".$table." WHERE ".$key." IN ('".implode("','",$ids)."')");
+            $stmt = $db->prepare("DELETE FROM ".$table." WHERE ".$key." IN (".implode(",",$ids).")");
             if (!$stmt) {
                 throw new Exception("While preparing DELETE FROM $table statement: " . $db->lastErrorMsg());
             }
@@ -469,12 +480,9 @@ if ($_POST['action'] == 'get_groups') {
     // Delete client identified by ID
     try {
         $ids = json_decode($_POST['id']);
+
         // Exploit prevention: Ensure all entries in the ID array are integers
-        foreach($ids as $value) {
-            if (!is_numeric($value)) {
-                throw new Exception('Invalid payload: id');
-            }
-        }
+        verify_ID_array($ids);
 
         $db->query('BEGIN TRANSACTION;');
 
@@ -855,12 +863,9 @@ if ($_POST['action'] == 'get_groups') {
     // Delete domain identified by ID
     try {
         $ids = json_decode($_POST['id']);
+
         // Exploit prevention: Ensure all entries in the ID array are integers
-        foreach($ids as $value) {
-            if (!is_numeric($value)) {
-                throw new Exception('Invalid payload: id');
-            }
-        }
+        verify_ID_array($ids);
 
         $db->query('BEGIN TRANSACTION;');
 
@@ -1139,16 +1144,9 @@ if ($_POST['action'] == 'get_groups') {
     try {
         // Accept only an array
         $ids = json_decode($_POST['id']);
-        if (!is_array($ids)) {
-           throw new Exception('Invalid payload: id is not an array');
-        }
 
         // Exploit prevention: Ensure all entries in the ID array are integers
-        foreach ($ids as $value) {
-            if (!is_numeric($value)) {
-                throw new Exception('Invalid payload: id contains non-numeric entries');
-            }
-        }
+        verify_ID_array($ids);
 
         $db->query('BEGIN TRANSACTION;');
 

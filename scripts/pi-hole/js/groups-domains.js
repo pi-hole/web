@@ -80,7 +80,6 @@ function initTable() {
     columnDefs: [
       {
         targets: 1,
-        orderable: false,
         className: "select-checkbox",
         render: function () {
           return "";

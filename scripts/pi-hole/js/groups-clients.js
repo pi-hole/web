@@ -92,7 +92,7 @@ function initTable() {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: null, visible: true, width: "15px" },
+      { data: null, visible: true, orderable: false, width: "15px" },
       { data: "ip", type: "ip-address" },
       { data: "comment" },
       { data: "groups", searchable: false },
@@ -101,7 +101,6 @@ function initTable() {
     columnDefs: [
       {
         targets: 1,
-        orderable: false,
         className: "select-checkbox",
         render: function () {
           return "";

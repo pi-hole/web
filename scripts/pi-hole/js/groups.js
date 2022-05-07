@@ -22,7 +22,7 @@ $(function () {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: null, visible: true, width: "15px" },
+      { data: null, visible: true, orderable: false, width: "15px" },
       { data: "name" },
       { data: "enabled", searchable: false },
       { data: "description" },
@@ -31,7 +31,6 @@ $(function () {
     columnDefs: [
       {
         targets: 1,
-        orderable: false,
         className: "select-checkbox",
         render: function () {
           return "";
