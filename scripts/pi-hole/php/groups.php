@@ -7,6 +7,8 @@
 *  Please see LICENSE file for your rights under this license. */
 
 require_once('auth.php');
+require_once('func.php');
+require_once('database.php');
 
 // Authentication checks
 if (!isset($api)) {
@@ -20,36 +22,8 @@ if (!isset($api)) {
 
 $reload = false;
 
-require_once('func.php');
-require_once('database.php');
 $GRAVITYDB = getGravityDBFilename();
 $db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
-
-function JSON_success($message = null)
-{
-    header('Content-type: application/json');
-    echo json_encode(array('success' => true, 'message' => $message));
-}
-
-function JSON_warning($message = null)
-{
-    header('Content-type: application/json');
-    echo json_encode(array(
-        'success' => true,
-        'warning' => true,
-        'message' => $message,
-    ));
-}
-
-function JSON_error($message = null)
-{
-    header('Content-type: application/json');
-    $response = array('success' => false, 'message' => $message);
-    if (isset($_POST['action'])) {
-        array_push($response, array('action' => $_POST['action']));
-    }
-    echo json_encode($response);
-}
 
 function verify_ID_array($arr)
 {

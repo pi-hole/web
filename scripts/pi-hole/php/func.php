@@ -483,6 +483,37 @@ function getQueryTypeStr($querytype)
         return "TYPE".($qtype - 100);
 }
 
+// Functions to return Alert messages (success, error, warning) in JSON format.
+// Used in multiple pages.
+
+// Return Success message in JSON format
+function JSON_success($message = null) {
+    header('Content-type: application/json');
+    echo json_encode(array('success' => true, 'message' => $message));
+}
+
+// Return Error message in JSON format
+function JSON_error($message = null) {
+    header('Content-type: application/json');
+    $response = array('success' => false, 'message' => $message);
+    if (isset($_POST['action'])) {
+        array_push($response, array('action' => $_POST['action']));
+    }
+    echo json_encode($response);
+}
+
+// Return Warning message in JSON format.
+// - sends "success", because it wasn't a failure.
+// - sends "warning" to use the correct alert type.
+function JSON_warning($message = null) {
+    header('Content-type: application/json');
+    echo json_encode(array(
+        'success' => true,
+        'warning' => true,
+        'message' => $message,
+    ));
+}
+
 // Returns an integer representing pihole blocking status
 function piholeStatus() {
     // Retrieve DNS Port calling FTL API directly
