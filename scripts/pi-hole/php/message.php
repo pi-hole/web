@@ -25,22 +25,6 @@ $reload = false;
 $QueriesDB = getQueriesDBFilename();
 $db = SQLite3_connect($QueriesDB, SQLITE3_OPEN_READWRITE);
 
-function JSON_success($message = null)
-{
-    header('Content-type: application/json');
-    echo json_encode(array('success' => true, 'message' => $message));
-}
-
-function JSON_error($message = null)
-{
-    header('Content-type: application/json');
-    $response = array('success' => false, 'message' => $message);
-    if (isset($_POST['action'])) {
-        array_push($response, array('action' => $_POST['action']));
-    }
-    echo json_encode($response);
-}
-
 // Delete message identified by IDs
 if ($_POST['action'] == 'delete_message' && isset($_POST['id'])) {
     try {
