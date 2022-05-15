@@ -374,7 +374,7 @@ $(function () {
 
       // Show response time only when reply is not N/A
       if (data.length > 7 && replyid !== 0) {
-        $("td:eq(5)", row).append(" (" + (0.1 * data[7]).toFixed(1) + "ms)");
+        $("td:eq(5)", row).append(" (" + (1000 * data[7]).toFixed(1) + "ms)");
       }
 
       // Substitute domain by "." if empty
