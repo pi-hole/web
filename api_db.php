@@ -64,7 +64,7 @@ if (isset($_GET['getAllQueries']) && $auth)
 	{
 		$from = intval($_GET["from"]);
 		$until = intval($_GET["until"]);
-		$dbquery = "SELECT timestamp, type, domain, client, status, forward FROM queries WHERE timestamp >= :from AND timestamp <= :until ";
+		$dbquery = "SELECT timestamp, type, domain, client, status, forward, reply_type, reply_time, dnssec FROM queries WHERE timestamp >= :from AND timestamp <= :until ";
 		if(isset($_GET["types"]))
 		{
 			$types = $_GET["types"];
@@ -101,14 +101,19 @@ if (isset($_GET['getAllQueries']) && $auth)
 					$first = false;
 				}
 
-				// Convert query type ID to name, encode domain, encode destination
-				$query_type = getQueryTypeStr($row[1]);
+				// Format, encode, transform each field (if necessary).
+				$time = $row[0];
+				$query_type = getQueryTypeStr($row[1]); // Convert query type ID to name
 				$domain = utf8_encode(str_replace("~"," ",$row[2]));
+				$client = $row[3];
+				$status = $row[4];
 				$destination = utf8_encode($row[5]);
+				$reply_type = $row[6];
+				$reply_time = $row[7];
+				$dnssec = $row[8];
 
 				// Insert into array and output it in JSON format
-				// array:         time     type         domain   client   status   upstream destination
-				echo json_encode([$row[0], $query_type, $domain, $row[3], $row[4], $destination]);
+				echo json_encode([$time, $query_type, $domain, $client, $status, $destination, $reply_type, $reply_time, $dnssec]);
 			}
 		}
 
