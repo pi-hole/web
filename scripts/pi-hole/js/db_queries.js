@@ -270,15 +270,13 @@ $(function () {
             replyid === 0
               ? "<span class='text-green'>OK</span> (sent to <br class='hidden-lg'>"
               : "<span class='text-green'>OK</span> (answered by <br class='hidden-lg'>";
-          fieldtext +=
-            (data.length > 5 && data[5] !== "N/A" ? data[5] : "") +
-            dnssecStatus +
-            ")";
+          fieldtext += (data.length > 5 && data[5] !== "N/A" ? data[5] : "") + dnssecStatus + ")";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case 3:
-          fieldtext = "<span class='text-green'>OK</span> <br class='hidden-lg'>(cache)" + dnssecStatus;
+          fieldtext =
+            "<span class='text-green'>OK</span> <br class='hidden-lg'>(cache)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
