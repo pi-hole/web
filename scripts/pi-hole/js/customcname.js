@@ -81,7 +81,12 @@ function addCustomCNAME() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "far fa-check-circle", "Custom CNAME added", domain + ": " + target);
+        utils.showAlert(
+          "success",
+          "far fa-check-circle",
+          "Custom CNAME added",
+          domain + ": " + target
+        );
         table.ajax.reload();
       } else {
         utils.showAlert("error", "fas fa-times", "Failure! Something went wrong", response.message);
@@ -110,7 +115,12 @@ function deleteCustomCNAME() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert("success", "far fa-check-circle", "Custom CNAME deleted", domain + ": " + target);
+        utils.showAlert(
+          "success",
+          "far fa-check-circle",
+          "Custom CNAME deleted",
+          domain + ": " + target
+        );
         table.ajax.reload();
       } else {
         utils.showAlert("error", "fas fa-times", "Failure! Something went wrong", response.message);
