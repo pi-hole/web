@@ -95,7 +95,6 @@ function addCustomCNAME() {
     error: function () {
       utils.enableAll();
       utils.showAlert("error", "fas fa-times", "Error while adding custom CNAME record", "");
-      showAlert("error", "Error while adding this custom CNAME record");
     },
   });
 }
