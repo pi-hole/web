@@ -124,10 +124,6 @@ function deleteCustomCNAME() {
           "Custom CNAME deleted",
           domain + ": " + target
         );
-
-        // Clean up field values and reload table data
-        $("#domain").val("");
-        $("#target").val("");
         table.ajax.reload();
       } else {
         utils.showAlert("error", "fas fa-times", "Failure! Something went wrong", response.message);
