@@ -81,6 +81,10 @@ function addCustomDNS() {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "far fa-check-circle", "Custom DNS added", domain + ": " + ip);
+
+        // Clean up field values and reload table data
+        $("#domain").val("");
+        $("#id").val("");
         table.ajax.reload();
       } else {
         utils.showAlert("error", "fas fa-times", "Failure! Something went wrong", response.message);
@@ -109,6 +113,10 @@ function deleteCustomDNS() {
       utils.enableAll();
       if (response.success) {
         utils.showAlert("success", "far fa-check-circle", "Custom DNS deleted", domain + ": " + ip);
+
+        // Clean up field values and reload table data
+        $("#domain").val("");
+        $("#id").val("");
         table.ajax.reload();
       } else {
         utils.showAlert("error", "fas fa-times", "Failure! Something went wrong", response.message);
