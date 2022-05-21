@@ -172,7 +172,6 @@ function initTable() {
         case 4:
           statusIcon = "fa-times";
           break;
-        case 0:
         default:
           statusIcon = "fa-question-circle";
           break;
