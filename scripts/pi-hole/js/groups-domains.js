@@ -51,13 +51,66 @@ $(function () {
       $("#new_domain").val("");
       $("#wildcard_checkbox").prop("checked", false);
     }
+
+    clearTimeout(suggestTimeout);
+    $("#suggest_domains").hide();
   });
 
   $("#add2black, #add2white").on("click", addDomain);
 
+  var suggestTimeout;
+  $("#new_domain").on("input", function (e) {
+    hideSuggestDomains();
+    clearTimeout(suggestTimeout);
+    suggestTimeout = setTimeout(showSuggestDomains, 1000, e.target.value);
+  });
+
   utils.setBsSelectDefaults();
   getGroups();
 });
+
+function showSuggestDomains(value) {
+  function createButton(hostname) {
+    // Purposefully omit 'btn' class to save space on padding
+    return $('<button type="button" class="btn-link btn-block text-right">')
+      .append($("<i>").text(hostname))
+      .click(function () {
+        hideSuggestDomains();
+        newDomainEl.val(hostname);
+      });
+  }
+
+  var newDomainEl = $("#new_domain");
+  var suggestDomainEl = $("#suggest_domains");
+
+  try {
+    // URL is not supported in all browsers, but we are in a try-block so we can ignore it
+    // eslint-disable-next-line compat/compat
+    var parts = new URL(value).hostname.split(".");
+    var table = $("<table>");
+
+    for (var i = 0; i < parts.length - 1; ++i) {
+      var hostname = parts.slice(i).join(".");
+
+      table.append(
+        $("<tr>")
+          .append($('<td class="text-nowrap text-right">').text(i === 0 ? "Did you mean" : "or"))
+          .append($("<td>").append(createButton(hostname)))
+      );
+    }
+
+    suggestDomainEl.slideUp("fast", function () {
+      suggestDomainEl.html(table);
+      suggestDomainEl.slideDown("fast");
+    });
+  } catch {
+    hideSuggestDomains();
+  }
+}
+
+function hideSuggestDomains() {
+  $("#suggest_domains").slideUp("fast");
+}
 
 function initTable() {
   table = $("#domainsTable").DataTable({
