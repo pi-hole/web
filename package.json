@@ -33,7 +33,7 @@
   },
   "browserslist": [
     "defaults",
-    "Explorer >= 11"
+    "not IE 11"
   ],
   "prettier": {
     "arrowParens": "avoid",
