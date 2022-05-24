@@ -29,7 +29,6 @@ function eventsource() {
     return;
   }
 
-  // eslint-disable-next-line compat/compat
   var source = new EventSource("scripts/pi-hole/php/debug.php?&token=" + token + "&" + checked);
 
   // Reset and show field
