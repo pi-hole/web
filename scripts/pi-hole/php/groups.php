@@ -640,15 +640,9 @@ if ($_POST['action'] == 'get_groups') {
                 }
             }
 
-            if(isset($_POST['type']) && strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
+            if( ! ($_POST['type'] == '2' || $_POST['type'] == '3'))
             {
-                // Apply wildcard-style formatting
-                $domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
-            }
-
-            if($type === ListType::whitelist || $type === ListType::blacklist)
-            {
-                // If adding to the exact lists, we convert the domain lower case and check whether it is valid
+                // If not adding a RegEx, we convert the domain lower case and check whether it is valid
                 $domain = strtolower($domain);
                 $msg = "";
                 if(!validDomain($domain, $msg))
@@ -662,6 +656,12 @@ if ($_POST['action'] == 'get_groups') {
                         $errormsg = 'Domain ' . htmlentities(utf8_encode($domain)) . ' is not a valid domain because ' . $msg . '.';
                     throw new Exception($errormsg . '<br>Added ' . $added . " out of ". $total . " domains");
                 }
+            }
+
+            if(isset($_POST['type']) && strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
+            {
+                // Apply wildcard-style formatting
+                $domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
             }
 
             // First try to delete any occurrences of this domain if we're in
@@ -996,7 +996,7 @@ if ($_POST['action'] == 'get_groups') {
 
             if (!$stmt->execute()) {
                 if ($db->lastErrorCode() == 19) {
-                    // ErrorCode 19 is "Constraint violation", here the unique constraint of `address` 
+                    // ErrorCode 19 is "Constraint violation", here the unique constraint of `address`
                     //   is violated (https://www.sqlite.org/rescode.html#constraint).
                     // If the list is already in database, add to ignored list, but don't throw error
                     $ignored++;
