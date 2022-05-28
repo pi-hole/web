@@ -64,7 +64,18 @@ if (isset($_GET['getAllQueries']) && $auth)
 	{
 		$from = intval($_GET["from"]);
 		$until = intval($_GET["until"]);
-		$dbquery = "SELECT timestamp, type, domain, client, status, forward, reply_type, reply_time, dnssec FROM queries WHERE timestamp >= :from AND timestamp <= :until ";
+
+		// Use table "query_storage"
+		//   - replace domain ID with domain
+		//   - replace client ID with client name
+		//   - replace forward ID with forward destination
+		$dbquery = "SELECT timestamp, type,";
+		$dbquery .= " CASE typeof(domain) WHEN 'integer' THEN (SELECT domain FROM domain_by_id d WHERE d.id = q.domain) ELSE domain END domain,";
+		$dbquery .= " CASE typeof(client) WHEN 'integer' THEN (SELECT name FROM client_by_id c WHERE c.id = q.client) ELSE client END client,";
+		$dbquery .= " CASE typeof(forward) WHEN 'integer' THEN (SELECT forward FROM forward_by_id f WHERE f.id = q.forward) ELSE forward END forward,";
+		$dbquery .= " status, reply_type, reply_time, dnssec";
+		$dbquery .= " FROM query_storage q";
+		$dbquery .= " WHERE timestamp >= :from AND timestamp <= :until ";
 		if(isset($_GET["types"]))
 		{
 			$types = $_GET["types"];
@@ -93,7 +104,7 @@ if (isset($_GET['getAllQueries']) && $auth)
 
 		if (!is_bool($results)) {
 			$first = true;
-			while ($row = $results->fetchArray()) {
+			while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
 				// Insert a comma before the next record (except on the first one)
 				if (!$first) {
 					echo ",";
@@ -102,15 +113,16 @@ if (isset($_GET['getAllQueries']) && $auth)
 				}
 
 				// Format, encode, transform each field (if necessary).
-				$time = $row[0];
-				$query_type = getQueryTypeStr($row[1]); // Convert query type ID to name
-				$domain = utf8_encode(str_replace("~"," ",$row[2]));
-				$client = $row[3];
-				$status = $row[4];
-				$destination = utf8_encode($row[5]);
-				$reply_type = $row[6];
-				$reply_time = $row[7];
-				$dnssec = $row[8];
+				$time = $row["timestamp"];
+				$query_type = getQueryTypeStr($row["type"]); // Convert query type ID to name
+				$domain = utf8_encode(str_replace("~"," ",$row["domain"]));
+				$client = $row["client"];
+				$status = $row["status"];
+				$destination = utf8_encode($row["forward"]);
+				$reply_type = $row["reply_type"];
+				$reply_time = $row["reply_time"];
+				$dnssec = $row["dnssec"];
+				$client_id = $row["client_id"];
 
 				// Insert into array and output it in JSON format
 				echo json_encode([$time, $query_type, $domain, $client, $status, $destination, $reply_type, $reply_time, $dnssec]);
