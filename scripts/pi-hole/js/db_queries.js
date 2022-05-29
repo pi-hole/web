@@ -230,19 +230,19 @@ $(function () {
       var replyid = parseInt(data[6], 10);
       var dnssecStatus;
       switch (data[8]) {
-        case "1":
+        case 1:
           dnssecStatus = '<br><span class="text-green">SECURE';
           break;
-        case "2":
+        case 2:
           dnssecStatus = '<br><span class="text-orange">INSECURE';
           break;
-        case "3":
+        case 3:
           dnssecStatus = '<br><span class="text-red">BOGUS';
           break;
-        case "4":
+        case 4:
           dnssecStatus = '<br><span class="text-red">ABANDONED';
           break;
-        case "5":
+        case 5:
           dnssecStatus = '<br><span class="text-orange">UNKNOWN';
           break;
         default:
@@ -270,7 +270,7 @@ $(function () {
             replyid === 0
               ? "<span class='text-green'>OK</span> (sent to <br class='hidden-lg'>"
               : "<span class='text-green'>OK</span> (answered by <br class='hidden-lg'>";
-          fieldtext += (data.length > 5 && data[5] !== "N/A" ? data[5] : "") + dnssecStatus + ")";
+          fieldtext += (data.length > 5 && data[5] !== "N/A" ? data[5] : "") + ")" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
@@ -334,7 +334,7 @@ $(function () {
           break;
         case 14:
           fieldtext =
-            "<span class='text-green'>OK</span> <br class='hidden-lg'>(already forwarded)";
+            "<span class='text-green'>OK</span> <br class='hidden-lg'>(already forwarded)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
