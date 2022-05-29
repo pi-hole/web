@@ -71,7 +71,9 @@ if (isset($_GET['getAllQueries']) && $auth)
 		//   - replace forward ID with forward destination
 		$dbquery = "SELECT timestamp, type,";
 		$dbquery .= " CASE typeof(domain) WHEN 'integer' THEN (SELECT domain FROM domain_by_id d WHERE d.id = q.domain) ELSE domain END domain,";
-		$dbquery .= " CASE typeof(client) WHEN 'integer' THEN (SELECT name FROM client_by_id c WHERE c.id = q.client) ELSE client END client,";
+		$dbquery .= " CASE typeof(client) WHEN 'integer' THEN (";
+		$dbquery .= "   SELECT CASE TRIM(name) WHEN '' THEN c.ip ELSE c.name END name FROM client_by_id c WHERE c.id = q.client";
+		$dbquery .= " ) ELSE client END client,";
 		$dbquery .= " CASE typeof(forward) WHEN 'integer' THEN (SELECT forward FROM forward_by_id f WHERE f.id = q.forward) ELSE forward END forward,";
 		$dbquery .= " status, reply_type, reply_time, dnssec";
 		$dbquery .= " FROM query_storage q";
