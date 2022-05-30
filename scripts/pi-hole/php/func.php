@@ -475,7 +475,7 @@ function returnError($message = "", $json = true)
 
 function getQueryTypeStr($querytype)
 {
-    $qtypes = ["A (IPv4)", "AAAA (IPv6)", "ANY", "SRV", "SOA", "PTR", "TXT", "NAPTR", "MX", "DS", "RRSIG", "DNSKEY", "NS", "OTHER", "SVCB", "HTTPS"];
+    $qtypes = ["A", "AAAA", "ANY", "SRV", "SOA", "PTR", "TXT", "NAPTR", "MX", "DS", "RRSIG", "DNSKEY", "NS", "OTHER", "SVCB", "HTTPS"];
     $qtype = intval($querytype);
     if($qtype > 0 && $qtype <= count($qtypes))
         return $qtypes[$qtype-1];
