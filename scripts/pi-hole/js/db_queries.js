@@ -334,7 +334,8 @@ $(function () {
           break;
         case 14:
           fieldtext =
-            "<span class='text-green'>OK</span> <br class='hidden-lg'>(already forwarded)" + dnssecStatus;
+            "<span class='text-green'>OK</span> <br class='hidden-lg'>(already forwarded)" +
+            dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
