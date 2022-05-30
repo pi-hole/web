@@ -84,7 +84,7 @@ function handleAjaxError(xhr, textStatus) {
     alert(
       "An unknown error occurred while loading the data.\n" +
         xhr.responseText +
-        "\nCheck the server's log files (/var/log/lighttpd/error.log) for details.\n\nYou may need to increase PHP memory limit." +
+        "\nCheck the server's log files (/var/log/lighttpd/error-pihole.log) for details.\n\nYou may need to increase PHP memory limit." +
         "\n\nYou can find more info in pi-hole's FAQ:\nhttps://docs.pi-hole.net/main/faq/#error-while-loading-data-from-the-long-term-database"
     );
   }

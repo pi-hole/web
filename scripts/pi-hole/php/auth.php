@@ -9,7 +9,7 @@
 require_once('func.php');
 $ERRORLOG = getenv('PHP_ERROR_LOG');
 if (empty($ERRORLOG)) {
-    $ERRORLOG = '/var/log/lighttpd/error.log';
+    $ERRORLOG = '/var/log/lighttpd/error-pihole.log';
 
     if (!file_exists($ERRORLOG) || !is_writable($ERRORLOG)) {
 	    $ERRORLOG = '/var/log/apache2/error.log';
