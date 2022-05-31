@@ -13,7 +13,7 @@
 </div>
 <div>
     <input type="checkbox" id="upload">
-    <label for="upload">Upload debug log and provide token once finished</label>
+    <label for="upload">Upload debug log and provide token (shown at the end of the report) once finished</label>
 </div>
 <p>Once you click this button a debug log will be generated and can automatically be uploaded if we detect a working internet connection.</p>
 <button type="button" id="debugBtn" class="btn btn-lg btn-primary btn-block">Generate debug log</button>
