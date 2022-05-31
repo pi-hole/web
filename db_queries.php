@@ -180,6 +180,7 @@
                         <th>Domain</th>
                         <th>Client</th>
                         <th>Status</th>
+                        <th>Reply</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -190,6 +191,7 @@
                         <th>Domain</th>
                         <th>Client</th>
                         <th>Status</th>
+                        <th>Reply</th>
                         <th>Action</th>
                     </tr>
                 </tfoot>
