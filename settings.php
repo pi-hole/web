@@ -76,10 +76,16 @@ if (isset($setupVars["PIHOLE_INTERFACE"])) {
 } else {
     $piHoleInterface = "unknown";
 }
-if (isset($setupVars["IPV4_ADDRESS"])) {
-    $piHoleIPv4 = $setupVars["IPV4_ADDRESS"];
+
+// get the gateway address for the default route on the Pi-hole interface
+if ($piHoleInterface !== "unknown") {
+$IPv4GW=shell_exec("ip -4 route | grep default | grep '${piHoleInterface}' | cut -d ' ' -f 3");
 } else {
-    $piHoleIPv4 = "unknown";
+    $IPv4GW = "unknown";
+}
+// if the route did not return anything
+if (empty($IPv4GW)) {
+    $IPv4GW = "unknown";
 }
 
 // DNS settings
@@ -432,8 +438,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                     } else {
                         $DHCP = false;
                         // Try to guess initial settings
-                        if ($piHoleIPv4 !== "unknown") {
-                            $DHCPdomain = explode(".", $piHoleIPv4);
+                        if ($IPv4GW !== "unknown") {
+                            $DHCPdomain = explode(".", $IPv4GW);
                             $DHCPstart = $DHCPdomain[0] . "." . $DHCPdomain[1] . "." . $DHCPdomain[2] . ".201";
                             $DHCPend = $DHCPdomain[0] . "." . $DHCPdomain[1] . "." . $DHCPdomain[2] . ".251";
                             $DHCProuter = $DHCPdomain[0] . "." . $DHCPdomain[1] . "." . $DHCPdomain[2] . ".1";
