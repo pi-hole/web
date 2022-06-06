@@ -437,10 +437,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                         $DHCP = false;
                         // Try to guess initial settings
                         if ($IPv4GW !== "unknown") {
-                            $DHCPdomain = explode(".", $IPv4GW);
-                            $DHCPstart = $DHCPdomain[0] . "." . $DHCPdomain[1] . "." . $DHCPdomain[2] . ".201";
-                            $DHCPend = $DHCPdomain[0] . "." . $DHCPdomain[1] . "." . $DHCPdomain[2] . ".251";
-                            $DHCProuter = $DHCPdomain[0] . "." . $DHCPdomain[1] . "." . $DHCPdomain[2] . ".1";
+                            $DHCPparts = explode(".", $IPv4GW);
+                            $DHCPstart = $DHCPparts[0] . "." . $DHCPparts[1] . "." . $DHCPparts[2] . ".201";
+                            $DHCPend = $DHCPparts[0] . "." . $DHCPparts[1] . "." . $DHCPparts[2] . ".251";
+                            $DHCProuter = $IPv4GW;
                         } else {
                             $DHCPstart = "";
                             $DHCPend = "";
