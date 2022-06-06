@@ -80,10 +80,8 @@ if (isset($setupVars["PIHOLE_INTERFACE"])) {
 // get the gateway address for the default route on the Pi-hole interface
 if ($piHoleInterface !== "unknown") {
     $IPv4GW=shell_exec("ip -4 route | grep default | grep '${piHoleInterface}' | cut -d ' ' -f 3");
-} else {
-    $IPv4GW = "unknown";
 }
-// if the route did not return anything
+// if the route did not return anything or $piHoleInterface is unknown
 if (empty($IPv4GW)) {
     $IPv4GW = "unknown";
 }
