@@ -9,6 +9,7 @@
 const DEFAULT_FTLCONFFILE = "/etc/pihole/pihole-FTL.conf";
 const DEFAULT_FTL_IP = "127.0.0.1";
 const DEFAULT_FTL_PORT = 4711;
+const DEFAULT_FTL_PORTFILE = "/run/pihole-FTL.port";
 
 function piholeFTLConfig($piholeFTLConfFile = DEFAULT_FTLCONFFILE, $force = false) {
     static $piholeFTLConfig;
@@ -30,7 +31,7 @@ function connectFTL($address, $port) {
     if ($address == DEFAULT_FTL_IP) {
         $config = piholeFTLConfig();
         // Read port
-        $portfileName = isset($config['PORTFILE']) ? $config['PORTFILE'] : '';
+        $portfileName = isset($config['PORTFILE']) ? $config['PORTFILE'] : DEFAULT_FTL_PORTFILE;
         if ($portfileName != '') {
             $portfileContents = file_get_contents($portfileName);
             if (is_numeric($portfileContents)) {
@@ -79,9 +80,9 @@ function getResponseFTL($socket) {
 }
 
 function disconnectFTL($socket) {
-  if (is_resource($socket)) {
-    fclose($socket);
-  }
+    if (is_resource($socket)) {
+        fclose($socket);
+    }
 }
 
 function callFTLAPI($request, $FTL_IP = DEFAULT_FTL_IP, $port = DEFAULT_FTL_PORT) {
