@@ -8,6 +8,7 @@
 require "scripts/pi-hole/php/header.php";
 require "scripts/pi-hole/php/savesettings.php";
 require_once "scripts/pi-hole/php/FTL.php";
+require_once "scripts/pi-hole/php/func.php";
 // Reread ini file as things might have been changed
 // DEFAULT_FTLCONFFILE is set in "scripts/pi-hole/php/FTL.php";
 $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
@@ -77,12 +78,11 @@ if (isset($setupVars["PIHOLE_INTERFACE"])) {
     $piHoleInterface = "unknown";
 }
 
-// get the gateway address for the default route on the Pi-hole interface
-if ($piHoleInterface !== "unknown") {
-    $IPv4GW=shell_exec("ip -4 route | grep default | grep '${piHoleInterface}' | cut -d ' ' -f 3");
-}
-// if the route did not return anything or $piHoleInterface is unknown
-if (empty($IPv4GW)) {
+// get the gateway IP
+$IPv4GW=getGateway()["ip"];
+
+// if the default gateway address is unknown or FTL is not running
+if ($IPv4GW == "0.0.0.0"|| $IPv4GW == -1) {
     $IPv4GW = "unknown";
 }
 
