@@ -8,7 +8,6 @@
 require "scripts/pi-hole/php/header.php";
 require "scripts/pi-hole/php/savesettings.php";
 require_once "scripts/pi-hole/php/FTL.php";
-require_once "scripts/pi-hole/php/func.php";
 // Reread ini file as things might have been changed
 // DEFAULT_FTLCONFFILE is set in "scripts/pi-hole/php/FTL.php";
 $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
