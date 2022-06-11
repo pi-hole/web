@@ -544,4 +544,15 @@ function piholeStatus() {
 
     return $ret;
 }
+
+//Returns the default gateway address and interface
+function getGateway() {
+    $gateway= callFTLAPI("gateway");
+    if (array_key_exists("FTLnotrunning", $gateway)) {
+      $ret = array("ip" => -1);
+    } else {
+      $ret = array_combine(["ip", "iface"], explode(" ", $gateway[0]));  
+    }
+    return $ret;
+}
 ?>

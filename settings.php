@@ -76,10 +76,13 @@ if (isset($setupVars["PIHOLE_INTERFACE"])) {
 } else {
     $piHoleInterface = "unknown";
 }
-if (isset($setupVars["IPV4_ADDRESS"])) {
-    $piHoleIPv4 = $setupVars["IPV4_ADDRESS"];
-} else {
-    $piHoleIPv4 = "unknown";
+
+// get the gateway IP
+$IPv4GW=getGateway()["ip"];
+
+// if the default gateway address is unknown or FTL is not running
+if ($IPv4GW == "0.0.0.0"|| $IPv4GW == -1) {
+    $IPv4GW = "unknown";
 }
 
 // DNS settings
@@ -432,11 +435,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                     } else {
                         $DHCP = false;
                         // Try to guess initial settings
-                        if ($piHoleIPv4 !== "unknown") {
-                            $DHCPdomain = explode(".", $piHoleIPv4);
-                            $DHCPstart = $DHCPdomain[0] . "." . $DHCPdomain[1] . "." . $DHCPdomain[2] . ".201";
-                            $DHCPend = $DHCPdomain[0] . "." . $DHCPdomain[1] . "." . $DHCPdomain[2] . ".251";
-                            $DHCProuter = $DHCPdomain[0] . "." . $DHCPdomain[1] . "." . $DHCPdomain[2] . ".1";
+                        if ($IPv4GW !== "unknown") {
+                            $DHCPparts = explode(".", $IPv4GW);
+                            $DHCPstart = $DHCPparts[0] . "." . $DHCPparts[1] . "." . $DHCPparts[2] . ".201";
+                            $DHCPend = $DHCPparts[0] . "." . $DHCPparts[1] . "." . $DHCPparts[2] . ".251";
+                            $DHCProuter = $IPv4GW;
                         } else {
                             $DHCPstart = "";
                             $DHCPend = "";
