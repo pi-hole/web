@@ -640,7 +640,7 @@ if ($_POST['action'] == 'get_groups') {
                 }
             }
 
-            if( ! ($_POST['type'] == '2' || $_POST['type'] == '3'))
+            if( $_POST['type'] != '2' && $_POST['type'] != '3')
             {
                 // If not adding a RegEx, we convert the domain lower case and check whether it is valid
                 $domain = strtolower($domain);
