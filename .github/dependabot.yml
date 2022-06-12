@@ -21,3 +21,5 @@ updates:
     versions:
     - 10.2.3
     - 10.2.4
+  reviewers:
+    - "pi-hole/web-maintainers"
