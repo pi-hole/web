@@ -384,7 +384,7 @@ if (isset($_GET['getGraphData']) && $auth)
 	$data = array_merge($data, $result);
 }
 
-if (isset($_GET['status']))
+if (isset($_GET['status']) && $auth)
 {
 	$extra = ";";
 	if(isset($_GET["ignore"]) && $_GET["ignore"] === 'DNSMASQ_WARN')
