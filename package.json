@@ -28,7 +28,7 @@
     "eslint-plugin-compat": "^4.0.2",
     "postcss": "^8.4.14",
     "postcss-cli": "^9.1.0",
-    "prettier": "2.6.2",
+    "prettier": "2.7.1",
     "xo": "^0.50.0"
   },
   "browserslist": [
