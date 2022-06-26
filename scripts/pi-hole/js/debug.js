@@ -39,8 +39,9 @@ function eventsource() {
     "message",
     function (e) {
       ta.append(e.data);
-      // scroll page to the bottom (to the last received data)
-      $("html, body").scrollTop($(document).height());
+      // scroll to the bottom of #output (most recent data)
+      var taBottom = ta.offset().top + ta.outerHeight(true);
+      $("html, body").scrollTop(taBottom - $(window).height());
     },
     false
   );
