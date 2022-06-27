@@ -137,9 +137,8 @@ if(!function_exists('hash_equals')) {
  * and returns output of that command as a string.
  *
  * @param $argument_string String of arguments to run pihole with.
- * @param $error_on_failure If true, a warning is raised if command execution fails. Defaults to true.
  */
-function pihole_execute($argument_string, $error_on_failure = true) {
+function pihole_execute($argument_string) {
     $escaped = escapeshellcmd($argument_string);
     $output = null;
     $return_status = -1;
@@ -551,7 +550,7 @@ function getGateway() {
     if (array_key_exists("FTLnotrunning", $gateway)) {
       $ret = array("ip" => -1);
     } else {
-      $ret = array_combine(["ip", "iface"], explode(" ", $gateway[0]));  
+      $ret = array_combine(["ip", "iface"], explode(" ", $gateway[0]));
     }
     return $ret;
 }
