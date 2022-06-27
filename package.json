@@ -41,7 +41,10 @@
     "endOfLine": "auto",
     "printWidth": 100,
     "singleQuote": false,
-    "trailingComma": "es5"
+    "trailingComma": "es5",
+    "options": {
+      "editorconfig": true
+    }
   },
   "xo": {
     "envs": [
