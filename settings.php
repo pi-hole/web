@@ -43,15 +43,6 @@ if (isset($_POST["submit"])) {
     <?php }
 } ?>
 
-<?php if (isset($debug)) { ?>
-    <div id="alDebug" class="alert alert-warning alert-dismissible fade in" role="alert">
-        <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-        </button>
-        <h4><i class="icon fa fa-exclamation-triangle"></i> Debug</h4>
-        <pre><?php print_r(htmlentities($_POST)); ?></pre>
-    </div>
-<?php } ?>
-
 <?php if (strlen($success) > 0) { ?>
     <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert">
         <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
