@@ -6,5 +6,5 @@ linters:
 
 files:
   ignore:
-    - '/scripts/vendor/**'
-    - '/style/vendor/**'
+    - 'scripts/vendor/*'
+    - 'style/vendor/*'
