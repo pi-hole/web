@@ -1,0 +1,4 @@
+---
+linters:
+  yamllint:
+  remarklint:
