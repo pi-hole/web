@@ -2,11 +2,9 @@
 linters:
   yamllint:
     ignore:
-      - '/scripts/vendor/*'
-      - '/styles/vendor/*'
   remarklint:
 
 files:
   ignore:
-    - '/scripts/vendor/**/*'
-    - '/style/vendor/**/*'
+    - '/scripts/vendor/**'
+    - '/style/vendor/**'
