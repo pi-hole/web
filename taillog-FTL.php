@@ -9,7 +9,7 @@
 ?>
 <!-- Title -->
 <div class="page-header">
-    <h1>Output the last lines of the pihole-FTL.log file (live)</h1>
+    <h1>Output the last lines of the FTL.log file (live)</h1>
 </div>
 
 <div>
