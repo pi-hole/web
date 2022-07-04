@@ -158,9 +158,9 @@ if (isset($_GET['topClients']) && $auth)
 	{
 		$limit = "WHERE timestamp <= :until";
 	}
-    $dbquery= "Select CASE typeof(client) WHEN 'integer' THEN (";
+    $dbquery = "SELECT CASE typeof(client) WHEN 'integer' THEN (";
     $dbquery .= " SELECT CASE TRIM(name) WHEN '' THEN c.ip ELSE c.name END name FROM client_by_id c WHERE c.id = q.client)";
-    $dbquery .= " ELSE client END client, count(client) FROM query_storage q ".$limit." GROUP by client order by count(client) desc limit 20";
+    $dbquery .= " ELSE client END client, count(client) FROM query_storage q ".$limit." GROUP BY client ORDER BY count(client) DESC LIMIT 20";
 
 	$stmt = $db->prepare($dbquery);
 	$stmt->bindValue(":from", intval($_GET['from']), SQLITE3_INTEGER);
