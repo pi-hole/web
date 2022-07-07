@@ -20,6 +20,23 @@ var datepickerManuallySelected = false;
 
 var dateformat = "MMMM Do YYYY, HH:mm";
 
+var replyTypes = [
+  "N/A",
+  "NODATA",
+  "NXDOMAIN",
+  "CNAME",
+  "IP",
+  "DOMAIN",
+  "RRNAME",
+  "SERVFAIL",
+  "REFUSED",
+  "NOTIMP",
+  "upstream error",
+  "DNSSEC",
+  "NONE",
+  "BLOB",
+];
+
 // Do we want to filter queries?
 var GETDict = {};
 window.location.search
@@ -84,7 +101,7 @@ function handleAjaxError(xhr, textStatus) {
     alert(
       "An unknown error occurred while loading the data.\n" +
         xhr.responseText +
-        "\nCheck the server's log files (/var/log/lighttpd/error.log) for details.\n\nYou may need to increase PHP memory limit." +
+        "\nCheck the server's log files (/var/log/lighttpd/error-pihole.log) for details.\n\nYou may need to increase PHP memory limit." +
         "\n\nYou can find more info in pi-hole's FAQ:\nhttps://docs.pi-hole.net/main/faq/#error-while-loading-data-from-the-long-term-database"
     );
   }
@@ -146,6 +163,10 @@ function getQueryTypes() {
     queryType.push(15);
   }
 
+  if ($("#type_special_domain").prop("checked")) {
+    queryType.push(16);
+  }
+
   return queryType.join(",");
 }
 
@@ -184,7 +205,7 @@ function refreshTableData() {
   var APIstring = "api_db.php?getAllQueries&from=" + from + "&until=" + until;
   // Check if query type filtering is enabled
   var queryType = getQueryTypes();
-  if (queryType !== "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15") {
+  if (queryType !== "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16") {
     APIstring += "&types=" + queryType;
   }
 
@@ -206,6 +227,34 @@ $(function () {
 
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
+      var replyid = parseInt(data[6], 10);
+      var dnssecStatus;
+      switch (data[8]) {
+        case 1:
+          dnssecStatus = '<br><span class="text-green">SECURE';
+          break;
+        case 2:
+          dnssecStatus = '<br><span class="text-orange">INSECURE';
+          break;
+        case 3:
+          dnssecStatus = '<br><span class="text-red">BOGUS';
+          break;
+        case 4:
+          dnssecStatus = '<br><span class="text-red">ABANDONED';
+          break;
+        case 5:
+          dnssecStatus = '<br><span class="text-orange">UNKNOWN';
+          break;
+        default:
+          // No DNSSEC
+          dnssecStatus = "";
+      }
+
+      if (dnssecStatus.length > 0) {
+        if (replyid === 7) dnssecStatus += " (refused upstream)";
+        dnssecStatus += "</span>";
+      }
+
       var fieldtext,
         buttontext = "",
         blocked = false;
@@ -218,14 +267,16 @@ $(function () {
           break;
         case 2:
           fieldtext =
-            "<span class='text-green'>OK</span> (forwarded to <br class='hidden-lg'>" +
-            (data.length > 5 && data[5] !== "N/A" ? data[5] : "") +
-            ")";
+            replyid === 0
+              ? "<span class='text-green'>OK</span> (sent to <br class='hidden-lg'>"
+              : "<span class='text-green'>OK</span> (answered by <br class='hidden-lg'>";
+          fieldtext += (data.length > 5 && data[5] !== "N/A" ? data[5] : "") + ")" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case 3:
-          fieldtext = "<span class='text-green'>OK</span> <br class='hidden-lg'>(cache)";
+          fieldtext =
+            "<span class='text-green'>OK</span> <br class='hidden-lg'>(cache)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
@@ -256,7 +307,8 @@ $(function () {
           blocked = true;
           break;
         case 9:
-          fieldtext = "<span class='text-red'>Blocked (gravity, CNAME)</span>";
+          fieldtext =
+            "<span class='text-red'>Blocked <br class='hidden-lg'>(gravity, CNAME)</span>";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           blocked = true;
@@ -283,7 +335,8 @@ $(function () {
           break;
         case 14:
           fieldtext =
-            "<span class='text-green'>OK</span> <br class='hidden-lg'>(already forwarded)";
+            "<span class='text-green'>OK</span> <br class='hidden-lg'>(already forwarded)" +
+            dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
@@ -292,17 +345,37 @@ $(function () {
             "<span class='text-orange'>Blocked <br class='hidden-lg'>(database is busy)</span>";
           blocked = true;
           break;
+        case 16:
+          fieldtext =
+            "<span class='text-orange'>Blocked <br class='hidden-lg'>(special domain)</span>";
+          blocked = true;
+          break;
         default:
-          fieldtext = "Unknown";
+          fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
       }
+
+      // Cannot block internal queries of this type
+      if ((data[1] === "DNSKEY" || data[1] === "DS") && data[3] === "pi.hole") buttontext = "";
 
       $(row).addClass(blocked === true ? "blocked-row" : "allowed-row");
       if (localStorage && localStorage.getItem("colorfulQueryLog_chkbox") === "true") {
         $(row).addClass(blocked === true ? "text-red" : "text-green");
       }
 
+      // Check for existence of sixth column and display only if not Pi-holed
+      var replytext =
+        replyid >= 0 && replyid < replyTypes.length ? replyTypes[replyid] : "? (" + replyid + ")";
+
+      replytext += '<input type="hidden" name="id" value="' + replyid + '">';
+
       $("td:eq(4)", row).html(fieldtext);
-      $("td:eq(5)", row).html(buttontext);
+      $("td:eq(5)", row).html(replytext);
+      $("td:eq(6)", row).html(buttontext);
+
+      // Show response time only when reply is not N/A
+      if (data.length > 7 && replyid !== 0) {
+        $("td:eq(5)", row).append(" (" + (1000 * data[7]).toFixed(1) + "ms)");
+      }
 
       // Substitute domain by "." if empty
       var domain = data[2];
@@ -334,7 +407,7 @@ $(function () {
     order: [[0, "desc"]],
     columns: [
       {
-        width: "15%",
+        width: "12%",
         render: function (data, type) {
           if (type === "display") {
             return moment
@@ -345,11 +418,12 @@ $(function () {
           return data;
         },
       },
-      { width: "10%" },
-      { width: "40%" },
-      { width: "20%", type: "ip-address" },
-      { width: "10%" },
-      { width: "5%" },
+      { width: "9%" },
+      { width: "36%" },
+      { width: "10%", type: "ip-address" },
+      { width: "15%" },
+      { width: "9%" },
+      { width: "9%" },
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],

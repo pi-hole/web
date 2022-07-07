@@ -89,7 +89,7 @@ function archive_restore_table($file, $table, $flush=false)
 	{
 		$tableExists = $db->querySingle("SELECT name FROM sqlite_master WHERE type='table' AND name='".$table."';");
 		if ($tableExists)
-		{			
+		{
 			$db->exec("DELETE FROM \"".$table."\"");
 			array_push($flushed_tables, $table);
 		}
@@ -354,6 +354,7 @@ if(isset($_POST["action"]))
 		}
 
 		$fullfilename = sys_get_temp_dir()."/".$filename;
+
 		if(!move_uploaded_file($source, $fullfilename))
 		{
 			die("Failed moving ".htmlentities($source)." to ".htmlentities($fullfilename));
@@ -603,7 +604,10 @@ else
 	$hostname = gethostname() ? str_replace(".", "_", gethostname())."-" : "";
 	$tarname = "pi-hole-".$hostname."teleporter_".date("Y-m-d_H-i-s").".tar";
 	$filename = $tarname.".gz";
-	$archive_file_name = sys_get_temp_dir() ."/". $tarname;
+    $archive_file_name = tempnam(sys_get_temp_dir(), 'pihole_teleporter_'); //create a random file name in the system's tmp dir for the intermediat archive
+    unlink($archive_file_name); //remove intermediate file created by tempnam()
+    $archive_file_name .= ".tar"; // Append ".tar" extension
+
 	$archive = new PharData($archive_file_name);
 
 	if ($archive->isWritable() !== TRUE) {
@@ -631,7 +635,7 @@ else
 	archive_add_file("/etc/","hosts","etc/");
 	archive_add_directory("/etc/dnsmasq.d/","dnsmasq.d/");
 
-	$archive->compress(Phar::GZ); // Creates a gziped copy
+	$archive->compress(Phar::GZ); // Creates a gzipped copy
 	unlink($archive_file_name); // Unlink original tar file as it is not needed anymore
 	$archive_file_name .= ".gz"; // Append ".gz" extension to ".tar"
 

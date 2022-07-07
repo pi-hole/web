@@ -569,7 +569,7 @@ if($auth) {
                     <!-- Tail pihole.log -->
                     <li<?php if($scriptname === "taillog.php"){ ?> class="active"<?php } ?>>
                         <a href="taillog.php">
-                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" x="0" y="0" width="200" height="200" viewBox="0 0 200 200" class="svg-inline--fa custom-menu-icon fa-w-20 fa-fw menu-icon">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" preserveAspectRatio="xMidYMid meet" height="14" viewBox="0 0 200 200" class="svg-inline--fa custom-menu-icon fa-w-20 fa-fw menu-icon">
                                 <g>
                                     <linearGradient id="svg_1_1_" gradientUnits="userSpaceOnUse" x1="-317.0903" y1="393.5137" x2="-316.0898" y2="393.5137" gradientTransform="matrix(94.8803 0 0 -56.7359 30129.9492 22362.8691)">
                                         <stop offset="0.051" style="stop-color:currentColor;stop-opacity:0.6"/>
@@ -585,17 +585,17 @@ if($auth) {
                             Tail pihole.log
                         </a>
                     </li>
-                    <!-- Tail pihole-FTL.log -->
+                    <!-- Tail FTL.log -->
                     <li<?php if($scriptname === "taillog-FTL.php"){ ?> class="active"<?php } ?>>
                         <a href="taillog-FTL.php">
-                            <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="400" height="340" viewBox="0 0 400 340" class="svg-inline--fa custom-menu-icon fa-w-20 fa-fw menu-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" preserveAspectRatio="xMidYMid meet" height="14" viewBox="0 0 400 340" class="svg-inline--fa custom-menu-icon fa-w-20 fa-fw menu-icon">
                                 <g fill="currentColor">
                                     <path opacity=".6" d="M42.315 11h111.078l-7.381 31.378H34.898L42.315 11z"/>
                                     <path d="M237.368 42.207q-13.098 62.242-26.23 124.486h-37.354q13.135-62.244 26.23-124.486h-39.652l7.381-31.174h132.055l-7.639 31.174h-54.791zm87.03 94.016L351.124 11h-37.18q-16.584 77.846-33.199 155.693h103.356v-30.47h-59.703zM32.428 67.509l-22.316 99.184h31.807l16.068-67.908h59.41l7.381-31.326-92.35.05z"/>
                                     <path opacity=".6" d="M10 186.2a283.868 283.868 0 0 1 42.976-2.992c26.697 0 44.014 4.806 57.58 15.023 14.604 10.853 23.782 28.17 23.782 52.991 0 26.914-9.798 45.487-23.364 56.96-14.806 12.31-37.348 18.154-64.882 18.154A276.442 276.442 0 0 1 10 324.29V186.2zm31.922 114.726a57.564 57.564 0 0 0 11.054.636c28.79.201 47.564-15.659 47.564-49.24.217-29.208-16.899-44.65-44.231-44.65a66.665 66.665 0 0 0-14.387 1.241v92.013zm113.283 24.015V184.325h37.209l29.146 51.595a408.098 408.098 0 0 1 22.945 48.06h.62a523.847 523.847 0 0 1-2.697-58.618v-41.037h29.208V324.94h-33.394l-30.046-54.262a523.459 523.459 0 0 1-24.402-49.611l-.62.201c.821 18.605 1.24 38.402 1.24 61.348v42.355l-29.209-.03zm145.004-32.759a81.099 81.099 0 0 0 35.27 8.76c14.605 0 22.326-6.047 22.326-15.225 0-8.76-6.682-13.767-23.581-19.829-23.364-8.123-38.604-21.069-38.604-41.518 0-23.984 20.03-42.355 53.208-42.355a86.246 86.246 0 0 1 35.89 7.1l-7.1 25.658a66.804 66.804 0 0 0-29.456-6.666c-13.783 0-20.45 6.201-20.45 13.55 0 8.976 7.923 12.945 26.077 19.829 24.806 9.178 36.511 22.108 36.511 41.937 0 23.58-18.155 43.611-56.743 43.611-16.077 0-31.921-4.186-39.86-8.558l6.512-26.294z"/>
                                 </g>
                             </svg>
-                            Tail pihole-FTL.log
+                            Tail FTL.log
                         </a>
                     </li>
                     <!-- Generate debug log -->

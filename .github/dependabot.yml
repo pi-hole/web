@@ -21,3 +21,15 @@ updates:
     versions:
     - 10.2.3
     - 10.2.4
+  reviewers:
+    - "pi-hole/web-maintainers"
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: saturday
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: devel
+  reviewers:
+    - "pi-hole/web-maintainers"

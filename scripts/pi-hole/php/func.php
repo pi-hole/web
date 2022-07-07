@@ -137,9 +137,8 @@ if(!function_exists('hash_equals')) {
  * and returns output of that command as a string.
  *
  * @param $argument_string String of arguments to run pihole with.
- * @param $error_on_failure If true, a warning is raised if command execution fails. Defaults to true.
  */
-function pihole_execute($argument_string, $error_on_failure = true) {
+function pihole_execute($argument_string) {
     $escaped = escapeshellcmd($argument_string);
     $output = null;
     $return_status = -1;
@@ -286,7 +285,7 @@ function deleteAllCustomDNSEntries($reload="")
             $reload = $_REQUEST['reload'];
 
         $existingEntries = getCustomDNSEntries();
-        // passing false to pihole_execute stops pihole from reloading after each enty has been deleted
+        // passing false to pihole_execute stops pihole from reloading after each entry has been deleted
         foreach ($existingEntries as $entry) {
             pihole_execute("-a removecustomdns ".$entry->ip." ".$entry->domain." ".$reload);
         }
@@ -438,7 +437,7 @@ function deleteAllCustomCNAMEEntries($reload="")
             $reload = $_REQUEST['reload'];
 
         $existingEntries = getCustomCNAMEEntries();
-        // passing false to pihole_execute stops pihole from reloading after each enty has been deleted
+        // passing false to pihole_execute stops pihole from reloading after each entry has been deleted
         foreach ($existingEntries as $entry) {
             pihole_execute("-a removecustomcname ".$entry->domain." ".$entry->target." ".$reload);
         }
@@ -475,12 +474,43 @@ function returnError($message = "", $json = true)
 
 function getQueryTypeStr($querytype)
 {
-    $qtypes = ["A (IPv4)", "AAAA (IPv6)", "ANY", "SRV", "SOA", "PTR", "TXT", "NAPTR", "MX", "DS", "RRSIG", "DNSKEY", "NS", "OTHER", "SVCB", "HTTPS"];
+    $qtypes = ["A", "AAAA", "ANY", "SRV", "SOA", "PTR", "TXT", "NAPTR", "MX", "DS", "RRSIG", "DNSKEY", "NS", "OTHER", "SVCB", "HTTPS"];
     $qtype = intval($querytype);
     if($qtype > 0 && $qtype <= count($qtypes))
         return $qtypes[$qtype-1];
     else
         return "TYPE".($qtype - 100);
+}
+
+// Functions to return Alert messages (success, error, warning) in JSON format.
+// Used in multiple pages.
+
+// Return Success message in JSON format
+function JSON_success($message = null) {
+    header('Content-type: application/json');
+    echo json_encode(array('success' => true, 'message' => $message));
+}
+
+// Return Error message in JSON format
+function JSON_error($message = null) {
+    header('Content-type: application/json');
+    $response = array('success' => false, 'message' => $message);
+    if (isset($_POST['action'])) {
+        array_push($response, array('action' => $_POST['action']));
+    }
+    echo json_encode($response);
+}
+
+// Return Warning message in JSON format.
+// - sends "success", because it wasn't a failure.
+// - sends "warning" to use the correct alert type.
+function JSON_warning($message = null) {
+    header('Content-type: application/json');
+    echo json_encode(array(
+        'success' => true,
+        'warning' => true,
+        'message' => $message,
+    ));
 }
 
 // Returns an integer representing pihole blocking status
@@ -511,6 +541,17 @@ function piholeStatus() {
         $ret = -2;
     }
 
+    return $ret;
+}
+
+//Returns the default gateway address and interface
+function getGateway() {
+    $gateway= callFTLAPI("gateway");
+    if (array_key_exists("FTLnotrunning", $gateway)) {
+      $ret = array("ip" => -1);
+    } else {
+      $ret = array_combine(["ip", "iface"], explode(" ", $gateway[0]));
+    }
     return $ret;
 }
 ?>

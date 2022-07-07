@@ -620,12 +620,12 @@ li:not(.menu-open) .treeview-menu .warning-count {
   }
   #domainsTable tr {
     display: flex;
-    padding: 15px 0;
+    padding: 5px 0;
     flex-wrap: wrap;
     box-sizing: border-box;
     align-items: end;
     border: 1px solid rgba(127, 127, 127, 0.4);
-    margin: 10px 0;
+    margin: 15px 0;
     border-radius: 6px;
   }
   #domainsTable td {
@@ -634,14 +634,23 @@ li:not(.menu-open) .treeview-menu .warning-count {
     display: block;
     border: none;
     box-sizing: border-box;
-    order: 2;
+    order: 3;
     text-align: right;
     padding: 4px 8px;
   }
-  #domainsTable td:nth-child(2n) {
+  #domainsTable td:nth-child(2n + 1) {
     width: calc(100% - 120px);
   }
-  #domainsTable td:first-child {
+  #domainsTable td:nth-child(1) {
+    width: 40px;
+    order: 0;
+    text-align: left;
+    padding: 5px 0 30px;
+    border-bottom: 1px solid rgba(127, 127, 127, 0.25);
+    margin-bottom: 5px;
+    flex: 0 0 auto;
+  }
+  #domainsTable td:nth-child(2) {
     width: calc(100% - 40px);
     order: 1;
     text-align: left;
@@ -651,13 +660,13 @@ li:not(.menu-open) .treeview-menu .warning-count {
   }
   #domainsTable td:last-child {
     width: 40px;
-    order: 1;
+    order: 0;
     padding-bottom: 10px;
     border-bottom: 1px solid rgba(127, 127, 127, 0.25);
     margin-bottom: 5px;
   }
-  #domainsTable td:nth-child(2),
-  #domainsTable td:nth-child(4) {
+  #domainsTable td:nth-child(3),
+  #domainsTable td:nth-child(5) {
     text-align: left;
   }
   #domainsTable td::before {
@@ -665,11 +674,15 @@ li:not(.menu-open) .treeview-menu .warning-count {
     font-weight: bold;
     font-size: smaller;
   }
-  #domainsTable td:nth-child(2)::before {
+  #domainsTable td:nth-child(3)::before {
     content: "Type:";
   }
-  #domainsTable td:nth-child(4)::before {
+  #domainsTable td:nth-child(5)::before {
     content: "Comment:";
+  }
+  #domainsTable tr.selected td.select-checkbox::after,
+  #domainsTable tr.selected th.select-checkbox::after {
+    transform: rotate(45deg) translate(5px, 1px);
   }
 }
 @media screen and (min-width: 767px) {
