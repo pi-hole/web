@@ -1,6 +1,7 @@
 ---
 linters:
   yamllint:
+    config: ./.yamllint.conf
   remarklint:
 files:
   ignore:
