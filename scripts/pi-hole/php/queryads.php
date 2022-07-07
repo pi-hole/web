@@ -27,9 +27,8 @@ if(isset($_GET["domain"]))
 {
     // Is this a valid domain?
     $url = idn_to_ascii($_GET["domain"]);
-    if(!validDomain($url))
-    {
-        echoEvent("$url is an invalid domain!");
+    if (!validDomain($url)) {
+        echoEvent(htmlentities($url)." is an invalid domain!");
         die();
     }
 }
