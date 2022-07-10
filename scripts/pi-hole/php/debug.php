@@ -49,11 +49,20 @@ function echoEvent($datatext) {
     }
 }
 
+// Execute "pihole" using Web option
+$command = "export TERM=dumb && sudo pihole -d -w";
+
+// Add auto-upload option
 if (isset($_GET["upload"])) {
-    $proc = popen("export TERM=dumb && sudo pihole -d -a -w", "r");
-} else {
-    $proc = popen("export TERM=dumb && sudo pihole -d -w", "r");
+    $command .= " -a";
 }
+
+// Execute database integrity_check
+if (isset($_GET["dbcheck"])) {
+    $command .= " -c";
+}
+
+$proc = popen($command, "r");
 
 while (!feof($proc)) {
     echoEvent(fread($proc, 4096));
