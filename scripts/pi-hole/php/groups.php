@@ -877,12 +877,29 @@ if ($_POST['action'] == 'get_groups') {
     try {
         $db->query('BEGIN TRANSACTION;');
 
+        $domain = html_entity_decode(trim($_POST['domain']));
+        // Convert domain name to IDNA ASCII form for international domains
+        if (extension_loaded("intl")) {
+            // Be prepared that this may fail and see our comments above
+            // (search for "idn_to_utf8)
+            $idn_domain = false;
+            if (defined("INTL_IDNA_VARIANT_UTS46")) {
+                $idn_domain = idn_to_ascii($domain, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
+            }
+            if ($idn_domain === false && defined("INTL_IDNA_VARIANT_2003")) {
+                $idn_domain = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
+            }
+            if($idn_domain !== false) {
+                $domain = $idn_domain;
+            }
+        }
+
         $stmt = $db->prepare('DELETE FROM domainlist_by_group WHERE domainlist_id=(SELECT id FROM domainlist WHERE domain=:domain AND type=:type);');
         if (!$stmt) {
             throw new Exception('While preparing domainlist_by_group statement: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':domain', $_POST['domain'], SQLITE3_TEXT)) {
+        if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
             throw new Exception('While binding domain to domainlist_by_group statement: ' . $db->lastErrorMsg());
         }
 
@@ -899,7 +916,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While preparing domainlist statement: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':domain', $_POST['domain'], SQLITE3_TEXT)) {
+        if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
             throw new Exception('While binding domain to domainlist statement: ' . $db->lastErrorMsg());
         }
 
