@@ -14,15 +14,21 @@ require "scripts/pi-hole/php/header.php";
 <div class="page-header">
     <h1>Generate debug log</h1>
 </div>
-<div>
-    <h3>Options:</h3>
-    <div>
-        <input type="checkbox" id="dbcheck">
-        <label for="dbcheck">Execute database integrity check <i class="text-red">(this can add several minutes to debug log time)</i></label>
-    </div>
-    <div>
-        <input type="checkbox" id="upload">
-        <label for="upload">Auto-upload debug log and provide token (the URL token will be shown at the end of the report, once finished)</label>
+<div class="box">
+    <div class="box-header with-border"><h1 class="box-title">Options:</h1></div>
+    <div class="box-body">
+        <div>
+            <input type="checkbox" id="dbcheck">
+            <label for="dbcheck"><strong>Execute database integrity check.</strong>
+                <br class="hidden-md hidden-lg"><span class="text-red">This can add several minutes to debug log time.</span>
+            </label>
+        </div>
+        <div>
+            <input type="checkbox" id="upload">
+            <label for="upload"><strong>Upload debug log and provide Debug Token.</strong>
+                <br class="hidden-md hidden-lg"><span>The URL token will be shown at the end of the report, once finished.</span>
+            </label>
+        </div>
     </div>
 </div>
 <br>
