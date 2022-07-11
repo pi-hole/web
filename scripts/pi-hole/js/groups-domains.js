@@ -592,7 +592,7 @@ function editDomain() {
   // Show group assignment field only if in full domain management mode
   // if not included, just use the row data.
   var rowData = table.row(tr).data();
-  var groups = table.column(5).visible() ? tr.find("#multiselect_" + id).val() : rowData.groups;
+  var groups = table.column(6).visible() ? tr.find("#multiselect_" + id).val() : rowData.groups;
 
   var domainRegex;
   if (type === "0" || type === "1") {
