@@ -27,7 +27,7 @@ if(isset($_GET["domain"]))
 {
     // Is this a valid domain?
     // Convert domain name to IDNA ASCII form for international domains
-    $url = convertDomainToIDNA($_GET["domain"]);
+    $url = convertUnicodeToIDNA($_GET["domain"]);
     if (!validDomain($url)) {
         echoEvent(htmlentities($url)." is an invalid domain!");
         die();
