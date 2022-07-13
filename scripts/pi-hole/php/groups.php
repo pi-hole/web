@@ -625,20 +625,7 @@ if ($_POST['action'] == 'get_groups') {
 
             $input = $domain;
             // Convert domain name to IDNA ASCII form for international domains
-            if (extension_loaded("intl")) {
-                // Be prepared that this may fail and see our comments above
-                // (search for "idn_to_utf8)
-                $idn_domain = false;
-                if (defined("INTL_IDNA_VARIANT_UTS46")) {
-                    $idn_domain = idn_to_ascii($domain, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
-                }
-                if ($idn_domain === false && defined("INTL_IDNA_VARIANT_2003")) {
-                    $idn_domain = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
-                }
-                if($idn_domain !== false) {
-                    $domain = $idn_domain;
-                }
-            }
+            $domain = convertDomainToIDNA($domain);
 
             if( $_POST['type'] != '2' && $_POST['type'] != '3')
             {
@@ -647,7 +634,7 @@ if ($_POST['action'] == 'get_groups') {
                 $msg = "";
                 if(!validDomain($domain, $msg))
                 {
-                    // This is the case when idn_to_ascii() modified the string
+                    // This is the case when convertDomainToIDNA() modified the string
                     if($input !== $domain && strlen($domain) > 0)
                         $errormsg = 'Domain ' . htmlentities($input) . ' (converted to "' . htmlentities(utf8_encode($domain)) . '") is not a valid domain because ' . $msg . '.';
                     elseif($input !== $domain)
@@ -879,15 +866,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $domain = html_entity_decode(trim($_POST['domain']));
         // Convert domain name to IDNA ASCII form for international domains
-        if (extension_loaded("intl")) {
-            // Be prepared that this may fail and see our comments above
-            // (search for "idn_to_utf8)
-            if (defined("INTL_IDNA_VARIANT_UTS46")) {
-                $domain = idn_to_ascii($domain, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
-            } elseif (defined("INTL_IDNA_VARIANT_2003")) {
-                $domain = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
-            }
-        }
+        $domain = convertDomainToIDNA($domain);
 
         $stmt = $db->prepare('DELETE FROM domainlist_by_group WHERE domainlist_id=(SELECT id FROM domainlist WHERE domain=:domain AND type=:type);');
         if (!$stmt) {

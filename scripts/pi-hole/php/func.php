@@ -554,4 +554,18 @@ function getGateway() {
     }
     return $ret;
 }
+
+//Convert a given (unicode) domain to IDNA ASCII
+function convertDomainToIDNA($IDNA) {
+    if (extension_loaded("intl")) {
+        // Be prepared that this may fail and see our comments about "idn_to_utf8
+        if (defined("INTL_IDNA_VARIANT_UTS46")) {
+            $IDNA = idn_to_ascii($IDNA, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
+        } elseif (defined("INTL_IDNA_VARIANT_2003")) {
+            $IDNA = idn_to_ascii($IDNA, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
+        }
+    }
+
+    return $IDNA;
+}
 ?>
