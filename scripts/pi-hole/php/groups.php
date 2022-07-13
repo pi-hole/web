@@ -882,15 +882,10 @@ if ($_POST['action'] == 'get_groups') {
         if (extension_loaded("intl")) {
             // Be prepared that this may fail and see our comments above
             // (search for "idn_to_utf8)
-            $idn_domain = false;
             if (defined("INTL_IDNA_VARIANT_UTS46")) {
-                $idn_domain = idn_to_ascii($domain, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
-            }
-            if ($idn_domain === false && defined("INTL_IDNA_VARIANT_2003")) {
-                $idn_domain = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
-            }
-            if($idn_domain !== false) {
-                $domain = $idn_domain;
+                $domain = idn_to_ascii($domain, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
+            } elseif (defined("INTL_IDNA_VARIANT_2003")) {
+                $domain = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
             }
         }
 
