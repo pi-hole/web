@@ -291,13 +291,6 @@ td.lookatme {
   text-decoration: line-through !important;
 }
 
-/* These are needed because AdmintLTE 2.x doesn't support Font Awesome 5.x */
-.sidebar-menu > li > a > .fab,
-.sidebar-menu > li > a > .far,
-.sidebar-menu > li > a > .fas {
-  width: 20px;
-}
-
 /* Utilities */
 .text-underline {
   text-decoration: underline;
