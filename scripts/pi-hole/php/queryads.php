@@ -26,7 +26,8 @@ function echoEvent($datatext) {
 if(isset($_GET["domain"]))
 {
     // Is this a valid domain?
-    $url = idn_to_ascii($_GET["domain"]);
+    // Convert domain name to IDNA ASCII form for international domains
+    $url = convertUnicodeToIDNA($_GET["domain"]);
     if (!validDomain($url)) {
         echoEvent(htmlentities($url)." is an invalid domain!");
         die();

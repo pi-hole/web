@@ -516,34 +516,12 @@ if ($_POST['action'] == 'get_groups') {
                 array_push($groups, $gres['group_id']);
             }
             $res['groups'] = $groups;
-            if (extension_loaded("intl") &&
-                ($res['type'] === ListType::whitelist ||
-                 $res['type'] === ListType::blacklist) ) {
-
-                // Try to convert possible IDNA domain to Unicode, we try the UTS #46 standard first
-                // as this is the new default, see https://sourceforge.net/p/icu/mailman/message/32980778/
-                // We know that this fails for some Google domains violating the standard
-                // see https://github.com/pi-hole/AdminLTE/issues/1223
-                $utf8_domain = false;
-                if (defined("INTL_IDNA_VARIANT_UTS46")) {
-                    // We have to use the option IDNA_NONTRANSITIONAL_TO_ASCII here
-                    // to ensure sparkasse-gießen.de is not converted into
-                    // sparkass-giessen.de but into xn--sparkasse-gieen-2ib.de
-                    // as mandated by the UTS #46 standard
-                    $utf8_domain = idn_to_utf8($res['domain'], IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
-                }
-
-                // If conversion failed, try with the (deprecated!) IDNA 2003 variant
-                // We have to check for its existence as support of this variant is
-                // scheduled for removal with PHP 8.0
-                // see https://wiki.php.net/rfc/deprecate-and-remove-intl_idna_variant_2003
-                if ($utf8_domain === false && defined("INTL_IDNA_VARIANT_2003")) {
-                    $utf8_domain = idn_to_utf8($res['domain'], IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
-                }
-
+            if ($res['type'] === ListType::whitelist || $res['type'] === ListType::blacklist) {
                 // Convert domain name to international form
-                // if applicable and extension is available
-                if ($utf8_domain !== false && $res['domain'] !== $utf8_domain) {
+                $utf8_domain = convertIDNAToUnicode($res['domain']);
+
+                // if domain and international form are different, show both
+                if ($res['domain'] !== $utf8_domain) {
                     $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
                 }
             }
@@ -625,20 +603,7 @@ if ($_POST['action'] == 'get_groups') {
 
             $input = $domain;
             // Convert domain name to IDNA ASCII form for international domains
-            if (extension_loaded("intl")) {
-                // Be prepared that this may fail and see our comments above
-                // (search for "idn_to_utf8)
-                $idn_domain = false;
-                if (defined("INTL_IDNA_VARIANT_UTS46")) {
-                    $idn_domain = idn_to_ascii($domain, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
-                }
-                if ($idn_domain === false && defined("INTL_IDNA_VARIANT_2003")) {
-                    $idn_domain = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
-                }
-                if($idn_domain !== false) {
-                    $domain = $idn_domain;
-                }
-            }
+            $domain = convertUnicodeToIDNA($domain);
 
             if( $_POST['type'] != '2' && $_POST['type'] != '3')
             {
@@ -647,7 +612,7 @@ if ($_POST['action'] == 'get_groups') {
                 $msg = "";
                 if(!validDomain($domain, $msg))
                 {
-                    // This is the case when idn_to_ascii() modified the string
+                    // This is the case when convertUnicodeToIDNA() modified the string
                     if($input !== $domain && strlen($domain) > 0)
                         $errormsg = 'Domain ' . htmlentities($input) . ' (converted to "' . htmlentities(utf8_encode($domain)) . '") is not a valid domain because ' . $msg . '.';
                     elseif($input !== $domain)
@@ -877,12 +842,16 @@ if ($_POST['action'] == 'get_groups') {
     try {
         $db->query('BEGIN TRANSACTION;');
 
+        $domain = html_entity_decode(trim($_POST['domain']));
+        // Convert domain name to IDNA ASCII form for international domains
+        $domain = convertUnicodeToIDNA($domain);
+
         $stmt = $db->prepare('DELETE FROM domainlist_by_group WHERE domainlist_id=(SELECT id FROM domainlist WHERE domain=:domain AND type=:type);');
         if (!$stmt) {
             throw new Exception('While preparing domainlist_by_group statement: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':domain', $_POST['domain'], SQLITE3_TEXT)) {
+        if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
             throw new Exception('While binding domain to domainlist_by_group statement: ' . $db->lastErrorMsg());
         }
 
@@ -899,7 +868,7 @@ if ($_POST['action'] == 'get_groups') {
             throw new Exception('While preparing domainlist statement: ' . $db->lastErrorMsg());
         }
 
-        if (!$stmt->bindValue(':domain', $_POST['domain'], SQLITE3_TEXT)) {
+        if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
             throw new Exception('While binding domain to domainlist statement: ' . $db->lastErrorMsg());
         }
 

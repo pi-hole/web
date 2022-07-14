@@ -554,4 +554,45 @@ function getGateway() {
     }
     return $ret;
 }
+
+// Try to convert possible IDNA domain to Unicode
+function convertIDNAToUnicode($unicode) {
+    if (extension_loaded("intl")) {
+        // we try the UTS #46 standard first
+        // as this is the new default, see https://sourceforge.net/p/icu/mailman/message/32980778/
+        // We know that this fails for some Google domains violating the standard
+        // see https://github.com/pi-hole/AdminLTE/issues/1223
+        if (defined("INTL_IDNA_VARIANT_UTS46")) {
+            // We have to use the option IDNA_NONTRANSITIONAL_TO_ASCII here
+            // to ensure sparkasse-gießen.de is not converted into
+            // sparkass-giessen.de but into xn--sparkasse-gieen-2ib.de
+            // as mandated by the UTS #46 standard
+            $unicode = idn_to_utf8($unicode, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
+        } elseif (defined("INTL_IDNA_VARIANT_2003")) {
+            // If conversion failed, try with the (deprecated!) IDNA 2003 variant
+            // We have to check for its existence as support of this variant is
+            // scheduled for removal with PHP 8.0
+            // see https://wiki.php.net/rfc/deprecate-and-remove-intl_idna_variant_2003
+            $unicode = idn_to_utf8($unicode, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
+        }
+
+    }
+
+    return $unicode;
+
+}
+
+//Convert a given (unicode) domain to IDNA ASCII
+function convertUnicodeToIDNA($IDNA) {
+    if (extension_loaded("intl")) {
+        // Be prepared that this may fail and see our comments about convertIDNAToUnicode()
+        if (defined("INTL_IDNA_VARIANT_UTS46")) {
+            $IDNA = idn_to_ascii($IDNA, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
+        } elseif (defined("INTL_IDNA_VARIANT_2003")) {
+            $IDNA = idn_to_ascii($IDNA, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
+        }
+    }
+
+    return $IDNA;
+}
 ?>
