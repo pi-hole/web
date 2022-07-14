@@ -49,5 +49,4 @@ function theme_selection() {
         <label for="webtheme_<?php echo $key; ?>"><strong><?php echo $value[0]; ?></strong></label></div><?php
     }
 }
-
 ?>

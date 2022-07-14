@@ -129,5 +129,4 @@ function check_domain(&$domains) {
         }
     }
 }
-
 ?>

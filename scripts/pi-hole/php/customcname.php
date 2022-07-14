@@ -23,6 +23,4 @@
         default:
             die("Wrong action");
     }
-
-
 ?>
