@@ -44,5 +44,4 @@ if(isset($_GET["offset"]))
 fseek($file, -1, SEEK_END);
 // Add one to skip the very last "\n" in the log file
 die(json_encode(array("offset" => ftell($file)+1)));
-
 ?>
