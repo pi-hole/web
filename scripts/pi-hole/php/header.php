@@ -443,18 +443,6 @@ if($auth) {
                     </li>
                   </ul>
                 </li>
-                <!-- Whitelist -->
-                <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
-                    <a href="groups-domains.php?type=white">
-                        <i class="fa fa-fw menu-icon fa-check-circle"></i> <span>Whitelist</span>
-                    </a>
-                </li>
-                <!-- Blacklist -->
-                <li<?php if($scriptname === "blacklist"){ ?> class="active"<?php } ?>>
-                    <a href="groups-domains.php?type=black">
-                        <i class="fa fa-fw menu-icon fa-ban"></i> <span>Blacklist</span>
-                    </a>
-                </li>
                 <!-- Group Management -->
                 <li class="treeview<?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?> active<?php } ?>">
                   <a href="#">
