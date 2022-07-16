@@ -11,7 +11,6 @@ var table;
 var groups = [];
 var token = $("#token").text();
 var GETDict = {};
-var showtype = "all";
 
 function getGroups() {
   $.post(
@@ -32,10 +31,6 @@ $(function () {
     .forEach(function (item) {
       GETDict[item.split("=")[0]] = item.split("=")[1];
     });
-
-  if ("type" in GETDict && (GETDict.type === "white" || GETDict.type === "black")) {
-    showtype = GETDict.type;
-  }
 
   // sync description fields, reset inactive inputs on tab change
   $('a[data-toggle="tab"]').on("shown.bs.tab", function () {
@@ -116,7 +111,7 @@ function initTable() {
   table = $("#domainsTable").DataTable({
     ajax: {
       url: "scripts/pi-hole/php/groups.php",
-      data: { action: "get_domains", showtype: showtype, token: token },
+      data: { action: "get_domains", token: token },
       type: "POST",
     },
     order: [[0, "asc"]],
@@ -127,7 +122,7 @@ function initTable() {
       { data: "type", searchable: false },
       { data: "enabled", searchable: false },
       { data: "comment" },
-      { data: "groups", searchable: false, visible: showtype === "all" },
+      { data: "groups", searchable: false, visible: true },
       { data: null, width: "22px", orderable: false },
     ],
     columnDefs: [
@@ -171,34 +166,23 @@ function initTable() {
           "</code>"
       );
 
-      var whitelistOptions = "";
-      if (showtype === "all" || showtype === "white") {
-        whitelistOptions =
+      // Drop-down type selector
+      $("td:eq(2)", row).html(
+        '<select id="type_' +
+          data.id +
+          '" class="form-control">' +
           '<option value="0"' +
           (data.type === 0 ? " selected" : "") +
           ">Exact whitelist</option>" +
           '<option value="2"' +
           (data.type === 2 ? " selected" : "") +
-          ">Regex whitelist</option>";
-      }
-
-      var blacklistOptions = "";
-      if (showtype === "all" || showtype === "black") {
-        blacklistOptions =
+          ">Regex whitelist</option>" +
           '<option value="1"' +
           (data.type === 1 ? " selected " : " ") +
           ">Exact blacklist</option>" +
           '<option value="3"' +
           (data.type === 3 ? " selected" : "") +
-          ">Regex blacklist</option>";
-      }
-
-      $("td:eq(2)", row).html(
-        '<select id="type_' +
-          data.id +
-          '" class="form-control">' +
-          whitelistOptions +
-          blacklistOptions +
+          ">Regex blacklist</option>" +
           "</select>"
       );
       var typeEl = $("#type_" + data.id, row);
@@ -379,8 +363,8 @@ function initTable() {
 
       // Reset visibility of ID column
       data.columns[0].visible = false;
-      // Show group assignment column only on full page
-      data.columns[6].visible = showtype === "all";
+      // Show group assignment
+      data.columns[6].visible = true;
       // Apply loaded state to table
       return data;
     },
@@ -588,11 +572,7 @@ function editDomain() {
   var type = tr.find("#type_" + id).val();
   var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
   var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
-
-  // Show group assignment field only if in full domain management mode
-  // if not included, just use the row data.
-  var rowData = table.row(tr).data();
-  var groups = table.column(6).visible() ? tr.find("#multiselect_" + id).val() : rowData.groups;
+  var groups = tr.find("#multiselect_" + id).val();
 
   var domainRegex;
   if (type === "0" || type === "1") {

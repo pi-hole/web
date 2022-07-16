@@ -386,23 +386,6 @@ if($auth) {
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
-            <?php
-            if($scriptname === "groups-domains.php" && isset($_GET['type']))
-            {
-                if($_GET["type"] === "white")
-                {
-                    $scriptname = "whitelist";
-                }
-                elseif($_GET["type"] === "black")
-                {
-                    $scriptname = "blacklist";
-                }
-            }
-            if(!$auth && (!isset($indexpage) || isset($_GET['login'])))
-            {
-                $scriptname = "login";
-            }
-            ?>
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">Main</li>
                 <!-- Home Page -->
