@@ -49,15 +49,15 @@ function countDown() {
 
   //Stop and remove timer when user enabled early
   if ($("#pihole-enable").is(":hidden")) {
-    ena.text("Enable");
+    ena.text("Enable Blocking");
     return;
   }
 
   if (seconds > 0) {
     setTimeout(countDown, 1000);
-    ena.text("Enable (" + secondsTimeSpanToHMS(seconds) + ")");
+    ena.text("Enable Blocking (" + secondsTimeSpanToHMS(seconds) + ")");
   } else {
-    ena.text("Enable");
+    ena.text("Enable Blocking");
     piholeChanged("enabled");
     if (localStorage) {
       localStorage.removeItem("countDownTarget");
