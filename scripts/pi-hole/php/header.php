@@ -386,6 +386,12 @@ if($auth) {
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
+            <?php
+            if(!$auth && (!isset($indexpage) || isset($_GET['login'])))
+            {
+                $scriptname = "login";
+            }
+            ?>
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">Main</li>
                 <!-- Home Page -->
@@ -453,22 +459,22 @@ if($auth) {
                 <!-- Group Management -->
                 <li<?php if($scriptname === "groups.php"){ ?> class="active"<?php } ?>>
                     <a href="groups.php">
-                        <i class="fa fa-fw menu-icon fa-user-friends"></i> Groups
+                        <i class="fa fa-fw menu-icon fa-user-friends"></i> <span>Groups</span>
                     </a>
                 </li>
                 <li<?php if($scriptname === "groups-clients.php"){ ?> class="active"<?php } ?>>
                     <a href="groups-clients.php">
-                        <i class="fa fa-fw menu-icon fa-laptop"></i> Clients
+                        <i class="fa fa-fw menu-icon fa-laptop"></i> <span>Clients</span>
                     </a>
                 </li>
                 <li<?php if($scriptname === "groups-domains.php"){ ?> class="active"<?php } ?>>
                     <a href="groups-domains.php">
-                        <i class="fa fa-fw menu-icon fa-list"></i> Domains
+                        <i class="fa fa-fw menu-icon fa-list"></i> <span>Domains</span>
                     </a>
                 </li>
                 <li<?php if($scriptname === "groups-adlists.php"){ ?> class="active"<?php } ?>>
                     <a href="groups-adlists.php">
-                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> Adlists
+                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adlists</span>
                     </a>
                 </li>
                 <li class="header text-uppercase">DNS Control</li>
