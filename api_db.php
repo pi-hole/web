@@ -124,7 +124,6 @@ if (isset($_GET['getAllQueries']) && $auth)
 				$reply_type = $row["reply_type"];
 				$reply_time = $row["reply_time"];
 				$dnssec = $row["dnssec"];
-				$client_id = $row["client_id"];
 
 				// Insert into array and output it in JSON format
 				echo json_encode([$time, $query_type, $domain, $client, $status, $destination, $reply_type, $reply_time, $dnssec]);
