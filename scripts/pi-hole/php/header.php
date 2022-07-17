@@ -445,7 +445,7 @@ if($auth) {
                     </li>
                     <li<?php if($scriptname === "db_queries.php"){ ?> class="active"<?php } ?>>
                         <a href="db_queries.php">
-                            <i class="fa fa-fwDNS Control menu-icon fa-file-alt"></i> Query Log
+                            <i class="fa fa-fw menu-icon fa-file-alt"></i> Query Log
                         </a>
                     </li>
                     <li<?php if($scriptname === "db_lists.php"){ ?> class="active"<?php } ?>>
