@@ -122,7 +122,7 @@ function initTable() {
       { data: "type", searchable: false },
       { data: "enabled", searchable: false },
       { data: "comment" },
-      { data: "groups", searchable: false, visible: true },
+      { data: "groups", searchable: false },
       { data: null, width: "22px", orderable: false },
     ],
     columnDefs: [
@@ -207,71 +207,69 @@ function initTable() {
       commentEl.val(utils.unescapeHtml(data.comment));
       commentEl.on("change", editDomain);
 
-      // Show group assignment field only if in full domain management mode
-      if (table.column(6).visible()) {
-        $("td:eq(5)", row).empty();
-        $("td:eq(5)", row).append(
-          '<select class="selectpicker" id="multiselect_' + data.id + '" multiple></select>'
-        );
-        var selectEl = $("#multiselect_" + data.id, row);
-        // Add all known groups
-        for (var i = 0; i < groups.length; i++) {
-          var dataSub = "";
-          if (!groups[i].enabled) {
-            dataSub = 'data-subtext="(disabled)"';
-          }
-
-          selectEl.append(
-            $("<option " + dataSub + "/>")
-              .val(groups[i].id)
-              .text(groups[i].name)
-          );
+      // Group assignment field
+      $("td:eq(5)", row).empty();
+      $("td:eq(5)", row).append(
+        '<select class="selectpicker" id="multiselect_' + data.id + '" multiple></select>'
+      );
+      var selectEl = $("#multiselect_" + data.id, row);
+      // Add all known groups
+      for (var i = 0; i < groups.length; i++) {
+        var dataSub = "";
+        if (!groups[i].enabled) {
+          dataSub = 'data-subtext="(disabled)"';
         }
 
-        // Select assigned groups
-        selectEl.val(data.groups);
-        // Initialize bootstrap-select
-        selectEl
-          // fix dropdown if it would stick out right of the viewport
-          .on("show.bs.select", function () {
-            var winWidth = $(window).width();
-            var dropdownEl = $("body > .bootstrap-select.dropdown");
-            if (dropdownEl.length > 0) {
-              dropdownEl.removeClass("align-right");
-              var width = dropdownEl.width();
-              var left = dropdownEl.offset().left;
-              if (left + width > winWidth) {
-                dropdownEl.addClass("align-right");
-              }
-            }
-          })
-          .on("changed.bs.select", function () {
-            // enable Apply button
-            if ($(applyBtn).prop("disabled")) {
-              $(applyBtn)
-                .addClass("btn-success")
-                .prop("disabled", false)
-                .on("click", function () {
-                  editDomain.call(selectEl);
-                });
-            }
-          })
-          .on("hide.bs.select", function () {
-            // Restore values if drop-down menu is closed without clicking the Apply button
-            if (!$(applyBtn).prop("disabled")) {
-              $(this).val(data.groups).selectpicker("refresh");
-              $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
-            }
-          })
-          .selectpicker()
-          .siblings(".dropdown-menu")
-          .find(".bs-actionsbox")
-          .prepend(
-            '<button type="button" id=btn_apply_' +
-              data.id +
-              ' class="btn btn-block btn-sm" disabled>Apply</button>'
-          );
+        selectEl.append(
+          $("<option " + dataSub + "/>")
+            .val(groups[i].id)
+            .text(groups[i].name)
+        );
       }
+
+      // Select assigned groups
+      selectEl.val(data.groups);
+      // Initialize bootstrap-select
+      selectEl
+        // fix dropdown if it would stick out right of the viewport
+        .on("show.bs.select", function () {
+          var winWidth = $(window).width();
+          var dropdownEl = $("body > .bootstrap-select.dropdown");
+          if (dropdownEl.length > 0) {
+            dropdownEl.removeClass("align-right");
+            var width = dropdownEl.width();
+            var left = dropdownEl.offset().left;
+            if (left + width > winWidth) {
+              dropdownEl.addClass("align-right");
+            }
+          }
+        })
+        .on("changed.bs.select", function () {
+          // enable Apply button
+          if ($(applyBtn).prop("disabled")) {
+            $(applyBtn)
+              .addClass("btn-success")
+              .prop("disabled", false)
+              .on("click", function () {
+                editDomain.call(selectEl);
+              });
+          }
+        })
+        .on("hide.bs.select", function () {
+          // Restore values if drop-down menu is closed without clicking the Apply button
+          if (!$(applyBtn).prop("disabled")) {
+            $(this).val(data.groups).selectpicker("refresh");
+            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+          }
+        })
+        .selectpicker()
+        .siblings(".dropdown-menu")
+        .find(".bs-actionsbox")
+        .prepend(
+          '<button type="button" id=btn_apply_' +
+            data.id +
+            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+        );
 
       var applyBtn = "#btn_apply_" + data.id;
 
@@ -280,6 +278,7 @@ function initTable() {
         $(row).find("td").addClass("highlight");
       }
 
+      // Add delete domain button
       var button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteDomain_' +
         data.id +
@@ -288,11 +287,7 @@ function initTable() {
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
-      if (table.column(6).visible()) {
-        $("td:eq(6)", row).html(button);
-      } else {
-        $("td:eq(5)", row).html(button);
-      }
+      $("td:eq(6)", row).html(button);
     },
     select: {
       style: "multi",
@@ -363,8 +358,6 @@ function initTable() {
 
       // Reset visibility of ID column
       data.columns[0].visible = false;
-      // Show group assignment
-      data.columns[6].visible = true;
       // Apply loaded state to table
       return data;
     },

@@ -88,14 +88,12 @@
                     </p>
                 </div>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
-                    <?php { ?>
                     <div class="btn-group" role="group" aria-label="Third group">
                         <button type="button" class="btn btn-primary" id="add2black">Add to Blacklist</button>
                     </div>
                     <div class="btn-group" role="group" aria-label="Third group">
                         <button type="button" class="btn btn-primary" id="add2white">Add to Whitelist</button>
                     </div>
-                    <?php } ?>
                 </div>
             </div>
             <!-- /.box-body -->
@@ -110,7 +108,7 @@
         <div class="box" id="domains-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of configured domains
+                    List of domains
                 </h3>
             </div>
             <!-- /.box-header -->
