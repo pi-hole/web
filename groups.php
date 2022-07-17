@@ -52,7 +52,7 @@
         <div class="box" id="groups-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of configured groups
+                    List of groups
                 </h3>
             </div>
             <!-- /.box-header -->

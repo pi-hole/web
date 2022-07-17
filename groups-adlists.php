@@ -53,7 +53,7 @@
         <div class="box" id="adlists-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of configured adlists
+                    List of adlists
                 </h3>
             </div>
             <!-- /.box-header -->
