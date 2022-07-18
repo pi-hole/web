@@ -422,6 +422,8 @@ if($auth) {
                 <?php } ?>
                 <?php if($auth){ ?>
 
+            </ul>
+            <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">Analysis</li>
                 <!-- Query Log -->
                 <li<?php if($scriptname === "queries.php"){ ?> class="active"<?php } ?>>
@@ -455,6 +457,8 @@ if($auth) {
                     </li>
                   </ul>
                 </li>
+            </ul>
+            <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">Group Management</li>
                 <!-- Group Management -->
                 <li<?php if($scriptname === "groups.php"){ ?> class="active"<?php } ?>>
@@ -477,6 +481,8 @@ if($auth) {
                         <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adlists</span>
                     </a>
                 </li>
+            </ul>
+            <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">DNS Control</li>
                 <!-- Enable/Disable Blocking -->
                 <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden<?php } ?>>
@@ -544,6 +550,8 @@ if($auth) {
                     </li>
                   </ul>
                 </li>
+            </ul>
+            <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">System</li>
                 <!-- Tools -->
                 <li class="treeview<?php if (in_array($scriptname, array("messages.php", "gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php", "network.php"))){ ?> active<?php } ?>">
@@ -633,6 +641,8 @@ if($auth) {
                     </a>
                 </li>
                 <?php } ?>
+            </ul>
+            <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">Support</li>
                  <!-- Docs -->
                  <li>

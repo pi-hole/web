@@ -749,12 +749,16 @@ p.login-box-msg,
 }
 
 .sidebar-menu > li.header {
-  display: none;
+  padding: 0.5em;
+  text-align: left;
+  color: #000;
+  background: #CCE6FF;
+  margin: 4px 0 0;
 }
 
 .sidebar-menu > li > a {
   margin: 4px 0 0;
-  padding: 38px 15px 5px;
+  padding: 30px 15px 5px;
   background: #8bf;
   border-left: none;
 }
@@ -763,16 +767,8 @@ p.login-box-msg,
   background-color: #48f;
 }
 
-.sidebar-menu > li:last-child > a {
-  background-color: #cce6ff;
-}
-
-.sidebar-menu > li:nth-last-child(2) > a {
-  background-color: #cb7;
-}
-
-.sidebar-menu > li:nth-last-child(3) > a {
-  background-color: #04f;
+.sidebar-menu:last-child > li > a {
+  background-color: #26f;
 }
 
 .sidebar-menu > li:hover > a,
