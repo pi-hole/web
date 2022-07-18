@@ -4,7 +4,8 @@
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
-*  Please see LICENSE file for your rights under this license. */ ?>
+*  Please see LICENSE file for your rights under this license. */
+?>
 
 <div class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2" style="float:none">
   <div class="panel panel-default">
@@ -69,3 +70,6 @@
     </div>
   </div>
 </div>
+<?php
+require "scripts/pi-hole/php/footer.php";
+?>

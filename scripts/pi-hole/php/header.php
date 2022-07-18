@@ -671,18 +671,17 @@ if($auth) {
         <!-- Main content -->
         <section class="content">
 <?php
-    // If password is not equal to the password set
-    // in the setupVars.conf file, then we skip any
-    // content and just complete the page. If no
-    // password is set at all, we keep the current
-    // behavior: everything is always authorized
-    // and will be displayed
-    //
-    // If auth is required and not set, i.e. no successfully logged in,
-    // we show the reduced version of the summary (index) page
-    if(!$auth && (!isset($indexpage) || isset($_GET['login']))){
-        require "scripts/pi-hole/php/loginpage.php";
-        require "footer.php";
-        exit();
-    }
+// If password is not equal to the password set
+// in the setupVars.conf file, then we skip any
+// content and just complete the page. If no
+// password is set at all, we keep the current
+// behavior: everything is always authorized
+// and will be displayed
+//
+// If auth is required and not set, i.e. no successfully logged in,
+// we show the reduced version of the summary (index) page
+if (!$auth && (!isset($indexpage) || isset($_GET['login']))) {
+    require "scripts/pi-hole/php/loginpage.php";
+    exit();
+}
 ?>
