@@ -492,11 +492,7 @@ if ($_POST['action'] == 'get_groups') {
     // List all available groups
     try {
         $limit = "";
-        if (isset($_POST["showtype"]) && $_POST["showtype"] === "white"){
-            $limit = " WHERE type = 0 OR type = 2";
-        } elseif (isset($_POST["showtype"]) && $_POST["showtype"] === "black"){
-            $limit = " WHERE type = 1 OR type = 3";
-        } elseif (isset($_POST["type"]) && is_numeric($_POST["type"])){
+        if (isset($_POST["type"]) && is_numeric($_POST["type"])){
             $limit = " WHERE type = " . $_POST["type"];
         }
         $query = $db->query('SELECT * FROM domainlist'.$limit);

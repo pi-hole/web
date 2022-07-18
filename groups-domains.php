@@ -6,19 +6,11 @@
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
     require "scripts/pi-hole/php/header.php";
-    $type = "all";
-    $pagetitle = "Domain";
-    $adjective = "";
-    if (isset($_GET['type']) && ($_GET['type'] === "white" || $_GET['type'] === "black")) {
-        $type = $_GET['type'];
-        $pagetitle = ucfirst($type)."list";
-        $adjective = $type."listed";
-    }
 ?>
 
 <!-- Title -->
 <div class="page-header">
-    <h1><?php echo $pagetitle; ?> management</h1>
+    <h1>Domain management</h1>
 </div>
 
 <!-- Domain Input -->
@@ -27,7 +19,7 @@
         <div class="box" id="add-group">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    Add a new <?php echo $adjective; ?> domain or regex filter
+                    Add a new domain or regex filter
                 </h3>
             </div>
             <!-- /.box-header -->
@@ -92,23 +84,16 @@
                 <div>
                     <p><strong>Note:</strong><br>
                        The domain or regex filter will be automatically assigned to the Default Group.<br>
-                       Other groups can optionally be assigned
-                       <?php if ($type === "white" || $type === "black") { ?>
-                       within <a href="groups-domains.php">Group Management > Domains</a>.
-                       <?php } else {?>
-                       in the list below (using <b>Group assignment</b>).
-                       <?php } ?></p>
+                       Other groups can optionally be assigned in the list below (using <b>Group assignment</b>).
+                    </p>
                 </div>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
-                    <?php if ( $type !== "white" ) { ?>
                     <div class="btn-group" role="group" aria-label="Third group">
                         <button type="button" class="btn btn-primary" id="add2black">Add to Blacklist</button>
                     </div>
-                    <?php } if ( $type !== "black" ) { ?>
                     <div class="btn-group" role="group" aria-label="Third group">
                         <button type="button" class="btn btn-primary" id="add2white">Add to Whitelist</button>
                     </div>
-                    <?php } ?>
                 </div>
             </div>
             <!-- /.box-body -->
@@ -123,7 +108,7 @@
         <div class="box" id="domains-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of <?php echo $adjective; ?> entries
+                    List of domains
                 </h3>
             </div>
             <!-- /.box-header -->
