@@ -749,11 +749,17 @@ p.login-box-msg,
 }
 
 .sidebar-menu > li.header {
-  padding: 0.5em;
+  margin: 4px 0 0;
+  padding: 0.5em 1em;
   text-align: left;
   color: #000;
-  background: #CCE6FF;
-  margin: 4px 0 0;
+  background: #cce6ff;
+  font-size: 11px;
+}
+
+/* Hide menu headers if not logged in */
+body:not(.logged-in) .sidebar-menu > li.header {
+  display: none;
 }
 
 .sidebar-menu > li > a {
@@ -764,17 +770,18 @@ p.login-box-msg,
 }
 
 .sidebar-menu > li.active > a {
-  background-color: #48f;
+  background-color: #eda;
+  box-shadow: inset 0 0 18px #ba7;
 }
 
-.sidebar-menu:last-child > li > a {
+.sidebar-menu > li > a.menu-support {
   background-color: #26f;
 }
 
 .sidebar-menu > li:hover > a,
 .sidebar-menu > li > a:focus {
-  background-color: #eda;
-  box-shadow: inset 0 0 18px #ba7;
+  background-color: #48f;
+  box-shadow: none;
 }
 
 .sidebar-menu > li > .treeview-menu {

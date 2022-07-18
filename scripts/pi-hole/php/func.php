@@ -595,4 +595,28 @@ function convertUnicodeToIDNA($IDNA) {
 
     return $IDNA;
 }
+
+// Return PID of FTL (used in settings.php)
+function pidofFTL() {
+    return shell_exec("pidof pihole-FTL");
+}
+
+// Get FTL process information (used in settings.php)
+function get_FTL_data($FTLpid, $arg) {
+    return trim(exec("ps -p " . $FTLpid . " -o " . $arg));
+}
+
+// Convert seconds into readable time (used in settings.php)
+function convertseconds($argument) {
+    $seconds = round($argument);
+    if ($seconds < 60) {
+        return sprintf('%ds', $seconds);
+    } elseif ($seconds < 3600) {
+        return sprintf('%dm %ds', ($seconds / 60), ($seconds % 60));
+    } elseif ($seconds < 86400) {
+        return sprintf('%dh %dm %ds', ($seconds / 3600 % 24), ($seconds / 60 % 60), ($seconds % 60));
+    } else {
+        return sprintf('%dd %dh %dm %ds', ($seconds / 86400), ($seconds / 3600 % 24), ($seconds / 60 % 60), ($seconds % 60));
+    }
+}
 ?>
