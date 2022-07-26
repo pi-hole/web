@@ -749,36 +749,39 @@ p.login-box-msg,
 }
 
 .sidebar-menu > li.header {
+  margin: 4px 0 0;
+  padding: 0.5em 1em;
+  text-align: left;
+  color: #000;
+  background: #cce6ff;
+  font-size: 11px;
+}
+
+/* Hide menu headers if not logged in */
+body:not(.logged-in) .sidebar-menu > li.header {
   display: none;
 }
 
 .sidebar-menu > li > a {
   margin: 4px 0 0;
-  padding: 38px 15px 5px;
+  padding: 30px 15px 5px;
   background: #8bf;
   border-left: none;
 }
 
 .sidebar-menu > li.active > a {
-  background-color: #48f;
+  background-color: #eda;
+  box-shadow: inset 0 0 18px #ba7;
 }
 
-.sidebar-menu > li:last-child > a {
-  background-color: #cce6ff;
-}
-
-.sidebar-menu > li:nth-last-child(2) > a {
-  background-color: #cb7;
-}
-
-.sidebar-menu > li:nth-last-child(3) > a {
-  background-color: #04f;
+.sidebar-menu > li > a.menu-support {
+  background-color: #26f;
 }
 
 .sidebar-menu > li:hover > a,
 .sidebar-menu > li > a:focus {
-  background-color: #eda;
-  box-shadow: inset 0 0 18px #ba7;
+  background-color: #48f;
+  box-shadow: none;
 }
 
 .sidebar-menu > li > .treeview-menu {
