@@ -12,7 +12,7 @@ require "scripts/pi-hole/php/header.php";
 
 <!-- Title -->
 <div class="page-header">
-    <h1>Local DNS Records</h1>
+    <h1>Local DNS Records [A/AAAA]</h1>
     <small>On this page, you can add domain/IP associations</small>
 </div>
 
