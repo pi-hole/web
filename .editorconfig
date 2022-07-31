@@ -23,6 +23,14 @@ indent_size = 2
 indent_style = space
 indent_size = 2
 
+[.yamllint.conf]
+indent_style = space
+indent_size = 2
+
 [*.yml]
+indent_style = space
+indent_size = 2
+
+[*.md]
 indent_style = space
 indent_size = 2
