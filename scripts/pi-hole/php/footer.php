@@ -4,7 +4,9 @@
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
-*  Please see LICENSE file for your rights under this license. */ ?>
+*  Please see LICENSE file for your rights under this license.
+*/
+?>
 
         </section>
         <!-- /.content -->
@@ -20,14 +22,14 @@
                 <div class="modal-body">
                     <div class="input-group">
                         <input id="customTimeout" class="form-control" type="number" value="60">
-                            <div class="input-group-btn" data-toggle="buttons">
-                                <label class="btn btn-default">
-                                    <input id="selSec" type="radio"> Secs
-                                </label>
-                                <label id="btnMins" class="btn btn-default active">
-                                    <input id="selMin" type="radio"> Mins
-                                </label>
-                            </div>
+                        <div class="input-group-btn" data-toggle="buttons">
+                            <label class="btn btn-default">
+                                <input id="selSec" type="radio"> Secs
+                            </label>
+                            <label id="btnMins" class="btn btn-default active">
+                                <input id="selMin" type="radio"> Mins
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

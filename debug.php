@@ -39,5 +39,5 @@ require "scripts/pi-hole/php/header.php";
 <script src="scripts/pi-hole/js/debug.js?v=<?=$cacheVer?>"></script>
 
 <?php
-    require "scripts/pi-hole/php/footer.php";
+require "scripts/pi-hole/php/footer.php";
 ?>

@@ -1,11 +1,14 @@
-<?php /*
+<?php
+/*
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2019 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. */
-    require "scripts/pi-hole/php/header.php";
+*    Please see LICENSE file for your rights under this license.
+*/
+
+require "scripts/pi-hole/php/header.php";
 ?>
 
 <!-- Title -->
@@ -74,8 +77,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
-                                        <label for="new_regex_comment">Comment:</label>
-                                        <input id="new_regex_comment" type="text" class="form-control" placeholder="Description (optional)">
+                                    <label for="new_regex_comment">Comment:</label>
+                                    <input id="new_regex_comment" type="text" class="form-control" placeholder="Description (optional)">
                                 </div>
                             </div>
                         </div>
@@ -83,8 +86,8 @@
                 </div>
                 <div>
                     <p><strong>Note:</strong><br>
-                       The domain or regex filter will be automatically assigned to the Default Group.<br>
-                       Other groups can optionally be assigned in the list below (using <b>Group assignment</b>).
+                        The domain or regex filter will be automatically assigned to the Default Group.<br>
+                        Other groups can optionally be assigned in the list below (using <b>Group assignment</b>).
                     </p>
                 </div>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
@@ -115,16 +118,16 @@
             <div class="box-body">
                 <table id="domainsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th></th>
-                        <th>Domain/RegEx</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Comment</th>
-                        <th>Group assignment</th>
-                        <th>&nbsp;</th>
-                    </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th></th>
+                            <th>Domain/RegEx</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Comment</th>
+                            <th>Group assignment</th>
+                            <th>&nbsp;</th>
+                        </tr>
                     </thead>
                 </table>
                 <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Reset sorting</button>

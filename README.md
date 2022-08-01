@@ -179,16 +179,16 @@ Full usage available [here](https://discourse.pi-hole.net/t/pi-hole-api/1863). C
 
 ```json
 {
-   "domains_being_blocked":243038,
-   "dns_queries_today":2385,
-   "ads_blocked_today":414,
-   "ads_percentage_today":17.35849,
-   "unique_domains":429,
-   "queries_forwarded":1537,
-   "queries_cached":434,
-   "clients_ever_seen":5,
-   "unique_clients":5,
-   "status":"enabled"
+  "domains_being_blocked":243038,
+  "dns_queries_today":2385,
+  "ads_blocked_today":414,
+  "ads_percentage_today":17.35849,
+  "unique_domains":429,
+  "queries_forwarded":1537,
+  "queries_cached":434,
+  "clients_ever_seen":5,
+  "unique_clients":5,
+  "status":"enabled"
 }
 ```
 

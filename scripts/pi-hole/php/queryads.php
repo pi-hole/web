@@ -4,11 +4,13 @@
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
-*  Please see LICENSE file for your rights under this license. */
+*  Please see LICENSE file for your rights under this license.
+*/
 
 while (ob_get_level() > 0) {
     ob_end_flush();
 }
+
 require_once("func.php");
 ini_set("output_buffering", "0");
 ob_implicit_flush(true);
@@ -17,9 +19,9 @@ header('Cache-Control: no-cache');
 
 function echoEvent($datatext) {
     if(!isset($_GET["IE"]))
-      echo "data:".implode("\ndata:", explode("\n", $datatext))."\n\n";
+        echo "data:".implode("\ndata:", explode("\n", $datatext))."\n\n";
     else
-      echo $datatext;
+        echo $datatext;
 }
 
 // Test if domain is set
