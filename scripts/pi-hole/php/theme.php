@@ -4,7 +4,8 @@
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
-*  Please see LICENSE file for your rights under this license. */
+*  Please see LICENSE file for your rights under this license.
+*/
 
 // Array of available themes and their description
 $available_themes = array();
@@ -28,15 +29,15 @@ if(isset($setupVars['WEBTHEME']))
 
 // May be overwritten by settings tab
 if(isset($_POST["field"]) &&
-   $_POST["field"] === "webUI" &&
-   isset($_POST["webtheme"])) {
+    $_POST["field"] === "webUI" &&
+    isset($_POST["webtheme"])) {
     $webtheme = $_POST["webtheme"];
 }
 
 if(!array_key_exists($webtheme,$available_themes)) {
-        // Fallback to default (light) theme is property is not set
-        // or requested theme is not among the available
-        $webtheme = "default-auto";
+    // Fallback to default (light) theme is property is not set
+    // or requested theme is not among the available
+    $webtheme = "default-auto";
 }
 
 $darkmode = $available_themes[$webtheme][1];
@@ -45,8 +46,9 @@ $theme = $available_themes[$webtheme][2];
 function theme_selection() {
     global $available_themes, $webtheme;
     foreach ($available_themes as $key => $value) {
-        ?><div><input type="radio" name="webtheme" value="<?php echo $key; ?>" id="webtheme_<?php echo $key; ?>" <?php if ($key === $webtheme){ ?>checked<?php } ?>>
-        <label for="webtheme_<?php echo $key; ?>"><strong><?php echo $value[0]; ?></strong></label></div><?php
+    ?><div><input type="radio" name="webtheme" value="<?php echo $key; ?>" id="webtheme_<?php echo $key; ?>" <?php if ($key === $webtheme){ ?>checked<?php } ?>>
+        <label for="webtheme_<?php echo $key; ?>"><strong><?php echo $value[0]; ?></strong></label></div>
+<?php
     }
 }
 ?>

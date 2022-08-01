@@ -4,7 +4,8 @@
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
-*  Please see LICENSE file for your rights under this license. */
+*  Please see LICENSE file for your rights under this license.
+*/
 
 require_once('auth.php');
 require_once('func.php');
@@ -360,8 +361,8 @@ if ($_POST['action'] == 'get_groups') {
 
             $comment = html_entity_decode($_POST['comment']);
             if (strlen($comment) === 0) {
-                    // Store NULL in database for empty comments
-                    $comment = null;
+                // Store NULL in database for empty comments
+                $comment = null;
             }
             if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
                 throw new Exception('While binding comment: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
@@ -392,8 +393,8 @@ if ($_POST['action'] == 'get_groups') {
 
         $comment = html_entity_decode($_POST['comment']);
         if (strlen($comment) === 0) {
-                // Store NULL in database for empty comments
-                $comment = null;
+            // Store NULL in database for empty comments
+            $comment = null;
         }
         if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
             throw new Exception('While binding comment: ' . $db->lastErrorMsg());
@@ -694,15 +695,15 @@ if ($_POST['action'] == 'get_groups') {
         $difference = $after - $before;
         if($total === 1) {
             if($difference !== 1) {
-                    $msg = "Not adding ". htmlentities(utf8_encode($domain)) . " as it is already on the list";
+                $msg = "Not adding ". htmlentities(utf8_encode($domain)) . " as it is already on the list";
             } else {
-                    $msg = "Added " . htmlentities(utf8_encode($domain));
+                $msg = "Added " . htmlentities(utf8_encode($domain));
             }
         } else {
             if($difference !== $total) {
-                    $msg = "Added " . ($after-$before) . " out of ". $total . " domains (skipped duplicates)";
+                $msg = "Added " . ($after-$before) . " out of ". $total . " domains (skipped duplicates)";
             } else {
-                    $msg = "Added " . $total . " domains";
+                $msg = "Added " . $total . " domains";
             }
         }
         $reload = true;
@@ -722,7 +723,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $status = intval($_POST['status']);
         if ($status !== 0) {
-                $status = 1;
+            $status = 1;
         }
 
         if (!$stmt->bindValue(':enabled', $status, SQLITE3_INTEGER)) {
@@ -731,8 +732,8 @@ if ($_POST['action'] == 'get_groups') {
 
         $comment = html_entity_decode($_POST['comment']);
         if (strlen($comment) === 0) {
-                // Store NULL in database for empty comments
-                $comment = null;
+            // Store NULL in database for empty comments
+            $comment = null;
         }
         if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
             throw new Exception('While binding comment: ' . $db->lastErrorMsg());
@@ -985,7 +986,7 @@ if ($_POST['action'] == 'get_groups') {
             // Send added and ignored lists
             $msg = "<b>Ignored duplicated adlists: " . $ignored . "</b><br>" . $ignored_list;
             if ($added_list != "") {
-              $msg .= "<br><b>Added adlists: " . $added . "</b><br>" . $added_list;
+                $msg .= "<br><b>Added adlists: " . $added . "</b><br>" . $added_list;
             }
             $msg .= "<br><b>Total: " . $total . " adlist(s) processed.</b>";
             JSON_warning($msg);
@@ -1010,7 +1011,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $status = intval($_POST['status']);
         if ($status !== 0) {
-                $status = 1;
+            $status = 1;
         }
 
         if (!$stmt->bindValue(':enabled', $status, SQLITE3_INTEGER)) {
@@ -1019,8 +1020,8 @@ if ($_POST['action'] == 'get_groups') {
 
         $comment = html_entity_decode($_POST['comment']);
         if (strlen($comment) === 0) {
-                // Store NULL in database for empty comments
-                $comment = null;
+            // Store NULL in database for empty comments
+            $comment = null;
         }
         if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
             throw new Exception('While binding comment: ' . $db->lastErrorMsg());
@@ -1160,15 +1161,15 @@ if ($_POST['action'] == 'get_groups') {
             $difference = $after - $before;
             if($total === 1) {
                 if($difference !== 1) {
-                        $msg = "Not adding ". htmlentities(utf8_encode($domain)) . " as it is already on the list";
+                    $msg = "Not adding ". htmlentities(utf8_encode($domain)) . " as it is already on the list";
                 } else {
-                        $msg = "Added " . htmlentities(utf8_encode($domain));
+                    $msg = "Added " . htmlentities(utf8_encode($domain));
                 }
             } else {
                 if($difference !== $total) {
-                        $msg = "Added " . ($after-$before) . " out of ". $total . " domains (skipped duplicates)";
+                    $msg = "Added " . ($after-$before) . " out of ". $total . " domains (skipped duplicates)";
                 } else {
-                        $msg = "Added " . $total . " domains";
+                    $msg = "Added " . $total . " domains";
                 }
             }
 

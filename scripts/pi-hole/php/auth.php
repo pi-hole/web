@@ -4,9 +4,11 @@
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
-*  Please see LICENSE file for your rights under this license. */
+*  Please see LICENSE file for your rights under this license.
+*/
 
 require_once('func.php');
+
 $ERRORLOG = getenv('PHP_ERROR_LOG');
 if (empty($ERRORLOG)) {
     $ERRORLOG = '/var/log/lighttpd/error-pihole.log';

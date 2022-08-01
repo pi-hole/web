@@ -1,11 +1,14 @@
-<?php /*
+<?php
+/*
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. */
-    require "scripts/pi-hole/php/header.php";
+*    Please see LICENSE file for your rights under this license.
+*/
+
+require "scripts/pi-hole/php/header.php";
 
 $showing = "";
 
@@ -131,47 +134,47 @@ if(strlen($showing) > 0)
 
 <div class="row">
     <div class="col-md-12">
-      <div class="box" id="recent-queries">
-        <div class="box-header with-border">
-          <h3 class="box-title">Recent Queries <?php echo $showing; ?></h3>
+        <div class="box" id="recent-queries">
+            <div class="box-header with-border">
+                <h3 class="box-title">Recent Queries <?php echo $showing; ?></h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="all-queries" class="table table-striped table-bordered" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Domain</th>
+                            <th>Client</th>
+                            <th>Status</th>
+                            <th>Reply</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Domain</th>
+                            <th>Client</th>
+                            <th>Status</th>
+                            <th>Reply</th>
+                            <th>Action</th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <p>Note: Queries for <code>pi.hole</code> and the hostname are never logged.</p>
+                <p><strong>Filtering options:</strong></p>
+                <ul>
+                    <li>Click a value in a column to add/remove that value to/from the filter</li>
+                    <li>On a computer: Hold down <kbd>Ctrl</kbd>, <kbd>Alt</kbd>, or <kbd>&#8984;</kbd> to allow highlighting for copying to clipboard</li>
+                    <li>On a mobile: Long press to highlight the text and enable copying to clipboard
+                </ul><br/><button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear filters</button>
+            </div>
+            <!-- /.box-body -->
         </div>
-        <!-- /.box-header -->
-        <div class="box-body">
-            <table id="all-queries" class="table table-striped table-bordered" width="100%">
-                <thead>
-                    <tr>
-                        <th>Time</th>
-                        <th>Type</th>
-                        <th>Domain</th>
-                        <th>Client</th>
-                        <th>Status</th>
-                        <th>Reply</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th>Time</th>
-                        <th>Type</th>
-                        <th>Domain</th>
-                        <th>Client</th>
-                        <th>Status</th>
-                        <th>Reply</th>
-                        <th>Action</th>
-                    </tr>
-                </tfoot>
-            </table>
-            <p>Note: Queries for <code>pi.hole</code> and the hostname are never logged.</p>
-            <p><strong>Filtering options:</strong></p>
-            <ul>
-                <li>Click a value in a column to add/remove that value to/from the filter</li>
-                <li>On a computer: Hold down <kbd>Ctrl</kbd>, <kbd>Alt</kbd>, or <kbd>&#8984;</kbd> to allow highlighting for copying to clipboard</li>
-                <li>On a mobile: Long press to highlight the text and enable copying to clipboard
-            </ul><br/><button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear filters</button>
-        </div>
-        <!-- /.box-body -->
-      </div>
-      <!-- /.box -->
+        <!-- /.box -->
     </div>
 </div>
 <!-- /.row -->
@@ -179,5 +182,5 @@ if(strlen($showing) > 0)
 <script src="scripts/pi-hole/js/queries.js?v=<?=$cacheVer?>"></script>
 
 <?php
-    require "scripts/pi-hole/php/footer.php";
+require "scripts/pi-hole/php/footer.php";
 ?>
