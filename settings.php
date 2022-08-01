@@ -877,10 +877,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                             <label for="DNSinterface4"><strong>Permit all origins</strong></label>
                                                         </div>
                                                         <p>These options are dangerous on devices
-                                                           directly connected to the Internet such as cloud instances and are only safe if your
-                                                           Pi-hole is properly firewalled. In a typical at-home setup where your Pi-hole is
-                                                           located within your local network (and you have <strong>not</strong> forwarded port 53
-                                                           in your router!) they are safe to use.</p>
+                                                            directly connected to the Internet such as cloud instances and are only safe if your
+                                                            Pi-hole is properly firewalled. In a typical at-home setup where your Pi-hole is
+                                                            located within your local network (and you have <strong>not</strong> forwarded port 53
+                                                            in your router!) they are safe to use.</p>
                                                     </div>
                                                 </div>
                                                 <p>See <a href="https://docs.pi-hole.net/ftldns/interfaces/" target="_blank">our documentation</a> for further technical details.</p>
@@ -1058,9 +1058,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 <div class="form-group">
                                                     <label>Top Clients</label>
                                                     <textarea name="clients" class="form-control" placeholder="Enter one IP address or host name per line" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                              rows="4"><?php foreach ($excludedClients as $client) {
-                                                                             echo $client . "\n"; }
-                                                                       ?></textarea>
+                                                            rows="4"><?php foreach ($excludedClients as $client) {
+                                                                            echo $client . "\n"; }
+                                                                    ?></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -1225,8 +1225,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 <label for="bargraphs"><strong>Use new Bar charts on dashboard</strong></label>
                                             </div>
                                         </div>
-                                      </div>
-                                      <div class="row">
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <div>
                                                 <input type="checkbox" name="colorfulQueryLog" id="colorfulQueryLog" value="no">
@@ -1234,7 +1234,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                             </div>
                                         </div>
                                     </div>
-                                      <div class="row">
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <div>
                                                 <input type="checkbox" name="hideNonfatalDnsmasqWarnings" id="hideNonfatalDnsmasqWarnings" value="no">
@@ -1311,8 +1311,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                     <div class="row">
                         <?php if (extension_loaded('Phar')) { ?>
                         <form role="form" method="post" id="takeoutform"
-                              action="scripts/pi-hole/php/teleporter.php"
-                              target="teleporter_iframe" enctype="multipart/form-data">
+                            action="scripts/pi-hole/php/teleporter.php"
+                            target="teleporter_iframe" enctype="multipart/form-data">
                             <input type="hidden" name="token" value="<?php echo $token ?>">
                             <div class="col-lg-6 col-md-12">
                                 <div class="box box-warning">
@@ -1423,7 +1423,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                             </div>
                         </form>
                         <div class="modal fade" id="teleporterModal" role="dialog" data-keyboard="false"
-                             tabindex="-1" data-backdrop="static" aria-labelledby="teleporterModalLabel">
+                            tabindex="-1" data-backdrop="static" aria-labelledby="teleporterModalLabel">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
