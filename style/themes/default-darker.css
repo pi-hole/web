@@ -7,6 +7,7 @@
 *
 *  The colors used in this theme has been inspired by
 *  https://addons.mozilla.org/en-US/firefox/addon/darkreader/
+// editorconfig-checker-disable
                         _______
                        /       \
                       .==.    .==.
@@ -25,6 +26,8 @@ _______|_______/__/ ____ \__\__|___\__\__|___\__\____
 |  ____  \|  |__/  ______  \|  |__/  /|  |___|  ____  \
 |__|   \__\____/__/      \__\_______/ |______|__|   \__\
                 https://darkreader.org
+
+// editorconfig-checker-disable
 */
 /* User-Agent Style */
 html {

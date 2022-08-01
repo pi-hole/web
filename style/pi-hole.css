@@ -392,10 +392,10 @@ td.lookatme {
   max-height: 400px;
 }
 
-/* Work around code that expects icon fonts rather than SVG.
-   Newer versions of AdminLTE have support for SVG icons,
-   https://github.com/ColorlibHQ/AdminLTE/pull/2920
-   so this code will only be needed temporarily. */
+/*Work around code that expects icon fonts rather than SVG.
+  Newer versions of AdminLTE have support for SVG icons,
+  https://github.com/ColorlibHQ/AdminLTE/pull/2920
+  so this code will only be needed temporarily. */
 
 .sidebar-menu li > a > .fa-angle-left,
 .sidebar-menu li > a > .pull-right-container > .fa-angle-left {
