@@ -73,17 +73,17 @@ elseif (isset($_GET['versions']))
     // suppressed if on development branches)
     require "scripts/pi-hole/php/update_checker.php";
     $updates = array("core_update" => $core_update,
-                     "web_update" => $web_update,
-                     "FTL_update" => $FTL_update);
+                    "web_update" => $web_update,
+                    "FTL_update" => $FTL_update);
     $current = array("core_current" => $core_current,
-                     "web_current" => $web_current,
-                     "FTL_current" => $FTL_current);
+                    "web_current" => $web_current,
+                    "FTL_current" => $FTL_current);
     $latest = array("core_latest" => $core_latest,
                     "web_latest" => $web_latest,
                     "FTL_latest" => $FTL_latest);
     $branches = array("core_branch" => $core_branch,
-                      "web_branch" => $web_branch,
-                      "FTL_branch" => $FTL_branch);
+                    "web_branch" => $web_branch,
+                    "FTL_branch" => $FTL_branch);
     $data = array_merge($data, $updates);
     $data = array_merge($data, $current);
     $data = array_merge($data, $latest);

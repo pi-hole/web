@@ -12,7 +12,7 @@ require "scripts/pi-hole/php/header.php";
 
 <div class="row">
     <div class="col-md-12">
-      <div class="box" id="network-details">
+        <div class="box" id="network-details">
             <div class="box-header with-border">
                 <h3 class="box-title">Network overview</h3>
             </div>

@@ -21,21 +21,21 @@ $piholeFTLConf = piholeFTLConfig(DEFAULT_FTLCONFFILE ,true);
 $last_error = error_get_last();
 if(isset($last_error) && ($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR))
 {
-	$error .= "There was a problem applying your settings.<br>Debugging information:<br>PHP error (".htmlspecialchars($last_error["type"])."): ".htmlspecialchars($last_error["message"])." in ".htmlspecialchars($last_error["file"]).":".htmlspecialchars($last_error["line"]);
+    $error .= "There was a problem applying your settings.<br>Debugging information:<br>PHP error (".htmlspecialchars($last_error["type"])."): ".htmlspecialchars($last_error["message"])." in ".htmlspecialchars($last_error["file"]).":".htmlspecialchars($last_error["line"]);
 }
 
 # Timezone is set in docker via ENV otherwise get it from commandline
 $timezone=htmlspecialchars(getenv("TZ"));
 if (empty($timezone)) {
-	$timezone=shell_exec("date +'%Z'");
+    $timezone=shell_exec("date +'%Z'");
 }
 
 ?>
 <style>
-	.tooltip-inner {
-		max-width: none;
-		white-space: nowrap;
-	}
+    .tooltip-inner {
+        max-width: none;
+        white-space: nowrap;
+    }
 </style>
 
 <?php // Check if ad lists should be updated after saving ...

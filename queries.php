@@ -14,87 +14,87 @@ $showing = "";
 
 if(isset($setupVars["API_QUERY_LOG_SHOW"]))
 {
-	if($setupVars["API_QUERY_LOG_SHOW"] === "all")
-	{
-		$showing = "showing";
-	}
-	elseif($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly")
-	{
-		$showing = "showing permitted";
-	}
-	elseif($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly")
-	{
-		$showing = "showing blocked";
-	}
-	elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
-	{
-		$showing = "showing no queries (due to setting)";
-	}
+    if($setupVars["API_QUERY_LOG_SHOW"] === "all")
+    {
+        $showing = "showing";
+    }
+    elseif($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly")
+    {
+        $showing = "showing permitted";
+    }
+    elseif($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly")
+    {
+        $showing = "showing blocked";
+    }
+    elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
+    {
+        $showing = "showing no queries (due to setting)";
+    }
 }
 else if(isset($_GET["type"]) && $_GET["type"] === "blocked")
 {
-	$showing = "showing blocked";
+    $showing = "showing blocked";
 }
 else
 {
-	// If filter variable is not set, we
-	// automatically show all queries
-	$showing = "showing";
+    // If filter variable is not set, we
+    // automatically show all queries
+    $showing = "showing";
 }
 
 $showall = false;
 if(isset($_GET["all"]))
 {
-	$showing .= " all queries within the Pi-hole log";
+    $showing .= " all queries within the Pi-hole log";
 }
 else if(isset($_GET["client"]))
 {
-	// Add switch between showing all queries and blocked only
-	if (isset($_GET["type"]) && $_GET["type"] === "blocked")
-	{
-		// Show blocked queries for this client + link to all
-		$showing .= " blocked queries for client ".htmlentities($_GET["client"]);
-		$showing .= ", <a href=\"?client=".htmlentities($_GET["client"])."\">show all</a>";
-	}
-	else
-	{
-		// Show All queries for this client + link to show only blocked
-		$showing .= " all queries for client ".htmlentities($_GET["client"]);
-		$showing .= ", <a href=\"?client=".htmlentities($_GET["client"])."&type=blocked\">show blocked only</a>";
-	}
+    // Add switch between showing all queries and blocked only
+    if (isset($_GET["type"]) && $_GET["type"] === "blocked")
+    {
+        // Show blocked queries for this client + link to all
+        $showing .= " blocked queries for client ".htmlentities($_GET["client"]);
+        $showing .= ", <a href=\"?client=".htmlentities($_GET["client"])."\">show all</a>";
+    }
+    else
+    {
+        // Show All queries for this client + link to show only blocked
+        $showing .= " all queries for client ".htmlentities($_GET["client"]);
+        $showing .= ", <a href=\"?client=".htmlentities($_GET["client"])."&type=blocked\">show blocked only</a>";
+    }
 }
 else if(isset($_GET["forwarddest"]))
 {
-	if($_GET["forwarddest"] === "blocked")
-		$showing .= " queries blocked by Pi-hole";
-	elseif($_GET["forwarddest"] === "cached")
-		$showing .= " queries answered from cache";
-	else
-		$showing .= " queries for upstream destination ".htmlentities($_GET["forwarddest"]);
+    if($_GET["forwarddest"] === "blocked")
+        $showing .= " queries blocked by Pi-hole";
+    elseif($_GET["forwarddest"] === "cached")
+        $showing .= " queries answered from cache";
+    else
+        $showing .= " queries for upstream destination ".htmlentities($_GET["forwarddest"]);
 }
 else if(isset($_GET["querytype"]))
 {
-	$showing .= " type ".getQueryTypeStr($_GET["querytype"])." queries";
+    $showing .= " type ".getQueryTypeStr($_GET["querytype"])." queries";
 }
 else if(isset($_GET["domain"]))
 {
-	$showing .= " queries for domain ".htmlentities($_GET["domain"]);
+    $showing .= " queries for domain ".htmlentities($_GET["domain"]);
 }
 else if(isset($_GET["from"]) || isset($_GET["until"]))
 {
-	$showing .= " queries within specified time interval";
+    $showing .= " queries within specified time interval";
 }
 else
 {
-	$showing .= " up to 100 queries";
-	$showall = true;
+    $showing .= " up to 100 queries";
+    $showall = true;
 }
 
 if(strlen($showing) > 0)
 {
-	$showing = "(".$showing.")";
-	if($showall)
-		$showing .= ", <a href=\"?all\">show all</a>";
+    $showing = "(".$showing.")";
+    if($showall)
+        $showing .= ", <a href=\"?all\">show all</a>";
 }
 ?>
 

@@ -12,61 +12,61 @@
 ini_set("pcre.recursion_limit", 1500);
 function validDomain($domain_name, &$message = NULL)
 {
-	if(!preg_match("/^((-|_)*[a-z\d]((-|_)*[a-z\d])*(-|_)*)(\.(-|_)*([a-z\d]((-|_)*[a-z\d])*))*$/i", $domain_name)) {
-		if($message !== NULL)
-			$message = "it contains invalid characters";
-		return false;
-	}
-	if(!preg_match("/^.{1,253}$/", $domain_name)) {
-		if($message !== NULL)
-			$message = "its length is invalid";
-		return false;
-	}
-	if(!preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)) {
-		if($message !== NULL)
-			$message = "at least one label is of invalid length";
-		return false;
-	}
+    if(!preg_match("/^((-|_)*[a-z\d]((-|_)*[a-z\d])*(-|_)*)(\.(-|_)*([a-z\d]((-|_)*[a-z\d])*))*$/i", $domain_name)) {
+        if($message !== NULL)
+            $message = "it contains invalid characters";
+        return false;
+    }
+    if(!preg_match("/^.{1,253}$/", $domain_name)) {
+        if($message !== NULL)
+            $message = "its length is invalid";
+        return false;
+    }
+    if(!preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)) {
+        if($message !== NULL)
+            $message = "at least one label is of invalid length";
+        return false;
+    }
 
-	// everything is okay
-	return true;
+    // everything is okay
+    return true;
 }
 
 function validDomainWildcard($domain_name)
 {
-	// There has to be either no or at most one "*" at the beginning of a line
-	$validChars = preg_match("/^((\*\.)?[_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([_a-z\d])*)*$/i", $domain_name);
-	$lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
-	$labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
-	return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
+    // There has to be either no or at most one "*" at the beginning of a line
+    $validChars = preg_match("/^((\*\.)?[_a-z\d](-*[_a-z\d])*)(\.([_a-z\d](-*[a-z\d])*))*(\.([_a-z\d])*)*$/i", $domain_name);
+    $lengthCheck = preg_match("/^.{1,253}$/", $domain_name);
+    $labelLengthCheck = preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
+    return ( $validChars && $lengthCheck && $labelLengthCheck ); //length of each label
 }
 
 function validIP($address){
-	if (preg_match('/[.:0]/', $address) && !preg_match('/[1-9a-f]/', $address)) {
-		// Test if address contains either `:` or `0` but not 1-9 or a-f
-		return false;
-	}
-	return !filter_var($address, FILTER_VALIDATE_IP) === false;
+    if (preg_match('/[.:0]/', $address) && !preg_match('/[1-9a-f]/', $address)) {
+        // Test if address contains either `:` or `0` but not 1-9 or a-f
+        return false;
+    }
+    return !filter_var($address, FILTER_VALIDATE_IP) === false;
 }
 
 function validCIDRIP($address){
-	// This validation strategy has been taken from ../js/groups-common.js
-	$isIPv6 = strpos($address, ":") !== false;
-	if($isIPv6) {
-		// One IPv6 element is 16bit: 0000 - FFFF
-		$v6elem = "[0-9A-Fa-f]{1,4}";
-		// dnsmasq allows arbitrary prefix-length since https://thekelleys.org.uk/gitweb/?p=dnsmasq.git;a=commit;h=35f93081dc9a52e64ac3b7196ad1f5c1106f8932
-		$v6cidr = "([1-9]|[1-9][0-9]|1[01][0-9]|12[0-8])";
-		$validator = "/^(((?:$v6elem))((?::$v6elem))*::((?:$v6elem))((?::$v6elem))*|((?:$v6elem))((?::$v6elem)){7})\/$v6cidr$/";
-		return preg_match($validator, $address);
-	} else {
-		// One IPv4 element is 8bit: 0 - 256
-		$v4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
-		// dnsmasq allows arbitrary prefix-length
-		$allowedv4cidr = "(([1-9]|[12][0-9]|3[0-2]))";
-		$validator = "/^$v4elem\.$v4elem\.$v4elem\.$v4elem\/$allowedv4cidr$/";
-		return preg_match($validator, $address);
-	}
+    // This validation strategy has been taken from ../js/groups-common.js
+    $isIPv6 = strpos($address, ":") !== false;
+    if($isIPv6) {
+        // One IPv6 element is 16bit: 0000 - FFFF
+        $v6elem = "[0-9A-Fa-f]{1,4}";
+        // dnsmasq allows arbitrary prefix-length since https://thekelleys.org.uk/gitweb/?p=dnsmasq.git;a=commit;h=35f93081dc9a52e64ac3b7196ad1f5c1106f8932
+        $v6cidr = "([1-9]|[1-9][0-9]|1[01][0-9]|12[0-8])";
+        $validator = "/^(((?:$v6elem))((?::$v6elem))*::((?:$v6elem))((?::$v6elem))*|((?:$v6elem))((?::$v6elem)){7})\/$v6cidr$/";
+        return preg_match($validator, $address);
+    } else {
+        // One IPv4 element is 8bit: 0 - 256
+        $v4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
+        // dnsmasq allows arbitrary prefix-length
+        $allowedv4cidr = "(([1-9]|[12][0-9]|3[0-2]))";
+        $validator = "/^$v4elem\.$v4elem\.$v4elem\.$v4elem\/$allowedv4cidr$/";
+        return preg_match($validator, $address);
+    }
 }
 
 function validMAC($mac_addr)
@@ -77,12 +77,12 @@ function validMAC($mac_addr)
 
 function validEmail($email)
 {
-	return filter_var($email, FILTER_VALIDATE_EMAIL)
-		// Make sure that the email does not contain special characters which
-		// may be used to execute shell commands, even though they may be valid
-		// in an email address. If the escaped email does not equal the original
-		// email, it is not safe to store in setupVars.
-		&& escapeshellcmd($email) === $email;
+    return filter_var($email, FILTER_VALIDATE_EMAIL)
+        // Make sure that the email does not contain special characters which
+        // may be used to execute shell commands, even though they may be valid
+        // in an email address. If the escaped email does not equal the original
+        // email, it is not safe to store in setupVars.
+        && escapeshellcmd($email) === $email;
 }
 
 function get_ip_type($ip)
@@ -281,7 +281,7 @@ function deleteCustomDNSEntry()
 function deleteAllCustomDNSEntries($reload="")
 {
     try
-		{
+        {
         if(isset($_REQUEST['reload']))
             $reload = $_REQUEST['reload'];
 

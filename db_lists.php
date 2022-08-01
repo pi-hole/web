@@ -51,11 +51,11 @@ require "scripts/pi-hole/php/header.php";
 <?php
 if($boxedlayout)
 {
-	$tablelayout = "col-md-6";
+    $tablelayout = "col-md-6";
 }
 else
 {
-	$tablelayout = "col-md-6 col-lg-4";
+    $tablelayout = "col-md-6 col-lg-4";
 }
 ?>
 <div class="row">

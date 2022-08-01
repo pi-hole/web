@@ -8,23 +8,23 @@ check_cors();
 <head>
 <style>
 body {
-  background: #fff;
-  margin: 10px 0;
+    background: #fff;
+    margin: 10px 0;
 }
 
 .qrcode {
-  text-align: center;
-  margin: 0 0 1em;
+    text-align: center;
+    margin: 0 0 1em;
 }
 
 .qrcode svg {
-  max-width: 100%;
-  height: auto;
+    max-width: 100%;
+    height: auto;
 }
 
 .token {
-  font-size: 14px;
-  word-break: break-word;
+    font-size: 14px;
+    word-break: break-word;
 }
 </style>
 </head>
