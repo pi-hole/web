@@ -3634,7 +3634,6 @@ a:focus {
 .login-page,
 .register-page {
   background-color: rgb(46, 50, 52);
-  background-image: none;
 }
 .login-box-body,
 .register-box-body {

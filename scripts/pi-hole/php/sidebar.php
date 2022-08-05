@@ -83,7 +83,7 @@
                 if(strlen($pwhash) > 0 && $auth) {
                 ?>
                 <li>
-                    <a href="?logout">
+                    <a href="logout.php">
                         <i class="fa fa-fw menu-icon fa-sign-out-alt"></i> <span>Logout</span>
                     </a>
                 </li>
