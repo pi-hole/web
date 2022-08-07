@@ -20,6 +20,7 @@ $finder = PhpCsFixer\Finder::create()
 $config = new PhpCsFixer\Config();
 $config
     ->setRules(array(
+        '@PSR12' => true,
         '@PhpCsFixer' => true,
         'array_syntax' => array('syntax' => 'long'),
     ))
