@@ -7,28 +7,33 @@
 *  Please see LICENSE file for your rights under this license.
 */
 
-require "scripts/pi-hole/php/auth.php";
-require "scripts/pi-hole/php/password.php";
-require_once "scripts/pi-hole/php/FTL.php";
-require_once "scripts/pi-hole/php/func.php";
-require "scripts/pi-hole/php/theme.php";
+require 'scripts/pi-hole/php/auth.php';
+
+require 'scripts/pi-hole/php/password.php';
+
+require_once 'scripts/pi-hole/php/FTL.php';
+
+require_once 'scripts/pi-hole/php/func.php';
+
+require 'scripts/pi-hole/php/theme.php';
 $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
-$hostname = gethostname() ? gethostname() : "";
+$hostname = gethostname() ? gethostname() : '';
 
 // Return memory usage to show on status block
-function getMemUsage() {
-    $data = explode("\n", file_get_contents("/proc/meminfo"));
+function getMemUsage()
+{
+    $data = explode("\n", file_get_contents('/proc/meminfo'));
     $meminfo = array();
     if (count($data) > 0) {
         foreach ($data as $line) {
-            $expl = explode(":", $line);
-            if (count($expl) == 2) {
+            $expl = explode(':', $line);
+            if (2 == count($expl)) {
                 // remove " kB" from the end of the string and make it an integer
-                $meminfo[$expl[0]] = intval(trim(substr($expl[1],0, -3)));
+                $meminfo[$expl[0]] = intval(trim(substr($expl[1], 0, -3)));
             }
         }
-        $memused = $meminfo["MemTotal"] - $meminfo["MemFree"] - $meminfo["Buffers"] - $meminfo["Cached"];
-        $memusage = $memused / $meminfo["MemTotal"];
+        $memused = $meminfo['MemTotal'] - $meminfo['MemFree'] - $meminfo['Buffers'] - $meminfo['Cached'];
+        $memusage = $memused / $meminfo['MemTotal'];
     } else {
         $memusage = -1;
     }
@@ -38,15 +43,16 @@ function getMemUsage() {
 
 // Try to get temperature value from different places (OS dependent)
 // - return an array, containing the temperature and limit.
-function getTemperature() {
+function getTemperature()
+{
     global $setupVars;
 
-    if (file_exists("/sys/class/thermal/thermal_zone0/temp")) {
-        $output = rtrim(file_get_contents("/sys/class/thermal/thermal_zone0/temp"));
-    } elseif (file_exists("/sys/class/hwmon/hwmon0/temp1_input")) {
-        $output = rtrim(file_get_contents("/sys/class/hwmon/hwmon0/temp1_input"));
+    if (file_exists('/sys/class/thermal/thermal_zone0/temp')) {
+        $output = rtrim(file_get_contents('/sys/class/thermal/thermal_zone0/temp'));
+    } elseif (file_exists('/sys/class/hwmon/hwmon0/temp1_input')) {
+        $output = rtrim(file_get_contents('/sys/class/hwmon/hwmon0/temp1_input'));
     } else {
-        $output = "";
+        $output = '';
     }
 
     // Test if we succeeded in getting the temperature
@@ -67,7 +73,6 @@ function getTemperature() {
         } else {
             $limit = 60;
         }
-
     } else {
         // Nothing can be colder than -273.15 degree Celsius (= 0 Kelvin)
         // This is the minimum temperature possible (AKA absolute zero)
@@ -76,7 +81,7 @@ function getTemperature() {
         $limit = null;
     }
 
-    return [$celsius, $limit];
+    return array($celsius, $limit);
 }
 
 check_cors();
@@ -92,7 +97,7 @@ $token = $_SESSION['token'];
 
 if ($auth) {
     // For session timer
-    $maxlifetime = ini_get("session.gc_maxlifetime");
+    $maxlifetime = ini_get('session.gc_maxlifetime');
 
     // Generate CSRF token
     if (empty($_SESSION['token'])) {
@@ -123,17 +128,17 @@ if (!is_numeric($nproc)) {
 $memory_usage = getMemUsage();
 
 // Retrieve layout setting from setupVars
-if (isset($setupVars['WEBUIBOXEDLAYOUT']) && !($setupVars['WEBUIBOXEDLAYOUT'] === "boxed")) {
+if (isset($setupVars['WEBUIBOXEDLAYOUT']) && !('boxed' === $setupVars['WEBUIBOXEDLAYOUT'])) {
     $boxedlayout = false;
 } else {
     $boxedlayout = true;
 }
 
 // Override layout setting if layout is changed via Settings page
-if (isset($_POST["field"])) {
-    if ($_POST["field"] === "webUI" && isset($_POST["boxedlayout"])) {
+if (isset($_POST['field'])) {
+    if ('webUI' === $_POST['field'] && isset($_POST['boxedlayout'])) {
         $boxedlayout = true;
-    } elseif ($_POST["field"] === "webUI" && !isset($_POST["boxedlayout"])) {
+    } elseif ('webUI' === $_POST['field'] && !isset($_POST['boxedlayout'])) {
         $boxedlayout = false;
     }
 }
@@ -157,7 +162,7 @@ $piholeFTLConf = piholeFTLConfig();
     <meta http-equiv="cache-control" content="max-age=60,private">
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pi-hole<?php echo $hostname ? " - " . $hostname : "" ?></title>
+    <title>Pi-hole<?php echo $hostname ? ' - '.$hostname : ''; ?></title>
 
     <link rel="apple-touch-icon" href="img/favicons/apple-touch-icon.png" sizes="180x180">
     <link rel="icon" href="img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
@@ -167,16 +172,16 @@ $piholeFTLConf = piholeFTLConfig();
     <link rel="shortcut icon" href="img/favicons/favicon.ico">
     <meta name="msapplication-TileColor" content="#367fa9">
     <meta name="msapplication-TileImage" content="img/favicons/mstile-150x150.png">
-<?php if ($theme == "default-light") { ?>
+<?php if ('default-light' == $theme) { ?>
     <meta name="theme-color" content="#367fa9">
-<?php } elseif ($theme == "default-dark") { ?>
+<?php } elseif ('default-dark' == $theme) { ?>
     <meta name="theme-color" content="#272c30">
-<?php } elseif ($theme == "default-darker") { ?>
+<?php } elseif ('default-darker' == $theme) { ?>
     <meta name="theme-color" content="#2e6786">
-<?php } elseif ($theme == "lcars") { ?>
+<?php } elseif ('lcars' == $theme) { ?>
     <meta name="theme-color" content="#4488FF">
-    <link rel="stylesheet" href="style/vendor/fonts/ubuntu-mono/ubuntu-mono.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/fonts/antonio/antonio.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/fonts/ubuntu-mono/ubuntu-mono.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/fonts/antonio/antonio.css?v=<?php echo $cacheVer; ?>">
 <?php } ?>
 
 <?php if ($darkmode) { ?>
@@ -184,37 +189,37 @@ $piholeFTLConf = piholeFTLConfig();
         html { background-color: #000; }
     </style>
 <?php } ?>
-    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/datatables.min.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/datatables_extensions.min.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/daterangepicker.min.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/AdminLTE.min.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/select2.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/datatables.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/datatables_extensions.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/daterangepicker.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/AdminLTE.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/select2.min.css?v=<?php echo $cacheVer; ?>">
 
-<?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?>
-    <link rel="stylesheet" href="style/vendor/animate.min.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css?v=<?=$cacheVer?>">
+<?php if (in_array($scriptname, array('groups.php', 'groups-adlists.php', 'groups-clients.php', 'groups-domains.php'))) { ?>
+    <link rel="stylesheet" href="style/vendor/animate.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css?v=<?php echo $cacheVer; ?>">
 <?php } ?>
-    <link rel="stylesheet" href="style/pi-hole.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css?v=<?=$cacheVer?>">
-    <noscript><link rel="stylesheet" href="style/vendor/js-warn.css?v=<?=$cacheVer?>"></noscript>
+    <link rel="stylesheet" href="style/pi-hole.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css?v=<?php echo $cacheVer; ?>">
+    <noscript><link rel="stylesheet" href="style/vendor/js-warn.css?v=<?php echo $cacheVer; ?>"></noscript>
 
-    <script src="scripts/vendor/jquery.min.js?v=<?=$cacheVer?>"></script>
-    <script src="style/vendor/bootstrap/js/bootstrap.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/adminlte.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/bootstrap-notify.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/select2.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/datatables.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/datatables.select.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/datatables.buttons.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/moment.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/Chart.min.js?v=<?=$cacheVer?>"></script>
-    <script src="style/vendor/font-awesome/js/all.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/jquery.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="style/vendor/bootstrap/js/bootstrap.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/adminlte.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/bootstrap-notify.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/select2.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/datatables.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/datatables.select.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/datatables.buttons.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/moment.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/Chart.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="style/vendor/font-awesome/js/all.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/pi-hole/js/utils.js?v=<?php echo $cacheVer; ?>"></script>
 </head>
-<body class="hold-transition sidebar-mini<?php if($boxedlayout){ ?> layout-boxed<?php } ?><?php if($auth){ ?> logged-in<?php } ?>">
+<body class="hold-transition sidebar-mini<?php if ($boxedlayout) { ?> layout-boxed<?php } ?><?php if ($auth) { ?> logged-in<?php } ?>">
 <noscript>
     <!-- JS Warning -->
     <div>
@@ -226,13 +231,15 @@ $piholeFTLConf = piholeFTLConfig();
     <!-- /JS Warning -->
 </noscript>
 <?php
-if($auth) {
-    echo "<div id=\"token\" hidden>$token</div>";
+if ($auth) {
+    echo "<div id=\"token\" hidden>{$token}</div>";
 }
 ?>
 
 <!-- Send token to JS -->
-<div id="enableTimer" hidden><?php if(file_exists("../custom_disable_timer")){ echo file_get_contents("../custom_disable_timer"); } ?></div>
+<div id="enableTimer" hidden><?php if (file_exists('../custom_disable_timer')) {
+    echo file_get_contents('../custom_disable_timer');
+} ?></div>
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
@@ -252,7 +259,7 @@ if($auth) {
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li<?php echo !$hostname ? ' class="hidden"' : "" ?>>
+                    <li<?php echo !$hostname ? ' class="hidden"' : ''; ?>>
                         <p class="navbar-text">
                             <span class="hidden-xs hidden-sm">hostname:</span>
                             <code><?php echo $hostname; ?></code>
@@ -285,7 +292,13 @@ if($auth) {
                                         <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank">Updates</a>
                                     </div>
                                     <div id="sessiontimer" class="col-xs-12 text-center">
-                                        <strong>Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></strong>
+                                        <strong>Session is valid for <span id="sessiontimercounter">
+<?php if ($auth && strlen($pwhash) > 0) {
+    echo $maxlifetime;
+} else {
+    echo '0';
+} ?>
+                                        </span></strong>
                                     </div>
                                 </div>
                             </li>
@@ -304,9 +317,7 @@ if($auth) {
             </div>
         </nav>
     </header>
-<?php
-require "scripts/pi-hole/php/sidebar.php";
-?>
+<?php require 'scripts/pi-hole/php/sidebar.php'; ?>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Main content -->
@@ -322,7 +333,8 @@ require "scripts/pi-hole/php/sidebar.php";
 // If auth is required and not set, i.e. no successfully logged in,
 // we show the reduced version of the summary (index) page
 if (!$auth && (!isset($indexpage) || isset($_GET['login']))) {
-    require "scripts/pi-hole/php/loginpage.php";
-    exit();
+    require 'scripts/pi-hole/php/loginpage.php';
+
+    exit;
 }
 ?>

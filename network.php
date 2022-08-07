@@ -7,7 +7,7 @@
 *    Please see LICENSE file for your rights under this license.
 */
 
-require "scripts/pi-hole/php/header.php";
+require 'scripts/pi-hole/php/header.php';
 ?>
 
 <div class="row">
@@ -66,9 +66,9 @@ require "scripts/pi-hole/php/header.php";
 </div>
 <!-- /.row -->
 
-<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/network.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="scripts/pi-hole/js/network.js?v=<?php echo $cacheVer; ?>"></script>
 
 <?php
-require "scripts/pi-hole/php/footer.php";
+require 'scripts/pi-hole/php/footer.php';
 ?>

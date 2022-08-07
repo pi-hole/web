@@ -8,7 +8,7 @@
 *    Please see LICENSE file for your rights under this license.
 */
 
-require "scripts/pi-hole/php/header.php";
+require 'scripts/pi-hole/php/header.php';
 ?>
 
 <!-- Sourceing CSS colors from stylesheet to be used in JS code -->
@@ -49,13 +49,10 @@ require "scripts/pi-hole/php/header.php";
 </div>
 
 <?php
-if($boxedlayout)
-{
-    $tablelayout = "col-md-6";
-}
-else
-{
-    $tablelayout = "col-md-6 col-lg-4";
+if ($boxedlayout) {
+    $tablelayout = 'col-md-6';
+} else {
+    $tablelayout = 'col-md-6 col-lg-4';
 }
 ?>
 <div class="row">
@@ -148,9 +145,9 @@ else
     <!-- /.col -->
 </div>
 
-<script src="scripts/vendor/daterangepicker.min.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/db_lists.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/vendor/daterangepicker.min.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="scripts/pi-hole/js/db_lists.js?v=<?php echo $cacheVer; ?>"></script>
 
 <?php
-require "scripts/pi-hole/php/footer.php";
+require 'scripts/pi-hole/php/footer.php';
 ?>
