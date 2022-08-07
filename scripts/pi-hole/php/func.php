@@ -108,7 +108,6 @@ function checkfile($filename)
     if (is_readable($filename)) {
         return $filename;
     }
-
     // substitute dummy file
     return '/dev/null';
 }

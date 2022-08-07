@@ -41,7 +41,6 @@ function SQLite3_connect_try($filename, $mode, $trytoreconnect)
 
             return SQLite3_connect_try($filename, $mode, false);
         }
-
         // If we should not try again (or are already trying again!), we return the exception string
         // so the user gets it on the dashboard
         return $filename.': '.$exception->getMessage();
@@ -154,7 +153,6 @@ function add_to_table($db, $table, $domains, $comment = null, $wildcardstyle = f
             if ($returnnum) {
                 return $num;
             }
-
             if (1 === $num) {
                 $plural = '';
             } else {
@@ -172,7 +170,6 @@ function add_to_table($db, $table, $domains, $comment = null, $wildcardstyle = f
     if ($returnnum) {
         return $num;
     }
-
     $finalcount = intval($db->querySingle($countquery));
     $modified = $finalcount - $initialcount;
 
@@ -256,7 +253,6 @@ function remove_from_table($db, $table, $domains, $returnnum = false, $type = -1
             if ($returnnum) {
                 return $num;
             }
-
             if (1 === $num) {
                 $plural = '';
             } else {
@@ -274,7 +270,6 @@ function remove_from_table($db, $table, $domains, $returnnum = false, $type = -1
     if ($returnnum) {
         return $num;
     }
-
     if (1 === $num) {
         $plural = '';
     } else {

@@ -8,11 +8,8 @@
 */
 
 require 'password.php';
-
 require 'auth.php'; // Also imports func.php
-
 require 'database.php';
-
 require 'savesettings.php';
 
 if ('cli' !== php_sapi_name()) {

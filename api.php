@@ -8,13 +8,9 @@
 */
 
 $api = true;
-
 require_once 'scripts/pi-hole/php/FTL.php';
-
 require_once 'scripts/pi-hole/php/password.php';
-
 require_once 'scripts/pi-hole/php/database.php';
-
 require_once 'scripts/pi-hole/php/auth.php';
 check_cors();
 
@@ -117,18 +113,15 @@ if (isset($_GET['enable']) && $auth) {
         // Set POST parameters and invoke script to add domain to list
         $_POST['domain'] = $_GET['add'];
         $_POST['action'] = 'add_domain';
-
         require 'scripts/pi-hole/php/groups.php';
     } elseif (isset($_GET['sub'])) {
         // Set POST parameters and invoke script to remove domain from list
         $_POST['domain'] = $_GET['sub'];
         $_POST['action'] = 'delete_domain_string';
-
         require 'scripts/pi-hole/php/groups.php';
     } else {
         // Set POST parameters and invoke script to get all domains
         $_POST['action'] = 'get_domains';
-
         require 'scripts/pi-hole/php/groups.php';
     }
 

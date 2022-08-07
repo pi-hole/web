@@ -9,9 +9,7 @@
 */
 
 require 'scripts/pi-hole/php/header.php';
-
 require 'scripts/pi-hole/php/savesettings.php';
-
 require_once 'scripts/pi-hole/php/FTL.php';
 
 // Reread ini file as things might have been changed
@@ -544,8 +542,16 @@ if (0 !== $FTLpid) {
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div><input type="checkbox" name="DHCP_rapid_commit" id="DHCP_rapid_commit" class="DHCPgroup" <?php if ($DHCP_rapid_commit) { ?>checked<?php } if (!$DHCP) { ?> disabled<?php } ?>>&nbsp;<label for="DHCP_rapid_commit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
-                                                <div><input type="checkbox" name="useIPv6" id="useIPv6" class="DHCPgroup" <?php if ($DHCPIPv6) { ?>checked<?php } if (!$DHCP) { ?> disabled<?php } ?>>&nbsp;<label for="useIPv6"><strong>Enable IPv6 support (SLAAC + RA)</strong></label></div>
+                                                <div><input type="checkbox" name="DHCP_rapid_commit" id="DHCP_rapid_commit" class="DHCPgroup"
+<?php
+if ($DHCP_rapid_commit) { ?>checked<?php }
+if (!$DHCP) { ?> disabled<?php } ?>
+>&nbsp;<label for="DHCP_rapid_commit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
+                                                <div><input type="checkbox" name="useIPv6" id="useIPv6" class="DHCPgroup"
+<?php
+if ($DHCPIPv6) { ?>checked<?php }
+if (!$DHCP) { ?> disabled<?php } ?>
+>&nbsp;<label for="useIPv6"><strong>Enable IPv6 support (SLAAC + RA)</strong></label></div>
                                             </div>
                                         </div>
                                     </div>
@@ -556,7 +562,7 @@ if (0 !== $FTLpid) {
                         <!-- DHCP Leases Box -->
                         <div class="row">
                             <?php
-        $dhcp_leases = array();
+$dhcp_leases = array();
 if ($DHCP) {
     // Read leases file
     $leasesfile = true;

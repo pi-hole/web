@@ -18,7 +18,6 @@ function gravity_last_update($raw = false)
             // Array output
             return array('file_exists' => false);
         }
-
         // String output
         return 'Gravity database not available';
     }

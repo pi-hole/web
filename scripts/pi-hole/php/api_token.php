@@ -1,6 +1,5 @@
 <?php
 require 'auth.php';
-
 require 'password.php';
 check_cors();
 ?>
@@ -34,7 +33,6 @@ body {
 if ($auth) {
     if (strlen($pwhash) > 0) {
         echo '<div class="qrcode">';
-
         require_once '../../vendor/qrcode.php';
         $qr = QRCode::getMinimumQRCode($pwhash, QR_ERROR_CORRECT_LEVEL_Q);
         // The size of each block (in pixels) should be an integer

@@ -1,7 +1,6 @@
 <?php
 
 require_once 'func.php';
-
 require_once 'auth.php';
 
 // Authentication checks
