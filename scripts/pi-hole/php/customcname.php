@@ -15,15 +15,12 @@ if (!isset($api)) {
 
 switch ($_POST['action']) {
     case 'get':     echo json_encode(echoCustomCNAMEEntries());
-
         break;
 
     case 'add':     echo json_encode(addCustomCNAMEEntry());
-
         break;
 
     case 'delete':  echo json_encode(deleteCustomCNAMEEntry());
-
         break;
 
     default:

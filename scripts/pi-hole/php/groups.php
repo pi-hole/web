@@ -82,13 +82,11 @@ if ('get_groups' == $_POST['action']) {
             }
 
             if (!$stmt->bindValue(':name', $name, SQLITE3_TEXT)) {
-                throw new Exception('While binding name: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                'Added '.$added.' out of '.$total.' groups');
+                throw new Exception('While binding name: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' groups');
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                'Added '.$added.' out of '.$total.' groups');
+                throw new Exception('While executing: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' groups');
             }
             ++$added;
         }
@@ -363,13 +361,11 @@ if ('get_groups' == $_POST['action']) {
                 $comment = null;
             }
             if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
-                throw new Exception('While binding comment: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                'Added '.$added.' out of '.$total.' clients');
+                throw new Exception('While binding comment: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' clients');
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                'Added '.$added.' out of '.$total.' clients');
+                throw new Exception('While executing: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' clients');
             }
             ++$added;
         }
@@ -632,45 +628,38 @@ if ('get_groups' == $_POST['action']) {
             // want from us.
             if ('replace_domain' == $_POST['action']) {
                 if (!$check_stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
-                    throw new Exception('While binding domain to check: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                    'Added '.$added.' out of '.$total.' domains');
+                    throw new Exception('While binding domain to check: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' domains');
                 }
 
                 $check_result = $check_stmt->execute();
                 if (!$check_result) {
-                    throw new Exception('While executing check: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                    'Added '.$added.' out of '.$total.' domains');
+                    throw new Exception('While executing check: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' domains');
                 }
 
                 // Check return value of CHECK query (0 = only default group, 1 = special group assignments)
                 $only_default_group = (0 == $check_result->fetchArray(SQLITE3_NUM)[0]) ? true : false;
                 if (!$only_default_group) {
-                    throw new Exception('Domain '.$domain.' is configured with special group settings.<br>'.
-                    'Please modify the domain on the respective group management pages.');
+                    throw new Exception('Domain '.$domain.' is configured with special group settings.<br>'.'Please modify the domain on the respective group management pages.');
                 }
 
                 if (!$delete_stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
-                    throw new Exception('While binding domain: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                    'Added '.$added.' out of '.$total.' domains');
+                    throw new Exception('While binding domain: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' domains');
                 }
 
                 if (!$delete_stmt->execute()) {
-                    throw new Exception('While executing: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                    'Added '.$added.' out of '.$total.' domains');
+                    throw new Exception('While executing: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' domains');
                 }
             }
 
             if (!$insert_stmt->bindValue(':domain', $domain, SQLITE3_TEXT)
                 || !$update_stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
-                throw new Exception('While binding domain: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                'Added '.$added.' out of '.$total.' domains');
+                throw new Exception('While binding domain: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' domains');
             }
 
             // First execute INSERT OR IGNORE statement to create a record for
             // this domain (ignore if already existing)
             if (!$insert_stmt->execute()) {
-                throw new Exception('While executing INSERT OR IGNORE: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                'Added '.$added.' out of '.$total.' domains');
+                throw new Exception('While executing INSERT OR IGNORE: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' domains');
             }
 
             // Then update the record with a new comment (and modification date
@@ -678,8 +667,7 @@ if ('get_groups' == $_POST['action']) {
             // the initial DELETE event (losing group assignments in case an
             // entry did already exist).
             if (!$update_stmt->execute()) {
-                throw new Exception('While executing UPDATE: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                'Added '.$added.' out of '.$total.' domains');
+                throw new Exception('While executing UPDATE: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' domains');
             }
             ++$added;
         }
@@ -949,13 +937,11 @@ if ('get_groups' == $_POST['action']) {
             $check_address = preg_replace('|([^:/]*://)?([^/]+)@|', '$1$2', $address, 1);
 
             if (0 !== preg_match('/[^a-zA-Z0-9:\\/?&%=~._()-;]/', $check_address)) {
-                throw new Exception('<strong>Invalid adlist URL '.htmlentities($address).'</strong><br>'.
-                'Added '.$added.' out of '.$total.' adlists');
+                throw new Exception('<strong>Invalid adlist URL '.htmlentities($address).'</strong><br>'.'Added '.$added.' out of '.$total.' adlists');
             }
 
             if (!$stmt->bindValue(':address', $address, SQLITE3_TEXT)) {
-                throw new Exception('While binding address: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                'Added '.$added.' out of '.$total.' adlists');
+                throw new Exception('While binding address: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' adlists');
             }
 
             if (!$stmt->execute()) {
@@ -966,8 +952,7 @@ if ('get_groups' == $_POST['action']) {
                     ++$ignored;
                     $ignored_list .= '<small>'.$address.'</small><br>';
                 } else {
-                    throw new Exception('While executing: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                    'Added '.$added.' out of '.$total.' adlists');
+                    throw new Exception('While executing: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' adlists');
                 }
             } else {
                 ++$added;
@@ -1140,13 +1125,11 @@ if ('get_groups' == $_POST['action']) {
             }
 
             if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
-                throw new Exception('While binding domain: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                    'Added '.$added.' out of '.$total.' domains');
+                throw new Exception('While binding domain: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' domains');
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: <strong>'.$db->lastErrorMsg().'</strong><br>'.
-                    'Added '.$added.' out of '.$total.' domains');
+                throw new Exception('While executing: <strong>'.$db->lastErrorMsg().'</strong><br>'.'Added '.$added.' out of '.$total.' domains');
             }
             ++$added;
         }

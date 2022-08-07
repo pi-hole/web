@@ -73,7 +73,7 @@ function SQLite3_connect($filename, $mode = SQLITE3_OPEN_READONLY)
  * @param $wildcardstyle boolean Whether to format the input domains in legacy wildcard notation
  * @param $returnnum boolean Whether to return an integer or a string
  * @param $type integer The target type (0 = exact whitelist, 1 = exact blacklist, 2 = regex whitelist, 3 = regex blacklist)
- * @param null|mixed $comment
+ * @param mixed|null $comment
  *
  * @return string Success/error and number of processed domains
  */
