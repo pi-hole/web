@@ -63,7 +63,8 @@ function readStaticLeasesFile($origin_file = '/etc/dnsmasq.d/04-pihole-static-dh
             } elseif (0 == strlen($two)) {
                 // dhcp-host=mac,hostname - no IP
                 array_push($dhcp_static_leases, array('hwaddr' => $mac, 'IP' => '', 'host' => $one));
-            } else { // dhcp-host=mac,IP,hostname
+            } else {
+                // dhcp-host=mac,IP,hostname
                 array_push($dhcp_static_leases, array('hwaddr' => $mac, 'IP' => $one, 'host' => $two));
             }
         } elseif (validIP($one) && validDomain($mac)) {

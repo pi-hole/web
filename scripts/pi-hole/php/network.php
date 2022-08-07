@@ -8,9 +8,7 @@
 */
 
 require_once 'auth.php';
-
 require_once 'func.php';
-
 require_once 'database.php';
 
 // Authentication checks

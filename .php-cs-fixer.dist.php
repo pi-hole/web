@@ -20,9 +20,9 @@ $finder = PhpCsFixer\Finder::create()
 $config = new PhpCsFixer\Config();
 $config
     ->setRules(array(
-        '@PSR12' => true,
         '@PhpCsFixer' => true,
         'array_syntax' => array('syntax' => 'long'),
+        'blank_line_before_statement' => array('statements' => array('break', 'case', 'continue', 'declare', 'default', 'exit', 'goto', 'phpdoc', 'return', 'switch', 'throw', 'try', 'yield', 'yield_from')),
     ))
     ->setFinder($finder)
 ;

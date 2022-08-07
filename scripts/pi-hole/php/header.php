@@ -8,13 +8,9 @@
 */
 
 require 'scripts/pi-hole/php/auth.php';
-
 require 'scripts/pi-hole/php/password.php';
-
 require_once 'scripts/pi-hole/php/FTL.php';
-
 require_once 'scripts/pi-hole/php/func.php';
-
 require 'scripts/pi-hole/php/theme.php';
 $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
 $hostname = gethostname() ? gethostname() : '';
