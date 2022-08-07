@@ -11,13 +11,13 @@
                     <p>Status</p>
                     <?php
                     $pistatus = piholeStatus();
-                    if ($pistatus == 53) {
+                    if (53 == $pistatus) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-green-light"></i> Active</span>';
-                    } elseif ($pistatus == 0) {
+                    } elseif (0 == $pistatus) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Blocking disabled</span>';
-                    } elseif ($pistatus == -1) {
+                    } elseif (-1 == $pistatus) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> DNS service not running</span>';
-                    } elseif ($pistatus == -2) {
+                    } elseif (-2 == $pistatus) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Unknown</span>';
                     } else {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-orange"></i> DNS service on port '.$pistatus.'</span>';
@@ -27,22 +27,22 @@
                     <?php
                     echo '<span title="Detected '.$nproc.' cores"><i class="fa fa-w fa-circle ';
                     if ($loaddata[0] > $nproc) {
-                        echo "text-red";
+                        echo 'text-red';
                     } else {
-                        echo "text-green-light";
+                        echo 'text-green-light';
                     }
-                    echo '"></i> Load:&nbsp;&nbsp;' . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</span>";
+                    echo '"></i> Load:&nbsp;&nbsp;'.$loaddata[0].'&nbsp;&nbsp;'.$loaddata[1].'&nbsp;&nbsp;'.$loaddata[2].'</span>';
                     ?>
                     <br/>
                     <?php
                     echo '<span><i class="fa fa-w fa-circle ';
                     if ($memory_usage > 0.75 || $memory_usage < 0.0) {
-                        echo "text-red";
+                        echo 'text-red';
                     } else {
-                        echo "text-green-light";
+                        echo 'text-green-light';
                     }
-                    if($memory_usage > 0.0) {
-                        echo '"></i> Memory usage:&nbsp;&nbsp;' . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</span>";
+                    if ($memory_usage > 0.0) {
+                        echo '"></i> Memory usage:&nbsp;&nbsp;'.sprintf('%.1f', 100.0 * $memory_usage).'&thinsp;%</span>';
                     } else {
                         echo '"></i> Memory usage:&nbsp;&nbsp; N/A</span>';
                     }
@@ -51,12 +51,12 @@
                     <?php
                     if ($celsius >= -273.15) {
                         // Only show temp info if any data is available -->
-                        $tempcolor = "text-vivid-blue";
+                        $tempcolor = 'text-vivid-blue';
                         if (isset($temperaturelimit) && $celsius > $temperaturelimit) {
-                            $tempcolor = "text-red";
+                            $tempcolor = 'text-red';
                         }
                         echo '<span id="temperature"><i class="fa fa-w fa-fire '.$tempcolor.'" style="width: 1em !important"></i> ';
-                        echo 'Temp:&nbsp;<span id="rawtemp" hidden>' .$celsius. '</span>';
+                        echo 'Temp:&nbsp;<span id="rawtemp" hidden>'.$celsius.'</span>';
                         echo '<span id="tempdisplay"></span></span>';
                     }
                     ?>
@@ -64,52 +64,53 @@
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <?php
-            if(!$auth && (!isset($indexpage) || isset($_GET['login'])))
-            {
-                $scriptname = "login";
+            if (!$auth && (!isset($indexpage) || isset($_GET['login']))) {
+                $scriptname = 'login';
             }
-            ?>
+                    ?>
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">Main</li>
                 <!-- Home Page -->
-                <li<?php if($scriptname === "index.php"){ ?> class="active"<?php } ?>>
+                <li<?php if ('index.php' === $scriptname) { ?> class="active"<?php } ?>>
                     <a href="index.php">
                         <i class="fa fa-fw menu-icon fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
                 <!-- Logout -->
                 <?php
-                // Show Logout button if $auth is set and authorization is required
-                if(strlen($pwhash) > 0 && $auth) {
-                ?>
+                        // Show Logout button if $auth is set and authorization is required
+                        if (strlen($pwhash) > 0 && $auth) {
+                            ?>
                 <li>
                     <a href="?logout">
                         <i class="fa fa-fw menu-icon fa-sign-out-alt"></i> <span>Logout</span>
                     </a>
                 </li>
-                <?php } ?>
+                <?php
+                        } ?>
                 <!-- Login -->
                 <?php
-                // Show Login button if $auth is *not* set and authorization is required
-                if(strlen($pwhash) > 0 && !$auth) {
-                ?>
-                <li<?php if($scriptname === "login"){ ?> class="active"<?php } ?>>
+                        // Show Login button if $auth is *not* set and authorization is required
+                        if (strlen($pwhash) > 0 && !$auth) {
+                            ?>
+                <li<?php if ('login' === $scriptname) { ?> class="active"<?php } ?>>
                     <a href="index.php?login">
                         <i class="fa fa-fw menu-icon fa-user"></i> <span>Login</span>
                     </a>
                 </li>
-                <?php } ?>
-                <?php if($auth){ ?>
+                <?php
+                        } ?>
+                <?php if ($auth) { ?>
 
                 <li class="header text-uppercase">Analysis</li>
                 <!-- Query Log -->
-                <li<?php if($scriptname === "queries.php"){ ?> class="active"<?php } ?>>
+                <li<?php if ('queries.php' === $scriptname) { ?> class="active"<?php } ?>>
                     <a href="queries.php">
                         <i class="fa fa-fw menu-icon fa-file-alt"></i> <span>Query Log</span>
                     </a>
                 </li>
                 <!-- Long-term database -->
-                <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php"){ ?> active<?php } ?>">
+                <li class="treeview<?php if ('db_queries.php' === $scriptname || 'db_lists.php' === $scriptname || 'db_graph.php' === $scriptname) { ?> active<?php } ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-history"></i> <span>Long-term Data</span>
                         <span class="pull-right-container">
@@ -117,17 +118,17 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li<?php if($scriptname === "db_graph.php"){ ?> class="active"<?php } ?>>
+                        <li<?php if ('db_graph.php' === $scriptname) { ?> class="active"<?php } ?>>
                             <a href="db_graph.php">
                                 <i class="fa fa-fw menu-icon fa-chart-bar"></i> Graphics
                             </a>
                         </li>
-                        <li<?php if($scriptname === "db_queries.php"){ ?> class="active"<?php } ?>>
+                        <li<?php if ('db_queries.php' === $scriptname) { ?> class="active"<?php } ?>>
                             <a href="db_queries.php">
                                 <i class="fa fa-fw menu-icon fa-file-alt"></i> Query Log
                             </a>
                         </li>
-                        <li<?php if($scriptname === "db_lists.php"){ ?> class="active"<?php } ?>>
+                        <li<?php if ('db_lists.php' === $scriptname) { ?> class="active"<?php } ?>>
                             <a href="db_lists.php">
                                 <i class="fa fa-fw menu-icon fa-list"></i> Top Lists
                             </a>
@@ -137,22 +138,22 @@
 
                 <li class="header text-uppercase">Group Management</li>
                 <!-- Group Management -->
-                <li<?php if($scriptname === "groups.php"){ ?> class="active"<?php } ?>>
+                <li<?php if ('groups.php' === $scriptname) { ?> class="active"<?php } ?>>
                     <a href="groups.php">
                         <i class="fa fa-fw menu-icon fa-user-friends"></i> <span>Groups</span>
                     </a>
                 </li>
-                <li<?php if($scriptname === "groups-clients.php"){ ?> class="active"<?php } ?>>
+                <li<?php if ('groups-clients.php' === $scriptname) { ?> class="active"<?php } ?>>
                     <a href="groups-clients.php">
                         <i class="fa fa-fw menu-icon fa-laptop"></i> <span>Clients</span>
                     </a>
                 </li>
-                <li<?php if($scriptname === "groups-domains.php"){ ?> class="active"<?php } ?>>
+                <li<?php if ('groups-domains.php' === $scriptname) { ?> class="active"<?php } ?>>
                     <a href="groups-domains.php">
                         <i class="fa fa-fw menu-icon fa-list"></i> <span>Domains</span>
                     </a>
                 </li>
-                <li<?php if($scriptname === "groups-adlists.php"){ ?> class="active"<?php } ?>>
+                <li<?php if ('groups-adlists.php' === $scriptname) { ?> class="active"<?php } ?>>
                     <a href="groups-adlists.php">
                         <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adlists</span>
                     </a>
@@ -160,7 +161,7 @@
 
                 <li class="header text-uppercase">DNS Control</li>
                 <!-- Enable/Disable Blocking -->
-                <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden<?php } ?>>
+                <li id="pihole-disable" class="treeview"<?php if ('0' == $pistatus) { ?> hidden<?php } ?>>
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-stop"></i> <span>Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
                         <span class="pull-right-container">
@@ -196,7 +197,7 @@
                     </ul>
                     <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
-                <li id="pihole-enable" class="treeview"<?php if (!in_array($pistatus,["0","-1","-2"])) { ?> hidden<?php } ?>>
+                <li id="pihole-enable" class="treeview"<?php if (!in_array($pistatus, array('0', '-1', '-2'))) { ?> hidden<?php } ?>>
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-play"></i>
                         <span id="enableLabel">Enable Blocking&nbsp;&nbsp;&nbsp;
@@ -205,7 +206,7 @@
                     </a>
                 </li>
                 <!-- Local DNS Records -->
-                <li class="treeview <?php if(in_array($scriptname, array("dns_records.php", "cname_records.php"))){ ?>active<?php } ?>">
+                <li class="treeview <?php if (in_array($scriptname, array('dns_records.php', 'cname_records.php'))) { ?>active<?php } ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-address-book"></i> <span>Local DNS</span>
                         <span class="pull-right-container">
@@ -213,12 +214,12 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li<?php if($scriptname === "dns_records.php"){ ?> class="active"<?php } ?>>
+                        <li<?php if ('dns_records.php' === $scriptname) { ?> class="active"<?php } ?>>
                             <a href="dns_records.php">
                                 <i class="fa fa-fw menu-icon fa-address-book"></i> DNS Records
                             </a>
                         </li>
-                        <li<?php if($scriptname === "cname_records.php"){ ?> class="active"<?php } ?>>
+                        <li<?php if ('cname_records.php' === $scriptname) { ?> class="active"<?php } ?>>
                             <a href="cname_records.php">
                                 <i class="fa fa-fw menu-icon fa-address-book"></i> CNAME Records
                             </a>
@@ -228,7 +229,7 @@
 
                 <li class="header text-uppercase">System</li>
                 <!-- Tools -->
-                <li class="treeview<?php if (in_array($scriptname, array("messages.php", "gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php", "network.php"))){ ?> active<?php } ?>">
+                <li class="treeview<?php if (in_array($scriptname, array('messages.php', 'gravity.php', 'queryads.php', 'auditlog.php', 'taillog.php', 'taillog-FTL.php', 'debug.php', 'network.php'))) { ?> active<?php } ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-tools"></i> <span>Tools</span>
                         <span class="warning-count hidden"></span>
@@ -238,32 +239,32 @@
                     </a>
                     <ul class="treeview-menu">
                         <!-- Pi-hole diagnosis -->
-                        <li<?php if($scriptname === "messages.php"){ ?> class="active"<?php } ?>>
+                        <li<?php if ('messages.php' === $scriptname) { ?> class="active"<?php } ?>>
                             <a href="messages.php">
                                 <i class="fa fa-fw menu-icon fa-file-medical-alt"></i> Pi-hole diagnosis
                                 <span class="pull-right-container warning-count hidden"></span>
                             </a>
                         </li>
                         <!-- Run gravity.sh -->
-                        <li<?php if($scriptname === "gravity.php"){ ?> class="active"<?php } ?>>
+                        <li<?php if ('gravity.php' === $scriptname) { ?> class="active"<?php } ?>>
                             <a href="gravity.php">
                                 <i class="fa fa-fw menu-icon fa-arrow-circle-down"></i> Update Gravity
                             </a>
                         </li>
                         <!-- Query Lists -->
-                        <li<?php if($scriptname === "queryads.php"){ ?> class="active"<?php } ?>>
+                        <li<?php if ('queryads.php' === $scriptname) { ?> class="active"<?php } ?>>
                             <a href="queryads.php">
                                 <i class="fa fa-fw menu-icon fa-search"></i> Search Adlists
                             </a>
                         </li>
                         <!-- Audit log -->
-                        <li<?php if($scriptname === "auditlog.php"){ ?> class="active"<?php } ?>>
+                        <li<?php if ('auditlog.php' === $scriptname) { ?> class="active"<?php } ?>>
                             <a href="auditlog.php">
                                 <i class="fa fa-fw menu-icon fa-balance-scale"></i> Audit log
                             </a>
                         </li>
                         <!-- Tail pihole.log -->
-                        <li<?php if($scriptname === "taillog.php"){ ?> class="active"<?php } ?>>
+                        <li<?php if ('taillog.php' === $scriptname) { ?> class="active"<?php } ?>>
                             <a href="taillog.php">
                                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" preserveAspectRatio="xMidYMid meet" height="14" viewBox="0 0 200 200" class="svg-inline--fa custom-menu-icon fa-w-20 fa-fw menu-icon">
                                     <g>
@@ -282,7 +283,7 @@
                             </a>
                         </li>
                         <!-- Tail FTL.log -->
-                        <li<?php if($scriptname === "taillog-FTL.php"){ ?> class="active"<?php } ?>>
+                        <li<?php if ('taillog-FTL.php' === $scriptname) { ?> class="active"<?php } ?>>
                             <a href="taillog-FTL.php">
                                 <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" preserveAspectRatio="xMidYMid meet" height="14" viewBox="0 0 400 340" class="svg-inline--fa custom-menu-icon fa-w-20 fa-fw menu-icon">
                                     <g fill="currentColor">
@@ -295,13 +296,13 @@
                             </a>
                         </li>
                         <!-- Generate debug log -->
-                        <li<?php if($scriptname === "debug.php"){ ?> class="active"<?php } ?>>
+                        <li<?php if ('debug.php' === $scriptname) { ?> class="active"<?php } ?>>
                             <a href="debug.php">
                                 <i class="fa fa-fw menu-icon fa-ambulance"></i> Generate debug log
                             </a>
                         </li>
                         <!-- Network -->
-                        <li<?php if($scriptname === "network.php"){ ?> class="active"<?php } ?>>
+                        <li<?php if ('network.php' === $scriptname) { ?> class="active"<?php } ?>>
                             <a href="network.php">
                                 <i class="fa fa-fw menu-icon fa-network-wired"></i> Network
                             </a>
@@ -309,7 +310,7 @@
                     </ul>
                 </li>
                 <!-- Settings -->
-                <li<?php if($scriptname === "settings.php"){ ?> class="active"<?php } ?>>
+                <li<?php if ('settings.php' === $scriptname) { ?> class="active"<?php } ?>>
                     <a href="settings.php">
                         <i class="fa fa-fw menu-icon fa-cog"></i> <span>Settings</span>
                     </a>

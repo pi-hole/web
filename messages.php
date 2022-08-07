@@ -8,7 +8,7 @@
 *    Please see LICENSE file for your rights under this license.
 */
 
-require "scripts/pi-hole/php/header.php";
+require 'scripts/pi-hole/php/header.php';
 ?>
 
 <!-- Title -->
@@ -47,8 +47,8 @@ require "scripts/pi-hole/php/header.php";
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/messages.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/messages.js?v=<?php echo $cacheVer; ?>"></script>
 
 <?php
-require "scripts/pi-hole/php/footer.php";
+require 'scripts/pi-hole/php/footer.php';
 ?>

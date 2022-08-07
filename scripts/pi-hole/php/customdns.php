@@ -1,6 +1,8 @@
 <?php
-require_once "func.php";
-require_once('auth.php');
+
+require_once 'func.php';
+
+require_once 'auth.php';
 
 // Authentication checks
 if (!isset($api)) {
@@ -13,10 +15,18 @@ if (!isset($api)) {
 }
 
 switch ($_POST['action']) {
-    case 'get':     echo json_encode(echoCustomDNSEntries()); break;
-    case 'add':     echo json_encode(addCustomDNSEntry());    break;
-    case 'delete':  echo json_encode(deleteCustomDNSEntry()); break;
+    case 'get':     echo json_encode(echoCustomDNSEntries());
+
+        break;
+
+    case 'add':     echo json_encode(addCustomDNSEntry());
+
+        break;
+
+    case 'delete':  echo json_encode(deleteCustomDNSEntry());
+
+        break;
+
     default:
-        die("Wrong action");
+        exit('Wrong action');
 }
-?>

@@ -7,47 +7,51 @@
 *  Please see LICENSE file for your rights under this license.
 */
 
-require "password.php";
-if(!$auth) die("Not authorized");
+require 'password.php';
+if (!$auth) {
+    exit('Not authorized');
+}
 
-function formatLine($line){
-    $txt = preg_replace("/ dnsmasq\[[0-9]*\]/", "", htmlspecialchars($line));
+function formatLine($line)
+{
+    $txt = preg_replace('/ dnsmasq\\[[0-9]*\\]/', '', htmlspecialchars($line));
 
-    if (strpos($line, "blacklisted") || strpos($line, "gravity blocked")) {
+    if (strpos($line, 'blacklisted') || strpos($line, 'gravity blocked')) {
         $txt = '<b class="log-red">'.$txt.'</b>';
-    } elseif (strpos($line, "query[A") || strpos($line, "query[DHCP")) {
+    } elseif (strpos($line, 'query[A') || strpos($line, 'query[DHCP')) {
         $txt = '<b>'.$txt.'</b>';
     } else {
         $txt = '<span class="text-muted">'.$txt.'</span>';
     }
+
     return $txt;
 }
 
 // Not using SplFileObject here, since direct
 // usage of f-streams will be much faster for
 // files as large as the pihole.log
-if (isset($_GET["FTL"])) {
-    $file = fopen("/var/log/pihole/FTL.log","r");
+if (isset($_GET['FTL'])) {
+    $file = fopen('/var/log/pihole/FTL.log', 'r');
 } else {
-    $file = fopen("/var/log/pihole/pihole.log","r");
+    $file = fopen('/var/log/pihole/pihole.log', 'r');
 }
 
 if (!$file) {
-    die(json_encode(array("offset" => 0, "lines" => array("Failed to open log file. Check permissions!\n"))));
+    exit(json_encode(array('offset' => 0, 'lines' => array("Failed to open log file. Check permissions!\n"))));
 }
 
-if (isset($_GET["offset"])) {
+if (isset($_GET['offset'])) {
     $offset = intval($_GET['offset']);
     if ($offset > 0) {
         // Seeks on the file pointer where we want to continue reading is known
         fseek($file, $offset);
 
-        $lines = [];
+        $lines = array();
         while (!feof($file)) {
             array_push($lines, formatLine(fgets($file)));
         }
 
-        die(json_encode(array("offset" => ftell($file), "lines" => $lines)));
+        exit(json_encode(array('offset' => ftell($file), 'lines' => $lines)));
     }
 }
 
@@ -55,5 +59,4 @@ if (isset($_GET["offset"])) {
 fseek($file, -1, SEEK_END);
 
 // Add one to skip the very last "\n" in the log file
-die(json_encode(array("offset" => ftell($file)+1)));
-?>
+exit(json_encode(array('offset' => ftell($file) + 1)));

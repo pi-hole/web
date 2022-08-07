@@ -8,93 +8,66 @@
 *    Please see LICENSE file for your rights under this license.
 */
 
-require "scripts/pi-hole/php/header.php";
+require 'scripts/pi-hole/php/header.php';
 
-$showing = "";
+$showing = '';
 
-if(isset($setupVars["API_QUERY_LOG_SHOW"]))
-{
-    if($setupVars["API_QUERY_LOG_SHOW"] === "all")
-    {
-        $showing = "showing";
+if (isset($setupVars['API_QUERY_LOG_SHOW'])) {
+    if ('all' === $setupVars['API_QUERY_LOG_SHOW']) {
+        $showing = 'showing';
+    } elseif ('permittedonly' === $setupVars['API_QUERY_LOG_SHOW']) {
+        $showing = 'showing permitted';
+    } elseif ('blockedonly' === $setupVars['API_QUERY_LOG_SHOW']) {
+        $showing = 'showing blocked';
+    } elseif ('nothing' === $setupVars['API_QUERY_LOG_SHOW']) {
+        $showing = 'showing no queries (due to setting)';
     }
-    elseif($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly")
-    {
-        $showing = "showing permitted";
-    }
-    elseif($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly")
-    {
-        $showing = "showing blocked";
-    }
-    elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
-    {
-        $showing = "showing no queries (due to setting)";
-    }
-}
-else if(isset($_GET["type"]) && $_GET["type"] === "blocked")
-{
-    $showing = "showing blocked";
-}
-else
-{
+} elseif (isset($_GET['type']) && 'blocked' === $_GET['type']) {
+    $showing = 'showing blocked';
+} else {
     // If filter variable is not set, we
     // automatically show all queries
-    $showing = "showing";
+    $showing = 'showing';
 }
 
 $showall = false;
-if(isset($_GET["all"]))
-{
-    $showing .= " all queries within the Pi-hole log";
-}
-else if(isset($_GET["client"]))
-{
+if (isset($_GET['all'])) {
+    $showing .= ' all queries within the Pi-hole log';
+} elseif (isset($_GET['client'])) {
     // Add switch between showing all queries and blocked only
-    if (isset($_GET["type"]) && $_GET["type"] === "blocked")
-    {
+    if (isset($_GET['type']) && 'blocked' === $_GET['type']) {
         // Show blocked queries for this client + link to all
-        $showing .= " blocked queries for client ".htmlentities($_GET["client"]);
-        $showing .= ", <a href=\"?client=".htmlentities($_GET["client"])."\">show all</a>";
-    }
-    else
-    {
+        $showing .= ' blocked queries for client '.htmlentities($_GET['client']);
+        $showing .= ', <a href="?client='.htmlentities($_GET['client']).'">show all</a>';
+    } else {
         // Show All queries for this client + link to show only blocked
-        $showing .= " all queries for client ".htmlentities($_GET["client"]);
-        $showing .= ", <a href=\"?client=".htmlentities($_GET["client"])."&type=blocked\">show blocked only</a>";
+        $showing .= ' all queries for client '.htmlentities($_GET['client']);
+        $showing .= ', <a href="?client='.htmlentities($_GET['client']).'&type=blocked">show blocked only</a>';
     }
-}
-else if(isset($_GET["forwarddest"]))
-{
-    if($_GET["forwarddest"] === "blocked")
-        $showing .= " queries blocked by Pi-hole";
-    elseif($_GET["forwarddest"] === "cached")
-        $showing .= " queries answered from cache";
-    else
-        $showing .= " queries for upstream destination ".htmlentities($_GET["forwarddest"]);
-}
-else if(isset($_GET["querytype"]))
-{
-    $showing .= " type ".getQueryTypeStr($_GET["querytype"])." queries";
-}
-else if(isset($_GET["domain"]))
-{
-    $showing .= " queries for domain ".htmlentities($_GET["domain"]);
-}
-else if(isset($_GET["from"]) || isset($_GET["until"]))
-{
-    $showing .= " queries within specified time interval";
-}
-else
-{
-    $showing .= " up to 100 queries";
+} elseif (isset($_GET['forwarddest'])) {
+    if ('blocked' === $_GET['forwarddest']) {
+        $showing .= ' queries blocked by Pi-hole';
+    } elseif ('cached' === $_GET['forwarddest']) {
+        $showing .= ' queries answered from cache';
+    } else {
+        $showing .= ' queries for upstream destination '.htmlentities($_GET['forwarddest']);
+    }
+} elseif (isset($_GET['querytype'])) {
+    $showing .= ' type '.getQueryTypeStr($_GET['querytype']).' queries';
+} elseif (isset($_GET['domain'])) {
+    $showing .= ' queries for domain '.htmlentities($_GET['domain']);
+} elseif (isset($_GET['from']) || isset($_GET['until'])) {
+    $showing .= ' queries within specified time interval';
+} else {
+    $showing .= ' up to 100 queries';
     $showall = true;
 }
 
-if(strlen($showing) > 0)
-{
-    $showing = "(".$showing.")";
-    if($showall)
-        $showing .= ", <a href=\"?all\">show all</a>";
+if (strlen($showing) > 0) {
+    $showing = '('.$showing.')';
+    if ($showall) {
+        $showing .= ', <a href="?all">show all</a>';
+    }
 }
 ?>
 
@@ -178,9 +151,9 @@ if(strlen($showing) > 0)
     </div>
 </div>
 <!-- /.row -->
-<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/queries.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="scripts/pi-hole/js/queries.js?v=<?php echo $cacheVer; ?>"></script>
 
 <?php
-require "scripts/pi-hole/php/footer.php";
+require 'scripts/pi-hole/php/footer.php';
 ?>

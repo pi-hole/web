@@ -8,7 +8,7 @@
 *    Please see LICENSE file for your rights under this license.
 */
 
-require "scripts/pi-hole/php/header.php";
+require 'scripts/pi-hole/php/header.php';
 ?>
 
 <!-- Title -->
@@ -206,10 +206,10 @@ require "scripts/pi-hole/php/header.php";
     </div>
 </div>
 <!-- /.row -->
-<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/vendor/daterangepicker.min.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/db_queries.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="scripts/vendor/daterangepicker.min.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="scripts/pi-hole/js/db_queries.js?v=<?php echo $cacheVer; ?>"></script>
 
 <?php
-require "scripts/pi-hole/php/footer.php";
+require 'scripts/pi-hole/php/footer.php';
 ?>
