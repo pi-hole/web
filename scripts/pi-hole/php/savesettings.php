@@ -184,6 +184,12 @@ function addStaticDHCPLease($mac, $ip, $hostname)
         pihole_execute('-a addstaticdhcp '.$mac.' '.$ip.' '.$hostname);
         $success .= 'A new static address has been added';
 
+        // Adds a DNS entry only if both IP and hostnames are provided.
+        if ($ip !== 'noip' && $hostname !== 'nohost') {
+            pihole_execute('-a adddhcphostname '.$mac.' '.$ip.' '.$hostname);
+            $success .= '<br>DNS entry for IP '.htmlspecialchars($ip).' with hostname '
+                .htmlspecialchars($hostname).' has been added';
+        }
         return true;
     } catch (Exception $exception) {
         $error .= $exception->getMessage();
@@ -484,7 +490,9 @@ if (isset($_POST['field'])) {
 
                 if (!strlen($error)) {
                     pihole_execute('-a removestaticdhcp '.$mac);
-                    $success .= 'The static address with MAC address '.htmlspecialchars($mac).' has been removed';
+                    pihole_execute('-a removedhcphostname '.$mac);
+                    $success .= 'The static address and corresponding DNS entry for device
+                        with MAC address '.htmlspecialchars($mac).' has been removed';
                 }
 
                 break;
