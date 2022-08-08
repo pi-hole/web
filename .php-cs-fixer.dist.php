@@ -23,6 +23,7 @@ $config
         '@Symfony' => true,
         'array_syntax' => array('syntax' => 'long'),
     ))
+    ->setLineEnding(PHP_EOL)
     ->setFinder($finder)
 ;
 
