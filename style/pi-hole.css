@@ -496,16 +496,38 @@ td.details-control {
   }
 }
 
-/*** Login form ***/
+/*** Login page ***/
+.login-page {
+  padding: 15px;
+  min-height: 100vh !important;
+  height: auto !important;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.login-box {
+  position: relative;
+  margin: 0 auto;
+  padding: 5px;
+  width: 480px;
+  max-width: 100%;
+  flex: 0 1 auto;
+  align-self: center;
+  border: none;
+}
+
 .form-control-feedback {
   right: 12px;
 }
 
-.loginpage-logo {
-  width: 30%;
+.login-logo {
+  margin-bottom: 15px;
 }
-.layout-boxed .loginpage-logo {
-  width: 50%;
+
+.loginpage-logo {
+  width: 140px;
+  margin: 0 0 10px;
 }
 
 .login-options {
@@ -530,27 +552,19 @@ td.details-control {
   flex: 1 0 auto;
 }
 
-.login-help {
-  padding: 6px;
-  background: rgba(127, 127, 127, 0.05);
+.login-footer a {
   text-align: center;
+  min-width: 28%;
+}
+@media screen and (max-width: 420px) {
+  .login-footer a {
+    min-width: auto;
+    padding: 5px;
+  }
 }
 
-.login-help p {
-  margin: 0;
-  font-size: clamp(11px, (100vw - 400px) / 45, 15px);
-  line-height: 1.6;
-}
-
-@media screen and (min-width: 768px) {
-  .layout-boxed:not(.sidebar-collapse) .login-help p {
-    font-size: clamp(11px, (min(100vw, 1250px) - 380px) / 47, 15px);
-  }
-
-  /* hide warning icon only when logged in and menu is not collapsed */
-  .logged-in:not(.sidebar-collapse) #top-warning-count {
-    display: none;
-  }
+.login-donate {
+  padding: 15px;
 }
 
 /*** Warning icon and count ***/

@@ -8,8 +8,8 @@
 */
 
 $api = true;
-require_once 'scripts/pi-hole/php/FTL.php';
 require_once 'scripts/pi-hole/php/password.php';
+require_once 'scripts/pi-hole/php/FTL.php';
 require_once 'scripts/pi-hole/php/database.php';
 require_once 'scripts/pi-hole/php/auth.php';
 check_cors();
