@@ -1,21 +1,21 @@
 <?php
-require "scripts/pi-hole/php/theme.php";
+require 'scripts/pi-hole/php/theme.php';
 
 $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
-$hostname = gethostname() ? gethostname() : "";
+$hostname = gethostname() ? gethostname() : '';
 
 // Retrieve layout setting from setupVars
-if (isset($setupVars['WEBUIBOXEDLAYOUT']) && !($setupVars['WEBUIBOXEDLAYOUT'] === "boxed")) {
+if (isset($setupVars['WEBUIBOXEDLAYOUT']) && !('boxed' === $setupVars['WEBUIBOXEDLAYOUT'])) {
     $boxedlayout = false;
 } else {
     $boxedlayout = true;
 }
 
 // Override layout setting if layout is changed via Settings page
-if (isset($_POST["field"])) {
-    if ($_POST["field"] === "webUI" && isset($_POST["boxedlayout"])) {
+if (isset($_POST['field'])) {
+    if ('webUI' === $_POST['field'] && isset($_POST['boxedlayout'])) {
         $boxedlayout = true;
-    } elseif ($_POST["field"] === "webUI" && !isset($_POST["boxedlayout"])) {
+    } elseif ('webUI' === $_POST['field'] && !isset($_POST['boxedlayout'])) {
         $boxedlayout = false;
     }
 }
@@ -42,7 +42,7 @@ $cacheVer = filemtime(__FILE__);
     <meta http-equiv="cache-control" content="max-age=60,private">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Pi-hole<?php echo $hostname ? " - " . $hostname : "" ?></title>
+    <title>Pi-hole<?php echo $hostname ? ' - '.$hostname : ''; ?></title>
 
     <link rel="apple-touch-icon" href="img/favicons/apple-touch-icon.png" sizes="180x180">
     <link rel="icon" href="img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
@@ -54,19 +54,19 @@ $cacheVer = filemtime(__FILE__);
     <meta name="msapplication-TileImage" content="img/favicons/mstile-150x150.png">
 
     <!-- Theme styles -->
-<?php if ($theme == "default-light") { ?>
+<?php if ('default-light' == $theme) { ?>
     <meta name="theme-color" content="#367fa9">
-    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?=$cacheVer?>">
-<?php } elseif ($theme == "default-dark") { ?>
+    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?php echo $cacheVer; ?>">
+<?php } elseif ('default-dark' == $theme) { ?>
     <meta name="theme-color" content="#272c30">
-    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?=$cacheVer?>">
-<?php } elseif ($theme == "default-darker") { ?>
+    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?php echo $cacheVer; ?>">
+<?php } elseif ('default-darker' == $theme) { ?>
     <meta name="theme-color" content="#2e6786">
-    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?=$cacheVer?>">
-<?php } elseif ($theme == "lcars") { ?>
+    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?php echo $cacheVer; ?>">
+<?php } elseif ('lcars' == $theme) { ?>
     <meta name="theme-color" content="#4488FF">
-    <link rel="stylesheet" href="style/vendor/fonts/ubuntu-mono/ubuntu-mono.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/fonts/antonio/antonio.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/fonts/ubuntu-mono/ubuntu-mono.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/fonts/antonio/antonio.css?v=<?php echo $cacheVer; ?>">
 <?php } ?>
 
 <?php if ($darkmode) { ?>
@@ -76,41 +76,41 @@ $cacheVer = filemtime(__FILE__);
 <?php } ?>
 
     <!-- Common styles -->
-    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css?v=<?php echo $cacheVer; ?>">
 <?php if ($auth) { ?>
-    <link rel="stylesheet" href="style/vendor/datatables.min.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/datatables_extensions.min.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/daterangepicker.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/datatables.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/datatables_extensions.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/daterangepicker.min.css?v=<?php echo $cacheVer; ?>">
 <?php } ?>
-    <link rel="stylesheet" href="style/vendor/AdminLTE.min.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/select2.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/AdminLTE.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/select2.min.css?v=<?php echo $cacheVer; ?>">
 
-<?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?>
+<?php if (in_array($scriptname, array('groups.php', 'groups-adlists.php', 'groups-clients.php', 'groups-domains.php'))) { ?>
     <!-- Group management styles -->
-    <link rel="stylesheet" href="style/vendor/animate.min.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/vendor/animate.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/bootstrap-select.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/bootstrap-toggle.min.css?v=<?php echo $cacheVer; ?>">
 <?php } ?>
 
     <!-- Theme styles -->
-    <link rel="stylesheet" href="style/pi-hole.css?v=<?=$cacheVer?>">
-    <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css?v=<?=$cacheVer?>">
+    <link rel="stylesheet" href="style/pi-hole.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css?v=<?php echo $cacheVer; ?>">
 
-    <noscript><link rel="stylesheet" href="style/vendor/js-warn.css?v=<?=$cacheVer?>"></noscript>
+    <noscript><link rel="stylesheet" href="style/vendor/js-warn.css?v=<?php echo $cacheVer; ?>"></noscript>
 
     <!-- scripts -->
-    <script src="scripts/vendor/jquery.min.js?v=<?=$cacheVer?>"></script>
-    <script src="style/vendor/bootstrap/js/bootstrap.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/adminlte.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/bootstrap-notify.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/jquery.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="style/vendor/bootstrap/js/bootstrap.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/adminlte.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/bootstrap-notify.min.js?v=<?php echo $cacheVer; ?>"></script>
 <?php if ($auth) { ?>
-    <script src="scripts/vendor/select2.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/datatables.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/datatables.select.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/datatables.buttons.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/moment.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/vendor/Chart.min.js?v=<?=$cacheVer?>"></script>
+    <script src="scripts/vendor/select2.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/datatables.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/datatables.select.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/datatables.buttons.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/moment.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/Chart.min.js?v=<?php echo $cacheVer; ?>"></script>
 <?php } ?>
-    <script src="style/vendor/font-awesome/js/all.min.js?v=<?=$cacheVer?>"></script>
-    <script src="scripts/pi-hole/js/utils.js?v=<?=$cacheVer?>"></script>
+    <script src="style/vendor/font-awesome/js/all.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/pi-hole/js/utils.js?v=<?php echo $cacheVer; ?>"></script>
 </head>

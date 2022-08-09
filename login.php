@@ -8,15 +8,15 @@
 *  Please see LICENSE file for your rights under this license.
 */
 
-require "scripts/pi-hole/php/password.php";
+require 'scripts/pi-hole/php/password.php';
 
 // Go directly to index, if authenticated.
-if ($_SESSION["auth"]) {
-    header("Location: index.php");
+if ($_SESSION['auth']) {
+    header('Location: index.php');
     exit;
 }
 
-require "scripts/pi-hole/php/common_header.php";
+require 'scripts/pi-hole/php/common_header.php';
 ?>
 <body class="hold-transition layout-boxed login-page">
 <div class="box login-box">
@@ -93,6 +93,6 @@ require "scripts/pi-hole/php/common_header.php";
         <strong><a href="https://pi-hole.net/donate/" rel="noopener" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
     </div>
 </div>
-<script src="scripts/pi-hole/js/footer.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/footer.js?v=<?php echo $cacheVer; ?>"></script>
 </body>
 </html>

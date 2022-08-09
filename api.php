@@ -8,10 +8,10 @@
 */
 
 $api = true;
-require_once("scripts/pi-hole/php/password.php");
-require_once("scripts/pi-hole/php/FTL.php");
-require_once("scripts/pi-hole/php/database.php");
-require_once("scripts/pi-hole/php/auth.php");
+require_once 'scripts/pi-hole/php/password.php';
+require_once 'scripts/pi-hole/php/FTL.php';
+require_once 'scripts/pi-hole/php/database.php';
+require_once 'scripts/pi-hole/php/auth.php';
 check_cors();
 
 $data = array();
@@ -31,6 +31,7 @@ if (isset($_GET['enable']) && $auth) {
     if (file_exists('../custom_disable_timer')) {
         unlink('../custom_disable_timer');
     }
+
 } elseif (isset($_GET['disable']) && $auth) {
     if (isset($_GET['auth'])) {
         if ($_GET['auth'] !== $pwhash) {
@@ -41,6 +42,7 @@ if (isset($_GET['enable']) && $auth) {
         check_csrf($_GET['token']);
     }
     $disable = intval($_GET['disable']);
+
     // intval returns the integer value on success, or 0 on failure
     if ($disable > 0) {
         $timestamp = time();
@@ -53,6 +55,7 @@ if (isset($_GET['enable']) && $auth) {
         }
     }
     $data = array_merge($data, array('status' => 'disabled'));
+
 } elseif (isset($_GET['versions'])) {
     // Determine if updates are available for Pi-hole
     // using the same script that we use for the footer
@@ -75,6 +78,7 @@ if (isset($_GET['enable']) && $auth) {
     $data = array_merge($data, $current);
     $data = array_merge($data, $latest);
     $data = array_merge($data, $branches);
+
 } elseif (isset($_GET['list'])) {
     if (!$auth) {
         exit('Not authorized!');
@@ -126,6 +130,7 @@ if (isset($_GET['enable']) && $auth) {
     }
 
     return;
+
 } elseif (isset($_GET['customdns']) && $auth) {
     if (isset($_GET['auth'])) {
         if ($_GET['auth'] !== $pwhash) {
@@ -155,6 +160,7 @@ if (isset($_GET['enable']) && $auth) {
         default:
             exit('Wrong action');
     }
+
 } elseif (isset($_GET['customcname']) && $auth) {
     if (isset($_GET['auth'])) {
         if ($_GET['auth'] !== $pwhash) {

@@ -8,16 +8,16 @@
 *  Please see LICENSE file for your rights under this license.
 */
 
-require "scripts/pi-hole/php/password.php";
+require 'scripts/pi-hole/php/password.php';
 if (!$auth) {
     $_SESSION['prev_url'] = $_SERVER['REQUEST_URI'];
-    header("Location: login.php");
+    header('Location: login.php');
     exit;
 }
 
-require "scripts/pi-hole/php/auth.php";
-require_once "scripts/pi-hole/php/FTL.php";
-require_once "scripts/pi-hole/php/func.php";
+require 'scripts/pi-hole/php/auth.php';
+require_once 'scripts/pi-hole/php/FTL.php';
+require_once 'scripts/pi-hole/php/func.php';
 
 // Return memory usage to show on status block
 function getMemUsage()
@@ -93,7 +93,7 @@ if (empty($_SESSION['token'])) {
 $token = $_SESSION['token'];
 
 // For session timer
-$maxlifetime = ini_get("session.gc_maxlifetime");
+$maxlifetime = ini_get('session.gc_maxlifetime');
 
 // Get temperature
 list($celsius, $temperaturelimit) = getTemperature();
@@ -118,9 +118,9 @@ $memory_usage = getMemUsage();
 
 $piholeFTLConf = piholeFTLConfig();
 
-require "common_header.php";
+require 'common_header.php';
 ?>
-<body class="hold-transition sidebar-mini<?php if($boxedlayout){ ?> layout-boxed<?php } ?><?php if($auth){ ?> logged-in<?php } ?>">
+<body class="hold-transition sidebar-mini<?php if ($boxedlayout) { ?> layout-boxed<?php } ?><?php if ($auth) { ?> logged-in<?php } ?>">
 <noscript>
     <!-- JS Warning -->
     <div>
