@@ -8,8 +8,8 @@
 */
 
 $indexpage = true;
-require "scripts/pi-hole/php/header.php";
-require_once "scripts/pi-hole/php/gravity.php";
+require 'scripts/pi-hole/php/header.php';
+require_once 'scripts/pi-hole/php/gravity.php';
 ?>
 <!-- Sourceing CSS colors from stylesheet to be used in JS code -->
 <span class="queries-permitted"></span>
@@ -95,8 +95,8 @@ require_once "scripts/pi-hole/php/gravity.php";
 // Even if we would include them here anyhow, there would be nothing to
 // show since the API will respect the privacy of the user if he defines
 // a password
-if($auth){
-?>
+if ($auth) {
+    ?>
 
 <div class="row">
     <div class="col-md-12">
@@ -159,15 +159,11 @@ if($auth){
 </div>
 
 <?php
-    if($boxedlayout)
-    {
-    $tablelayout = "col-md-6";
-    }
-    else
-    {
-    $tablelayout = "col-md-6 col-lg-6";
-    }
-?>
+    if ($boxedlayout) {
+        $tablelayout = 'col-md-6';
+    } else {
+        $tablelayout = 'col-md-6 col-lg-6';
+    } ?>
 <div class="row">
     <div class="<?php echo $tablelayout; ?>">
         <div class="box" id="domain-frequency">
@@ -289,10 +285,11 @@ if($auth){
     <!-- /.col -->
 </div>
 <!-- /.row -->
-<?php } ?>
+<?php
+} ?>
 
-<script src="scripts/pi-hole/js/index.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/index.js?v=<?php echo $cacheVer; ?>"></script>
 
 <?php
-require "scripts/pi-hole/php/footer.php";
+require 'scripts/pi-hole/php/footer.php';
 ?>

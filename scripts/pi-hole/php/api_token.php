@@ -1,6 +1,6 @@
 <?php
-require "auth.php";
-require "password.php";
+require 'auth.php';
+require 'password.php';
 check_cors();
 ?>
 
@@ -30,20 +30,20 @@ body {
 </head>
 <body>
 <?php
-if($auth) {
-    if(strlen($pwhash) > 0) {
+if ($auth) {
+    if (strlen($pwhash) > 0) {
         echo '<div class="qrcode">';
-        require_once("../../vendor/qrcode.php");
+        require_once '../../vendor/qrcode.php';
         $qr = QRCode::getMinimumQRCode($pwhash, QR_ERROR_CORRECT_LEVEL_Q);
         // The size of each block (in pixels) should be an integer
         $qr->printSVG(10);
-        echo "</div>";
-        echo 'Raw API Token: <code class="token">' . $pwhash . "</code></div>";
+        echo '</div>';
+        echo 'Raw API Token: <code class="token">'.$pwhash.'</code></div>';
     } else {
-        echo "<p>No password set</p>";
+        echo '<p>No password set</p>';
     }
 } else {
-    echo "<p>Not authorized!</p>";
+    echo '<p>Not authorized!</p>';
 }
 ?>
 </body>

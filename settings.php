@@ -8,26 +8,25 @@
 *    Please see LICENSE file for your rights under this license.
 */
 
-require "scripts/pi-hole/php/header.php";
-require "scripts/pi-hole/php/savesettings.php";
-require_once "scripts/pi-hole/php/FTL.php";
+require 'scripts/pi-hole/php/header.php';
+require 'scripts/pi-hole/php/savesettings.php';
+require_once 'scripts/pi-hole/php/FTL.php';
 
 // Reread ini file as things might have been changed
 // DEFAULT_FTLCONFFILE is set in "scripts/pi-hole/php/FTL.php";
-$setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
-$piholeFTLConf = piholeFTLConfig(DEFAULT_FTLCONFFILE ,true);
+$setupVars = parse_ini_file('/etc/pihole/setupVars.conf');
+$piholeFTLConf = piholeFTLConfig(DEFAULT_FTLCONFFILE, true);
 
 // Handling of PHP internal errors
 $last_error = error_get_last();
-if(isset($last_error) && ($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR))
-{
-    $error .= "There was a problem applying your settings.<br>Debugging information:<br>PHP error (".htmlspecialchars($last_error["type"])."): ".htmlspecialchars($last_error["message"])." in ".htmlspecialchars($last_error["file"]).":".htmlspecialchars($last_error["line"]);
+if (isset($last_error) && (E_WARNING === $last_error['type'] || E_ERROR === $last_error['type'])) {
+    $error .= 'There was a problem applying your settings.<br>Debugging information:<br>PHP error ('.htmlspecialchars($last_error['type']).'): '.htmlspecialchars($last_error['message']).' in '.htmlspecialchars($last_error['file']).':'.htmlspecialchars($last_error['line']);
 }
 
-# Timezone is set in docker via ENV otherwise get it from commandline
-$timezone=htmlspecialchars(getenv("TZ"));
+// Timezone is set in docker via ENV otherwise get it from commandline
+$timezone = htmlspecialchars(getenv('TZ'));
 if (empty($timezone)) {
-    $timezone=shell_exec("date +'%Z'");
+    $timezone = shell_exec("date +'%Z'");
 }
 
 ?>
@@ -39,10 +38,10 @@ if (empty($timezone)) {
 </style>
 
 <?php // Check if ad lists should be updated after saving ...
-if (isset($_POST["submit"])) {
-    if ($_POST["submit"] == "saveupdate") {
+if (isset($_POST['submit'])) {
+    if ('saveupdate' == $_POST['submit']) {
         // If that is the case -> refresh to the gravity page and start updating immediately
-?>
+        ?>
         <meta http-equiv="refresh" content="1;url=gravity.php?go">
 <?php
     }
@@ -68,46 +67,46 @@ if (isset($_POST["submit"])) {
 <?php } ?>
 
 <?php
-if (isset($setupVars["PIHOLE_INTERFACE"])) {
-    $piHoleInterface = $setupVars["PIHOLE_INTERFACE"];
+if (isset($setupVars['PIHOLE_INTERFACE'])) {
+    $piHoleInterface = $setupVars['PIHOLE_INTERFACE'];
 } else {
-    $piHoleInterface = "unknown";
+    $piHoleInterface = 'unknown';
 }
 
 // get the gateway IP
-$IPv4GW=getGateway()["ip"];
+$IPv4GW = getGateway()['ip'];
 
 // if the default gateway address is unknown or FTL is not running
-if ($IPv4GW == "0.0.0.0"|| $IPv4GW == -1) {
-    $IPv4GW = "unknown";
+if ('0.0.0.0' == $IPv4GW || -1 == $IPv4GW) {
+    $IPv4GW = 'unknown';
 }
 
 // DNS settings
-$DNSservers = [];
-$DNSactive = [];
+$DNSservers = array();
+$DNSactive = array();
 
 $i = 1;
-while (isset($setupVars["PIHOLE_DNS_" . $i])) {
-    if (isinserverlist($setupVars["PIHOLE_DNS_" . $i])) {
-        array_push($DNSactive, $setupVars["PIHOLE_DNS_" . $i]);
-    } elseif (strpos($setupVars["PIHOLE_DNS_" . $i], ".") !== false) {
+while (isset($setupVars['PIHOLE_DNS_'.$i])) {
+    if (isinserverlist($setupVars['PIHOLE_DNS_'.$i])) {
+        array_push($DNSactive, $setupVars['PIHOLE_DNS_'.$i]);
+    } elseif (false !== strpos($setupVars['PIHOLE_DNS_'.$i], '.')) {
         if (!isset($custom1)) {
-            $custom1 = $setupVars["PIHOLE_DNS_" . $i];
+            $custom1 = $setupVars['PIHOLE_DNS_'.$i];
         } else {
-            $custom2 = $setupVars["PIHOLE_DNS_" . $i];
+            $custom2 = $setupVars['PIHOLE_DNS_'.$i];
         }
-    } elseif (strpos($setupVars["PIHOLE_DNS_" . $i], ":") !== false) {
+    } elseif (false !== strpos($setupVars['PIHOLE_DNS_'.$i], ':')) {
         if (!isset($custom3)) {
-            $custom3 = $setupVars["PIHOLE_DNS_" . $i];
+            $custom3 = $setupVars['PIHOLE_DNS_'.$i];
         } else {
-            $custom4 = $setupVars["PIHOLE_DNS_" . $i];
+            $custom4 = $setupVars['PIHOLE_DNS_'.$i];
         }
     }
-    $i++;
+    ++$i;
 }
 
-if (isset($setupVars["DNS_FQDN_REQUIRED"])) {
-    if ($setupVars["DNS_FQDN_REQUIRED"]) {
+if (isset($setupVars['DNS_FQDN_REQUIRED'])) {
+    if ($setupVars['DNS_FQDN_REQUIRED']) {
         $DNSrequiresFQDN = true;
     } else {
         $DNSrequiresFQDN = false;
@@ -116,8 +115,8 @@ if (isset($setupVars["DNS_FQDN_REQUIRED"])) {
     $DNSrequiresFQDN = false;
 }
 
-if (isset($setupVars["DNS_BOGUS_PRIV"])) {
-    if ($setupVars["DNS_BOGUS_PRIV"]) {
+if (isset($setupVars['DNS_BOGUS_PRIV'])) {
+    if ($setupVars['DNS_BOGUS_PRIV']) {
         $DNSbogusPriv = true;
     } else {
         $DNSbogusPriv = false;
@@ -126,8 +125,8 @@ if (isset($setupVars["DNS_BOGUS_PRIV"])) {
     $DNSbogusPriv = false;
 }
 
-if (isset($setupVars["DNSSEC"])) {
-    if ($setupVars["DNSSEC"]) {
+if (isset($setupVars['DNSSEC'])) {
+    if ($setupVars['DNSSEC']) {
         $DNSSEC = true;
     } else {
         $DNSSEC = false;
@@ -136,24 +135,24 @@ if (isset($setupVars["DNSSEC"])) {
     $DNSSEC = false;
 }
 
-if (isset($setupVars["DNSMASQ_LISTENING"])) {
-    if ($setupVars["DNSMASQ_LISTENING"] === "single") {
-        $DNSinterface = "single";
-    } elseif ($setupVars["DNSMASQ_LISTENING"] === "bind") {
-        $DNSinterface = "bind";
-    } elseif ($setupVars["DNSMASQ_LISTENING"] === "all") {
-        $DNSinterface = "all";
+if (isset($setupVars['DNSMASQ_LISTENING'])) {
+    if ('single' === $setupVars['DNSMASQ_LISTENING']) {
+        $DNSinterface = 'single';
+    } elseif ('bind' === $setupVars['DNSMASQ_LISTENING']) {
+        $DNSinterface = 'bind';
+    } elseif ('all' === $setupVars['DNSMASQ_LISTENING']) {
+        $DNSinterface = 'all';
     } else {
-        $DNSinterface = "local";
+        $DNSinterface = 'local';
     }
 } else {
-    $DNSinterface = "single";
+    $DNSinterface = 'single';
 }
-if (isset($setupVars["REV_SERVER"]) && ($setupVars["REV_SERVER"] == 1)) {
+if (isset($setupVars['REV_SERVER']) && (1 == $setupVars['REV_SERVER'])) {
     $rev_server = true;
-    $rev_server_cidr   = $setupVars["REV_SERVER_CIDR"];
-    $rev_server_target = $setupVars["REV_SERVER_TARGET"];
-    $rev_server_domain = $setupVars["REV_SERVER_DOMAIN"];
+    $rev_server_cidr = $setupVars['REV_SERVER_CIDR'];
+    $rev_server_target = $setupVars['REV_SERVER_TARGET'];
+    $rev_server_domain = $setupVars['REV_SERVER_DOMAIN'];
 } else {
     $rev_server = false;
 }
@@ -161,8 +160,8 @@ if (isset($setupVars["REV_SERVER"]) && ($setupVars["REV_SERVER"] == 1)) {
 
 <?php
 // Query logging
-if (isset($setupVars["QUERY_LOGGING"])) {
-    if ($setupVars["QUERY_LOGGING"] == 1) {
+if (isset($setupVars['QUERY_LOGGING'])) {
+    if (1 == $setupVars['QUERY_LOGGING']) {
         $piHoleLogging = true;
     } else {
         $piHoleLogging = false;
@@ -174,61 +173,61 @@ if (isset($setupVars["QUERY_LOGGING"])) {
 
 <?php
 // Excluded domains in API Query Log call
-if (isset($setupVars["API_EXCLUDE_DOMAINS"])) {
-    $excludedDomains = explode(",", $setupVars["API_EXCLUDE_DOMAINS"]);
+if (isset($setupVars['API_EXCLUDE_DOMAINS'])) {
+    $excludedDomains = explode(',', $setupVars['API_EXCLUDE_DOMAINS']);
 } else {
-    $excludedDomains = [];
+    $excludedDomains = array();
 }
 
 // Excluded clients in API Query Log call
-if (isset($setupVars["API_EXCLUDE_CLIENTS"])) {
-    $excludedClients = explode(",", $setupVars["API_EXCLUDE_CLIENTS"]);
+if (isset($setupVars['API_EXCLUDE_CLIENTS'])) {
+    $excludedClients = explode(',', $setupVars['API_EXCLUDE_CLIENTS']);
 } else {
-    $excludedClients = [];
+    $excludedClients = array();
 }
 
 // Excluded clients
-if (isset($setupVars["API_QUERY_LOG_SHOW"])) {
-    $queryLog = $setupVars["API_QUERY_LOG_SHOW"];
+if (isset($setupVars['API_QUERY_LOG_SHOW'])) {
+    $queryLog = $setupVars['API_QUERY_LOG_SHOW'];
 } else {
-    $queryLog = "all";
+    $queryLog = 'all';
 }
 
 ?>
 
 <?php
-if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piholedhcp", "api", "privacy", "teleporter"))) {
+if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piholedhcp', 'api', 'privacy', 'teleporter'))) {
     $tab = $_GET['tab'];
 } else {
-    $tab = "sysadmin";
+    $tab = 'sysadmin';
 }
 ?>
 <div class="row">
     <div class="col-md-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation"<?php if($tab === "sysadmin"){ ?> class="active"<?php } ?>>
-                    <a href="#sysadmin" aria-controls="sysadmin" aria-expanded="<?php echo $tab === "sysadmin" ? "true" : "false"; ?>" role="tab" data-toggle="tab">System</a>
+                <li role="presentation"<?php if ('sysadmin' === $tab) { ?> class="active"<?php } ?>>
+                    <a href="#sysadmin" aria-controls="sysadmin" aria-expanded="<?php echo 'sysadmin' === $tab ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">System</a>
                 </li>
-                <li role="presentation"<?php if($tab === "dns"){ ?> class="active"<?php } ?>>
-                    <a href="#dns" aria-controls="dns" aria-expanded="<?php echo $tab === "dns" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DNS</a>
+                <li role="presentation"<?php if ('dns' === $tab) { ?> class="active"<?php } ?>>
+                    <a href="#dns" aria-controls="dns" aria-expanded="<?php echo 'dns' === $tab ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">DNS</a>
                 </li>
-                <li role="presentation"<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>>
-                    <a href="#piholedhcp" aria-controls="piholedhcp" aria-expanded="<?php echo $tab === "piholedhcp" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DHCP</a>
+                <li role="presentation"<?php if ('piholedhcp' === $tab) { ?> class="active"<?php } ?>>
+                    <a href="#piholedhcp" aria-controls="piholedhcp" aria-expanded="<?php echo 'piholedhcp' === $tab ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">DHCP</a>
                 </li>
-                <li role="presentation"<?php if($tab === "api"){ ?> class="active"<?php } ?>>
-                    <a href="#api" aria-controls="api" aria-expanded="<?php echo $tab === "api" ? "true" : "false"; ?>" role="tab" data-toggle="tab">API / Web interface</a>
+                <li role="presentation"<?php if ('api' === $tab) { ?> class="active"<?php } ?>>
+                    <a href="#api" aria-controls="api" aria-expanded="<?php echo 'api' === $tab ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">API / Web interface</a>
                 </li>
-                <li role="presentation"<?php if($tab === "privacy"){ ?> class="active"<?php } ?>>
-                    <a href="#privacy" aria-controls="privacy" aria-expanded="<?php echo $tab === "privacy" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Privacy</a>
+                <li role="presentation"<?php if ('privacy' === $tab) { ?> class="active"<?php } ?>>
+                    <a href="#privacy" aria-controls="privacy" aria-expanded="<?php echo 'privacy' === $tab ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">Privacy</a>
                 </li>
-                <li role="presentation"<?php if($tab === "teleporter"){ ?> class="active"<?php } ?>>
-                    <a href="#teleporter" aria-controls="teleporter" aria-expanded="<?php echo $tab === "teleporter" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Teleporter</a>
+                <li role="presentation"<?php if ('teleporter' === $tab) { ?> class="active"<?php } ?>>
+                    <a href="#teleporter" aria-controls="teleporter" aria-expanded="<?php echo 'teleporter' === $tab ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">Teleporter</a>
                 </li>
             </ul>
             <div class="tab-content">
                 <!-- ######################################################### System admin ######################################################### -->
-                <div id="sysadmin" class="tab-pane fade<?php if($tab === "sysadmin"){ ?> in active<?php } ?>">
+                <div id="sysadmin" class="tab-pane fade<?php if ('sysadmin' === $tab) { ?> in active<?php } ?>">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="box">
@@ -240,9 +239,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                         <div class="col-lg-12">
                                             <?php
                                             $FTLpid = intval(pidofFTL());
-                                            if ($FTLpid !== 0) {
-                                                $FTLversion = exec("/usr/bin/pihole-FTL version");
-                                            ?>
+if (0 !== $FTLpid) {
+    $FTLversion = exec('/usr/bin/pihole-FTL version'); ?>
                                             <table class="table table-striped table-bordered nowrap">
                                                 <tbody>
                                                     <tr>
@@ -255,25 +253,26 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">Time FTL started:</th>
-                                                        <td><?php print_r(get_FTL_data($FTLpid, "lstart")); echo " ".$timezone; ?></td>
+                                                        <td><?php print_r(get_FTL_data($FTLpid, 'lstart'));
+    echo ' '.$timezone; ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">User / Group:</th>
-                                                        <td><?php print_r(get_FTL_data($FTLpid, "euser")); ?> / <?php print_r(get_FTL_data($FTLpid, "egroup")); ?></td>
+                                                        <td><?php print_r(get_FTL_data($FTLpid, 'euser')); ?> / <?php print_r(get_FTL_data($FTLpid, 'egroup')); ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">Total CPU utilization:</th>
-                                                        <td><?php print_r(get_FTL_data($FTLpid, "%cpu")); ?>%</td>
+                                                        <td><?php print_r(get_FTL_data($FTLpid, '%cpu')); ?>%</td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">Memory utilization:</th>
-                                                        <td><?php print_r(get_FTL_data($FTLpid, "%mem")); ?>%</td>
+                                                        <td><?php print_r(get_FTL_data($FTLpid, '%mem')); ?>%</td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">
                                                             <span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory:</span>
                                                         </th>
-                                                        <td><?php echo formatSizeUnits(1e3 * floatval(get_FTL_data($FTLpid, "rss"))); ?></td>
+                                                        <td><?php echo formatSizeUnits(1e3 * floatval(get_FTL_data($FTLpid, 'rss'))); ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">
@@ -296,7 +295,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 </tbody>
                                             </table>
                                             See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
-                                            <?php } else { ?>
+                                            <?php
+} else { ?>
                                             <div>The FTL service is offline!</div>
                                             <?php } ?>
                                         </div>
@@ -317,7 +317,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 <form role="form" method="post">
                                                     <input type="hidden" name="action" value="Enable">
                                                     <input type="hidden" name="field" value="Logging">
-                                                    <input type="hidden" name="token" value="<?php echo $token ?>">
+                                                    <input type="hidden" name="token" value="<?php echo $token; ?>">
                                                     <button type="submit" class="btn btn-success btn-block">Enable query logging</button>
                                                 </form>
                                             <?php } ?>
@@ -348,28 +348,28 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
 
                                     <form role="form" method="post" id="flushlogsform">
                                         <input type="hidden" name="field" value="flushlogs">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                     </form>
                                     <form role="form" method="post" id="flusharpform">
                                         <input type="hidden" name="field" value="flusharp">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                     </form>
                                     <form role="form" method="post" id="disablelogsform-noflush">
                                         <input type="hidden" name="field" value="Logging">
                                         <input type="hidden" name="action" value="Disable-noflush">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                     </form>
                                     <form role="form" method="post" id="poweroffform">
                                         <input type="hidden" name="field" value="poweroff">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                     </form>
                                     <form role="form" method="post" id="rebootform">
                                         <input type="hidden" name="field" value="reboot">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                     </form>
                                     <form role="form" method="post" id="restartdnsform">
                                         <input type="hidden" name="field" value="restartdns">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                     </form>
                                 </div>
                             </div>
@@ -377,35 +377,35 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                     </div>
                 </div>
                 <!-- ######################################################### DHCP ######################################################### -->
-                <div id="piholedhcp" class="tab-pane fade<?php if($tab === "piholedhcp"){ ?> in active<?php } ?>">
+                <div id="piholedhcp" class="tab-pane fade<?php if ('piholedhcp' === $tab) { ?> in active<?php } ?>">
                     <?php
                     // Pi-hole DHCP server
-                    if (isset($setupVars["DHCP_ACTIVE"])) {
-                        if ($setupVars["DHCP_ACTIVE"] == 1) {
+                    if (isset($setupVars['DHCP_ACTIVE'])) {
+                        if (1 == $setupVars['DHCP_ACTIVE']) {
                             $DHCP = true;
                         } else {
                             $DHCP = false;
                         }
                         // Read settings from config file
-                        if (isset($setupVars["DHCP_START"])) {
-                            $DHCPstart = $setupVars["DHCP_START"];
+                        if (isset($setupVars['DHCP_START'])) {
+                            $DHCPstart = $setupVars['DHCP_START'];
                         } else {
-                            $DHCPstart = "";
+                            $DHCPstart = '';
                         }
-                        if (isset($setupVars["DHCP_END"])) {
-                            $DHCPend = $setupVars["DHCP_END"];
+                        if (isset($setupVars['DHCP_END'])) {
+                            $DHCPend = $setupVars['DHCP_END'];
                         } else {
-                            $DHCPend = "";
+                            $DHCPend = '';
                         }
-                        if (isset($setupVars["DHCP_ROUTER"])) {
-                            $DHCProuter = $setupVars["DHCP_ROUTER"];
+                        if (isset($setupVars['DHCP_ROUTER'])) {
+                            $DHCProuter = $setupVars['DHCP_ROUTER'];
                         } else {
-                            $DHCProuter = "";
+                            $DHCProuter = '';
                         }
 
                         // This setting has been added later, we have to check if it exists
-                        if (isset($setupVars["DHCP_LEASETIME"])) {
-                            $DHCPleasetime = $setupVars["DHCP_LEASETIME"];
+                        if (isset($setupVars['DHCP_LEASETIME'])) {
+                            $DHCPleasetime = $setupVars['DHCP_LEASETIME'];
                             if (strlen($DHCPleasetime) < 1) {
                                 // Fallback if empty string
                                 $DHCPleasetime = 24;
@@ -413,40 +413,39 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                         } else {
                             $DHCPleasetime = 24;
                         }
-                        if (isset($setupVars["DHCP_IPv6"])) {
-                            $DHCPIPv6 = $setupVars["DHCP_IPv6"];
+                        if (isset($setupVars['DHCP_IPv6'])) {
+                            $DHCPIPv6 = $setupVars['DHCP_IPv6'];
                         } else {
                             $DHCPIPv6 = false;
                         }
-                        if (isset($setupVars["DHCP_rapid_commit"])) {
-                            $DHCP_rapid_commit = $setupVars["DHCP_rapid_commit"];
+                        if (isset($setupVars['DHCP_rapid_commit'])) {
+                            $DHCP_rapid_commit = $setupVars['DHCP_rapid_commit'];
                         } else {
                             $DHCP_rapid_commit = false;
                         }
-
                     } else {
                         $DHCP = false;
                         // Try to guess initial settings
-                        if ($IPv4GW !== "unknown") {
-                            $DHCPparts = explode(".", $IPv4GW);
-                            $DHCPstart = $DHCPparts[0] . "." . $DHCPparts[1] . "." . $DHCPparts[2] . ".201";
-                            $DHCPend = $DHCPparts[0] . "." . $DHCPparts[1] . "." . $DHCPparts[2] . ".251";
+                        if ('unknown' !== $IPv4GW) {
+                            $DHCPparts = explode('.', $IPv4GW);
+                            $DHCPstart = $DHCPparts[0].'.'.$DHCPparts[1].'.'.$DHCPparts[2].'.201';
+                            $DHCPend = $DHCPparts[0].'.'.$DHCPparts[1].'.'.$DHCPparts[2].'.251';
                             $DHCProuter = $IPv4GW;
                         } else {
-                            $DHCPstart = "";
-                            $DHCPend = "";
-                            $DHCProuter = "";
+                            $DHCPstart = '';
+                            $DHCPend = '';
+                            $DHCProuter = '';
                         }
                         $DHCPleasetime = 24;
                         $DHCPIPv6 = false;
                         $DHCP_rapid_commit = false;
                     }
-                    if (isset($setupVars["PIHOLE_DOMAIN"])) {
-                        $piHoleDomain = $setupVars["PIHOLE_DOMAIN"];
+                    if (isset($setupVars['PIHOLE_DOMAIN'])) {
+                        $piHoleDomain = $setupVars['PIHOLE_DOMAIN'];
                     } else {
-                        $piHoleDomain = "lan";
+                        $piHoleDomain = 'lan';
                     }
-                    ?>
+?>
                     <form role="form" method="post">
                         <div class="row">
                             <!-- DHCP Settings Box -->
@@ -458,8 +457,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div><input type="checkbox" name="active" id="DHCPchk" <?php if ($DHCP){ ?>checked<?php } ?>><label for="DHCPchk"><strong>DHCP server enabled</strong></label></div><br>
-                                                <p id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!" <?php if (!$DHCP){ ?>hidden<?php } ?>>Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
+                                                <div><input type="checkbox" name="active" id="DHCPchk" <?php if ($DHCP) { ?>checked<?php } ?>><label for="DHCPchk"><strong>DHCP server enabled</strong></label></div><br>
+                                                <p id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!" <?php if (!$DHCP) { ?>hidden<?php } ?>>Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -473,7 +472,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                         <input type="text" class="form-control DHCPgroup" name="from"
                                                             autocomplete="off" spellcheck="false" autocapitalize="none"
                                                             autocorrect="off" value="<?php echo $DHCPstart; ?>"
-                                                            <?php if (!$DHCP){ ?>disabled<?php } ?>>
+                                                            <?php if (!$DHCP) { ?>disabled<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -484,7 +483,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                         <input type="text" class="form-control DHCPgroup" name="to"
                                                             autocomplete="off" spellcheck="false" autocapitalize="none"
                                                             autocorrect="off" value="<?php echo $DHCPend; ?>"
-                                                            <?php if (!$DHCP){ ?>disabled<?php } ?>>
+                                                            <?php if (!$DHCP) { ?>disabled<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -498,7 +497,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                         <input type="text" class="form-control DHCPgroup" name="router"
                                                             autocomplete="off" spellcheck="false" autocapitalize="none"
                                                             autocorrect="off" value="<?php echo $DHCProuter; ?>"
-                                                            <?php if (!$DHCP){ ?>disabled<?php } ?>>
+                                                            <?php if (!$DHCP) { ?>disabled<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -521,7 +520,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                         <div class="input-group-addon">Domain</div>
                                                         <input type="text" class="form-control DHCPgroup" name="domain"
                                                             value="<?php echo $piHoleDomain; ?>"
-                                                            <?php if (!$DHCP){ ?>disabled<?php } ?>>
+                                                            <?php if (!$DHCP) { ?>disabled<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -535,7 +534,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                         <input type="number" class="form-control DHCPgroup"
                                                             name="leasetime"
                                                             id="leasetime" value="<?php echo $DHCPleasetime; ?>"
-                                                            data-mask <?php if (!$DHCP){ ?>disabled<?php } ?>>
+                                                            data-mask <?php if (!$DHCP) { ?>disabled<?php } ?>>
                                                     </div>
                                                 </div>
                                                 <p>Hint: 0 = infinite, 24 = one day, 168 = one week, 744 = one month, 8760 = one year</p>
@@ -543,8 +542,16 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div><input type="checkbox" name="DHCP_rapid_commit" id="DHCP_rapid_commit" class="DHCPgroup" <?php if ($DHCP_rapid_commit){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="DHCP_rapid_commit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
-                                                <div><input type="checkbox" name="useIPv6" id="useIPv6" class="DHCPgroup" <?php if ($DHCPIPv6){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="useIPv6"><strong>Enable IPv6 support (SLAAC + RA)</strong></label></div>
+                                                <div><input type="checkbox" name="DHCP_rapid_commit" id="DHCP_rapid_commit" class="DHCPgroup"
+<?php
+if ($DHCP_rapid_commit) { ?>checked<?php }
+if (!$DHCP) { ?> disabled<?php } ?>
+>&nbsp;<label for="DHCP_rapid_commit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
+                                                <div><input type="checkbox" name="useIPv6" id="useIPv6" class="DHCPgroup"
+<?php
+if ($DHCPIPv6) { ?>checked<?php }
+if (!$DHCP) { ?> disabled<?php } ?>
+>&nbsp;<label for="useIPv6"><strong>Enable IPv6 support (SLAAC + RA)</strong></label></div>
                                             </div>
                                         </div>
                                     </div>
@@ -555,50 +562,49 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                         <!-- DHCP Leases Box -->
                         <div class="row">
                             <?php
-                            $dhcp_leases = array();
-                            if ($DHCP) {
-                                // Read leases file
-                                $leasesfile = true;
-                                $dhcpleases = @fopen('/etc/pihole/dhcp.leases', 'r');
-                                if (!is_resource($dhcpleases))
-                                    $leasesfile = false;
+$dhcp_leases = array();
+if ($DHCP) {
+    // Read leases file
+    $leasesfile = true;
+    $dhcpleases = @fopen('/etc/pihole/dhcp.leases', 'r');
+    if (!is_resource($dhcpleases)) {
+        $leasesfile = false;
+    }
 
-                                while (!feof($dhcpleases) && $leasesfile) {
-                                    $line = explode(" ", trim(fgets($dhcpleases)));
-                                    if (count($line) == 5) {
-                                        $counter = intval($line[0]);
-                                        if ($counter == 0) {
-                                            $time = "Infinite";
-                                        } elseif ($counter <= 315360000) // 10 years in seconds
-                                        {
-                                            $time = convertseconds($counter);
-                                        } else // Assume time stamp
-                                        {
-                                            $time = convertseconds($counter - time());
-                                        }
+    while (!feof($dhcpleases) && $leasesfile) {
+        $line = explode(' ', trim(fgets($dhcpleases)));
+        if (5 == count($line)) {
+            $counter = intval($line[0]);
+            if (0 == $counter) {
+                $time = 'Infinite';
+            } elseif ($counter <= 315360000) { // 10 years in seconds
+                $time = convertseconds($counter);
+            } else { // Assume time stamp
+                $time = convertseconds($counter - time());
+            }
 
-                                        if (strpos($line[2], ':') !== false) {
-                                            // IPv6 address
-                                            $type = 6;
-                                        } else {
-                                            // IPv4 lease
-                                            $type = 4;
-                                        }
+            if (false !== strpos($line[2], ':')) {
+                // IPv6 address
+                $type = 6;
+            } else {
+                // IPv4 lease
+                $type = 4;
+            }
 
-                                        $host = htmlentities($line[3]);
+            $host = htmlentities($line[3]);
 
-                                        $clid = $line[4];
-                                        if ($clid == "*") {
-                                            $clid = "<i>unknown</i>";
-                                        }
+            $clid = $line[4];
+            if ('*' == $clid) {
+                $clid = '<i>unknown</i>';
+            }
 
-                                        array_push($dhcp_leases, ["TIME" => $time, "hwaddr" => strtoupper($line[1]), "IP" => $line[2], "host" => $host, "clid" => $clid, "type" => $type]);
-                                    }
-                                }
-                            }
+            array_push($dhcp_leases, array('TIME' => $time, 'hwaddr' => strtoupper($line[1]), 'IP' => $line[2], 'host' => $host, 'clid' => $clid, 'type' => $type));
+        }
+    }
+}
 
-                            readStaticLeasesFile();
-                            ?>
+readStaticLeasesFile();
+?>
                             <div class="col-md-12">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
@@ -619,10 +625,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     <tbody>
                                                         <?php foreach ($dhcp_leases as $lease) { ?>
                                                         <tr data-placement="auto" data-container="body" data-toggle="tooltip"
-                                                            title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>">
-                                                            <td id="MAC"><?php echo $lease["hwaddr"]; ?></td>
-                                                            <td id="IP" data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
-                                                            <td id="HOST"><?php echo $lease["host"]; ?></td>
+                                                            title="Lease type: IPv<?php echo $lease['type']; ?><br/>Remaining lease time: <?php echo $lease['TIME']; ?><br/>DHCP UID: <?php echo $lease['clid']; ?>">
+                                                            <td id="MAC"><?php echo $lease['hwaddr']; ?></td>
+                                                            <td id="IP" data-order="<?php echo bin2hex(inet_pton($lease['IP'])); ?>"><?php echo $lease['IP']; ?></td>
+                                                            <td id="HOST"><?php echo $lease['host']; ?></td>
                                                             <td>
                                                                 <button type="button" class="btn btn-danger btn-xs" id="removedynamic">
                                                                     <span class="fas fas fa-trash-alt"></span>
@@ -660,12 +666,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     <tbody>
                                                         <?php foreach ($dhcp_static_leases as $lease) { ?>
                                                         <tr>
-                                                            <td><?php echo $lease["hwaddr"]; ?></td>
-                                                            <td data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
-                                                            <td><?php echo htmlentities($lease["host"]); ?></td>
-                                                            <td><?php if (strlen($lease["hwaddr"]) > 0) { ?>
+                                                            <td><?php echo $lease['hwaddr']; ?></td>
+                                                            <td data-order="<?php echo bin2hex(inet_pton($lease['IP'])); ?>"><?php echo $lease['IP']; ?></td>
+                                                            <td><?php echo htmlentities($lease['host']); ?></td>
+                                                            <td><?php if (strlen($lease['hwaddr']) > 0) { ?>
                                                                 <button type="submit" class="btn btn-danger btn-xs" name="removestatic"
-                                                                        value="<?php echo $lease["hwaddr"]; ?>">
+                                                                        value="<?php echo $lease['hwaddr']; ?>">
                                                                     <span class="far fa-trash-alt"></span>
                                                                 </button>
                                                                 <?php } ?>
@@ -696,7 +702,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                     </div>
                                 </div>
                                 <input type="hidden" name="field" value="DHCP">
-                                <input type="hidden" name="token" value="<?php echo $token ?>">
+                                <input type="hidden" name="token" value="<?php echo $token; ?>">
                                 <button type="submit" class="btn btn-primary pull-right">Save</button>
                             </div>
                         </div>
@@ -706,17 +712,17 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                 <?php
                     // Use default
                     $rate_limit_count = 1000;
-                    $rate_limit_interval = 60;
-                    // Get rate limit from piholeFTL config array
-                    if (isset($piholeFTLConf["RATE_LIMIT"])) {
-                        $rl = explode("/", $piholeFTLConf["RATE_LIMIT"]);
-                        if(count($rl) == 2) {
-                            $rate_limit_count = intval($rl[0]);
-                            $rate_limit_interval = intval($rl[1]);
-                        }
-                    }
-                ?>
-                <div id="dns" class="tab-pane fade<?php if($tab === "dns"){ ?> in active<?php } ?>">
+$rate_limit_interval = 60;
+// Get rate limit from piholeFTL config array
+if (isset($piholeFTLConf['RATE_LIMIT'])) {
+    $rl = explode('/', $piholeFTLConf['RATE_LIMIT']);
+    if (2 == count($rl)) {
+        $rate_limit_count = intval($rl[0]);
+        $rate_limit_interval = intval($rl[1]);
+    }
+}
+?>
+                <div id="dns" class="tab-pane fade<?php if ('dns' === $tab) { ?> in active<?php } ?>">
                     <form role="form" method="post">
                         <div class="row">
                             <div class="col-lg-6">
@@ -738,30 +744,30 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     <tbody>
                                                         <?php foreach ($DNSserverslist as $key => $value) { ?>
                                                         <tr>
-                                                        <?php if (isset($value["v4_1"])) { ?>
-                                                            <td title="<?php echo $value["v4_1"]; ?>">
-                                                                <div><input type="checkbox" name="DNSserver<?php echo $value["v4_1"]; ?>" id="DNS4server<?php echo $value["v4_1"]; ?>" value="true" <?php if (in_array($value["v4_1"], $DNSactive)){ ?>checked<?php } ?>><label for="DNS4server<?php echo $value["v4_1"]; ?>"></label></div>
+                                                        <?php if (isset($value['v4_1'])) { ?>
+                                                            <td title="<?php echo $value['v4_1']; ?>">
+                                                                <div><input type="checkbox" name="DNSserver<?php echo $value['v4_1']; ?>" id="DNS4server<?php echo $value['v4_1']; ?>" value="true" <?php if (in_array($value['v4_1'], $DNSactive)) { ?>checked<?php } ?>><label for="DNS4server<?php echo $value['v4_1']; ?>"></label></div>
                                                             </td>
                                                         <?php } else { ?>
                                                             <td></td>
                                                         <?php } ?>
-                                                        <?php if (isset($value["v4_2"])) { ?>
-                                                            <td title="<?php echo $value["v4_2"]; ?>">
-                                                                <div><input type="checkbox" name="DNSserver<?php echo $value["v4_2"]; ?>" id="DNS4server<?php echo $value["v4_2"]; ?>" value="true" <?php if (in_array($value["v4_2"], $DNSactive)){ ?>checked<?php } ?>><label for="DNS4server<?php echo $value["v4_2"]; ?>"></label></div>
+                                                        <?php if (isset($value['v4_2'])) { ?>
+                                                            <td title="<?php echo $value['v4_2']; ?>">
+                                                                <div><input type="checkbox" name="DNSserver<?php echo $value['v4_2']; ?>" id="DNS4server<?php echo $value['v4_2']; ?>" value="true" <?php if (in_array($value['v4_2'], $DNSactive)) { ?>checked<?php } ?>><label for="DNS4server<?php echo $value['v4_2']; ?>"></label></div>
                                                             </td>
                                                         <?php } else { ?>
                                                             <td></td>
                                                         <?php } ?>
-                                                        <?php if (isset($value["v6_1"])) { ?>
-                                                            <td title="<?php echo $value["v6_1"]; ?>">
-                                                                <div><input type="checkbox" name="DNSserver<?php echo $value["v6_1"]; ?>" id="DNS6server<?php echo $value["v6_1"]; ?>" value="true" <?php if (in_array($value["v6_1"], $DNSactive)){ ?>checked<?php } ?>><label for="DNS6server<?php echo $value["v6_1"]; ?>"></label></div>
+                                                        <?php if (isset($value['v6_1'])) { ?>
+                                                            <td title="<?php echo $value['v6_1']; ?>">
+                                                                <div><input type="checkbox" name="DNSserver<?php echo $value['v6_1']; ?>" id="DNS6server<?php echo $value['v6_1']; ?>" value="true" <?php if (in_array($value['v6_1'], $DNSactive)) { ?>checked<?php } ?>><label for="DNS6server<?php echo $value['v6_1']; ?>"></label></div>
                                                             </td>
                                                         <?php } else { ?>
                                                             <td></td>
                                                         <?php } ?>
-                                                        <?php if (isset($value["v6_2"])) { ?>
-                                                            <td title="<?php echo $value["v6_2"]; ?>">
-                                                                <div><input type="checkbox" name="DNSserver<?php echo $value["v6_2"]; ?>" id="DNS6server<?php echo $value["v6_2"]; ?>" value="true" <?php if (in_array($value["v6_2"], $DNSactive)){ ?>checked<?php } ?>><label for="DNS6server<?php echo $value["v6_2"]; ?>"></label></div>
+                                                        <?php if (isset($value['v6_2'])) { ?>
+                                                            <td title="<?php echo $value['v6_2']; ?>">
+                                                                <div><input type="checkbox" name="DNSserver<?php echo $value['v6_2']; ?>" id="DNS6server<?php echo $value['v6_2']; ?>" value="true" <?php if (in_array($value['v6_2'], $DNSactive)) { ?>checked<?php } ?>><label for="DNS6server<?php echo $value['v6_2']; ?>"></label></div>
                                                             </td>
                                                         <?php } else { ?>
                                                             <td></td>
@@ -788,12 +794,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 <strong>Custom 1 (IPv4)</strong>
                                                 <div class="row">
                                                     <div class="col-md-1"><div>
-                                                        <input type="checkbox" name="custom1" id="custom1" value="Customv4" <?php if (isset($custom1)){ ?>checked<?php } ?>>
+                                                        <input type="checkbox" name="custom1" id="custom1" value="Customv4" <?php if (isset($custom1)) { ?>checked<?php } ?>>
                                                         <label for="custom1"></label></div>
                                                     </div>
                                                     <div class="col-md-11">
                                                         <input type="text" name="custom1val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                            <?php if (isset($custom1)){ ?>value="<?php echo $custom1; ?>"<?php } ?>>
+                                                            <?php if (isset($custom1)) { ?>value="<?php echo $custom1; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -801,12 +807,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 <strong>Custom 2 (IPv4)</strong>
                                                 <div class="row">
                                                     <div class="col-md-1"><div>
-                                                        <input type="checkbox" name="custom2" id="custom2" value="Customv4" <?php if (isset($custom2)){ ?>checked<?php } ?>>
+                                                        <input type="checkbox" name="custom2" id="custom2" value="Customv4" <?php if (isset($custom2)) { ?>checked<?php } ?>>
                                                         <label for="custom2"></label></div>
                                                     </div>
                                                     <div class="col-md-11">
                                                         <input type="text" name="custom2val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                            <?php if (isset($custom2)){ ?>value="<?php echo $custom2; ?>"<?php } ?>>
+                                                            <?php if (isset($custom2)) { ?>value="<?php echo $custom2; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -816,12 +822,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 <strong>Custom 3 (IPv6)</strong>
                                                 <div class="row">
                                                     <div class="col-md-1"><div>
-                                                        <input type="checkbox" name="custom3" id="custom3" value="Customv6" <?php if (isset($custom3)){ ?>checked<?php } ?>>
+                                                        <input type="checkbox" name="custom3" id="custom3" value="Customv6" <?php if (isset($custom3)) { ?>checked<?php } ?>>
                                                         <label for="custom3"></label></div>
                                                     </div>
                                                     <div class="col-md-11">
                                                         <input type="text" name="custom3val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                            <?php if (isset($custom3)){ ?>value="<?php echo $custom3; ?>"<?php } ?>>
+                                                            <?php if (isset($custom3)) { ?>value="<?php echo $custom3; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -829,12 +835,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 <strong>Custom 4 (IPv6)</strong>
                                                 <div class="row">
                                                     <div class="col-md-1"><div>
-                                                        <input type="checkbox" name="custom4" id="custom4" value="Customv6" <?php if (isset($custom4)){ ?>checked<?php } ?>>
+                                                        <input type="checkbox" name="custom4" id="custom4" value="Customv6" <?php if (isset($custom4)) { ?>checked<?php } ?>>
                                                         <label for="custom4"></label></div>
                                                     </div>
                                                     <div class="col-md-11">
                                                         <input type="text" name="custom4val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                            <?php if (isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
+                                                            <?php if (isset($custom4)) { ?>value="<?php echo $custom4; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -855,7 +861,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                         <h4>Recommended setting</h4>
                                                         <div>
                                                             <input type="radio" name="DNSinterface" id="DNSinterface1" value="local"
-                                                                <?php if ($DNSinterface == "local"){ ?>checked<?php } ?>>
+                                                                <?php if ('local' == $DNSinterface) { ?>checked<?php } ?>>
                                                             <label for="DNSinterface1"><strong>Allow only local requests</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
                                                         </div>
                                                     </div>
@@ -863,17 +869,17 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                         <h4>Potentially dangerous options</h4>Make sure your Pi-hole is properly firewalled!
                                                         <div>
                                                             <input type="radio" name="DNSinterface" id="DNSinterface2" value="single"
-                                                                <?php if ($DNSinterface == "single"){ ?>checked<?php } ?>>
+                                                                <?php if ('single' == $DNSinterface) { ?>checked<?php } ?>>
                                                             <label for="DNSinterface2"><strong>Respond only on interface <?php echo htmlentities($piHoleInterface); ?></strong></label>
                                                         </div>
                                                         <div>
                                                             <input type="radio" name="DNSinterface" id="DNSinterface3" value="bind"
-                                                                <?php if ($DNSinterface == "bind"){ ?>checked<?php } ?>>
+                                                                <?php if ('bind' == $DNSinterface) { ?>checked<?php } ?>>
                                                             <label for="DNSinterface3"><strong>Bind only to interface <?php echo htmlentities($piHoleInterface); ?></strong></label>
                                                         </div>
                                                         <div>
                                                             <input type="radio" name="DNSinterface" id="DNSinterface4" value="all"
-                                                                <?php if ($DNSinterface == "all"){ ?>checked<?php } ?>>
+                                                                <?php if ('all' == $DNSinterface) { ?>checked<?php } ?>>
                                                             <label for="DNSinterface4"><strong>Permit all origins</strong></label>
                                                         </div>
                                                         <p>These options are dangerous on devices
@@ -900,7 +906,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div>
-                                                    <input type="checkbox" name="DNSrequiresFQDN" id="DNSrequiresFQDN" title="domain-needed" <?php if ($DNSrequiresFQDN){ ?>checked<?php } ?>>
+                                                    <input type="checkbox" name="DNSrequiresFQDN" id="DNSrequiresFQDN" title="domain-needed" <?php if ($DNSrequiresFQDN) { ?>checked<?php } ?>>
                                                     <label for="DNSrequiresFQDN"><strong>Never forward non-FQDN <code>A</code> and <code>AAAA</code> queries</strong></label>
                                                     <p>When there is a Pi-hole domain set and this box is
                                                         ticked, this asks FTL that this domain is purely
@@ -910,7 +916,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                         DNS loop under certain circumstances (e.g. if a client would send TLD DNSSEC queries).</p>
                                                 </div>
                                                 <div>
-                                                    <input type="checkbox" name="DNSbogusPriv" id="DNSbogusPriv" title="bogus-priv" <?php if ($DNSbogusPriv){ ?>checked<?php } ?>>
+                                                    <input type="checkbox" name="DNSbogusPriv" id="DNSbogusPriv" title="bogus-priv" <?php if ($DNSbogusPriv) { ?>checked<?php } ?>>
                                                     <label for="DNSbogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
                                                     <p>All reverse lookups for private IP ranges (i.e., <code>192.168.0.x/24</code>, etc.)
                                                         which are not found in <code>/etc/hosts</code> or the DHCP leases are answered
@@ -922,7 +928,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 </div>
                                                 <br>
                                                 <div>
-                                                    <input type="checkbox" name="DNSSEC" id="DNSSEC" <?php if ($DNSSEC){ ?>checked<?php } ?>>
+                                                    <input type="checkbox" name="DNSSEC" id="DNSSEC" <?php if ($DNSSEC) { ?>checked<?php } ?>>
                                                     <label for="DNSSEC"><strong>Use DNSSEC</strong></label>
                                                     <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
                                                         queries, Pi-hole requests the DNSSEC records needed to validate
@@ -935,8 +941,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 </div>
                                                 <br>
                                                 <h4><a id="ratelimit"></a>Rate-limiting</h4>
-                                                <p>Block clients making more than <input type="number" name="rate_limit_count" value="<?=$rate_limit_count?>" min="0" step="10" style="width: 5em;"> queries within
-                                                    <input type="number" name="rate_limit_interval" value="<?=$rate_limit_interval?>" min="0" step="10" style="width: 4em;"> seconds.</p>
+                                                <p>Block clients making more than <input type="number" name="rate_limit_count" value="<?php echo $rate_limit_count; ?>" min="0" step="10" style="width: 5em;"> queries within
+                                                    <input type="number" name="rate_limit_interval" value="<?php echo $rate_limit_interval; ?>" min="0" step="10" style="width: 4em;"> seconds.</p>
                                                     <p>When a client makes too many queries in too short time, it
                                                     gets rate-limited. Rate-limited queries are answered with a
                                                     <code>REFUSED</code> reply and not further processed by FTL
@@ -975,7 +981,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     when "Never forward non-FQDNs" is <em>not</em> enabled.</p>
                                                 <div class="form-group">
                                                     <div>
-                                                        <input type="checkbox" name="rev_server" id="rev_server" value="rev_server" <?php if(isset($rev_server) && ($rev_server == true)){ ?>checked<?php } ?>>
+                                                        <input type="checkbox" name="rev_server" id="rev_server" value="rev_server" <?php if (isset($rev_server) && (true == $rev_server)) { ?>checked<?php } ?>>
                                                         <label for="rev_server"><strong>Use Conditional Forwarding</strong></label>
                                                     </div>
                                                     <div class="input-group">
@@ -991,18 +997,18 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                                 <tr>
                                                                     <td>
                                                                         <input type="text" name="rev_server_cidr" placeholder="192.168.0.0/16" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                                        <?php if(isset($rev_server_cidr)){ ?>value="<?php echo $rev_server_cidr; ?>"<?php } ?>
-                                                                        <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
+                                                                        <?php if (isset($rev_server_cidr)) { ?>value="<?php echo $rev_server_cidr; ?>"<?php } ?>
+                                                                        <?php if (!isset($rev_server) || !$rev_server) { ?>disabled<?php } ?>>
                                                                     </td>
                                                                     <td>
                                                                         <input type="text" name="rev_server_target" placeholder="192.168.0.1" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                                        <?php if(isset($rev_server_target)){ ?>value="<?php echo $rev_server_target; ?>"<?php } ?>
-                                                                        <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
+                                                                        <?php if (isset($rev_server_target)) { ?>value="<?php echo $rev_server_target; ?>"<?php } ?>
+                                                                        <?php if (!isset($rev_server) || !$rev_server) { ?>disabled<?php } ?>>
                                                                     </td>
                                                                     <td>
                                                                         <input type="text" name="rev_server_domain" placeholder="local" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                                        <?php if(isset($rev_server_domain)){ ?>value="<?php echo $rev_server_domain; ?>"<?php } ?>
-                                                                        <?php if(!isset($rev_server) || !$rev_server){ ?>disabled<?php } ?>>
+                                                                        <?php if (isset($rev_server_domain)) { ?>value="<?php echo $rev_server_domain; ?>"<?php } ?>
+                                                                        <?php if (!isset($rev_server) || !$rev_server) { ?>disabled<?php } ?>>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -1014,7 +1020,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                     </div>
                                 </div>
                                 <input type="hidden" name="field" value="DNS">
-                                <input type="hidden" name="token" value="<?php echo $token ?>">
+                                <input type="hidden" name="token" value="<?php echo $token; ?>">
                                 <button type="submit" class="btn btn-primary pull-right">Save</button>
                             </div>
                         </div>
@@ -1022,14 +1028,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                 </div>
                 <!-- ######################################################### API and Web ######################################################### -->
                 <?php
-                // Administrator email address
-                if (isset($setupVars["ADMIN_EMAIL"])) {
-                    $adminemail = $setupVars["ADMIN_EMAIL"];
-                } else {
-                    $adminemail = "";
-                }
-                ?>
-                <div id="api" class="tab-pane fade<?php if($tab === "api"){ ?> in active<?php } ?>">
+// Administrator email address
+if (isset($setupVars['ADMIN_EMAIL'])) {
+    $adminemail = $setupVars['ADMIN_EMAIL'];
+} else {
+    $adminemail = '';
+}
+?>
+                <div id="api" class="tab-pane fade<?php if ('api' === $tab) { ?> in active<?php } ?>">
                     <div class="row">
                         <div class="col-md-6">
                             <form role="form" method="post">
@@ -1050,8 +1056,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     <label>Top Domains / Top Advertisers</label>
                                                     <textarea name="domains" class="form-control" placeholder="Enter one domain per line" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                             rows="4"><?php foreach ($excludedDomains as $domain) {
-                                                                            echo $domain . "\n"; }
-                                                                    ?></textarea>
+                                                                echo $domain."\n";
+                                                            }
+?></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
@@ -1059,8 +1066,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                     <label>Top Clients</label>
                                                     <textarea name="clients" class="form-control" placeholder="Enter one IP address or host name per line" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                             rows="4"><?php foreach ($excludedClients as $client) {
-                                                                            echo $client . "\n"; }
-                                                                    ?></textarea>
+                                                                echo $client."\n";
+                                                            }
+?></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -1072,13 +1080,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div>
-                                                    <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>>
+                                                    <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <?php if ('permittedonly' === $queryLog || 'all' === $queryLog) { ?>checked<?php } ?>>
                                                     <label for="querylog-permitted"><strong>Show permitted domain entries</strong></label>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
                                                 <div>
-                                                <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>>
+                                                <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <?php if ('blockedonly' === $queryLog || 'all' === $queryLog) { ?>checked<?php } ?>>
                                                 <label for="querylog-blocked"><strong>Show blocked domain entries</strong></label>
                                                 </div>
                                             </div>
@@ -1086,7 +1094,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                     </div>
                                     <div class="box-footer clearfix">
                                         <input type="hidden" name="field" value="API">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                         <button type="button" class="btn btn-primary api-token">Show API token</button>
                                         <button type="submit" class="btn btn-primary pull-right">Save</button>
                                     </div>
@@ -1125,7 +1133,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div>
-                                                    <input type="checkbox" name="boxedlayout" id="boxedlayout" value="yes" <?php if ($boxedlayout){ ?>checked<?php } ?>>
+                                                    <input type="checkbox" name="boxedlayout" id="boxedlayout" value="yes" <?php if ($boxedlayout) { ?>checked<?php } ?>>
                                                     <label for="boxedlayout"><strong>Use boxed layout (for large screens)</strong></label>
                                                 </div>
                                             </div>
@@ -1135,7 +1143,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 <h4>Administrator Email Address</h4>
                                                 <input type="email" class="form-control" name="adminemail" value="<?php echo htmlspecialchars($adminemail); ?>">
                                                 <input type="hidden" name="field" value="webUI">
-                                                <input type="hidden" name="token" value="<?php echo $token ?>">
+                                                <input type="hidden" name="token" value="<?php echo $token; ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -1250,13 +1258,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                 <!-- ######################################################### Privacy (may be expanded further later on) ######################################################### -->
                 <?php
                 // Get privacy level from piholeFTL config array
-                if (isset($piholeFTLConf["PRIVACYLEVEL"])) {
-                    $privacylevel = intval($piholeFTLConf["PRIVACYLEVEL"]);
+                if (isset($piholeFTLConf['PRIVACYLEVEL'])) {
+                    $privacylevel = intval($piholeFTLConf['PRIVACYLEVEL']);
                 } else {
                     $privacylevel = 0;
                 }
-                ?>
-                <div id="privacy" class="tab-pane fade<?php if($tab === "privacy"){ ?> in active<?php } ?>">
+?>
+                <div id="privacy" class="tab-pane fade<?php if ('privacy' === $tab) { ?> in active<?php } ?>">
                     <div class="row">
                         <div class="col-md-12">
                             <form role="form" method="post">
@@ -1270,27 +1278,27 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                                 <h4>DNS resolver privacy level</h4>
                                                 <p>Specify if DNS queries should be anonymized, available options are:</p>
                                                 <div>
-                                                    <input type="radio" name="privacylevel" id="privacylevel_0" value="0" <?php if ($privacylevel === 0){ ?>checked<?php } ?>>
+                                                    <input type="radio" name="privacylevel" id="privacylevel_0" value="0" <?php if (0 === $privacylevel) { ?>checked<?php } ?>>
                                                     <label for="privacylevel_0"><strong>Show everything and record everything</strong></label>
                                                     <p>Gives maximum amount of statistics</p>
                                                 </div>
                                                 <div>
-                                                    <input type="radio" name="privacylevel" id="privacylevel_1" value="1" <?php if ($privacylevel === 1){ ?>checked<?php } ?>>
+                                                    <input type="radio" name="privacylevel" id="privacylevel_1" value="1" <?php if (1 === $privacylevel) { ?>checked<?php } ?>>
                                                     <label for="privacylevel_1"><strong>Hide domains: Display and store all domains as "hidden"</strong></label>
                                                     <p>This disables the Top Permitted Domains and Top Blocked Domains tables on the dashboard</p>
                                                 </div>
                                                 <div>
-                                                    <input type="radio" name="privacylevel" id="privacylevel_2" value="2" <?php if ($privacylevel === 2){ ?>checked<?php } ?>>
+                                                    <input type="radio" name="privacylevel" id="privacylevel_2" value="2" <?php if (2 === $privacylevel) { ?>checked<?php } ?>>
                                                     <label for="privacylevel_2"><strong>Hide domains and clients: Display and store all domains as "hidden" and all clients as "0.0.0.0"</strong></label>
                                                     <p>This disables all tables on the dashboard</p>
                                                 </div>
                                                 <div>
-                                                    <input type="radio" name="privacylevel" id="privacylevel_3" value="3" <?php if ($privacylevel === 3){ ?>checked<?php } ?>>
+                                                    <input type="radio" name="privacylevel" id="privacylevel_3" value="3" <?php if (3 === $privacylevel) { ?>checked<?php } ?>>
                                                     <label for="privacylevel_3"><strong>Anonymous mode: This disables basically everything except the live anonymous statistics</strong></label>
                                                     <p>No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists.</p>
                                                 </div>
                                                 <p>The privacy level may be increased at any time without having to restart the DNS resolver. However, note that the DNS resolver needs to be restarted when lowering the privacy level. This restarting is automatically done when saving.</p>
-                                                <?php if($privacylevel > 0 && $piHoleLogging){ ?>
+                                                <?php if ($privacylevel > 0 && $piHoleLogging) { ?>
                                                 <p class="lookatme" lookatme-text="Warning: Pi-hole's query logging is activated. Although the dashboard will hide the requested details, all queries are still fully logged to the pihole.log file.">Warning: Pi-hole's query logging is activated. Although the dashboard will hide the requested details, all queries are still fully logged to the pihole.log file.</p>
                                                 <?php } ?>
                                             </div>
@@ -1298,7 +1306,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                                     </div>
                                     <div class="box-footer clearfix">
                                         <input type="hidden" name="field" value="privacyLevel">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                         <button type="submit" class="btn btn-primary pull-right">Apply</button>
                                     </div>
                                 </div>
@@ -1307,13 +1315,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
                     </div>
                 </div>
                 <!-- ######################################################### Teleporter ######################################################### -->
-                <div id="teleporter" class="tab-pane fade<?php if($tab === "teleporter"){ ?> in active<?php } ?>">
+                <div id="teleporter" class="tab-pane fade<?php if ('teleporter' === $tab) { ?> in active<?php } ?>">
                     <div class="row">
                         <?php if (extension_loaded('Phar')) { ?>
                         <form role="form" method="post" id="takeoutform"
                             action="scripts/pi-hole/php/teleporter.php"
                             target="teleporter_iframe" enctype="multipart/form-data">
-                            <input type="hidden" name="token" value="<?php echo $token ?>">
+                            <input type="hidden" name="token" value="<?php echo $token; ?>">
                             <div class="col-lg-6 col-md-12">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
@@ -1468,9 +1476,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "dns", "piho
     </div>
 </div>
 
-<script src="scripts/vendor/jquery.confirm.min.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/settings.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/vendor/jquery.confirm.min.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="scripts/pi-hole/js/settings.js?v=<?php echo $cacheVer; ?>"></script>
 
 <?php
-require "scripts/pi-hole/php/footer.php";
+require 'scripts/pi-hole/php/footer.php';
 ?>

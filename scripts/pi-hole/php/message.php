@@ -7,9 +7,9 @@
 *  Please see LICENSE file for your rights under this license.
 */
 
-require_once('auth.php');
-require_once('func.php');
-require_once('database.php');
+require_once 'auth.php';
+require_once 'func.php';
+require_once 'database.php';
 
 // Authentication checks
 if (!isset($api)) {
@@ -27,22 +27,26 @@ $QueriesDB = getQueriesDBFilename();
 $db = SQLite3_connect($QueriesDB, SQLITE3_OPEN_READWRITE);
 
 // Delete message identified by IDs
-if ($_POST['action'] == 'delete_message' && isset($_POST['id'])) {
+if ('delete_message' == $_POST['action'] && isset($_POST['id'])) {
     try {
         $ids = json_decode($_POST['id']);
-        if(!is_array($ids))
+        if (!is_array($ids)) {
             throw new Exception('Invalid payload: id is not an array');
-        // Exploit prevention: Ensure all entries in the ID array are integers
-        foreach($ids as $value) {
-            if (!is_numeric($value))
-                throw new Exception('Invalid payload: id contains non-numeric entries');
         }
-        $stmt = $db->prepare('DELETE FROM message WHERE id IN ('.implode(",",$ids).')');
-        if (!$stmt)
-            throw new Exception('While preparing message statement: ' . $db->lastErrorMsg());
+        // Exploit prevention: Ensure all entries in the ID array are integers
+        foreach ($ids as $value) {
+            if (!is_numeric($value)) {
+                throw new Exception('Invalid payload: id contains non-numeric entries');
+            }
+        }
+        $stmt = $db->prepare('DELETE FROM message WHERE id IN ('.implode(',', $ids).')');
+        if (!$stmt) {
+            throw new Exception('While preparing message statement: '.$db->lastErrorMsg());
+        }
 
-        if (!$stmt->execute())
-            throw new Exception('While executing message statement: ' . $db->lastErrorMsg());
+        if (!$stmt->execute()) {
+            throw new Exception('While executing message statement: '.$db->lastErrorMsg());
+        }
 
         $reload = true;
         JSON_success();

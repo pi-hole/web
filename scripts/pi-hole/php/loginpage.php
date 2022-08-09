@@ -73,5 +73,5 @@
     </div>
 </div>
 <?php
-require "scripts/pi-hole/php/footer.php";
+require 'scripts/pi-hole/php/footer.php';
 ?>

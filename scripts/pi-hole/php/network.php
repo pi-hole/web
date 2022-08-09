@@ -7,9 +7,9 @@
 *  Please see LICENSE file for your rights under this license.
 */
 
-require_once('auth.php');
-require_once('func.php');
-require_once('database.php');
+require_once 'auth.php';
+require_once 'func.php';
+require_once 'database.php';
 
 // Authentication checks
 if (!isset($api)) {
@@ -26,34 +26,33 @@ $reload = false;
 $QueriesDB = getQueriesDBFilename();
 $db = SQLite3_connect($QueriesDB, SQLITE3_OPEN_READWRITE);
 
-if ($_POST['action'] == 'delete_network_entry' && isset($_POST['id'])) {
-// Delete netwwork and network_addresses table entry identified by ID
+if ('delete_network_entry' == $_POST['action'] && isset($_POST['id'])) {
+    // Delete netwwork and network_addresses table entry identified by ID
     try {
-
         $stmt = $db->prepare('DELETE FROM network_addresses WHERE network_id=:id');
         if (!$stmt) {
-            throw new Exception('While preparing message statement: ' . $db->lastErrorMsg());
+            throw new Exception('While preparing message statement: '.$db->lastErrorMsg());
         }
 
         if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
-            throw new Exception('While binding id to message statement: ' . $db->lastErrorMsg());
+            throw new Exception('While binding id to message statement: '.$db->lastErrorMsg());
         }
 
         if (!$stmt->execute()) {
-            throw new Exception('While executing message statement: ' . $db->lastErrorMsg());
+            throw new Exception('While executing message statement: '.$db->lastErrorMsg());
         }
 
         $stmt = $db->prepare('DELETE FROM network WHERE id=:id');
         if (!$stmt) {
-            throw new Exception('While preparing message statement: ' . $db->lastErrorMsg());
+            throw new Exception('While preparing message statement: '.$db->lastErrorMsg());
         }
 
         if (!$stmt->bindValue(':id', intval($_POST['id']), SQLITE3_INTEGER)) {
-            throw new Exception('While binding id to message statement: ' . $db->lastErrorMsg());
+            throw new Exception('While binding id to message statement: '.$db->lastErrorMsg());
         }
 
         if (!$stmt->execute()) {
-            throw new Exception('While executing message statement: ' . $db->lastErrorMsg());
+            throw new Exception('While executing message statement: '.$db->lastErrorMsg());
         }
 
         $reload = true;
