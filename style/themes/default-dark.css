@@ -596,6 +596,10 @@ input[type="password"]::-webkit-caps-lock-indicator {
   color: #383838;
 }
 
+.login-page {
+  background-image: linear-gradient(#0006, #0006), url("../../img/boxed-bg-dark.png");
+}
+
 /*** Fix login input visual misalignment ***/
 #loginform,
 #loginform input {
