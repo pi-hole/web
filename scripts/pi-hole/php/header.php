@@ -1,24 +1,6 @@
 <?php
-require 'scripts/pi-hole/php/theme.php';
-
 $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
 $hostname = gethostname() ? gethostname() : '';
-
-// Retrieve layout setting from setupVars
-if (isset($setupVars['WEBUIBOXEDLAYOUT']) && !('boxed' === $setupVars['WEBUIBOXEDLAYOUT'])) {
-    $boxedlayout = false;
-} else {
-    $boxedlayout = true;
-}
-
-// Override layout setting if layout is changed via Settings page
-if (isset($_POST['field'])) {
-    if ('webUI' === $_POST['field'] && isset($_POST['boxedlayout'])) {
-        $boxedlayout = true;
-    } elseif ('webUI' === $_POST['field'] && !isset($_POST['boxedlayout'])) {
-        $boxedlayout = false;
-    }
-}
 
 // Create cache busting version
 $cacheVer = filemtime(__FILE__);

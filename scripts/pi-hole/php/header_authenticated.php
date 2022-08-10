@@ -18,6 +18,23 @@ if (!$auth) {
 require 'scripts/pi-hole/php/auth.php';
 require_once 'scripts/pi-hole/php/FTL.php';
 require_once 'scripts/pi-hole/php/func.php';
+require 'scripts/pi-hole/php/theme.php';
+
+// Retrieve layout setting from setupVars
+if (isset($setupVars['WEBUIBOXEDLAYOUT']) && !('boxed' === $setupVars['WEBUIBOXEDLAYOUT'])) {
+    $boxedlayout = false;
+} else {
+    $boxedlayout = true;
+}
+
+// Override layout setting if layout is changed via Settings page
+if (isset($_POST['field'])) {
+    if ('webUI' === $_POST['field'] && isset($_POST['boxedlayout'])) {
+        $boxedlayout = true;
+    } elseif ('webUI' === $_POST['field'] && !isset($_POST['boxedlayout'])) {
+        $boxedlayout = false;
+    }
+}
 
 // Return memory usage to show on status block
 function getMemUsage()

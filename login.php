@@ -16,6 +16,7 @@ if ($_SESSION['auth']) {
     exit;
 }
 
+require 'scripts/pi-hole/php/theme.php';
 require 'scripts/pi-hole/php/header.php';
 ?>
 <body class="hold-transition layout-boxed login-page">
@@ -31,7 +32,6 @@ require 'scripts/pi-hole/php/header.php';
 
         <div class="card">
             <div class="card-body login-card-body">
-                <p class="login-box-msg">Sign in to start your session</p>
                 <div id="cookieInfo" class="panel-title text-center text-red" style="font-size: 150%" hidden>Verify that cookies are allowed for <code><?php echo $_SERVER['HTTP_HOST']; ?></code></div>
                 <?php if ($wrongpassword) { ?>
                 <div class="form-group has-error login-box-msg">

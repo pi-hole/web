@@ -256,36 +256,39 @@ $("#pihole-disable-custom").on("click", function (e) {
 });
 
 // Session timer
-var sessionTimerCounter = document.getElementById("sessiontimercounter");
-var sessionvalidity = parseInt(sessionTimerCounter.textContent, 10);
-var start = new Date();
-
 function updateSessionTimer() {
   start = new Date();
   start.setSeconds(start.getSeconds() + sessionvalidity);
 }
 
-if (sessionvalidity > 0) {
-  // setSeconds will correctly handle wrap-around cases
-  updateSessionTimer();
+var sessiontimer = document.getElementById("sessiontimer");
+if (sessiontimer) {
+  var sessionTimerCounter = document.getElementById("sessiontimercounter");
+  var sessionvalidity = parseInt(sessionTimerCounter.textContent, 10);
+  var start = new Date();
 
-  setInterval(function () {
-    var current = new Date();
-    var totalseconds = (start - current) / 1000;
-    var minutes = Math.floor(totalseconds / 60);
-    if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
+  if (sessionvalidity > 0) {
+    // setSeconds will correctly handle wrap-around cases
+    updateSessionTimer();
 
-    var seconds = Math.floor(totalseconds % 60);
-    if (seconds < 10) {
-      seconds = "0" + seconds;
-    }
+    setInterval(function () {
+      var current = new Date();
+      var totalseconds = (start - current) / 1000;
+      var minutes = Math.floor(totalseconds / 60);
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
 
-    sessionTimerCounter.textContent = totalseconds > 0 ? minutes + ":" + seconds : "-- : --";
-  }, 1000);
-} else {
-  document.getElementById("sessiontimer").style.display = "none";
+      var seconds = Math.floor(totalseconds % 60);
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
+
+      sessionTimerCounter.textContent = totalseconds > 0 ? minutes + ":" + seconds : "-- : --";
+    }, 1000);
+  } else {
+    sessiontimer.style.display = "none";
+  }
 }
 
 // Handle Ctrl + Enter button on Login page
