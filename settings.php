@@ -683,7 +683,12 @@ readStaticLeasesFile();
                                                         <tr>
                                                             <td><input type="text" class="form-group" name="AddMAC" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
                                                             <td><input type="text" class="form-group" name="AddIP" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
-                                                            <td><input type="text" class="form-group" name="AddHostname" value="" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
+                                                            <td><input type="text" class="form-group" name="AddHostname" value="" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                                                <div>
+                                                                    <input type="checkbox" class="form-group" id="PreserveHostname" name="PreserveHostname" value="">
+                                                                    <label for="PreserveHostname"> Resolve if inactive</label>
+                                                                </div>
+                                                            </td>
                                                             <td>
                                                                 <button type="submit" class="btn btn-success btn-xs" name="addstatic">
                                                                     <span class="fas fa-plus"></span>

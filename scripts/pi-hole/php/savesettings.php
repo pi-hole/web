@@ -136,7 +136,7 @@ function readDNSserversList()
 
 require_once 'database.php';
 
-function addStaticDHCPLease($mac, $ip, $hostname)
+function addStaticDHCPLease($mac, $ip, $hostname, $preservehostname = false)
 {
     global $error, $success, $dhcp_static_leases;
 
@@ -185,7 +185,7 @@ function addStaticDHCPLease($mac, $ip, $hostname)
         $success .= 'A new static address has been added';
 
         // Adds a DNS entry only if both IP and hostnames are provided.
-        if ($ip !== 'noip' && $hostname !== 'nohost') {
+        if ($ip !== 'noip' && $hostname !== 'nohost' && $preservehostname) {
             pihole_execute('-a adddhcphostname '.$mac.' '.$ip.' '.$hostname);
             $success .= '<br>DNS entry for IP '.htmlspecialchars($ip).' with hostname '
                 .htmlspecialchars($hostname).' has been added';
@@ -475,8 +475,9 @@ if (isset($_POST['field'])) {
                 $mac = trim($_POST['AddMAC']);
                 $ip = trim($_POST['AddIP']);
                 $hostname = trim($_POST['AddHostname']);
+                $preservehostname = isset($_POST['PreserveHostname']);
 
-                addStaticDHCPLease($mac, $ip, $hostname);
+                addStaticDHCPLease($mac, $ip, $hostname, $preservehostname);
 
                 break;
             }
