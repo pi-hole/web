@@ -8,7 +8,7 @@
 */
 
 $indexpage = true;
-require 'scripts/pi-hole/php/header.php';
+require 'scripts/pi-hole/php/header_authenticated.php';
 require_once 'scripts/pi-hole/php/gravity.php';
 ?>
 <!-- Sourceing CSS colors from stylesheet to be used in JS code -->

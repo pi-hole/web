@@ -8,7 +8,7 @@
 *    Please see LICENSE file for your rights under this license.
 */
 
-require 'scripts/pi-hole/php/header.php';
+require 'scripts/pi-hole/php/header_authenticated.php';
 ?>
 <!-- Sourceing CSS colors from stylesheet to be used in JS code -->
 <span class="queries-permitted"></span>

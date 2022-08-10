@@ -8,7 +8,7 @@
 *    Please see LICENSE file for your rights under this license.
 */
 
-require 'scripts/pi-hole/php/header.php';
+require 'scripts/pi-hole/php/header_authenticated.php';
 ?>
 <!-- Title -->
 <div class="page-header">
