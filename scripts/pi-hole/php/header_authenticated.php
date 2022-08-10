@@ -118,7 +118,7 @@ $memory_usage = getMemUsage();
 
 $piholeFTLConf = piholeFTLConfig();
 
-require 'common_header.php';
+require 'header.php';
 ?>
 <body class="hold-transition sidebar-mini<?php if ($boxedlayout) { ?> layout-boxed<?php } ?><?php if ($auth) { ?> logged-in<?php } ?>">
 <noscript>

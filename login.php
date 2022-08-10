@@ -16,7 +16,7 @@ if ($_SESSION['auth']) {
     exit;
 }
 
-require 'scripts/pi-hole/php/common_header.php';
+require 'scripts/pi-hole/php/header.php';
 ?>
 <body class="hold-transition layout-boxed login-page">
 <div class="box login-box">
