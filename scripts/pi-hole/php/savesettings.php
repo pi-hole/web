@@ -185,11 +185,12 @@ function addStaticDHCPLease($mac, $ip, $hostname, $preservehostname = false)
         $success .= 'A new static address has been added';
 
         // Adds a DNS entry only if both IP and hostnames are provided.
-        if ($ip !== 'noip' && $hostname !== 'nohost' && $preservehostname) {
+        if ('noip' !== $ip && 'nohost' !== $hostname && $preservehostname) {
             pihole_execute('-a adddhcphostname '.$mac.' '.$ip.' '.$hostname);
             $success .= '<br>DNS entry for IP '.htmlspecialchars($ip).' with hostname '
                 .htmlspecialchars($hostname).' has been added';
         }
+
         return true;
     } catch (Exception $exception) {
         $error .= $exception->getMessage();
