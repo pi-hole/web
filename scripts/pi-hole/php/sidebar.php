@@ -318,6 +318,12 @@
                 <?php } ?>
 
                 <li class="header text-uppercase">Support</li>
+                <!-- Website -->
+                <li>
+                    <a href="https://pi-hole.net/" rel="noopener" target="_blank" class="menu-support">
+                        <i class="fa fa-fw menu-icon fa-home"></i> <span>Pi-hole Website</span>
+                    </a>
+                </li>
                 <!-- Docs -->
                 <li>
                     <a href="https://docs.pi-hole.net/" rel="noopener" target="_blank" class="menu-support">
@@ -328,6 +334,12 @@
                 <li>
                     <a href="https://discourse.pi-hole.net/" rel="noopener" target="_blank" class="menu-support">
                         <i class="fa fa-fw menu-icon fab fa-discourse"></i> <span>Pi-hole Forum</span>
+                    </a>
+                </li>
+                <!-- Github -->
+                <li>
+                    <a href="https://github.com/pi-hole/" rel="noopener" target="_blank" class="menu-support">
+                        <i class="fa fa-fw menu-icon fab fa-github"></i> <span>Github</span>
                     </a>
                 </li>
                 <!-- Donate -->
