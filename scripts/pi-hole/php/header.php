@@ -261,54 +261,6 @@ if ($auth) {
                             <code><?php echo $hostname; ?></code>
                         </p>
                     </li>
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <img src="img/logo.svg" class="user-image" alt="Pi-hole logo" style="border-radius: 0" width="25" height="25">
-                            <span class="hidden-xs">Pi-hole</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <!-- User image -->
-                            <li class="user-header">
-                                <img src="img/logo.svg" alt="Pi-hole Logo" style="border: 0" width="90" height="90">
-                                <p>
-                                    Open Source Ad Blocker
-                                    <small>Designed For Raspberry Pi</small>
-                                </p>
-                            </li>
-                            <!-- Menu Body -->
-                            <li class="user-body">
-                                <div class="row">
-                                    <div class="col-xs-4 text-center">
-                                        <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank">GitHub</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">Website</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank">Updates</a>
-                                    </div>
-                                    <div id="sessiontimer" class="col-xs-12 text-center">
-                                        <strong>Session is valid for <span id="sessiontimercounter">
-<?php if ($auth && strlen($pwhash) > 0) {
-    echo $maxlifetime;
-} else {
-    echo '0';
-} ?>
-                                        </span></strong>
-                                    </div>
-                                </div>
-                            </li>
-                            <!-- Menu Footer -->
-                            <li class="user-footer">
-                                <!-- Donate Button -->
-                                <div class="text-center">
-                                    <a class="btn btn-primary btn-lg donate" href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
-                                        <i class="fas fa-fw menu-icon fa-donate"></i> Donate
-                                    </a>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
                 </ul>
             </div>
         </nav>
