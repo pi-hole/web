@@ -73,7 +73,7 @@ if (strlen($pwhash) > 0) {
             }
 
             // Login successful, redirect the user to the homepage to discard the POST request
-            if ('POST' === $_SERVER['REQUEST_METHOD'] && 'login' === $_SERVER['QUERY_STRING']) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['QUERY_STRING'] === 'login') {
                 header('Location: index.php');
 
                 exit;

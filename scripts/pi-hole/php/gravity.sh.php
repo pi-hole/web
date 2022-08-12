@@ -28,7 +28,7 @@ function echoEvent($datatext)
     // "Pending: String to replace${OVER}Done: String has been replaced"
     // If this is the case, we have to remove everything before ${OVER}
     // and return only the text thereafter
-    if (false !== $pos && 0 !== $pos) {
+    if ($pos !== false && $pos !== 0) {
         $datatext = substr($datatext, $pos);
     }
     echo 'data: '.implode("\ndata: ", explode("\n", $datatext))."\n\n";

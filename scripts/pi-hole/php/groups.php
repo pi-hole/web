@@ -40,7 +40,7 @@ function verify_ID_array($arr)
     }
 }
 
-if ('get_groups' == $_POST['action']) {
+if ($_POST['action'] == 'get_groups') {
     // List all available groups
     try {
         $query = $db->query('SELECT * FROM "group";');
@@ -54,7 +54,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('add_group' == $_POST['action']) {
+} elseif ($_POST['action'] == 'add_group') {
     // Add new group
     try {
         $input = html_entity_decode(trim($_POST['name']));
@@ -67,7 +67,7 @@ if ('get_groups' == $_POST['action']) {
         }
 
         $desc = $_POST['desc'];
-        if (0 === strlen($desc)) {
+        if (strlen($desc) === 0) {
             // Store NULL in database for empty descriptions
             $desc = null;
         }
@@ -77,7 +77,7 @@ if ('get_groups' == $_POST['action']) {
 
         foreach ($names as $name) {
             // Silently skip this entry when it is empty or not a string (e.g. NULL)
-            if (!is_string($name) || 0 == strlen($name)) {
+            if (!is_string($name) || strlen($name) == 0) {
                 continue;
             }
 
@@ -96,7 +96,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('edit_group' == $_POST['action']) {
+} elseif ($_POST['action'] == 'edit_group') {
     // Edit group identified by ID
     try {
         $name = html_entity_decode($_POST['name']);
@@ -116,7 +116,7 @@ if ('get_groups' == $_POST['action']) {
             throw new Exception('While binding name: '.$db->lastErrorMsg());
         }
 
-        if (0 === strlen($desc)) {
+        if (strlen($desc) === 0) {
             // Store NULL in database for empty descriptions
             $desc = null;
         }
@@ -137,7 +137,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('delete_group' == $_POST['action']) {
+} elseif ($_POST['action'] == 'delete_group') {
     // Delete group identified by ID
     try {
         $ids = json_decode($_POST['id']);
@@ -170,7 +170,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('get_clients' == $_POST['action']) {
+} elseif ($_POST['action'] == 'get_clients') {
     // List all available groups
     try {
         $QUERYDB = getQueriesDBFilename();
@@ -250,7 +250,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('get_unconfigured_clients' == $_POST['action']) {
+} elseif ($_POST['action'] == 'get_unconfigured_clients') {
     // List all available clients WITHOUT already configured clients
     try {
         $QUERYDB = getQueriesDBFilename();
@@ -272,7 +272,7 @@ if ('get_groups' == $_POST['action']) {
             $names = array();
             while ($res_ips = $query_ips->fetchArray(SQLITE3_ASSOC)) {
                 array_push($addresses, utf8_encode($res_ips['ip']));
-                if (null !== $res_ips['name']) {
+                if ($res_ips['name'] !== null) {
                     array_push($names, utf8_encode($res_ips['name']));
                 }
             }
@@ -281,7 +281,7 @@ if ('get_groups' == $_POST['action']) {
             // Prepare extra information
             $extrainfo = '';
             // Add list of associated host names to info string (if available)
-            if (1 === count($names)) {
+            if (count($names) === 1) {
                 $extrainfo .= 'hostname: '.$names[0];
             } elseif (count($names) > 0) {
                 $extrainfo .= 'hostnames: '.implode(', ', $names);
@@ -296,12 +296,12 @@ if ('get_groups' == $_POST['action']) {
             }
 
             // Add list of associated host names to info string (if available and if this is not a mock device)
-            if (false === stripos($res['hwaddr'], 'ip-')) {
+            if (stripos($res['hwaddr'], 'ip-') === false) {
                 if ((count($names) > 0 || strlen($res['macVendor']) > 0) && count($addresses) > 0) {
                     $extrainfo .= '; ';
                 }
 
-                if (1 === count($addresses)) {
+                if (count($addresses) === 1) {
                     $extrainfo .= 'address: '.$addresses[0];
                 } elseif (count($addresses) > 0) {
                     $extrainfo .= 'addresses: '.implode(', ', $addresses);
@@ -332,7 +332,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('add_client' == $_POST['action']) {
+} elseif ($_POST['action'] == 'add_client') {
     // Add new client
     try {
         $ips = explode(' ', trim($_POST['ip']));
@@ -347,7 +347,7 @@ if ('get_groups' == $_POST['action']) {
             // Encode $ip variable to prevent XSS
             $ip = htmlspecialchars($ip);
             // Silently skip this entry when it is empty or not a string (e.g. NULL)
-            if (!is_string($ip) || 0 == strlen($ip)) {
+            if (!is_string($ip) || strlen($ip) == 0) {
                 continue;
             }
 
@@ -356,7 +356,7 @@ if ('get_groups' == $_POST['action']) {
             }
 
             $comment = html_entity_decode($_POST['comment']);
-            if (0 === strlen($comment)) {
+            if (strlen($comment) === 0) {
                 // Store NULL in database for empty comments
                 $comment = null;
             }
@@ -375,7 +375,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('edit_client' == $_POST['action']) {
+} elseif ($_POST['action'] == 'edit_client') {
     // Edit client identified by ID
     try {
         $db->query('BEGIN TRANSACTION;');
@@ -386,7 +386,7 @@ if ('get_groups' == $_POST['action']) {
         }
 
         $comment = html_entity_decode($_POST['comment']);
-        if (0 === strlen($comment)) {
+        if (strlen($comment) === 0) {
             // Store NULL in database for empty comments
             $comment = null;
         }
@@ -446,7 +446,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('delete_client' == $_POST['action']) {
+} elseif ($_POST['action'] == 'delete_client') {
     // Delete client identified by ID
     try {
         $ids = json_decode($_POST['id']);
@@ -484,7 +484,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('get_domains' == $_POST['action']) {
+} elseif ($_POST['action'] == 'get_domains') {
     // List all available groups
     try {
         $limit = '';
@@ -508,7 +508,7 @@ if ('get_groups' == $_POST['action']) {
                 array_push($groups, $gres['group_id']);
             }
             $res['groups'] = $groups;
-            if (ListType::whitelist === $res['type'] || ListType::blacklist === $res['type']) {
+            if ($res['type'] === ListType::whitelist || $res['type'] === ListType::blacklist) {
                 // Convert domain name to international form
                 $utf8_domain = convertIDNAToUnicode($res['domain']);
 
@@ -528,7 +528,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('add_domain' == $_POST['action'] || 'replace_domain' == $_POST['action']) {
+} elseif ($_POST['action'] == 'add_domain' || $_POST['action'] == 'replace_domain') {
     // Add new domain
     try {
         $domains = explode(' ', html_entity_decode(trim($_POST['domain'])));
@@ -552,7 +552,7 @@ if ('get_groups' == $_POST['action']) {
 
         $check_stmt = null;
         $delete_stmt = null;
-        if ('replace_domain' == $_POST['action']) {
+        if ($_POST['action'] == 'replace_domain') {
             // Check statement will reveal any group associations for a given (domain,type) which do NOT belong to the default group
             $check_stmt = $db->prepare('SELECT EXISTS(SELECT domain FROM domainlist_by_group dlbg JOIN domainlist dl on dlbg.domainlist_id = dl.id WHERE dl.domain = :domain AND dlbg.group_id != 0)');
             if (!$check_stmt) {
@@ -567,9 +567,9 @@ if ('get_groups' == $_POST['action']) {
 
         if (isset($_POST['type'])) {
             $type = intval($_POST['type']);
-        } elseif (isset($_POST['list']) && 'white' === $_POST['list']) {
+        } elseif (isset($_POST['list']) && $_POST['list'] === 'white') {
             $type = ListType::whitelist;
-        } elseif (isset($_POST['list']) && 'black' === $_POST['list']) {
+        } elseif (isset($_POST['list']) && $_POST['list'] === 'black') {
             $type = ListType::blacklist;
         }
 
@@ -579,7 +579,7 @@ if ('get_groups' == $_POST['action']) {
         }
 
         $comment = html_entity_decode($_POST['comment']);
-        if (0 === strlen($comment)) {
+        if (strlen($comment) === 0) {
             // Store NULL in database for empty comments
             $comment = null;
         }
@@ -589,7 +589,7 @@ if ('get_groups' == $_POST['action']) {
 
         foreach ($domains as $domain) {
             // Silently skip this entry when it is empty or not a string (e.g. NULL)
-            if (!is_string($domain) || 0 == strlen($domain)) {
+            if (!is_string($domain) || strlen($domain) == 0) {
                 continue;
             }
 
@@ -597,7 +597,7 @@ if ('get_groups' == $_POST['action']) {
             // Convert domain name to IDNA ASCII form for international domains
             $domain = convertUnicodeToIDNA($domain);
 
-            if ('2' != $_POST['type'] && '3' != $_POST['type']) {
+            if ($_POST['type'] != '2' && $_POST['type'] != '3') {
                 // If not adding a RegEx, we convert the domain lower case and check whether it is valid
                 $domain = strtolower($domain);
                 $msg = '';
@@ -615,7 +615,7 @@ if ('get_groups' == $_POST['action']) {
                 }
             }
 
-            if (isset($_POST['type']) && 2 === strlen($_POST['type']) && 'W' === $_POST['type'][1]) {
+            if (isset($_POST['type']) && strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W') {
                 // Apply wildcard-style formatting
                 $domain = '(\\.|^)'.str_replace('.', '\\.', $domain).'$';
             }
@@ -626,7 +626,7 @@ if ('get_groups' == $_POST['action']) {
             // just throw an error at the user to tell them to change this
             // domain manually. This ensures user's will really get what they
             // want from us.
-            if ('replace_domain' == $_POST['action']) {
+            if ($_POST['action'] == 'replace_domain') {
                 if (!$check_stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
                     throw new Exception('While binding domain to check: <strong>'.$db->lastErrorMsg().'</strong><br>Added '.$added.' out of '.$total.' domains');
                 }
@@ -637,7 +637,7 @@ if ('get_groups' == $_POST['action']) {
                 }
 
                 // Check return value of CHECK query (0 = only default group, 1 = special group assignments)
-                $only_default_group = (0 == $check_result->fetchArray(SQLITE3_NUM)[0]) ? true : false;
+                $only_default_group = ($check_result->fetchArray(SQLITE3_NUM)[0] == 0) ? true : false;
                 if (!$only_default_group) {
                     throw new Exception('Domain '.$domain.' is configured with special group settings.<br>Please modify the domain on the respective group management pages.');
                 }
@@ -678,8 +678,8 @@ if ('get_groups' == $_POST['action']) {
 
         $after = intval($db->querySingle('SELECT COUNT(*) FROM domainlist;'));
         $difference = $after - $before;
-        if (1 === $total) {
-            if (1 !== $difference) {
+        if ($total === 1) {
+            if ($difference !== 1) {
                 $msg = 'Not adding '.htmlentities(utf8_encode($domain)).' as it is already on the list';
             } else {
                 $msg = 'Added '.htmlentities(utf8_encode($domain));
@@ -696,7 +696,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('edit_domain' == $_POST['action']) {
+} elseif ($_POST['action'] == 'edit_domain') {
     // Edit domain identified by ID
     try {
         $db->query('BEGIN TRANSACTION;');
@@ -707,7 +707,7 @@ if ('get_groups' == $_POST['action']) {
         }
 
         $status = intval($_POST['status']);
-        if (0 !== $status) {
+        if ($status !== 0) {
             $status = 1;
         }
 
@@ -716,7 +716,7 @@ if ('get_groups' == $_POST['action']) {
         }
 
         $comment = html_entity_decode($_POST['comment']);
-        if (0 === strlen($comment)) {
+        if (strlen($comment) === 0) {
             // Store NULL in database for empty comments
             $comment = null;
         }
@@ -781,7 +781,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('delete_domain' == $_POST['action']) {
+} elseif ($_POST['action'] == 'delete_domain') {
     // Delete domain identified by ID
     try {
         $ids = json_decode($_POST['id']);
@@ -820,7 +820,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('delete_domain_string' == $_POST['action']) {
+} elseif ($_POST['action'] == 'delete_domain_string') {
     // Delete domain identified by the domain string itself
     try {
         $db->query('BEGIN TRANSACTION;');
@@ -872,7 +872,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('get_adlists' == $_POST['action']) {
+} elseif ($_POST['action'] == 'get_adlists') {
     // List all available groups
     try {
         $query = $db->query('SELECT * FROM adlist;');
@@ -900,7 +900,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('add_adlist' == $_POST['action']) {
+} elseif ($_POST['action'] == 'add_adlist') {
     // Add new adlist
     try {
         $db->query('BEGIN TRANSACTION;');
@@ -916,7 +916,7 @@ if ('get_groups' == $_POST['action']) {
         }
 
         $comment = html_entity_decode($_POST['comment']);
-        if (0 === strlen($comment)) {
+        if (strlen($comment) === 0) {
             // Store NULL in database for empty comments
             $comment = null;
         }
@@ -928,7 +928,7 @@ if ('get_groups' == $_POST['action']) {
         $ignored_list = '';
         foreach ($addresses as $address) {
             // Silently skip this entry when it is empty or not a string (e.g. NULL)
-            if (!is_string($address) || 0 == strlen($address)) {
+            if (!is_string($address) || strlen($address) == 0) {
                 continue;
             }
 
@@ -936,7 +936,7 @@ if ('get_groups' == $_POST['action']) {
             // $1 is optional schema, $2 is userinfo
             $check_address = preg_replace('|([^:/]*://)?([^/]+)@|', '$1$2', $address, 1);
 
-            if (0 !== preg_match('/[^a-zA-Z0-9:\\/?&%=~._()-;]/', $check_address)) {
+            if (preg_match('/[^a-zA-Z0-9:\\/?&%=~._()-;]/', $check_address) !== 0) {
                 throw new Exception('<strong>Invalid adlist URL '.htmlentities($address).'</strong><br>Added '.$added.' out of '.$total.' adlists');
             }
 
@@ -945,7 +945,7 @@ if ('get_groups' == $_POST['action']) {
             }
 
             if (!$stmt->execute()) {
-                if (19 == $db->lastErrorCode()) {
+                if ($db->lastErrorCode() == 19) {
                     // ErrorCode 19 is "Constraint violation", here the unique constraint of `address`
                     //   is violated (https://www.sqlite.org/rescode.html#constraint).
                     // If the list is already in database, add to ignored list, but don't throw error
@@ -965,10 +965,10 @@ if ('get_groups' == $_POST['action']) {
         }
 
         $reload = true;
-        if ('' != $ignored_list) {
+        if ($ignored_list != '') {
             // Send added and ignored lists
             $msg = '<b>Ignored duplicated adlists: '.$ignored.'</b><br>'.$ignored_list;
-            if ('' != $added_list) {
+            if ($added_list != '') {
                 $msg .= '<br><b>Added adlists: '.$added.'</b><br>'.$added_list;
             }
             $msg .= '<br><b>Total: '.$total.' adlist(s) processed.</b>';
@@ -981,7 +981,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('edit_adlist' == $_POST['action']) {
+} elseif ($_POST['action'] == 'edit_adlist') {
     // Edit adlist identified by ID
     try {
         $db->query('BEGIN TRANSACTION;');
@@ -992,7 +992,7 @@ if ('get_groups' == $_POST['action']) {
         }
 
         $status = intval($_POST['status']);
-        if (0 !== $status) {
+        if ($status !== 0) {
             $status = 1;
         }
 
@@ -1001,7 +1001,7 @@ if ('get_groups' == $_POST['action']) {
         }
 
         $comment = html_entity_decode($_POST['comment']);
-        if (0 === strlen($comment)) {
+        if (strlen($comment) === 0) {
             // Store NULL in database for empty comments
             $comment = null;
         }
@@ -1062,7 +1062,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('delete_adlist' == $_POST['action']) {
+} elseif ($_POST['action'] == 'delete_adlist') {
     // Delete adlist identified by ID
     try {
         // Accept only an array
@@ -1103,7 +1103,7 @@ if ('get_groups' == $_POST['action']) {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-} elseif ('add_audit' == $_POST['action']) {
+} elseif ($_POST['action'] == 'add_audit') {
     // Add new domain
     try {
         $domains = explode(' ', html_entity_decode(trim($_POST['domain'])));
@@ -1120,7 +1120,7 @@ if ('get_groups' == $_POST['action']) {
 
         foreach ($domains as $domain) {
             // Silently skip this entry when it is empty or not a string (e.g. NULL)
-            if (!is_string($domain) || 0 == strlen($domain)) {
+            if (!is_string($domain) || strlen($domain) == 0) {
                 continue;
             }
 
@@ -1140,8 +1140,8 @@ if ('get_groups' == $_POST['action']) {
 
         $after = intval($db->querySingle('SELECT COUNT(*) FROM domain_audit;'));
         $difference = $after - $before;
-        if (1 === $total) {
-            if (1 !== $difference) {
+        if ($total === 1) {
+            if ($difference !== 1) {
                 $msg = 'Not adding '.htmlentities(utf8_encode($domain)).' as it is already on the list';
             } else {
                 $msg = 'Added '.htmlentities(utf8_encode($domain));

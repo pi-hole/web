@@ -13,21 +13,21 @@ ini_set('pcre.recursion_limit', 1500);
 function validDomain($domain_name, &$message = null)
 {
     if (!preg_match('/^((-|_)*[a-z\\d]((-|_)*[a-z\\d])*(-|_)*)(\\.(-|_)*([a-z\\d]((-|_)*[a-z\\d])*))*$/i', $domain_name)) {
-        if (null !== $message) {
+        if ($message !== null) {
             $message = 'it contains invalid characters';
         }
 
         return false;
     }
     if (!preg_match('/^.{1,253}$/', $domain_name)) {
-        if (null !== $message) {
+        if ($message !== null) {
             $message = 'its length is invalid';
         }
 
         return false;
     }
     if (!preg_match('/^[^\\.]{1,63}(\\.[^\\.]{1,63})*$/', $domain_name)) {
-        if (null !== $message) {
+        if ($message !== null) {
             $message = 'at least one label is of invalid length';
         }
 
@@ -55,13 +55,13 @@ function validIP($address)
         return false;
     }
 
-    return false === !filter_var($address, FILTER_VALIDATE_IP);
+    return !filter_var($address, FILTER_VALIDATE_IP) === false;
 }
 
 function validCIDRIP($address)
 {
     // This validation strategy has been taken from ../js/groups-common.js
-    $isIPv6 = false !== strpos($address, ':');
+    $isIPv6 = strpos($address, ':') !== false;
     if ($isIPv6) {
         // One IPv6 element is 16bit: 0000 - FFFF
         $v6elem = '[0-9A-Fa-f]{1,4}';
@@ -83,7 +83,7 @@ function validCIDRIP($address)
 function validMAC($mac_addr)
 {
     // Accepted input format: 00:01:02:1A:5F:FF (characters may be lower case)
-    return false === !filter_var($mac_addr, FILTER_VALIDATE_MAC);
+    return !filter_var($mac_addr, FILTER_VALIDATE_MAC) === false;
 }
 
 function validEmail($email)
@@ -155,7 +155,7 @@ function pihole_execute($argument_string)
     $return_status = -1;
     $command = 'sudo pihole '.$escaped;
     exec($command, $output, $return_status);
-    if (0 !== $return_status) {
+    if ($return_status !== 0) {
         trigger_error("Executing {$command} failed.", E_USER_WARNING);
     }
 
@@ -190,7 +190,7 @@ function getCustomDNSEntries()
             $line = str_replace("\n", '', $line);
             $explodedLine = explode(' ', $line);
 
-            if (2 != count($explodedLine)) {
+            if (count($explodedLine) != 2) {
                 continue;
             }
 

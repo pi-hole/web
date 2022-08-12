@@ -43,12 +43,12 @@ if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET)) {
         foreach ($return as $line) {
             $tmp = explode(' ', $line);
 
-            if ('domains_being_blocked' === $tmp[0] && !is_numeric($tmp[1]) || 'status' === $tmp[0]) {
+            if ($tmp[0] === 'domains_being_blocked' && !is_numeric($tmp[1]) || $tmp[0] === 'status') {
                 // Expect string response
                 $stats[$tmp[0]] = $tmp[1];
             } elseif (isset($_GET['summary'])) {
                 // "summary" expects a formmated string response
-                if ('ads_percentage_today' !== $tmp[0]) {
+                if ($tmp[0] !== 'ads_percentage_today') {
                     $stats[$tmp[0]] = number_format($tmp[1]);
                 } else {
                     $stats[$tmp[0]] = number_format($tmp[1], 1, '.', '');
@@ -100,7 +100,7 @@ if (isset($_GET['overTimeData10mins'])) {
 }
 
 if (isset($_GET['topItems']) && $auth) {
-    if ('audit' === $_GET['topItems']) {
+    if ($_GET['topItems'] === 'audit') {
         $return = callFTLAPI('top-domains for audit');
     } elseif (is_numeric($_GET['topItems'])) {
         $return = callFTLAPI('top-domains ('.$_GET['topItems'].')');
@@ -114,7 +114,7 @@ if (isset($_GET['topItems']) && $auth) {
         $top_queries = array();
         foreach ($return as $line) {
             $tmp = explode(' ', $line);
-            if (2 == count($tmp)) {
+            if (count($tmp) == 2) {
                 $tmp[2] = '';
             }
             $domain = utf8_encode($tmp[2]);
@@ -122,7 +122,7 @@ if (isset($_GET['topItems']) && $auth) {
         }
     }
 
-    if ('audit' === $_GET['topItems']) {
+    if ($_GET['topItems'] === 'audit') {
         $return = callFTLAPI('top-ads for audit');
     } elseif (is_numeric($_GET['topItems'])) {
         $return = callFTLAPI('top-ads ('.$_GET['topItems'].')');
@@ -216,7 +216,7 @@ if (isset($_GET['topClientsBlocked']) && $auth) {
 }
 
 if (isset($_GET['getForwardDestinations']) && $auth) {
-    if ('unsorted' === $_GET['getForwardDestinations']) {
+    if ($_GET['getForwardDestinations'] === 'unsorted') {
         $return = callFTLAPI('forward-dest unsorted');
     } else {
         $return = callFTLAPI('forward-dest');
@@ -282,7 +282,7 @@ if (isset($_GET['getAllQueries']) && $auth) {
     } elseif (isset($_GET['domain'])) {
         // Get specific domain only
         $return = callFTLAPI('getallqueries-domain '.$_GET['domain']);
-    } elseif (isset($_GET['client']) && (isset($_GET['type']) && 'blocked' === $_GET['type'])) {
+    } elseif (isset($_GET['client']) && (isset($_GET['type']) && $_GET['type'] === 'blocked')) {
         // Get specific client only
         $return = callFTLAPI('getallqueries-client-blocked '.$_GET['client']);
     } elseif (isset($_GET['client'])) {

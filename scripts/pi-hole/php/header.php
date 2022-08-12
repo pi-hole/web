@@ -23,7 +23,7 @@ function getMemUsage()
     if (count($data) > 0) {
         foreach ($data as $line) {
             $expl = explode(':', $line);
-            if (2 == count($expl)) {
+            if (count($expl) == 2) {
                 // remove " kB" from the end of the string and make it an integer
                 $meminfo[$expl[0]] = intval(trim(substr($expl[1], 0, -3)));
             }
@@ -124,7 +124,7 @@ if (!is_numeric($nproc)) {
 $memory_usage = getMemUsage();
 
 // Retrieve layout setting from setupVars
-if (isset($setupVars['WEBUIBOXEDLAYOUT']) && !('boxed' === $setupVars['WEBUIBOXEDLAYOUT'])) {
+if (isset($setupVars['WEBUIBOXEDLAYOUT']) && !($setupVars['WEBUIBOXEDLAYOUT'] === 'boxed')) {
     $boxedlayout = false;
 } else {
     $boxedlayout = true;
@@ -132,9 +132,9 @@ if (isset($setupVars['WEBUIBOXEDLAYOUT']) && !('boxed' === $setupVars['WEBUIBOXE
 
 // Override layout setting if layout is changed via Settings page
 if (isset($_POST['field'])) {
-    if ('webUI' === $_POST['field'] && isset($_POST['boxedlayout'])) {
+    if ($_POST['field'] === 'webUI' && isset($_POST['boxedlayout'])) {
         $boxedlayout = true;
-    } elseif ('webUI' === $_POST['field'] && !isset($_POST['boxedlayout'])) {
+    } elseif ($_POST['field'] === 'webUI' && !isset($_POST['boxedlayout'])) {
         $boxedlayout = false;
     }
 }
@@ -168,13 +168,13 @@ $piholeFTLConf = piholeFTLConfig();
     <link rel="shortcut icon" href="img/favicons/favicon.ico">
     <meta name="msapplication-TileColor" content="#367fa9">
     <meta name="msapplication-TileImage" content="img/favicons/mstile-150x150.png">
-<?php if ('default-light' == $theme) { ?>
+<?php if ($theme == 'default-light') { ?>
     <meta name="theme-color" content="#367fa9">
-<?php } elseif ('default-dark' == $theme) { ?>
+<?php } elseif ($theme == 'default-dark') { ?>
     <meta name="theme-color" content="#272c30">
-<?php } elseif ('default-darker' == $theme) { ?>
+<?php } elseif ($theme == 'default-darker') { ?>
     <meta name="theme-color" content="#2e6786">
-<?php } elseif ('lcars' == $theme) { ?>
+<?php } elseif ($theme == 'lcars') { ?>
     <meta name="theme-color" content="#4488FF">
     <link rel="stylesheet" href="style/vendor/fonts/ubuntu-mono/ubuntu-mono.css?v=<?php echo $cacheVer; ?>">
     <link rel="stylesheet" href="style/vendor/fonts/antonio/antonio.css?v=<?php echo $cacheVer; ?>">

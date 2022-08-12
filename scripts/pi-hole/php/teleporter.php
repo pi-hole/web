@@ -12,7 +12,7 @@ require 'auth.php'; // Also imports func.php
 require 'database.php';
 require 'savesettings.php';
 
-if ('cli' !== php_sapi_name()) {
+if (php_sapi_name() !== 'cli') {
     if (!$auth) {
         exit('Not authorized');
     }
@@ -98,46 +98,46 @@ function archive_restore_table($file, $table, $flush = false)
     }
 
     // Prepare fields depending on the table we restore to
-    if ('adlist' === $table) {
+    if ($table === 'adlist') {
         $sql = 'INSERT OR IGNORE INTO adlist';
         $sql .= ' (id,address,enabled,date_added,comment)';
         $sql .= ' VALUES (:id,:address,:enabled,:date_added,:comment);';
-    } elseif ('domain_audit' === $table) {
+    } elseif ($table === 'domain_audit') {
         $sql = 'INSERT OR IGNORE INTO domain_audit';
         $sql .= ' (id,domain,date_added)';
         $sql .= ' VALUES (:id,:domain,:date_added);';
-    } elseif ('domainlist' === $table) {
+    } elseif ($table === 'domainlist') {
         $sql = 'INSERT OR IGNORE INTO domainlist';
         $sql .= ' (id,domain,enabled,date_added,comment,type)';
         $sql .= ' VALUES (:id,:domain,:enabled,:date_added,:comment,:type);';
-    } elseif ('group' === $table) {
+    } elseif ($table === 'group') {
         $sql = 'INSERT OR IGNORE INTO "group"';
         $sql .= ' (id,name,date_added,description)';
         $sql .= ' VALUES (:id,:name,:date_added,:description);';
-    } elseif ('client' === $table) {
+    } elseif ($table === 'client') {
         $sql = 'INSERT OR IGNORE INTO client';
         $sql .= ' (id,ip,date_added,comment)';
         $sql .= ' VALUES (:id,:ip,:date_added,:comment);';
-    } elseif ('domainlist_by_group' === $table) {
+    } elseif ($table === 'domainlist_by_group') {
         $sql = 'INSERT OR IGNORE INTO domainlist_by_group';
         $sql .= ' (domainlist_id,group_id)';
         $sql .= ' VALUES (:domainlist_id,:group_id);';
-    } elseif ('client_by_group' === $table) {
+    } elseif ($table === 'client_by_group') {
         $sql = 'INSERT OR IGNORE INTO client_by_group';
         $sql .= ' (client_id,group_id)';
         $sql .= ' VALUES (:client_id,:group_id);';
-    } elseif ('adlist_by_group' === $table) {
+    } elseif ($table === 'adlist_by_group') {
         $sql = 'INSERT OR IGNORE INTO adlist_by_group';
         $sql .= ' (adlist_id,group_id)';
         $sql .= ' VALUES (:adlist_id,:group_id);';
     } else {
-        if ('whitelist' === $table) {
+        if ($table === 'whitelist') {
             $type = 0;
-        } elseif ('blacklist' === $table) {
+        } elseif ($table === 'blacklist') {
             $type = 1;
-        } elseif ('regex_whitelist' === $table) {
+        } elseif ($table === 'regex_whitelist') {
             $type = 2;
-        } elseif ('regex_blacklist' === $table) {
+        } elseif ($table === 'regex_blacklist') {
             $type = 3;
         }
 
@@ -240,19 +240,19 @@ function archive_insert_into_table($file, $table, $flush = false, $wildcardstyle
 
     // Determine table and type to import to
     $type = null;
-    if ('whitelist' === $table) {
+    if ($table === 'whitelist') {
         $table = 'domainlist';
         $type = ListType::whitelist;
-    } elseif ('blacklist' === $table) {
+    } elseif ($table === 'blacklist') {
         $table = 'domainlist';
         $type = ListType::blacklist;
-    } elseif ('regex_blacklist' === $table) {
+    } elseif ($table === 'regex_blacklist') {
         $table = 'domainlist';
         $type = ListType::regex_blacklist;
-    } elseif ('domain_audit' === $table) {
+    } elseif ($table === 'domain_audit') {
         $table = 'domain_audit';
         $type = -1; // -1 -> not used inside add_to_table()
-    } elseif ('adlist' === $table) {
+    } elseif ($table === 'adlist') {
         $table = 'adlist';
         $type = -1; // -1 -> not used inside add_to_table()
     }
@@ -277,7 +277,7 @@ function flush_table($table, $type = null)
     global $db, $flushed_tables;
 
     if (!in_array($table, $flushed_tables)) {
-        if (null !== $type) {
+        if ($type !== null) {
             $sql = 'DELETE FROM "'.$table.'" WHERE type = '.$type;
             array_push($flushed_tables, $table.$type);
         } else {
@@ -292,7 +292,7 @@ function archive_add_directory($path, $subdir = '')
 {
     if ($dir = opendir($path)) {
         while (false !== ($entry = readdir($dir))) {
-            if ('.' !== $entry && '..' !== $entry) {
+            if ($entry !== '.' && $entry !== '..') {
                 archive_add_file($path, $entry, $subdir);
             }
         }
@@ -319,7 +319,7 @@ function process_file($contents)
 
 function noun($num)
 {
-    if (1 === $num) {
+    if ($num === 1) {
         return ' entry';
     }
 
@@ -327,7 +327,7 @@ function noun($num)
 }
 
 if (isset($_POST['action'])) {
-    if ($_FILES['zip_file']['name'] && 'in' == $_POST['action']) {
+    if ($_FILES['zip_file']['name'] && $_POST['action'] == 'in') {
         $filename = $_FILES['zip_file']['name'];
         $source = $_FILES['zip_file']['tmp_name'];
         $type = mime_content_type($source);
@@ -338,7 +338,7 @@ if (isset($_POST['action'])) {
 
         // verify the file extension (Looking for ".tar.gz" at the end of the file name)
         $ext = array_slice(explode('.', $filename), -2, 2);
-        $ext_valid = 'tar' == strtolower($ext[0]) && 'gz' == strtolower($ext[1]) ? true : false;
+        $ext_valid = strtolower($ext[0]) == 'tar' && strtolower($ext[1]) == 'gz' ? true : false;
 
         if (!$ext_valid || !$mime_valid) {
             exit('The file you are trying to upload is not a .tar.gz file (filename: '.htmlentities($filename).', type: '.htmlentities($type).'). Please try again.');
@@ -359,92 +359,92 @@ if (isset($_POST['action'])) {
         $flushtables = isset($_POST['flushtables']);
 
         foreach (new RecursiveIteratorIterator($archive) as $file) {
-            if (isset($_POST['blacklist']) && 'blacklist.txt' === $file->getFilename()) {
+            if (isset($_POST['blacklist']) && $file->getFilename() === 'blacklist.txt') {
                 $num = archive_insert_into_table($file, 'blacklist', $flushtables);
                 echo 'Processed blacklist (exact) ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['whitelist']) && 'whitelist.txt' === $file->getFilename()) {
+            if (isset($_POST['whitelist']) && $file->getFilename() === 'whitelist.txt') {
                 $num = archive_insert_into_table($file, 'whitelist', $flushtables);
                 echo 'Processed whitelist (exact) ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['regexlist']) && 'regex.list' === $file->getFilename()) {
+            if (isset($_POST['regexlist']) && $file->getFilename() === 'regex.list') {
                 $num = archive_insert_into_table($file, 'regex_blacklist', $flushtables);
                 echo 'Processed blacklist (regex) ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
             // Also try to import legacy wildcard list if found
-            if (isset($_POST['regexlist']) && 'wildcardblocking.txt' === $file->getFilename()) {
+            if (isset($_POST['regexlist']) && $file->getFilename() === 'wildcardblocking.txt') {
                 $num = archive_insert_into_table($file, 'regex_blacklist', $flushtables, true);
                 echo 'Processed blacklist (regex, wildcard style) ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['auditlog']) && 'auditlog.list' === $file->getFilename()) {
+            if (isset($_POST['auditlog']) && $file->getFilename() === 'auditlog.list') {
                 $num = archive_insert_into_table($file, 'domain_audit', $flushtables);
                 echo 'Processed audit log ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['adlist']) && 'adlists.list' === $file->getFilename()) {
+            if (isset($_POST['adlist']) && $file->getFilename() === 'adlists.list') {
                 $num = archive_insert_into_table($file, 'adlist', $flushtables);
                 echo 'Processed adlists ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['blacklist']) && 'blacklist.exact.json' === $file->getFilename()) {
+            if (isset($_POST['blacklist']) && $file->getFilename() === 'blacklist.exact.json') {
                 $num = archive_restore_table($file, 'blacklist', $flushtables);
                 echo 'Processed blacklist (exact) ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['regexlist']) && 'blacklist.regex.json' === $file->getFilename()) {
+            if (isset($_POST['regexlist']) && $file->getFilename() === 'blacklist.regex.json') {
                 $num = archive_restore_table($file, 'regex_blacklist', $flushtables);
                 echo 'Processed blacklist (regex) ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['whitelist']) && 'whitelist.exact.json' === $file->getFilename()) {
+            if (isset($_POST['whitelist']) && $file->getFilename() === 'whitelist.exact.json') {
                 $num = archive_restore_table($file, 'whitelist', $flushtables);
                 echo 'Processed whitelist (exact) ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['regex_whitelist']) && 'whitelist.regex.json' === $file->getFilename()) {
+            if (isset($_POST['regex_whitelist']) && $file->getFilename() === 'whitelist.regex.json') {
                 $num = archive_restore_table($file, 'regex_whitelist', $flushtables);
                 echo 'Processed whitelist (regex) ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['adlist']) && 'adlist.json' === $file->getFilename()) {
+            if (isset($_POST['adlist']) && $file->getFilename() === 'adlist.json') {
                 $num = archive_restore_table($file, 'adlist', $flushtables);
                 echo 'Processed adlist ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['auditlog']) && 'domain_audit.json' === $file->getFilename()) {
+            if (isset($_POST['auditlog']) && $file->getFilename() === 'domain_audit.json') {
                 $num = archive_restore_table($file, 'domain_audit', $flushtables);
                 echo 'Processed domain_audit ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['group']) && 'group.json' === $file->getFilename()) {
+            if (isset($_POST['group']) && $file->getFilename() === 'group.json') {
                 $num = archive_restore_table($file, 'group', $flushtables);
                 echo 'Processed group ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['client']) && 'client.json' === $file->getFilename()) {
+            if (isset($_POST['client']) && $file->getFilename() === 'client.json') {
                 $num = archive_restore_table($file, 'client', $flushtables);
                 echo 'Processed client ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['client']) && 'client_by_group.json' === $file->getFilename()) {
+            if (isset($_POST['client']) && $file->getFilename() === 'client_by_group.json') {
                 $num = archive_restore_table($file, 'client_by_group', $flushtables);
                 echo 'Processed client group assignments ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
@@ -452,22 +452,22 @@ if (isset($_POST['action'])) {
 
             if ((isset($_POST['whitelist']) || isset($_POST['regex_whitelist'])
                 || isset($_POST['blacklist']) || isset($_POST['regex_blacklist']))
-                && 'domainlist_by_group.json' === $file->getFilename()) {
+                && $file->getFilename() === 'domainlist_by_group.json') {
                 $num = archive_restore_table($file, 'domainlist_by_group', $flushtables);
                 echo 'Processed black-/whitelist group assignments ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['adlist']) && 'adlist_by_group.json' === $file->getFilename()) {
+            if (isset($_POST['adlist']) && $file->getFilename() === 'adlist_by_group.json') {
                 $num = archive_restore_table($file, 'adlist_by_group', $flushtables);
                 echo 'Processed adlist group assignments ('.$num.noun($num).")<br>\n";
                 $importedsomething = true;
             }
 
-            if (isset($_POST['staticdhcpleases']) && '04-pihole-static-dhcp.conf' === $file->getFilename()) {
+            if (isset($_POST['staticdhcpleases']) && $file->getFilename() === '04-pihole-static-dhcp.conf') {
                 if ($flushtables) {
                     $local_file = @fopen('/etc/dnsmasq.d/04-pihole-static-dhcp.conf', 'r+');
-                    if (false !== $local_file) {
+                    if ($local_file !== false) {
                         ftruncate($local_file, 0);
                         fclose($local_file);
                     }
@@ -490,7 +490,7 @@ if (isset($_POST['action'])) {
                 }
             }
 
-            if (isset($_POST['localdnsrecords']) && 'custom.list' === $file->getFilename()) {
+            if (isset($_POST['localdnsrecords']) && $file->getFilename() === 'custom.list') {
                 ob_start();
                 $reload = 'false';
                 if ($flushtables) {
@@ -514,7 +514,7 @@ if (isset($_POST['action'])) {
                 }
             }
 
-            if (isset($_POST['localcnamerecords']) && '05-pihole-custom-cname.conf' === $file->getFilename()) {
+            if (isset($_POST['localcnamerecords']) && $file->getFilename() === '05-pihole-custom-cname.conf') {
                 ob_start();
                 $reload = 'false';
                 if ($flushtables) {
@@ -574,7 +574,7 @@ if (isset($_POST['action'])) {
 
     $archive = new PharData($archive_file_name);
 
-    if (true !== $archive->isWritable()) {
+    if ($archive->isWritable() !== true) {
         exit('cannot open/create '.htmlentities($archive_file_name)."<br>\nPHP user: ".exec('whoami')."\n");
     }
 
