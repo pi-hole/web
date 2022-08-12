@@ -261,6 +261,18 @@ if ($auth) {
                             <code><?php echo $hostname; ?></code>
                         </p>
                     </li>
+                    <!-- Logout -->
+                    <?php
+                        // Show Logout button if $auth is set and authorization is required
+                            if (strlen($pwhash) > 0 && $auth) {
+                                ?>
+                        <li>
+                            <a href="?logout">
+                                <i class="fa fa-fw menu-icon fa-sign-out-alt"></i> <span>Logout</span>
+                            </a>
+                        </li>
+                    <?php
+                            } ?>
                 </ul>
             </div>
         </nav>

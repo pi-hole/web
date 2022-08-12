@@ -76,18 +76,6 @@
                         <i class="fa fa-fw menu-icon fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
-                <!-- Logout -->
-                <?php
-                        // Show Logout button if $auth is set and authorization is required
-                        if (strlen($pwhash) > 0 && $auth) {
-                            ?>
-                <li>
-                    <a href="?logout">
-                        <i class="fa fa-fw menu-icon fa-sign-out-alt"></i> <span>Logout</span>
-                    </a>
-                </li>
-                <?php
-                        } ?>
                 <!-- Login -->
                 <?php
                         // Show Login button if $auth is *not* set and authorization is required
