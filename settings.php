@@ -8,7 +8,7 @@
 *    Please see LICENSE file for your rights under this license.
 */
 
-require 'scripts/pi-hole/php/header.php';
+require 'scripts/pi-hole/php/header_authenticated.php';
 require 'scripts/pi-hole/php/savesettings.php';
 require_once 'scripts/pi-hole/php/FTL.php';
 
