@@ -29,7 +29,7 @@ if (isset($setupVars['WEBTHEME'])) {
 
 // May be overwritten by settings tab
 if (isset($_POST['field'])
-    && 'webUI' === $_POST['field']
+    && $_POST['field'] === 'webUI'
     && isset($_POST['webtheme'])) {
     $webtheme = $_POST['webtheme'];
 }

@@ -93,14 +93,14 @@ function add_to_table($db, $table, $domains, $comment = null, $wildcardstyle = f
     }
 
     // To which column should the record be added to?
-    if ('adlist' === $table) {
+    if ($table === 'adlist') {
         $field = 'address';
     } else {
         $field = 'domain';
     }
 
     // Get initial count of domains in this table
-    if (-1 === $type) {
+    if ($type === -1) {
         $countquery = "SELECT COUNT(*) FROM {$table};";
     } else {
         $countquery = "SELECT COUNT(*) FROM {$table} WHERE type = {$type};";
@@ -109,9 +109,9 @@ function add_to_table($db, $table, $domains, $comment = null, $wildcardstyle = f
 
     // Prepare INSERT SQLite statement
     $bindcomment = false;
-    if ('domain_audit' === $table) {
+    if ($table === 'domain_audit') {
         $querystr = "INSERT OR IGNORE INTO {$table} ({$field}) VALUES (:{$field});";
-    } elseif (-1 === $type) {
+    } elseif ($type === -1) {
         $querystr = "INSERT OR IGNORE INTO {$table} ({$field},comment) VALUES (:{$field}, :comment);";
         $bindcomment = true;
     } else {
@@ -153,7 +153,7 @@ function add_to_table($db, $table, $domains, $comment = null, $wildcardstyle = f
             if ($returnnum) {
                 return $num;
             }
-            if (1 === $num) {
+            if ($num === 1) {
                 $plural = '';
             } else {
                 $plural = 's';
@@ -181,7 +181,7 @@ function add_to_table($db, $table, $domains, $comment = null, $wildcardstyle = f
         $extra = '';
     }
 
-    if (1 === $num) {
+    if ($num === 1) {
         $plural = '';
     } else {
         $plural = 's';
@@ -217,7 +217,7 @@ function remove_from_table($db, $table, $domains, $returnnum = false, $type = -1
     }
 
     // Get initial count of domains in this table
-    if (-1 === $type) {
+    if ($type === -1) {
         $countquery = "SELECT COUNT(*) FROM {$table};";
     } else {
         $countquery = "SELECT COUNT(*) FROM {$table} WHERE type = {$type};";
@@ -225,7 +225,7 @@ function remove_from_table($db, $table, $domains, $returnnum = false, $type = -1
     $initialcount = intval($db->querySingle($countquery));
 
     // Prepare SQLite statement
-    if (-1 === $type) {
+    if ($type === -1) {
         $querystr = "DELETE FROM {$table} WHERE domain = :domain AND type = {$type};";
     } else {
         $querystr = "DELETE FROM {$table} WHERE domain = :domain;";
@@ -253,7 +253,7 @@ function remove_from_table($db, $table, $domains, $returnnum = false, $type = -1
             if ($returnnum) {
                 return $num;
             }
-            if (1 === $num) {
+            if ($num === 1) {
                 $plural = '';
             } else {
                 $plural = 's';
@@ -270,7 +270,7 @@ function remove_from_table($db, $table, $domains, $returnnum = false, $type = -1
     if ($returnnum) {
         return $num;
     }
-    if (1 === $num) {
+    if ($num === 1) {
         $plural = '';
     } else {
         $plural = 's';

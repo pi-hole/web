@@ -21,7 +21,7 @@ if (!is_readable($localversions) || !is_readable($localbranches) || !is_readable
     // Get Pi-hole core branch / version / commit
     // Check if on a dev branch
     $core_branch = $branches[0];
-    if ('master' !== $core_branch) {
+    if ($core_branch !== 'master') {
         $core_current = 'vDev';
         $core_commit = $versions[0];
     } else {
@@ -30,7 +30,7 @@ if (!is_readable($localversions) || !is_readable($localbranches) || !is_readable
 
     // Get Pi-hole web branch / version / commit
     $web_branch = $branches[1];
-    if ('master' !== $web_branch) {
+    if ($web_branch !== 'master') {
         $web_current = 'vDev';
         $web_commit = $versions[1];
     } else {
@@ -39,7 +39,7 @@ if (!is_readable($localversions) || !is_readable($localbranches) || !is_readable
 
     // Get Pi-hole FTL (not a git repository)
     $FTL_branch = $branches[2];
-    if ('vDev' === substr($versions[2], 0, 4)) {
+    if (substr($versions[2], 0, 4) === 'vDev') {
         $FTL_current = 'vDev';
         $FTL_commit = $versions[2];
     } else {
@@ -52,7 +52,7 @@ if (!is_readable($localversions) || !is_readable($localbranches) || !is_readable
     $FTL_latest = $GitHubversions[2];
 
     // Core version comparison
-    if ('vDev' !== $core_current) {
+    if ($core_current !== 'vDev') {
         // This logic allows the local core version to be newer than the upstream version
         // The update indicator is only shown if the upstream version is NEWER
         $core_update = (version_compare($core_current, $core_latest) < 0);
@@ -61,7 +61,7 @@ if (!is_readable($localversions) || !is_readable($localbranches) || !is_readable
     }
 
     // Web version comparison
-    if ('vDev' !== $web_current) {
+    if ($web_current !== 'vDev') {
         // This logic allows the local core version to be newer than the upstream version
         // The update indicator is only shown if the upstream version is NEWER
         $web_update = (version_compare($web_current, $web_latest) < 0);
@@ -72,7 +72,7 @@ if (!is_readable($localversions) || !is_readable($localbranches) || !is_readable
     // FTL version comparison
     // This logic allows the local core version to be newer than the upstream version
     // The update indicator is only shown if the upstream version is NEWER
-    if ('vDev' !== $FTL_current) {
+    if ($FTL_current !== 'vDev') {
         $FTL_update = (version_compare($FTL_current, $FTL_latest) < 0);
     } else {
         $FTL_update = false;

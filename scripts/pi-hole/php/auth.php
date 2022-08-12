@@ -102,8 +102,8 @@ function check_csrf($token)
 {
     // Check CSRF token
     $session_started = function_exists('session_status') ?
-        PHP_SESSION_ACTIVE == session_status() :
-        '' == session_id();
+        session_status() == PHP_SESSION_ACTIVE :
+        session_id() == '';
 
     if (!$session_started) {
         // Start a new PHP session (or continue an existing one)
