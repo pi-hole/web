@@ -13,7 +13,7 @@ function gravity_last_update($raw = false)
 {
     $db = SQLite3_connect(getGravityDBFilename());
     $date_file_created_unix = $db->querySingle("SELECT value FROM info WHERE property = 'updated';");
-    if (false === $date_file_created_unix) {
+    if ($date_file_created_unix === false) {
         if ($raw) {
             // Array output
             return array('file_exists' => false);
@@ -43,7 +43,7 @@ function gravity_last_update($raw = false)
         // String output (more than one day ago)
         return $gravitydiff->format('Adlists updated %a days, %H:%I (hh:mm) ago');
     }
-    if (1 == $gravitydiff->d) {
+    if ($gravitydiff->d == 1) {
         // String output (one day ago)
         return $gravitydiff->format('Adlists updated one day, %H:%I (hh:mm) ago');
     }

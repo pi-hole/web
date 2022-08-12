@@ -27,7 +27,7 @@ $QueriesDB = getQueriesDBFilename();
 $db = SQLite3_connect($QueriesDB, SQLITE3_OPEN_READWRITE);
 
 // Delete message identified by IDs
-if ('delete_message' == $_POST['action'] && isset($_POST['id'])) {
+if ($_POST['action'] == 'delete_message' && isset($_POST['id'])) {
     try {
         $ids = json_decode($_POST['id']);
         if (!is_array($ids)) {

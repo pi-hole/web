@@ -26,7 +26,7 @@ $reload = false;
 $QueriesDB = getQueriesDBFilename();
 $db = SQLite3_connect($QueriesDB, SQLITE3_OPEN_READWRITE);
 
-if ('delete_network_entry' == $_POST['action'] && isset($_POST['id'])) {
+if ($_POST['action'] == 'delete_network_entry' && isset($_POST['id'])) {
     // Delete netwwork and network_addresses table entry identified by ID
     try {
         $stmt = $db->prepare('DELETE FROM network_addresses WHERE network_id=:id');

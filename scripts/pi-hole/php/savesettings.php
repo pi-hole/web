@@ -57,10 +57,10 @@ function readStaticLeasesFile($origin_file = '/etc/dnsmasq.d/04-pihole-static-dh
         $two = '';
         sscanf(trim(fgets($dhcpstatic)), 'dhcp-host=%[^,],%[^,],%[^,]', $mac, $one, $two);
         if (strlen($mac) > 0 && validMAC($mac)) {
-            if (validIP($one) && 0 == strlen($two)) {
+            if (validIP($one) && strlen($two) == 0) {
                 // dhcp-host=mac,IP - no HOST
                 array_push($dhcp_static_leases, array('hwaddr' => $mac, 'IP' => $one, 'host' => ''));
-            } elseif (0 == strlen($two)) {
+            } elseif (strlen($two) == 0) {
                 // dhcp-host=mac,hostname - no IP
                 array_push($dhcp_static_leases, array('hwaddr' => $mac, 'IP' => '', 'host' => $one));
             } else {
@@ -154,15 +154,15 @@ function addStaticDHCPLease($mac, $ip, $hostname)
             throw new Exception('Host name ('.htmlspecialchars($hostname).') is invalid!<br>', 2);
         }
 
-        if (0 == strlen($hostname) && 0 == strlen($ip)) {
+        if (strlen($hostname) == 0 && strlen($ip) == 0) {
             throw new Exception('You can not omit both the IP address and the host name!<br>', 3);
         }
 
-        if (0 == strlen($hostname)) {
+        if (strlen($hostname) == 0) {
             $hostname = 'nohost';
         }
 
-        if (0 == strlen($ip)) {
+        if (strlen($ip) == 0) {
             $ip = 'noip';
         }
 
@@ -173,7 +173,7 @@ function addStaticDHCPLease($mac, $ip, $hostname)
             if ($lease['hwaddr'] === $mac) {
                 throw new Exception('Static lease for MAC address ('.htmlspecialchars($mac).') already defined!<br>', 4);
             }
-            if ('noip' !== $ip && $lease['IP'] === $ip) {
+            if ($ip !== 'noip' && $lease['IP'] === $ip) {
                 throw new Exception('Static lease for IP address ('.htmlspecialchars($ip).') already defined!<br>', 5);
             }
             if ($lease['host'] === $hostname) {
@@ -306,11 +306,11 @@ if (isset($_POST['field'])) {
 
             // Check if DNSinterface is set
             if (isset($_POST['DNSinterface'])) {
-                if ('single' === $_POST['DNSinterface']) {
+                if ($_POST['DNSinterface'] === 'single') {
                     $DNSinterface = 'single';
-                } elseif ('bind' === $_POST['DNSinterface']) {
+                } elseif ($_POST['DNSinterface'] === 'bind') {
                     $DNSinterface = 'bind';
-                } elseif ('all' === $_POST['DNSinterface']) {
+                } elseif ($_POST['DNSinterface'] === 'all') {
                     $DNSinterface = 'all';
                 } else {
                     $DNSinterface = 'local';
@@ -340,10 +340,10 @@ if (isset($_POST['field'])) {
             break;
             // Set query logging
         case 'Logging':
-            if ('Disable' === $_POST['action']) {
+            if ($_POST['action'] === 'Disable') {
                 pihole_execute('-l off');
                 $success .= 'Logging has been disabled and logs have been flushed';
-            } elseif ('Disable-noflush' === $_POST['action']) {
+            } elseif ($_POST['action'] === 'Disable-noflush') {
                 pihole_execute('-l off noflush');
                 $success .= 'Logging has been disabled, your logs have <strong>not</strong> been flushed';
             } else {
@@ -417,7 +417,7 @@ if (isset($_POST['field'])) {
 
         case 'webUI':
             $adminemail = trim($_POST['adminemail']);
-            if (0 == strlen($adminemail) || !isset($adminemail)) {
+            if (strlen($adminemail) == 0 || !isset($adminemail)) {
                 $adminemail = '';
             }
             if (strlen($adminemail) > 0 && !validEmail($adminemail)) {
@@ -581,7 +581,7 @@ if (isset($_POST['field'])) {
             if (is_array($output)) {
                 $error = implode('<br>', $output);
             }
-            if (0 == strlen($error)) {
+            if (strlen($error) == 0) {
                 $success .= 'The network table has been flushed';
             }
 
@@ -604,7 +604,7 @@ function formatSizeUnits($bytes)
         $bytes = number_format($bytes / 1024, 2).' kB';
     } elseif ($bytes > 1) {
         $bytes = $bytes.' bytes';
-    } elseif (1 == $bytes) {
+    } elseif ($bytes == 1) {
         $bytes = $bytes.' byte';
     } else {
         $bytes = '0 bytes';

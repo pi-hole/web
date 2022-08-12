@@ -31,11 +31,11 @@ function piholeFTLConfig($piholeFTLConfFile = DEFAULT_FTLCONFFILE, $force = fals
 
 function connectFTL($address, $port)
 {
-    if (DEFAULT_FTL_IP == $address) {
+    if ($address == DEFAULT_FTL_IP) {
         $config = piholeFTLConfig();
         // Read port
         $portfileName = isset($config['PORTFILE']) ? $config['PORTFILE'] : DEFAULT_FTL_PORTFILE;
-        if ('' != $portfileName) {
+        if ($portfileName != '') {
             $portfileContents = file_get_contents($portfileName);
             if (is_numeric($portfileContents)) {
                 $port = intval($portfileContents);
@@ -60,7 +60,7 @@ function getResponseFTL($socket)
     $errCount = 0;
     while (true) {
         $out = fgets($socket);
-        if ('' == $out) {
+        if ($out == '') {
             ++$errCount;
         }
 
@@ -69,7 +69,7 @@ function getResponseFTL($socket)
             exit('{"error":"Tried 100 times to connect to FTL server, but never got proper reply. Please check Port and logs!"}');
         }
 
-        if (false !== strrpos($out, '---EOM---')) {
+        if (strrpos($out, '---EOM---') !== false) {
             break;
         }
 

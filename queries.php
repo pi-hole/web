@@ -13,16 +13,16 @@ require 'scripts/pi-hole/php/header.php';
 $showing = '';
 
 if (isset($setupVars['API_QUERY_LOG_SHOW'])) {
-    if ('all' === $setupVars['API_QUERY_LOG_SHOW']) {
+    if ($setupVars['API_QUERY_LOG_SHOW'] === 'all') {
         $showing = 'showing';
-    } elseif ('permittedonly' === $setupVars['API_QUERY_LOG_SHOW']) {
+    } elseif ($setupVars['API_QUERY_LOG_SHOW'] === 'permittedonly') {
         $showing = 'showing permitted';
-    } elseif ('blockedonly' === $setupVars['API_QUERY_LOG_SHOW']) {
+    } elseif ($setupVars['API_QUERY_LOG_SHOW'] === 'blockedonly') {
         $showing = 'showing blocked';
-    } elseif ('nothing' === $setupVars['API_QUERY_LOG_SHOW']) {
+    } elseif ($setupVars['API_QUERY_LOG_SHOW'] === 'nothing') {
         $showing = 'showing no queries (due to setting)';
     }
-} elseif (isset($_GET['type']) && 'blocked' === $_GET['type']) {
+} elseif (isset($_GET['type']) && $_GET['type'] === 'blocked') {
     $showing = 'showing blocked';
 } else {
     // If filter variable is not set, we
@@ -35,7 +35,7 @@ if (isset($_GET['all'])) {
     $showing .= ' all queries within the Pi-hole log';
 } elseif (isset($_GET['client'])) {
     // Add switch between showing all queries and blocked only
-    if (isset($_GET['type']) && 'blocked' === $_GET['type']) {
+    if (isset($_GET['type']) && $_GET['type'] === 'blocked') {
         // Show blocked queries for this client + link to all
         $showing .= ' blocked queries for client '.htmlentities($_GET['client']);
         $showing .= ', <a href="?client='.htmlentities($_GET['client']).'">show all</a>';
@@ -45,9 +45,9 @@ if (isset($_GET['all'])) {
         $showing .= ', <a href="?client='.htmlentities($_GET['client']).'&type=blocked">show blocked only</a>';
     }
 } elseif (isset($_GET['forwarddest'])) {
-    if ('blocked' === $_GET['forwarddest']) {
+    if ($_GET['forwarddest'] === 'blocked') {
         $showing .= ' queries blocked by Pi-hole';
-    } elseif ('cached' === $_GET['forwarddest']) {
+    } elseif ($_GET['forwarddest'] === 'cached') {
         $showing .= ' queries answered from cache';
     } else {
         $showing .= ' queries for upstream destination '.htmlentities($_GET['forwarddest']);

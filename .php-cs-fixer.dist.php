@@ -22,6 +22,7 @@ $config
     ->setRules(array(
         '@Symfony' => true,
         'array_syntax' => array('syntax' => 'long'),
+        'yoda_style' => array('equal' => false, 'identical' => false, 'less_and_greater' => false, 'always_move_variable' => false),
     ))
     ->setLineEnding(PHP_EOL)
     ->setFinder($finder)
