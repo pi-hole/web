@@ -255,39 +255,6 @@ $("#pihole-disable-custom").on("click", function (e) {
   piholeChange("disable", custVal);
 });
 
-// Session timer
-var sessionTimerCounter = document.getElementById("sessiontimercounter");
-var sessionvalidity = parseInt(sessionTimerCounter.textContent, 10);
-var start = new Date();
-
-function updateSessionTimer() {
-  start = new Date();
-  start.setSeconds(start.getSeconds() + sessionvalidity);
-}
-
-if (sessionvalidity > 0) {
-  // setSeconds will correctly handle wrap-around cases
-  updateSessionTimer();
-
-  setInterval(function () {
-    var current = new Date();
-    var totalseconds = (start - current) / 1000;
-    var minutes = Math.floor(totalseconds / 60);
-    if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
-
-    var seconds = Math.floor(totalseconds % 60);
-    if (seconds < 10) {
-      seconds = "0" + seconds;
-    }
-
-    sessionTimerCounter.textContent = totalseconds > 0 ? minutes + ":" + seconds : "-- : --";
-  }, 1000);
-} else {
-  document.getElementById("sessiontimer").style.display = "none";
-}
-
 // Handle Ctrl + Enter button on Login page
 $(document).keypress(function (e) {
   if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
