@@ -774,7 +774,6 @@ function updateSummaryData(runOnce) {
   };
 
   $.getJSON("api.php?summaryRaw", function (data) {
-
     if ("FTLnotrunning" in data) {
       data.dns_queries_today = "Lost";
       data.ads_blocked_today = "connection";
@@ -1209,4 +1208,9 @@ $(function () {
 //destroy all chartjs customTooltips on window resize
 window.addEventListener("resize", function () {
   $(".chartjs-tooltip").remove();
+});
+
+// change sidebar icon on collapse/expand
+$(".sidebar-toggle-svg").click(function () {
+  $(this).find("svg").toggleClass("fa-angle-double-left fa-angle-double-right");
 });
