@@ -473,6 +473,9 @@ p.login-box-msg,
 .main-header .navbar {
   background-image: linear-gradient(#000 36px, transparent 36px);
 }
+.sidebar-mini.sidebar-collapse .main-header .navbar {
+  margin-left: 50px;
+}
 
 .main-header .navbar::after {
   content: "";
@@ -491,18 +494,18 @@ p.login-box-msg,
   padding: 0;
   overflow: hidden;
   color: #000;
-  background: #9ab;
-  border: 3px solid #fff;
+  background: #9ab !important;
+  border: 3px solid #fff !important;
   border-radius: 8px;
-  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 0 2000vmax rgba(0, 0, 0, 0.6);
+}
+
+.dropdown-menu > li > a:hover {
+  color: #06c;
 }
 
 .dropdown-toggle {
   z-index: 2000;
-}
-
-.dropdown-menu > li > a {
-  color: inherit;
 }
 
 .main-header li.user-header {
@@ -515,9 +518,10 @@ p.login-box-msg,
 
 .navbar .nav > li > a,
 .navbar .nav > li > .navbar-text {
-  color: #000;
   padding: 0;
   margin: 0;
+  width: 100%;
+  color: #000;
   line-height: 1.2;
   font-size: 1em;
   text-align: center;
@@ -537,10 +541,11 @@ p.login-box-msg,
   top: 0;
   bottom: -6px;
   background: #48f;
+  padding: 0 20px;
 }
 
 .navbar-custom-menu > .navbar-nav > li {
-  padding: 0 4px;
+  flex: 1 1 auto;
 }
 
 #pihole-diagnosis {
@@ -573,7 +578,12 @@ p.login-box-msg,
 }
 
 .dropdown.user.user-menu {
-  min-width: 84px;
+  margin-left: 20px;
+  width: 1.6em;
+  flex: 0 1 auto;
+  padding: 0 5px 5px;
+  border-radius: 4px;
+  background: none;
 }
 
 .navbar-text code {
@@ -741,17 +751,10 @@ p.login-box-msg,
 }
 
 .sidebar-menu > li.header {
-  margin: 4px 0 0;
-  padding: 0.5em 1em;
-  text-align: left;
-  color: #000;
-  background: #cce6ff;
-  font-size: 11px;
-}
-
-/* Hide menu headers if not logged in */
-body:not(.logged-in) .sidebar-menu > li.header {
-  display: none;
+  margin: 0;
+  padding: 0;
+  color: transparent;
+  font-size: 0;
 }
 
 .sidebar-menu > li > a {
@@ -763,7 +766,6 @@ body:not(.logged-in) .sidebar-menu > li.header {
 
 .sidebar-menu > li.active > a {
   background-color: #eda;
-  box-shadow: inset 0 0 18px #ba7;
 }
 
 .sidebar-menu > li > a.menu-support {
@@ -772,8 +774,7 @@ body:not(.logged-in) .sidebar-menu > li.header {
 
 .sidebar-menu > li:hover > a,
 .sidebar-menu > li > a:focus {
-  background-color: #48f;
-  box-shadow: none;
+  background-color: #cce6ff;
 }
 
 .sidebar-menu > li > .treeview-menu {
@@ -790,6 +791,33 @@ body:not(.logged-in) .sidebar-menu > li.header {
   transform: scaleX(-1);
 }
 
+.sidebar-menu > .menu-main a,
+.sidebar-menu > .menu-system a {
+  background-color: #8bf;
+}
+
+.sidebar-menu > .menu-analysis a {
+  background-color: #48f;
+}
+
+.sidebar-menu > .menu-group a {
+  background-color: #aaf;
+}
+
+.sidebar-menu > .menu-dns a {
+  background-color: #26f;
+}
+
+/* Donate sidebar button */
+.sidebar-menu > li.menu-donate a {
+  background: #c78;
+}
+.sidebar-menu > li.menu-donate:hover a,
+.sidebar-menu > li.menu-donate a:focus {
+  background: #e9a;
+  box-shadow: inset 0 0 18px #c78;
+}
+
 .treeview-menu > li > a {
   margin: 4px 0 0;
   padding: 23px 38px 4px 0;
@@ -797,17 +825,17 @@ body:not(.logged-in) .sidebar-menu > li.header {
   overflow: hidden;
   color: #000;
   background: #8bf;
-  background-image: linear-gradient(to right, #48f 36px, #000 36px, #000 40px, transparent 40px);
+  background-image: linear-gradient(to right, #cce6ff 36px, #000 36px, #000 40px, transparent 40px);
   border-radius: 22px;
 }
 
 .treeview-menu > li.active > a {
-  background-color: #48f;
+  background-color: #cce6ff;
 }
 
 .treeview-menu > li > a:hover {
-  background-color: #aad0ff;
-  background-image: linear-gradient(to right, #48f 36px, #000 36px, #000 40px, transparent 40px);
+  background-color: #cce6ff;
+  background-image: linear-gradient(to right, #cce6ff 36px, #000 36px, #000 40px, #cce6ff 40px);
   box-shadow: inset 0 0 18px rgba(68, 136, 255, 0.4);
 }
 
@@ -1566,9 +1594,6 @@ table.dataTable {
   .main-header .navbar .dropdown-menu li.divider {
     background-color: rgba(255, 255, 255, 0.1);
   }
-  .main-header .navbar .dropdown-menu li a {
-    color: #fff;
-  }
   .main-header .logo {
     width: 150px;
     float: left;
@@ -1608,9 +1633,6 @@ table.dataTable {
   }
   .nav > li > a {
     padding: 6px 10px;
-  }
-  .dropdown.user.user-menu {
-    min-width: 40px;
   }
   .user-panel {
     border-radius: 0;

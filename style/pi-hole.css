@@ -408,11 +408,32 @@ td.lookatme {
   float: left;
   background: none;
   padding: 15px;
+  width: 50px;
+  text-align: center;
 }
 
 .sidebar-toggle-svg:hover {
   color: #f6f6f6;
   background: #367fa9;
+}
+
+/* Hide the "Ph" and move the toggle to the left */
+.sidebar-mini.sidebar-collapse .main-header .logo {
+  width: 0;
+  position: absolute;
+}
+.sidebar-mini.sidebar-collapse .main-header .logo-mini {
+  visibility: hidden;
+}
+.sidebar-mini.sidebar-collapse .main-header .navbar {
+  margin-left: 0;
+}
+
+/* "Hide" all sidebar header titles, but keep them readable to screen readers */
+.sidebar-menu > li.header {
+  color: transparent;
+  font-size: 0;
+  padding: 1px;
 }
 
 .box,
@@ -708,16 +729,16 @@ li:not(.menu-open) .treeview-menu .warning-count {
 }
 
 /* reverse side menu collapse arrows when menu is closed */
-.sidebar-collapse .sidebar-toggle-svg {
+.sidebar-collapse .sidebar-toggle-svg svg {
   transform: scaleX(-1);
 }
 
 /* reverse side menu collapse arrows on mobile screens */
 @media (max-width: 767px) {
-  .sidebar-toggle-svg {
+  .sidebar-toggle-svg svg {
     transform: scaleX(-1);
   }
-  .sidebar-open .sidebar-toggle-svg {
+  .sidebar-open .sidebar-toggle-svg svg {
     transform: scaleX(1);
   }
 }
@@ -757,6 +778,17 @@ li:not(.menu-open) .treeview-menu .warning-count {
   height: 50px;
 }
 
+.navbar-nav > .user-menu {
+  margin-left: 15px;
+  width: 50px;
+  text-align: center;
+}
+@media screen and (min-width: 767px) {
+  .navbar-nav > .user-menu {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
 .navbar-nav > .user-menu > .dropdown-menu > li.user-header {
   height: auto;
   padding: 15px 15px 5px;
@@ -773,25 +805,6 @@ li:not(.menu-open) .treeview-menu .warning-count {
   border-color: #fff;
 }
 
-/*** Donate button - navbar ***/
-.navbar-nav > .user-menu > .dropdown-menu > .user-body a.donate {
-  margin: 0;
-  padding: 0.8em 1em;
-  width: 100%;
-  color: #fff !important;
-  background: #96060c !important;
-  border: none;
-  border-radius: 6px;
-}
-
-.navbar-nav > .user-menu > .dropdown-menu > .user-body a.donate:hover,
-.navbar-nav > .user-menu > .dropdown-menu > .user-body a.donate:active,
-.navbar-nav > .user-menu > .dropdown-menu > .user-body a.donate:active:hover,
-.navbar-nav > .user-menu > .dropdown-menu > .user-body a.donate:focus,
-.navbar-nav > .user-menu > .dropdown-menu > .user-body a.donate:active:focus {
-  background: #f60d1a;
-}
-
 .navbar-nav > .user-menu > .dropdown-menu > .user-footer {
   padding: 10px 15px;
   background: #fff;
@@ -799,12 +812,20 @@ li:not(.menu-open) .treeview-menu .warning-count {
 
 .navbar-nav > .user-menu > .dropdown-menu > .user-footer a {
   background: transparent !important;
-  color: #000 !important;
   padding: 6px 0;
 }
 
 .navbar-nav > .user-menu > .dropdown-menu {
   width: 240px;
+  border: none;
+  overflow: hidden;
+  padding: 0;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+  margin: 1px;
+}
+
+.dropdown-menu > li > a {
+  color: inherit;
 }
 
 .user-menu hr {

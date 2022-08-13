@@ -123,6 +123,13 @@ h4 {
 .treeview-menu > li > a:focus {
   color: #fff;
 }
+/* "Donate" sidebar button */
+.sidebar-menu > li.menu-donate:hover > a,
+.sidebar-menu > li.menu-donate > a:focus {
+  background-color: #3c8dbc;
+  border-left-color: #fff;
+}
+
 .sidebar-form {
   border-radius: 3px;
   border: 1px solid #3e464c;
@@ -511,8 +518,8 @@ fieldset[disabled] .form-control {
 }
 .navbar-custom-menu > .navbar-nav > li > .dropdown-menu {
   background-color: #30383f;
-  color: #bec5cb;
   border: 1px solid #171c20;
+  box-shadow: none;
 }
 .navbar-nav > .user-menu > .dropdown-menu > .user-body {
   border-color: #bec5cb;
@@ -592,11 +599,6 @@ input[type="password"]::-webkit-caps-lock-indicator {
 .overlay-wrapper .overlay > .fa,
 .navbar-nav > .user-menu > .dropdown-menu > .user-body a {
   color: #bec5cb !important;
-}
-
-.navbar-nav > .user-menu > .dropdown-menu > .user-footer {
-  background-color: #353c42bb;
-  padding: 10px;
 }
 
 .modal-content {

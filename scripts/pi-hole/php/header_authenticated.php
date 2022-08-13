@@ -179,7 +179,7 @@ if ($auth) {
                 <ul class="nav navbar-nav">
                     <li<?php echo !$hostname ? ' class="hidden"' : ''; ?>>
                         <p class="navbar-text">
-                            <span class="hidden-xs hidden-sm">hostname:</span>
+                            <span class="hidden-xs">hostname:</span>
                             <code><?php echo $hostname; ?></code>
                         </p>
                     </li>
@@ -196,14 +196,7 @@ if ($auth) {
                                 </p>
                             </li>
                             <!-- Menu Body -->
-                            <li class="user-body">
-                                <!-- Donate Button -->
-                                <div class="text-center">
-                                    <a class="btn btn-primary btn-lg donate" href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
-                                        <i class="fas fa-fw menu-icon fa-donate"></i> Donate
-                                    </a>
-                                </div>
-                            </li>
+                            <!-- <li class="user-body"></li> -->
                             <!-- Menu Footer -->
                             <li class="user-footer">
                                 <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">
