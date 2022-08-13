@@ -697,10 +697,17 @@ li:not(.menu-open) .treeview-menu .warning-count {
   }
 }
 
+.sidebar-collapse .sidebar-toggle-svg {
+  transform: scaleX(-1);
+}
+
 /* reverse side menu collapse arrows on mobile screens */
 @media (max-width: 767px) {
   .sidebar-toggle-svg {
     transform: scaleX(-1);
+  }
+  .sidebar-open .sidebar-toggle-svg {
+    transform: scaleX(1);
   }
 }
 

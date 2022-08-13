@@ -1209,8 +1209,3 @@ $(function () {
 window.addEventListener("resize", function () {
   $(".chartjs-tooltip").remove();
 });
-
-// change sidebar icon on collapse/expand
-$(".sidebar-toggle-svg").click(function () {
-  $(this).find("svg").toggleClass("fa-angle-double-left fa-angle-double-right");
-});
