@@ -742,31 +742,59 @@ li:not(.menu-open) .treeview-menu .warning-count {
   height: 50px;
 }
 
-.navbar-nav > .user-menu > .dropdown-menu > .user-body a {
-  background: transparent !important;
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header {
+  height: auto;
+  padding: 15px 15px 5px;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
+  height: 50px;
+  width: 50px;
+  border: none;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > .user-body {
+  border-radius: 0;
+  border-color: #fff;
 }
 
 /*** Donate button - navbar ***/
-.main-header .navbar-custom-menu .user-footer .donate {
-  margin: 15px;
+.navbar-nav > .user-menu > .dropdown-menu > .user-body a.donate {
+  margin: 0;
   padding: 0.8em 1em;
-  width: calc(100% - 30px);
-  color: #fff;
+  width: 100%;
+  color: #fff !important;
   background: #96060c;
   border: none;
   border-radius: 6px;
 }
 
-.main-header .navbar-custom-menu .user-footer .donate:hover,
-.main-header .navbar-custom-menu .user-footer .donate:active,
-.main-header .navbar-custom-menu .user-footer .donate:active:hover,
-.main-header .navbar-custom-menu .user-footer .donate:focus,
-.main-header .navbar-custom-menu .user-footer .donate:active:focus {
+.navbar-nav > .user-menu > .dropdown-menu > .user-body a.donate:hover,
+.navbar-nav > .user-menu > .dropdown-menu > .user-body a.donate:active,
+.navbar-nav > .user-menu > .dropdown-menu > .user-body a.donate:active:hover,
+.navbar-nav > .user-menu > .dropdown-menu > .user-body a.donate:focus,
+.navbar-nav > .user-menu > .dropdown-menu > .user-body a.donate:active:focus {
   background: #f60d1a;
 }
 
-.navbar-custom-menu > .navbar-nav > li:nth-child(1) {
-  padding: 0 10px 0 0;
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer {
+  padding: 10px 15px;
+  background: #fff;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer a {
+  background: transparent !important;
+  color: #000 !important;
+  padding: 6px 0;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu {
+  width: 240px;
+}
+
+.user-menu hr {
+  margin: 5px 0;
+  opacity: 0.5;
 }
 
 #apiTokenIframe {

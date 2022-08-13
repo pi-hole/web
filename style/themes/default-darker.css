@@ -5500,6 +5500,26 @@ link-muted {
 .content-header {
   background-color: transparent;
 }
+
+.navbar-custom-menu > .navbar-nav > li > .dropdown-menu {
+  background-color: #30383f;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-body {
+  border-color: #bec5cb;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer {
+  background-color: #272c30;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer a {
+  color: #bec5cb !important;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer a:hover {
+  color: #fff !important;
+}
+.user-menu hr {
+  border-color: #bec5cb;
+}
+
 .wrapper,
 .main-sidebar,
 .left-side {

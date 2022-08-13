@@ -54,6 +54,13 @@
 .content-header {
   background-color: transparent;
 }
+.navbar-nav > .user-menu > .dropdown-menu > .user-body {
+  background: #e4e8f0;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer a:hover {
+  color: #367fa9 !important;
+}
+
 .wrapper,
 .main-sidebar,
 .left-side {
