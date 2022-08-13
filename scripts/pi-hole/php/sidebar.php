@@ -164,63 +164,6 @@
                     </a>
                 </li>
 
-                <li class="header text-uppercase">Analysis</li>
-                <!-- Query Log -->
-                <li<?php if ($scriptname === 'queries.php') { ?> class="active"<?php } ?>>
-                    <a href="queries.php">
-                        <i class="fa fa-fw menu-icon fa-file-alt"></i> <span>Query Log</span>
-                    </a>
-                </li>
-                <!-- Long-term database -->
-                <li class="treeview<?php if ($scriptname === 'db_queries.php' || $scriptname === 'db_lists.php' || $scriptname === 'db_graph.php') { ?> active<?php } ?>">
-                    <a href="#">
-                        <i class="fa fa-fw menu-icon fa-history"></i> <span>Long-term Data</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li<?php if ($scriptname === 'db_graph.php') { ?> class="active"<?php } ?>>
-                            <a href="db_graph.php">
-                                <i class="fa fa-fw menu-icon fa-chart-bar"></i> Graphics
-                            </a>
-                        </li>
-                        <li<?php if ($scriptname === 'db_queries.php') { ?> class="active"<?php } ?>>
-                            <a href="db_queries.php">
-                                <i class="fa fa-fw menu-icon fa-file-alt"></i> Query Log
-                            </a>
-                        </li>
-                        <li<?php if ($scriptname === 'db_lists.php') { ?> class="active"<?php } ?>>
-                            <a href="db_lists.php">
-                                <i class="fa fa-fw menu-icon fa-list"></i> Top Lists
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="header text-uppercase">Group Management</li>
-                <!-- Group Management -->
-                <li<?php if ($scriptname === 'groups.php') { ?> class="active"<?php } ?>>
-                    <a href="groups.php">
-                        <i class="fa fa-fw menu-icon fa-user-friends"></i> <span>Groups</span>
-                    </a>
-                </li>
-                <li<?php if ($scriptname === 'groups-clients.php') { ?> class="active"<?php } ?>>
-                    <a href="groups-clients.php">
-                        <i class="fa fa-fw menu-icon fa-laptop"></i> <span>Clients</span>
-                    </a>
-                </li>
-                <li<?php if ($scriptname === 'groups-domains.php') { ?> class="active"<?php } ?>>
-                    <a href="groups-domains.php">
-                        <i class="fa fa-fw menu-icon fa-list"></i> <span>Domains</span>
-                    </a>
-                </li>
-                <li<?php if ($scriptname === 'groups-adlists.php') { ?> class="active"<?php } ?>>
-                    <a href="groups-adlists.php">
-                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adlists</span>
-                    </a>
-                </li>
-
                 <li class="header text-uppercase">DNS Control</li>
                 <!-- Enable/Disable Blocking -->
                 <li id="pihole-disable" class="treeview"<?php if ($pistatus == '0') { ?> hidden<?php } ?>>
@@ -287,6 +230,63 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+
+                <li class="header text-uppercase">Analysis</li>
+                <!-- Query Log -->
+                <li<?php if ($scriptname === 'queries.php') { ?> class="active"<?php } ?>>
+                    <a href="queries.php">
+                        <i class="fa fa-fw menu-icon fa-file-alt"></i> <span>Query Log</span>
+                    </a>
+                </li>
+                <!-- Long-term database -->
+                <li class="treeview<?php if ($scriptname === 'db_queries.php' || $scriptname === 'db_lists.php' || $scriptname === 'db_graph.php') { ?> active<?php } ?>">
+                    <a href="#">
+                        <i class="fa fa-fw menu-icon fa-history"></i> <span>Long-term Data</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li<?php if ($scriptname === 'db_graph.php') { ?> class="active"<?php } ?>>
+                            <a href="db_graph.php">
+                                <i class="fa fa-fw menu-icon fa-chart-bar"></i> Graphics
+                            </a>
+                        </li>
+                        <li<?php if ($scriptname === 'db_queries.php') { ?> class="active"<?php } ?>>
+                            <a href="db_queries.php">
+                                <i class="fa fa-fw menu-icon fa-file-alt"></i> Query Log
+                            </a>
+                        </li>
+                        <li<?php if ($scriptname === 'db_lists.php') { ?> class="active"<?php } ?>>
+                            <a href="db_lists.php">
+                                <i class="fa fa-fw menu-icon fa-list"></i> Top Lists
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="header text-uppercase">Group Management</li>
+                <!-- Group Management -->
+                <li<?php if ($scriptname === 'groups.php') { ?> class="active"<?php } ?>>
+                    <a href="groups.php">
+                        <i class="fa fa-fw menu-icon fa-user-friends"></i> <span>Groups</span>
+                    </a>
+                </li>
+                <li<?php if ($scriptname === 'groups-clients.php') { ?> class="active"<?php } ?>>
+                    <a href="groups-clients.php">
+                        <i class="fa fa-fw menu-icon fa-laptop"></i> <span>Clients</span>
+                    </a>
+                </li>
+                <li<?php if ($scriptname === 'groups-domains.php') { ?> class="active"<?php } ?>>
+                    <a href="groups-domains.php">
+                        <i class="fa fa-fw menu-icon fa-list"></i> <span>Domains</span>
+                    </a>
+                </li>
+                <li<?php if ($scriptname === 'groups-adlists.php') { ?> class="active"<?php } ?>>
+                    <a href="groups-adlists.php">
+                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adlists</span>
+                    </a>
                 </li>
             </ul>
         </section>
