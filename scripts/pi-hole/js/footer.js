@@ -25,15 +25,18 @@ function piholeChanged(action) {
   switch (action) {
     case "enabled":
       status.html("<i class='fa fa-circle text-green-light'></i> Active");
-      ena.hide();
-      dis.show();
-      dis.removeClass("active");
+      ena.addClass("hidden");
+      dis.removeClass("hidden");
+
+      // close the "Disable Blocking" menu
+      dis.removeClass("menu-open");
+      dis[0].querySelector("ul").style.display = "none";
       break;
 
     case "disabled":
       status.html("<i class='fa fa-circle text-red'></i> Blocking disabled");
-      ena.show();
-      dis.hide();
+      dis.addClass("hidden");
+      ena.removeClass("hidden");
       break;
 
     default:
