@@ -227,7 +227,7 @@ if ($auth) {
                                 <a class="btn-link" href="https://discourse.pi-hole.net/" rel="noopener" target="_blank"><i class="fa fa-fw menu-icon fab fa-discourse"></i> Pi-hole Forum</a>
                                 <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank"><i class="fa-fw menu-icon fab fa-github"></i> GitHub</a>
                                 <hr>
-                                <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank"><i class="fa fa-fw menu-icon fa-sign-out-alt"></i> Log out</a>
+                                <a class="btn-link" href="logout.php" rel="noopener"><i class="fa fa-fw menu-icon fa-sign-out-alt"></i> Log out</a>
                             </li>
                         </ul>
                     </li>
