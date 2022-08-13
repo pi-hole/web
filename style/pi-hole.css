@@ -707,6 +707,21 @@ li:not(.menu-open) .treeview-menu .warning-count {
   }
 }
 
+/* reverse side menu collapse arrows when menu is closed */
+.sidebar-collapse .sidebar-toggle-svg {
+  transform: scaleX(-1);
+}
+
+/* reverse side menu collapse arrows on mobile screens */
+@media (max-width: 767px) {
+  .sidebar-toggle-svg {
+    transform: scaleX(-1);
+  }
+  .sidebar-open .sidebar-toggle-svg {
+    transform: scaleX(1);
+  }
+}
+
 .icon-bounce {
   display: inline-block;
   position: relative;

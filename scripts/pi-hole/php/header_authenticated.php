@@ -171,7 +171,7 @@ if ($auth) {
         <nav class="navbar navbar-static-top">
             <!-- Sidebar toggle button-->
             <a href="#" class="sidebar-toggle-svg" data-toggle="push-menu" role="button">
-                <i aria-hidden="true" class="fa fa-bars"></i>
+                <i aria-hidden="true" class="fa fa-angle-double-left"></i>
                 <span class="sr-only">Toggle navigation</span>
                 <span class="warning-count hidden" id="top-warning-count"></span>
             </a>
