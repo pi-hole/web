@@ -63,11 +63,6 @@
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
-            <?php
-            if (!$auth && (!isset($indexpage) || isset($_GET['login']))) {
-                $scriptname = 'login';
-            }
-                    ?>
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">Main</li>
                 <!-- Home Page -->
