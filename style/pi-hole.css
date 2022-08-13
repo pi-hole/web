@@ -779,7 +779,7 @@ li:not(.menu-open) .treeview-menu .warning-count {
   padding: 0.8em 1em;
   width: 100%;
   color: #fff !important;
-  background: #96060c;
+  background: #96060c !important;
   border: none;
   border-radius: 6px;
 }
