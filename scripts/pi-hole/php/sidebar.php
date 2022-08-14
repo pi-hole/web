@@ -176,6 +176,16 @@
                         </span>
                     </a>
                 </li>
+                <!-- Restart FTL -->
+                <li class="menu-dns<?php if (!in_array($pistatus, array('-1', '-2'))) { ?> hidden<?php } ?>">
+                    <a href="#" class="confirm-restartftl">
+                        <i class="menu-icon fa fa-fw fa-sync"></i> <span>Restart DNS Resolver</span>
+                    </a>
+                <form role="form" method="post" id="restartftlform">
+                    <input type="hidden" name="field" value="restartftl">
+                </form>
+                </li>
+                <!-- Local DNS Records -->
                 <li class="menu-dns treeview <?php if (in_array($scriptname, array('dns_records.php', 'cname_records.php'))) { ?>active<?php } ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-address-book"></i> <span>Local DNS</span>
@@ -261,7 +271,7 @@
                         </li>
                     </ul>
                 </li>
-                <!-- Settings -->
+                <!-- Settings -->class="
                 <li class="menu-system<?php if ($scriptname === 'settings.php') { ?> active<?php } ?>">
                     <a href="settings.php">
                         <i class="fa fa-fw menu-icon fa-cog"></i> <span>Settings</span>
@@ -279,3 +289,15 @@
         </section>
         <!-- /.sidebar -->
     </aside>
+
+<?php
+if (isset($_POST['field'])) {
+    if ($_POST['field'] == 'restartftl') {
+        pihole_execute('-a restartdns');
+    }
+}
+                    ?>
+
+<script src="scripts/vendor/jquery.confirm.min.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="scripts/pi-hole/js/sidebar.js?v=<?php echo $cacheVer; ?>"></script>
+
