@@ -534,38 +534,6 @@ function JSON_warning($message = null)
     ));
 }
 
-// Returns an integer representing pihole blocking status
-function piholeStatus()
-{
-    // Retrieve DNS Port calling FTL API directly
-    $port = callFTLAPI('dns-port');
-
-    // Retrieve FTL status
-    $FTLstats = callFTLAPI('stats');
-
-    if (array_key_exists('FTLnotrunning', $port) || array_key_exists('FTLnotrunning', $FTLstats)) {
-        // FTL is not running
-        $ret = -1;
-    } elseif (in_array('status enabled', $FTLstats)) {
-        // FTL is enabled
-        if (intval($port[0]) <= 0) {
-            // Port=0; FTL is not listening
-            $ret = -1;
-        } else {
-            // FTL is running on this port
-            $ret = intval($port[0]);
-        }
-    } elseif (in_array('status disabled', $FTLstats)) {
-        // FTL is disabled
-        $ret = 0;
-    } else {
-        // Unknown (unexpected) response
-        $ret = -2;
-    }
-
-    return $ret;
-}
-
 // Returns the default gateway address and interface
 function getGateway()
 {

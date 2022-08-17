@@ -435,3 +435,32 @@ if (isset($_GET['dns-port']) && $auth) {
         $data['dns-port'] = $return[0];
     }
 }
+
+// Returns an integer representing pihole blocking status
+if (isset($_GET['pihole-status']) && $auth) {
+    // Retrieve DNS Port calling FTL API directly
+    $port = callFTLAPI('dns-port');
+
+    // Retrieve FTL status
+    $FTLstats = callFTLAPI('stats');
+
+    if (array_key_exists('FTLnotrunning', $port) || array_key_exists('FTLnotrunning', $FTLstats)) {
+        // FTL is not running
+        $data['pihole-status'] = -1;
+    } elseif (in_array('status enabled', $FTLstats)) {
+        // FTL is enabled
+        if (intval($port[0]) <= 0) {
+            // Port=0; FTL is not listening
+            $data['pihole-status'] = -1;
+        } else {
+            // FTL is running on this port
+            $data['pihole-status'] = intval($port[0]);
+        }
+    } elseif (in_array('status disabled', $FTLstats)) {
+        // FTL is disabled
+        $data['pihole-status'] = 0;
+    } else {
+        // Unknown (unexpected) response
+        $data['pihole-status'] = -2;
+    }
+}

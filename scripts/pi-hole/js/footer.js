@@ -17,51 +17,29 @@ function secondsTimeSpanToHMS(s) {
   return h + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s); //zero padding on minutes and seconds
 }
 
-function piholeChanged(action) {
-  var status = $("#status");
-  var ena = $("#pihole-enable");
-  var dis = $("#pihole-disable");
-
-  switch (action) {
-    case "enabled":
-      status.html("<i class='fa fa-circle text-green-light'></i> Active");
-      ena.addClass("hidden");
-      dis.removeClass("hidden");
-
-      // close the "Disable Blocking" menu
-      dis.removeClass("menu-open");
-      dis[0].querySelector("ul").style.display = "none";
-      break;
-
-    case "disabled":
-      status.html("<i class='fa fa-circle text-red'></i> Blocking disabled");
-      dis.addClass("hidden");
-      ena.removeClass("hidden");
-      break;
-
-    default:
-    // nothing
-  }
-}
-
 function countDown() {
-  var ena = $("#enableLabel");
+  var ena = $("#pihole-enable");
+  var enaLabel = $("#enableLabel");
+  var dis = $("#pihole-disable");
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - Date.now()) / 1000);
 
   //Stop and remove timer when user enabled early
-  if ($("#pihole-enable").is(":hidden")) {
-    ena.text("Enable Blocking");
+  if (ena.hasClass("hidden")) {
+    enaLabel.text("Enable Blocking");
+    console.log("hidden");
     return;
   }
 
   if (seconds > 0) {
     setTimeout(countDown, 1000);
-    ena.text("Enable Blocking (" + secondsTimeSpanToHMS(seconds) + ")");
+    enaLabel.text("Enable Blocking (" + secondsTimeSpanToHMS(seconds) + ")");
   } else {
-    ena.text("Enable Blocking");
-    piholeChanged("enabled");
+    enaLabel.text("Enable Blocking");
+    // close the "Disable Blocking" menu
+    dis.removeClass("menu-open");
+    dis[0].querySelector("ul").style.display = "none";
     if (localStorage) {
       localStorage.removeItem("countDownTarget");
     }
@@ -72,6 +50,8 @@ function piholeChange(action, duration) {
   var token = encodeURIComponent($("#token").text());
   var enaT = $("#enableTimer");
   var btnStatus;
+  var dis = $("#pihole-disable");
+  var ena = $("#pihole-enable");
 
   switch (action) {
     case "enable":
@@ -80,7 +60,10 @@ function piholeChange(action, duration) {
       $.getJSON("api.php?enable&token=" + token, function (data) {
         if (data.status === "enabled") {
           btnStatus.html("");
-          piholeChanged("enabled");
+          updatePiholeStatus(true);
+          // close the "Disable Blocking" menu
+          dis.removeClass("menu-open");
+          dis[0].querySelector("ul").style.display = "none";
         }
       });
       break;
@@ -91,7 +74,10 @@ function piholeChange(action, duration) {
       $.getJSON("api.php?disable=" + duration + "&token=" + token, function (data) {
         if (data.status === "disabled") {
           btnStatus.html("");
-          piholeChanged("disabled");
+          // we need to remove the hidden already before updatePiholeStatus() because getting the data from the API can be slow
+          // and we run into an race condition with countDown checking for that class
+          ena.removeClass("hidden");
+          updatePiholeStatus(true);
           if (duration > 0) {
             enaT.html(Date.now() + duration * 1000);
             setTimeout(countDown, 100);
@@ -103,6 +89,61 @@ function piholeChange(action, duration) {
     default:
     // nothing
   }
+}
+
+// sets the status indicator and toggles enable/disable/(restart DNS) blocking
+function updatePiholeStatus(once) {
+  $.getJSON("api.php?pihole-status", function (data) {
+    var pistatus = data["pihole-status"];
+
+    var status = $("#status");
+    var ena = $("#pihole-enable");
+    var dis = $("#pihole-disable");
+    var restart = $("#pihole-restart");
+
+    switch (true) {
+      case pistatus == 53:
+        status.html("<i class='fa fa-w fa-circle text-green-light'></i> Active");
+        ena.addClass("hidden");
+        dis.removeClass("hidden");
+        restart.addClass("hidden");
+        break;
+
+      case pistatus == 0:
+        status.html("<i class='fa fa-w fa-circle text-red'></i> Blocking disabled");
+        dis.addClass("hidden");
+        ena.removeClass("hidden");
+        restart.addClass("hidden");
+        break;
+
+      case pistatus == -1:
+        status.html("<i class='fa fa-w fa-circle text-red'></i> DNS service not running");
+        restart.removeClass("hidden");
+        dis.addClass("hidden");
+        ena.addClass("hidden");
+        break;
+
+      case pistatus > 0:
+        status.html(
+          "<i class='fa fa-w fa-circle text-orange'></i> DNS service on port " + pistatus
+        );
+        ena.addClass("hidden");
+        dis.removeClass("hidden");
+        restart.addClass("hidden");
+        break;
+
+      default:
+        status.html("<i class='fa fa-w fa-circle text-red'></i> Unknown");
+        restart.removeClass("hidden");
+        dis.addClass("hidden");
+        ena.addClass("hidden");
+    }
+  }).done(function () {
+    // Reload function every second if not asked to run only once
+    if (!once) {
+      setTimeout(updatePiholeStatus, 1000);
+    }
+  });
 }
 
 function testCookies() {
@@ -214,6 +255,8 @@ $(function () {
   if (seconds > 0) {
     setTimeout(countDown, 100);
   }
+
+  updatePiholeStatus();
 
   if (!testCookies() && $("#cookieInfo").length > 0) {
     $("#cookieInfo").show();

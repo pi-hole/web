@@ -154,10 +154,6 @@ if ($auth) {
 }
 ?>
 
-<!-- Send token to JS -->
-<div id="enableTimer" hidden><?php if (file_exists('../custom_disable_timer')) {
-    echo file_get_contents('../custom_disable_timer');
-} ?></div>
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->

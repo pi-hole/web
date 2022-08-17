@@ -1,3 +1,8 @@
+    <!-- Send token to JS -->
+    <div id="enableTimer" hidden><?php if (file_exists('../custom_disable_timer')) {
+        echo file_get_contents('../custom_disable_timer');
+    } ?></div>
+
     <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
         <!-- sidebar: style can be found in sidebar.less -->
@@ -9,57 +14,44 @@
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
-                    <?php
-                    $pistatus = piholeStatus();
-                    if ($pistatus == 53) {
-                        echo '<span id="status"><i class="fa fa-w fa-circle text-green-light"></i> Active</span>';
-                    } elseif ($pistatus == 0) {
-                        echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Blocking disabled</span>';
-                    } elseif ($pistatus == -1) {
-                        echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> DNS service not running</span>';
-                    } elseif ($pistatus == -2) {
-                        echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Unknown</span>';
-                    } else {
-                        echo '<span id="status"><i class="fa fa-w fa-circle text-orange"></i> DNS service on port '.$pistatus.'</span>';
-                    }
-                    ?>
+                    <span id="status"></span>
                     <br/>
                     <?php
                     echo '<span title="Detected '.$nproc.' cores"><i class="fa fa-w fa-circle ';
-                    if ($loaddata[0] > $nproc) {
-                        echo 'text-red';
-                    } else {
-                        echo 'text-green-light';
-                    }
-                    echo '"></i> Load:&nbsp;&nbsp;'.$loaddata[0].'&nbsp;&nbsp;'.$loaddata[1].'&nbsp;&nbsp;'.$loaddata[2].'</span>';
-                    ?>
+    if ($loaddata[0] > $nproc) {
+        echo 'text-red';
+    } else {
+        echo 'text-green-light';
+    }
+    echo '"></i> Load:&nbsp;&nbsp;'.$loaddata[0].'&nbsp;&nbsp;'.$loaddata[1].'&nbsp;&nbsp;'.$loaddata[2].'</span>';
+    ?>
                     <br/>
                     <?php
-                    echo '<span><i class="fa fa-w fa-circle ';
-                    if ($memory_usage > 0.75 || $memory_usage < 0.0) {
-                        echo 'text-red';
-                    } else {
-                        echo 'text-green-light';
-                    }
-                    if ($memory_usage > 0.0) {
-                        echo '"></i> Memory usage:&nbsp;&nbsp;'.sprintf('%.1f', 100.0 * $memory_usage).'&thinsp;%</span>';
-                    } else {
-                        echo '"></i> Memory usage:&nbsp;&nbsp; N/A</span>';
-                    }
-                    ?>
+    echo '<span><i class="fa fa-w fa-circle ';
+    if ($memory_usage > 0.75 || $memory_usage < 0.0) {
+        echo 'text-red';
+    } else {
+        echo 'text-green-light';
+    }
+    if ($memory_usage > 0.0) {
+        echo '"></i> Memory usage:&nbsp;&nbsp;'.sprintf('%.1f', 100.0 * $memory_usage).'&thinsp;%</span>';
+    } else {
+        echo '"></i> Memory usage:&nbsp;&nbsp; N/A</span>';
+    }
+    ?>
                     <br/>
                     <?php
-                    if ($celsius >= -273.15) {
-                        // Only show temp info if any data is available -->
-                        $tempcolor = 'text-vivid-blue';
-                        if (isset($temperaturelimit) && $celsius > $temperaturelimit) {
-                            $tempcolor = 'text-red';
-                        }
-                        echo '<span id="temperature"><i class="fa fa-w fa-fire '.$tempcolor.'" style="width: 1em !important"></i> ';
-                        echo 'Temp:&nbsp;<span id="rawtemp" hidden>'.$celsius.'</span>';
-                        echo '<span id="tempdisplay"></span></span>';
-                    }
-                    ?>
+    if ($celsius >= -273.15) {
+        // Only show temp info if any data is available -->
+        $tempcolor = 'text-vivid-blue';
+        if (isset($temperaturelimit) && $celsius > $temperaturelimit) {
+            $tempcolor = 'text-red';
+        }
+        echo '<span id="temperature"><i class="fa fa-w fa-fire '.$tempcolor.'" style="width: 1em !important"></i> ';
+        echo 'Temp:&nbsp;<span id="rawtemp" hidden>'.$celsius.'</span>';
+        echo '<span id="tempdisplay"></span></span>';
+    }
+    ?>
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -71,7 +63,6 @@
                         <i class="fa fa-fw menu-icon fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
-
                 <li class="header text-uppercase">Analysis</li>
                 <!-- Query Log -->
                 <li class="menu-analysis<?php if ($scriptname === 'queries.php') { ?> active<?php } ?>">
@@ -132,7 +123,7 @@
                 <li class="header text-uppercase">DNS Control</li>
                 <!-- Local DNS Records -->
                 <!-- Enable/Disable Blocking -->
-                <li id="pihole-disable" class="menu-dns treeview<?php if ($pistatus <= 0) { ?> hidden<?php } ?>">
+                <li id="pihole-disable" class="menu-dns treeview">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-stop"></i> <span>Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
                         <span class="pull-right-container">
@@ -168,7 +159,7 @@
                     </ul>
                     <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
-                <li id="pihole-enable" class="menu-dns<?php if ($pistatus != 0) { ?> hidden<?php } ?>">
+                <li id="pihole-enable" class="menu-dns hidden">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-play"></i>
                         <span id="enableLabel">Enable Blocking&nbsp;&nbsp;&nbsp;
@@ -177,7 +168,7 @@
                     </a>
                 </li>
                 <!-- Restart FTL -->
-                <li class="menu-dns<?php if (!in_array($pistatus, array('-1', '-2'))) { ?> hidden<?php } ?>">
+                <li id="pihole-restart" class="menu-dns hidden">
                     <a href="#" class="confirm-restartftl">
                         <i class="menu-icon fa fa-fw fa-sync"></i> <span>Restart DNS Resolver</span>
                     </a>
@@ -296,7 +287,7 @@ if (isset($_POST['field'])) {
         pihole_execute('-a restartdns');
     }
 }
-                    ?>
+    ?>
 
 <script src="scripts/vendor/jquery.confirm.min.js?v=<?php echo $cacheVer; ?>"></script>
 <script src="scripts/pi-hole/js/sidebar.js?v=<?php echo $cacheVer; ?>"></script>
