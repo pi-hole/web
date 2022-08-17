@@ -1027,14 +1027,6 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
                     </form>
                 </div>
                 <!-- ######################################################### API and Web ######################################################### -->
-                <?php
-// Administrator email address
-if (isset($setupVars['ADMIN_EMAIL'])) {
-    $adminemail = $setupVars['ADMIN_EMAIL'];
-} else {
-    $adminemail = '';
-}
-?>
                 <div id="api" class="tab-pane fade<?php if ($tab === 'api') { ?> in active<?php } ?>">
                     <div class="row">
                         <div class="col-md-6">
@@ -1136,14 +1128,6 @@ if (isset($setupVars['ADMIN_EMAIL'])) {
                                                     <input type="checkbox" name="boxedlayout" id="boxedlayout" value="yes" <?php if ($boxedlayout) { ?>checked<?php } ?>>
                                                     <label for="boxedlayout"><strong>Use boxed layout (for large screens)</strong></label>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <h4>Administrator Email Address</h4>
-                                                <input type="email" class="form-control" name="adminemail" value="<?php echo htmlspecialchars($adminemail); ?>">
-                                                <input type="hidden" name="field" value="webUI">
-                                                <input type="hidden" name="token" value="<?php echo $token; ?>">
                                             </div>
                                         </div>
                                     </div>
