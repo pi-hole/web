@@ -568,7 +568,7 @@ if (isset($_POST['action'])) {
     $hostname = gethostname() ? str_replace('.', '_', gethostname()).'-' : '';
     $tarname = 'pi-hole-'.$hostname.'teleporter_'.date('Y-m-d_H-i-s').'.tar';
     $filename = $tarname.'.gz';
-    $archive_file_name = tempnam(sys_get_temp_dir(), 'pihole_teleporter_'); // create a random file name in the system's tmp dir for the intermediat archive
+    $archive_file_name = tempnam(sys_get_temp_dir(), 'pihole_teleporter_'); // create a random file name in the system's tmp dir for the intermediate archive
     unlink($archive_file_name); // remove intermediate file created by tempnam()
     $archive_file_name .= '.tar'; // Append ".tar" extension
 
