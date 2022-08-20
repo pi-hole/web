@@ -38,23 +38,26 @@ $cacheVer = filemtime(__FILE__);
     <!-- Theme styles -->
 <?php if ($theme == 'default-light') { ?>
     <meta name="theme-color" content="#367fa9">
-    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?php echo $cacheVer; ?>">
 <?php } elseif ($theme == 'default-dark') { ?>
     <meta name="theme-color" content="#272c30">
-    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?php echo $cacheVer; ?>">
 <?php } elseif ($theme == 'default-darker') { ?>
     <meta name="theme-color" content="#2e6786">
-    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?php echo $cacheVer; ?>">
 <?php } elseif ($theme == 'lcars') { ?>
     <meta name="theme-color" content="#4488FF">
-    <link rel="stylesheet" href="style/vendor/fonts/ubuntu-mono/ubuntu-mono.css?v=<?php echo $cacheVer; ?>">
-    <link rel="stylesheet" href="style/vendor/fonts/antonio/antonio.css?v=<?php echo $cacheVer; ?>">
 <?php } ?>
 
 <?php if ($darkmode) { ?>
     <style>
         html { background-color: #000; }
     </style>
+<?php } ?>
+
+    <!-- Theme fonts -->
+<?php if ($theme == 'lcars') { ?>
+    <link rel="stylesheet" href="style/vendor/fonts/ubuntu-mono/ubuntu-mono.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/fonts/antonio/antonio.css?v=<?php echo $cacheVer; ?>">
+<?php } else { ?>
+    <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css?v=<?php echo $cacheVer; ?>">
 <?php } ?>
 
     <!-- Common styles -->
