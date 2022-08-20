@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, Chart:false, updateSessionTimer:false */
+/* global utils:false, Chart:false */
 
 // Define global variables
 var timeLineChart, clientsChart;
@@ -774,8 +774,6 @@ function updateSummaryData(runOnce) {
   };
 
   $.getJSON("api.php?summaryRaw", function (data) {
-    updateSessionTimer();
-
     if ("FTLnotrunning" in data) {
       data.dns_queries_today = "Lost";
       data.ads_blocked_today = "connection";

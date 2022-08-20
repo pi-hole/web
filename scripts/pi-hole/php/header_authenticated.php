@@ -158,6 +158,17 @@ if ($auth) {
 <div id="enableTimer" hidden><?php if (file_exists('../custom_disable_timer')) {
     echo file_get_contents('../custom_disable_timer');
 } ?></div>
+<!-- Pi-hole SVG icon - used in topmenu and sidebar -->
+<svg display="none">
+    <symbol id="pihole-svg-logo" viewBox="0 0 200 200">
+        <path d="M88.387 61.745C63.6 59.101 38.632 40.367 36.66.728c38.462 0 59.03 22.769 61.017 58.846 7.273-43.275 41.366-38.203 41.366-38.203 1.619 24.526-18.52 39.394-41.366 40.632C91.26 48.48 52.813 15.305 52.813 15.305a.108.108 0 0 0-.169.122c0 .001 37.102 32.32 35.743 46.318" fill="currentcolor"/>
+        <path d="M100 199.272c-2.399-.137-24.785-.993-26.145-26.145-1.1-15.28 10.972-26.543 10.972-41.38-2.736-36.994-52.307-32.41-52.307 0a30.472 30.472 0 0 0 8.91 21.608l36.933 36.949a30.466 30.466 0 0 0 21.607 8.908" fill="currentColor"/>
+        <path d="M167.48 131.762c-.137 2.399-.994 24.785-26.146 26.145-15.28 1.1-26.558-10.972-41.38-10.972-36.996 2.736-32.41 52.292 0 52.292a30.468 30.468 0 0 0 21.607-8.91l36.965-36.933a30.466 30.466 0 0 0 8.908-21.607" fill="currentColor"/>
+        <path d="M100 64.282c2.399.137 24.786.992 26.146 26.145 1.1 15.281-10.972 26.543-10.972 41.38 2.735 36.995 52.292 32.41 52.292 0a30.465 30.465 0 0 0-8.91-21.607l-36.949-36.965A30.468 30.468 0 0 0 100 64.326" fill="currentColor"/>
+        <path d="M32.642 131.762c.137-2.4.994-24.786 26.145-26.146 15.28-1.101 26.558 10.972 41.38 10.972 36.996-2.781 32.411-52.292 0-52.292a30.468 30.468 0 0 0-21.607 8.91l-36.964 36.949a30.472 30.472 0 0 0-8.91 21.607" fill="currentColor"/>
+    </symbol>
+</svg>
+
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
@@ -171,7 +182,7 @@ if ($auth) {
         <nav class="navbar navbar-static-top">
             <!-- Sidebar toggle button-->
             <a href="#" class="sidebar-toggle-svg" data-toggle="push-menu" role="button">
-                <i aria-hidden="true" class="fa fa-bars"></i>
+                <i aria-hidden="true" class="fa fa-angle-double-left"></i>
                 <span class="sr-only">Toggle navigation</span>
                 <span class="warning-count hidden" id="top-warning-count"></span>
             </a>
@@ -179,14 +190,13 @@ if ($auth) {
                 <ul class="nav navbar-nav">
                     <li<?php echo !$hostname ? ' class="hidden"' : ''; ?>>
                         <p class="navbar-text">
-                            <span class="hidden-xs hidden-sm">hostname:</span>
+                            <span class="hidden-xs">hostname:</span>
                             <code><?php echo $hostname; ?></code>
                         </p>
                     </li>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <img src="img/logo.svg" class="user-image" alt="Pi-hole logo" style="border-radius: 0" width="25" height="25">
-                            <span class="hidden-xs">Pi-hole</span>
+                            <i class="fa fa-bars"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
@@ -194,40 +204,23 @@ if ($auth) {
                                 <img src="img/logo.svg" alt="Pi-hole Logo" style="border: 0" width="90" height="90">
                                 <p>
                                     Open Source Ad Blocker
-                                    <small>Designed For Raspberry Pi</small>
                                 </p>
                             </li>
                             <!-- Menu Body -->
-                            <li class="user-body">
-                                <div class="row">
-                                    <div class="col-xs-4 text-center">
-                                        <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank">GitHub</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">Website</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank">Updates</a>
-                                    </div>
-                                    <div id="sessiontimer" class="col-xs-12 text-center">
-                                        <strong>Session is valid for <span id="sessiontimercounter">
-<?php if ($auth && strlen($pwhash) > 0) {
-    echo $maxlifetime;
-} else {
-    echo '0';
-} ?>
-                                        </span></strong>
-                                    </div>
-                                </div>
-                            </li>
+                            <!-- <li class="user-body"></li> -->
                             <!-- Menu Footer -->
                             <li class="user-footer">
-                                <!-- Donate Button -->
-                                <div class="text-center">
-                                    <a class="btn btn-primary btn-lg donate" href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
-                                        <i class="fas fa-fw menu-icon fa-donate"></i> Donate
-                                    </a>
-                                </div>
+                                <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">
+                                    <svg class="svg-inline--fa fa-fw menu-icon" style="height: 1.25em"><use xlink:href="#pihole-svg-logo"/></svg>
+                                    Pi-hole Website
+                                </a>
+                                <hr>
+                                <a class="btn-link" href="https://docs.pi-hole.net/" rel="noopener" target="_blank"><i class="fa fa-fw menu-icon fa-question-circle"></i> Documentation</a>
+                                <a class="btn-link" href="https://discourse.pi-hole.net/" rel="noopener" target="_blank"><i class="fa fa-fw menu-icon fab fa-discourse"></i> Pi-hole Forum</a>
+                                <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank"><i class="fa-fw menu-icon fab fa-github"></i> GitHub</a>
+                                <a class="btn-link" href="https://discourse.pi-hole.net/c/announcements/5" rel="noopener" target="_blank"><i class="fa-fw menu-icon fa fa-regular fa-rocket"></i> Pi-hole Releases</a>
+                                <hr>
+                                <a class="btn-link" href="logout.php" rel="noopener"><i class="fa fa-fw menu-icon fa-sign-out-alt"></i> Log out</a>
                             </li>
                         </ul>
                     </li>
