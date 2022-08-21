@@ -91,26 +91,22 @@ $webReleasesUrl = $webUrl.'/releases';
                     <li>
                         <strong>Pi-hole</strong>
                         <a href="<?php echo $coreReleasesUrl.'/'.$core_current; ?>" rel="noopener" target="_blank"><?php echo $core_current; ?></a>
-                        <?php if ($core_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $coreReleasesUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
+                        <?php if ($core_update && !$dockerTag) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $coreReleasesUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                     <li>
                         <strong>FTL</strong>
                         <a href="<?php echo $ftlReleasesUrl.'/'.$FTL_current; ?>" rel="noopener" target="_blank"><?php echo $FTL_current; ?></a>
-                        <?php if ($FTL_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $ftlReleasesUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
+                        <?php if ($FTL_update && !$dockerTag) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $ftlReleasesUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                     <li>
                         <strong>Web Interface</strong>
                         <a href="<?php echo $webReleasesUrl.'/'.$web_current; ?>" rel="noopener" target="_blank"><?php echo $web_current; ?></a>
-                        <?php if ($web_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $webReleasesUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
+                        <?php if ($web_update && !$dockerTag) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $webReleasesUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                 </ul>
-                <?php if ($core_update || $web_update || $FTL_update) { ?>
-                <?php if ($dockerTag) { ?>
-                    <p>To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener" target="_blank">replace this old container with a fresh upgraded image</a>.</p>
-                <?php } else { ?>
-                    <p>To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener" target="_blank">pihole -up</a></code>.</p>
-                <?php } ?>
-                <?php } ?>
+                    <?php if (($core_update || $web_update || $FTL_update) && !$dockerTag) { ?>
+                        <p>To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener" target="_blank">pihole -up</a></code>.</p>
+                    <?php } ?>
                 <?php } ?>
             </div>
         </div>
