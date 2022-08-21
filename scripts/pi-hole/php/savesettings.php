@@ -416,15 +416,6 @@ if (isset($_POST['field'])) {
             break;
 
         case 'webUI':
-            $adminemail = trim($_POST['adminemail']);
-            if (strlen($adminemail) == 0 || !isset($adminemail)) {
-                $adminemail = '';
-            }
-            if (strlen($adminemail) > 0 && !validEmail($adminemail)) {
-                $error .= 'Administrator email address ('.htmlspecialchars($adminemail).') is invalid!<br>';
-            } else {
-                pihole_execute('-a -e \''.$adminemail.'\'');
-            }
             if (isset($_POST['boxedlayout'])) {
                 pihole_execute('-a layout boxed');
             } else {

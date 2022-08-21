@@ -86,16 +86,6 @@ function validMAC($mac_addr)
     return !filter_var($mac_addr, FILTER_VALIDATE_MAC) === false;
 }
 
-function validEmail($email)
-{
-    return filter_var($email, FILTER_VALIDATE_EMAIL)
-        // Make sure that the email does not contain special characters which
-        // may be used to execute shell commands, even though they may be valid
-        // in an email address. If the escaped email does not equal the original
-        // email, it is not safe to store in setupVars.
-        && escapeshellcmd($email) === $email;
-}
-
 function get_ip_type($ip)
 {
     return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 4 :
