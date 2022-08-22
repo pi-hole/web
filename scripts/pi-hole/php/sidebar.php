@@ -236,14 +236,14 @@
                         <!-- Tail pihole.log -->
                         <li class="<?php if ($scriptname === 'taillog.php') { ?> active<?php } ?>">
                             <a href="taillog.php">
-                                <svg class="svg-inline--fa fa-fw menu-icon" style="height: 1.25em"><use xlink:href="#pihole-svg-logo"/></svg>
+                                <svg class="svg-inline--fa fa-fw menu-icon" style="height: 1.25em"><use xlink:href="img/pihole_icon.svg#pihole-svg-logo"/></svg>
                                 Tail pihole.log
                             </a>
                         </li>
                         <!-- Tail FTL.log -->
                         <li class="<?php if ($scriptname === 'taillog-FTL.php') { ?> active<?php } ?>">
                             <a href="taillog-FTL.php">
-                                <svg class="svg-inline--fa fa-fw menu-icon" style="height: 1.25em"><use xlink:href="#pihole-svg-logo"/></svg>
+                                <svg class="svg-inline--fa fa-fw menu-icon" style="height: 1.25em"><use xlink:href="img/pihole_icon.svg#pihole-svg-logo"/></svg>
                                 Tail FTL.log
                             </a>
                         </li>
