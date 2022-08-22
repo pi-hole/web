@@ -41,8 +41,9 @@
     </div> <!-- /.content-wrapper -->
 
 <?php
-    // Flushes the system write buffers of PHP. This attempts to push everything we have so far all the way to the client's browser.
-    flush();
+// Flushes the system write buffers of PHP. This attempts to push everything we have so far all the way to the client's browser.
+flush();
+
 // Run update checker
 //  - determines local branch each time,
 //  - determines local and remote version every 30 minutes
@@ -72,20 +73,20 @@ $webReleasesUrl = $webUrl.'/releases';
         </div>
 
         <div class="row row-centered text-center version-info">
-            <div class="col-xs-12 col-sm-8 col-md-6">
+            <div class="col-xs-12 col-sm-12 col-md-10">
                 <?php if (isset($core_commit) || isset($web_commit) || isset($FTL_commit)) { ?>
                 <ul class="list-unstyled">
-                    <?php if ($dockerTag) { ?> <li><strong>Docker Tag</strong> <?php echo $dockerTag; ?></li> <?php } ?>
+                    <?php if ($docker_current) { ?> <li><strong>Docker Tag</strong> <?php echo $docker_current; ?></li> <?php } ?>
                     <li><strong>Pi-hole</strong> <?php echo $coreVersionStr; ?></li>
                     <li><strong>FTL</strong> <?php echo $ftlVersionStr; ?></li>
                     <li><strong>Web Interface</strong> <?php echo $webVersionStr; ?></li>
                 </ul>
                 <?php } else { ?>
                 <ul class="list-inline">
-                    <?php if ($dockerTag) { ?>
+                    <?php if ($docker_current) { ?>
                     <li>
                         <strong>Docker Tag</strong>
-                        <a href="<?php echo $dockerReleasesUrl.'/'.$dockerTag; ?>" rel="noopener" target="_blank"><?php echo $dockerTag; ?></a>
+                        <a href="<?php echo $dockerReleasesUrl.'/'.$docker_current; ?>" rel="noopener" target="_blank"><?php echo $docker_current; ?></a>
                     </li>
                     <?php } ?>
                     <li>
@@ -104,13 +105,12 @@ $webReleasesUrl = $webUrl.'/releases';
                         <?php if ($web_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $webReleasesUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                 </ul>
-                <?php if ($core_update || $web_update || $FTL_update) { ?>
-                <?php if ($dockerTag) { ?>
+                <?php if ($docker_update) { ?>
                     <p>To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener" target="_blank">replace this old container with a fresh upgraded image</a>.</p>
-                <?php } else { ?>
+                <?php } elseif ($core_update || $web_update || $FTL_update) { ?>
                     <p>To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener" target="_blank">pihole -up</a></code>.</p>
                 <?php } ?>
-                <?php } ?>
+
                 <?php } ?>
             </div>
         </div>
