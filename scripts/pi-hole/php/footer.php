@@ -48,22 +48,6 @@ flush();
 //  - determines local branch each time,
 //  - determines local and remote version every 30 minutes
 require 'scripts/pi-hole/php/update_checker.php';
-
-$coreVersionStr = $core_current.(isset($core_commit) ? ' ('.$core_branch.', '.$core_commit.')' : '');
-$ftlVersionStr = $FTL_current.(isset($FTL_commit) ? ' ('.$FTL_branch.', '.$FTL_commit.')' : '');
-$webVersionStr = $web_current.(isset($web_commit) ? ' ('.$web_branch.', '.$web_commit.')' : '');
-$dockerTag = htmlspecialchars(getenv('PIHOLE_DOCKER_TAG'));
-
-$githubBaseUrl = 'https://github.com/pi-hole';
-$coreUrl = $githubBaseUrl.'/pi-hole';
-$dockerUrl = $githubBaseUrl.'/docker-pi-hole';
-$ftlUrl = $githubBaseUrl.'/FTL';
-$webUrl = $githubBaseUrl.'/AdminLTE';
-
-$coreReleasesUrl = $coreUrl.'/releases';
-$dockerReleasesUrl = $dockerUrl.'/releases';
-$ftlReleasesUrl = $ftlUrl.'/releases';
-$webReleasesUrl = $webUrl.'/releases';
 ?>
     <footer class="main-footer">
         <div class="row row-centered text-center">
