@@ -463,7 +463,6 @@ p.login-box-msg,
   background-size: 304px 100%, 758px 100%;
   background-repeat: no-repeat;
   background-position: 0 0, 100% 0;
-  border-radius: 0 0 0 60px;
   border-radius: 0 0 0 min(75px, var(--sidebar-width));
   font-weight: bold;
   text-transform: uppercase;
@@ -711,21 +710,20 @@ p.login-box-msg,
   top: 150px;
   bottom: 20px;
   left: 5px;
-  background: #8bf;
+  background: #cce6ff;
   background-image: linear-gradient(
     to top,
     #cce6ff 200px,
     #000 200px,
     #000 204px,
-    #eda 204px,
-    #eda 270px,
+    #48f 204px,
+    #48f 270px,
     #000 270px,
     #000 274px,
     transparent 274px
   );
   background-repeat: no-repeat;
   background-position: bottom;
-  border-radius: 0 0 0 75px;
   border-radius: 0 0 0 min(90px, var(--sidebar-width));
   transition: all 0.3s ease-in-out;
   z-index: -1;
@@ -748,6 +746,8 @@ p.login-box-msg,
 
 .sidebar-menu > li {
   text-align: right;
+  --hover-color: var(--backlit-color);
+  --active-color: #fff;
 }
 
 .sidebar-menu > li.header {
@@ -757,24 +757,58 @@ p.login-box-msg,
   font-size: 0;
 }
 
+/* Menu groups */
+.menu-main {
+  --normal-color: #26f;
+  --backlit-color: #8bf;
+  --darken-color: #59f;
+}
+
+.menu-analysis {
+  --normal-color: #48f;
+  --backlit-color: #bdf;
+  --darken-color: #8bf;
+}
+
+.menu-group {
+  --normal-color: #8bf;
+  --backlit-color: #bdf;
+  --darken-color: #8bf;
+}
+
+.menu-dns {
+  --normal-color: #eca;
+  --backlit-color: #fdb;
+  --darken-color: #eca;
+}
+
+.menu-system {
+  --normal-color: #e97;
+  --backlit-color: #fb9;
+  --darken-color: #e97;
+}
+
+.menu-donate {
+  --normal-color: #d67;
+  --backlit-color: #e89;
+  --darken-color: #d67;
+}
+
 .sidebar-menu > li > a {
   margin: 4px 0 0;
   padding: 30px 15px 5px;
-  background: #8bf;
+  background: var(--normal-color);
   border-left: none;
 }
 
 .sidebar-menu > li.active > a {
-  background-color: #eda;
-}
-
-.sidebar-menu > li > a.menu-support {
-  background-color: #26f;
+  background-color: var(--active-color);
 }
 
 .sidebar-menu > li:hover > a,
 .sidebar-menu > li > a:focus {
-  background-color: #cce6ff;
+  background-color: var(--backlit-color);
+  box-shadow: inset 0 0 20px var(--darken-color);
 }
 
 .sidebar-menu > li > .treeview-menu {
@@ -791,52 +825,30 @@ p.login-box-msg,
   transform: scaleX(-1);
 }
 
-.sidebar-menu > .menu-main a,
-.sidebar-menu > .menu-system a {
-  background-color: #8bf;
-}
-
-.sidebar-menu > .menu-analysis a {
-  background-color: #48f;
-}
-
-.sidebar-menu > .menu-group a {
-  background-color: #aaf;
-}
-
-.sidebar-menu > .menu-dns a {
-  background-color: #26f;
-}
-
-/* Donate sidebar button */
-.sidebar-menu > li.menu-donate a {
-  background: #c78;
-}
-.sidebar-menu > li.menu-donate:hover a,
-.sidebar-menu > li.menu-donate a:focus {
-  background: #e9a;
-  box-shadow: inset 0 0 18px #c78;
-}
-
 .treeview-menu > li > a {
   margin: 4px 0 0;
   padding: 23px 38px 4px 0;
   position: relative;
   overflow: hidden;
   color: #000;
-  background: #8bf;
-  background-image: linear-gradient(to right, #cce6ff 36px, #000 36px, #000 40px, transparent 40px);
+  background: var(--normal-color);
+  background-image: linear-gradient(
+    to right,
+    var(--backlit-color) 36px,
+    #000 36px,
+    #000 40px,
+    transparent 40px
+  );
   border-radius: 22px;
 }
 
 .treeview-menu > li.active > a {
-  background-color: #cce6ff;
+  background-color: var(--active-color);
 }
 
 .treeview-menu > li > a:hover {
-  background-color: #cce6ff;
-  background-image: linear-gradient(to right, #cce6ff 36px, #000 36px, #000 40px, #cce6ff 40px);
-  box-shadow: inset 0 0 18px rgba(68, 136, 255, 0.4);
+  background-color: var(--hover-color);
+  box-shadow: inset 0 0 18px var(--darken-color);
 }
 
 #pihole-disable > a > span:not(.pull-right-container) {
@@ -1578,6 +1590,12 @@ table.dataTable {
 
 /*--- Media - max-width ---*/
 @media (max-width: 767px) {
+  h1 {
+    font-size: 1.8em;
+  }
+  h2 {
+    font-size: 1.4rem;
+  }
   .sidebar-collapse {
     --sidebar-width: 230px;
   }
