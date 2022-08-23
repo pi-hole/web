@@ -158,17 +158,6 @@ if ($auth) {
 <div id="enableTimer" hidden><?php if (file_exists('../custom_disable_timer')) {
     echo file_get_contents('../custom_disable_timer');
 } ?></div>
-<!-- Pi-hole SVG icon - used in topmenu and sidebar -->
-<svg display="none">
-    <symbol id="pihole-svg-logo" viewBox="0 0 200 200">
-        <path d="M88.387 61.745C63.6 59.101 38.632 40.367 36.66.728c38.462 0 59.03 22.769 61.017 58.846 7.273-43.275 41.366-38.203 41.366-38.203 1.619 24.526-18.52 39.394-41.366 40.632C91.26 48.48 52.813 15.305 52.813 15.305a.108.108 0 0 0-.169.122c0 .001 37.102 32.32 35.743 46.318" fill="currentcolor"/>
-        <path d="M100 199.272c-2.399-.137-24.785-.993-26.145-26.145-1.1-15.28 10.972-26.543 10.972-41.38-2.736-36.994-52.307-32.41-52.307 0a30.472 30.472 0 0 0 8.91 21.608l36.933 36.949a30.466 30.466 0 0 0 21.607 8.908" fill="currentColor"/>
-        <path d="M167.48 131.762c-.137 2.399-.994 24.785-26.146 26.145-15.28 1.1-26.558-10.972-41.38-10.972-36.996 2.736-32.41 52.292 0 52.292a30.468 30.468 0 0 0 21.607-8.91l36.965-36.933a30.466 30.466 0 0 0 8.908-21.607" fill="currentColor"/>
-        <path d="M100 64.282c2.399.137 24.786.992 26.146 26.145 1.1 15.281-10.972 26.543-10.972 41.38 2.735 36.995 52.292 32.41 52.292 0a30.465 30.465 0 0 0-8.91-21.607l-36.949-36.965A30.468 30.468 0 0 0 100 64.326" fill="currentColor"/>
-        <path d="M32.642 131.762c.137-2.4.994-24.786 26.145-26.146 15.28-1.101 26.558 10.972 41.38 10.972 36.996-2.781 32.411-52.292 0-52.292a30.468 30.468 0 0 0-21.607 8.91l-36.964 36.949a30.472 30.472 0 0 0-8.91 21.607" fill="currentColor"/>
-    </symbol>
-</svg>
-
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
@@ -211,7 +200,7 @@ if ($auth) {
                             <!-- Menu Footer -->
                             <li class="user-footer">
                                 <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">
-                                    <svg class="svg-inline--fa fa-fw menu-icon" style="height: 1.25em"><use xlink:href="#pihole-svg-logo"/></svg>
+                                    <svg class="svg-inline--fa fa-fw menu-icon" style="height: 1.25em"><use xlink:href="img/pihole_icon.svg#pihole-svg-logo"/></svg>
                                     Pi-hole Website
                                 </a>
                                 <hr>

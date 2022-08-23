@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<symbol id="drop">
+    <path d="M1 85.459c0-1.717 1.707-16.993 16.907-16.993 9.998-.717 17.766 7.169 27.464 7.169 24.208-1.814 20.952-34.293-.252-34.293-5.3-.014-10.179 2.22-13.929 5.954L6.738 71.747C2.68 75.792 1 80.972 1 85.459z"/>
+</symbol>
+<symbol id="pihole-svg-logo" viewBox="-20 0 130 130">
+    <path fill="currentColor" d="M37.4 40.145C21.18 38.415 4.84 26.155 3.55.215c25.17 0 38.63 14.9 39.93 38.51 4.76-28.32 27.07-25 27.07-25 1.06 16.05-12.12 25.78-27.07 26.59-4.2-8.85-29.36-30.56-29.36-30.56a.07.07 0 0 0-.11.08s24.28 21.15 23.39 30.31"/>
+    <use xlink:href="#drop" fill="currentColor" transform="rotate(180 45 85.3)"/>
+    <use xlink:href="#drop" fill="currentColor" transform="rotate(90 45 85.3)"/>
+    <use xlink:href="#drop" fill="currentColor" transform="rotate(-90 45 85.3)"/>
+    <use xlink:href="#drop" fill="currentColor"/>
+</symbol>
+</svg>
