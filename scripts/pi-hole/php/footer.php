@@ -48,6 +48,12 @@ flush();
 //  - determines local branch each time,
 //  - determines local and remote version every 30 minutes
 require 'scripts/pi-hole/php/update_checker.php';
+
+if (isset($core_commit) || isset($web_commit) || isset($FTL_commit)) {
+    $list_class = 'list-unstyled';
+} else {
+    $list_class = 'list-inline';
+}
 ?>
     <footer class="main-footer">
         <div class="row row-centered text-center">
@@ -58,44 +64,38 @@ require 'scripts/pi-hole/php/update_checker.php';
 
         <div class="row row-centered text-center version-info">
             <div class="col-xs-12 col-sm-12 col-md-10">
-                <?php if (isset($core_commit) || isset($web_commit) || isset($FTL_commit)) { ?>
-                <ul class="list-unstyled">
-                    <?php if ($docker_current) { ?> <li><strong>Docker Tag</strong> <?php echo $docker_current; ?></li> <?php } ?>
-                    <li><strong>Pi-hole</strong> <?php echo $coreVersionStr; ?></li>
-                    <li><strong>FTL</strong> <?php echo $ftlVersionStr; ?></li>
-                    <li><strong>Web Interface</strong> <?php echo $webVersionStr; ?></li>
-                </ul>
-                <?php } else { ?>
-                <ul class="list-inline">
+                <ul class="<?php echo $list_class; ?>">
                     <?php if ($docker_current) { ?>
                     <li>
                         <strong>Docker Tag</strong>
-                        <a href="<?php echo $dockerReleasesUrl.'/'.$docker_current; ?>" rel="noopener" target="_blank"><?php echo $docker_current; ?></a>
+                        <?php echo $docker_current; ?>
+                        <?php if ($docker_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $dockerUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                     <?php } ?>
                     <li>
                         <strong>Pi-hole</strong>
-                        <a href="<?php echo $coreReleasesUrl.'/'.$core_current; ?>" rel="noopener" target="_blank"><?php echo $core_current; ?></a>
-                        <?php if ($core_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $coreReleasesUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
+                        <?php echo $coreVersionStr; ?>
+                        <?php if ($core_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $coreUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                     <li>
                         <strong>FTL</strong>
-                        <a href="<?php echo $ftlReleasesUrl.'/'.$FTL_current; ?>" rel="noopener" target="_blank"><?php echo $FTL_current; ?></a>
-                        <?php if ($FTL_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $ftlReleasesUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
+                        <?php echo $ftlVersionStr; ?>
+                        <?php if ($FTL_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $ftlUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                     <li>
                         <strong>Web Interface</strong>
-                        <a href="<?php echo $webReleasesUrl.'/'.$web_current; ?>" rel="noopener" target="_blank"><?php echo $web_current; ?></a>
-                        <?php if ($web_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $webReleasesUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
+                        <?php echo $webVersionStr; ?>
+                        <?php if ($web_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $webUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                 </ul>
-                <?php if ($docker_update) { ?>
-                    <p>To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener" target="_blank">replace this old container with a fresh upgraded image</a>.</p>
-                <?php } elseif ($core_update || $web_update || $FTL_update) { ?>
-                    <p>To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener" target="_blank">pihole -up</a></code>.</p>
-                <?php } ?>
 
-                <?php } ?>
+                <p style="margin: 15px 0 0;">
+                    <?php if ($docker_update) { ?>
+                        To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener" target="_blank">replace this old container with a fresh upgraded image</a>.
+                    <?php } elseif ($core_update || $web_update || $FTL_update) { ?>
+                        To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener" target="_blank">pihole -up</a></code>.
+                    <?php } ?>
+                </p>
             </div>
         </div>
     </footer>
