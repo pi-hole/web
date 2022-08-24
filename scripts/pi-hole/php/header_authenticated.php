@@ -21,7 +21,7 @@ require_once 'scripts/pi-hole/php/func.php';
 require 'scripts/pi-hole/php/theme.php';
 
 // Retrieve layout setting from setupVars
-if (isset($setupVars['WEBUIBOXEDLAYOUT']) && !$setupVars['WEBUIBOXEDLAYOUT'] === 'boxed') {
+if (isset($setupVars['WEBUIBOXEDLAYOUT']) && !($setupVars['WEBUIBOXEDLAYOUT'] === 'boxed')) {
     $boxedlayout = false;
 } else {
     $boxedlayout = true;
