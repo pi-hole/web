@@ -3,7 +3,7 @@
 /*** Main variables ***/
 :root {
   --sidebar-width: 230px;
-  --gradient-pos: 300px;
+  --gradient-pos: 304px;
   --primary-color: #48f;
   --text-color: #9ab;
   --net-never-color: #000;
@@ -18,7 +18,7 @@
 }
 
 .sidebar-open {
-  --gradient-pos: 70px;
+  --gradient-pos: 74px;
 }
 
 /*** General ***/
@@ -661,11 +661,7 @@ p.login-box-msg,
 }
 
 .content-wrapper {
-  background-image: linear-gradient(
-      to right,
-      #cce6ff calc(300px - var(--sidebar-width)),
-      #000 calc(300px - var(--sidebar-width))
-    ),
+  background-image: linear-gradient(to left, #000 4px, #cce6ff 4px),
     linear-gradient(
       to left,
       #48f 359.5px,
@@ -1051,7 +1047,7 @@ footer a:focus {
   }
 
   .main-footer > div {
-    margin: 5px;
+    margin: 5px !important;
   }
 
   .main-footer > div div {
@@ -1075,10 +1071,6 @@ footer a:focus {
 
 .sidebar-collapse .sidebar-menu > li a {
   box-shadow: none;
-}
-
-.sidebar-collapse .treeview-menu > li > a:hover {
-  background-color: #04f;
 }
 
 .sidebar-collapse .sidebar-menu svg {
@@ -1656,17 +1648,9 @@ table.dataTable {
     border-radius: 0;
   }
   .content-wrapper {
-    background-image: linear-gradient(to right, #000 4px, #48f 4px),
-      linear-gradient(
-        to right,
-        #cce6ff var(--gradient-pos),
-        #000 var(--gradient-pos),
-        #000 calc(4px + var(--gradient-pos)),
-        transparent
-      );
-    background-size: 100% 50px, var(--gradient-pos) 50px;
+    background-image: linear-gradient(to left, #000 4px, #cce6ff 4px), linear-gradient(#48f, #48f);
+    background-size: var(--gradient-pos) 50px, 100% 50px;
     background-repeat: no-repeat;
-    background-position: calc(var(--gradient-pos)) 4px, 0 4px;
   }
   .content {
     padding: 20px;
