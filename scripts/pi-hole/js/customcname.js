@@ -92,6 +92,7 @@ function addCustomCNAME() {
         $("#domain").val("");
         $("#target").val("");
         table.ajax.reload();
+        $("#domain").focus();
       } else {
         utils.showAlert("error", "fas fa-times", "Failure! Something went wrong", response.message);
       }
