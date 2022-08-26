@@ -28,7 +28,6 @@ function countDown() {
   //Stop and remove timer when user enabled early
   if (ena.hasClass("hidden")) {
     enaLabel.text("Enable Blocking");
-    console.log("hidden");
     return;
   }
 
@@ -100,23 +99,22 @@ function updatePiholeStatus(once) {
     var ena = $("#pihole-enable");
     var dis = $("#pihole-disable");
     var restart = $("#pihole-restart");
-
     switch (true) {
-      case pistatus == 53:
+      case pistatus === 53:
         status.html("<i class='fa fa-w fa-circle text-green-light'></i> Active");
         ena.addClass("hidden");
         dis.removeClass("hidden");
         restart.addClass("hidden");
         break;
 
-      case pistatus == 0:
+      case pistatus === 0:
         status.html("<i class='fa fa-w fa-circle text-red'></i> Blocking disabled");
         dis.addClass("hidden");
         ena.removeClass("hidden");
         restart.addClass("hidden");
         break;
 
-      case pistatus == -1:
+      case pistatus === -1:
         status.html("<i class='fa fa-w fa-circle text-red'></i> DNS service not running");
         restart.removeClass("hidden");
         dis.addClass("hidden");

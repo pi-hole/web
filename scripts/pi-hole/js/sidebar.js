@@ -4,7 +4,6 @@
  *
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
-/* global utils:false */
 
 $(".confirm-restartftl").confirm({
   text: "Are you sure you want to send a restart command to your DNS server?",

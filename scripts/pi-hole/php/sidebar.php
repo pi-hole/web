@@ -262,7 +262,7 @@
                         </li>
                     </ul>
                 </li>
-                <!-- Settings -->class="
+                <!-- Settings -->
                 <li class="menu-system<?php if ($scriptname === 'settings.php') { ?> active<?php } ?>">
                     <a href="settings.php">
                         <i class="fa fa-fw menu-icon fa-cog"></i> <span>Settings</span>
