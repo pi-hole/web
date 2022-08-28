@@ -377,7 +377,15 @@ $(function () {
         $("td:eq(5)", row).append(" (" + (1000 * data[7]).toFixed(1) + "ms)");
       }
 
+      // Substitute domain by "." if empty
+      // This was introduced by https://github.com/pi-hole/AdminLTE/pull/1244 but is considered obsolete since
+      // https://github.com/pi-hole/FTL/pull/1413. However, we keep the conversion here to keep user's
+      // statistic accurat when they import older data with empty domain fields
       var domain = data[2];
+      if (domain.length === 0) {
+        domain = ".";
+      }
+
       $("td:eq(2)", row).text(domain);
     },
     dom:
