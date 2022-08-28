@@ -65,7 +65,11 @@ if (!is_readable($versionsfile)) {
     $core_latest = $versions['GITHUB_CORE_VERSION'];
     $web_latest = $versions['GITHUB_WEB_VERSION'];
     $FTL_latest = $versions['GITHUB_FTL_VERSION'];
-    $docker_latest = $versions['GITHUB_DOCKER_VERSION'];
+    if (isset($versions['GITHUB_DOCKER_VERSION'])) {
+        $docker_latest = $versions['GITHUB_DOCKER_VERSION'];
+    } else {
+        $docker_latest = '';
+    }
 
     // Version comparison
     if (!$docker_current) {
@@ -73,6 +77,7 @@ if (!is_readable($versionsfile)) {
         $core_update = checkUpdate($core_current, $core_latest);
         $web_update = checkUpdate($web_current, $web_latest);
         $FTL_update = checkUpdate($FTL_current, $FTL_latest);
+        $docker_update = false;
     } elseif ($docker_current == 'nightly' || $docker_current == 'dev') {
         // Special container - no update messages
         $docker_update = false;
