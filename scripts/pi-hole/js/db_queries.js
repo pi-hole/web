@@ -377,12 +377,7 @@ $(function () {
         $("td:eq(5)", row).append(" (" + (1000 * data[7]).toFixed(1) + "ms)");
       }
 
-      // Substitute domain by "." if empty
       var domain = data[2];
-      if (domain.length === 0) {
-        domain = ".";
-      }
-
       $("td:eq(2)", row).text(domain);
     },
     dom:
