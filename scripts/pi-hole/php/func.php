@@ -12,6 +12,11 @@
 ini_set('pcre.recursion_limit', 1500);
 function validDomain($domain_name, &$message = null)
 {
+    // special handling of the root zone `.`
+    if ($domain_name == '.') {
+        return true;
+    }
+
     if (!preg_match('/^((-|_)*[a-z\\d]((-|_)*[a-z\\d])*(-|_)*)(\\.(-|_)*([a-z\\d]((-|_)*[a-z\\d])*))*$/i', $domain_name)) {
         if ($message !== null) {
             $message = 'it contains invalid characters';
