@@ -72,11 +72,11 @@ if (!is_readable($versionsfile)) {
     }
 
     // Version comparison
+    $core_update = checkUpdate($core_current, $core_latest);
+    $web_update = checkUpdate($web_current, $web_latest);
+    $FTL_update = checkUpdate($FTL_current, $FTL_latest);
     if (!$docker_current) {
         // Not a docker container
-        $core_update = checkUpdate($core_current, $core_latest);
-        $web_update = checkUpdate($web_current, $web_latest);
-        $FTL_update = checkUpdate($FTL_current, $FTL_latest);
         $docker_update = false;
     } elseif ($docker_current == 'nightly' || $docker_current == 'dev') {
         // Special container - no update messages
