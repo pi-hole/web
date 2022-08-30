@@ -71,18 +71,27 @@ if (!is_readable($versionsfile)) {
         $docker_latest = '';
     }
 
+    $core_update = false;
+    $web_update = false;
+    $FTL_update = false;
+
     // Version comparison
-    $core_update = checkUpdate($core_current, $core_latest);
-    $web_update = checkUpdate($web_current, $web_latest);
-    $FTL_update = checkUpdate($FTL_current, $FTL_latest);
-    if (!$docker_current) {
+    if ($docker_current) {
+        // It's a container: do not check for individual component updates
+        if ($docker_current == 'nightly' || $docker_current == 'dev') {
+            // Special container - no update messages
+            $docker_update = false;
+        } else {
+            $docker_update = checkUpdate($docker_current, $docker_latest);
+        }
+    } else {
+        // Components comparison
+        $core_update = checkUpdate($core_current, $core_latest);
+        $web_update = checkUpdate($web_current, $web_latest);
+        $FTL_update = checkUpdate($FTL_current, $FTL_latest);
+
         // Not a docker container
         $docker_update = false;
-    } elseif ($docker_current == 'nightly' || $docker_current == 'dev') {
-        // Special container - no update messages
-        $docker_update = false;
-    } else {
-        $docker_update = checkUpdate($docker_current, $docker_latest);
     }
 }
 
