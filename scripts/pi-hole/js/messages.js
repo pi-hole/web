@@ -126,6 +126,19 @@ function renderMessage(data, type, row) {
         "</pre>"
       );
 
+    case "ADLIST":
+      return (
+        '<a href="groups-adlists.php?adlistid=' +
+        row.blob1 +
+        '">' +
+        "Adlist with ID " +
+        parseInt(row.blob1, 10) +
+        "</a> was inaccessible during last gravity run." +
+        "<pre>" +
+        utils.escapeHtml(row.message) +
+        "</pre>"
+      );
+
     default:
       return "Unknown message type<pre>" + JSON.stringify(row) + "</pre>";
   }
