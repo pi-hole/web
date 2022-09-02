@@ -4,203 +4,194 @@
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license */
+*    Please see LICENSE file for your rights under this license
+*/
 
 $api = true;
-require_once("scripts/pi-hole/php/FTL.php");
-require_once("scripts/pi-hole/php/password.php");
-require_once("scripts/pi-hole/php/database.php");
-require_once("scripts/pi-hole/php/auth.php");
+require_once 'scripts/pi-hole/php/password.php';
+require_once 'scripts/pi-hole/php/FTL.php';
+require_once 'scripts/pi-hole/php/database.php';
+require_once 'scripts/pi-hole/php/auth.php';
 check_cors();
 
 $data = array();
 
 // Common API functions
 if (isset($_GET['enable']) && $auth) {
-	if(isset($_GET["auth"]))
-	{
-	if($_GET["auth"] !== $pwhash)
-		die("Not authorized!");
-	}
-	else
-	{
-		// Skip token validation if explicit auth string is given
-		check_csrf($_GET['token']);
-	}
-	pihole_execute('enable');
-	$data = array_merge($data, array("status" => "enabled"));
-	if (file_exists("../custom_disable_timer"))
-	{
-		unlink("../custom_disable_timer");
-	}
-}
-elseif (isset($_GET['disable']) && $auth)
-{
-	if(isset($_GET["auth"]))
-	{
-		if($_GET["auth"] !== $pwhash)
-			die("Not authorized!");
-	}
-	else
-	{
-		// Skip token validation if explicit auth string is given
-		check_csrf($_GET['token']);
-	}
-	$disable = intval($_GET['disable']);
-	// intval returns the integer value on success, or 0 on failure
-	if($disable > 0)
-	{
-		$timestamp = time();
-		pihole_execute("disable ".$disable."s");
-		file_put_contents("../custom_disable_timer",($timestamp+$disable)*1000);
-	}
-	else
-	{
-		pihole_execute('disable');
-		if (file_exists("../custom_disable_timer"))
-		{
-			unlink("../custom_disable_timer");
-		}
-	}
-	$data = array_merge($data, array("status" => "disabled"));
-}
-elseif (isset($_GET['versions']))
-{
-	// Determine if updates are available for Pi-hole
-	// using the same script that we use for the footer
-	// on the dashboard (update notifications are
-	// suppressed if on development branches)
-	require "scripts/pi-hole/php/update_checker.php";
-	$updates = array("core_update" => $core_update,
-	                 "web_update" => $web_update,
-	                 "FTL_update" => $FTL_update);
-	$current = array("core_current" => $core_current,
-	                 "web_current" => $web_current,
-	                 "FTL_current" => $FTL_current);
-	$latest = array("core_latest" => $core_latest,
-	                "web_latest" => $web_latest,
-	                "FTL_latest" => $FTL_latest);
-	$branches = array("core_branch" => $core_branch,
-	                  "web_branch" => $web_branch,
-	                  "FTL_branch" => $FTL_branch);
-	$data = array_merge($data, $updates);
-	$data = array_merge($data, $current);
-	$data = array_merge($data, $latest);
-	$data = array_merge($data, $branches);
-}
-elseif (isset($_GET['list']))
-{
-	if (!$auth)
-		die("Not authorized!");
+    if (isset($_GET['auth'])) {
+        if ($_GET['auth'] !== $pwhash) {
+            exit('Not authorized!');
+        }
+    } else {
+        // Skip token validation if explicit auth string is given
+        check_csrf($_GET['token']);
+    }
+    pihole_execute('enable');
+    $data = array_merge($data, array('status' => 'enabled'));
+    if (file_exists('../custom_disable_timer')) {
+        unlink('../custom_disable_timer');
+    }
+} elseif (isset($_GET['disable']) && $auth) {
+    if (isset($_GET['auth'])) {
+        if ($_GET['auth'] !== $pwhash) {
+            exit('Not authorized!');
+        }
+    } else {
+        // Skip token validation if explicit auth string is given
+        check_csrf($_GET['token']);
+    }
+    $disable = intval($_GET['disable']);
+    // intval returns the integer value on success, or 0 on failure
+    if ($disable > 0) {
+        $timestamp = time();
+        pihole_execute('disable '.$disable.'s');
+        file_put_contents('../custom_disable_timer', ($timestamp + $disable) * 1000);
+    } else {
+        pihole_execute('disable');
+        if (file_exists('../custom_disable_timer')) {
+            unlink('../custom_disable_timer');
+        }
+    }
+    $data = array_merge($data, array('status' => 'disabled'));
+} elseif (isset($_GET['versions'])) {
+    // Determine if updates are available for Pi-hole
+    // using the same script that we use for the footer
+    // on the dashboard (update notifications are
+    // suppressed if on development branches)
+    require 'scripts/pi-hole/php/update_checker.php';
+    $updates = array('core_update' => $core_update,
+        'web_update' => $web_update,
+        'FTL_update' => $FTL_update, );
+    $current = array('core_current' => $core_current,
+        'web_current' => $web_current,
+        'FTL_current' => $FTL_current, );
+    $latest = array('core_latest' => $core_latest,
+        'web_latest' => $web_latest,
+        'FTL_latest' => $FTL_latest, );
+    $branches = array('core_branch' => $core_branch,
+        'web_branch' => $web_branch,
+        'FTL_branch' => $FTL_branch, );
+    $data = array_merge($data, $updates);
+    $data = array_merge($data, $current);
+    $data = array_merge($data, $latest);
+    $data = array_merge($data, $branches);
+} elseif (isset($_GET['list'])) {
+    if (!$auth) {
+        exit('Not authorized!');
+    }
 
-	if(!isset($_GET["list"]))
-		die("List has not been specified.");
+    if (!isset($_GET['list'])) {
+        exit('List has not been specified.');
+    }
 
-	switch ($_GET["list"]) {
-		case 'black':
-			$_POST['type'] = ListType::blacklist;
-			break;
-		case 'regex_black':
-			$_POST['type'] = ListType::regex_blacklist;
-			break;
-		case 'white':
-			$_POST['type'] = ListType::whitelist;
-			break;
-		case 'regex_white':
-			$_POST['type'] = ListType::regex_whitelist;
-			break;
+    switch ($_GET['list']) {
+        case 'black':
+            $_POST['type'] = ListType::blacklist;
 
-		default:
-			die("Invalid list [supported: black, regex_black, white, regex_white]");
-	}
+            break;
 
-	if (isset($_GET['add']))
-	{
-		// Set POST parameters and invoke script to add domain to list
-		$_POST['domain'] = $_GET['add'];
-		$_POST['action'] = 'add_domain';
-		require("scripts/pi-hole/php/groups.php");
-	}
-	elseif (isset($_GET['sub']))
-	{
-		// Set POST parameters and invoke script to remove domain from list
-		$_POST['domain'] = $_GET['sub'];
-		$_POST['action'] = 'delete_domain_string';
-		require("scripts/pi-hole/php/groups.php");
-	}
-	else
-	{
-		// Set POST parameters and invoke script to get all domains
-		$_POST['action'] = 'get_domains';
-		require("scripts/pi-hole/php/groups.php");
-	}
+        case 'regex_black':
+            $_POST['type'] = ListType::regex_blacklist;
 
-	return;
-}
-elseif(isset($_GET['customdns']) && $auth)
-{
-	if (isset($_GET["auth"])) {
-		if ($_GET["auth"] !== $pwhash) {
-			die("Not authorized!");
-		}
-	} else {
-		// Skip token validation if explicit auth string is given
-		check_csrf($_GET['token']);
-	}
+            break;
 
-	switch ($_GET["action"]) {
-		case 'get':
-			$data = echoCustomDNSEntries();
-			break;
+        case 'white':
+            $_POST['type'] = ListType::whitelist;
 
-		case 'add':
-			$data = addCustomDNSEntry();
-			break;
+            break;
 
-		case 'delete':
-			$data = deleteCustomDNSEntry();
-			break;
+        case 'regex_white':
+            $_POST['type'] = ListType::regex_whitelist;
 
-		default:
-			die("Wrong action");
-	}
-}
-elseif(isset($_GET['customcname']) && $auth)
-{
-	if (isset($_GET["auth"])) {
-		if ($_GET["auth"] !== $pwhash) {
-			die("Not authorized!");
-		}
-	} else {
-		// Skip token validation if explicit auth string is given
-		check_csrf($_GET['token']);
-	}
+            break;
 
-	switch ($_GET["action"]) {
-		case 'get':
-			$data = echoCustomCNAMEEntries();
-			break;
+        default:
+            exit('Invalid list [supported: black, regex_black, white, regex_white]');
+    }
 
-		case 'add':
-			$data = addCustomCNAMEEntry();
-			break;
+    if (isset($_GET['add'])) {
+        // Set POST parameters and invoke script to add domain to list
+        $_POST['domain'] = $_GET['add'];
+        $_POST['action'] = 'add_domain';
+        require 'scripts/pi-hole/php/groups.php';
+    } elseif (isset($_GET['sub'])) {
+        // Set POST parameters and invoke script to remove domain from list
+        $_POST['domain'] = $_GET['sub'];
+        $_POST['action'] = 'delete_domain_string';
+        require 'scripts/pi-hole/php/groups.php';
+    } else {
+        // Set POST parameters and invoke script to get all domains
+        $_POST['action'] = 'get_domains';
+        require 'scripts/pi-hole/php/groups.php';
+    }
 
-		case 'delete':
-			$data = deleteCustomCNAMEEntry();
-			break;
+    return;
+} elseif (isset($_GET['customdns']) && $auth) {
+    if (isset($_GET['auth'])) {
+        if ($_GET['auth'] !== $pwhash) {
+            exit('Not authorized!');
+        }
+    } else {
+        // Skip token validation if explicit auth string is given
+        check_csrf($_GET['token']);
+    }
 
-		default:
-			die("Wrong action");
-	}
+    switch ($_GET['action']) {
+        case 'get':
+            $data = echoCustomDNSEntries();
+
+            break;
+
+        case 'add':
+            $data = addCustomDNSEntry();
+
+            break;
+
+        case 'delete':
+            $data = deleteCustomDNSEntry();
+
+            break;
+
+        default:
+            exit('Wrong action');
+    }
+} elseif (isset($_GET['customcname']) && $auth) {
+    if (isset($_GET['auth'])) {
+        if ($_GET['auth'] !== $pwhash) {
+            exit('Not authorized!');
+        }
+    } else {
+        // Skip token validation if explicit auth string is given
+        check_csrf($_GET['token']);
+    }
+
+    switch ($_GET['action']) {
+        case 'get':
+            $data = echoCustomCNAMEEntries();
+
+            break;
+
+        case 'add':
+            $data = addCustomCNAMEEntry();
+
+            break;
+
+        case 'delete':
+            $data = deleteCustomCNAMEEntry();
+
+            break;
+
+        default:
+            exit('Wrong action');
+    }
 }
 
 // Other API functions
-require("api_FTL.php");
+require 'api_FTL.php';
 
 header('Content-type: application/json');
-if(isset($_GET["jsonForceObject"])) {
+if (isset($_GET['jsonForceObject'])) {
     echo json_encode($data, JSON_FORCE_OBJECT);
 } else {
     echo json_encode($data);
 }
-?>

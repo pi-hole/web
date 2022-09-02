@@ -392,10 +392,10 @@ td.lookatme {
   max-height: 400px;
 }
 
-/* Work around code that expects icon fonts rather than SVG.
-   Newer versions of AdminLTE have support for SVG icons,
-   https://github.com/ColorlibHQ/AdminLTE/pull/2920
-   so this code will only be needed temporarily. */
+/*Work around code that expects icon fonts rather than SVG.
+  Newer versions of AdminLTE have support for SVG icons,
+  https://github.com/ColorlibHQ/AdminLTE/pull/2920
+  so this code will only be needed temporarily. */
 
 .sidebar-menu li > a > .fa-angle-left,
 .sidebar-menu li > a > .pull-right-container > .fa-angle-left {
@@ -408,11 +408,32 @@ td.lookatme {
   float: left;
   background: none;
   padding: 15px;
+  width: 50px;
+  text-align: center;
 }
 
 .sidebar-toggle-svg:hover {
   color: #f6f6f6;
   background: #367fa9;
+}
+
+/* Hide the "Ph" and move the toggle to the left */
+.sidebar-mini.sidebar-collapse .main-header .logo {
+  width: 0;
+  position: absolute;
+}
+.sidebar-mini.sidebar-collapse .main-header .logo-mini {
+  visibility: hidden;
+}
+.sidebar-mini.sidebar-collapse .main-header .navbar {
+  margin-left: 0;
+}
+
+/* "Hide" all sidebar header titles, but keep them readable to screen readers */
+.sidebar-menu > li.header {
+  color: transparent;
+  font-size: 0;
+  padding: 1px;
 }
 
 .box,
@@ -496,16 +517,34 @@ td.details-control {
   }
 }
 
-/*** Login form ***/
+/*** Login page ***/
+.login-page {
+  padding: 15px;
+  min-height: 100vh !important;
+  height: auto !important;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.login-box {
+  position: relative;
+  margin: 0 auto;
+  padding: 5px;
+  width: 480px;
+  max-width: 100%;
+  flex: 0 1 auto;
+  align-self: center;
+  border: none;
+}
+
 .form-control-feedback {
   right: 12px;
 }
 
 .loginpage-logo {
-  width: 30%;
-}
-.layout-boxed .loginpage-logo {
-  width: 50%;
+  width: 140px;
+  margin: 0 0 10px;
 }
 
 .login-options {
@@ -530,27 +569,19 @@ td.details-control {
   flex: 1 0 auto;
 }
 
-.login-help {
-  padding: 6px;
-  background: rgba(127, 127, 127, 0.05);
+.login-footer a {
   text-align: center;
+  min-width: 28%;
+}
+@media screen and (max-width: 420px) {
+  .login-footer a {
+    min-width: auto;
+    padding: 5px;
+  }
 }
 
-.login-help p {
-  margin: 0;
-  font-size: clamp(11px, (100vw - 400px) / 45, 15px);
-  line-height: 1.6;
-}
-
-@media screen and (min-width: 768px) {
-  .layout-boxed:not(.sidebar-collapse) .login-help p {
-    font-size: clamp(11px, (min(100vw, 1250px) - 380px) / 47, 15px);
-  }
-
-  /* hide warning icon only when logged in and menu is not collapsed */
-  .logged-in:not(.sidebar-collapse) #top-warning-count {
-    display: none;
-  }
+.login-donate {
+  padding: 15px;
 }
 
 /*** Warning icon and count ***/
@@ -697,6 +728,21 @@ li:not(.menu-open) .treeview-menu .warning-count {
   }
 }
 
+/* reverse side menu collapse arrows when menu is closed */
+.sidebar-collapse .sidebar-toggle-svg svg {
+  transform: scaleX(-1);
+}
+
+/* reverse side menu collapse arrows on mobile screens */
+@media (max-width: 767px) {
+  .sidebar-toggle-svg svg {
+    transform: scaleX(-1);
+  }
+  .sidebar-open .sidebar-toggle-svg svg {
+    transform: scaleX(1);
+  }
+}
+
 .icon-bounce {
   display: inline-block;
   position: relative;
@@ -732,31 +778,59 @@ li:not(.menu-open) .treeview-menu .warning-count {
   height: 50px;
 }
 
-.navbar-nav > .user-menu > .dropdown-menu > .user-body a {
-  background: transparent !important;
+.navbar-nav > .user-menu {
+  margin-left: 15px;
+  width: 50px;
+  text-align: center;
+}
+@media screen and (min-width: 767px) {
+  .navbar-nav > .user-menu {
+    background: rgba(0, 0, 0, 0.1);
+  }
 }
 
-/*** Donate button - navbar ***/
-.main-header .navbar-custom-menu .user-footer .donate {
-  margin: 15px;
-  padding: 0.8em 1em;
-  width: calc(100% - 30px);
-  color: #fff;
-  background: #96060c;
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header {
+  height: auto;
+  padding: 15px 15px 5px;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
+  height: 50px;
+  width: 50px;
   border: none;
-  border-radius: 6px;
 }
 
-.main-header .navbar-custom-menu .user-footer .donate:hover,
-.main-header .navbar-custom-menu .user-footer .donate:active,
-.main-header .navbar-custom-menu .user-footer .donate:active:hover,
-.main-header .navbar-custom-menu .user-footer .donate:focus,
-.main-header .navbar-custom-menu .user-footer .donate:active:focus {
-  background: #f60d1a;
+.navbar-nav > .user-menu > .dropdown-menu > .user-body {
+  border-radius: 0;
+  border-color: #fff;
 }
 
-.navbar-custom-menu > .navbar-nav > li:nth-child(1) {
-  padding: 0 10px 0 0;
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer {
+  padding: 10px 15px;
+  background: #fff;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer a {
+  background: transparent !important;
+  padding: 6px 0;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu {
+  width: 240px;
+  border: none;
+  overflow: hidden;
+  padding: 0;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+  margin: 1px;
+}
+
+.dropdown-menu > li > a {
+  color: inherit;
+}
+
+.user-menu hr {
+  margin: 5px 0;
+  opacity: 0.5;
 }
 
 #apiTokenIframe {

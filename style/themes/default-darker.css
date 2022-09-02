@@ -7,6 +7,7 @@
 *
 *  The colors used in this theme has been inspired by
 *  https://addons.mozilla.org/en-US/firefox/addon/darkreader/
+// editorconfig-checker-disable
                         _______
                        /       \
                       .==.    .==.
@@ -25,6 +26,8 @@ _______|_______/__/ ____ \__\__|___\__\__|___\__\____
 |  ____  \|  |__/  ______  \|  |__/  /|  |___|  ____  \
 |__|   \__\____/__/      \__\_______/ |______|__|   \__\
                 https://darkreader.org
+
+// editorconfig-checker-enable
 */
 /* User-Agent Style */
 html {
@@ -2707,8 +2710,7 @@ a:focus {
   color: rgba(232, 230, 227, 0.8);
 }
 .navbar-nav > .user-menu > .dropdown-menu > .user-body {
-  border-bottom-color: rgb(51, 55, 57);
-  border-top-color: rgb(58, 62, 65);
+  border-color: #1b2428;
 }
 .navbar-nav > .user-menu > .dropdown-menu > .user-body a {
   color: rgb(189, 183, 175) !important;
@@ -2721,23 +2723,31 @@ a:focus {
   }
 }
 .navbar-nav > .user-menu > .dropdown-menu > .user-footer {
-  background-color: rgb(27, 30, 31);
+  background-color: #1b2428;
 }
 .navbar-nav > .user-menu > .dropdown-menu > .user-footer .btn-default {
   color: rgb(168, 160, 149);
 }
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer a {
+  color: rgb(194, 189, 181) !important;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer a:hover {
+  color: rgb(232, 230, 227) !important;
+}
 @media (max-width: 991px) {
   .navbar-nav > .user-menu > .dropdown-menu > .user-footer .btn-default:hover {
-    background-color: rgb(27, 30, 31);
+    background-color: #1b2428;
   }
 }
-@media (max-width: 991px) {
-  .navbar-custom-menu > .navbar-nav > li > .dropdown-menu {
-    border-color: rgb(58, 62, 65);
-    background-color: rgb(24, 26, 27);
-    background-image: none;
-  }
+.navbar-custom-menu > .navbar-nav > li > .dropdown-menu {
+  background-color: #283038;
+  border: 1px solid #283038;
+  background-image: none;
 }
+.user-menu hr {
+  border-color: #bec5cb;
+}
+
 .form-group.has-success label {
   color: rgb(88, 255, 178);
 }
@@ -3631,7 +3641,6 @@ a:focus {
 .login-page,
 .register-page {
   background-color: rgb(46, 50, 52);
-  background-image: none;
 }
 .login-box-body,
 .register-box-body {
@@ -5492,12 +5501,10 @@ link-muted {
 .main-header .logo:hover {
   background-color: rgb(42, 99, 132);
 }
-.main-header li.user-header {
-  background-color: rgb(48, 113, 150);
-}
 .content-header {
   background-color: transparent;
 }
+
 .wrapper,
 .main-sidebar,
 .left-side {
@@ -5537,6 +5544,12 @@ link-muted {
 .treeview-menu > li > a:hover,
 .treeview-menu > li > a:focus {
   color: rgb(232, 230, 227);
+}
+/* "Donate" sidebar button */
+.sidebar-menu > li.menu-donate:hover > a,
+.sidebar-menu > li.menu-donate > a:focus {
+  background-color: #2b6687;
+  border-left-color: rgb(232, 230, 227);
 }
 
 .sidebar-form {

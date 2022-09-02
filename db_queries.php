@@ -1,11 +1,14 @@
-<?php /*
+<?php
+/*
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. */
-    require "scripts/pi-hole/php/header.php";
+*    Please see LICENSE file for your rights under this license.
+*/
+
+require 'scripts/pi-hole/php/header_authenticated.php';
 ?>
 
 <!-- Title -->
@@ -14,60 +17,60 @@
 </div>
 
 <div class="row">
-  <div class="col-md-12">
-    <div class="box">
-      <div class="box-header with-border">
-        <h3 class="box-title">
-          Select date and time range
-        </h3>
-      </div>
-      <div class="box-body">
-        <div class="alert alert-info reload-box">
-            <div>
-                <span><i class="fa fa-exclamation-circle"></i>&nbsp; New options selected. Please reload the data or choose another time range.</span>
-                <button type="button" class="btn btn-primary bt-reload">Reload Data</button>
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    Select date and time range
+                </h3>
+            </div>
+            <div class="box-body">
+                <div class="alert alert-info reload-box">
+                    <div>
+                        <span><i class="fa fa-exclamation-circle"></i>&nbsp; New options selected. Please reload the data or choose another time range.</span>
+                        <button type="button" class="btn btn-primary bt-reload">Reload Data</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="far fa-clock"></i>
+                            </div>
+                            <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Query status:</label>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <div><input type="checkbox" id="type_forwarded" checked><label for="type_forwarded">Permitted: forwarded</label><br></div>
+                            <div><input type="checkbox" id="type_cached" checked><label for="type_cached">Permitted: cached</label></div>
+                            <div><input type="checkbox" id="type_retried" checked><label for="type_retried">Permitted: retried</label></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div><input type="checkbox" id="type_gravity" checked><label for="type_gravity">Blocked: gravity</label><br></div>
+                            <div><input type="checkbox" id="type_external" checked><label for="type_external">Blocked: external</label></div>
+                            <div><input type="checkbox" id="type_dbbusy" checked><label for="type_dbbusy">Blocked: database busy</label></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div><input type="checkbox" id="type_blacklist" checked><label for="type_blacklist">Blocked: exact blacklist</label><br></div>
+                            <div><input type="checkbox" id="type_regex" checked><label for="type_regex">Blocked: regex blacklist</label></div>
+                            <div><input type="checkbox" id="type_special_domain" checked><label for="type_special_domain">Blocked: special domain</label></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div><input type="checkbox" id="type_gravity_CNAME" checked><label for="type_gravity_CNAME">Blocked: gravity (CNAME)</label><br></div>
+                            <div><input type="checkbox" id="type_blacklist_CNAME" checked><label for="type_blacklist_CNAME">Blocked: exact blacklist (CNAME)</label><br></div>
+                            <div><input type="checkbox" id="type_regex_CNAME" checked><label for="type_regex_CNAME">Blocked: regex blacklist (CNAME)</label></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row">
-          <div class="form-group col-md-12">
-            <div class="input-group">
-              <div class="input-group-addon">
-                <i class="far fa-clock"></i>
-              </div>
-              <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <label>Query status:</label>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <div><input type="checkbox" id="type_forwarded" checked><label for="type_forwarded">Permitted: forwarded</label><br></div>
-                    <div><input type="checkbox" id="type_cached" checked><label for="type_cached">Permitted: cached</label></div>
-                    <div><input type="checkbox" id="type_retried" checked><label for="type_retried">Permitted: retried</label></div>
-                </div>
-                <div class="col-md-3">
-                    <div><input type="checkbox" id="type_gravity" checked><label for="type_gravity">Blocked: gravity</label><br></div>
-                    <div><input type="checkbox" id="type_external" checked><label for="type_external">Blocked: external</label></div>
-                    <div><input type="checkbox" id="type_dbbusy" checked><label for="type_dbbusy">Blocked: database busy</label></div>
-                </div>
-                <div class="col-md-3">
-                    <div><input type="checkbox" id="type_blacklist" checked><label for="type_blacklist">Blocked: exact blacklist</label><br></div>
-                    <div><input type="checkbox" id="type_regex" checked><label for="type_regex">Blocked: regex blacklist</label></div>
-                    <div><input type="checkbox" id="type_special_domain" checked><label for="type_special_domain">Blocked: special domain</label></div>
-                </div>
-                <div class="col-md-3">
-                    <div><input type="checkbox" id="type_gravity_CNAME" checked><label for="type_gravity_CNAME">Blocked: gravity (CNAME)</label><br></div>
-                    <div><input type="checkbox" id="type_blacklist_CNAME" checked><label for="type_blacklist_CNAME">Blocked: exact blacklist (CNAME)</label><br></div>
-                    <div><input type="checkbox" id="type_regex_CNAME" checked><label for="type_regex_CNAME">Blocked: regex blacklist (CNAME)</label></div>
-                </div>
-            </div>
-        </div>
-      </div>
     </div>
-  </div>
 </div>
 
 <div id="timeoutWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden>
@@ -166,47 +169,47 @@
 
 <div class="row">
     <div class="col-md-12">
-      <div class="box" id="recent-queries">
-        <div class="box-header with-border">
-          <h3 class="box-title">Recent Queries</h3>
+        <div class="box" id="recent-queries">
+            <div class="box-header with-border">
+                <h3 class="box-title">Recent Queries</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="all-queries" class="table table-striped table-bordered" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Domain</th>
+                            <th>Client</th>
+                            <th>Status</th>
+                            <th>Reply</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Domain</th>
+                            <th>Client</th>
+                            <th>Status</th>
+                            <th>Reply</th>
+                            <th>Action</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- /.box-body -->
         </div>
-        <!-- /.box-header -->
-        <div class="box-body">
-            <table id="all-queries" class="table table-striped table-bordered" width="100%">
-                <thead>
-                    <tr>
-                        <th>Time</th>
-                        <th>Type</th>
-                        <th>Domain</th>
-                        <th>Client</th>
-                        <th>Status</th>
-                        <th>Reply</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th>Time</th>
-                        <th>Type</th>
-                        <th>Domain</th>
-                        <th>Client</th>
-                        <th>Status</th>
-                        <th>Reply</th>
-                        <th>Action</th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-        <!-- /.box-body -->
-      </div>
-      <!-- /.box -->
+        <!-- /.box -->
     </div>
 </div>
 <!-- /.row -->
-<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/vendor/daterangepicker.min.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/db_queries.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="scripts/vendor/daterangepicker.min.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="scripts/pi-hole/js/db_queries.js?v=<?php echo $cacheVer; ?>"></script>
 
 <?php
-    require "scripts/pi-hole/php/footer.php";
+require 'scripts/pi-hole/php/footer.php';
 ?>

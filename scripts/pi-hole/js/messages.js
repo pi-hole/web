@@ -19,7 +19,7 @@ function renderTimestamp(data, type) {
   return data;
 }
 
-function multline(input) {
+function multiline(input) {
   return input.split(",").join("\n");
 }
 
@@ -50,7 +50,7 @@ function renderMessage(data, type, row) {
         " groups (database IDs [" +
         row.blob3 +
         "]):<pre>" +
-        multline(row.blob2) +
+        multiline(row.blob2) +
         "</pre>" +
         "FTL chose the most recent entry <pre>" +
         row.blob4 +

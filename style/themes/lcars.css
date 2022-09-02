@@ -3,7 +3,7 @@
 /*** Main variables ***/
 :root {
   --sidebar-width: 230px;
-  --gradient-pos: 300px;
+  --gradient-pos: 304px;
   --primary-color: #48f;
   --text-color: #9ab;
   --net-never-color: #000;
@@ -18,7 +18,7 @@
 }
 
 .sidebar-open {
-  --gradient-pos: 70px;
+  --gradient-pos: 74px;
 }
 
 /*** General ***/
@@ -337,37 +337,33 @@ p.login-box-msg,
   height: 32px;
 }
 
-.form-group.has-error.login-box-msg::before {
+.has-error.login-box-msg::before,
+.has-error.login-box-msg::after {
   content: "ACCESS DENIED";
   margin: -20px -20px 20px;
-  padding: calc(45px + 0.7em) 0 0;
+  padding: calc(176px - 0.5em) 0 0;
   position: absolute;
   inset: 0 0 0 0;
-  color: #630030;
-  font-size: 3.825em;
-  font-size: calc((100vw - var(--sidebar-width) - 60px) / 12);
+  font-size: clamp(40px, calc((100vw - 60px) / 6), 90px);
   line-height: 1;
-  background: rgba(0, 0, 0, 0.88);
+  height: calc(176px + 2em);
+}
+
+.form-group.has-error.login-box-msg::before {
+  color: #600;
+  background-image: linear-gradient(
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.7) 10%,
+    rgba(0, 0, 0, 0.7) 70%,
+    rgba(0, 0, 0, 0)
+  );
+  text-shadow: 0 0 0.25em #000;
 }
 
 .form-group.has-error.login-box-msg::after {
-  content: "ACCESS DENIED";
-  margin: -20px -20px 20px;
-  padding: calc(45px + 0.7em) 0 0;
-  position: absolute;
-  inset: 0 0 0 0;
-  color: #e33100;
-  font-size: 3.825em;
-  font-size: calc((100vw - var(--sidebar-width) - 60px) / 12);
-  line-height: 1;
-  text-shadow: 0 0 5px #e33100;
+  color: #e30;
   animation: 3s infinite Pulse steps(30);
   z-index: 1;
-}
-
-.layout-boxed .form-group.has-error.login-box-msg::before,
-.layout-boxed .form-group.has-error.login-box-msg::after {
-  padding: calc(50% - 0.5em) 0 0;
 }
 
 #loginform .has-error + .row .btn {
@@ -381,10 +377,6 @@ p.login-box-msg,
 #loginform .has-error + .row .btn:active,
 #loginform .has-error + .row .btn:focus {
   background: #f00;
-}
-
-.login-help p {
-  font-size: 13px;
 }
 
 .input-group .input-group-addon {
@@ -471,7 +463,6 @@ p.login-box-msg,
   background-size: 304px 100%, 758px 100%;
   background-repeat: no-repeat;
   background-position: 0 0, 100% 0;
-  border-radius: 0 0 0 60px;
   border-radius: 0 0 0 min(75px, var(--sidebar-width));
   font-weight: bold;
   text-transform: uppercase;
@@ -480,6 +471,9 @@ p.login-box-msg,
 /*** Navbar ***/
 .main-header .navbar {
   background-image: linear-gradient(#000 36px, transparent 36px);
+}
+.sidebar-mini.sidebar-collapse .main-header .navbar {
+  margin-left: 50px;
 }
 
 .main-header .navbar::after {
@@ -499,18 +493,18 @@ p.login-box-msg,
   padding: 0;
   overflow: hidden;
   color: #000;
-  background: #9ab;
-  border: 3px solid #fff;
+  background: #9ab !important;
+  border: 3px solid #fff !important;
   border-radius: 8px;
-  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 0 2000vmax rgba(0, 0, 0, 0.6);
+}
+
+.dropdown-menu > li > a:hover {
+  color: #06c;
 }
 
 .dropdown-toggle {
   z-index: 2000;
-}
-
-.dropdown-menu > li > a {
-  color: inherit;
 }
 
 .main-header li.user-header {
@@ -523,9 +517,10 @@ p.login-box-msg,
 
 .navbar .nav > li > a,
 .navbar .nav > li > .navbar-text {
-  color: #000;
   padding: 0;
   margin: 0;
+  width: 100%;
+  color: #000;
   line-height: 1.2;
   font-size: 1em;
   text-align: center;
@@ -545,10 +540,11 @@ p.login-box-msg,
   top: 0;
   bottom: -6px;
   background: #48f;
+  padding: 0 20px;
 }
 
 .navbar-custom-menu > .navbar-nav > li {
-  padding: 0 4px;
+  flex: 1 1 auto;
 }
 
 #pihole-diagnosis {
@@ -581,7 +577,12 @@ p.login-box-msg,
 }
 
 .dropdown.user.user-menu {
-  min-width: 84px;
+  margin-left: 20px;
+  width: 1.6em;
+  flex: 0 1 auto;
+  padding: 0 5px 5px;
+  border-radius: 4px;
+  background: none;
 }
 
 .navbar-text code {
@@ -660,11 +661,7 @@ p.login-box-msg,
 }
 
 .content-wrapper {
-  background-image: linear-gradient(
-      to right,
-      #cce6ff calc(300px - var(--sidebar-width)),
-      #000 calc(300px - var(--sidebar-width))
-    ),
+  background-image: linear-gradient(to left, #000 4px, #cce6ff 4px),
     linear-gradient(
       to left,
       #48f 359.5px,
@@ -709,21 +706,20 @@ p.login-box-msg,
   top: 150px;
   bottom: 20px;
   left: 5px;
-  background: #8bf;
+  background: #cce6ff;
   background-image: linear-gradient(
     to top,
     #cce6ff 200px,
     #000 200px,
     #000 204px,
-    #eda 204px,
-    #eda 270px,
+    #48f 204px,
+    #48f 270px,
     #000 270px,
     #000 274px,
     transparent 274px
   );
   background-repeat: no-repeat;
   background-position: bottom;
-  border-radius: 0 0 0 75px;
   border-radius: 0 0 0 min(90px, var(--sidebar-width));
   transition: all 0.3s ease-in-out;
   z-index: -1;
@@ -746,39 +742,69 @@ p.login-box-msg,
 
 .sidebar-menu > li {
   text-align: right;
+  --hover-color: var(--backlit-color);
+  --active-color: #fff;
 }
 
 .sidebar-menu > li.header {
-  display: none;
+  margin: 0;
+  padding: 0;
+  color: transparent;
+  font-size: 0;
+}
+
+/* Menu groups */
+.menu-main {
+  --normal-color: #26f;
+  --backlit-color: #8bf;
+  --darken-color: #59f;
+}
+
+.menu-analysis {
+  --normal-color: #48f;
+  --backlit-color: #bdf;
+  --darken-color: #8bf;
+}
+
+.menu-group {
+  --normal-color: #8bf;
+  --backlit-color: #bdf;
+  --darken-color: #8bf;
+}
+
+.menu-dns {
+  --normal-color: #eca;
+  --backlit-color: #fdb;
+  --darken-color: #eca;
+}
+
+.menu-system {
+  --normal-color: #e97;
+  --backlit-color: #fb9;
+  --darken-color: #e97;
+}
+
+.menu-donate {
+  --normal-color: #d67;
+  --backlit-color: #e89;
+  --darken-color: #d67;
 }
 
 .sidebar-menu > li > a {
   margin: 4px 0 0;
-  padding: 38px 15px 5px;
-  background: #8bf;
+  padding: 30px 15px 5px;
+  background: var(--normal-color);
   border-left: none;
 }
 
 .sidebar-menu > li.active > a {
-  background-color: #48f;
-}
-
-.sidebar-menu > li:last-child > a {
-  background-color: #cce6ff;
-}
-
-.sidebar-menu > li:nth-last-child(2) > a {
-  background-color: #cb7;
-}
-
-.sidebar-menu > li:nth-last-child(3) > a {
-  background-color: #04f;
+  background-color: var(--active-color);
 }
 
 .sidebar-menu > li:hover > a,
 .sidebar-menu > li > a:focus {
-  background-color: #eda;
-  box-shadow: inset 0 0 18px #ba7;
+  background-color: var(--backlit-color);
+  box-shadow: inset 0 0 20px var(--darken-color);
 }
 
 .sidebar-menu > li > .treeview-menu {
@@ -801,19 +827,24 @@ p.login-box-msg,
   position: relative;
   overflow: hidden;
   color: #000;
-  background: #8bf;
-  background-image: linear-gradient(to right, #48f 36px, #000 36px, #000 40px, transparent 40px);
+  background: var(--normal-color);
+  background-image: linear-gradient(
+    to right,
+    var(--backlit-color) 36px,
+    #000 36px,
+    #000 40px,
+    transparent 40px
+  );
   border-radius: 22px;
 }
 
 .treeview-menu > li.active > a {
-  background-color: #48f;
+  background-color: var(--active-color);
 }
 
 .treeview-menu > li > a:hover {
-  background-color: #aad0ff;
-  background-image: linear-gradient(to right, #48f 36px, #000 36px, #000 40px, transparent 40px);
-  box-shadow: inset 0 0 18px rgba(68, 136, 255, 0.4);
+  background-color: var(--hover-color);
+  box-shadow: inset 0 0 18px var(--darken-color);
 }
 
 #pihole-disable > a > span:not(.pull-right-container) {
@@ -1016,7 +1047,7 @@ footer a:focus {
   }
 
   .main-footer > div {
-    margin: 5px;
+    margin: 5px !important;
   }
 
   .main-footer > div div {
@@ -1040,10 +1071,6 @@ footer a:focus {
 
 .sidebar-collapse .sidebar-menu > li a {
   box-shadow: none;
-}
-
-.sidebar-collapse .treeview-menu > li > a:hover {
-  background-color: #04f;
 }
 
 .sidebar-collapse .sidebar-menu svg {
@@ -1095,6 +1122,11 @@ table.table-bordered.dataTable td {
   border-top: 4px solid #000;
   padding: 10px;
   background-color: transparent;
+}
+
+.login-box {
+  margin-bottom: 0;
+  background: #181818;
 }
 
 .page-header {
@@ -1549,14 +1581,13 @@ table.dataTable {
 /*** MEDIA QUERIES ***/
 
 /*--- Media - max-width ---*/
-@media (max-width: 991px) {
-  .form-group.has-error.login-box-msg::before,
-  .form-group.has-error.login-box-msg::after {
-    font-size: calc((100vw - var(--sidebar-width) - 60px) / 9);
-  }
-}
-
 @media (max-width: 767px) {
+  h1 {
+    font-size: 1.8em;
+  }
+  h2 {
+    font-size: 1.4rem;
+  }
   .sidebar-collapse {
     --sidebar-width: 230px;
   }
@@ -1572,9 +1603,6 @@ table.dataTable {
   }
   .main-header .navbar .dropdown-menu li.divider {
     background-color: rgba(255, 255, 255, 0.1);
-  }
-  .main-header .navbar .dropdown-menu li a {
-    color: #fff;
   }
   .main-header .logo {
     width: 150px;
@@ -1616,24 +1644,13 @@ table.dataTable {
   .nav > li > a {
     padding: 6px 10px;
   }
-  .dropdown.user.user-menu {
-    min-width: 40px;
-  }
   .user-panel {
     border-radius: 0;
   }
   .content-wrapper {
-    background-image: linear-gradient(to right, #000 4px, #48f 4px),
-      linear-gradient(
-        to right,
-        #cce6ff var(--gradient-pos),
-        #000 var(--gradient-pos),
-        #000 calc(4px + var(--gradient-pos)),
-        transparent
-      );
-    background-size: 100% 50px, var(--gradient-pos) 50px;
+    background-image: linear-gradient(to left, #000 4px, #cce6ff 4px), linear-gradient(#48f, #48f);
+    background-size: var(--gradient-pos) 50px, 100% 50px;
     background-repeat: no-repeat;
-    background-position: calc(var(--gradient-pos)) 4px, 0 4px;
   }
   .content {
     padding: 20px;
@@ -1641,10 +1658,6 @@ table.dataTable {
   }
   .main-footer {
     margin-left: 0;
-  }
-  .form-group.has-error.login-box-msg::before,
-  .form-group.has-error.login-box-msg::after {
-    font-size: calc((100vw - 60px) / 6);
   }
 }
 
@@ -1713,19 +1726,7 @@ table.dataTable {
   }
 }
 
-@media (min-width: 1320px) {
-  .layout-boxed .form-group.has-error.login-box-msg::before,
-  .layout-boxed .form-group.has-error.login-box-msg::after {
-    font-size: calc((1320px - var(--sidebar-width) - 60px) / 12);
-  }
-}
-
 @media (min-width: 1960px) {
-  .layout-boxed .form-group.has-error.login-box-msg::before,
-  .layout-boxed .form-group.has-error.login-box-msg::after {
-    font-size: calc((1920px - var(--sidebar-width) - 60px) / 12);
-  }
-
   .layout-boxed .wrapper {
     box-shadow: none;
     max-width: 1920px;

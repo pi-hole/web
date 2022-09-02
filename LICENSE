@@ -6,8 +6,9 @@ The license is available in the 22 official languages of the EU. The English ver
 Please see https://joinup.ec.europa.eu/community/eupl/og_page/eupl for official translations of the other languages.
 
 This license applies to the whole project EXCEPT the files located under
- - styles/vendor, and
- - scripts/vendor
+
+- styles/vendor, and
+- scripts/vendor
 whose licenses are located therein.
 
 -------------------------------------------------------------

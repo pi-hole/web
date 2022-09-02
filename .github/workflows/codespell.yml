@@ -11,10 +11,10 @@ jobs:
     steps:
       -
         name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.0.2
       -
         name: Spell-Checking
         uses: codespell-project/actions-codespell@master
         with:
           ignore_words_file: .codespellignore
-          skip: ./scripts/vendor,./style/vendor
+          skip: ./scripts/vendor,./style/vendor,./package.json,./package-lock.json,./composer.json,./composer.lock

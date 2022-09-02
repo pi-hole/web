@@ -7,6 +7,7 @@ TODO
 *.zip
 test.html
 *.log
+.php-cs-fixer.cache
 
 # Intellij IDEA Project Files
 *.iml

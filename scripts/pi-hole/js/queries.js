@@ -262,12 +262,7 @@ $(function () {
         $("td:eq(4)", row).addClass("text-underline pointer");
       }
 
-      // Substitute domain by "." if empty
       var domain = data[2];
-      if (domain.length === 0) {
-        domain = ".";
-      }
-
       if (isCNAME) {
         var CNAMEDomain = data[8];
         // Add domain in CNAME chain causing the query to have been blocked
