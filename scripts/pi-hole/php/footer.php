@@ -65,10 +65,10 @@ if (isset($core_commit) || isset($web_commit) || isset($FTL_commit)) {
         <div class="row row-centered text-center version-info">
             <div class="col-xs-12 col-sm-12 col-md-10">
                 <ul class="<?php echo $list_class; ?>">
-                    <?php if ($docker_current) { ?>
+                    <?php if ($dockerVersionStr) { ?>
                     <li>
                         <strong>Docker Tag</strong>
-                        <?php echo $docker_current; ?>
+                        <?php echo $dockerVersionStr; ?>
                         <?php if ($docker_update) { ?> &middot; <a class="lookatme" lookatme-text="Update available!" href="<?php echo $dockerUrl.'/latest'; ?>" rel="noopener" target="_blank">Update available!</a><?php } ?>
                     </li>
                     <?php } ?>
