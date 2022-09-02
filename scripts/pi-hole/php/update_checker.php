@@ -83,6 +83,9 @@ if (!is_readable($versionsfile)) {
             $docker_update = false;
         } else {
             $docker_update = checkUpdate($docker_current, $docker_latest);
+
+            $dockerUrl = 'https://github.com/pi-hole/docker-pi-hole/releases';
+            $dockerVersionStr = '<a href="'.$dockerUrl.'/'.$docker_current.'" rel="noopener" target="_blank">'.$docker_current.'</a>';
         }
     } else {
         // Components comparison
@@ -99,7 +102,6 @@ if (!is_readable($versionsfile)) {
 $coreUrl = 'https://github.com/pi-hole/pi-hole/releases';
 $webUrl = 'https://github.com/pi-hole/AdminLTE/releases';
 $ftlUrl = 'https://github.com/pi-hole/FTL/releases';
-$dockerUrl = 'https://github.com/pi-hole/docker-pi-hole/releases';
 
 // Version strings
 // If "vDev" show branch/commit, else show link
