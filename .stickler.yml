@@ -1,0 +1,9 @@
+---
+linters:
+  yamllint:
+    config: ./.yamllint.conf
+  remarklint:
+files:
+  ignore:
+    - 'scripts/vendor/*'
+    - 'style/vendor/*'

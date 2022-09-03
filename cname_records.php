@@ -1,12 +1,13 @@
-<?php /*
+<?php
+/*
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
-    require "scripts/pi-hole/php/header.php";
 
+require "scripts/pi-hole/php/header.php";
 ?>
 
 <!-- Title -->
@@ -50,23 +51,6 @@
     </div>
 </div>
 
-<!-- Alerts -->
-<div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Updating CNAME records...
-</div>
-<div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden>
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Success! The list will refresh.
-</div>
-<div id="alFailure" class="alert alert-danger alert-dismissible fade in" role="alert" hidden>
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    Failure! Something went wrong, see output below:<br/><br/><pre><span id="err"></span></pre>
-</div>
-<div id="alWarning" class="alert alert-warning alert-dismissible fade in" role="alert" hidden>
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    At least one domain was already present, see output below:<br/><br/><pre><span id="warn"></span></pre>
-</div>
 <div class="row">
     <div class="col-md-12">
         <div class="box" id="recent-queries">

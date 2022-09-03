@@ -51,13 +51,66 @@ $(function () {
       $("#new_domain").val("");
       $("#wildcard_checkbox").prop("checked", false);
     }
+
+    clearTimeout(suggestTimeout);
+    $("#suggest_domains").hide();
   });
 
   $("#add2black, #add2white").on("click", addDomain);
 
+  var suggestTimeout;
+  $("#new_domain").on("input", function (e) {
+    hideSuggestDomains();
+    clearTimeout(suggestTimeout);
+    suggestTimeout = setTimeout(showSuggestDomains, 1000, e.target.value);
+  });
+
   utils.setBsSelectDefaults();
   getGroups();
 });
+
+function showSuggestDomains(value) {
+  function createButton(hostname) {
+    // Purposefully omit 'btn' class to save space on padding
+    return $('<button type="button" class="btn-link btn-block text-right">')
+      .append($("<i>").text(hostname))
+      .click(function () {
+        hideSuggestDomains();
+        newDomainEl.val(hostname);
+      });
+  }
+
+  var newDomainEl = $("#new_domain");
+  var suggestDomainEl = $("#suggest_domains");
+
+  try {
+    // URL is not supported in all browsers, but we are in a try-block so we can ignore it
+    // eslint-disable-next-line compat/compat
+    var parts = new URL(value).hostname.split(".");
+    var table = $("<table>");
+
+    for (var i = 0; i < parts.length - 1; ++i) {
+      var hostname = parts.slice(i).join(".");
+
+      table.append(
+        $("<tr>")
+          .append($('<td class="text-nowrap text-right">').text(i === 0 ? "Did you mean" : "or"))
+          .append($("<td>").append(createButton(hostname)))
+      );
+    }
+
+    suggestDomainEl.slideUp("fast", function () {
+      suggestDomainEl.html(table);
+      suggestDomainEl.slideDown("fast");
+    });
+  } catch {
+    hideSuggestDomains();
+  }
+}
+
+function hideSuggestDomains() {
+  $("#suggest_domains").slideUp("fast");
+}
 
 function initTable() {
   table = $("#domainsTable").DataTable({
@@ -69,6 +122,7 @@ function initTable() {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
+      { data: null, visible: true, orderable: false, width: "15px" },
       { data: "domain" },
       { data: "type", searchable: false },
       { data: "enabled", searchable: false },
@@ -78,11 +132,22 @@ function initTable() {
     ],
     columnDefs: [
       {
+        targets: 1,
+        className: "select-checkbox",
+        render: function () {
+          return "";
+        },
+      },
+      {
         targets: "_all",
         render: $.fn.dataTable.render.text(),
       },
     ],
     drawCallback: function () {
+      // Hide buttons if all domains were deleted
+      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
+
       $('button[id^="deleteDomain_"]').on("click", deleteDomain);
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
@@ -96,7 +161,7 @@ function initTable() {
         utils.datetime(data.date_modified, false) +
         "\nDatabase ID: " +
         data.id;
-      $("td:eq(0)", row).html(
+      $("td:eq(1)", row).html(
         '<code id="domain_' +
           data.id +
           '" title="' +
@@ -128,7 +193,7 @@ function initTable() {
           ">Regex blacklist</option>";
       }
 
-      $("td:eq(1)", row).html(
+      $("td:eq(2)", row).html(
         '<select id="type_' +
           data.id +
           '" class="form-control">' +
@@ -140,7 +205,7 @@ function initTable() {
       typeEl.on("change", editDomain);
 
       var disabled = data.enabled === 0;
-      $("td:eq(2)", row).html(
+      $("td:eq(3)", row).html(
         '<input type="checkbox" id="status_' + data.id + '"' + (disabled ? "" : " checked") + ">"
       );
       var statusEl = $("#status_" + data.id, row);
@@ -153,15 +218,15 @@ function initTable() {
       });
       statusEl.on("change", editDomain);
 
-      $("td:eq(3)", row).html('<input id="comment_' + data.id + '" class="form-control">');
+      $("td:eq(4)", row).html('<input id="comment_' + data.id + '" class="form-control">');
       var commentEl = $("#comment_" + data.id, row);
       commentEl.val(utils.unescapeHtml(data.comment));
       commentEl.on("change", editDomain);
 
       // Show group assignment field only if in full domain management mode
-      if (table.column(5).visible()) {
-        $("td:eq(4)", row).empty();
-        $("td:eq(4)", row).append(
+      if (table.column(6).visible()) {
+        $("td:eq(5)", row).empty();
+        $("td:eq(5)", row).append(
           '<select class="selectpicker" id="multiselect_' + data.id + '" multiple></select>'
         );
         var selectEl = $("#multiselect_" + data.id, row);
@@ -234,20 +299,67 @@ function initTable() {
       var button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteDomain_' +
         data.id +
+        '" data-del-id="' +
+        data.id +
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
-      if (table.column(5).visible()) {
-        $("td:eq(5)", row).html(button);
+      if (table.column(6).visible()) {
+        $("td:eq(6)", row).html(button);
       } else {
-        $("td:eq(4)", row).html(button);
+        $("td:eq(5)", row).html(button);
       }
     },
+    select: {
+      style: "multi",
+      selector: "td:not(:last-child)",
+      info: false,
+    },
+    buttons: [
+      {
+        text: '<span class="far fa-square"></span>',
+        titleAttr: "Select All",
+        className: "btn-sm datatable-bt selectAll",
+        action: function () {
+          table.rows({ page: "current" }).select();
+        },
+      },
+      {
+        text: '<span class="far fa-plus-square"></span>',
+        titleAttr: "Select All",
+        className: "btn-sm datatable-bt selectMore",
+        action: function () {
+          table.rows({ page: "current" }).select();
+        },
+      },
+      {
+        extend: "selectNone",
+        text: '<span class="far fa-check-square"></span>',
+        titleAttr: "Deselect All",
+        className: "btn-sm datatable-bt removeAll",
+      },
+      {
+        text: '<span class="far fa-trash-alt"></span>',
+        titleAttr: "Delete Selected",
+        className: "btn-sm datatable-bt deleteSelected",
+        action: function () {
+          // For each ".selected" row ...
+          var ids = [];
+          $("tr.selected").each(function () {
+            // ... add the row identified by "data-id".
+            ids.push(parseInt($(this).attr("data-id"), 10));
+          });
+          // Delete all selected rows at once
+          delItems(ids);
+        },
+      },
+    ],
     dom:
-      "<'row'<'col-sm-12'f>>" +
-      "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
+      "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
-      "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
+      "<'row'<'col-sm-12'i>>",
     lengthMenu: [
       [10, 25, 50, 100, -1],
       [10, 25, 50, 100, "All"],
@@ -268,7 +380,7 @@ function initTable() {
       // Reset visibility of ID column
       data.columns[0].visible = false;
       // Show group assignment column only on full page
-      data.columns[5].visible = showtype === "all";
+      data.columns[6].visible = showtype === "all";
       // Apply loaded state to table
       return data;
     },
@@ -294,6 +406,10 @@ function initTable() {
     input.setAttribute("spellcheck", false);
   }
 
+  table.on("init select deselect", function () {
+    utils.changeBulkDeleteStates(table);
+  });
+
   table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
@@ -302,10 +418,83 @@ function initTable() {
       $("#resetButton").addClass("hidden");
     }
   });
+
   $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").addClass("hidden");
   });
+}
+
+// Remove 'bnt-group' class from container, to avoid grouping
+$.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
+
+function deleteDomain() {
+  // Passes the button data-del-id attribute as ID
+  var ids = [parseInt($(this).attr("data-del-id"), 10)];
+  delItems(ids);
+}
+
+function delItems(ids) {
+  // Check input validity
+  if (!Array.isArray(ids)) return;
+
+  var items = "";
+  var type = "";
+  var typeID = "";
+
+  for (var id of ids) {
+    // Exploit prevention: Return early for non-numeric IDs
+    if (typeof id !== "number") return;
+
+    // Retrieve domain type
+    typeID = $("#type_" + id).val();
+    if (typeID === "0" || typeID === "1") {
+      type = " (<i>domain</i>)";
+    } else if (typeID === "2" || typeID === "3") {
+      type = " (<i>regex</i>)";
+    }
+
+    // Add item
+    items += "<li>" + utils.escapeHtml($("#domain_" + id).text()) + type + "</li>";
+  }
+
+  utils.disableAll();
+  var idstring = ids.join(", ");
+  utils.showAlert("info", "", "Deleting items: " + idstring, "...");
+
+  $.ajax({
+    url: "scripts/pi-hole/php/groups.php",
+    method: "post",
+    dataType: "json",
+    data: { action: "delete_domain", id: JSON.stringify(ids), token: token },
+  })
+    .done(function (response) {
+      utils.enableAll();
+      if (response.success) {
+        utils.showAlert(
+          "success",
+          "far fa-trash-alt",
+          "Successfully deleted items: " + idstring,
+          "<ul>" + items + "</ul>"
+        );
+        for (var id in ids) {
+          if (Object.hasOwnProperty.call(ids, id)) {
+            table.row(id).remove().draw(false).ajax.reload(null, false);
+          }
+        }
+      } else {
+        utils.showAlert("error", "", "Error while deleting items: " + idstring, response.message);
+      }
+
+      // Clear selection after deletion
+      table.rows().deselect();
+      utils.changeBulkDeleteStates(table);
+    })
+    .fail(function (jqXHR, exception) {
+      utils.enableAll();
+      utils.showAlert("error", "", "Error while deleting items: " + idstring, jqXHR.responseText);
+      console.log(exception); // eslint-disable-line no-console
+    });
 }
 
 function addDomain() {
@@ -378,6 +567,7 @@ function addDomain() {
         commentEl.val("");
         wildcardEl.prop("checked", false);
         table.ajax.reload(null, false);
+        table.rows().deselect();
       } else {
         utils.showAlert("error", "", "Error while adding new " + domainRegex, response.message);
       }
@@ -484,58 +674,6 @@ function editDomain() {
         "error",
         "",
         "Error while " + notDone + " " + domainRegex + " with ID " + id,
-        jqXHR.responseText
-      );
-      console.log(exception); // eslint-disable-line no-console
-    },
-  });
-}
-
-function deleteDomain() {
-  var tr = $(this).closest("tr");
-  var id = tr.attr("data-id");
-  var domain = utils.escapeHtml(tr.find("#domain_" + id).text());
-  var type = tr.find("#type_" + id).val();
-
-  var domainRegex;
-  if (type === "0" || type === "1") {
-    domainRegex = "domain";
-  } else if (type === "2" || type === "3") {
-    domainRegex = "regex";
-  }
-
-  utils.disableAll();
-  utils.showAlert("info", "", "Deleting " + domainRegex + "...", domain);
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: { action: "delete_domain", id: id, token: token },
-    success: function (response) {
-      utils.enableAll();
-      if (response.success) {
-        utils.showAlert(
-          "success",
-          "far fa-trash-alt",
-          "Successfully deleted " + domainRegex,
-          domain
-        );
-        table.row(tr).remove().draw(false).ajax.reload(null, false);
-      } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while deleting " + domainRegex + " with ID " + id,
-          response.message
-        );
-      }
-    },
-    error: function (jqXHR, exception) {
-      utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while deleting " + domainRegex + " with ID " + id,
         jqXHR.responseText
       );
       console.log(exception); // eslint-disable-line no-console

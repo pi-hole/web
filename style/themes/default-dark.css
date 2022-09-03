@@ -503,6 +503,11 @@ fieldset[disabled] .form-control {
   background-color: #353c42;
   opacity: 1;
 }
+.dropdown-menu {
+  background-color: #22282d;
+  color: #bec5cb;
+  border: 1px solid #4c5761;
+}
 .navbar-custom-menu > .navbar-nav > li > .dropdown-menu {
   background-color: #4c5761;
   color: #bec5cb;

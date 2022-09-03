@@ -61,6 +61,7 @@
                     <thead>
                     <tr>
                         <th>ID</th>
+                        <th></th>
                         <th>Name</th>
                         <th>Status</th>
                         <th>Description</th>

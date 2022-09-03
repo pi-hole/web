@@ -25,29 +25,13 @@ $reload = false;
 $QueriesDB = getQueriesDBFilename();
 $db = SQLite3_connect($QueriesDB, SQLITE3_OPEN_READWRITE);
 
-function JSON_success($message = null)
-{
-    header('Content-type: application/json');
-    echo json_encode(array('success' => true, 'message' => $message));
-}
-
-function JSON_error($message = null)
-{
-    header('Content-type: application/json');
-    $response = array('success' => false, 'message' => $message);
-    if (isset($_POST['action'])) {
-        array_push($response, array('action' => $_POST['action']));
-    }
-    echo json_encode($response);
-}
-
 // Delete message identified by IDs
 if ($_POST['action'] == 'delete_message' && isset($_POST['id'])) {
     try {
         $ids = json_decode($_POST['id']);
         if(!is_array($ids))
             throw new Exception('Invalid payload: id is not an array');
-        // Explot prevention: Ensure all entries in the ID array are integers
+        // Exploit prevention: Ensure all entries in the ID array are integers
         foreach($ids as $value) {
             if (!is_numeric($value))
                 throw new Exception('Invalid payload: id contains non-numeric entries');

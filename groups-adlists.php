@@ -63,6 +63,7 @@
                     <tr>
                         <th>ID</th>
                         <th></th>
+                        <th class="no-padding"></th>
                         <th>Address</th>
                         <th>Status</th>
                         <th>Comment</th>

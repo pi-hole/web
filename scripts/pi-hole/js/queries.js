@@ -125,12 +125,10 @@ $(function () {
         case "2":
           fieldtext =
             replyid === 0
-              ? "<span class='text-green'>OK</span>, sent to "
-              : "<span class='text-green'>OK</span>, answered by ";
+              ? "<span class='text-green'>OK</span> (sent to <br class='hidden-lg'>"
+              : "<span class='text-green'>OK</span> (answered by <br class='hidden-lg'>";
           fieldtext +=
-            "<br class='hidden-lg'>" +
-            (data.length > 10 && data[10] !== "N/A" ? data[10] : "") +
-            dnssecStatus;
+            (data.length > 10 && data[10] !== "N/A" ? data[10] : "") + ")" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
@@ -174,7 +172,8 @@ $(function () {
           buttontext = "";
           break;
         case "9":
-          fieldtext = "<span class='text-red'>Blocked (gravity, CNAME)</span>";
+          fieldtext =
+            "<span class='text-red'>Blocked <br class='hidden-lg'>(gravity, CNAME)</span>";
           blocked = true;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
@@ -216,6 +215,11 @@ $(function () {
         case "15":
           fieldtext =
             "<span class='text-orange'>Blocked <br class='hidden-lg'>(database is busy)</span>";
+          blocked = true;
+          break;
+        case "16":
+          fieldtext =
+            "<span class='text-orange'>Blocked <br class='hidden-lg'>(special domain)</span>";
           blocked = true;
           break;
         default:

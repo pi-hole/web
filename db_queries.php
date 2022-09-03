@@ -56,6 +56,7 @@
                 <div class="col-md-3">
                     <div><input type="checkbox" id="type_blacklist" checked><label for="type_blacklist">Blocked: exact blacklist</label><br></div>
                     <div><input type="checkbox" id="type_regex" checked><label for="type_regex">Blocked: regex blacklist</label></div>
+                    <div><input type="checkbox" id="type_special_domain" checked><label for="type_special_domain">Blocked: special domain</label></div>
                 </div>
                 <div class="col-md-3">
                     <div><input type="checkbox" id="type_gravity_CNAME" checked><label for="type_gravity_CNAME">Blocked: gravity (CNAME)</label><br></div>
@@ -179,6 +180,7 @@
                         <th>Domain</th>
                         <th>Client</th>
                         <th>Status</th>
+                        <th>Reply</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -189,6 +191,7 @@
                         <th>Domain</th>
                         <th>Client</th>
                         <th>Status</th>
+                        <th>Reply</th>
                         <th>Action</th>
                     </tr>
                 </tfoot>

@@ -9,7 +9,7 @@
 require_once('func.php');
 $ERRORLOG = getenv('PHP_ERROR_LOG');
 if (empty($ERRORLOG)) {
-    $ERRORLOG = '/var/log/lighttpd/error.log';
+    $ERRORLOG = '/var/log/lighttpd/error-pihole.log';
 
     if (!file_exists($ERRORLOG) || !is_writable($ERRORLOG)) {
 	    $ERRORLOG = '/var/log/apache2/error.log';
@@ -30,14 +30,11 @@ function log_and_die($message) {
 }
 
 function check_cors() {
-    $setupVars = parse_ini_file("/etc/pihole/setupVars.conf");
-    $ipv4 = isset($setupVars["IPV4_ADDRESS"]) ? explode("/", $setupVars["IPV4_ADDRESS"])[0] : $_SERVER['SERVER_ADDR'];
-    $ipv6 = isset($setupVars["IPV6_ADDRESS"]) ? explode("/", $setupVars["IPV6_ADDRESS"])[0] : $_SERVER['SERVER_ADDR'];
+    $ip = $_SERVER['SERVER_ADDR'];
 
     // Check CORS
     $AUTHORIZED_HOSTNAMES = array(
-        $ipv4,
-        $ipv6,
+        $ip,
         str_replace(array("[","]"), array("",""), $_SERVER["SERVER_NAME"]),
         "pi.hole",
         "localhost"

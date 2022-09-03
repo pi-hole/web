@@ -64,7 +64,7 @@ if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET)) {
 }
 
 if (isset($_GET["getMaxlogage"]) && $auth) {
-    $return = callFTLAPI("stats");
+    $return = callFTLAPI("maxlogage");
     if (array_key_exists("FTLnotrunning", $return)) {
       $data = array("FTLnotrunning" => true);
     } else {
@@ -306,6 +306,9 @@ if (isset($_GET['getAllQueries']) && $auth) {
     if (array_key_exists("FTLnotrunning", $return)) {
       $data = array("FTLnotrunning" => true);
     } else {
+      // Set the header
+      header('Content-type: application/json');
+
       // Start the JSON string
       echo '{"data":[';
       $first = true;

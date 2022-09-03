@@ -14,11 +14,11 @@ if(!$auth) die("Not authorized");
 // files as large as the pihole.log
 if(isset($_GET["FTL"]))
 {
-	$file = fopen("/var/log/pihole-FTL.log","r");
+	$file = fopen("/var/log/pihole/FTL.log","r");
 }
 else
 {
-	$file = fopen("/var/log/pihole.log","r");
+	$file = fopen("/var/log/pihole/pihole.log","r");
 }
 
 if(!$file)
