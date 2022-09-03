@@ -5,9 +5,10 @@
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. */
+*    Please see LICENSE file for your rights under this license.
+*/
 
-require "scripts/pi-hole/php/header.php";
+require 'scripts/pi-hole/php/header_authenticated.php';
 ?>
 
 <!-- Title -->
@@ -40,9 +41,9 @@ require "scripts/pi-hole/php/header.php";
                 </div>
             </div>
             <div class="box-footer clearfix">
-              <strong>Note:</strong>
-              <p>The target of a <code>CNAME</code> must be a domain that the Pi-hole already has in its cache or is authoritative for. This is a universal limitation of <code>CNAME</code> records.</p>
-              <p>The reason for this is that Pi-hole will not send additional queries upstream when serving <code>CNAME</code> replies. As consequence, if you set a target that isn't already known, the reply to the client may be incomplete. Pi-hole just returns the information it knows at the time of the query. This results in certain limitations for <code>CNAME</code> targets,
+                <strong>Note:</strong>
+                <p>The target of a <code>CNAME</code> must be a domain that the Pi-hole already has in its cache or is authoritative for. This is a universal limitation of <code>CNAME</code> records.</p>
+                <p>The reason for this is that Pi-hole will not send additional queries upstream when serving <code>CNAME</code> replies. As consequence, if you set a target that isn't already known, the reply to the client may be incomplete. Pi-hole just returns the information it knows at the time of the query. This results in certain limitations for <code>CNAME</code> targets,
                 for instance, only <i>active</i> DHCP leases work as targets - mere DHCP <i>leases</i> aren't sufficient as they aren't (yet) valid DNS records.</p>
                 <p>Additionally, you can't <code>CNAME</code> external domains (<code>bing.com</code> to <code>google.com</code>) successfully as this could result in invalid SSL certificate errors when the target server does not serve content for the requested domain.</p>
                 <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
@@ -63,11 +64,11 @@ require "scripts/pi-hole/php/header.php";
             <div class="box-body">
                 <table id="customCNAMETable" class="table table-striped table-bordered" width="100%">
                     <thead>
-                    <tr>
-                        <th>Domain</th>
-                        <th>Target</th>
-                        <th>Action</th>
-                    </tr>
+                        <tr>
+                            <th>Domain</th>
+                            <th>Target</th>
+                            <th>Action</th>
+                        </tr>
                     </thead>
                 </table>
                 <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear Filters</button>
@@ -78,8 +79,8 @@ require "scripts/pi-hole/php/header.php";
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/customcname.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/customcname.js?v=<?php echo $cacheVer; ?>"></script>
 
 <?php
-require "scripts/pi-hole/php/footer.php";
+require 'scripts/pi-hole/php/footer.php';
 ?>

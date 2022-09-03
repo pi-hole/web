@@ -5,14 +5,15 @@
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. */
+*    Please see LICENSE file for your rights under this license.
+*/
 
-require "scripts/pi-hole/php/header.php";
+require 'scripts/pi-hole/php/header_authenticated.php';
 ?>
 
 <!-- Title -->
 <div class="page-header">
-    <h1>Local DNS Records</h1>
+    <h1>Local DNS Records [A/AAAA]</h1>
     <small>On this page, you can add domain/IP associations</small>
 </div>
 
@@ -40,15 +41,15 @@ require "scripts/pi-hole/php/header.php";
                 </div>
             </div>
             <div class="box-footer clearfix">
-              <strong>Note:</strong>
-              <p>The order of locally defined DNS records is: </p>
-              <ol>
-                  <li>The device's host name and <code>pi.hole</code></li>
-                  <li>Configured in a config file in <code>/etc/dnsmasq.d/</code></li>
-                  <li>Read from <code>/etc/hosts</code></li>
-                  <li>Read from the "Local (custom) DNS" list (stored in <code>/etc/pihole/custom.list</code>)</li>
-              </ol>
-              <p>Only the first record will trigger an address-to-name association.</p>
+                <strong>Note:</strong>
+                <p>The order of locally defined DNS records is: </p>
+                <ol>
+                    <li>The device's host name and <code>pi.hole</code></li>
+                    <li>Configured in a config file in <code>/etc/dnsmasq.d/</code></li>
+                    <li>Read from <code>/etc/hosts</code></li>
+                    <li>Read from the "Local (custom) DNS" list (stored in <code>/etc/pihole/custom.list</code>)</li>
+                </ol>
+                <p>Only the first record will trigger an address-to-name association.</p>
                 <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
             </div>
         </div>
@@ -82,9 +83,9 @@ require "scripts/pi-hole/php/header.php";
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/customdns.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/pi-hole/js/ip-address-sorting.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="scripts/pi-hole/js/customdns.js?v=<?php echo $cacheVer; ?>"></script>
 
 <?php
-require "scripts/pi-hole/php/footer.php";
+require 'scripts/pi-hole/php/footer.php';
 ?>

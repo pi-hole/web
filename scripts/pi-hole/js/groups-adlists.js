@@ -89,7 +89,7 @@ function format(data) {
     (data.date_updated > 0
       ? utils.datetimeRelative(data.date_updated) +
         "&nbsp;(" +
-        utils.datetime(data.date_updated) +
+        utils.datetime(data.date_updated, false) +
         ")"
       : "N/A") +
     '</td></tr><tr class="dataTables-child"><td>Number of domains on this list:&nbsp;&nbsp;</td><td>' +
@@ -517,6 +517,7 @@ function addAdlist() {
         $("#new_comment").val("");
         table.ajax.reload();
         table.rows().deselect();
+        $("#new_address").focus();
       } else {
         utils.showAlert("error", "", "Error while adding new adlist: ", response.message);
       }

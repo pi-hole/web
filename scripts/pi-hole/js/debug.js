@@ -8,18 +8,25 @@
 function eventsource() {
   var ta = $("#output");
   var upload = $("#upload");
+  var dbcheck = $("#dbcheck");
   var checked = "";
   var token = encodeURIComponent($("#token").text());
 
   if (upload.prop("checked")) {
-    checked = "upload";
+    // add upload option
+    checked += "&upload";
+  }
+
+  if (dbcheck.prop("checked")) {
+    // add db integrity check option
+    checked += "&dbcheck";
   }
 
   // IE does not support EventSource - load whole content at once
   if (typeof EventSource !== "function") {
     $.ajax({
       method: "GET",
-      url: "scripts/pi-hole/php/debug.php?IE&token=" + token + "&" + checked,
+      url: "scripts/pi-hole/php/debug.php?IE&token=" + token + checked,
       async: false,
     }).done(function (data) {
       ta.show();
@@ -29,7 +36,7 @@ function eventsource() {
     return;
   }
 
-  var source = new EventSource("scripts/pi-hole/php/debug.php?&token=" + token + "&" + checked);
+  var source = new EventSource("scripts/pi-hole/php/debug.php?&token=" + token + checked);
 
   // Reset and show field
   ta.empty();
@@ -60,6 +67,7 @@ function eventsource() {
 $("#debugBtn").on("click", function () {
   $("#debugBtn").prop("disabled", true);
   $("#upload").prop("disabled", true);
+  $("#dbcheck").prop("disabled", true);
   $("#output").addClass("loading");
   eventsource();
 });

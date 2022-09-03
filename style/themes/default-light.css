@@ -33,9 +33,6 @@
   .main-header .navbar .dropdown-menu li.divider {
     background-color: rgba(255, 255, 255, 0.1);
   }
-  .main-header .navbar .dropdown-menu li a {
-    color: #fff;
-  }
   .main-header .navbar .dropdown-menu li a:hover {
     background-color: #367fa9;
   }
@@ -54,6 +51,13 @@
 .content-header {
   background-color: transparent;
 }
+.navbar-nav > .user-menu > .dropdown-menu > .user-body {
+  background: #e4e8f0;
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer a:hover {
+  color: #367fa9 !important;
+}
+
 .wrapper,
 .main-sidebar,
 .left-side {
@@ -64,7 +68,7 @@
   color: #fff;
 }
 .sidebar-menu > li.header {
-  color: #4b646f;
+  color: #808a90;
   background-color: #1a2226;
 }
 .sidebar-menu > li > a {
@@ -86,6 +90,12 @@
 }
 .sidebar a:hover {
   text-decoration: none;
+}
+/* "Donate" sidebar button */
+.sidebar-menu > li.menu-donate:hover > a,
+.sidebar-menu > li.menu-donate > a:focus {
+  background-color: #367fa9;
+  border-left-color: #fff;
 }
 .treeview-menu > li > a {
   color: #8aa4af;
@@ -156,6 +166,10 @@
 }
 .layout-top-nav .main-header > .logo:hover {
   background-color: #3b8ab8;
+}
+
+.login-box {
+  background: #f0f2f4;
 }
 
 .not-used {

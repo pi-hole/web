@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, Chart:false, updateSessionTimer:false */
+/* global utils:false, Chart:false */
 
 // Define global variables
 var timeLineChart, clientsChart;
@@ -703,7 +703,7 @@ function updateTopLists() {
     $("#ad-frequency td").parent().remove();
     var domaintable = $("#domain-frequency").find("tbody:last");
     var adtable = $("#ad-frequency").find("tbody:last");
-    var url, domain, percentage, urlText;
+    var url, domain, percentage;
     for (domain in data.top_queries) {
       if (Object.prototype.hasOwnProperty.call(data.top_queries, domain)) {
         // Sanitize domain
@@ -713,8 +713,7 @@ function updateTopLists() {
         }
 
         domain = utils.escapeHtml(domain);
-        urlText = domain === "" ? "." : domain;
-        url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
+        url = '<a href="queries.php?domain=' + domain + '">' + domain + "</a>";
         percentage = (data.top_queries[domain] / data.dns_queries_today) * 100;
         domaintable.append(
           "<tr> " +
@@ -740,8 +739,7 @@ function updateTopLists() {
         }
 
         domain = utils.escapeHtml(domain);
-        urlText = domain === "" ? "." : domain;
-        url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
+        url = '<a href="queries.php?domain=' + domain + '">' + domain + "</a>";
         percentage = (data.top_ads[domain] / data.ads_blocked_today) * 100;
         adtable.append(
           "<tr> " +
@@ -774,8 +772,6 @@ function updateSummaryData(runOnce) {
   };
 
   $.getJSON("api.php?summaryRaw", function (data) {
-    updateSessionTimer();
-
     if ("FTLnotrunning" in data) {
       data.dns_queries_today = "Lost";
       data.ads_blocked_today = "connection";

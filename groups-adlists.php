@@ -1,11 +1,14 @@
-<?php /*
+<?php
+/*
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2019 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. */
-    require "scripts/pi-hole/php/header.php";
+*    Please see LICENSE file for your rights under this license.
+*/
+
+require 'scripts/pi-hole/php/header_authenticated.php';
 ?>
 
 <!-- Title -->
@@ -53,23 +56,23 @@
         <div class="box" id="adlists-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of configured adlists
+                    List of adlists
                 </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
                 <table id="adlistsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th></th>
-                        <th class="no-padding"></th>
-                        <th>Address</th>
-                        <th>Status</th>
-                        <th>Comment</th>
-                        <th>Group assignment</th>
-                        <th>&nbsp;</th>
-                    </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th></th>
+                            <th class="no-padding"></th>
+                            <th>Address</th>
+                            <th>Status</th>
+                            <th>Comment</th>
+                            <th>Group assignment</th>
+                            <th>&nbsp;</th>
+                        </tr>
                     </thead>
                 </table>
                 <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Reset sorting</button>
@@ -80,10 +83,10 @@
     </div>
 </div>
 
-<script src="scripts/vendor/bootstrap-select.min.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/vendor/bootstrap-toggle.min.js?v=<?=$cacheVer?>"></script>
-<script src="scripts/pi-hole/js/groups-adlists.js?v=<?=$cacheVer?>"></script>
+<script src="scripts/vendor/bootstrap-select.min.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="scripts/vendor/bootstrap-toggle.min.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="scripts/pi-hole/js/groups-adlists.js?v=<?php echo $cacheVer; ?>"></script>
 
 <?php
-require "scripts/pi-hole/php/footer.php";
+require 'scripts/pi-hole/php/footer.php';
 ?>

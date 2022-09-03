@@ -12,17 +12,28 @@ charset = utf-8
 trim_trailing_whitespace = true
 
 [*.css]
-indent_style = space
 indent_size = 2
 
-[scripts/**.js]
-indent_style = space
+[*.js]
 indent_size = 2
 
 [package.json]
-indent_style = space
+indent_size = 2
+
+[.yamllint.conf]
 indent_size = 2
 
 [*.yml]
-indent_style = space
 indent_size = 2
+
+[*.md]
+indent_size = 2
+
+# Ignore paths
+[**/vendor/**]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
