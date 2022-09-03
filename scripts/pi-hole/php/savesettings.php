@@ -52,7 +52,7 @@ function readStaticLeasesFile($origin_file = '/etc/dnsmasq.d/04-pihole-static-dh
 
     while (($dhcpline = fgets($dhcpstatic)) !== false) {
         $dhcpparts=explode(",",trim($dhcpline));
-	$mac = ""; 
+        $mac = ""; 
         $mac_array=[];
         // Remove the "dhcp-host=" part of the line
         $dhcpparts[0]=explode("=",$dhcpparts[0])[1];
@@ -194,15 +194,15 @@ function addStaticDHCPLease($mac, $ip, $hostname)
         // Test if this lease is already included
         readStaticLeasesFile();
 
-        foreach($dhcp_static_leases as $lease) {
-            if(in_array($mac,  explode(',',$lease['hwaddr']), true)) {
-               throw new Exception('Static lease for MAC address ('.htmlspecialchars($mac).') already defined!<br>', 4);
+        foreach ($dhcp_static_leases as $lease) {
+            if (in_array($mac,  explode(',',$lease['hwaddr']), true)) {
+                throw new Exception('Static lease for MAC address ('.htmlspecialchars($mac).') already defined!<br>', 4);
             }
-            if($ip !== 'noip' && $lease['IP'] === $ip) {
-               throw new Exception('Static lease for IP address ('.htmlspecialchars($ip).') already defined!<br>', 5);
+            if ($ip !== 'noip' && $lease['IP'] === $ip) {
+                throw new Exception('Static lease for IP address ('.htmlspecialchars($ip).') already defined!<br>', 5);
             }
-            if($lease['host'] === $hostname) {
-               throw new Exception('Static lease for hostname ('.htmlspecialchars($hostname).') already defined!<br>', 6);
+            if ($lease['host'] === $hostname) {
+                throw new Exception('Static lease for hostname ('.htmlspecialchars($hostname).') already defined!<br>', 6);
             }
         }
 
@@ -499,8 +499,8 @@ if (isset($_POST['field'])) {
                 $mac = strtoupper($mac);
 
                 if(!strlen($error)) {
-                    pihole_execute("-a removestaticdhcp ".explode(",",$mac)[0]);
-                    $success .= "The static address with MAC address ".htmlspecialchars($mac)." has been removed";
+                    pihole_execute('-a removestaticdhcp '.explode(',',$mac)[0]);
+                    $success .= 'The static address with MAC address '.htmlspecialchars($mac).' has been removed';
                 }
 
                 break;
