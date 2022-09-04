@@ -26,7 +26,7 @@ if (isset($setupVars['WEBPASSWORD'])) {
     $pwhash = '';
 }
 
-function verifyPassword($pwhash)
+function verifyPassword($pwhash, $use_api = false)
 {
     $validpassword = true;
 
@@ -86,7 +86,7 @@ function verifyPassword($pwhash)
             if (hash_equals($pwhash, $_SESSION['hash'])) {
                 $_SESSION['auth'] = true;
             }
-        } elseif (isset($api) && isset($_GET['auth'])) {
+        } elseif ($use_api && isset($_GET['auth'])) {
             // API can use the hash to get data without logging in via plain-text password
             if (hash_equals($pwhash, $_GET['auth'])) {
                 $_SESSION['auth'] = true;
@@ -103,5 +103,5 @@ function verifyPassword($pwhash)
     return $validpassword;
 }
 
-$wrongpassword = !verifyPassword($pwhash);
+$wrongpassword = !verifyPassword($pwhash, isset($api));
 $auth = $_SESSION['auth'];
