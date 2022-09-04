@@ -52,7 +52,7 @@ function readStaticLeasesFile($origin_file = '/etc/dnsmasq.d/04-pihole-static-dh
 
     while (($dhcpline = fgets($dhcpstatic)) !== false) {
         $dhcpparts=explode(',', trim($dhcpline));
-        $mac = ''; 
+        $mac = '';
         $mac_array = array();
         // Remove the "dhcp-host=" part of the line
         $dhcpparts[0] = explode('=', $dhcpparts[0])[1];
@@ -84,8 +84,8 @@ function readStaticLeasesFile($origin_file = '/etc/dnsmasq.d/04-pihole-static-dh
                 // dhcp-host=mac,IP,hostname
                 array_push($dhcp_static_leases, array('hwaddr' => $mac, 'IP' => $dhcpparts[0], 'host' => $dhcpparts[1]));
             } else {
-               // dhcp-host=mac,IP - no HOST
-               array_push($dhcp_static_leases, array('hwaddr' => $mac, 'IP' => $dhcpparts[0], 'host' => ''));
+                // dhcp-host=mac,IP - no HOST
+                array_push($dhcp_static_leases, array('hwaddr' => $mac, 'IP' => $dhcpparts[0], 'host' => ''));
             }
         } else {
             // dhcp-host=mac,hostname - no IP
