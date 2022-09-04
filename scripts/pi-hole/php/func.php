@@ -87,11 +87,11 @@ function validCIDRIP($address)
 
 function validMAC($mac_addr)
 {
-    // Accepted input format: one or multiple comma seperated 00:01:02:1A:5F:FF (characters may be lower case)
-    $parts = explode(",", $mac_addr);
+    // Accepted input format: one or multiple comma separated 00:01:02:1A:5F:FF (characters may be lower case)
+    $parts = explode(',', $mac_addr);
     foreach ($parts as &$value) {
         if (filter_var($value, FILTER_VALIDATE_MAC) === false) {
-			return false;
+            return false;
         }
     }
     return true;

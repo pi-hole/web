@@ -88,7 +88,7 @@ function readStaticLeasesFile($origin_file = '/etc/dnsmasq.d/04-pihole-static-dh
             }
         } else {
             // dhcp-host=mac,hostname - no IP
-            array_push($dhcp_static_leases, array('hwaddr' => $mac, 'IP' => '' 'host' => $dhcpparts[0]));
+            array_push($dhcp_static_leases, array('hwaddr' => $mac, 'IP' => '', 'host' => $dhcpparts[0]));
         }
         // As Pi-Hole does not allow entries without MAC address, this can never happen 
         // and if it happens because someone modified the file manually, it won't be able to be saved
