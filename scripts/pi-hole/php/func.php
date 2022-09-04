@@ -94,6 +94,7 @@ function validMAC($mac_addr)
             return false;
         }
     }
+
     return true;
 }
 
