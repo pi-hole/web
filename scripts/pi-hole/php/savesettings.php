@@ -51,7 +51,7 @@ function readStaticLeasesFile($origin_file = '/etc/dnsmasq.d/04-pihole-static-dh
     }
 
     while (($dhcpline = fgets($dhcpstatic)) !== false) {
-        $dhcpparts=explode(',', trim($dhcpline));
+        $dhcpparts = explode(',', trim($dhcpline));
         $mac = '';
         $mac_array = array();
         // Remove the "dhcp-host=" part of the line
