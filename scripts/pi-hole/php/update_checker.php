@@ -83,9 +83,6 @@ if (!is_readable($versionsfile)) {
             $docker_update = false;
         } else {
             $docker_update = checkUpdate($docker_current, $docker_latest);
-
-            $dockerUrl = 'https://github.com/pi-hole/docker-pi-hole/releases';
-            $dockerVersionStr = '<a href="'.$dockerUrl.'/'.$docker_current.'" rel="noopener" target="_blank">'.$docker_current.'</a>';
         }
     } else {
         // Components comparison
@@ -102,26 +99,30 @@ if (!is_readable($versionsfile)) {
 $coreUrl = 'https://github.com/pi-hole/pi-hole/releases';
 $webUrl = 'https://github.com/pi-hole/AdminLTE/releases';
 $ftlUrl = 'https://github.com/pi-hole/FTL/releases';
+$dockerUrl = 'https://github.com/pi-hole/docker-pi-hole/releases';
 
 // Version strings
 // If "vDev" show branch/commit, else show link
-$coreVersionStr = $core_current;
 if (isset($core_commit)) {
-    $coreVersionStr .= ' ('.$core_branch.', '.$core_commit.')';
+    $coreVersionStr = $core_current.' ('.$core_branch.', '.$core_commit.')';
 } else {
     $coreVersionStr = '<a href="'.$coreUrl.'/'.$core_current.'" rel="noopener" target="_blank">'.$core_current.'</a>';
 }
 
-$webVersionStr = $web_current;
 if (isset($web_commit)) {
-    $webVersionStr .= ' ('.$web_branch.', '.$web_commit.')';
+    $webVersionStr = $web_current.' ('.$web_branch.', '.$web_commit.')';
 } else {
     $webVersionStr = '<a href="'.$webUrl.'/'.$web_current.'" rel="noopener" target="_blank">'.$web_current.'</a>';
 }
 
-$ftlVersionStr = $FTL_current;
 if (isset($FTL_commit)) {
-    $ftlVersionStr .= ' ('.$FTL_branch.', '.$FTL_commit.')';
+    $ftlVersionStr = $FTL_current.' ('.$FTL_branch.', '.$FTL_commit.')';
 } else {
     $ftlVersionStr = '<a href="'.$ftlUrl.'/'.$FTL_current.'" rel="noopener" target="_blank">'.$FTL_current.'</a>';
+}
+
+if ($docker_current) {
+    $dockerVersionStr = '<a href="'.$dockerUrl.'/'.$docker_current.'" rel="noopener" target="_blank">'.$docker_current.'</a>';
+} else {
+    $dockerVersionStr = '';
 }
