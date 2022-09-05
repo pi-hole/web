@@ -728,6 +728,51 @@ li:not(.menu-open) .treeview-menu .warning-count {
   }
 }
 
+/* Domains table: filter by type */
+#filter_types_group {
+  display: none;
+}
+.filter_types {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.filter_types div {
+  flex: 0 0 auto;
+}
+.filter_types span {
+  display: inline-block;
+  margin: 10px;
+  width: 120px;
+}
+
+/* Domains table: filter by type - smaller icheck */
+.filter_types .icheck-primary[class*="icheck-"] > label {
+  padding-left: 1.5em !important;
+  line-height: 1.2em;
+}
+.filter_types
+  .icheck-primary[class*="icheck-"]
+  > input:first-child
+  + input[type="hidden"]
+  + label::before,
+.filter_types .icheck-primary[class*="icheck-"] > input:first-child + label::before {
+  width: 1.2em;
+  height: 1.2em;
+  margin-left: -1.55em;
+}
+.filter_types
+  .icheck-primary[class*="icheck-"]
+  > input:first-child:checked
+  + input[type="hidden"]
+  + label::after,
+.filter_types .icheck-primary[class*="icheck-"] > input:first-child:checked + label::after {
+  width: 0.35em;
+  height: 0.7em;
+  top: -0.2em;
+  left: -0.18em;
+}
+
 /* reverse side menu collapse arrows when menu is closed */
 .sidebar-collapse .sidebar-toggle-svg svg {
   transform: scaleX(-1);

@@ -335,6 +335,7 @@ function initTable() {
     ],
     dom:
       "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+      "<'#filter'>" +
       "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
@@ -383,6 +384,12 @@ function initTable() {
     input.setAttribute("spellcheck", false);
   }
 
+  table.on("init", function () {
+    // Put the type filter div into Datatables "DOM"
+    $("#filter").append($("#filter_types_group"));
+    $("#filter_types_group").show();
+  });
+
   table.on("init select deselect", function () {
     utils.changeBulkDeleteStates(table);
   });
@@ -401,6 +408,28 @@ function initTable() {
     $("#resetButton").addClass("hidden");
   });
 }
+
+// Enable "filter by type" functionality, using checkboxes
+$.fn.dataTable.ext.search.push(function (settings, searchData, index, rowData) {
+  var types = $(".filter_types input:checkbox:checked")
+    .map(function () {
+      return this.value;
+    })
+    .get();
+
+  if (types.length === 0) {
+    return true;
+  }
+
+  if (types.indexOf(rowData.type.toString()) !== -1) {
+    return true;
+  }
+
+  return false;
+});
+$(".filter_types input:checkbox").on("change", function () {
+  table.draw();
+});
 
 // Remove 'bnt-group' class from container, to avoid grouping
 $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";

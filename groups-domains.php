@@ -116,6 +116,20 @@ require 'scripts/pi-hole/php/header_authenticated.php';
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+                <div class="row" id="filter_types_group">
+                    <div class="col-sm-12">
+                        <div class="filter_types">
+                            <div class="line">
+                                <span><input type="checkbox" name="typ" value="0" id="typ0" checked><label for="typ0">Exact whitelist</label></span>
+                                <span><input type="checkbox" name="typ" value="1" id="typ1" checked><label for="typ1">Exact blacklist</label></span>
+                            </div>
+                            <div class="line">
+                                <span><input type="checkbox" name="typ" value="2" id="typ2" checked><label for="typ2">Regex whitelist</label></span>
+                                <span><input type="checkbox" name="typ" value="3" id="typ3" checked><label for="typ3">Regex blacklist</label></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <table id="domainsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                         <tr>
