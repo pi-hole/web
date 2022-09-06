@@ -335,7 +335,6 @@ function initTable() {
     ],
     dom:
       "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
-      "<'#filter'>" +
       "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
@@ -383,12 +382,6 @@ function initTable() {
     input.setAttribute("autocapitalize", "off");
     input.setAttribute("spellcheck", false);
   }
-
-  table.on("init", function () {
-    // Put the type filter div into Datatables "DOM"
-    $("#filter").append($("#filter_types_group"));
-    $("#filter_types_group").show();
-  });
 
   table.on("init select deselect", function () {
     utils.changeBulkDeleteStates(table);
