@@ -1743,6 +1743,17 @@ table.dataTable {
   }
 }
 
+/* Domains table: filter by type */
+.filter_types span {
+  width: 132px;
+}
+[class*="icheck-"] > label {
+  color: var(--text-color);
+}
+[class*="icheck-"] > label:hover {
+  color: #cde !important;
+}
+
 /*** Used by the long-term pages ***/
 .daterangepicker {
   background-color: #345;
