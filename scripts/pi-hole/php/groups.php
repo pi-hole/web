@@ -596,14 +596,15 @@ if ($_POST['action'] == 'get_groups') {
                 continue;
             }
 
-            $input = $domain;
-            // Convert domain name to IDNA ASCII form for international domains
-            // Skip this for the root zone `.`
-            if ($domain != '.') {
-                $domain = convertUnicodeToIDNA($domain);
-            }
             if ($_POST['type'] != '2' && $_POST['type'] != '3') {
-                // If not adding a RegEx, we convert the domain lower case and check whether it is valid
+                // If not adding a RegEx....
+                $input = $domain;
+                // Convert domain name to IDNA ASCII form for international domains
+                // Skip this for the root zone `.`
+                if ($domain != '.') {
+                    $domain = convertUnicodeToIDNA($domain);
+                }
+                // convert the domain lower case and check whether it is valid
                 $domain = strtolower($domain);
                 $msg = '';
                 if (!validDomain($domain, $msg)) {
