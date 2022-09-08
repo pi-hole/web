@@ -129,7 +129,7 @@ function renderMessage(data, type, row) {
     case "ADLIST":
       return (
         '<a href="groups-adlists.php?adlistid=' +
-        row.blob1 +
+        parseInt(row.blob1, 10) +
         '">' +
         "Adlist with ID " +
         parseInt(row.blob1, 10) +
