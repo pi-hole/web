@@ -115,6 +115,11 @@ $(function () {
         isCNAME = false,
         regexLink = false;
 
+      // Store domainlist IDs for blocked/permitted queries - PR 1409
+      if (data.length > 9 && data[9] > 0) {
+        regexLink = true;
+      }
+
       switch (data[4]) {
         case "1":
           fieldtext = "<span class='text-red'>Blocked (gravity)</span>";
@@ -141,10 +146,6 @@ $(function () {
         case "4":
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist)";
           blocked = true;
-          if (data.length > 9 && data[9] > 0) {
-            regexLink = true;
-          }
-
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           break;
@@ -183,10 +184,6 @@ $(function () {
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist, CNAME)</span>";
           blocked = true;
-          if (data.length > 9 && data[9] > 0) {
-            regexLink = true;
-          }
-
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
