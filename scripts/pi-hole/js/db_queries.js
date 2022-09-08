@@ -111,63 +111,63 @@ function handleAjaxError(xhr, textStatus) {
   tableApi.draw();
 }
 
-function getQueryTypes() {
-  var queryType = [];
-  if ($("#type_gravity").prop("checked")) {
-    queryType.push(1);
+function excludeStatusTypes() {
+  var statusType = [];
+  if ($("#type_gravity").prop("checked") === false) {
+    statusType.push(1);
   }
 
-  if ($("#type_forwarded").prop("checked")) {
-    queryType.push([2, 14]);
+  if ($("#type_forwarded").prop("checked") === false) {
+    statusType.push([2, 14]);
   }
 
-  if ($("#type_cached").prop("checked")) {
-    queryType.push(3);
+  if ($("#type_cached").prop("checked") === false) {
+    statusType.push(3);
   }
 
-  if ($("#type_regex").prop("checked")) {
-    queryType.push(4);
+  if ($("#type_regex").prop("checked") === false) {
+    statusType.push(4);
   }
 
-  if ($("#type_blacklist").prop("checked")) {
-    queryType.push(5);
+  if ($("#type_blacklist").prop("checked") === false) {
+    statusType.push(5);
   }
 
-  if ($("#type_external").prop("checked")) {
+  if ($("#type_external").prop("checked") === false) {
     // Multiple IDs correspond to this status
     // We request queries with all of them
-    queryType.push([6, 7, 8]);
+    statusType.push([6, 7, 8]);
   }
 
-  if ($("#type_gravity_CNAME").prop("checked")) {
-    queryType.push(9);
+  if ($("#type_gravity_CNAME").prop("checked") === false) {
+    statusType.push(9);
   }
 
-  if ($("#type_regex_CNAME").prop("checked")) {
-    queryType.push(10);
+  if ($("#type_regex_CNAME").prop("checked") === false) {
+    statusType.push(10);
   }
 
-  if ($("#type_blacklist_CNAME").prop("checked")) {
-    queryType.push(11);
+  if ($("#type_blacklist_CNAME").prop("checked") === false) {
+    statusType.push(11);
   }
 
-  if ($("#type_retried").prop("checked")) {
+  if ($("#type_retried").prop("checked") === false) {
     // Multiple IDs correspond to this status
     // We request queries with all of them
-    queryType.push([12, 13]);
+    statusType.push([12, 13]);
   }
 
   // 14 is defined above
 
-  if ($("#type_dbbusy").prop("checked")) {
-    queryType.push(15);
+  if ($("#type_dbbusy").prop("checked") === false) {
+    statusType.push(15);
   }
 
-  if ($("#type_special_domain").prop("checked")) {
-    queryType.push(16);
+  if ($("#type_special_domain").prop("checked") === false) {
+    statusType.push(16);
   }
 
-  return queryType.join(",");
+  return statusType.join(",");
 }
 
 var reloadCallback = function () {
@@ -203,10 +203,10 @@ function refreshTableData() {
   timeoutWarning.show();
   reloadBox.hide();
   var APIstring = "api_db.php?getAllQueries&from=" + from + "&until=" + until;
-  // Check if query type filtering is enabled
-  var queryType = getQueryTypes();
-  if (queryType !== "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16") {
-    APIstring += "&types=" + queryType;
+  // If status types should be excluded ("unchecked") we add them to the query
+  var statusType = excludeStatusTypes();
+  if (statusType.length > 0) {
+    APIstring += "&status=" + statusType;
   }
 
   statistics = [0, 0, 0];
@@ -218,11 +218,10 @@ $(function () {
     ? "api_db.php?getAllQueries&from=" + from + "&until=" + until
     : "api_db.php?getAllQueries=empty";
 
-  // Check if query type filtering is enabled
-  var queryType = getQueryTypes();
-  if (queryType !== 63) {
-    // 63 (0b00111111) = all possible query types are selected
-    APIstring += "&types=" + queryType;
+  // If status types should be excluded ("unchecked") we add them to the query
+  var statusType = excludeStatusTypes();
+  if (statusType.length > 0) {
+    APIstring += "&status=" + statusType;
   }
 
   tableApi = $("#all-queries").DataTable({
