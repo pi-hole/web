@@ -242,13 +242,13 @@ function archive_insert_into_table($file, $table, $flush = false, $wildcardstyle
     $type = null;
     if ($table === 'whitelist') {
         $table = 'domainlist';
-        $type = ListType::whitelist;
+        $type = LISTTYPE_WHITELIST;
     } elseif ($table === 'blacklist') {
         $table = 'domainlist';
-        $type = ListType::blacklist;
+        $type = LISTTYPE_BLACKLIST;
     } elseif ($table === 'regex_blacklist') {
         $table = 'domainlist';
-        $type = ListType::regex_blacklist;
+        $type = LISTTYPE_REGEX_BLACKLIST;
     } elseif ($table === 'domain_audit') {
         $table = 'domain_audit';
         $type = -1; // -1 -> not used inside add_to_table()
@@ -578,10 +578,10 @@ if (isset($_POST['action'])) {
         exit('cannot open/create '.htmlentities($archive_file_name)."<br>\nPHP user: ".exec('whoami')."\n");
     }
 
-    archive_add_table('whitelist.exact.json', 'domainlist', ListType::whitelist);
-    archive_add_table('whitelist.regex.json', 'domainlist', ListType::regex_whitelist);
-    archive_add_table('blacklist.exact.json', 'domainlist', ListType::blacklist);
-    archive_add_table('blacklist.regex.json', 'domainlist', ListType::regex_blacklist);
+    archive_add_table('whitelist.exact.json', 'domainlist', LISTTYPE_WHITELIST);
+    archive_add_table('whitelist.regex.json', 'domainlist', LISTTYPE_REGEX_WHITELIST);
+    archive_add_table('blacklist.exact.json', 'domainlist', LISTTYPE_BLACKLIST);
+    archive_add_table('blacklist.regex.json', 'domainlist', LISTTYPE_REGEX_BLACKLIST);
     archive_add_table('adlist.json', 'adlist');
     archive_add_table('domain_audit.json', 'domain_audit');
     archive_add_table('group.json', 'group');
