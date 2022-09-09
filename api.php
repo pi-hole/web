@@ -86,22 +86,22 @@ if (isset($_GET['enable']) && $auth) {
 
     switch ($_GET['list']) {
         case 'black':
-            $_POST['type'] = ListType::blacklist;
+            $_POST['type'] = LISTTYPE_BLACKLIST;
 
             break;
 
         case 'regex_black':
-            $_POST['type'] = ListType::regex_blacklist;
+            $_POST['type'] = LISTTYPE_REGEX_BLACKLIST;
 
             break;
 
         case 'white':
-            $_POST['type'] = ListType::whitelist;
+            $_POST['type'] = LISTTYPE_WHITELIST;
 
             break;
 
         case 'regex_white':
-            $_POST['type'] = ListType::regex_whitelist;
+            $_POST['type'] = LISTTYPE_REGEX_WHITELIST;
 
             break;
 

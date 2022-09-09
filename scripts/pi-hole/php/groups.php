@@ -508,7 +508,7 @@ if ($_POST['action'] == 'get_groups') {
                 array_push($groups, $gres['group_id']);
             }
             $res['groups'] = $groups;
-            if ($res['type'] === ListType::whitelist || $res['type'] === ListType::blacklist) {
+            if ($res['type'] === LISTTYPE_WHITELIST || $res['type'] === LISTTYPE_BLACKLIST) {
                 // Convert domain name to international form
                 // Skip this for the root zone `.`
                 if ($res['domain'] != '.') {
@@ -571,9 +571,9 @@ if ($_POST['action'] == 'get_groups') {
         if (isset($_POST['type'])) {
             $type = intval($_POST['type']);
         } elseif (isset($_POST['list']) && $_POST['list'] === 'white') {
-            $type = ListType::whitelist;
+            $type = LISTTYPE_WHITELIST;
         } elseif (isset($_POST['list']) && $_POST['list'] === 'black') {
-            $type = ListType::blacklist;
+            $type = LISTTYPE_BLACKLIST;
         }
 
         if (!$insert_stmt->bindValue(':type', $type, SQLITE3_TEXT)
