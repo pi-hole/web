@@ -116,7 +116,7 @@ $(function () {
         regexLink = false;
 
       // accompanies Store domainlist IDs for blocked/permitted queries FTL PR 1409
-      if (data.length > 9 && Number.isInteger(parseInt(data[9],10)) && data[9] > 0) {
+      if (data.length > 9 && Number.isInteger(parseInt(data[9], 10)) && data[9] > 0) {
         regexLink = true;
       }
 
