@@ -410,10 +410,6 @@ $.fn.dataTable.ext.search.push(function (settings, searchData, index, rowData) {
     })
     .get();
 
-  if (types.length === 0) {
-    return true;
-  }
-
   if (types.indexOf(rowData.type.toString()) !== -1) {
     return true;
   }

@@ -116,10 +116,10 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                 <div class="filter_types">
                     <div class="line">
                         <span><input type="checkbox" name="typ" value="0" id="typ0" checked><label for="typ0">Exact whitelist</label></span>
-                        <span><input type="checkbox" name="typ" value="1" id="typ1" checked><label for="typ1">Exact blacklist</label></span>
+                        <span><input type="checkbox" name="typ" value="2" id="typ2" checked><label for="typ2">Regex whitelist</label></span>
                     </div>
                     <div class="line">
-                        <span><input type="checkbox" name="typ" value="2" id="typ2" checked><label for="typ2">Regex whitelist</label></span>
+                        <span><input type="checkbox" name="typ" value="1" id="typ1" checked><label for="typ1">Exact blacklist</label></span>
                         <span><input type="checkbox" name="typ" value="3" id="typ3" checked><label for="typ3">Regex blacklist</label></span>
                     </div>
                 </div>
