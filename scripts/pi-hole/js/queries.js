@@ -116,7 +116,6 @@ $(function () {
         regexLink = false;
 
       // accompanies Store domainlist IDs for blocked/permitted queries FTL PR 1409
-      // 'is_numeric' is undefined, replaced with '!isNAN', see PR for details
       if (data.length > 9 && !isNaN(data[9]) && data[9] > 0) {
         regexLink = true;
       }
