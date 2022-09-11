@@ -239,7 +239,7 @@ $(function () {
       $("td:eq(4)", row).html(fieldtext);
       $("td:eq(6)", row).html(buttontext);
 
-      if (regexLink) {
+      if (DomainlistLink) {
         $("td:eq(4)", row).hover(
           function () {
             this.title = "Click to show matching regex filter";
