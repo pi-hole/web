@@ -101,5 +101,6 @@
       "unicorn/prefer-string-slice": "off",
       "unicorn/prevent-abbreviations": "off"
     }
-  }
+  },
+  "dependencies": {}
 }
