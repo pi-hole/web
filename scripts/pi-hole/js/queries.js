@@ -242,7 +242,7 @@ $(function () {
       if (DomainlistLink) {
         $("td:eq(4)", row).hover(
           function () {
-            this.title = "Click to show matching regex filter";
+            this.title = "Click to show matching blacklist/whitelist domain";
             this.style.color = "#72afd2";
           },
           function () {
