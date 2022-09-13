@@ -101,7 +101,9 @@ function check_cors()
 function check_csrf($token)
 {
     // Start a new PHP session (or continue an existing one)
-    start_php_session();
+    if (session_status() != PHP_SESSION_ACTIVE) {
+        start_php_session();
+    }
 
     if (!isset($_SESSION['token'])) {
         log_and_die('Session expired! Please re-login on the Pi-hole dashboard.');
