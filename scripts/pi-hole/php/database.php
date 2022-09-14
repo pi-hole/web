@@ -7,6 +7,12 @@
 *    Please see LICENSE file for your rights under this license
 */
 
+// List Type Constants
+const LISTTYPE_WHITELIST = 0;
+const LISTTYPE_BLACKLIST = 1;
+const LISTTYPE_REGEX_WHITELIST = 2;
+const LISTTYPE_REGEX_BLACKLIST = 3;
+
 function getGravityDBFilename()
 {
     // Get possible non-standard location of FTL's database
@@ -277,14 +283,4 @@ function remove_from_table($db, $table, $domains, $returnnum = false, $type = -1
     }
 
     return 'Success, removed '.$num.' domain'.$plural;
-}
-
-if (!class_exists('ListType')) {
-    class ListType
-    {
-        public const whitelist = 0;
-        public const blacklist = 1;
-        public const regex_whitelist = 2;
-        public const regex_blacklist = 3;
-    }
 }

@@ -728,6 +728,65 @@ li:not(.menu-open) .treeview-menu .warning-count {
   }
 }
 
+/* Domains table: filter by type */
+#domains-list .box-header {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 5px 10px;
+}
+#domains-list .box-header h3 {
+  flex: 1 1 auto;
+  margin: 5px 0;
+  width: auto;
+  min-width: 130px;
+}
+.filter_types {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 5px auto;
+}
+.filter_types div {
+  flex: 0 0 auto;
+  margin: 2px 0 0;
+}
+.filter_types span {
+  display: inline-block;
+  margin: 0 0 2px 10px !important;
+  width: 120px;
+  min-height: 1.2em;
+}
+
+/* Domains table: filter by type - smaller icheck */
+body:not(.lcars) .filter_types [class*="icheck-"] > label {
+  padding-left: 1.5em !important;
+  line-height: 1.2em;
+  min-height: 1.2em;
+}
+body:not(.lcars)
+  .filter_types
+  [class*="icheck-"]
+  > input:first-child
+  + input[type="hidden"]
+  + label::before,
+body:not(.lcars) .filter_types [class*="icheck-"] > input:first-child + label::before {
+  width: 1.2em;
+  height: 1.2em;
+  margin-left: -1.55em;
+}
+body:not(.lcars)
+  .filter_types
+  [class*="icheck-"]
+  > input:first-child:checked
+  + input[type="hidden"]
+  + label::after,
+body:not(.lcars) .filter_types [class*="icheck-"] > input:first-child:checked + label::after {
+  width: 0.35em;
+  height: 0.7em;
+  top: -0.2em;
+  left: -0.18em;
+}
+
 /* reverse side menu collapse arrows when menu is closed */
 .sidebar-collapse .sidebar-toggle-svg svg {
   transform: scaleX(-1);

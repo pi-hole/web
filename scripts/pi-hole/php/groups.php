@@ -508,7 +508,7 @@ if ($_POST['action'] == 'get_groups') {
                 array_push($groups, $gres['group_id']);
             }
             $res['groups'] = $groups;
-            if ($res['type'] === ListType::whitelist || $res['type'] === ListType::blacklist) {
+            if ($res['type'] === LISTTYPE_WHITELIST || $res['type'] === LISTTYPE_BLACKLIST) {
                 // Convert domain name to international form
                 // Skip this for the root zone `.`
                 if ($res['domain'] != '.') {
@@ -571,9 +571,9 @@ if ($_POST['action'] == 'get_groups') {
         if (isset($_POST['type'])) {
             $type = intval($_POST['type']);
         } elseif (isset($_POST['list']) && $_POST['list'] === 'white') {
-            $type = ListType::whitelist;
+            $type = LISTTYPE_WHITELIST;
         } elseif (isset($_POST['list']) && $_POST['list'] === 'black') {
-            $type = ListType::blacklist;
+            $type = LISTTYPE_BLACKLIST;
         }
 
         if (!$insert_stmt->bindValue(':type', $type, SQLITE3_TEXT)
@@ -596,14 +596,15 @@ if ($_POST['action'] == 'get_groups') {
                 continue;
             }
 
-            $input = $domain;
-            // Convert domain name to IDNA ASCII form for international domains
-            // Skip this for the root zone `.`
-            if ($domain != '.') {
-                $domain = convertUnicodeToIDNA($domain);
-            }
             if ($_POST['type'] != '2' && $_POST['type'] != '3') {
-                // If not adding a RegEx, we convert the domain lower case and check whether it is valid
+                // If not adding a RegEx....
+                $input = $domain;
+                // Convert domain name to IDNA ASCII form for international domains
+                // Skip this for the root zone `.`
+                if ($domain != '.') {
+                    $domain = convertUnicodeToIDNA($domain);
+                }
+                // convert the domain lower case and check whether it is valid
                 $domain = strtolower($domain);
                 $msg = '';
                 if (!validDomain($domain, $msg)) {

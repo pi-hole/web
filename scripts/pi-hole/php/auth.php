@@ -100,18 +100,9 @@ function check_cors()
 
 function check_csrf($token)
 {
-    // Check CSRF token
-    $session_started = function_exists('session_status') ?
-        session_status() == PHP_SESSION_ACTIVE :
-        session_id() == '';
-
-    if (!$session_started) {
-        // Start a new PHP session (or continue an existing one)
-        // Prevents javascript XSS attacks aimed to steal the session ID
-        ini_set('session.cookie_httponly', 1);
-        // Prevent Session ID from being passed through URLs
-        ini_set('session.use_only_cookies', 1);
-        session_start();
+    // Start a new PHP session (or continue an existing one)
+    if (session_status() != PHP_SESSION_ACTIVE) {
+        start_php_session();
     }
 
     if (!isset($_SESSION['token'])) {
