@@ -1853,10 +1853,6 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-input[type="password"]::-webkit-credentials-auto-fill-button {
-  background: white;
-}
-
 input[type="password"]::-webkit-caps-lock-indicator {
   filter: invert(100%);
 }
