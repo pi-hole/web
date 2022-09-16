@@ -59,7 +59,11 @@ if (!is_readable($versionsfile)) {
     }
 
     // Get Pi-hole Docker Tag, if available
-    $docker_current = htmlspecialchars(getenv('PIHOLE_DOCKER_TAG'));
+    if (isset($versions['DOCKER_VERSION'])) {
+        $docker_current = $versions['DOCKER_VERSION'];
+    } else {
+        $docker_current = '';
+    }
 
     // Get data from GitHub
     $core_latest = $versions['GITHUB_CORE_VERSION'];
