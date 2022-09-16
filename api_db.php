@@ -76,17 +76,18 @@ if (isset($_GET['getAllQueries']) && $auth) {
         $dbquery .= ' status, reply_type, reply_time, dnssec';
         $dbquery .= ' FROM query_storage q';
         $dbquery .= ' WHERE timestamp >= :from AND timestamp <= :until ';
-        if (isset($_GET['types'])) {
-            $types = $_GET['types'];
-            if (preg_match('/^[0-9]+(?:,[0-9]+)*$/', $types) === 1) {
+        if (isset($_GET['status'])) {
+            // if some query status should be excluded
+            $excludedStatus = $_GET['status'];
+            if (preg_match('/^[0-9]+(?:,[0-9]+)*$/', $excludedStatus) === 1) {
                 // Append selector to DB query. The used regex ensures
                 // that only numbers, separated by commas are accepted
                 // to avoid code injection and other malicious things
                 // We accept only valid lists like "1,2,3"
                 // We reject ",2,3", "1,2," and similar arguments
-                $dbquery .= 'AND status IN ('.$types.') ';
+                $dbquery .= 'AND status NOT IN ('.$excludedStatus.') ';
             } else {
-                exit('Error. Selector types specified using an invalid format.');
+                exit('Error. Selector status specified using an invalid format.');
             }
         }
         $dbquery .= 'ORDER BY timestamp ASC';
