@@ -78,14 +78,14 @@ if (isset($_GET['getAllQueries']) && $auth) {
         $dbquery .= ' WHERE timestamp >= :from AND timestamp <= :until ';
         if (isset($_GET['status'])) {
             // if some query status should be excluded
-            $status = $_GET['status'];
-            if (preg_match('/^[0-9]+(?:,[0-9]+)*$/', $status) === 1) {
+            $excludedStatus = $_GET['status'];
+            if (preg_match('/^[0-9]+(?:,[0-9]+)*$/', $excludedStatus) === 1) {
                 // Append selector to DB query. The used regex ensures
                 // that only numbers, separated by commas are accepted
                 // to avoid code injection and other malicious things
                 // We accept only valid lists like "1,2,3"
                 // We reject ",2,3", "1,2," and similar arguments
-                $dbquery .= 'AND status NOT IN ('.$status.') ';
+                $dbquery .= 'AND status NOT IN ('.$excludedStatus.') ';
             } else {
                 exit('Error. Selector status specified using an invalid format.');
             }
