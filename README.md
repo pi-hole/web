@@ -112,7 +112,7 @@ While we are primarily reachable on our <a href="https://discourse.pi-hole.net/"
 ## Password protection
 
 <p align="center">
-  <img src="https://pi-hole.github.io/graphics/Screenshots/password_protection_v5.png" height="400" alt="Password protection">
+  <img src="https://pi-hole.github.io/graphics/Screenshots/password_protection_v5.png" alt="Password protection">
 </p>
 
 ## Detailed graphs and doughnut charts
