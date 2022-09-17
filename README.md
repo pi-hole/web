@@ -11,7 +11,7 @@
   <br>
   <br>
   <a href="https://pi-hole.net/">
-    <img src="https://pi-hole.github.io/graphics/Screenshots/pihole-dashboard.png" alt="Pi-hole Web interface">
+    <img src="https://pi-hole.github.io/graphics/Screenshots/pihole_dashboard_v5.png" alt="Pi-hole Web interface">
   </a>
 </p>
 
@@ -112,7 +112,7 @@ While we are primarily reachable on our <a href="https://discourse.pi-hole.net/"
 ## Password protection
 
 <p align="center">
-  <img src="https://pi-hole.github.io/graphics/Screenshots/password-protection.png" height="400" alt="Password protection">
+  <img src="https://pi-hole.github.io/graphics/Screenshots/password_protection_v5.png" height="400" alt="Password protection">
 </p>
 
 ## Detailed graphs and doughnut charts
