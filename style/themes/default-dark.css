@@ -554,9 +554,6 @@ fieldset[disabled] .form-control {
   background-color: #367fa9 !important;
   border: 1px solid #367fa9;
 }
-input[type="password"]::-webkit-credentials-auto-fill-button {
-  background: #bfc5ca;
-}
 input[type="password"]::-webkit-caps-lock-indicator {
   filter: invert(100%);
 }

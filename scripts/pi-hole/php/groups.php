@@ -596,7 +596,7 @@ if ($_POST['action'] == 'get_groups') {
                 continue;
             }
 
-            if ($_POST['type'] != '2' && $_POST['type'] != '3') {
+            if (isset($_POST['type']) && $_POST['type'] != '2' && $_POST['type'] != '3') {
                 // If not adding a RegEx....
                 $input = $domain;
                 // Convert domain name to IDNA ASCII form for international domains
