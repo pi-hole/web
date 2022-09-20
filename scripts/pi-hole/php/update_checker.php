@@ -30,6 +30,9 @@ if (!is_readable($versionsfile)) {
 } else {
     $versions = parse_ini_file($versionsfile);
 
+    // Allow only valid characters
+    $versions = preg_replace('/[^[:alnum:]._:\/-]/i', '', $versions);
+
     // Get Pi-hole core branch / version / commit
     // Check if on a dev branch
     $core_branch = $versions['CORE_BRANCH'];
