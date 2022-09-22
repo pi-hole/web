@@ -105,28 +105,28 @@ $webUrl = 'https://github.com/pi-hole/AdminLTE/releases';
 $ftlUrl = 'https://github.com/pi-hole/FTL/releases';
 $dockerUrl = 'https://github.com/pi-hole/docker-pi-hole/releases';
 
-// Version strings
+// Version strings (encoded to avoid code execution)
 // If "vDev" show branch/commit, else show link
 if (isset($core_commit)) {
-    $coreVersionStr = $core_current.' ('.$core_branch.', '.$core_commit.')';
+    $coreVersionStr = htmlentities($core_current.' ('.$core_branch.', '.$core_commit.')');
 } else {
-    $coreVersionStr = '<a href="'.$coreUrl.'/'.$core_current.'" rel="noopener" target="_blank">'.$core_current.'</a>';
+    $coreVersionStr = '<a href="'.$coreUrl.'/'.rawurlencode($core_current).'" rel="noopener" target="_blank">'.htmlentities($core_current).'</a>';
 }
 
 if (isset($web_commit)) {
-    $webVersionStr = $web_current.' ('.$web_branch.', '.$web_commit.')';
+    $webVersionStr = htmlentities($web_current.' ('.$web_branch.', '.$web_commit.')');
 } else {
-    $webVersionStr = '<a href="'.$webUrl.'/'.$web_current.'" rel="noopener" target="_blank">'.$web_current.'</a>';
+    $webVersionStr = '<a href="'.$webUrl.'/'.rawurlencode($web_current).'" rel="noopener" target="_blank">'.htmlentities($web_current).'</a>';
 }
 
 if (isset($FTL_commit)) {
-    $ftlVersionStr = $FTL_current.' ('.$FTL_branch.', '.$FTL_commit.')';
+    $ftlVersionStr = htmlentities($FTL_current.' ('.$FTL_branch.', '.$FTL_commit.')');
 } else {
-    $ftlVersionStr = '<a href="'.$ftlUrl.'/'.$FTL_current.'" rel="noopener" target="_blank">'.$FTL_current.'</a>';
+    $ftlVersionStr = '<a href="'.$ftlUrl.'/'.rawurlencode($FTL_current).'" rel="noopener" target="_blank">'.htmlentities($FTL_current).'</a>';
 }
 
 if ($docker_current) {
-    $dockerVersionStr = '<a href="'.$dockerUrl.'/'.$docker_current.'" rel="noopener" target="_blank">'.$docker_current.'</a>';
+    $dockerVersionStr = '<a href="'.$dockerUrl.'/'.rawurlencode($docker_current).'" rel="noopener" target="_blank">'.htmlentities($docker_current).'</a>';
 } else {
     $dockerVersionStr = '';
 }
