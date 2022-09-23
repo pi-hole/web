@@ -30,7 +30,8 @@ var THEME_COLORS = [
   "#d2d6de",
 ];
 
-var customTooltips = function (tooltip) {
+var customTooltips = function (context) {
+  var tooltip = context.tooltip;
   var tooltipEl = document.getElementById(this._chart.canvas.id + "-customTooltip");
   if (!tooltipEl) {
     // Create Tooltip Element once per chart
@@ -42,11 +43,12 @@ var customTooltips = function (tooltip) {
     // font-size was set to 14px by bootstrap's css
     var fontZoom = parseFloat($("body").css("font-size")) / 14;
     // set styles and font
-    tooltipEl.style.padding = tooltip.yPadding + "px " + tooltip.xPadding + "px";
-    tooltipEl.style.borderRadius = tooltip.cornerRadius + "px";
-    tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
-    tooltipEl.style.fontSize = tooltip.bodyFontSize / fontZoom + "px";
-    tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
+    tooltipEl.style.padding = tooltip.options.padding + "px " + tooltip.options.padding + "px";
+    tooltipEl.style.borderRadius = tooltip.options.cornerRadius + "px";
+    tooltipEl.style.font = tooltip.options.bodyFont.string;
+    tooltipEl.style.fontFamily = tooltip.options.bodyFont.family;
+    tooltipEl.style.fontSize = tooltip.options.bodyFont.size / fontZoom + "px";
+    tooltipEl.style.fontStyle = tooltip.options.bodyFont.style;
     // append Tooltip next to canvas-containing box
     tooltipEl.ancestor = this._chart.canvas.closest(".box[id]").parentNode;
     tooltipEl.ancestor.append(tooltipEl);
@@ -110,9 +112,9 @@ var customTooltips = function (tooltip) {
   var tooltipHeight = tooltipEl.offsetHeight;
   var caretX = tooltip.caretX;
   var caretY = tooltip.caretY;
-  var caretPadding = tooltip.caretPadding;
+  var caretPadding = tooltip.options.caretPadding;
   var tooltipX, tooltipY, arrowX;
-  var arrowMinIndent = 2 * tooltip.cornerRadius;
+  var arrowMinIndent = 2 * tooltip.options.cornerRadius;
   var arrowSize = 5;
 
   // Compute X position
@@ -315,7 +317,6 @@ function updateQueryTypesPie() {
     queryTypePieChart.data.datasets[0] = dd;
     queryTypePieChart.data.labels = k;
     $("#query-types-pie .overlay").hide();
-    queryTypePieChart.options.cutout = '50%';
     queryTypePieChart.update();
     // Don't use rotation animation for further updates
     queryTypePieChart.options.animation.duration = 0;
@@ -561,7 +562,6 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.data.datasets[0] = dd;
     // and push it at once
     $("#forward-destinations-pie .overlay").hide();
-    forwardDestinationPieChart.options.cutout = '50%';
     forwardDestinationPieChart.update();
     // Don't use rotation animation for further updates
     forwardDestinationPieChart.options.animation.duration = 0;
@@ -893,80 +893,83 @@ $(function () {
       datasets: [{ data: [] }],
     },
     options: {
-      tooltips: {
-        enabled: true,
-        mode: "x-axis",
-        itemSort: function (a, b) {
-          return b.datasetIndex - a.datasetIndex;
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false,
         },
-        callbacks: {
-          title: function (tooltipItem) {
-            var label = tooltipItem[0].xLabel;
-            var time = label.match(/(\d?\d):?(\d?\d?)/);
-            var h = parseInt(time[1], 10);
-            var m = parseInt(time[2], 10) || 0;
-            var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
-            var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
-            return "Queries from " + from + " to " + to;
+        tooltip: {
+          enabled: true,
+          mode: "index",
+          yAlign: "bottom",
+          itemSort: function (a, b) {
+            return b.datasetIndex - a.datasetIndex;
           },
-          label: function (tooltipItems, data) {
-            if (tooltipItems.datasetIndex === 0) {
-              var percentage = 0;
-              var permitted = parseInt(data.datasets[1].data[tooltipItems.index], 10);
-              var blocked = parseInt(data.datasets[0].data[tooltipItems.index], 10);
-              var total = permitted + blocked;
-              if (total > 0) {
-                percentage = (100 * blocked) / total;
+          callbacks: {
+            title: function (tooltipTitle) {
+              var label = tooltipTitle[0].label;
+              var time = label.match(/(\d?\d):?(\d?\d?)/);
+              var h = parseInt(time[1], 10);
+              var m = parseInt(time[2], 10) || 0;
+              var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
+              var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
+              return "Queries from " + from + " to " + to;
+            },
+            label: function (tooltipLabel) {
+              var label = tooltipLabel.dataset.label;
+              // Add percentage only for blocked queries
+              if (tooltipLabel.datasetIndex === 0) {
+                var percentage = 0;
+                var permitted = parseInt(tooltipLabel.parsed._stacks.y[1], 10);
+                var blocked = parseInt(tooltipLabel.parsed._stacks.y[0], 10);
+                if (permitted + blocked > 0) {
+                  percentage = (100 * blocked) / (permitted + blocked);
+                }
+
+                label += ": " + tooltipLabel.parsed.y + " (" + percentage.toFixed(1) + "%)";
+              } else {
+                label += ": " + tooltipLabel.parsed.y;
               }
 
-              return (
-                data.datasets[tooltipItems.datasetIndex].label +
-                ": " +
-                tooltipItems.yLabel +
-                " (" +
-                percentage.toFixed(1) +
-                "%)"
-              );
-            }
-
-            return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
+              return label;
+            },
           },
         },
       },
-      legend: {
-        display: false,
-      },
       scales: {
-        xAxes:
-          {
-            type: "time",
-            stacked: true,
-            time: {
-              unit: "hour",
-              displayFormats: {
-                hour: "HH:mm",
-              },
-              tooltipFormat: "HH:mm",
+        xAxes: {
+          type: "time",
+          stacked: true,
+          offset: false,
+          time: {
+            unit: "hour",
+            displayFormats: {
+              hour: "HH:mm",
             },
-            gridLines: {
-              color: gridColor,
-            },
-            ticks: {
-              fontColor: ticksColor,
-            },
+            tooltipFormat: "HH:mm",
           },
-        yAxes:
-          {
-            stacked: true,
-            beginAtZero: true,
-            ticks: {
-              fontColor: ticksColor,
-              precision: 0,
-            },
-            gridLines: {
-              color: gridColor,
-            },
+          grid: {
+            color: gridColor,
+            offset: false,
+            drawBorder: false,
           },
+          ticks: {
+            color: ticksColor,
+          },
+        },
+        yAxes: {
+          stacked: true,
+          beginAtZero: true,
+          ticks: {
+            color: ticksColor,
+            precision: 0,
+          },
+          grid: {
+            color: gridColor,
+            drawBorder: false,
+          },
+        },
       },
       elements: {
         line: {
@@ -974,7 +977,6 @@ $(function () {
           spanGaps: false,
         },
       },
-      maintainAspectRatio: false,
     },
   });
 
@@ -993,63 +995,67 @@ $(function () {
         datasets: [{ data: [] }],
       },
       options: {
-        tooltips: {
-          enabled: false,
-          mode: "x-axis",
-          custom: customTooltips,
-          yAlign: "top",
-          itemSort: function (a, b) {
-            return b.yLabel - a.yLabel;
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
           },
-          callbacks: {
-            title: function (tooltipItem) {
-              var label = tooltipItem[0].xLabel;
-              var time = label.match(/(\d?\d):?(\d?\d?)/);
-              var h = parseInt(time[1], 10);
-              var m = parseInt(time[2], 10) || 0;
-              var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
-              var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
-              return "Client activity from " + from + " to " + to;
+          tooltip: {
+            // Disable the on-canvas tooltip
+            enabled: false,
+            mode: "index",
+            external: customTooltips,
+            yAlign: "top",
+            itemSort: function (a, b) {
+              return b.raw - a.raw;
             },
-            label: function (tooltipItems, data) {
-              return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
+            callbacks: {
+              title: function (tooltipTitle) {
+                var label = tooltipTitle[0].label;
+                var time = label.match(/(\d?\d):?(\d?\d?)/);
+                var h = parseInt(time[1], 10);
+                var m = parseInt(time[2], 10) || 0;
+                var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
+                var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
+                return "Client activity from " + from + " to " + to;
+              },
             },
           },
-        },
-        legend: {
-          display: false,
         },
         scales: {
-          xAxes:
-            {
-              type: "time",
-              stacked: true,
-              time: {
-                unit: "hour",
-                displayFormats: {
-                  hour: "HH:mm",
-                },
-                tooltipFormat: "HH:mm",
+          xAxes: {
+            type: "time",
+            stacked: true,
+            offset: false,
+            time: {
+              unit: "hour",
+              displayFormats: {
+                hour: "HH:mm",
               },
-              gridLines: {
-                color: gridColor,
-              },
-              ticks: {
-                fontColor: ticksColor,
-              },
+              tooltipFormat: "HH:mm",
             },
-          yAxes:
-            {
-              beginAtZero: true,
-              ticks: {
-                fontColor: ticksColor,
-                precision: 0,
-              },
-              stacked: true,
-              gridLines: {
-                color: gridColor,
-              },
+            grid: {
+              color: gridColor,
+              offset: false,
+              drawBorder: false,
             },
+            ticks: {
+              color: ticksColor,
+            },
+          },
+          yAxes: {
+            beginAtZero: true,
+            ticks: {
+              color: ticksColor,
+              precision: 0,
+            },
+            stacked: true,
+            grid: {
+              color: gridColor,
+              drawBorder: false,
+            },
+          },
         },
         elements: {
           line: {
@@ -1057,7 +1063,6 @@ $(function () {
             spanGaps: false,
           },
         },
-        maintainAspectRatio: false,
         hover: {
           animationDuration: 0,
         },
@@ -1123,30 +1128,34 @@ $(function () {
         datasets: [{ data: [] }],
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         elements: {
           arc: {
             borderColor: $(".box").css("background-color"),
           },
         },
-        legend: {
-          display: false,
-        },
-        tooltips: {
-          enabled: false,
-          custom: customTooltips,
-          callbacks: {
-            title: function () {
-              return "Query types";
-            },
-            label: function (tooltipItems, data) {
-              return doughnutTooltip(tooltipItems, data);
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            enabled: false,
+            custom: customTooltips,
+            callbacks: {
+              title: function () {
+                return "Query types";
+              },
+              label: function (tooltipItems, data) {
+                return doughnutTooltip(tooltipItems, data);
+              },
             },
           },
         },
+
         animation: {
           duration: 750,
         },
-        cutout: '0%',
       },
     });
 
@@ -1163,30 +1172,33 @@ $(function () {
         datasets: [{ data: [] }],
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         elements: {
           arc: {
             borderColor: $(".box").css("background-color"),
           },
         },
-        legend: {
-          display: false,
-        },
-        tooltips: {
-          enabled: false,
-          custom: customTooltips,
-          callbacks: {
-            title: function () {
-              return "Forward destinations";
-            },
-            label: function (tooltipItems, data) {
-              return doughnutTooltip(tooltipItems, data);
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            enabled: false,
+            custom: customTooltips,
+            callbacks: {
+              title: function () {
+                return "Forward destinations";
+              },
+              label: function (tooltipItems, data) {
+                return doughnutTooltip(tooltipItems, data);
+              },
             },
           },
         },
         animation: {
           duration: 750,
         },
-        cutout: '0%',
       },
     });
 
