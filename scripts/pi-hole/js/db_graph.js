@@ -245,9 +245,6 @@ $(function () {
     options: {
       responsive: true,
       plugins: {
-        legend: {
-          display: false,
-        },
         tooltip: {
           enabled: true,
           yAlign: "bottom",
@@ -334,12 +331,14 @@ $(function () {
             },
           },
         },
+        legend: {
+          display: false,
+        },
       },
       scales: {
-        xAxes:
-          {
-            type: "time",
-            stacked: true,
+        xAxes: {
+          type: "time",
+          stacked: true,
           offset: false,
           time: {
             unit: "hour",
@@ -353,25 +352,26 @@ $(function () {
               year: "YYYY",
             },
           },
-            gridLines: {
-              color: gridColor,
-            },
-            ticks: {
-              fontColor: ticksColor,
-            },
-          },
-        yAxes:
-          {
-            stacked: true,
-            beginAtZero: true,
-            ticks: {
-              fontColor: ticksColor,
-            },
           grid: {
             color: gridColor,
             drawBorder: false,
-            },
+            offset: false,
           },
+          ticks: {
+            color: ticksColor,
+          },
+        },
+        yAxes: {
+          stacked: true,
+          beginAtZero: true,
+          ticks: {
+            color: ticksColor,
+          },
+          grid: {
+            color: gridColor,
+            drawBorder: false,
+          },
+        },
       },
       elements: {
         line: {
