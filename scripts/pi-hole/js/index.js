@@ -315,7 +315,7 @@ function updateQueryTypesPie() {
     queryTypePieChart.data.datasets[0] = dd;
     queryTypePieChart.data.labels = k;
     $("#query-types-pie .overlay").hide();
-    queryTypePieChart.chart.config.options.cutoutPercentage = 50;
+    queryTypePieChart.options.cutout = '50%';
     queryTypePieChart.update();
     // Don't use rotation animation for further updates
     queryTypePieChart.options.animation.duration = 0;
@@ -561,7 +561,7 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.data.datasets[0] = dd;
     // and push it at once
     $("#forward-destinations-pie .overlay").hide();
-    forwardDestinationPieChart.chart.config.options.cutoutPercentage = 50;
+    forwardDestinationPieChart.options.cutout = '50%';
     forwardDestinationPieChart.update();
     // Don't use rotation animation for further updates
     forwardDestinationPieChart.options.animation.duration = 0;
@@ -937,7 +937,7 @@ $(function () {
         display: false,
       },
       scales: {
-        xAxes: [
+        xAxes:
           {
             type: "time",
             stacked: true,
@@ -950,27 +950,23 @@ $(function () {
             },
             gridLines: {
               color: gridColor,
-              zeroLineColor: gridColor,
             },
             ticks: {
               fontColor: ticksColor,
             },
           },
-        ],
-        yAxes: [
+        yAxes:
           {
             stacked: true,
+            beginAtZero: true,
             ticks: {
-              beginAtZero: true,
               fontColor: ticksColor,
               precision: 0,
             },
             gridLines: {
               color: gridColor,
-              zeroLineColor: gridColor,
             },
           },
-        ],
       },
       elements: {
         line: {
@@ -1024,7 +1020,7 @@ $(function () {
           display: false,
         },
         scales: {
-          xAxes: [
+          xAxes:
             {
               type: "time",
               stacked: true,
@@ -1037,27 +1033,23 @@ $(function () {
               },
               gridLines: {
                 color: gridColor,
-                zeroLineColor: gridColor,
               },
               ticks: {
                 fontColor: ticksColor,
               },
             },
-          ],
-          yAxes: [
+          yAxes:
             {
+              beginAtZero: true,
               ticks: {
-                beginAtZero: true,
                 fontColor: ticksColor,
                 precision: 0,
               },
               stacked: true,
               gridLines: {
                 color: gridColor,
-                zeroLineColor: gridColor,
               },
             },
-          ],
         },
         elements: {
           line: {
@@ -1154,7 +1146,7 @@ $(function () {
         animation: {
           duration: 750,
         },
-        cutoutPercentage: 0,
+        cutout: '0%',
       },
     });
 
@@ -1194,7 +1186,7 @@ $(function () {
         animation: {
           duration: 750,
         },
-        cutoutPercentage: 0,
+        cutout: '0%',
       },
     });
 
