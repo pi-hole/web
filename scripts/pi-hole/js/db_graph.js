@@ -120,25 +120,25 @@ function updateQueriesOverTime() {
 
   interval = computeInterval(from, until);
   // Default displaying axis scaling
-  timeLineChart.options.scales.xAxes[0].time.unit = "hour";
+  timeLineChart.options.scales.xAxes.time.unit = "hour";
 
   var duration = until - from;
   // Xaxis scaling based on selected daterange
   if (duration > 4 * 365 * 24 * 60 * 60) {
     // If the requested data is more than 4 years, set ticks interval to year
-    timeLineChart.options.scales.xAxes[0].time.unit = "year";
+    timeLineChart.options.scales.xAxes.time.unit = "year";
   } else if (duration >= 366 * 24 * 60 * 60) {
     // If the requested data is more than 1 year, set ticks interval to quarter
-    timeLineChart.options.scales.xAxes[0].time.unit = "quarter";
+    timeLineChart.options.scales.xAxes.time.unit = "quarter";
   } else if (duration >= 92 * 24 * 60 * 60) {
     // If the requested data is more than 3 months, set ticks interval to months
-    timeLineChart.options.scales.xAxes[0].time.unit = "month";
+    timeLineChart.options.scales.xAxes.time.unit = "month";
   } else if (duration >= 31 * 24 * 60 * 60) {
     // If the requested data is 1 month or more, set ticks interval to weeks
-    timeLineChart.options.scales.xAxes[0].time.unit = "week";
+    timeLineChart.options.scales.xAxes.time.unit = "week";
   } else if (duration > 3 * 24 * 60 * 60) {
     // If the requested data is more than 3 days (72 hours), set ticks interval to days
-    timeLineChart.options.scales.xAxes[0].time.unit = "day";
+    timeLineChart.options.scales.xAxes.time.unit = "day";
   }
 
   $.getJSON(
@@ -196,9 +196,9 @@ function updateQueriesOverTime() {
         }
       }
 
-      timeLineChart.options.scales.xAxes[0].ticks.min = from * 1000;
-      timeLineChart.options.scales.xAxes[0].ticks.max = until * 1000;
-      timeLineChart.options.scales.xAxes[0].display = true;
+      timeLineChart.options.scales.xAxes.ticks.min = from * 1000;
+      timeLineChart.options.scales.xAxes.ticks.max = until * 1000;
+      timeLineChart.options.scales.xAxes.display = true;
       $("#queries-over-time .overlay").hide();
       timeoutWarning.hide();
       timeLineChart.update();
@@ -243,135 +243,135 @@ $(function () {
       ],
     },
     options: {
-      tooltips: {
-        enabled: true,
-        itemSort: function (a, b) {
-          return b.datasetIndex - a.datasetIndex;
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
         },
-        mode: "x-axis",
-        callbacks: {
-          title: function (tooltipItem) {
-            var label = tooltipItem[0].xLabel;
-            var time = new Date(label);
-            var fromDate =
-              time.getFullYear() +
-              "-" +
-              utils.padNumber(time.getMonth() + 1) +
-              "-" +
-              utils.padNumber(time.getDate());
-            var fromTime =
-              utils.padNumber(time.getHours()) +
-              ":" +
-              utils.padNumber(time.getMinutes()) +
-              ":" +
-              utils.padNumber(time.getSeconds());
-            time = new Date(time.valueOf() + 1000 * interval);
-            var untilDate =
-              time.getFullYear() +
-              "-" +
-              utils.padNumber(time.getMonth() + 1) +
-              "-" +
-              utils.padNumber(time.getDate());
-            var untilTime =
-              utils.padNumber(time.getHours()) +
-              ":" +
-              utils.padNumber(time.getMinutes()) +
-              ":" +
-              utils.padNumber(time.getSeconds());
+        tooltip: {
+          enabled: true,
+          yAlign: "bottom",
+          mode: "index",
+          itemSort: function (a, b) {
+            return b.datasetIndex - a.datasetIndex;
+          },
+          callbacks: {
+            label: function (tooltipLabel) {
+              var label = tooltipLabel.dataset.label;
+              // Add percentage only for blocked queries
+              if (tooltipLabel.datasetIndex === 0) {
+                var percentage = 0;
+                var permitted = parseInt(tooltipLabel.parsed._stacks.y[1], 10);
+                var blocked = parseInt(tooltipLabel.parsed._stacks.y[0], 10);
+                if (permitted + blocked > 0) {
+                  percentage = (100 * blocked) / (permitted + blocked);
+                }
 
-            if (fromDate === untilDate) {
-              // Abbreviated form for intervals on the same day
-              // We split title in two lines on small screens
-              if ($(window).width() < 992) {
-                untilTime += "\n";
+                label += ": " + tooltipLabel.parsed.y + " (" + percentage.toFixed(1) + "%)";
+              } else {
+                label += ": " + tooltipLabel.parsed.y;
               }
 
-              return ("Queries from " + fromTime + " to " + untilTime + " on " + fromDate).split(
-                "\n "
-              );
-            }
+              return label;
+            },
+            title: function (tooltipTitle) {
+              var title = tooltipTitle[0].label;
+              var time = new Date(title);
+              var fromDate =
+                time.getFullYear() +
+                "-" +
+                utils.padNumber(time.getMonth() + 1) +
+                "-" +
+                utils.padNumber(time.getDate());
+              var fromTime =
+                utils.padNumber(time.getHours()) +
+                ":" +
+                utils.padNumber(time.getMinutes()) +
+                ":" +
+                utils.padNumber(time.getSeconds());
+              time = new Date(time.valueOf() + 1000 * interval);
+              var untilDate =
+                time.getFullYear() +
+                "-" +
+                utils.padNumber(time.getMonth() + 1) +
+                "-" +
+                utils.padNumber(time.getDate());
+              var untilTime =
+                utils.padNumber(time.getHours()) +
+                ":" +
+                utils.padNumber(time.getMinutes()) +
+                ":" +
+                utils.padNumber(time.getSeconds());
 
-            // Full tooltip for intervals spanning more than one day
-            // We split title in two lines on small screens
-            if ($(window).width() < 992) {
-              fromDate += "\n";
-            }
+              if (fromDate === untilDate) {
+                // Abbreviated form for intervals on the same day
+                // We split title in two lines on small screens
+                if ($(window).width() < 992) {
+                  untilTime += "\n";
+                }
 
-            return (
-              "Queries from " +
-              fromDate +
-              " " +
-              fromTime +
-              " to " +
-              untilDate +
-              " " +
-              untilTime
-            ).split("\n ");
-          },
-          label: function (tooltipItems, data) {
-            if (tooltipItems.datasetIndex === 0) {
-              var percentage = 0;
-              var permitted = parseInt(data.datasets[1].data[tooltipItems.index], 10);
-              var blocked = parseInt(data.datasets[0].data[tooltipItems.index], 10);
-              if (permitted + blocked > 0) {
-                percentage = (100 * blocked) / (permitted + blocked);
+                return ("Queries from " + fromTime + " to " + untilTime + " on " + fromDate).split(
+                  "\n "
+                );
+              }
+
+              // Full tooltip for intervals spanning more than one day
+              // We split title in two lines on small screens
+              if ($(window).width() < 992) {
+                fromDate += "\n";
               }
 
               return (
-                data.datasets[tooltipItems.datasetIndex].label +
-                ": " +
-                tooltipItems.yLabel +
-                " (" +
-                percentage.toFixed(1) +
-                "%)"
-              );
-            }
-
-            return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
+                "Queries from " +
+                fromDate +
+                " " +
+                fromTime +
+                " to " +
+                untilDate +
+                " " +
+                untilTime
+              ).split("\n ");
+            },
           },
         },
       },
-      legend: {
-        display: false,
-      },
       scales: {
-        xAxes: [
+        xAxes:
           {
             type: "time",
             stacked: true,
-            time: {
-              unit: "hour",
-              displayFormats: {
-                minute: "HH:mm",
-                hour: "HH:mm",
-                day: "MMM DD",
-                week: "MMM DD",
-                month: "MMM",
-                quarter: "YYYY MMM",
-                year: "YYYY",
-              },
+          offset: false,
+          time: {
+            unit: "hour",
+            displayFormats: {
+              minute: "HH:mm",
+              hour: "HH:mm",
+              day: "MMM DD",
+              week: "MMM DD",
+              month: "MMM",
+              quarter: "YYYY MMM",
+              year: "YYYY",
             },
+          },
             gridLines: {
               color: gridColor,
-              zeroLineColor: gridColor,
             },
             ticks: {
               fontColor: ticksColor,
             },
           },
-        ],
-        yAxes: [
+        yAxes:
           {
             stacked: true,
+            beginAtZero: true,
             ticks: {
-              beginAtZero: true,
               fontColor: ticksColor,
             },
-            gridLines: {
-              color: gridColor,
+          grid: {
+            color: gridColor,
+            drawBorder: false,
             },
           },
-        ],
       },
       elements: {
         line: {
