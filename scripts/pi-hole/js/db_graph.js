@@ -196,6 +196,8 @@ function updateQueriesOverTime() {
         }
       }
 
+      timeLineChart.options.scales.xAxes[0].ticks.min = from * 1000;
+      timeLineChart.options.scales.xAxes[0].ticks.max = until * 1000;
       timeLineChart.options.scales.xAxes[0].display = true;
       $("#queries-over-time .overlay").hide();
       timeoutWarning.hide();
