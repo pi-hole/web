@@ -391,10 +391,10 @@ $("#querytime").on("apply.daterangepicker", function (ev, picker) {
 });
 
 $("#queryOverTimeChart").click(function (evt) {
-  var activePoints = timeLineChart.getElementAtEvent(evt);
+  var activePoints = timeLineChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
   if (activePoints.length > 0) {
     //get the internal index in the chart
-    var clickedElementindex = activePoints[0]._index;
+    var clickedElementindex = activePoints[0].index;
 
     //get specific label by index
     var label = timeLineChart.data.labels[clickedElementindex];
