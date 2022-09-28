@@ -1084,11 +1084,10 @@ $(function () {
   }
 
   $("#queryOverTimeChart").click(function (evt) {
-    var activePoints = timeLineChart.getElementAtEvent(evt);
+    var activePoints = timeLineChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
     if (activePoints.length > 0) {
-      //get the internal index of slice in pie chart
-      var clickedElementindex = activePoints[0]._index;
-
+      //get the internal index
+      var clickedElementindex = activePoints[0].index;
       //get specific label by index
       var label = timeLineChart.data.labels[clickedElementindex];
 
@@ -1102,10 +1101,10 @@ $(function () {
   });
 
   $("#clientsChart").click(function (evt) {
-    var activePoints = clientsChart.getElementAtEvent(evt);
+    var activePoints = clientsChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
     if (activePoints.length > 0) {
-      //get the internal index of slice in pie chart
-      var clickedElementindex = activePoints[0]._index;
+      //get the internal index
+      var clickedElementindex = activePoints[0].index;
 
       //get specific label by index
       var label = clientsChart.data.labels[clickedElementindex];
