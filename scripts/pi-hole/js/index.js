@@ -323,7 +323,7 @@ function updateQueryTypesPie() {
     queryTypePieChart.options.legendCallback = customLegend;
 
     // Generate legend in separate div
-    $("#query-types-legend").html(queryTypePieChart.generateLegend());
+    // $("#query-types-legend").html(queryTypePieChart.generateLegend());
     $("#query-types-legend > ul > li").click(function (e) {
       if (iscolorBox(e.target)) {
         return false;
@@ -568,7 +568,7 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.options.legendCallback = customLegend;
 
     // Generate legend in separate div
-    $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
+    // $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
     $("#forward-destinations-legend > ul > li").click(function (e) {
       if (iscolorBox(e.target)) {
         return false;
@@ -839,32 +839,23 @@ function updateSummaryData(runOnce) {
     });
 }
 
-function doughnutTooltip(tooltipItems, data) {
-  var dataset = data.datasets[tooltipItems.datasetIndex];
-  var label = " " + data.labels[tooltipItems.index];
-  // Compute share of total and of displayed
-  var scale = 0,
-    total = 0;
-  var metas = Object.keys(dataset._meta).map(function (e) {
-    return dataset._meta[e];
-  });
-  metas.forEach(function (meta) {
-    meta.data.forEach(function (val, i) {
-      if (val.hidden) scale += dataset.data[i];
-      total += dataset.data[i];
-    });
-  });
-  if (scale === 0)
+function doughnutTooltip(tooltipLabel) {
+  var percentageTotalShown = tooltipLabel.chart._metasets[0].total;
+  var label = " " + tooltipLabel.label;
+
+  if (percentageTotalShown >= 100) {
     // All items shown
-    return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
-  return (
-    label +
-    ":<br>&bull; " +
-    dataset.data[tooltipItems.index].toFixed(1) +
-    "% of all queries<br>&bull; " +
-    ((dataset.data[tooltipItems.index] * 100) / (total - scale)).toFixed(1) +
-    "% of shown items"
-  );
+    return label + ": " + tooltipLabel.parsed.toFixed(1) + "%";
+  } else {
+    return (
+      label +
+      ":<br>&bull; " +
+      tooltipLabel.parsed.toFixed(1) +
+      "% of all queries<br>&bull; " +
+      ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) +
+      "% of shown items"
+    );
+  }
 }
 
 var maxlogage = "24";
@@ -1096,7 +1087,12 @@ $(function () {
   }
 
   $("#queryOverTimeChart").click(function (evt) {
-    var activePoints = timeLineChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
+    var activePoints = timeLineChart.getElementsAtEventForMode(
+      evt,
+      "nearest",
+      { intersect: true },
+      false
+    );
     if (activePoints.length > 0) {
       //get the internal index
       var clickedElementindex = activePoints[0].index;
@@ -1113,7 +1109,12 @@ $(function () {
   });
 
   $("#clientsChart").click(function (evt) {
-    var activePoints = clientsChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
+    var activePoints = clientsChart.getElementsAtEventForMode(
+      evt,
+      "nearest",
+      { intersect: true },
+      false
+    );
     if (activePoints.length > 0) {
       //get the internal index
       var clickedElementindex = activePoints[0].index;
@@ -1148,18 +1149,23 @@ $(function () {
         },
         plugins: {
           legend: {
-            display: false,
+            display: true,
+            position: "right",
+            align: "start",
+            labels: {
+              boxWidth: 13,
+              color: ticksColor,
+            },
           },
           tooltip: {
+            // Disable the on-canvas tooltip
             enabled: false,
-            custom: customTooltips,
+            external: customTooltips,
             callbacks: {
               title: function () {
-                return "Query types";
+                return "Query type";
               },
-              label: function (tooltipItems, data) {
-                return doughnutTooltip(tooltipItems, data);
-              },
+              label: doughnutTooltip,
             },
           },
         },
@@ -1192,18 +1198,23 @@ $(function () {
         },
         plugins: {
           legend: {
-            display: false,
+            display: true,
+            position: "right",
+            align: "start",
+            labels: {
+              boxWidth: 13,
+              color: ticksColor,
+            },
           },
           tooltip: {
+            // Disable the on-canvas tooltip
             enabled: false,
-            custom: customTooltips,
+            external: customTooltips,
             callbacks: {
               title: function () {
-                return "Forward destinations";
+                return "Upstream server";
               },
-              label: function (tooltipItems, data) {
-                return doughnutTooltip(tooltipItems, data);
-              },
+              label: doughnutTooltip,
             },
           },
         },

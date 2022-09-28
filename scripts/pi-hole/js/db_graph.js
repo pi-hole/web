@@ -390,7 +390,12 @@ $("#querytime").on("apply.daterangepicker", function (ev, picker) {
 });
 
 $("#queryOverTimeChart").click(function (evt) {
-  var activePoints = timeLineChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
+  var activePoints = timeLineChart.getElementsAtEventForMode(
+    evt,
+    "nearest",
+    { intersect: true },
+    false
+  );
   if (activePoints.length > 0) {
     //get the internal index in the chart
     var clickedElementindex = activePoints[0].index;
