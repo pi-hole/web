@@ -116,11 +116,8 @@ require_once 'scripts/pi-hole/php/gravity.php';
                 <h3 class="box-title">Query Types</h3>
             </div>
             <div class="box-body">
-                <div class="pull-left" style="width:60%">
+                <div class="pull-left" style="width:100%">
                     <canvas id="queryTypePieChart"></canvas>
-                </div>
-                <div class="pull-left" style="width:40%">
-                    <div id="query-types-legend" class="chart-legend"></div>
                 </div>
             </div>
             <div class="overlay">
@@ -135,11 +132,8 @@ require_once 'scripts/pi-hole/php/gravity.php';
                 <h3 class="box-title">Upstream servers</h3>
             </div>
             <div class="box-body">
-                <div class="pull-left" style="width:60%">
+                <div class="pull-left" style="width:100%">
                     <canvas id="forwardDestinationPieChart" class="extratooltipcanvas no-user-select"></canvas>
-                </div>
-                <div class="pull-left" style="width:40%">
-                    <div id="forward-destinations-legend" class="chart-legend extratooltipcanvas no-user-select"></div>
                 </div>
             </div>
             <div class="overlay">
