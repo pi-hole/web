@@ -220,25 +220,17 @@ $(function () {
       datasets: [
         {
           label: "Blocked DNS Queries",
-          fill: true,
           backgroundColor: blockedColor,
           borderColor: blockedColor,
           pointBorderColor: blockedColor,
-          pointRadius: 0,
-          pointHoverRadius: 5,
           data: [],
-          pointHitRadius: 5,
         },
         {
           label: "Permitted DNS Queries",
-          fill: true,
           backgroundColor: permittedColor,
           borderColor: permittedColor,
           pointBorderColor: permittedColor,
-          pointRadius: 0,
-          pointHoverRadius: 5,
           data: [],
-          pointHitRadius: 5,
         },
       ],
     },
@@ -366,6 +358,7 @@ $(function () {
           beginAtZero: true,
           ticks: {
             color: ticksColor,
+            precision: 0,
           },
           grid: {
             color: gridColor,
@@ -377,6 +370,12 @@ $(function () {
         line: {
           borderWidth: 0,
           spanGaps: false,
+          fill: true,
+        },
+        point: {
+          radius: 0,
+          hoverRadius: 5,
+          hitRadius: 5,
         },
       },
       maintainAspectRatio: false,
