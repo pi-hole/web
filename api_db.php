@@ -339,6 +339,19 @@ if (isset($_GET['getGraphData']) && $auth) {
             }
         }
 
+        // It is unpredictable what the first timestamp returned by the database will be.
+        // This depends on live data. The bar graph can handle "gaps", but the Area graph can't.
+        // Hence, we filling the "missing" timeslots with 0 to avoid wrong graphic render.
+        // (https://github.com/pi-hole/AdminLTE/pull/2374#issuecomment-1261865428)
+        $aligned_from = $from + (($first_db_timestamp - $from) % $interval);
+
+        // Fill gaps in returned data
+        for ($i = $aligned_from; $i < $until; $i += $interval) {
+            if (!array_key_exists($i, $data)) {
+                $data[$i] = 0;
+            }
+        }
+
         return $data;
     }
 
