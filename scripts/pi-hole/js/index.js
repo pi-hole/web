@@ -975,6 +975,12 @@ $(function () {
         line: {
           borderWidth: 0,
           spanGaps: false,
+          fill: true,
+        },
+        point: {
+          radius: 0,
+          hoverRadius: 5,
+          hitRadius: 5,
         },
       },
     },
@@ -1061,6 +1067,12 @@ $(function () {
           line: {
             borderWidth: 0,
             spanGaps: false,
+            fill: true,
+            point: {
+              radius: 0,
+              hoverRadius: 5,
+              hitRadius: 5,
+            },
           },
         },
         hover: {
