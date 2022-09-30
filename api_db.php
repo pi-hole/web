@@ -324,7 +324,7 @@ if (isset($_GET['getGraphData']) && $auth) {
                 ELSE 0
             END) AS domains,
             SUM(CASE
-                WHEN status IN (1,4,5,6,7,8,9,10,11) THEN 1
+                WHEN status IN (1,4,5,6,7,8,9,10,11,15,16) THEN 1
                 ELSE 0
             END) AS blocked
         FROM queries
