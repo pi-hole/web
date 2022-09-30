@@ -332,7 +332,6 @@ if (isset($_GET['getGraphData']) && $auth) {
         GROUP BY interval
         ORDER BY interval";
 
-    // Count permitted queries in intervals
     $stmt = $db->prepare($sqlcommand);
     $stmt->bindValue(':from', $from, SQLITE3_INTEGER);
     $stmt->bindValue(':until', $until, SQLITE3_INTEGER);
