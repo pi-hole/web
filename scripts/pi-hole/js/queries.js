@@ -41,7 +41,7 @@ function handleAjaxError(xhr, textStatus) {
   tableApi.clear();
   tableApi.draw();
 }
- 
+
 $(function () {
   // Do we want to filter queries?
   var GETDict = {};
@@ -76,9 +76,9 @@ $(function () {
   }
 
   $('#all-queries tfoot th').each(function () {
-        var title = $(this).text();
-        $(this).html('<input type="text" placeholder="Search ' + title + '" />');
-    });
+    var title = $(this).text();
+    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+  });
 
 
   tableApi = $("#all-queries").DataTable({
@@ -295,7 +295,7 @@ $(function () {
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     dom: 'Qlfrtip',
     searchBuilder: {
-      columns: [1,2,3,4,5]
+      columns: [1, 2, 3, 4, 5]
     },
     ajax: {
       url: APIstring,
@@ -463,20 +463,20 @@ $(function () {
       }
     },
     initComplete: function (settings, json) {
-            
-            // Apply the search
-            this.api()
-                .columns()
-                .every(function () {
-                    var that = this;
- 
-                    $('input', this.footer()).on('keyup change clear', function () {
-                        if (that.search() !== this.value) {
-                            that.search(this.value).draw();
-                        }
-                    });
-                });
-     },
+
+      // Apply the search
+      this.api()
+        .columns()
+        .every(function () {
+          var that = this;
+
+          $('input', this.footer()).on('keyup change clear', function () {
+            if (that.search() !== this.value) {
+              that.search(this.value).draw();
+            }
+          });
+        });
+    },
   });
 
   resetColumnsFilters();

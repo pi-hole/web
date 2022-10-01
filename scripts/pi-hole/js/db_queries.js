@@ -100,9 +100,9 @@ function handleAjaxError(xhr, textStatus) {
   } else {
     alert(
       "An unknown error occurred while loading the data.\n" +
-        xhr.responseText +
-        "\nCheck the server's log files (/var/log/lighttpd/error-pihole.log) for details.\n\nYou may need to increase PHP memory limit." +
-        "\n\nYou can find more info in pi-hole's FAQ:\nhttps://docs.pi-hole.net/main/faq/#error-while-loading-data-from-the-long-term-database"
+      xhr.responseText +
+      "\nCheck the server's log files (/var/log/lighttpd/error-pihole.log) for details.\n\nYou may need to increase PHP memory limit." +
+      "\n\nYou can find more info in pi-hole's FAQ:\nhttps://docs.pi-hole.net/main/faq/#error-while-loading-data-from-the-long-term-database"
     );
   }
 
@@ -225,10 +225,9 @@ $(function () {
   }
 
   $('#all-queries tfoot th').each(function () {
-        var title = $(this).text();
-        $(this).html('<input type="text" placeholder="Search ' + title + '" />');
-    });
-  
+    var title = $(this).text();
+    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+  });
 
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
@@ -400,7 +399,7 @@ $(function () {
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     dom: 'Qlfrtip',
     searchBuilder: {
-      columns: [1,2,3,4,5]
+      columns: [1, 2, 3, 4, 5]
     },
     ajax: {
       url: APIstring,
@@ -453,21 +452,20 @@ $(function () {
       },
     ],
     initComplete: function (settings, json) {
-            // Apply the search
-            this.api()
-                .columns()
-                .every(function () {
-                    var that = this;
- 
-                    $('input', this.footer()).on('keyup change clear', function () {
-                        if (that.search() !== this.value) {
-                            that.search(this.value).draw();
-                        }
-                    });
-                });
-     },
+      // Apply the search
+      this.api()
+        .columns()
+        .every(function () {
+          var that = this;
+          $('input', this.footer()).on('keyup change clear', function () {
+            if (that.search() !== this.value) {
+              that.search(this.value).draw();
+            }
+          });
+        });
+    },
   });
-  
+
   $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();
     if ([1, 4, 5, 9, 10, 11].indexOf(data[4]) !== -1) {
