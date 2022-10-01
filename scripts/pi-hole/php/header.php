@@ -84,6 +84,7 @@ $cacheVer = filemtime(__FILE__);
 
     <!-- scripts -->
     <script src="scripts/vendor/jquery.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/jquery.dataTables.min.js?v=<?php echo $cacheVer; ?>"></script>
     <script src="style/vendor/bootstrap/js/bootstrap.min.js?v=<?php echo $cacheVer; ?>"></script>
     <script src="scripts/vendor/adminlte.min.js?v=<?php echo $cacheVer; ?>"></script>
     <script src="scripts/vendor/bootstrap-notify.min.js?v=<?php echo $cacheVer; ?>"></script>

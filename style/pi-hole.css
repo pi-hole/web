@@ -1011,3 +1011,11 @@ table.dataTable tbody > tr > .selected {
   line-height: 1;
   animation: 2s infinite Pulse steps(20);
 }
+tfoot input {
+  width: 100%;
+  padding: 3px;
+  box-sizing: border-box;
+}
+tfoot {
+    display: table-header-group;
+}

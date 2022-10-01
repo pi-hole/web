@@ -224,6 +224,11 @@ $(function () {
     APIstring += "&status=" + statusType;
   }
 
+  $('#all-queries tfoot th').each(function () {
+        var title = $(this).text();
+        $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+    });
+  
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
       var replyid = parseInt(data[6], 10);
@@ -442,8 +447,22 @@ $(function () {
         render: $.fn.dataTable.render.text(),
       },
     ],
-    initComplete: reloadCallback,
+    initComplete: function (settings, json) {
+            // Apply the search
+            this.api()
+                .columns()
+                .every(function () {
+                    var that = this;
+ 
+                    $('input', this.footer()).on('keyup change clear', function () {
+                        if (that.search() !== this.value) {
+                            that.search(this.value).draw();
+                        }
+                    });
+                });
+     },
   });
+  
   $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();
     if ([1, 4, 5, 9, 10, 11].indexOf(data[4]) !== -1) {
