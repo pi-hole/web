@@ -64,6 +64,10 @@ $cacheVer = filemtime(__FILE__);
 <?php if ($auth) { ?>
     <link rel="stylesheet" href="style/vendor/datatables.min.css?v=<?php echo $cacheVer; ?>">
     <link rel="stylesheet" href="style/vendor/datatables_extensions.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/dataTables.dateTime.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/dataTables.bootstrap.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/searchBuilder.bootstrap.min.css?v=<?php echo $cacheVer; ?>">
+    <link rel="stylesheet" href="style/vendor/searchBuilder.dataTables.min.css?v=<?php echo $cacheVer; ?>">
     <link rel="stylesheet" href="style/vendor/daterangepicker.min.css?v=<?php echo $cacheVer; ?>">
 <?php } ?>
     <link rel="stylesheet" href="style/vendor/AdminLTE.min.css?v=<?php echo $cacheVer; ?>">
@@ -92,6 +96,11 @@ $cacheVer = filemtime(__FILE__);
     <script src="scripts/vendor/select2.min.js?v=<?php echo $cacheVer; ?>"></script>
     <script src="scripts/vendor/datatables.min.js?v=<?php echo $cacheVer; ?>"></script>
     <script src="scripts/vendor/datatables.select.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/searchBuilder.bootstrap.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/dataTables.bootstrap.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/dataTables.dateTime.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/dataTables.searchBuilder.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/datetime-moment.js?v=<?php echo $cacheVer; ?>"></script>
     <script src="scripts/vendor/datatables.buttons.min.js?v=<?php echo $cacheVer; ?>"></script>
     <script src="scripts/vendor/moment.min.js?v=<?php echo $cacheVer; ?>"></script>
     <script src="scripts/vendor/Chart.min.js?v=<?php echo $cacheVer; ?>"></script>

@@ -41,7 +41,7 @@ function handleAjaxError(xhr, textStatus) {
   tableApi.clear();
   tableApi.draw();
 }
-
+ 
 $(function () {
   // Do we want to filter queries?
   var GETDict = {};
@@ -79,6 +79,7 @@ $(function () {
         var title = $(this).text();
         $(this).html('<input type="text" placeholder="Search ' + title + '" />');
     });
+
 
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
@@ -292,6 +293,10 @@ $(function () {
       "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+    dom: 'Qlfrtip',
+    searchBuilder: {
+      columns: [1,2,3,4,5]
+    },
     ajax: {
       url: APIstring,
       error: handleAjaxError,
