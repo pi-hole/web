@@ -373,6 +373,19 @@ $(function () {
     initComplete: function () {
       var api = this.api();
 
+      // Apply the search
+      this.api()
+        .columns()
+        .every(function () {
+          var that = this;
+
+          $('input', this.footer()).on('keyup change clear', function () {
+            if (that.search() !== this.value) {
+              that.search(this.value).draw();
+            }
+          });
+        });
+
       // Query type IPv4 / IPv6
       api
         .$("td:eq(1)")
@@ -462,21 +475,7 @@ $(function () {
         input.attr("placeholder", "Type / Domain / Client");
       }
     },
-    initComplete: function (settings, json) {
 
-      // Apply the search
-      this.api()
-        .columns()
-        .every(function () {
-          var that = this;
-
-          $('input', this.footer()).on('keyup change clear', function () {
-            if (that.search() !== this.value) {
-              that.search(this.value).draw();
-            }
-          });
-        });
-    },
   });
 
   resetColumnsFilters();
