@@ -890,7 +890,7 @@ $(function () {
     type: utils.getGraphType(),
     data: {
       labels: [],
-      datasets: [{ data: [] }],
+      datasets: [{ data: [], parsing: false }],
     },
     options: {
       responsive: true,
@@ -998,7 +998,7 @@ $(function () {
       type: utils.getGraphType(),
       data: {
         labels: [],
-        datasets: [{ data: [] }],
+        datasets: [{ data: [], parsing: false }],
       },
       options: {
         responsive: true,
@@ -1136,7 +1136,7 @@ $(function () {
       type: "doughnut",
       data: {
         labels: [],
-        datasets: [{ data: [] }],
+        datasets: [{ data: [], parsing: false }],
       },
       options: {
         responsive: true,
@@ -1180,7 +1180,7 @@ $(function () {
       type: "doughnut",
       data: {
         labels: [],
-        datasets: [{ data: [] }],
+        datasets: [{ data: [], parsing: false }],
       },
       options: {
         responsive: true,
