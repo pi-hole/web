@@ -75,6 +75,11 @@ $(function () {
     APIstring += "&type=" + GETDict.type;
   }
 
+  $('#all-queries tfoot th').each(function () {
+        var title = $(this).text();
+        $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+    });
+
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
       var replyid = parseInt(data[5], 10);
@@ -452,6 +457,21 @@ $(function () {
         input.attr("placeholder", "Type / Domain / Client");
       }
     },
+    initComplete: function (settings, json) {
+            
+            // Apply the search
+            this.api()
+                .columns()
+                .every(function () {
+                    var that = this;
+ 
+                    $('input', this.footer()).on('keyup change clear', function () {
+                        if (that.search() !== this.value) {
+                            that.search(this.value).draw();
+                        }
+                    });
+                });
+     },
   });
 
   resetColumnsFilters();
