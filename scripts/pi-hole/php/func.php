@@ -257,6 +257,52 @@ function addCustomDNSEntry($ip = '', $domain = '', $reload = '', $json = true)
     }
 }
 
+function editCustomDNSEntry($ip = '', $domain = '', $reload = '', $json = true)
+{
+    try {
+        $ip = !empty($_REQUEST['ip']) ? trim($_REQUEST['ip']) : $ip;
+        $domain = !empty($_REQUEST['domain']) ? trim($_REQUEST['domain']) : $domain;
+        $reload = !empty($_REQUEST['reload']) ? trim($_REQUEST['reload']) : $reload;
+
+        if (empty($ip)) {
+            return returnError('IP must be set', $json);
+        }
+
+        $ipType = get_ip_type($ip);
+
+        if (!$ipType) {
+            return returnError('IP must be valid', $json);
+        }
+
+        if (empty($domain)) {
+            return returnError('Domain must be set', $json);
+        }
+
+        if (!validDomain($domain)) {
+            return returnError('Domain must be valid', $json);
+        }
+
+        $existingEntries = getCustomDNSEntries();
+
+        foreach ($existingEntries as $entry) {
+            if ($entry->domain == $domain) {
+                $old_ip = $entry->ip;
+                break;
+            }
+        }
+
+        if (isset($old_ip)) {
+            pihole_execute('-a removecustomdns '.$old_ip.' '.$domain);
+        }
+
+        pihole_execute('-a addcustomdns '.$ip.' '.$domain.' '.$reload);
+
+        return returnSuccess('', $json);
+    } catch (\Exception $ex) {
+        return returnError($ex->getMessage(), $json);
+    }
+}
+
 function deleteCustomDNSEntry()
 {
     try {

@@ -20,6 +20,9 @@ switch ($_POST['action']) {
     case 'add':     echo json_encode(addCustomDNSEntry());
         break;
 
+    case 'edit':    echo json_encode(editCustomDNSEntry());
+        break;
+
     case 'delete':  echo json_encode(deleteCustomDNSEntry());
         break;
 
