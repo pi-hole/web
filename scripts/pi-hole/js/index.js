@@ -321,12 +321,6 @@ function updateQueryTypesPie() {
 
     // Don't use rotation animation for further updates
     queryTypePieChart.options.animation.duration = 0;
-
-    // Generate legend in separate div
-    // $("#query-types-legend").html(queryTypePieChart.generateLegend());
-    $("#query-types-legend > ul > li > p").click(function () {
-      window.location.href = "queries.php?querytype=" + querytypeids[$(this).index()];
-    });
   }).done(function () {
     // Reload graph after minute
     setTimeout(updateQueryTypesPie, 60000);
@@ -472,15 +466,6 @@ function updateForwardDestinationsPie() {
 
     // Don't use rotation animation for further updates
     forwardDestinationPieChart.options.animation.duration = 0;
-
-    // Generate legend in separate div
-    // $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
-    $("#forward-destinations-legend > ul > li > p").click(function (e) {
-      var obj = encodeURIComponent(e.target.textContent);
-      if (obj.length > 0) {
-        window.location.href = "queries.php?forwarddest=" + obj;
-      }
-    });
   }).done(function () {
     // Reload graph after one minute
     setTimeout(updateForwardDestinationsPie, 60000);
@@ -806,7 +791,17 @@ const htmlLegendPlugin = {
       li.style.display = "flex";
       li.style.flexDirection = "row";
 
-      li.addEventListener('click', () => {
+      // Color checkbox (toggle visibility)
+      const boxSpan = document.createElement("span");
+      boxSpan.title = "Toggle visibility";
+      boxSpan.style.color = item.fillStyle;
+      boxSpan.style.display = "inline-block";
+      boxSpan.style.margin = "0 10px";
+      boxSpan.innerHTML = item.hidden
+        ? '<i class="colorBoxWrapper fa fa-square"></i>'
+        : '<i class="colorBoxWrapper fa fa-check-square"></i>';
+
+      boxSpan.addEventListener("click", () => {
         const { type } = chart.config;
 
         if (type === "pie" || type === "doughnut") {
@@ -817,30 +812,27 @@ const htmlLegendPlugin = {
         }
 
         chart.update();
-      };
+      });
 
-      // Color checkbox
-      const boxSpan = document.createElement("span");
-      boxSpan.style.color = item.fillStyle;
-      boxSpan.style.display = "inline-block";
-      boxSpan.style.margin = "0 10px";
-      boxSpan.innerHTML = item.hidden
-        ? '<i class="colorBoxWrapper fa fa-square"></i>'
-        : '<i class="colorBoxWrapper fa fa-check-square"></i>';
+      // Text (link to query log page)
+      const textLink = document.createElement("p");
+      textLink.title = "List " + item.text + " queries";
+      textLink.style.color = item.fontColor;
+      textLink.style.margin = 0;
+      textLink.style.padding = 0;
+      textLink.style.textDecoration = item.hidden ? "line-through" : "";
+      textLink.className = "legend-label-text";
+      textLink.append(item.text);
 
-      // Text
-      const textContainer = document.createElement("p");
-      textContainer.style.color = item.fontColor;
-      textContainer.style.margin = 0;
-      textContainer.style.padding = 0;
-      textContainer.style.textDecoration = item.hidden ? "line-through" : "";
-      textContainer.className = "legend-label-text";
+      textLink.addEventListener("click", () => {
+        if (chart.canvas.id === "queryTypePieChart") {
+          window.location.href = "queries.php?querytype=" + querytypeids[item.index];
+        } else if (chart.canvas.id === "forwardDestinationPieChart") {
+          window.location.href = "queries.php?forwarddest=" + encodeURIComponent(item.text);
+        }
+      });
 
-      const text = document.createTextNode(item.text);
-      textContainer.append(text);
-
-      li.append(boxSpan);
-      li.append(textContainer);
+      li.append(boxSpan, textLink);
       ul.append(li);
     });
   },
@@ -955,7 +947,6 @@ $(function () {
   });
 
   // Pull in data via AJAX
-
   updateQueriesOverTime();
 
   // Create / load "Top Clients over Time" only if authorized
