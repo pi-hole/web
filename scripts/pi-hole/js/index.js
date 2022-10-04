@@ -318,113 +318,19 @@ function updateQueryTypesPie() {
     queryTypePieChart.data.labels = k;
     $("#query-types-pie .overlay").hide();
     queryTypePieChart.update();
+
     // Don't use rotation animation for further updates
     queryTypePieChart.options.animation.duration = 0;
-    queryTypePieChart.options.legendCallback = customLegend;
 
     // Generate legend in separate div
     // $("#query-types-legend").html(queryTypePieChart.generateLegend());
-    $("#query-types-legend > ul > li").click(function (e) {
-      if (iscolorBox(e.target)) {
-        return false;
-      }
-
+    $("#query-types-legend > ul > li > p").click(function () {
       window.location.href = "queries.php?querytype=" + querytypeids[$(this).index()];
-    });
-    $("#query-types-legend .colorBoxWrapper").click(function (e) {
-      hidePieSlice(e);
     });
   }).done(function () {
     // Reload graph after minute
     setTimeout(updateQueryTypesPie, 60000);
   });
-}
-
-function customLegend(chart) {
-  var text = [];
-  var data = chart.data;
-  var datasets = data.datasets;
-  var labels = data.labels;
-
-  text.push('<ul class="' + chart.id + '-legend">');
-
-  if (datasets.length > 0) {
-    for (var i = 0; i < datasets[0].data.length; ++i) {
-      var color = datasets[0].backgroundColor[i];
-
-      var txt = "";
-
-      // legend box icon
-      txt =
-        '<span class="colorBoxWrapper" style="color: ' +
-        color +
-        '" title="Toggle visibility">' +
-        '<i class="fa fa-check-square"></i>' +
-        "</span>";
-
-      // color block
-      txt += '<span class="legend-color-box" style="background-color:' + color + '"></span>';
-
-      // label
-      if (labels[i]) {
-        txt +=
-          '<span class="legend-label-text" title="List ' +
-          labels[i] +
-          ' queries">' +
-          labels[i] +
-          "</span>";
-      }
-
-      text.push("<li>" + txt + "</li>");
-    }
-  }
-
-  text.push("</ul>");
-  return text.join("");
-}
-
-function hidePieSlice(event) {
-  togglecolorBox(event.target);
-
-  var legendID = $(event.target).closest(".chart-legend").attr("id");
-  var ci =
-    legendID === "query-types-legend"
-      ? event.view.queryTypePieChart
-      : event.view.forwardDestinationPieChart;
-
-  var listItemParent = $(event.target).closest("li");
-  $(listItemParent).toggleClass("strike");
-
-  var index = $(listItemParent).index();
-  var mobj = ci.data.datasets[0]._meta;
-  var metas = Object.keys(mobj).map(function (e) {
-    return mobj[e];
-  });
-  metas.forEach(function (meta) {
-    var curr = meta.data[index];
-    curr.hidden = !curr.hidden;
-  });
-
-  ci.update();
-}
-
-function togglecolorBox(target) {
-  var parentListItem = $(target).closest("li");
-  var colorBox = $(parentListItem).find(".fa-check-square, .fa-square");
-
-  if (colorBox) {
-    $(colorBox).toggleClass("fa-check-square");
-    $(colorBox).toggleClass("fa-square");
-  }
-}
-
-function iscolorBox(target) {
-  // See if click happened on colorBoxWrapper or child SVG
-  if ($(target).closest(".colorBoxWrapper")[0]) {
-    return true;
-  }
-
-  return false;
 }
 
 function updateClientsOverTime() {
@@ -563,24 +469,17 @@ function updateForwardDestinationsPie() {
     // and push it at once
     $("#forward-destinations-pie .overlay").hide();
     forwardDestinationPieChart.update();
+
     // Don't use rotation animation for further updates
     forwardDestinationPieChart.options.animation.duration = 0;
-    forwardDestinationPieChart.options.legendCallback = customLegend;
 
     // Generate legend in separate div
     // $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
-    $("#forward-destinations-legend > ul > li").click(function (e) {
-      if (iscolorBox(e.target)) {
-        return false;
-      }
-
+    $("#forward-destinations-legend > ul > li > p").click(function (e) {
       var obj = encodeURIComponent(e.target.textContent);
       if (obj.length > 0) {
         window.location.href = "queries.php?forwarddest=" + obj;
       }
-    });
-    $("#forward-destinations-legend .colorBoxWrapper").click(function (e) {
-      hidePieSlice(e);
     });
   }).done(function () {
     // Reload graph after one minute
@@ -869,6 +768,84 @@ function getMaxlogage() {
   });
 }
 
+// chartjs plugin used by the custom doughnut legend
+const getOrCreateLegendList = (chart, id) => {
+  const legendContainer = document.getElementById(id);
+  let listContainer = legendContainer.querySelector("ul");
+
+  if (!listContainer) {
+    listContainer = document.createElement("ul");
+    listContainer.style.display = "flex";
+    listContainer.style.flexDirection = "column";
+    listContainer.style.margin = 0;
+    listContainer.style.padding = 0;
+
+    legendContainer.append(listContainer);
+  }
+
+  return listContainer;
+};
+
+const htmlLegendPlugin = {
+  id: "htmlLegend",
+  afterUpdate(chart, args, options) {
+    const ul = getOrCreateLegendList(chart, options.containerID);
+
+    // Remove old legend items
+    while (ul.firstChild) {
+      ul.firstChild.remove();
+    }
+
+    // Reuse the built-in legendItems generator
+    const items = chart.options.plugins.legend.labels.generateLabels(chart);
+
+    items.forEach(item => {
+      const li = document.createElement("li");
+      li.style.alignItems = "center";
+      li.style.cursor = "pointer";
+      li.style.display = "flex";
+      li.style.flexDirection = "row";
+
+      li.addEventListener('click', () => {
+        const { type } = chart.config;
+
+        if (type === "pie" || type === "doughnut") {
+          // Pie and doughnut charts only have a single dataset and visibility is per item
+          chart.toggleDataVisibility(item.index);
+        } else {
+          chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
+        }
+
+        chart.update();
+      };
+
+      // Color checkbox
+      const boxSpan = document.createElement("span");
+      boxSpan.style.color = item.fillStyle;
+      boxSpan.style.display = "inline-block";
+      boxSpan.style.margin = "0 10px";
+      boxSpan.innerHTML = item.hidden
+        ? '<i class="colorBoxWrapper fa fa-square"></i>'
+        : '<i class="colorBoxWrapper fa fa-check-square"></i>';
+
+      // Text
+      const textContainer = document.createElement("p");
+      textContainer.style.color = item.fontColor;
+      textContainer.style.margin = 0;
+      textContainer.style.padding = 0;
+      textContainer.style.textDecoration = item.hidden ? "line-through" : "";
+      textContainer.className = "legend-label-text";
+
+      const text = document.createTextNode(item.text);
+      textContainer.append(text);
+
+      li.append(boxSpan);
+      li.append(textContainer);
+      ul.append(li);
+    });
+  },
+};
+
 $(function () {
   // Pull in data via AJAX
   getMaxlogage();
@@ -1139,6 +1116,7 @@ $(function () {
         labels: [],
         datasets: [{ data: [], parsing: false }],
       },
+      plugins: [htmlLegendPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -1148,14 +1126,11 @@ $(function () {
           },
         },
         plugins: {
+          htmlLegend: {
+            containerID: "query-types-legend",
+          },
           legend: {
-            display: true,
-            position: "right",
-            align: "start",
-            labels: {
-              boxWidth: 13,
-              color: ticksColor,
-            },
+            display: false,
           },
           tooltip: {
             // Disable the on-canvas tooltip
@@ -1169,7 +1144,6 @@ $(function () {
             },
           },
         },
-
         animation: {
           duration: 750,
         },
@@ -1188,6 +1162,7 @@ $(function () {
         labels: [],
         datasets: [{ data: [], parsing: false }],
       },
+      plugins: [htmlLegendPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -1197,14 +1172,11 @@ $(function () {
           },
         },
         plugins: {
+          htmlLegend: {
+            containerID: "forward-destinations-legend",
+          },
           legend: {
-            display: true,
-            position: "right",
-            align: "start",
-            labels: {
-              boxWidth: 13,
-              color: ticksColor,
-            },
+            display: false,
           },
           tooltip: {
             // Disable the on-canvas tooltip
