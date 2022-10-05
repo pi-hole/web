@@ -861,7 +861,8 @@ $(function () {
         },
         tooltip: {
           enabled: true,
-          mode: "index",
+          intersect: false,
+          mode: "x",
           yAlign: "bottom",
           itemSort: function (a, b) {
             return b.datasetIndex - a.datasetIndex;
@@ -969,7 +970,8 @@ $(function () {
           tooltip: {
             // Disable the on-canvas tooltip
             enabled: false,
-            mode: "index",
+            intersect: false,
+            mode: "x",
             external: customTooltips,
             yAlign: "top",
             itemSort: function (a, b) {
