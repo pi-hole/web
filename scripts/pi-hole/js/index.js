@@ -30,7 +30,8 @@ var THEME_COLORS = [
   "#d2d6de",
 ];
 
-var customTooltips = function (tooltip) {
+var customTooltips = function (context) {
+  var tooltip = context.tooltip;
   var tooltipEl = document.getElementById(this._chart.canvas.id + "-customTooltip");
   if (!tooltipEl) {
     // Create Tooltip Element once per chart
@@ -42,11 +43,12 @@ var customTooltips = function (tooltip) {
     // font-size was set to 14px by bootstrap's css
     var fontZoom = parseFloat($("body").css("font-size")) / 14;
     // set styles and font
-    tooltipEl.style.padding = tooltip.yPadding + "px " + tooltip.xPadding + "px";
-    tooltipEl.style.borderRadius = tooltip.cornerRadius + "px";
-    tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
-    tooltipEl.style.fontSize = tooltip.bodyFontSize / fontZoom + "px";
-    tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
+    tooltipEl.style.padding = tooltip.options.padding + "px " + tooltip.options.padding + "px";
+    tooltipEl.style.borderRadius = tooltip.options.cornerRadius + "px";
+    tooltipEl.style.font = tooltip.options.bodyFont.string;
+    tooltipEl.style.fontFamily = tooltip.options.bodyFont.family;
+    tooltipEl.style.fontSize = tooltip.options.bodyFont.size / fontZoom + "px";
+    tooltipEl.style.fontStyle = tooltip.options.bodyFont.style;
     // append Tooltip next to canvas-containing box
     tooltipEl.ancestor = this._chart.canvas.closest(".box[id]").parentNode;
     tooltipEl.ancestor.append(tooltipEl);
@@ -110,9 +112,9 @@ var customTooltips = function (tooltip) {
   var tooltipHeight = tooltipEl.offsetHeight;
   var caretX = tooltip.caretX;
   var caretY = tooltip.caretY;
-  var caretPadding = tooltip.caretPadding;
+  var caretPadding = tooltip.options.caretPadding;
   var tooltipX, tooltipY, arrowX;
-  var arrowMinIndent = 2 * tooltip.cornerRadius;
+  var arrowMinIndent = 2 * tooltip.options.cornerRadius;
   var arrowSize = 5;
 
   // Compute X position
@@ -315,115 +317,14 @@ function updateQueryTypesPie() {
     queryTypePieChart.data.datasets[0] = dd;
     queryTypePieChart.data.labels = k;
     $("#query-types-pie .overlay").hide();
-    queryTypePieChart.chart.config.options.cutoutPercentage = 50;
     queryTypePieChart.update();
+
     // Don't use rotation animation for further updates
     queryTypePieChart.options.animation.duration = 0;
-    queryTypePieChart.options.legendCallback = customLegend;
-
-    // Generate legend in separate div
-    $("#query-types-legend").html(queryTypePieChart.generateLegend());
-    $("#query-types-legend > ul > li").click(function (e) {
-      if (iscolorBox(e.target)) {
-        return false;
-      }
-
-      window.location.href = "queries.php?querytype=" + querytypeids[$(this).index()];
-    });
-    $("#query-types-legend .colorBoxWrapper").click(function (e) {
-      hidePieSlice(e);
-    });
   }).done(function () {
     // Reload graph after minute
     setTimeout(updateQueryTypesPie, 60000);
   });
-}
-
-function customLegend(chart) {
-  var text = [];
-  var data = chart.data;
-  var datasets = data.datasets;
-  var labels = data.labels;
-
-  text.push('<ul class="' + chart.id + '-legend">');
-
-  if (datasets.length > 0) {
-    for (var i = 0; i < datasets[0].data.length; ++i) {
-      var color = datasets[0].backgroundColor[i];
-
-      var txt = "";
-
-      // legend box icon
-      txt =
-        '<span class="colorBoxWrapper" style="color: ' +
-        color +
-        '" title="Toggle visibility">' +
-        '<i class="fa fa-check-square"></i>' +
-        "</span>";
-
-      // color block
-      txt += '<span class="legend-color-box" style="background-color:' + color + '"></span>';
-
-      // label
-      if (labels[i]) {
-        txt +=
-          '<span class="legend-label-text" title="List ' +
-          labels[i] +
-          ' queries">' +
-          labels[i] +
-          "</span>";
-      }
-
-      text.push("<li>" + txt + "</li>");
-    }
-  }
-
-  text.push("</ul>");
-  return text.join("");
-}
-
-function hidePieSlice(event) {
-  togglecolorBox(event.target);
-
-  var legendID = $(event.target).closest(".chart-legend").attr("id");
-  var ci =
-    legendID === "query-types-legend"
-      ? event.view.queryTypePieChart
-      : event.view.forwardDestinationPieChart;
-
-  var listItemParent = $(event.target).closest("li");
-  $(listItemParent).toggleClass("strike");
-
-  var index = $(listItemParent).index();
-  var mobj = ci.data.datasets[0]._meta;
-  var metas = Object.keys(mobj).map(function (e) {
-    return mobj[e];
-  });
-  metas.forEach(function (meta) {
-    var curr = meta.data[index];
-    curr.hidden = !curr.hidden;
-  });
-
-  ci.update();
-}
-
-function togglecolorBox(target) {
-  var parentListItem = $(target).closest("li");
-  var colorBox = $(parentListItem).find(".fa-check-square, .fa-square");
-
-  if (colorBox) {
-    $(colorBox).toggleClass("fa-check-square");
-    $(colorBox).toggleClass("fa-square");
-  }
-}
-
-function iscolorBox(target) {
-  // See if click happened on colorBoxWrapper or child SVG
-  if ($(target).closest(".colorBoxWrapper")[0]) {
-    return true;
-  }
-
-  return false;
 }
 
 function updateClientsOverTime() {
@@ -561,27 +462,10 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.data.datasets[0] = dd;
     // and push it at once
     $("#forward-destinations-pie .overlay").hide();
-    forwardDestinationPieChart.chart.config.options.cutoutPercentage = 50;
     forwardDestinationPieChart.update();
+
     // Don't use rotation animation for further updates
     forwardDestinationPieChart.options.animation.duration = 0;
-    forwardDestinationPieChart.options.legendCallback = customLegend;
-
-    // Generate legend in separate div
-    $("#forward-destinations-legend").html(forwardDestinationPieChart.generateLegend());
-    $("#forward-destinations-legend > ul > li").click(function (e) {
-      if (iscolorBox(e.target)) {
-        return false;
-      }
-
-      var obj = encodeURIComponent(e.target.textContent);
-      if (obj.length > 0) {
-        window.location.href = "queries.php?forwarddest=" + obj;
-      }
-    });
-    $("#forward-destinations-legend .colorBoxWrapper").click(function (e) {
-      hidePieSlice(e);
-    });
   }).done(function () {
     // Reload graph after one minute
     setTimeout(updateForwardDestinationsPie, 60000);
@@ -839,32 +723,23 @@ function updateSummaryData(runOnce) {
     });
 }
 
-function doughnutTooltip(tooltipItems, data) {
-  var dataset = data.datasets[tooltipItems.datasetIndex];
-  var label = " " + data.labels[tooltipItems.index];
-  // Compute share of total and of displayed
-  var scale = 0,
-    total = 0;
-  var metas = Object.keys(dataset._meta).map(function (e) {
-    return dataset._meta[e];
-  });
-  metas.forEach(function (meta) {
-    meta.data.forEach(function (val, i) {
-      if (val.hidden) scale += dataset.data[i];
-      total += dataset.data[i];
-    });
-  });
-  if (scale === 0)
+function doughnutTooltip(tooltipLabel) {
+  var percentageTotalShown = tooltipLabel.chart._metasets[0].total.toFixed(2);
+  var label = " " + tooltipLabel.label;
+
+  if (percentageTotalShown >= 100) {
     // All items shown
-    return label + ": " + dataset.data[tooltipItems.index].toFixed(1) + "%";
-  return (
-    label +
-    ":<br>&bull; " +
-    dataset.data[tooltipItems.index].toFixed(1) +
-    "% of all queries<br>&bull; " +
-    ((dataset.data[tooltipItems.index] * 100) / (total - scale)).toFixed(1) +
-    "% of shown items"
-  );
+    return label + ": " + tooltipLabel.parsed.toFixed(1) + "%";
+  } else {
+    return (
+      label +
+      ":<br>&bull; " +
+      tooltipLabel.parsed.toFixed(1) +
+      "% of all queries<br>&bull; " +
+      ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) +
+      "% of shown items"
+    );
+  }
 }
 
 var maxlogage = "24";
@@ -878,6 +753,91 @@ function getMaxlogage() {
   });
 }
 
+// chartjs plugin used by the custom doughnut legend
+const getOrCreateLegendList = (chart, id) => {
+  const legendContainer = document.getElementById(id);
+  let listContainer = legendContainer.querySelector("ul");
+
+  if (!listContainer) {
+    listContainer = document.createElement("ul");
+    listContainer.style.display = "flex";
+    listContainer.style.flexDirection = "column";
+    listContainer.style.margin = 0;
+    listContainer.style.padding = 0;
+
+    legendContainer.append(listContainer);
+  }
+
+  return listContainer;
+};
+
+const htmlLegendPlugin = {
+  id: "htmlLegend",
+  afterUpdate(chart, args, options) {
+    const ul = getOrCreateLegendList(chart, options.containerID);
+
+    // Remove old legend items
+    while (ul.firstChild) {
+      ul.firstChild.remove();
+    }
+
+    // Reuse the built-in legendItems generator
+    const items = chart.options.plugins.legend.labels.generateLabels(chart);
+
+    items.forEach(item => {
+      const li = document.createElement("li");
+      li.style.alignItems = "center";
+      li.style.cursor = "pointer";
+      li.style.display = "flex";
+      li.style.flexDirection = "row";
+
+      // Color checkbox (toggle visibility)
+      const boxSpan = document.createElement("span");
+      boxSpan.title = "Toggle visibility";
+      boxSpan.style.color = item.fillStyle;
+      boxSpan.style.display = "inline-block";
+      boxSpan.style.margin = "0 10px";
+      boxSpan.innerHTML = item.hidden
+        ? '<i class="colorBoxWrapper fa fa-square"></i>'
+        : '<i class="colorBoxWrapper fa fa-check-square"></i>';
+
+      boxSpan.addEventListener("click", () => {
+        const { type } = chart.config;
+
+        if (type === "pie" || type === "doughnut") {
+          // Pie and doughnut charts only have a single dataset and visibility is per item
+          chart.toggleDataVisibility(item.index);
+        } else {
+          chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
+        }
+
+        chart.update();
+      });
+
+      // Text (link to query log page)
+      const textLink = document.createElement("p");
+      textLink.title = "List " + item.text + " queries";
+      textLink.style.color = item.fontColor;
+      textLink.style.margin = 0;
+      textLink.style.padding = 0;
+      textLink.style.textDecoration = item.hidden ? "line-through" : "";
+      textLink.className = "legend-label-text";
+      textLink.append(item.text);
+
+      textLink.addEventListener("click", () => {
+        if (chart.canvas.id === "queryTypePieChart") {
+          window.location.href = "queries.php?querytype=" + querytypeids[item.index];
+        } else if (chart.canvas.id === "forwardDestinationPieChart") {
+          window.location.href = "queries.php?forwarddest=" + encodeURIComponent(item.text);
+        }
+      });
+
+      li.append(boxSpan, textLink);
+      ul.append(li);
+    });
+  },
+};
+
 $(function () {
   // Pull in data via AJAX
   getMaxlogage();
@@ -890,100 +850,104 @@ $(function () {
     type: utils.getGraphType(),
     data: {
       labels: [],
-      datasets: [{ data: [] }],
+      datasets: [{ data: [], parsing: false }],
     },
     options: {
-      tooltips: {
-        enabled: true,
-        mode: "x-axis",
-        itemSort: function (a, b) {
-          return b.datasetIndex - a.datasetIndex;
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false,
         },
-        callbacks: {
-          title: function (tooltipItem) {
-            var label = tooltipItem[0].xLabel;
-            var time = label.match(/(\d?\d):?(\d?\d?)/);
-            var h = parseInt(time[1], 10);
-            var m = parseInt(time[2], 10) || 0;
-            var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
-            var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
-            return "Queries from " + from + " to " + to;
+        tooltip: {
+          enabled: true,
+          intersect: false,
+          mode: "x",
+          yAlign: "bottom",
+          itemSort: function (a, b) {
+            return b.datasetIndex - a.datasetIndex;
           },
-          label: function (tooltipItems, data) {
-            if (tooltipItems.datasetIndex === 0) {
-              var percentage = 0;
-              var permitted = parseInt(data.datasets[1].data[tooltipItems.index], 10);
-              var blocked = parseInt(data.datasets[0].data[tooltipItems.index], 10);
-              var total = permitted + blocked;
-              if (total > 0) {
-                percentage = (100 * blocked) / total;
+          callbacks: {
+            title: function (tooltipTitle) {
+              var label = tooltipTitle[0].label;
+              var time = label.match(/(\d?\d):?(\d?\d?)/);
+              var h = parseInt(time[1], 10);
+              var m = parseInt(time[2], 10) || 0;
+              var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
+              var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
+              return "Queries from " + from + " to " + to;
+            },
+            label: function (tooltipLabel) {
+              var label = tooltipLabel.dataset.label;
+              // Add percentage only for blocked queries
+              if (tooltipLabel.datasetIndex === 0) {
+                var percentage = 0;
+                var permitted = parseInt(tooltipLabel.parsed._stacks.y[1], 10);
+                var blocked = parseInt(tooltipLabel.parsed._stacks.y[0], 10);
+                if (permitted + blocked > 0) {
+                  percentage = (100 * blocked) / (permitted + blocked);
+                }
+
+                label += ": " + tooltipLabel.parsed.y + " (" + percentage.toFixed(1) + "%)";
+              } else {
+                label += ": " + tooltipLabel.parsed.y;
               }
 
-              return (
-                data.datasets[tooltipItems.datasetIndex].label +
-                ": " +
-                tooltipItems.yLabel +
-                " (" +
-                percentage.toFixed(1) +
-                "%)"
-              );
-            }
-
-            return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
+              return label;
+            },
           },
         },
       },
-      legend: {
-        display: false,
-      },
       scales: {
-        xAxes: [
-          {
-            type: "time",
-            stacked: true,
-            time: {
-              unit: "hour",
-              displayFormats: {
-                hour: "HH:mm",
-              },
-              tooltipFormat: "HH:mm",
+        xAxes: {
+          type: "time",
+          stacked: true,
+          offset: false,
+          time: {
+            unit: "hour",
+            displayFormats: {
+              hour: "HH:mm",
             },
-            gridLines: {
-              color: gridColor,
-              zeroLineColor: gridColor,
-            },
-            ticks: {
-              fontColor: ticksColor,
-            },
+            tooltipFormat: "HH:mm",
           },
-        ],
-        yAxes: [
-          {
-            stacked: true,
-            ticks: {
-              beginAtZero: true,
-              fontColor: ticksColor,
-              precision: 0,
-            },
-            gridLines: {
-              color: gridColor,
-              zeroLineColor: gridColor,
-            },
+          grid: {
+            color: gridColor,
+            offset: false,
+            drawBorder: false,
           },
-        ],
+          ticks: {
+            color: ticksColor,
+          },
+        },
+        yAxes: {
+          stacked: true,
+          beginAtZero: true,
+          ticks: {
+            color: ticksColor,
+            precision: 0,
+          },
+          grid: {
+            color: gridColor,
+            drawBorder: false,
+          },
+        },
       },
       elements: {
         line: {
           borderWidth: 0,
           spanGaps: false,
+          fill: true,
+        },
+        point: {
+          radius: 0,
+          hoverRadius: 5,
+          hitRadius: 5,
         },
       },
-      maintainAspectRatio: false,
     },
   });
 
   // Pull in data via AJAX
-
   updateQueriesOverTime();
 
   // Create / load "Top Clients over Time" only if authorized
@@ -994,78 +958,84 @@ $(function () {
       type: utils.getGraphType(),
       data: {
         labels: [],
-        datasets: [{ data: [] }],
+        datasets: [{ data: [], parsing: false }],
       },
       options: {
-        tooltips: {
-          enabled: false,
-          mode: "x-axis",
-          custom: customTooltips,
-          yAlign: "top",
-          itemSort: function (a, b) {
-            return b.yLabel - a.yLabel;
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
           },
-          callbacks: {
-            title: function (tooltipItem) {
-              var label = tooltipItem[0].xLabel;
-              var time = label.match(/(\d?\d):?(\d?\d?)/);
-              var h = parseInt(time[1], 10);
-              var m = parseInt(time[2], 10) || 0;
-              var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
-              var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
-              return "Client activity from " + from + " to " + to;
+          tooltip: {
+            // Disable the on-canvas tooltip
+            enabled: false,
+            intersect: false,
+            mode: "x",
+            external: customTooltips,
+            yAlign: "top",
+            itemSort: function (a, b) {
+              return b.raw - a.raw;
             },
-            label: function (tooltipItems, data) {
-              return data.datasets[tooltipItems.datasetIndex].label + ": " + tooltipItems.yLabel;
+            callbacks: {
+              title: function (tooltipTitle) {
+                var label = tooltipTitle[0].label;
+                var time = label.match(/(\d?\d):?(\d?\d?)/);
+                var h = parseInt(time[1], 10);
+                var m = parseInt(time[2], 10) || 0;
+                var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
+                var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
+                return "Client activity from " + from + " to " + to;
+              },
             },
           },
-        },
-        legend: {
-          display: false,
         },
         scales: {
-          xAxes: [
-            {
-              type: "time",
-              stacked: true,
-              time: {
-                unit: "hour",
-                displayFormats: {
-                  hour: "HH:mm",
-                },
-                tooltipFormat: "HH:mm",
+          xAxes: {
+            type: "time",
+            stacked: true,
+            offset: false,
+            time: {
+              unit: "hour",
+              displayFormats: {
+                hour: "HH:mm",
               },
-              gridLines: {
-                color: gridColor,
-                zeroLineColor: gridColor,
-              },
-              ticks: {
-                fontColor: ticksColor,
-              },
+              tooltipFormat: "HH:mm",
             },
-          ],
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-                fontColor: ticksColor,
-                precision: 0,
-              },
-              stacked: true,
-              gridLines: {
-                color: gridColor,
-                zeroLineColor: gridColor,
-              },
+            grid: {
+              color: gridColor,
+              offset: false,
+              drawBorder: false,
             },
-          ],
+            ticks: {
+              color: ticksColor,
+            },
+          },
+          yAxes: {
+            beginAtZero: true,
+            ticks: {
+              color: ticksColor,
+              precision: 0,
+            },
+            stacked: true,
+            grid: {
+              color: gridColor,
+              drawBorder: false,
+            },
+          },
         },
         elements: {
           line: {
             borderWidth: 0,
             spanGaps: false,
+            fill: true,
+            point: {
+              radius: 0,
+              hoverRadius: 5,
+              hitRadius: 5,
+            },
           },
         },
-        maintainAspectRatio: false,
         hover: {
           animationDuration: 0,
         },
@@ -1087,11 +1057,15 @@ $(function () {
   }
 
   $("#queryOverTimeChart").click(function (evt) {
-    var activePoints = timeLineChart.getElementAtEvent(evt);
+    var activePoints = timeLineChart.getElementsAtEventForMode(
+      evt,
+      "nearest",
+      { intersect: true },
+      false
+    );
     if (activePoints.length > 0) {
-      //get the internal index of slice in pie chart
-      var clickedElementindex = activePoints[0]._index;
-
+      //get the internal index
+      var clickedElementindex = activePoints[0].index;
       //get specific label by index
       var label = timeLineChart.data.labels[clickedElementindex];
 
@@ -1105,10 +1079,15 @@ $(function () {
   });
 
   $("#clientsChart").click(function (evt) {
-    var activePoints = clientsChart.getElementAtEvent(evt);
+    var activePoints = clientsChart.getElementsAtEventForMode(
+      evt,
+      "nearest",
+      { intersect: true },
+      false
+    );
     if (activePoints.length > 0) {
-      //get the internal index of slice in pie chart
-      var clickedElementindex = activePoints[0]._index;
+      //get the internal index
+      var clickedElementindex = activePoints[0].index;
 
       //get specific label by index
       var label = clientsChart.data.labels[clickedElementindex];
@@ -1128,33 +1107,39 @@ $(function () {
       type: "doughnut",
       data: {
         labels: [],
-        datasets: [{ data: [] }],
+        datasets: [{ data: [], parsing: false }],
       },
+      plugins: [htmlLegendPlugin],
       options: {
+        responsive: true,
+        maintainAspectRatio: true,
         elements: {
           arc: {
             borderColor: $(".box").css("background-color"),
           },
         },
-        legend: {
-          display: false,
-        },
-        tooltips: {
-          enabled: false,
-          custom: customTooltips,
-          callbacks: {
-            title: function () {
-              return "Query types";
-            },
-            label: function (tooltipItems, data) {
-              return doughnutTooltip(tooltipItems, data);
+        plugins: {
+          htmlLegend: {
+            containerID: "query-types-legend",
+          },
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            // Disable the on-canvas tooltip
+            enabled: false,
+            external: customTooltips,
+            callbacks: {
+              title: function () {
+                return "Query type";
+              },
+              label: doughnutTooltip,
             },
           },
         },
         animation: {
           duration: 750,
         },
-        cutoutPercentage: 0,
       },
     });
 
@@ -1168,33 +1153,39 @@ $(function () {
       type: "doughnut",
       data: {
         labels: [],
-        datasets: [{ data: [] }],
+        datasets: [{ data: [], parsing: false }],
       },
+      plugins: [htmlLegendPlugin],
       options: {
+        responsive: true,
+        maintainAspectRatio: true,
         elements: {
           arc: {
             borderColor: $(".box").css("background-color"),
           },
         },
-        legend: {
-          display: false,
-        },
-        tooltips: {
-          enabled: false,
-          custom: customTooltips,
-          callbacks: {
-            title: function () {
-              return "Forward destinations";
-            },
-            label: function (tooltipItems, data) {
-              return doughnutTooltip(tooltipItems, data);
+        plugins: {
+          htmlLegend: {
+            containerID: "forward-destinations-legend",
+          },
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            // Disable the on-canvas tooltip
+            enabled: false,
+            external: customTooltips,
+            callbacks: {
+              title: function () {
+                return "Upstream server";
+              },
+              label: doughnutTooltip,
             },
           },
         },
         animation: {
           duration: 750,
         },
-        cutoutPercentage: 0,
       },
     });
 

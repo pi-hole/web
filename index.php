@@ -79,8 +79,8 @@ require_once 'scripts/pi-hole/php/gravity.php';
                 <h3 class="box-title">Total queries over last <span class="maxlogage-interval">24</span> hours</h3>
             </div>
             <div class="box-body">
-                <div class="chart">
-                    <canvas id="queryOverTimeChart" width="800" height="140"></canvas>
+                <div class="chart" style="width: 100%; height: 180px">
+                    <canvas id="queryOverTimeChart"></canvas>
                 </div>
             </div>
             <div class="overlay">
@@ -97,8 +97,8 @@ require_once 'scripts/pi-hole/php/gravity.php';
                 <h3 class="box-title">Client activity over last <span class="maxlogage-interval">24</span> hours</h3>
             </div>
             <div class="box-body">
-                <div class="chart">
-                    <canvas id="clientsChart" width="800" height="140" class="extratooltipcanvas no-user-select"></canvas>
+                <div class="chart" style="width: 100%; height: 180px">
+                    <canvas id="clientsChart" class="extratooltipcanvas no-user-select"></canvas>
                 </div>
             </div>
             <div class="overlay">
@@ -116,12 +116,10 @@ require_once 'scripts/pi-hole/php/gravity.php';
                 <h3 class="box-title">Query Types</h3>
             </div>
             <div class="box-body">
-                <div class="pull-left" style="width:50%">
-                    <canvas id="queryTypePieChart" width="120" height="120"></canvas>
+                <div style="width:50%">
+                    <canvas id="queryTypePieChart" width="280" height="280"></canvas>
                 </div>
-                <div class="pull-left" style="width:50%">
-                    <div id="query-types-legend" class="chart-legend"></div>
-                </div>
+                <div class="chart-legend" style="width:50%" id="query-types-legend" ></div>
             </div>
             <div class="overlay">
                 <i class="fa fa-sync fa-spin"></i>
@@ -135,12 +133,10 @@ require_once 'scripts/pi-hole/php/gravity.php';
                 <h3 class="box-title">Upstream servers</h3>
             </div>
             <div class="box-body">
-                <div class="pull-left" style="width:50%">
-                    <canvas id="forwardDestinationPieChart" width="120" height="120" class="extratooltipcanvas no-user-select"></canvas>
+                <div style="width:50%">
+                    <canvas id="forwardDestinationPieChart" width="280" height="280" class="extratooltipcanvas no-user-select"></canvas>
                 </div>
-                <div class="pull-left" style="width:50%">
-                    <div id="forward-destinations-legend" class="chart-legend extratooltipcanvas no-user-select"></div>
-                </div>
+                <div class="chart-legend" style="width:50%" id="forward-destinations-legend"></div>
             </div>
             <div class="overlay">
                 <i class="fa fa-sync fa-spin"></i>
