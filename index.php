@@ -22,12 +22,15 @@ require_once 'scripts/pi-hole/php/gravity.php';
         <!-- small box -->
         <div class="small-box bg-green no-user-select" id="total_queries" title="only A + AAAA queries">
             <div class="inner">
-                <p>Total queries (<span id="unique_clients">-</span> clients)</p>
+                <p>Total queries</p>
                 <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-globe-americas"></i>
             </div>
+            <a href="network.php" class="small-box-footer">
+                <span id="unique_clients">-</span> clients - more info <i class="fa fa-arrow-circle-right"></i>
+            </a>
         </div>
     </div>
     <!-- ./col -->
@@ -41,6 +44,9 @@ require_once 'scripts/pi-hole/php/gravity.php';
             <div class="icon">
                 <i class="fas fa-hand-paper"></i>
             </div>
+            <a href="queries.php?forwarddest=blocked" class="small-box-footer">
+                List blocked queries <i class="fa fa-arrow-circle-right"></i>
+            </a>
         </div>
     </div>
     <!-- ./col -->
@@ -54,6 +60,9 @@ require_once 'scripts/pi-hole/php/gravity.php';
             <div class="icon">
                 <i class="fas fa-chart-pie"></i>
             </div>
+            <a href="queries.php?forwarddest=blocked" class="small-box-footer">
+                List blocked queries <i class="fa fa-arrow-circle-right"></i>
+            </a>
         </div>
     </div>
     <!-- ./col -->
@@ -67,6 +76,9 @@ require_once 'scripts/pi-hole/php/gravity.php';
             <div class="icon">
                 <i class="fas fa-list-alt"></i>
             </div>
+            <a href="groups-adlists.php" class="small-box-footer">
+                Manage adlists <i class="fa fa-arrow-circle-right"></i>
+            </a>
         </div>
     </div>
     <!-- ./col -->

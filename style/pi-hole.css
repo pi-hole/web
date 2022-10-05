@@ -424,19 +424,43 @@ td.lookatme {
   padding: 1px;
 }
 
-.box,
+.box {
+  border-radius: 10px;
+}
+
 .small-box {
   border-radius: 10px;
   z-index: 0; /* fix the small-box z-index (related to '.small-box .icon') */
+  overflow: hidden;
+}
+
+.small-box p {
+  margin: 0 0 5px;
+}
+
+.small-box > .inner {
+  padding: 10px 10px 0 10px;
+}
+
+@media screen and (min-width: 768px) {
+  .small-box > .small-box-footer {
+    text-align: right;
+    padding: 3px 7px;
+  }
+}
+.small-box-footer svg {
+  margin: 0 5px;
+  font-size: 13px;
 }
 
 .small-box .icon {
+  font-size: 76px;
   z-index: -1; /* sends the icon behind the text */
 }
 
 /*** Icons grow on hover, but remain centered ***/
 .small-box:hover .icon {
-  font-size: 90px; /* keep the same font-size, to avoid shifting the position */
+  font-size: 80px; /* keep the same font-size, to avoid shifting the position */
   transform: scale(1.06);
 }
 
