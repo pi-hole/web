@@ -1112,7 +1112,7 @@ $(function () {
       plugins: [htmlLegendPlugin],
       options: {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
         elements: {
           arc: {
             borderColor: $(".box").css("background-color"),
@@ -1158,7 +1158,7 @@ $(function () {
       plugins: [htmlLegendPlugin],
       options: {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
         elements: {
           arc: {
             borderColor: $(".box").css("background-color"),
