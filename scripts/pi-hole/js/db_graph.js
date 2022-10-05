@@ -240,7 +240,8 @@ $(function () {
         tooltip: {
           enabled: true,
           yAlign: "bottom",
-          mode: "index",
+          intersect: false,
+          mode: "x",
           itemSort: function (a, b) {
             return b.datasetIndex - a.datasetIndex;
           },
