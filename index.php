@@ -20,7 +20,7 @@ require_once 'scripts/pi-hole/php/gravity.php';
 <div class="row">
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-green no-user-select" id="total_queries" title="only A + AAAA queries">
+        <div class="small-box bg-aqua no-user-select" id="total_queries" title="only A + AAAA queries">
             <div class="inner">
                 <p>Total queries</p>
                 <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
@@ -36,7 +36,7 @@ require_once 'scripts/pi-hole/php/gravity.php';
     <!-- ./col -->
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-aqua no-user-select">
+        <div class="small-box bg-red no-user-select">
             <div class="inner">
                 <p>Queries Blocked</p>
                 <h3 class="statistic"><span id="queries_blocked_today">---</span></h3>
@@ -68,7 +68,7 @@ require_once 'scripts/pi-hole/php/gravity.php';
     <!-- ./col -->
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-red no-user-select" title="<?php echo gravity_last_update(); ?>">
+        <div class="small-box bg-green no-user-select" title="<?php echo gravity_last_update(); ?>">
             <div class="inner">
                 <p>Domains on Adlists</p>
                 <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
