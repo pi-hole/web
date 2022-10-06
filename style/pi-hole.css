@@ -9,14 +9,6 @@
   background: url("../img/boxed-bg.png") repeat fixed;
 }
 
-.small-box span {
-  transition-duration: 0.5s;
-}
-
-.small-box span.glow {
-  text-shadow: 0 0 5px currentColor;
-}
-
 @-webkit-keyframes Pulse {
   from {
     opacity: 0;
@@ -434,12 +426,29 @@ td.lookatme {
   overflow: hidden;
 }
 
+.small-box span {
+  transition-duration: 0.5s;
+}
+
+.small-box-footer span {
+  transition-duration: 0s;
+}
+
+.small-box span.glow {
+  text-shadow: 0 0 5px currentColor;
+}
+
 .small-box p {
   margin: 0 0 5px;
 }
 
 .small-box > .inner {
-  padding: 10px 10px 0 10px;
+  padding: 10px 10px 0;
+}
+
+.small-box > .small-box-footer {
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.5s;
 }
 
 @media screen and (min-width: 768px) {
@@ -448,6 +457,7 @@ td.lookatme {
     padding: 3px 7px;
   }
 }
+
 .small-box-footer svg {
   margin: 0 5px;
   font-size: 13px;
