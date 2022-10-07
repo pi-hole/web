@@ -28,8 +28,8 @@ require_once 'scripts/pi-hole/php/gravity.php';
             <div class="icon">
                 <i class="fas fa-globe-americas"></i>
             </div>
-            <a href="network.php" class="small-box-footer">
-                <span id="unique_clients">-</span> clients - more info <i class="fa fa-arrow-circle-right"></i>
+            <a href="network.php" class="small-box-footer" title="">
+                <span id="unique_clients">-</span> active clients <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
     </div>
@@ -44,7 +44,7 @@ require_once 'scripts/pi-hole/php/gravity.php';
             <div class="icon">
                 <i class="fas fa-hand-paper"></i>
             </div>
-            <a href="queries.php?forwarddest=blocked" class="small-box-footer">
+            <a href="queries.php?forwarddest=blocked" class="small-box-footer" title="">
                 List blocked queries <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
@@ -60,8 +60,8 @@ require_once 'scripts/pi-hole/php/gravity.php';
             <div class="icon">
                 <i class="fas fa-chart-pie"></i>
             </div>
-            <a href="queries.php?forwarddest=blocked" class="small-box-footer">
-                List blocked queries <i class="fa fa-arrow-circle-right"></i>
+            <a href="queries.php" class="small-box-footer" title="">
+                List all queries <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
     </div>
@@ -76,7 +76,7 @@ require_once 'scripts/pi-hole/php/gravity.php';
             <div class="icon">
                 <i class="fas fa-list-alt"></i>
             </div>
-            <a href="groups-adlists.php" class="small-box-footer">
+            <a href="groups-adlists.php" class="small-box-footer" title="">
                 Manage adlists <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
