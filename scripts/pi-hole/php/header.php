@@ -93,7 +93,8 @@ $cacheVer = filemtime(__FILE__);
     <script src="scripts/vendor/datatables.select.min.js?v=<?php echo $cacheVer; ?>"></script>
     <script src="scripts/vendor/datatables.buttons.min.js?v=<?php echo $cacheVer; ?>"></script>
     <script src="scripts/vendor/moment.min.js?v=<?php echo $cacheVer; ?>"></script>
-    <script src="scripts/vendor/Chart.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/chart.min.js?v=<?php echo $cacheVer; ?>"></script>
+    <script src="scripts/vendor/chartjs-adapter-moment.js?v=<?php echo $cacheVer; ?>"></script>
 <?php } ?>
     <script src="style/vendor/font-awesome/js/all.min.js?v=<?php echo $cacheVer; ?>"></script>
     <script src="scripts/pi-hole/js/utils.js?v=<?php echo $cacheVer; ?>"></script>

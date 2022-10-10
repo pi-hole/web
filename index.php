@@ -20,20 +20,23 @@ require_once 'scripts/pi-hole/php/gravity.php';
 <div class="row">
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-green no-user-select" id="total_queries" title="only A + AAAA queries">
+        <div class="small-box bg-aqua no-user-select" id="total_queries" title="only A + AAAA queries">
             <div class="inner">
-                <p>Total queries (<span id="unique_clients">-</span> clients)</p>
+                <p>Total queries</p>
                 <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-globe-americas"></i>
             </div>
+            <a href="network.php" class="small-box-footer" title="">
+                <span id="unique_clients">-</span> active clients <i class="fa fa-arrow-circle-right"></i>
+            </a>
         </div>
     </div>
     <!-- ./col -->
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-aqua no-user-select">
+        <div class="small-box bg-red no-user-select">
             <div class="inner">
                 <p>Queries Blocked</p>
                 <h3 class="statistic"><span id="queries_blocked_today">---</span></h3>
@@ -41,6 +44,9 @@ require_once 'scripts/pi-hole/php/gravity.php';
             <div class="icon">
                 <i class="fas fa-hand-paper"></i>
             </div>
+            <a href="queries.php?forwarddest=blocked" class="small-box-footer" title="">
+                List blocked queries <i class="fa fa-arrow-circle-right"></i>
+            </a>
         </div>
     </div>
     <!-- ./col -->
@@ -54,12 +60,15 @@ require_once 'scripts/pi-hole/php/gravity.php';
             <div class="icon">
                 <i class="fas fa-chart-pie"></i>
             </div>
+            <a href="queries.php" class="small-box-footer" title="">
+                List all queries <i class="fa fa-arrow-circle-right"></i>
+            </a>
         </div>
     </div>
     <!-- ./col -->
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-red no-user-select" title="<?php echo gravity_last_update(); ?>">
+        <div class="small-box bg-green no-user-select" title="<?php echo gravity_last_update(); ?>">
             <div class="inner">
                 <p>Domains on Adlists</p>
                 <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
@@ -67,6 +76,9 @@ require_once 'scripts/pi-hole/php/gravity.php';
             <div class="icon">
                 <i class="fas fa-list-alt"></i>
             </div>
+            <a href="groups-adlists.php" class="small-box-footer" title="">
+                Manage adlists <i class="fa fa-arrow-circle-right"></i>
+            </a>
         </div>
     </div>
     <!-- ./col -->
@@ -79,8 +91,8 @@ require_once 'scripts/pi-hole/php/gravity.php';
                 <h3 class="box-title">Total queries over last <span class="maxlogage-interval">24</span> hours</h3>
             </div>
             <div class="box-body">
-                <div class="chart">
-                    <canvas id="queryOverTimeChart" width="800" height="140"></canvas>
+                <div class="chart" style="width: 100%; height: 180px">
+                    <canvas id="queryOverTimeChart"></canvas>
                 </div>
             </div>
             <div class="overlay">
@@ -97,8 +109,8 @@ require_once 'scripts/pi-hole/php/gravity.php';
                 <h3 class="box-title">Client activity over last <span class="maxlogage-interval">24</span> hours</h3>
             </div>
             <div class="box-body">
-                <div class="chart">
-                    <canvas id="clientsChart" width="800" height="140" class="extratooltipcanvas no-user-select"></canvas>
+                <div class="chart" style="width: 100%; height: 180px">
+                    <canvas id="clientsChart" class="extratooltipcanvas no-user-select"></canvas>
                 </div>
             </div>
             <div class="overlay">
@@ -116,12 +128,10 @@ require_once 'scripts/pi-hole/php/gravity.php';
                 <h3 class="box-title">Query Types</h3>
             </div>
             <div class="box-body">
-                <div class="pull-left" style="width:50%">
-                    <canvas id="queryTypePieChart" width="120" height="120"></canvas>
+                <div style="width:50%">
+                    <canvas id="queryTypePieChart" width="280" height="280"></canvas>
                 </div>
-                <div class="pull-left" style="width:50%">
-                    <div id="query-types-legend" class="chart-legend"></div>
-                </div>
+                <div class="chart-legend" style="width:50%" id="query-types-legend" ></div>
             </div>
             <div class="overlay">
                 <i class="fa fa-sync fa-spin"></i>
@@ -135,12 +145,10 @@ require_once 'scripts/pi-hole/php/gravity.php';
                 <h3 class="box-title">Upstream servers</h3>
             </div>
             <div class="box-body">
-                <div class="pull-left" style="width:50%">
-                    <canvas id="forwardDestinationPieChart" width="120" height="120" class="extratooltipcanvas no-user-select"></canvas>
+                <div style="width:50%">
+                    <canvas id="forwardDestinationPieChart" width="280" height="280" class="extratooltipcanvas no-user-select"></canvas>
                 </div>
-                <div class="pull-left" style="width:50%">
-                    <div id="forward-destinations-legend" class="chart-legend extratooltipcanvas no-user-select"></div>
-                </div>
+                <div class="chart-legend" style="width:50%" id="forward-destinations-legend"></div>
             </div>
             <div class="overlay">
                 <i class="fa fa-sync fa-spin"></i>

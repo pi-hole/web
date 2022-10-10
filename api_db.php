@@ -295,11 +295,11 @@ if (isset($_GET['getGraphData']) && $auth) {
     $limit = '';
 
     if (isset($_GET['from'], $_GET['until'])) {
-        $limit = ' AND timestamp >= :from AND timestamp <= :until';
+        $limit = 'timestamp >= :from AND timestamp <= :until';
     } elseif (isset($_GET['from']) && !isset($_GET['until'])) {
-        $limit = ' AND timestamp >= :from';
+        $limit = 'timestamp >= :from';
     } elseif (!isset($_GET['from']) && isset($_GET['until'])) {
-        $limit = ' AND timestamp <= :until';
+        $limit = 'timestamp <= :until';
     }
 
     $interval = 600;
@@ -315,8 +315,24 @@ if (isset($_GET['getGraphData']) && $auth) {
     $from = intval((intval($_GET['from']) / $interval) * $interval);
     $until = intval((intval($_GET['until']) / $interval) * $interval);
 
-    // Count permitted queries in intervals
-    $stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE (status != 0 )'.$limit.' GROUP by interval ORDER by interval');
+    // Count domains and blocked queries using the same intervals
+    $sqlcommand = "
+        SELECT
+            (timestamp / :interval) * :interval AS interval,
+            SUM(CASE
+                WHEN status !=0 THEN 1
+                ELSE 0
+            END) AS domains,
+            SUM(CASE
+                WHEN status IN (1,4,5,6,7,8,9,10,11,15,16) THEN 1
+                ELSE 0
+            END) AS blocked
+        FROM queries
+        WHERE $limit
+        GROUP BY interval
+        ORDER BY interval";
+
+    $stmt = $db->prepare($sqlcommand);
     $stmt->bindValue(':from', $from, SQLITE3_INTEGER);
     $stmt->bindValue(':until', $until, SQLITE3_INTEGER);
     $stmt->bindValue(':interval', $interval, SQLITE3_INTEGER);
@@ -325,52 +341,40 @@ if (isset($_GET['getGraphData']) && $auth) {
     // Parse the DB result into graph data, filling in missing interval sections with zero
     function parseDBData($results, $interval, $from, $until)
     {
-        $data = array();
+        $domains = array();
+        $blocked = array();
         $first_db_timestamp = -1;
 
         if (!is_bool($results)) {
             // Read in the data
             while ($row = $results->fetchArray()) {
-                // $data[timestamp] = value_in_this_interval
-                $data[$row[0]] = intval($row[1]);
+                $domains[$row['interval']] = intval($row['domains']);
+                $blocked[$row['interval']] = intval($row['blocked']);
                 if ($first_db_timestamp === -1) {
                     $first_db_timestamp = intval($row[0]);
                 }
             }
         }
 
-        // It is unpredictable what the first timestamp returned by the database
-        // will be. This depends on live data. Hence, we re-align the FROM
-        // timestamp to avoid unaligned holes appearing as additional
-        // (incorrect) data points
+        // It is unpredictable what the first timestamp returned by the database will be.
+        // This depends on live data. The bar graph can handle "gaps", but the Area graph can't.
+        // Hence, we filling the "missing" timeslots with 0 to avoid wrong graphic render.
+        // (https://github.com/pi-hole/AdminLTE/pull/2374#issuecomment-1261865428)
         $aligned_from = $from + (($first_db_timestamp - $from) % $interval);
 
         // Fill gaps in returned data
         for ($i = $aligned_from; $i < $until; $i += $interval) {
-            if (!array_key_exists($i, $data)) {
-                $data[$i] = 0;
+            if (!array_key_exists($i, $domains)) {
+                $domains[$i] = 0;
+                $blocked[$i] = 0;
             }
         }
 
-        return $data;
+        return array('domains_over_time' => $domains, 'ads_over_time' => $blocked);
     }
 
-    $domains = parseDBData($results, $interval, $from, $until);
-
-    $result = array('domains_over_time' => $domains);
-    $data = array_merge($data, $result);
-
-    // Count blocked queries in intervals
-    $stmt = $db->prepare('SELECT (timestamp/:interval)*:interval interval, COUNT(*) FROM queries WHERE status IN (1,4,5,6,7,8,9,10,11)'.$limit.' GROUP by interval ORDER by interval');
-    $stmt->bindValue(':from', $from, SQLITE3_INTEGER);
-    $stmt->bindValue(':until', $until, SQLITE3_INTEGER);
-    $stmt->bindValue(':interval', $interval, SQLITE3_INTEGER);
-    $results = $stmt->execute();
-
-    $addomains = parseDBData($results, $interval, $from, $until);
-
-    $result = array('ads_over_time' => $addomains);
-    $data = array_merge($data, $result);
+    $over_time = parseDBData($results, $interval, $from, $until);
+    $data = array_merge($data, $over_time);
 }
 
 if (isset($_GET['status']) && $auth) {

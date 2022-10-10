@@ -1999,6 +1999,14 @@ td.highlight {
   color: #000 !important;
 }
 
+.small-box > .small-box-footer:hover {
+  color: #000;
+}
+
+.small-box > .small-box-footer {
+  color: rgba(0, 0, 0, 0.5);
+}
+
 .small-box .icon,
 .select2-selection__clear {
   font-family: sans-serif;

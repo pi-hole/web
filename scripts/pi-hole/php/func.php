@@ -45,6 +45,10 @@ function validDomain($domain_name, &$message = null)
 
 function validDomainWildcard($domain_name)
 {
+    // Skip this checks for the root zone `.`
+    if ($domain_name == '.') {
+        return true;
+    }
     // There has to be either no or at most one "*" at the beginning of a line
     $validChars = preg_match('/^((\\*\\.)?[_a-z\\d](-*[_a-z\\d])*)(\\.([_a-z\\d](-*[a-z\\d])*))*(\\.([_a-z\\d])*)*$/i', $domain_name);
     $lengthCheck = preg_match('/^.{1,253}$/', $domain_name);
@@ -667,5 +671,5 @@ function start_php_session()
     // protection against cross-site request forgery attacks.
     // Direct support of Samesite has been added to PHP only in version 7.3
     // We manually set the cookie option ourselves to ensure backwards compatibility
-    header('Set-Cookie: PHPSESSID= '.session_id().'; path=/; HttpOnly; SameSite=Strict');
+    header('Set-Cookie: PHPSESSID='.session_id().'; path=/; HttpOnly; SameSite=Strict');
 }
