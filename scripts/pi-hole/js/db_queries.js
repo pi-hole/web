@@ -464,12 +464,12 @@ $("#querytime").on("apply.daterangepicker", function (ev, picker) {
   refreshTableData();
 });
 
-$("input[id^=type]").change(function () {
+$("input[id^=type]").on("change", function () {
   if (datepickerManuallySelected) {
     reloadBox.show();
   }
 });
 
-$(".bt-reload").click(function () {
+$(".bt-reload").on("click", function () {
   refreshTableData();
 });

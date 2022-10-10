@@ -390,7 +390,7 @@ $("#querytime").on("apply.daterangepicker", function (ev, picker) {
   updateQueriesOverTime();
 });
 
-$("#queryOverTimeChart").click(function (evt) {
+$("#queryOverTimeChart").on("click", function (evt) {
   var activePoints = timeLineChart.getElementsAtEventForMode(
     evt,
     "nearest",
