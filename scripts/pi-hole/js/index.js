@@ -726,8 +726,7 @@ function updateSummaryData(runOnce) {
 function doughnutTooltip(tooltipLabel) {
   var percentageTotalShown = tooltipLabel.chart._metasets[0].total.toFixed(2);
   var label = " " + tooltipLabel.label;
-
-  if (percentageTotalShown >= 100) {
+  if (percentageTotalShown >= 99.99) {
     // All items shown
     return label + ": " + tooltipLabel.parsed.toFixed(1) + "%";
   } else {
