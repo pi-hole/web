@@ -725,7 +725,13 @@ function updateSummaryData(runOnce) {
 
 function doughnutTooltip(tooltipLabel) {
   var percentageTotalShown = tooltipLabel.chart._metasets[0].total.toFixed(2);
+  // tooltipLabel.chart._metasets[0].total returns the total percentage of the shown slices
+  // to compensate rounding errors we round to two decimals
+
   var label = " " + tooltipLabel.label;
+
+  // even if no doughnut slice is hidden, sometimes percentageTotalShown is only 99.99
+  // we therefore use this value to decide if slices are hidden
   if (percentageTotalShown >= 99.99) {
     // All items shown
     return label + ": " + tooltipLabel.parsed.toFixed(1) + "%";
