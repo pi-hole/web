@@ -1,0 +1,57 @@
+#!/bin/bash
+set -e
+
+DOCKER_COMPOSE_CMD="docker-compose -f ./tests/docker-compose.yml"
+MAX_DOCKER_WAIT_SECONDS=60
+
+function waitForPiholeToBeReady () {
+    attempt=${1:-1} # set to 1 if not already set
+    if [ $attempt -gt $MAX_DOCKER_WAIT_SECONDS ]; then
+        echo "Failed waiting on pihole to start...."
+        stopPihole
+        exit 1
+    fi
+    image_status=$(docker inspect -f "{{.State.Health.Status}}" "$(docker ps --format '{{.Names}}' | grep dev-pihole)" || echo 'missing')
+    if [ "${image_status}" = "missing" ]; then
+        echo "Missing docker image...."
+        docker ps -a
+    fi
+    if [ "${image_status}" != "healthy" ]; then
+        sleep 1;
+        echo -n "."
+        waitForPiholeToBeReady $((attempt+1))
+    elif [ "${image_status}" = "healthy" ]; then
+        echo "pihole ready"
+    fi
+}
+
+function startPihole() {
+    stopPihole # ensure not lingering images
+    ${DOCKER_COMPOSE_CMD} pull
+    ${DOCKER_COMPOSE_CMD} up -d dev-pihole
+    echo "pihole starting..."
+}
+
+function stopPihole() {
+    ${DOCKER_COMPOSE_CMD} down --remove-orphans
+    echo "pihole down"
+}
+
+function prepForTests() {
+    # the playwright image needs to be ran as 'pwuser', but that causes
+    # permission issues with the volume mount. Fix that up here.
+    mkdir -p ./tests/results ./tests/node_modules
+    touch ./tests/storageState.json
+    chmod 777 ./tests/results ./tests/node_modules ./tests/storageState.json
+    ./tests/npm ci
+    echo "npm install complete"
+}
+
+startPihole
+prepForTests
+echo "waiting on pihole to be ready"
+waitForPiholeToBeReady
+echo "ready, starting tests"
+./tests/npm run test:integration
+echo "tests complete, stopping pihole"
+stopPihole

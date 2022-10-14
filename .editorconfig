@@ -17,7 +17,10 @@ indent_size = 2
 [*.js]
 indent_size = 2
 
-[package.json]
+[*.ts]
+indent_size = 2
+
+[*.json]
 indent_size = 2
 
 [.yamllint.conf]
