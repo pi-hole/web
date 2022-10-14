@@ -32,3 +32,11 @@ jobs:
 
       - name: Run tests
         run: npm run testpr
+
+  integration:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    name: Integration Tests
+    steps:
+      - uses: actions/checkout@v3.1.0
+      - run: ./tests/run

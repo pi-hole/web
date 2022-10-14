@@ -1,0 +1,15 @@
+{
+  "name": "admin-lte-tests",
+  "version": "0.0.0",
+  "description": "Tests for Pi-hole AdminLTE",
+  "main": "index.js",
+  "scripts": {
+    "test:integration": "playwright test"
+  },
+  "author": "",
+  "license": "EUPL-1.2",
+  "devDependencies": {
+    "@playwright/test": "1.27.0",
+    "playwright": "1.27.0"
+  }
+}
