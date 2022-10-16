@@ -724,17 +724,26 @@ function updateSummaryData(runOnce) {
 }
 
 function doughnutTooltip(tooltipLabel) {
-  var percentageTotalShown = tooltipLabel.chart._metasets[0].total.toFixed(2);
-  var label = " " + tooltipLabel.label;
+  var percentageTotalShown = tooltipLabel.chart._metasets[0].total.toFixed(1);
+  // tooltipLabel.chart._metasets[0].total returns the total percentage of the shown slices
+  // to compensate rounding errors we round to one decimal
 
-  if (percentageTotalShown >= 100) {
+  var label = " " + tooltipLabel.label;
+  // in case the item share is really small it could be rounded to 0.0
+  // we compensate for this
+  var itemPercentage =
+    tooltipLabel.parsed.toFixed(1) === 0 ? "< 0.1" : tooltipLabel.parsed.toFixed(1);
+
+  // even if no doughnut slice is hidden, sometimes percentageTotalShown is slightly less then 100
+  // we therefore use 99.9 to decide if slices are hidden (we only show with 0.1 precision)
+  if (percentageTotalShown > 99.9) {
     // All items shown
-    return label + ": " + tooltipLabel.parsed.toFixed(1) + "%";
+    return label + ": " + itemPercentage + "%";
   } else {
     return (
       label +
       ":<br>&bull; " +
-      tooltipLabel.parsed.toFixed(1) +
+      itemPercentage +
       "% of all queries<br>&bull; " +
       ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) +
       "% of shown items"
