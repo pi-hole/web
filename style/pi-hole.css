@@ -9,14 +9,6 @@
   background: url("../img/boxed-bg.png") repeat fixed;
 }
 
-.small-box span {
-  transition-duration: 0.5s;
-}
-
-.small-box span.glow {
-  text-shadow: 0 0 5px currentColor;
-}
-
 @-webkit-keyframes Pulse {
   from {
     opacity: 0;
@@ -234,47 +226,35 @@ td.lookatme {
   vertical-align: text-top;
 }
 
-.chart-legend {
-  overflow: auto;
+#query-types-pie .box-body,
+#forward-destinations-pie .box-body {
+  display: flex;
 }
 
-.chart-legend ul {
-  list-style-type: none;
-  padding-left: 45px;
+.chart-legend {
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-self: center;
 }
 
 .chart-legend li {
   cursor: pointer;
   position: relative;
   line-height: 1;
-  margin: 0 0 6px;
+  margin: 0 0 8px;
 }
 
 .chart-legend li span {
   display: inline-block;
-  height: 12px;
 }
 
 .colorBoxWrapper {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .colorBoxWrapper:hover {
   transform: scale(1.15);
-}
-
-.chart-legend li .colorBoxWrapper {
-  position: absolute;
-  width: 20px;
-  left: -20px;
-  top: 0;
-  line-height: 1;
-}
-
-.chart-legend li .legend-color-box {
-  display: none;
-  width: 12px;
-  margin-right: 5px;
 }
 
 .chart-legend li .legend-label-text {
@@ -436,19 +416,61 @@ td.lookatme {
   padding: 1px;
 }
 
-.box,
+.box {
+  border-radius: 10px;
+}
+
 .small-box {
   border-radius: 10px;
   z-index: 0; /* fix the small-box z-index (related to '.small-box .icon') */
+  overflow: hidden;
+}
+
+.small-box span {
+  transition-duration: 0.5s;
+}
+
+.small-box-footer span {
+  transition-duration: 0s;
+}
+
+.small-box span.glow {
+  text-shadow: 0 0 5px currentColor;
+}
+
+.small-box p {
+  margin: 0 0 5px;
+}
+
+.small-box > .inner {
+  padding: 10px 10px 0;
+}
+
+.small-box > .small-box-footer {
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.5s;
+}
+
+@media screen and (min-width: 768px) {
+  .small-box > .small-box-footer {
+    text-align: right;
+    padding: 3px 7px;
+  }
+}
+
+.small-box-footer svg {
+  margin: 0 5px;
+  font-size: 13px;
 }
 
 .small-box .icon {
+  font-size: 76px;
   z-index: -1; /* sends the icon behind the text */
 }
 
 /*** Icons grow on hover, but remain centered ***/
 .small-box:hover .icon {
-  font-size: 90px; /* keep the same font-size, to avoid shifting the position */
+  font-size: 80px; /* keep the same font-size, to avoid shifting the position */
   transform: scale(1.06);
 }
 
@@ -1010,4 +1032,14 @@ table.dataTable tbody > tr > .selected {
   color: #fff;
   line-height: 1;
   animation: 2s infinite Pulse steps(20);
+}
+
+/* Loading spinner (Dashboard and Long-term data) */
+.overlay .fa-spin {
+  position: relative;
+  opacity: 0.5;
+  font-size: 2.5em;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
 }
