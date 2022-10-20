@@ -2016,3 +2016,17 @@ td.highlight {
 #dns .col-md-11 {
   width: 84%;
 }
+
+/* Back to top button */
+#back-to-top-btn {
+  bottom: 30px;
+  text-transform: uppercase;
+  background-color: #488bfa;
+  border-radius: 30px;
+  opacity: 1.0;
+  transition: 0.1s;
+}
+
+#back-to-top-btn:hover {
+  background-color: #f19b2c;
+}

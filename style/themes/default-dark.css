@@ -628,3 +628,13 @@ input[type="password"]::-webkit-caps-lock-indicator {
   background: none;
   border-color: rgb(120, 127, 133);
 }
+
+/* Back to top button */
+#back-to-top-btn {
+  background-color: #8f3329;
+  opacity: 0.6;
+}
+
+#back-to-top-btn:hover {
+  background-color: #bf3428;
+}
