@@ -392,11 +392,16 @@ function addCustomCNAMEEntry($domain = '', $target = '', $reload = '', $json = t
             return returnError('Target must be valid', $json);
         }
 
-        // Check if each submitted domain is valid
         $domains = array_map('trim', explode(',', $domain));
         foreach ($domains as $d) {
+            // Check if each submitted domain is valid
             if (!validDomain($d)) {
                 return returnError("Domain '{$d}' is not valid", $json);
+            }
+
+            // Check if each submitted domain is different than the target to avoid loops
+            if (strtolower($d) === strtolower($target)) {
+                return returnError('Domain and target cannot be the same', $json);
             }
         }
 
