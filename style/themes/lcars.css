@@ -2023,7 +2023,7 @@ td.highlight {
   text-transform: uppercase;
   background-color: #488bfa;
   border-radius: 30px;
-  opacity: 1.0;
+  opacity: 1;
   transition: 0.1s;
 }
 
