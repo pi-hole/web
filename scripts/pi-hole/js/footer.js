@@ -262,3 +262,24 @@ $(document).keypress(function (e) {
     $("#loginform").submit();
   }
 });
+
+// Back to top button
+let bttbutton = document.getElementById("back-to-top-btn");
+
+// Display button when page is scrolled down 20px
+window.onscroll = function () {
+  displayBackToTopBtn();
+}
+
+function displayBackToTopBtn() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    bttbutton.style.display = "block";
+  } else {
+    bttbutton.style.display = "none";
+  }
+}
+
+// Smooth scroll to top on button click
+function execBackToTop() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}

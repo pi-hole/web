@@ -5994,3 +5994,9 @@ td.highlight {
 .log-gray {
   color: #999;
 }
+
+/* Back to top button */
+#back-to-top-btn {
+  background-color: #a02c22;
+  opacity: 0.4;
+}

@@ -98,6 +98,11 @@ if (isset($core_commit) || isset($web_commit) || isset($FTL_commit)) {
                 </p>
             </div>
         </div>
+
+        <div>
+            <!-- Back to top button -->
+            <button onclick='execBackToTop()' id="back-to-top-btn">Back to top</button>
+        </div>
     </footer>
 
 </div>
