@@ -236,12 +236,15 @@ $(function () {
     },
     options: {
       responsive: true,
+      interaction: {
+        mode: 'nearest',
+        axis: 'x',
+      },
       plugins: {
         tooltip: {
           enabled: true,
           yAlign: "bottom",
           intersect: false,
-          mode: "x",
           itemSort: function (a, b) {
             return b.datasetIndex - a.datasetIndex;
           },
