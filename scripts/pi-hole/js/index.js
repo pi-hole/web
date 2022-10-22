@@ -864,6 +864,10 @@ $(function () {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: {
+        mode: 'nearest',
+        axis: 'x',
+      },
       plugins: {
         legend: {
           display: false,
@@ -871,7 +875,6 @@ $(function () {
         tooltip: {
           enabled: true,
           intersect: false,
-          mode: "x",
           yAlign: "bottom",
           itemSort: function (a, b) {
             return b.datasetIndex - a.datasetIndex;
@@ -972,6 +975,10 @@ $(function () {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+          mode: 'nearest',
+          axis: 'x',
+        },
         plugins: {
           legend: {
             display: false,
@@ -980,7 +987,6 @@ $(function () {
             // Disable the on-canvas tooltip
             enabled: false,
             intersect: false,
-            mode: "x",
             external: customTooltips,
             yAlign: "top",
             itemSort: function (a, b) {
