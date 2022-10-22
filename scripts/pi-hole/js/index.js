@@ -865,8 +865,8 @@ $(function () {
       responsive: true,
       maintainAspectRatio: false,
       interaction: {
-        mode: 'nearest',
-        axis: 'x',
+        mode: "nearest",
+        axis: "x",
       },
       plugins: {
         legend: {
@@ -976,8 +976,8 @@ $(function () {
         responsive: true,
         maintainAspectRatio: false,
         interaction: {
-          mode: 'nearest',
-          axis: 'x',
+          mode: "nearest",
+          axis: "x",
         },
         plugins: {
           legend: {

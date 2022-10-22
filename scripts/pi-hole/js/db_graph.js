@@ -237,8 +237,8 @@ $(function () {
     options: {
       responsive: true,
       interaction: {
-        mode: 'nearest',
-        axis: 'x',
+        mode: "nearest",
+        axis: "x",
       },
       plugins: {
         tooltip: {
