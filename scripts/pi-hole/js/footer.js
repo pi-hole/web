@@ -150,7 +150,7 @@ function initCheckboxRadioStyle() {
   var iCheckStyle = $("#iCheckStyle");
   if (iCheckStyle !== null) {
     iCheckStyle.val(chkboxStyle);
-    iCheckStyle.change(function () {
+    iCheckStyle.on("change", function () {
       var themename = $(this).val();
       localStorage.setItem("theme_icheck", themename);
       applyCheckboxRadioStyle(themename);
@@ -197,7 +197,7 @@ function initCPUtemp() {
   var tempunitSelector = $("#tempunit-selector");
   if (tempunitSelector !== null) {
     tempunitSelector.val(tempunit);
-    tempunitSelector.change(function () {
+    tempunitSelector.on("change", function () {
       tempunit = $(this).val();
       setCPUtemp(tempunit);
     });
@@ -256,7 +256,7 @@ $("#pihole-disable-custom").on("click", function (e) {
 });
 
 // Handle Ctrl + Enter button on Login page
-$(document).keypress(function (e) {
+$(document).on("keypress", function (e) {
   if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey && $("#loginpw").is(":focus")) {
     $("#loginform").attr("action", "settings.php");
     $("#loginform").submit();

@@ -1071,7 +1071,7 @@ $(function () {
     updateTopClientsChart();
   }
 
-  $("#queryOverTimeChart").click(function (evt) {
+  $("#queryOverTimeChart").on("click", function (evt) {
     var activePoints = timeLineChart.getElementsAtEventForMode(
       evt,
       "nearest",
@@ -1093,7 +1093,7 @@ $(function () {
     return false;
   });
 
-  $("#clientsChart").click(function (evt) {
+  $("#clientsChart").on("click", function (evt) {
     var activePoints = clientsChart.getElementsAtEventForMode(
       evt,
       "nearest",
