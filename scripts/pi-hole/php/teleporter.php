@@ -193,7 +193,7 @@ function archive_restore_table($file, $table, $flush = false)
                 default:
                     $sqltype = 'UNK';
             }
-            $stmt->bindValue(':'.$key, htmlentities($value), $sqltype);
+            $stmt->bindValue(':'.$key, $value, $sqltype);
         }
 
         if ($stmt->execute() && $stmt->reset() && $stmt->clear()) {
