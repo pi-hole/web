@@ -32,7 +32,7 @@ if (isset($_GET['status']) && $auth) {
     }
 }
 
-if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET) && $auth) {
+if ((isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET)) && $auth) {
     require_once 'scripts/pi-hole/php/gravity.php';
 
     $return = callFTLAPI('stats');
