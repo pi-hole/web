@@ -167,6 +167,10 @@ function excludeStatusTypes() {
     statusType.push(16);
   }
 
+  if ($("#type_cached_stale").prop("checked") === false) {
+    statusType.push(17);
+  }
+
   return statusType.join(",");
 }
 
@@ -348,6 +352,13 @@ $(function () {
           fieldtext =
             "<span class='text-orange'>Blocked <br class='hidden-lg'>(special domain)</span>";
           blocked = true;
+          break;
+        case 17:
+          fieldtext =
+            "<span class='text-orange'>OK</span> <br class='hidden-lg'>(stale cache)" +
+            dnssecStatus;
+          buttontext =
+            '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         default:
           fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
