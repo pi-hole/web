@@ -259,6 +259,12 @@
                                 <i class="fa fa-fw menu-icon fa-network-wired"></i> Network
                             </a>
                         </li>
+                        <!-- Ad block test -->
+                        <li class="<?php if ($scriptname === 'testblocking.php') { ?> active<?php } ?>">
+                            <a href="testblocking.php">
+                                <i class="fa fa-fw menu-icon fa-hand-paper"></i> Test Pi-hole Blocking
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <!-- Settings -->
