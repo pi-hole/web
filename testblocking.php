@@ -9,7 +9,7 @@
 */
 
 require 'scripts/pi-hole/php/header_authenticated.php';
-$ipaddress = $_SERVER['REMOTE_ADDR'] ;
+$ipaddress = $_SERVER['REMOTE_ADDR'];
 ?>
 <!-- Title -->
 <div class="page-header">
@@ -56,7 +56,7 @@ $ipaddress = $_SERVER['REMOTE_ADDR'] ;
         <div class="box" id="test-results-list">
             <div class=" box-header with-border">
                 <h3 class="box-title">
-                    <?php Echo "Results for device with ip: $ipaddress";?>
+                    <?php Echo "Results for device with ip: $ipaddress"; ?>
                 </h3>
             </div>
             <!-- /.box-header -->
