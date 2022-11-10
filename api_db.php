@@ -192,7 +192,7 @@ if (isset($_GET['topDomains']) && $auth) {
         $limit = ' AND timestamp <= :until';
     }
     // Select top permitted domains only
-    $stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE status IN (2,3,12,13,14)'.$limit.' GROUP by domain order by count(domain) desc limit 20');
+    $stmt = $db->prepare('SELECT domain,count(domain) FROM queries WHERE status IN (2,3,12,13,14,17)'.$limit.' GROUP by domain order by count(domain) desc limit 20');
     $stmt->bindValue(':from', intval($_GET['from']), SQLITE3_INTEGER);
     $stmt->bindValue(':until', intval($_GET['until']), SQLITE3_INTEGER);
     $results = $stmt->execute();
