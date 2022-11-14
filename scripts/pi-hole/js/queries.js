@@ -219,6 +219,13 @@ $(function () {
             "<span class='text-orange'>Blocked <br class='hidden-lg'>(special domain)</span>";
           blocked = true;
           break;
+        case "17":
+          fieldtext =
+            "<span class='text-orange'>OK</span> <br class='hidden-lg'>(stale cache)" +
+            dnssecStatus;
+          buttontext =
+            '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
+          break;
         default:
           fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
       }
@@ -240,17 +247,18 @@ $(function () {
       $("td:eq(6)", row).html(buttontext);
 
       if (DomainlistLink) {
-        $("td:eq(4)", row).hover(
-          function () {
+        $("td:eq(4)", row).on(
+          "hover",
+          (function () {
             this.title = "Click to show matching blacklist/whitelist domain";
             this.style.color = "#72afd2";
           },
           function () {
             this.style.color = "";
-          }
+          })
         );
         $("td:eq(4)", row).off(); // Release any possible previous onClick event handlers
-        $("td:eq(4)", row).click(function () {
+        $("td:eq(4)", row).on("click", function () {
           var newTab = window.open("groups-domains.php?domainid=" + data[9], "_blank");
           if (newTab) {
             newTab.focus();
@@ -366,80 +374,85 @@ $(function () {
       // Query type IPv4 / IPv6
       api
         .$("td:eq(1)")
-        .click(function (event) {
+        .on("click", function (event) {
           addColumnFilter(event, 1, this.textContent);
         })
-        .hover(
-          function () {
+        .on(
+          "hover",
+          (function () {
             $(this).addClass("pointer").attr("title", tooltipText(1, this.textContent));
           },
           function () {
             $(this).removeClass("pointer");
-          }
+          })
         );
 
       // Domain
       api
         .$("td:eq(2)")
-        .click(function (event) {
+        .on("click", function (event) {
           addColumnFilter(event, 2, this.textContent.split("\n")[0]);
         })
-        .hover(
-          function () {
+        .on(
+          "hover",
+          (function () {
             $(this).addClass("pointer").attr("title", tooltipText(2, this.textContent));
           },
           function () {
             $(this).removeClass("pointer");
-          }
+          })
         );
 
       // Client
       api
         .$("td:eq(3)")
-        .click(function (event) {
+        .on("click", function (event) {
           addColumnFilter(event, 3, this.textContent);
         })
-        .hover(
-          function () {
+        .on(
+          "hover",
+          (function () {
             $(this).addClass("pointer").attr("title", tooltipText(3, this.textContent));
           },
           function () {
             $(this).removeClass("pointer");
-          }
+          })
         );
 
       // Status
       api
         .$("td:eq(4)")
-        .click(function (event) {
+        .on("click", function (event) {
           var id = this.children.id.value;
           var text = this.textContent;
           addColumnFilter(event, 4, id + "#" + text);
         })
-        .hover(
-          function () {
+        .on(
+          "hover",
+          (function () {
             $(this).addClass("pointer").attr("title", tooltipText(4, this.textContent));
           },
           function () {
             $(this).removeClass("pointer");
-          }
+          })
         );
 
       // Reply type
       api
         .$("td:eq(5)")
-        .click(function (event) {
+        .on("click", function (event) {
           var id = this.children.id.value;
           var text = this.textContent.split(" ")[0];
           addColumnFilter(event, 5, id + "#" + text);
         })
-        .hover(
-          function () {
+        .on(
+          "hover",
+          (function () {
             $(this).addClass("pointer").attr("title", tooltipText(5, this.textContent));
           },
           function () {
             $(this).removeClass("pointer");
-          }
+          })
         );
 
       // Disable autocorrect in the search box
@@ -458,14 +471,14 @@ $(function () {
 
   $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();
-    if (data[4] === "2" || data[4] === "3" || data[4] === "14") {
+    if (data[4] === "2" || data[4] === "3" || data[4] === "14" || data[4] === "17") {
       utils.addFromQueryLog(data[2], "black");
     } else {
       utils.addFromQueryLog(data[2], "white");
     }
   });
 
-  $("#resetButton").click(function () {
+  $("#resetButton").on("click", function () {
     tableApi.search("");
     resetColumnsFilters();
   });

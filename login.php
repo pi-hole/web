@@ -42,7 +42,7 @@ require 'scripts/pi-hole/php/header.php';
                 <form action="" id="loginform" method="post">
                     <div class="form-group login-options has-feedback<?php if ($wrongpassword) { ?> has-error<?php } ?>">
                         <div class="pwd-field">
-                            <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" autocomplete="current-password" autofocus>
+                            <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" spellcheck="false" autocomplete="current-password" autofocus>
                             <span class="fa fa-key form-control-feedback"></span>
                         </div>
                         <div>

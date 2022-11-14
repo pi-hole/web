@@ -59,7 +59,7 @@ $(function () {
   });
 
   // display selected import file on button's adjacent textfield
-  $("#zip_file").change(function () {
+  $("#zip_file").on("change", function () {
     var fileName = $(this)[0].files.length === 1 ? $(this)[0].files[0].name : "";
     $("#zip_filename").val(fileName);
   });
@@ -194,7 +194,7 @@ $("#apiTokenModal").on("show.bs.modal", function () {
   $('iframe[name="apiToken_iframe"]').contents().find("table").css(qrCodeStyle);
 });
 
-$("#DHCPchk").click(function () {
+$("#DHCPchk").on("click", function () {
   $("input.DHCPgroup").prop("disabled", !this.checked);
   $("#dhcpnotice").prop("hidden", !this.checked).addClass("lookatme");
 });
@@ -347,7 +347,7 @@ $(function () {
 
   // En-/disable conditional forwarding input fields based
   // on the checkbox state
-  $('input[name="rev_server"]').click(function () {
+  $('input[name="rev_server"]').on("click", function () {
     $('input[name="rev_server_cidr"]').prop("disabled", !this.checked);
     $('input[name="rev_server_target"]').prop("disabled", !this.checked);
     $('input[name="rev_server_domain"]').prop("disabled", !this.checked);
@@ -377,7 +377,7 @@ $(function () {
     }
   }
 
-  bargraphs.click(function () {
+  bargraphs.on("click", function () {
     localStorage.setItem("barchart_chkbox", bargraphs.prop("checked"));
   });
 });
@@ -397,7 +397,7 @@ $(function () {
     }
   }
 
-  colorfulQueryLog.click(function () {
+  colorfulQueryLog.on("click", function () {
     localStorage.setItem("colorfulQueryLog_chkbox", colorfulQueryLog.prop("checked"));
   });
 });
@@ -463,7 +463,7 @@ $(function () {
     }
   }
 
-  nonfatalwarnigns.click(function () {
+  nonfatalwarnigns.on("click", function () {
     localStorage.setItem("hideNonfatalDnsmasqWarnings_chkbox", nonfatalwarnigns.prop("checked"));
     // Call check messages to make new setting effective
     checkMessages();

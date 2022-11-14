@@ -178,7 +178,7 @@ $(function () {
         }
 
         $("td:eq(3)", row).html(names.join("<br>"));
-        $("td:eq(3)", row).hover(function () {
+        $("td:eq(3)", row).on("hover", function () {
           this.title = allnames.join("\n");
         });
       }
@@ -201,7 +201,7 @@ $(function () {
       }
 
       $("td:eq(0)", row).html(ips.join("<br>"));
-      $("td:eq(0)", row).hover(function () {
+      $("td:eq(0)", row).on("hover", function () {
         this.title = data.ip.join("\n");
       });
 

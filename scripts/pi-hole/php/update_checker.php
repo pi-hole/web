@@ -126,7 +126,11 @@ if (isset($FTL_commit)) {
 }
 
 if ($docker_current) {
-    $dockerVersionStr = '<a href="'.$dockerUrl.'/'.rawurlencode($docker_current).'" rel="noopener" target="_blank">'.htmlentities($docker_current).'</a>';
+    if ($docker_current == 'dev' || $docker_current == 'nightly') {
+        $dockerVersionStr = htmlentities($docker_current);
+    } else {
+        $dockerVersionStr = '<a href="'.$dockerUrl.'/'.rawurlencode($docker_current).'" rel="noopener" target="_blank">'.htmlentities($docker_current).'</a>';
+    }
 } else {
     $dockerVersionStr = '';
 }

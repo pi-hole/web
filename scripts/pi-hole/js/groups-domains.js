@@ -69,7 +69,7 @@ function showSuggestDomains(value) {
     // Purposefully omit 'btn' class to save space on padding
     return $('<button type="button" class="btn-link btn-block text-right">')
       .append($("<i>").text(hostname))
-      .click(function () {
+      .on("click", function () {
         hideSuggestDomains();
         newDomainEl.val(hostname);
       });
