@@ -233,24 +233,35 @@ $(function () {
       var replyid = parseInt(data[6], 10);
       var dnssecStatus;
       switch (data[8]) {
-        case 1:
+        case 1: {
           dnssecStatus = '<br><span class="text-green">SECURE';
           break;
-        case 2:
+        }
+
+        case 2: {
           dnssecStatus = '<br><span class="text-orange">INSECURE';
           break;
-        case 3:
+        }
+
+        case 3: {
           dnssecStatus = '<br><span class="text-red">BOGUS';
           break;
-        case 4:
+        }
+
+        case 4: {
           dnssecStatus = '<br><span class="text-red">ABANDONED';
           break;
-        case 5:
+        }
+
+        case 5: {
           dnssecStatus = '<br><span class="text-orange">UNKNOWN';
           break;
-        default:
+        }
+
+        default: {
           // No DNSSEC
           dnssecStatus = "";
+        }
       }
 
       if (dnssecStatus.length > 0) {
@@ -262,13 +273,15 @@ $(function () {
         buttontext = "",
         blocked = false;
       switch (data[4]) {
-        case 1:
+        case 1: {
           fieldtext = "<span class='text-red'>Blocked (gravity)</span>";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           blocked = true;
           break;
-        case 2:
+        }
+
+        case 2: {
           fieldtext =
             replyid === 0
               ? "<span class='text-green'>OK</span> (sent to <br class='hidden-lg'>"
@@ -277,91 +290,124 @@ $(function () {
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
-        case 3:
+        }
+
+        case 3: {
           fieldtext =
             "<span class='text-green'>OK</span> <br class='hidden-lg'>(cache)" + dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
-        case 4:
+        }
+
+        case 4: {
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           blocked = true;
           break;
-        case 5:
+        }
+
+        case 5: {
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist)";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           blocked = true;
           break;
-        case 6:
+        }
+
+        case 6: {
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(external, IP)";
           blocked = true;
           break;
-        case 7:
+        }
+
+        case 7: {
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(external, NULL)</span>";
           blocked = true;
           break;
-        case 8:
+        }
+
+        case 8: {
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(external, NXRA)</span>";
           blocked = true;
           break;
-        case 9:
+        }
+
+        case 9: {
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(gravity, CNAME)</span>";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           blocked = true;
           break;
-        case 10:
+        }
+
+        case 10: {
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist, CNAME)</span>";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           blocked = true;
           break;
-        case 11:
+        }
+
+        case 11: {
           fieldtext =
             "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist, CNAME)</span>";
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
           blocked = true;
           break;
-        case 12:
+        }
+
+        case 12: {
           fieldtext = "<span class='text-green'>Retried</span>";
           break;
-        case 13:
+        }
+
+        case 13: {
           fieldtext = "<span class='text-green'>Retried</span> <br class='hidden-lg'>(ignored)";
           break;
-        case 14:
+        }
+
+        case 14: {
           fieldtext =
             "<span class='text-green'>OK</span> <br class='hidden-lg'>(already forwarded)" +
             dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
-        case 15:
+        }
+
+        case 15: {
           fieldtext =
             "<span class='text-orange'>Blocked <br class='hidden-lg'>(database is busy)</span>";
           blocked = true;
           break;
-        case 16:
+        }
+
+        case 16: {
           fieldtext =
             "<span class='text-orange'>Blocked <br class='hidden-lg'>(special domain)</span>";
           blocked = true;
           break;
-        case 17:
+        }
+
+        case 17: {
           fieldtext =
             "<span class='text-orange'>OK</span> <br class='hidden-lg'>(stale cache)" +
             dnssecStatus;
           buttontext =
             '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
-        default:
+        }
+
+        default: {
           fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
+        }
       }
 
       // Cannot block internal queries of this type

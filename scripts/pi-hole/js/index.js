@@ -123,7 +123,7 @@ var customTooltips = function (context) {
     tooltipX = offsetX + caretX;
     if (tooltip.yAlign === "top" || tooltip.yAlign === "bottom") {
       switch (tooltip.xAlign) {
-        case "center":
+        case "center": {
           // set a minimal X position to 5px to prevent
           // the tooltip to stick out left of the viewport
           var minX = 5;
@@ -135,30 +135,44 @@ var customTooltips = function (context) {
           }
 
           break;
-        case "left":
+        }
+
+        case "left": {
           tooltipX -= arrowMinIndent;
           arrowX = arrowMinIndent;
           break;
-        case "right":
+        }
+
+        case "right": {
           tooltipX -= tooltipWidth - arrowMinIndent;
           arrowX = tooltipWidth - arrowMinIndent;
           break;
-        default:
+        }
+
+        default: {
           break;
+        }
       }
     } else if (tooltip.yAlign === "center") {
       switch (tooltip.xAlign) {
-        case "left":
+        case "left": {
           tooltipX += caretPadding;
           break;
-        case "right":
+        }
+
+        case "right": {
           tooltipX -= tooltipWidth - caretPadding;
           break;
-        case "center":
+        }
+
+        case "center": {
           tooltipX -= tooltipWidth / 2;
           break;
-        default:
+        }
+
+        default: {
           break;
+        }
       }
     }
   } else {
@@ -179,10 +193,12 @@ var customTooltips = function (context) {
 
   // Compute Y position
   switch (tooltip.yAlign) {
-    case "top":
+    case "top": {
       tooltipY = offsetY + caretY + arrowSize + caretPadding;
       break;
-    case "center":
+    }
+
+    case "center": {
       tooltipY = offsetY + caretY - tooltipHeight / 2;
       if (tooltip.xAlign === "left") {
         tooltipX += arrowSize;
@@ -191,11 +207,16 @@ var customTooltips = function (context) {
       }
 
       break;
-    case "bottom":
+    }
+
+    case "bottom": {
       tooltipY = offsetY + caretY - tooltipHeight - arrowSize - caretPadding;
       break;
-    default:
+    }
+
+    default: {
       break;
+    }
   }
 
   // Position tooltip and display

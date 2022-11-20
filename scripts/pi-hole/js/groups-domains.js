@@ -596,7 +596,7 @@ function editDomain() {
   var done = "edited";
   var notDone = "editing";
   switch (elem) {
-    case "status_" + id:
+    case "status_" + id: {
       if (status === 0) {
         done = "disabled";
         notDone = "disabling";
@@ -606,25 +606,36 @@ function editDomain() {
       }
 
       break;
-    case "name_" + id:
+    }
+
+    case "name_" + id: {
       done = "edited name of";
       notDone = "editing name of";
       break;
-    case "comment_" + id:
+    }
+
+    case "comment_" + id: {
       done = "edited comment of";
       notDone = "editing comment of";
       break;
-    case "type_" + id:
+    }
+
+    case "type_" + id: {
       done = "edited type of";
       notDone = "editing type of";
       break;
-    case "multiselect_" + id:
+    }
+
+    case "multiselect_" + id: {
       done = "edited groups of";
       notDone = "editing groups of";
       break;
-    default:
+    }
+
+    default: {
       alert("bad element or invalid data-id!");
       return;
+    }
   }
 
   utils.disableAll();

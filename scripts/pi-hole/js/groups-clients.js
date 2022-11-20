@@ -467,17 +467,22 @@ function editClient() {
   var done = "edited";
   var notDone = "editing";
   switch (elem) {
-    case "multiselect_" + id:
+    case "multiselect_" + id: {
       done = "edited groups of";
       notDone = "editing groups of";
       break;
-    case "comment_" + id:
+    }
+
+    case "comment_" + id: {
       done = "edited comment of";
       notDone = "editing comment of";
       break;
-    default:
+    }
+
+    default: {
       alert("bad element or invalid data-id!");
       return;
+    }
   }
 
   if (name.length > 0) {
