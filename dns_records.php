@@ -32,7 +32,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="domain">Domain:</label>
-                        <input id="domain" type="url" class="form-control" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                        <input id="domain" type="url" class="form-control" placeholder="Domain or comma-separated list of domains" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="ip">IP Address:</label>

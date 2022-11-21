@@ -236,12 +236,15 @@ $(function () {
     },
     options: {
       responsive: true,
+      interaction: {
+        mode: "nearest",
+        axis: "x",
+      },
       plugins: {
         tooltip: {
           enabled: true,
           yAlign: "bottom",
           intersect: false,
-          mode: "x",
           itemSort: function (a, b) {
             return b.datasetIndex - a.datasetIndex;
           },
@@ -390,7 +393,7 @@ $("#querytime").on("apply.daterangepicker", function (ev, picker) {
   updateQueriesOverTime();
 });
 
-$("#queryOverTimeChart").click(function (evt) {
+$("#queryOverTimeChart").on("click", function (evt) {
   var activePoints = timeLineChart.getElementsAtEventForMode(
     evt,
     "nearest",

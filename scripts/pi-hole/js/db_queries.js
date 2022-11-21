@@ -167,6 +167,10 @@ function excludeStatusTypes() {
     statusType.push(16);
   }
 
+  if ($("#type_cached_stale").prop("checked") === false) {
+    statusType.push(17);
+  }
+
   return statusType.join(",");
 }
 
@@ -176,7 +180,7 @@ var reloadCallback = function () {
   var data = tableApi.rows().data();
   for (var i = 0; i < data.length; i++) {
     statistics[0]++; // TOTAL query
-    if (data[i][4] === 1 || (data[i][4] > 4 && ![10, 12, 13, 14].includes(data[i][4]))) {
+    if (data[i][4] === 1 || (data[i][4] > 4 && ![10, 12, 13, 14, 17].includes(data[i][4]))) {
       statistics[2]++; // EXACT blocked
     } else if (data[i][4] === 3) {
       statistics[1]++; // CACHE query
@@ -349,6 +353,13 @@ $(function () {
             "<span class='text-orange'>Blocked <br class='hidden-lg'>(special domain)</span>";
           blocked = true;
           break;
+        case 17:
+          fieldtext =
+            "<span class='text-orange'>OK</span> <br class='hidden-lg'>(stale cache)" +
+            dnssecStatus;
+          buttontext =
+            '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
+          break;
         default:
           fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
       }
@@ -464,12 +475,12 @@ $("#querytime").on("apply.daterangepicker", function (ev, picker) {
   refreshTableData();
 });
 
-$("input[id^=type]").change(function () {
+$("input[id^=type]").on("change", function () {
   if (datepickerManuallySelected) {
     reloadBox.show();
   }
 });
 
-$(".bt-reload").click(function () {
+$(".bt-reload").on("click", function () {
   refreshTableData();
 });

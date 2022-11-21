@@ -43,6 +43,12 @@ if (!$file) {
 if (isset($_GET['offset'])) {
     $offset = intval($_GET['offset']);
     if ($offset > 0) {
+        // If offset is grater then current file end it means the file was truncated (log rotation)
+        fseek($file, 0, SEEK_END);
+        if ($offset > ftell($file)) {
+            $offset = 0;
+        }
+
         // Seeks on the file pointer where we want to continue reading is known
         fseek($file, $offset);
 

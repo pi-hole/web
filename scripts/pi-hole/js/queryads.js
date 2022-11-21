@@ -87,7 +87,7 @@ function eventsource() {
 }
 
 // Handle enter key
-$("#domain").keypress(function (e) {
+$("#domain").on("keypress", function (e) {
   if (e.which === 13) {
     // Enter was pressed, and the input has focus
     exact = "";

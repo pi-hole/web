@@ -203,6 +203,7 @@ function getCustomDNSEntries()
             $data = new \stdClass();
             $data->ip = $explodedLine[0];
             $data->domain = $explodedLine[1];
+            $data->domains = array_slice($explodedLine, 0, -1);
             $entries[] = $data;
         }
 
@@ -241,22 +242,39 @@ function addCustomDNSEntry($ip = '', $domain = '', $reload = '', $json = true)
             return returnError('Domain must be set', $json);
         }
 
-        if (!validDomain($domain)) {
-            return returnError('Domain must be valid', $json);
+        $num = 0;
+        // Check if each submitted domain is valid
+        $domains = array_map('trim', explode(',', $domain));
+        foreach ($domains as $d) {
+            if (!validDomain($d)) {
+                return returnError("Domain '{$d}' is not valid", $json);
+            }
+            ++$num;
         }
 
         // Only check for duplicates if adding new records from the web UI (not through Teleporter)
         if (isset($_REQUEST['ip']) || isset($_REQUEST['domain'])) {
             $existingEntries = getCustomDNSEntries();
             foreach ($existingEntries as $entry) {
-                if ($entry->domain == $domain && get_ip_type($entry->ip) == $ipType) {
-                    return returnError('This domain already has a custom DNS entry for an IPv'.$ipType, $json);
+                foreach ($domains as $d) {
+                    if ($entry->domain == $d && get_ip_type($entry->ip) == $ipType) {
+                        return returnError("The domain {$d} already has a custom DNS entry for an IPv".$ipType, $json);
+                    }
                 }
             }
         }
 
-        // Add record
-        pihole_execute('-a addcustomdns '.$ip.' '.$domain.' '.$reload);
+        // if $reload is not set and more then one domain is supplied, restart FTL only once after all entries were added
+        if (($num > 0) && (empty($reload))) {
+            $reload = 'false';
+        }
+        // Add records
+        foreach ($domains as $domain) {
+            pihole_execute('-a addcustomdns '.$ip.' '.$domain.' '.$reload);
+        }
+        if ($num > 0) {
+            pihole_execute('restartdns');
+        }
 
         return returnSuccess('', $json);
     } catch (\Exception $ex) {
@@ -399,12 +417,20 @@ function addCustomCNAMEEntry($domain = '', $target = '', $reload = '', $json = t
             return returnError('Target must be valid', $json);
         }
 
-        // Check if each submitted domain is valid
+        $num = 0;
         $domains = array_map('trim', explode(',', $domain));
         foreach ($domains as $d) {
+            // Check if each submitted domain is valid
             if (!validDomain($d)) {
                 return returnError("Domain '{$d}' is not valid", $json);
             }
+
+            // Check if each submitted domain is different than the target to avoid loops
+            if (strtolower($d) === strtolower($target)) {
+                return returnError('Domain and target cannot be the same', $json);
+            }
+
+            ++$num;
         }
 
         $existingEntries = getCustomCNAMEEntries();
@@ -418,7 +444,18 @@ function addCustomCNAMEEntry($domain = '', $target = '', $reload = '', $json = t
             }
         }
 
-        pihole_execute('-a addcustomcname '.$domain.' '.$target.' '.$reload);
+        // if $reload is not set and more then one domain is supplied, restart FTL only once after all entries were added
+        if (($num > 0) && (empty($reload))) {
+            $reload = 'false';
+        }
+        // add records
+        foreach ($domains as $d) {
+            pihole_execute('-a addcustomcname '.$d.' '.$target.' '.$reload);
+        }
+
+        if ($num > 0) {
+            pihole_execute('restartdns');
+        }
 
         return returnSuccess('', $json);
     } catch (\Exception $ex) {
