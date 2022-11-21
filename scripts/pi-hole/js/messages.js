@@ -139,6 +139,19 @@ function renderMessage(data, type, row) {
         "</pre>"
       );
 
+    case "DOMAIN_RATE_LIMIT":
+      return (
+        "Client " +
+        utils.escapeHtml(row.blob1) +
+        " has been rate-limited for domain " +
+        utils.escapeHtml(row.message) +
+        " (current config allows up to " +
+        parseInt(row.blob2, 10) +
+        " queries per client and domain in " +
+        parseInt(row.blob3, 10) +
+        " seconds)"
+      );
+
     default:
       return "Unknown message type<pre>" + JSON.stringify(row) + "</pre>";
   }
