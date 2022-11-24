@@ -312,7 +312,7 @@ function editGroup() {
   var done = "edited";
   var notDone = "editing";
   switch (elem) {
-    case "status_" + id: {
+    case "status_" + id:
       if (status === 0) {
         done = "disabled";
         notDone = "disabling";
@@ -322,24 +322,17 @@ function editGroup() {
       }
 
       break;
-    }
-
-    case "name_" + id: {
+    case "name_" + id:
       done = "edited name of";
       notDone = "editing name of";
       break;
-    }
-
-    case "desc_" + id: {
+    case "desc_" + id:
       done = "edited description of";
       notDone = "editing description of";
       break;
-    }
-
-    default: {
+    default:
       alert("bad element or invalid data-id!");
       return;
-    }
   }
 
   utils.disableAll();

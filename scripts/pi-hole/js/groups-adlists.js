@@ -44,44 +44,34 @@ function format(data) {
   var numbers = true;
   if (data.status !== null) {
     switch (parseInt(data.status, 10)) {
-      case 0: {
+      case 0:
         statusText =
           data.enabled === 0
             ? "List is disabled and not checked"
             : "List was not downloaded so far";
         numbers = false;
         break;
-      }
-
-      case 1: {
+      case 1:
         statusText = 'List download was successful (<span class="list-status-1">OK</span>)';
         break;
-      }
-
-      case 2: {
+      case 2:
         statusText =
           'List unchanged upstream, Pi-hole used a local copy (<span class="list-status-2">OK</span>)';
         break;
-      }
-
-      case 3: {
+      case 3:
         statusText =
           'List unavailable, Pi-hole used a local copy (<span class="list-status-3">check list</span>)';
         break;
-      }
-
-      case 4: {
+      case 4:
         statusText =
           'List unavailable, there is no local copy of this list available on your Pi-hole (<span class="list-status-4">replace list</span>)';
         numbers = false;
         break;
-      }
 
-      default: {
+      default:
         statusText =
           'Unknown (<span class="list-status-0">' + parseInt(data.status, 10) + "</span>)";
         break;
-      }
     }
   }
 
@@ -178,30 +168,21 @@ function initTable() {
       }
 
       switch (statusCode) {
-        case 1: {
+        case 1:
           statusIcon = "fa-check";
           break;
-        }
-
-        case 2: {
+        case 2:
           statusIcon = "fa-history";
           break;
-        }
-
-        case 3: {
+        case 3:
           statusIcon = "fa-exclamation-circle";
           break;
-        }
-
-        case 4: {
+        case 4:
           statusIcon = "fa-times";
           break;
-        }
-
-        default: {
+        default:
           statusIcon = "fa-question-circle";
           break;
-        }
       }
 
       // Append red exclamation-triangle when there are invalid lines on the list
@@ -586,7 +567,7 @@ function editAdlist() {
   var done = "edited";
   var notDone = "editing";
   switch (elem) {
-    case "status_" + id: {
+    case "status_" + id:
       if (status === 0) {
         done = "disabled";
         notDone = "disabling";
@@ -596,24 +577,17 @@ function editAdlist() {
       }
 
       break;
-    }
-
-    case "comment_" + id: {
+    case "comment_" + id:
       done = "edited comment of";
       notDone = "editing comment of";
       break;
-    }
-
-    case "multiselect_" + id: {
+    case "multiselect_" + id:
       done = "edited groups of";
       notDone = "editing groups of";
       break;
-    }
-
-    default: {
+    default:
       alert("bad element or invalid data-id!");
       return;
-    }
   }
 
   utils.disableAll();

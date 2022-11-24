@@ -77,7 +77,7 @@ function showAlert(type, icon, title, message) {
   var opts = {};
   title = "&nbsp;<strong>" + title + "</strong><br>";
   switch (type) {
-    case "info": {
+    case "info":
       opts = {
         type: "info",
         icon: "far fa-clock",
@@ -86,9 +86,7 @@ function showAlert(type, icon, title, message) {
       };
       info = $.notify(opts);
       break;
-    }
-
-    case "success": {
+    case "success":
       opts = {
         type: "success",
         icon: icon,
@@ -102,9 +100,7 @@ function showAlert(type, icon, title, message) {
       }
 
       break;
-    }
-
-    case "warning": {
+    case "warning":
       opts = {
         type: "warning",
         icon: "fas fa-exclamation-triangle",
@@ -118,9 +114,7 @@ function showAlert(type, icon, title, message) {
       }
 
       break;
-    }
-
-    case "error": {
+    case "error":
       opts = {
         type: "danger",
         icon: "fas fa-times",
@@ -134,8 +128,6 @@ function showAlert(type, icon, title, message) {
       }
 
       break;
-    }
-
     default:
   }
 }

@@ -26,7 +26,7 @@ function multiline(input) {
 function renderMessage(data, type, row) {
   // Display and search content
   switch (row.type) {
-    case "REGEX": {
+    case "REGEX":
       return (
         'Encountered an error when processing <a href="groups-domains.php?domainid=' +
         row.blob3 +
@@ -40,9 +40,8 @@ function renderMessage(data, type, row) {
         row.message +
         "</pre>"
       );
-    }
 
-    case "SUBNET": {
+    case "SUBNET":
       return (
         "Client <code>" +
         row.message +
@@ -57,9 +56,8 @@ function renderMessage(data, type, row) {
         row.blob4 +
         "</pre> to get the group configuration for this client."
       );
-    }
 
-    case "HOSTNAME": {
+    case "HOSTNAME":
       // eslint-disable-next-line unicorn/no-new-array
       var hint = new Array(row.blob2 + row.message.length + 3).join(" ");
       return (
@@ -75,13 +73,11 @@ function renderMessage(data, type, row) {
         hint +
         "&uarr;</pre>"
       );
-    }
 
-    case "DNSMASQ_CONFIG": {
+    case "DNSMASQ_CONFIG":
       return "FTL failed to start due to " + row.message;
-    }
 
-    case "RATE_LIMIT": {
+    case "RATE_LIMIT":
       return (
         "Client " +
         row.message +
@@ -91,17 +87,15 @@ function renderMessage(data, type, row) {
         parseInt(row.blob2, 10) +
         " seconds)"
       );
-    }
 
-    case "DNSMASQ_WARN": {
+    case "DNSMASQ_WARN":
       return (
         "Warning in <code>dnsmasq</code> core:<pre>" +
         row.message +
         '</pre> Check out <a href="https://docs.pi-hole.net/ftldns/dnsmasq_warn/" target="_blank">our documentation</a> for further information.'
       );
-    }
 
-    case "LOAD": {
+    case "LOAD":
       return (
         "Long-term load (15min avg) larger than number of processors: <strong>" +
         parseFloat(row.blob1).toFixed(1) +
@@ -109,9 +103,8 @@ function renderMessage(data, type, row) {
         parseInt(row.blob2, 10) +
         "</strong><br>This may slow down DNS resolution and can cause bottlenecks."
       );
-    }
 
-    case "SHMEM": {
+    case "SHMEM":
       return (
         "RAM shortage (<code>" +
         utils.escapeHtml(row.message) +
@@ -121,9 +114,8 @@ function renderMessage(data, type, row) {
         utils.escapeHtml(row.blob2) +
         "</pre>"
       );
-    }
 
-    case "DISK": {
+    case "DISK":
       return (
         "Disk shortage (<code>" +
         utils.escapeHtml(row.message) +
@@ -133,9 +125,8 @@ function renderMessage(data, type, row) {
         utils.escapeHtml(row.blob2) +
         "</pre>"
       );
-    }
 
-    case "ADLIST": {
+    case "ADLIST":
       return (
         '<a href="groups-adlists.php?adlistid=' +
         parseInt(row.blob1, 10) +
@@ -147,11 +138,9 @@ function renderMessage(data, type, row) {
         utils.escapeHtml(row.message) +
         "</pre>"
       );
-    }
 
-    default: {
+    default:
       return "Unknown message type<pre>" + JSON.stringify(row) + "</pre>";
-    }
   }
 }
 

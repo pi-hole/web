@@ -23,20 +23,18 @@ function piholeChanged(action) {
   var dis = $("#pihole-disable");
 
   switch (action) {
-    case "enabled": {
+    case "enabled":
       status.html("<i class='fa fa-circle text-green-light'></i> Active");
       ena.hide();
       dis.show();
       dis.removeClass("active");
       break;
-    }
 
-    case "disabled": {
+    case "disabled":
       status.html("<i class='fa fa-circle text-red'></i> Blocking disabled");
       ena.show();
       dis.hide();
       break;
-    }
 
     default:
     // nothing
@@ -73,7 +71,7 @@ function piholeChange(action, duration) {
   var btnStatus;
 
   switch (action) {
-    case "enable": {
+    case "enable":
       btnStatus = $("#flip-status-enable");
       btnStatus.html("<i class='fa fa-spinner'> </i>");
       $.getJSON("api.php?enable&token=" + token, function (data) {
@@ -83,9 +81,8 @@ function piholeChange(action, duration) {
         }
       });
       break;
-    }
 
-    case "disable": {
+    case "disable":
       btnStatus = $("#flip-status-disable");
       btnStatus.html("<i class='fa fa-spinner'> </i>");
       $.getJSON("api.php?disable=" + duration + "&token=" + token, function (data) {
@@ -99,7 +96,6 @@ function piholeChange(action, duration) {
         }
       });
       break;
-    }
 
     default:
     // nothing
@@ -172,22 +168,19 @@ function initCPUtemp() {
     var displaytemp = $("#tempdisplay");
     if (!isNaN(temperature)) {
       switch (unit) {
-        case "K": {
+        case "K":
           temperature += 273.15;
           displaytemp.html(temperature.toFixed(1) + "&nbsp;K");
           break;
-        }
 
-        case "F": {
+        case "F":
           temperature = (temperature * 9) / 5 + 32;
           displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;F");
           break;
-        }
 
-        default: {
+        default:
           displaytemp.html(temperature.toFixed(1) + "&nbsp;&deg;C");
           break;
-        }
       }
     }
   }
