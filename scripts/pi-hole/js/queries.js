@@ -80,7 +80,7 @@ $(function () {
       var replyid = parseInt(data[5], 10);
       // DNSSEC status
       var dnssecStatus;
-      var ede = data[11] ?? "";
+      var ede = data[11] ? data[11] : "";
       switch (data[6]) {
         case "1": {
           dnssecStatus = '<br><span class="text-green">SECURE';
