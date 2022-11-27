@@ -29,7 +29,7 @@
     "postcss": "^8.4.19",
     "postcss-cli": "^10.0.0",
     "prettier": "2.8.0",
-    "xo": "^0.52.4"
+    "xo": "^0.53.0"
   },
   "browserslist": [
     "defaults",
@@ -99,7 +99,9 @@
       "unicorn/prefer-number-properties": "off",
       "unicorn/prefer-query-selector": "off",
       "unicorn/prefer-string-slice": "off",
-      "unicorn/prevent-abbreviations": "off"
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/prefer-logical-operator-over-ternary": "off",
+      "unicorn/switch-case-braces": "off"
     }
   },
   "dependencies": {}
