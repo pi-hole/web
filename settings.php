@@ -48,23 +48,27 @@ if (isset($_POST['submit'])) {
 }
 ?>
 
+<script>
 <?php if (strlen($success) > 0) { ?>
-    <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert">
-        <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-        </button>
-        <h4><i class="icon fa fa-info"></i> Info</h4>
-        <?php echo $success; ?>
-    </div>
+    $.notify({
+        icon: "fas fa-check-circle",
+        title: "<b>Success</b><br>",
+        message: "<?php echo $success; ?>"
+    }, {
+        type: "success"
+    });
 <?php } ?>
 
 <?php if (strlen($error) > 0) { ?>
-    <div id="alError" class="alert alert-danger alert-dismissible fade in" role="alert">
-        <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-        </button>
-        <h4><i class="icon fa fa-ban"></i> Error</h4>
-        <?php echo $error; ?>
-    </div>
+    $.notify({
+        icon: "fas fa-times-circle",
+        title: "<b>Error</b><br>",
+        message: "<?php echo $error; ?>"
+    }, {
+        type: "error"
+    });
 <?php } ?>
+</script>
 
 <?php
 if (isset($setupVars['PIHOLE_INTERFACE'])) {
