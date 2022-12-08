@@ -4,7 +4,7 @@
     "description": "Pi-hole Dashboard for stats and more",
     "require": {
         "php": ">=5.4",
-        "phpstan/phpstan": "^0.12.42"
+        "phpstan/phpstan": "1.*"
     },
     "license": "EUPL-1.2",
     "minimum-stability": "stable",
@@ -12,8 +12,5 @@
         "files": [
             "scripts/vendor/qrcode.php"
         ]
-    },
-    "scripts": {
-        "phpstan": "vendor/phpstan/phpstan/phpstan analyse -c phpstan.neon.dist"
     }
 }
