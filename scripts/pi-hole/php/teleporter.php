@@ -496,8 +496,7 @@ function load_teleport_archive($filename, $flushtables = true, $blacklist = true
                 }
             }
         }
-    }
-    finally {
+    } finally {
         // do we need a full restart of Pi-hole or reloading the lists?
         if ($fullpiholerestart) {
             pihole_execute('restartdns');
@@ -506,6 +505,7 @@ function load_teleport_archive($filename, $flushtables = true, $blacklist = true
                 pihole_execute('restartdns reload');
             }
         }
+
         return $reloadsettings;
     }
 }
@@ -561,9 +561,9 @@ if (isset($_POST['action'])) {
         }
 
         $reloadsettingspage = load_teleport_archive($fullfilename, isset($_POST['flushtables']), isset($_POST['blacklist']), isset($_POST['whitelist']),
-                                                    isset($_POST['regex_blacklist']), isset($_POST['regex_whitelist']), isset($_POST['regexlist']),
-                                                    isset($_POST['auditlog']), isset($_POST['adlist']), isset($_POST['group']), isset($_POST['client']),
-                                                    isset($_POST['staticdhcpleases']), isset($_POST['localdnsrecords']), isset($_POST['localcnamerecords']));
+            isset($_POST['regex_blacklist']), isset($_POST['regex_whitelist']), isset($_POST['regexlist']),
+            isset($_POST['auditlog']), isset($_POST['adlist']), isset($_POST['group']), isset($_POST['client']),
+            isset($_POST['staticdhcpleases']), isset($_POST['localdnsrecords']), isset($_POST['localcnamerecords']));
 
         unlink($fullfilename);
         echo 'OK';
