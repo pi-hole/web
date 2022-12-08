@@ -300,6 +300,216 @@ function archive_add_directory($path, $subdir = '')
     }
 }
 
+function load_teleport_archive($filename, $flushtables = true, $blacklist = true, $whitelist = true, $regex_blacklist = true, $regex_whitelist = true, $regexlist = true, $auditlog = true, $adlist = true, $group = true, $client = true, $staticdhcpleases = true, $localdnsrecords = true, $localcnamerecords = true)
+{
+    $importedsomething = false;
+    $fullpiholerestart = false;
+    $reloadsettings = false;
+
+    try {
+        $archive = new PharData($filename);
+
+        foreach (new RecursiveIteratorIterator($archive) as $file) {
+            if ($blacklist && $file->getFilename() === 'blacklist.txt') {
+                $num = archive_insert_into_table($file, 'blacklist', $flushtables);
+                echo 'Processed blacklist (exact) ('.$num.noun($num).")<br>\n";  // it is possible to remove the <br>, but is it worth it?
+                $importedsomething = true;
+            }
+
+            if ($whitelist && $file->getFilename() === 'whitelist.txt') {
+                $num = archive_insert_into_table($file, 'whitelist', $flushtables);
+                echo 'Processed whitelist (exact) ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($regexlist && $file->getFilename() === 'regex.list') {
+                $num = archive_insert_into_table($file, 'regex_blacklist', $flushtables);
+                echo 'Processed blacklist (regex) ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            // Also try to import legacy wildcard list if found
+            if ($regexlist && $file->getFilename() === 'wildcardblocking.txt') {
+                $num = archive_insert_into_table($file, 'regex_blacklist', $flushtables, true);
+                echo 'Processed blacklist (regex, wildcard style) ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($auditlog && $file->getFilename() === 'auditlog.list') {
+                $num = archive_insert_into_table($file, 'domain_audit', $flushtables);
+                echo 'Processed audit log ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($adlist && $file->getFilename() === 'adlists.list') {
+                $num = archive_insert_into_table($file, 'adlist', $flushtables);
+                echo 'Processed adlists ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($blacklist && $file->getFilename() === 'blacklist.exact.json') {
+                $num = archive_restore_table($file, 'blacklist', $flushtables);
+                echo 'Processed blacklist (exact) ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($regexlist && $file->getFilename() === 'blacklist.regex.json') {
+                $num = archive_restore_table($file, 'regex_blacklist', $flushtables);
+                echo 'Processed blacklist (regex) ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($whitelist && $file->getFilename() === 'whitelist.exact.json') {
+                $num = archive_restore_table($file, 'whitelist', $flushtables);
+                echo 'Processed whitelist (exact) ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($regex_whitelist && $file->getFilename() === 'whitelist.regex.json') {
+                $num = archive_restore_table($file, 'regex_whitelist', $flushtables);
+                echo 'Processed whitelist (regex) ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($adlist && $file->getFilename() === 'adlist.json') {
+                $num = archive_restore_table($file, 'adlist', $flushtables);
+                echo 'Processed adlist ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($auditlog && $file->getFilename() === 'domain_audit.json') {
+                $num = archive_restore_table($file, 'domain_audit', $flushtables);
+                echo 'Processed domain_audit ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($group && $file->getFilename() === 'group.json') {
+                $num = archive_restore_table($file, 'group', $flushtables);
+                echo 'Processed group ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($client && $file->getFilename() === 'client.json') {
+                $num = archive_restore_table($file, 'client', $flushtables);
+                echo 'Processed client ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($client && $file->getFilename() === 'client_by_group.json') {
+                $num = archive_restore_table($file, 'client_by_group', $flushtables);
+                echo 'Processed client group assignments ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if (($whitelist || $regex_whitelist || $blacklist || $regex_blacklist)
+                && $file->getFilename() === 'domainlist_by_group.json') {
+                $num = archive_restore_table($file, 'domainlist_by_group', $flushtables);
+                echo 'Processed black-/whitelist group assignments ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($adlist && $file->getFilename() === 'adlist_by_group.json') {
+                $num = archive_restore_table($file, 'adlist_by_group', $flushtables);
+                echo 'Processed adlist group assignments ('.$num.noun($num).")<br>\n";
+                $importedsomething = true;
+            }
+
+            if ($staticdhcpleases && $file->getFilename() === '04-pihole-static-dhcp.conf') {
+                if ($flushtables) {
+                    $local_file = @fopen('/etc/dnsmasq.d/04-pihole-static-dhcp.conf', 'r+');
+                    if ($local_file !== false) {
+                        ftruncate($local_file, 0);
+                        fclose($local_file);
+                    }
+                }
+                $num = 0;
+                $staticdhcpleases = process_file(file_get_contents($file));
+                foreach ($staticdhcpleases as $lease) {
+                    list($mac, $ip, $hostname) = explode(',', $lease);
+                    $mac = formatMAC($mac);
+                    if (addStaticDHCPLease($mac, $ip, $hostname)) {
+                        ++$num;
+                    }
+                }
+
+                readStaticLeasesFile();
+                echo 'Processed static DHCP leases ('.$num.noun($num).")<br>\n";
+                if ($num > 0) {
+                    $importedsomething = true;
+                    $reloadsettingspage = true;
+                }
+            }
+
+            if ($localdnsrecords && $file->getFilename() === 'custom.list') {
+                ob_start();
+                $reload = 'false';
+                if ($flushtables) {
+                    // Defined in func.php included via auth.php
+                    // passing reload="false" will not restart Pi-hole
+                    deleteAllCustomDNSEntries($reload);
+                }
+                $num = 0;
+                $localdnsrecords = process_file(file_get_contents($file));
+                foreach ($localdnsrecords as $record) {
+                    list($ip, $domain) = explode(' ', $record);
+                    if (addCustomDNSEntry($ip, $domain, $reload, false)) {
+                        ++$num;
+                    }
+                }
+                ob_end_clean();
+                echo 'Processed local DNS records ('.$num.noun($num).")<br>\n";
+                if ($num > 0) {
+                    // we need a full pihole restart
+                    $fullpiholerestart = true;
+                }
+            }
+
+            if ($localcnamerecords && $file->getFilename() === '05-pihole-custom-cname.conf') {
+                ob_start();
+                $reload = 'false';
+                if ($flushtables) {
+                    // Defined in func.php included via auth.php
+                    // passing reload="false" will not restart Pi-hole
+                    deleteAllCustomCNAMEEntries($reload);
+                }
+
+                $num = 0;
+                $localcnamerecords = process_file(file_get_contents($file));
+                foreach ($localcnamerecords as $record) {
+                    $line = str_replace('cname=', '', $record);
+                    $line = str_replace("\r", '', $line);
+                    $line = str_replace("\n", '', $line);
+                    $explodedLine = explode(',', $line);
+
+                    $domain = implode(',', array_slice($explodedLine, 0, -1));
+                    $target = $explodedLine[count($explodedLine) - 1];
+
+                    if (addCustomCNAMEEntry($domain, $target, $reload, false)) {
+                        ++$num;
+                    }
+                }
+                ob_end_clean();
+                echo 'Processed local CNAME records ('.$num.noun($num).")<br>\n";
+                if ($num > 0) {
+                    // we need a full pihole restart
+                    $fullpiholerestart = true;
+                }
+            }
+        }
+    }
+    finally {
+        // do we need a full restart of Pi-hole or reloading the lists?
+        if ($fullpiholerestart) {
+            pihole_execute('restartdns');
+        } else {
+            if ($importedsomething) {
+                pihole_execute('restartdns reload');
+            }
+        }
+        return $reloadsettings;
+    }
+}
+
 function limit_length(&$item, $key)
 {
     // limit max length for a domain entry to 253 chars
@@ -350,211 +560,10 @@ if (isset($_POST['action'])) {
             exit('Failed moving '.htmlentities($source).' to '.htmlentities($fullfilename));
         }
 
-        $archive = new PharData($fullfilename);
-
-        $importedsomething = false;
-        $fullpiholerestart = false;
-        $reloadsettingspage = false;
-
-        $flushtables = isset($_POST['flushtables']);
-
-        foreach (new RecursiveIteratorIterator($archive) as $file) {
-            if (isset($_POST['blacklist']) && $file->getFilename() === 'blacklist.txt') {
-                $num = archive_insert_into_table($file, 'blacklist', $flushtables);
-                echo 'Processed blacklist (exact) ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['whitelist']) && $file->getFilename() === 'whitelist.txt') {
-                $num = archive_insert_into_table($file, 'whitelist', $flushtables);
-                echo 'Processed whitelist (exact) ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['regexlist']) && $file->getFilename() === 'regex.list') {
-                $num = archive_insert_into_table($file, 'regex_blacklist', $flushtables);
-                echo 'Processed blacklist (regex) ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            // Also try to import legacy wildcard list if found
-            if (isset($_POST['regexlist']) && $file->getFilename() === 'wildcardblocking.txt') {
-                $num = archive_insert_into_table($file, 'regex_blacklist', $flushtables, true);
-                echo 'Processed blacklist (regex, wildcard style) ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['auditlog']) && $file->getFilename() === 'auditlog.list') {
-                $num = archive_insert_into_table($file, 'domain_audit', $flushtables);
-                echo 'Processed audit log ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['adlist']) && $file->getFilename() === 'adlists.list') {
-                $num = archive_insert_into_table($file, 'adlist', $flushtables);
-                echo 'Processed adlists ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['blacklist']) && $file->getFilename() === 'blacklist.exact.json') {
-                $num = archive_restore_table($file, 'blacklist', $flushtables);
-                echo 'Processed blacklist (exact) ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['regexlist']) && $file->getFilename() === 'blacklist.regex.json') {
-                $num = archive_restore_table($file, 'regex_blacklist', $flushtables);
-                echo 'Processed blacklist (regex) ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['whitelist']) && $file->getFilename() === 'whitelist.exact.json') {
-                $num = archive_restore_table($file, 'whitelist', $flushtables);
-                echo 'Processed whitelist (exact) ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['regex_whitelist']) && $file->getFilename() === 'whitelist.regex.json') {
-                $num = archive_restore_table($file, 'regex_whitelist', $flushtables);
-                echo 'Processed whitelist (regex) ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['adlist']) && $file->getFilename() === 'adlist.json') {
-                $num = archive_restore_table($file, 'adlist', $flushtables);
-                echo 'Processed adlist ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['auditlog']) && $file->getFilename() === 'domain_audit.json') {
-                $num = archive_restore_table($file, 'domain_audit', $flushtables);
-                echo 'Processed domain_audit ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['group']) && $file->getFilename() === 'group.json') {
-                $num = archive_restore_table($file, 'group', $flushtables);
-                echo 'Processed group ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['client']) && $file->getFilename() === 'client.json') {
-                $num = archive_restore_table($file, 'client', $flushtables);
-                echo 'Processed client ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['client']) && $file->getFilename() === 'client_by_group.json') {
-                $num = archive_restore_table($file, 'client_by_group', $flushtables);
-                echo 'Processed client group assignments ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if ((isset($_POST['whitelist']) || isset($_POST['regex_whitelist'])
-                || isset($_POST['blacklist']) || isset($_POST['regex_blacklist']))
-                && $file->getFilename() === 'domainlist_by_group.json') {
-                $num = archive_restore_table($file, 'domainlist_by_group', $flushtables);
-                echo 'Processed black-/whitelist group assignments ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['adlist']) && $file->getFilename() === 'adlist_by_group.json') {
-                $num = archive_restore_table($file, 'adlist_by_group', $flushtables);
-                echo 'Processed adlist group assignments ('.$num.noun($num).")<br>\n";
-                $importedsomething = true;
-            }
-
-            if (isset($_POST['staticdhcpleases']) && $file->getFilename() === '04-pihole-static-dhcp.conf') {
-                if ($flushtables) {
-                    $local_file = @fopen('/etc/dnsmasq.d/04-pihole-static-dhcp.conf', 'r+');
-                    if ($local_file !== false) {
-                        ftruncate($local_file, 0);
-                        fclose($local_file);
-                    }
-                }
-                $num = 0;
-                $staticdhcpleases = process_file(file_get_contents($file));
-                foreach ($staticdhcpleases as $lease) {
-                    list($mac, $ip, $hostname) = explode(',', $lease);
-                    $mac = formatMAC($mac);
-                    if (addStaticDHCPLease($mac, $ip, $hostname)) {
-                        ++$num;
-                    }
-                }
-
-                readStaticLeasesFile();
-                echo 'Processed static DHCP leases ('.$num.noun($num).")<br>\n";
-                if ($num > 0) {
-                    $importedsomething = true;
-                    $reloadsettingspage = true;
-                }
-            }
-
-            if (isset($_POST['localdnsrecords']) && $file->getFilename() === 'custom.list') {
-                ob_start();
-                $reload = 'false';
-                if ($flushtables) {
-                    // Defined in func.php included via auth.php
-                    // passing reload="false" will not restart Pi-hole
-                    deleteAllCustomDNSEntries($reload);
-                }
-                $num = 0;
-                $localdnsrecords = process_file(file_get_contents($file));
-                foreach ($localdnsrecords as $record) {
-                    list($ip, $domain) = explode(' ', $record);
-                    if (addCustomDNSEntry($ip, $domain, $reload, false)) {
-                        ++$num;
-                    }
-                }
-                ob_end_clean();
-                echo 'Processed local DNS records ('.$num.noun($num).")<br>\n";
-                if ($num > 0) {
-                    // we need a full pihole restart
-                    $fullpiholerestart = true;
-                }
-            }
-
-            if (isset($_POST['localcnamerecords']) && $file->getFilename() === '05-pihole-custom-cname.conf') {
-                ob_start();
-                $reload = 'false';
-                if ($flushtables) {
-                    // Defined in func.php included via auth.php
-                    // passing reload="false" will not restart Pi-hole
-                    deleteAllCustomCNAMEEntries($reload);
-                }
-
-                $num = 0;
-                $localcnamerecords = process_file(file_get_contents($file));
-                foreach ($localcnamerecords as $record) {
-                    $line = str_replace('cname=', '', $record);
-                    $line = str_replace("\r", '', $line);
-                    $line = str_replace("\n", '', $line);
-                    $explodedLine = explode(',', $line);
-
-                    $domain = implode(',', array_slice($explodedLine, 0, -1));
-                    $target = $explodedLine[count($explodedLine) - 1];
-
-                    if (addCustomCNAMEEntry($domain, $target, $reload, false)) {
-                        ++$num;
-                    }
-                }
-                ob_end_clean();
-                echo 'Processed local CNAME records ('.$num.noun($num).")<br>\n";
-                if ($num > 0) {
-                    // we need a full pihole restart
-                    $fullpiholerestart = true;
-                }
-            }
-        }
-
-        // do we need a full restart of Pi-hole or reloading the lists?
-        if ($fullpiholerestart) {
-            pihole_execute('restartdns');
-        } else {
-            if ($importedsomething) {
-                pihole_execute('restartdns reload');
-            }
-        }
+        $reloadsettingspage = load_teleport_archive($fullfilename, isset($_POST['flushtables']), isset($_POST['blacklist']), isset($_POST['whitelist']),
+                                                    isset($_POST['regex_blacklist']), isset($_POST['regex_whitelist']), isset($_POST['regexlist']),
+                                                    isset($_POST['auditlog']), isset($_POST['adlist']), isset($_POST['group']), isset($_POST['client']),
+                                                    isset($_POST['staticdhcpleases']), isset($_POST['localdnsrecords']), isset($_POST['localcnamerecords']));
 
         unlink($fullfilename);
         echo 'OK';
@@ -563,6 +572,17 @@ if (isset($_POST['action'])) {
         }
     } else {
         exit('No file transmitted or parameter error.');
+    }
+} elseif (php_sapi_name() === 'cli' && $argc > 1) {
+    // this leaves room for more complicated execution, if such a thing is necessary
+    if (file_exists($argv[1])) {
+        try {
+            load_teleport_archive($argv[1]);  // cli restores everything
+        } catch (PharException $e) {
+            exit($e->getMessage()."\n");
+        }
+    } else {
+        exit('archive "'.$argv[1].'" does not exist'."\n");
     }
 } else {
     $hostname = gethostname() ? str_replace('.', '_', gethostname()).'-' : '';
