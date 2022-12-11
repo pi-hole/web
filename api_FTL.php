@@ -19,7 +19,7 @@ if (isset($_GET['version'])) {
     $data['version'] = 3;
 }
 
-if (isset($_GET['status'])) {
+if (isset($_GET['status']) && $auth) {
     $return = callFTLAPI('stats');
     if (array_key_exists('FTLnotrunning', $return)) {
         $data = array('FTLnotrunning' => true);
@@ -32,7 +32,7 @@ if (isset($_GET['status'])) {
     }
 }
 
-if (isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET)) {
+if ((isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET)) && $auth) {
     require_once 'scripts/pi-hole/php/gravity.php';
 
     $return = callFTLAPI('stats');
@@ -77,7 +77,7 @@ if (isset($_GET['getMaxlogage']) && $auth) {
     }
 }
 
-if (isset($_GET['overTimeData10mins'])) {
+if (isset($_GET['overTimeData10mins']) && $auth) {
     $return = callFTLAPI('overTime');
     if (array_key_exists('FTLnotrunning', $return)) {
         $data = array('FTLnotrunning' => true);

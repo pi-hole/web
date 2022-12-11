@@ -1,6 +1,6 @@
 parameters:
     level: 0
-    excludes_analyse:
+    excludePaths:
         - vendor
     scanDirectories:
         - .
