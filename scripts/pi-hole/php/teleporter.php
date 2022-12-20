@@ -300,11 +300,27 @@ function archive_add_directory($path, $subdir = '')
     }
 }
 
-function load_teleport_archive($filename, $flushtables = true, $blacklist = true, $whitelist = true, $regex_blacklist = true, $regex_whitelist = true, $regexlist = true, $auditlog = true, $adlist = true, $group = true, $client = true, $staticdhcpleases = true, $localdnsrecords = true, $localcnamerecords = true)
+function load_teleport_archive($filename)
 {
     $importedsomething = false;
     $fullpiholerestart = false;
     $reloadsettings = false;
+
+    $flushtables = isset($_POST['flushtables']);
+    $blacklist = isset($_POST['blacklist']);
+    $whitelist = isset($_POST['whitelist']);
+    $regex_blacklist = isset($_POST['regex_blacklist']);
+    $regex_whitelist = isset($_POST['regex_whitelist']);
+    $regexlist = isset($_POST['regexlist']);
+    $auditlog = isset($_POST['auditlog']);
+    $adlist = isset($_POST['adlist']);
+    $group = isset($_POST['group']);
+    $client = isset($_POST['client']);
+    $staticdhcpleases = isset($_POST['staticdhcpleases']);
+    $localdnsrecords = isset($_POST['localdnsrecords']);
+    $localcnamerecords = isset($_POST['localcnamerecords']);
+
+    $endline = php_sapi_name() === 'cli' ? "\n" : "<br>\n";
 
     try {
         $archive = new PharData($filename);
@@ -312,105 +328,105 @@ function load_teleport_archive($filename, $flushtables = true, $blacklist = true
         foreach (new RecursiveIteratorIterator($archive) as $file) {
             if ($blacklist && $file->getFilename() === 'blacklist.txt') {
                 $num = archive_insert_into_table($file, 'blacklist', $flushtables);
-                echo 'Processed blacklist (exact) ('.$num.noun($num).")<br>\n";  // it is possible to remove the <br>, but is it worth it?
+                echo 'Processed blacklist (exact) ('.$num.noun($num).")$endline";  // it is possible to remove the <br>, but is it worth it?
                 $importedsomething = true;
             }
 
             if ($whitelist && $file->getFilename() === 'whitelist.txt') {
                 $num = archive_insert_into_table($file, 'whitelist', $flushtables);
-                echo 'Processed whitelist (exact) ('.$num.noun($num).")<br>\n";
+                echo 'Processed whitelist (exact) ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if ($regexlist && $file->getFilename() === 'regex.list') {
                 $num = archive_insert_into_table($file, 'regex_blacklist', $flushtables);
-                echo 'Processed blacklist (regex) ('.$num.noun($num).")<br>\n";
+                echo 'Processed blacklist (regex) ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             // Also try to import legacy wildcard list if found
             if ($regexlist && $file->getFilename() === 'wildcardblocking.txt') {
                 $num = archive_insert_into_table($file, 'regex_blacklist', $flushtables, true);
-                echo 'Processed blacklist (regex, wildcard style) ('.$num.noun($num).")<br>\n";
+                echo 'Processed blacklist (regex, wildcard style) ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if ($auditlog && $file->getFilename() === 'auditlog.list') {
                 $num = archive_insert_into_table($file, 'domain_audit', $flushtables);
-                echo 'Processed audit log ('.$num.noun($num).")<br>\n";
+                echo 'Processed audit log ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if ($adlist && $file->getFilename() === 'adlists.list') {
                 $num = archive_insert_into_table($file, 'adlist', $flushtables);
-                echo 'Processed adlists ('.$num.noun($num).")<br>\n";
+                echo 'Processed adlists ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if ($blacklist && $file->getFilename() === 'blacklist.exact.json') {
                 $num = archive_restore_table($file, 'blacklist', $flushtables);
-                echo 'Processed blacklist (exact) ('.$num.noun($num).")<br>\n";
+                echo 'Processed blacklist (exact) ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if ($regexlist && $file->getFilename() === 'blacklist.regex.json') {
                 $num = archive_restore_table($file, 'regex_blacklist', $flushtables);
-                echo 'Processed blacklist (regex) ('.$num.noun($num).")<br>\n";
+                echo 'Processed blacklist (regex) ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if ($whitelist && $file->getFilename() === 'whitelist.exact.json') {
                 $num = archive_restore_table($file, 'whitelist', $flushtables);
-                echo 'Processed whitelist (exact) ('.$num.noun($num).")<br>\n";
+                echo 'Processed whitelist (exact) ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if ($regex_whitelist && $file->getFilename() === 'whitelist.regex.json') {
                 $num = archive_restore_table($file, 'regex_whitelist', $flushtables);
-                echo 'Processed whitelist (regex) ('.$num.noun($num).")<br>\n";
+                echo 'Processed whitelist (regex) ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if ($adlist && $file->getFilename() === 'adlist.json') {
                 $num = archive_restore_table($file, 'adlist', $flushtables);
-                echo 'Processed adlist ('.$num.noun($num).")<br>\n";
+                echo 'Processed adlist ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if ($auditlog && $file->getFilename() === 'domain_audit.json') {
                 $num = archive_restore_table($file, 'domain_audit', $flushtables);
-                echo 'Processed domain_audit ('.$num.noun($num).")<br>\n";
+                echo 'Processed domain_audit ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if ($group && $file->getFilename() === 'group.json') {
                 $num = archive_restore_table($file, 'group', $flushtables);
-                echo 'Processed group ('.$num.noun($num).")<br>\n";
+                echo 'Processed group ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if ($client && $file->getFilename() === 'client.json') {
                 $num = archive_restore_table($file, 'client', $flushtables);
-                echo 'Processed client ('.$num.noun($num).")<br>\n";
+                echo 'Processed client ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if ($client && $file->getFilename() === 'client_by_group.json') {
                 $num = archive_restore_table($file, 'client_by_group', $flushtables);
-                echo 'Processed client group assignments ('.$num.noun($num).")<br>\n";
+                echo 'Processed client group assignments ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if (($whitelist || $regex_whitelist || $blacklist || $regex_blacklist)
                 && $file->getFilename() === 'domainlist_by_group.json') {
                 $num = archive_restore_table($file, 'domainlist_by_group', $flushtables);
-                echo 'Processed black-/whitelist group assignments ('.$num.noun($num).")<br>\n";
+                echo 'Processed black-/whitelist group assignments ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
             if ($adlist && $file->getFilename() === 'adlist_by_group.json') {
                 $num = archive_restore_table($file, 'adlist_by_group', $flushtables);
-                echo 'Processed adlist group assignments ('.$num.noun($num).")<br>\n";
+                echo 'Processed adlist group assignments ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
@@ -433,7 +449,7 @@ function load_teleport_archive($filename, $flushtables = true, $blacklist = true
                 }
 
                 readStaticLeasesFile();
-                echo 'Processed static DHCP leases ('.$num.noun($num).")<br>\n";
+                echo 'Processed static DHCP leases ('.$num.noun($num).")$endline";
                 if ($num > 0) {
                     $importedsomething = true;
                     $reloadsettingspage = true;
@@ -457,7 +473,7 @@ function load_teleport_archive($filename, $flushtables = true, $blacklist = true
                     }
                 }
                 ob_end_clean();
-                echo 'Processed local DNS records ('.$num.noun($num).")<br>\n";
+                echo 'Processed local DNS records ('.$num.noun($num).")$endline";
                 if ($num > 0) {
                     // we need a full pihole restart
                     $fullpiholerestart = true;
@@ -489,7 +505,7 @@ function load_teleport_archive($filename, $flushtables = true, $blacklist = true
                     }
                 }
                 ob_end_clean();
-                echo 'Processed local CNAME records ('.$num.noun($num).")<br>\n";
+                echo 'Processed local CNAME records ('.$num.noun($num).")$endline";
                 if ($num > 0) {
                     // we need a full pihole restart
                     $fullpiholerestart = true;
@@ -560,10 +576,7 @@ if (isset($_POST['action'])) {
             exit('Failed moving '.htmlentities($source).' to '.htmlentities($fullfilename));
         }
 
-        $reloadsettingspage = load_teleport_archive($fullfilename, isset($_POST['flushtables']), isset($_POST['blacklist']), isset($_POST['whitelist']),
-            isset($_POST['regex_blacklist']), isset($_POST['regex_whitelist']), isset($_POST['regexlist']),
-            isset($_POST['auditlog']), isset($_POST['adlist']), isset($_POST['group']), isset($_POST['client']),
-            isset($_POST['staticdhcpleases']), isset($_POST['localdnsrecords']), isset($_POST['localcnamerecords']));
+        $reloadsettingspage = load_teleport_archive($fullfilename);
 
         unlink($fullfilename);
         echo 'OK';
@@ -574,15 +587,58 @@ if (isset($_POST['action'])) {
         exit('No file transmitted or parameter error.');
     }
 } elseif (php_sapi_name() === 'cli' && $argc > 1) {
-    // this leaves room for more complicated execution, if such a thing is necessary
-    if (file_exists($argv[1])) {
-        try {
-            load_teleport_archive($argv[1]);  // cli restores everything
-        } catch (PharException $e) {
-            exit($e->getMessage()."\n");
+    try {
+        $arguments = array(
+            'help' => 'print this help message',
+            'whitelist' => 'Load Whitelist (exact) from archive',
+            'regex_whitelist' => 'Load Whitelist (regex/wildcard) from archive',
+            'blacklist' => 'Load Blacklist (exact) from archive',
+            'regexlist' => 'Load Blacklist (regex/wildcard) from archive',
+            'adlist' => 'Load Adlists from archive',
+            'client' => 'Load Clients from archive',
+            'group' => 'Load Groups from archive',
+            'auditlog' => 'Load Audit log from archive',
+            'staticdhcpleases' => 'Load Static DHCP Leases from archive',
+            'localdnsrecords' => 'Load Local DNS Records from archive',
+            'localcnamerecords' => 'Load Local CNAME Records from archive',
+            'flushtables' => 'Clear existing data from a table before loading archive data',
+        );
+        $rest_index = 1;
+        $_POST = getopt('h', array_keys($arguments), $rest_index);
+        if (isset($_POST['h']) || isset($_POST['help'])) {
+            $help_message = "Usage: php teleporter.php [options] [archive]\n";
+            $help_message = "   Or: pihole -a -t -r [options] [archive]\n";
+            $help_message .= "If no options are specified, then existing data will be cleared and everything available in the archive will be loaded.\n\n";
+            $help_message .= "Examples: pihole -a -t -r myname.tar.gz\n";
+            $help_message .= "          pihole -a -t -r --whitelist --flushtables myname.tar.gz\n";
+            $help_message .= "          php teleporter.php myname.tar.gz\n\n";
+
+            foreach ($arguments as $argument => $value) {
+                $help_message .= sprintf("  --%-30s%s\n", $argument, $value);
+            }
+
+            exit($help_message);
         }
-    } else {
-        exit('archive "'.$argv[1].'" does not exist'."\n");
+        $has_data_arguments = false;
+        foreach ($arguments as $argument => $value) {
+            # flushtables doesn't specify a table, but rather an action
+            if ($argument !== 'flushtables') {
+                $has_data_arguments = $has_data_arguments || isset($_POST[$argument]);
+            }
+        }
+        if (!$has_data_arguments) {
+            # Default to everything, if nothing is specified
+            foreach ($arguments as $argument => $value) {
+                $_POST[$argument] = true;
+            }
+        }
+        if (file_exists($argv[$rest_index])) {
+            load_teleport_archive($argv[$rest_index]);
+        } else {
+            exit('archive "'.$argv[$rest_index].'" does not exist'."\n");
+        }
+    } catch (PharException $e) {
+        exit($e->getMessage()."\n");
     }
 } else {
     $hostname = gethostname() ? str_replace('.', '_', gethostname()).'-' : '';
