@@ -300,25 +300,25 @@ function archive_add_directory($path, $subdir = '')
     }
 }
 
-function load_teleport_archive($filename)
+function load_teleport_archive($filename, $options)
 {
     $importedsomething = false;
     $fullpiholerestart = false;
     $reloadsettings = false;
 
-    $flushtables = isset($_POST['flushtables']);
-    $blacklist = isset($_POST['blacklist']);
-    $whitelist = isset($_POST['whitelist']);
-    $regex_blacklist = isset($_POST['regex_blacklist']);
-    $regex_whitelist = isset($_POST['regex_whitelist']);
-    $regexlist = isset($_POST['regexlist']);
-    $auditlog = isset($_POST['auditlog']);
-    $adlist = isset($_POST['adlist']);
-    $group = isset($_POST['group']);
-    $client = isset($_POST['client']);
-    $staticdhcpleases = isset($_POST['staticdhcpleases']);
-    $localdnsrecords = isset($_POST['localdnsrecords']);
-    $localcnamerecords = isset($_POST['localcnamerecords']);
+    $flushtables = isset($options['flushtables']);
+    $blacklist = isset($options['blacklist']);
+    $whitelist = isset($options['whitelist']);
+    $regex_blacklist = isset($options['regex_blacklist']);
+    $regex_whitelist = isset($options['regex_whitelist']);
+    $regexlist = isset($options['regexlist']);
+    $auditlog = isset($options['auditlog']);
+    $adlist = isset($options['adlist']);
+    $group = isset($options['group']);
+    $client = isset($options['client']);
+    $staticdhcpleases = isset($options['staticdhcpleases']);
+    $localdnsrecords = isset($options['localdnsrecords']);
+    $localcnamerecords = isset($options['localcnamerecords']);
 
     $endline = php_sapi_name() === 'cli' ? "\n" : "<br>\n";
 
@@ -576,7 +576,7 @@ if (isset($_POST['action'])) {
             exit('Failed moving '.htmlentities($source).' to '.htmlentities($fullfilename));
         }
 
-        $reloadsettingspage = load_teleport_archive($fullfilename);
+        $reloadsettingspage = load_teleport_archive($fullfilename, $_POST);
 
         unlink($fullfilename);
         echo 'OK';
@@ -604,38 +604,42 @@ if (isset($_POST['action'])) {
             'flushtables' => 'Clear existing data from a table before loading archive data',
         );
         $rest_index = 1;
-        $_POST = getopt('h', array_keys($arguments), $rest_index);
-        if (isset($_POST['h']) || isset($_POST['help'])) {
+        $options = getopt('h', array_keys($arguments), $rest_index);
+        if (isset($options['h']) || isset($options['help'])) {
             $help_message = "Usage: php teleporter.php [options] [archive]\n";
-            $help_message = "   Or: pihole -a -t -r [options] [archive]\n";
+            $help_message .= "   Or: pihole -a -t -r [options] [archive]\n";
             $help_message .= "If no options are specified, then existing data will be cleared and everything available in the archive will be loaded.\n\n";
             $help_message .= "Examples: pihole -a -t -r myname.tar.gz\n";
             $help_message .= "          pihole -a -t -r --whitelist --flushtables myname.tar.gz\n";
             $help_message .= "          php teleporter.php myname.tar.gz\n\n";
 
             foreach ($arguments as $argument => $value) {
-                $help_message .= sprintf("  --%-30s%s\n", $argument, $value);
+                if ($argument === 'help') {
+                    $help_message .= sprintf("  -h, %-28s%s\n", 'h, --help', $value);
+                } else {
+                    $help_message .= sprintf("  --%-30s%s\n", $argument, $value);
+                }
             }
 
             exit($help_message);
         }
         $has_data_arguments = false;
         foreach ($arguments as $argument => $value) {
-            # flushtables doesn't specify a table, but rather an action
+            // flushtables doesn't specify a table, but rather an action
             if ($argument !== 'flushtables') {
-                $has_data_arguments = $has_data_arguments || isset($_POST[$argument]);
+                $has_data_arguments = $has_data_arguments || isset($options[$argument]);
             }
         }
         if (!$has_data_arguments) {
-            # Default to everything, if nothing is specified
+            // Default to everything, if nothing is specified
             foreach ($arguments as $argument => $value) {
-                $_POST[$argument] = true;
+                $options[$argument] = true;
             }
         }
         if (file_exists($argv[$rest_index])) {
-            load_teleport_archive($argv[$rest_index]);
+            load_teleport_archive($argv[$rest_index], $options);
         } else {
-            exit('archive "'.$argv[$rest_index].'" does not exist'."\n");
+            exit("archive '$argv[$rest_index]' does not exist\n");
         }
     } catch (PharException $e) {
         exit($e->getMessage()."\n");
