@@ -615,7 +615,7 @@ if (isset($_POST['action'])) {
 
             foreach ($arguments as $argument => $value) {
                 if ($argument === 'help') {
-                    $help_message .= sprintf("  -h, %-28s%s\n", 'h, --help', $value);
+                    $help_message .= sprintf("  -h, --%-26s%s\n", $argument, $value);
                 } else {
                     $help_message .= sprintf("  --%-30s%s\n", $argument, $value);
                 }
