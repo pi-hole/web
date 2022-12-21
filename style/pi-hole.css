@@ -447,7 +447,7 @@ td.lookatme {
 }
 
 .small-box > .small-box-footer {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.75);
   transition: all 0.5s;
 }
 

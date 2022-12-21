@@ -9,21 +9,19 @@ updates:
   open-pull-requests-limit: 10
   target-branch: devel
   versioning-strategy: increase
-  ignore:
-  - dependency-name: postcss
-    versions:
-    - 8.2.6
-    - 8.2.7
-  - dependency-name: xo
-    versions:
-    - 0.38.1
-  - dependency-name: autoprefixer
-    versions:
-    - 10.2.3
-    - 10.2.4
   reviewers:
     - "pi-hole/web-maintainers"
 - package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: saturday
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: devel
+  reviewers:
+    - "pi-hole/web-maintainers"
+- package-ecosystem: composer
   directory: "/"
   schedule:
     interval: weekly
