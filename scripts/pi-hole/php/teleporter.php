@@ -328,7 +328,7 @@ function load_teleport_archive($filename, $options)
         foreach (new RecursiveIteratorIterator($archive) as $file) {
             if ($blacklist && $file->getFilename() === 'blacklist.txt') {
                 $num = archive_insert_into_table($file, 'blacklist', $flushtables);
-                echo 'Processed blacklist (exact) ('.$num.noun($num).")$endline";  // it is possible to remove the <br>, but is it worth it?
+                echo 'Processed blacklist (exact) ('.$num.noun($num).")$endline";
                 $importedsomething = true;
             }
 
