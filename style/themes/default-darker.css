@@ -56,11 +56,15 @@ table {
   color: #b2aba1;
   opacity: 0.5 !important;
 }
+
+/*** Overwrite chrome's input field auto-filling ***/
 input:-webkit-autofill,
+input:-webkit-autofill:focus,
 textarea:-webkit-autofill,
 select:-webkit-autofill {
-  background-color: #555b00 !important;
-  color: #e8e6e3 !important;
+  -webkit-text-fill-color: #b2aba1 !important;
+  -webkit-box-shadow: 0 0 0px 1000px #181a1b inset;
+  transition: background-color 1s ease-in-out 0s;
 }
 ::-webkit-scrollbar {
   background-color: #202324;
