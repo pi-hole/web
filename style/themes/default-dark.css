@@ -504,6 +504,16 @@ div.dataTables_wrapper div.dataTables_length select {
   color: #bec5cb;
   border: 1px solid #3d444b;
 }
+
+/*** Overwrite chrome's input field auto-filling ***/
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: #bec5cb !important;
+  -webkit-box-shadow: 0 0 0px 1000px #353c42 inset;
+  transition: background-color 1s ease-in-out 0s;
+}
 .form-control[disabled],
 .form-control[readonly],
 fieldset[disabled] .form-control {
