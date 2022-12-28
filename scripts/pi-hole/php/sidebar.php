@@ -194,6 +194,11 @@
                                 <i class="fa fa-fw menu-icon fa-address-book"></i> CNAME Records
                             </a>
                         </li>
+                        <li class="<?php if ($scriptname === 'ns_records.php') { ?> active<?php } ?>">
+                            <a href="ns_records.php">
+                                <i class="fa fa-fw menu-icon fa-address-book"></i> NS Records
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

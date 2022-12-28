@@ -184,6 +184,35 @@ if (isset($_GET['enable']) && $auth) {
         default:
             exit('Wrong action');
     }
+} elseif (isset($_GET['customns']) && $auth) {
+    if (isset($_GET['auth'])) {
+        if ($_GET['auth'] !== $pwhash) {
+            exit('Not authorized!');
+        }
+    } else {
+        // Skip token validation if explicit auth string is given
+        check_csrf($_GET['token']);
+    }
+
+    switch ($_GET['action']) {
+        case 'get':
+            $data = echoCustomNSEntries();
+
+            break;
+
+        case 'add':
+            $data = addCustomNSEntry();
+
+            break;
+
+        case 'delete':
+            $data = deleteCustomNSEntry();
+
+            break;
+
+        default:
+            exit('Wrong action');
+    }
 }
 
 // Other API functions

@@ -514,6 +514,187 @@ function deleteAllCustomCNAMEEntries($reload = '')
     return returnSuccess();
 }
 
+// NS
+$customNSFile = '/etc/dnsmasq.d/07-pihole-custom-ns.conf';
+
+function echoCustomNSEntries()
+{
+    $entries = getCustomNSEntries();
+
+    $data = array();
+    foreach ($entries as $entry) {
+        $data[] = array($entry->domain, $entry->target);
+    }
+
+    return array('data' => $data);
+}
+
+function getCustomNSEntries()
+{
+    global $customNSFile;
+
+    $entries = array();
+
+    if (!file_exists($customNSFile)) {
+        return $entries;
+    }
+
+    $handle = fopen($customNSFile, 'r');
+    if ($handle) {
+        while (($line = fgets($handle)) !== false) {
+            $line = str_replace('server=/', '', $line);
+            $line = str_replace("\r", '', $line);
+            $line = str_replace("\n", '', $line);
+            $explodedLine = explode('/', $line);
+
+            if (count($explodedLine) <= 1) {
+                continue;
+            }
+
+            $data = new \stdClass();
+            $data->domains = array_slice($explodedLine, 0, -1);
+            $data->domain = implode('/', $data->domains);
+            $data->target = $explodedLine[count($explodedLine) - 1];
+            $entries[] = $data;
+        }
+
+        fclose($handle);
+    }
+
+    return $entries;
+}
+
+function addCustomNSEntry($domain = '', $target = '', $reload = '', $json = true)
+{
+    try {
+        if (isset($_REQUEST['domain'])) {
+            $domain = $_REQUEST['domain'];
+        }
+
+        if (isset($_REQUEST['target'])) {
+            $target = trim($_REQUEST['target']);
+        }
+
+        if (isset($_REQUEST['reload'])) {
+            $reload = $_REQUEST['reload'];
+        }
+
+        if (empty($domain)) {
+            return returnError('Domain must be set', $json);
+        }
+
+        if (empty($target)) {
+            return returnError('Target must be set', $json);
+        }
+
+        if (!validDomain($target)) {
+            return returnError('Target must be valid', $json);
+        }
+
+        $num = 0;
+        $domains = array_map('trim', explode(',', $domain));
+        foreach ($domains as $d) {
+            // Check if each submitted domain is valid
+            if (!validDomain($d)) {
+                return returnError("Domain '{$d}' is not valid", $json);
+            }
+
+            // Check if each submitted domain is different than the target to avoid loops
+            if (strtolower($d) === strtolower($target)) {
+                return returnError('Domain and target cannot be the same', $json);
+            }
+
+            ++$num;
+        }
+
+        $existingEntries = getCustomNSEntries();
+
+        // Check if a record for one of the domains already exists
+        foreach ($existingEntries as $entry) {
+            foreach ($domains as $d) {
+                if (in_array($d, $entry->domains)) {
+                    return returnError("There is already an NS record for '{$d}'", $json);
+                }
+            }
+        }
+
+        // if $reload is not set and more then one domain is supplied, restart FTL only once after all entries were added
+        if (($num > 0) && (empty($reload))) {
+            $reload = 'false';
+        }
+        // add records
+        foreach ($domains as $d) {
+            pihole_execute('-a addcustomns '.$d.' '.$target.' '.$reload);
+        }
+
+        if ($num > 0) {
+            pihole_execute('restartdns');
+        }
+
+        return returnSuccess('', $json);
+    } catch (\Exception $ex) {
+        return returnError($ex->getMessage(), $json);
+    }
+}
+
+function deleteCustomNSEntry()
+{
+    try {
+        $target = !empty($_REQUEST['target']) ? $_REQUEST['target'] : '';
+        $domain = !empty($_REQUEST['domain']) ? $_REQUEST['domain'] : '';
+
+        if (empty($target)) {
+            return returnError('Target must be set');
+        }
+
+        if (empty($domain)) {
+            return returnError('Domain must be set');
+        }
+
+        $existingEntries = getCustomNSEntries();
+
+        $found = false;
+        foreach ($existingEntries as $entry) {
+            if ($entry->domain == $domain) {
+                if ($entry->target == $target) {
+                    $found = true;
+
+                    break;
+                }
+            }
+        }
+
+        if (!$found) {
+            return returnError('This domain/ip association does not exist');
+        }
+
+        pihole_execute('-a removecustomns '.$domain.' '.$target);
+
+        return returnSuccess();
+    } catch (\Exception $ex) {
+        return returnError($ex->getMessage());
+    }
+}
+
+function deleteAllCustomNSEntries($reload = '')
+{
+    try {
+        if (isset($_REQUEST['reload'])) {
+            $reload = $_REQUEST['reload'];
+        }
+
+        $existingEntries = getCustomNSEntries();
+        // passing false to pihole_execute stops pihole from reloading after each entry has been deleted
+        foreach ($existingEntries as $entry) {
+            pihole_execute('-a removecustomns '.$entry->domain.' '.$entry->target.' '.$reload);
+        }
+    } catch (\Exception $ex) {
+        return returnError($ex->getMessage());
+    }
+
+    return returnSuccess();
+}
+
 function returnSuccess($message = '', $json = true)
 {
     if ($json) {
