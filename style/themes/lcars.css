@@ -514,7 +514,7 @@ p.login-box-msg,
 }
 
 .dropdown-toggle {
-  z-index: 1050;
+  z-index: 1000;
 }
 
 .main-header li.user-header {
