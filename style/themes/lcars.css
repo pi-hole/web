@@ -517,6 +517,35 @@ p.login-box-msg,
   z-index: 1000;
 }
 
+.bootstrap-select > .dropdown-toggle.bs-placeholder,
+.bootstrap-select > .dropdown-toggle.bs-placeholder:active,
+.bootstrap-select > .dropdown-toggle.bs-placeholder:focus {
+  color: #6c7c8c;
+}
+
+.bootstrap-select > .dropdown-toggle.bs-placeholder:hover {
+  color: #456;
+}
+
+.bootstrap-select.bs-container .dropdown-menu {
+  border-radius: 12px;
+  border-width: 2px;
+}
+
+.bootstrap-select.bs-container .dropdown-menu.open {
+  filter: invert(0.88) hue-rotate(180deg);
+}
+
+/*** Set .dropdown-toggle width to fill the whole table cell ***/
+@media screen and (min-width: 661px) and (max-width: 767px), screen and (min-width: 960px) {
+  .bootstrap-select.fit-width {
+    width: 100% !important;
+  }
+  .bootstrap-select .dropdown-toggle .filter-option {
+    text-align: right;
+  }
+}
+
 .main-header li.user-header {
   background-color: #000;
 }
