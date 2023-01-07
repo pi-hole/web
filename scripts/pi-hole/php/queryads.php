@@ -7,6 +7,11 @@
 *  Please see LICENSE file for your rights under this license.
 */
 
+require 'password.php';
+if (!$auth) {
+    exit('Not authorized');
+}
+
 while (ob_get_level() > 0) {
     ob_end_flush();
 }

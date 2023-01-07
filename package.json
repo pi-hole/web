@@ -26,10 +26,10 @@
   "devDependencies": {
     "autoprefixer": "^10.4.13",
     "eslint-plugin-compat": "^4.0.2",
-    "postcss": "^8.4.19",
-    "postcss-cli": "^10.0.0",
-    "prettier": "2.7.1",
-    "xo": "^0.52.4"
+    "postcss": "^8.4.20",
+    "postcss-cli": "^10.1.0",
+    "prettier": "2.8.1",
+    "xo": "^0.53.1"
   },
   "browserslist": [
     "defaults",
@@ -99,7 +99,9 @@
       "unicorn/prefer-number-properties": "off",
       "unicorn/prefer-query-selector": "off",
       "unicorn/prefer-string-slice": "off",
-      "unicorn/prevent-abbreviations": "off"
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/prefer-logical-operator-over-ternary": "off",
+      "unicorn/switch-case-braces": "off"
     }
   },
   "dependencies": {}

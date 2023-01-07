@@ -200,12 +200,12 @@ function validateIPv6CIDR(ip) {
 }
 
 function validateMAC(mac) {
-  var macvalidator = new RegExp(/^([\da-fA-F]{2}:){5}([\da-fA-F]{2})$/);
+  var macvalidator = /^([\da-fA-F]{2}:){5}([\da-fA-F]{2})$/;
   return macvalidator.test(mac);
 }
 
 function validateHostname(name) {
-  var namevalidator = new RegExp(/[^<>;"]/);
+  var namevalidator = /[^<>;"]/;
   return namevalidator.test(name);
 }
 

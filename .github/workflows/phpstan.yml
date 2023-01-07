@@ -8,27 +8,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3.1.0
-    - name: Change PHP version
-      run: |
-        sudo update-alternatives --set php /usr/bin/php8.0
-        sudo update-alternatives --set phar /usr/bin/phar8.0
-        sudo update-alternatives --set phpdbg /usr/bin/phpdbg8.0
-        sudo update-alternatives --set php-cgi /usr/bin/php-cgi8.0
-        sudo update-alternatives --set phar.phar /usr/bin/phar.phar8.0
-        php -version
-    - name: Validate composer.json and composer.lock
-      run: composer validate
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v3.0.11
+    - uses: actions/checkout@v3.2.0
+
+    - name: Install composer
+      uses: php-actions/composer@v6
+
+    - name: Run PHPStan
+      uses: php-actions/phpstan@v3
       with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
-    - name: Install dependencies
-      if: steps.composer-cache.outputs.cache-hit != 'true'
-      run: composer install --prefer-dist --no-progress --no-suggest
-    - name: Run phpstan
-      run: composer run-script phpstan
+        configuration: phpstan.neon.dist
+        memory_limit: 256M
+
