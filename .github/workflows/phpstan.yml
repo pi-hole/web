@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3.2.0
+    - uses: actions/checkout@v3.3.0
 
     - name: Install composer
       uses: php-actions/composer@v6
