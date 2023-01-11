@@ -6,6 +6,7 @@
  *  Please see LICENSE file for your rights under this license. */
 
 var exact = "";
+var showAll = "";
 
 function quietfilter(ta, data) {
   var lines = data.split("\n");
@@ -22,8 +23,9 @@ function quietfilter(ta, data) {
 function eventsource() {
   var ta = $("#output");
   // process with the current visible domain input field
-  var domain = $("input[id^='domain']:visible").val().trim();
+  var domain = $("input[id^='domain']:visible").val().trim().toLowerCase();
   var q = $("#quiet");
+  var unlimited = $("#show-all").is(":checked");
 
   if (domain.length === 0) {
     return;
@@ -32,14 +34,20 @@ function eventsource() {
   var quiet = false;
   if (q.val() === "yes") {
     quiet = true;
-    exact = "exact";
+    exact = "&exact";
   }
+
+  if (unlimited === true) {
+    showAll = "&showall";
+  }
+
+  var queryURL = "scripts/pi-hole/php/queryads.php?domain=" + domain + exact + showAll;
 
   // IE does not support EventSource - load whole content at once
   if (typeof EventSource !== "function") {
     $.ajax({
       method: "GET",
-      url: "scripts/pi-hole/php/queryads.php?domain=" + domain.toLowerCase() + "&" + exact + "&IE",
+      url: queryURL + "&IE",
       async: false,
     }).done(function (data) {
       ta.show();
@@ -53,9 +61,7 @@ function eventsource() {
     return;
   }
 
-  var source = new EventSource(
-    "scripts/pi-hole/php/queryads.php?domain=" + domain.toLowerCase() + "&" + exact
-  );
+  var source = new EventSource(queryURL);
 
   // Reset and show field
   ta.empty();
@@ -82,8 +88,9 @@ function eventsource() {
     false
   );
 
-  // Reset exact variable
+  // Reset option variables
   exact = "";
+  showAll = "";
 }
 
 // Handle enter key
@@ -100,7 +107,7 @@ $("button[id^='btnSearch']").on("click", function () {
   exact = "";
 
   if (this.id.match("^btnSearchExact")) {
-    exact = "exact";
+    exact = "&exact";
   }
 
   eventsource();

@@ -25,10 +25,12 @@ header('Cache-Control: no-cache');
 function echoEvent($datatext)
 {
     if (!isset($_GET['IE'])) {
-        echo 'data:'.implode("\ndata:", explode("\n", $datatext))."\n\n";
+        $txt = 'data:'.implode("\ndata:", explode("\n", $datatext))."\n\n";
     } else {
-        echo $datatext;
+        $txt = $datatext;
     }
+
+    echo str_replace('This can be overridden using the -all option', 'Select the checkbox to remove the limitation', $txt);
 }
 
 // Test if domain is set
@@ -47,15 +49,16 @@ if (isset($_GET['domain'])) {
     exit;
 }
 
+$options = '';
 if (isset($_GET['exact'])) {
-    $exact = '-exact';
-} elseif (isset($_GET['bp'])) {
-    $exact = '-bp';
-} else {
-    $exact = '';
+    $options .= ' -exact';
 }
 
-$proc = popen('sudo pihole -q -adlist '.$url.' '.$exact, 'r');
+if (isset($_GET['showall'])) {
+    $options .= ' -all';
+}
+
+$proc = popen('sudo pihole -q -adlist '.$url.$options, 'r');
 while (!feof($proc)) {
     echoEvent(fread($proc, 4096));
 }
