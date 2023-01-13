@@ -36,7 +36,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
 <button type="button" id="debugBtn" class="btn btn-lg btn-primary btn-block">Generate debug log</button>
 <pre id="output" style="width: 100%; height: 100%;" hidden></pre>
 
-<script src="scripts/pi-hole/js/debug.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/debug.js'); ?>"></script>
 
 <?php
 require 'scripts/pi-hole/php/footer.php';
