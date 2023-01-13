@@ -145,8 +145,8 @@ if ($boxedlayout) {
     <!-- /.col -->
 </div>
 
-<script src="scripts/vendor/daterangepicker.min.js?v=<?php echo $cacheVer; ?>"></script>
-<script src="scripts/pi-hole/js/db_lists.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="<?php echo fileversion('scripts/vendor/daterangepicker.min.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/db_lists.js'); ?>"></script>
 
 <?php
 require 'scripts/pi-hole/php/footer.php';

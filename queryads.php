@@ -41,7 +41,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
 
 <pre id="output" style="width: 100%; height: 100%;" hidden></pre>
 
-<script src="scripts/pi-hole/js/queryads.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/queryads.js'); ?>"></script>
 <?php
 require 'scripts/pi-hole/php/footer.php';
 ?>

@@ -79,7 +79,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
 </div>
 <!-- /.row -->
 
-<script src="scripts/pi-hole/js/auditlog.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/auditlog.js'); ?>"></script>
 
 <?php
 require 'scripts/pi-hole/php/footer.php';
