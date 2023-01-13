@@ -22,7 +22,7 @@ ob_implicit_flush(true);
 header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 
-function echoEvent($datatext)
+function echoEvent($datatext, $url = '')
 {
     if (!isset($_GET['IE'])) {
         $txt = 'data:'.implode("\ndata:", explode("\n", $datatext))."\n\n";
@@ -30,7 +30,10 @@ function echoEvent($datatext)
         $txt = $datatext;
     }
 
-    echo str_replace('This can be overridden using the -all option', 'Select the checkbox to remove the limitation', $txt);
+    $txt = str_replace('This can be overridden using the -all option', 'Select the checkbox to remove the limitation', $txt);
+    $txt = str_replace($url, '<strong class="text-blue">'.$url.'</strong>', $txt);
+
+    echo $txt;
 }
 
 // Test if domain is set
@@ -39,7 +42,7 @@ if (isset($_GET['domain'])) {
     // Convert domain name to IDNA ASCII form for international domains
     $url = convertUnicodeToIDNA($_GET['domain']);
     if (!validDomain($url)) {
-        echoEvent(htmlentities($url).' is an invalid domain!');
+        echoEvent(htmlentities($url).' is an invalid domain!', $url);
 
         exit;
     }
@@ -60,5 +63,5 @@ if (isset($_GET['showall'])) {
 
 $proc = popen('sudo pihole -q '.$url.$options, 'r');
 while (!feof($proc)) {
-    echoEvent(fread($proc, 4096));
+    echoEvent(fread($proc, 4096), $url);
 }
