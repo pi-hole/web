@@ -8,33 +8,14 @@
 var exact = "";
 var showAll = "";
 
-function quietfilter(ta, data) {
-  var lines = data.split("\n");
-  for (var i = 0; i < lines.length; i++) {
-    if (lines[i].indexOf("results") !== -1 && lines[i].indexOf("0 results") === -1) {
-      var shortstring = lines[i].replace("::: /etc/pihole/", "");
-      // Remove "(x results)"
-      shortstring = shortstring.replace(/\(.*/, "");
-      ta.append(shortstring + "\n");
-    }
-  }
-}
-
 function eventsource() {
   var ta = $("#output");
   // process with the current visible domain input field
   var domain = $("input[id^='domain']:visible").val().trim().toLowerCase();
-  var q = $("#quiet");
   var unlimited = $("#show-all").is(":checked");
 
   if (domain.length === 0) {
     return;
-  }
-
-  var quiet = false;
-  if (q.val() === "yes") {
-    quiet = true;
-    exact = "&exact";
   }
 
   if (unlimited === true) {
@@ -52,11 +33,7 @@ function eventsource() {
     }).done(function (data) {
       ta.show();
       ta.empty();
-      if (!quiet) {
-        ta.append(data);
-      } else {
-        quietfilter(ta, data);
-      }
+      ta.append(data);
     });
     return;
   }
@@ -70,11 +47,7 @@ function eventsource() {
   source.addEventListener(
     "message",
     function (e) {
-      if (!quiet) {
-        ta.append(e.data);
-      } else {
-        quietfilter(ta, e.data);
-      }
+      ta.append(e.data);
     },
     false
   );
