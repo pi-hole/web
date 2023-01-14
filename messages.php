@@ -47,7 +47,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/messages.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/messages.js'); ?>"></script>
 
 <?php
 require 'scripts/pi-hole/php/footer.php';

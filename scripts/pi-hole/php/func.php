@@ -111,6 +111,19 @@ function checkfile($filename)
     return '/dev/null';
 }
 
+// Avoid browser caching old versions of a file, using the last modification time
+//   Receive the file URL (without "/admin/");
+//   Return the string containin URL + "?v=xxx", where xxx is the last modified time of the file.
+function fileversion($url)
+{
+    $filename = $_SERVER['DOCUMENT_ROOT'].'/admin/'.$url;
+    if (file_exists($filename)) {
+        $ver = filemtime($filename);
+    }
+
+    return $url.'?v='.$ver;
+}
+
 // Credit: http://php.net/manual/en/function.hash-equals.php#119576
 if (!function_exists('hash_equals')) {
     function hash_equals($known_string, $user_string)

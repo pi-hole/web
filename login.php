@@ -95,6 +95,6 @@ require 'scripts/pi-hole/php/header.php';
         <strong><a href="https://pi-hole.net/donate/" rel="noopener" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
     </div>
 </div>
-<script src="scripts/pi-hole/js/footer.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/footer.js'); ?>"></script>
 </body>
 </html>
