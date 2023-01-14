@@ -124,6 +124,33 @@ function fileversion($url)
     return $url.'?v='.$ver;
 }
 
+
+// Processes an array of files and outputs HTML tags for linking stylesheets, fonts, and scripts. It appends the file modification time to the file path as a query string to ensure the browser loads the latest version of the file. The function can handle a single file or an array of files.
+// <?=fileTags[['css/main.css', 'stylesheet'],['js/main.js']]
+function fileTags($files) {
+    if (!is_array($files[0])) {
+      // $files is not an array of arrays, so treat it as a single file
+      $ver = substr(filemtime($files[0]), 0, 6);
+      echo $files[1] === 'stylesheet'
+        ? '<link href="' . $files[0] . '?v=' . $ver . '" rel="stylesheet">'
+        : ($files[1] === 'font'
+          ? '<link rel="preload" href="' . $files[0] . '?v=' . $ver . '" as="font" type="' . $files[2] . '">'
+          : '<script src="' . $files[0] . '?v=' . $ver . '"></script>');
+    } else {
+      // $files is an array of arrays, so loop through and process each file
+      $output = '';
+      foreach ($files as $file) {
+        $ver = substr(filemtime($file[0]), 0, 6);
+        $output .= $file[1] === 'stylesheet'
+          ? '<link href="' . $file[0] . '?v=' . $ver . '" rel="stylesheet">'
+          : ($file[1] === 'font'
+            ? '<link rel="preload" href="' . $file[0] . '?v=' . $ver . '" as="font" type="' . $file[2] . '">'
+            : '<script src="' . $file[0] . '?v=' . $ver . '"></script>');
+      }
+      echo $output;
+    }
+}
+
 // Credit: http://php.net/manual/en/function.hash-equals.php#119576
 if (!function_exists('hash_equals')) {
     function hash_equals($known_string, $user_string)
