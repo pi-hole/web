@@ -42,6 +42,8 @@ require 'scripts/pi-hole/php/header.php';
                 <form action="" id="loginform" method="post">
                     <div class="form-group login-options has-feedback<?php if ($wrongpassword) { ?> has-error<?php } ?>">
                         <div class="pwd-field">
+                            <!-- hidden username input field to help password managers to autfill the password -->
+                            <input type="text" id="username" value="pi.hole" autocomplete="username" hidden>
                             <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" spellcheck="false" autocomplete="current-password" autofocus>
                             <span class="fa fa-key form-control-feedback"></span>
                         </div>
@@ -93,6 +95,6 @@ require 'scripts/pi-hole/php/header.php';
         <strong><a href="https://pi-hole.net/donate/" rel="noopener" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
     </div>
 </div>
-<script src="scripts/pi-hole/js/footer.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/footer.js'); ?>"></script>
 </body>
 </html>
