@@ -117,6 +117,7 @@ function checkfile($filename)
 function fileversion($url)
 {
     $filename = $_SERVER['DOCUMENT_ROOT'].'/admin/'.$url;
+    $ver = 0;  // Default
     if (file_exists($filename)) {
         $ver = filemtime($filename);
     }
