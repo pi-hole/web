@@ -362,7 +362,7 @@ function delItems(ids) {
 
   utils.disableAll();
   var idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting clients: " + idstring, "...");
+  utils.showAlert("info", "", "Deleting client with ID: " + idstring, "...");
 
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
