@@ -338,7 +338,7 @@ function delMsg(ids) {
 
   utils.disableAll();
   var idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting messages: " + idstring, "...");
+  utils.showAlert("info", "", "Deleting message with ID: " + idstring, "...");
 
   $.ajax({
     url: "scripts/pi-hole/php/message.php",
