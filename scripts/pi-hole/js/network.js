@@ -65,7 +65,7 @@ function deleteNetworkEntry() {
   var id = tr.attr("data-id");
 
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting network table entry with ID " + parseInt(id, 10), "...");
+  utils.showAlert("info", "", "Deleting network table entry...");
   $.ajax({
     url: "scripts/pi-hole/php/network.php",
     method: "post",
@@ -74,12 +74,7 @@ function deleteNetworkEntry() {
     success: function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert(
-          "success",
-          "far fa-trash-alt",
-          "Successfully deleted network table entry # ",
-          id
-        );
+        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted network table entry");
         tableApi.row(tr).remove().draw(false).ajax.reload(null, false);
       } else {
         utils.showAlert(
