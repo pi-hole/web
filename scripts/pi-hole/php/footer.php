@@ -102,6 +102,6 @@ if (isset($core_commit) || isset($web_commit) || isset($FTL_commit)) {
 
 </div>
 <!-- ./wrapper -->
-<script src="scripts/pi-hole/js/footer.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/footer.js'); ?>"></script>
 </body>
 </html>

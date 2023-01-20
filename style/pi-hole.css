@@ -530,11 +530,10 @@ td.details-control {
     margin: 5px 0;
   }
   #domain-search-block .input-group-btn {
-    margin: 5px 0;
-    text-align: center;
+    display: inline-block;
   }
   #domain-search-block .input-group-btn button {
-    margin: 0 2px;
+    margin: 0 5px 0 0;
     border-radius: 3px;
   }
 }

@@ -285,6 +285,16 @@ div.dataTables_wrapper div.dataTables_length select {
   border-radius: 8px;
 }
 
+/*** Overwrite chrome's input field auto-filling ***/
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: #fff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #000 inset;
+  transition: background-color 1s ease-in-out 0s;
+}
+
 input.form-control,
 textarea.form-control {
   border-radius: 8px;
@@ -504,7 +514,36 @@ p.login-box-msg,
 }
 
 .dropdown-toggle {
-  z-index: 1050;
+  z-index: 1000;
+}
+
+.bootstrap-select > .dropdown-toggle.bs-placeholder,
+.bootstrap-select > .dropdown-toggle.bs-placeholder:active,
+.bootstrap-select > .dropdown-toggle.bs-placeholder:focus {
+  color: #6c7c8c;
+}
+
+.bootstrap-select > .dropdown-toggle.bs-placeholder:hover {
+  color: #456;
+}
+
+.bootstrap-select.bs-container .dropdown-menu {
+  border-radius: 12px;
+  border-width: 2px;
+}
+
+.bootstrap-select.bs-container .dropdown-menu.open {
+  filter: invert(0.88) hue-rotate(180deg);
+}
+
+/*** Set .dropdown-toggle width to fill the whole table cell ***/
+@media screen and (min-width: 661px) and (max-width: 767px), screen and (min-width: 960px) {
+  .bootstrap-select.fit-width {
+    width: 100% !important;
+  }
+  .bootstrap-select .dropdown-toggle .filter-option {
+    text-align: right;
+  }
 }
 
 .main-header li.user-header {

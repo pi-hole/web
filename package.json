@@ -26,9 +26,9 @@
   "devDependencies": {
     "autoprefixer": "^10.4.13",
     "eslint-plugin-compat": "^4.0.2",
-    "postcss": "^8.4.20",
+    "postcss": "^8.4.21",
     "postcss-cli": "^10.1.0",
-    "prettier": "2.8.1",
+    "prettier": "2.8.3",
     "xo": "^0.53.1"
   },
   "browserslist": [

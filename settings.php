@@ -1462,8 +1462,8 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
     </div>
 </div>
 
-<script src="scripts/vendor/jquery.confirm.min.js?v=<?php echo $cacheVer; ?>"></script>
-<script src="scripts/pi-hole/js/settings.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="<?php echo fileversion('scripts/vendor/jquery.confirm.min.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/settings.js'); ?>"></script>
 
 <?php
 require 'scripts/pi-hole/php/footer.php';
