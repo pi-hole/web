@@ -75,11 +75,6 @@ function format(data) {
     }
   }
 
-  var invalidStyle =
-    data.invalid_domains !== null && data.invalid_domains > 0 && numbers === true
-      ? ' style="color:red; font-weight:bold;"'
-      : "";
-
   // Compile extra info for displaying
   return (
     "<table>" +
@@ -103,8 +98,7 @@ function format(data) {
     '</td></tr><tr class="dataTables-child"><td>Number of domains on this list:&nbsp;&nbsp;</td><td>' +
     (data.number !== null && numbers === true ? parseInt(data.number, 10) : "N/A") +
     '</td></tr><tr class="dataTables-child"' +
-    invalidStyle +
-    "><td>Number of invalid domains on this list:&nbsp;&nbsp;</td>" +
+    "><td>Number of non-domains on this list:&nbsp;&nbsp;</td>" +
     "<td>" +
     (data.invalid_domains !== null && numbers === true
       ? parseInt(data.invalid_domains, 10)
