@@ -696,7 +696,7 @@ readStaticLeasesFile();
                                                     address is allowed. If the IP address is omitted and a host name is
                                                     given, the IP address will still be generated dynamically and the
                                                     specified host name will be used. If the host name is omitted, only
-                                                    a static lease will be added.</p>
+                                                    a static lease will be added. Also, if your device is not issued the static IP address set, please run 'sudo service pihole-FTL restart'</p>
                                             </div>
                                         </div>
                                     </div>
