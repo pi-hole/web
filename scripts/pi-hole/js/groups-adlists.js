@@ -179,15 +179,9 @@ function initTable() {
           break;
       }
 
-      // Append red exclamation-triangle when there are invalid lines on the list
-      var extra = "";
-      if (data.invalid_domains !== null && data.invalid_domains > 0) {
-        extra = "<i class='fa fa-exclamation-triangle list-status-3'></i>";
-      }
-
       $("td:eq(1)", row).addClass("list-status-" + statusCode);
       $("td:eq(1)", row).html(
-        "<i class='fa " + statusIcon + "' title='Click for details about this list'></i>" + extra
+        "<i class='fa " + statusIcon + "' title='Click for details about this list'></i>"
       );
 
       if (data.address.startsWith("file://")) {
