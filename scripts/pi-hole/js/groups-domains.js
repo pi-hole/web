@@ -455,7 +455,7 @@ function delItems(ids) {
 
   utils.disableAll();
   var idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting items: " + idstring, "...");
+  utils.showAlert("info", "", "Deleting domain(s)...", "<ul>" + items + "</ul>");
 
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
@@ -469,7 +469,7 @@ function delItems(ids) {
         utils.showAlert(
           "success",
           "far fa-trash-alt",
-          "Successfully deleted items: " + idstring,
+          "Successfully deleted domain(s): ",
           "<ul>" + items + "</ul>"
         );
         for (var id in ids) {
@@ -478,7 +478,12 @@ function delItems(ids) {
           }
         }
       } else {
-        utils.showAlert("error", "", "Error while deleting items: " + idstring, response.message);
+        utils.showAlert(
+          "error",
+          "",
+          "Error while deleting domain(s): " + idstring,
+          response.message
+        );
       }
 
       // Clear selection after deletion
@@ -487,7 +492,12 @@ function delItems(ids) {
     })
     .fail(function (jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting items: " + idstring, jqXHR.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting domain(s): " + idstring,
+        jqXHR.responseText
+      );
       console.log(exception); // eslint-disable-line no-console
     });
 }

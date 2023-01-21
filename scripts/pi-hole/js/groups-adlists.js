@@ -465,7 +465,7 @@ function delItems(ids) {
 
   utils.disableAll();
   var idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting Adlists: " + idstring, "...");
+  utils.showAlert("info", "", "Deleting adlist(s) ...", "<ul>" + address + "</ul>");
 
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
@@ -479,7 +479,7 @@ function delItems(ids) {
         utils.showAlert(
           "success",
           "far fa-trash-alt",
-          "Successfully deleted adlists: " + idstring,
+          "Successfully deleted adlist(s): ",
           "<ul>" + address + "</ul>"
         );
         for (var id in ids) {
@@ -488,7 +488,12 @@ function delItems(ids) {
           }
         }
       } else {
-        utils.showAlert("error", "", "Error while deleting adlists: " + idstring, response.message);
+        utils.showAlert(
+          "error",
+          "",
+          "Error while deleting adlist(s): " + idstring,
+          response.message
+        );
       }
 
       // Clear selection after deletion
@@ -497,7 +502,12 @@ function delItems(ids) {
     })
     .fail(function (jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting adlists: " + idstring, jqXHR.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting adlist(s): " + idstring,
+        jqXHR.responseText
+      );
       console.log(exception); // eslint-disable-line no-console
     });
 }
