@@ -338,7 +338,7 @@ function delMsg(ids) {
 
   utils.disableAll();
   var idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting messages: " + idstring, "...");
+  utils.showAlert("info", "", "Deleting message(s)...");
 
   $.ajax({
     url: "scripts/pi-hole/php/message.php",
@@ -349,19 +349,19 @@ function delMsg(ids) {
     .done(function (response) {
       utils.enableAll();
       if (response.success) {
-        utils.showAlert(
-          "success",
-          "far fa-trash-alt",
-          "Successfully deleted messages: " + idstring,
-          ""
-        );
+        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted message(s)", "");
         for (var id in ids) {
           if (Object.hasOwnProperty.call(ids, id)) {
             table.row(id).remove().draw(false).ajax.reload(null, false);
           }
         }
       } else {
-        utils.showAlert("error", "", "Error while deleting message: " + idstring, response.message);
+        utils.showAlert(
+          "error",
+          "",
+          "Error while deleting message(s): " + idstring,
+          response.message
+        );
       }
 
       // Clear selection after deletion
@@ -373,7 +373,12 @@ function delMsg(ids) {
     )
     .fail(function (jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting message: " + idstring, jqXHR.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting message(s): " + idstring,
+        jqXHR.responseText
+      );
       console.log(exception); // eslint-disable-line no-console
     });
 }
