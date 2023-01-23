@@ -241,7 +241,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <?php
-                                            $FTLpid = intval(pidofFTL());
+                                            $FTLpid = intval(pidofFTL($FTLrestarted));
 if ($FTLpid !== 0) {
     $FTLversion = exec('/usr/bin/pihole-FTL version'); ?>
                                             <table class="table table-striped table-bordered nowrap">
