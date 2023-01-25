@@ -7,7 +7,6 @@
 *  Please see LICENSE file for your rights under this license.
 */
 
-
 function genPersistentLoginToken()
 {
     return bin2hex(openssl_random_pseudo_bytes(16));
@@ -19,7 +18,8 @@ function checkSafetyPersistentLoginToken($token)
     if (ctype_alnum($token) and strlen($token) == 32) {
         return true;
     }
-    error_log("Security alert: presented \"persistentlogin\" token did not pass safety check!", 0);
+    error_log('Security alert: presented "persistentlogin" token did not pass safety check!', 0);
+
     return false;
 }
 
@@ -29,9 +29,11 @@ function getPathPersistentLoginToken($token)
     $session_path = session_save_path();
 
     if ($session_path and checkSafetyPersistentLoginToken($token)) {
-        $token_file = $session_path . '/ph_plt_' . $token . '.txt';
+        $token_file = $session_path.'/ph_plt_'.$token.'.txt';
+
         return $token_file;
     }
+
     return false;
 }
 
@@ -41,7 +43,7 @@ function checkValidityPersistentLoginToken($token)
     $token_file = getPathPersistentLoginToken($token);
 
     if ($token_file and file_exists($token_file) and is_readable($token_file)) {
-        $t_file = fopen($token_file, "r");
+        $t_file = fopen($token_file, 'r');
         if ($t_file) {
             $time = fread($t_file, filesize($token_file));
             fclose($t_file);
@@ -51,6 +53,7 @@ function checkValidityPersistentLoginToken($token)
             }
         }
     }
+
     return false;
 }
 
@@ -59,16 +62,18 @@ function writePersistentLoginToken($token, $time)
     $token_file = getPathPersistentLoginToken($token);
 
     if ($token_file and !file_exists($token_file)) {
-        $t_file = fopen($token_file, "w");
+        $t_file = fopen($token_file, 'w');
         if ($t_file) {
             // make sure persistent login token file is not readable by other users
             chmod($token_file, 0600);
 
             fwrite($t_file, $time);
             fclose($t_file);
+
             return true;
         }
     }
+
     return false;
 }
 
