@@ -208,10 +208,10 @@ function updateQueriesOverTime() {
 
 $(function () {
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
-  var blockedColor = $(".queries-blocked").css("background-color");
-  var permittedColor = $(".queries-permitted").css("background-color");
-  var gridColor = $(".graphs-grid").css("background-color");
-  var ticksColor = $(".graphs-ticks").css("color");
+  var blockedColor = utils.getCSSval("queries-blocked", "background-color");
+  var permittedColor = utils.getCSSval("queries-permitted", "background-color");
+  var gridColor = utils.getCSSval("graphs-grid", "background-color");
+  var ticksColor = utils.getCSSval("graphs-ticks", "color");
 
   timeLineChart = new Chart(ctx, {
     type: utils.getGraphType(),
