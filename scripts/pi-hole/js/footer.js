@@ -160,10 +160,6 @@ function initCheckboxRadioStyle() {
 
 function initCPUtemp() {
   function setCPUtemp(unit) {
-    if (localStorage) {
-      localStorage.setItem("tempunit", tempunit);
-    }
-
     var temperature = parseFloat($("#rawtemp").text());
     var displaytemp = $("#tempdisplay");
     if (!isNaN(temperature)) {
@@ -185,11 +181,8 @@ function initCPUtemp() {
     }
   }
 
-  // Read from local storage, initialize if needed
-  var tempunit = localStorage ? localStorage.getItem("tempunit") : null;
-  if (tempunit === null) {
-    tempunit = "C";
-  }
+  // Read the temperature unit from HTML code
+  var tempunit = $("#tempunit").text();
 
   setCPUtemp(tempunit);
 
@@ -200,6 +193,15 @@ function initCPUtemp() {
     tempunitSelector.on("change", function () {
       tempunit = $(this).val();
       setCPUtemp(tempunit);
+
+      // store the selected value on setupVars.conf
+      $.getJSON("api.php?setTempUnit=" + tempunit + "&token=" + token, function (data) {
+        if ("result" in data && data.result == "success") {
+          utils.showAlert("success", "", "Temperature unit set to " + tempunit, "");
+        } else {
+          utils.showAlert("error", "", "", "Temperature unit not set");
+        }
+      });
     });
   }
 }
