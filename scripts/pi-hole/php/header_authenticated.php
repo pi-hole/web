@@ -110,7 +110,8 @@ function getTemperature()
                 $unit = 'C';
         }
     } else {
-        $unit = 'C';
+        // no value is set in setupVars.conf
+        $unit = '';
     }
 
     return array($celsius, $limit, $unit);
