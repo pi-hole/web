@@ -75,11 +75,6 @@ function format(data) {
     }
   }
 
-  var invalidStyle =
-    data.invalid_domains !== null && data.invalid_domains > 0 && numbers === true
-      ? ' style="color:red; font-weight:bold;"'
-      : "";
-
   // Compile extra info for displaying
   return (
     "<table>" +
@@ -103,8 +98,7 @@ function format(data) {
     '</td></tr><tr class="dataTables-child"><td>Number of domains on this list:&nbsp;&nbsp;</td><td>' +
     (data.number !== null && numbers === true ? parseInt(data.number, 10) : "N/A") +
     '</td></tr><tr class="dataTables-child"' +
-    invalidStyle +
-    "><td>Number of invalid domains on this list:&nbsp;&nbsp;</td>" +
+    "><td>Number of non-domains on this list:&nbsp;&nbsp;</td>" +
     "<td>" +
     (data.invalid_domains !== null && numbers === true
       ? parseInt(data.invalid_domains, 10)
@@ -185,15 +179,9 @@ function initTable() {
           break;
       }
 
-      // Append red exclamation-triangle when there are invalid lines on the list
-      var extra = "";
-      if (data.invalid_domains !== null && data.invalid_domains > 0) {
-        extra = "<i class='fa fa-exclamation-triangle list-status-3'></i>";
-      }
-
       $("td:eq(1)", row).addClass("list-status-" + statusCode);
       $("td:eq(1)", row).html(
-        "<i class='fa " + statusIcon + "' title='Click for details about this list'></i>" + extra
+        "<i class='fa " + statusIcon + "' title='Click for details about this list'></i>"
       );
 
       if (data.address.startsWith("file://")) {
@@ -465,7 +453,7 @@ function delItems(ids) {
 
   utils.disableAll();
   var idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting Adlists: " + idstring, "...");
+  utils.showAlert("info", "", "Deleting adlist(s) ...", "<ul>" + address + "</ul>");
 
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
@@ -479,7 +467,7 @@ function delItems(ids) {
         utils.showAlert(
           "success",
           "far fa-trash-alt",
-          "Successfully deleted adlists: " + idstring,
+          "Successfully deleted adlist(s): ",
           "<ul>" + address + "</ul>"
         );
         for (var id in ids) {
@@ -488,7 +476,12 @@ function delItems(ids) {
           }
         }
       } else {
-        utils.showAlert("error", "", "Error while deleting adlists: " + idstring, response.message);
+        utils.showAlert(
+          "error",
+          "",
+          "Error while deleting adlist(s): " + idstring,
+          response.message
+        );
       }
 
       // Clear selection after deletion
@@ -497,7 +490,12 @@ function delItems(ids) {
     })
     .fail(function (jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting adlists: " + idstring, jqXHR.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting adlist(s): " + idstring,
+        jqXHR.responseText
+      );
       console.log(exception); // eslint-disable-line no-console
     });
 }

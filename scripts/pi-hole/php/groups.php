@@ -510,14 +510,11 @@ if ($_POST['action'] == 'get_groups') {
             $res['groups'] = $groups;
             if ($res['type'] === LISTTYPE_WHITELIST || $res['type'] === LISTTYPE_BLACKLIST) {
                 // Convert domain name to international form
-                // Skip this for the root zone `.`
-                if ($res['domain'] != '.') {
-                    $utf8_domain = convertIDNAToUnicode($res['domain']);
+                $utf8_domain = convertIDNAToUnicode($res['domain']);
 
-                    // if domain and international form are different, show both
-                    if ($res['domain'] !== $utf8_domain) {
-                        $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
-                    }
+                // if domain and international form are different, show both
+                if ($res['domain'] !== $utf8_domain) {
+                    $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
                 }
             }
             // Prevent domain and comment fields from returning any arbitrary javascript code which could be executed on the browser.
@@ -600,10 +597,7 @@ if ($_POST['action'] == 'get_groups') {
                 // If not adding a RegEx....
                 $input = $domain;
                 // Convert domain name to IDNA ASCII form for international domains
-                // Skip this for the root zone `.`
-                if ($domain != '.') {
-                    $domain = convertUnicodeToIDNA($domain);
-                }
+                $domain = convertUnicodeToIDNA($domain);
                 // convert the domain lower case and check whether it is valid
                 $domain = strtolower($domain);
                 $msg = '';

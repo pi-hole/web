@@ -8,6 +8,7 @@
 */
 
 require_once 'func.php';
+require_once 'persistentlogin_token.php';
 
 // Start a new PHP session (or continue an existing one)
 start_php_session();
@@ -29,11 +30,8 @@ function verifyPassword($pwhash, $use_api = false)
     if (strlen($pwhash) > 0) {
         // Check for and authorize from persistent cookie
         if (isset($_COOKIE['persistentlogin'])) {
-            if (hash_equals($pwhash, $_COOKIE['persistentlogin'])) {
+            if (checkValidityPersistentLoginToken($_COOKIE['persistentlogin'])) {
                 $_SESSION['auth'] = true;
-                // Refresh cookie with new expiry
-                // setcookie( $name, $value, $expire, $path, $domain, $secure, $httponly )
-                setcookie('persistentlogin', $pwhash, time() + 60 * 60 * 24 * 7, null, null, null, true);
             } else {
                 // Invalid cookie
                 $_SESSION['auth'] = false;
@@ -61,14 +59,22 @@ function verifyPassword($pwhash, $use_api = false)
 
                 // Set persistent cookie if selected
                 if (isset($_POST['persistentlogin'])) {
-                    // setcookie( $name, $value, $expire, $path, $domain, $secure, $httponly )
-                    setcookie('persistentlogin', $pwhash, time() + 60 * 60 * 24 * 7, null, null, null, true);
+                    // Generate cookie with new expiry
+                    $token = genPersistentLoginToken();
+                    $time = time() + 60 * 60 * 24 * 7; // 7 days
+                    writePersistentLoginToken($token, $time);
+                    // setcookie($name, $value, $expire, $path, $domain, $secure, $httponly)
+                    setcookie('persistentlogin', $token, $time, null, null, null, true);
                 }
 
                 $_SESSION['auth'] = true;
 
                 // Login successful, redirect the user to the original requested page
-                if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['SCRIPT_NAME'] === '/admin/login.php') {
+                if (
+                    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+                    strlen($_SERVER['SCRIPT_NAME']) >= 10 &&
+                    substr_compare($_SERVER['SCRIPT_NAME'], '/login.php', -10) === 0
+                ) {
                     header('Location: '.$redirect_url);
                     exit;
                 }
