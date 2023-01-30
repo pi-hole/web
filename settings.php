@@ -1130,6 +1130,18 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="icheck-default">
+                                                    <label for="tempunit-selector"><strong>CPU Temperature Unit:</strong> </label>
+                                                    <select id="tempunit-selector">
+                                                        <option value="C">Celsius</option>
+                                                        <option value="K">Kelvin</option>
+                                                        <option value="F">Fahrenheit</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <input type="hidden" name="field" value="webUI">
                                         <input type="hidden" name="token" value="<?php echo $token; ?>">
                                     </div>
@@ -1197,18 +1209,6 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
                                                 <option>material-brown</option>
                                                 <option>material-grey</option>
                                                 <option>material-bluegrey</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p>CPU Temperature Unit</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <select id="tempunit-selector">
-                                                <option value="C">Celsius</option>
-                                                <option value="K">Kelvin</option>
-                                                <option value="F">Fahrenheit</option>
                                             </select>
                                         </div>
                                     </div>
