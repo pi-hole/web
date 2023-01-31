@@ -145,6 +145,7 @@ function renderMessage(data, type, row) {
 }
 
 $(function () {
+  return;
   var ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;

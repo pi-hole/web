@@ -16,6 +16,17 @@ check_cors();
 
 require 'header.php';
 ?>
+    <link rel="stylesheet" href="<?php echo fileversion('style/vendor/datatables.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo fileversion('style/vendor/datatables_extensions.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo fileversion('style/vendor/daterangepicker.min.css'); ?>">
+    <script src="<?php echo fileversion('scripts/vendor/select2.min.js'); ?>"></script>
+    <script src="<?php echo fileversion('scripts/vendor/datatables.min.js'); ?>"></script>
+    <script src="<?php echo fileversion('scripts/vendor/datatables.select.min.js'); ?>"></script>
+    <script src="<?php echo fileversion('scripts/vendor/datatables.buttons.min.js'); ?>"></script>
+    <script src="<?php echo fileversion('scripts/vendor/moment.min.js'); ?>"></script>
+    <script src="<?php echo fileversion('scripts/vendor/chart.min.js'); ?>"></script>
+    <script src="<?php echo fileversion('scripts/vendor/chartjs-adapter-moment.js'); ?>"></script>
+</head>
 <body class="<?php echo $theme; ?> hold-transition sidebar-mini<?php if ($boxedlayout) { ?> layout-boxed<?php } ?><?php if ($auth) { ?> logged-in<?php } ?>">
 <noscript>
     <!-- JS Warning -->
@@ -27,11 +38,6 @@ require 'header.php';
     </div>
     <!-- /JS Warning -->
 </noscript>
-<?php
-if ($auth) {
-    echo "<div id=\"token\" hidden>{$token}</div>";
-}
-?>
 
 <!-- Send token to JS -->
 <div id="enableTimer" hidden><?php if (file_exists('../custom_disable_timer')) {

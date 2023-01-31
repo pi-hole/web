@@ -9,7 +9,6 @@
 
 $indexpage = true;
 require 'scripts/pi-hole/php/header_authenticated.php';
-require_once 'scripts/pi-hole/php/gravity.php';
 ?>
 <!-- Sourceing CSS colors from stylesheet to be used in JS code -->
 <span class="queries-permitted"></span>
@@ -23,13 +22,13 @@ require_once 'scripts/pi-hole/php/gravity.php';
         <div class="small-box bg-aqua no-user-select" id="total_queries" title="only A + AAAA queries">
             <div class="inner">
                 <p>Total queries</p>
-                <h3 class="statistic"><span id="dns_queries_today">---</span></h3>
+                <h3 class="statistic"><span id="dns_queries">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-globe-americas"></i>
             </div>
             <a href="network.php" class="small-box-footer" title="">
-                <span id="unique_clients">-</span> active clients <i class="fa fa-arrow-circle-right"></i>
+                <span id="total_clients">-</span> active clients <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
     </div>
@@ -39,7 +38,7 @@ require_once 'scripts/pi-hole/php/gravity.php';
         <div class="small-box bg-red no-user-select">
             <div class="inner">
                 <p>Queries Blocked</p>
-                <h3 class="statistic"><span id="queries_blocked_today">---</span></h3>
+                <h3 class="statistic"><span id="blocked_queries">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-hand-paper"></i>
@@ -55,7 +54,7 @@ require_once 'scripts/pi-hole/php/gravity.php';
         <div class="small-box bg-yellow no-user-select">
             <div class="inner">
                 <p>Percentage Blocked</p>
-                <h3 class="statistic"><span id="percentage_blocked_today">---</span></h3>
+                <h3 class="statistic"><span id="percent_blocked">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-chart-pie"></i>
@@ -68,10 +67,10 @@ require_once 'scripts/pi-hole/php/gravity.php';
     <!-- ./col -->
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-green no-user-select" title="<?php echo gravity_last_update(); ?>">
+        <div class="small-box bg-green no-user-select">
             <div class="inner">
                 <p>Domains on Adlists</p>
-                <h3 class="statistic"><span id="domains_being_blocked">---</span></h3>
+                <h3 class="statistic"><span id="gravity_size">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-list-alt"></i>
@@ -88,7 +87,7 @@ require_once 'scripts/pi-hole/php/gravity.php';
     <div class="col-md-12">
         <div class="box" id="queries-over-time">
             <div class="box-header with-border">
-                <h3 class="box-title">Total queries over last <span class="maxlogage-interval">24</span> hours</h3>
+                <h3 class="box-title">Total queries over last 24 hours</h3>
             </div>
             <div class="box-body">
                 <div class="chart" style="width: 100%; height: 180px">
@@ -106,7 +105,7 @@ require_once 'scripts/pi-hole/php/gravity.php';
     <div class="col-md-12">
         <div class="box" id="clients">
             <div class="box-header with-border">
-                <h3 class="box-title">Client activity over last <span class="maxlogage-interval">24</span> hours</h3>
+                <h3 class="box-title">Client activity over last 24 hours</h3>
             </div>
             <div class="box-body">
                 <div class="chart" style="width: 100%; height: 180px">

@@ -58,11 +58,6 @@ $hostname = gethostname() ? gethostname() : '';
 
     <!-- Common styles -->
     <link rel="stylesheet" href="<?php echo fileversion('style/vendor/bootstrap/css/bootstrap.min.css'); ?>">
-<?php if ($auth) { ?>
-    <link rel="stylesheet" href="<?php echo fileversion('style/vendor/datatables.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo fileversion('style/vendor/datatables_extensions.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo fileversion('style/vendor/daterangepicker.min.css'); ?>">
-<?php } ?>
     <link rel="stylesheet" href="<?php echo fileversion('style/vendor/AdminLTE.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo fileversion('style/vendor/select2.min.css'); ?>">
 
@@ -84,15 +79,5 @@ $hostname = gethostname() ? gethostname() : '';
     <script src="<?php echo fileversion('style/vendor/bootstrap/js/bootstrap.min.js'); ?>"></script>
     <script src="<?php echo fileversion('scripts/vendor/adminlte.min.js'); ?>"></script>
     <script src="<?php echo fileversion('scripts/vendor/bootstrap-notify.min.js'); ?>"></script>
-<?php if ($auth) { ?>
-    <script src="<?php echo fileversion('scripts/vendor/select2.min.js'); ?>"></script>
-    <script src="<?php echo fileversion('scripts/vendor/datatables.min.js'); ?>"></script>
-    <script src="<?php echo fileversion('scripts/vendor/datatables.select.min.js'); ?>"></script>
-    <script src="<?php echo fileversion('scripts/vendor/datatables.buttons.min.js'); ?>"></script>
-    <script src="<?php echo fileversion('scripts/vendor/moment.min.js'); ?>"></script>
-    <script src="<?php echo fileversion('scripts/vendor/chart.min.js'); ?>"></script>
-    <script src="<?php echo fileversion('scripts/vendor/chartjs-adapter-moment.js'); ?>"></script>
-<?php } ?>
     <script src="<?php echo fileversion('style/vendor/font-awesome/js/all.min.js'); ?>"></script>
     <script src="<?php echo fileversion('scripts/pi-hole/js/utils.js'); ?>"></script>
-</head>

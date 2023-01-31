@@ -361,6 +361,7 @@ function colorBar(percentage, total, cssClass) {
 }
 
 function checkMessages() {
+  return;
   var ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
@@ -411,7 +412,7 @@ function changeBulkDeleteStates(table) {
 function doLogout() {
   $.ajax({
     url: "/api/auth",
-    method: "DELETE"
+    method: "DELETE",
   }).always(function (data) {
     if (data.status === 410) location.reload();
   });

@@ -1,3 +1,4 @@
+
     <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
         <!-- sidebar: style can be found in sidebar.less -->
@@ -9,57 +10,10 @@
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
-                    <?php
-                    /*$pistatus = piholeStatus();
-                    if ($pistatus == 53) {
-                        echo '<span id="status"><i class="fa fa-w fa-circle text-green-light"></i> Active</span>';
-                    } elseif ($pistatus == 0) {
-                        echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Blocking disabled</span>';
-                    } elseif ($pistatus == -1) {
-                        echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> DNS service not running</span>';
-                    } elseif ($pistatus == -2) {*/
-                        echo '<span id="status"><i class="fa fa-w fa-circle text-orange"></i> Unknown</span>'; /*
-                    } else {
-                        echo '<span id="status"><i class="fa fa-w fa-circle text-orange"></i> DNS service on port '.$pistatus.'</span>';
-                    }*/
-                    ?>
-                    <br/>
-                    <?php
-                    echo '<span title="Detected '.$nproc.' cores"><i class="fa fa-w fa-circle ';
-                    if ($loaddata[0] > $nproc) {
-                        echo 'text-red';
-                    } else {
-                        echo 'text-green-light';
-                    }
-                    echo '"></i> Load:&nbsp;&nbsp;'.$loaddata[0].'&nbsp;&nbsp;'.$loaddata[1].'&nbsp;&nbsp;'.$loaddata[2].'</span>';
-                    ?>
-                    <br/>
-                    <?php
-                    echo '<span><i class="fa fa-w fa-circle ';
-                    if ($memory_usage > 0.75 || $memory_usage < 0.0) {
-                        echo 'text-red';
-                    } else {
-                        echo 'text-green-light';
-                    }
-                    if ($memory_usage > 0.0) {
-                        echo '"></i> Memory usage:&nbsp;&nbsp;'.sprintf('%.1f', 100.0 * $memory_usage).'&thinsp;%</span>';
-                    } else {
-                        echo '"></i> Memory usage:&nbsp;&nbsp; N/A</span>';
-                    }
-                    ?>
-                    <br/>
-                    <?php
-                    if ($celsius >= -273.15) {
-                        // Only show temp info if any data is available -->
-                        $tempcolor = 'text-vivid-blue';
-                        if (isset($temperaturelimit) && $celsius > $temperaturelimit) {
-                            $tempcolor = 'text-red';
-                        }
-                        echo '<span id="temperature"><i class="fa fa-w fa-fire '.$tempcolor.'" style="width: 1em !important"></i> ';
-                        echo 'Temp:&nbsp;<span id="rawtemp" hidden>'.$celsius.'</span>';
-                        echo '<span id="tempdisplay"></span></span>';
-                    }
-                    ?>
+                    <span id="status"></span>
+                    <span id="temperature"></span><br/>
+                    <span id="cpu"></span><br/>
+                    <span id="memory"></span>
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
