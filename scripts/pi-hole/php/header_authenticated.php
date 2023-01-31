@@ -8,132 +8,11 @@
 *  Please see LICENSE file for your rights under this license.
 */
 
-require 'scripts/pi-hole/php/password.php';
-if (!$auth) {
-    $_SESSION['prev_url'] = $_SERVER['REQUEST_URI'];
-    header('Location: login.php');
-    exit;
-}
-
 require 'scripts/pi-hole/php/auth.php';
-require_once 'scripts/pi-hole/php/FTL.php';
 require_once 'scripts/pi-hole/php/func.php';
 require 'scripts/pi-hole/php/theme.php';
 
-// Retrieve layout setting from setupVars
-if (isset($setupVars['WEBUIBOXEDLAYOUT']) && !($setupVars['WEBUIBOXEDLAYOUT'] === 'boxed')) {
-    $boxedlayout = false;
-} else {
-    $boxedlayout = true;
-}
-
-// Override layout setting if layout is changed via Settings page
-if (isset($_POST['field'])) {
-    if ($_POST['field'] === 'webUI' && isset($_POST['boxedlayout'])) {
-        $boxedlayout = true;
-    } elseif ($_POST['field'] === 'webUI' && !isset($_POST['boxedlayout'])) {
-        $boxedlayout = false;
-    }
-}
-
-// Return memory usage to show on status block
-function getMemUsage()
-{
-    $data = explode("\n", file_get_contents('/proc/meminfo'));
-    $meminfo = array();
-    if (count($data) > 0) {
-        foreach ($data as $line) {
-            $expl = explode(':', $line);
-            if (count($expl) == 2) {
-                // remove " kB" from the end of the string and make it an integer
-                $meminfo[$expl[0]] = intval(trim(substr($expl[1], 0, -3)));
-            }
-        }
-        $memused = $meminfo['MemTotal'] - $meminfo['MemFree'] - $meminfo['Buffers'] - $meminfo['Cached'];
-        $memusage = $memused / $meminfo['MemTotal'];
-    } else {
-        $memusage = -1;
-    }
-
-    return $memusage;
-}
-
-// Try to get temperature value from different places (OS dependent)
-// - return an array, containing the temperature and limit.
-function getTemperature()
-{
-    global $setupVars;
-
-    if (file_exists('/sys/class/thermal/thermal_zone0/temp')) {
-        $output = rtrim(file_get_contents('/sys/class/thermal/thermal_zone0/temp'));
-    } elseif (file_exists('/sys/class/hwmon/hwmon0/temp1_input')) {
-        $output = rtrim(file_get_contents('/sys/class/hwmon/hwmon0/temp1_input'));
-    } else {
-        $output = '';
-    }
-
-    // Test if we succeeded in getting the temperature
-    if (is_numeric($output)) {
-        // $output could be either 4-5 digits or 2-3, and we only divide by 1000 if it's 4-5
-        // ex. 39007 vs 39
-        $celsius = intval($output);
-
-        // If celsius is greater than 1 degree and is in the 4-5 digit format
-        if ($celsius > 1000) {
-            // Use multiplication to get around the division-by-zero error
-            $celsius *= 1e-3;
-        }
-
-        // Get user-defined temperature limit if set
-        if (isset($setupVars['TEMPERATURE_LIMIT'])) {
-            $limit = intval($setupVars['TEMPERATURE_LIMIT']);
-        } else {
-            $limit = 60;
-        }
-    } else {
-        // Nothing can be colder than -273.15 degree Celsius (= 0 Kelvin)
-        // This is the minimum temperature possible (AKA absolute zero)
-        $celsius = -273.16;
-        // Set templimit to null if no tempsensor was found
-        $limit = null;
-    }
-
-    return array($celsius, $limit);
-}
-
 check_cors();
-
-// Generate CSRF token
-if (empty($_SESSION['token'])) {
-    $_SESSION['token'] = base64_encode(openssl_random_pseudo_bytes(32));
-}
-$token = $_SESSION['token'];
-
-// For session timer
-$maxlifetime = ini_get('session.gc_maxlifetime');
-
-// Get temperature
-list($celsius, $temperaturelimit) = getTemperature();
-
-// Get CPU load
-$loaddata = sys_getloadavg();
-foreach ($loaddata as $key => $value) {
-    $loaddata[$key] = round($value, 2);
-}
-
-// Get number of processing units available to PHP
-// (may be less than the number of online processors)
-$nproc = shell_exec('nproc');
-if (!is_numeric($nproc)) {
-    $cpuinfo = file_get_contents('/proc/cpuinfo');
-    preg_match_all('/^processor/m', $cpuinfo, $matches);
-    $nproc = count($matches[0]);
-}
-
-// Get memory usage
-$memory_usage = getMemUsage();
-
-$piholeFTLConf = piholeFTLConfig();
 
 require 'header.php';
 ?>
@@ -208,10 +87,7 @@ if ($auth) {
                                 <a class="btn-link" href="https://discourse.pi-hole.net/" rel="noopener" target="_blank"><i class="fa fa-fw menu-icon fab fa-discourse"></i> Pi-hole Forum</a>
                                 <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank"><i class="fa-fw menu-icon fab fa-github"></i> GitHub</a>
                                 <a class="btn-link" href="https://discourse.pi-hole.net/c/announcements/5" rel="noopener" target="_blank"><i class="fa-fw menu-icon fa fa-regular fa-rocket"></i> Pi-hole Releases</a>
-                                <?php if (strlen($pwhash) > 0) {  // Show "Logout" link only when the user has the password protection enabled.?>
-                                <hr>
-                                <a class="btn-link" href="logout.php" rel="noopener"><i class="fa fa-fw menu-icon fa-sign-out-alt"></i> Log out</a>
-                                <?php } ?>
+                                <a class="btn-link" href="#" onclick="utils.doLogout();"><i class="fa fa-fw menu-icon fa-sign-out-alt"></i> Log out</a>
                             </li>
                         </ul>
                     </li>

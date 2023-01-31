@@ -55,7 +55,12 @@ function check_cors()
     // Allow user set CORS
     $cors_hosts = getenv('CORS_HOSTS');
     if (!empty($cors_hosts)) {
-        array_push($AUTHORIZED_HOSTNAMES, ...explode(',', $cors_hosts));
+        // Push all hosts from comma separated list
+        $cors_hosts_array = explode(',', $cors_hosts);
+        // Add all hosts to the list of authorized hosts
+        foreach ($cors_hosts_array as $host) {
+            array_push($AUTHORIZED_HOSTNAMES, $host);
+        }
     }
 
     // Since the Host header is easily manipulated, we can only check if it's wrong and can't use it
@@ -93,7 +98,7 @@ function check_cors()
         if (!in_array($server_origin, $AUTHORIZED_HOSTNAMES)) {
             log_and_die('Failed CORS: '.htmlspecialchars($server_origin).' vs '.htmlspecialchars(join(', ', $AUTHORIZED_HOSTNAMES)));
         }
-        header("Access-Control-Allow-Origin: ${_SERVER['HTTP_ORIGIN']}");
+        /* header("Access-Control-Allow-Origin: ${_SERVER['HTTP_ORIGIN']}"); */
     }
     // If there's no HTTP_ORIGIN, CORS should not be used
 }

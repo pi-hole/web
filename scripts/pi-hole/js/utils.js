@@ -408,6 +408,15 @@ function changeBulkDeleteStates(table) {
   }
 }
 
+function doLogout() {
+  $.ajax({
+    url: "/api/auth",
+    method: "DELETE"
+  }).always(function (data) {
+    if (data.status === 410) location.reload();
+  });
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -432,5 +441,6 @@ window.utils = (function () {
     colorBar: colorBar,
     checkMessages: checkMessages,
     changeBulkDeleteStates: changeBulkDeleteStates,
+    doLogout: doLogout,
   };
 })();

@@ -9,26 +9,24 @@
 */
 
 require 'scripts/pi-hole/php/header_authenticated.php';
-require 'scripts/pi-hole/php/savesettings.php';
-require_once 'scripts/pi-hole/php/FTL.php';
 
 // Reread ini file as things might have been changed
 // DEFAULT_FTLCONFFILE is set in "scripts/pi-hole/php/FTL.php";
 $setupVars = parse_ini_file('/etc/pihole/setupVars.conf');
-$piholeFTLConf = piholeFTLConfig(DEFAULT_FTLCONFFILE, true);
+$piholeFTLConf = array();
 
 // Handling of PHP internal errors
 $last_error = error_get_last();
 if (isset($last_error) && ($last_error['type'] === E_WARNING || $last_error['type'] === E_ERROR)) {
     $error .= 'There was a problem applying your settings.<br>Debugging information:<br>PHP error ('.htmlspecialchars($last_error['type']).'): '.htmlspecialchars($last_error['message']).' in '.htmlspecialchars($last_error['file']).':'.htmlspecialchars($last_error['line']);
 }
-
+/*
 // Timezone is set in docker via ENV otherwise get it from commandline
 $timezone = htmlspecialchars(getenv('TZ'));
 if (empty($timezone)) {
     $timezone = shell_exec("date +'%Z'");
 }
-
+*/
 ?>
 <style>
     .tooltip-inner {
@@ -74,7 +72,7 @@ if (isset($setupVars['PIHOLE_INTERFACE'])) {
 }
 
 // get the gateway IP
-$IPv4GW = getGateway()['ip'];
+//$IPv4GW = getGateway()['ip'];
 
 // if the default gateway address is unknown or FTL is not running
 if ($IPv4GW == '0.0.0.0' || $IPv4GW == -1) {
@@ -84,7 +82,7 @@ if ($IPv4GW == '0.0.0.0' || $IPv4GW == -1) {
 // DNS settings
 $DNSservers = array();
 $DNSactive = array();
-
+/*
 $i = 1;
 while (isset($setupVars['PIHOLE_DNS_'.$i])) {
     if (isinserverlist($setupVars['PIHOLE_DNS_'.$i])) {
@@ -104,7 +102,7 @@ while (isset($setupVars['PIHOLE_DNS_'.$i])) {
     }
     ++$i;
 }
-
+*/
 if (isset($setupVars['DNS_FQDN_REQUIRED'])) {
     if ($setupVars['DNS_FQDN_REQUIRED']) {
         $DNSrequiresFQDN = true;
@@ -238,7 +236,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <?php
-                                            $FTLpid = intval(pidofFTL());
+                                            $FTLpid = 0;//intval(pidofFTL());
 if ($FTLpid !== 0) {
     $FTLversion = exec('/usr/bin/pihole-FTL version'); ?>
                                             <table class="table table-striped table-bordered nowrap">
@@ -603,7 +601,7 @@ if ($DHCP) {
     }
 }
 
-readStaticLeasesFile();
+//readStaticLeasesFile();
 ?>
                             <div class="col-md-12">
                                 <div class="box box-warning">
@@ -1303,7 +1301,7 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
                 <!-- ######################################################### Teleporter ######################################################### -->
                 <div id="teleporter" class="tab-pane fade<?php if ($tab === 'teleporter') { ?> in active<?php } ?>">
                     <div class="row">
-                        <?php if (extension_loaded('Phar')) { ?>
+                        <?php /*if (extension_loaded('Phar')) { ?>
                         <form role="form" method="post" id="takeoutform"
                             action="scripts/pi-hole/php/teleporter.php"
                             target="teleporter_iframe" enctype="multipart/form-data">
@@ -1365,10 +1363,6 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
                                                 <div>
                                                     <input type="checkbox" name="group" id="tele_group" value="true" checked>
                                                     <label for="tele_group">Group</label>
-                                                </div>
-                                                <div>
-                                                    <input type="checkbox" name="auditlog" id="tele_auditlog" value="true" checked>
-                                                    <label for="tele_auditlog">Audit log</label>
                                                 </div>
                                                 <div>
                                                     <input type="checkbox" name="staticdhcpleases" id="tele_staticdhcpleases" value="true" checked>
@@ -1443,7 +1437,7 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
                                 </div>
                             </div>
                         </div>
-                        <?php } else { ?>
+                        <?php } else */{ ?>
                         <div class="col-lg-12">
                             <div class="box box-warning">
                                 <div class="box-header with-border">

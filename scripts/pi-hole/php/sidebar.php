@@ -10,18 +10,18 @@
                 <div class="pull-left info">
                     <p>Status</p>
                     <?php
-                    $pistatus = piholeStatus();
+                    /*$pistatus = piholeStatus();
                     if ($pistatus == 53) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-green-light"></i> Active</span>';
                     } elseif ($pistatus == 0) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Blocking disabled</span>';
                     } elseif ($pistatus == -1) {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> DNS service not running</span>';
-                    } elseif ($pistatus == -2) {
-                        echo '<span id="status"><i class="fa fa-w fa-circle text-red"></i> Unknown</span>';
+                    } elseif ($pistatus == -2) {*/
+                        echo '<span id="status"><i class="fa fa-w fa-circle text-orange"></i> Unknown</span>'; /*
                     } else {
                         echo '<span id="status"><i class="fa fa-w fa-circle text-orange"></i> DNS service on port '.$pistatus.'</span>';
-                    }
+                    }*/
                     ?>
                     <br/>
                     <?php
@@ -199,7 +199,7 @@
 
                 <li class="header text-uppercase">System</li>
                 <!-- Tools -->
-                <li class="menu-system treeview<?php if (in_array($scriptname, array('messages.php', 'gravity.php', 'queryads.php', 'auditlog.php', 'taillog.php', 'taillog-FTL.php', 'debug.php', 'network.php'))) { ?> active<?php } ?>">
+                <li class="menu-system treeview<?php if (in_array($scriptname, array('messages.php', 'gravity.php', 'queryads.php', 'taillog.php', 'taillog-FTL.php', 'debug.php', 'network.php'))) { ?> active<?php } ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-tools"></i> <span>Tools</span>
                         <span class="warning-count hidden"></span>
@@ -225,12 +225,6 @@
                         <li class="<?php if ($scriptname === 'queryads.php') { ?> active<?php } ?>">
                             <a href="queryads.php">
                                 <i class="fa fa-fw menu-icon fa-search"></i> Search Adlists
-                            </a>
-                        </li>
-                        <!-- Audit log -->
-                        <li class="<?php if ($scriptname === 'auditlog.php') { ?> active<?php } ?>">
-                            <a href="auditlog.php">
-                                <i class="fa fa-fw menu-icon fa-balance-scale"></i> Audit log
                             </a>
                         </li>
                         <!-- Tail pihole.log -->

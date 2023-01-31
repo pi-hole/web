@@ -9,7 +9,8 @@
 
 // Credit: http://stackoverflow.com/a/4694816/2087442
 // Modified because of https://github.com/pi-hole/AdminLTE/pull/533
-ini_set('pcre.recursion_limit', 1500);
+/* ini_set('pcre.recursion_limit', 1500); */
+/*
 function validDomain($domain_name, &$message = null)
 {
     // special handling of the root zone `.`
@@ -101,7 +102,7 @@ function get_ip_type($ip)
         (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? 6 :
         0);
 }
-
+*/
 function checkfile($filename)
 {
     if (is_readable($filename)) {
@@ -207,10 +208,10 @@ function getCustomDNSEntries()
                 continue;
             }
 
-            $data = new \stdClass();
-            $data->ip = $explodedLine[0];
-            $data->domain = $explodedLine[1];
-            $data->domains = array_slice($explodedLine, 0, -1);
+            $data = array();
+            $data["ip"] = $explodedLine[0];
+            $data["domain"] = $explodedLine[1];
+            $data["domains"] = array_slice($explodedLine, 0, -1);
             $entries[] = $data;
         }
 
@@ -284,7 +285,7 @@ function addCustomDNSEntry($ip = '', $domain = '', $reload = '', $json = true)
         }
 
         return returnSuccess('', $json);
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         return returnError($ex->getMessage(), $json);
     }
 }
@@ -323,7 +324,7 @@ function deleteCustomDNSEntry()
         pihole_execute('-a removecustomdns '.$ip.' '.$domain);
 
         return returnSuccess();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         return returnError($ex->getMessage());
     }
 }
@@ -340,7 +341,7 @@ function deleteAllCustomDNSEntries($reload = '')
         foreach ($existingEntries as $entry) {
             pihole_execute('-a removecustomdns '.$entry->ip.' '.$entry->domain.' '.$reload);
         }
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         return returnError($ex->getMessage());
     }
 
@@ -384,10 +385,10 @@ function getCustomCNAMEEntries()
                 continue;
             }
 
-            $data = new \stdClass();
-            $data->domains = array_slice($explodedLine, 0, -1);
-            $data->domain = implode(',', $data->domains);
-            $data->target = $explodedLine[count($explodedLine) - 1];
+            $data = array();
+            $data["domains"] = array_slice($explodedLine, 0, -1);
+            $data["domain"] = implode(',', $data["domains"]);
+            $data["target"] = $explodedLine[count($explodedLine) - 1];
             $entries[] = $data;
         }
 
@@ -465,7 +466,7 @@ function addCustomCNAMEEntry($domain = '', $target = '', $reload = '', $json = t
         }
 
         return returnSuccess('', $json);
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         return returnError($ex->getMessage(), $json);
     }
 }
@@ -504,7 +505,7 @@ function deleteCustomCNAMEEntry()
         pihole_execute('-a removecustomcname '.$domain.' '.$target);
 
         return returnSuccess();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         return returnError($ex->getMessage());
     }
 }
@@ -521,7 +522,7 @@ function deleteAllCustomCNAMEEntries($reload = '')
         foreach ($existingEntries as $entry) {
             pihole_execute('-a removecustomcname '.$entry->domain.' '.$entry->target.' '.$reload);
         }
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         return returnError($ex->getMessage());
     }
 
@@ -566,14 +567,14 @@ function getQueryTypeStr($querytype)
 // Return Success message in JSON format
 function JSON_success($message = null)
 {
-    header('Content-type: application/json');
+    /* header('Content-type: application/json'); */
     echo json_encode(array('success' => true, 'message' => $message));
 }
 
 // Return Error message in JSON format
 function JSON_error($message = null)
 {
-    header('Content-type: application/json');
+    /* header('Content-type: application/json'); */
     $response = array('success' => false, 'message' => $message);
     if (isset($_POST['action'])) {
         array_push($response, array('action' => $_POST['action']));
@@ -586,57 +587,12 @@ function JSON_error($message = null)
 // - sends "warning" to use the correct alert type.
 function JSON_warning($message = null)
 {
-    header('Content-type: application/json');
+    /* header('Content-type: application/json'); */
     echo json_encode(array(
         'success' => true,
         'warning' => true,
         'message' => $message,
     ));
-}
-
-// Returns an integer representing pihole blocking status
-function piholeStatus()
-{
-    // Retrieve DNS Port calling FTL API directly
-    $port = callFTLAPI('dns-port');
-
-    // Retrieve FTL status
-    $FTLstats = callFTLAPI('stats');
-
-    if (array_key_exists('FTLnotrunning', $port) || array_key_exists('FTLnotrunning', $FTLstats)) {
-        // FTL is not running
-        $ret = -1;
-    } elseif (in_array('status enabled', $FTLstats)) {
-        // FTL is enabled
-        if (intval($port[0]) <= 0) {
-            // Port=0; FTL is not listening
-            $ret = -1;
-        } else {
-            // FTL is running on this port
-            $ret = intval($port[0]);
-        }
-    } elseif (in_array('status disabled', $FTLstats)) {
-        // FTL is disabled
-        $ret = 0;
-    } else {
-        // Unknown (unexpected) response
-        $ret = -2;
-    }
-
-    return $ret;
-}
-
-// Returns the default gateway address and interface
-function getGateway()
-{
-    $gateway = callFTLAPI('gateway');
-    if (array_key_exists('FTLnotrunning', $gateway)) {
-        $ret = array('ip' => -1);
-    } else {
-        $ret = array_combine(array('ip', 'iface'), explode(' ', $gateway[0]));
-    }
-
-    return $ret;
 }
 
 // Try to convert possible IDNA domain to Unicode
@@ -690,12 +646,6 @@ function convertUnicodeToIDNA($unicode)
     }
 }
 
-// Return PID of FTL (used in settings.php)
-function pidofFTL()
-{
-    return shell_exec('pidof pihole-FTL');
-}
-
 // Get FTL process information (used in settings.php)
 function get_FTL_data($FTLpid, $arg)
 {
@@ -722,8 +672,8 @@ function convertseconds($argument)
 function start_php_session()
 {
     // Prevent Session ID from being passed through URLs
-    ini_set('session.use_only_cookies', 1);
-    session_start();
+    /* ini_set('session.use_only_cookies', 1); */
+    /* session_start(); */
     // HttpOnly: Prevents javascript XSS attacks aimed to steal the session ID
     //
     // SameSite=Strict: Allows servers to assert that a cookie ought not to be
@@ -732,5 +682,5 @@ function start_php_session()
     // protection against cross-site request forgery attacks.
     // Direct support of Samesite has been added to PHP only in version 7.3
     // We manually set the cookie option ourselves to ensure backwards compatibility
-    header('Set-Cookie: PHPSESSID='.session_id().'; path=/; HttpOnly; SameSite=Strict');
+    /* header('Set-Cookie: PHPSESSID='.session_id().'; path=/; HttpOnly; SameSite=Strict'); */
 }

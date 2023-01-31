@@ -8,16 +8,11 @@
 *  Please see LICENSE file for your rights under this license.
 */
 
-require 'scripts/pi-hole/php/password.php';
-
-// Go directly to index, if authenticated.
-if ($_SESSION['auth']) {
-    header('Location: index.php');
-    exit;
-}
-
+$wrongpassword = false;
+require_once 'func.php';
 require 'scripts/pi-hole/php/theme.php';
 require 'scripts/pi-hole/php/header.php';
+
 ?>
 <body class="hold-transition layout-boxed login-page">
 <div class="box login-box">
@@ -39,7 +34,7 @@ require 'scripts/pi-hole/php/header.php';
                 </div>
                 <?php } ?>
 
-                <form action="" id="loginform" method="post">
+                <form id="loginform">
                     <div class="form-group login-options has-feedback<?php if ($wrongpassword) { ?> has-error<?php } ?>">
                         <div class="pwd-field">
                             <!-- hidden username input field to help password managers to autfill the password -->
@@ -48,7 +43,7 @@ require 'scripts/pi-hole/php/header.php';
                             <span class="fa fa-key form-control-feedback"></span>
                         </div>
                         <div>
-                            <input type="checkbox" id="logincookie" name="persistentlogin">
+                            <input type="checkbox" id="logincookie" name="persistentlogin" disabled="true">
                             <label for="logincookie">Remember me for 7 days</label>
                         </div>
                     </div>
@@ -95,6 +90,8 @@ require 'scripts/pi-hole/php/header.php';
         <strong><a href="https://pi-hole.net/donate/" rel="noopener" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
     </div>
 </div>
+<script src="<?php echo fileversion('scripts/pi-hole/js/login.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/vendor/geraintluff-sha256.min.js'); ?>"></script>
 <script src="<?php echo fileversion('scripts/pi-hole/js/footer.js'); ?>"></script>
 </body>
 </html>

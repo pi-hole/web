@@ -11,6 +11,8 @@ require_once 'scripts/pi-hole/php/database.php';
 
 function gravity_last_update($raw = false)
 {
+    return 'Adlists updated ??.?? ago';
+    /*
     $db = SQLite3_connect(getGravityDBFilename());
     $date_file_created_unix = $db->querySingle("SELECT value FROM info WHERE property = 'updated';");
     if ($date_file_created_unix === false) {
@@ -50,4 +52,5 @@ function gravity_last_update($raw = false)
 
     // String output (less than one day ago)
     return $gravitydiff->format('Adlists updated %H:%I (hh:mm) ago');
+    */
 }
