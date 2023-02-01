@@ -5,7 +5,7 @@
 *
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license. */
-    require "scripts/pi-hole/php/header_authenticated.php";
+require 'scripts/pi-hole/php/header_authenticated.php';
 ?>
 <!-- Alert Modal -->
 <div id="alertModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -194,48 +194,50 @@
 
 <div class="row">
     <div class="col-md-12">
-      <div class="box" id="recent-queries">
-        <div class="box-header with-border">
-          <h3 class="box-title">Recent Queries</h3>
-          <a id="refresh" href="#" class="btn btn-sm btn-info btn-flat pull-right">Refresh</a>
+        <div class="box" id="recent-queries">
+            <div class="box-header with-border">
+                <h3 class="box-title">Recent Queries</h3>
+                <a id="refresh" href="#" class="btn btn-sm btn-info btn-flat pull-right">Refresh</a>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <p>Click on a query log item to obtain additional information for this query.</p>
+                <table id="all-queries" class="table table-striped table-bordered" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th></th>
+                            <th>Type</th>
+                            <th>Domain</th>
+                            <th>Client</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Time</th>
+                            <th></th>
+                            <th>Type</th>
+                            <th>Domain</th>
+                            <th>Client</th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <p>Note: Queries for <code>pi.hole</code> and the hostname are never logged.</p>
+            </div>
+            <!-- /.box-body -->
         </div>
-        <!-- /.box-header -->
-        <div class="box-body">
-            <p>Click on a query log item to obtain additional information for this query.</p>
-            <table id="all-queries" class="table table-striped table-bordered" width="100%">
-                <thead>
-                    <tr>
-                        <th>Time</th>
-                        <th></th>
-                        <th>Type</th>
-                        <th>Domain</th>
-                        <th>Client</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th>Time</th>
-                        <th></th>
-                        <th>Type</th>
-                        <th>Domain</th>
-                        <th>Client</th>
-                    </tr>
-                </tfoot>
-            </table>
-            <p>Note: Queries for <code>pi.hole</code> and the hostname are never logged.</p>
-        </div>
-        <!-- /.box-body -->
+        <!-- /.box -->
     </div>
-    <!-- /.box -->
+    <!-- /.col -->
 </div>
 <!-- /.row -->
 
-<script src="<?php echo fileversion('scripts/vendor/bootstrap-select.min.js') ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/ip-address-sorting.js') ?>"></script>
-<script src="<?php echo fileversion('scripts/vendor/daterangepicker.min.js') ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/utils.js') ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/queries.js') ?>"></script>
+<script src="<?php echo fileversion('scripts/vendor/bootstrap-select.min.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/ip-address-sorting.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/vendor/daterangepicker.min.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/utils.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/queries.js'); ?>"></script>
 
 <?php
-    require "scripts/pi-hole/php/footer.php";
+    require 'scripts/pi-hole/php/footer.php';
 ?>

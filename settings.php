@@ -10,187 +10,6 @@
 
 require 'scripts/pi-hole/php/header_authenticated.php';
 
-$piholeFTLConf = array();
-
-// Handling of PHP internal errors
-$last_error = error_get_last();
-if (isset($last_error) && ($last_error['type'] === E_WARNING || $last_error['type'] === E_ERROR)) {
-    $error .= 'There was a problem applying your settings.<br>Debugging information:<br>PHP error ('.htmlspecialchars($last_error['type']).'): '.htmlspecialchars($last_error['message']).' in '.htmlspecialchars($last_error['file']).':'.htmlspecialchars($last_error['line']);
-}
-/*
-// Timezone is set in docker via ENV otherwise get it from commandline
-$timezone = htmlspecialchars(getenv('TZ'));
-if (empty($timezone)) {
-    $timezone = shell_exec("date +'%Z'");
-}
-*/
-?>
-<style>
-    .tooltip-inner {
-        max-width: none;
-        white-space: nowrap;
-    }
-</style>
-
-<?php // Check if ad lists should be updated after saving ...
-if (isset($_POST['submit'])) {
-    if ($_POST['submit'] == 'saveupdate') {
-        // If that is the case -> refresh to the gravity page and start updating immediately
-        ?>
-        <meta http-equiv="refresh" content="1;url=gravity.php?go">
-<?php
-    }
-}
-?>
-
-<?php if (strlen($success) > 0) { ?>
-    <div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert">
-        <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-        </button>
-        <h4><i class="icon fa fa-info"></i> Info</h4>
-        <?php echo $success; ?>
-    </div>
-<?php } ?>
-
-<?php if (strlen($error) > 0) { ?>
-    <div id="alError" class="alert alert-danger alert-dismissible fade in" role="alert">
-        <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-        </button>
-        <h4><i class="icon fa fa-ban"></i> Error</h4>
-        <?php echo $error; ?>
-    </div>
-<?php } ?>
-
-<?php
-if (isset($setupVars['PIHOLE_INTERFACE'])) {
-    $piHoleInterface = $setupVars['PIHOLE_INTERFACE'];
-} else {
-    $piHoleInterface = 'unknown';
-}
-
-// get the gateway IP
-//$IPv4GW = getGateway()['ip'];
-
-// if the default gateway address is unknown or FTL is not running
-if ($IPv4GW == '0.0.0.0' || $IPv4GW == -1) {
-    $IPv4GW = 'unknown';
-}
-
-// DNS settings
-$DNSservers = array();
-$DNSactive = array();
-/*
-$i = 1;
-while (isset($setupVars['PIHOLE_DNS_'.$i])) {
-    if (isinserverlist($setupVars['PIHOLE_DNS_'.$i])) {
-        array_push($DNSactive, $setupVars['PIHOLE_DNS_'.$i]);
-    } elseif (strpos($setupVars['PIHOLE_DNS_'.$i], '.') !== false) {
-        if (!isset($custom1)) {
-            $custom1 = $setupVars['PIHOLE_DNS_'.$i];
-        } else {
-            $custom2 = $setupVars['PIHOLE_DNS_'.$i];
-        }
-    } elseif (strpos($setupVars['PIHOLE_DNS_'.$i], ':') !== false) {
-        if (!isset($custom3)) {
-            $custom3 = $setupVars['PIHOLE_DNS_'.$i];
-        } else {
-            $custom4 = $setupVars['PIHOLE_DNS_'.$i];
-        }
-    }
-    ++$i;
-}
-*/
-if (isset($setupVars['DNS_FQDN_REQUIRED'])) {
-    if ($setupVars['DNS_FQDN_REQUIRED']) {
-        $DNSrequiresFQDN = true;
-    } else {
-        $DNSrequiresFQDN = false;
-    }
-} else {
-    $DNSrequiresFQDN = false;
-}
-
-if (isset($setupVars['DNS_BOGUS_PRIV'])) {
-    if ($setupVars['DNS_BOGUS_PRIV']) {
-        $DNSbogusPriv = true;
-    } else {
-        $DNSbogusPriv = false;
-    }
-} else {
-    $DNSbogusPriv = false;
-}
-
-if (isset($setupVars['DNSSEC'])) {
-    if ($setupVars['DNSSEC']) {
-        $DNSSEC = true;
-    } else {
-        $DNSSEC = false;
-    }
-} else {
-    $DNSSEC = false;
-}
-
-if (isset($setupVars['DNSMASQ_LISTENING'])) {
-    if ($setupVars['DNSMASQ_LISTENING'] === 'single') {
-        $DNSinterface = 'single';
-    } elseif ($setupVars['DNSMASQ_LISTENING'] === 'bind') {
-        $DNSinterface = 'bind';
-    } elseif ($setupVars['DNSMASQ_LISTENING'] === 'all') {
-        $DNSinterface = 'all';
-    } else {
-        $DNSinterface = 'local';
-    }
-} else {
-    $DNSinterface = 'single';
-}
-if (isset($setupVars['REV_SERVER']) && ($setupVars['REV_SERVER'] == 1)) {
-    $rev_server = true;
-    $rev_server_cidr = $setupVars['REV_SERVER_CIDR'];
-    $rev_server_target = $setupVars['REV_SERVER_TARGET'];
-    $rev_server_domain = $setupVars['REV_SERVER_DOMAIN'];
-} else {
-    $rev_server = false;
-}
-?>
-
-<?php
-// Query logging
-if (isset($setupVars['QUERY_LOGGING'])) {
-    if ($setupVars['QUERY_LOGGING'] == 1) {
-        $piHoleLogging = true;
-    } else {
-        $piHoleLogging = false;
-    }
-} else {
-    $piHoleLogging = true;
-}
-?>
-
-<?php
-// Excluded domains in API Query Log call
-if (isset($setupVars['API_EXCLUDE_DOMAINS'])) {
-    $excludedDomains = explode(',', $setupVars['API_EXCLUDE_DOMAINS']);
-} else {
-    $excludedDomains = array();
-}
-
-// Excluded clients in API Query Log call
-if (isset($setupVars['API_EXCLUDE_CLIENTS'])) {
-    $excludedClients = explode(',', $setupVars['API_EXCLUDE_CLIENTS']);
-} else {
-    $excludedClients = array();
-}
-
-// Excluded clients
-if (isset($setupVars['API_QUERY_LOG_SHOW'])) {
-    $queryLog = $setupVars['API_QUERY_LOG_SHOW'];
-} else {
-    $queryLog = 'all';
-}
-
-?>
-
-<?php
 if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piholedhcp', 'api', 'privacy', 'teleporter'))) {
     $tab = $_GET['tab'];
 } else {
@@ -224,7 +43,49 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                 <!-- ######################################################### System admin ######################################################### -->
                 <div id="sysadmin" class="tab-pane fade<?php if ($tab === 'sysadmin') { ?> in active<?php } ?>">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">System Information</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <table class="table table-striped table-bordered nowrap">
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">Hostname:</th>
+                                                        <td><span id="sysinfo-hostname"></span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">CPU:</th>
+                                                        <td><span id="sysinfo-cpu"></span> <span id="sysinfo-cpu-ftl"></span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Used memory:</th>
+                                                        <td><span id="sysinfo-memory-ram"></span> <span id="sysinfo-ram-ftl"></span</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Used swap:</th>
+                                                        <td><span id="sysinfo-memory-swap"></span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Kernel:</th>
+                                                        <td><span id="sysinfo-kernel"></span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Uptime:</th>
+                                                        <td><span id="sysinfo-uptime"></span></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="overlay" id="sysinfo-system-overlay">
+                                    <i class="fa fa-sync fa-spin"></i>
+                                </div>
+                            </div>
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">FTL Information</h3>
@@ -232,70 +93,116 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <?php
-                                            $FTLpid = 0;//intval(pidofFTL());
-if ($FTLpid !== 0) {
-    $FTLversion = exec('/usr/bin/pihole-FTL version'); ?>
                                             <table class="table table-striped table-bordered nowrap">
                                                 <tbody>
                                                     <tr>
-                                                        <th scope="row">FTL version:</th>
-                                                        <td><?php echo $FTLversion; ?></td>
+                                                        <th scope="row">FTL's PID:</th>
+                                                        <td><span id="sysinfo-pid-ftl"></span></td>
                                                     </tr>
                                                     <tr>
-                                                        <th scope="row">Process identifier (PID):</th>
-                                                        <td><?php echo $FTLpid; ?></td>
+                                                        <th scope="row">Privacy level:</th>
+                                                        <td><span id="sysinfo-privacy_level"></span></td>
                                                     </tr>
-                                                    <tr>
-                                                        <th scope="row">Time FTL started:</th>
-                                                        <td><?php print_r(get_FTL_data($FTLpid, 'lstart'));
-    echo ' '.$timezone; ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">User / Group:</th>
-                                                        <td><?php print_r(get_FTL_data($FTLpid, 'euser')); ?> / <?php print_r(get_FTL_data($FTLpid, 'egroup')); ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Total CPU utilization:</th>
-                                                        <td><?php print_r(get_FTL_data($FTLpid, '%cpu')); ?>%</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Memory utilization:</th>
-                                                        <td><?php print_r(get_FTL_data($FTLpid, '%mem')); ?>%</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span title="Resident memory is the portion of memory occupied by a process that is held in main memory (RAM). The rest of the occupied memory exists in the swap space or file system.">Used memory:</span>
-                                                        </th>
-                                                        <td><?php echo formatSizeUnits(1e3 * floatval(get_FTL_data($FTLpid, 'rss'))); ?></td>
-                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="overlay" id="sysinfo-ftl-overlay">
+                                    <i class="fa fa-sync fa-spin"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">DNS Information</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <table class="table table-striped table-bordered nowrap">
+                                                <tbody>
                                                     <tr>
                                                         <th scope="row">
                                                             <span title="Size of the DNS domain cache">DNS cache size:</span>
                                                         </th>
-                                                        <td id="cache-size">&nbsp;</td>
+                                                        <td id="sysinfo-cache-size">&nbsp;</td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">
                                                             <span title="Number of cache insertions">DNS cache insertions:</span>
                                                         </th>
-                                                        <td id="cache-inserted">&nbsp;</td>
+                                                        <td id="sysinfo-cache-inserted">&nbsp;</td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">
                                                             <span title="Number of cache entries that had to be removed although they are not expired (increase cache size to reduce this number)" lookatme-text="DNS cache evictions:">DNS cache evictions:</span>
                                                         </th>
-                                                        <td id="cache-live-freed">&nbsp;</td>
+                                                        <td id="sysinfo-cache-evicted">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Valid A records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-cache-valid-a">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Valid AAAA records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-cache-valid-aaaa">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Valid CNAME records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-cache-valid-cname">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Valid SRV records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-cache-valid-srv">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Valid DS records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-cache-valid-ds">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Valid DNSKEY records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-cache-valid-dnskey">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Other valid records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-cache-valid-other">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            DNS cache expiries:
+                                                        </th>
+                                                        <td id="sysinfo-cache-expired">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Immortal DNS cache entries:
+                                                        </th>
+                                                        <td id="sysinfo-cache-immortal">&nbsp;</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                             See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
-                                            <?php
-} else { ?>
-                                            <div>The FTL service is offline!</div>
-                                            <?php } ?>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="overlay" id="sysinfo-cache-overlay">
+                                    <i class="fa fa-sync fa-spin"></i>
                                 </div>
                             </div>
                         </div>
@@ -598,7 +505,7 @@ if ($DHCP) {
     }
 }
 
-//readStaticLeasesFile();
+// readStaticLeasesFile();
 ?>
                             <div class="col-md-12">
                                 <div class="box box-warning">
@@ -1434,7 +1341,7 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
                                 </div>
                             </div>
                         </div>
-                        <?php } else */{ ?>
+                        <?php } else */ ?>
                         <div class="col-lg-12">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
@@ -1445,7 +1352,6 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
                                 </div>
                             </div>
                         </div>
-                        <?php } ?>
                     </div>
                 </div>
             </div>

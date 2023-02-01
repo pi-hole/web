@@ -59,22 +59,36 @@
                 <!-- Group Management -->
                 <li class="menu-group<?php if ($scriptname === 'groups.php') { ?> active<?php } ?>">
                     <a href="groups.php">
-                        <i class="fa fa-fw menu-icon fa-user-friends"></i> <span>Groups</span>
+                        <i class="fa fa-fw menu-icon fa-user-friends"></i> <span>Groups
+                        <span class="pull-right-container">
+                            <span class="label label-primary pull-right" id="num_groups" title="Number of defined groups"></span>
+                        </span>
                     </a>
                 </li>
                 <li class="menu-group<?php if ($scriptname === 'groups-clients.php') { ?> active<?php } ?>">
                     <a href="groups-clients.php">
-                        <i class="fa fa-fw menu-icon fa-laptop"></i> <span>Clients</span>
+                        <i class="fa fa-fw menu-icon fa-laptop"></i> <span>Clients
+                        <span class="pull-right-container">
+                            <span class="label label-primary pull-right" id="num_clients" title="Number of defined clients"></span>
+                        </span>
                     </a>
                 </li>
                 <li class="menu-group<?php if ($scriptname === 'groups-domains.php') { ?> active<?php } ?>">
                     <a href="groups-domains.php">
-                        <i class="fa fa-fw menu-icon fa-list"></i> <span>Domains</span>
+                        <i class="fa fa-fw menu-icon fa-list"></i> <span>Domains
+                        <span class="pull-right-container">
+                            <span class="label bg-red pull-right" id="num_denied" title="Number of deny rules (domains and regex)"></span>
+                            <span class="label bg-green pull-right" id="num_allowed" title="Number of allow rules (domains and regex)"></span>
+                        </span>
                     </a>
                 </li>
                 <li class="menu-group<?php if ($scriptname === 'groups-adlists.php') { ?> active<?php } ?>">
                     <a href="groups-adlists.php">
-                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adlists</span>
+                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adists
+                        <span class="pull-right-container">
+                            <span class="label bg-blue pull-right" id="num_gravity" title="Total number of domains blocked by your Pi-hole"></span>
+                            <span class="label bg-yellow pull-right" id="num_lists" title="Number of defined adlists"></span>
+                        </span>
                     </a>
                 </li>
 

@@ -5,10 +5,76 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, checkMessages:false */
+/* global utils:false, checkMessages:false, apiFailure:false */
 var token = $("#token").text();
 
+var hostinfoTimer = null;
+function updateHostInfo() {
+  $.ajax({
+    url: "/api/info/host",
+  })
+    .done(function (data) {
+      var host = data.host;
+      var uname = host.uname;
+      if (uname.domainname !== "(none)") {
+        $("#sysinfo-hostname").text(uname.nodename + "." + uname.domainname);
+      } else {
+        $("#sysinfo-hostname").text(uname.nodename);
+      }
+
+      $("#sysinfo-kernel").text(
+        uname.sysname +
+          " " +
+          uname.nodename +
+          " " +
+          uname.release +
+          " " +
+          uname.version +
+          " " +
+          uname.machine
+      );
+      // Update every 120 seconds
+      clearTimeout(hostinfoTimer);
+      hostinfoTimer = setTimeout(updateHostInfo, 120000);
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
+}
+
+var cacheinfoTimer = null;
+function updateCacheInfo() {
+  $.ajax({
+    url: "/api/info/cache",
+  })
+    .done(function (data) {
+      var cache = data.cache;
+      $("#sysinfo-cache-size").text(cache.size);
+      $("#sysinfo-cache-inserted").text(cache.inserted);
+      $("#sysinfo-cache-evicted").text(cache.evicted);
+      $("#sysinfo-cache-expired").text(cache.expired);
+      $("#sysinfo-cache-immortal").text(cache.immortal);
+      $("#sysinfo-cache-valid-a").text(cache.valid.a);
+      $("#sysinfo-cache-valid-aaaa").text(cache.valid.aaaa);
+      $("#sysinfo-cache-valid-cname").text(cache.valid.cname);
+      $("#sysinfo-cache-valid-srv").text(cache.valid.srv);
+      $("#sysinfo-cache-valid-ds").text(cache.valid.ds);
+      $("#sysinfo-cache-valid-dnskey").text(cache.valid.dnskey);
+      $("#sysinfo-cache-valid-other").text(cache.valid.other);
+      $("#sysinfo-cache-overlay").hide();
+      // Update every 10 seconds
+      clearTimeout(cacheinfoTimer);
+      cacheinfoTimer = setTimeout(updateCacheInfo, 10000);
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
+}
+
 $(function () {
+  updateHostInfo();
+  updateCacheInfo();
+
   $("[data-static]").on("click", function () {
     var row = $(this).closest("tr");
     var mac = row.find("#MAC").text();

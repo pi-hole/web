@@ -163,6 +163,37 @@ function updateInfo() {
   updateSystemInfo();
   updateSensorsInfo();
   updateVersionInfo();
+  updateFtlInfo();
+}
+
+var ftlinfoTimer = null;
+function updateFtlInfo() {
+  $.ajax({
+    url: "/api/info/ftl",
+  })
+    .done(function (data) {
+      var ftl = data.ftl;
+      var database = ftl.database;
+      var intl = new Intl.NumberFormat();
+      $("#num_groups").text(intl.format(database.groups));
+      $("#num_clients").text(intl.format(database.clients));
+      $("#num_lists").text(intl.format(database.lists));
+      $("#num_gravity").text(intl.format(database.gravity));
+      $("#num_allowed").text(intl.format(database.domains.allowed));
+      $("#num_denied").text(intl.format(database.domains.denied));
+
+      $("#sysinfo-cpu-ftl").text("(" + ftl["%cpu"].toFixed(1) + "% used by FTL)");
+      $("#sysinfo-ram-ftl").text("(" + ftl["%mem"].toFixed(1) + "% used by FTL)");
+      $("#sysinfo-pid-ftl").text(ftl.pid);
+      $("#sysinfo-privacy_level").text(ftl.privacy_level);
+      $("#sysinfo-ftl-overlay").hide();
+      // Update every 120 seconds
+      clearTimeout(ftlinfoTimer);
+      ftlinfoTimer = setTimeout(updateFtlInfo, 120000);
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
 }
 
 function updateSystemInfo() {
@@ -171,25 +202,37 @@ function updateSystemInfo() {
   })
     .done(function (data) {
       var system = data.system;
-      var memory = (100 * system.memory.ram.used) / system.memory.ram.total;
-      var totalGB = 1e-6 * system.memory.ram.total;
+      var percentRAM = system.memory.ram["%used"];
+      var percentSwap = system.memory.swap["%used"];
+      var totalRAMGB = system.memory.ram.total / 1024 / 1024;
+      var totalSwapGB = system.memory.swap.total / 1024 / 1024;
       var swap =
         system.memory.swap.total > 0
-          ? ((1e-6 * system.memory.swap.used) / system.memory.swap.total).toFixed(1) + " %"
+          ? ((1e2 * system.memory.swap.used) / system.memory.swap.total).toFixed(1) + " %"
           : "N/A";
       var color;
-      color = memory > 75 ? "text-red" : "text-green-light";
+      color = percentRAM > 75 ? "text-red" : "text-green-light";
       $("#memory").html(
         '<i class="fa fa-circle ' +
           color +
           '"></i>&nbsp;Memory usage:&nbsp;' +
-          memory.toFixed(1) +
+          percentRAM.toFixed(1) +
           "&thinsp;%"
       );
       $("#memory").prop(
         "title",
-        "Total memory: " + totalGB.toFixed(1) + " GB, Swap usage: " + swap
+        "Total memory: " + totalRAMGB.toFixed(1) + " GB, Swap usage: " + swap
       );
+      $("#sysinfo-memory-ram").text(
+        percentRAM.toFixed(1) + "% of " + totalRAMGB.toFixed(1) + " GB is used"
+      );
+      if (system.memory.swap.total > 0) {
+        $("#sysinfo-memory-swap").text(
+          percentSwap.toFixed(1) + "% of " + totalSwapGB.toFixed(1) + " GB is used"
+        );
+      } else {
+        $("#sysinfo-memory-swap").text("No swap space available");
+      }
 
       color = system.cpu.load.percent[0] > 100 ? "text-red" : "text-green-light";
       $("#cpu").html(
@@ -213,6 +256,20 @@ function updateSystemInfo() {
           system.procs +
           " processes"
       );
+      $("#sysinfo-cpu").text(
+        system.cpu.load.percent[0].toFixed(1) +
+          "% (load: " +
+          system.cpu.load.raw[0].toFixed(2) +
+          " " +
+          system.cpu.load.raw[1].toFixed(2) +
+          " " +
+          system.cpu.load.raw[2].toFixed(2) +
+          ") on " +
+          system.cpu.nprocs +
+          " cores running " +
+          system.procs +
+          " processes"
+      );
 
       var startdate = moment()
         .subtract(system.uptime, "seconds")
@@ -225,6 +282,10 @@ function updateSystemInfo() {
           startdate +
           ")"
       );
+      $("#sysinfo-uptime").text(
+        moment.duration(1000 * system.uptime).humanize() + " (running since " + startdate + ")"
+      );
+      $("#sysinfo-system-overlay").hide();
       // Update every 20 seconds
       clearTimeout(systemTimer);
       systemTimer = setTimeout(updateSystemInfo, 20000);
