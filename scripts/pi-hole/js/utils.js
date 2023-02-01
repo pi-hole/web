@@ -361,20 +361,21 @@ function colorBar(percentage, total, cssClass) {
 }
 
 function checkMessages() {
-  return;
   var ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
-  $.getJSON("api_db.php?status" + (ignoreNonfatal ? "&ignore=DNSMASQ_WARN" : ""), function (data) {
-    if ("message_count" in data && data.message_count > 0) {
+  var url = "/api/info/messages" + (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : "");
+  $.getJSON(url, function (data) {
+    console.log(data);
+    if (data.messages.length > 0) {
       var more = '\nAccess "Tools/Pi-hole diganosis" for further details.';
       var title =
-        data.message_count > 1
-          ? "There are " + data.message_count + " warnings." + more
+        data.messages.length > 1
+          ? "There are " + data.messages.length + " warnings." + more
           : "There is one warning." + more;
 
       $(".warning-count").prop("title", title);
-      $(".warning-count").text(data.message_count);
+      $(".warning-count").text(data.messages.length);
       $(".warning-count").removeClass("hidden");
     } else {
       $(".warning-count").addClass("hidden");

@@ -30,16 +30,11 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                             <th>Time</th>
                             <th>Type</th>
                             <th>Message</th>
-                            <th>Data1</th>
-                            <th>Data2</th>
-                            <th>Data3</th>
-                            <th>Data4</th>
-                            <th>Data5</th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
                 </table>
-                <p>Note: If errors are shown, you can <a href="debug.php">generate a debug log</a>, which will do a thorough Pi-hole evaluation.</p>
+                <p>Note: If errors are shown, you generate a debug log (use <code>pihole -d</code>), which will do a thorough Pi-hole evaluation.</p>
             </div>
             <!-- /.box-body -->
         </div>
