@@ -206,6 +206,7 @@
                 <thead>
                     <tr>
                         <th>Time</th>
+                        <th></th>
                         <th>Type</th>
                         <th>Domain</th>
                         <th>Client</th>
@@ -214,6 +215,7 @@
                 <tfoot>
                     <tr>
                         <th>Time</th>
+                        <th></th>
                         <th>Type</th>
                         <th>Domain</th>
                         <th>Client</th>

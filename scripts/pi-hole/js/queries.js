@@ -72,30 +72,35 @@ function parseQueryStatus(data) {
   // Parse query status
   var fieldtext,
     buttontext,
+    icon = null,
     colorClass = false,
     isCNAME = false,
     regexLink = false;
   switch (data.status) {
     case "GRAVITY":
       colorClass = "text-red";
+      icon = "fa-solid fa-hand";
       fieldtext = "Blocked (gravity)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Allow</button>';
       break;
     case "FORWARDED":
       colorClass = "text-green";
+      icon = "fa-solid fa-check";
       fieldtext = "Forwarded to " + data.upstream;
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
       break;
     case "CACHE":
       colorClass = "text-green";
+      icon = "fa-solid fa-check";
       fieldtext = "Cached";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
       break;
     case "REGEX":
       colorClass = "text-red";
+      icon = "fa-solid fa-hand";
       fieldtext = "Blocked <br class='hidden-lg'>(regex)";
       regexLink = data.regex > 0;
       buttontext =
@@ -103,27 +108,32 @@ function parseQueryStatus(data) {
       break;
     case "DENYLIST":
       colorClass = "text-red";
+      icon = "fa-solid fa-hand";
       fieldtext = "Blocked <br class='hidden-lg'>(exact)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Allow</button>';
       break;
     case "EXTERNAL_BLOCKED_IP":
       colorClass = "text-red";
+      icon = "fa-solid fa-hand";
       fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
       buttontext = "";
       break;
     case "EXTERNAL_BLOCKED_NULL":
       colorClass = "text-red";
+      icon = "fa-solid fa-hand";
       fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
       buttontext = "";
       break;
     case "EXTERNAL_BLOCKED_NXRA":
       colorClass = "text-red";
+      icon = "fa-solid fa-hand";
       fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
       buttontext = "";
       break;
     case "GRAVITY_CNAME":
       colorClass = "text-red";
+      icon = "fa-solid fa-hand";
       fieldtext = "Blocked (gravity, CNAME)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Allow</button>';
@@ -131,6 +141,7 @@ function parseQueryStatus(data) {
       break;
     case "REGEX_CNAME":
       colorClass = "text-red";
+      icon = "fa-solid fa-hand";
       fieldtext = "Blocked <br class='hidden-lg'>(regex diened, CNAME)";
       regexLink = data.regex > 0;
       buttontext =
@@ -139,6 +150,7 @@ function parseQueryStatus(data) {
       break;
     case "DENYLIST_CNAME":
       colorClass = "text-red";
+      icon = "fa-solid fa-hand";
       fieldtext = "Blocked <br class='hidden-lg'>(exact diened, CNAME)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Allow</button>';
@@ -146,22 +158,26 @@ function parseQueryStatus(data) {
       break;
     case "RETRIED":
       colorClass = "text-green";
+      icon = "fa-solid fa-check";
       fieldtext = "Retried";
       buttontext = "";
       break;
     case "RETRIED_DNSSEC":
       colorClass = "text-green";
+      icon = "fa-solid fa-check";
       fieldtext = "Retried <br class='hidden-lg'>(ignored)";
       buttontext = "";
       break;
     case "IN_PROGRESS":
       colorClass = "text-green";
+      icon = "fa-solid fa-check";
       fieldtext = "OK <br class='hidden-lg'>(already forwarded)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
       break;
     default:
       colorClass = false;
+      icon = "fa-solid fa-question";
       fieldtext = data.status;
       buttontext = "";
   }
@@ -170,6 +186,7 @@ function parseQueryStatus(data) {
     fieldtext: fieldtext,
     buttontext: buttontext,
     colorClass: colorClass,
+    icon: icon,
     isCNAME: isCNAME,
     regexLink: regexLink
   };
@@ -450,7 +467,7 @@ $(function () {
     columns: [
       {
         data: "time",
-        width: "20%",
+        width: "10%",
         render: function (data, type) {
           if (type === "display") {
             return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
@@ -459,9 +476,10 @@ $(function () {
           return data;
         }
       },
+      { data: "status", width: "1%" },
       { data: "type", width: "5%" },
-      { data: "domain", width: "40%" },
-      { data: "client.ip", width: "35%", type: "ip-address", render: $.fn.dataTable.render.text() }
+      { data: "domain", width: "50%" },
+      { data: "client.ip", width: "34%", type: "ip-address", render: $.fn.dataTable.render.text() }
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],
@@ -477,7 +495,9 @@ $(function () {
     rowCallback: function (row, data) {
       var querystatus = parseQueryStatus(data);
 
-      if (querystatus.colorClass !== false) {
+      if(querystatus.icon !== false) {
+        $("td:eq(1)", row).html("<i class='fa " + querystatus.icon + " " + querystatus.colorClass + "'></i>");
+      } else if (querystatus.colorClass !== false) {
         $(row).addClass(querystatus.colorClass);
       }
 
@@ -486,17 +506,17 @@ $(function () {
 
       if (querystatus.isCNAME) {
         // Add domain in CNAME chain causing the query to have been blocked
-        $("td:eq(2)", row).text(domain + "\n(blocked " + data.cname + ")");
+        $("td:eq(3)", row).text(domain + "\n(blocked " + data.cname + ")");
       } else {
-        $("td:eq(2)", row).text(domain);
+        $("td:eq(3)", row).text(domain);
       }
 
       // Show hostname instead of IP if available
       if (data.client.name !== null && data.client.name !== "") {
-        $("td:eq(3)", row).text(data.client.name);
+        $("td:eq(4)", row).text(data.client.name);
       }
       else {
-        $("td:eq(3)", row).text(data.client.ip);
+        $("td:eq(4)", row).text(data.client.ip);
       }
     }
   });
