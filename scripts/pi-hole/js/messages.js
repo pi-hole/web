@@ -7,7 +7,6 @@
 
 /* global utils:false */
 var table;
-var token = $("#token").text();
 
 function renderTimestamp(data, type) {
   // Display and search content
@@ -19,7 +18,7 @@ function renderTimestamp(data, type) {
   return data;
 }
 
-function htmlPass(data, type) {
+function htmlPass(data, _type) {
   return data;
 }
 
@@ -199,33 +198,28 @@ function deleteMessage() {
 
   // Exploit prevention: Return early for non-numeric IDs
   for (var id in ids) {
-    if (Object.hasOwnProperty.call(ids, id) && typeof ids[id] !== "number") return;
-    delMsg(ids);
+    if (Object.hasOwnProperty.call(ids, id)) {
+      if (typeof ids[id] !== "number") return;
+      delMsg(ids);
+    }
   }
 }
 
 function delMsg(id) {
-
   utils.disableAll();
   utils.showAlert("info", "", "Deleting message...");
 
   $.ajax({
     url: "/api/info/messages/" + id,
-    method: "DELETE"
+    method: "DELETE",
   })
     .done(function (response) {
       utils.enableAll();
-      console.log(response);
       if (response === undefined) {
         utils.showAlert("success", "far fa-trash-alt", "Successfully deleted message", "");
         table.row(id).remove().draw(false).ajax.reload(null, false);
       } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while deleting message: " + id,
-          response.message
-        );
+        utils.showAlert("error", "", "Error while deleting message: " + id, response.message);
       }
 
       // Clear selection after deletion
@@ -237,12 +231,7 @@ function delMsg(id) {
     )
     .fail(function (jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while deleting message: " + id,
-        jqXHR.responseText
-      );
+      utils.showAlert("error", "", "Error while deleting message: " + id, jqXHR.responseText);
       console.log(exception); // eslint-disable-line no-console
     });
 }

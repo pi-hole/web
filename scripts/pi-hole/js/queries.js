@@ -16,7 +16,16 @@ var dateformat = "MMMM Do YYYY, HH:mm";
 
 var table = null;
 var cursor = null;
-var filters = ["client_ip", "client_name", "domain", "upstream", "type", "status", "reply", "dnssec"];
+var filters = [
+  "client_ip",
+  "client_name",
+  "domain",
+  "upstream",
+  "type",
+  "status",
+  "reply",
+  "dnssec",
+];
 
 $(function () {
   $("#querytime").daterangepicker(
@@ -33,21 +42,21 @@ $(function () {
         Today: [moment().startOf("day"), moment().endOf("day")],
         Yesterday: [
           moment().subtract(1, "days").startOf("day"),
-          moment().subtract(1, "days").endOf("day")
+          moment().subtract(1, "days").endOf("day"),
         ],
         "Last 7 Days": [moment().subtract(6, "days"), moment().endOf("day")],
         "Last 30 Days": [moment().subtract(29, "days"), moment().endOf("day")],
         "This Month": [moment().startOf("month"), moment().endOf("month")],
         "Last Month": [
           moment().subtract(1, "month").startOf("month"),
-          moment().subtract(1, "month").endOf("month")
+          moment().subtract(1, "month").endOf("month"),
         ],
         "This Year": [moment().startOf("year"), moment().endOf("year")],
-        "All Time": [moment(beginningOfTime), moment(endOfTime)]
+        "All Time": [moment(beginningOfTime), moment(endOfTime)],
       },
       opens: "center",
       showDropdowns: true,
-      autoUpdateInput: true
+      autoUpdateInput: true,
     },
     function (startt, endt) {
       from = moment(startt).utc().valueOf() / 1000;
@@ -79,28 +88,28 @@ function parseQueryStatus(data) {
   switch (data.status) {
     case "GRAVITY":
       colorClass = "text-red";
-      icon = "fa-solid fa-hand";
+      icon = "fa-solid fa-ban";
       fieldtext = "Blocked (gravity)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Allow</button>';
       break;
     case "FORWARDED":
       colorClass = "text-green";
-      icon = "fa-solid fa-check";
+      icon = "fa-solid fa-upload";
       fieldtext = "Forwarded to " + data.upstream;
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
       break;
     case "CACHE":
       colorClass = "text-green";
-      icon = "fa-solid fa-check";
+      icon = "fa-regular fa-database";
       fieldtext = "Cached";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
       break;
     case "REGEX":
       colorClass = "text-red";
-      icon = "fa-solid fa-hand";
+      icon = "fa-solid fa-ban";
       fieldtext = "Blocked <br class='hidden-lg'>(regex)";
       regexLink = data.regex > 0;
       buttontext =
@@ -108,32 +117,32 @@ function parseQueryStatus(data) {
       break;
     case "DENYLIST":
       colorClass = "text-red";
-      icon = "fa-solid fa-hand";
+      icon = "fa-solid fa-ban";
       fieldtext = "Blocked <br class='hidden-lg'>(exact)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Allow</button>';
       break;
     case "EXTERNAL_BLOCKED_IP":
       colorClass = "text-red";
-      icon = "fa-solid fa-hand";
+      icon = "fa-solid fa-ban";
       fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
       buttontext = "";
       break;
     case "EXTERNAL_BLOCKED_NULL":
       colorClass = "text-red";
-      icon = "fa-solid fa-hand";
+      icon = "fa-solid fa-ban";
       fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
       buttontext = "";
       break;
     case "EXTERNAL_BLOCKED_NXRA":
       colorClass = "text-red";
-      icon = "fa-solid fa-hand";
+      icon = "fa-solid fa-ban";
       fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
       buttontext = "";
       break;
     case "GRAVITY_CNAME":
       colorClass = "text-red";
-      icon = "fa-solid fa-hand";
+      icon = "fa-solid fa-ban";
       fieldtext = "Blocked (gravity, CNAME)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Allow</button>';
@@ -141,7 +150,7 @@ function parseQueryStatus(data) {
       break;
     case "REGEX_CNAME":
       colorClass = "text-red";
-      icon = "fa-solid fa-hand";
+      icon = "fa-solid fa-ban";
       fieldtext = "Blocked <br class='hidden-lg'>(regex diened, CNAME)";
       regexLink = data.regex > 0;
       buttontext =
@@ -150,7 +159,7 @@ function parseQueryStatus(data) {
       break;
     case "DENYLIST_CNAME":
       colorClass = "text-red";
-      icon = "fa-solid fa-hand";
+      icon = "fa-solid fa-ban";
       fieldtext = "Blocked <br class='hidden-lg'>(exact diened, CNAME)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Allow</button>';
@@ -158,19 +167,19 @@ function parseQueryStatus(data) {
       break;
     case "RETRIED":
       colorClass = "text-green";
-      icon = "fa-solid fa-check";
+      icon = "fa-solid fa-redo"; // fa-repeat
       fieldtext = "Retried";
       buttontext = "";
       break;
     case "RETRIED_DNSSEC":
       colorClass = "text-green";
-      icon = "fa-solid fa-check";
+      icon = "fa-solid fa-redo"; // fa-repeat
       fieldtext = "Retried <br class='hidden-lg'>(ignored)";
       buttontext = "";
       break;
     case "IN_PROGRESS":
       colorClass = "text-green";
-      icon = "fa-solid fa-check";
+      icon = "fa-solid fa-redo";
       fieldtext = "OK <br class='hidden-lg'>(already forwarded)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
@@ -188,7 +197,7 @@ function parseQueryStatus(data) {
     colorClass: colorClass,
     icon: icon,
     isCNAME: isCNAME,
-    regexLink: regexLink
+    regexLink: regexLink,
   };
 }
 
@@ -209,7 +218,6 @@ function formatInfo(data) {
     case "ABANDONED":
       dnssecClass = "text-red";
       break;
-    case "UNKNOWN":
     default:
       // No DNSSEC or UNKNOWN
       dnssecStatus = "N/A";
@@ -218,13 +226,17 @@ function formatInfo(data) {
 
   // Parse Query Status
   var queryStatus = parseQueryStatus(data);
+  var divStart = '<div class="col-xl-2 col-lg-4 col-md-6 col-12">';
   var statusInfo = "";
   if (queryStatus.colorClass !== false) {
     statusInfo =
-      '</td></tr><tr class="dataTables-child"><td>Query status:</td><td class="' +
+      divStart +
+      "Query Status:&nbsp;&nbsp;" +
+      '<strong><span class="' +
       queryStatus.colorClass +
       '">' +
-      queryStatus.fieldtext;
+      queryStatus.fieldtext +
+      "</span></strong></div>";
   }
 
   var regexInfo = "",
@@ -236,75 +248,84 @@ function formatInfo(data) {
       'target="_blank">Regex ID ' +
       data.regex +
       "</a>";
-    regexInfo =
-      '</td></tr><tr class="dataTables-child"><td>Query was blocked by:</td><td>' + regexLink;
+    regexInfo = divStart + "Query was blocked by:</td><td>" + regexLink + "</div>";
   }
 
   if (queryStatus.isCNAME) {
     cnameInfo =
-      '</td></tr><tr class="dataTables-child"><td>Query was blocked during CNAME inspection of</td><td>' +
-      data.cname;
+      divStart + "Query was blocked during CNAME inspection of&nbsp;&nbsp;" + data.cname + "</div>";
   }
 
   // Show TTL if applicable
   var ttlInfo = "";
   if (data.ttl > 0) {
     ttlInfo =
-      '</td></tr><tr class="dataTables-child"><td>Time-to-live (TTL):</td><td>' +
+      divStart +
+      "Time-to-live (TTL):&nbsp;&nbsp;" +
       moment.duration(data.ttl, "s").humanize() +
       " (" +
       data.ttl +
-      "s)";
+      "s)</div>";
   }
 
   // Show client information, show hostname only if available
   var ipInfo =
-    data.client.name !== null && data.client.length > 0 ? data.client.name + " (" + data.client.ip + ")" : data.client.ip;
-  var clientInfo = '</td></tr><tr class="dataTables-child"><td>Client:</td><td>' + ipInfo;
+    data.client.name !== null && data.client.name.length > 0
+      ? utils.escapeHtml(data.client.name) + " (" + data.client.ip + ")"
+      : data.client.ip;
+  var clientInfo = divStart + "Client:&nbsp;&nbsp;<strong>" + ipInfo + "</strong></div>";
 
   // Show DNSSEC status if applicable
   var dnssecInfo = "";
   if (dnssecClass !== false) {
     dnssecInfo =
-      '</td></tr><tr class="dataTables-child"><td>DNSSEC status:</td><td class="' +
+      divStart +
+      'DNSSEC status:&nbsp&nbsp;<strong><span class="' +
       dnssecClass +
       '">' +
-      dnssecStatus;
+      dnssecStatus +
+      "</span></strong></div>";
   }
 
   // Show long-term database information if applicable
   var dbInfo = "";
   if (data.dbid !== false) {
-    dbInfo = '</td></tr><tr class="dataTables-child"><td>Database ID:</td><td>' + data.id;
+    dbInfo = divStart + "Database ID:&nbsp;&nbsp;" + data.id + "</div>";
   }
 
   // Always show reply info, add reply delay if applicable
   var replyInfo = "";
   if (data.reply.type !== "UNKNOWN") {
-    replyInfo = '</td></tr><tr class="dataTables-child"><td>Reply type:</td><td>' + data.reply.type;
+    replyInfo = divStart + "Reply:&nbsp&nbsp;" + data.reply.type;
     if (data.reply.time >= 0 && data.reply.type !== "UNKNOWN") {
       replyInfo +=
-        '</td></tr><tr class="dataTables-child"><td>Reply delay:</td><td>' +
-        (data.reply.time < 1.0 ? (1e3*data.reply.time).toFixed(1) + " ms" : (data.reply.time).toFixed(1) + " s");
+        " (" +
+        (data.reply.time < 1
+          ? (1e3 * data.reply.time).toFixed(1) + " ms)"
+          : data.reply.time.toFixed(1) + " s)");
     }
+
+    replyInfo += "</div>";
   } else {
-    replyInfo = '</td></tr><tr class="dataTables-child"><td>Reply type:</td><td>No reply received';
+    replyInfo = divStart + "Reply:&nbsp;&nbsp;No reply received</div>";
   }
 
   // Compile extra info for displaying
   return (
-    "<table><tbody>" +
-    '<tr class="dataTables-child"><td>Query received on:&nbsp;&nbsp;</td><td>' +
-    moment.unix(data.time).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss.SSS z") +
-    statusInfo +
+    '<div class="row">' +
+    divStart +
+    "Query received on:&nbsp;&nbsp;" +
+    moment.unix(data.time).format("Y-MM-DD HH:mm:ss.SSS z") +
+    "</div>" +
     clientInfo +
+    dnssecInfo +
+    statusInfo +
     cnameInfo +
     regexInfo +
     ttlInfo +
-    dnssecInfo +
     replyInfo +
     dbInfo +
-    "</td></tr></tbody></table>"
+    "</div>"
   );
 }
 
@@ -370,7 +391,6 @@ function getSuggestions(dict) {
   $.get(
     "/api/queries/suggestions",
     function (data) {
-      console.log(data);
       for (var key in filters) {
         if (Object.hasOwnProperty.call(filters, key)) {
           var f = filters[key];
@@ -434,7 +454,7 @@ $(function () {
         width: "100%",
         tags: sel < 3, // Only the first three are allowed to freely specify input
         placeholder: "Select...",
-        allowClear: true
+        allowClear: true,
       });
     }
   }
@@ -454,7 +474,7 @@ $(function () {
         var json = jQuery.parseJSON(d);
         cursor = json.cursor; // Extract cursor from original data
         return d;
-      }
+      },
     },
     serverSide: true,
     dom:
@@ -474,16 +494,16 @@ $(function () {
           }
 
           return data;
-        }
+        },
       },
       { data: "status", width: "1%" },
       { data: "type", width: "5%" },
       { data: "domain", width: "50%" },
-      { data: "client.ip", width: "34%", type: "ip-address", render: $.fn.dataTable.render.text() }
+      { data: "client.ip", width: "34%", type: "ip-address", render: $.fn.dataTable.render.text() },
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"]
+      [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
     stateSaveCallback: function (settings, data) {
@@ -495,8 +515,10 @@ $(function () {
     rowCallback: function (row, data) {
       var querystatus = parseQueryStatus(data);
 
-      if(querystatus.icon !== false) {
-        $("td:eq(1)", row).html("<i class='fa " + querystatus.icon + " " + querystatus.colorClass + "'></i>");
+      if (querystatus.icon !== false) {
+        $("td:eq(1)", row).html(
+          "<i class='fa " + querystatus.icon + " " + querystatus.colorClass + "'></i>"
+        );
       } else if (querystatus.colorClass !== false) {
         $(row).addClass(querystatus.colorClass);
       }
@@ -514,11 +536,10 @@ $(function () {
       // Show hostname instead of IP if available
       if (data.client.name !== null && data.client.name !== "") {
         $("td:eq(4)", row).text(data.client.name);
-      }
-      else {
+      } else {
         $("td:eq(4)", row).text(data.client.ip);
       }
-    }
+    },
   });
 
   $("#all-queries tbody").on("click", "button", function () {

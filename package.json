@@ -19,9 +19,10 @@
     "prettier:check": "prettier -l \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**/*.js\"",
     "prettier:fix": "prettier --write \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**/*.js\"",
     "xo": "xo",
-    "xo:fix": "npm run xo -- --fix",
-    "test": "npm run prettier:check && npm run xo",
-    "testpr": "npm run prettier:fix && git diff --ws-error-highlight=all --color=always --exit-code && npm run xo"
+    "xo:check": "npm run xo -- \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**\" \"*.php\"",
+    "xo:fix": "npm run xo -- --fix \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**\" \"*.php\"",
+    "test": "npm run prettier:check && npm run xo:check",
+    "testpr": "npm run prettier:fix && git diff --ws-error-highlight=all --color=always --exit-code && npm run xo:check"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",

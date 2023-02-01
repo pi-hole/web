@@ -366,7 +366,6 @@ function checkMessages() {
     : false;
   var url = "/api/info/messages" + (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : "");
   $.getJSON(url, function (data) {
-    console.log(data);
     if (data.messages.length > 0) {
       var more = '\nAccess "Tools/Pi-hole diganosis" for further details.';
       var title =
