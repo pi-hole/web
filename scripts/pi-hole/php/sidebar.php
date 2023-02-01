@@ -34,7 +34,7 @@
                     </a>
                 </li>
                 <!-- Long-term database -->
-                <li class="menu-analysis treeview<?php if ($scriptname === 'db_queries.php' || $scriptname === 'db_lists.php' || $scriptname === 'db_graph.php') { ?> active<?php } ?>">
+                <li class="menu-analysis treeview<?php if ($scriptname === 'db_lists.php' || $scriptname === 'db_graph.php') { ?> active<?php } ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-history"></i> <span>Long-term Data</span>
                         <span class="pull-right-container">
@@ -45,11 +45,6 @@
                         <li class="<?php if ($scriptname === 'db_graph.php') { ?> active<?php } ?>">
                             <a href="db_graph.php">
                                 <i class="fa fa-fw menu-icon fa-chart-bar"></i> Graphics
-                            </a>
-                        </li>
-                        <li class="<?php if ($scriptname === 'db_queries.php') { ?> active<?php } ?>">
-                            <a href="db_queries.php">
-                                <i class="fa fa-fw menu-icon fa-file-alt"></i> Query Log
                             </a>
                         </li>
                         <li class="<?php if ($scriptname === 'db_lists.php') { ?> active<?php } ?>">
