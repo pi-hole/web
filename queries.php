@@ -1,76 +1,12 @@
-<?php
-/*
+<?php /*
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license.
-*/
-
-require 'scripts/pi-hole/php/header_authenticated.php';
-
-$showing = '';
-
-if (isset($setupVars['API_QUERY_LOG_SHOW'])) {
-    if ($setupVars['API_QUERY_LOG_SHOW'] === 'all') {
-        $showing = 'showing';
-    } elseif ($setupVars['API_QUERY_LOG_SHOW'] === 'permittedonly') {
-        $showing = 'showing permitted';
-    } elseif ($setupVars['API_QUERY_LOG_SHOW'] === 'blockedonly') {
-        $showing = 'showing blocked';
-    } elseif ($setupVars['API_QUERY_LOG_SHOW'] === 'nothing') {
-        $showing = 'showing no queries (due to setting)';
-    }
-} elseif (isset($_GET['type']) && $_GET['type'] === 'blocked') {
-    $showing = 'showing blocked';
-} else {
-    // If filter variable is not set, we
-    // automatically show all queries
-    $showing = 'showing';
-}
-
-$showall = false;
-if (isset($_GET['all'])) {
-    $showing .= ' all queries within the Pi-hole log';
-} elseif (isset($_GET['client'])) {
-    // Add switch between showing all queries and blocked only
-    if (isset($_GET['type']) && $_GET['type'] === 'blocked') {
-        // Show blocked queries for this client + link to all
-        $showing .= ' blocked queries for client '.htmlentities($_GET['client']);
-        $showing .= ', <a href="?client='.htmlentities($_GET['client']).'">show all</a>';
-    } else {
-        // Show All queries for this client + link to show only blocked
-        $showing .= ' all queries for client '.htmlentities($_GET['client']);
-        $showing .= ', <a href="?client='.htmlentities($_GET['client']).'&type=blocked">show blocked only</a>';
-    }
-} elseif (isset($_GET['forwarddest'])) {
-    if ($_GET['forwarddest'] === 'blocked') {
-        $showing .= ' queries blocked by Pi-hole';
-    } elseif ($_GET['forwarddest'] === 'cached') {
-        $showing .= ' queries answered from cache';
-    } else {
-        $showing .= ' queries for upstream destination '.htmlentities($_GET['forwarddest']);
-    }
-} elseif (isset($_GET['querytype'])) {
-    $showing .= ' type '.getQueryTypeStr($_GET['querytype']).' queries';
-} elseif (isset($_GET['domain'])) {
-    $showing .= ' queries for domain '.htmlentities($_GET['domain']);
-} elseif (isset($_GET['from']) || isset($_GET['until'])) {
-    $showing .= ' queries within specified time interval';
-} else {
-    $showing .= ' up to 100 queries';
-    $showall = true;
-}
-
-if (strlen($showing) > 0) {
-    $showing = '('.$showing.')';
-    if ($showall) {
-        $showing .= ', <a href="?all">show all</a>';
-    }
-}
+*    Please see LICENSE file for your rights under this license. */
+    require "scripts/pi-hole/php/header_authenticated.php";
 ?>
-
 <!-- Alert Modal -->
 <div id="alertModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="vertical-alignment-helper">
@@ -107,53 +43,197 @@ if (strlen($showing) > 0) {
 
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="recent-queries">
+        <div class="box box-warning collapsed-box box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title">Recent Queries <?php echo $showing; ?></h3>
+                <h3 class="box-title">Advanced filtering</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                </div>
+                <!-- /.box-tools -->
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="all-queries" class="table table-striped table-bordered" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Domain</th>
-                            <th>Client</th>
-                            <th>Status</th>
-                            <th>Reply</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Domain</th>
-                            <th>Client</th>
-                            <th>Status</th>
-                            <th>Reply</th>
-                            <th>Action</th>
-                        </tr>
-                    </tfoot>
-                </table>
-                <p>Note: Queries for <code>pi.hole</code> and the hostname are never logged.</p>
-                <p><strong>Filtering options:</strong></p>
-                <ul>
-                    <li>Click a value in a column to add/remove that value to/from the filter</li>
-                    <li>On a computer: Hold down <kbd>Ctrl</kbd>, <kbd>Alt</kbd>, or <kbd>&#8984;</kbd> to allow highlighting for copying to clipboard</li>
-                    <li>On a mobile: Long press to highlight the text and enable copying to clipboard
-                </ul><br/><button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear filters</button>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="far fa-clock"></i>
+                        </div>
+                        <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div><input type="checkbox" id="disk"><label for="disk">Query on-disk data. This is <em>a lot</em> slower but necessary if you want to obtain queries older than 24 hours.</label></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Domain</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <select id="domain_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Client (by IP)</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <select id="client_ip_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Client (by name)</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <select id="client_name_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Upstream</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <select id="upstream_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Type</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <select id="type_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Status</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <select id="status_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Reply</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <select id="reply_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">DNSSEC status</h3>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <select id="dnssec_filter" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- /.box-body -->
+            <div class="box-footer clearfix">
+                <span class="pull-right">Click "Refresh" below to apply.</span>
+            </div>
+            <!-- /.box -->
         </div>
-        <!-- /.box -->
     </div>
+    <!-- /.col -->
 </div>
 <!-- /.row -->
-<script src="<?php echo fileversion('scripts/pi-hole/js/ip-address-sorting.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/queries.js'); ?>"></script>
+
+<div class="row">
+    <div class="col-md-12">
+      <div class="box" id="recent-queries">
+        <div class="box-header with-border">
+          <h3 class="box-title">Recent Queries</h3>
+          <a id="refresh" href="#" class="btn btn-sm btn-info btn-flat pull-right">Refresh</a>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <p>Click on a query log item to obtain additional information for this query.</p>
+            <table id="all-queries" class="table table-striped table-bordered" width="100%">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Domain</th>
+                        <th>Client</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Domain</th>
+                        <th>Client</th>
+                    </tr>
+                </tfoot>
+            </table>
+            <p>Note: Queries for <code>pi.hole</code> and the hostname are never logged.</p>
+        </div>
+        <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+</div>
+<!-- /.row -->
+
+<script src="<?php echo fileversion('scripts/vendor/bootstrap-select.min.js') ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/ip-address-sorting.js') ?>"></script>
+<script src="<?php echo fileversion('scripts/vendor/daterangepicker.min.js') ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/utils.js') ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/queries.js') ?>"></script>
 
 <?php
-require 'scripts/pi-hole/php/footer.php';
+    require "scripts/pi-hole/php/footer.php";
 ?>
