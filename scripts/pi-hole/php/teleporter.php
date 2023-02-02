@@ -493,6 +493,7 @@ if (isset($_POST['action'])) {
             if (isset($_POST['localdnsrecords']) && $file->getFilename() === 'custom.list') {
                 ob_start();
                 $reload = 'false';
+                $teleporter = true;
                 if ($flushtables) {
                     // Defined in func.php included via auth.php
                     // passing reload="false" will not restart Pi-hole
@@ -502,7 +503,7 @@ if (isset($_POST['action'])) {
                 $localdnsrecords = process_file(file_get_contents($file));
                 foreach ($localdnsrecords as $record) {
                     list($ip, $domain) = explode(' ', $record);
-                    if (addCustomDNSEntry($ip, $domain, $reload, false)) {
+                    if (addCustomDNSEntry($ip, $domain, $reload, false, $teleporter)) {
                         ++$num;
                     }
                 }
@@ -517,6 +518,7 @@ if (isset($_POST['action'])) {
             if (isset($_POST['localcnamerecords']) && $file->getFilename() === '05-pihole-custom-cname.conf') {
                 ob_start();
                 $reload = 'false';
+                $teleporter = true;
                 if ($flushtables) {
                     // Defined in func.php included via auth.php
                     // passing reload="false" will not restart Pi-hole
@@ -534,7 +536,7 @@ if (isset($_POST['action'])) {
                     $domain = implode(',', array_slice($explodedLine, 0, -1));
                     $target = $explodedLine[count($explodedLine) - 1];
 
-                    if (addCustomCNAMEEntry($domain, $target, $reload, false)) {
+                    if (addCustomCNAMEEntry($domain, $target, $reload, false, $teleporter)) {
                         ++$num;
                     }
                 }
