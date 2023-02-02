@@ -85,7 +85,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
         <div class="small-box bg-aqua no-user-select">
             <div class="inner">
                 <h3 class="statistic" id="dns_queries">---</h3>
-                <p>Queries Total</p>
+                <p>Total Queries</p>
             </div>
             <div class="icon">
                 <i class="fas fa-globe-americas"></i>
@@ -124,7 +124,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
         <div class="small-box bg-yellow no-user-select">
             <div class="inner">
                 <h3 class="statistic" id="queries_percentage_today">---</h3>
-                <p>Queries Blocked</p>
+                <p>Percentage Blocked</p>
             </div>
             <div class="icon">
                 <i class="fas fa-chart-pie"></i>
