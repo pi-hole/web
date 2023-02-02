@@ -84,6 +84,19 @@ require 'scripts/pi-hole/php/header_authenticated.php';
         <!-- small box -->
         <div class="small-box bg-aqua no-user-select">
             <div class="inner">
+                <h3 class="statistic" id="dns_queries">---</h3>
+                <p>Total Queries</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-globe-americas"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-12">
+        <!-- small box -->
+        <div class="small-box bg-red no-user-select">
+            <div class="inner">
                 <h3 class="statistic" id="queries_blocked_exact">---</h3>
                 <p>Queries Blocked</p>
             </div>
@@ -95,7 +108,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
     <!-- ./col -->
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-aqua no-user-select">
+        <div class="small-box bg-red no-user-select">
             <div class="inner">
                 <h3 class="statistic" id="queries_wildcard_blocked">---</h3>
                 <p>Queries Blocked (Wildcards)</p>
@@ -108,23 +121,10 @@ require 'scripts/pi-hole/php/header_authenticated.php';
     <!-- ./col -->
     <div class="col-lg-3 col-xs-12">
         <!-- small box -->
-        <div class="small-box bg-green no-user-select">
-            <div class="inner">
-                <h3 class="statistic" id="dns_queries">---</h3>
-                <p>Queries Total</p>
-            </div>
-            <div class="icon">
-                <i class="fas fa-globe-americas"></i>
-            </div>
-        </div>
-    </div>
-    <!-- ./col -->
-    <div class="col-lg-3 col-xs-12">
-        <!-- small box -->
         <div class="small-box bg-yellow no-user-select">
             <div class="inner">
                 <h3 class="statistic" id="queries_percentage_today">---</h3>
-                <p>Queries Blocked</p>
+                <p>Percentage Blocked</p>
             </div>
             <div class="icon">
                 <i class="fas fa-chart-pie"></i>
