@@ -543,7 +543,7 @@ function updateTopDomainsTable(blocked) {
       domaintable.append(
         "<tr> " +
           utils.addTD(url) +
-          utils.addTD(domain.count) +
+          utils.addTD(item.count) +
           utils.addTD(utils.colorBar(percentage, sum, style)) +
           "</tr> "
       );
