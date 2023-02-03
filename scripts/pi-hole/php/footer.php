@@ -40,16 +40,6 @@
         </div>
     </div> <!-- /.content-wrapper -->
 
-<?php
-// Flushes the system write buffers of PHP. This attempts to push everything we have so far all the way to the client's browser.
-flush();
-
-if (isset($core_commit) || isset($web_commit) || isset($FTL_commit)) {
-    $list_class = 'list-unstyled';
-} else {
-    $list_class = 'list-inline';
-}
-?>
     <footer class="main-footer">
         <div class="row row-centered text-center">
             <div class="col-xs-12 col-sm-6">
@@ -59,7 +49,7 @@ if (isset($core_commit) || isset($web_commit) || isset($FTL_commit)) {
 
         <div class="row row-centered text-center version-info">
             <div class="col-xs-12 col-sm-12 col-md-10">
-                <ul class="<?php echo $list_class; ?>" id="versions"></ul>
+                <ul class="list-inline" id="versions"></ul>
                 <p style="margin: 15px 0 0;" id="update-hint"></p>
             </div>
         </div>

@@ -8,7 +8,6 @@
 *  Please see LICENSE file for your rights under this license.
 */
 
-require 'scripts/pi-hole/php/theme.php';
 require 'header.php';
 ?>
     <link rel="stylesheet" href="<?php echo fileversion('style/vendor/datatables.min.css'); ?>">
@@ -35,9 +34,7 @@ require 'header.php';
 </noscript>
 
 <!-- Send token to JS -->
-<div id="enableTimer" hidden><?php if (file_exists('../custom_disable_timer')) {
-    echo file_get_contents('../custom_disable_timer');
-} ?></div>
+<div id="enableTimer" hidden></div>
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->

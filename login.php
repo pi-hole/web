@@ -9,7 +9,6 @@
 */
 
 $wrongpassword = false;
-require 'scripts/pi-hole/php/theme.php';
 require 'scripts/pi-hole/php/header.php';
 
 ?>
