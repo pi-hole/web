@@ -582,7 +582,6 @@ td.details-control {
 .login-options div:last-child {
   margin-right: 2px;
   margin-bottom: 0 !important;
-  flex: 0 1 auto;
   font-size: 95%;
 }
 

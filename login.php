@@ -9,7 +9,6 @@
 */
 
 $wrongpassword = false;
-require_once 'func.php';
 require 'scripts/pi-hole/php/theme.php';
 require 'scripts/pi-hole/php/header.php';
 
@@ -27,7 +26,7 @@ require 'scripts/pi-hole/php/header.php';
 
         <div class="card">
             <div class="card-body login-card-body">
-                <div id="cookieInfo" class="panel-title text-center text-red" style="font-size: 150%" hidden>Verify that cookies are allowed for <code><?php echo $_SERVER['HTTP_HOST']; ?></code></div>
+                <div id="cookieInfo" class="panel-title text-center text-red" style="font-size: 150%" hidden>Verify that cookies are allowed</div>
                 <?php if ($wrongpassword) { ?>
                 <div class="form-group has-error login-box-msg">
                     <label class="control-label"><i class="fa fa-times-circle"></i> Wrong password!</label>
@@ -41,10 +40,6 @@ require 'scripts/pi-hole/php/header.php';
                             <input type="text" id="username" value="pi.hole" autocomplete="username" hidden>
                             <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" spellcheck="false" autocomplete="current-password" autofocus>
                             <span class="fa fa-key form-control-feedback"></span>
-                        </div>
-                        <div>
-                            <input type="checkbox" id="logincookie" name="persistentlogin" disabled="true">
-                            <label for="logincookie">Remember me for 7 days</label>
                         </div>
                     </div>
                     <div class="form-group">

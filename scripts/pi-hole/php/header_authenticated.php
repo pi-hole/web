@@ -8,12 +8,7 @@
 *  Please see LICENSE file for your rights under this license.
 */
 
-require 'scripts/pi-hole/php/auth.php';
-require_once 'scripts/pi-hole/php/func.php';
 require 'scripts/pi-hole/php/theme.php';
-
-check_cors();
-
 require 'header.php';
 ?>
     <link rel="stylesheet" href="<?php echo fileversion('style/vendor/datatables.min.css'); ?>">
