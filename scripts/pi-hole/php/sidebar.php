@@ -84,7 +84,7 @@
                 </li>
                 <li class="menu-group<?php if ($scriptname === 'groups-adlists.php') { ?> active<?php } ?>">
                     <a href="groups-adlists.php">
-                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adists
+                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adlists
                         <span class="pull-right-container">
                             <span class="label bg-blue pull-right" id="num_lists" title="Number of defined adlists"></span>
                             <span class="label bg-yellow pull-right" id="num_gravity" title="Total number of domains blocked by your Pi-hole"></span>
