@@ -5,8 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, checkMessages:false, apiFailure:false */
-var token = $("#token").text();
+/* global utils:false, apiFailure:false */
 
 var hostinfoTimer = null;
 function updateHostInfo() {
@@ -71,6 +70,256 @@ function updateCacheInfo() {
     });
 }
 
+function addAllowedValues(allowed) {
+  if (typeof allowed === "object") {
+    return (
+      "<p>Available options: <ul><li>" +
+      allowed
+        .map(function (option) {
+          return "<code>" + option.item + "</code>: " + utils.escapeHtml(option.description);
+        })
+        .join("</li><li>") +
+      "</li></ul></p>"
+    );
+  } else if (typeof allowed === "string") {
+    return "<p><small>Allowed value: " + utils.escapeHtml(allowed) + "</small></p>";
+  }
+}
+
+function generateDNSServers() {
+  // Build array from multiline string, one item per line
+  var servers = $("#dns-servers").text().split("\n");
+  console.log(servers);
+}
+
+function fillDNSupstreams(value, servers) {
+  var row =
+    '<div class="col-lg-6">' +
+    '<div class="box box-warning">' +
+    '<div class="box-header with-border">' +
+    '<h1 class="box-title">Upstream DNS Servers</h1>' +
+    "</div>" +
+    '<div class="box-body">' +
+    '<div class="row">' +
+    '<div class="col-sm-12">' +
+    '<table class="table table-bordered">' +
+    "<thead>" +
+    "<tr>" +
+    '<th colspan="2">IPv4</th>' +
+    '<th colspan="2">IPv6</th>' +
+    "<th>Name</th>" +
+    "</tr>" +
+    "</thead>" +
+    "<tbody>";
+  servers.forEach(element => {
+    row += "<tr>";
+    // Build checkboxes for IPv4 and IPv6
+    const variants = [element.v4, element.v6];
+    for (let v = 0; v < 2; v++) {
+      const variant = variants[v];
+      for (let index = 0; index < 2; index++) {
+        if (variant.length > index) {
+          row += '<td title="' + variant[index] + '"><input type="checkbox" id="DNSupstreams"';
+          if (variant[index] in value.value || variant[index] + "#53" in value.value) {
+            row += " checked";
+          }
+
+          row += "></td>";
+        } else {
+          row += "<td></td>";
+        }
+      }
+    }
+
+    // Build name
+    row += "<td>" + element.name + "</td>";
+  });
+  // Close table
+  row +=
+    "</tbody>" +
+    "</table>" +
+    "<p>ECS (Extended Client Subnet) defines a mechanism for recursive resolvers to send partial client IP address information to authoritative DNS name servers. Content Delivery Networks (CDNs) and latency-sensitive services use this to give geo-located responses when responding to name lookups coming through public DNS resolvers. <em>Note that ECS may result in reduced privacy.</em></p>" +
+    "<p> Custom DNS servers can be added by specifying the IP address (and optionally the port number separated by a <code>#</code>) of the server. If the port number is not specified, the default port 53 will be used. The following box contains one server per line:</p>";
+  // Append textbox showing the current values
+  row +=
+    '<label class="col-sm-5 control-label">Values (one server per line)</label>' +
+    '<div class="col-sm-7">' +
+    '<textarea class="form-control" id="dns-servers">' +
+    value.value.join("\n") +
+    "</textarea> " +
+    "</div>" +
+    "</div>" +
+    "</div>" +
+    "</div>" +
+    "</div>" +
+    "</div>";
+
+  $("#dns-content").append(row);
+}
+
+function generateRow(topic, key, value, fullConfig = null) {
+  if (topic === "dns" && key === "upstreams") {
+    console.log(value, fullConfig);
+    fillDNSupstreams(value, fullConfig.dns_servers);
+    return;
+  }
+
+  if (!("description" in value)) {
+    Object.keys(value).forEach(function (subkey) {
+      var subvalue = value[subkey];
+      row = generateRow(topic, key + "." + subkey, subvalue);
+    });
+    return;
+  }
+
+  var row =
+    '<div class="col-md-6 ' +
+    (value.flags.advanced ? 'advanced-setting" hidden' : '"') +
+    ">" +
+    '<div class="box box-warning">' +
+    '<div class="box-header with-border">' +
+    '<h3 class="box-title">' +
+    key +
+    (value.modified ? '&nbsp;&nbsp;<i class="far fa-edit" title="Modified"></i>' : "") +
+    (value.flags.advanced
+      ? '&nbsp;&nbsp;<i class="fas fa-cogs" title="This is an advanced setting"></i>'
+      : "") +
+    "</h3>" +
+    "<p>" +
+    utils.escapeHtml(value.description).replace("\n", "<br>") +
+    "</p>" +
+    "</div>" +
+    '<div class="box-body">' +
+    '<div class="row">' +
+    '<div class="col-lg-12">' +
+    '<div class="form-group">';
+  var resetToDefault = "";
+  if (value.modified) {
+    resetToDefault =
+      '<button type="button" class="btn btn-default btn-sm pull-right" onclick="resetToDefault(\'' +
+      topic +
+      "','" +
+      key +
+      '\')" title="Default option is: ' +
+      utils.escapeHtml(JSON.stringify(value.default)) +
+      '"><i class="fas fa-redo"></i>&nbsp&nbsp;Reset to default</button>';
+  }
+
+  switch (value.type) {
+    case "string": {
+      row +=
+        '<label class="col-sm-4 control-label">Value (string)</label>' +
+        '<div class="col-sm-8">' +
+        '<input type="text" class="form-control" value="' +
+        value.value +
+        '"> ' +
+        resetToDefault +
+        addAllowedValues(value.allowed) +
+        "</div>";
+
+      break;
+    }
+
+    case "boolean": {
+      row +=
+        '<label class="col-sm-4 control-label">Enabled</label>' +
+        '<div class="col-sm-8">' +
+        '<input type="checkbox" ' +
+        (value.value ? " checked" : "") +
+        "> " +
+        resetToDefault +
+        " </div>";
+
+      break;
+    }
+
+    case "integer": {
+      row +=
+        '<label class="col-sm-4 control-label">Value (integer)</label>' +
+        '<div class="col-sm-8">' +
+        '<input type="number" step="1" class="form-control" value="' +
+        value.value +
+        '"> ' +
+        resetToDefault +
+        "</div>";
+
+      break;
+    }
+
+    case "unsigned integer": {
+      row +=
+        '<label class="col-sm-4 control-label">Value (unsigned integer)</label>' +
+        '<div class="col-sm-8">' +
+        '<input type="number" step="1" min="0" class="form-control" value="' +
+        value.value +
+        '"> ' +
+        resetToDefault +
+        "</div>";
+
+      break;
+    }
+
+    case "unsigned integer (16 bit)": {
+      row +=
+        '<label class="col-sm-4 control-label">Value (unsigned 16bit integer)</label>' +
+        '<div class="col-sm-8">' +
+        '<input type="number" step="1" min="0" max="65535" class="form-control" value="' +
+        value.value +
+        '"> ' +
+        resetToDefault +
+        "</div>";
+
+      break;
+    }
+
+    case "string array": {
+      row +=
+        '<label class="col-sm-5 control-label">Values (one item per line)</label>' +
+        '<div class="col-sm-7">' +
+        '<textarea class="form-control">' +
+        value.value.join("\n") +
+        "</textarea> " +
+        resetToDefault +
+        "</div>";
+
+      break;
+    }
+
+    case "enum (string)": {
+      row +=
+        '<label class="col-sm-4 control-label">Selected Option</label>' +
+        '<div class="col-sm-8">' +
+        '<select class="form-control">';
+      value.allowed.forEach(function (option) {
+        row +=
+          '<option value="' +
+          option.item +
+          '"' +
+          (option.item === value.value ? " selected" : "") +
+          ">" +
+          option.item +
+          "</option>";
+      });
+      row +=
+        "</select> " +
+        resetToDefault +
+        "</div>" +
+        '<div class="col-sm-12">' +
+        addAllowedValues(value.allowed) +
+        "</div>";
+
+      break;
+    }
+
+    default: {
+      row += "TYPE " + value.type + " NOT DEFINED";
+    }
+  }
+
+  row += "</div></div></div></div> ";
+  $("#" + topic + "-content").append(row);
+}
+
 function createDynamicConfigTabs() {
   $.ajax({
     url: "/api/config?detailed=true",
@@ -85,28 +334,50 @@ function createDynamicConfigTabs() {
 
       // Create the tabs for the dynamic config topics
       data.topics.forEach(function (topic) {
-        var nav = '<li role="presentation"><a href="#' + topic.name + '" aria-controls="' + topic.name + '" aria-expanded="false" role="tab" data-toggle="tab">' + topic.title + '</a></li>';
+        var nav =
+          '<li role="presentation"><a href="#' +
+          topic.name +
+          '" aria-controls="' +
+          topic.name +
+          '" aria-expanded="false" role="tab" data-toggle="tab">' +
+          topic.title +
+          "</a></li>";
         navTabs.append(nav);
-        var content = '<div id="' + topic.name + '" class="tab-pane fade"> \
-        <div class="row"> \
-          <div class="col-md-12"> \
-            <div class="box"> \
-              <div class="box-header with-border"> \
-                <h3 class="box-title">' + topic.title + '</h3> \
-                <p>' + topic.description + '</p> \
-                <p><input type="checkbox" id="advanced-settings-toggle-' + topic.name + '"><label for="advanced-settings-toggle-' + topic.name + '">&nbsp;Show advanced settings</label></p> \
-              </div> \
-              <div class="box-body"> \
-                <div class="row"> \
-                  <div class="col-lg-12" id="' + topic.name + '-content"> \
-                  </div> \
-                  <div class="overlay" id="settings-' + topic.name + '-overlay"> \
-                    <i class="fa fa-sync fa-spin"></i> \
-                  </div> \
-                </div> \
-              </div> \
-            </div> \
-          </div>';
+        var content =
+          '<div id="' +
+          topic.name +
+          '" class="tab-pane fade">' +
+          '<div class="row">' +
+          '<div class="col-md-12">' +
+          '<div class="box">' +
+          '<div class="box-header with-border">' +
+          '<h3 class="box-title">' +
+          topic.title +
+          "</h3>" +
+          "<p>" +
+          topic.description +
+          "</p>" +
+          '<p><input type="checkbox" id="advanced-settings-toggle-' +
+          topic.name +
+          '"><label for="advanced-settings-toggle-' +
+          topic.name +
+          '">&nbsp;Show advanced settings</label></p>' +
+          "</div>" +
+          '<div class="box-body">' +
+          '<div class="row">' +
+          '<div class="col-lg-12" id="' +
+          topic.name +
+          '-content">' +
+          "</div>" +
+          '<div class="overlay" id="settings-' +
+          topic.name +
+          '-overlay">' +
+          '<i class="fa fa-sync fa-spin"></i>' +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          "</div>";
         tabContent.append(content);
       });
 
@@ -116,78 +387,11 @@ function createDynamicConfigTabs() {
       Object.keys(data.config).forEach(function (topic) {
         Object.keys(data.config[topic]).forEach(function (key) {
           var value = data.config[topic][key];
-          console.log(topic, value);
-          if('description' in value) {
-            var row = '<div class="col-md-6 ' + (value.flags.advanced ? 'advanced-setting" hidden':'"') + '> \
-                        <div class="box box-warning"> \
-                          <div class="box-header with-border"> \
-                            <h3 class="box-title">' + key + (value.modified ? '&nbsp;&nbsp;<i class="far fa-edit" title="Modified"></i>':'') + (value.flags.advanced ? '&nbsp;&nbsp;<i class="fas fa-cogs" title="This is an advanced setting"></i>':'') + '</h3> \
-                            <p>' + utils.escapeHtml(value.description).replace("\n","<br>") + '</p> \
-                          </div> \
-                          <div class="box-body"> \
-                            <div class="row"> \
-                              <div class="col-lg-12"> \
-                                <div class="form-group">';
-            var resetToDefault = '';
-            if(value.modified) {
-              resetToDefault = '<button type="button" class="btn btn-default btn-sm pull-right" onclick="resetToDefault(\'' + topic + '\',\'' + key + '\')" title="Default option is: \"' + JSON.stringify(value.default) + '\""><i class="fas fa-redo"></i>&nbsp&nbsp;Reset to default</button>';
-            }
-            if(value['type'] == "string") {
-              row += '<label class="col-sm-4 control-label">Value (string)</label> \
-                      <div class="col-sm-8"> \
-                        <input type="text" class="form-control" value="' + value.value + '"> ' + resetToDefault + '\
-                        <p><small>Allowed value: ' + utils.escapeHtml(value.allowed) + '</small></p> \
-                        </div>';
-            } else if(value['type'] == "boolean") {
-              row += '<label class="col-sm-4 control-label">Enabled</label> \
-                      <div class="col-sm-8"> \
-                        <input type="checkbox" ' + (value.value ? ' checked':'') + '> ' + resetToDefault + '\
-                        </div>';
-            } else if(value['type'] == "integer") {
-              row += '<label class="col-sm-4 control-label">Value (integer)</label> \
-                      <div class="col-sm-8"> \
-                        <input type="number" step="1" class="form-control" value="' + value.value + '"> ' + resetToDefault + '\
-                        </div>';
-            } else if(value['type'] == "unsigned integer") {
-              row += '<label class="col-sm-4 control-label">Value (unsigned integer)</label> \
-                      <div class="col-sm-8"> \
-                        <input type="number" step="1" min="0" class="form-control" value="' + value.value + '"> ' + resetToDefault + '\
-                        </div>';
-            } else if(value['type'] == "unsigned integer (16 bit)") {
-              row += '<label class="col-sm-4 control-label">Value (unsigned 16bit integer)</label> \
-                      <div class="col-sm-8"> \
-                        <input type="number" step="1" min="0" max="65535" class="form-control" value="' + value.value + '"> ' + resetToDefault + '\
-                        </div>';
-            } else if(value['type'] == "string array") {
-              row += '<label class="col-sm-5 control-label">Values (one item per line)</label> \
-                      <div class="col-sm-7"> \
-                        <textarea class="form-control">' + value.value.join("\n") + '</textarea> ' + resetToDefault + '\
-                        </div>';
-            } else if(value['type'] == "enum (string)") {
-              row += '<label class="col-sm-4 control-label">Selected Option</label> \
-                      <div class="col-sm-8"> \
-                        <select class="form-control">';
-              value.allowed.forEach(function(option) {
-                row += '<option value="' + option.item + '"' + (option.item == value.value ? ' selected':'') + '>' + option.item + '</option>';
-              });
-              row += '</select> ' + resetToDefault + '\
-                    </div> \
-                    <div class="col-sm-12"> \
-                      <p>Available options: <ul><li>' + value.allowed.map(function(option) { return '<code>' + option.item + '</code>: ' + utils.escapeHtml(option.description); }).join('</li><li>') + '</li></ul></p> \
-                    </div>';
-            } else {
-              row += "TYPE " + value.type + " NOT DEFINED";
-            }
-            row +='          </div> \
-                            </div> \
-                          </div> \
-                        </div> ';
-          }
-          $("#" + topic + "-content").append(row);
+          generateRow(topic, key, value, data);
         });
-        $('#settings-' + topic + '-overlay').hide();
+        $("#settings-" + topic + "-overlay").hide();
 
-        $("input[id^='advanced-settings-toggle']").on("click", function(data) {
+        $("input[id^='advanced-settings-toggle']").on("click", function (data) {
           var checked = data.target.checked;
           // Synchronize all advanced settings checkboxes
           $("input[id^='advanced-settings-toggle']").prop("checked", checked);
