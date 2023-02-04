@@ -86,41 +86,33 @@ function addAllowedValues(allowed) {
   }
 }
 
-function generateDNSServers() {
-  // Build array from multiline string, one item per line
-  var servers = $("#dns-servers").text().split("\n");
-  console.log(servers);
+// Remove an element from an array (inline)
+function removeFromArray(arr, what) {
+  var found = arr.indexOf(what);
+
+  while (found !== -1) {
+    arr.splice(found, 1);
+    found = arr.indexOf(what);
+  }
 }
 
 function fillDNSupstreams(value, servers) {
-  var row =
-    '<div class="col-lg-6">' +
-    '<div class="box box-warning">' +
-    '<div class="box-header with-border">' +
-    '<h1 class="box-title">Upstream DNS Servers</h1>' +
-    "</div>" +
-    '<div class="box-body">' +
-    '<div class="row">' +
-    '<div class="col-sm-12">' +
-    '<table class="table table-bordered">' +
-    "<thead>" +
-    "<tr>" +
-    '<th colspan="2">IPv4</th>' +
-    '<th colspan="2">IPv6</th>' +
-    "<th>Name</th>" +
-    "</tr>" +
-    "</thead>" +
-    "<tbody>";
+  var i = 0;
   servers.forEach(element => {
-    row += "<tr>";
+    var row = "<tr>";
     // Build checkboxes for IPv4 and IPv6
-    const variants = [element.v4, element.v6];
+    const addresses = [element.v4, element.v6];
     for (let v = 0; v < 2; v++) {
-      const variant = variants[v];
+      const address = addresses[v];
       for (let index = 0; index < 2; index++) {
-        if (variant.length > index) {
-          row += '<td title="' + variant[index] + '"><input type="checkbox" id="DNSupstreams"';
-          if (variant[index] in value.value || variant[index] + "#53" in value.value) {
+        if (address.length > index) {
+          row +=
+            '<td><input type="checkbox" title="' +
+            address[index] +
+            '" id="DNSupstreams-' +
+            i++ +
+            '"';
+          if (address[index] in value.value || address[index] + "#53" in value.value) {
             row += " checked";
           }
 
@@ -131,51 +123,50 @@ function fillDNSupstreams(value, servers) {
       }
     }
 
-    // Build name
+    // Add server name
     row += "<td>" + element.name + "</td>";
-  });
-  // Close table
-  row +=
-    "</tbody>" +
-    "</table>" +
-    "<p>ECS (Extended Client Subnet) defines a mechanism for recursive resolvers to send partial client IP address information to authoritative DNS name servers. Content Delivery Networks (CDNs) and latency-sensitive services use this to give geo-located responses when responding to name lookups coming through public DNS resolvers. <em>Note that ECS may result in reduced privacy.</em></p>" +
-    "<p> Custom DNS servers can be added by specifying the IP address (and optionally the port number separated by a <code>#</code>) of the server. If the port number is not specified, the default port 53 will be used. The following box contains one server per line:</p>";
-  // Append textbox showing the current values
-  row +=
-    '<label class="col-sm-5 control-label">Values (one server per line)</label>' +
-    '<div class="col-sm-7">' +
-    '<textarea class="form-control" id="dns-servers">' +
-    value.value.join("\n") +
-    "</textarea> " +
-    "</div>" +
-    "</div>" +
-    "</div>" +
-    "</div>" +
-    "</div>" +
-    "</div>";
 
-  $("#dns-content").append(row);
+    // Close table row
+    row += "</tr>";
+
+    // Add row to table
+    $("#DNSupstreamsTable").append(row);
+  });
+
+  // Add event listener to checkboxes
+  $("input[id^='DNSupstreams-']").on("change", function () {
+    var upstreams = $("#DNSupstreamsTextfield").val().split("\n");
+    $("#DNSupstreamsTable input").each(function () {
+      if (this.checked && !upstreams.includes(this.title)) {
+        // Add server to array
+        upstreams.push(this.title);
+      } else if (!this.checked && upstreams.includes(this.title)) {
+        // Remove server from array
+        removeFromArray(upstreams, this.title);
+      }
+    });
+    updateDNSserversTextfield(upstreams);
+  });
+
+  // Initialize textfield
+  updateDNSserversTextfield(value.value);
 }
 
-function generateRow(topic, key, value, fullConfig = null) {
-  if (topic === "dns" && key === "upstreams") {
-    console.log(value, fullConfig);
-    fillDNSupstreams(value, fullConfig.dns_servers);
-    return;
-  }
+function updateDNSserversTextfield(upstreams) {
+  $("#DNSupstreamsTextfield").val(upstreams.join("\n"));
+}
 
+function generateRow(topic, key, value) {
   if (!("description" in value)) {
     Object.keys(value).forEach(function (subkey) {
       var subvalue = value[subkey];
-      row = generateRow(topic, key + "." + subkey, subvalue);
+      generateRow(topic, key + "." + subkey, subvalue);
     });
     return;
   }
 
   var row =
-    '<div class="col-md-6 ' +
-    (value.flags.advanced ? 'advanced-setting" hidden' : '"') +
-    ">" +
+    '<div class="col-md-6">' +
     '<div class="box box-warning">' +
     '<div class="box-header with-border">' +
     '<h3 class="box-title">' +
@@ -193,19 +184,40 @@ function generateRow(topic, key, value, fullConfig = null) {
     '<div class="row">' +
     '<div class="col-lg-12">' +
     '<div class="form-group">';
-  var resetToDefault = "";
+  var defaultValueHint = "";
   if (value.modified) {
-    resetToDefault =
-      '<button type="button" class="btn btn-default btn-sm pull-right" onclick="resetToDefault(\'' +
-      topic +
-      "','" +
-      key +
-      '\')" title="Default option is: ' +
-      utils.escapeHtml(JSON.stringify(value.default)) +
-      '"><i class="fas fa-redo"></i>&nbsp&nbsp;Reset to default</button>';
+    defaultValueHint = "";
+    if (value.default !== null) {
+      var defVal = utils.escapeHtml(JSON.stringify(value.default));
+      switch (defVal) {
+        case "true": {
+          defVal = "enabled";
+
+          break;
+        }
+
+        case "false": {
+          defVal = "disabled";
+
+          break;
+        }
+
+        case '""':
+        case "[]": {
+          defVal = "empty";
+
+          break;
+        }
+        // No default
+      }
+
+      defaultValueHint = "<p>Default Value: " + defVal + "</p>";
+    }
   }
 
   switch (value.type) {
+    case "IPv4 address":
+    case "IPv6 address":
     case "string": {
       row +=
         '<label class="col-sm-4 control-label">Value (string)</label>' +
@@ -213,7 +225,7 @@ function generateRow(topic, key, value, fullConfig = null) {
         '<input type="text" class="form-control" value="' +
         value.value +
         '"> ' +
-        resetToDefault +
+        defaultValueHint +
         addAllowedValues(value.allowed) +
         "</div>";
 
@@ -227,8 +239,21 @@ function generateRow(topic, key, value, fullConfig = null) {
         '<input type="checkbox" ' +
         (value.value ? " checked" : "") +
         "> " +
-        resetToDefault +
+        defaultValueHint +
         " </div>";
+
+      break;
+    }
+
+    case "double": {
+      row +=
+        '<label class="col-sm-4 control-label">Value</label>' +
+        '<div class="col-sm-8">' +
+        '<input type="number" class="form-control" value="' +
+        value.value +
+        '"> ' +
+        defaultValueHint +
+        "</div>";
 
       break;
     }
@@ -240,7 +265,7 @@ function generateRow(topic, key, value, fullConfig = null) {
         '<input type="number" step="1" class="form-control" value="' +
         value.value +
         '"> ' +
-        resetToDefault +
+        defaultValueHint +
         "</div>";
 
       break;
@@ -253,7 +278,7 @@ function generateRow(topic, key, value, fullConfig = null) {
         '<input type="number" step="1" min="0" class="form-control" value="' +
         value.value +
         '"> ' +
-        resetToDefault +
+        defaultValueHint +
         "</div>";
 
       break;
@@ -266,7 +291,7 @@ function generateRow(topic, key, value, fullConfig = null) {
         '<input type="number" step="1" min="0" max="65535" class="form-control" value="' +
         value.value +
         '"> ' +
-        resetToDefault +
+        defaultValueHint +
         "</div>";
 
       break;
@@ -279,7 +304,7 @@ function generateRow(topic, key, value, fullConfig = null) {
         '<textarea class="form-control">' +
         value.value.join("\n") +
         "</textarea> " +
-        resetToDefault +
+        defaultValueHint +
         "</div>";
 
       break;
@@ -302,7 +327,7 @@ function generateRow(topic, key, value, fullConfig = null) {
       });
       row +=
         "</select> " +
-        resetToDefault +
+        defaultValueHint +
         "</div>" +
         '<div class="col-sm-12">' +
         addAllowedValues(value.allowed) +
@@ -317,7 +342,7 @@ function generateRow(topic, key, value, fullConfig = null) {
   }
 
   row += "</div></div></div></div> ";
-  $("#" + topic + "-content").append(row);
+  $("#advanced-content").append(row);
 }
 
 function createDynamicConfigTabs() {
@@ -325,82 +350,17 @@ function createDynamicConfigTabs() {
     url: "/api/config?detailed=true",
   })
     .done(function (data) {
-      var navTabs = $(".nav-tabs");
-      var tabContent = $(".tab-content");
+      // Initialize the DNS upstreams
+      fillDNSupstreams(data.config.dns.upstreams, data.dns_servers);
 
-      // Remove the teleporter tab (it is added as the last tab after the loop)
-      var teleporter = $(".nav-tabs > li").last();
-      navTabs.remove(teleporter);
-
-      // Create the tabs for the dynamic config topics
-      data.topics.forEach(function (topic) {
-        var nav =
-          '<li role="presentation"><a href="#' +
-          topic.name +
-          '" aria-controls="' +
-          topic.name +
-          '" aria-expanded="false" role="tab" data-toggle="tab">' +
-          topic.title +
-          "</a></li>";
-        navTabs.append(nav);
-        var content =
-          '<div id="' +
-          topic.name +
-          '" class="tab-pane fade">' +
-          '<div class="row">' +
-          '<div class="col-md-12">' +
-          '<div class="box">' +
-          '<div class="box-header with-border">' +
-          '<h3 class="box-title">' +
-          topic.title +
-          "</h3>" +
-          "<p>" +
-          topic.description +
-          "</p>" +
-          '<p><input type="checkbox" id="advanced-settings-toggle-' +
-          topic.name +
-          '"><label for="advanced-settings-toggle-' +
-          topic.name +
-          '">&nbsp;Show advanced settings</label></p>' +
-          "</div>" +
-          '<div class="box-body">' +
-          '<div class="row">' +
-          '<div class="col-lg-12" id="' +
-          topic.name +
-          '-content">' +
-          "</div>" +
-          '<div class="overlay" id="settings-' +
-          topic.name +
-          '-overlay">' +
-          '<i class="fa fa-sync fa-spin"></i>' +
-          "</div>" +
-          "</div>" +
-          "</div>" +
-          "</div>" +
-          "</div>";
-        tabContent.append(content);
-      });
-
-      navTabs.append(teleporter);
-
-      // Create the content for the dynamic config topics
+      // Create the content for the advanced dynamic config topics
+      $("#advanced-content").empty();
       Object.keys(data.config).forEach(function (topic) {
         Object.keys(data.config[topic]).forEach(function (key) {
           var value = data.config[topic][key];
-          generateRow(topic, key, value, data);
-        });
-        $("#settings-" + topic + "-overlay").hide();
-
-        $("input[id^='advanced-settings-toggle']").on("click", function (data) {
-          var checked = data.target.checked;
-          // Synchronize all advanced settings checkboxes
-          $("input[id^='advanced-settings-toggle']").prop("checked", checked);
-          // Show/hide all advanced settings
-          $(".advanced-setting").toggle(checked);
+          generateRow(topic, topic + "." + key, value, data);
         });
       });
-
-      // Remove the overlay
     })
     .fail(function (data) {
       apiFailure(data);
