@@ -10,7 +10,7 @@
 
 require 'scripts/pi-hole/php/header_authenticated.php';
 
-if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piholedhcp', 'api', 'privacy', 'teleporter'))) {
+if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp', 'api', 'privacy', 'advanced', 'teleporter'))) {
     $tab = $_GET['tab'];
 } else {
     $tab = 'sysadmin';
@@ -308,7 +308,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                         <div class="col-sm-12">
                                             <div class="box collapsed-box">
                                                 <div class="box-header with-border pointer no-user-select" data-widget="collapse">
-                                                    <h3 class="box-title">Custom DNS servers</h3>
+                                                    <h3 class="box-title">Custom DNS servers <span id="custom-servers-title"></span></h3>
                                                     <div class="box-tools pull-right">
                                                         <button type="button" class="btn btn-box-tool">
                                                             <i class="fa fa-plus"></i>
@@ -337,23 +337,23 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                                 <div class="no-danger-area">
                                                     <h4>Recommended setting</h4>
                                                     <div>
-                                                        <input type="radio" name="DNSinterface" id="DNSinterface1" value="local">
-                                                        <label for="DNSinterface1"><strong>Allow only local requests</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
+                                                        <input type="radio" name="DNSinterface" id="dns.listeningMode-LOCAL">
+                                                        <label for="dns.listeningMode-LOCAL"><strong>Allow only local requests</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
                                                     </div>
                                                 </div>
                                                 <div class="danger-area">
                                                     <h4>Potentially dangerous options</h4>Make sure your Pi-hole is properly firewalled!
                                                     <div>
-                                                        <input type="radio" name="DNSinterface" id="DNSinterface2" value="single">
-                                                        <label for="DNSinterface2"><strong>Respond only on interface <span id="interface-name"></span></strong></label>
+                                                        <input type="radio" name="DNSinterface" id="dns.listeningMode-SINGLE">
+                                                        <label for="dns.listeningMode-SINGLE"><strong>Respond only on interface <span id="interface-name-1"></span></strong></label>
                                                     </div>
                                                     <div>
-                                                        <input type="radio" name="DNSinterface" id="DNSinterface3" value="bind">
-                                                        <label for="DNSinterface3"><strong>Bind only to interface <span id="interface-name"></span></strong></label>
+                                                        <input type="radio" name="DNSinterface" id="dns.listeningMode-BIND">
+                                                        <label for="dns.listeningMode-BIND"><strong>Bind only to interface <span id="interface-name-2"></span></strong></label>
                                                     </div>
                                                     <div>
-                                                        <input type="radio" name="DNSinterface" id="DNSinterface4" value="all">
-                                                        <label for="DNSinterface4"><strong>Permit all origins</strong></label>
+                                                        <input type="radio" name="DNSinterface" id="dns.listeningMode-ALL">
+                                                        <label for="dns.listeningMode-ALL"><strong>Permit all origins</strong></label>
                                                     </div>
                                                     <p>These options are dangerous on devices
                                                         directly connected to the Internet such as cloud instances and are only safe if your
@@ -379,18 +379,18 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div>
-                                                <input type="checkbox" name="DNSrequiresFQDN" id="DNSrequiresFQDN" title="domain-needed">
-                                                <label for="DNSrequiresFQDN"><strong>Never forward non-FQDN <code>A</code> and <code>AAAA</code> queries</strong></label>
-                                                <p>When there is a Pi-hole domain set and this box is
-                                                    ticked, this asks FTL that this domain is purely
-                                                    local and FTL may answer queries from <code>/etc/hosts</code> or DHCP leases
-                                                    but should never forward queries on that domain to any upstream servers.
+                                                <input type="checkbox" id="dns.domainNeeded" title="domain-needed">
+                                                <label for="dns.domainNeeded"><strong>Never forward non-FQDN <code>A</code> and <code>AAAA</code> queries</strong></label>
+                                                <p>Tells Pi-hole to never forward A or AAAA queries for plain
+                                                    names, without dots or domain parts, to upstream nameservers. If
+                                                    the name is not known from <code>/etc/hosts</code> or DHCP then a "not found"
+                                                    answer is returned.<br>
                                                     If Conditional Forwarding is enabled, unticking this box may cause a partial
                                                     DNS loop under certain circumstances (e.g. if a client would send TLD DNSSEC queries).</p>
                                             </div>
                                             <div>
-                                                <input type="checkbox" name="DNSbogusPriv" id="DNSbogusPriv" title="bogus-priv">
-                                                <label for="DNSbogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
+                                                <input type="checkbox" id="dns.bogusPriv" title="bogus-priv">
+                                                <label for="dns.bogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
                                                 <p>All reverse lookups for private IP ranges (i.e., <code>192.168.0.x/24</code>, etc.)
                                                     which are not found in <code>/etc/hosts</code> or the DHCP leases are answered
                                                     with "no such domain" rather than being forwarded upstream. The set
@@ -401,8 +401,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                             </div>
                                             <br>
                                             <div>
-                                                <input type="checkbox" name="DNSSEC" id="DNSSEC">
-                                                <label for="DNSSEC"><strong>Use DNSSEC</strong></label>
+                                                <input type="checkbox" id="dns.dnssec">
+                                                <label for="dns.dnssec"><strong>Use DNSSEC</strong></label>
                                                 <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
                                                     queries, Pi-hole requests the DNSSEC records needed to validate
                                                     the replies. If a domain fails validation or the upstream does not
@@ -413,9 +413,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                                     <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
                                             </div>
                                             <br>
-                                            <h4><a id="ratelimit"></a>Rate-limiting</h4>
-                                            <p>Block clients making more than <input type="number" name="rate_limit_count" value="" min="0" step="10" style="width: 5em;"> queries within
-                                                <input type="number" name="rate_limit_interval" value="" min="0" step="10" style="width: 4em;"> seconds.</p>
+                                            <h4>Rate-limiting</h4>
+                                            <p>Block clients making more than <input type="number" id="dns.rateLimit.count" value="" min="0" step="10" style="width: 5em;"> queries within
+                                                <input type="number" id="dns.rateLimit.interval" value="" min="0" step="10" style="width: 4em;"> seconds.</p>
                                                 <p>When a client makes too many queries in too short time, it
                                                 gets rate-limited. Rate-limited queries are answered with a
                                                 <code>REFUSED</code> reply and not further processed by FTL
@@ -454,8 +454,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                                 when "Never forward non-FQDNs" is <em>not</em> enabled.</p>
                                             <div class="form-group">
                                                 <div>
-                                                    <input type="checkbox" name="rev_server" id="rev_server" value="rev_server">
-                                                    <label for="rev_server"><strong>Use Conditional Forwarding</strong></label>
+                                                    <input type="checkbox" id="dns.revServer.active">
+                                                    <label for="dns.revServer.active"><strong>Use Conditional Forwarding</strong></label>
                                                 </div>
                                                 <div class="input-group">
                                                     <table class="table table-bordered">
@@ -469,13 +469,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                                         <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <input type="text" name="rev_server_cidr" placeholder="192.168.0.0/16" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
+                                                                    <input type="text" id="dns.revServer.cidr" placeholder="192.168.0.0/16" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
                                                                 </td>
                                                                 <td>
-                                                                    <input type="text" name="rev_server_target" placeholder="192.168.0.1" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
+                                                                    <input type="text" id="dns.revServer.target" placeholder="192.168.0.1" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
                                                                 </td>
                                                                 <td>
-                                                                    <input type="text" name="rev_server_domain" placeholder="local" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
+                                                                    <input type="text" id="dns.revServer.domain" placeholder="local" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -502,7 +502,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div><input type="checkbox" name="active" id="DHCPchk"><label for="DHCPchk"><strong>DHCP server enabled</strong></label></div><br>
+                                            <div><input type="checkbox" id="dhcp.active"><label for="dhcp.active"><strong>DHCP server enabled</strong></label></div><br>
                                             <p id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
                                         </div>
                                     </div>
@@ -514,7 +514,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <div class="input-group-addon">From</div>
-                                                    <input type="text" class="form-control DHCPgroup" name="from"
+                                                    <input type="text" class="form-control DHCPgroup" id="dhcp.start"
                                                         autocomplete="off" spellcheck="false" autocapitalize="none"
                                                         autocorrect="off" value="">
                                                 </div>
@@ -524,7 +524,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <div class="input-group-addon">To</div>
-                                                    <input type="text" class="form-control DHCPgroup" name="to"
+                                                    <input type="text" class="form-control DHCPgroup" id="dhcp.end"
                                                         autocomplete="off" spellcheck="false" autocapitalize="none"
                                                         autocorrect="off" value="">
                                                 </div>
@@ -532,12 +532,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                                             <label>Router (gateway) IP address</label>
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <div class="input-group-addon">Router</div>
-                                                    <input type="text" class="form-control DHCPgroup" name="router"
+                                                    <input type="text" class="form-control DHCPgroup" id="dhcp.router"
                                                         autocomplete="off" spellcheck="false" autocapitalize="none"
                                                         autocorrect="off" value="">
                                                 </div>
@@ -560,7 +560,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <div class="input-group-addon">Domain</div>
-                                                    <input type="text" class="form-control DHCPgroup" name="domain"
+                                                    <input type="text" class="form-control DHCPgroup" id="dns.domain"
                                                         value="">
                                                 </div>
                                             </div>
@@ -571,19 +571,19 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                             <label>DHCP lease time</label>
                                             <div class="form-group">
                                                 <div class="input-group">
-                                                    <div class="input-group-addon">Lease time in hours</div>
-                                                    <input type="number" class="form-control DHCPgroup"
-                                                        name="leasetime"
-                                                        id="leasetime" value="">
+                                                    <div class="input-group-addon">Lease time</div>
+                                                    <input type="text" class="form-control DHCPgroup"
+                                                        autocomplete="off" spellcheck="false" autocapitalize="none"
+                                                        autocorrect="off" id="dhcp.leaseTime" value="">
                                                 </div>
                                             </div>
-                                            <p>Hint: 0 = infinite, 24 = one day, 168 = one week, 744 = one month, 8760 = one year</p>
+                                            <p>The lease time can be in seconds, or minutes (e.g., "45m") or hours (e.g., "1h") or days (like "2d") or even weeks ("1w"). You may also use "infinite" as string but be aware of the drawbacks.</p>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div><input type="checkbox" name="DHCP_rapid_commit" id="DHCP_rapid_commit" class="DHCPgroup">&nbsp;<label for="DHCP_rapid_commit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
-                                            <div><input type="checkbox" name="useIPv6" id="useIPv6" class="DHCPgroup">&nbsp;<label for="useIPv6"><strong>Enable IPv6 support (SLAAC + RA)</strong></label></div>
+                                            <div><input type="checkbox" id="dhcp.rapidCommit" class="DHCPgroup">&nbsp;<label for="dhcp.rapidCommit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
+                                            <div><input type="checkbox" id="dhcp.ipv6" class="DHCPgroup">&nbsp;<label for="dhcp.ipv6"><strong>Enable IPv6 support (SLAAC + RA)</strong></label></div>
                                         </div>
                                     </div>
                                 </div>
@@ -704,6 +704,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                 <!-- ######################################################### Advanced ############################################################# -->
                 <div id="advanced" class="tab-pane fade<?php if ($tab === 'advanced') { ?> in active<?php } ?>">
                 <div class="row" id="advanced-content">
+                    <!-- dynamically filled with content -->
+                    <div class="overlay" id="advanced-overlay">
+                        <i class="fa fa-sync fa-spin"></i>
+                    </div>
                 </div>
                 </div>
                 <!-- ######################################################### Teleporter ########################################################### -->

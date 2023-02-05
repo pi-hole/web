@@ -62,6 +62,12 @@ $("#loginform").submit(function (e) {
   // submitted) because we want to do a two-step challenge-response login
   e.preventDefault();
 
+  // Check if cookie checkbox is enabled
+  /*  if (!$("#logincookie").is(":checked")) {
+    alert("Please consent to using a login cookie to be able to log in. It is necessary to keep you logged in between page reloads. You can end the session by clicking on the logout button in the top right menu at any time.");
+    return;
+  }*/
+
   // Get challenge
   $.ajax({
     url: "/api/auth",

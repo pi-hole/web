@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure:false */
+/* global utils:false, apiFailure:false, initCheckboxRadioStyle:false */
 
 var hostinfoTimer = null;
 function updateHostInfo() {
@@ -98,6 +98,7 @@ function removeFromArray(arr, what) {
 
 function fillDNSupstreams(value, servers) {
   var i = 0;
+  var customServers = value.value.length;
   servers.forEach(element => {
     var row = "<tr>";
     // Build checkboxes for IPv4 and IPv6
@@ -107,16 +108,17 @@ function fillDNSupstreams(value, servers) {
       for (let index = 0; index < 2; index++) {
         if (address.length > index) {
           row +=
-            '<td><input type="checkbox" title="' +
+            '<td title="' +
             address[index] +
-            '" id="DNSupstreams-' +
-            i++ +
+            '"><div><input type="checkbox" id="DNSupstreams-' +
+            i +
             '"';
           if (address[index] in value.value || address[index] + "#53" in value.value) {
             row += " checked";
+            customServers--;
           }
 
-          row += "></td>";
+          row += '><label for="DNSupstreams-' + i++ + '"></label></div></td>';
         } else {
           row += "<td></td>";
         }
@@ -136,6 +138,7 @@ function fillDNSupstreams(value, servers) {
   // Add event listener to checkboxes
   $("input[id^='DNSupstreams-']").on("change", function () {
     var upstreams = $("#DNSupstreamsTextfield").val().split("\n");
+    var customServers = 0;
     $("#DNSupstreamsTable input").each(function () {
       if (this.checked && !upstreams.includes(this.title)) {
         // Add server to array
@@ -144,19 +147,28 @@ function fillDNSupstreams(value, servers) {
         // Remove server from array
         removeFromArray(upstreams, this.title);
       }
+
+      if (upstreams.includes(this.title)) customServers--;
     });
-    updateDNSserversTextfield(upstreams);
+    // The variable will contain a negative value, we need to add the length to
+    // get the correct number of custom servers
+    customServers += upstreams.length;
+    updateDNSserversTextfield(upstreams, customServers);
   });
 
   // Initialize textfield
-  updateDNSserversTextfield(value.value);
+  updateDNSserversTextfield(value.value, customServers);
 }
 
-function updateDNSserversTextfield(upstreams) {
+function updateDNSserversTextfield(upstreams, customServers) {
   $("#DNSupstreamsTextfield").val(upstreams.join("\n"));
+  $("#custom-servers-title").text(
+    "(" + customServers + " custom server" + (customServers === 1 ? "" : "s") + " enabled)"
+  );
 }
 
 function generateRow(topic, key, value) {
+  // If the value is an object, we need to recurse
   if (!("description" in value)) {
     Object.keys(value).forEach(function (subkey) {
       var subvalue = value[subkey];
@@ -165,6 +177,21 @@ function generateRow(topic, key, value) {
     return;
   }
 
+  // Select listening mode radio button
+  var escapedKey = key.replace(/\./g, "\\.");
+  if (value.type === "enum (string)") {
+    $("#" + escapedKey + "-" + value.value).trigger("click");
+  } else if (value.type === "boolean") {
+    // Select checkboxes (if available)
+    $("#" + escapedKey).prop("checked", value.value);
+  } else if (
+    ["string", "IPv4 address", "IPv6 address", "integer", "unsigned integer"].includes(value.type)
+  ) {
+    // Set input field values (if available)
+    $("#" + escapedKey).val(value.value);
+  }
+
+  // else: we have a setting we can display
   var row =
     '<div class="col-md-6">' +
     '<div class="box box-warning">' +
@@ -236,11 +263,11 @@ function generateRow(topic, key, value) {
       row +=
         '<label class="col-sm-4 control-label">Enabled</label>' +
         '<div class="col-sm-8">' +
-        '<input type="checkbox" ' +
+        '<div><input type="checkbox" ' +
         (value.value ? " checked" : "") +
         "> " +
         defaultValueHint +
-        " </div>";
+        " </div></div>";
 
       break;
     }
@@ -361,6 +388,9 @@ function createDynamicConfigTabs() {
           generateRow(topic, topic + "." + key, value, data);
         });
       });
+      $("#advanced-overlay").hide();
+
+      initCheckboxRadioStyle();
     })
     .fail(function (data) {
       apiFailure(data);

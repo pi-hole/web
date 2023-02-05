@@ -41,8 +41,13 @@ require 'scripts/pi-hole/php/header.php';
                             <span class="fa fa-key form-control-feedback"></span>
                         </div>
                     </div>
+                    <!--
+                    <div class="form-group" title="Pi-hole has to set a cookie for the login session to be successful. The cookie will not contain your password nor is it used anywhere outside of you local Pi-hole.">
+                        <input type="checkbox" id="logincookie" checked>
+                        <label for="logincookie">Keep me logged in (uses cookie)</label>
+                    </div> -->
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary form-control"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in</button>
+                        <button type="submit" class="btn btn-primary form-control"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in (uses cookie)</button>
                     </div>
                 </form>
                 <br>

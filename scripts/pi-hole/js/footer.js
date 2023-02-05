@@ -117,22 +117,22 @@ function testCookies() {
   return ret;
 }
 
+var iCheckStyle = "primary";
+function applyCheckboxRadioStyle() {
+  // Get all radio/checkboxes for theming, with the exception of the two radio buttons on the custom disable timer,
+  // as well as every element with an id that starts with "status_"
+  var sel = $("input[type='radio'],input[type='checkbox']")
+    .not("#selSec")
+    .not("#selMin")
+    .not("[id^=status_]");
+  sel.parent().removeClass();
+  sel.parent().addClass("icheck-" + iCheckStyle);
+}
+
 function initCheckboxRadioStyle() {
   function getCheckboxURL(style) {
     var extra = style.startsWith("material-") ? "material" : "bootstrap";
     return "style/vendor/icheck-" + extra + ".min.css";
-  }
-
-  function applyCheckboxRadioStyle(style) {
-    boxsheet.attr("href", getCheckboxURL(style));
-    // Get all radio/checkboxes for theming, with the exception of the two radio buttons on the custom disable timer,
-    // as well as every element with an id that starts with "status_"
-    var sel = $("input[type='radio'],input[type='checkbox']")
-      .not("#selSec")
-      .not("#selMin")
-      .not("[id^=status_]");
-    sel.parent().removeClass();
-    sel.parent().addClass("icheck-" + style);
   }
 
   // Read from local storage, initialize if needed
@@ -144,7 +144,8 @@ function initCheckboxRadioStyle() {
   var boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet" />');
   boxsheet.appendTo("head");
 
-  applyCheckboxRadioStyle(chkboxStyle);
+  iCheckStyle = chkboxStyle;
+  applyCheckboxRadioStyle();
 
   // Add handler when on settings page
   var iCheckStyle = $("#iCheckStyle");
