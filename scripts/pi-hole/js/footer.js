@@ -475,10 +475,12 @@ $(function () {
   // Apply per-browser styling settings
   initCheckboxRadioStyle();
 
-  // Run check immediately after page loading ...
-  utils.checkMessages();
-  // ... and once again with five seconds delay
-  setTimeout(utils.checkMessages, 5000);
+  if (window.location.pathname !== "/admin/login.php") {
+    // Run check immediately after page loading ...
+    utils.checkMessages();
+    // ... and once again with five seconds delay
+    setTimeout(utils.checkMessages, 5000);
+  }
 });
 
 // Handle Enable/Disable
