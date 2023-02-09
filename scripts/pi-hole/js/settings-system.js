@@ -9,6 +9,7 @@
 /* exported updateHostInfo, updateCacheInfo */
 
 var hostinfoTimer = null;
+// eslint-disable-next-line no-unused-vars
 function updateHostInfo() {
   $.ajax({
     url: "/api/info/host",
@@ -43,6 +44,7 @@ function updateHostInfo() {
 }
 
 var cacheinfoTimer = null;
+// eslint-disable-next-line no-unused-vars
 function updateCacheInfo() {
   $.ajax({
     url: "/api/info/cache",

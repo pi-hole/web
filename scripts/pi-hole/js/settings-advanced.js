@@ -232,6 +232,7 @@ function generateRow(topic, key, value) {
   $("#advanced-content").append(row);
 }
 
+// eslint-disable-next-line no-unused-vars
 function createDynamicConfigTabs() {
   $.ajax({
     url: "/api/config?detailed=true",

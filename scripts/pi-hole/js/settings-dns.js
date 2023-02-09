@@ -17,6 +17,7 @@ function removeFromArray(arr, what) {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 function fillDNSupstreams(value, servers) {
   var i = 0;
   var customServers = value.value.length;
