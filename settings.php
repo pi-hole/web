@@ -604,29 +604,16 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                             <table id="DHCPLeasesTable" class="table table-striped table-bordered nowrap" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>MAC address</th>
+                                                        <td></td>
                                                         <th>IP address</th>
                                                         <th>Hostname</th>
+                                                        <th>MAC address</th>
+                                                        <th>Expiration</th>
+                                                        <th>Client ID</th>
                                                         <td></td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php foreach ($dhcp_leases as $lease) { ?>
-                                                    <tr data-placement="auto" data-container="body" data-toggle="tooltip"
-                                                        title="Lease type: IPv<?php echo $lease['type']; ?><br/>Remaining lease time: <?php echo $lease['TIME']; ?><br/>DHCP UID: <?php echo $lease['clid']; ?>">
-                                                        <td id="MAC"><?php echo $lease['hwaddr']; ?></td>
-                                                        <td id="IP" data-order="<?php echo bin2hex(inet_pton($lease['IP'])); ?>"><?php echo $lease['IP']; ?></td>
-                                                        <td id="HOST"><?php echo $lease['host']; ?></td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-danger btn-xs" id="removedynamic">
-                                                                <span class="fas fas fa-trash-alt"></span>
-                                                            </button>
-                                                            <button type="button" id="button" class="btn btn-warning btn-xs" data-static="alert">
-                                                                <span class="fas fas fa-file-import"></span>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                    <?php } ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -718,8 +705,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
     </div>
 </div>
 
+<script src="<?php echo fileversion('scripts/pi-hole/js/ip-address-sorting.js'); ?>"></script>
 <script src="<?php echo fileversion('scripts/vendor/jquery.confirm.min.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/settings.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/settings-system.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/settings-dns.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/settings-dhcp.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/settings-advanced.js'); ?>"></script>
 
 <?php
 require 'scripts/pi-hole/php/footer.php';

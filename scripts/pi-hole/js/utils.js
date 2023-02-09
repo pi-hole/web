@@ -132,9 +132,12 @@ function showAlert(type, icon, title, message) {
   }
 }
 
-function datetime(date, html) {
+function datetime(date, html, humanReadable) {
   var format = html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
-  return moment.unix(Math.floor(date)).format(format).trim();
+  var timestr = moment.unix(Math.floor(date)).format(format).trim();
+  return humanReadable
+    ? '<span title="' + timestr + '">' + moment.unix(Math.floor(date)).fromNow() + "</span>"
+    : timestr;
 }
 
 function datetimeRelative(date) {
@@ -418,6 +421,57 @@ function doLogout() {
   });
 }
 
+function renderTimestamp(data, type) {
+  // Display and search content
+  if (type === "display" || type === "filter") {
+    return datetime(data, false, false);
+  }
+
+  // Sorting content
+  return data;
+}
+
+function renderTimespan(data, type) {
+  // Display and search content
+  if (type === "display" || type === "filter") {
+    return datetime(data, false, true);
+  }
+
+  // Sorting content
+  return data;
+}
+
+function htmlPass(data, _type) {
+  return data;
+}
+
+// Show only the appropriate buttons
+function changeTableButtonStates(table) {
+  var allRows = table.rows({ filter: "applied" }).data().length;
+  var pageLength = table.page.len();
+  var selectedRows = table.rows(".selected").data().length;
+
+  if (selectedRows === 0) {
+    // Nothing selected
+    $(".selectAll").removeClass("hidden");
+    $(".selectMore").addClass("hidden");
+    $(".removeAll").addClass("hidden");
+    $(".deleteSelected").addClass("hidden");
+  } else if (selectedRows >= pageLength || selectedRows === allRows) {
+    // Whole page is selected (or all available messages were selected)
+    $(".selectAll").addClass("hidden");
+    $(".selectMore").addClass("hidden");
+    $(".removeAll").removeClass("hidden");
+    $(".deleteSelected").removeClass("hidden");
+  } else {
+    // Some rows are selected, but not all
+    $(".selectAll").addClass("hidden");
+    $(".selectMore").removeClass("hidden");
+    $(".removeAll").addClass("hidden");
+    $(".deleteSelected").removeClass("hidden");
+  }
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -443,5 +497,9 @@ window.utils = (function () {
     checkMessages: checkMessages,
     changeBulkDeleteStates: changeBulkDeleteStates,
     doLogout: doLogout,
+    renderTimestamp: renderTimestamp,
+    renderTimespan: renderTimespan,
+    htmlPass: htmlPass,
+    changeTableButtonStates: changeTableButtonStates,
   };
 })();

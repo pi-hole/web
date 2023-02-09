@@ -1,36 +1,53 @@
 /* Pi-hole: A black hole for Internet advertisements
- *  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+ *  (c) 2023 Pi-hole, LLC (https://pi-hole.net)
  *  Network-wide ad blocking via your own hardware.
  *
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils:false */
-var table;
+
+var dhcpLeaesTable = null;
+
+// DHCP leases tooltips
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
+});
+
+function renderHostnameCLID(data, type) {
+  // Display and search content
+  if (type === "display" || type === "filter") {
+    if (data === "*") {
+      return "<i>---</i>";
+    }
+
+    return data;
+  }
+
+  // Sorting content
+  return data;
+}
 
 $(function () {
-  var ignoreNonfatal = localStorage
-    ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
-    : false;
-  var url = "/api/info/messages" + (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : "");
-  table = $("#messagesTable").DataTable({
+  dhcpLeaesTable = $("#DHCPLeasesTable").DataTable({
     ajax: {
-      url: url,
+      url: "/api/dhcp/leases",
       type: "GET",
-      dataSrc: "messages",
+      dataSrc: "leases",
     },
-    order: [[0, "asc"]],
+    order: [[1, "asc"]],
     columns: [
-      { data: "id", visible: false },
-      { data: null, visible: true, width: "15px" },
-      { data: "timestamp", width: "8%", render: utils.renderTimestamp },
-      { data: "type", width: "8%" },
-      { data: "html", orderable: false, render: utils.htmlPass },
+      { data: null, width: "22px" },
+      { data: "ip", type: "ip-address" },
+      { data: "name", render: renderHostnameCLID },
+      { data: "hwaddr" },
+      { data: "expires", render: utils.renderTimespan },
+      { data: "clientid", render: renderHostnameCLID },
       { data: null, width: "22px", orderable: false },
     ],
     columnDefs: [
       {
-        targets: 1,
+        targets: 0,
         orderable: false,
         className: "select-checkbox",
         render: function () {
@@ -43,7 +60,7 @@ $(function () {
       },
     ],
     drawCallback: function () {
-      $('button[id^="deleteMessage_"]').on("click", deleteMessage);
+      $('button[id^="deleteLease_"]').on("click", deleteLease);
 
       // Hide buttons if all messages were deleted
       var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
@@ -53,16 +70,16 @@ $(function () {
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback: function (row, data) {
-      $(row).attr("data-id", data.id);
+      $(row).attr("data-id", data.ip);
       var button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteMessage_' +
-        data.id +
-        '" data-del-id="' +
-        data.id +
+        '<button type="button" class="btn btn-danger btn-xs" id="deleteLease_' +
+        data.ip +
+        '" data-del-ip="' +
+        data.ip +
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
-      $("td:eq(4)", row).html(button);
+      $("td:eq(6)", row).html(button);
     },
     select: {
       style: "multi",
@@ -75,7 +92,7 @@ $(function () {
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectAll",
         action: function () {
-          table.rows({ page: "current" }).select();
+          dhcpLeaesTable.rows({ page: "current" }).select();
         },
       },
       {
@@ -83,7 +100,7 @@ $(function () {
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectMore",
         action: function () {
-          table.rows({ page: "current" }).select();
+          dhcpLeaesTable.rows({ page: "current" }).select();
         },
       },
       {
@@ -104,7 +121,7 @@ $(function () {
             ids.push(parseInt($(this).attr("data-id"), 10));
           });
           // Delete all selected rows at once
-          delMsg(ids);
+          delLease(ids);
         },
       },
     ],
@@ -124,73 +141,66 @@ $(function () {
     stateSave: true,
     stateDuration: 0,
     stateSaveCallback: function (settings, data) {
-      utils.stateSaveCallback("messages-table", data);
+      utils.stateSaveCallback("dhcp-leases-table", data);
     },
     stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("messages-table");
+      var data = utils.stateLoadCallback("dhcp-leases-table");
       // Return if not available
       if (data === null) {
         return null;
       }
 
-      // Reset visibility of ID column
-      data.columns[0].visible = false;
-
       // Apply loaded state to table
       return data;
     },
   });
-  table.on("init select deselect", function () {
-    utils.changeTableButtonStates(table);
+  dhcpLeaesTable.on("init select deselect", function () {
+    utils.changeTableButtonStates(dhcpLeaesTable);
   });
 });
 
-// Remove 'bnt-group' class from container, to avoid grouping
-$.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
-
-function deleteMessage() {
-  // Passes the button data-del-id attribute as ID
-  var ids = [parseInt($(this).attr("data-del-id"), 10)];
+function deleteLease() {
+  // Passes the button data-del-id attribute as IP
+  var ips = [$(this).attr("data-del-ip")];
 
   // Check input validity
-  if (!Array.isArray(ids)) return;
+  if (!Array.isArray(ips)) return;
 
   // Exploit prevention: Return early for non-numeric IDs
-  for (var id in ids) {
-    if (Object.hasOwnProperty.call(ids, id)) {
-      if (typeof ids[id] !== "number") return;
-      delMsg(ids);
+  for (var ip in ips) {
+    if (Object.hasOwnProperty.call(ips, ip)) {
+      delLease(ips);
     }
   }
 }
 
-function delMsg(id) {
+function delLease(ip) {
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting message...");
+  utils.showAlert("info", "", "Deleting lease...");
 
   $.ajax({
-    url: "/api/info/messages/" + id,
+    url: "/api/dhcp/leases/" + ip,
     method: "DELETE",
   })
     .done(function (response) {
       utils.enableAll();
       if (response === undefined) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted message", "");
-        table.row(id).remove().draw(false).ajax.reload(null, false);
+        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted lease", "");
+        dhcpLeaesTable.ajax.reload(null, false);
       } else {
-        utils.showAlert("error", "", "Error while deleting message: " + id, response.message);
+        utils.showAlert("error", "", "Error while deleting lease: " + ip, response.lease);
       }
 
       // Clear selection after deletion
-      table.rows().deselect();
-      utils.changeTableButtonStates(table);
+      dhcpLeaesTable.rows().deselect();
+      utils.changeTableButtonStates(dhcpLeaesTable);
     })
     .done(
-      utils.checkMessages // Update icon warnings count
+      utils.checkleases // Update icon warnings count
     )
     .fail(function (jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting message: " + id, jqXHR.responseText);
+      utils.showAlert("error", "", "Error while deleting lease: " + ip, jqXHR.responseText);
       console.log(exception); // eslint-disable-line no-console
     });
 }
