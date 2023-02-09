@@ -711,6 +711,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
 <script src="<?php echo fileversion('scripts/pi-hole/js/settings-dns.js'); ?>"></script>
 <script src="<?php echo fileversion('scripts/pi-hole/js/settings-dhcp.js'); ?>"></script>
 <script src="<?php echo fileversion('scripts/pi-hole/js/settings-advanced.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/settings.js'); ?>"></script>
 
 <?php
 require 'scripts/pi-hole/php/footer.php';
