@@ -214,9 +214,9 @@ function updateSystemInfo() {
       var color;
       color = percentRAM > 75 ? "text-red" : "text-green-light";
       $("#memory").html(
-        '<i class="fa fa-circle ' +
+        '<i class="fa fa-fw fa-circle ' +
           color +
-          '"></i>&nbsp;Memory usage:&nbsp;' +
+          '"></i>&nbsp;&nbsp;Memory usage:&nbsp;' +
           percentRAM.toFixed(1) +
           "&thinsp;%"
       );
@@ -237,9 +237,9 @@ function updateSystemInfo() {
 
       color = system.cpu.load.percent[0] > 100 ? "text-red" : "text-green-light";
       $("#cpu").html(
-        '<i class="fa fa-circle ' +
+        '<i class="fa fa-fw fa-circle ' +
           color +
-          '"></i>&nbsp;CPU:&nbsp;' +
+          '"></i>&nbsp;&nbsp;CPU:&nbsp;' +
           system.cpu.load.percent[0].toFixed(1) +
           "&thinsp;%"
       );
@@ -301,11 +301,11 @@ function updateSensorsInfo() {
     url: "/api/info/sensors",
   })
     .done(function (data) {
-      if (data.sensors.length > 0) {
-        var temp = data.sensors[0].value.toFixed(1) + "&thinsp;&deg;C";
-        var color = data.sensors[0].value > 50 ? "text-red" : "text-vivid-blue";
-        $("#temperature").html('<i class="fa fa-fire ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp);
-      } else $("#temperature").html('<i class="fa fa-fire"></i>&nbsp;Temp:&nbsp;N/A');
+      if (data.sensors.cpu_temp !== null) {
+        var temp = data.sensors.cpu_temp.toFixed(1) + "&thinsp;&deg;C";
+        var color = data.sensors.cpu_temp > data.sensors.hot_limit ? "text-red fa-temperature-high" : "text-green-light fa-temperature-low";
+        $("#temperature").html('<i class="fa fa-fw fas ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp);
+      } else $("#temperature").html('<i class="fa fa-fw fas fa-temperature-low"></i>&nbsp;Temp:&nbsp;N/A');
       // Update every 20 seconds
       clearTimeout(sensorsTimer);
       sensorsTimer = setTimeout(updateSensorsInfo, 20000);

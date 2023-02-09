@@ -577,7 +577,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                                         autocorrect="off" id="dhcp.leaseTime" value="">
                                                 </div>
                                             </div>
-                                            <p>The lease time can be in seconds, or minutes (e.g., "45m") or hours (e.g., "1h") or days (like "2d") or even weeks ("1w"). You may also use "infinite" as string but be aware of the drawbacks.</p>
+                                            <p>The lease time can be in seconds, or minutes (e.g., "45m") or hours (e.g., "1h") or days (like "2d") or even weeks ("1w"). You may also use "infinite" as string but be aware of the drawbacks (assigned addresses are will only be made available again after the lease time has passed).</p>
                                         </div>
                                     </div>
                                     <div class="row">
