@@ -142,7 +142,8 @@ function initCheckboxRadioStyle() {
   }
 
   var boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet" />');
-  boxsheet.appendTo("head");
+  // Only add the stylesheet if it's not already present
+  if ($("link[href='" + boxsheet.attr("href") + "']").length === 0) boxsheet.appendTo("head");
 
   iCheckStyle = chkboxStyle;
   applyCheckboxRadioStyle();
@@ -303,8 +304,13 @@ function updateSensorsInfo() {
     .done(function (data) {
       if (data.sensors.cpu_temp !== null) {
         var temp = data.sensors.cpu_temp.toFixed(1) + "&thinsp;&deg;C";
-        var color = data.sensors.cpu_temp > data.sensors.hot_limit ? "text-red fa-temperature-high" : "text-green-light fa-temperature-low";
-        $("#temperature").html('<i class="fa fa-fw fas ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp);
+        var color =
+          data.sensors.cpu_temp > data.sensors.hot_limit
+            ? "text-red fa-temperature-high"
+            : "text-green-light fa-temperature-low";
+        $("#temperature").html(
+          '<i class="fa fa-fw fas ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp
+        );
       } else $("#temperature").html('<i class="fa fa-fw fas fa-temperature-low"></i>&nbsp;Temp:&nbsp;N/A');
       // Update every 20 seconds
       clearTimeout(sensorsTimer);

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure:false, initCheckboxRadioStyle:false */
+/* global utils:false, apiFailure:false, applyCheckboxRadioStyle:false */
 
 var hostinfoTimer = null;
 function updateHostInfo() {
@@ -262,13 +262,16 @@ function generateRow(topic, key, value) {
 
     case "boolean": {
       row +=
-        '<label class="col-sm-4 control-label">Enabled</label>' +
-        '<div class="col-sm-8">' +
         '<div><input type="checkbox" ' +
         (value.value ? " checked" : "") +
-        "> " +
+        ' id="' +
+        key +
+        '-checkbox"><label for="' +
+        key +
+        '-checkbox">Enabled ' +
         defaultValueHint +
-        " </div></div>";
+        "</label>" +
+        " </div>";
 
       break;
     }
@@ -391,7 +394,7 @@ function createDynamicConfigTabs() {
       });
       $("#advanced-overlay").hide();
 
-      initCheckboxRadioStyle();
+      applyCheckboxRadioStyle();
     })
     .fail(function (data) {
       apiFailure(data);
