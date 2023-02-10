@@ -518,96 +518,86 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                 <div id="dhcp" class="tab-pane fade<?php if ($tab === 'dhcp') { ?> in active<?php } ?>">
                     <div class="row">
                         <!-- DHCP Settings Box -->
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">DHCP Settings</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="row">
-                                        <div class="col-md-12">
-                                            <div><input type="checkbox" id="dhcp.active"><label for="dhcp.active"><strong>DHCP server enabled</strong></label></div><br>
-                                            <p id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <label>Range of IP addresses to hand out</label>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <div class="input-group-addon">From</div>
-                                                    <input type="text" class="form-control DHCPgroup" id="dhcp.start"
-                                                        autocomplete="off" spellcheck="false" autocapitalize="none"
-                                                        autocorrect="off" value="">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div><input type="checkbox" id="dhcp.active"><label for="dhcp.active"><strong>DHCP server enabled</strong></label></div>
+                                                    <p id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p><br>&nbsp;
+                                                </div>
+                                                <div class="col-xs-12">
+                                                    <label>Range of IP addresses to hand out</label>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">From</div>
+                                                            <input type="text" class="form-control DHCPgroup" id="dhcp.start"
+                                                                autocomplete="off" spellcheck="false" autocapitalize="none"
+                                                                autocorrect="off" value="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">To</div>
+                                                            <input type="text" class="form-control DHCPgroup" id="dhcp.end"
+                                                                autocomplete="off" spellcheck="false" autocapitalize="none"
+                                                                autocorrect="off" value="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
+                                                    <label>Router (gateway) IP address</label>
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">Router</div>
+                                                            <input type="text" class="form-control DHCPgroup" id="dhcp.router"
+                                                                autocomplete="off" spellcheck="false" autocapitalize="none"
+                                                                autocorrect="off" value="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div><input type="checkbox" id="dhcp.ipv6" class="DHCPgroup">&nbsp;<label for="dhcp.ipv6"><strong>Enable additional IPv6 support (SLAAC + RA)</strong></label></div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <div class="input-group-addon">To</div>
-                                                    <input type="text" class="form-control DHCPgroup" id="dhcp.end"
-                                                        autocomplete="off" spellcheck="false" autocapitalize="none"
-                                                        autocorrect="off" value="">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Pi-hole domain name</label>
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">Domain</div>
+                                                            <input type="text" class="form-control DHCPgroup" id="dns.domain"
+                                                                value="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <label>DHCP lease time</label>
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">Lease time</div>
+                                                            <input type="text" class="form-control DHCPgroup"
+                                                                autocomplete="off" spellcheck="false" autocapitalize="none"
+                                                                autocorrect="off" id="dhcp.leaseTime" value="">
+                                                        </div>
+                                                    </div>
+                                                    <p>The lease time can be in seconds, minutes (e.g., "45m"), hours (e.g., "1h"), days (like "2d"), or even weeks ("1w"). You may also use "infinite" as string but be aware of the drawbacks: assigned addresses are will only be made available again after the lease time has passed or when leases are manually deleted below.</p>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div><input type="checkbox" id="dhcp.rapidCommit" class="DHCPgroup">&nbsp;<label for="dhcp.rapidCommit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
-                                            <label>Router (gateway) IP address</label>
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <div class="input-group-addon">Router</div>
-                                                    <input type="text" class="form-control DHCPgroup" id="dhcp.router"
-                                                        autocomplete="off" spellcheck="false" autocapitalize="none"
-                                                        autocorrect="off" value="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Advanced DHCP Settings Box -->
-                        <div class="col-md-6">
-                            <div class="box box-warning">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Advanced DHCP settings</h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label>Pi-hole domain name</label>
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <div class="input-group-addon">Domain</div>
-                                                    <input type="text" class="form-control DHCPgroup" id="dns.domain"
-                                                        value="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label>DHCP lease time</label>
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <div class="input-group-addon">Lease time</div>
-                                                    <input type="text" class="form-control DHCPgroup"
-                                                        autocomplete="off" spellcheck="false" autocapitalize="none"
-                                                        autocorrect="off" id="dhcp.leaseTime" value="">
-                                                </div>
-                                            </div>
-                                            <p>The lease time can be in seconds, or minutes (e.g., "45m") or hours (e.g., "1h") or days (like "2d") or even weeks ("1w"). You may also use "infinite" as string but be aware of the drawbacks (assigned addresses are will only be made available again after the lease time has passed).</p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div><input type="checkbox" id="dhcp.rapidCommit" class="DHCPgroup">&nbsp;<label for="dhcp.rapidCommit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
-                                            <div><input type="checkbox" id="dhcp.ipv6" class="DHCPgroup">&nbsp;<label for="dhcp.ipv6"><strong>Enable IPv6 support (SLAAC + RA)</strong></label></div>
                                         </div>
                                     </div>
                                 </div>
