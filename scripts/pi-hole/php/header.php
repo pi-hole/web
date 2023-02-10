@@ -33,7 +33,8 @@ $hostname = gethostname() ? gethostname() : '';
 
     <!-- Theme styles -->
 <?php $theme = webtheme(); $darkmode = true; ?>
-<?php if ($theme == 'default-light') { $darkmode = false; ?>
+<?php if ($theme == 'default-light') {
+    $darkmode = false; ?>
     <meta name="theme-color" content="#367fa9">
 <?php } elseif ($theme == 'default-dark') { ?>
     <meta name="theme-color" content="#272c30">

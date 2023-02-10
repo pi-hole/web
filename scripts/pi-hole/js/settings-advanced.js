@@ -50,7 +50,9 @@ function generateRow(topic, key, value) {
 
   // else: we have a setting we can display
   var row =
-    '<div class="col-md-6">' +
+    '<div class="col-md-6 ' +
+    (value.flags.advanced ? "advanced-setting" : "") +
+    '">' +
     '<div class="box box-warning">' +
     '<div class="box-header with-border">' +
     '<h3 class="box-title">' +
@@ -192,6 +194,7 @@ function generateRow(topic, key, value) {
         value.value.join("\n") +
         "</textarea> " +
         defaultValueHint +
+        addAllowedValues(value.allowed) +
         "</div>";
 
       break;
@@ -232,6 +235,10 @@ function generateRow(topic, key, value) {
   $("#advanced-content").append(row);
 }
 
+function fillDHCPhosts(data) {
+  $("#dhcp-hosts").val(data.value.join("\n"));
+}
+
 // eslint-disable-next-line no-unused-vars
 function createDynamicConfigTabs() {
   $.ajax({
@@ -240,6 +247,8 @@ function createDynamicConfigTabs() {
     .done(function (data) {
       // Initialize the DNS upstreams
       fillDNSupstreams(data.config.dns.upstreams, data.dns_servers);
+
+      fillDHCPhosts(data.config.dhcp.hosts);
 
       // Create the content for the advanced dynamic config topics
       $("#advanced-content").empty();

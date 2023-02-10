@@ -624,60 +624,58 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                         <div class="col-md-12">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Static DHCP leases configuration</h3>
+                                    <h3 class="box-title">Static DHCP configuration&nbsp;&nbsp;<i class="fas fa-cogs" title="This is an advanced setting"></i></h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="row">
-                                        <div class="col-md-12">
-                                            <table id="DHCPStaticLeasesTable" class="table table-striped table-bordered nowrap" width="100%">
-                                                <thead>
-                                                <tr>
-                                                    <th>MAC address</th>
-                                                    <th>IP address</th>
-                                                    <th>Hostname</th>
-                                                    <td></td>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php foreach ($dhcp_static_leases as $lease) { ?>
-                                                    <tr>
-                                                        <td><?php echo $lease['hwaddr']; ?></td>
-                                                        <td data-order="<?php echo bin2hex(inet_pton($lease['IP'])); ?>"><?php echo $lease['IP']; ?></td>
-                                                        <td><?php echo htmlentities($lease['host']); ?></td>
-                                                        <td><?php if (strlen($lease['hwaddr']) > 0) { ?>
-                                                            <button type="submit" class="btn btn-danger btn-xs" name="removestatic"
-                                                                    value="<?php echo $lease['hwaddr']; ?>">
-                                                                <span class="far fa-trash-alt"></span>
-                                                            </button>
-                                                            <?php } ?>
-                                                        </td>
-                                                    </tr>
-                                                    <?php } ?>
-                                                </tbody>
-                                                <tfoot style="display: table-row-group">
-                                                    <tr>
-                                                        <td><input type="text" class="form-group" name="AddMAC" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
-                                                        <td><input type="text" class="form-group" name="AddIP" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
-                                                        <td><input type="text" class="form-group" name="AddHostname" value="" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"></td>
-                                                        <td>
-                                                            <button type="submit" class="btn btn-success btn-xs" name="addstatic">
-                                                                <span class="fas fa-plus"></span>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
-                                            <p>Specifying the MAC address is mandatory and only one entry per MAC
-                                                address is allowed. If the IP address is omitted and a host name is
-                                                given, the IP address will still be generated dynamically and the
-                                                specified host name will be used. If the host name is omitted, only
-                                                a static lease will be added.</p>
+                                        <div class="col-xs-12 col-md-6">
+                                            <p>Specify per host parameters for the DHCP server. This allows a machine with a particular hardware address to be always allocated the same hostname, IP address and lease time. A hostname specified like this overrides any supplied by the DHCP client on the machine. It is also allowable to omit the hardware address and include the hostname, in which case the IP address and lease times will apply to any machine claiming that name.</p>
+                                            <textarea class="form-control" id="dhcp-hosts" style="resize: vertical;"></textarea><br>&nbsp;
+                                            <p>Each entry should be on a separate line, and should be of the form:</p>
+                                            <pre>[&lt;hwaddr&gt;][,id:&lt;client_id&gt;|*][,set:&lt;tag&gt;][,tag:&lt;tag&gt;][,&lt;ipaddr&gt;][,&lt;hostname&gt;][,&lt;lease_time&gt;][,ignore]</pre>
+                                            <p>Only one entry per MAC address is allowed.</p>
+                                        </div>
+                                        <div class="col-xs-12 col-md-6">
+                                            <p>Examples:
+                                                <ul>
+                                                    <li><pre>00:20:e0:3b:13:af,192.168.0.123</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code><br>&nbsp;</li>
+                                                    <li><pre>00:20:e0:3b:13:af,wap,infinite</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code>, too, but also the name <code>wap</code>, and an infinite DHCP lease<br>&nbsp;</li>
+                                                    <li><pre>lap,192.168.0.199</pre>tells Pi-hole to always allocate the machine claiming the host name <code>lap</code> the IP address <code>192.168.0.199</code></li>
+                                                </ul>
+                                            </p>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="box box-success collapsed-box">
+                                                <div class="box-header with-border pointer no-user-select" data-widget="collapse">
+                                                    <h3 class="box-title">Advanced description</h3>
+                                                    <div class="box-tools pull-right">
+                                                        <button type="button" class="btn btn-box-tool">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="box-body">
+                                                    <ul>
+                                                        <li> Addresses allocated like this are not constrained to be in the DHCP range specified above but they must be in the same subnet. For subnets which don't need a pool of dynamically allocated addresses, you can set a one-address range above and specify only static leases here.</li>
+                                                        <li> It is allowed to use client identifiers (called client DUID in IPv6-land) rather than hardware addresses to identify hosts by prefixing with <code>id:</code>. Thus lines like <code>id:01:02:03:04,.....</code> refer to the host with client identifier <code>01:02:03:04</code>. It is also allowed to specify the client ID as text, like this: <code>id:clientidastext,.....</code></li>
+                                                        <li> A single line may contain an IPv4 address or one or more IPv6 addresses, or both. IPv6 addresses must be bracketed by square brackets thus: <code>laptop,[1234::56]</code> IPv6 addresses may contain only the host-identifier part: <code>laptop,[::56]</code> in which case they act as wildcards in constructed DHCP ranges, with the appropriate network part inserted. For IPv6, an address may include a prefix length: <code>laptop,[1234:50/126]</code> which (in this case) specifies four addresses, <code>1234::50</code> to <code>1234::53</code>. This (an the ability to specify multiple addresses) is useful when a host presents either a consistent name or hardware-ID, but varying DUIDs, since it allows dnsmasq to honour the static address allocation but assign a different adddress for each DUID. This typically occurs when chain netbooting, as each stage of the chain gets in turn allocates an address.</li>
+                                                        <!--<li> Note that in IPv6 DHCP, the hardware address may not be available, though it normally is for direct-connected clients, or clients using DHCP relays which support RFC 6939.</li>-->
+                                                        <li> For DHCPv4, the special option <code>id:*</code> means "ignore any client-id and use MAC addresses only." This is useful when a client presents a client-id sometimes but not others.</li>
+                                                        <li> If a name appears in <code>/etc/hosts</code>, the associated address can be allocated to a DHCP lease, but only if a separate line specifying the name also exists. Only one hostname can be given per line, but aliases are possible by using CNAMEs. Note that <code>/etc/hosts</code> is NOT used when the DNS server side of dnsmasq is disabled by setting the DNS server port to zero.</li>
+                                                        <li> More than one line can be associated (by name, hardware address or UID) with a host. Which one is used (and therefore which address is allocated by DHCP and appears in the DNS) depends on the subnet on which the host last obtained a DHCP lease: the line with an address within the subnet is used. If more than one address is within the subnet, the result is undefined. <strong>A corollary to this is that the name associated with a host defined here does not appear in the DNS until the host obtains a DHCP lease.</strong></li>
+                                                        <li> The special keyword <code>ignore</code> tells Pi-hole to never offer a DHCP lease to a machine. The machine can be specified by hardware address, client ID or hostname, for instance <code>00:20:e0:3b:13:af,ignore</code>. This is useful when there is another DHCP server on the network which should be used by some machines.</li>
+                                                        <li> The <code>set:&lt;tag&gt;</code> construct sets the tag whenever this line is in use. This can be used to selectively send DHCP options just for this host. More than one tag can be set per line directive (but not in other places where "set:&lt;tag&gt;" is allowed). When a host matches any directive (or one implied by <code>/etc/ethers</code>) then the special tag "<code>known</code>"" is set. This allows Pi-hole to be configured to ignore requests from unknown machines using a custom config option <code>dhcp-ignore=tag:!known</code> in your own config file. If the host matches only a directive which cannot be used because it specifies an address on different subnet, the tag "<code>known-othernet</code>" is set.</li>
+                                                        <li> The <code>tag:&lt;tag&gt;</code> construct filters which directives are used; more than one can be provided, in this case the request must match all of them. Tagged directives are used in preference to untagged ones. Note that one of <code>&lt;hwaddr&gt</code>;, <code>&lt;client_id&gt</code>; or <code>&lt;hostname&gt</code>; still needs to be specified (can be a wildcard).</li>
+                                                        <li> Ethernet addresses (but not client-ids) may have wildcard bytes, so for example <code>00:20:e0:3b:13:*,ignore</code> will cause Pi-hole to ignore a range of hardware addresses.</li>
+                                                        <li> Hardware addresses normally match any network (ARP) type, but it is possible to restrict them to a single ARP type by preceding them with the ARP-type (in HEX) and "<code>-</code>". so the line <code>06-00:20:e0:3b:13:af,1.2.3.4</code> will only match a Token-Ring hardware address, since the ARP-address type for token ring is <code>6</code>.</li>
+                                                        <li> As a special case, in DHCPv4, it is possible to include more than one hardware address. eg: <code>11:22:33:44:55:66,12:34:56:78:90:12,192.168.0.2</code>. This allows an IP address to be associated with multiple hardware addresses, and gives Pi-hole permission to abandon a DHCP lease to one of the hardware addresses when another one asks for a lease. Beware that this is a dangerous thing to do, it will only work reliably if only one of the hardware addresses is active at any time and there is no way for dnsmasq to enforce this. It is, for instance, useful to allocate a stable IP address to a laptop which has both wired and wireless interfaces.</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <input type="hidden" name="field" value="DHCP">
-                            <input type="hidden" name="token" value="<?php echo $token; ?>">
                             <button type="submit" class="btn btn-primary pull-right">Save</button>
                         </div>
                     </div>
