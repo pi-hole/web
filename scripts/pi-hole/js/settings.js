@@ -20,6 +20,34 @@ $(".nav-tabs a").on("shown.bs.tab", function (e) {
   window.scrollTo(0, 0);
 });
 
+function initSettingsLevel() {
+  // Restore settings level from local storage (if available) or default to 0
+  var level = localStorage.getItem("settings-level");
+  if (level === null) {
+    level = "0";
+  }
+
+  // Set the settings level
+  $("#settings-level").val(level);
+  applySettingsLevel(level);
+}
+
+function applySettingsLevel(level) {
+  if (level === "2") {
+    $(".settings-level-0").show();
+    $(".settings-level-1").show();
+    $(".settings-level-2").show();
+  } else if (level === "1") {
+    $(".settings-level-0").show();
+    $(".settings-level-1").show();
+    $(".settings-level-2").hide();
+  } else {
+    $(".settings-level-0").show();
+    $(".settings-level-1").hide();
+    $(".settings-level-2").hide();
+  }
+}
+
 // Handle hiding of alerts
 $(function () {
   $("[data-hide]").on("click", function () {
@@ -27,4 +55,12 @@ $(function () {
       .closest("." + $(this).attr("data-hide"))
       .hide();
   });
+
+  $("#settings-level").on("change", function () {
+    var level = $(this).val();
+    applySettingsLevel(level);
+    localStorage.setItem("settings-level", level);
+  });
+
+  initSettingsLevel();
 });

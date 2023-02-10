@@ -35,13 +35,23 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                 <li role="presentation"<?php if ($tab === 'privacy') { ?> class="active"<?php } ?>>
                     <a href="#privacy" aria-controls="privacy" aria-expanded="<?php echo $tab === 'privacy' ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">Privacy</a>
                 </li>
-                <li role="presentation"<?php if ($tab === 'advanced') { ?> class="active"<?php } ?>>
+                <li role="presentation" class="settings-level-2 <?php if ($tab === 'advanced') { ?> active<?php } ?>">
                     <a href="#advanced" aria-controls="advanced" aria-expanded="<?php echo $tab === 'advanced' ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">Advanced</a>
                 </li>
                 <li role="presentation"<?php if ($tab === 'teleporter') { ?> class="active"<?php } ?>>
                     <a href="#teleporter" aria-controls="teleporter" aria-expanded="<?php echo $tab === 'teleporter' ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">Teleporter</a>
                 </li>
+                <li class="nav-item pull-nav-right">
+                    <a class="nav-link" role="button">
+                        Settings level: <select id="settings-level">
+                            <option value="0">Basic</option>
+                            <option value="1">Advanced</option>
+                            <option value="2">Expert</option>
+                        </select>
+                    </a>
+                </li>
             </ul>
+            </nav>
             <div class="tab-content">
                 <!-- ######################################################### System admin ######################################################### -->
                 <div id="sysadmin" class="tab-pane fade<?php if ($tab === 'sysadmin') { ?> in active<?php } ?>">
@@ -209,22 +219,18 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12 settings-level-1">
                             <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Actions&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
+                                </div>
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-md-4">
                                             <?php if ($piHoleLogging) { ?>
                                                 <button type="button" class="btn btn-warning confirm-disablelogging-noflush btn-block">Disable query logging</button>
                                             <?php } else { ?>
-                                                <form role="form" method="post">
-                                                    <input type="hidden" name="action" value="Enable">
-                                                    <input type="hidden" name="field" value="Logging">
-                                                    <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                                    <button type="submit" class="btn btn-success btn-block">Enable query logging</button>
-                                                </form>
+                                                <button type="submit" class="btn btn-success btn-block">Enable query logging</button>
                                             <?php } ?>
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
@@ -235,18 +241,15 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                         <div class="col-md-4">
                                             <button type="button" class="btn btn-warning confirm-restartdns btn-block">Restart DNS resolver</button>
                                         </div>
-                                    </div>
-                                    <br/>
-                                    <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-4 settings-level-2">
                                             <button type="button" class="btn btn-danger confirm-flushlogs btn-block">Flush logs (last 24 hours)</button>
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4 settings-level-2">
                                             <button type="button" class="btn btn-danger confirm-poweroff btn-block">Power off system</button>
                                         </div>
                                         <p class="hidden-md hidden-lg"></p>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4 settings-level-2">
                                             <button type="button" class="btn btn-danger confirm-reboot btn-block">Restart system</button>
                                         </div>
                                     </div>
@@ -325,10 +328,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 settings-level-1">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
-                                    <h1 class="box-title">Interface settings</h1>
+                                    <h1 class="box-title">Interface settings&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h1>
                                 </div>
                                 <div class="box-body">
                                     <div class="row">
@@ -368,9 +371,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
+                        <div class="col-lg-6">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Advanced DNS settings</h3>
@@ -388,6 +389,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                                     If Conditional Forwarding is enabled, unticking this box may cause a partial
                                                     DNS loop under certain circumstances (e.g. if a client would send TLD DNSSEC queries).</p>
                                             </div>
+                                            <br>
                                             <div>
                                                 <input type="checkbox" id="dns.bogusPriv" title="bogus-priv">
                                                 <label for="dns.bogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
@@ -412,8 +414,19 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                                     when enabling DNSSEC. A DNSSEC resolver test can be found
                                                     <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
                                             </div>
-                                            <br>
-                                            <h4>Rate-limiting</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 settings-level-1">
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Rate-limiting&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
                                             <p>Block clients making more than <input type="number" id="dns.rateLimit.count" value="" min="0" step="10" style="width: 5em;"> queries within
                                                 <input type="number" id="dns.rateLimit.interval" value="" min="0" step="10" style="width: 4em;"> seconds.</p>
                                                 <p>When a client makes too many queries in too short time, it
@@ -427,8 +440,19 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                                 values to zero. See
                                                 <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" target="_blank">our documentation</a>
                                                 for further details.</p>
-                                            <br>
-                                            <h4>Conditional forwarding</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 settings-level-1">
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Conditional forwarding&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
                                             <p>If not configured as your DHCP server, Pi-hole typically won't be able to
                                                 determine the names of devices on your local network.  As a
                                                 result, tables such as Top Clients will only show IP addresses.</p>
@@ -621,10 +645,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-12 settings-level-1">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Static DHCP configuration&nbsp;&nbsp;<i class="fas fa-cogs" title="This is an advanced setting"></i></h3>
+                                    <h3 class="box-title">Static DHCP configuration&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="row">

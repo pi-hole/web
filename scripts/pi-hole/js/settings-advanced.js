@@ -59,7 +59,7 @@ function generateRow(topic, key, value) {
     key +
     (value.modified ? '&nbsp;&nbsp;<i class="far fa-edit" title="Modified"></i>' : "") +
     (value.flags.advanced
-      ? '&nbsp;&nbsp;<i class="fas fa-cogs" title="This is an advanced setting"></i>'
+      ? '&nbsp;&nbsp;<i class="fas fa-cogs" title="This is an expert-level setting"></i>'
       : "") +
     "</h3>" +
     "<p>" +

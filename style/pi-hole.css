@@ -1041,3 +1041,10 @@ table.dataTable tbody > tr > .selected {
   left: 50%;
   translate: -50% -50%;
 }
+
+.pull-nav-right {
+  float: right !important;
+  margin-right: 5px;
+  margin-left: 5px;
+  padding: 5px;
+}

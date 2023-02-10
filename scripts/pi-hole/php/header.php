@@ -32,7 +32,8 @@ $hostname = gethostname() ? gethostname() : '';
     <meta name="msapplication-TileImage" content="img/favicons/mstile-150x150.png">
 
     <!-- Theme styles -->
-<?php $theme = webtheme(); $darkmode = true; ?>
+<?php $theme = webtheme();
+$darkmode = true; ?>
 <?php if ($theme == 'default-light') {
     $darkmode = false; ?>
     <meta name="theme-color" content="#367fa9">
