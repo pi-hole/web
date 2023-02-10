@@ -10,7 +10,7 @@
 
 require 'scripts/pi-hole/php/header_authenticated.php';
 
-if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp', 'api', 'privacy', 'advanced', 'teleporter'))) {
+if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp', 'web_api', 'privacy', 'advanced', 'teleporter'))) {
     $tab = $_GET['tab'];
 } else {
     $tab = 'sysadmin';
@@ -29,8 +29,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                 <li role="presentation"<?php if ($tab === 'dhcp') { ?> class="active"<?php } ?>>
                     <a href="#dhcp" aria-controls="dhcp" aria-expanded="<?php echo $tab === 'dhcp' ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">DHCP</a>
                 </li>
-                <li role="presentation"<?php if ($tab === 'api') { ?> class="active"<?php } ?>>
-                    <a href="#api" aria-controls="api" aria-expanded="<?php echo $tab === 'api' ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">API / Web interface</a>
+                <li role="presentation"<?php if ($tab === 'web_api') { ?> class="active"<?php } ?>>
+                    <a href="#web_api" aria-controls="web_api" aria-expanded="<?php echo $tab === 'web_api' ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">Web interface / API</a>
                 </li>
                 <li role="presentation"<?php if ($tab === 'privacy') { ?> class="active"<?php } ?>>
                     <a href="#privacy" aria-controls="privacy" aria-expanded="<?php echo $tab === 'privacy' ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">Privacy</a>
@@ -529,10 +529,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div><input type="checkbox" id="dhcp.active"><label for="dhcp.active"><strong>DHCP server enabled</strong></label></div>
-                                                    <p id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p><br>&nbsp;
+                                                    <p id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
                                                 </div>
                                                 <div class="col-xs-12">
-                                                    <label>Range of IP addresses to hand out</label>
+                                                    <label style="margin-top: 10px">Range of IP addresses to hand out</label>
                                                 </div>
                                                 <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                                                     <div class="form-group">
@@ -567,12 +567,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div><input type="checkbox" id="dhcp.ipv6" class="DHCPgroup">&nbsp;<label for="dhcp.ipv6"><strong>Enable additional IPv6 support (SLAAC + RA)</strong></label></div>
+                                                    <p>Enable this option to enable IPv6 support for the Pi-hole DHCP server. This will allow the Pi-hole to hand out IPv6 addresses to clients and also provide IPv6 router advertisements (RA) to clients. This option is only useful if the Pi-hole is configured with an IPv6 address.</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="row">
-                                                <div class="col-md-12">
+                                                <div class="col-md-6">
                                                     <label>Pi-hole domain name</label>
                                                     <div class="form-group">
                                                         <div class="input-group">
@@ -581,8 +582,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                                                 value="">
                                                         </div>
                                                     </div>
+                                                    <p>The DNS domains for the DHCP server. If no domain is specified, then any DHCP hostname with a domain part (i.e., with a period) will be disallowed. If a domain is specified, then hostnames with a domain parts matching the domain here are allowed. In addition, when a suffix is set then hostnames without a domain part have the suffix added as an optional domain part.</p>
                                                 </div>
-                                                <div class="col-md-12">
+                                                <div class="col-md-6">
                                                     <label>DHCP lease time</label>
                                                     <div class="form-group">
                                                         <div class="input-group">
@@ -596,6 +598,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div><input type="checkbox" id="dhcp.rapidCommit" class="DHCPgroup">&nbsp;<label for="dhcp.rapidCommit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
+                                                    <p>The DHCPv4 rapid commit option allows the Pi-hole DHCP server to assign an IP address to a client right away. This can noteably speed up the address assignment process and you will notice, e.g., faster WiFi joins in your network. This option should only be enabled if the Pi-hole DHCP server is the only DHCP server in your network.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -653,8 +656,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                             <p>Examples:
                                                 <ul>
                                                     <li><pre>00:20:e0:3b:13:af,192.168.0.123</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code><br>&nbsp;</li>
-                                                    <li><pre>00:20:e0:3b:13:af,wap,infinite</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code>, too, but also the name <code>wap</code>, and an infinite DHCP lease<br>&nbsp;</li>
-                                                    <li><pre>lap,192.168.0.199</pre>tells Pi-hole to always allocate the machine claiming the host name <code>lap</code> the IP address <code>192.168.0.199</code></li>
+                                                    <li><pre>00:20:e0:3b:13:af,laptop</pre>tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the name <code>laptop</code><br>&nbsp;</li>
+                                                    <li><pre>00:20:e0:3b:13:af,192.168.0.123,laptop,infinite</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code>, the name <code>laptop</code>, and an infinite DHCP lease<br>&nbsp;</li>
                                                 </ul>
                                             </p>
                                         </div>
@@ -695,7 +698,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                     </div>
                 </div>
                 <!-- ######################################################### API ################################################################## -->
-                <div id="api" class="tab-pane fade<?php if ($tab === 'api') { ?> in active<?php } ?>">
+                <div id="web_api" class="tab-pane fade<?php if ($tab === 'web_api') { ?> in active<?php } ?>">
                 </div>
                 <!-- ######################################################### Privacy ############################################################## -->
                 <div id="privacy" class="tab-pane fade<?php if ($tab === 'privacy') { ?> in active<?php } ?>">

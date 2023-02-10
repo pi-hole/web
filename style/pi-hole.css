@@ -1048,3 +1048,7 @@ table.dataTable tbody > tr > .selected {
   margin-left: 5px;
   padding: 5px;
 }
+
+.faint-border {
+  border-color: rgba(127, 127, 127, 0.1);
+}
