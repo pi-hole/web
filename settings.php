@@ -196,7 +196,7 @@ if (isset($setupVars['API_QUERY_LOG_SHOW'])) {
 ?>
 
 <?php
-if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piholedhcp', 'api', 'privacy', 'teleporter'))) {
+if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piholedhcp', 'web', 'api', 'privacy', 'teleporter'))) {
     $tab = $_GET['tab'];
 } else {
     $tab = 'sysadmin';
@@ -215,8 +215,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                 <li role="presentation"<?php if ($tab === 'piholedhcp') { ?> class="active"<?php } ?>>
                     <a href="#piholedhcp" aria-controls="piholedhcp" aria-expanded="<?php echo $tab === 'piholedhcp' ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">DHCP</a>
                 </li>
+                <li role="presentation"<?php if ($tab === 'web') { ?> class="active"<?php } ?>>
+                    <a href="#web" aria-controls="web" aria-expanded="<?php echo $tab === 'web' ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">Web interface</a>
+                </li>
                 <li role="presentation"<?php if ($tab === 'api') { ?> class="active"<?php } ?>>
-                    <a href="#api" aria-controls="api" aria-expanded="<?php echo $tab === 'api' ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">API / Web interface</a>
+                    <a href="#api" aria-controls="api" aria-expanded="<?php echo $tab === 'api' ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">API</a>
                 </li>
                 <li role="presentation"<?php if ($tab === 'privacy') { ?> class="active"<?php } ?>>
                     <a href="#privacy" aria-controls="privacy" aria-expanded="<?php echo $tab === 'privacy' ? 'true' : 'false'; ?>" role="tab" data-toggle="tab">Privacy</a>
@@ -1026,10 +1029,162 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
                         </div>
                     </form>
                 </div>
-                <!-- ######################################################### API and Web ######################################################### -->
-                <div id="api" class="tab-pane fade<?php if ($tab === 'api') { ?> in active<?php } ?>">
+                <!-- ######################################################## Web Interface ######################################################## -->
+                <div id="web" class="tab-pane fade<?php if ($tab === 'web') { ?> in active<?php } ?>">
                     <div class="row">
                         <div class="col-md-6">
+                            <form role="form" method="post">
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Theme and Layout</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <?php theme_selection(); ?>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div>
+                                                    <input type="checkbox" name="boxedlayout" id="boxedlayout" value="yes" <?php if ($boxedlayout) { ?>checked<?php } ?>>
+                                                    <label for="boxedlayout"><strong>Use boxed layout (for large screens)</strong></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="field" value="webUI">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
+                                    </div>
+                                    <div class="box-footer clearfix">
+                                        <button type="submit" class="btn btn-primary pull-right">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Interface settings (auto saved)</h3>
+                                </div>
+                                <div class="box-body">
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h4>Global Settings</h4>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="icheck-default">
+                                                <label for="tempunit-selector"><strong>CPU Temperature Unit:</strong> </label>
+                                                <select id="tempunit-selector">
+                                                    <option value="C">Celsius</option>
+                                                    <option value="K">Kelvin</option>
+                                                    <option value="F">Fahrenheit</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr class="faint-border">
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h4>Per Browser Settings</h4>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="icheck-default">
+                                                <label for="iCheckStyle"><strong>Checkbox and radio buttons: </strong> </label>
+                                                <select id="iCheckStyle">
+                                                    <option>default</option>
+                                                    <option>primary</option>
+                                                    <option>success</option>
+                                                    <option>info</option>
+                                                    <option>warning</option>
+                                                    <option>danger</option>
+                                                    <option>turquoise</option>
+                                                    <option>emerland</option>
+                                                    <option>peterriver</option>
+                                                    <option>amethyst</option>
+                                                    <option>wetasphalt</option>
+                                                    <option>greensea</option>
+                                                    <option>nephritis</option>
+                                                    <option>belizehole</option>
+                                                    <option>wisteria</option>
+                                                    <option>midnightblue</option>
+                                                    <option>sunflower</option>
+                                                    <option>carrot</option>
+                                                    <option>alizarin</option>
+                                                    <option>clouds</option>
+                                                    <option>concrete</option>
+                                                    <option>orange</option>
+                                                    <option>pumpkin</option>
+                                                    <option>pomegranate</option>
+                                                    <option>silver</option>
+                                                    <option>asbestos</option>
+
+                                                    <option>material-red</option>
+                                                    <option>material-pink</option>
+                                                    <option>material-purple</option>
+                                                    <option>material-deeppurple</option>
+                                                    <option>material-indigo</option>
+                                                    <option>material-blue</option>
+                                                    <option>material-lightblue</option>
+                                                    <option>material-cyan</option>
+                                                    <option>material-teal</option>
+                                                    <option>material-green</option>
+                                                    <option>material-lightgreen</option>
+                                                    <option>material-lime</option>
+                                                    <option>material-yellow</option>
+                                                    <option>material-amber</option>
+                                                    <option>material-orange</option>
+                                                    <option>material-deeporange</option>
+                                                    <option>material-brown</option>
+                                                    <option>material-grey</option>
+                                                    <option>material-bluegrey</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div>
+                                                <input type="checkbox" name="bargraphs" id="bargraphs" value="yes">
+                                                <label for="bargraphs"><strong>Use new Bar charts on dashboard</strong></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div>
+                                                <input type="checkbox" name="colorfulQueryLog" id="colorfulQueryLog" value="no">
+                                                <label for="colorfulQueryLog"><strong>Colorful Query Log</strong></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div>
+                                                <input type="checkbox" name="hideNonfatalDnsmasqWarnings" id="hideNonfatalDnsmasqWarnings" value="no">
+                                                <label for="hideNonfatalDnsmasqWarnings"><strong>Hide non-fatal <code>dnsmasq</code> warnings (warnings listed <a target="_blank" href="https://docs.pi-hole.net/ftldns/dnsmasq_warn">here</a>)</strong></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ############################################################# API ############################################################# -->
+                <div id="api" class="tab-pane fade<?php if ($tab === 'api') { ?> in active<?php } ?>">
+                    <div class="row">
+                        <div class="col-md-12">
                             <form role="form" method="post">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
@@ -1109,138 +1264,9 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <form role="form" method="post">
-                                <div class="box box-warning">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">Web interface settings</h3>
-                                    </div>
-                                    <div class="box-body">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <h4>Interface appearance</h4>
-                                                <?php theme_selection(); ?>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div>
-                                                    <input type="checkbox" name="boxedlayout" id="boxedlayout" value="yes" <?php if ($boxedlayout) { ?>checked<?php } ?>>
-                                                    <label for="boxedlayout"><strong>Use boxed layout (for large screens)</strong></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="field" value="webUI">
-                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                    </div>
-                                    <div class="box-footer clearfix">
-                                        <button type="submit" class="btn btn-primary pull-right">Save</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="box box-warning">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Per-browser settings (auto saved)</h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p>Checkbox and radio buttons</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <select id="iCheckStyle">
-                                                <option>default</option>
-                                                <option>primary</option>
-                                                <option>success</option>
-                                                <option>info</option>
-                                                <option>warning</option>
-                                                <option>danger</option>
-                                                <option>turquoise</option>
-                                                <option>emerland</option>
-                                                <option>peterriver</option>
-                                                <option>amethyst</option>
-                                                <option>wetasphalt</option>
-                                                <option>greensea</option>
-                                                <option>nephritis</option>
-                                                <option>belizehole</option>
-                                                <option>wisteria</option>
-                                                <option>midnightblue</option>
-                                                <option>sunflower</option>
-                                                <option>carrot</option>
-                                                <option>alizarin</option>
-                                                <option>clouds</option>
-                                                <option>concrete</option>
-                                                <option>orange</option>
-                                                <option>pumpkin</option>
-                                                <option>pomegranate</option>
-                                                <option>silver</option>
-                                                <option>asbestos</option>
-
-                                                <option>material-red</option>
-                                                <option>material-pink</option>
-                                                <option>material-purple</option>
-                                                <option>material-deeppurple</option>
-                                                <option>material-indigo</option>
-                                                <option>material-blue</option>
-                                                <option>material-lightblue</option>
-                                                <option>material-cyan</option>
-                                                <option>material-teal</option>
-                                                <option>material-green</option>
-                                                <option>material-lightgreen</option>
-                                                <option>material-lime</option>
-                                                <option>material-yellow</option>
-                                                <option>material-amber</option>
-                                                <option>material-orange</option>
-                                                <option>material-deeporange</option>
-                                                <option>material-brown</option>
-                                                <option>material-grey</option>
-                                                <option>material-bluegrey</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p>CPU Temperature Unit</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <select id="tempunit-selector">
-                                                <option value="C">Celsius</option>
-                                                <option value="K">Kelvin</option>
-                                                <option value="F">Fahrenheit</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div>
-                                                <input type="checkbox" name="bargraphs" id="bargraphs" value="yes">
-                                                <label for="bargraphs"><strong>Use new Bar charts on dashboard</strong></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div>
-                                                <input type="checkbox" name="colorfulQueryLog" id="colorfulQueryLog" value="no">
-                                                <label for="colorfulQueryLog"><strong>Colorful Query Log</strong></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div>
-                                                <input type="checkbox" name="hideNonfatalDnsmasqWarnings" id="hideNonfatalDnsmasqWarnings" value="no">
-                                                <label for="hideNonfatalDnsmasqWarnings"><strong>Hide non-fatal <code>dnsmasq</code> warnings (warnings listed <a target="_blank" href="https://docs.pi-hole.net/ftldns/dnsmasq_warn">here</a>)</strong></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
+
                 <!-- ######################################################### Privacy (may be expanded further later on) ######################################################### -->
                 <?php
                 // Get privacy level from piholeFTL config array

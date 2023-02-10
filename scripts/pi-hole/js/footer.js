@@ -160,10 +160,6 @@ function initCheckboxRadioStyle() {
 
 function initCPUtemp() {
   function setCPUtemp(unit) {
-    if (localStorage) {
-      localStorage.setItem("tempunit", tempunit);
-    }
-
     var temperature = parseFloat($("#rawtemp").text());
     var displaytemp = $("#tempdisplay");
     if (!isNaN(temperature)) {
@@ -185,10 +181,30 @@ function initCPUtemp() {
     }
   }
 
-  // Read from local storage, initialize if needed
-  var tempunit = localStorage ? localStorage.getItem("tempunit") : null;
-  if (tempunit === null) {
-    tempunit = "C";
+  function setSetupvarsTempUnit(unit, showmsg = true) {
+    var token = encodeURIComponent($("#token").text());
+    $.getJSON("api.php?setTempUnit=" + unit + "&token=" + token, function (data) {
+      if (showmsg === true) {
+        if ("result" in data && data.result === "success") {
+          utils.showAlert("success", "", "Temperature unit set to " + unit, "");
+        } else {
+          utils.showAlert("error", "", "", "Temperature unit not set");
+        }
+      }
+    });
+  }
+
+  // Read the temperature unit from HTML code
+  var tempunit = $("#tempunit").text();
+  if (!tempunit) {
+    // if no value was set in setupVars.conf, tries to retrieve the old config from localstorage
+    tempunit = localStorage ? localStorage.getItem("tempunit") : null;
+    if (tempunit === null) {
+      tempunit = "C";
+    } else {
+      // if some value was found on localstorage, set the value in setupVars.conf
+      setSetupvarsTempUnit(tempunit, false);
+    }
   }
 
   setCPUtemp(tempunit);
@@ -200,6 +216,9 @@ function initCPUtemp() {
     tempunitSelector.on("change", function () {
       tempunit = $(this).val();
       setCPUtemp(tempunit);
+
+      // store the selected value on setupVars.conf
+      setSetupvarsTempUnit(tempunit);
     });
   }
 }
