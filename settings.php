@@ -129,7 +129,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                         <div class="col-md-6">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">DNS Information</h3>
+                                    <h3 class="box-title">Server metrics</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="row">
@@ -147,73 +147,73 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                                                         <th scope="row">
                                                                             <span title="Size of the DNS domain cache">DNS cache size:</span>
                                                                         </th>
-                                                                        <td id="sysinfo-cache-size">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-cache-size">&nbsp;</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">
                                                                             <span title="Number of cache insertions">DNS cache insertions:</span>
                                                                         </th>
-                                                                        <td id="sysinfo-cache-inserted">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-cache-inserted">&nbsp;</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">
                                                                             <span title="Number of cache entries that had to be removed although they are not expired (increase cache size to reduce this number)" lookatme-text="DNS cache evictions:">DNS cache evictions:</span>
                                                                         </th>
-                                                                        <td id="sysinfo-cache-evicted">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-cache-evicted">&nbsp;</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">
                                                                             DNS cache expiries:
                                                                         </th>
-                                                                        <td id="sysinfo-cache-expired">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-cache-expired">&nbsp;</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">
                                                                             Immortal DNS cache entries:
                                                                         </th>
-                                                                        <td id="sysinfo-cache-immortal">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-cache-immortal">&nbsp;</td>
                                                                     </tr>
-                                                                    <tr>
+                                                                    <tr class="settings-level-2">
                                                                         <th scope="row">
                                                                             Valid A records in cache:
                                                                         </th>
-                                                                        <td id="sysinfo-cache-valid-a">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-cache-content-a">&nbsp;</td>
                                                                     </tr>
-                                                                    <tr>
+                                                                    <tr class="settings-level-2">
                                                                         <th scope="row">
                                                                             Valid AAAA records in cache:
                                                                         </th>
-                                                                        <td id="sysinfo-cache-valid-aaaa">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-cache-content-aaaa">&nbsp;</td>
                                                                     </tr>
-                                                                    <tr>
+                                                                    <tr class="settings-level-2">
                                                                         <th scope="row">
                                                                             Valid CNAME records in cache:
                                                                         </th>
-                                                                        <td id="sysinfo-cache-valid-cname">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-cache-content-cname">&nbsp;</td>
                                                                     </tr>
-                                                                    <tr>
+                                                                    <tr class="settings-level-2">
                                                                         <th scope="row">
                                                                             Valid SRV records in cache:
                                                                         </th>
-                                                                        <td id="sysinfo-cache-valid-srv">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-cache-content-srv">&nbsp;</td>
                                                                     </tr>
-                                                                    <tr>
+                                                                    <tr class="settings-level-2">
                                                                         <th scope="row">
                                                                             Valid DS records in cache:
                                                                         </th>
-                                                                        <td id="sysinfo-cache-valid-ds">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-cache-content-ds">&nbsp;</td>
                                                                     </tr>
-                                                                    <tr>
+                                                                    <tr class="settings-level-2">
                                                                         <th scope="row">
                                                                             Valid DNSKEY records in cache:
                                                                         </th>
-                                                                        <td id="sysinfo-cache-valid-dnskey">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-cache-content-dnskey">&nbsp;</td>
                                                                     </tr>
-                                                                    <tr>
+                                                                    <tr class="settings-level-2">
                                                                         <th scope="row">
                                                                             Other valid records in cache:
                                                                         </th>
-                                                                        <td id="sysinfo-cache-valid-other">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-cache-content-other">&nbsp;</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -237,31 +237,130 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                                                         <th scope="row">
                                                                             <span>Local replies:</span>
                                                                         </th>
-                                                                        <td id="sysinfo-replies-local">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-replies-local">&nbsp;</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">
                                                                             Forwarded queries:
                                                                         </th>
-                                                                        <td id="sysinfo-replies-extra-forwarded">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-replies-forwarded">&nbsp;</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">
                                                                             Unanswered queries:
                                                                         </th>
-                                                                        <td id="sysinfo-replies-extra-unanswered">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-replies-unanswered">&nbsp;</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">
                                                                             <span>Cache optimizer replies:</span>
                                                                         </th>
-                                                                        <td id="sysinfo-replies-optimized">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-replies-optimized">&nbsp;</td>
                                                                     </tr>
-                                                                    <tr>
+                                                                    <tr class="settings-level-2">
                                                                         <th scope="row">
                                                                             <span>Authoritative replies:</span>
                                                                         </th>
-                                                                        <td id="sysinfo-replies-auth">&nbsp;</td>
+                                                                        <td id="sysinfo-dns-replies-auth">&nbsp;</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 settings-level-2">
+                                            <div class="box">
+                                                <div class="box-header with-border">
+                                                    <h3 class="box-title">DHCP server</h3>
+                                                </div>
+                                                <div class="box-body">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <table class="table table-striped table-bordered nowrap">
+                                                                <tbody>
+                                                                    <tr class="settings-level-2">
+                                                                        <th scope="row">
+                                                                            <span>DHCPDISCOVER:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-dhcp-discover">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr class="settings-level-2">
+                                                                        <th scope="row">
+                                                                            <span>DHCPOFFER:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-dhcp-offer">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr class="settings-level-2">
+                                                                        <th scope="row">
+                                                                            <span>DHCPREQUEST:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-dhcp-request">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr class="settings-level-2">
+                                                                        <th scope="row">
+                                                                            <span>DHCPACK:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-dhcp-ack">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr class="settings-level-2">
+                                                                        <th scope="row">
+                                                                            <span>DHCPNAK:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-dhcp-nak">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr class="settings-level-2">
+                                                                        <th scope="row">
+                                                                            <span>DHCPDECLINE:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-dhcp-decline">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr class="settings-level-2">
+                                                                        <th scope="row">
+                                                                            <span>DHCPINFORM:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-dhcp-inform">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr class="settings-level-2">
+                                                                        <th scope="row">
+                                                                            <span>DHCPRELEASE:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-dhcp-release">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr class="settings-level-2">
+                                                                        <th scope="row">
+                                                                            <span>DHCPNOANSWER:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-dhcp-noanswer">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr class="settings-level-2">
+                                                                        <th scope="row">
+                                                                            <span>BOOTP:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-dhcp-bootp">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr class="settings-level-2">
+                                                                        <th scope="row">
+                                                                            <span>PXE:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-dhcp-pxe">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr class="settings-level-2">
+                                                                        <th scope="row">
+                                                                            <span>Allocated / pruned IPv4 leases:</span>
+                                                                        </th>
+                                                                        <td><span id="sysinfo-dhcp-leases-allocated_4">&nbsp;</span> /
+                                                                            <span id="sysinfo-dhcp-leases-pruned_4">&nbsp;</span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr class="settings-level-2">
+                                                                        <th scope="row">
+                                                                            <span>Allocated / pruned IPv6 leases:</span>
+                                                                        </th>
+                                                                        <td><span id="sysinfo-dhcp-leases-allocated_6">&nbsp;</span> /
+                                                                            <span id="sysinfo-dhcp-leases-pruned_6">&nbsp;</span>
+                                                                        </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -272,7 +371,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                         </div>
                                     </div>
                                 </div>
-                                <div class="overlay" id="sysinfo-dns-overlay">
+                                <div class="overlay" id="sysinfo-metrics-overlay">
                                     <i class="fa fa-sync fa-spin"></i>
                                 </div>
                             </div>
@@ -311,32 +410,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                             <button type="button" class="btn btn-danger confirm-reboot btn-block">Restart system</button>
                                         </div>
                                     </div>
-
-                                    <form role="form" method="post" id="flushlogsform">
-                                        <input type="hidden" name="field" value="flushlogs">
-                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                    </form>
-                                    <form role="form" method="post" id="flusharpform">
-                                        <input type="hidden" name="field" value="flusharp">
-                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                    </form>
-                                    <form role="form" method="post" id="disablelogsform-noflush">
-                                        <input type="hidden" name="field" value="Logging">
-                                        <input type="hidden" name="action" value="Disable-noflush">
-                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                    </form>
-                                    <form role="form" method="post" id="poweroffform">
-                                        <input type="hidden" name="field" value="poweroff">
-                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                    </form>
-                                    <form role="form" method="post" id="rebootform">
-                                        <input type="hidden" name="field" value="reboot">
-                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                    </form>
-                                    <form role="form" method="post" id="restartdnsform">
-                                        <input type="hidden" name="field" value="restartdns">
-                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                    </form>
                                 </div>
                             </div>
                         </div>

@@ -5,11 +5,11 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global updateHostInfo:false, updateCacheInfo:false, createDynamicConfigTabs:false */
+/* global updateHostInfo:false, updateMetrics:false, createDynamicConfigTabs:false */
 
 $(function () {
   updateHostInfo();
-  updateCacheInfo();
+  updateMetrics();
   createDynamicConfigTabs();
 });
 

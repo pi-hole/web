@@ -43,49 +43,35 @@ function updateHostInfo() {
     });
 }
 
-var cacheinfoTimer = null;
+// Walk nested objects, create a dash-separated global key and assign the value
+// to the corresponding element (add percentage for DNS replies)
+function setMetrics(data, prefix) {
+  for (const [key, val] of Object.entries(data)) {
+    if (typeof val === "object") {
+      setMetrics(val, prefix + key + "-");
+    } else if (prefix === "sysinfo-dns-replies-") {
+      // Compute and display percentage of DNS replies in addition to the absolute value
+      $("#" + prefix + key).text(val + " (" + ((100 * val) / data.sum).toFixed(1) + "%)");
+    } else {
+      $("#" + prefix + key).text(val);
+    }
+  }
+}
+
+var metricsTimer = null;
 // eslint-disable-next-line no-unused-vars
-function updateCacheInfo() {
+function updateMetrics() {
   $.ajax({
-    url: "/api/info/cache",
+    url: "/api/info/metrics",
   })
     .done(function (data) {
-      var cache = data.cache;
-      $("#sysinfo-cache-size").text(cache.size);
-      $("#sysinfo-cache-inserted").text(cache.inserted);
-      $("#sysinfo-cache-evicted").text(cache.evicted);
-      $("#sysinfo-cache-expired").text(cache.expired);
-      $("#sysinfo-cache-immortal").text(cache.immortal);
-      $("#sysinfo-cache-valid-a").text(cache.valid.a);
-      $("#sysinfo-cache-valid-aaaa").text(cache.valid.aaaa);
-      $("#sysinfo-cache-valid-cname").text(cache.valid.cname);
-      $("#sysinfo-cache-valid-srv").text(cache.valid.srv);
-      $("#sysinfo-cache-valid-ds").text(cache.valid.ds);
-      $("#sysinfo-cache-valid-dnskey").text(cache.valid.dnskey);
-      $("#sysinfo-cache-valid-other").text(cache.valid.other);
+      var metrics = data.metrics;
+      setMetrics(metrics, "sysinfo-");
 
-      var total =
-        cache.optimized + cache.local + cache.auth + cache.extra.unanswered + cache.extra.forwarded;
-      $("#sysinfo-replies-optimized").text(
-        cache.optimized + " (" + ((100 * cache.optimized) / total).toFixed(1) + "%)"
-      );
-      $("#sysinfo-replies-local").text(
-        cache.local + " (" + ((100 * cache.local) / total).toFixed(1) + "%)"
-      );
-      $("#sysinfo-replies-auth").text(
-        cache.auth + " (" + ((100 * cache.auth) / total).toFixed(1) + "%)"
-      );
-      $("#sysinfo-replies-extra-unanswered").text(
-        cache.extra.unanswered + " (" + ((100 * cache.extra.unanswered) / total).toFixed(1) + "%)"
-      );
-      $("#sysinfo-replies-extra-forwarded").text(
-        cache.extra.forwarded + " (" + ((100 * cache.extra.forwarded) / total).toFixed(1) + "%)"
-      );
-
-      $("#sysinfo-dns-overlay").hide();
+      $("#sysinfo-metrics-overlay").hide();
       // Update every 10 seconds
-      clearTimeout(cacheinfoTimer);
-      cacheinfoTimer = setTimeout(updateCacheInfo, 10000);
+      clearTimeout(metricsTimer);
+      metricsTimer = setTimeout(updateMetrics, 10000);
     })
     .fail(function (data) {
       apiFailure(data);
