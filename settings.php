@@ -134,87 +134,145 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <table class="table table-striped table-bordered nowrap">
-                                                <tbody>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span title="Size of the DNS domain cache">DNS cache size:</span>
-                                                        </th>
-                                                        <td id="sysinfo-cache-size">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span title="Number of cache insertions">DNS cache insertions:</span>
-                                                        </th>
-                                                        <td id="sysinfo-cache-inserted">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <span title="Number of cache entries that had to be removed although they are not expired (increase cache size to reduce this number)" lookatme-text="DNS cache evictions:">DNS cache evictions:</span>
-                                                        </th>
-                                                        <td id="sysinfo-cache-evicted">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            Valid A records in cache:
-                                                        </th>
-                                                        <td id="sysinfo-cache-valid-a">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            Valid AAAA records in cache:
-                                                        </th>
-                                                        <td id="sysinfo-cache-valid-aaaa">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            Valid CNAME records in cache:
-                                                        </th>
-                                                        <td id="sysinfo-cache-valid-cname">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            Valid SRV records in cache:
-                                                        </th>
-                                                        <td id="sysinfo-cache-valid-srv">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            Valid DS records in cache:
-                                                        </th>
-                                                        <td id="sysinfo-cache-valid-ds">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            Valid DNSKEY records in cache:
-                                                        </th>
-                                                        <td id="sysinfo-cache-valid-dnskey">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            Other valid records in cache:
-                                                        </th>
-                                                        <td id="sysinfo-cache-valid-other">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            DNS cache expiries:
-                                                        </th>
-                                                        <td id="sysinfo-cache-expired">&nbsp;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            Immortal DNS cache entries:
-                                                        </th>
-                                                        <td id="sysinfo-cache-immortal">&nbsp;</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
+                                            <div class="box">
+                                                <div class="box-header with-border">
+                                                    <h3 class="box-title">DNS cache</h3>
+                                                </div>
+                                                <div class="box-body">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <table class="table table-striped table-bordered nowrap">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            <span title="Size of the DNS domain cache">DNS cache size:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-cache-size">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            <span title="Number of cache insertions">DNS cache insertions:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-cache-inserted">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            <span title="Number of cache entries that had to be removed although they are not expired (increase cache size to reduce this number)" lookatme-text="DNS cache evictions:">DNS cache evictions:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-cache-evicted">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            DNS cache expiries:
+                                                                        </th>
+                                                                        <td id="sysinfo-cache-expired">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            Immortal DNS cache entries:
+                                                                        </th>
+                                                                        <td id="sysinfo-cache-immortal">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            Valid A records in cache:
+                                                                        </th>
+                                                                        <td id="sysinfo-cache-valid-a">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            Valid AAAA records in cache:
+                                                                        </th>
+                                                                        <td id="sysinfo-cache-valid-aaaa">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            Valid CNAME records in cache:
+                                                                        </th>
+                                                                        <td id="sysinfo-cache-valid-cname">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            Valid SRV records in cache:
+                                                                        </th>
+                                                                        <td id="sysinfo-cache-valid-srv">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            Valid DS records in cache:
+                                                                        </th>
+                                                                        <td id="sysinfo-cache-valid-ds">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            Valid DNSKEY records in cache:
+                                                                        </th>
+                                                                        <td id="sysinfo-cache-valid-dnskey">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            Other valid records in cache:
+                                                                        </th>
+                                                                        <td id="sysinfo-cache-valid-other">&nbsp;</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="box">
+                                                <div class="box-header with-border">
+                                                    <h3 class="box-title">DNS replies</h3>
+                                                </div>
+                                                <div class="box-body">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <table class="table table-striped table-bordered nowrap">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            <span>Local replies:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-replies-local">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            Forwarded queries:
+                                                                        </th>
+                                                                        <td id="sysinfo-replies-extra-forwarded">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            Unanswered queries:
+                                                                        </th>
+                                                                        <td id="sysinfo-replies-extra-unanswered">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            <span>Cache optimizer replies:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-replies-optimized">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">
+                                                                            <span>Authoritative replies:</span>
+                                                                        </th>
+                                                                        <td id="sysinfo-replies-auth">&nbsp;</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="overlay" id="sysinfo-cache-overlay">
+                                <div class="overlay" id="sysinfo-dns-overlay">
                                     <i class="fa fa-sync fa-spin"></i>
                                 </div>
                             </div>

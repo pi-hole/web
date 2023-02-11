@@ -63,7 +63,26 @@ function updateCacheInfo() {
       $("#sysinfo-cache-valid-ds").text(cache.valid.ds);
       $("#sysinfo-cache-valid-dnskey").text(cache.valid.dnskey);
       $("#sysinfo-cache-valid-other").text(cache.valid.other);
-      $("#sysinfo-cache-overlay").hide();
+
+      var total =
+        cache.optimized + cache.local + cache.auth + cache.extra.unanswered + cache.extra.forwarded;
+      $("#sysinfo-replies-optimized").text(
+        cache.optimized + " (" + ((100 * cache.optimized) / total).toFixed(1) + "%)"
+      );
+      $("#sysinfo-replies-local").text(
+        cache.local + " (" + ((100 * cache.local) / total).toFixed(1) + "%)"
+      );
+      $("#sysinfo-replies-auth").text(
+        cache.auth + " (" + ((100 * cache.auth) / total).toFixed(1) + "%)"
+      );
+      $("#sysinfo-replies-extra-unanswered").text(
+        cache.extra.unanswered + " (" + ((100 * cache.extra.unanswered) / total).toFixed(1) + "%)"
+      );
+      $("#sysinfo-replies-extra-forwarded").text(
+        cache.extra.forwarded + " (" + ((100 * cache.extra.forwarded) / total).toFixed(1) + "%)"
+      );
+
+      $("#sysinfo-dns-overlay").hide();
       // Update every 10 seconds
       clearTimeout(cacheinfoTimer);
       cacheinfoTimer = setTimeout(updateCacheInfo, 10000);
