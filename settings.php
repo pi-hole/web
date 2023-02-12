@@ -313,9 +313,14 @@ if ($FTLpid !== 0) {
                             <div class="box box-warning">
                                 <div class="box-body">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-xs-12 col-md-6 col-lg-3 form-group">
                                             <?php if ($piHoleLogging) { ?>
-                                                <button type="button" class="btn btn-warning confirm-disablelogging-noflush btn-block">Disable query logging</button>
+                                                <form role="form" method="post" id="disablelogsform-noflush">
+                                                    <input type="hidden" name="action" value="Disable-noflush">
+                                                    <input type="hidden" name="field" value="Logging">
+                                                    <input type="hidden" name="token" value="<?php echo $token; ?>">
+                                                    <button type="button" class="btn btn-warning confirm-disablelogging-noflush btn-block">Disable query logging</button>
+                                                </form>
                                             <?php } else { ?>
                                                 <form role="form" method="post">
                                                     <input type="hidden" name="action" value="Enable">
@@ -325,55 +330,31 @@ if ($FTLpid !== 0) {
                                                 </form>
                                             <?php } ?>
                                         </div>
-                                        <p class="hidden-md hidden-lg"></p>
-                                        <div class="col-md-4">
-                                            <button type="button" class="btn btn-warning confirm-flusharp btn-block">Flush network table</button>
-                                        </div>
-                                        <p class="hidden-md hidden-lg"></p>
-                                        <div class="col-md-4">
-                                            <button type="button" class="btn btn-warning confirm-restartdns btn-block">Restart DNS resolver</button>
-                                        </div>
-                                    </div>
-                                    <br/>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <button type="button" class="btn btn-danger confirm-flushlogs btn-block">Flush logs (last 24 hours)</button>
-                                        </div>
-                                        <p class="hidden-md hidden-lg"></p>
-                                        <div class="col-md-4">
-                                            <button type="button" class="btn btn-danger confirm-poweroff btn-block">Power off system</button>
-                                        </div>
-                                        <p class="hidden-md hidden-lg"></p>
-                                        <div class="col-md-4">
-                                            <button type="button" class="btn btn-danger confirm-reboot btn-block">Restart system</button>
-                                        </div>
-                                    </div>
 
-                                    <form role="form" method="post" id="flushlogsform">
-                                        <input type="hidden" name="field" value="flushlogs">
-                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                    </form>
-                                    <form role="form" method="post" id="flusharpform">
-                                        <input type="hidden" name="field" value="flusharp">
-                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                    </form>
-                                    <form role="form" method="post" id="disablelogsform-noflush">
-                                        <input type="hidden" name="field" value="Logging">
-                                        <input type="hidden" name="action" value="Disable-noflush">
-                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                    </form>
-                                    <form role="form" method="post" id="poweroffform">
-                                        <input type="hidden" name="field" value="poweroff">
-                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                    </form>
-                                    <form role="form" method="post" id="rebootform">
-                                        <input type="hidden" name="field" value="reboot">
-                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                    </form>
-                                    <form role="form" method="post" id="restartdnsform">
-                                        <input type="hidden" name="field" value="restartdns">
-                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                    </form>
+                                        <div class="col-xs-12 col-md-6 col-lg-3 form-group">
+                                            <button type="button" class="btn btn-warning confirm-flusharp btn-block">Flush network table</button>
+                                            <form role="form" method="post" id="flusharpform">
+                                                <input type="hidden" name="field" value="flusharp">
+                                                <input type="hidden" name="token" value="<?php echo $token; ?>">
+                                            </form>
+                                        </div>
+
+                                        <div class="col-xs-12 col-md-6 col-lg-3 form-group">
+                                            <button type="button" class="btn btn-warning confirm-flushlogs btn-block">Flush logs (last 24 hours)</button>
+                                            <form role="form" method="post" id="flushlogsform">
+                                                <input type="hidden" name="field" value="flushlogs">
+                                                <input type="hidden" name="token" value="<?php echo $token; ?>">
+                                            </form>
+                                        </div>
+
+                                        <div class="col-xs-12 col-md-6 col-lg-3 form-group">
+                                            <button type="button" class="btn btn-warning confirm-restartdns btn-block">Restart DNS resolver</button>
+                                            <form role="form" method="post" id="restartdnsform">
+                                                <input type="hidden" name="field" value="restartdns">
+                                                <input type="hidden" name="token" value="<?php echo $token; ?>">
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
