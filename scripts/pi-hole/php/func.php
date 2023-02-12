@@ -227,7 +227,7 @@ function getCustomDNSEntries()
     return $entries;
 }
 
-function addCustomDNSEntry($ip = '', $domain = '', $reload = '', $json = true)
+function addCustomDNSEntry($ip = '', $domain = '', $reload = '', $json = true, $teleporter = false)
 {
     try {
         if (isset($_REQUEST['ip'])) {
@@ -286,7 +286,8 @@ function addCustomDNSEntry($ip = '', $domain = '', $reload = '', $json = true)
         foreach ($domains as $domain) {
             pihole_execute('-a addcustomdns '.$ip.' '.$domain.' '.$reload);
         }
-        if ($num > 0) {
+        // restart only if not called from teleporter.php as it handles restarts itself
+        if (($num > 0) && (!$teleporter)) {
             pihole_execute('restartdns');
         }
 
@@ -404,7 +405,7 @@ function getCustomCNAMEEntries()
     return $entries;
 }
 
-function addCustomCNAMEEntry($domain = '', $target = '', $reload = '', $json = true)
+function addCustomCNAMEEntry($domain = '', $target = '', $reload = '', $json = true, $teleporter = false)
 {
     try {
         if (isset($_REQUEST['domain'])) {
@@ -467,7 +468,8 @@ function addCustomCNAMEEntry($domain = '', $target = '', $reload = '', $json = t
             pihole_execute('-a addcustomcname '.$d.' '.$target.' '.$reload);
         }
 
-        if ($num > 0) {
+        // restart only if not called from teleporter.php as it handles restarts itself
+        if (($num > 0) && (!$teleporter)) {
             pihole_execute('restartdns');
         }
 

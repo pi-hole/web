@@ -1042,3 +1042,7 @@ table.dataTable tbody > tr > .selected {
   left: 50%;
   translate: -50% -50%;
 }
+
+.faint-border {
+  border-color: rgba(127, 127, 127, 0.1);
+}
