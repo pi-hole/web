@@ -693,12 +693,8 @@ function convertUnicodeToIDNA($unicode)
 }
 
 // Return PID of FTL (used in settings.php)
-function pidofFTL($add_delay = false)
+function pidofFTL()
 {
-    if ($add_delay) {
-        usleep(100000);
-    }
-
     return shell_exec('pidof pihole-FTL');
 }
 
