@@ -68,7 +68,7 @@ function updateMetrics() {
       var metrics = data.metrics;
       setMetrics(metrics, "sysinfo-");
 
-      $("#sysinfo-metrics-overlay").hide();
+      $("div[id^='sysinfo-metrics-overlay']").hide();
       // Update every 10 seconds
       clearTimeout(metricsTimer);
       metricsTimer = setTimeout(updateMetrics, 10000);

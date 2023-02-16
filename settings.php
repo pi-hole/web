@@ -129,249 +129,248 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                         <div class="col-md-6">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Server metrics</h3>
+                                    <h3 class="box-title">DNS cache metrics</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <div class="box">
-                                                <div class="box-header with-border">
-                                                    <h3 class="box-title">DNS cache</h3>
-                                                </div>
-                                                <div class="box-body">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <table class="table table-striped table-bordered nowrap">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <th scope="row">
-                                                                            <span title="Size of the DNS domain cache">DNS cache size:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-cache-size">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">
-                                                                            <span title="Number of cache insertions">DNS cache insertions:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-cache-inserted">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">
-                                                                            <span title="Number of cache entries that had to be removed although they are not expired (increase cache size to reduce this number)" lookatme-text="DNS cache evictions:">DNS cache evictions:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-cache-evicted">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">
-                                                                            DNS cache expiries:
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-cache-expired">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">
-                                                                            Immortal DNS cache entries:
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-cache-immortal">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            Valid A records in cache:
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-cache-content-a">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            Valid AAAA records in cache:
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-cache-content-aaaa">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            Valid CNAME records in cache:
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-cache-content-cname">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            Valid SRV records in cache:
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-cache-content-srv">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            Valid DS records in cache:
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-cache-content-ds">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            Valid DNSKEY records in cache:
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-cache-content-dnskey">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            Other valid records in cache:
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-cache-content-other">&nbsp;</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                            See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <div class="box">
-                                                <div class="box-header with-border">
-                                                    <h3 class="box-title">DNS replies</h3>
-                                                </div>
-                                                <div class="box-body">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <table class="table table-striped table-bordered nowrap">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <th scope="row">
-                                                                            <span>Local replies:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-replies-local">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">
-                                                                            Forwarded queries:
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-replies-forwarded">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">
-                                                                            Unanswered queries:
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-replies-unanswered">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">
-                                                                            <span>Cache optimizer replies:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-replies-optimized">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>Authoritative replies:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dns-replies-auth">&nbsp;</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12 settings-level-2">
-                                            <div class="box">
-                                                <div class="box-header with-border">
-                                                    <h3 class="box-title">DHCP server</h3>
-                                                </div>
-                                                <div class="box-body">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <table class="table table-striped table-bordered nowrap">
-                                                                <tbody>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>DHCPDISCOVER:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dhcp-discover">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>DHCPOFFER:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dhcp-offer">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>DHCPREQUEST:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dhcp-request">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>DHCPACK:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dhcp-ack">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>DHCPNAK:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dhcp-nak">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>DHCPDECLINE:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dhcp-decline">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>DHCPINFORM:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dhcp-inform">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>DHCPRELEASE:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dhcp-release">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>DHCPNOANSWER:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dhcp-noanswer">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>BOOTP:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dhcp-bootp">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>PXE:</span>
-                                                                        </th>
-                                                                        <td id="sysinfo-dhcp-pxe">&nbsp;</td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>Allocated / pruned IPv4 leases:</span>
-                                                                        </th>
-                                                                        <td><span id="sysinfo-dhcp-leases-allocated_4">&nbsp;</span> /
-                                                                            <span id="sysinfo-dhcp-leases-pruned_4">&nbsp;</span>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr class="settings-level-2">
-                                                                        <th scope="row">
-                                                                            <span>Allocated / pruned IPv6 leases:</span>
-                                                                        </th>
-                                                                        <td><span id="sysinfo-dhcp-leases-allocated_6">&nbsp;</span> /
-                                                                            <span id="sysinfo-dhcp-leases-pruned_6">&nbsp;</span>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <table class="table table-striped table-bordered nowrap">
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span title="Size of the DNS domain cache">DNS cache size:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dns-cache-size">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span title="Number of cache insertions">DNS cache insertions:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dns-cache-inserted">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span title="Number of cache entries that had to be removed although they are not expired (increase cache size to reduce this number)" lookatme-text="DNS cache evictions:">DNS cache evictions:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dns-cache-evicted">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            DNS cache expiries:
+                                                        </th>
+                                                        <td id="sysinfo-dns-cache-expired">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Immortal DNS cache entries:
+                                                        </th>
+                                                        <td id="sysinfo-dns-cache-immortal">&nbsp;</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <table class="table table-striped table-bordered nowrap settings-level-2">
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Valid A records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-dns-cache-content-a">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Valid AAAA records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-dns-cache-content-aaaa">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Valid CNAME records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-dns-cache-content-cname">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Valid SRV records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-dns-cache-content-srv">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Valid DS records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-dns-cache-content-ds">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Valid DNSKEY records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-dns-cache-content-dnskey">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Other valid records in cache:
+                                                        </th>
+                                                        <td id="sysinfo-dns-cache-content-other">&nbsp;</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
                                         </div>
                                     </div>
                                 </div>
-                                <div class="overlay" id="sysinfo-metrics-overlay">
+                                <div class="overlay" id="sysinfo-metrics-overlay-1">
+                                    <i class="fa fa-sync fa-spin"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">DNS reply metrics</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <table class="table table-striped table-bordered nowrap">
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>Local replies:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dns-replies-local">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Forwarded queries:
+                                                        </th>
+                                                        <td id="sysinfo-dns-replies-forwarded">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            Unanswered queries:
+                                                        </th>
+                                                        <td id="sysinfo-dns-replies-unanswered">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>Cache optimizer replies:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dns-replies-optimized">&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>Authoritative replies:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dns-replies-auth">&nbsp;</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="overlay" id="sysinfo-metrics-overlay-2">
+                                    <i class="fa fa-sync fa-spin"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 settings-level-2">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">DHCP server sysinfo-metrics-overlay/h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <table class="table table-striped table-bordered nowrap">
+                                                <tbody>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>DHCPDISCOVER:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-discover">&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>DHCPOFFER:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-offer">&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>DHCPREQUEST:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-request">&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>DHCPACK:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-ack">&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>DHCPNAK:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-nak">&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>DHCPDECLINE:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-decline">&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>DHCPINFORM:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-inform">&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>DHCPRELEASE:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-release">&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>DHCPNOANSWER:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-noanswer">&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>BOOTP:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-bootp">&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>PXE:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-pxe">&nbsp;</td>
+                                                    </tr>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>Allocated / pruned IPv4 leases:</span>
+                                                        </th>
+                                                        <td><span id="sysinfo-dhcp-leases-allocated_4">&nbsp;</span> /
+                                                            <span id="sysinfo-dhcp-leases-pruned_4">&nbsp;</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="settings-level-2">
+                                                        <th scope="row">
+                                                            <span>Allocated / pruned IPv6 leases:</span>
+                                                        </th>
+                                                        <td><span id="sysinfo-dhcp-leases-allocated_6">&nbsp;</span> /
+                                                            <span id="sysinfo-dhcp-leases-pruned_6">&nbsp;</span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="overlay" id="sysinfo-metrics-overlay-3">
                                     <i class="fa fa-sync fa-spin"></i>
                                 </div>
                             </div>
