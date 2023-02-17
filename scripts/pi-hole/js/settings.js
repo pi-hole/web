@@ -64,38 +64,6 @@ $(function () {
     $("#zip_filename").val(fileName);
   });
 });
-$(".confirm-poweroff").confirm({
-  text: "Are you sure you want to send a poweroff command to your Pi-hole?",
-  title: "Confirmation required",
-  confirm: function () {
-    $("#poweroffform").submit();
-  },
-  cancel: function () {
-    // nothing to do
-  },
-  confirmButton: "Yes, poweroff",
-  cancelButton: "No, go back",
-  post: true,
-  confirmButtonClass: "btn-danger",
-  cancelButtonClass: "btn-success",
-  dialogClass: "modal-dialog",
-});
-$(".confirm-reboot").confirm({
-  text: "Are you sure you want to send a reboot command to your Pi-hole?",
-  title: "Confirmation required",
-  confirm: function () {
-    $("#rebootform").submit();
-  },
-  cancel: function () {
-    // nothing to do
-  },
-  confirmButton: "Yes, reboot",
-  cancelButton: "No, go back",
-  post: true,
-  confirmButtonClass: "btn-danger",
-  cancelButtonClass: "btn-success",
-  dialogClass: "modal-dialog",
-});
 
 $(".confirm-restartdns").confirm({
   text: "Are you sure you want to send a restart command to your DNS server?",

@@ -431,18 +431,6 @@ if (isset($_POST['field'])) {
 
             break;
 
-        case 'poweroff':
-            pihole_execute('-a poweroff');
-            $success = 'The system will poweroff in 5 seconds...';
-
-            break;
-
-        case 'reboot':
-            pihole_execute('-a reboot');
-            $success = 'The system will reboot in 5 seconds...';
-
-            break;
-
         case 'restartdns':
             pihole_execute('-a restartdns');
             $success = 'The DNS server has been restarted';
