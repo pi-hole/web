@@ -49,12 +49,9 @@ function generateRow(topic, key, value) {
   }
 
   // else: we have a setting we can display
-  var row =
-    '<div class="col-md-6 ' +
-    (value.flags.advanced ? "advanced-setting" : "") +
-    '">' +
+  var box =
     '<div class="box box-warning">' +
-    '<div class="box-header with-border">' +
+    '<div class="box-header no-user-select">' +
     '<h3 class="box-title">' +
     key +
     (value.modified ? '&nbsp;&nbsp;<i class="far fa-edit" title="Modified"></i>' : "") +
@@ -67,8 +64,6 @@ function generateRow(topic, key, value) {
     "</p>" +
     "</div>" +
     '<div class="box-body">' +
-    '<div class="row">' +
-    '<div class="col-lg-12">' +
     '<div class="form-group">';
   var defaultValueHint = "";
   if (value.modified) {
@@ -105,7 +100,7 @@ function generateRow(topic, key, value) {
     case "IPv4 address":
     case "IPv6 address":
     case "string": {
-      row +=
+      box +=
         '<label class="col-sm-4 control-label">Value (string)</label>' +
         '<div class="col-sm-8">' +
         '<input type="text" class="form-control" value="' +
@@ -119,7 +114,7 @@ function generateRow(topic, key, value) {
     }
 
     case "boolean": {
-      row +=
+      box +=
         '<div><input type="checkbox" ' +
         (value.value ? " checked" : "") +
         ' id="' +
@@ -135,7 +130,7 @@ function generateRow(topic, key, value) {
     }
 
     case "double": {
-      row +=
+      box +=
         '<label class="col-sm-4 control-label">Value</label>' +
         '<div class="col-sm-8">' +
         '<input type="number" class="form-control" value="' +
@@ -148,7 +143,7 @@ function generateRow(topic, key, value) {
     }
 
     case "integer": {
-      row +=
+      box +=
         '<label class="col-sm-4 control-label">Value (integer)</label>' +
         '<div class="col-sm-8">' +
         '<input type="number" step="1" class="form-control" value="' +
@@ -161,7 +156,7 @@ function generateRow(topic, key, value) {
     }
 
     case "unsigned integer": {
-      row +=
+      box +=
         '<label class="col-sm-4 control-label">Value (unsigned integer)</label>' +
         '<div class="col-sm-8">' +
         '<input type="number" step="1" min="0" class="form-control" value="' +
@@ -174,7 +169,7 @@ function generateRow(topic, key, value) {
     }
 
     case "unsigned integer (16 bit)": {
-      row +=
+      box +=
         '<label class="col-sm-4 control-label">Value (unsigned 16bit integer)</label>' +
         '<div class="col-sm-8">' +
         '<input type="number" step="1" min="0" max="65535" class="form-control" value="' +
@@ -187,7 +182,7 @@ function generateRow(topic, key, value) {
     }
 
     case "string array": {
-      row +=
+      box +=
         '<label class="col-sm-5 control-label">Values (one item per line)</label>' +
         '<div class="col-sm-7">' +
         '<textarea class="form-control">' +
@@ -201,12 +196,12 @@ function generateRow(topic, key, value) {
     }
 
     case "enum (string)": {
-      row +=
+      box +=
         '<label class="col-sm-4 control-label">Selected Option</label>' +
         '<div class="col-sm-8">' +
         '<select class="form-control">';
       value.allowed.forEach(function (option) {
-        row +=
+        box +=
           '<option value="' +
           option.item +
           '"' +
@@ -215,7 +210,7 @@ function generateRow(topic, key, value) {
           option.item +
           "</option>";
       });
-      row +=
+      box +=
         "</select> " +
         defaultValueHint +
         "</div>" +
@@ -227,12 +222,20 @@ function generateRow(topic, key, value) {
     }
 
     default: {
-      row += "TYPE " + value.type + " NOT DEFINED";
+      box += "TYPE " + value.type + " NOT DEFINED";
     }
   }
 
-  row += "</div></div></div></div> ";
-  $("#advanced-content").append(row);
+  box += "</div></div> ";
+  var topKey = key.split(".")[0];
+  // Add the box to the left or right column depending on which is shorter
+  // This is done to reduce gaps between boxes
+  var elem =
+    $("#advanced-content-" + topKey + "-left").height() <=
+    $("#advanced-content-" + topKey + "-right").height() + 10
+      ? $("#advanced-content-" + topKey + "-left")
+      : $("#advanced-content-" + topKey + "-right");
+  elem.append(box);
 }
 
 function fillDHCPhosts(data) {
@@ -251,12 +254,40 @@ function createDynamicConfigTabs() {
       fillDHCPhosts(data.config.dhcp.hosts);
 
       // Create the content for the advanced dynamic config topics
-      $("#advanced-content").empty();
+      Object.keys(data.topics).forEach(function (n) {
+        var topic = data.topics[n];
+        $("#advanced-content").append(
+          '<div class="col-lg-12" id="advanced-content-' +
+            topic.name +
+            '">' +
+            '<div class="box box-success">' +
+            '<div class="box-header with-border no-user-select">' +
+            '<h3 class="box-title">' +
+            topic.description +
+            " (<code>" +
+            topic.name +
+            "</code>)" +
+            "</h3>" +
+            "</div>" +
+            '<div class="box-body">' +
+            '<div class="row" id="advanced-content-' +
+            topic.name +
+            '-body">' +
+            '<div class="col-md-6" id="advanced-content-' +
+            topic.name +
+            '-left"></div>' +
+            '<div class="col-md-6" id="advanced-content-' +
+            topic.name +
+            '-right"></div>' +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>"
+        );
+      });
       Object.keys(data.config).forEach(function (topic) {
-        Object.keys(data.config[topic]).forEach(function (key) {
-          var value = data.config[topic][key];
-          generateRow(topic, topic + "." + key, value, data);
-        });
+        var value = data.config[topic];
+        generateRow(topic, topic, value, data);
       });
       $("#advanced-overlay").hide();
 

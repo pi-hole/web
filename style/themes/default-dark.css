@@ -184,7 +184,7 @@ h4 {
 }
 .box-solid,
 .box {
-  border: 1px solid #272c30;
+  border: 1px solid dimgray;
 }
 .box-solid > .box-header,
 .box > .box-header {

@@ -99,6 +99,106 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                     <i class="fa fa-sync fa-spin"></i>
                                 </div>
                             </div>
+                            <div class="box settings-level-2">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">DHCP server metrics</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <table class="table table-striped table-bordered nowrap">
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>DHCPDISCOVER:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-discover">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>DHCPOFFER:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-offer">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>DHCPREQUEST:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-request">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>DHCPACK:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-ack">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>DHCPNAK:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-nak">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>DHCPDECLINE:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-decline">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>DHCPINFORM:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-inform">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>DHCPRELEASE:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-release">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>DHCPNOANSWER:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-noanswer">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>BOOTP:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-bootp">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>PXE:</span>
+                                                        </th>
+                                                        <td id="sysinfo-dhcp-pxe">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>Allocated / pruned IPv4 leases:</span>
+                                                        </th>
+                                                        <td><span id="sysinfo-dhcp-leases-allocated_4">&nbsp;</span> /
+                                                            <span id="sysinfo-dhcp-leases-pruned_4">&nbsp;</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <span>Allocated / pruned IPv6 leases:</span>
+                                                        </th>
+                                                        <td><span id="sysinfo-dhcp-leases-allocated_6">&nbsp;</span> /
+                                                            <span id="sysinfo-dhcp-leases-pruned_6">&nbsp;</span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="overlay" id="sysinfo-metrics-overlay-3">
+                                    <i class="fa fa-sync fa-spin"></i>
+                                </div>
+                            </div>
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">FTL Information</h3>
@@ -127,7 +227,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="box">
+                        <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">DNS cache metrics</h3>
                                 </div>
@@ -222,8 +322,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                     <i class="fa fa-sync fa-spin"></i>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">DNS reply metrics</h3>
@@ -269,108 +367,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                     </div>
                                 </div>
                                 <div class="overlay" id="sysinfo-metrics-overlay-2">
-                                    <i class="fa fa-sync fa-spin"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 settings-level-2">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">DHCP server sysinfo-metrics-overlay/h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <table class="table table-striped table-bordered nowrap">
-                                                <tbody>
-                                                    <tr class="settings-level-2">
-                                                        <th scope="row">
-                                                            <span>DHCPDISCOVER:</span>
-                                                        </th>
-                                                        <td id="sysinfo-dhcp-discover">&nbsp;</td>
-                                                    </tr>
-                                                    <tr class="settings-level-2">
-                                                        <th scope="row">
-                                                            <span>DHCPOFFER:</span>
-                                                        </th>
-                                                        <td id="sysinfo-dhcp-offer">&nbsp;</td>
-                                                    </tr>
-                                                    <tr class="settings-level-2">
-                                                        <th scope="row">
-                                                            <span>DHCPREQUEST:</span>
-                                                        </th>
-                                                        <td id="sysinfo-dhcp-request">&nbsp;</td>
-                                                    </tr>
-                                                    <tr class="settings-level-2">
-                                                        <th scope="row">
-                                                            <span>DHCPACK:</span>
-                                                        </th>
-                                                        <td id="sysinfo-dhcp-ack">&nbsp;</td>
-                                                    </tr>
-                                                    <tr class="settings-level-2">
-                                                        <th scope="row">
-                                                            <span>DHCPNAK:</span>
-                                                        </th>
-                                                        <td id="sysinfo-dhcp-nak">&nbsp;</td>
-                                                    </tr>
-                                                    <tr class="settings-level-2">
-                                                        <th scope="row">
-                                                            <span>DHCPDECLINE:</span>
-                                                        </th>
-                                                        <td id="sysinfo-dhcp-decline">&nbsp;</td>
-                                                    </tr>
-                                                    <tr class="settings-level-2">
-                                                        <th scope="row">
-                                                            <span>DHCPINFORM:</span>
-                                                        </th>
-                                                        <td id="sysinfo-dhcp-inform">&nbsp;</td>
-                                                    </tr>
-                                                    <tr class="settings-level-2">
-                                                        <th scope="row">
-                                                            <span>DHCPRELEASE:</span>
-                                                        </th>
-                                                        <td id="sysinfo-dhcp-release">&nbsp;</td>
-                                                    </tr>
-                                                    <tr class="settings-level-2">
-                                                        <th scope="row">
-                                                            <span>DHCPNOANSWER:</span>
-                                                        </th>
-                                                        <td id="sysinfo-dhcp-noanswer">&nbsp;</td>
-                                                    </tr>
-                                                    <tr class="settings-level-2">
-                                                        <th scope="row">
-                                                            <span>BOOTP:</span>
-                                                        </th>
-                                                        <td id="sysinfo-dhcp-bootp">&nbsp;</td>
-                                                    </tr>
-                                                    <tr class="settings-level-2">
-                                                        <th scope="row">
-                                                            <span>PXE:</span>
-                                                        </th>
-                                                        <td id="sysinfo-dhcp-pxe">&nbsp;</td>
-                                                    </tr>
-                                                    <tr class="settings-level-2">
-                                                        <th scope="row">
-                                                            <span>Allocated / pruned IPv4 leases:</span>
-                                                        </th>
-                                                        <td><span id="sysinfo-dhcp-leases-allocated_4">&nbsp;</span> /
-                                                            <span id="sysinfo-dhcp-leases-pruned_4">&nbsp;</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="settings-level-2">
-                                                        <th scope="row">
-                                                            <span>Allocated / pruned IPv6 leases:</span>
-                                                        </th>
-                                                        <td><span id="sysinfo-dhcp-leases-allocated_6">&nbsp;</span> /
-                                                            <span id="sysinfo-dhcp-leases-pruned_6">&nbsp;</span>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="overlay" id="sysinfo-metrics-overlay-3">
                                     <i class="fa fa-sync fa-spin"></i>
                                 </div>
                             </div>
@@ -457,126 +453,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-6 settings-level-1">
-                            <div class="box box-warning">
-                                <div class="box-header with-border">
-                                    <h1 class="box-title">Interface settings&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h1>
-                                </div>
-                                <div class="box-body">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="form-group">
-                                                <div class="no-danger-area">
-                                                    <h4>Recommended setting</h4>
-                                                    <div>
-                                                        <input type="radio" name="DNSinterface" id="dns.listeningMode-LOCAL">
-                                                        <label for="dns.listeningMode-LOCAL"><strong>Allow only local requests</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
-                                                    </div>
-                                                </div>
-                                                <div class="danger-area">
-                                                    <h4>Potentially dangerous options</h4>Make sure your Pi-hole is properly firewalled!
-                                                    <div>
-                                                        <input type="radio" name="DNSinterface" id="dns.listeningMode-SINGLE">
-                                                        <label for="dns.listeningMode-SINGLE"><strong>Respond only on interface <span id="interface-name-1"></span></strong></label>
-                                                    </div>
-                                                    <div>
-                                                        <input type="radio" name="DNSinterface" id="dns.listeningMode-BIND">
-                                                        <label for="dns.listeningMode-BIND"><strong>Bind only to interface <span id="interface-name-2"></span></strong></label>
-                                                    </div>
-                                                    <div>
-                                                        <input type="radio" name="DNSinterface" id="dns.listeningMode-ALL">
-                                                        <label for="dns.listeningMode-ALL"><strong>Permit all origins</strong></label>
-                                                    </div>
-                                                    <p>These options are dangerous on devices
-                                                        directly connected to the Internet such as cloud instances and are only safe if your
-                                                        Pi-hole is properly firewalled. In a typical at-home setup where your Pi-hole is
-                                                        located within your local network (and you have <strong>not</strong> forwarded port 53
-                                                        in your router!) they are safe to use.</p>
-                                                </div>
-                                            </div>
-                                            <p>See <a href="https://docs.pi-hole.net/ftldns/interfaces/" target="_blank">our documentation</a> for further technical details.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="box box-warning">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Advanced DNS settings</h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div>
-                                                <input type="checkbox" id="dns.domainNeeded" title="domain-needed">
-                                                <label for="dns.domainNeeded"><strong>Never forward non-FQDN <code>A</code> and <code>AAAA</code> queries</strong></label>
-                                                <p>Tells Pi-hole to never forward A or AAAA queries for plain
-                                                    names, without dots or domain parts, to upstream nameservers. If
-                                                    the name is not known from <code>/etc/hosts</code> or DHCP then a "not found"
-                                                    answer is returned.<br>
-                                                    If Conditional Forwarding is enabled, unticking this box may cause a partial
-                                                    DNS loop under certain circumstances (e.g. if a client would send TLD DNSSEC queries).</p>
-                                            </div>
-                                            <br>
-                                            <div>
-                                                <input type="checkbox" id="dns.bogusPriv" title="bogus-priv">
-                                                <label for="dns.bogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
-                                                <p>All reverse lookups for private IP ranges (i.e., <code>192.168.0.x/24</code>, etc.)
-                                                    which are not found in <code>/etc/hosts</code> or the DHCP leases are answered
-                                                    with "no such domain" rather than being forwarded upstream. The set
-                                                    of prefixes affected is the list given in <a href="https://tools.ietf.org/html/rfc6303">RFC6303</a>.</p>
-                                                    <p><strong>Important</strong>: Enabling these two options may increase your privacy,
-                                                    but may also prevent you from being able to access
-                                                    local hostnames if the Pi-hole is not used as DHCP server.</p>
-                                            </div>
-                                            <br>
-                                            <div>
-                                                <input type="checkbox" id="dns.dnssec">
-                                                <label for="dns.dnssec"><strong>Use DNSSEC</strong></label>
-                                                <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
-                                                    queries, Pi-hole requests the DNSSEC records needed to validate
-                                                    the replies. If a domain fails validation or the upstream does not
-                                                    support DNSSEC, this setting can cause issues resolving domains.
-                                                    Use an upstream DNS server which supports DNSSEC when activating DNSSEC. Note that
-                                                    the size of your log might increase significantly
-                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
-                                                    <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 settings-level-1">
-                            <div class="box box-warning">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Rate-limiting&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <p>Block clients making more than <input type="number" id="dns.rateLimit.count" value="" min="0" step="10" style="width: 5em;"> queries within
-                                                <input type="number" id="dns.rateLimit.interval" value="" min="0" step="10" style="width: 4em;"> seconds.</p>
-                                                <p>When a client makes too many queries in too short time, it
-                                                gets rate-limited. Rate-limited queries are answered with a
-                                                <code>REFUSED</code> reply and not further processed by FTL
-                                                and prevent Pi-holes getting overwhelmed by rogue clients.
-                                                It is important to note that rate-limiting is happening on a
-                                                per-client basis. Other clients can continue to use FTL while
-                                                rate-limited clients are short-circuited at the same time.</p>
-                                            <p>Rate-limiting may be disabled altogether by setting both
-                                                values to zero. See
-                                                <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" target="_blank">our documentation</a>
-                                                for further details.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 settings-level-1">
-                            <div class="box box-warning">
+                            <div class="box box-warning settings-level-1">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Conditional forwarding&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
                                 </div>
@@ -640,6 +517,121 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-lg-6 settings-level-1">
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h1 class="box-title">Interface settings&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h1>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <div class="no-danger-area">
+                                                    <h4>Recommended setting</h4>
+                                                    <div>
+                                                        <input type="radio" name="DNSinterface" id="dns.listeningMode-LOCAL">
+                                                        <label for="dns.listeningMode-LOCAL"><strong>Allow only local requests</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
+                                                    </div>
+                                                </div>
+                                                <div class="danger-area">
+                                                    <h4>Potentially dangerous options</h4>Make sure your Pi-hole is properly firewalled!
+                                                    <div>
+                                                        <input type="radio" name="DNSinterface" id="dns.listeningMode-SINGLE">
+                                                        <label for="dns.listeningMode-SINGLE"><strong>Respond only on interface <span id="interface-name-1"></span></strong></label>
+                                                    </div>
+                                                    <div>
+                                                        <input type="radio" name="DNSinterface" id="dns.listeningMode-BIND">
+                                                        <label for="dns.listeningMode-BIND"><strong>Bind only to interface <span id="interface-name-2"></span></strong></label>
+                                                    </div>
+                                                    <div>
+                                                        <input type="radio" name="DNSinterface" id="dns.listeningMode-ALL">
+                                                        <label for="dns.listeningMode-ALL"><strong>Permit all origins</strong></label>
+                                                    </div>
+                                                    <p>These options are dangerous on devices
+                                                        directly connected to the Internet such as cloud instances and are only safe if your
+                                                        Pi-hole is properly firewalled. In a typical at-home setup where your Pi-hole is
+                                                        located within your local network (and you have <strong>not</strong> forwarded port 53
+                                                        in your router!) they are safe to use.</p>
+                                                </div>
+                                            </div>
+                                            <p>See <a href="https://docs.pi-hole.net/ftldns/interfaces/" target="_blank">our documentation</a> for further technical details.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Advanced DNS settings</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div>
+                                                <input type="checkbox" id="dns.domainNeeded" title="domain-needed">
+                                                <label for="dns.domainNeeded"><strong>Never forward non-FQDN <code>A</code> and <code>AAAA</code> queries</strong></label>
+                                                <p>Tells Pi-hole to never forward A or AAAA queries for plain
+                                                    names, without dots or domain parts, to upstream nameservers. If
+                                                    the name is not known from <code>/etc/hosts</code> or DHCP then a "not found"
+                                                    answer is returned.<br>
+                                                    If Conditional Forwarding is enabled, unticking this box may cause a partial
+                                                    DNS loop under certain circumstances (e.g. if a client would send TLD DNSSEC queries).</p>
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <input type="checkbox" id="dns.bogusPriv" title="bogus-priv">
+                                                <label for="dns.bogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
+                                                <p>All reverse lookups for private IP ranges (i.e., <code>192.168.0.x/24</code>, etc.)
+                                                    which are not found in <code>/etc/hosts</code> or the DHCP leases are answered
+                                                    with "no such domain" rather than being forwarded upstream. The set
+                                                    of prefixes affected is the list given in <a href="https://tools.ietf.org/html/rfc6303">RFC6303</a>.</p>
+                                                    <p><strong>Important</strong>: Enabling these two options may increase your privacy,
+                                                    but may also prevent you from being able to access
+                                                    local hostnames if the Pi-hole is not used as DHCP server.</p>
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <input type="checkbox" id="dns.dnssec">
+                                                <label for="dns.dnssec"><strong>Use DNSSEC</strong></label>
+                                                <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
+                                                    queries, Pi-hole requests the DNSSEC records needed to validate
+                                                    the replies. If a domain fails validation or the upstream does not
+                                                    support DNSSEC, this setting can cause issues resolving domains.
+                                                    Use an upstream DNS server which supports DNSSEC when activating DNSSEC. Note that
+                                                    the size of your log might increase significantly
+                                                    when enabling DNSSEC. A DNSSEC resolver test can be found
+                                                    <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box box-warning settings-level-1">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Rate-limiting&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <p>Block clients making more than <input type="number" id="dns.rateLimit.count" value="" min="0" step="10" style="width: 5em;"> queries within
+                                                <input type="number" id="dns.rateLimit.interval" value="" min="0" step="10" style="width: 4em;"> seconds.</p>
+                                                <p>When a client makes too many queries in too short time, it
+                                                gets rate-limited. Rate-limited queries are answered with a
+                                                <code>REFUSED</code> reply and not further processed by FTL
+                                                and prevent Pi-holes getting overwhelmed by rogue clients.
+                                                It is important to note that rate-limiting is happening on a
+                                                per-client basis. Other clients can continue to use FTL while
+                                                rate-limited clients are short-circuited at the same time.</p>
+                                            <p>Rate-limiting may be disabled altogether by setting both
+                                                values to zero. See
+                                                <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" target="_blank">our documentation</a>
+                                                for further details.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 settings-level-1">
                             <button type="submit" class="btn btn-primary pull-right">Save</button>
                         </div>
                     </div>
@@ -648,89 +640,92 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'dhcp
                 <div id="dhcp" class="tab-pane fade<?php if ($tab === 'dhcp') { ?> in active<?php } ?>">
                     <div class="row">
                         <!-- DHCP Settings Box -->
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="box box-warning">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">DHCP Settings</h3>
                                 </div>
                                 <div class="box-body">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div><input type="checkbox" id="dhcp.active"><label for="dhcp.active"><strong>DHCP server enabled</strong></label></div>
-                                                    <p id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
-                                                </div>
-                                                <div class="col-xs-12">
-                                                    <label style="margin-top: 10px">Range of IP addresses to hand out</label>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
-                                                    <div class="form-group">
-                                                        <div class="input-group">
-                                                            <div class="input-group-addon">From</div>
-                                                            <input type="text" class="form-control DHCPgroup" id="dhcp.start"
-                                                                autocomplete="off" spellcheck="false" autocapitalize="none"
-                                                                autocorrect="off" value="">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
-                                                    <div class="form-group">
-                                                        <div class="input-group">
-                                                            <div class="input-group-addon">To</div>
-                                                            <input type="text" class="form-control DHCPgroup" id="dhcp.end"
-                                                                autocomplete="off" spellcheck="false" autocapitalize="none"
-                                                                autocorrect="off" value="">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
-                                                    <label>Router (gateway) IP address</label>
-                                                    <div class="form-group">
-                                                        <div class="input-group">
-                                                            <div class="input-group-addon">Router</div>
-                                                            <input type="text" class="form-control DHCPgroup" id="dhcp.router"
-                                                                autocomplete="off" spellcheck="false" autocapitalize="none"
-                                                                autocorrect="off" value="">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div><input type="checkbox" id="dhcp.ipv6" class="DHCPgroup">&nbsp;<label for="dhcp.ipv6"><strong>Enable additional IPv6 support (SLAAC + RA)</strong></label></div>
-                                                    <p>Enable this option to enable IPv6 support for the Pi-hole DHCP server. This will allow the Pi-hole to hand out IPv6 addresses to clients and also provide IPv6 router advertisements (RA) to clients. This option is only useful if the Pi-hole is configured with an IPv6 address.</p>
+                                        <div class="col-md-12">
+                                            <div><input type="checkbox" id="dhcp.active"><label for="dhcp.active"><strong>DHCP server enabled</strong></label></div>
+                                            <p id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <label style="margin-top: 10px">Range of IP addresses to hand out</label>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">From</div>
+                                                    <input type="text" class="form-control DHCPgroup" id="dhcp.start"
+                                                        autocomplete="off" spellcheck="false" autocapitalize="none"
+                                                        autocorrect="off" value="">
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <label>Pi-hole domain name</label>
-                                                    <div class="form-group">
-                                                        <div class="input-group">
-                                                            <div class="input-group-addon">Domain</div>
-                                                            <input type="text" class="form-control DHCPgroup" id="dns.domain"
-                                                                value="">
-                                                        </div>
-                                                    </div>
-                                                    <p>The DNS domains for the DHCP server. If no domain is specified, then any DHCP hostname with a domain part (i.e., with a period) will be disallowed. If a domain is specified, then hostnames with a domain parts matching the domain here are allowed. In addition, when a suffix is set then hostnames without a domain part have the suffix added as an optional domain part.</p>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label>DHCP lease time</label>
-                                                    <div class="form-group">
-                                                        <div class="input-group">
-                                                            <div class="input-group-addon">Lease time</div>
-                                                            <input type="text" class="form-control DHCPgroup"
-                                                                autocomplete="off" spellcheck="false" autocapitalize="none"
-                                                                autocorrect="off" id="dhcp.leaseTime" value="">
-                                                        </div>
-                                                    </div>
-                                                    <p>The lease time can be in seconds, minutes (e.g., "45m"), hours (e.g., "1h"), days (like "2d"), or even weeks ("1w"). You may also use "infinite" as string but be aware of the drawbacks: assigned addresses are will only be made available again after the lease time has passed or when leases are manually deleted below.</p>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div><input type="checkbox" id="dhcp.rapidCommit" class="DHCPgroup">&nbsp;<label for="dhcp.rapidCommit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
-                                                    <p>The DHCPv4 rapid commit option allows the Pi-hole DHCP server to assign an IP address to a client right away. This can noteably speed up the address assignment process and you will notice, e.g., faster WiFi joins in your network. This option should only be enabled if the Pi-hole DHCP server is the only DHCP server in your network.</p>
+                                        <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">To</div>
+                                                    <input type="text" class="form-control DHCPgroup" id="dhcp.end"
+                                                        autocomplete="off" spellcheck="false" autocapitalize="none"
+                                                        autocorrect="off" value="">
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
+                                            <label>Router (gateway) IP address</label>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">Router</div>
+                                                    <input type="text" class="form-control DHCPgroup" id="dhcp.router"
+                                                        autocomplete="off" spellcheck="false" autocapitalize="none"
+                                                        autocorrect="off" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div><input type="checkbox" id="dhcp.ipv6" class="DHCPgroup">&nbsp;<label for="dhcp.ipv6"><strong>Enable additional IPv6 support (SLAAC + RA)</strong></label></div>
+                                            <p>Enable this option to enable IPv6 support for the Pi-hole DHCP server. This will allow the Pi-hole to hand out IPv6 addresses to clients and also provide IPv6 router advertisements (RA) to clients. This option is only useful if the Pi-hole is configured with an IPv6 address.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Advanced DHCP Settings</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Pi-hole domain name</label>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">Domain</div>
+                                                    <input type="text" class="form-control DHCPgroup" id="dns.domain"
+                                                        value="">
+                                                </div>
+                                            </div>
+                                            <p>The DNS domains for the DHCP server. If no domain is specified, then any DHCP hostname with a domain part (i.e., with a period) will be disallowed. If a domain is specified, then hostnames with a domain parts matching the domain here are allowed. In addition, when a suffix is set then hostnames without a domain part have the suffix added as an optional domain part.</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>DHCP lease time</label>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">Lease time</div>
+                                                    <input type="text" class="form-control DHCPgroup"
+                                                        autocomplete="off" spellcheck="false" autocapitalize="none"
+                                                        autocorrect="off" id="dhcp.leaseTime" value="">
+                                                </div>
+                                            </div>
+                                            <p>The lease time can be in seconds, minutes (e.g., "45m"), hours (e.g., "1h"), days (like "2d"), or even weeks ("1w"). You may also use "infinite" as string but be aware of the drawbacks: assigned addresses are will only be made available again after the lease time has passed or when leases are manually deleted below.</p>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div><input type="checkbox" id="dhcp.rapidCommit" class="DHCPgroup">&nbsp;<label for="dhcp.rapidCommit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
+                                            <p>The DHCPv4 rapid commit option allows the Pi-hole DHCP server to assign an IP address to a client right away. This can noteably speed up the address assignment process and you will notice, e.g., faster WiFi joins in your network. This option should only be enabled if the Pi-hole DHCP server is the only DHCP server in your network.</p>
                                         </div>
                                     </div>
                                 </div>
