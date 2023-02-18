@@ -9,7 +9,7 @@
 /* exported updateHostInfo, updateCacheInfo */
 
 var hostinfoTimer = null;
-// eslint-disable-next-line no-unused-vars
+
 function updateHostInfo() {
   $.ajax({
     url: "/api/info/host",
@@ -59,7 +59,7 @@ function setMetrics(data, prefix) {
 }
 
 var metricsTimer = null;
-// eslint-disable-next-line no-unused-vars
+
 function updateMetrics() {
   $.ajax({
     url: "/api/info/metrics",
@@ -177,4 +177,9 @@ $(".confirm-disablelogging-noflush").confirm({
   confirmButtonClass: "btn-warning",
   cancelButtonClass: "btn-success",
   dialogClass: "modal-dialog",
+});
+
+$(function () {
+  updateHostInfo();
+  updateMetrics();
 });

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, setConfigValues: false, apiFailure: false */
 
 var dhcpLeaesTable = null;
 
@@ -204,3 +204,24 @@ function delLease(ip) {
       console.log(exception); // eslint-disable-line no-console
     });
 }
+
+function fillDHCPhosts(data) {
+  $("#dhcp-hosts").val(data.value.join("\n"));
+}
+
+function processDHCPConfig() {
+  $.ajax({
+    url: "/api/config/dhcp?detailed=true",
+  })
+    .done(function (data) {
+      fillDHCPhosts(data.config.dhcp.hosts);
+      setConfigValues("dhcp", "dhcp", data.config.dhcp);
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
+}
+
+$(document).ready(function () {
+  processDHCPConfig();
+});

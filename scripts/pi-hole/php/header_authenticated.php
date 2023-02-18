@@ -9,6 +9,14 @@
 */
 
 require 'header.php';
+// Function to check string starting
+// with given substring
+function startsWith($string, $startString)
+{
+    $len = strlen($startString);
+
+    return substr($string, 0, $len) === $startString;
+}
 ?>
     <link rel="stylesheet" href="<?php echo fileversion('style/vendor/datatables.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo fileversion('style/vendor/datatables_extensions.min.css'); ?>">
@@ -54,6 +62,17 @@ require 'header.php';
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
+                <?php if (startsWith($scriptname, 'settings-')) { ?>
+                    <li class="nav-item">
+                        <p class="navbar-text">
+                            Settings level: <select id="settings-level">
+                                <option value="0">Basic</option>
+                                <option value="1">Advanced</option>
+                                <option value="2">Expert</option>
+                            </select>
+                        </p>
+                    </li>
+                    <?php } ?>
                     <li<?php echo !$hostname ? ' class="hidden"' : ''; ?>>
                         <p class="navbar-text">
                             <span class="hidden-xs">hostname:</span>

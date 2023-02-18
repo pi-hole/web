@@ -187,6 +187,10 @@ function updateFtlInfo() {
       $("#sysinfo-cpu-ftl").text("(" + ftl["%cpu"].toFixed(1) + "% used by FTL)");
       $("#sysinfo-ram-ftl").text("(" + ftl["%mem"].toFixed(1) + "% used by FTL)");
       $("#sysinfo-pid-ftl").text(ftl.pid);
+      var startdate = moment()
+        .subtract(ftl.uptime, "milliseconds")
+        .format("dddd, MMMM Do YYYY, HH:mm:ss");
+      $("#sysinfo-uptime-ftl").text(startdate);
       $("#sysinfo-privacy_level").text(ftl.privacy_level);
       $("#sysinfo-ftl-overlay").hide();
       // Update every 120 seconds
@@ -516,4 +520,42 @@ $("#pihole-disable-custom").on("click", function (e) {
   var custVal = $("#customTimeout").val();
   custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
   piholeChange("disable", custVal);
+});
+
+function initSettingsLevel() {
+  // Restore settings level from local storage (if available) or default to 0
+  var level = localStorage.getItem("settings-level");
+  if (level === null) {
+    level = "0";
+  }
+
+  // Set the settings level
+  $("#settings-level").val(level);
+  applySettingsLevel(level);
+}
+
+function applySettingsLevel(level) {
+  if (level === "2") {
+    $(".settings-level-0").show();
+    $(".settings-level-1").show();
+    $(".settings-level-2").show();
+  } else if (level === "1") {
+    $(".settings-level-0").show();
+    $(".settings-level-1").show();
+    $(".settings-level-2").hide();
+  } else {
+    $(".settings-level-0").show();
+    $(".settings-level-1").hide();
+    $(".settings-level-2").hide();
+  }
+}
+
+$("#settings-level").on("change", function () {
+  var level = $(this).val();
+  applySettingsLevel(level);
+  localStorage.setItem("settings-level", level);
+});
+
+$(function () {
+  initSettingsLevel();
 });

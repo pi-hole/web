@@ -5,49 +5,6 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global updateHostInfo:false, updateMetrics:false, createDynamicConfigTabs:false */
-
-$(function () {
-  updateHostInfo();
-  updateMetrics();
-  createDynamicConfigTabs();
-});
-
-// Change "?tab=" parameter in URL for save and reload
-$(".nav-tabs a").on("shown.bs.tab", function (e) {
-  var tab = e.target.hash.substring(1);
-  window.history.pushState("", "", "?tab=" + tab);
-  window.scrollTo(0, 0);
-});
-
-function initSettingsLevel() {
-  // Restore settings level from local storage (if available) or default to 0
-  var level = localStorage.getItem("settings-level");
-  if (level === null) {
-    level = "0";
-  }
-
-  // Set the settings level
-  $("#settings-level").val(level);
-  applySettingsLevel(level);
-}
-
-function applySettingsLevel(level) {
-  if (level === "2") {
-    $(".settings-level-0").show();
-    $(".settings-level-1").show();
-    $(".settings-level-2").show();
-  } else if (level === "1") {
-    $(".settings-level-0").show();
-    $(".settings-level-1").show();
-    $(".settings-level-2").hide();
-  } else {
-    $(".settings-level-0").show();
-    $(".settings-level-1").hide();
-    $(".settings-level-2").hide();
-  }
-}
-
 // Handle hiding of alerts
 $(function () {
   $("[data-hide]").on("click", function () {
@@ -55,12 +12,31 @@ $(function () {
       .closest("." + $(this).attr("data-hide"))
       .hide();
   });
-
-  $("#settings-level").on("change", function () {
-    var level = $(this).val();
-    applySettingsLevel(level);
-    localStorage.setItem("settings-level", level);
-  });
-
-  initSettingsLevel();
 });
+
+// Globally available function to set config values
+// eslint-disable-next-line no-unused-vars
+function setConfigValues(topic, key, value) {
+  // If the value is an object, we need to recurse
+  if (!("description" in value)) {
+    Object.keys(value).forEach(function (subkey) {
+      var subvalue = value[subkey];
+      setConfigValues(topic, key + "." + subkey, subvalue);
+    });
+    return;
+  }
+
+  // else: we have a setting we can set
+  var escapedKey = key.replace(/\./g, "\\.");
+  if (value.type === "enum (string)") {
+    $("#" + escapedKey + "-" + value.value).trigger("click");
+  } else if (value.type === "boolean") {
+    // Select checkboxes (if available)
+    $("#" + escapedKey).prop("checked", value.value);
+  } else if (
+    ["string", "IPv4 address", "IPv6 address", "integer", "unsigned integer"].includes(value.type)
+  ) {
+    // Set input field values (if available)
+    $("#" + escapedKey).val(value.value);
+  }
+}

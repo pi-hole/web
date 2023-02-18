@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* exported fillDNSupstreams */
+/* global applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false */
 
 // Remove an element from an array (inline)
 function removeFromArray(arr, what) {
@@ -17,7 +17,6 @@ function removeFromArray(arr, what) {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
 function fillDNSupstreams(value, servers) {
   var i = 0;
   var customServers = value.value.length;
@@ -81,11 +80,36 @@ function fillDNSupstreams(value, servers) {
 
   // Initialize textfield
   updateDNSserversTextfield(value.value, customServers);
+
+  // Hide the loading animation
+  $("#dns-upstreams-overlay").hide();
+
+  // Apply styling to the new checkboxes
+  applyCheckboxRadioStyle();
 }
 
+// Update the textfield with all (incl. custom) upstream servers
 function updateDNSserversTextfield(upstreams, customServers) {
   $("#DNSupstreamsTextfield").val(upstreams.join("\n"));
   $("#custom-servers-title").text(
     "(" + customServers + " custom server" + (customServers === 1 ? "" : "s") + " enabled)"
   );
 }
+
+function processDNSConfig() {
+  $.ajax({
+    url: "/api/config/dns?detailed=true", // We need the detailed output to get the DNS server list
+  })
+    .done(function (data) {
+      // Initialize the DNS upstreams
+      fillDNSupstreams(data.config.dns.upstreams, data.dns_servers);
+      setConfigValues("dns", "dns", data.config.dns);
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
+}
+
+$(document).ready(function () {
+  processDNSConfig();
+});

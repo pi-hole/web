@@ -1,4 +1,3 @@
-
     <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
         <!-- sidebar: style can be found in sidebar.less -->
@@ -219,10 +218,50 @@
                     </ul>
                 </li>
                 <!-- Settings -->
-                <li class="menu-system<?php if ($scriptname === 'settings.php') { ?> active<?php } ?>">
-                    <a href="settings.php">
-                        <i class="fa fa-fw menu-icon fa-cog"></i> <span>Settings</span>
+                <li class="menu-system treeview <?php if (startsWith($scriptname, 'settings-')) { ?> active<?php } ?>">
+                    <a href="#">
+                        <i class="fa fa-fw menu-icon fa-cogs"></i> <span>Settings</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
                     </a>
+                    <ul class="treeview-menu">
+                        <li class="<?php if ($scriptname === 'settings-system.php') { ?> active<?php } ?>">
+                            <a href="settings-system.php">
+                                <i class="fa fa-fw menu-icon fa-cog"></i> System
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'settings-dns.php') { ?> active<?php } ?>">
+                            <a href="settings-dns.php">
+                                <i class="fa fa-fw menu-icon fa-cog"></i> DNS
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'settings-dhcp.php') { ?> active<?php } ?>">
+                            <a href="settings-dhcp.php">
+                                <i class="fa fa-fw menu-icon fa-cog"></i> DHCP
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'settings-api.php') { ?> active<?php } ?>">
+                            <a href="settings-api.php">
+                                <i class="fa fa-fw menu-icon fa-cog"></i> Web interface / API
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'settings-privacy.php') { ?> active<?php } ?>">
+                            <a href="settings-privacy.php">
+                                <i class="fa fa-fw menu-icon fa-cog"></i> Privacy
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'settings-advanced.php') { ?> active<?php } ?> settings-level-2">
+                            <a href="settings-advanced.php">
+                                <i class="fa fa-fw menu-icon fa-cog"></i> Advanced
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'settings-teleporter.php') { ?> active<?php } ?>">
+                            <a href="settings-teleporter.php">
+                                <i class="fa fa-fw menu-icon fa-cog"></i> Teleporter
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <!-- Donate button -->

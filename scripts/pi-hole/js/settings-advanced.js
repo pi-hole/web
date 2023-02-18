@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure: false, applyCheckboxRadioStyle: false, fillDNSupstreams: false */
+/* global utils:false, apiFailure: false, applyCheckboxRadioStyle: false */
 /* exported createDynamicConfigTabs */
 
 function addAllowedValues(allowed) {
@@ -32,20 +32,6 @@ function generateRow(topic, key, value) {
       generateRow(topic, key + "." + subkey, subvalue);
     });
     return;
-  }
-
-  // Select listening mode radio button
-  var escapedKey = key.replace(/\./g, "\\.");
-  if (value.type === "enum (string)") {
-    $("#" + escapedKey + "-" + value.value).trigger("click");
-  } else if (value.type === "boolean") {
-    // Select checkboxes (if available)
-    $("#" + escapedKey).prop("checked", value.value);
-  } else if (
-    ["string", "IPv4 address", "IPv6 address", "integer", "unsigned integer"].includes(value.type)
-  ) {
-    // Set input field values (if available)
-    $("#" + escapedKey).val(value.value);
   }
 
   // else: we have a setting we can display
@@ -238,21 +224,11 @@ function generateRow(topic, key, value) {
   elem.append(box);
 }
 
-function fillDHCPhosts(data) {
-  $("#dhcp-hosts").val(data.value.join("\n"));
-}
-
-// eslint-disable-next-line no-unused-vars
 function createDynamicConfigTabs() {
   $.ajax({
     url: "/api/config?detailed=true",
   })
     .done(function (data) {
-      // Initialize the DNS upstreams
-      fillDNSupstreams(data.config.dns.upstreams, data.dns_servers);
-
-      fillDHCPhosts(data.config.dhcp.hosts);
-
       // Create the content for the advanced dynamic config topics
       Object.keys(data.topics).forEach(function (n) {
         var topic = data.topics[n];
@@ -297,3 +273,7 @@ function createDynamicConfigTabs() {
       apiFailure(data);
     });
 }
+
+$(document).ready(function () {
+  createDynamicConfigTabs();
+});
