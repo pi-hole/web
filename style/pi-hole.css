@@ -417,11 +417,12 @@ td.lookatme {
 }
 
 .box {
-  border-radius: 10px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .small-box {
-  border-radius: 10px;
+  border-radius: 8px;
   z-index: 0; /* fix the small-box z-index (related to '.small-box .icon') */
   overflow: hidden;
 }
