@@ -95,7 +95,7 @@ function parseQueryStatus(data) {
       break;
     case "FORWARDED":
       colorClass = "text-green";
-      icon = "fa-solid fa-upload";
+      icon = "fa-solid fa-cloud-download-alt";
       fieldtext = "Forwarded to " + data.upstream;
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
@@ -103,7 +103,7 @@ function parseQueryStatus(data) {
     case "CACHE":
       colorClass = "text-green";
       icon = "fa-regular fa-database";
-      fieldtext = "Cached";
+      fieldtext = "Served from cache";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
       break;
@@ -180,12 +180,19 @@ function parseQueryStatus(data) {
     case "IN_PROGRESS":
       colorClass = "text-green";
       icon = "fa-solid fa-redo";
-      fieldtext = "OK <br class='hidden-lg'>(already forwarded)";
+      fieldtext = "Already forwarded";
+      buttontext =
+        '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
+      break;
+    case "CACHE_STALE":
+      colorClass = "text-green";
+      icon = "fa-solid fa-infinity";
+      fieldtext = "Served by cache optimizer";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
       break;
     default:
-      colorClass = false;
+      colorClass = "text-orange";
       icon = "fa-solid fa-question";
       fieldtext = data.status;
       buttontext = "";
@@ -515,9 +522,18 @@ $(function () {
     rowCallback: function (row, data) {
       var querystatus = parseQueryStatus(data);
 
+      // Remove HTML from querystatus.fieldtext
+      var rawtext = $("<div/>").html(querystatus.fieldtext).text();
+
       if (querystatus.icon !== false) {
         $("td:eq(1)", row).html(
-          "<i class='fa " + querystatus.icon + " " + querystatus.colorClass + "'></i>"
+          "<i class='fa fa-fw " +
+            querystatus.icon +
+            " " +
+            querystatus.colorClass +
+            "' title='" +
+            rawtext +
+            "'></i>"
         );
       } else if (querystatus.colorClass !== false) {
         $(row).addClass(querystatus.colorClass);
