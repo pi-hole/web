@@ -409,10 +409,8 @@ td.lookatme {
   margin-left: 0;
 }
 
-/* "Hide" all sidebar header titles, but keep them readable to screen readers */
 .sidebar-menu > li.header {
   color: transparent;
-  font-size: 0;
   padding: 1px;
 }
 
@@ -425,6 +423,10 @@ td.lookatme {
   border-radius: 8px;
   z-index: 0; /* fix the small-box z-index (related to '.small-box .icon') */
   overflow: hidden;
+}
+
+.small-box-header {
+  padding: 4px 8px 4px 8px;
 }
 
 .small-box span {

@@ -102,7 +102,7 @@ function parseQueryStatus(data) {
       break;
     case "CACHE":
       colorClass = "text-green";
-      icon = "fa-regular fa-database";
+      icon = "fa-solid fa-database";
       fieldtext = "Served from cache";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
@@ -110,7 +110,7 @@ function parseQueryStatus(data) {
     case "REGEX":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked <br class='hidden-lg'>(regex)";
+      fieldtext = "Blocked (regex)";
       regexLink = data.regex > 0;
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Allow</button>';
@@ -118,26 +118,26 @@ function parseQueryStatus(data) {
     case "DENYLIST":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked <br class='hidden-lg'>(exact)";
+      fieldtext = "Blocked (exact)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Allow</button>';
       break;
     case "EXTERNAL_BLOCKED_IP":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked <br class='hidden-lg'>(external, IP)";
+      fieldtext = "Blocked (external, IP)";
       buttontext = "";
       break;
     case "EXTERNAL_BLOCKED_NULL":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked <br class='hidden-lg'>(external, NULL)";
+      fieldtext = "Blocked (external, NULL)";
       buttontext = "";
       break;
     case "EXTERNAL_BLOCKED_NXRA":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked <br class='hidden-lg'>(external, NXRA)";
+      fieldtext = "Blocked (external, NXRA)";
       buttontext = "";
       break;
     case "GRAVITY_CNAME":
@@ -151,7 +151,7 @@ function parseQueryStatus(data) {
     case "REGEX_CNAME":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked <br class='hidden-lg'>(regex diened, CNAME)";
+      fieldtext = "Blocked (regex diened, CNAME)";
       regexLink = data.regex > 0;
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Allow</button>';
@@ -160,7 +160,7 @@ function parseQueryStatus(data) {
     case "DENYLIST_CNAME":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked <br class='hidden-lg'>(exact diened, CNAME)";
+      fieldtext = "Blocked (exact diened, CNAME)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
@@ -174,13 +174,13 @@ function parseQueryStatus(data) {
     case "RETRIED_DNSSEC":
       colorClass = "text-green";
       icon = "fa-solid fa-redo"; // fa-repeat
-      fieldtext = "Retried <br class='hidden-lg'>(ignored)";
+      fieldtext = "Retried (ignored)";
       buttontext = "";
       break;
     case "IN_PROGRESS":
       colorClass = "text-green";
-      icon = "fa-solid fa-redo";
-      fieldtext = "Already forwarded";
+      icon = "fa-solid fa-hourglass-half";
+      fieldtext = "Already forwarded, awaiting reply";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Deny</button>';
       break;

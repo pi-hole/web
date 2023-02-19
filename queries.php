@@ -69,7 +69,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                 <div class="row">
                     <div class="col-md-3">
                         <div class="box box-default box-solid">
-                            <div class="box-header with-border">
+                            <div class="box-header small-box-header">
                                 <h3 class="box-title">Domain</h3>
                                 <!-- /.box-tools -->
                             </div>
@@ -83,7 +83,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                     </div>
                     <div class="col-md-3">
                         <div class="box box-default box-solid">
-                            <div class="box-header with-border">
+                            <div class="box-header small-box-header">
                                 <h3 class="box-title">Client (by IP)</h3>
                                 <!-- /.box-tools -->
                             </div>
@@ -97,7 +97,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                     </div>
                     <div class="col-md-3">
                         <div class="box box-default box-solid">
-                            <div class="box-header with-border">
+                            <div class="box-header small-box-header">
                                 <h3 class="box-title">Client (by name)</h3>
                                 <!-- /.box-tools -->
                             </div>
@@ -111,7 +111,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                     </div>
                     <div class="col-md-3">
                         <div class="box box-default box-solid">
-                            <div class="box-header with-border">
+                            <div class="box-header small-box-header">
                                 <h3 class="box-title">Upstream</h3>
                                 <!-- /.box-tools -->
                             </div>
@@ -125,7 +125,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="box box-default box-solid">
-                            <div class="box-header with-border">
+                            <div class="box-header small-box-header">
                                 <h3 class="box-title">Type</h3>
                                 <!-- /.box-tools -->
                             </div>
@@ -139,7 +139,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="box box-default box-solid">
-                            <div class="box-header with-border">
+                            <div class="box-header small-box-header">
                                 <h3 class="box-title">Status</h3>
                                 <!-- /.box-tools -->
                             </div>
@@ -153,7 +153,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="box box-default box-solid">
-                            <div class="box-header with-border">
+                            <div class="box-header small-box-header">
                                 <h3 class="box-title">Reply</h3>
                                 <!-- /.box-tools -->
                             </div>
@@ -167,7 +167,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="box box-default box-solid">
-                            <div class="box-header with-border">
+                            <div class="box-header small-box-header">
                                 <h3 class="box-title">DNSSEC status</h3>
                                 <!-- /.box-tools -->
                             </div>

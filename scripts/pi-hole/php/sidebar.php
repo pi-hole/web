@@ -24,34 +24,11 @@
                         <i class="fa fa-fw menu-icon fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
-
-                <li class="header text-uppercase">Analysis</li>
                 <!-- Query Log -->
                 <li class="menu-analysis<?php if ($scriptname === 'queries.php') { ?> active<?php } ?>">
                     <a href="queries.php">
                         <i class="fa fa-fw menu-icon fa-file-alt"></i> <span>Query Log</span>
                     </a>
-                </li>
-                <!-- Long-term database -->
-                <li class="menu-analysis treeview<?php if ($scriptname === 'db_lists.php' || $scriptname === 'db_graph.php') { ?> active<?php } ?>">
-                    <a href="#">
-                        <i class="fa fa-fw menu-icon fa-history"></i> <span>Long-term Data</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="<?php if ($scriptname === 'db_graph.php') { ?> active<?php } ?>">
-                            <a href="db_graph.php">
-                                <i class="fa fa-fw menu-icon fa-chart-bar"></i> Graphics
-                            </a>
-                        </li>
-                        <li class="<?php if ($scriptname === 'db_lists.php') { ?> active<?php } ?>">
-                            <a href="db_lists.php">
-                                <i class="fa fa-fw menu-icon fa-list"></i> Top Lists
-                            </a>
-                        </li>
-                    </ul>
                 </li>
 
                 <li class="header text-uppercase">Group Management</li>
@@ -94,7 +71,7 @@
                 <li class="header text-uppercase">DNS Control</li>
                 <!-- Local DNS Records -->
                 <!-- Enable/Disable Blocking -->
-                <li id="pihole-disable" class="menu-dns treeview"<?php if ($pistatus == '0') { ?> hidden<?php } ?>>
+                <li id="pihole-disable" class="menu-dns treeview">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-stop"></i> <span>Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
                         <span class="pull-right-container">
@@ -138,28 +115,63 @@
                         </span>
                     </a>
                 </li>
-                <li class="menu-dns treeview <?php if (in_array($scriptname, array('dns_records.php', 'cname_records.php'))) { ?>active<?php } ?>">
+                <li class="header text-uppercase">System</li>
+                <!-- Settings -->
+                <li class="menu-system treeview <?php if (startsWith($scriptname, 'settings-')) { ?> active<?php } ?>">
                     <a href="#">
-                        <i class="fa fa-fw menu-icon fa-address-book"></i> <span>Local DNS</span>
+                        <i class="fa fa-fw menu-icon fa-cogs"></i> <span>Settings</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="<?php if ($scriptname === 'dns_records.php') { ?> active<?php } ?>">
-                            <a href="dns_records.php">
-                                <i class="fa fa-fw menu-icon fa-address-book"></i> DNS Records
+                        <li class="<?php if ($scriptname === 'settings-system.php') { ?> active<?php } ?>">
+                            <a href="settings-system.php">
+                                <i class="fa-fw menu-icon fa-solid fa-circle-info"></i> System
                             </a>
                         </li>
-                        <li class="<?php if ($scriptname === 'cname_records.php') { ?> active<?php } ?>">
-                            <a href="cname_records.php">
-                                <i class="fa fa-fw menu-icon fa-address-book"></i> CNAME Records
+                        <li class="<?php if ($scriptname === 'settings-dns.php') { ?> active<?php } ?>">
+                            <a href="settings-dns.php">
+                                <i class="fa-fw menu-icon fa-solid fa-book-atlas"></i> DNS
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'settings-dhcp.php') { ?> active<?php } ?>">
+                            <a href="settings-dhcp.php">
+                                <i class="fa-fw menu-icon fa-solid fa-sitemap"></i> DHCP
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'settings-api.php') { ?> active<?php } ?>">
+                            <a href="settings-api.php">
+                                <i class="fa-fw menu-icon fa-solid fa-window-restore"></i> Web interface / API
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'settings-privacy.php') { ?> active<?php } ?>">
+                            <a href="settings-privacy.php">
+                                <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> Privacy
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'settings-advanced.php') { ?> active<?php } ?> settings-level-2">
+                            <a href="settings-advanced.php">
+                                <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> Advanced
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'settings-teleporter.php') { ?> active<?php } ?>">
+                            <a href="settings-teleporter.php">
+                                <i class="fa-fw menu-icon fa-solid fa-file-export"></i> Teleporter
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'settings-dns-records.php') { ?> active<?php } ?>">
+                            <a href="settings-dns-records.php">
+                                <i class="fa-fw menu-icon fa-solid fa-address-book"></i> DNS Records
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'settings-cname-records.php') { ?> active<?php } ?>">
+                            <a href="settings-cname-records.php">
+                                <i class="fa-fw menu-icon fa-solid fa-address-book"></i> CNAME Records
                             </a>
                         </li>
                     </ul>
                 </li>
-
-                <li class="header text-uppercase">System</li>
                 <!-- Tools -->
                 <li class="menu-system treeview<?php if (in_array($scriptname, array('messages.php', 'gravity.php', 'queryads.php', 'taillog.php', 'taillog-FTL.php', 'debug.php', 'network.php'))) { ?> active<?php } ?>">
                     <a href="#">
@@ -213,52 +225,6 @@
                         <li class="<?php if ($scriptname === 'network.php') { ?> active<?php } ?>">
                             <a href="network.php">
                                 <i class="fa fa-fw menu-icon fa-network-wired"></i> Network
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <!-- Settings -->
-                <li class="menu-system treeview <?php if (startsWith($scriptname, 'settings-')) { ?> active<?php } ?>">
-                    <a href="#">
-                        <i class="fa fa-fw menu-icon fa-cogs"></i> <span>Settings</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="<?php if ($scriptname === 'settings-system.php') { ?> active<?php } ?>">
-                            <a href="settings-system.php">
-                                <i class="fa fa-fw menu-icon fa-cog"></i> System
-                            </a>
-                        </li>
-                        <li class="<?php if ($scriptname === 'settings-dns.php') { ?> active<?php } ?>">
-                            <a href="settings-dns.php">
-                                <i class="fa fa-fw menu-icon fa-cog"></i> DNS
-                            </a>
-                        </li>
-                        <li class="<?php if ($scriptname === 'settings-dhcp.php') { ?> active<?php } ?>">
-                            <a href="settings-dhcp.php">
-                                <i class="fa fa-fw menu-icon fa-cog"></i> DHCP
-                            </a>
-                        </li>
-                        <li class="<?php if ($scriptname === 'settings-api.php') { ?> active<?php } ?>">
-                            <a href="settings-api.php">
-                                <i class="fa fa-fw menu-icon fa-cog"></i> Web interface / API
-                            </a>
-                        </li>
-                        <li class="<?php if ($scriptname === 'settings-privacy.php') { ?> active<?php } ?>">
-                            <a href="settings-privacy.php">
-                                <i class="fa fa-fw menu-icon fa-cog"></i> Privacy
-                            </a>
-                        </li>
-                        <li class="<?php if ($scriptname === 'settings-advanced.php') { ?> active<?php } ?> settings-level-2">
-                            <a href="settings-advanced.php">
-                                <i class="fa fa-fw menu-icon fa-cog"></i> Advanced
-                            </a>
-                        </li>
-                        <li class="<?php if ($scriptname === 'settings-teleporter.php') { ?> active<?php } ?>">
-                            <a href="settings-teleporter.php">
-                                <i class="fa fa-fw menu-icon fa-cog"></i> Teleporter
                             </a>
                         </li>
                     </ul>
