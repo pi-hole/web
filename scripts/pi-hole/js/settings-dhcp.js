@@ -136,7 +136,7 @@ $(function () {
       [10, 25, 50, 100, "All"],
     ],
     language: {
-      emptyTable: "No issues found.",
+      emptyTable: "No DHCP leases found.",
     },
     stateSave: true,
     stateDuration: 0,

@@ -190,10 +190,6 @@ h4 {
 .box > .box-header {
   color: #bec5cb;
 }
-.box-solid > .box-header .btn,
-.box > .box-header .btn {
-  color: #bec5cb;
-}
 .box.box-info,
 .box.box-primary,
 .box.box-success,

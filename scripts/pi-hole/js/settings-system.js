@@ -6,7 +6,6 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global apiFailure:false */
-/* exported updateHostInfo, updateCacheInfo */
 
 var hostinfoTimer = null;
 

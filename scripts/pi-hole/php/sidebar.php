@@ -162,12 +162,7 @@
                         </li>
                         <li class="<?php if ($scriptname === 'settings-dns-records.php') { ?> active<?php } ?>">
                             <a href="settings-dns-records.php">
-                                <i class="fa-fw menu-icon fa-solid fa-address-book"></i> DNS Records
-                            </a>
-                        </li>
-                        <li class="<?php if ($scriptname === 'settings-cname-records.php') { ?> active<?php } ?>">
-                            <a href="settings-cname-records.php">
-                                <i class="fa-fw menu-icon fa-solid fa-address-book"></i> CNAME Records
+                                <i class="fa-fw menu-icon fa-solid fa-address-book"></i> Local DNS Records
                             </a>
                         </li>
                     </ul>
@@ -189,6 +184,41 @@
                                 <span class="pull-right-container warning-count hidden"></span>
                             </a>
                         </li>
+                        <!-- Tail log files -->
+                        <li class="treeview <?php if ($scriptname === 'taillog.php') { ?> active<?php } ?>">
+                            <a href="#">
+                                <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> Tail log files
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <!-- Tail pihole.log -->
+                                <li class="<?php if ($scriptname === 'taillog.php' && $_GET["file"] == "dnsmasq") { ?> active<?php } ?>">
+                                    <a href="taillog.php?file=dnsmasq">
+                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>pihole.log</code>
+                                    </a>
+                                </li>
+                                <!-- Tail FTL.log -->
+                                <li class="<?php if ($scriptname === 'taillog.php' && $_GET["file"] == "ftl") { ?> active<?php } ?>">
+                                    <a href="taillog.php?file=ftl">
+                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>FTL.log</code>
+                                    </a>
+                                </li>
+                                <!-- Tail civetweb.log -->
+                                <li class="<?php if ($scriptname === 'taillog.php' && $_GET["file"] == "http") { ?> active<?php } ?>">
+                                    <a href="taillog.php?file=http">
+                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>civetweb.log</code>
+                                    </a>
+                                </li>
+                                <!-- Tail ph7.log -->
+                                <li class="<?php if ($scriptname === 'taillog.php' && $_GET["file"] == "ph7") { ?> active<?php } ?>">
+                                    <a href="taillog.php?file=ph7">
+                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>ph7.log</code>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <!-- Run gravity.sh -->
                         <li class="<?php if ($scriptname === 'gravity.php') { ?> active<?php } ?>">
                             <a href="gravity.php">
@@ -199,20 +229,6 @@
                         <li class="<?php if ($scriptname === 'queryads.php') { ?> active<?php } ?>">
                             <a href="queryads.php">
                                 <i class="fa fa-fw menu-icon fa-search"></i> Search Adlists
-                            </a>
-                        </li>
-                        <!-- Tail pihole.log -->
-                        <li class="<?php if ($scriptname === 'taillog.php') { ?> active<?php } ?>">
-                            <a href="taillog.php">
-                                <svg class="svg-inline--fa fa-fw menu-icon" style="height: 1.25em"><use xlink:href="img/pihole_icon.svg#pihole-svg-logo"/></svg>
-                                Tail pihole.log
-                            </a>
-                        </li>
-                        <!-- Tail FTL.log -->
-                        <li class="<?php if ($scriptname === 'taillog-FTL.php') { ?> active<?php } ?>">
-                            <a href="taillog-FTL.php">
-                                <svg class="svg-inline--fa fa-fw menu-icon" style="height: 1.25em"><use xlink:href="img/pihole_icon.svg#pihole-svg-logo"/></svg>
-                                Tail FTL.log
                             </a>
                         </li>
                         <!-- Generate debug log -->

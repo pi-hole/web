@@ -1055,3 +1055,14 @@ table.dataTable tbody > tr > .selected {
 .faint-border {
   border-color: rgba(127, 127, 127, 0.1);
 }
+
+.pre-scrollable {
+  max-height: calc(100vh - 300px);
+  overflow-y: scroll;
+}
+
+.hr-small {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  border-top: 1px solid #ff0000aa;
+}
