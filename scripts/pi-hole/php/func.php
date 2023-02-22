@@ -111,6 +111,20 @@ function checkfile($filename)
     return '/dev/null';
 }
 
+// Avoid browser caching old versions of a file, using the last modification time
+//   Receive the file URL (without "/admin/");
+//   Return the string containin URL + "?v=xxx", where xxx is the last modified time of the file.
+function fileversion($url)
+{
+    $filename = $_SERVER['DOCUMENT_ROOT'].'/admin/'.$url;
+    $ver = 0;  // Default
+    if (file_exists($filename)) {
+        $ver = filemtime($filename);
+    }
+
+    return $url.'?v='.$ver;
+}
+
 // Credit: http://php.net/manual/en/function.hash-equals.php#119576
 if (!function_exists('hash_equals')) {
     function hash_equals($known_string, $user_string)
@@ -206,7 +220,7 @@ function getCustomDNSEntries()
     return $entries;
 }
 
-function addCustomDNSEntry($ip = '', $domain = '', $reload = '', $json = true)
+function addCustomDNSEntry($ip = '', $domain = '', $reload = '', $json = true, $teleporter = false)
 {
     try {
         if (isset($_REQUEST['ip'])) {
@@ -265,7 +279,8 @@ function addCustomDNSEntry($ip = '', $domain = '', $reload = '', $json = true)
         foreach ($domains as $domain) {
             pihole_execute('-a addcustomdns '.$ip.' '.$domain.' '.$reload);
         }
-        if ($num > 0) {
+        // restart only if not called from teleporter.php as it handles restarts itself
+        if (($num > 0) && (!$teleporter)) {
             pihole_execute('restartdns');
         }
 
@@ -383,7 +398,7 @@ function getCustomCNAMEEntries()
     return $entries;
 }
 
-function addCustomCNAMEEntry($domain = '', $target = '', $reload = '', $json = true)
+function addCustomCNAMEEntry($domain = '', $target = '', $reload = '', $json = true, $teleporter = false)
 {
     try {
         if (isset($_REQUEST['domain'])) {
@@ -446,7 +461,8 @@ function addCustomCNAMEEntry($domain = '', $target = '', $reload = '', $json = t
             pihole_execute('-a addcustomcname '.$d.' '.$target.' '.$reload);
         }
 
-        if ($num > 0) {
+        // restart only if not called from teleporter.php as it handles restarts itself
+        if (($num > 0) && (!$teleporter)) {
             pihole_execute('restartdns');
         }
 
@@ -626,7 +642,7 @@ function getGateway()
 }
 
 // Try to convert possible IDNA domain to Unicode
-function convertIDNAToUnicode($unicode)
+function convertIDNAToUnicode($IDNA)
 {
     if (extension_loaded('intl')) {
         // we try the UTS #46 standard first
@@ -638,32 +654,42 @@ function convertIDNAToUnicode($unicode)
             // to ensure sparkasse-gießen.de is not converted into
             // sparkass-giessen.de but into xn--sparkasse-gieen-2ib.de
             // as mandated by the UTS #46 standard
-            $unicode = idn_to_utf8($unicode, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
+            $unicode = idn_to_utf8($IDNA, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
         } elseif (defined('INTL_IDNA_VARIANT_2003')) {
             // If conversion failed, try with the (deprecated!) IDNA 2003 variant
             // We have to check for its existence as support of this variant is
             // scheduled for removal with PHP 8.0
             // see https://wiki.php.net/rfc/deprecate-and-remove-intl_idna_variant_2003
-            $unicode = idn_to_utf8($unicode, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
+            $unicode = idn_to_utf8($IDNA, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
         }
     }
 
-    return $unicode;
+    // if the conversion failed (e.g. domain to long) return the original domain
+    if ($unicode == false) {
+        return $IDNA;
+    } else {
+        return $unicode;
+    }
 }
 
 // Convert a given (unicode) domain to IDNA ASCII
-function convertUnicodeToIDNA($IDNA)
+function convertUnicodeToIDNA($unicode)
 {
     if (extension_loaded('intl')) {
         // Be prepared that this may fail and see our comments about convertIDNAToUnicode()
         if (defined('INTL_IDNA_VARIANT_UTS46')) {
-            $IDNA = idn_to_ascii($IDNA, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
+            $IDNA = idn_to_ascii($unicode, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
         } elseif (defined('INTL_IDNA_VARIANT_2003')) {
-            $IDNA = idn_to_ascii($IDNA, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
+            $IDNA = idn_to_ascii($unicode, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
         }
     }
 
-    return $IDNA;
+    // if the conversion failed (e.g. domain to long) return the original domain
+    if ($IDNA == false) {
+        return $unicode;
+    } else {
+        return $IDNA;
+    }
 }
 
 // Return PID of FTL (used in settings.php)

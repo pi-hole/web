@@ -6,56 +6,39 @@
  *  Please see LICENSE file for your rights under this license. */
 
 var exact = "";
-
-function quietfilter(ta, data) {
-  var lines = data.split("\n");
-  for (var i = 0; i < lines.length; i++) {
-    if (lines[i].indexOf("results") !== -1 && lines[i].indexOf("0 results") === -1) {
-      var shortstring = lines[i].replace("::: /etc/pihole/", "");
-      // Remove "(x results)"
-      shortstring = shortstring.replace(/\(.*/, "");
-      ta.append(shortstring + "\n");
-    }
-  }
-}
+var showAll = "";
 
 function eventsource() {
   var ta = $("#output");
   // process with the current visible domain input field
-  var domain = $("input[id^='domain']:visible").val().trim();
-  var q = $("#quiet");
+  var domain = $("input[id^='domain']:visible").val().trim().toLowerCase();
+  var unlimited = $("#show-all").is(":checked");
 
   if (domain.length === 0) {
     return;
   }
 
-  var quiet = false;
-  if (q.val() === "yes") {
-    quiet = true;
-    exact = "exact";
+  if (unlimited === true) {
+    showAll = "&showall";
   }
+
+  var queryURL = "scripts/pi-hole/php/queryads.php?domain=" + domain + exact + showAll;
 
   // IE does not support EventSource - load whole content at once
   if (typeof EventSource !== "function") {
     $.ajax({
       method: "GET",
-      url: "scripts/pi-hole/php/queryads.php?domain=" + domain.toLowerCase() + "&" + exact + "&IE",
+      url: queryURL + "&IE",
       async: false,
     }).done(function (data) {
       ta.show();
       ta.empty();
-      if (!quiet) {
-        ta.append(data);
-      } else {
-        quietfilter(ta, data);
-      }
+      ta.append(data);
     });
     return;
   }
 
-  var source = new EventSource(
-    "scripts/pi-hole/php/queryads.php?domain=" + domain.toLowerCase() + "&" + exact
-  );
+  var source = new EventSource(queryURL);
 
   // Reset and show field
   ta.empty();
@@ -64,11 +47,7 @@ function eventsource() {
   source.addEventListener(
     "message",
     function (e) {
-      if (!quiet) {
-        ta.append(e.data);
-      } else {
-        quietfilter(ta, e.data);
-      }
+      ta.append(e.data);
     },
     false
   );
@@ -82,8 +61,9 @@ function eventsource() {
     false
   );
 
-  // Reset exact variable
+  // Reset option variables
   exact = "";
+  showAll = "";
 }
 
 // Handle enter key
@@ -100,7 +80,7 @@ $("button[id^='btnSearch']").on("click", function () {
   exact = "";
 
   if (this.id.match("^btnSearchExact")) {
-    exact = "exact";
+    exact = "&exact";
   }
 
   eventsource();

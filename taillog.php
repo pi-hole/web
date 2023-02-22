@@ -27,7 +27,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
     <label for="chk2">Automatic scrolling on update</label>
 </div>
 
-<script src="scripts/pi-hole/js/taillog.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/taillog.js'); ?>"></script>
 
 <?php
 require 'scripts/pi-hole/php/footer.php';

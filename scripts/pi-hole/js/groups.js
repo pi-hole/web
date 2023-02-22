@@ -224,7 +224,7 @@ function delItems(ids) {
 
   utils.disableAll();
   var idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting groups: " + idstring, "...");
+  utils.showAlert("info", "", "Deleting group(s)...", "<ul>" + items + "</ul>");
 
   $.ajax({
     url: "scripts/pi-hole/php/groups.php",
@@ -238,7 +238,7 @@ function delItems(ids) {
         utils.showAlert(
           "success",
           "far fa-trash-alt",
-          "Successfully deleted groups: " + idstring,
+          "Successfully deleted group(s): ",
           "<ul>" + items + "</ul>"
         );
         for (var id in ids) {
@@ -247,7 +247,12 @@ function delItems(ids) {
           }
         }
       } else {
-        utils.showAlert("error", "", "Error while deleting groups: " + idstring, response.message);
+        utils.showAlert(
+          "error",
+          "",
+          "Error while deleting group(s): " + idstring,
+          response.message
+        );
       }
 
       // Clear selection after deletion
@@ -256,7 +261,12 @@ function delItems(ids) {
     })
     .fail(function (jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting groups: " + idstring, jqXHR.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting group(s): " + idstring,
+        jqXHR.responseText
+      );
       console.log(exception); // eslint-disable-line no-console
     });
 }

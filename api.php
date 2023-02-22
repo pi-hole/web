@@ -75,6 +75,17 @@ if (isset($_GET['enable']) && $auth) {
     $data = array_merge($data, $current);
     $data = array_merge($data, $latest);
     $data = array_merge($data, $branches);
+} elseif (isset($_GET['setTempUnit'])) {
+    $unit = strtolower($_GET['setTempUnit']);
+    if ($unit == 'c' || $unit == 'f' || $unit == 'k') {
+        pihole_execute('-a -'.$unit);
+        $result = 'success';
+    } else {
+        // invalid unit
+        $result = 'error';
+    }
+
+    $data = array_merge($data, array('result' => $result));
 } elseif (isset($_GET['list'])) {
     if (!$auth) {
         exit('Not authorized!');

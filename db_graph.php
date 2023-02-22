@@ -75,8 +75,8 @@ require 'scripts/pi-hole/php/header_authenticated.php';
     </div>
 </div>
 
-<script src="scripts/vendor/daterangepicker.min.js?v=<?php echo $cacheVer; ?>"></script>
-<script src="scripts/pi-hole/js/db_graph.js?v=<?php echo $cacheVer; ?>"></script>
+<script src="<?php echo fileversion('scripts/vendor/daterangepicker.min.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/pi-hole/js/db_graph.js'); ?>"></script>
 <?php
 require 'scripts/pi-hole/php/footer.php';
 ?>
