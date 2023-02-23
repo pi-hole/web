@@ -185,9 +185,6 @@ function delRecord(ip) {
         utils.showAlert("error", "", "Error while deleting DNS record: " + ip, response.record);
       }
     })
-    .done(
-      utils.checkrecords // Update icon warnings count
-    )
     .fail(function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting DNS record: " + ip, jqXHR.responseText);
@@ -222,9 +219,6 @@ function delCNAMERecord(ip) {
         );
       }
     })
-    .done(
-      utils.checkrecords // Update icon warnings count
-    )
     .fail(function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert(
@@ -237,8 +231,51 @@ function delCNAMERecord(ip) {
     });
 }
 
-/*
 $(document).ready(function () {
-  processDNSRecordsConfig();
+  $("#btnAdd-host").on("click", function () {
+    const elem = $("#Hip").val() + " " + $("#Hdomain").val();
+    const path = "/api/config/dns/hosts/" + elem;
+    $.ajax({
+      url: path,
+      method: "PUT",
+    })
+      .done(function (response) {
+        utils.enableAll();
+        if (response === undefined) {
+          utils.showAlert("success", "far fa-trash-alt", "Successfully added DNS record", "");
+          dnsRecordsTable.ajax.reload(null, false);
+        } else {
+          utils.showAlert("error", "", "Error while adding DNS record", response.record);
+        }
+      })
+      .fail(function (jqXHR, exception) {
+        utils.enableAll();
+        utils.showAlert("error", "", "Error while deleting DNS record", jqXHR.responseText);
+        console.log(exception); // eslint-disable-line no-console
+      });
+  });
+  $("#btnAdd-cname").on("click", function () {
+    var elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
+    var ttlVal = parseInt($("#Cttl").val(), 10);
+    if (isFinite(ttlVal) && ttlVal >= 0) elem += "," + ttlVal;
+    const path = "/api/config/dns/cnameRecords/" + elem;
+    $.ajax({
+      url: path,
+      method: "PUT",
+    })
+      .done(function (response) {
+        utils.enableAll();
+        if (response === undefined) {
+          utils.showAlert("success", "far fa-trash-alt", "Successfully added CNAME record", "");
+          dnsRecordsTable.ajax.reload(null, false);
+        } else {
+          utils.showAlert("error", "", "Error while adding CNAME record", response.record);
+        }
+      })
+      .fail(function (jqXHR, exception) {
+        utils.enableAll();
+        utils.showAlert("error", "", "Error while deleting CNAME record", jqXHR.responseText);
+        console.log(exception); // eslint-disable-line no-console
+      });
+  });
 });
-*/

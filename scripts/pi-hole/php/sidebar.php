@@ -21,13 +21,13 @@
                 <!-- Home Page -->
                 <li class="menu-main<?php if ($scriptname === 'index.php') { ?> active<?php } ?>">
                     <a href="index.php">
-                        <i class="fa fa-fw menu-icon fa-home"></i> <span>Dashboard</span>
+                        <i class="fa fa-fw menu-icon fa-home"></i> <span class="text-green">Dashboard</span>
                     </a>
                 </li>
                 <!-- Query Log -->
                 <li class="menu-analysis<?php if ($scriptname === 'queries.php') { ?> active<?php } ?>">
                     <a href="queries.php">
-                        <i class="fa fa-fw menu-icon fa-file-alt"></i> <span>Query Log</span>
+                        <i class="fa fa-fw menu-icon fa-file-alt"></i> <span class="text-green">Query Log</span>
                     </a>
                 </li>
 
@@ -35,7 +35,7 @@
                 <!-- Group Management -->
                 <li class="menu-group<?php if ($scriptname === 'groups.php') { ?> active<?php } ?>">
                     <a href="groups.php">
-                        <i class="fa fa-fw menu-icon fa-user-friends"></i> <span>Groups
+                        <i class="fa fa-fw menu-icon fa-user-friends"></i> <span class="text-red">Groups
                         <span class="pull-right-container">
                             <span class="label label-primary pull-right" id="num_groups" title="Number of defined groups"></span>
                         </span>
@@ -43,7 +43,7 @@
                 </li>
                 <li class="menu-group<?php if ($scriptname === 'groups-clients.php') { ?> active<?php } ?>">
                     <a href="groups-clients.php">
-                        <i class="fa fa-fw menu-icon fa-laptop"></i> <span>Clients
+                        <i class="fa fa-fw menu-icon fa-laptop"></i> <span class="text-red">Clients
                         <span class="pull-right-container">
                             <span class="label label-primary pull-right" id="num_clients" title="Number of defined clients"></span>
                         </span>
@@ -51,7 +51,7 @@
                 </li>
                 <li class="menu-group<?php if ($scriptname === 'groups-domains.php') { ?> active<?php } ?>">
                     <a href="groups-domains.php">
-                        <i class="fa fa-fw menu-icon fa-list"></i> <span>Domains
+                        <i class="fa fa-fw menu-icon fa-list"></i> <span class="text-red">Domains
                         <span class="pull-right-container">
                             <span class="label bg-red pull-right" id="num_denied" title="Number of deny rules (domains and regex)"></span>
                             <span class="label bg-green pull-right" id="num_allowed" title="Number of allow rules (domains and regex)"></span>
@@ -60,7 +60,7 @@
                 </li>
                 <li class="menu-group<?php if ($scriptname === 'groups-adlists.php') { ?> active<?php } ?>">
                     <a href="groups-adlists.php">
-                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adlists
+                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span class="text-red">Adlists
                         <span class="pull-right-container">
                             <span class="label bg-blue pull-right" id="num_lists" title="Number of defined adlists"></span>
                             <span class="label bg-yellow pull-right" id="num_gravity" title="Total number of domains blocked by your Pi-hole"></span>
@@ -73,7 +73,7 @@
                 <!-- Enable/Disable Blocking -->
                 <li id="pihole-disable" class="menu-dns treeview">
                     <a href="#">
-                        <i class="fa fa-fw menu-icon fa-stop"></i> <span>Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
+                        <i class="fa fa-fw menu-icon fa-stop"></i> <span class="text-red">Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -110,7 +110,7 @@
                 <li id="pihole-enable" class="menu-dns treeview"<?php if (!in_array($pistatus, array('0', '-1', '-2'))) { ?> hidden<?php } ?>>
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-play"></i>
-                        <span id="enableLabel">Enable Blocking&nbsp;&nbsp;&nbsp;
+                        <span id="enableLabel" class="text-red">Enable Blocking&nbsp;&nbsp;&nbsp;
                             <span id="flip-status-enable"></span>
                         </span>
                     </a>
@@ -127,42 +127,42 @@
                     <ul class="treeview-menu">
                         <li class="<?php if ($scriptname === 'settings-system.php') { ?> active<?php } ?>">
                             <a href="settings-system.php">
-                                <i class="fa-fw menu-icon fa-solid fa-circle-info"></i> System
+                                <i class="fa-fw menu-icon fa-solid fa-circle-info"></i> <span class="text-green">System</span>
                             </a>
                         </li>
                         <li class="<?php if ($scriptname === 'settings-dns.php') { ?> active<?php } ?>">
                             <a href="settings-dns.php">
-                                <i class="fa-fw menu-icon fa-solid fa-book-atlas"></i> DNS
+                                <i class="fa-fw menu-icon fa-solid fa-book-atlas"></i> <span class="text-orange">DNS</span>
                             </a>
                         </li>
                         <li class="<?php if ($scriptname === 'settings-dhcp.php') { ?> active<?php } ?>">
                             <a href="settings-dhcp.php">
-                                <i class="fa-fw menu-icon fa-solid fa-sitemap"></i> DHCP
+                                <i class="fa-fw menu-icon fa-solid fa-sitemap"></i> <span class="text-orange">DHCP</span>
                             </a>
                         </li>
                         <li class="<?php if ($scriptname === 'settings-api.php') { ?> active<?php } ?>">
                             <a href="settings-api.php">
-                                <i class="fa-fw menu-icon fa-solid fa-window-restore"></i> Web interface / API
+                                <i class="fa-fw menu-icon fa-solid fa-window-restore"></i> <span class="text-orange">Web interface / API</span>
                             </a>
                         </li>
                         <li class="<?php if ($scriptname === 'settings-privacy.php') { ?> active<?php } ?>">
                             <a href="settings-privacy.php">
-                                <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> Privacy
+                                <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> <span class="text-orange">Privacy</span>
                             </a>
                         </li>
                         <li class="<?php if ($scriptname === 'settings-advanced.php') { ?> active<?php } ?> settings-level-2">
                             <a href="settings-advanced.php">
-                                <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> Advanced
+                                <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> <span class="text-orange">Advanced</span>
                             </a>
                         </li>
                         <li class="<?php if ($scriptname === 'settings-teleporter.php') { ?> active<?php } ?>">
                             <a href="settings-teleporter.php">
-                                <i class="fa-fw menu-icon fa-solid fa-file-export"></i> Teleporter
+                                <i class="fa-fw menu-icon fa-solid fa-file-export"></i> <span class="text-red">Teleporter</span>
                             </a>
                         </li>
                         <li class="<?php if ($scriptname === 'settings-dns-records.php') { ?> active<?php } ?>">
                             <a href="settings-dns-records.php">
-                                <i class="fa-fw menu-icon fa-solid fa-address-book"></i> Local DNS Records
+                                <i class="fa-fw menu-icon fa-solid fa-address-book"></i> <span class="text-orange">Local DNS Records</span>
                             </a>
                         </li>
                     </ul>
@@ -180,14 +180,14 @@
                         <!-- Pi-hole diagnosis -->
                         <li class="<?php if ($scriptname === 'messages.php') { ?> active<?php } ?>">
                             <a href="messages.php">
-                                <i class="fa fa-fw menu-icon fa-file-medical-alt"></i> Pi-hole diagnosis
+                                <i class="fa fa-fw menu-icon fa-file-medical-alt"></i> <span class="text-green">Pi-hole diagnosis</span>
                                 <span class="pull-right-container warning-count hidden"></span>
                             </a>
                         </li>
                         <!-- Tail log files -->
                         <li class="treeview <?php if ($scriptname === 'taillog.php') { ?> active<?php } ?>">
                             <a href="#">
-                                <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> Tail log files
+                                <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <span class="text-green">Tail log files</span>
                                 <span class="pull-right-container">
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </span>
@@ -222,25 +222,19 @@
                         <!-- Run gravity.sh -->
                         <li class="<?php if ($scriptname === 'gravity.php') { ?> active<?php } ?>">
                             <a href="gravity.php">
-                                <i class="fa fa-fw menu-icon fa-arrow-circle-down"></i> Update Gravity
+                                <i class="fa fa-fw menu-icon fa-arrow-circle-down"></i> <span class="text-red">Update Gravity</span>
                             </a>
                         </li>
                         <!-- Query Lists -->
                         <li class="<?php if ($scriptname === 'queryads.php') { ?> active<?php } ?>">
                             <a href="queryads.php">
-                                <i class="fa fa-fw menu-icon fa-search"></i> Search Adlists
-                            </a>
-                        </li>
-                        <!-- Generate debug log -->
-                        <li class="<?php if ($scriptname === 'debug.php') { ?> active<?php } ?>">
-                            <a href="debug.php">
-                                <i class="fa fa-fw menu-icon fa-ambulance"></i> Generate debug log
+                                <i class="fa fa-fw menu-icon fa-search"></i> <span class="text-red">Search Adlists</span>
                             </a>
                         </li>
                         <!-- Network -->
                         <li class="<?php if ($scriptname === 'network.php') { ?> active<?php } ?>">
                             <a href="network.php">
-                                <i class="fa fa-fw menu-icon fa-network-wired"></i> Network
+                                <i class="fa fa-fw menu-icon fa-network-wired"></i> <span class="text-red">Network</span>
                             </a>
                         </li>
                     </ul>

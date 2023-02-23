@@ -34,11 +34,11 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="domain">Domain:</label>
-                                        <input id="domain" type="url" class="form-control" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Hdomain" type="url" class="form-control" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="target">IP address:</label>
-                                        <input id="ip" type="text" class="form-control" placeholder="Associated IP address" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Hip" type="text" class="form-control" placeholder="Associated IP address" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                 </div>
                             </div>
@@ -48,7 +48,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                             <p>The reason for this is that Pi-hole will not send additional queries upstream when serving <code>CNAME</code> replies. As consequence, if you set a target that isn't already known, the reply to the client may be incomplete. Pi-hole just returns the information it knows at the time of the query. This results in certain limitations for <code>CNAME</code> targets,
                                 for instance, only <i>active</i> DHCP leases work as targets - mere DHCP <i>leases</i> aren't sufficient as they aren't (yet) valid DNS records.</p>
                                 <p>Additionally, you can't <code>CNAME</code> external domains (<code>bing.com</code> to <code>google.com</code>) successfully as this could result in invalid SSL certificate errors when the target server does not serve content for the requested domain.</p>
-                                <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
+                                <button type="button" id="btnAdd-host" class="btn btn-primary pull-right">Add</button>
                             </div>
                         </div>
                     </div>
@@ -91,23 +91,22 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                             <!-- /.box-header -->
                             <div class="box-body">
                                 <div class="row">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-5">
                                         <label for="domain">Domain:</label>
-                                        <input id="domain" type="url" class="form-control" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Cdomain" type="url" class="form-control" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-5">
                                         <label for="target">Target Domain:</label>
-                                        <input id="target" type="url" class="form-control" placeholder="Associated Target Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Ctarget" type="url" class="form-control" placeholder="Associated Target Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="target">TTL (optinal):</label>
+                                        <input id="Cttl" type="numeric" class="form-control" placeholder="TTL in seconds" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                 </div>
                             </div>
                             <div class="box-footer clearfix">
-                            <strong>Note:</strong>
-                            <p>The target of a <code>CNAME</code> must be a domain that the Pi-hole already has in its cache or is authoritative for. This is a universal limitation of <code>CNAME</code> records.</p>
-                            <p>The reason for this is that Pi-hole will not send additional queries upstream when serving <code>CNAME</code> replies. As consequence, if you set a target that isn't already known, the reply to the client may be incomplete. Pi-hole just returns the information it knows at the time of the query. This results in certain limitations for <code>CNAME</code> targets,
-                                for instance, only <i>active</i> DHCP leases work as targets - mere DHCP <i>leases</i> aren't sufficient as they aren't (yet) valid DNS records.</p>
-                                <p>Additionally, you can't <code>CNAME</code> external domains (<code>bing.com</code> to <code>google.com</code>) successfully as this could result in invalid SSL certificate errors when the target server does not serve content for the requested domain.</p>
-                                <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
+                                <button type="button" id="btnAdd-cname" class="btn btn-primary pull-right">Add</button>
                             </div>
                         </div>
                     </div>

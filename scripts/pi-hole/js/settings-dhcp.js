@@ -195,9 +195,6 @@ function delLease(ip) {
       dhcpLeaesTable.rows().deselect();
       utils.changeTableButtonStates(dhcpLeaesTable);
     })
-    .done(
-      utils.checkleases // Update icon warnings count
-    )
     .fail(function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting lease: " + ip, jqXHR.responseText);
