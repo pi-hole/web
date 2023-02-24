@@ -13,13 +13,16 @@ $available_themes = array();
 *  Array[0] = Description
 *  Array[1] = Is this a dark mode theme? (Sets background to black during page reloading to avoid white "flashing")
 *  Array[2] = Style sheet name
+*  Array[3] = Theme color
 */
-$available_themes['default-light'] = array('Pi-hole default theme (light, default)', false, 'default-light');
-$available_themes['default-dark'] = array('Pi-hole midnight theme (dark)', true, 'default-dark');
-$available_themes['default-darker'] = array('Pi-hole deep-midnight theme (dark)', true, 'default-darker');
+$available_themes['default-light'] = array('Pi-hole default theme (light, default)', false, 'default-light', '#367fa9');
+$available_themes['default-dark'] = array('Pi-hole midnight theme (dark)', true, 'default-dark', '#272c30');
+$available_themes['default-darker'] = array('Pi-hole deep-midnight theme (dark)', true, 'default-darker', '#2e6786');
+$available_themes['high-contrast'] = array('High contrast light', false, 'high-contrast', '#0078a0');
+$available_themes['high-contrast-dark'] = array('High contrast dark', false, 'high-contrast-dark', '#0077c7');
 // Option to have the theme go with the device dark mode setting, always set the background to black to avoid flashing
-$available_themes['default-auto'] = array('Pi-hole auto theme (light/dark)', true, 'default-auto');
-$available_themes['lcars'] = array('Star Trek LCARS theme (dark)', true, 'lcars');
+$available_themes['default-auto'] = array('Pi-hole auto theme (light/dark)', true, 'default-auto', '#367fa9');
+$available_themes['lcars'] = array('Star Trek LCARS theme (dark)', true, 'lcars', '#4488FF');
 
 $webtheme = '';
 // Try to load theme settings from setupVars.conf
@@ -42,6 +45,7 @@ if (!array_key_exists($webtheme, $available_themes)) {
 
 $darkmode = $available_themes[$webtheme][1];
 $theme = $available_themes[$webtheme][2];
+$theme_color = $available_themes[$webtheme][3];
 
 function theme_selection()
 {

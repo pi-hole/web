@@ -124,7 +124,7 @@ $(function () {
         case "1":
           fieldtext = "<span class='text-red'>Blocked (gravity)</span>";
           buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+            '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Whitelist</button>';
           blocked = true;
           break;
         case "2":
@@ -135,25 +135,25 @@ $(function () {
           fieldtext +=
             (data.length > 10 && data[10] !== "N/A" ? data[10] : "") + ")" + dnssecStatus;
           buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
+            '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case "3":
           fieldtext =
             "<span class='text-green'>OK</span> <br class='hidden-lg'>(cache)" + dnssecStatus;
           buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
+            '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case "4":
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist)";
           blocked = true;
           buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+            '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case "5":
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist)";
           blocked = true;
           buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+            '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Whitelist</button>';
           break;
         case "6":
           fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(external, IP)";
@@ -177,7 +177,7 @@ $(function () {
             "<span class='text-red'>Blocked <br class='hidden-lg'>(gravity, CNAME)</span>";
           blocked = true;
           buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+            '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
           break;
         case "10":
@@ -185,7 +185,7 @@ $(function () {
             "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist, CNAME)</span>";
           blocked = true;
           buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+            '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
           break;
         case "11":
@@ -193,7 +193,7 @@ $(function () {
             "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist, CNAME)</span>";
           blocked = true;
           buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-green"><i class="fas fa-check"></i> Whitelist</button>';
+            '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Whitelist</button>';
           isCNAME = true;
           break;
         case "12":
@@ -207,7 +207,7 @@ $(function () {
             "<span class='text-green'>OK</span> <br class='hidden-lg'>(already forwarded)" +
             dnssecStatus;
           buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
+            '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         case "15":
           fieldtext =
@@ -224,7 +224,7 @@ $(function () {
             "<span class='text-orange'>OK</span> <br class='hidden-lg'>(stale cache)" +
             dnssecStatus;
           buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-red"><i class="fa fa-ban"></i> Blacklist</button>';
+            '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Blacklist</button>';
           break;
         default:
           fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
