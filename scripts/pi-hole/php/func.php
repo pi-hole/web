@@ -17,7 +17,7 @@ function validDomain($domain_name, &$message = null)
         return true;
     }
 
-    if (!preg_match('/^((-|_)*[a-z\\d]((-|_)*[a-z\\d])*(-|_)*)(\\.(-|_)*([a-z\\d]((-|_)*[a-z\\d])*))*$/i', $domain_name)) {
+    if (!preg_match('/^((-|_)*[a-z\\d]((-|_)*[a-z\\d])*(-|_)*)(\\.(-|_)*([a-z\\d]((-|_)*[a-z\\d])*))*\.?$/i', $domain_name)) {
         if ($message !== null) {
             $message = 'it contains invalid characters';
         }
