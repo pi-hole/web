@@ -33,13 +33,16 @@ require 'scripts/pi-hole/php/header.php';
                 <?php } ?>
 
                 <form id="loginform">
-                    <div class="form-group login-options has-feedback<?php if ($wrongpassword) { ?> has-error<?php } ?>">
-                        <div class="pwd-field">
+                    <div class="login-options has-feedback<?php if ($wrongpassword) { ?> has-error<?php } ?>">
+                        <input type="text" id="username" value="pi.hole" autocomplete="username" hidden>
+                        <div class="pwd-field form-group">
                             <!-- hidden username input field to help password managers to autfill the password -->
-                            <input type="text" id="username" value="pi.hole" autocomplete="username" hidden>
                             <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" spellcheck="false" autocomplete="current-password" autofocus>
-                            <span class="fa fa-key form-control-feedback"></span>
                         </div>
+                        <div class="form-group">
+                            <input type="numeric" id="totp" name="totp" class="form-control hidden" placeholder="2FA token like 01234567" spellcheck="false" autocomplete="current-password" autofocus>
+                        </div>
+                        <span class="fa fa-key form-control-feedback"></span>
                     </div>
                     <!--
                     <div class="form-group" title="Pi-hole has to set a cookie for the login session to be successful. The cookie will not contain your password nor is it used anywhere outside of you local Pi-hole.">

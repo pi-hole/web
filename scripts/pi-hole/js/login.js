@@ -43,7 +43,7 @@ function doLogin(response) {
   $.ajax({
     url: "/api/auth",
     method: "POST",
-    data: JSON.stringify({ response: response }),
+    data: JSON.stringify({ response: response, totp: parseInt($("#totp").val(), 10) }),
   })
     .done(function () {
       redirect();
@@ -88,5 +88,6 @@ $(function () {
     url: "/api/auth",
   }).done(function (data) {
     if (data.session.valid === true) redirect();
+    if (data.session.totp === true) $("#totp").removeClass("hidden");
   });
 });
