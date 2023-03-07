@@ -42,7 +42,7 @@ require 'scripts/pi-hole/php/header.php';
                         <div class="form-group">
                             <input type="numeric" id="totp" name="totp" class="form-control hidden" placeholder="2FA token like 01234567" spellcheck="false" autocomplete="current-password" autofocus>
                         </div>
-                        <span class="fa fa-key form-control-feedback"></span>
+                        <span class="fa fa-key pwd-field form-control-feedback"></span>
                     </div>
                     <!--
                     <div class="form-group" title="Pi-hole has to set a cookie for the login session to be successful. The cookie will not contain your password nor is it used anywhere outside of you local Pi-hole.">

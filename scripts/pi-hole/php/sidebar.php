@@ -147,7 +147,7 @@
                         </li>
                         <li class="<?php if ($scriptname === 'settings-privacy.php') { ?> active<?php } ?>">
                             <a href="settings-privacy.php">
-                                <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> <span class="text-orange">Privacy</span>
+                                <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> <span class="text-red">Privacy</span>
                             </a>
                         </li>
                         <li class="<?php if ($scriptname === 'settings-advanced.php') { ?> active<?php } ?> settings-level-2">
