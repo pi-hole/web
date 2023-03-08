@@ -8,6 +8,7 @@
 /* global utils:false, setConfigValues: false, apiFailure: false, QRious: false */
 
 var apiSessionsTable = null;
+var ownSessionID = null;
 var TOTPdata = null;
 
 function renderBool(data, type) {
@@ -79,8 +80,11 @@ $(function () {
         "</button>";
       $("td:eq(7)", row).html(button);
       if (data.current_session) {
+        ownSessionID = data.id;
         $("td:eq(5)", row).html(
-          '<strong title="This is the current session">' + data.remote_addr + "</strong>"
+          '<strong title="This is the session you are currently using for the web interface">' +
+            data.remote_addr +
+            "</strong>"
         );
       }
     },
@@ -164,21 +168,64 @@ $(function () {
 
 function deleteSession() {
   // Passes the button data-del-id attribute as ID
-  var ids = [$(this).attr("data-del-is")];
+  var ids = [$(this).attr("data-del-id")];
+  delSessions(ids);
+}
 
+function delSessions(ids) {
   // Check input validity
   if (!Array.isArray(ids)) return;
 
   // Exploit prevention: Return early for non-numeric IDs
-  for (var ip in ids) {
-    if (Object.hasOwnProperty.call(ids, ip)) {
-      delSession(ids);
+  for (const id of ids) {
+    if (Object.hasOwnProperty.call(ids, id) && isNaN(ids[id])) return;
+  }
+
+  // Convert all ids to integers
+  ids = ids.map(function (value) {
+    return parseInt(value, 10);
+  });
+
+  // Check if own session is selected
+  let ownSessionDelete = false;
+  if (ids.includes(ownSessionID)) {
+    ownSessionDelete = true;
+    // Strip own session ID from array
+    ids = ids.filter(function (value) {
+      return value !== ownSessionID;
+    });
+  }
+
+  // Loop through IDs and delete them
+  for (const id of ids) {
+    if (Object.hasOwnProperty.call(ids, id)) {
+      delSession(ids[id]);
     }
+  }
+
+  // Delete own session last (if selected)
+  if (ownSessionDelete) {
+    delSession(ownSessionID);
   }
 }
 
-function delSession(_ids) {
-  alert("Deleteing sessions is not implemented yet");
+function delSession(id) {
+  $.ajax({
+    url: "/api/auth/session/" + id,
+    method: "DELETE",
+  })
+    .done(function () {
+      if (id !== ownSessionID) {
+        // Reload table to remove session
+        apiSessionsTable.ajax.reload();
+      } else {
+        // Reload page to clear session
+        location.reload();
+      }
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
 }
 
 function processWebServerConfig() {

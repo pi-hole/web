@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false */
+/* global moment:false, apiFailure: false */
 
 // Credit: https://stackoverflow.com/a/4835406
 function escapeHtml(text) {
@@ -367,22 +367,30 @@ function checkMessages() {
   var ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
-  var url = "/api/info/messages" + (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : "");
-  $.getJSON(url, function (data) {
-    if (data.messages.length > 0) {
-      var more = '\nAccess "Tools/Pi-hole diganosis" for further details.';
-      var title =
-        data.messages.length > 1
-          ? "There are " + data.messages.length + " warnings." + more
-          : "There is one warning." + more;
+  $.ajax({
+    url: "/api/info/messages" + (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""),
+    method: "GET",
+    dataType: "json",
+  })
+    .done(function (data) {
+      if (data.messages.length > 0) {
+        var more = '\nAccess "Tools/Pi-hole diganosis" for further details.';
+        var title =
+          data.messages.length > 1
+            ? "There are " + data.messages.length + " warnings." + more
+            : "There is one warning." + more;
 
-      $(".warning-count").prop("title", title);
-      $(".warning-count").text(data.messages.length);
-      $(".warning-count").removeClass("hidden");
-    } else {
+        $(".warning-count").prop("title", title);
+        $(".warning-count").text(data.messages.length);
+        $(".warning-count").removeClass("hidden");
+      } else {
+        $(".warning-count").addClass("hidden");
+      }
+    })
+    .fail(function (data) {
       $(".warning-count").addClass("hidden");
-    }
-  });
+      apiFailure(data);
+    });
 }
 
 // Show only the appropriate delete buttons in datatables

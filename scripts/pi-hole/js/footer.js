@@ -559,3 +559,12 @@ $("#settings-level").on("change", function () {
 $(function () {
   initSettingsLevel();
 });
+
+// Install custom AJAX error handler for DataTables
+// if $.fn.dataTable is available
+if ($.fn.dataTable) {
+  $.fn.dataTable.ext.errMode = function (settings, helpPage, message) {
+    // eslint-disable-next-line no-console
+    console.log("DataTables warning: " + message);
+  };
+}
