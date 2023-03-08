@@ -55,7 +55,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
             </div>
         </div>
     </div>-->
-    <div class="col-md-3">
+    <div class="col-md-6">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">Advanced Settings</h3>
@@ -95,17 +95,10 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                                 </select>
                             </div>
                         </div>
+                        <button type="button" id="button-enable-totp" class="btn btn-success hidden" data-toggle="modal" data-target="#modal-totp">Enable 2FA</button>
+                        <button type="button" id="button-disable-totp" class="btn btn-danger hidden" data-toggle="modal" data-target="#modal-totp-disable">Disable 2FA</button>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title">2FA (TOTP) authentication</h3>
-            </div>
-            <div class="box-body">
             </div>
         </div>
     </div>
@@ -140,6 +133,44 @@ require 'scripts/pi-hole/php/header_authenticated.php';
     </div>
 </div>
 
+<div class="modal fade" id="modal-totp" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Enable two-factor authentication</h4>
+            </div>
+            <div class="modal-body">
+                <p>Use a phone app like Google Authenticator, 2FA Authenticator, FreeOTP or BitWarden, etc. to get 2FA codes when prompted during login.</p>
+                <p>1. Scan the QR code below with your app or enter the secret manually.</p>
+                <div class="text-center">
+                    <canvas id="qrcode" class="qrcode" title="QR Code"></canvas>
+                </div>
+                <p class="text-center"><code id="totp_secret"></code></p>
+                <p>2. Enter the 2FA code from your app below to confirm that you have set up 2FA correctly.</p>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div id="totp_div" class="has-feedback has-error">
+                            <div class="pwd-field form-group">
+                                <input type="text" size="6" maxlength="6" class="form-control totp_token" id="totp_code" placeholder=""/>
+                            </div>
+                            <i class="fa-solid fa-clock-rotate-left pwd-field form-control-feedback"></i>
+                        </div>
+                    </div>
+                </div>
+                <p>IMPORTANT: If you lose your 2FA token, you will not be able to login. You will need to disable 2FA on the comand line and re-enable 2FA to generate a new secret.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" id="totp_submit" disabled="true" class="btn btn-default">Enable 2FA</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="<?php echo fileversion('scripts/vendor/jquery.confirm.min.js'); ?>"></script>
+<script src="<?php echo fileversion('scripts/vendor/qrious.min.js'); ?>"></script>
 <script src="<?php echo fileversion('scripts/pi-hole/js/settings-api.js'); ?>"></script>
 <script src="<?php echo fileversion('scripts/pi-hole/js/settings.js'); ?>"></script>
 

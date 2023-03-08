@@ -5,9 +5,10 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, setConfigValues: false, apiFailure: false */
+/* global utils:false, setConfigValues: false, apiFailure: false, QRious: false */
 
 var apiSessionsTable = null;
+var TOTPdata = null;
 
 function renderBool(data, type) {
   // Display and search content
@@ -78,7 +79,9 @@ $(function () {
         "</button>";
       $("td:eq(7)", row).html(button);
       if (data.current_session) {
-        $("td:eq(5)", row).html('<strong title="This is the current session">' + data.remote_addr + "</strong>");
+        $("td:eq(5)", row).html(
+          '<strong title="This is the current session">' + data.remote_addr + "</strong>"
+        );
       }
     },
     select: {
@@ -190,6 +193,113 @@ function processWebServerConfig() {
     });
 }
 
+$("#modal-totp").on("shown.bs.modal", function () {
+  $.ajax({
+    url: "/api/auth/totp",
+  })
+    .done(function (data) {
+      TOTPdata = data.totp;
+      $("#totp_secret").text(data.totp.secret);
+      var qrlink =
+        "otpauth://totp/" +
+        data.totp.issuer +
+        ":" +
+        data.totp.account +
+        "?secret=" +
+        data.totp.secret +
+        "&issuer=" +
+        data.totp.issuer +
+        "&algorithm=" +
+        data.totp.algorithm +
+        "&digits=" +
+        data.totp.digits +
+        "&period=" +
+        data.totp.period;
+      /* eslint-disable-next-line no-new */
+      new QRious({
+        element: document.getElementById("qrcode"),
+        value: qrlink,
+        level: "Q",
+        size: 300,
+      });
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
+});
+
+// Trigger keyup event when pasting into the TOTP code input field
+$("#totp_code").on("paste", function (e) {
+  $(e.target).keyup();
+});
+
+$("#totp_code").on("keyup", function () {
+  var code = parseInt($(this).val(), 10);
+  if (TOTPdata.codes.includes(code)) {
+    $("#totp_div").removeClass("has-error");
+    $("#totp_div").addClass("has-success");
+    $("#totp_code").prop("disabled", true);
+    $("#totp_submit").prop("disabled", false);
+    $("#totp_submit").removeClass("btn-default");
+    $("#totp_submit").addClass("btn-success");
+  }
+});
+
+function setTOTPSecret(secret) {
+  $.ajax({
+    url: "/api/config",
+    type: "PATCH",
+    data: JSON.stringify({ config: { webserver: { api: { totp_secret: secret } } } }),
+    contentType: "application/json",
+  })
+    .done(function () {
+      $("#button-enable-totp").addClass("hidden");
+      $("#button-disable-totp").removeClass("hidden");
+      $("#totp_code").val("");
+      $("#modal-totp").modal("hide");
+      var verb = secret.length > 0 ? "enabled" : "disabled";
+      alert(
+        "Two-factor authentication has been " +
+          verb +
+          ", you will need to re-login to continue using the web interface."
+      );
+      location.reload();
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
+}
+
+$("#totp_submit").on("click", function () {
+  // Enable TOTP
+  setTOTPSecret(TOTPdata.secret);
+});
+
+$("#button-disable-totp").confirm({
+  text: "Are you sure you want to disable 2FA authentication on your Pi-hole?",
+  title: "Confirmation required",
+  confirm: function () {
+    // Disable TOTP
+    setTOTPSecret("");
+  },
+  cancel: function () {
+    // nothing to do
+  },
+  confirmButton: "Yes, disable 2FA",
+  cancelButton: "No, keep 2FA enabled",
+  post: true,
+  confirmButtonClass: "btn-danger",
+  cancelButtonClass: "btn-success",
+  dialogClass: "modal-dialog",
+});
+
 $(document).ready(function () {
   processWebServerConfig();
+  // Check if TOTP is enabled
+  $.ajax({
+    url: "/api/auth",
+  }).done(function (data) {
+    if (data.session.totp === false) $("#button-enable-totp").removeClass("hidden");
+    else $("#button-disable-totp").removeClass("hidden");
+  });
 });

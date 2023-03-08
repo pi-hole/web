@@ -82,12 +82,27 @@ $("#loginform").submit(function (e) {
   });
 });
 
+// Trigger keyup event when pasting into the TOTP code input field
+$("#totp").on("paste", function (e) {
+  $(e.target).keyup();
+});
+
+$("#totp").on("keyup", function () {
+  var code = $(this).val();
+  if (code.length === 6) {
+    $("#loginform").submit();
+  }
+});
+
 $(function () {
   // Check if we need to login at all
   $.ajax({
     url: "/api/auth",
   }).done(function (data) {
     if (data.session.valid === true) redirect();
-    if (data.session.totp === true) $("#totp").removeClass("hidden");
+    if (data.session.totp === true) $("#totp_input").removeClass("hidden");
   });
+
+  // Clear TOTP field
+  $("#totp").val("");
 });

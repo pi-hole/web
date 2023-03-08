@@ -28,26 +28,40 @@ function setConfigValues(topic, key, value) {
 
   // else: we have a setting we can set
   var escapedKey = key.replace(/\./g, "\\.");
-  if (value.type === "enum (string)") {
-    // Remove all options from select
-    $("#" + escapedKey + " option").remove();
-    // Add allowed select items (if available)
-    value.allowed.forEach(function (allowedValue) {
-      var newopt = $("<option></option>")
+  switch (value.type) {
+    case "enum (string)": {
+      // Remove all options from select
+      $("#" + escapedKey + " option").remove();
+      // Add allowed select items (if available)
+      value.allowed.forEach(function (allowedValue) {
+        var newopt = $("<option></option>")
           .attr("value", allowedValue.item)
-          .text(allowedValue.description)
-          $("#" + escapedKey).append(newopt);
-    });
-    // Select the current value
-    $("#" + escapedKey + "-" + value.value).trigger("click");
-  } else if (value.type === "boolean") {
-    // Select checkboxes (if available)
-    $("#" + escapedKey).prop("checked", value.value);
-  } else if (value.type === "string array") {
-    // Set input field values from array (if available)
-    $("#" + escapedKey).val(value.value.join("\n"));
-  } else {
-    // Set input field values (if available)
-    $("#" + escapedKey).val(value.value);
+          .text(allowedValue.description);
+        $("#" + escapedKey).append(newopt);
+      });
+      // Select the current value
+      $("#" + escapedKey + "-" + value.value).trigger("click");
+
+      break;
+    }
+
+    case "boolean": {
+      // Select checkboxes (if available)
+      $("#" + escapedKey).prop("checked", value.value);
+
+      break;
+    }
+
+    case "string array": {
+      // Set input field values from array (if available)
+      $("#" + escapedKey).val(value.value.join("\n"));
+
+      break;
+    }
+
+    default: {
+      // Set input field values (if available)
+      $("#" + escapedKey).val(value.value);
+    }
   }
 }

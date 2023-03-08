@@ -1066,3 +1066,19 @@ table.dataTable tbody > tr > .selected {
   margin-bottom: 0px;
   border-top: 1px solid #ff0000aa;
 }
+
+.qrcode {
+  width: 50%;
+}
+
+.totp_token {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+  font-family: monospace;
+  letter-spacing: .5em;
+}
+
+.totp_token::placeholder {
+  opacity: 0.1;
+}
