@@ -269,6 +269,8 @@ $("#modal-totp").on("shown.bs.modal", function () {
         level: "Q",
         size: 300,
       });
+      $("#qrcode-spinner").hide();
+      $("#qrcode").show();
     })
     .fail(function (data) {
       apiFailure(data);

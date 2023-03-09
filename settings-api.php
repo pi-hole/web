@@ -145,7 +145,10 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                 <p>Use a phone app like Google Authenticator, 2FA Authenticator, FreeOTP or BitWarden, etc. to get 2FA codes when prompted during login.</p>
                 <p>1. Scan the QR code below with your app or enter the secret manually.</p>
                 <div class="text-center">
-                    <canvas id="qrcode" class="qrcode" title="QR Code"></canvas>
+                    <i id="qrcode-spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
+                </div>
+                <div class="text-center">
+                    <canvas id="qrcode" class="qrcode" title="QR Code" hidden="true"></canvas>
                 </div>
                 <p class="text-center"><code id="totp_secret"></code></p>
                 <p>2. Enter the 2FA code from your app below to confirm that you have set up 2FA correctly.</p>
