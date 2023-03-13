@@ -506,6 +506,11 @@ if ($FTLpid !== 0) {
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="box-footer clearfix">
+                                        <input type="hidden" name="field" value="DHCP">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
+                                        <button type="submit" class="btn btn-primary pull-right">Save</button>
+                                    </div>
                                 </div>
                             </div>
                             <!-- Advanced DHCP Settings Box -->
@@ -558,10 +563,14 @@ if (!$DHCP) { ?> disabled<?php } ?>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="box-footer clearfix">
+                                        <input type="hidden" name="field" value="DHCP">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
+                                        <button type="submit" class="btn btn-primary pull-right">Save</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
                         <!-- DHCP Leases Box -->
                         <div class="row">
                             <?php
@@ -700,13 +709,12 @@ readStaticLeasesFile();
                                                     given, the IP address will still be generated dynamically and the
                                                     specified host name will be used. If the host name is omitted, only
                                                     a static lease will be added.</p>
+                                                <p><b>Note</b>: All changes to the static DHCP assignments need a <b>full Pi-hole restart</b>
+                                                    to take effect.</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <input type="hidden" name="field" value="DHCP">
-                                <input type="hidden" name="token" value="<?php echo $token; ?>">
-                                <button type="submit" class="btn btn-primary pull-right">Save</button>
                             </div>
                         </div>
                     </form>
