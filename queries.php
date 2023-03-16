@@ -45,11 +45,12 @@ require 'scripts/pi-hole/php/header_authenticated.php';
     <div class="col-md-12">
         <div class="box box-warning collapsed-box box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title">Advanced filtering</h3>
-                <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
-                </div>
-                <!-- /.box-tools -->
+                <button type="button" class="btn btn-box-tool btn-block" data-widget="collapse">
+                    <h3 class="box-title pull-left">Advanced filtering</h3>
+                    <div class="pull-right">
+                        <i class="fa fa-plus"></i>
+                    </div>
+                </button>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
