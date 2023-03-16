@@ -869,6 +869,14 @@ body:not(.lcars) .filter_types [class*="icheck-"] > input:first-child:checked + 
   }
 }
 
+/* Global settings level selector */
+#settings-level {
+  display: inline-block;
+  width: auto;
+  height: 2.2em;
+  border-radius: 4px;
+}
+
 .navbar-nav {
   height: 50px;
 }

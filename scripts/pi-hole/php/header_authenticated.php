@@ -65,7 +65,7 @@ function startsWith($string, $startString)
                 <?php if (startsWith($scriptname, 'settings-')) { ?>
                     <li class="nav-item">
                         <p class="navbar-text">
-                            Settings level: <select id="settings-level">
+                            Settings level: <select id="settings-level" class="form-control input-sm">
                                 <option value="0">Basic</option>
                                 <option value="1">Advanced</option>
                                 <option value="2">Expert</option>
