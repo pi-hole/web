@@ -525,6 +525,16 @@ td.details-control {
   padding-right: 20px;
 }
 
+.settings-container {
+  --number-of-columns: 2;
+  display: flex;
+  flex-wrap: wrap;
+}
+.settings-container > .box {
+  margin: 10px;
+  width: calc((100% / var(--number-of-columns)) - 20px);
+}
+
 @media screen and (max-width: 991px) {
   #domain-search-block {
     display: block;
@@ -538,6 +548,9 @@ td.details-control {
   #domain-search-block .input-group-btn button {
     margin: 0 5px 0 0;
     border-radius: 3px;
+  }
+  .settings-container {
+    --number-of-columns: 1;
   }
 }
 

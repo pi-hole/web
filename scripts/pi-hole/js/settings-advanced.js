@@ -214,13 +214,7 @@ function generateRow(topic, key, value) {
 
   box += "</div></div> ";
   var topKey = key.split(".")[0];
-  // Add the box to the left or right column depending on which is shorter
-  // This is done to reduce gaps between boxes
-  var elem =
-    $("#advanced-content-" + topKey + "-left").height() <=
-    $("#advanced-content-" + topKey + "-right").height() + 10
-      ? $("#advanced-content-" + topKey + "-left")
-      : $("#advanced-content-" + topKey + "-right");
+  var elem = $("#advanced-content-" + topKey + "-flex");
   elem.append(box);
 }
 
@@ -249,12 +243,9 @@ function createDynamicConfigTabs() {
             '<div class="row" id="advanced-content-' +
             topic.name +
             '-body">' +
-            '<div class="col-md-6" id="advanced-content-' +
+            '<div class="col-xs-12 settings-container" id="advanced-content-' +
             topic.name +
-            '-left"></div>' +
-            '<div class="col-md-6" id="advanced-content-' +
-            topic.name +
-            '-right"></div>' +
+            '-flex"></div>' +
             "</div>" +
             "</div>" +
             "</div>" +
