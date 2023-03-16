@@ -36,13 +36,13 @@ function generateRow(topic, key, value) {
 
   // else: we have a setting we can display
   var box =
-    '<div class="box box-warning">' +
+    '<div class="box">' +
     '<div class="box-header no-user-select">' +
     '<h3 class="box-title">' +
     key +
-    (value.modified ? '&nbsp;&nbsp;<i class="far fa-edit" title="Modified"></i>' : "") +
+    (value.modified ? '&nbsp;&nbsp;<i class="far fa-edit text-light-blue" title="Modified"></i>' : "") +
     (value.flags.advanced
-      ? '&nbsp;&nbsp;<i class="fas fa-cogs" title="This is an expert-level setting"></i>'
+      ? '&nbsp;&nbsp;<i class="fas fa-cogs text-yellow" title="Expert-level setting"></i>'
       : "") +
     "</h3>" +
     "<p>" +
