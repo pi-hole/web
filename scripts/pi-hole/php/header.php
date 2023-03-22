@@ -26,21 +26,13 @@ $hostname = gethostname() ? gethostname() : '';
     <link rel="icon" href="img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
     <link rel="manifest" href="img/favicons/manifest.json">
-    <link rel="mask-icon" href="img/favicons/safari-pinned-tab.svg" color="#367fa9">
+    <link rel="mask-icon" href="img/favicons/safari-pinned-tab.svg" color="<?php echo $theme_color; ?>">
     <link rel="shortcut icon" href="img/favicons/favicon.ico">
-    <meta name="msapplication-TileColor" content="#367fa9">
+    <meta name="msapplication-TileColor" content="<?php echo $theme_color; ?>">
     <meta name="msapplication-TileImage" content="img/favicons/mstile-150x150.png">
 
     <!-- Theme styles -->
-<?php if ($theme == 'default-light') { ?>
-    <meta name="theme-color" content="#367fa9">
-<?php } elseif ($theme == 'default-dark') { ?>
-    <meta name="theme-color" content="#272c30">
-<?php } elseif ($theme == 'default-darker') { ?>
-    <meta name="theme-color" content="#2e6786">
-<?php } elseif ($theme == 'lcars') { ?>
-    <meta name="theme-color" content="#4488FF">
-<?php } ?>
+    <meta name="theme-color" content="<?php echo $theme_color; ?>">
 
 <?php if ($darkmode) { ?>
     <style>

@@ -11,10 +11,6 @@
 require 'scripts/pi-hole/php/header_authenticated.php';
 ?>
 
-<!-- Sourceing CSS colors from stylesheet to be used in JS code -->
-<span class="queries-permitted"></span>
-<span class="queries-blocked"></span>
-
 <!-- Title -->
 <div class="page-header">
     <h1>Compute Top Lists from the Pi-hole query database</h1>
