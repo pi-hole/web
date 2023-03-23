@@ -1493,19 +1493,15 @@ table.dataTable {
 .modal-header .close,
 .close,
 .alert > .close {
-  background: #dd4b39;
-  padding: 0 0.5em 0 1em;
-  color: #000;
+  color: currentColor;
   opacity: 1;
-  text-decoration: none;
   text-shadow: none;
-  border-radius: 1.07em;
-  text-align: right;
+  transform: scale(2) translate(0, -3px);
+  font-weight: normal;
 }
 
 .close:hover,
 .close:focus {
-  background: #d73925;
   color: #fff;
   opacity: 1;
 }
