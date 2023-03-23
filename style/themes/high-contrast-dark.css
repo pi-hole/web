@@ -36,6 +36,11 @@
   transition: none !important;
 }
 
+/* fix #2554: browser not detecting dark mode */
+html {
+  color-scheme: dark;
+}
+
 body {
   font-size: 15px;
   color: var(--main-text-color);

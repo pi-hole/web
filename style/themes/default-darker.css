@@ -32,6 +32,8 @@ _______|_______/__/ ____ \__\__|___\__\__|___\__\____
 /* User-Agent Style */
 html {
   background-color: #181a1b !important;
+  /* fix #2554: browser not detecting dark mode */
+  color-scheme: dark;
 }
 html,
 body,
