@@ -635,7 +635,7 @@ function getGateway()
     if (array_key_exists('FTLnotrunning', $gateway)) {
         $ret = array('ip' => -1);
     } else {
-        $ret = array_combine(array('ip', 'iface'), explode(' ', $gateway[0]));
+        $ret = array_combine(array('ip', 'iface'), array_pad(explode(' ', $gateway[0]), 2, ''));
     }
 
     return $ret;
