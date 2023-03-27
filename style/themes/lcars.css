@@ -502,9 +502,9 @@ p.login-box-msg,
   margin: 5px 0;
   padding: 0;
   overflow: hidden;
-  color: #000;
-  background: #9ab !important;
-  border: 3px solid #fff !important;
+  color: #9ab;
+  background: #111111 !important;
+  border: 3px solid #4488ff !important;
   border-radius: 8px;
   box-shadow: 0 0 0 2000vmax rgba(0, 0, 0, 0.6);
 }
@@ -1143,6 +1143,16 @@ footer a:focus {
   padding: 0 4px;
 }
 
+.modal-body .overlay {
+  padding: 0px;
+  border-radius: 3px;
+}
+
+.modal-header,
+.modal-footer {
+  border-color: #222;
+}
+
 .box-header.with-border,
 .table-responsive,
 .table-bordered,
@@ -1470,6 +1480,32 @@ table.dataTable {
   border-radius: 12px;
 }
 
+.modal-dialog {
+  border-radius: 12px;
+  border: 3px solid #4488ff;
+}
+
+.modal-content {
+  border-radius: 12px;
+  background-color: #111111;
+}
+
+.modal-header .close,
+.close,
+.alert > .close {
+  color: currentColor;
+  opacity: 1;
+  text-shadow: none;
+  transform: scale(2) translate(0, -3px);
+  font-weight: normal;
+}
+
+.close:hover,
+.close:focus {
+  color: #fff;
+  opacity: 1;
+}
+
 .alert {
   animation: flash 1.2s ease-in-out 0.5s;
   transition: all ease-in-out 1s;
@@ -1642,6 +1678,11 @@ table.dataTable {
   }
   .main-header .navbar .dropdown-menu li.divider {
     background-color: rgba(255, 255, 255, 0.1);
+  }
+  .dropdown-menu > li > a:hover,
+  .dropdown-menu > li > a:active,
+  .dropdown-menu > li > a:focus {
+    color: #48f;
   }
   .main-header .logo {
     width: 150px;
@@ -2054,4 +2095,11 @@ td.highlight {
 /*** size correction to fit in one line - Settings/DNS ***/
 #dns .col-md-11 {
   width: 84%;
+}
+
+/*** add style to the information/about dropdown ***/
+
+.navbar-nav > .user-menu > .dropdown-menu > .user-header,
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer {
+  background-color: #111111;
 }
