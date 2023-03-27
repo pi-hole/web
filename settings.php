@@ -428,16 +428,18 @@ if ($FTLpid !== 0) {
                         }
                     } else {
                         $DHCP = false;
+                        $DHCPstart = '';
+                        $DHCPend = '';
+                        $DHCProuter = '';
+
                         // Try to guess initial settings
                         if ($IPv4GW !== 'unknown') {
                             $DHCPparts = explode('.', $IPv4GW);
-                            $DHCPstart = $DHCPparts[0].'.'.$DHCPparts[1].'.'.$DHCPparts[2].'.201';
-                            $DHCPend = $DHCPparts[0].'.'.$DHCPparts[1].'.'.$DHCPparts[2].'.251';
-                            $DHCProuter = $IPv4GW;
-                        } else {
-                            $DHCPstart = '';
-                            $DHCPend = '';
-                            $DHCProuter = '';
+                            if (isset($DHCPparts[0]) && isset($DHCPparts[1]) && isset($DHCPparts[2])) {
+                                $DHCPstart = $DHCPparts[0].'.'.$DHCPparts[1].'.'.$DHCPparts[2].'.201';
+                                $DHCPend = $DHCPparts[0].'.'.$DHCPparts[1].'.'.$DHCPparts[2].'.251';
+                                $DHCProuter = $IPv4GW;
+                            }
                         }
                         $DHCPleasetime = 24;
                         $DHCPIPv6 = false;
