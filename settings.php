@@ -940,7 +940,7 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
                                                         Use an upstream DNS server which supports DNSSEC when activating DNSSEC. Note that
                                                         the size of your log might increase significantly
                                                         when enabling DNSSEC. A DNSSEC resolver test can be found
-                                                        <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
+                                                        <a href="https://wander.science/projects/dns/dnssec-resolver-test/" rel="noopener" target="_blank">here</a>.</p>
                                                 </div>
                                                 <br>
                                                 <h4><a id="ratelimit"></a>Rate-limiting</h4>
