@@ -40,7 +40,9 @@ function generateRow(topic, key, value) {
     '<div class="box-header no-user-select">' +
     '<h3 class="box-title">' +
     key +
-    (value.modified ? '&nbsp;&nbsp;<i class="far fa-edit text-light-blue" title="Modified"></i>' : "") +
+    (value.modified
+      ? '&nbsp;&nbsp;<i class="far fa-edit text-light-blue" title="Modified"></i>'
+      : "") +
     (value.flags.advanced
       ? '&nbsp;&nbsp;<i class="fas fa-cogs text-yellow" title="Expert-level setting"></i>'
       : "") +

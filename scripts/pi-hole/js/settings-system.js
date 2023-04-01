@@ -46,7 +46,16 @@ function updateHostInfo() {
 // to the corresponding element (add percentage for DNS replies)
 function setMetrics(data, prefix) {
   for (const [key, val] of Object.entries(data)) {
-    if (typeof val === "object") {
+    if (prefix === "sysinfo-dns-cache-content-") {
+      // Append row to DNS cache table
+      $("#dns-cache-table").append(
+        "<tr><th>Valid " +
+          (val.name !== null ? val.name : "TYPE " + val.type) +
+          " records in cache:</th><td>" +
+          val.count +
+          "</td></tr>"
+      );
+    } else if (typeof val === "object") {
       setMetrics(val, prefix + key + "-");
     } else if (prefix === "sysinfo-dns-replies-") {
       // Compute and display percentage of DNS replies in addition to the absolute value
@@ -65,6 +74,7 @@ function updateMetrics() {
   })
     .done(function (data) {
       var metrics = data.metrics;
+      $("#dns-cache-table").empty();
       setMetrics(metrics, "sysinfo-");
 
       $("div[id^='sysinfo-metrics-overlay']").hide();

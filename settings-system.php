@@ -202,49 +202,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                             </tbody>
                         </table>
                         <table class="table table-striped table-bordered nowrap settings-level-2">
-                            <tbody>
-                                <tr>
-                                    <th scope="row">
-                                        Valid A records in cache:
-                                    </th>
-                                    <td id="sysinfo-dns-cache-content-a">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Valid AAAA records in cache:
-                                    </th>
-                                    <td id="sysinfo-dns-cache-content-aaaa">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Valid CNAME records in cache:
-                                    </th>
-                                    <td id="sysinfo-dns-cache-content-cname">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Valid SRV records in cache:
-                                    </th>
-                                    <td id="sysinfo-dns-cache-content-srv">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Valid DS records in cache:
-                                    </th>
-                                    <td id="sysinfo-dns-cache-content-ds">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Valid DNSKEY records in cache:
-                                    </th>
-                                    <td id="sysinfo-dns-cache-content-dnskey">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        Other valid records in cache:
-                                    </th>
-                                    <td id="sysinfo-dns-cache-content-other">&nbsp;</td>
-                                </tr>
+                            <tbody id="dns-cache-table">
                             </tbody>
                         </table>
                         See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
