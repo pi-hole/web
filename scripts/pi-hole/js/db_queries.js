@@ -77,7 +77,7 @@ $(function () {
           moment().subtract(1, "month").endOf("month"),
         ],
         "This Year": [moment().startOf("year"), moment()],
-        "All Time": [moment(0), moment()],
+        "All Time": [moment(mintimestamp), moment()],
       },
       opens: "center",
       showDropdowns: true,
