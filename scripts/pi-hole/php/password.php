@@ -50,7 +50,7 @@ function verifyPassword($pwhash, $use_api, $ldapAuth, $ldapServer, $ldapBindDn)
             // Compare doubly hashes password input with saved hash
             $postinput = hash('sha256', hash('sha256', $_POST['pw']));
 
-            if (hash_equals($pwhash, $postinput) || authenticateLdap($_POST["username"], $_POST["pw"], $ldapServer, $ldapBindDn)) {
+            if (hash_equals($pwhash, $postinput) || authenticateLdap($_POST['username'], $_POST['pw'], $ldapServer, $ldapBindDn)) {
                 // Save previously accessed page, before clear the session
                 $redirect_url = 'index.php';
                 if (isset($_SESSION['prev_url'])) {
@@ -119,6 +119,7 @@ function authenticateLdap($username, $password, $ldapServer, $ldapBindDn)
     ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
     ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
     $bindDn = sprintf($ldapBindDn, $username);
+
     return @ldap_bind($ldap, $bindDn, $password);
 }
 
