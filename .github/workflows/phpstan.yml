@@ -12,10 +12,12 @@ jobs:
 
     - name: Install composer
       uses: php-actions/composer@v6
+      with:
+        php_extensions: ldap
 
     - name: Run PHPStan
       uses: php-actions/phpstan@v3
       with:
         configuration: phpstan.neon.dist
         memory_limit: 256M
-        php_extensions: ext-ldap
+        php_extensions: ldap
