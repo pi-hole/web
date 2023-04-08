@@ -24,6 +24,8 @@
 /*** General ***/
 html {
   font-size: 17px;
+  /* fix #2554: browser not detecting dark mode */
+  color-scheme: dark;
 }
 
 body {
