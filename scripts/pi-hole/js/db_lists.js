@@ -76,11 +76,11 @@ function updateTopClientsChart() {
           data.top_sources[utils.escapeHtml(client)] = data.top_sources[client];
         }
 
-        if (client.indexOf("|") !== -1) {
+        if (client.indexOf("|") === -1) {
+          clientname = client;
+        } else {
           var idx = client.indexOf("|");
           clientname = client.substr(0, idx);
-        } else {
-          clientname = client;
         }
 
         percentage = (data.top_sources[client] / sum) * 100;

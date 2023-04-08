@@ -20,10 +20,10 @@ var DAY_IN_SECONDS = 24 * 60 * 60;
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
-  } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
-    alert("An error occurred while loading the data: Connection refused. Is FTL running?");
-  } else {
+  } else if (xhr.responseText.indexOf("Connection refused") === -1) {
     alert("An unknown error occurred while loading the data.\n" + xhr.responseText);
+  } else {
+    alert("An error occurred while loading the data: Connection refused. Is FTL running?");
   }
 
   $("#network-entries_processing").hide();
