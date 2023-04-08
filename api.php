@@ -71,6 +71,13 @@ if (isset($_GET['enable']) && $auth) {
     $branches = array('core_branch' => $core_branch,
         'web_branch' => $web_branch,
         'FTL_branch' => $FTL_branch, );
+    if (isset($versions['DOCKER_VERSION'])) {
+        // Docker info is available only inside containers
+        $updates['docker_update'] = $docker_update;
+        $current['docker_current'] = $docker_current;
+        $latest['docker_latest'] = $docker_latest;
+    }
+
     $data = array_merge($data, $updates);
     $data = array_merge($data, $current);
     $data = array_merge($data, $latest);
