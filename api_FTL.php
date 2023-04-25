@@ -64,16 +64,13 @@ if ((isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET)) && 
 }
 
 if (isset($_GET['getMaxlogage']) && $auth) {
-    $return = callFTLAPI('maxlogage');
-    if (array_key_exists('FTLnotrunning', $return)) {
+    $maxlogage = getMaxlogage();
+
+    if ($maxlogage < 0) {
+        // FTL is offline
         $data = array('FTLnotrunning' => true);
     } else {
-        // Convert seconds to hours and rounds to one decimal place.
-        $ret = round(intval($return[0]) / 3600, 1);
-        // Return 24h if value is 0, empty, null or non numeric.
-        $ret = $ret ?: 24;
-
-        $data = array_merge($data, array('maxlogage' => $ret));
+        $data = array_merge($data, array('maxlogage' => $maxlogage));
     }
 }
 
