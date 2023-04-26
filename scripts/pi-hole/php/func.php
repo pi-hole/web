@@ -641,6 +641,24 @@ function getGateway()
     return $ret;
 }
 
+// Returns the maxlogage used by FTL
+function getMaxlogage()
+{
+    $api_return = callFTLAPI('maxlogage');
+
+    if (array_key_exists('FTLnotrunning', $api_return)) {
+        // FTL is offline. Return "-1"
+        $maxlogage = -1;
+    } else {
+        // Convert seconds to hours and rounds to one decimal place.
+        $maxlogage = round(intval($api_return[0]) / 3600, 1);
+        // Return 24h if value is 0, empty, null or non numeric.
+        $maxlogage = $maxlogage ?: 24;
+    }
+
+    return $maxlogage;
+}
+
 // Try to convert possible IDNA domain to Unicode
 function convertIDNAToUnicode($IDNA)
 {
