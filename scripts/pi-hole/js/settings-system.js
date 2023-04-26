@@ -47,14 +47,14 @@ function updateHostInfo() {
 function setMetrics(data, prefix) {
   for (const [key, val] of Object.entries(data)) {
     if (prefix === "sysinfo-dns-cache-content-") {
+      // Create table row for each DNS cache entry
+      const name =
+        val.name !== "OTHER"
+          ? "Valid " + (val.name !== null ? val.name : "TYPE " + val.type)
+          : "Other valid";
+      const tr = "<tr><th>" + name + " records in cache:</th><td>" + val.count + "</td></tr>";
       // Append row to DNS cache table
-      $("#dns-cache-table").append(
-        "<tr><th>Valid " +
-          (val.name !== null ? val.name : "TYPE " + val.type) +
-          " records in cache:</th><td>" +
-          val.count +
-          "</td></tr>"
-      );
+      $("#dns-cache-table").append(tr);
     } else if (typeof val === "object") {
       setMetrics(val, prefix + key + "-");
     } else if (prefix === "sysinfo-dns-replies-") {
