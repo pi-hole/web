@@ -1,14 +1,13 @@
-<?php
-/*
-*    Pi-hole: A black hole for Internet advertisements
-*    (c) 2023 Pi-hole, LLC (https://pi-hole.net)
-*    Network-wide ad blocking via your own hardware.
+<? --[[
+*  Pi-hole: A black hole for Internet advertisements
+*  (c) 2023 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
 *
-*    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license.
-*/
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license.
+--]]
 
-require 'scripts/pi-hole/php/header_authenticated.php';
+mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
 <div class="row">
     <!-- DHCP Settings Box -->
@@ -199,9 +198,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
         <button type="submit" class="btn btn-primary pull-right">Save</button>
     </div>
 </div>
-<script src="<?php echo fileversion('scripts/pi-hole/js/settings-dhcp.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/settings.js'); ?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/settings-dhcp.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/settings.js')?>"></script>
 
-<?php
-require 'scripts/pi-hole/php/footer.php';
-?>
+<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>

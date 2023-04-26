@@ -1097,7 +1097,7 @@ table.dataTable tbody > tr > .selected {
   font-weight: bold;
   text-align: center;
   font-family: monospace;
-  letter-spacing: .5em;
+  letter-spacing: 0.5em;
 }
 
 .totp_token::placeholder {

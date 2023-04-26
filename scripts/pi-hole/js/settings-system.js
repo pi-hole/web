@@ -87,6 +87,24 @@ function updateMetrics() {
     });
 }
 
+function showQueryLoggingButton() {
+  $.ajax({
+    url: "/api/config/dns/queryLogging",
+  })
+    .done(function (data) {
+      if (data.config.dns.queryLogging) {
+        $("#disableLoggingButton").show();
+        $("#enableLoggingButton").hide();
+      } else {
+        $("#disableLoggingButton").hide();
+        $("#enableLoggingButton").show();
+      }
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
+}
+
 $(".confirm-poweroff").confirm({
   text: "Are you sure you want to send a poweroff command to your Pi-hole?",
   title: "Confirmation required",
@@ -191,4 +209,5 @@ $(".confirm-disablelogging-noflush").confirm({
 $(function () {
   updateHostInfo();
   updateMetrics();
+  showQueryLoggingButton();
 });

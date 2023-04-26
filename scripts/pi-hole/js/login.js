@@ -26,13 +26,14 @@ function computeResponse(password, challenge) {
 
 function redirect() {
   // Login succeeded or not needed (empty password)
-  // Default: Send back to index.php (dashboard)
-  var target = "index.php";
+  // Default: Send back to index.lp (dashboard)
+  var target = "index.lp";
 
   // If specified: Send to requested page
   var GETDict = getParams();
   if ("target" in GETDict) {
-    target = GETDict.target;
+    // URL-decode target
+    target = decodeURIComponent(GETDict.target);
   }
 
   // Redirect to target

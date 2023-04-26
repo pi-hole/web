@@ -538,7 +538,7 @@ function updateTopDomainsTable(blocked) {
       domain = utils.escapeHtml(item.domain);
       // Substitute "." for empty domain lookups
       urlText = domain === "" ? "." : domain;
-      url = '<a href="queries.php?domain=' + domain + '">' + urlText + "</a>";
+      url = '<a href="queries.lp?domain=' + domain + '">' + urlText + "</a>";
       percentage = (item.count / sum) * 100;
       domaintable.append(
         "<tr> " +
@@ -724,9 +724,9 @@ const htmlLegendPlugin = {
 
       textLink.addEventListener("click", () => {
         if (chart.canvas.id === "queryTypePieChart") {
-          window.location.href = "queries.php?querytype=" + querytypeids[item.index];
+          window.location.href = "queries.lp?querytype=" + querytypeids[item.index];
         } else if (chart.canvas.id === "forwardDestinationPieChart") {
-          window.location.href = "queries.php?forwarddest=" + encodeURIComponent(item.text);
+          window.location.href = "queries.lp?forwarddest=" + encodeURIComponent(item.text);
         }
       });
 
@@ -967,7 +967,7 @@ $(function () {
       //get value by index
       var from = label / 1000 - 300;
       var until = label / 1000 + 300;
-      window.location.href = "queries.php?from=" + from + "&until=" + until;
+      window.location.href = "queries.lp?from=" + from + "&until=" + until;
     }
 
     return false;
@@ -990,7 +990,7 @@ $(function () {
       //get value by index
       var from = label / 1000 - 300;
       var until = label / 1000 + 300;
-      window.location.href = "queries.php?from=" + from + "&until=" + until;
+      window.location.href = "queries.lp?from=" + from + "&until=" + until;
     }
 
     return false;

@@ -75,7 +75,7 @@ function piholeChange(action, duration) {
     case "enable":
       btnStatus = $("#flip-status-enable");
       btnStatus.html("<i class='fa fa-spinner'> </i>");
-      $.getJSON("api.php?enable&token=" + token, function (data) {
+      $.getJSON("api.lp?enable&token=" + token, function (data) {
         if (data.status === "enabled") {
           btnStatus.html("");
           piholeChanged("enabled");
@@ -86,7 +86,7 @@ function piholeChange(action, duration) {
     case "disable":
       btnStatus = $("#flip-status-disable");
       btnStatus.html("<i class='fa fa-spinner'> </i>");
-      $.getJSON("api.php?disable=" + duration + "&token=" + token, function (data) {
+      $.getJSON("api.lp?disable=" + duration + "&token=" + token, function (data) {
         if (data.status === "disabled") {
           btnStatus.html("");
           piholeChanged("disabled");
@@ -471,7 +471,7 @@ function updateVersionInfo() {
 }
 
 $(function () {
-  if (window.location.pathname !== "/admin/login.php") updateInfo();
+  if (window.location.pathname !== "/admin/login.lp") updateInfo();
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - Date.now()) / 1000);
@@ -486,7 +486,7 @@ $(function () {
   // Apply per-browser styling settings
   initCheckboxRadioStyle();
 
-  if (window.location.pathname !== "/admin/login.php") {
+  if (window.location.pathname !== "/admin/login.lp") {
     // Run check immediately after page loading ...
     utils.checkMessages();
     // ... and once again with five seconds delay

@@ -7,10 +7,5 @@
         "phpstan/phpstan": "1.*"
     },
     "license": "EUPL-1.2",
-    "minimum-stability": "stable",
-    "autoload": {
-        "files": [
-            "scripts/vendor/qrcode.php"
-        ]
-    }
+    "minimum-stability": "stable"
 }

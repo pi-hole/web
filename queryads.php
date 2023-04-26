@@ -8,7 +8,7 @@
 *    Please see LICENSE file for your rights under this license.
 */
 
-require 'scripts/pi-hole/php/header_authenticated.php';
+mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
 <!-- Title -->
 <div class="page-header">
@@ -41,7 +41,5 @@ require 'scripts/pi-hole/php/header_authenticated.php';
 
 <pre id="output" style="width: 100%; height: 100%;" hidden></pre>
 
-<script src="<?php echo fileversion('scripts/pi-hole/js/queryads.js'); ?>"></script>
-<?php
-require 'scripts/pi-hole/php/footer.php';
-?>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/queryads.js')?>"></script>
+<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>

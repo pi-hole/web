@@ -1,14 +1,14 @@
-<?php
-/*   Pi-hole: A black hole for Internet advertisements
-*    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
-*    Network-wide ad blocking via your own hardware.
+<? --[[
+*  Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
 *
-*    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license.
-*/
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license.
+--]]
 
-$indexpage = true;
-require 'scripts/pi-hole/php/header_authenticated.php';
+indexpage = true
+mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
@@ -22,7 +22,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
             <div class="icon">
                 <i class="fas fa-globe-americas"></i>
             </div>
-            <a href="network.php" class="small-box-footer" title="">
+            <a href="network.lp" class="small-box-footer" title="">
                 <span id="total_clients">-</span> active clients <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
@@ -38,7 +38,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
             <div class="icon">
                 <i class="fas fa-hand-paper"></i>
             </div>
-            <a href="queries.php?forwarddest=blocked" class="small-box-footer" title="">
+            <a href="queries.lp?forwarddest=blocked" class="small-box-footer" title="">
                 List blocked queries <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
@@ -54,7 +54,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
             <div class="icon">
                 <i class="fas fa-chart-pie"></i>
             </div>
-            <a href="queries.php" class="small-box-footer" title="">
+            <a href="queries.lp" class="small-box-footer" title="">
                 List all queries <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
@@ -70,7 +70,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
             <div class="icon">
                 <i class="fas fa-list-alt"></i>
             </div>
-            <a href="groups-adlists.php" class="small-box-footer" title="">
+            <a href="groups-adlists.lp" class="small-box-footer" title="">
                 Manage adlists <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
@@ -152,14 +152,9 @@ require 'scripts/pi-hole/php/header_authenticated.php';
     </div>
 </div>
 
-<?php
-    if ($boxedlayout) {
-        $tablelayout = 'col-md-6';
-    } else {
-        $tablelayout = 'col-md-6 col-lg-6';
-    } ?>
+<? if pihole.boxedlayout() then tablelayout = 'col-md-6' else  tablelayout = 'col-md-6 col-lg-6' end ?>
 <div class="row">
-    <div class="<?php echo $tablelayout; ?>">
+    <div class="<?=tablelayout?>">
         <div class="box" id="domain-frequency">
             <div class="box-header with-border">
                 <h3 class="box-title">Top Permitted Domains</h3>
@@ -188,7 +183,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
         <!-- /.box -->
     </div>
     <!-- /.col -->
-    <div class="<?php echo $tablelayout; ?>">
+    <div class="<?=tablelayout?>">
         <div class="box" id="ad-frequency">
             <div class="box-header with-border">
                 <h3 class="box-title">Top Blocked Domains</h3>
@@ -219,7 +214,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
 </div>
 <div class="row">
     <!-- /.col -->
-    <div class="<?php echo $tablelayout; ?>">
+    <div class="<?=tablelayout?>">
         <div class="box" id="client-frequency">
             <div class="box-header with-border">
                 <h3 class="box-title">Top Clients (total)</h3>
@@ -248,7 +243,7 @@ require 'scripts/pi-hole/php/header_authenticated.php';
         <!-- /.box -->
     </div>
     <!-- /.col -->
-    <div class="<?php echo $tablelayout; ?>">
+    <div class="<?=tablelayout?>">
         <div class="box" id="client-frequency-blocked">
             <div class="box-header with-border">
                 <h3 class="box-title">Top Clients (blocked only)</h3>
@@ -280,8 +275,6 @@ require 'scripts/pi-hole/php/header_authenticated.php';
 </div>
 <!-- /.row -->
 
-<script src="<?php echo fileversion('scripts/pi-hole/js/index.js'); ?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/index.js')?>"></script>
 
-<?php
-require 'scripts/pi-hole/php/footer.php';
-?>
+<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>

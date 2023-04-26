@@ -1,15 +1,14 @@
-<?php
-/*
+<? --[[
 *  Pi-hole: A black hole for Internet advertisements
 *  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license.
-*/
+--]]
 
-$wrongpassword = false;
-require 'scripts/pi-hole/php/header.php';
+mg.include('scripts/pi-hole/lua/header.lp','r')
+wrongpassword = false
 
 ?>
 <body class="hold-transition layout-boxed login-page">
@@ -26,14 +25,14 @@ require 'scripts/pi-hole/php/header.php';
         <div class="card">
             <div class="card-body login-card-body">
                 <div id="cookieInfo" class="panel-title text-center text-red" style="font-size: 150%" hidden>Verify that cookies are allowed</div>
-                <?php if ($wrongpassword) { ?>
-                <div class="form-group has-error login-box-msg">
-                    <label class="control-label"><i class="fa fa-times-circle"></i> Wrong password!</label>
-                </div>
-                <?php } ?>
+                <? if wrongpassword then mg.write('\
+                <div class="form-group has-error login-box-msg">\
+                    <label class="control-label"><i class="fa fa-times-circle"></i> Wrong password!</label>\
+                </div>\
+                ') end ?>
 
                 <form id="loginform">
-                    <div class="login-options has-feedback<?php if ($wrongpassword) { ?> has-error<?php } ?>">
+                    <div class="login-options has-feedback<? if wrongpassword then mg.write(" has-error") end ?>">
                         <input type="text" id="username" value="pi.hole" autocomplete="username" hidden>
                         <div class="pwd-field form-group">
                             <!-- hidden username input field to help password managers to autfill the password -->
@@ -57,12 +56,12 @@ require 'scripts/pi-hole/php/header.php';
                 <br>
                 <div class="row">
                     <div class="col-xs-12">
-                        <div class="box box-<?php if (!$wrongpassword) { ?>info collapsed-box<?php } else { ?>danger<?php }?>">
+                        <div class="box box-<? if not wrongpassword then mg.write("info collapsed-box") else mg.write("danger") end ?>">
                             <div class="box-header with-border pointer no-user-select" data-widget="collapse">
                                 <h3 class="box-title">Forgot password?</h3>
                                 <div class="box-tools pull-right">
                                     <button type="button" class="btn btn-box-tool">
-                                        <i class="fa <?php if ($wrongpassword) { ?>fa-minus<?php } else { ?>fa-plus<?php } ?>"></i>
+                                        <i class="fa <? if wrongpassword then mg.write("fa-minus") else mg.write("fa-plus") end ?>"></i>
                                     </button>
                                 </div>
                             </div>
@@ -93,8 +92,8 @@ require 'scripts/pi-hole/php/header.php';
         <strong><a href="https://pi-hole.net/donate/" rel="noopener" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
     </div>
 </div>
-<script src="<?php echo fileversion('scripts/pi-hole/js/login.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/vendor/geraintluff-sha256.min.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/footer.js'); ?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/login.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/vendor/geraintluff-sha256.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/footer.js')?>"></script>
 </body>
 </html>

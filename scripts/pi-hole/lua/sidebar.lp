@@ -1,3 +1,11 @@
+<? --[[
+*    Pi-hole: A black hole for Internet advertisements
+*    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*    Network-wide ad blocking via your own hardware.
+*
+*    This file is copyright under the latest version of the EUPL.
+*    Please see LICENSE file for your rights under this license.
+*/ ]]-- ?>
     <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
         <!-- sidebar: style can be found in sidebar.less -->
@@ -19,38 +27,38 @@
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">Main</li>
                 <!-- Home Page -->
-                <li class="menu-main<?php if ($scriptname === 'index.php') { ?> active<?php } ?>">
-                    <a href="index.php">
+                <li class="menu-main<? if scriptname == 'index.lp' then mg.write(" active") end ?>">
+                    <a href="index.lp">
                         <i class="fa fa-fw menu-icon fa-home"></i> <span class="text-green">Dashboard</span>
                     </a>
                 </li>
                 <!-- Query Log -->
-                <li class="menu-analysis<?php if ($scriptname === 'queries.php') { ?> active<?php } ?>">
-                    <a href="queries.php">
+                <li class="menu-analysis<? if scriptname == 'queries.lp' then mg.write(" active") end ?>">
+                    <a href="queries.lp">
                         <i class="fa fa-fw menu-icon fa-file-alt"></i> <span class="text-green">Query Log</span>
                     </a>
                 </li>
 
                 <li class="header text-uppercase">Group Management</li>
                 <!-- Group Management -->
-                <li class="menu-group<?php if ($scriptname === 'groups.php') { ?> active<?php } ?>">
-                    <a href="groups.php">
+                <li class="menu-group<? if scriptname == 'groups.lp' then mg.write(" active") end ?>">
+                    <a href="groups.lp">
                         <i class="fa fa-fw menu-icon fa-user-friends"></i> <span class="text-red">Groups
                         <span class="pull-right-container">
                             <span class="label label-primary pull-right" id="num_groups" title="Number of defined groups"></span>
                         </span>
                     </a>
                 </li>
-                <li class="menu-group<?php if ($scriptname === 'groups-clients.php') { ?> active<?php } ?>">
-                    <a href="groups-clients.php">
+                <li class="menu-group<? if scriptname == 'groups-clients.lp' then mg.write(" active") end ?>">
+                    <a href="groups-clients.lp">
                         <i class="fa fa-fw menu-icon fa-laptop"></i> <span class="text-red">Clients
                         <span class="pull-right-container">
                             <span class="label label-primary pull-right" id="num_clients" title="Number of defined clients"></span>
                         </span>
                     </a>
                 </li>
-                <li class="menu-group<?php if ($scriptname === 'groups-domains.php') { ?> active<?php } ?>">
-                    <a href="groups-domains.php">
+                <li class="menu-group<? if scriptname == 'groups-domains.lp' then mg.write(" active") end ?>">
+                    <a href="groups-domains.lp">
                         <i class="fa fa-fw menu-icon fa-list"></i> <span class="text-red">Domains
                         <span class="pull-right-container">
                             <span class="label bg-red pull-right" id="num_denied" title="Number of deny rules (domains and regex)"></span>
@@ -58,8 +66,8 @@
                         </span>
                     </a>
                 </li>
-                <li class="menu-group<?php if ($scriptname === 'groups-adlists.php') { ?> active<?php } ?>">
-                    <a href="groups-adlists.php">
+                <li class="menu-group<? if scriptname == 'groups-adlists.lp' then mg.write(" active") end ?>">
+                    <a href="groups-adlists.lp">
                         <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span class="text-red">Adlists
                         <span class="pull-right-container">
                             <span class="label bg-blue pull-right" id="num_lists" title="Number of defined adlists"></span>
@@ -107,7 +115,7 @@
                     </ul>
                     <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
-                <li id="pihole-enable" class="menu-dns treeview"<?php if (!in_array($pistatus, array('0', '-1', '-2'))) { ?> hidden<?php } ?>>
+                <li id="pihole-enable" class="menu-dns treeview">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-play"></i>
                         <span id="enableLabel" class="text-red">Enable Blocking&nbsp;&nbsp;&nbsp;
@@ -117,7 +125,7 @@
                 </li>
                 <li class="header text-uppercase">System</li>
                 <!-- Settings -->
-                <li class="menu-system treeview <?php if (startsWith($scriptname, 'settings-')) { ?> active<?php } ?>">
+                <li class="menu-system treeview <? if startsWith(scriptname, 'settings-') then mg.write(" active") end ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-cogs"></i> <span>Settings</span>
                         <span class="pull-right-container">
@@ -125,50 +133,50 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="<?php if ($scriptname === 'settings-system.php') { ?> active<?php } ?>">
-                            <a href="settings-system.php">
+                        <li class="<? if scriptname == 'settings-system.lp' then mg.write(" active") end ?>">
+                            <a href="settings-system.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-circle-info"></i> <span class="text-green">System</span>
                             </a>
                         </li>
-                        <li class="<?php if ($scriptname === 'settings-dns.php') { ?> active<?php } ?>">
-                            <a href="settings-dns.php">
+                        <li class="<? if scriptname == 'settings-dns.lp' then mg.write(" active") end ?>">
+                            <a href="settings-dns.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-book-atlas"></i> <span class="text-orange">DNS</span>
                             </a>
                         </li>
-                        <li class="<?php if ($scriptname === 'settings-dhcp.php') { ?> active<?php } ?>">
-                            <a href="settings-dhcp.php">
+                        <li class="<? if scriptname == 'settings-dhcp.lp' then mg.write(" active") end ?>">
+                            <a href="settings-dhcp.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-sitemap"></i> <span class="text-orange">DHCP</span>
                             </a>
                         </li>
-                        <li class="<?php if ($scriptname === 'settings-api.php') { ?> active<?php } ?>">
-                            <a href="settings-api.php">
+                        <li class="<? if scriptname == 'settings-api.lp' then mg.write(" active") end ?>">
+                            <a href="settings-api.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-window-restore"></i> <span class="text-orange">Web interface / API</span>
                             </a>
                         </li>
-                        <li class="<?php if ($scriptname === 'settings-privacy.php') { ?> active<?php } ?>">
-                            <a href="settings-privacy.php">
+                        <li class="<? if scriptname == 'settings-privacy.lp' then mg.write(" active") end ?>">
+                            <a href="settings-privacy.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> <span class="text-red">Privacy</span>
                             </a>
                         </li>
-                        <li class="<?php if ($scriptname === 'settings-advanced.php') { ?> active<?php } ?> settings-level-2">
-                            <a href="settings-advanced.php">
+                        <li class="<? if scriptname == 'settings-advanced.lp' then mg.write(" active") end ?> settings-level-2">
+                            <a href="settings-advanced.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> <span class="text-orange">Advanced</span>
                             </a>
                         </li>
-                        <li class="<?php if ($scriptname === 'settings-teleporter.php') { ?> active<?php } ?>">
-                            <a href="settings-teleporter.php">
+                        <li class="<? if scriptname == 'settings-teleporter.lp' then mg.write(" active") end ?>">
+                            <a href="settings-teleporter.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-file-export"></i> <span class="text-red">Teleporter</span>
                             </a>
                         </li>
-                        <li class="<?php if ($scriptname === 'settings-dns-records.php') { ?> active<?php } ?>">
-                            <a href="settings-dns-records.php">
+                        <li class="<? if scriptname == 'settings-dns-records.lp' then mg.write(" active") end ?>">
+                            <a href="settings-dns-records.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-address-book"></i> <span class="text-orange">Local DNS Records</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <!-- Tools -->
-                <li class="menu-system treeview<?php if (in_array($scriptname, array('messages.php', 'gravity.php', 'queryads.php', 'taillog.php', 'taillog-FTL.php', 'debug.php', 'network.php'))) { ?> active<?php } ?>">
+                <li class="menu-system treeview<? if in_array(scriptname, array('messages.lp', 'gravity.lp', 'queryads.lp', 'taillog.lp', 'taillog-FTL.lp', 'debug.lp', 'network.lp')) then mg.write(" active") end ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-tools"></i> <span>Tools</span>
                         <span class="warning-count hidden"></span>
@@ -178,14 +186,14 @@
                     </a>
                     <ul class="treeview-menu">
                         <!-- Pi-hole diagnosis -->
-                        <li class="<?php if ($scriptname === 'messages.php') { ?> active<?php } ?>">
-                            <a href="messages.php">
+                        <li class="<? if scriptname == 'messages.lp' then mg.write(" active") end ?>">
+                            <a href="messages.lp">
                                 <i class="fa fa-fw menu-icon fa-file-medical-alt"></i> <span class="text-green">Pi-hole diagnosis</span>
                                 <span class="pull-right-container warning-count hidden"></span>
                             </a>
                         </li>
                         <!-- Tail log files -->
-                        <li class="treeview <?php if ($scriptname === 'taillog.php') { ?> active<?php } ?>">
+                        <li class="treeview <? if scriptname == 'taillog.lp' then mg.write(" active") end ?>">
                             <a href="#">
                                 <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <span class="text-green">Tail log files</span>
                                 <span class="pull-right-container">
@@ -194,46 +202,40 @@
                             </a>
                             <ul class="treeview-menu">
                                 <!-- Tail pihole.log -->
-                                <li class="<?php if ($scriptname === 'taillog.php' && $_GET["file"] == "dnsmasq") { ?> active<?php } ?>">
-                                    <a href="taillog.php?file=dnsmasq">
+                                <li class="<? if scriptname == 'taillog.lp' and GET("file") == "dnsmasq" then mg.write(" active") end ?>">
+                                    <a href="taillog.lp?file=dnsmasq">
                                         <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>pihole.log</code>
                                     </a>
                                 </li>
                                 <!-- Tail FTL.log -->
-                                <li class="<?php if ($scriptname === 'taillog.php' && $_GET["file"] == "ftl") { ?> active<?php } ?>">
-                                    <a href="taillog.php?file=ftl">
+                                <li class="<? if scriptname == 'taillog.lp' and GET("file") == "ftl" then mg.write(" active") end ?>">
+                                    <a href="taillog.lp?file=ftl">
                                         <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>FTL.log</code>
                                     </a>
                                 </li>
-                                <!-- Tail civetweb.log -->
-                                <li class="<?php if ($scriptname === 'taillog.php' && $_GET["file"] == "http") { ?> active<?php } ?>">
-                                    <a href="taillog.php?file=http">
-                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>civetweb.log</code>
-                                    </a>
-                                </li>
-                                <!-- Tail ph7.log -->
-                                <li class="<?php if ($scriptname === 'taillog.php' && $_GET["file"] == "ph7") { ?> active<?php } ?>">
-                                    <a href="taillog.php?file=ph7">
-                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>ph7.log</code>
+                                <!-- Tail webserver.log -->
+                                <li class="<? if scriptname == 'taillog.lp' and GET("file") == "webserver" then mg.write(" active") end ?>">
+                                    <a href="taillog.lp?file=webserver">
+                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>webserver.log</code>
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <!-- Run gravity.sh -->
-                        <li class="<?php if ($scriptname === 'gravity.php') { ?> active<?php } ?>">
-                            <a href="gravity.php">
+                        <li class="<? if scriptname == 'gravity.lp' then mg.write(" active") end ?>">
+                            <a href="gravity.lp">
                                 <i class="fa fa-fw menu-icon fa-arrow-circle-down"></i> <span class="text-red">Update Gravity</span>
                             </a>
                         </li>
                         <!-- Query Lists -->
-                        <li class="<?php if ($scriptname === 'queryads.php') { ?> active<?php } ?>">
-                            <a href="queryads.php">
+                        <li class="<? if scriptname == 'queryads.lp' then mg.write(" active") end ?>">
+                            <a href="queryads.lp">
                                 <i class="fa fa-fw menu-icon fa-search"></i> <span class="text-red">Search Adlists</span>
                             </a>
                         </li>
                         <!-- Network -->
-                        <li class="<?php if ($scriptname === 'network.php') { ?> active<?php } ?>">
-                            <a href="network.php">
+                        <li class="<? if scriptname == 'network.lp' then mg.write(" active") end ?>">
+                            <a href="network.lp">
                                 <i class="fa fa-fw menu-icon fa-network-wired"></i> <span class="text-red">Network</span>
                             </a>
                         </li>

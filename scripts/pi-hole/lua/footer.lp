@@ -1,11 +1,11 @@
-<?php
-/* Pi-hole: A black hole for Internet advertisements
+<? --[[
+*  Pi-hole: A black hole for Internet advertisements
 *  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license.
-*/
+* ]]--
 ?>
 
         </section>
@@ -57,6 +57,6 @@
 
 </div>
 <!-- ./wrapper -->
-<script src="<?php echo fileversion('scripts/pi-hole/js/footer.js'); ?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/footer.js')?>"></script>
 </body>
 </html>

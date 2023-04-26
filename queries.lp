@@ -1,11 +1,13 @@
-<?php /*
-*    Pi-hole: A black hole for Internet advertisements
-*    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
-*    Network-wide ad blocking via your own hardware.
+<? --[[
+*  Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
 *
-*    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. */
-require 'scripts/pi-hole/php/header_authenticated.php';
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license.
+--]]
+
+mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
 <!-- Alert Modal -->
 <div id="alertModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -233,12 +235,10 @@ require 'scripts/pi-hole/php/header_authenticated.php';
 </div>
 <!-- /.row -->
 
-<script src="<?php echo fileversion('scripts/vendor/bootstrap-select.min.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/ip-address-sorting.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/vendor/daterangepicker.min.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/utils.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/queries.js'); ?>"></script>
+<script src="<?=pihole.fileversion('scripts/vendor/bootstrap-select.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/ip-address-sorting.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/vendor/daterangepicker.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/utils.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/queries.js')?>"></script>
 
-<?php
-    require 'scripts/pi-hole/php/footer.php';
-?>
+<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>

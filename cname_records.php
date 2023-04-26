@@ -8,7 +8,7 @@
 *    Please see LICENSE file for your rights under this license.
 */
 
-require 'scripts/pi-hole/php/header_authenticated.php';
+mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
 
 <!-- Title -->
@@ -79,8 +79,6 @@ require 'scripts/pi-hole/php/header_authenticated.php';
     </div>
 </div>
 
-<script src="<?php echo fileversion('scripts/pi-hole/js/customcname.js'); ?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/customcname.js')?>"></script>
 
-<?php
-require 'scripts/pi-hole/php/footer.php';
-?>
+<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>

@@ -1,14 +1,13 @@
-<?php
-/*
-*    Pi-hole: A black hole for Internet advertisements
-*    (c) 2023 Pi-hole, LLC (https://pi-hole.net)
-*    Network-wide ad blocking via your own hardware.
+<? --[[
+*  Pi-hole: A black hole for Internet advertisements
+*  (c) 2023 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
 *
-*    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license.
-*/
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license.
+--]]
 
-require 'scripts/pi-hole/php/header_authenticated.php';
+mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
 <div class="row">
     <div class="col-md-6">
@@ -270,11 +269,8 @@ require 'scripts/pi-hole/php/header_authenticated.php';
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <?php if ($piHoleLogging) { ?>
-                            <button type="button" class="btn btn-warning confirm-disablelogging-noflush btn-block">Disable query logging</button>
-                        <?php } else { ?>
-                            <button type="submit" class="btn btn-success btn-block">Enable query logging</button>
-                        <?php } ?>
+                            <button type="button" id="disableLoggingButton" class="btn btn-warning confirm-disablelogging-noflush btn-block" style="display: none">Disable query logging</button>
+                            <button type="button" id="enableLoggingButton" class="btn btn-success btn-block" style="display: none">Enable query logging</button>
                     </div>
                     <p class="hidden-md hidden-lg"></p>
                     <div class="col-md-4">
@@ -300,10 +296,8 @@ require 'scripts/pi-hole/php/header_authenticated.php';
         </div>
     </div>
 </div>
-<script src="<?php echo fileversion('scripts/vendor/jquery.confirm.min.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/settings-system.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/settings.js'); ?>"></script>
+<script src="<?=pihole.fileversion('scripts/vendor/jquery.confirm.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/settings-system.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/settings.js')?>"></script>
 
-<?php
-require 'scripts/pi-hole/php/footer.php';
-?>
+<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>

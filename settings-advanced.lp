@@ -1,0 +1,21 @@
+<? --[[
+*  Pi-hole: A black hole for Internet advertisements
+*  (c) 2023 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
+*
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license.
+--]]
+
+mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
+?>
+<div class="row" id="advanced-content">
+    <!-- dynamically filled with content -->
+    <div class="overlay" id="advanced-overlay">
+        <i class="fa fa-sync fa-spin"></i>
+    </div>
+</div>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/settings-advanced.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/settings.js')?>"></script>
+
+<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>

@@ -1,35 +1,31 @@
-<?php
-/*
+<?
+--[[
 *  Pi-hole: A black hole for Internet advertisements
 *  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license.
-*/
-
-require 'header.php';
-// Function to check string starting
-// with given substring
-function startsWith($string, $startString)
-{
-    $len = strlen($startString);
-
-    return substr($string, 0, $len) === $startString;
-}
+]]--
+mg.include('header.lp','r')
 ?>
-    <link rel="stylesheet" href="<?php echo fileversion('style/vendor/datatables.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo fileversion('style/vendor/datatables_extensions.min.css'); ?>">
-    <link rel="stylesheet" href="<?php echo fileversion('style/vendor/daterangepicker.min.css'); ?>">
-    <script src="<?php echo fileversion('scripts/vendor/select2.min.js'); ?>"></script>
-    <script src="<?php echo fileversion('scripts/vendor/datatables.min.js'); ?>"></script>
-    <script src="<?php echo fileversion('scripts/vendor/datatables.select.min.js'); ?>"></script>
-    <script src="<?php echo fileversion('scripts/vendor/datatables.buttons.min.js'); ?>"></script>
-    <script src="<?php echo fileversion('scripts/vendor/moment.min.js'); ?>"></script>
-    <script src="<?php echo fileversion('scripts/vendor/chart.min.js'); ?>"></script>
-    <script src="<?php echo fileversion('scripts/vendor/chartjs-adapter-moment.js'); ?>"></script>
+    <!-- Group management styles -->
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/animate.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap-select.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap-toggle.min.css')?>">
+
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/datatables.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/datatables_extensions.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/daterangepicker.min.css')?>">
+    <script src="<?=pihole.fileversion('scripts/vendor/select2.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/vendor/datatables.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/vendor/datatables.select.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/vendor/datatables.buttons.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/vendor/moment.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/vendor/chart.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/vendor/chartjs-adapter-moment.js')?>"></script>
 </head>
-<body class="<?php echo $theme; ?> hold-transition sidebar-mini<?php if ($boxedlayout) { ?> layout-boxed<?php } ?><?php if ($auth) { ?> logged-in<?php } ?>">
+<body class="<?=pihole.webtheme()?> hold-transition sidebar-mini<? if pihole.boxedlayout() then mg.write("layout-boxed") end ?> logged-in">
 <noscript>
     <!-- JS Warning -->
     <div>
@@ -46,7 +42,7 @@ function startsWith($string, $startString)
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
-        <a href="index.php" class="logo">
+        <a href="index.lp" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">P<strong>h</strong></span>
             <!-- logo for regular state and mobile devices -->
@@ -62,21 +58,21 @@ function startsWith($string, $startString)
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                <?php if (startsWith($scriptname, 'settings-')) { ?>
-                    <li class="nav-item">
-                        <p class="navbar-text">
-                            Settings level: <select id="settings-level" class="form-control input-sm">
-                                <option value="0">Basic</option>
-                                <option value="1">Advanced</option>
-                                <option value="2">Expert</option>
-                            </select>
-                        </p>
-                    </li>
-                    <?php } ?>
-                    <li<?php echo !$hostname ? ' class="hidden"' : ''; ?>>
+                <? if startsWith(scriptname, 'settings-') then mg.write('\
+                    <li class="nav-item">\
+                        <p class="navbar-text">\
+                            Settings level: <select id="settings-level" class="form-control input-sm">\
+                                <option value="0">Basic</option>\
+                                <option value="1">Advanced</option>\
+                                <option value="2">Expert</option>\
+                            </select>\
+                        </p>\
+                    </li>\
+                    ') end ?>
+                    <li<? if string.len(hostname) == 0 then mg.write(' class="hidden"') end ?>>
                         <p class="navbar-text">
                             <span class="hidden-xs">hostname:</span>
-                            <code><?php echo $hostname; ?></code>
+                            <code><?=hostname?></code>
                         </p>
                     </li>
                     <li class="dropdown user user-menu">
@@ -112,7 +108,7 @@ function startsWith($string, $startString)
             </div>
         </nav>
     </header>
-<?php require 'scripts/pi-hole/php/sidebar.php'; ?>
+<? mg.include('sidebar.lp', 'r') ?>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Main content -->

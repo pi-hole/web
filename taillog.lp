@@ -1,14 +1,13 @@
-<?php
-/*
+<? --[[
 *    Pi-hole: A black hole for Internet advertisements
 *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
 *    Network-wide ad blocking via your own hardware.
 *
 *    This file is copyright under the latest version of the EUPL.
 *    Please see LICENSE file for your rights under this license.
-*/
+*/ ]]--
 
-require 'scripts/pi-hole/php/header_authenticated.php';
+mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
 <div class="row">
     <div class="col-md-12">
@@ -33,8 +32,6 @@ require 'scripts/pi-hole/php/header_authenticated.php';
     </div>
 </div>
 
-<script src="<?php echo fileversion('scripts/pi-hole/js/taillog.js'); ?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/taillog.js')?>"></script>
 
-<?php
-require 'scripts/pi-hole/php/footer.php';
-?>
+<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>

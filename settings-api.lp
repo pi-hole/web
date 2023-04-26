@@ -1,14 +1,13 @@
-<?php
-/*
-*    Pi-hole: A black hole for Internet advertisements
-*    (c) 2023 Pi-hole, LLC (https://pi-hole.net)
-*    Network-wide ad blocking via your own hardware.
+<? --[[
+*  Pi-hole: A black hole for Internet advertisements
+*  (c) 2023 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
 *
-*    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license.
-*/
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license.
+--]]
 
-require 'scripts/pi-hole/php/header_authenticated.php';
+mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
 <div class="row">
     <div class="col-md-6">
@@ -41,12 +40,12 @@ require 'scripts/pi-hole/php/header_authenticated.php';
                 <div class="row">
                     <div class="col-lg-12">
                         <div>
-                            <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <?php if ($queryLog === 'permittedonly' || $queryLog === 'all') { ?>checked<?php } ?>>
+                            <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <? if queryLog == 'permittedonly' or queryLog == 'all' then mg.write("checked") end ?>>
                             <label for="querylog-permitted"><strong>Show permitted domain entries</strong></label>
                             <p class="help-block">This will show all permitted domain entries in the query log.</p>
                         </div>
                         <div>
-                            <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <?php if ($queryLog === 'blockedonly' || $queryLog === 'all') { ?>checked<?php } ?>>
+                            <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <? if queryLog == 'blockedonly' or queryLog == 'all' then mg.write("checked") end ?>>
                             <label for="querylog-blocked"><strong>Show blocked domain entries</strong></label>
                             <p class="help-block">This will show all blocked domain entries in the query log.</p>
                         </div>
@@ -172,11 +171,9 @@ require 'scripts/pi-hole/php/header_authenticated.php';
     </div>
 </div>
 
-<script src="<?php echo fileversion('scripts/vendor/jquery.confirm.min.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/vendor/qrious.min.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/settings-api.js'); ?>"></script>
-<script src="<?php echo fileversion('scripts/pi-hole/js/settings.js'); ?>"></script>
+<script src="<?=pihole.fileversion('scripts/vendor/jquery.confirm.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/vendor/qrious.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/settings-api.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/settings.js')?>"></script>
 
-<?php
-require 'scripts/pi-hole/php/footer.php';
-?>
+<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>
