@@ -6,6 +6,7 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils:false, moment:false */
+
 //The following functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
 

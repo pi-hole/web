@@ -223,9 +223,9 @@ function updateQueriesOverTime() {
     timeLineChart.data.datasets = [];
 
     var labels = ["Blocked DNS Queries", "Cached DNS Queries", "Forwarded DNS Queries"];
-    var blockedColor = $(".queries-blocked").css("background-color");
-    var cachedColor = $(".queries-cached").css("background-color");
-    var permittedColor = $(".queries-permitted").css("background-color");
+    var cachedColor = utils.getCSSval("queries-cached", "background-color");
+    var blockedColor = utils.getCSSval("queries-blocked", "background-color");
+    var permittedColor = utils.getCSSval("queries-permitted", "background-color");
     var colors = [blockedColor, cachedColor, permittedColor];
 
     // Collect values and colors, and labels
@@ -740,8 +740,8 @@ $(function () {
   // Pull in data via AJAX
   updateSummaryData();
 
-  var gridColor = $(".graphs-grid").css("background-color");
-  var ticksColor = $(".graphs-ticks").css("color");
+  var gridColor = utils.getCSSval("graphs-grid", "background-color");
+  var ticksColor = utils.getCSSval("graphs-ticks", "color");
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   timeLineChart = new Chart(ctx, {
     type: utils.getGraphType(),
