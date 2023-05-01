@@ -358,6 +358,7 @@ if (isset($_POST['action'])) {
 
         $flushtables = isset($_POST['flushtables']);
 
+        echo 'Start importing...'."<br>\n";
         foreach (new RecursiveIteratorIterator($archive) as $file) {
             if (isset($_POST['blacklist']) && $file->getFilename() === 'blacklist.txt') {
                 $num = archive_insert_into_table($file, 'blacklist', $flushtables);
@@ -559,7 +560,7 @@ if (isset($_POST['action'])) {
         }
 
         unlink($fullfilename);
-        echo 'OK';
+        echo 'Done importing';
         if ($reloadsettingspage) {
             echo "<br>\n<span data-forcereload></span>";
         }

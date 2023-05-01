@@ -6,6 +6,7 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils:false */
+
 //The following functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
 
@@ -185,8 +186,9 @@ function initCPUtemp() {
     var token = encodeURIComponent($("#token").text());
     $.getJSON("api.php?setTempUnit=" + unit + "&token=" + token, function (data) {
       if (showmsg === true) {
+        utils.showAlert("info", "", "Setting temperature unit...");
         if ("result" in data && data.result === "success") {
-          utils.showAlert("success", "", "Temperature unit set to " + unit, "");
+          utils.showAlert("success", "far fa-check-circle", "Temperature unit set to " + unit, "");
         } else {
           utils.showAlert("error", "", "", "Temperature unit not set");
         }
