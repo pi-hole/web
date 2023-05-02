@@ -8,7 +8,6 @@
 --]]
 
 mg.include('scripts/pi-hole/lua/header.lp','r')
-wrongpassword = false
 
 ?>
 <body class="hold-transition layout-boxed login-page">
@@ -25,14 +24,12 @@ wrongpassword = false
         <div class="card">
             <div class="card-body login-card-body">
                 <div id="cookieInfo" class="panel-title text-center text-red" style="font-size: 150%" hidden>Verify that cookies are allowed</div>
-                <? if wrongpassword then mg.write('\
-                <div class="form-group has-error login-box-msg">\
-                    <label class="control-label"><i class="fa fa-times-circle"></i> Wrong password!</label>\
-                </div>\
-                ') end ?>
+                <div class="form-group has-error login-box-msg" id="error-label" style="display: none;">
+                    <label class="control-label"><i class="fa fa-times-circle"></i> Wrong password!</label>
+                </div>
 
                 <form id="loginform">
-                    <div class="login-options has-feedback<? if wrongpassword then mg.write(" has-error") end ?>">
+                    <div class="login-options has-feedback" id="pw-field">
                         <input type="text" id="username" value="pi.hole" autocomplete="username" hidden>
                         <div class="pwd-field form-group">
                             <!-- hidden username input field to help password managers to autfill the password -->
@@ -56,12 +53,12 @@ wrongpassword = false
                 <br>
                 <div class="row">
                     <div class="col-xs-12">
-                        <div class="box box-<? if not wrongpassword then mg.write("info collapsed-box") else mg.write("danger") end ?>">
+                        <div class="box box-info collapsed-box" id="forgot-pw-box">
                             <div class="box-header with-border pointer no-user-select" data-widget="collapse">
                                 <h3 class="box-title">Forgot password?</h3>
                                 <div class="box-tools pull-right">
                                     <button type="button" class="btn btn-box-tool">
-                                        <i class="fa <? if wrongpassword then mg.write("fa-minus") else mg.write("fa-plus") end ?>"></i>
+                                        <i class="fa fa-plus" id="forgot-pw-toggle-icon"></i>
                                     </button>
                                 </div>
                             </div>

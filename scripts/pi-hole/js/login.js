@@ -40,7 +40,24 @@ function redirect() {
   window.location.replace(target);
 }
 
+function wrongPassword(is_wrong) {
+  if (is_wrong) {
+    $("#pw-field").addClass("has-error");
+    $("#error-label").show();
+    $("#forgot-pw-box").removeClass("box-info").removeClass("collapsed-box").addClass("box-danger");
+    $("#forgot-pw-box .box-body").show();
+    $("#forgot-pw-toggle-icon").removeClass("fa-plus").addClass("fa-minus");
+  } else {
+    $("#pw-field").removeClass("has-error");
+    $("#error-label").hide();
+    $("#forgot-pw-box").addClass("box-info").addClass("collapsed-box").removeClass("box-danger");
+    $("#forgot-pw-box .box-body").hide();
+    $("#forgot-pw-toggle-icon").removeClass("fa-minus").addClass("fa-plus");
+  }
+}
+
 function doLogin(response) {
+  wrongPassword(false);
   $.ajax({
     url: "/api/auth",
     method: "POST",
@@ -51,9 +68,8 @@ function doLogin(response) {
     })
     .fail(function (data) {
       if (data.status === 401) {
-        // Login failed
-        $("#pw-field").addClass("has-error");
-        $("#error-label").show();
+        // Login failed, show error message
+        wrongPassword(true);
       }
     });
 }
