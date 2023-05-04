@@ -164,21 +164,27 @@ function deleteMessage() {
   }
 }
 
-function delMsg(id) {
+function delMsg(ids) {
   utils.disableAll();
   utils.showAlert("info", "", "Deleting message...");
 
   $.ajax({
-    url: "/api/info/messages/" + id,
+    url: "/api/info/messages/" + ids,
     method: "DELETE",
   })
     .done(function (response) {
       utils.enableAll();
       if (response === undefined) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted message", "");
-        table.row(id).remove().draw(false).ajax.reload(null, false);
+        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted " + ids.length + " message" + (ids.length > 1 ? "s":""), "");
+        // Loop over id in case of multiple IDs
+        for (var id in ids) {
+          if (Object.hasOwnProperty.call(ids, id)) {
+            table.row(id).remove();
+          }
+        }
+        table.draw(false).ajax.reload(null, false);
       } else {
-        utils.showAlert("error", "", "Error while deleting message: " + id, response.message);
+        utils.showAlert("error", "", "Error while deleting message: " + ids, response.message);
       }
 
       // Clear selection after deletion
