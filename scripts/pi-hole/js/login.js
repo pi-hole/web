@@ -40,13 +40,15 @@ function redirect() {
   window.location.replace(target);
 }
 
-function wrongPassword(is_wrong) {
-  if (is_wrong) {
+function wrongPassword(isError = false, isSuccess = false) {
+  if (isError) {
     $("#pw-field").addClass("has-error");
     $("#error-label").show();
     $("#forgot-pw-box").removeClass("box-info").removeClass("collapsed-box").addClass("box-danger");
     $("#forgot-pw-box .box-body").show();
     $("#forgot-pw-toggle-icon").removeClass("fa-plus").addClass("fa-minus");
+  } else if (isSuccess) {
+    $("#pw-field").addClass("has-success");
   } else {
     $("#pw-field").removeClass("has-error");
     $("#error-label").hide();
@@ -57,19 +59,20 @@ function wrongPassword(is_wrong) {
 }
 
 function doLogin(response) {
-  wrongPassword(false);
+  wrongPassword(false, false);
   $.ajax({
     url: "/api/auth",
     method: "POST",
     data: JSON.stringify({ response: response, totp: parseInt($("#totp").val(), 10) }),
   })
     .done(function () {
+      wrongPassword(false, true);
       redirect();
     })
     .fail(function (data) {
       if (data.status === 401) {
         // Login failed, show error message
-        wrongPassword(true);
+        wrongPassword(true, false);
       }
     });
 }

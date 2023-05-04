@@ -175,13 +175,19 @@ function delMsg(ids) {
     .done(function (response) {
       utils.enableAll();
       if (response === undefined) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted " + ids.length + " message" + (ids.length > 1 ? "s":""), "");
+        utils.showAlert(
+          "success",
+          "far fa-trash-alt",
+          "Successfully deleted " + ids.length + " message" + (ids.length > 1 ? "s" : ""),
+          ""
+        );
         // Loop over id in case of multiple IDs
         for (var id in ids) {
           if (Object.hasOwnProperty.call(ids, id)) {
             table.row(id).remove();
           }
         }
+
         table.draw(false).ajax.reload(null, false);
       } else {
         utils.showAlert("error", "", "Error while deleting message: " + ids, response.message);
@@ -196,7 +202,7 @@ function delMsg(ids) {
     )
     .fail(function (jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting message: " + id, jqXHR.responseText);
+      utils.showAlert("error", "", "Error while deleting message: " + ids, jqXHR.responseText);
       console.log(exception); // eslint-disable-line no-console
     });
 }
