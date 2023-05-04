@@ -368,20 +368,20 @@ function checkMessages() {
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
   $.ajax({
-    url: "/api/info/messages" + (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""),
+    url: "/api/info/messages/count" + (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""),
     method: "GET",
     dataType: "json",
   })
     .done(function (data) {
-      if (data.messages.length > 0) {
+      if (data.count > 0) {
         var more = '\nAccess "Tools/Pi-hole diganosis" for further details.';
         var title =
-          data.messages.length > 1
-            ? "There are " + data.messages.length + " warnings." + more
+          data.count > 1
+            ? "There are " + data.count + " warnings." + more
             : "There is one warning." + more;
 
         $(".warning-count").prop("title", title);
-        $(".warning-count").text(data.messages.length);
+        $(".warning-count").text(data.count);
         $(".warning-count").removeClass("hidden");
       } else {
         $(".warning-count").addClass("hidden");
