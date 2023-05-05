@@ -1,3 +1,6 @@
+HTTP/1.0 200 OK
+Content-Type: text/html
+
 <!DOCTYPE html>
 <!--
 *  Pi-hole: A black hole for Internet advertisements
