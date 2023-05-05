@@ -43,7 +43,7 @@
                 <!-- Group Management -->
                 <li class="menu-group<? if scriptname == 'groups.lp' then mg.write(" active") end ?>">
                     <a href="groups.lp">
-                        <i class="fa fa-fw menu-icon fa-user-friends"></i> <span class="text-red">Groups
+                        <i class="fa fa-fw menu-icon fa-user-friends"></i> <span class="text-green">Groups
                         <span class="pull-right-container">
                             <span class="label label-primary pull-right" id="num_groups" title="Number of defined groups"></span>
                         </span>

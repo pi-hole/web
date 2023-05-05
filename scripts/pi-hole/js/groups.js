@@ -7,17 +7,28 @@
 
 /* global utils:false */
 
-var table;
-var token = $("#token").text();
+var table, id_names = {};
+
+function handleAjaxError(xhr, textStatus) {
+  if (textStatus === "timeout") {
+    alert("The server took too long to send the data.");
+  } else {
+    alert("An unknown error occured while loading the data.\n" + xhr.responseText);
+  }
+
+  table.clear();
+  table.draw();
+}
 
 $(function () {
   $("#btnAdd").on("click", addGroup);
 
   table = $("#groupsTable").DataTable({
     ajax: {
-      url: "scripts/pi-hole/php/groups.php",
-      data: { action: "get_groups", token: token },
-      type: "POST",
+      url: "/api/groups",
+      error: handleAjaxError,
+      dataSrc: "groups",
+      type: "GET",
     },
     order: [[0, "asc"]],
     columns: [
@@ -25,7 +36,7 @@ $(function () {
       { data: null, visible: true, orderable: false, width: "15px" },
       { data: "name" },
       { data: "enabled", searchable: false },
-      { data: "description" },
+      { data: "comment" },
       { data: null, width: "22px", orderable: false },
     ],
     columnDefs: [
@@ -49,6 +60,7 @@ $(function () {
       $('button[id^="deleteGroup_"]').on("click", deleteGroup);
     },
     rowCallback: function (row, data) {
+      id_names[data.id] = data.name;
       $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
@@ -66,23 +78,23 @@ $(function () {
 
       var disabled = data.enabled === 0;
       $("td:eq(2)", row).html(
-        '<input type="checkbox" id="status_' + data.id + '"' + (disabled ? "" : " checked") + ">"
+        '<input type="checkbox" id="enabled_' + data.id + '"' + (disabled ? "" : " checked") + ">"
       );
-      var statusEl = $("#status_" + data.id, row);
-      statusEl.bootstrapToggle({
+      var enabledEl = $("#enabled_" + data.id, row);
+      enabledEl.bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px",
       });
-      statusEl.on("change", editGroup);
+      enabledEl.on("change", editGroup);
 
-      $("td:eq(3)", row).html('<input id="desc_' + data.id + '" class="form-control">');
-      var desc = data.description !== null ? data.description : "";
-      var descEl = $("#desc_" + data.id, row);
-      descEl.val(utils.unescapeHtml(desc));
-      descEl.on("change", editGroup);
+      $("td:eq(3)", row).html('<input id="comment_' + data.id + '" class="form-control">');
+      var comment = data.comment !== null ? data.comment : "";
+      var commentEl = $("#comment_" + data.id, row);
+      commentEl.val(utils.unescapeHtml(comment));
+      commentEl.on("change", editGroup);
 
       $("td:eq(4)", row).empty();
       if (data.id !== 0) {
@@ -212,52 +224,46 @@ function delItems(ids) {
   // Check input validity
   if (!Array.isArray(ids)) return;
 
-  var items = "";
-
   for (var id of ids) {
     // Exploit prevention: Return early for non-numeric IDs
     if (typeof id !== "number") return;
-
-    // List deleted items
-    items += "<li><i>" + utils.escapeHtml($("#name_" + id).val()) + "</i></li>";
   }
+
+  var name = id_names[ids[0]];
+
+  // Remove first element from array
+  ids.shift();
 
   utils.disableAll();
   var idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting group(s)...", "<ul>" + items + "</ul>");
+  utils.showAlert("info", "", "Deleting group...", name);
 
   $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: { action: "delete_group", id: JSON.stringify(ids), token: token },
+    url: "/api/groups/" + name,
+    method: "delete",
   })
     .done(function (response) {
       utils.enableAll();
-      if (response.success) {
-        utils.showAlert(
-          "success",
-          "far fa-trash-alt",
-          "Successfully deleted group(s): ",
-          "<ul>" + items + "</ul>"
-        );
-        for (var id in ids) {
-          if (Object.hasOwnProperty.call(ids, id)) {
-            table.row(id).remove().draw(false).ajax.reload(null, false);
-          }
-        }
-      } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while deleting group(s): " + idstring,
-          response.message
-        );
+      utils.showAlert(
+        "success",
+        "far fa-trash-alt",
+        "Successfully deleted group: ",
+        name
+      );
+      table.row(id).remove().draw(false);
+      if(ids.length > 0) {
+        // Recursively delete all remaining items
+        delItems(ids);
+        return;
       }
+      table.ajax.reload(null, false);
 
       // Clear selection after deletion
       table.rows().deselect();
       utils.changeBulkDeleteStates(table);
+
+      // Update number of groups in the sidebar
+      updateFtlInfo();
     })
     .fail(function (jqXHR, exception) {
       utils.enableAll();
@@ -273,7 +279,7 @@ function delItems(ids) {
 
 function addGroup() {
   var name = utils.escapeHtml($("#new_name").val());
-  var desc = utils.escapeHtml($("#new_desc").val());
+  var comment = utils.escapeHtml($("#new_comment").val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding group...", name);
@@ -286,22 +292,24 @@ function addGroup() {
   }
 
   $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
+    url: "/api/groups",
     method: "post",
     dataType: "json",
-    data: { action: "add_group", name: name, desc: desc, token: token },
+    data: JSON.stringify({
+      name: name,
+      comment: comment,
+      enabled: true,
+    }),
     success: function (response) {
       utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Successfully added group", name);
-        $("#new_name").val("");
-        $("#new_desc").val("");
-        table.ajax.reload();
-        table.rows().deselect();
-        $("#new_name").focus();
-      } else {
-        utils.showAlert("error", "", "Error while adding new group", response.message);
-      }
+      utils.showAlert("success", "fas fa-plus", "Successfully added group", name);
+      $("#new_name").val("");
+      $("#new_comment").val("");
+      table.ajax.reload();
+      table.rows().deselect();
+      $("#new_name").focus();
+      // Update number of groups in the sidebar
+      updateFtlInfo();
     },
     error: function (jqXHR, exception) {
       utils.enableAll();
@@ -315,69 +323,57 @@ function editGroup() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
+  var old_name = id_names[data.id];
   var name = utils.escapeHtml(tr.find("#name_" + id).val());
-  var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
-  var desc = utils.escapeHtml(tr.find("#desc_" + id).val());
+  var enabled = tr.find("#enabled_" + id).is(":checked");
+  var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
 
   var done = "edited";
   var notDone = "editing";
   switch (elem) {
-    case "status_" + id:
-      if (status === 0) {
+    case "enabled_" + id:
+      if (enabled === false) {
         done = "disabled";
         notDone = "disabling";
-      } else if (status === 1) {
+      } else if (enabled === true) {
         done = "enabled";
         notDone = "enabling";
       }
-
       break;
     case "name_" + id:
       done = "edited name of";
       notDone = "editing name of";
       break;
-    case "desc_" + id:
-      done = "edited description of";
-      notDone = "editing description of";
+    case "comment_" + id:
+      done = "edited comment of";
+      notDone = "editing comment of";
       break;
     default:
-      alert("bad element or invalid data-id!");
+      alert("bad element ( " + elem + " ) or invalid data-id!");
       return;
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Editing group...", name);
+  utils.showAlert("info", "", "Editing group...", old_name);
   $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
+    url: "/api/groups/" + old_name,
+    method: "put",
     dataType: "json",
-    data: {
-      action: "edit_group",
-      id: id,
+    data: JSON.stringify({
       name: name,
-      desc: desc,
-      status: status,
-      token: token,
-    },
+      comment: comment,
+      enabled: enabled,
+    }),
     success: function (response) {
       utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " group", name);
-      } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while " + notDone + " group with ID " + id,
-          response.message
-        );
-      }
+      utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " group", old_name);
     },
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert(
         "error",
         "",
-        "Error while " + notDone + " group with ID " + id,
+        "Error while " + notDone + " group with name " + old_name,
         jqXHR.responseText
       );
       console.log(exception); // eslint-disable-line no-console
