@@ -51,7 +51,7 @@
                 </li>
                 <li class="menu-group<? if scriptname == 'groups-clients.lp' then mg.write(" active") end ?>">
                     <a href="groups-clients.lp">
-                        <i class="fa fa-fw menu-icon fa-laptop"></i> <span class="text-red">Clients
+                        <i class="fa fa-fw menu-icon fa-laptop"></i> <span class="text-green">Clients
                         <span class="pull-right-container">
                             <span class="label label-primary pull-right" id="num_clients" title="Number of defined clients"></span>
                         </span>

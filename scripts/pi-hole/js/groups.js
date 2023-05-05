@@ -5,9 +5,10 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, updateFtlInfo:false */
 
-var table, id_names = {};
+var table,
+  idNames = {};
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
@@ -60,7 +61,7 @@ $(function () {
       $('button[id^="deleteGroup_"]').on("click", deleteGroup);
     },
     rowCallback: function (row, data) {
-      id_names[data.id] = data.name;
+      idNames[data.id] = data.name;
       $(row).attr("data-id", data.id);
       var tooltip =
         "Added: " +
@@ -76,9 +77,12 @@ $(function () {
       nameEl.val(utils.unescapeHtml(data.name));
       nameEl.on("change", editGroup);
 
-      var disabled = data.enabled === 0;
       $("td:eq(2)", row).html(
-        '<input type="checkbox" id="enabled_' + data.id + '"' + (disabled ? "" : " checked") + ">"
+        '<input type="checkbox" id="enabled_' +
+          data.id +
+          '"' +
+          (data.enabled ? " checked" : "") +
+          ">"
       );
       var enabledEl = $("#enabled_" + data.id, row);
       enabledEl.bootstrapToggle({
@@ -224,12 +228,13 @@ function delItems(ids) {
   // Check input validity
   if (!Array.isArray(ids)) return;
 
-  for (var id of ids) {
+  for (const id of ids) {
     // Exploit prevention: Return early for non-numeric IDs
     if (typeof id !== "number") return;
   }
 
-  var name = id_names[ids[0]];
+  var id = ids[0];
+  var name = idNames[id];
 
   // Remove first element from array
   ids.shift();
@@ -242,20 +247,16 @@ function delItems(ids) {
     url: "/api/groups/" + name,
     method: "delete",
   })
-    .done(function (response) {
+    .done(function () {
       utils.enableAll();
-      utils.showAlert(
-        "success",
-        "far fa-trash-alt",
-        "Successfully deleted group: ",
-        name
-      );
+      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted group: ", name);
       table.row(id).remove().draw(false);
-      if(ids.length > 0) {
+      if (ids.length > 0) {
         // Recursively delete all remaining items
         delItems(ids);
         return;
       }
+
       table.ajax.reload(null, false);
 
       // Clear selection after deletion
@@ -300,7 +301,7 @@ function addGroup() {
       comment: comment,
       enabled: true,
     }),
-    success: function (response) {
+    success: function () {
       utils.enableAll();
       utils.showAlert("success", "fas fa-plus", "Successfully added group", name);
       $("#new_name").val("");
@@ -323,7 +324,7 @@ function editGroup() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var old_name = id_names[data.id];
+  var oldName = idNames[id];
   var name = utils.escapeHtml(tr.find("#name_" + id).val());
   var enabled = tr.find("#enabled_" + id).is(":checked");
   var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
@@ -339,6 +340,7 @@ function editGroup() {
         done = "enabled";
         notDone = "enabling";
       }
+
       break;
     case "name_" + id:
       done = "edited name of";
@@ -354,9 +356,9 @@ function editGroup() {
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Editing group...", old_name);
+  utils.showAlert("info", "", "Editing group...", oldName);
   $.ajax({
-    url: "/api/groups/" + old_name,
+    url: "/api/groups/" + oldName,
     method: "put",
     dataType: "json",
     data: JSON.stringify({
@@ -364,16 +366,16 @@ function editGroup() {
       comment: comment,
       enabled: enabled,
     }),
-    success: function (response) {
+    success: function () {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " group", old_name);
+      utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " group", oldName);
     },
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert(
         "error",
         "",
-        "Error while " + notDone + " group with name " + old_name,
+        "Error while " + notDone + " group with name " + oldName,
         jqXHR.responseText
       );
       console.log(exception); // eslint-disable-line no-console

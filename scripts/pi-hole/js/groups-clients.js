@@ -5,17 +5,18 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, updateFtlInfo:false */
 
 var table;
 var groups = [];
 var token = $("#token").text();
 
 function reloadClientSuggestions() {
-  $.post(
-    "scripts/pi-hole/php/groups.php",
-    { action: "get_unconfigured_clients", token: token },
-    function (data) {
+  $.ajax({
+    url: "/api/clients/_suggestions",
+    type: "GET",
+    dataType: "json",
+    success: function (data) {
       var sel = $("#select");
       sel.empty();
 
@@ -27,41 +28,62 @@ function reloadClientSuggestions() {
       sel.append($("<option />"));
 
       // Add data obtained from API
-      for (var key in data) {
-        if (!Object.prototype.hasOwnProperty.call(data, key)) {
-          continue;
-        }
-
-        var text = key;
-        var keyPlain = key;
+      for (var i = 0; i < data.clients.length; i++) {
+        const client = data.clients[i];
+        let mockDevice = false;
+        var text = client.hwaddr.toUpperCase();
+        var key = text;
         if (key.startsWith("IP-")) {
           // Mock MAC address for address-only devices
-          keyPlain = key.substring(3);
-          text = keyPlain;
+          mockDevice = true;
+          key = key.substring(3);
+          text = key;
         }
 
-        // Append host name if available
-        if (data[key].length > 0) {
-          text += " (" + data[key] + ")";
+        // Append additional infos if available
+        var extraInfo = "";
+        if (client.names !== null && client.names.length > 0) {
+          // Count number of "," in client.names to determine number of hostnames
+          var numHostnames = client.names.split(",").length;
+          const pluralHostnames = numHostnames > 1 ? "s" : "";
+          extraInfo =
+            numHostnames + " hostname" + pluralHostnames + ": " + utils.escapeHtml(client.names);
         }
 
-        sel.append($("<option />").val(keyPlain).text(text));
+        if (client.macVendor !== null && client.macVendor.length > 0) {
+          if (extraInfo.length > 0) extraInfo += "; ";
+          extraInfo += "vendor: " + utils.escapeHtml(client.macVendor);
+        }
+
+        // Do not add addresses for mock devices as their address is already
+        // the hwaddr
+        if (client.addresses !== null && client.addresses.length > 0 && !mockDevice) {
+          if (extraInfo.length > 0) extraInfo += "; ";
+          // Count number of "," in client.addresses to determine number of addresses
+          var numAddresses = client.addresses.split(",").length;
+          const pluralAddresses = numAddresses > 1 ? "es" : "";
+          extraInfo +=
+            numAddresses + " address" + pluralAddresses + ": " + utils.escapeHtml(client.addresses);
+        }
+
+        if (extraInfo.length > 0) text += " (" + extraInfo + ")";
+
+        sel.append($("<option />").val(key).text(text));
       }
     },
-    "json"
-  );
+  });
 }
 
 function getGroups() {
-  $.post(
-    "scripts/pi-hole/php/groups.php",
-    { action: "get_groups", token: token },
-    function (data) {
-      groups = data.data;
+  $.ajax({
+    url: "/api/groups",
+    type: "GET",
+    dataType: "json",
+    success: function (data) {
+      groups = data.groups;
       initTable();
     },
-    "json"
-  );
+  });
 }
 
 $(function () {
@@ -85,18 +107,18 @@ $(function () {
 function initTable() {
   table = $("#clientsTable").DataTable({
     ajax: {
-      url: "scripts/pi-hole/php/groups.php",
-      data: { action: "get_clients", token: token },
-      type: "POST",
+      url: "/api/clients",
+      dataSrc: "clients",
+      type: "GET",
     },
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
       { data: null, visible: true, orderable: false, width: "15px" },
-      { data: "ip", type: "ip-address" },
+      { data: "client", type: "ip-address" },
       { data: "comment" },
       { data: "groups", searchable: false },
-      { data: "name", width: "22px", orderable: false },
+      { data: null, width: "22px", orderable: false },
     ],
     columnDefs: [
       {
@@ -121,7 +143,8 @@ function initTable() {
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback: function (row, data) {
-      $(row).attr("data-id", data.id);
+      var dataId = data.client.replaceAll(":", "__");
+      $(row).attr("data-id", dataId);
       var tooltip =
         "Added: " +
         utils.datetime(data.date_added, false) +
@@ -131,16 +154,16 @@ function initTable() {
         data.id;
       var ipName =
         '<code id="ip_' +
-        data.id +
+        dataId +
         '" title="' +
         tooltip +
         '" class="breakall">' +
-        data.ip +
+        data.client +
         "</code>";
       if (data.name !== null && data.name.length > 0)
         ipName +=
           '<br><code id="name_' +
-          data.id +
+          dataId +
           '" title="' +
           tooltip +
           '" class="breakall">' +
@@ -148,16 +171,16 @@ function initTable() {
           "</code>";
       $("td:eq(1)", row).html(ipName);
 
-      $("td:eq(2)", row).html('<input id="comment_' + data.id + '" class="form-control">');
-      var commentEl = $("#comment_" + data.id, row);
+      $("td:eq(2)", row).html('<input id="comment_' + dataId + '" class="form-control">');
+      var commentEl = $("#comment_" + dataId, row);
       commentEl.val(utils.unescapeHtml(data.comment));
       commentEl.on("change", editClient);
 
       $("td:eq(3)", row).empty();
       $("td:eq(3)", row).append(
-        '<select class="selectpicker" id="multiselect_' + data.id + '" multiple></select>'
+        '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
       );
-      var selectEl = $("#multiselect_" + data.id, row);
+      var selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
       for (var i = 0; i < groups.length; i++) {
         var dataSub = "";
@@ -212,17 +235,17 @@ function initTable() {
         .find(".bs-actionsbox")
         .prepend(
           '<button type="button" id=btn_apply_' +
-            data.id +
+            dataId +
             ' class="btn btn-block btn-sm" disabled>Apply</button>'
         );
 
-      var applyBtn = "#btn_apply_" + data.id;
+      var applyBtn = "#btn_apply_" + dataId;
 
       var button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteClient_' +
-        data.id +
-        '" data-del-id="' +
-        data.id +
+        dataId +
+        '" data-id="' +
+        dataId +
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
@@ -265,7 +288,7 @@ function initTable() {
           var ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
-            ids.push(parseInt($(this).attr("data-id"), 10));
+            ids.push($(this).attr("data-id"));
           });
           // Delete all selected rows at once
           delItems(ids);
@@ -334,8 +357,8 @@ function initTable() {
 $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteClient() {
-  // Passes the button data-del-id attribute as ID
-  var ids = [parseInt($(this).attr("data-del-id"), 10)];
+  // Passes the button data-id attribute as ID
+  var ids = [$(this).attr("data-id")];
   delItems(ids);
 }
 
@@ -343,59 +366,38 @@ function delItems(ids) {
   // Check input validity
   if (!Array.isArray(ids)) return;
 
-  var items = "";
-  var name = "";
+  var clientRaw = ids[0];
+  var client = clientRaw.replaceAll("__", ":");
 
-  for (var id of ids) {
-    // Exploit prevention: Return early for non-numeric IDs
-    if (typeof id !== "number") return;
-
-    // Retrieve details
-    name = utils.escapeHtml($("#name_" + id).text());
-    if (name.length > 0) {
-      name = " (<i>" + utils.escapeHtml($("#name_" + id).text()) + "</i>)";
-    }
-
-    // Add client
-    items += "<li>" + utils.escapeHtml($("#ip_" + id).text()) + name + "</li>";
-  }
+  // Remove first element from array
+  ids.shift();
 
   utils.disableAll();
   var idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting client(s)...", "<ul>" + items + "</ul>");
+  utils.showAlert("info", "", "Deleting client...", client);
 
   $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: { action: "delete_client", id: JSON.stringify(ids), token: token },
+    url: "/api/clients/" + client,
+    method: "delete",
   })
-    .done(function (response) {
+    .done(function () {
       utils.enableAll();
-      if (response.success) {
-        utils.showAlert(
-          "success",
-          "far fa-trash-alt",
-          "Successfully deleted client(s): ",
-          "<ul>" + items + "</ul>"
-        );
-        for (var id in ids) {
-          if (Object.hasOwnProperty.call(ids, id)) {
-            table.row(id).remove().draw(false).ajax.reload(null, false);
-          }
-        }
-      } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while deleting client(s): " + idstring,
-          response.message
-        );
+      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted client: ", client);
+      table.row(clientRaw).remove().draw(false);
+      if (ids.length > 0) {
+        // Recursively delete all remaining items
+        delItems(ids);
+        return;
       }
+
+      table.ajax.reload(null, false);
 
       // Clear selection after deletion
       table.rows().deselect();
       utils.changeBulkDeleteStates(table);
+
+      // Update number of groups in the sidebar
+      updateFtlInfo();
     })
     .fail(function (jqXHR, exception) {
       utils.enableAll();
@@ -442,20 +444,19 @@ function addClient() {
   }
 
   $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
+    url: "/api/clients",
     method: "post",
     dataType: "json",
-    data: { action: "add_client", ip: ip, comment: comment, token: token },
-    success: function (response) {
+    data: JSON.stringify({ client: ip, comment: comment }),
+    success: function () {
       utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Successfully added client", ip);
-        reloadClientSuggestions();
-        table.ajax.reload(null, false);
-        table.rows().deselect();
-      } else {
-        utils.showAlert("error", "", "Error while adding new client", response.message);
-      }
+      utils.showAlert("success", "fas fa-plus", "Successfully added client", ip);
+      reloadClientSuggestions();
+      table.ajax.reload(null, false);
+      table.rows().deselect();
+
+      // Update number of groups in the sidebar
+      updateFtlInfo();
     },
     error: function (jqXHR, exception) {
       utils.enableAll();
@@ -468,25 +469,27 @@ function addClient() {
 function editClient() {
   var elem = $(this).attr("id");
   var tr = $(this).closest("tr");
-  var id = tr.attr("data-id");
-  var groups = tr.find("#multiselect_" + id).val();
-  var ip = utils.escapeHtml(tr.find("#ip_" + id).text());
-  var name = utils.escapeHtml(tr.find("#name_" + id).text());
-  var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
+  var client = tr.attr("data-id");
+  var groups = tr.find("#multiselect_" + client).val();
+  // Convert list of string integers to list of integers
+  groups = groups.map(Number);
+  var ip = utils.escapeHtml(tr.find("#ip_" + client).text());
+  var name = utils.escapeHtml(tr.find("#name_" + client).text());
+  var comment = utils.escapeHtml(tr.find("#comment_" + client).val());
 
   var done = "edited";
   var notDone = "editing";
   switch (elem) {
-    case "multiselect_" + id:
+    case "multiselect_" + client:
       done = "edited groups of";
       notDone = "editing groups of";
       break;
-    case "comment_" + id:
+    case "comment_" + client:
       done = "edited comment of";
       notDone = "editing comment of";
       break;
     default:
-      alert("bad element or invalid data-id!");
+      alert("bad element (" + elem + ") or invalid data-id!");
       return;
   }
 
@@ -495,37 +498,29 @@ function editClient() {
   }
 
   utils.disableAll();
+  const clientRaw = client.replaceAll("__", ":");
   utils.showAlert("info", "", "Editing client...", ip);
   $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
+    url: "/api/clients/" + clientRaw,
+    method: "put",
     dataType: "json",
-    data: {
-      action: "edit_client",
-      id: id,
+    data: JSON.stringify({
+      client: client,
       groups: groups,
       token: token,
       comment: comment,
-    },
-    success: function (response) {
+    }),
+    success: function () {
       utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " client", ip);
-        table.ajax.reload(null, false);
-      } else {
-        utils.showAlert(
-          "error",
-          "Error while " + notDone + " client with ID " + id,
-          response.message
-        );
-      }
+      utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " client", ip);
+      table.ajax.reload(null, false);
     },
     error: function (jqXHR, exception) {
       utils.enableAll();
       utils.showAlert(
         "error",
         "",
-        "Error while " + notDone + " client with ID " + id,
+        "Error while " + notDone + " client " + clientRaw,
         jqXHR.responseText
       );
       console.log(exception); // eslint-disable-line no-console
