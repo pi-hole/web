@@ -59,7 +59,7 @@
                 </li>
                 <li class="menu-group<? if scriptname == 'groups-domains.lp' then mg.write(" active") end ?>">
                     <a href="groups-domains.lp">
-                        <i class="fa fa-fw menu-icon fa-list"></i> <span class="text-red">Domains
+                        <i class="fa fa-fw menu-icon fa-list"></i> <span class="text-green">Domains
                         <span class="pull-right-container">
                             <span class="label bg-red pull-right" id="num_denied" title="Number of deny rules (domains and regex)"></span>
                             <span class="label bg-green pull-right" id="num_allowed" title="Number of allow rules (domains and regex)"></span>
@@ -68,7 +68,7 @@
                 </li>
                 <li class="menu-group<? if scriptname == 'groups-adlists.lp' then mg.write(" active") end ?>">
                     <a href="groups-adlists.lp">
-                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span class="text-red">Adlists
+                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span class="text-green">Adlists
                         <span class="pull-right-container">
                             <span class="label bg-blue pull-right" id="num_lists" title="Number of defined adlists"></span>
                             <span class="label bg-yellow pull-right" id="num_gravity" title="Total number of domains blocked by your Pi-hole"></span>

@@ -5,11 +5,9 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, updateFtlInfo:false */
+/* global utils:false, groups:false,, apiFailure:false, updateFtlInfo:false, getGroups:false */
 
 var table;
-var groups = [];
-var token = $("#token").text();
 
 function reloadClientSuggestions() {
   $.ajax({
@@ -74,18 +72,6 @@ function reloadClientSuggestions() {
   });
 }
 
-function getGroups() {
-  $.ajax({
-    url: "/api/groups",
-    type: "GET",
-    dataType: "json",
-    success: function (data) {
-      groups = data.groups;
-      initTable();
-    },
-  });
-}
-
 $(function () {
   $("#btnAdd").on("click", addClient);
   $("select").select2({
@@ -96,7 +82,7 @@ $(function () {
 
   reloadClientSuggestions();
   utils.setBsSelectDefaults();
-  getGroups();
+  initTable();
 
   $("#select").on("change", function () {
     $("#ip-custom").val("");
@@ -105,225 +91,230 @@ $(function () {
 });
 
 function initTable() {
-  table = $("#clientsTable").DataTable({
-    ajax: {
-      url: "/api/clients",
-      dataSrc: "clients",
-      type: "GET",
-    },
-    order: [[0, "asc"]],
-    columns: [
-      { data: "id", visible: false },
-      { data: null, visible: true, orderable: false, width: "15px" },
-      { data: "client", type: "ip-address" },
-      { data: "comment" },
-      { data: "groups", searchable: false },
-      { data: null, width: "22px", orderable: false },
-    ],
-    columnDefs: [
-      {
-        targets: 1,
-        className: "select-checkbox",
-        render: function () {
-          return "";
+  table = $("#clientsTable")
+    .on("preXhr.dt", function () {
+      getGroups();
+    })
+    .DataTable({
+      processing: true,
+      ajax: {
+        url: "/api/clients",
+        dataSrc: "clients",
+        type: "GET",
+      },
+      order: [[0, "asc"]],
+      columns: [
+        { data: "id", visible: false },
+        { data: null, visible: true, orderable: false, width: "15px" },
+        { data: "client", type: "ip-address" },
+        { data: "comment" },
+        { data: "groups", searchable: false },
+        { data: null, width: "22px", orderable: false },
+      ],
+      columnDefs: [
+        {
+          targets: 1,
+          className: "select-checkbox",
+          render: function () {
+            return "";
+          },
         },
-      },
-      {
-        targets: "_all",
-        render: $.fn.dataTable.render.text(),
-      },
-    ],
-    drawCallback: function () {
-      // Hide buttons if all clients were deleted
-      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
-      $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
+        {
+          targets: "_all",
+          render: $.fn.dataTable.render.text(),
+        },
+      ],
+      drawCallback: function () {
+        // Hide buttons if all clients were deleted
+        var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+        $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
-      $('button[id^="deleteClient_"]').on("click", deleteClient);
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
-    },
-    rowCallback: function (row, data) {
-      var dataId = data.client.replaceAll(":", "__");
-      $(row).attr("data-id", dataId);
-      var tooltip =
-        "Added: " +
-        utils.datetime(data.date_added, false) +
-        "\nLast modified: " +
-        utils.datetime(data.date_modified, false) +
-        "\nDatabase ID: " +
-        data.id;
-      var ipName =
-        '<code id="ip_' +
-        dataId +
-        '" title="' +
-        tooltip +
-        '" class="breakall">' +
-        data.client +
-        "</code>";
-      if (data.name !== null && data.name.length > 0)
-        ipName +=
-          '<br><code id="name_' +
+        $('button[id^="deleteClient_"]').on("click", deleteClient);
+        // Remove visible dropdown to prevent orphaning
+        $("body > .bootstrap-select.dropdown").remove();
+      },
+      rowCallback: function (row, data) {
+        var dataId = utils.hexEncode(data.client);
+        $(row).attr("data-id", dataId);
+        var tooltip =
+          "Added: " +
+          utils.datetime(data.date_added, false) +
+          "\nLast modified: " +
+          utils.datetime(data.date_modified, false) +
+          "\nDatabase ID: " +
+          data.id;
+        var ipName =
+          '<code id="ip_' +
           dataId +
           '" title="' +
           tooltip +
           '" class="breakall">' +
-          data.name +
+          data.client +
           "</code>";
-      $("td:eq(1)", row).html(ipName);
+        if (data.name !== null && data.name.length > 0)
+          ipName +=
+            '<br><code id="name_' +
+            dataId +
+            '" title="' +
+            tooltip +
+            '" class="breakall">' +
+            data.name +
+            "</code>";
+        $("td:eq(1)", row).html(ipName);
 
-      $("td:eq(2)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-      var commentEl = $("#comment_" + dataId, row);
-      commentEl.val(utils.unescapeHtml(data.comment));
-      commentEl.on("change", editClient);
+        $("td:eq(2)", row).html('<input id="comment_' + dataId + '" class="form-control">');
+        var commentEl = $("#comment_" + dataId, row);
+        commentEl.val(utils.unescapeHtml(data.comment));
+        commentEl.on("change", editClient);
 
-      $("td:eq(3)", row).empty();
-      $("td:eq(3)", row).append(
-        '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
-      );
-      var selectEl = $("#multiselect_" + dataId, row);
-      // Add all known groups
-      for (var i = 0; i < groups.length; i++) {
-        var dataSub = "";
-        if (!groups[i].enabled) {
-          dataSub = 'data-subtext="(disabled)"';
+        $("td:eq(3)", row).empty();
+        $("td:eq(3)", row).append(
+          '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
+        );
+        var selectEl = $("#multiselect_" + dataId, row);
+        // Add all known groups
+        for (var i = 0; i < groups.length; i++) {
+          var dataSub = "";
+          if (!groups[i].enabled) {
+            dataSub = 'data-subtext="(disabled)"';
+          }
+
+          selectEl.append(
+            $("<option " + dataSub + "/>")
+              .val(groups[i].id)
+              .text(groups[i].name)
+          );
         }
 
-        selectEl.append(
-          $("<option " + dataSub + "/>")
-            .val(groups[i].id)
-            .text(groups[i].name)
-        );
-      }
-
-      // Select assigned groups
-      selectEl.val(data.groups);
-      // Initialize bootstrap-select
-      selectEl
-        // fix dropdown if it would stick out right of the viewport
-        .on("show.bs.select", function () {
-          var winWidth = $(window).width();
-          var dropdownEl = $("body > .bootstrap-select.dropdown");
-          if (dropdownEl.length > 0) {
-            dropdownEl.removeClass("align-right");
-            var width = dropdownEl.width();
-            var left = dropdownEl.offset().left;
-            if (left + width > winWidth) {
-              dropdownEl.addClass("align-right");
+        // Select assigned groups
+        selectEl.val(data.groups);
+        // Initialize bootstrap-select
+        selectEl
+          // fix dropdown if it would stick out right of the viewport
+          .on("show.bs.select", function () {
+            var winWidth = $(window).width();
+            var dropdownEl = $("body > .bootstrap-select.dropdown");
+            if (dropdownEl.length > 0) {
+              dropdownEl.removeClass("align-right");
+              var width = dropdownEl.width();
+              var left = dropdownEl.offset().left;
+              if (left + width > winWidth) {
+                dropdownEl.addClass("align-right");
+              }
             }
-          }
-        })
-        .on("changed.bs.select", function () {
-          // enable Apply button
-          if ($(applyBtn).prop("disabled")) {
-            $(applyBtn)
-              .addClass("btn-success")
-              .prop("disabled", false)
-              .on("click", function () {
-                editClient.call(selectEl);
-              });
-          }
-        })
-        .on("hide.bs.select", function () {
-          // Restore values if drop-down menu is closed without clicking the Apply button
-          if (!$(applyBtn).prop("disabled")) {
-            $(this).val(data.groups).selectpicker("refresh");
-            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
-          }
-        })
-        .selectpicker()
-        .siblings(".dropdown-menu")
-        .find(".bs-actionsbox")
-        .prepend(
-          '<button type="button" id=btn_apply_' +
-            dataId +
-            ' class="btn btn-block btn-sm" disabled>Apply</button>'
-        );
+          })
+          .on("changed.bs.select", function () {
+            // enable Apply button
+            if ($(applyBtn).prop("disabled")) {
+              $(applyBtn)
+                .addClass("btn-success")
+                .prop("disabled", false)
+                .on("click", function () {
+                  editClient.call(selectEl);
+                });
+            }
+          })
+          .on("hide.bs.select", function () {
+            // Restore values if drop-down menu is closed without clicking the Apply button
+            if (!$(applyBtn).prop("disabled")) {
+              $(this).val(data.groups).selectpicker("refresh");
+              $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+            }
+          })
+          .selectpicker()
+          .siblings(".dropdown-menu")
+          .find(".bs-actionsbox")
+          .prepend(
+            '<button type="button" id=btn_apply_' +
+              dataId +
+              ' class="btn btn-block btn-sm" disabled>Apply</button>'
+          );
 
-      var applyBtn = "#btn_apply_" + dataId;
+        var applyBtn = "#btn_apply_" + dataId;
 
-      var button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteClient_' +
-        dataId +
-        '" data-id="' +
-        dataId +
-        '">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
-      $("td:eq(4)", row).html(button);
-    },
-    select: {
-      style: "multi",
-      selector: "td:not(:last-child)",
-      info: false,
-    },
-    buttons: [
-      {
-        text: '<span class="far fa-square"></span>',
-        titleAttr: "Select All",
-        className: "btn-sm datatable-bt selectAll",
-        action: function () {
-          table.rows({ page: "current" }).select();
+        var button =
+          '<button type="button" class="btn btn-danger btn-xs" id="deleteClient_' +
+          dataId +
+          '" data-id="' +
+          dataId +
+          '">' +
+          '<span class="far fa-trash-alt"></span>' +
+          "</button>";
+        $("td:eq(4)", row).html(button);
+      },
+      select: {
+        style: "multi",
+        selector: "td:not(:last-child)",
+        info: false,
+      },
+      buttons: [
+        {
+          text: '<span class="far fa-square"></span>',
+          titleAttr: "Select All",
+          className: "btn-sm datatable-bt selectAll",
+          action: function () {
+            table.rows({ page: "current" }).select();
+          },
         },
-      },
-      {
-        text: '<span class="far fa-plus-square"></span>',
-        titleAttr: "Select All",
-        className: "btn-sm datatable-bt selectMore",
-        action: function () {
-          table.rows({ page: "current" }).select();
+        {
+          text: '<span class="far fa-plus-square"></span>',
+          titleAttr: "Select All",
+          className: "btn-sm datatable-bt selectMore",
+          action: function () {
+            table.rows({ page: "current" }).select();
+          },
         },
-      },
-      {
-        extend: "selectNone",
-        text: '<span class="far fa-check-square"></span>',
-        titleAttr: "Deselect All",
-        className: "btn-sm datatable-bt removeAll",
-      },
-      {
-        text: '<span class="far fa-trash-alt"></span>',
-        titleAttr: "Delete Selected",
-        className: "btn-sm datatable-bt deleteSelected",
-        action: function () {
-          // For each ".selected" row ...
-          var ids = [];
-          $("tr.selected").each(function () {
-            // ... add the row identified by "data-id".
-            ids.push($(this).attr("data-id"));
-          });
-          // Delete all selected rows at once
-          delItems(ids);
+        {
+          extend: "selectNone",
+          text: '<span class="far fa-check-square"></span>',
+          titleAttr: "Deselect All",
+          className: "btn-sm datatable-bt removeAll",
         },
+        {
+          text: '<span class="far fa-trash-alt"></span>',
+          titleAttr: "Delete Selected",
+          className: "btn-sm datatable-bt deleteSelected",
+          action: function () {
+            // For each ".selected" row ...
+            var ids = [];
+            $("tr.selected").each(function () {
+              // ... add the row identified by "data-id".
+              ids.push($(this).attr("data-id"));
+            });
+            // Delete all selected rows at once
+            delItems(ids);
+          },
+        },
+      ],
+      dom:
+        "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+        "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
+        "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
+        "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
+        "<'row'<'col-sm-12'i>>",
+      lengthMenu: [
+        [10, 25, 50, 100, -1],
+        [10, 25, 50, 100, "All"],
+      ],
+      stateSave: true,
+      stateDuration: 0,
+      stateSaveCallback: function (settings, data) {
+        utils.stateSaveCallback("groups-clients-table", data);
       },
-    ],
-    dom:
-      "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
-      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
-      "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
-      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
-      "<'row'<'col-sm-12'i>>",
-    lengthMenu: [
-      [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"],
-    ],
-    stateSave: true,
-    stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
-      utils.stateSaveCallback("groups-clients-table", data);
-    },
-    stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("groups-clients-table");
+      stateLoadCallback: function () {
+        var data = utils.stateLoadCallback("groups-clients-table");
 
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
+        // Return if not available
+        if (data === null) {
+          return null;
+        }
 
-      // Reset visibility of ID column
-      data.columns[0].visible = false;
-      // Apply loaded state to table
-      return data;
-    },
-  });
+        // Reset visibility of ID column
+        data.columns[0].visible = false;
+        // Apply loaded state to table
+        return data;
+      },
+    });
 
   // Disable autocorrect in the search box
   var input = document.querySelector("input[type=search]");
@@ -358,7 +349,7 @@ $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteClient() {
   // Passes the button data-id attribute as ID
-  var ids = [$(this).attr("data-id")];
+  const ids = [$(this).attr("data-id")];
   delItems(ids);
 }
 
@@ -366,18 +357,19 @@ function delItems(ids) {
   // Check input validity
   if (!Array.isArray(ids)) return;
 
-  var clientRaw = ids[0];
-  var client = clientRaw.replaceAll("__", ":");
+  // Get first element from array
+  const clientRaw = ids[0];
+  const client = utils.hexDecode(clientRaw);
 
   // Remove first element from array
   ids.shift();
 
   utils.disableAll();
-  var idstring = ids.join(", ");
+  const idstring = ids.join(", ");
   utils.showAlert("info", "", "Deleting client...", client);
 
   $.ajax({
-    url: "/api/clients/" + client,
+    url: "/api/clients/" + encodeURIComponent(client),
     method: "delete",
   })
     .done(function () {
@@ -396,16 +388,17 @@ function delItems(ids) {
       table.rows().deselect();
       utils.changeBulkDeleteStates(table);
 
-      // Update number of groups in the sidebar
+      // Update number of clients in the sidebar
       updateFtlInfo();
     })
-    .fail(function (jqXHR, exception) {
+    .fail(function (data, exception) {
+      apiFailure(data);
       utils.enableAll();
       utils.showAlert(
         "error",
         "",
         "Error while deleting client(s): " + idstring,
-        jqXHR.responseText
+        data.responseText
       );
       console.log(exception); // eslint-disable-line no-console
     });
@@ -413,7 +406,7 @@ function delItems(ids) {
 
 function addClient() {
   var ip = utils.escapeHtml($("#select").val().trim());
-  var comment = utils.escapeHtml($("#new_comment").val());
+  const comment = utils.escapeHtml($("#new_comment").val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding client...", ip);
@@ -458,24 +451,26 @@ function addClient() {
       // Update number of groups in the sidebar
       updateFtlInfo();
     },
-    error: function (jqXHR, exception) {
+    error: function (data, exception) {
+      apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new client", jqXHR.responseText);
+      utils.showAlert("error", "", "Error while adding new client", data.responseText);
       console.log(exception); // eslint-disable-line no-console
     },
   });
 }
 
 function editClient() {
-  var elem = $(this).attr("id");
-  var tr = $(this).closest("tr");
-  var client = tr.attr("data-id");
-  var groups = tr.find("#multiselect_" + client).val();
-  // Convert list of string integers to list of integers
-  groups = groups.map(Number);
-  var ip = utils.escapeHtml(tr.find("#ip_" + client).text());
-  var name = utils.escapeHtml(tr.find("#name_" + client).text());
-  var comment = utils.escapeHtml(tr.find("#comment_" + client).val());
+  const elem = $(this).attr("id");
+  const tr = $(this).closest("tr");
+  const client = tr.attr("data-id");
+  // Convert list of string integers to list of integers using map(Number)
+  const groups = tr
+    .find("#multiselect_" + client)
+    .val()
+    .map(Number);
+  const comment = utils.escapeHtml(tr.find("#comment_" + client).val());
+  const enabled = tr.find("#enabled_" + client).is(":checked");
 
   var done = "edited";
   var notDone = "editing";
@@ -493,35 +488,37 @@ function editClient() {
       return;
   }
 
-  if (name.length > 0) {
-    ip += " (" + name + ")";
-  }
-
   utils.disableAll();
-  const clientRaw = client.replaceAll("__", ":");
-  utils.showAlert("info", "", "Editing client...", ip);
+  const clientDecoded = utils.hexDecode(client);
+  utils.showAlert("info", "", "Editing client...", clientDecoded);
   $.ajax({
-    url: "/api/clients/" + clientRaw,
+    url: "/api/clients/" + encodeURIComponent(clientDecoded),
     method: "put",
     dataType: "json",
     data: JSON.stringify({
       client: client,
       groups: groups,
-      token: token,
       comment: comment,
+      enabled: enabled,
     }),
     success: function () {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " client", ip);
+      utils.showAlert(
+        "success",
+        "fas fa-pencil-alt",
+        "Successfully " + done + " client",
+        clientDecoded
+      );
       table.ajax.reload(null, false);
     },
-    error: function (jqXHR, exception) {
+    error: function (data, exception) {
+      apiFailure(data);
       utils.enableAll();
       utils.showAlert(
         "error",
         "",
-        "Error while " + notDone + " client " + clientRaw,
-        jqXHR.responseText
+        "Error while " + notDone + " client " + clientDecoded,
+        data.responseText
       );
       console.log(exception); // eslint-disable-line no-console
     },

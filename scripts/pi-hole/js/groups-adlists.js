@@ -5,37 +5,18 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false */
 
 var table;
-var groups = [];
-var token = $("#token").text();
 var GETDict = {};
 
-function getGroups() {
-  $.post(
-    "scripts/pi-hole/php/groups.php",
-    { action: "get_groups", token: token },
-    function (data) {
-      groups = data.data;
-      initTable();
-    },
-    "json"
-  );
-}
-
 $(function () {
-  window.location.search
-    .substr(1)
-    .split("&")
-    .forEach(function (item) {
-      GETDict[item.split("=")[0]] = item.split("=")[1];
-    });
+  GETDict = utils.parseQueryString();
 
   $("#btnAdd").on("click", addAdlist);
 
   utils.setBsSelectDefaults();
-  getGroups();
+  initTable();
 });
 
 function format(data) {
@@ -110,281 +91,290 @@ function format(data) {
 }
 
 function initTable() {
-  table = $("#adlistsTable").DataTable({
-    ajax: {
-      url: "scripts/pi-hole/php/groups.php",
-      data: { action: "get_adlists", token: token },
-      type: "POST",
-    },
-    order: [[0, "asc"]],
-    columns: [
-      { data: "id", visible: false },
-      { data: null, visible: true, orderable: false, width: "15px" },
-      { data: "status", searchable: false, class: "details-control" },
-      { data: "address" },
-      { data: "enabled", searchable: false },
-      { data: "comment" },
-      { data: "groups", searchable: false },
-      { data: null, width: "22px", orderable: false },
-    ],
-    columnDefs: [
-      {
-        targets: 1,
-        className: "select-checkbox",
-        render: function () {
-          return "";
+  table = $("#adlistsTable")
+    .on("preXhr.dt", function () {
+      getGroups();
+    })
+    .DataTable({
+      processing: true,
+      ajax: {
+        url: "/api/lists",
+        dataSrc: "lists",
+        type: "GET",
+      },
+      order: [[0, "asc"]],
+      columns: [
+        { data: "id", visible: false },
+        { data: null, visible: true, orderable: false, width: "15px" },
+        { data: "status", searchable: false, class: "details-control" },
+        { data: "address" },
+        { data: "enabled", searchable: false },
+        { data: "comment" },
+        { data: "groups", searchable: false },
+        { data: null, width: "22px", orderable: false },
+      ],
+      columnDefs: [
+        {
+          targets: 1,
+          className: "select-checkbox",
+          render: function () {
+            return "";
+          },
         },
+        {
+          targets: "_all",
+          render: $.fn.dataTable.render.text(),
+        },
+      ],
+      drawCallback: function () {
+        // Hide buttons if all adlists were deleted
+        var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+        $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
+
+        $('button[id^="deleteAdlist_"]').on("click", deleteAdlist);
+        // Remove visible dropdown to prevent orphaning
+        $("body > .bootstrap-select.dropdown").remove();
       },
-      {
-        targets: "_all",
-        render: $.fn.dataTable.render.text(),
-      },
-    ],
-    drawCallback: function () {
-      // Hide buttons if all adlists were deleted
-      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
-      $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
+      rowCallback: function (row, data) {
+        var dataId = utils.hexEncode(data.address);
+        $(row).attr("data-id", dataId);
 
-      $('button[id^="deleteAdlist_"]').on("click", deleteAdlist);
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
-    },
-    rowCallback: function (row, data) {
-      $(row).attr("data-id", data.id);
-
-      var disabled = data.enabled === 0;
-      var statusCode = 0,
-        statusIcon;
-      // If there is no status or the list is disabled, we keep
-      // status 0 (== unknown)
-      if (data.status !== null && disabled !== true) {
-        statusCode = parseInt(data.status, 10);
-      }
-
-      switch (statusCode) {
-        case 1:
-          statusIcon = "fa-check";
-          break;
-        case 2:
-          statusIcon = "fa-history";
-          break;
-        case 3:
-          statusIcon = "fa-exclamation-circle";
-          break;
-        case 4:
-          statusIcon = "fa-times";
-          break;
-        default:
-          statusIcon = "fa-question-circle";
-          break;
-      }
-
-      $("td:eq(1)", row).addClass("list-status-" + statusCode);
-      $("td:eq(1)", row).html(
-        "<i class='fa " + statusIcon + "' title='Click for details about this list'></i>"
-      );
-
-      if (data.address.startsWith("file://")) {
-        // Local files cannot be downloaded from a distant client so don't show
-        // a link to such a list here
-        $("td:eq(2)", row).html(
-          '<code id="address_' + data.id + '" class="breakall">' + data.address + "</code>"
-        );
-      } else {
-        $("td:eq(2)", row).html(
-          '<a id="address_' +
-            data.id +
-            '" class="breakall" href="' +
-            data.address +
-            '" target="_blank" rel="noopener noreferrer">' +
-            data.address +
-            "</a>"
-        );
-      }
-
-      $("td:eq(3)", row).html(
-        '<input type="checkbox" id="status_' + data.id + '"' + (disabled ? "" : " checked") + ">"
-      );
-      var statusEl = $("#status_" + data.id, row);
-      statusEl.bootstrapToggle({
-        on: "Enabled",
-        off: "Disabled",
-        size: "small",
-        onstyle: "success",
-        width: "80px",
-      });
-      statusEl.on("change", editAdlist);
-
-      $("td:eq(4)", row).html('<input id="comment_' + data.id + '" class="form-control">');
-      var commentEl = $("#comment_" + data.id, row);
-      commentEl.val(utils.unescapeHtml(data.comment));
-      commentEl.on("change", editAdlist);
-
-      $("td:eq(5)", row).empty();
-      $("td:eq(5)", row).append(
-        '<select class="selectpicker" id="multiselect_' + data.id + '" multiple></select>'
-      );
-      var selectEl = $("#multiselect_" + data.id, row);
-      // Add all known groups
-      for (var i = 0; i < groups.length; i++) {
-        var dataSub = "";
-        if (!groups[i].enabled) {
-          dataSub = 'data-subtext="(disabled)"';
+        var statusCode = 0,
+          statusIcon;
+        // If there is no status or the list is disabled, we keep
+        // status 0 (== unknown)
+        if (data.status !== null && data.enabled) {
+          statusCode = parseInt(data.status, 10);
         }
 
-        selectEl.append(
-          $("<option " + dataSub + "/>")
-            .val(groups[i].id)
-            .text(groups[i].name)
-        );
-      }
+        switch (statusCode) {
+          case 1:
+            statusIcon = "fa-check";
+            break;
+          case 2:
+            statusIcon = "fa-history";
+            break;
+          case 3:
+            statusIcon = "fa-exclamation-circle";
+            break;
+          case 4:
+            statusIcon = "fa-times";
+            break;
+          default:
+            statusIcon = "fa-question-circle";
+            break;
+        }
 
-      // Select assigned groups
-      selectEl.val(data.groups);
-      // Initialize bootstrap-select
-      selectEl
-        // fix dropdown if it would stick out right of the viewport
-        .on("show.bs.select", function () {
-          var winWidth = $(window).width();
-          var dropdownEl = $("body > .bootstrap-select.dropdown");
-          if (dropdownEl.length > 0) {
-            dropdownEl.removeClass("align-right");
-            var width = dropdownEl.width();
-            var left = dropdownEl.offset().left;
-            if (left + width > winWidth) {
-              dropdownEl.addClass("align-right");
+        $("td:eq(1)", row).addClass("list-status-" + statusCode);
+        $("td:eq(1)", row).html(
+          "<i class='fa " + statusIcon + "' title='Click for details about this list'></i>"
+        );
+
+        if (data.address.startsWith("file://")) {
+          // Local files cannot be downloaded from a distant client so don't show
+          // a link to such a list here
+          $("td:eq(2)", row).html(
+            '<code id="address_' + dataId + '" class="breakall">' + data.address + "</code>"
+          );
+        } else {
+          $("td:eq(2)", row).html(
+            '<a id="address_' +
+              dataId +
+              '" class="breakall" href="' +
+              data.address +
+              '" target="_blank" rel="noopener noreferrer">' +
+              data.address +
+              "</a>"
+          );
+        }
+
+        $("td:eq(3)", row).html(
+          '<input type="checkbox" id="enabled_' +
+            dataId +
+            '"' +
+            (data.enabled ? " checked" : "") +
+            ">"
+        );
+        var statusEl = $("#enabled_" + dataId, row);
+        statusEl.bootstrapToggle({
+          on: "Enabled",
+          off: "Disabled",
+          size: "small",
+          onstyle: "success",
+          width: "80px",
+        });
+        statusEl.on("change", editAdlist);
+
+        $("td:eq(4)", row).html('<input id="comment_' + dataId + '" class="form-control">');
+        var commentEl = $("#comment_" + dataId, row);
+        commentEl.val(utils.unescapeHtml(data.comment));
+        commentEl.on("change", editAdlist);
+
+        $("td:eq(5)", row).empty();
+        $("td:eq(5)", row).append(
+          '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
+        );
+        var selectEl = $("#multiselect_" + dataId, row);
+        // Add all known groups
+        for (var i = 0; i < groups.length; i++) {
+          var dataSub = "";
+          if (!groups[i].enabled) {
+            dataSub = 'data-subtext="(disabled)"';
+          }
+
+          selectEl.append(
+            $("<option " + dataSub + "/>")
+              .val(groups[i].id)
+              .text(groups[i].name)
+          );
+        }
+
+        // Select assigned groups
+        selectEl.val(data.groups);
+        // Initialize bootstrap-select
+        selectEl
+          // fix dropdown if it would stick out right of the viewport
+          .on("show.bs.select", function () {
+            var winWidth = $(window).width();
+            var dropdownEl = $("body > .bootstrap-select.dropdown");
+            if (dropdownEl.length > 0) {
+              dropdownEl.removeClass("align-right");
+              var width = dropdownEl.width();
+              var left = dropdownEl.offset().left;
+              if (left + width > winWidth) {
+                dropdownEl.addClass("align-right");
+              }
             }
-          }
-        })
-        .on("changed.bs.select", function () {
-          // enable Apply button
-          if ($(applyBtn).prop("disabled")) {
-            $(applyBtn)
-              .addClass("btn-success")
-              .prop("disabled", false)
-              .on("click", function () {
-                editAdlist.call(selectEl);
-              });
-          }
-        })
-        .on("hide.bs.select", function () {
-          // Restore values if drop-down menu is closed without clicking the Apply button
-          if (!$(applyBtn).prop("disabled")) {
-            $(this).val(data.groups).selectpicker("refresh");
-            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
-          }
-        })
-        .selectpicker()
-        .siblings(".dropdown-menu")
-        .find(".bs-actionsbox")
-        .prepend(
-          '<button type="button" id=btn_apply_' +
-            data.id +
-            ' class="btn btn-block btn-sm" disabled>Apply</button>'
-        );
+          })
+          .on("changed.bs.select", function () {
+            // enable Apply button
+            if ($(applyBtn).prop("disabled")) {
+              $(applyBtn)
+                .addClass("btn-success")
+                .prop("disabled", false)
+                .on("click", function () {
+                  editAdlist.call(selectEl);
+                });
+            }
+          })
+          .on("hide.bs.select", function () {
+            // Restore values if drop-down menu is closed without clicking the Apply button
+            if (!$(applyBtn).prop("disabled")) {
+              $(this).val(data.groups).selectpicker("refresh");
+              $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+            }
+          })
+          .selectpicker()
+          .siblings(".dropdown-menu")
+          .find(".bs-actionsbox")
+          .prepend(
+            '<button type="button" id=btn_apply_' +
+              dataId +
+              ' class="btn btn-block btn-sm" disabled>Apply</button>'
+          );
 
-      var applyBtn = "#btn_apply_" + data.id;
+        var applyBtn = "#btn_apply_" + dataId;
 
-      // Highlight row (if url parameter "adlistid=" is used)
-      if ("adlistid" in GETDict && data.id === parseInt(GETDict.adlistid, 10)) {
-        $(row).find("td").addClass("highlight");
-      }
-
-      var button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteAdlist_' +
-        data.id +
-        '" data-del-id="' +
-        data.id +
-        '">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
-      $("td:eq(6)", row).html(button);
-    },
-    dom:
-      "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
-      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
-      "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
-      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
-      "<'row'<'col-sm-12'i>>",
-    lengthMenu: [
-      [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"],
-    ],
-    select: {
-      style: "multi",
-      selector: "td:not(:last-child)",
-      info: false,
-    },
-    buttons: [
-      {
-        text: '<span class="far fa-square"></span>',
-        titleAttr: "Select All",
-        className: "btn-sm datatable-bt selectAll",
-        action: function () {
-          table.rows({ page: "current" }).select();
-        },
-      },
-      {
-        text: '<span class="far fa-plus-square"></span>',
-        titleAttr: "Select All",
-        className: "btn-sm datatable-bt selectMore",
-        action: function () {
-          table.rows({ page: "current" }).select();
-        },
-      },
-      {
-        extend: "selectNone",
-        text: '<span class="far fa-check-square"></span>',
-        titleAttr: "Deselect All",
-        className: "btn-sm datatable-bt removeAll",
-      },
-      {
-        text: '<span class="far fa-trash-alt"></span>',
-        titleAttr: "Delete Selected",
-        className: "btn-sm datatable-bt deleteSelected",
-        action: function () {
-          // For each ".selected" row ...
-          var ids = [];
-          $("tr.selected").each(function () {
-            // ... add the row identified by "data-id".
-            ids.push(parseInt($(this).attr("data-id"), 10));
-          });
-          // Delete all selected rows at once
-          delItems(ids);
-        },
-      },
-    ],
-    stateSave: true,
-    stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
-      utils.stateSaveCallback("groups-adlists-table", data);
-    },
-    stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("groups-adlists-table");
-
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
-
-      // Reset visibility of ID column
-      data.columns[0].visible = false;
-      // Apply loaded state to table
-      return data;
-    },
-    initComplete: function () {
-      if ("adlistid" in GETDict) {
-        var pos = table
-          .column(0, { order: "current" })
-          .data()
-          .indexOf(parseInt(GETDict.adlistid, 10));
-        if (pos >= 0) {
-          var page = Math.floor(pos / table.page.info().length);
-          table.page(page).draw(false);
+        // Highlight row (if url parameter "adlistid=" is used)
+        if ("adlistid" in GETDict && data.id === parseInt(GETDict.adlistid, 10)) {
+          $(row).find("td").addClass("highlight");
         }
-      }
-    },
-  });
+
+        var button =
+          '<button type="button" class="btn btn-danger btn-xs" id="deleteAdlist_' +
+          dataId +
+          '" data-id="' +
+          dataId +
+          '">' +
+          '<span class="far fa-trash-alt"></span>' +
+          "</button>";
+        $("td:eq(6)", row).html(button);
+      },
+      dom:
+        "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+        "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
+        "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
+        "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
+        "<'row'<'col-sm-12'i>>",
+      lengthMenu: [
+        [10, 25, 50, 100, -1],
+        [10, 25, 50, 100, "All"],
+      ],
+      select: {
+        style: "multi",
+        selector: "td:not(:last-child)",
+        info: false,
+      },
+      buttons: [
+        {
+          text: '<span class="far fa-square"></span>',
+          titleAttr: "Select All",
+          className: "btn-sm datatable-bt selectAll",
+          action: function () {
+            table.rows({ page: "current" }).select();
+          },
+        },
+        {
+          text: '<span class="far fa-plus-square"></span>',
+          titleAttr: "Select All",
+          className: "btn-sm datatable-bt selectMore",
+          action: function () {
+            table.rows({ page: "current" }).select();
+          },
+        },
+        {
+          extend: "selectNone",
+          text: '<span class="far fa-check-square"></span>',
+          titleAttr: "Deselect All",
+          className: "btn-sm datatable-bt removeAll",
+        },
+        {
+          text: '<span class="far fa-trash-alt"></span>',
+          titleAttr: "Delete Selected",
+          className: "btn-sm datatable-bt deleteSelected",
+          action: function () {
+            // For each ".selected" row ...
+            var ids = [];
+            $("tr.selected").each(function () {
+              // ... add the row identified by "data-id".
+              ids.push($(this).attr("data-id"), 10);
+            });
+            // Delete all selected rows at once
+            delItems(ids);
+          },
+        },
+      ],
+      stateSave: true,
+      stateDuration: 0,
+      stateSaveCallback: function (settings, data) {
+        utils.stateSaveCallback("groups-adlists-table", data);
+      },
+      stateLoadCallback: function () {
+        var data = utils.stateLoadCallback("groups-adlists-table");
+
+        // Return if not available
+        if (data === null) {
+          return null;
+        }
+
+        // Reset visibility of ID column
+        data.columns[0].visible = false;
+        // Apply loaded state to table
+        return data;
+      },
+      initComplete: function () {
+        if ("adlistid" in GETDict) {
+          var pos = table
+            .column(0, { order: "current" })
+            .data()
+            .indexOf(parseInt(GETDict.adlistid, 10));
+          if (pos >= 0) {
+            var page = Math.floor(pos / table.page.info().length);
+            table.page(page).draw(false);
+          }
+        }
+      },
+    });
 
   table.on("init select deselect", function () {
     utils.changeBulkDeleteStates(table);
@@ -434,8 +424,8 @@ function initTable() {
 $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteAdlist() {
-  // Passes the button data-del-id attribute as ID
-  var ids = [parseInt($(this).attr("data-del-id"), 10)];
+  // Passes the button data-id attribute as ID
+  const ids = [$(this).attr("data-id")];
   delItems(ids);
 }
 
@@ -443,66 +433,51 @@ function delItems(ids) {
   // Check input validity
   if (!Array.isArray(ids)) return;
 
-  var address = "";
+  // Get first element from array
+  const addressRaw = ids[0];
+  const address = utils.hexDecode(addressRaw);
 
-  // Exploit prevention: Return early for non-numeric IDs
-  for (var id of ids) {
-    if (typeof id !== "number") return;
-    address += "<li>" + utils.escapeHtml($("#address_" + id).text()) + "</li>";
-  }
+  // Remove first element from array
+  ids.shift();
 
   utils.disableAll();
-  var idstring = ids.join(", ");
+  const idstring = ids.join(", ");
   utils.showAlert("info", "", "Deleting adlist(s) ...", "<ul>" + address + "</ul>");
 
   $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: { action: "delete_adlist", id: JSON.stringify(ids), token: token },
+    url: "/api/lists/" + encodeURIComponent(address),
+    method: "delete",
   })
-    .done(function (response) {
+    .done(function () {
       utils.enableAll();
-      if (response.success) {
-        utils.showAlert(
-          "success",
-          "far fa-trash-alt",
-          "Successfully deleted adlist(s): ",
-          "<ul>" + address + "</ul>"
-        );
-        for (var id in ids) {
-          if (Object.hasOwnProperty.call(ids, id)) {
-            table.row(id).remove().draw(false).ajax.reload(null, false);
-          }
-        }
-      } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while deleting adlist(s): " + idstring,
-          response.message
-        );
+      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted list: ", address);
+      table.row(addressRaw).remove().draw(false);
+      if (ids.length > 0) {
+        // Recursively delete all remaining items
+        delItems(ids);
+        return;
       }
+
+      table.ajax.reload(null, false);
 
       // Clear selection after deletion
       table.rows().deselect();
       utils.changeBulkDeleteStates(table);
+
+      // Update number of lists in the sidebar
+      updateFtlInfo();
     })
-    .fail(function (jqXHR, exception) {
+    .fail(function (data, exception) {
+      apiFailure(data);
       utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while deleting adlist(s): " + idstring,
-        jqXHR.responseText
-      );
+      utils.showAlert("error", "", "Error while deleting list(s): " + idstring, data.responseText);
       console.log(exception); // eslint-disable-line no-console
     });
 }
 
 function addAdlist() {
-  var address = utils.escapeHtml($("#new_address").val());
-  var comment = utils.escapeHtml($("#new_comment").val());
+  const address = utils.escapeHtml($("#new_address").val());
+  const comment = utils.escapeHtml($("#new_comment").val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding adlist...", address);
@@ -515,120 +490,97 @@ function addAdlist() {
   }
 
   $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
+    url: "/api/lists",
     method: "post",
     dataType: "json",
-    data: {
-      action: "add_adlist",
-      address: address,
-      comment: comment,
-      token: token,
-    },
-    success: function (response) {
+    data: JSON.stringify({ address: address, comment: comment }),
+    success: function () {
       utils.enableAll();
-      if (response.success) {
-        if (response.warning) {
-          // Ignored items found! Showing ignored and added items in a warning.
-          utils.showAlert("warning", "fas fa-plus", "Warning", response.message);
-        } else {
-          // All items added.
-          utils.showAlert("success", "fas fa-plus", "Successfully added adlist", response.message);
-        }
+      utils.showAlert("success", "fas fa-plus", "Successfully added list", address);
+      table.ajax.reload(null, false);
+      table.rows().deselect();
 
-        table.ajax.reload(null, false);
-        $("#new_address").val("");
-        $("#new_comment").val("");
-        table.ajax.reload();
-        table.rows().deselect();
-        $("#new_address").focus();
-      } else {
-        utils.showAlert("error", "", "Error while adding new adlist: ", response.message);
-      }
+      // Update number of groups in the sidebar
+      updateFtlInfo();
     },
-    error: function (jqXHR, exception) {
+    error: function (data, exception) {
+      apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new adlist: ", jqXHR.responseText);
+      utils.showAlert("error", "", "Error while adding new list", data.responseText);
       console.log(exception); // eslint-disable-line no-console
     },
   });
 }
 
 function editAdlist() {
-  var elem = $(this).attr("id");
-  var tr = $(this).closest("tr");
-  var id = tr.attr("data-id");
-  var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
-  var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
-  var groups = tr.find("#multiselect_" + id).val();
-  var address = utils.escapeHtml(tr.find("#address_" + id).text());
+  const elem = $(this).attr("id");
+  const tr = $(this).closest("tr");
+  const address = tr.attr("data-id");
+  const status = tr.find("#enabled_" + address).is(":checked");
+  const comment = utils.escapeHtml(tr.find("#comment_" + address).val());
+  // Convert list of string integers to list of integers using map(Number)
+  const groups = tr
+    .find("#multiselect_" + address)
+    .val()
+    .map(Number);
+  const enabled = tr.find("#enabled_" + address).is(":checked");
 
   var done = "edited";
   var notDone = "editing";
   switch (elem) {
-    case "status_" + id:
-      if (status === 0) {
+    case "enabled_" + address:
+      if (status) {
         done = "disabled";
         notDone = "disabling";
-      } else if (status === 1) {
+      } else {
         done = "enabled";
         notDone = "enabling";
       }
 
       break;
-    case "comment_" + id:
+    case "comment_" + address:
       done = "edited comment of";
       notDone = "editing comment of";
       break;
-    case "multiselect_" + id:
+    case "multiselect_" + address:
       done = "edited groups of";
       notDone = "editing groups of";
       break;
     default:
-      alert("bad element or invalid data-id!");
+      alert("bad element (" + elem + ") or invalid data-id!");
       return;
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Editing adlist...", address);
-
+  const addressDecoded = utils.hexDecode(address);
+  utils.showAlert("info", "", "Editing address...", addressDecoded);
   $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
+    url: "/api/lists/" + encodeURIComponent(addressDecoded),
+    method: "put",
     dataType: "json",
-    data: {
-      action: "edit_adlist",
-      id: id,
-      comment: comment,
-      status: status,
+    data: JSON.stringify({
       groups: groups,
-      token: token,
-    },
-    success: function (response) {
+      comment: comment,
+      enabled: enabled,
+    }),
+    success: function () {
       utils.enableAll();
-      if (response.success) {
-        utils.showAlert(
-          "success",
-          "fas fa-pencil-alt",
-          "Successfully " + done + " adlist ",
-          address
-        );
-        table.ajax.reload(null, false);
-      } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while " + notDone + " adlist with ID " + id,
-          Number(response.message)
-        );
-      }
+      utils.showAlert(
+        "success",
+        "fas fa-pencil-alt",
+        "Successfully " + done + " list",
+        addressDecoded
+      );
+      table.ajax.reload(null, false);
     },
-    error: function (jqXHR, exception) {
+    error: function (data, exception) {
+      apiFailure(data);
       utils.enableAll();
       utils.showAlert(
         "error",
         "",
-        "Error while " + notDone + " adlist with ID " + id,
-        jqXHR.responseText
+        "Error while " + notDone + " list " + addressDecoded,
+        data.responseText
       );
       console.log(exception); // eslint-disable-line no-console
     },

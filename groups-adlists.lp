@@ -1,12 +1,11 @@
-<?php
-/*
-*    Pi-hole: A black hole for Internet advertisements
-*    (c) 2019 Pi-hole, LLC (https://pi-hole.net)
-*    Network-wide ad blocking via your own hardware.
+<? --[[
+*  Pi-hole: A black hole for Internet advertisements
+*  (c) 2019 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
 *
-*    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license.
-*/
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license.
+--]]
 
 mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
@@ -85,6 +84,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 
 <script src="<?=pihole.fileversion('scripts/vendor/bootstrap-select.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/vendor/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/groups-common.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/groups-adlists.js')?>"></script>
 
 <? mg.include('scripts/pi-hole/lua/footer.lp','r')?>

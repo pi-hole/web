@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, updateFtlInfo:false */
+/* global utils:false, apiFailure:false, updateFtlInfo:false */
 
 var table,
   idNames = {};
@@ -25,6 +25,7 @@ $(function () {
   $("#btnAdd").on("click", addGroup);
 
   table = $("#groupsTable").DataTable({
+    processing: true,
     ajax: {
       url: "/api/groups",
       error: handleAjaxError,
@@ -220,7 +221,7 @@ $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteGroup() {
   // Passes the button data-del-id attribute as ID
-  var ids = [parseInt($(this).attr("data-del-id"), 10)];
+  const ids = [parseInt($(this).attr("data-del-id"), 10)];
   delItems(ids);
 }
 
@@ -233,14 +234,15 @@ function delItems(ids) {
     if (typeof id !== "number") return;
   }
 
-  var id = ids[0];
-  var name = idNames[id];
+  // Get first element from array
+  const id = ids[0];
+  const name = idNames[id];
 
   // Remove first element from array
   ids.shift();
 
   utils.disableAll();
-  var idstring = ids.join(", ");
+  const idstring = ids.join(", ");
   utils.showAlert("info", "", "Deleting group...", name);
 
   $.ajax({
@@ -266,21 +268,17 @@ function delItems(ids) {
       // Update number of groups in the sidebar
       updateFtlInfo();
     })
-    .fail(function (jqXHR, exception) {
+    .fail(function (data, exception) {
+      apiFailure(data);
       utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while deleting group(s): " + idstring,
-        jqXHR.responseText
-      );
+      utils.showAlert("error", "", "Error while deleting group(s): " + idstring, data.responseText);
       console.log(exception); // eslint-disable-line no-console
     });
 }
 
 function addGroup() {
-  var name = utils.escapeHtml($("#new_name").val());
-  var comment = utils.escapeHtml($("#new_comment").val());
+  const name = utils.escapeHtml($("#new_name").val());
+  const comment = utils.escapeHtml($("#new_comment").val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding group...", name);
@@ -312,22 +310,23 @@ function addGroup() {
       // Update number of groups in the sidebar
       updateFtlInfo();
     },
-    error: function (jqXHR, exception) {
+    error: function (data, exception) {
+      apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new group", jqXHR.responseText);
+      utils.showAlert("error", "", "Error while adding new group", data.responseText);
       console.log(exception); // eslint-disable-line no-console
     },
   });
 }
 
 function editGroup() {
-  var elem = $(this).attr("id");
-  var tr = $(this).closest("tr");
-  var id = tr.attr("data-id");
-  var oldName = idNames[id];
-  var name = utils.escapeHtml(tr.find("#name_" + id).val());
-  var enabled = tr.find("#enabled_" + id).is(":checked");
-  var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
+  const elem = $(this).attr("id");
+  const tr = $(this).closest("tr");
+  const id = tr.attr("data-id");
+  const oldName = idNames[id];
+  const name = utils.escapeHtml(tr.find("#name_" + id).val());
+  const enabled = tr.find("#enabled_" + id).is(":checked");
+  const comment = utils.escapeHtml(tr.find("#comment_" + id).val());
 
   var done = "edited";
   var notDone = "editing";
@@ -370,13 +369,14 @@ function editGroup() {
       utils.enableAll();
       utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " group", oldName);
     },
-    error: function (jqXHR, exception) {
+    error: function (data, exception) {
+      apiFailure(data);
       utils.enableAll();
       utils.showAlert(
         "error",
         "",
         "Error while " + notDone + " group with name " + oldName,
-        jqXHR.responseText
+        data.responseText
       );
       console.log(exception); // eslint-disable-line no-console
     },

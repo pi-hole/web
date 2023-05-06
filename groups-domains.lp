@@ -1,12 +1,11 @@
-<?php
-/*
-*    Pi-hole: A black hole for Internet advertisements
-*    (c) 2019 Pi-hole, LLC (https://pi-hole.net)
-*    Network-wide ad blocking via your own hardware.
+<? --[[
+*  Pi-hole: A black hole for Internet advertisements
+*  (c) 2019 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
 *
-*    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license.
-*/
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license.
+--]]
 
 mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
@@ -91,11 +90,11 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                     </p>
                 </div>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
-                    <div class="btn-group" role="group" aria-label="Third group">
-                        <button type="button" class="btn btn-primary" id="add2black">Add to Blacklist</button>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary" id="add_deny">Add to denied domains</button>
                     </div>
-                    <div class="btn-group" role="group" aria-label="Third group">
-                        <button type="button" class="btn btn-primary" id="add2white">Add to Whitelist</button>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary" id="add_allow">Add to allowed domains</button>
                     </div>
                 </div>
             </div>
@@ -115,12 +114,12 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 </h3>
                 <div class="filter_types">
                     <div class="line">
-                        <span><input type="checkbox" name="typ" value="0" id="typ0" checked><label for="typ0">Exact whitelist</label></span>
-                        <span><input type="checkbox" name="typ" value="2" id="typ2" checked><label for="typ2">Regex whitelist</label></span>
+                        <span><input type="checkbox" name="typ" value="allow/exact" id="typ0" checked><label for="typ0">Exact allow</label></span>
+                        <span><input type="checkbox" name="typ" value="allow/regex" id="typ2" checked><label for="typ2">Regex allow</label></span>
                     </div>
                     <div class="line">
-                        <span><input type="checkbox" name="typ" value="1" id="typ1" checked><label for="typ1">Exact blacklist</label></span>
-                        <span><input type="checkbox" name="typ" value="3" id="typ3" checked><label for="typ3">Regex blacklist</label></span>
+                        <span><input type="checkbox" name="typ" value="deny/exact" id="typ1" checked><label for="typ1">Exact deny</label></span>
+                        <span><input type="checkbox" name="typ" value="deny/regex" id="typ3" checked><label for="typ3">Regex deny</label></span>
                     </div>
                 </div>
             </div>
@@ -150,6 +149,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 
 <script src="<?=pihole.fileversion('scripts/vendor/bootstrap-select.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/vendor/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/groups-common.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/groups-domains.js')?>"></script>
 
 <? mg.include('scripts/pi-hole/lua/footer.lp','r')?>

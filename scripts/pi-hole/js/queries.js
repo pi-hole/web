@@ -489,7 +489,7 @@ $(function () {
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     autoWidth: false,
-    processing: false,
+    processing: true,
     order: [[0, "desc"]],
     columns: [
       {

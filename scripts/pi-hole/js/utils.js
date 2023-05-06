@@ -72,7 +72,7 @@ function padNumber(num) {
   return ("00" + num).substr(-2, 2);
 }
 
-var info = null; // TODO clear this up; there shouldn't be a global var here
+var info = null;
 function showAlert(type, icon, title, message) {
   var opts = {};
   title = "&nbsp;<strong>" + title + "</strong><br>";
@@ -487,6 +487,43 @@ function getCSSval(cssclass, cssproperty) {
   return val;
 }
 
+function parseQueryString(queryString = window.location.search) {
+  const GETDict = {};
+  queryString
+    .substr(1)
+    .split("&")
+    .forEach(function (item) {
+      GETDict[item.split("=")[0]] = item.split("=")[1];
+    });
+
+  return GETDict;
+}
+
+// https://stackoverflow.com/q/21647928
+function hexEncode(string) {
+  var hex, i;
+
+  var result = "";
+  for (i = 0; i < string.length; i++) {
+    hex = string.codePointAt(i).toString(16);
+    result += ("000" + hex).slice(-4);
+  }
+
+  return result;
+}
+
+// https://stackoverflow.com/q/21647928
+function hexDecode(string) {
+  var j;
+  var hexes = string.match(/.{1,4}/g) || [];
+  var back = "";
+  for (j = 0; j < hexes.length; j++) {
+    back += String.fromCodePoint(parseInt(hexes[j], 16));
+  }
+
+  return back;
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -517,5 +554,8 @@ window.utils = (function () {
     htmlPass: htmlPass,
     changeTableButtonStates: changeTableButtonStates,
     getCSSval: getCSSval,
+    parseQueryString: parseQueryString,
+    hexEncode: hexEncode,
+    hexDecode: hexDecode,
   };
 })();
