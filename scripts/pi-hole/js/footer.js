@@ -66,13 +66,11 @@ function checkBlocking() {
   })
     .done(function (data) {
       piholeChanged(data.blocking);
-
-      setTimeout(checkBlocking, 2500);
+      setTimeout(checkBlocking, 10000);
     })
     .fail(function (data) {
       apiFailure(data);
-
-      setTimeout(checkBlocking, 5000);
+      setTimeout(checkBlocking, 30000);
     });
 }
 
