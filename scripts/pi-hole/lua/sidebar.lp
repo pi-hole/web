@@ -176,7 +176,7 @@
                     </ul>
                 </li>
                 <!-- Tools -->
-                <li class="menu-system treeview<? if in_array(scriptname, array('messages.lp', 'gravity.lp', 'queryads.lp', 'taillog.lp', 'taillog-FTL.lp', 'debug.lp', 'network.lp')) then mg.write(" active") end ?>">
+                <li class="menu-system treeview<? if in_array(scriptname, {'messages.lp', 'queryads.lp', 'taillog.lp', 'network.lp'}) then mg.write(" active") end ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-tools"></i> <span>Tools</span>
                         <span class="warning-count hidden"></span>
@@ -221,12 +221,6 @@
                                 </li>
                             </ul>
                         </li>
-                        <!-- Run gravity.sh -->
-                        <li class="<? if scriptname == 'gravity.lp' then mg.write(" active") end ?>">
-                            <a href="gravity.lp">
-                                <i class="fa fa-fw menu-icon fa-arrow-circle-down"></i> <span class="text-red">Update Gravity</span>
-                            </a>
-                        </li>
                         <!-- Query Lists -->
                         <li class="<? if scriptname == 'queryads.lp' then mg.write(" active") end ?>">
                             <a href="queryads.lp">
@@ -236,7 +230,7 @@
                         <!-- Network -->
                         <li class="<? if scriptname == 'network.lp' then mg.write(" active") end ?>">
                             <a href="network.lp">
-                                <i class="fa fa-fw menu-icon fa-network-wired"></i> <span class="text-red">Network</span>
+                                <i class="fa fa-fw menu-icon fa-network-wired"></i> <span class="text-green">Network</span>
                             </a>
                         </li>
                     </ul>

@@ -5,17 +5,13 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global utils:false */
+/* global utils:false, apiFailure:false */
 
 var tableApi;
-var token = $("#token").text();
-
-var API_STRING = "api_db.php?network";
 
 // How many IPs do we show at most per device?
-var MAXIPDISPLAY = 3;
-
-var DAY_IN_SECONDS = 24 * 60 * 60;
+const MAXIPDISPLAY = 3;
+const DAY_IN_SECONDS = 24 * 60 * 60;
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
@@ -61,37 +57,33 @@ function parseColor(input) {
 }
 
 function deleteNetworkEntry() {
-  var tr = $(this).closest("tr");
-  var id = tr.attr("data-id");
+  const tr = $(this).closest("tr");
+  const id = tr.attr("data-id");
+  const hwaddr = tr.attr("data-hwaddr");
 
   utils.disableAll();
   utils.showAlert("info", "", "Deleting network table entry...");
   $.ajax({
-    url: "scripts/pi-hole/php/network.php",
-    method: "post",
-    dataType: "json",
-    data: { action: "delete_network_entry", id: id, token: token },
-    success: function (response) {
+    url: "/api/network/devices/" + id,
+    method: "DELETE",
+    success: function () {
       utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted network table entry");
-        tableApi.row(tr).remove().draw(false).ajax.reload(null, false);
-      } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while network table entry with ID " + id,
-          response.message
-        );
-      }
+      utils.showAlert(
+        "success",
+        "far fa-trash-alt",
+        "Successfully deleted network table entry",
+        hwaddr
+      );
+      tableApi.row(tr).remove().draw(false).ajax.reload(null, false);
     },
-    error: function (jqXHR, exception) {
+    error: function (data, exception) {
+      apiFailure(data);
       utils.enableAll();
       utils.showAlert(
         "error",
         "",
         "Error while deleting network table entry with ID " + id,
-        jqXHR.responseText
+        data.responseText
       );
       console.log(exception); // eslint-disable-line no-console
     },
@@ -133,63 +125,29 @@ $(function () {
 
       // Set determined background color
       $(row).css("background-color", color);
-      $("td:eq(7)", row).html('<i class="' + iconClasses + '"></i>');
+      $("td:eq(6)", row).html('<i class="' + iconClasses + '"></i>');
 
       // Insert "Never" into Last Query field when we have
       // never seen a query from this device
       if (data.lastQuery === 0) {
-        $("td:eq(5)", row).html("Never");
-      }
-
-      // Set hostname to "unknown" if not available
-      if (!data.name || data.name.length === 0) {
-        $("td:eq(3)", row).html("<em>unknown</em>");
-      } else {
-        var names = [];
-        var name = "";
-        maxiter = Math.min(data.name.length, MAXIPDISPLAY);
-        index = 0;
-        for (index = 0; index < maxiter; index++) {
-          name = data.name[index];
-          if (name.length === 0) continue;
-          names.push('<a href="queries.php?client=' + name + '">' + name + "</a>");
-        }
-
-        if (data.name.length > MAXIPDISPLAY) {
-          // We hit the maximum above, add "..." to symbolize we would
-          // have more to show here
-          names.push("...");
-        }
-
-        maxiter = Math.min(data.ip.length, data.name.length);
-        var allnames = [];
-        for (index = 0; index < maxiter; index++) {
-          name = data.name[index];
-          if (name.length > 0) {
-            allnames.push(name + " (" + data.ip[index] + ")");
-          } else {
-            allnames.push("No host name for " + data.ip[index] + " known");
-          }
-        }
-
-        $("td:eq(3)", row).html(names.join("<br>"));
-        $("td:eq(3)", row).on("hover", function () {
-          this.title = allnames.join("\n");
-        });
+        $("td:eq(4)", row).html("Never");
       }
 
       // Set number of queries to localized string (add thousand separators)
-      $("td:eq(6)", row).html(data.numQueries.toLocaleString());
+      $("td:eq(5)", row).html(data.numQueries.toLocaleString());
 
       var ips = [];
-      maxiter = Math.min(data.ip.length, MAXIPDISPLAY);
-      index = 0;
+      maxiter = Math.min(data.ips.length, MAXIPDISPLAY);
       for (index = 0; index < maxiter; index++) {
-        var ip = data.ip[index];
-        ips.push('<a href="queries.php?client=' + ip + '">' + ip + "</a>");
+        var ip = data.ips[index];
+        if (ip.name !== null && ip.name.length > 0)
+          ips.push(
+            '<a href="queries.php?client=' + ip.ip + '">' + ip.ip + " (" + ip.name + ")</a>"
+          );
+        else ips.push('<a href="queries.php?client=' + ip.ip + '">' + ip.ip + "</a>");
       }
 
-      if (data.ip.length > MAXIPDISPLAY) {
+      if (data.ips.length > MAXIPDISPLAY) {
         // We hit the maximum above, add "..." to symbolize we would
         // have more to show here
         ips.push("...");
@@ -197,7 +155,7 @@ $(function () {
 
       $("td:eq(0)", row).html(ips.join("<br>"));
       $("td:eq(0)", row).on("hover", function () {
-        this.title = data.ip.join("\n");
+        this.title = data.ips.join("\n");
       });
 
       // MAC + Vendor field if available
@@ -212,29 +170,39 @@ $(function () {
 
       // Add delete button
       $(row).attr("data-id", data.id);
+      $(row).attr("data-hwaddr", data.hwaddr);
       var button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteNetworkEntry_' +
         data.id +
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
-      $("td:eq(8)", row).html(button);
+      $("td:eq(7)", row).html(button);
     },
     dom:
       "<'row'<'col-sm-12'f>>" +
       "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-    ajax: { url: API_STRING, error: handleAjaxError, dataSrc: "network" },
+    ajax: {
+      url: "/api/network/devices",
+      type: "GET",
+      dataType: "json",
+      data: {
+        max_devices: 999,
+        max_addresses: 25,
+      },
+      error: handleAjaxError,
+      dataSrc: "devices",
+    },
     autoWidth: false,
     processing: true,
     order: [[6, "desc"]],
     columns: [
       { data: "id", visible: false },
-      { data: "ip", type: "ip-address", width: "10%" },
+      { data: "ip", type: "ip-address", width: "25%" },
       { data: "hwaddr", width: "10%" },
       { data: "interface", width: "4%" },
-      { data: "name", width: "15%" },
       {
         data: "firstSeen",
         width: "8%",

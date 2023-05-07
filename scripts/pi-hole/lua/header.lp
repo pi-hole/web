@@ -27,6 +27,18 @@ function GET(name)
     return mg.request_info.query_string:match(name.."=([^&]*)")
     -- mg.get_var(mg.request_info.query_string, "REQUEST_URI")
 end
+
+-- Function checking if val is in tab
+function in_array (val, tab)
+    for index, value in ipairs(tab) do
+        if value == val then
+            return true
+        end
+    end
+
+    return false
+end
+
 ?>
 <html lang="en">
 <head>
