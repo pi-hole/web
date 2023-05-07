@@ -176,7 +176,7 @@
                     </ul>
                 </li>
                 <!-- Tools -->
-                <li class="menu-system treeview<? if in_array(scriptname, {'messages.lp', 'queryads.lp', 'taillog.lp', 'network.lp'}) then mg.write(" active") end ?>">
+                <li class="menu-system treeview<? if in_array(scriptname, {'messages.lp', 'gravity.lp', 'search.lp', 'taillog.lp', 'network.lp'}) then mg.write(" active") end ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-tools"></i> <span>Tools</span>
                         <span class="warning-count hidden"></span>
@@ -221,10 +221,16 @@
                                 </li>
                             </ul>
                         </li>
+                        <!-- Run gravity.sh -->
+                        <li class="<? if scriptname == 'gravity.lp' then mg.write(" active") end ?>">
+                            <a href="gravity.lp">
+                                <i class="fa fa-fw menu-icon fa-arrow-circle-down"></i> <span class="text-green">Update Gravity</span>
+                            </a>
+                        </li>
                         <!-- Query Lists -->
                         <li class="<? if scriptname == 'search.lp' then mg.write(" active") end ?>">
                             <a href="search.lp">
-                                <i class="fa fa-fw menu-icon fa-search"></i> <span class="text-red">Search Adlists</span>
+                                <i class="fa fa-fw menu-icon fa-search"></i> <span class="text-green">Search Adlists</span>
                             </a>
                         </li>
                         <!-- Network -->
