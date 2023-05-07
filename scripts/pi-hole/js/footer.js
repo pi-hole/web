@@ -18,27 +18,20 @@ function secondsTimeSpanToHMS(s) {
   return h + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s); //zero padding on minutes and seconds
 }
 
-function piholeChanged(action) {
+function piholeChanged(blocking) {
   var status = $("#status");
   var ena = $("#pihole-enable");
   var dis = $("#pihole-disable");
 
-  switch (action) {
-    case "enabled":
-      status.html("<i class='fa fa-circle text-green-light'></i> Active");
-      ena.hide();
-      dis.show();
-      dis.removeClass("active");
-      break;
-
-    case "disabled":
-      status.html("<i class='fa fa-circle text-red'></i> Blocking disabled");
-      ena.show();
-      dis.hide();
-      break;
-
-    default:
-    // nothing
+  if (blocking) {
+    status.html("<i class='fa fa-circle fa-fw text-green-light'></i>&nbsp;Active");
+    ena.hide();
+    dis.show();
+    dis.removeClass("active");
+  } else {
+    status.html("<i class='fa fa-circle fa-fw text-red'></i>&nbsp;Blocking disabled");
+    ena.show();
+    dis.hide();
   }
 }
 
@@ -66,41 +59,61 @@ function countDown() {
   }
 }
 
+function checkBlocking() {
+  $.ajax({
+    url: "/api/dns/blocking",
+    method: "GET",
+  })
+    .done(function (data) {
+      piholeChanged(data.blocking);
+
+      setTimeout(checkBlocking, 2500);
+    })
+    .fail(function (data) {
+      apiFailure(data);
+
+      setTimeout(checkBlocking, 5000);
+    });
+}
+
 function piholeChange(action, duration) {
-  var token = encodeURIComponent($("#token").text());
   var enaT = $("#enableTimer");
   var btnStatus;
 
   switch (action) {
     case "enable":
       btnStatus = $("#flip-status-enable");
-      btnStatus.html("<i class='fa fa-spinner'> </i>");
-      $.getJSON("api.lp?enable&token=" + token, function (data) {
-        if (data.status === "enabled") {
-          btnStatus.html("");
-          piholeChanged("enabled");
-        }
-      });
       break;
-
     case "disable":
       btnStatus = $("#flip-status-disable");
-      btnStatus.html("<i class='fa fa-spinner'> </i>");
-      $.getJSON("api.lp?disable=" + duration + "&token=" + token, function (data) {
-        if (data.status === "disabled") {
-          btnStatus.html("");
-          piholeChanged("disabled");
-          if (duration > 0) {
-            enaT.html(Date.now() + duration * 1000);
-            setTimeout(countDown, 100);
-          }
-        }
-      });
       break;
-
-    default:
-    // nothing
+    default: // Do nothing
+      break;
   }
+
+  btnStatus.html("<i class='fa fa-spinner fa-spin'> </i>");
+  const blocking = action === "enable";
+  $.ajax({
+    url: "/api/dns/blocking",
+    method: "POST",
+    data: JSON.stringify({
+      blocking: blocking,
+      timer: parseInt(duration, 10) > 0 ? parseInt(duration, 10) : null,
+    }),
+  })
+    .done(function (data) {
+      if (data.blocking === blocking) {
+        btnStatus.html("");
+        piholeChanged(blocking);
+        if (duration > 0) {
+          enaT.html(Date.now() + duration * 1000);
+          setTimeout(countDown, 100);
+        }
+      }
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
 }
 
 function testCookies() {
@@ -558,6 +571,7 @@ $("#settings-level").on("change", function () {
 });
 
 $(function () {
+  checkBlocking();
   initSettingsLevel();
 });
 

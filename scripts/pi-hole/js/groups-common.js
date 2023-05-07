@@ -5,6 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global apiFailure:false */
+
 // eslint-disable-next-line no-unused-vars
 var groups = [];
 
@@ -16,6 +18,9 @@ function getGroups() {
     dataType: "json",
     success: function (data) {
       groups = data.groups;
+    },
+    error: function (data) {
+      apiFailure(data);
     },
   });
 }

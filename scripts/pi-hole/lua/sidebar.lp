@@ -17,7 +17,7 @@
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
-                    <span id="status"></span>
+                    <span id="status"></span><br/>
                     <span id="temperature"></span><br/>
                     <span id="cpu"></span><br/>
                     <span id="memory"></span>
@@ -81,7 +81,7 @@
                 <!-- Enable/Disable Blocking -->
                 <li id="pihole-disable" class="menu-dns treeview">
                     <a href="#">
-                        <i class="fa fa-fw menu-icon fa-stop"></i> <span class="text-red">Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
+                        <i class="fa fa-fw menu-icon fa-stop"></i> <span class="text-green">Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -115,10 +115,10 @@
                     </ul>
                     <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
-                <li id="pihole-enable" class="menu-dns treeview">
+                <li id="pihole-enable" class="menu-dns treeview" style="display: none;">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-play"></i>
-                        <span id="enableLabel" class="text-red">Enable Blocking&nbsp;&nbsp;&nbsp;
+                        <span id="enableLabel" class="text-green">Enable Blocking&nbsp;&nbsp;&nbsp;
                             <span id="flip-status-enable"></span>
                         </span>
                     </a>
