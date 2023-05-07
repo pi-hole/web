@@ -1,12 +1,11 @@
-<?php
-/*
-*    Pi-hole: A black hole for Internet advertisements
-*    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
-*    Network-wide ad blocking via your own hardware.
+<? --[[
+*  Pi-hole: A black hole for Internet advertisements
+*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+*  Network-wide ad blocking via your own hardware.
 *
-*    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license.
-*/
+*  This file is copyright under the latest version of the EUPL.
+*  Please see LICENSE file for your rights under this license.
+--]]
 
 mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
@@ -31,8 +30,8 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             <div class="box-body">
                 <!-- /domain-search-block -->
                 <div id="limitbox-block">
-                    <input type="checkbox" id="show-all">
-                    <label for="show-all"><strong>Show unlimited results.</strong> <br class="hidden-md hidden-lg">This can be very slow if too many domains are returned. <span class="text-red">Use with caution</span>.</label></i>
+                    <input type="number" min="0" value="20" id="number">
+                    <label for="number"><strong>Maximum of results to be returned</label></i>
                 </div>
             </div>
         </div>
@@ -41,5 +40,5 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 
 <pre id="output" style="width: 100%; height: 100%;" hidden></pre>
 
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/queryads.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/search.js')?>"></script>
 <? mg.include('scripts/pi-hole/lua/footer.lp','r')?>

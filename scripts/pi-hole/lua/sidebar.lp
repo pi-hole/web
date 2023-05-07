@@ -222,8 +222,8 @@
                             </ul>
                         </li>
                         <!-- Query Lists -->
-                        <li class="<? if scriptname == 'queryads.lp' then mg.write(" active") end ?>">
-                            <a href="queryads.lp">
+                        <li class="<? if scriptname == 'search.lp' then mg.write(" active") end ?>">
+                            <a href="search.lp">
                                 <i class="fa fa-fw menu-icon fa-search"></i> <span class="text-red">Search Adlists</span>
                             </a>
                         </li>
