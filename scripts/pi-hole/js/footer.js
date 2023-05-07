@@ -178,6 +178,7 @@ function updateInfo() {
   updateSensorsInfo();
   updateVersionInfo();
   updateFtlInfo();
+  checkBlocking();
 }
 
 var ftlinfoTimer = null;
@@ -569,7 +570,6 @@ $("#settings-level").on("change", function () {
 });
 
 $(function () {
-  checkBlocking();
   initSettingsLevel();
 });
 
