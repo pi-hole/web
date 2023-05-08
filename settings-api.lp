@@ -130,6 +130,9 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             </div>
         </div>
     </div>
+    <div class="col-lg-12 settings-level-1">
+        <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
+    </div>
 </div>
 
 <div class="modal fade" id="modal-totp" style="display: none;">

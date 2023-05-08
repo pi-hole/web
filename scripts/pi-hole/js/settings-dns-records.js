@@ -242,7 +242,7 @@ $(document).ready(function () {
       .done(function (response) {
         utils.enableAll();
         if (response === undefined) {
-          utils.showAlert("success", "far fa-trash-alt", "Successfully added DNS record", "");
+          utils.showAlert("success", "far fa-plus", "Successfully added DNS record", "");
           dnsRecordsTable.ajax.reload(null, false);
         } else {
           utils.showAlert("error", "", "Error while adding DNS record", response.record);
@@ -266,7 +266,7 @@ $(document).ready(function () {
       .done(function (response) {
         utils.enableAll();
         if (response === undefined) {
-          utils.showAlert("success", "far fa-trash-alt", "Successfully added CNAME record", "");
+          utils.showAlert("success", "far fa-plus", "Successfully added CNAME record", "");
           dnsRecordsTable.ajax.reload(null, false);
         } else {
           utils.showAlert("error", "", "Error while adding CNAME record", response.record);

@@ -160,7 +160,7 @@
                         </li>
                         <li class="<? if scriptname == 'settings-advanced.lp' then mg.write(" active") end ?> settings-level-2">
                             <a href="settings-advanced.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> <span class="text-orange">Advanced</span>
+                                <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> <span class="text-green">Advanced</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings-teleporter.lp' then mg.write(" active") end ?>">

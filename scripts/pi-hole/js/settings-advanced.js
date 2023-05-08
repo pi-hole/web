@@ -93,6 +93,8 @@ function generateRow(topic, key, value) {
         '<div class="col-sm-8">' +
         '<input type="text" class="form-control" value="' +
         value.value +
+        '" data-key="' +
+        key +
         '"> ' +
         defaultValueHint +
         addAllowedValues(value.allowed) +
@@ -107,7 +109,9 @@ function generateRow(topic, key, value) {
         (value.value ? " checked" : "") +
         ' id="' +
         key +
-        '-checkbox"><label for="' +
+        '-checkbox" data-key="' +
+        key +
+        '"><label for="' +
         key +
         '-checkbox">Enabled ' +
         defaultValueHint +
@@ -123,7 +127,9 @@ function generateRow(topic, key, value) {
         '<div class="col-sm-8">' +
         '<input type="number" class="form-control" value="' +
         value.value +
-        '"> ' +
+        '" data-key="' +
+        key +
+        '" data-type="float"> ' +
         defaultValueHint +
         "</div>";
 
@@ -136,7 +142,9 @@ function generateRow(topic, key, value) {
         '<div class="col-sm-8">' +
         '<input type="number" step="1" class="form-control" value="' +
         value.value +
-        '"> ' +
+        '" data-key="' +
+        key +
+        '" data-type="integer"> ' +
         defaultValueHint +
         "</div>";
 
@@ -149,7 +157,9 @@ function generateRow(topic, key, value) {
         '<div class="col-sm-8">' +
         '<input type="number" step="1" min="0" class="form-control" value="' +
         value.value +
-        '"> ' +
+        '" data-key="' +
+        key +
+        '" data-type="integer"> ' +
         defaultValueHint +
         "</div>";
 
@@ -162,7 +172,9 @@ function generateRow(topic, key, value) {
         '<div class="col-sm-8">' +
         '<input type="number" step="1" min="0" max="65535" class="form-control" value="' +
         value.value +
-        '"> ' +
+        '" data-key="' +
+        key +
+        '" data-type="integer"> ' +
         defaultValueHint +
         "</div>";
 
@@ -173,7 +185,9 @@ function generateRow(topic, key, value) {
       box +=
         '<label class="col-sm-5 control-label">Values (one item per line)</label>' +
         '<div class="col-sm-7">' +
-        '<textarea class="form-control">' +
+        '<textarea class="form-control" data-key="' +
+        key +
+        '">' +
         value.value.join("\n") +
         "</textarea> " +
         defaultValueHint +
@@ -187,7 +201,9 @@ function generateRow(topic, key, value) {
       box +=
         '<label class="col-sm-4 control-label">Selected Option</label>' +
         '<div class="col-sm-8">' +
-        '<select class="form-control">';
+        '<select class="form-control" data-key="' +
+        key +
+        '">';
       value.allowed.forEach(function (option) {
         box +=
           '<option value="' +
@@ -203,6 +219,22 @@ function generateRow(topic, key, value) {
         defaultValueHint +
         "</div>" +
         '<div class="col-sm-12">' +
+        addAllowedValues(value.allowed) +
+        "</div>";
+
+      break;
+    }
+
+    case "password (write-only string)": {
+      box +=
+        '<label class="col-sm-4 control-label">Value (string)</label>' +
+        '<div class="col-sm-8">' +
+        '<input type="password" class="form-control" value="' +
+        value.value +
+        '" data-key="' +
+        key +
+        '"> ' +
+        defaultValueHint +
         addAllowedValues(value.allowed) +
         "</div>";
 
@@ -260,7 +292,76 @@ function createDynamicConfigTabs() {
       });
       $("#advanced-overlay").hide();
 
+      $("#advanced-content").append(
+        '<div class="col-lg-12 settings-level-1">' +
+          '<button type="button" class="btn btn-primary save-button" id="save"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>' +
+          "</div>"
+      );
+      $("button[id='save']").on("click", function () {
+        saveSettings();
+      });
+
       applyCheckboxRadioStyle();
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
+}
+
+function saveSettings() {
+  var settings = {};
+  $("[data-key]").each(function () {
+    var key = $(this).data("key");
+    var value = $(this).val();
+    if ($(this).is(":checkbox")) {
+      value = $(this).is(":checked");
+    }
+
+    if ($(this).is("textarea")) {
+      value = $(this).val();
+      value = value === "" ? [] : value.split("\n");
+    }
+
+    if ($(this).data("type") === "integer") {
+      value = parseInt(value, 10);
+    }
+
+    if ($(this).data("type") === "float") {
+      value = parseFloat(value);
+    }
+
+    // Build deep object
+    // Transform "foo.bar.baz" into {foo: {bar: {baz: value}}}
+    var parts = key.split(".");
+    var obj = {};
+    var tmp = obj;
+    for (var i = 0; i < parts.length - 1; i++) {
+      tmp[parts[i]] = {};
+      tmp = tmp[parts[i]];
+    }
+
+    tmp[parts[parts.length - 1]] = value;
+
+    // Merge deep object into settings
+    $.extend(true, settings, obj);
+  });
+  // Apply changes
+  $.ajax({
+    url: "/api/config",
+    method: "PATCH",
+    data: JSON.stringify({ config: settings }),
+    contentType: "application/json; charset=utf-8",
+  })
+    .done(function () {
+      // Success
+      utils.showAlert(
+        "success",
+        "fa-solid fa-fw fa-floppy-disk",
+        "Successfully saved and applied settings",
+        ""
+      );
+      // Reload page
+      location.reload();
     })
     .fail(function (data) {
       apiFailure(data);

@@ -23,41 +23,43 @@ function eventsource() {
   alInfo.show();
   alSuccess.hide();
 
+  // eslint-disable-next-line compat/compat
   fetch("/api/action/gravity", {
     method: "POST",
   })
-  // Retrieve its body as ReadableStream
-  .then((response) => {
-    const reader = response.body.getReader();
-    return new ReadableStream({
-      start(controller) {
-        return pump();
-        function pump() {
-          return reader.read().then(({ done, value }) => {
-            // When no more data needs to be consumed, close the stream
-            if (done) {
-              controller.close();
-              alInfo.hide();
-              $("#gravityBtn").prop("disabled", false);
-              return;
-            }
-            // Enqueue the next data chunk into our target stream
-            controller.enqueue(value);
-            var string = new TextDecoder().decode(value);
-            // Remove ${OVER} from the string
-            string = string.replaceAll("\r[K", "\n");
-            console.log(string);
-            ta.append(string);
-            if (string.indexOf("Pi-hole blocking is") !== -1) {
-              alSuccess.show();
-            }
-            return pump();
-          });
-        }
-      },
-    });
-  })
-  .catch((err) => console.error(err));
+    // Retrieve its body as ReadableStream
+    .then(response => {
+      const reader = response.body.getReader();
+      return new ReadableStream({
+        start(controller) {
+          return pump();
+          function pump() {
+            return reader.read().then(({ done, value }) => {
+              // When no more data needs to be consumed, close the stream
+              if (done) {
+                controller.close();
+                alInfo.hide();
+                $("#gravityBtn").prop("disabled", false);
+                return;
+              }
+
+              // Enqueue the next data chunk into our target stream
+              controller.enqueue(value);
+              var string = new TextDecoder().decode(value);
+              // Remove ${OVER} from the string
+              string = string.replaceAll("\r[K", "\n");
+              ta.append(string);
+              if (string.indexOf("Pi-hole blocking is") !== -1) {
+                alSuccess.show();
+              }
+
+              return pump();
+            });
+          }
+        },
+      });
+    })
+    .catch(error => console.error(error)); // eslint-disable-line no-console
 }
 
 $("#gravityBtn").on("click", function () {

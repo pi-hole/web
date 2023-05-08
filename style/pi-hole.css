@@ -1103,3 +1103,9 @@ table.dataTable tbody > tr > .selected {
 .totp_token::placeholder {
   opacity: 0.1;
 }
+
+.save-button {
+  position: fixed;
+  bottom: 2%;
+  right: 2%;
+}
