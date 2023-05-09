@@ -28,7 +28,9 @@ function setConfigValues(topic, key, value) {
   if (!("description" in value)) {
     Object.keys(value).forEach(function (subkey) {
       var subvalue = value[subkey];
-      setConfigValues(topic, key + "." + subkey, subvalue);
+      // If the key is empty, we are at the top level
+      var newKey = key === "" ? subkey : key + "." + subkey;
+      setConfigValues(topic, newKey, subvalue);
     });
     return;
   }
@@ -36,6 +38,7 @@ function setConfigValues(topic, key, value) {
   // else: we have a setting we can set
   var escapedKey = key.replace(/\./g, "\\.");
   switch (value.type) {
+    case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
       // Remove all options from select
       $("#" + escapedKey + " option").remove();
@@ -68,7 +71,13 @@ function setConfigValues(topic, key, value) {
 
     default: {
       // Set input field values (if available)
-      $("#" + escapedKey).val(value.value);
+      // Set text if this is a <span> or <code> element
+      if ($("#" + escapedKey).is("span") || $("#" + escapedKey).is("code")) {
+        $("#" + escapedKey).text(value.value);
+      } else {
+        // Set value if this is an <input> element
+        $("#" + escapedKey).val(value.value);
+      }
     }
   }
 }

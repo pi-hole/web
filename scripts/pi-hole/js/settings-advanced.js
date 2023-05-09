@@ -197,6 +197,7 @@ function generateRow(topic, key, value) {
       break;
     }
 
+    case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
       box +=
         '<label class="col-sm-4 control-label">Selected Option</label>' +

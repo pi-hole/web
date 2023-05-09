@@ -155,7 +155,7 @@
                         </li>
                         <li class="<? if scriptname == 'settings-privacy.lp' then mg.write(" active") end ?>">
                             <a href="settings-privacy.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> <span class="text-red">Privacy</span>
+                                <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> <span class="text-green">Privacy</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings-advanced.lp' then mg.write(" active") end ?> settings-level-2">
