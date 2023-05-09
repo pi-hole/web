@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure: false, applyCheckboxRadioStyle: false */
+/* global utils:false, apiFailure: false, applyCheckboxRadioStyle: false, saveSettings:false */
 /* exported createDynamicConfigTabs */
 
 function addAllowedValues(allowed) {
@@ -302,66 +302,6 @@ function createDynamicConfigTabs() {
       });
 
       applyCheckboxRadioStyle();
-    })
-    .fail(function (data) {
-      apiFailure(data);
-    });
-}
-
-function saveSettings() {
-  var settings = {};
-  $("[data-key]").each(function () {
-    var key = $(this).data("key");
-    var value = $(this).val();
-    if ($(this).is(":checkbox")) {
-      value = $(this).is(":checked");
-    }
-
-    if ($(this).is("textarea")) {
-      value = $(this).val();
-      value = value === "" ? [] : value.split("\n");
-    }
-
-    if ($(this).data("type") === "integer") {
-      value = parseInt(value, 10);
-    }
-
-    if ($(this).data("type") === "float") {
-      value = parseFloat(value);
-    }
-
-    // Build deep object
-    // Transform "foo.bar.baz" into {foo: {bar: {baz: value}}}
-    var parts = key.split(".");
-    var obj = {};
-    var tmp = obj;
-    for (var i = 0; i < parts.length - 1; i++) {
-      tmp[parts[i]] = {};
-      tmp = tmp[parts[i]];
-    }
-
-    tmp[parts[parts.length - 1]] = value;
-
-    // Merge deep object into settings
-    $.extend(true, settings, obj);
-  });
-  // Apply changes
-  $.ajax({
-    url: "/api/config",
-    method: "PATCH",
-    data: JSON.stringify({ config: settings }),
-    contentType: "application/json; charset=utf-8",
-  })
-    .done(function () {
-      // Success
-      utils.showAlert(
-        "success",
-        "fa-solid fa-fw fa-floppy-disk",
-        "Successfully saved and applied settings",
-        ""
-      );
-      // Reload page
-      location.reload();
     })
     .fail(function (data) {
       apiFailure(data);

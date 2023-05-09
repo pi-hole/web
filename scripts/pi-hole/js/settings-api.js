@@ -38,6 +38,7 @@ $(function () {
       { data: null, width: "22px" },
       { data: "id" },
       { data: "valid", render: renderBool },
+      { data: "tls", render: renderBool },
       { data: "login_at", render: utils.renderTimestamp },
       { data: "valid_until", render: utils.renderTimestamp },
       { data: "remote_addr", type: "ip-address" },
@@ -78,10 +79,10 @@ $(function () {
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
-      $("td:eq(7)", row).html(button);
+      $("td:eq(8)", row).html(button);
       if (data.current_session) {
         ownSessionID = data.id;
-        $("td:eq(5)", row).html(
+        $("td:eq(6)", row).html(
           '<strong title="This is the session you are currently using for the web interface">' +
             data.remote_addr +
             "</strong>"

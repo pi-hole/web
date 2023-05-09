@@ -43,7 +43,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                             </div>
                             <div class="box-body">
                                 <p>The following list contains all DNS servers selected above. Furthermore, you can add your own custom DNS servers here. The expected format is one server per line in form of <code>IP#port</code>, where the <code>port</code> is optional. If given, it has to be separated by a hash <code>#</code> from the address (e.g. <code>127.0.0.1#5335</code> for a local <code>unbound</code> istance running on port <code>5335</code>). The port defaults to 53 if omitted.</p>
-                                <textarea class="form-control" rows="3" id="DNSupstreamsTextfield" placeholder="Enter upstream DNS servers, one per line" style="resize: vertical;"></textarea>
+                                <textarea class="form-control" rows="3" id="DNSupstreamsTextfield" data-key="dns.upstreams" placeholder="Enter upstream DNS servers, one per line" style="resize: vertical;"></textarea>
                             </div>
                         </div>
                     </div>
@@ -85,7 +85,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                             when "Never forward non-FQDNs" is <em>not</em> enabled.</p>
                         <div class="form-group">
                             <div>
-                                <input type="checkbox" id="dns.revServer.active">
+                                <input type="checkbox" id="dns.revServer.active" data-key="dns.revServer.active">
                                 <label for="dns.revServer.active"><strong>Use Conditional Forwarding</strong></label>
                             </div>
                             <div class="input-group">
@@ -100,13 +100,13 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <input type="text" id="dns.revServer.cidr" placeholder="192.168.0.0/16" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
+                                                <input type="text" id="dns.revServer.cidr" data-key="dns.revServer.cidr" placeholder="192.168.0.0/16" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
                                             </td>
                                             <td>
-                                                <input type="text" id="dns.revServer.target" placeholder="192.168.0.1" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
+                                                <input type="text" id="dns.revServer.target" data-key="dns.revServer.target" placeholder="192.168.0.1" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
                                             </td>
                                             <td>
-                                                <input type="text" id="dns.revServer.domain" placeholder="local" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
+                                                <input type="text" id="dns.revServer.domain" data-key="dns.revServer.domain" placeholder="local" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
                                             </td>
                                         </tr>
                                     </tbody>
@@ -130,22 +130,22 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                             <div class="no-danger-area">
                                 <h4>Recommended setting</h4>
                                 <div>
-                                    <input type="radio" name="DNSinterface" id="dns.listeningMode-LOCAL">
+                                    <input type="radio" name="DNSinterface" id="dns.listeningMode-LOCAL" data-key="dns.listeningMode" value="local">
                                     <label for="dns.listeningMode-LOCAL"><strong>Allow only local requests</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
                                 </div>
                             </div>
                             <div class="danger-area">
                                 <h4>Potentially dangerous options</h4>Make sure your Pi-hole is properly firewalled!
                                 <div>
-                                    <input type="radio" name="DNSinterface" id="dns.listeningMode-SINGLE">
+                                    <input type="radio" name="DNSinterface" id="dns.listeningMode-SINGLE" data-key="dns.listeningMode" value="single">
                                     <label for="dns.listeningMode-SINGLE"><strong>Respond only on interface <span id="interface-name-1"></span></strong></label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="DNSinterface" id="dns.listeningMode-BIND">
+                                    <input type="radio" name="DNSinterface" id="dns.listeningMode-BIND" data-key="dns.listeningMode" value="bind">
                                     <label for="dns.listeningMode-BIND"><strong>Bind only to interface <span id="interface-name-2"></span></strong></label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="DNSinterface" id="dns.listeningMode-ALL">
+                                    <input type="radio" name="DNSinterface" id="dns.listeningMode-ALL" data-key="dns.listeningMode" value="all">
                                     <label for="dns.listeningMode-ALL"><strong>Permit all origins</strong></label>
                                 </div>
                                 <p>These options are dangerous on devices
@@ -168,7 +168,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 <div class="row">
                     <div class="col-lg-12">
                         <div>
-                            <input type="checkbox" id="dns.domainNeeded" title="domain-needed">
+                            <input type="checkbox" id="dns.domainNeeded" data-key="dns.domainNeeded" title="domain-needed">
                             <label for="dns.domainNeeded"><strong>Never forward non-FQDN <code>A</code> and <code>AAAA</code> queries</strong></label>
                             <p>Tells Pi-hole to never forward A or AAAA queries for plain
                                 names, without dots or domain parts, to upstream nameservers. If
@@ -179,7 +179,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                         </div>
                         <br>
                         <div>
-                            <input type="checkbox" id="dns.bogusPriv" title="bogus-priv">
+                            <input type="checkbox" id="dns.bogusPriv" data-key="dns.bogusPriv" title="bogus-priv">
                             <label for="dns.bogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
                             <p>All reverse lookups for private IP ranges (i.e., <code>192.168.0.x/24</code>, etc.)
                                 which are not found in <code>/etc/hosts</code> or the DHCP leases are answered
@@ -191,7 +191,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                         </div>
                         <br>
                         <div>
-                            <input type="checkbox" id="dns.dnssec">
+                            <input type="checkbox" id="dns.dnssec" data-key="dns.dnssec">
                             <label for="dns.dnssec"><strong>Use DNSSEC</strong></label>
                             <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
                                 queries, Pi-hole requests the DNSSEC records needed to validate
@@ -213,8 +213,8 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             <div class="box-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <p>Block clients making more than <input type="number" id="dns.rateLimit.count" value="" min="0" step="10" style="width: 5em;"> queries within
-                            <input type="number" id="dns.rateLimit.interval" value="" min="0" step="10" style="width: 4em;"> seconds.</p>
+                        <p>Block clients making more than <input type="number" id="dns.rateLimit.count" data-key="dns.rateLimit.count" data-type="integer" value="" min="0" step="10" style="width: 5em;"> queries within
+                            <input type="number" id="dns.rateLimit.interval" data-key="dns.rateLimit.interval" data-type="integer" value="" min="0" step="10" style="width: 4em;"> seconds.</p>
                             <p>When a client makes too many queries in too short time, it
                             gets rate-limited. Rate-limited queries are answered with a
                             <code>REFUSED</code> reply and not further processed by FTL

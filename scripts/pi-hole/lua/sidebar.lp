@@ -140,17 +140,17 @@
                         </li>
                         <li class="<? if scriptname == 'settings-dns.lp' then mg.write(" active") end ?>">
                             <a href="settings-dns.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-book-atlas"></i> <span class="text-orange">DNS</span>
+                                <i class="fa-fw menu-icon fa-solid fa-book-atlas"></i> <span class="text-green">DNS</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings-dhcp.lp' then mg.write(" active") end ?>">
                             <a href="settings-dhcp.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-sitemap"></i> <span class="text-orange">DHCP</span>
+                                <i class="fa-fw menu-icon fa-solid fa-sitemap"></i> <span class="text-green">DHCP</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings-api.lp' then mg.write(" active") end ?>">
                             <a href="settings-api.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-window-restore"></i> <span class="text-orange">Web interface / API</span>
+                                <i class="fa-fw menu-icon fa-solid fa-window-restore"></i> <span class="text-green">Web interface / API</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings-privacy.lp' then mg.write(" active") end ?>">

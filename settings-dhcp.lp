@@ -19,7 +19,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <div><input type="checkbox" id="dhcp.active"><label for="dhcp.active"><strong>DHCP server enabled</strong></label></div>
+                        <div><input type="checkbox" id="dhcp.active" data-key="dhcp.active"><label for="dhcp.active"><strong>DHCP server enabled</strong></label></div>
                         <p id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
                     </div>
                     <div class="col-xs-12">
@@ -29,7 +29,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">From</div>
-                                <input type="text" class="form-control DHCPgroup" id="dhcp.start"
+                                <input type="text" class="form-control DHCPgroup" id="dhcp.start" data-key="dhcp.start"
                                     autocomplete="off" spellcheck="false" autocapitalize="none"
                                     autocorrect="off" value="">
                             </div>
@@ -39,7 +39,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">To</div>
-                                <input type="text" class="form-control DHCPgroup" id="dhcp.end"
+                                <input type="text" class="form-control DHCPgroup" id="dhcp.end" data-key="dhcp.end"
                                     autocomplete="off" spellcheck="false" autocapitalize="none"
                                     autocorrect="off" value="">
                             </div>
@@ -50,14 +50,14 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">Router</div>
-                                <input type="text" class="form-control DHCPgroup" id="dhcp.router"
+                                <input type="text" class="form-control DHCPgroup" id="dhcp.router" data-key="dhcp.router"
                                     autocomplete="off" spellcheck="false" autocapitalize="none"
                                     autocorrect="off" value="">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <div><input type="checkbox" id="dhcp.ipv6" class="DHCPgroup">&nbsp;<label for="dhcp.ipv6"><strong>Enable additional IPv6 support (SLAAC + RA)</strong></label></div>
+                        <div><input type="checkbox" id="dhcp.ipv6" data-key="dhcp.ipv6" class="DHCPgroup">&nbsp;<label for="dhcp.ipv6"><strong>Enable additional IPv6 support (SLAAC + RA)</strong></label></div>
                         <p>Enable this option to enable IPv6 support for the Pi-hole DHCP server. This will allow the Pi-hole to hand out IPv6 addresses to clients and also provide IPv6 router advertisements (RA) to clients. This option is only useful if the Pi-hole is configured with an IPv6 address.</p>
                     </div>
                 </div>
@@ -76,8 +76,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">Domain</div>
-                                <input type="text" class="form-control DHCPgroup" id="dhcp.domain"
-                                    value="">
+                                <input type="text" class="form-control DHCPgroup" id="dhcp.domain" data-key="dhcp.domain" value="">
                             </div>
                         </div>
                         <p>The DNS domains for the DHCP server. If no domain is specified, then any DHCP hostname with a domain part (i.e., with a period) will be disallowed. If a domain is specified, then hostnames with a domain parts matching the domain here are allowed. In addition, when a suffix is set then hostnames without a domain part have the suffix added as an optional domain part.</p>
@@ -89,7 +88,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                                 <div class="input-group-addon">Lease time</div>
                                 <input type="text" class="form-control DHCPgroup"
                                     autocomplete="off" spellcheck="false" autocapitalize="none"
-                                    autocorrect="off" id="dhcp.leaseTime" value="">
+                                    autocorrect="off" id="dhcp.leaseTime" data-key="dhcp.leaseTime" value="">
                             </div>
                         </div>
                         <p>The lease time can be in seconds, minutes (e.g., "45m"), hours (e.g., "1h"), days (like "2d"), or even weeks ("1w"). You may also use "infinite" as string but be aware of the drawbacks: assigned addresses are will only be made available again after the lease time has passed or when leases are manually deleted below.</p>
@@ -97,11 +96,11 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <div><input type="checkbox" id="dhcp.rapidCommit" class="DHCPgroup">&nbsp;<label for="dhcp.rapidCommit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
+                        <div><input type="checkbox" id="dhcp.rapidCommit" data-key="dhcp.rapidCommit" class="DHCPgroup">&nbsp;<label for="dhcp.rapidCommit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
                         <p>The DHCPv4 rapid commit option allows the Pi-hole DHCP server to assign an IP address to a client right away. This can noteably speed up the address assignment process and you will notice, e.g., faster WiFi joins in your network. This option should only be enabled if the Pi-hole DHCP server is the only DHCP server in your network.</p>
                     </div>
                     <div class="col-md-6">
-                        <div><input type="checkbox" id="dhcp.multiDNS" class="DHCPgroup">&nbsp;<label for="dhcp.multiDNS"><strong>Advertise DNS server multiple times</strong></label></div>
+                        <div><input type="checkbox" id="dhcp.multiDNS" data-key="dhcp.multiDNS" class="DHCPgroup">&nbsp;<label for="dhcp.multiDNS"><strong>Advertise DNS server multiple times</strong></label></div>
                         <p>Advertise DNS server multiple times to clients. Some devices will add their own proprietary DNS servers to the list of DNS servers, which can cause issues with Pi-hole. This option will advertise the Pi-hole DNS server multiple times to clients, which should prevent this from happening.</p>
                     </div>
                 </div>
@@ -149,7 +148,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <p>Specify per host parameters for the DHCP server. This allows a machine with a particular hardware address to be always allocated the same hostname, IP address and lease time. A hostname specified like this overrides any supplied by the DHCP client on the machine. It is also allowable to omit the hardware address and include the hostname, in which case the IP address and lease times will apply to any machine claiming that name.</p>
-                        <textarea class="form-control" id="dhcp-hosts" style="resize: vertical;"></textarea><br>&nbsp;
+                        <textarea class="form-control" id="dhcp-hosts" data-key="dhcp.hosts" style="resize: vertical;"></textarea><br>&nbsp;
                         <p>Each entry should be on a separate line, and should be of the form:</p>
                         <pre>[&lt;hwaddr&gt;][,id:&lt;client_id&gt;|*][,set:&lt;tag&gt;][,tag:&lt;tag&gt;][,&lt;ipaddr&gt;][,&lt;hostname&gt;][,&lt;lease_time&gt;][,ignore]</pre>
                         <p>Only one entry per MAC address is allowed.</p>

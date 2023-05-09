@@ -19,12 +19,12 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 <div class="row">
                     <div class="col-md-6">
                         <p><strong>Domains to be excluded from Top Domains / Ads Lists</strong></p>
-                        <textarea class="form-control" rows="4" id="webserver.api.excludeDomains" placeholder="Enter domains, one per line" style="resize: vertical;"></textarea>
+                        <textarea class="form-control" rows="4" id="webserver.api.excludeDomains" data-key="webserver.api.excludeDomains" placeholder="Enter domains, one per line" style="resize: vertical;"></textarea>
                         <p class="help-block">Domains may be described by their domain name (like <code>example.com</code>)</p>
                     </div>
                     <div class="col-md-6">
                         <p><strong>Clients to be excluded from Top Clients List</strong></p>
-                        <textarea class="form-control" rows="4" id="webserver.api.excludeClients" placeholder="Enter clients, one per line" style="resize: vertical;"></textarea>
+                        <textarea class="form-control" rows="4" id="webserver.api.excludeClients" data-key="webserver.api.excludeClients" placeholder="Enter clients, one per line" style="resize: vertical;"></textarea>
                         <p class="help-block">Clients may be described either by their IP addresses (IPv4 and IPv6 are supported), or hostnames (like <code>laptop.lan</code>).</p>
                     </div>
                 </div>
@@ -42,12 +42,12 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                         <div>
                             <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <? if queryLog == 'permittedonly' or queryLog == 'all' then mg.write("checked") end ?>>
                             <label for="querylog-permitted"><strong>Show permitted domain entries</strong></label>
-                            <p class="help-block">This will show all permitted domain entries in the query log.</p>
+                            <p class="help-block"><span class="text-red">This will show all permitted domain entries in the query log.</span></p>
                         </div>
                         <div>
                             <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <? if queryLog == 'blockedonly' or queryLog == 'all' then mg.write("checked") end ?>>
                             <label for="querylog-blocked"><strong>Show blocked domain entries</strong></label>
-                            <p class="help-block">This will show all blocked domain entries in the query log.</p>
+                            <p class="help-block"><span class="text-red">This will show all blocked domain entries in the query log.</span></p>
                         </div>
                     </div>
                 </div>
@@ -63,14 +63,14 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 <div class="row">
                     <div class="col-lg-12">
                         <div>
-                            <input type="checkbox" id="webserver.api.localAPIauth">
+                            <input type="checkbox" id="webserver.api.localAPIauth" data-key="webserver.api.localAPIauth">
                             <label for="webserver.api.localAPIauth"><strong>Local clients need to authenticate to access the API</strong></label>
                             <p class="help-block">This will require local clients to authenticate to access the API. This is useful if you want to prevent local users from accessing the API without knowing the password.</p>
                         </div>
                     </div>
                     <div class="col-lg-12">
                         <div>
-                            <input type="checkbox" id="webserver.api.prettyJSON">
+                            <input type="checkbox" id="webserver.api.prettyJSON" data-key="webserver.api.prettyJSON">
                             <label for="webserver.api.prettyJSON"><strong>Prettify API output for human-readability</strong></label>
                             <p class="help-block">This will make the API output more human-readable, but will increase the size of the output and make the API a bit slower.</p>
                         </div>
@@ -81,7 +81,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                                 <label for="webserver.api.temp.limit"><strong>Temperature limit for showing "hot":</strong></label>
                             </div>
                             <div class="col-md-6">
-                                <input type="number" id="webserver.api.temp.limit">
+                                <input type="number" id="webserver.api.temp.limit" data-key="webserver.api.temp.limit">
                             </div>
                         </div>
                         <div class="row">
@@ -89,7 +89,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                                 <label for="webserver.api.temp.unit">Temperature unit:</label>
                             </div>
                             <div class="col-md-6">
-                                <select id="webserver.api.temp.unit" class="form-control" placeholder="">
+                                <select id="webserver.api.temp.unit" data-key="webserver.api.temp.unit" class="form-control" placeholder="">
                                     <option disabled selected>Loading...</option>
                                 </select>
                             </div>
@@ -115,6 +115,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                                     <td></td>
                                     <th>ID</th>
                                     <th>Valid</th>
+                                    <th title="Connection between client and Pi-hole is end-to-end encrypted">TLS</th>
                                     <th>Login at</th>
                                     <th>Valid until</th>
                                     <th>Client IP</th>
