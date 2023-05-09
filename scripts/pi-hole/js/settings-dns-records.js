@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Precord see LICENSE file for your rights under this license. */
 
-/* global utils: false */
+/* global utils: false, apiFailure:false */
 
 var dnsRecordsTable = null;
 var customCNAMETable = null;
@@ -36,20 +36,21 @@ $(function () {
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback: function (row, data) {
-      $(row).attr("data-id", data.ip);
-      var button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteRecord' +
-        data.ip +
-        '" data-del-ip="' +
-        data.ip +
-        '">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
-      $("td:eq(2)", row).html(button);
       // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
       var ip = data.substring(0, data.indexOf(" "));
       // The name can be mulitple domains separated by spaces
       var name = data.substring(data.indexOf(" ") + 1);
+
+      $(row).attr("data-id", data);
+      var button =
+        '<button type="button" class="btn btn-danger btn-xs" id="deleteRecord' +
+        utils.hexEncode(data) +
+        '" data-tag="' +
+        data +
+        '" data-type="hosts">' +
+        '<span class="far fa-trash-alt"></span>' +
+        "</button>";
+      $("td:eq(2)", row).html(button);
       $("td:eq(0)", row).text(name);
       $("td:eq(1)", row).text(ip);
     },
@@ -66,6 +67,7 @@ $(function () {
     },
     stateSave: true,
     stateDuration: 0,
+    processing: true,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("dns-records-table", data);
     },
@@ -101,24 +103,25 @@ $(function () {
       },
     ],
     drawCallback: function () {
-      $('button[id^="deleteCNAME"]').on("click", delCNAMERecord);
+      $('button[id^="deleteCNAME"]').on("click", deleteRecord);
 
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback: function (row, data) {
-      $(row).attr("data-id", data.ip);
+      // Split record in format <cname>,<target>[,<TTL>]
+      var splitted = data.split(",");
+
+      $(row).attr("data-id", data);
       var button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteCNAME' +
-        data.ip +
-        '" data-del-ip="' +
-        data.ip +
-        '">' +
+        utils.hexEncode(data) +
+        '" data-tag="' +
+        data +
+        '" data-type="cname">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
       $("td:eq(3)", row).html(button);
-      // Split record in format <cname>,<target>[,<TTL>]
-      var splitted = data.split(",");
       $("td:eq(0)", row).text(splitted[0]);
       $("td:eq(1)", row).text(splitted[1]);
       if (splitted.length > 2) $("td:eq(2)", row).text(splitted[2]);
@@ -137,6 +140,7 @@ $(function () {
     },
     stateSave: true,
     stateDuration: 0,
+    processing: true,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("dns-cname-records-table", data);
     },
@@ -154,78 +158,71 @@ $(function () {
 });
 
 function deleteRecord() {
-  // Passes the button data-del-id attribute as IP
-  var ips = [$(this).attr("data-del-ip")];
+  // Get the tags
+  var tags = [$(this).attr("data-tag")];
+  var types = [$(this).attr("data-type")];
 
   // Check input validity
-  if (!Array.isArray(ips)) return;
+  if (!Array.isArray(tags)) return;
 
   // Exploit prevention: Return early for non-numeric IDs
-  for (var ip in ips) {
-    if (Object.hasOwnProperty.call(ips, ip)) {
-      delRecord(ips);
+  for (var tag in tags) {
+    if (Object.hasOwnProperty.call(tags, tag)) {
+      if (types[0] === "hosts") delHosts(tags);
+      else delCNAME(tags);
     }
   }
 }
 
-function delRecord(ip) {
+function delHosts(elem) {
   utils.disableAll();
   utils.showAlert("info", "", "Deleting DNS record...");
+  const url = "/api/config/dns/hosts/" + encodeURIComponent(elem);
 
   $.ajax({
-    url: "/api/dns/records/" + ip /* TODO */,
+    url: url,
     method: "DELETE",
   })
-    .done(function (response) {
+    .done(function () {
       utils.enableAll();
-      if (response === undefined) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted DNS record", "");
-        dnsRecordsTable.ajax.reload(null, false);
-      } else {
-        utils.showAlert("error", "", "Error while deleting DNS record: " + ip, response.record);
-      }
+      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted DNS record", "");
+      dnsRecordsTable.ajax.reload(null, false);
     })
-    .fail(function (jqXHR, exception) {
+    .fail(function (data, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting DNS record: " + ip, jqXHR.responseText);
+      apiFailure(data);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting DNS record: <code>" + utils.escapeHtml(elem) + "</code>",
+        data.responseText
+      );
       console.log(exception); // eslint-disable-line no-console
     });
 }
 
-function delCNAMERecord(ip) {
+function delCNAME(elem) {
   utils.disableAll();
   utils.showAlert("info", "", "Deleting local CNAME record...");
+  const url = "/api/config/dns/cnameRecords/" + encodeURIComponent(elem);
 
   $.ajax({
-    url: "/api/CNAME/records/" + ip /* TODO */,
+    url: url,
     method: "DELETE",
   })
-    .done(function (response) {
+    .done(function () {
       utils.enableAll();
-      if (response === undefined) {
-        utils.showAlert(
-          "success",
-          "far fa-trash-alt",
-          "Successfully deleted local CNAME record",
-          ""
-        );
-        customCNAMETable.ajax.reload(null, false);
-      } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while deleting local CNAME record: " + ip,
-          response.record
-        );
-      }
+      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted local CNAME record", "");
+      customCNAMETable.ajax.reload(null, false);
     })
-    .fail(function (jqXHR, exception) {
+    .fail(function (data, exception) {
       utils.enableAll();
+      apiFailure(data);
       utils.showAlert(
         "error",
         "",
-        "Error while deleting local CNAME record: " + ip,
-        jqXHR.responseText
+        "Error while deleting CNAME record: <code>" + utils.escapeHtml(elem) + "</code>",
+        data.responseText
       );
       console.log(exception); // eslint-disable-line no-console
     });
@@ -234,47 +231,42 @@ function delCNAMERecord(ip) {
 $(document).ready(function () {
   $("#btnAdd-host").on("click", function () {
     const elem = $("#Hip").val() + " " + $("#Hdomain").val();
-    const path = "/api/config/dns/hosts/" + elem;
+    const url = "/api/config/dns/hosts/" + encodeURIComponent(elem);
     $.ajax({
-      url: path,
+      url: url,
       method: "PUT",
     })
-      .done(function (response) {
+      .done(function () {
         utils.enableAll();
-        if (response === undefined) {
-          utils.showAlert("success", "far fa-plus", "Successfully added DNS record", "");
-          dnsRecordsTable.ajax.reload(null, false);
-        } else {
-          utils.showAlert("error", "", "Error while adding DNS record", response.record);
-        }
+        utils.showAlert("success", "far fa-plus", "Successfully added DNS record", "");
+        dnsRecordsTable.ajax.reload(null, false);
       })
-      .fail(function (jqXHR, exception) {
+      .fail(function (data, exception) {
         utils.enableAll();
-        utils.showAlert("error", "", "Error while deleting DNS record", jqXHR.responseText);
+        apiFailure(data);
+        utils.showAlert("error", "", "Error while deleting DNS record", data.responseText);
         console.log(exception); // eslint-disable-line no-console
       });
   });
+
   $("#btnAdd-cname").on("click", function () {
     var elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
     var ttlVal = parseInt($("#Cttl").val(), 10);
     if (isFinite(ttlVal) && ttlVal >= 0) elem += "," + ttlVal;
-    const path = "/api/config/dns/cnameRecords/" + elem;
+    const url = "/api/config/dns/cnameRecords/" + encodeURIComponent(elem);
     $.ajax({
-      url: path,
+      url: url,
       method: "PUT",
     })
-      .done(function (response) {
+      .done(function () {
         utils.enableAll();
-        if (response === undefined) {
-          utils.showAlert("success", "far fa-plus", "Successfully added CNAME record", "");
-          dnsRecordsTable.ajax.reload(null, false);
-        } else {
-          utils.showAlert("error", "", "Error while adding CNAME record", response.record);
-        }
+        utils.showAlert("success", "far fa-plus", "Successfully added CNAME record", "");
+        dnsRecordsTable.ajax.reload(null, false);
       })
-      .fail(function (jqXHR, exception) {
+      .fail(function (data, exception) {
         utils.enableAll();
-        utils.showAlert("error", "", "Error while deleting CNAME record", jqXHR.responseText);
+        apiFailure(data);
+        utils.showAlert("error", "", "Error while deleting CNAME record", data.responseText);
         console.log(exception); // eslint-disable-line no-console
       });
   });

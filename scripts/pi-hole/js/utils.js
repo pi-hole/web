@@ -17,7 +17,8 @@ function escapeHtml(text) {
     "'": "&#039;",
   };
 
-  if (text === null) return null;
+  // Return early when text is not a string
+  if (typeof text !== "string") return text;
 
   return text.replace(/[&<>"']/g, function (m) {
     return map[m];

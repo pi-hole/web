@@ -170,7 +170,7 @@
                         </li>
                         <li class="<? if scriptname == 'settings-dns-records.lp' then mg.write(" active") end ?>">
                             <a href="settings-dns-records.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-address-book"></i> <span class="text-orange">Local DNS Records</span>
+                                <i class="fa-fw menu-icon fa-solid fa-address-book"></i> <span class="text-green">Local DNS Records</span>
                             </a>
                         </li>
                     </ul>
