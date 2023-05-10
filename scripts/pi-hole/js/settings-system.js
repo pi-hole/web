@@ -59,9 +59,11 @@ function setMetrics(data, prefix) {
       setMetrics(val, prefix + key + "-");
     } else if (prefix === "sysinfo-dns-replies-") {
       // Compute and display percentage of DNS replies in addition to the absolute value
-      $("#" + prefix + key).text(val + " (" + ((100 * val) / data.sum).toFixed(1) + "%)");
+      const lval = val.toLocaleString();
+      $("#" + prefix + key).text(lval + " (" + ((100 * val) / data.sum).toFixed(1) + "%)");
     } else {
-      $("#" + prefix + key).text(val);
+      const lval = val.toLocaleString();
+      $("#" + prefix + key).text(lval);
     }
   }
 }
