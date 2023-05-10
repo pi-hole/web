@@ -165,7 +165,7 @@
                         </li>
                         <li class="<? if scriptname == 'settings-teleporter.lp' then mg.write(" active") end ?>">
                             <a href="settings-teleporter.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-file-export"></i> <span class="text-red">Teleporter</span>
+                                <i class="fa-fw menu-icon fa-solid fa-file-export"></i> <span class="text-green">Teleporter</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings-dns-records.lp' then mg.write(" active") end ?>">
