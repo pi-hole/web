@@ -29,13 +29,13 @@
                 <!-- Home Page -->
                 <li class="menu-main<? if scriptname == 'index.lp' then mg.write(" active") end ?>">
                     <a href="index.lp">
-                        <i class="fa fa-fw menu-icon fa-home"></i> <span class="text-green">Dashboard</span>
+                        <i class="fa fa-fw menu-icon fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
                 <!-- Query Log -->
                 <li class="menu-analysis<? if scriptname == 'queries.lp' then mg.write(" active") end ?>">
                     <a href="queries.lp">
-                        <i class="fa fa-fw menu-icon fa-file-alt"></i> <span class="text-green">Query Log</span>
+                        <i class="fa fa-fw menu-icon fa-file-alt"></i> <span>Query Log</span>
                     </a>
                 </li>
 
@@ -43,7 +43,7 @@
                 <!-- Group Management -->
                 <li class="menu-group<? if scriptname == 'groups.lp' then mg.write(" active") end ?>">
                     <a href="groups.lp">
-                        <i class="fa fa-fw menu-icon fa-user-friends"></i> <span class="text-green">Groups
+                        <i class="fa fa-fw menu-icon fa-user-friends"></i> <span>Groups
                         <span class="pull-right-container">
                             <span class="label label-primary pull-right" id="num_groups" title="Number of defined groups"></span>
                         </span>
@@ -51,7 +51,7 @@
                 </li>
                 <li class="menu-group<? if scriptname == 'groups-clients.lp' then mg.write(" active") end ?>">
                     <a href="groups-clients.lp">
-                        <i class="fa fa-fw menu-icon fa-laptop"></i> <span class="text-green">Clients
+                        <i class="fa fa-fw menu-icon fa-laptop"></i> <span>Clients
                         <span class="pull-right-container">
                             <span class="label label-primary pull-right" id="num_clients" title="Number of defined clients"></span>
                         </span>
@@ -59,7 +59,7 @@
                 </li>
                 <li class="menu-group<? if scriptname == 'groups-domains.lp' then mg.write(" active") end ?>">
                     <a href="groups-domains.lp">
-                        <i class="fa fa-fw menu-icon fa-list"></i> <span class="text-green">Domains
+                        <i class="fa fa-fw menu-icon fa-list"></i> <span>Domains
                         <span class="pull-right-container">
                             <span class="label bg-red pull-right" id="num_denied" title="Number of deny rules (domains and regex)"></span>
                             <span class="label bg-green pull-right" id="num_allowed" title="Number of allow rules (domains and regex)"></span>
@@ -68,7 +68,7 @@
                 </li>
                 <li class="menu-group<? if scriptname == 'groups-adlists.lp' then mg.write(" active") end ?>">
                     <a href="groups-adlists.lp">
-                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span class="text-green">Adlists
+                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adlists
                         <span class="pull-right-container">
                             <span class="label bg-blue pull-right" id="num_lists" title="Number of defined adlists"></span>
                             <span class="label bg-yellow pull-right" id="num_gravity" title="Total number of domains blocked by your Pi-hole"></span>
@@ -81,7 +81,7 @@
                 <!-- Enable/Disable Blocking -->
                 <li id="pihole-disable" class="menu-dns treeview">
                     <a href="#">
-                        <i class="fa fa-fw menu-icon fa-stop"></i> <span class="text-green">Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
+                        <i class="fa fa-fw menu-icon fa-stop"></i> <span>Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -135,42 +135,42 @@
                     <ul class="treeview-menu">
                         <li class="<? if scriptname == 'settings-system.lp' then mg.write(" active") end ?>">
                             <a href="settings-system.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-circle-info"></i> <span class="text-green">System</span>
+                                <i class="fa-fw menu-icon fa-solid fa-circle-info"></i> <span>System</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings-dns.lp' then mg.write(" active") end ?>">
                             <a href="settings-dns.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-book-atlas"></i> <span class="text-green">DNS</span>
+                                <i class="fa-fw menu-icon fa-solid fa-book-atlas"></i> <span>DNS</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings-dhcp.lp' then mg.write(" active") end ?>">
                             <a href="settings-dhcp.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-sitemap"></i> <span class="text-green">DHCP</span>
+                                <i class="fa-fw menu-icon fa-solid fa-sitemap"></i> <span>DHCP</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings-api.lp' then mg.write(" active") end ?>">
                             <a href="settings-api.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-window-restore"></i> <span class="text-green">Web interface / API</span>
+                                <i class="fa-fw menu-icon fa-solid fa-window-restore"></i> <span>Web interface / API</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings-privacy.lp' then mg.write(" active") end ?>">
                             <a href="settings-privacy.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> <span class="text-green">Privacy</span>
+                                <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> <span>Privacy</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings-advanced.lp' then mg.write(" active") end ?> settings-level-2">
                             <a href="settings-advanced.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> <span class="text-green">Advanced</span>
+                                <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> <span>Advanced</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings-teleporter.lp' then mg.write(" active") end ?>">
                             <a href="settings-teleporter.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-file-export"></i> <span class="text-green">Teleporter</span>
+                                <i class="fa-fw menu-icon fa-solid fa-file-export"></i> <span>Teleporter</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings-dns-records.lp' then mg.write(" active") end ?>">
                             <a href="settings-dns-records.lp">
-                                <i class="fa-fw menu-icon fa-solid fa-address-book"></i> <span class="text-green">Local DNS Records</span>
+                                <i class="fa-fw menu-icon fa-solid fa-address-book"></i> <span>Local DNS Records</span>
                             </a>
                         </li>
                     </ul>
@@ -188,14 +188,14 @@
                         <!-- Pi-hole diagnosis -->
                         <li class="<? if scriptname == 'messages.lp' then mg.write(" active") end ?>">
                             <a href="messages.lp">
-                                <i class="fa fa-fw menu-icon fa-file-medical-alt"></i> <span class="text-green">Pi-hole diagnosis</span>
+                                <i class="fa fa-fw menu-icon fa-file-medical-alt"></i> <span>Pi-hole diagnosis</span>
                                 <span class="pull-right-container warning-count hidden"></span>
                             </a>
                         </li>
                         <!-- Tail log files -->
                         <li class="treeview <? if scriptname == 'taillog.lp' then mg.write(" active") end ?>">
                             <a href="#">
-                                <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <span class="text-green">Tail log files</span>
+                                <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <span>Tail log files</span>
                                 <span class="pull-right-container">
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </span>
@@ -224,19 +224,19 @@
                         <!-- Run gravity.sh -->
                         <li class="<? if scriptname == 'gravity.lp' then mg.write(" active") end ?>">
                             <a href="gravity.lp">
-                                <i class="fa fa-fw menu-icon fa-arrow-circle-down"></i> <span class="text-green">Update Gravity</span>
+                                <i class="fa fa-fw menu-icon fa-arrow-circle-down"></i> <span>Update Gravity</span>
                             </a>
                         </li>
                         <!-- Query Lists -->
                         <li class="<? if scriptname == 'search.lp' then mg.write(" active") end ?>">
                             <a href="search.lp">
-                                <i class="fa fa-fw menu-icon fa-search"></i> <span class="text-green">Search Adlists</span>
+                                <i class="fa fa-fw menu-icon fa-search"></i> <span>Search Adlists</span>
                             </a>
                         </li>
                         <!-- Network -->
                         <li class="<? if scriptname == 'network.lp' then mg.write(" active") end ?>">
                             <a href="network.lp">
-                                <i class="fa fa-fw menu-icon fa-network-wired"></i> <span class="text-green">Network</span>
+                                <i class="fa fa-fw menu-icon fa-network-wired"></i> <span>Network</span>
                             </a>
                         </li>
                     </ul>
