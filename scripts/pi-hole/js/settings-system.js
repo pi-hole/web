@@ -5,9 +5,51 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global apiFailure:false */
+/* global apiFailure:false, Chart:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false */
 
 var hostinfoTimer = null;
+var cachePieChart = null;
+var cacheSize = 0;
+
+var querytypeids = [];
+function updateCachePie(data) {
+  var v = [],
+    c = [],
+    k = [],
+    i = 0,
+    sum = 0;
+
+  // Compute total number of queries
+  Object.keys(data).forEach(function (item) {
+    sum += data[item];
+  });
+
+  // Add empty space to chart
+  data.empty = cacheSize - sum;
+  sum = cacheSize;
+
+  // Fill chart with data
+  querytypeids = [];
+  Object.keys(data).forEach(function (item) {
+    v.push((100 * data[item]) / sum);
+    c.push(THEME_COLORS[i % THEME_COLORS.length]);
+    k.push(item);
+    querytypeids.push(i + 1);
+
+    i++;
+  });
+
+  // Build a single dataset with the data to be pushed
+  var dd = { data: v, backgroundColor: c };
+  // and push it at once
+  cachePieChart.data.datasets[0] = dd;
+  cachePieChart.data.labels = k;
+  $("#cache-pie-chart .overlay").hide();
+  cachePieChart.update();
+
+  // Don't use rotation animation for further updates
+  cachePieChart.options.animation.duration = 0;
+}
 
 function updateHostInfo() {
   $.ajax({
@@ -45,16 +87,22 @@ function updateHostInfo() {
 // Walk nested objects, create a dash-separated global key and assign the value
 // to the corresponding element (add percentage for DNS replies)
 function setMetrics(data, prefix) {
+  var cacheData = {};
   for (const [key, val] of Object.entries(data)) {
     if (prefix === "sysinfo-dns-cache-content-") {
       // Create table row for each DNS cache entry
-      const name =
-        val.name !== "OTHER"
-          ? "Valid " + (val.name !== null ? val.name : "TYPE " + val.type)
-          : "Other valid";
-      const tr = "<tr><th>" + name + " records in cache:</th><td>" + val.count + "</td></tr>";
-      // Append row to DNS cache table
-      $("#dns-cache-table").append(tr);
+      // (if table exists)
+      if ($("#dns-cache-table").length > 0) {
+        const name =
+          val.name !== "OTHER"
+            ? "Valid " + (val.name !== null ? val.name : "TYPE " + val.type)
+            : "Other valid";
+        const tr = "<tr><th>" + name + " records in cache:</th><td>" + val.count + "</td></tr>";
+        // Append row to DNS cache table
+        $("#dns-cache-table").append(tr);
+      }
+
+      cacheData[val.name] = val.count;
     } else if (typeof val === "object") {
       setMetrics(val, prefix + key + "-");
     } else if (prefix === "sysinfo-dns-replies-") {
@@ -65,6 +113,11 @@ function setMetrics(data, prefix) {
       const lval = val.toLocaleString();
       $("#" + prefix + key).text(lval);
     }
+  }
+
+  // Draw pie chart if data is available
+  if (Object.keys(cacheData).length > 0) {
+    updateCachePie(cacheData);
   }
 }
 
@@ -77,6 +130,11 @@ function updateMetrics() {
     .done(function (data) {
       var metrics = data.metrics;
       $("#dns-cache-table").empty();
+
+      // Set global cache size
+      cacheSize = metrics.dns.cache.size;
+
+      // Set metrics
       setMetrics(metrics, "sysinfo-");
 
       $("div[id^='sysinfo-metrics-overlay']").hide();
@@ -212,4 +270,45 @@ $(function () {
   updateHostInfo();
   updateMetrics();
   showQueryLoggingButton();
+
+  var ctx = document.getElementById("cachePieChart").getContext("2d");
+  cachePieChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: [],
+      datasets: [{ data: [], parsing: false }],
+    },
+    plugins: [htmlLegendPlugin],
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      elements: {
+        arc: {
+          borderColor: $(".box").css("background-color"),
+        },
+      },
+      plugins: {
+        htmlLegend: {
+          containerID: "cache-legend",
+        },
+        legend: {
+          display: false,
+        },
+        tooltip: {
+          // Disable the on-canvas tooltip
+          enabled: false,
+          external: customTooltips,
+          callbacks: {
+            title: function () {
+              return "Cache content";
+            },
+            label: doughnutTooltip,
+          },
+        },
+      },
+      animation: {
+        duration: 750,
+      },
+    },
+  });
 });

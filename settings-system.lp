@@ -159,7 +159,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
         </div>
     </div>
     <div class="col-md-6">
-    <div class="box">
+        <div class="box settings-level-1" id="cache-metrics">
             <div class="box-header with-border">
                 <h3 class="box-title">DNS cache metrics</h3>
             </div>
@@ -200,10 +200,17 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                                 </tr>
                             </tbody>
                         </table>
-                        <table class="table table-striped table-bordered nowrap settings-level-2">
+<!--                    <table class="table table-striped table-bordered nowrap settings-level-2">
                             <tbody id="dns-cache-table">
                             </tbody>
-                        </table>
+                        </table> -->
+                    </div>
+                    <div class="col-lg-12">
+                        <div style="width:50%">
+                            <canvas id="cachePieChart" width="280" height="280"></canvas>
+                        </div>
+                        <div class="chart-legend" style="width:50%" id="cache-legend" ></div>
+                            <!-- /.box-body -->
                         See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
                     </div>
                 </div>
@@ -297,6 +304,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
     </div>
 </div>
 <script src="<?=pihole.fileversion('scripts/vendor/jquery.confirm.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/charts.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings-system.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings.js')?>"></script>
 
