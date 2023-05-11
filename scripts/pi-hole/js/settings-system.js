@@ -50,7 +50,7 @@ function updateCachePie(data) {
   querytypeids = [];
   Object.keys(data).forEach(function (item) {
     v.push((100 * data[item]) / sum);
-    c.push(THEME_COLORS[i % THEME_COLORS.length]);
+    c.push(item !== "empty" ? THEME_COLORS[i % THEME_COLORS.length] : "#80808040");
     k.push(item);
     querytypeids.push(i + 1);
 
