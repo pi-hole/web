@@ -24,6 +24,24 @@ function updateCachePie(data) {
     sum += data[item];
   });
 
+  // Sort data by value, put OTHER always as last
+  var sorted = Object.keys(data).sort(function (a, b) {
+    if (a === "OTHER") {
+      return 1;
+    } else if (b === "OTHER") {
+      return -1;
+    } else {
+      return data[b] - data[a];
+    }
+  });
+
+  // Rebuild data object
+  var tmp = {};
+  sorted.forEach(function (item) {
+    tmp[item] = data[item];
+  });
+  data = tmp;
+
   // Add empty space to chart
   data.empty = cacheSize - sum;
   sum = cacheSize;
