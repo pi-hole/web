@@ -176,6 +176,12 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                                 </tr>
                                 <tr>
                                     <th scope="row">
+                                        <span title="Percentage of the allocated cache that is currently in use. If this value is very low, it is advisable to reduce the DNS cache size to optimize performance">DNS cache efficiency:</span>
+                                    </th>
+                                    <td id="cache-efficiency">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
                                         <span title="Number of cache insertions">DNS cache insertions:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-inserted">&nbsp;</td>

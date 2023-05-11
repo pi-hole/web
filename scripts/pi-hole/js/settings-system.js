@@ -9,19 +9,20 @@
 
 var hostinfoTimer = null;
 var cachePieChart = null;
-var cacheSize = 0;
+var cacheSize = 0,
+  cacheEntries = 0;
 
 var querytypeids = [];
 function updateCachePie(data) {
   var v = [],
     c = [],
     k = [],
-    i = 0,
-    sum = 0;
+    i = 0;
 
-  // Compute total number of queries
+  // Compute total number of cache entries
+  cacheEntries = 0;
   Object.keys(data).forEach(function (item) {
-    sum += data[item];
+    cacheEntries += data[item];
   });
 
   // Sort data by value, put OTHER always as last
@@ -43,13 +44,12 @@ function updateCachePie(data) {
   data = tmp;
 
   // Add empty space to chart
-  data.empty = cacheSize - sum;
-  sum = cacheSize;
+  data.empty = cacheSize - cacheEntries;
 
   // Fill chart with data
   querytypeids = [];
   Object.keys(data).forEach(function (item) {
-    v.push((100 * data[item]) / sum);
+    v.push((100 * data[item]) / cacheSize);
     c.push(item !== "empty" ? THEME_COLORS[i % THEME_COLORS.length] : "#80808040");
     k.push(item);
     querytypeids.push(i + 1);
@@ -154,6 +154,8 @@ function updateMetrics() {
 
       // Set metrics
       setMetrics(metrics, "sysinfo-");
+
+      $("#cache-efficiency").text(((100 * cacheEntries) / cacheSize).toFixed(2) + "%");
 
       $("div[id^='sysinfo-metrics-overlay']").hide();
       // Update every 10 seconds
