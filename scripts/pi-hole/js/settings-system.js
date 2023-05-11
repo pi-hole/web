@@ -12,7 +12,6 @@ var cachePieChart = null;
 var cacheSize = 0,
   cacheEntries = 0;
 
-var querytypeids = [];
 function updateCachePie(data) {
   var v = [],
     c = [],
@@ -22,7 +21,8 @@ function updateCachePie(data) {
   // Compute total number of cache entries
   cacheEntries = 0;
   Object.keys(data).forEach(function (item) {
-    cacheEntries += data[item];
+    cacheEntries += data[item].valid;
+    cacheEntries += data[item].stale;
   });
 
   // Sort data by value, put OTHER always as last
@@ -32,7 +32,7 @@ function updateCachePie(data) {
     } else if (b === "OTHER") {
       return -1;
     } else {
-      return data[b] - data[a];
+      return data[b].valid + data[b].stale - (data[a].valid + data[a].stale);
     }
   });
 
@@ -44,17 +44,23 @@ function updateCachePie(data) {
   data = tmp;
 
   // Add empty space to chart
-  data.empty = cacheSize - cacheEntries;
+  data.empty = {};
+  data.empty.valid = cacheSize - cacheEntries;
 
   // Fill chart with data
-  querytypeids = [];
   Object.keys(data).forEach(function (item) {
-    v.push((100 * data[item]) / cacheSize);
-    c.push(item !== "empty" ? THEME_COLORS[i % THEME_COLORS.length] : "#80808040");
-    k.push(item);
-    querytypeids.push(i + 1);
+    if (data[item].valid > 0) {
+      v.push((100 * data[item].valid) / cacheSize);
+      c.push(item !== "empty" ? THEME_COLORS[i++ % THEME_COLORS.length] : "#80808040");
+      k.push(item);
+    }
 
-    i++;
+    if (data[item].stale > 0) {
+      // There are no stale empty entries
+      v.push((100 * data[item].stale) / cacheSize);
+      c.push(THEME_COLORS[i++ % THEME_COLORS.length]);
+      k.push(item + " (stale)");
+    }
   });
 
   // Build a single dataset with the data to be pushed
