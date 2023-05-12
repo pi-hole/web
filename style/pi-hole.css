@@ -231,6 +231,12 @@ td.lookatme {
   display: flex;
 }
 
+#query-types-pie .box-body,
+#forward-destinations-pie .box-body,
+#cache-metrics-chart {
+  display: flex;
+}
+
 .chart-legend {
   overflow: auto;
   display: flex;

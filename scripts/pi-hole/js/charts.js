@@ -333,6 +333,7 @@ const getOrCreateLegendList = (chart, id) => {
     listContainer = document.createElement("ul");
     listContainer.style.display = "flex";
     listContainer.style.flexDirection = "column";
+    listContainer.style.flexWrap = "wrap";
     listContainer.style.margin = 0;
     listContainer.style.padding = 0;
 

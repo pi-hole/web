@@ -207,6 +207,7 @@ $(".confirm-poweroff").confirm({
   cancelButtonClass: "btn-success",
   dialogClass: "modal-dialog",
 });
+
 $(".confirm-reboot").confirm({
   text: "Are you sure you want to send a reboot command to your Pi-hole?",
   title: "Confirmation required",

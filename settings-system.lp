@@ -212,12 +212,13 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                         </table> -->
                     </div>
                     <div class="col-lg-12">
+                        See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.<br>&nbsp;
+                    </div>
+                    <div class="col-lg-12" id="cache-metrics-chart">
                         <div style="width:50%">
                             <canvas id="cachePieChart" width="280" height="280"></canvas>
                         </div>
                         <div class="chart-legend" style="width:50%" id="cache-legend" ></div>
-                            <!-- /.box-body -->
-                        See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
                     </div>
                 </div>
             </div>
