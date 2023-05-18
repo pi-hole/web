@@ -170,37 +170,37 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                             <tbody>
                                 <tr>
                                     <th scope="row">
-                                        <span title="Size of the DNS domain cache">DNS cache size:</span>
+                                        <span title="Total size of the DNS cache">DNS cache size:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-size">&nbsp;</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">
-                                        <span title="Percentage of the allocated cache that is currently in use. If this value is very low, it is advisable to reduce the DNS cache size to optimize performance">DNS cache efficiency:</span>
+                                        <span title="Percentage of the allocated cache that is currently in use. If this value is very low, it is advisable to reduce the DNS cache size to optimize performance">DNS cache utilization:</span>
                                     </th>
-                                    <td id="cache-efficiency">&nbsp;</td>
+                                    <td id="cache-utilization">&nbsp;</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">
-                                        <span title="Number of cache insertions">DNS cache insertions:</span>
+                                        <span title="Number of cache insertions, this number will grow continuously as expiring records naturally make space for new records">DNS cache insertions:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-inserted">&nbsp;</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">
-                                        <span title="Number of cache entries that had to be removed although they are not expired (increase cache size to reduce this number)" lookatme-text="DNS cache evictions:">DNS cache evictions:</span>
+                                        <span title="Number of cache entries that had to be removed although they are not expired. When this number if larger than zero, you should consider increasing your total cache size" lookatme-text="DNS cache evictions:">DNS cache evictions:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-evicted">&nbsp;</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">
-                                        DNS cache expiries:
+                                        <span title="Number of cache entries that were removed because they expired">DNS cache expiries:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-expired">&nbsp;</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">
-                                        Immortal DNS cache entries:
+                                        <span title="Number of immortan cache entries that will never expire (e.g. from /etc/hosts or local configuration)">Immortal DNS cache entries:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-immortal">&nbsp;</td>
                                 </tr>

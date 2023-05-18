@@ -132,7 +132,8 @@ function setMetrics(data, prefix) {
     } else if (prefix === "sysinfo-dns-replies-") {
       // Compute and display percentage of DNS replies in addition to the absolute value
       const lval = val.toLocaleString();
-      $("#" + prefix + key).text(lval + " (" + ((100 * val) / data.sum).toFixed(1) + "%)");
+      const percent = (100 * val) / data.sum;
+      $("#" + prefix + key).text(lval + " (" + percent.toFixed(1) + "%)");
     } else {
       const lval = val.toLocaleString();
       $("#" + prefix + key).text(lval);
@@ -161,7 +162,7 @@ function updateMetrics() {
       // Set metrics
       setMetrics(metrics, "sysinfo-");
 
-      $("#cache-efficiency").text(((100 * cacheEntries) / cacheSize).toFixed(2) + "%");
+      $("#cache-utilization").text(((100 * cacheEntries) / cacheSize).toFixed(1) + "%");
 
       $("div[id^='sysinfo-metrics-overlay']").hide();
       // Update every 10 seconds
