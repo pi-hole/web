@@ -83,6 +83,12 @@ end
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/AdminLTE.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/select2.min.css')?>">
 
+    <? if startsWith(scriptname, 'groups') then mg.write('\
+    <!-- Group management styles -->\
+    <link rel="stylesheet" href="'..pihole.fileversion('style/vendor/animate.min.css')..'">\
+    <link rel="stylesheet" href="'..pihole.fileversion('style/vendor/bootstrap-select.min.css')..'">\
+    <link rel="stylesheet" href="'..pihole.fileversion('style/vendor/bootstrap-toggle.min.css')..'">') end ?>
+
     <!-- Theme styles -->
     <link rel="stylesheet" href="<?=pihole.fileversion('style/pi-hole.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/themes/'..pihole.webtheme()..'.css')?>">
