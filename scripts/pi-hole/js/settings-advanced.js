@@ -37,7 +37,7 @@ function generateRow(topic, key, value) {
   // else: we have a setting we can display
   var box =
     '<div class="box">' +
-    '<div class="box-header no-user-select">' +
+    '<div class="box-header">' +
     '<h3 class="box-title">' +
     key +
     (value.modified

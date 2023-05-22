@@ -100,4 +100,3 @@ end
     <script src="<?=pihole.fileversion('scripts/vendor/bootstrap-notify.min.js')?>"></script>
     <script src="<?=pihole.fileversion('style/vendor/font-awesome/js/all.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/pi-hole/js/utils.js')?>"></script>
-</head>

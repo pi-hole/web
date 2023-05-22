@@ -10,7 +10,7 @@
 mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 settings-level-1">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">Exclusions</h3>
@@ -31,7 +31,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             </div>
         </div>
     </div><!--
-    <div class="col-md-3">
+    <div class="col-md-6">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">Query Log</h3>
@@ -54,7 +54,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             </div>
         </div>
     </div>-->
-    <div class="col-md-6">
+    <div class="col-md-6 settings-level-1">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">Advanced Settings</h3>
@@ -78,7 +78,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                     <div class="col-lg-12">
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="webserver.api.temp.limit"><strong>Temperature limit for showing "hot":</strong></label>
+                                <label for="webserver.api.temp.limit"><strong>Temperature limit for "hot":</strong></label>
                             </div>
                             <div class="col-md-6">
                                 <input type="number" id="webserver.api.temp.limit" data-key="webserver.api.temp.limit">
@@ -96,6 +96,33 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                         </div>
                         <button type="button" id="button-enable-totp" class="btn btn-success hidden" data-toggle="modal" data-target="#modal-totp">Enable 2FA</button>
                         <button type="button" id="button-disable-totp" class="btn btn-danger hidden" data-toggle="modal" data-target="#modal-totp-disable">Disable 2FA</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 settings-level-0">
+        <div class="box box-warning">
+            <div class="box-header with-border">
+                <h3 class="box-title">Theme settings</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label for="webserver.interface.theme">Used theme:</label>
+                            </div>
+                            <div class="col-md-9">
+                                <select id="webserver.interface.theme" data-key="webserver.interface.theme" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="webserver.interface.boxed" data-key="webserver.interface.boxed">
+                            <label for="webserver.interface.boxed"><strong>Should the web interface use the boxed layout?</strong></label>
+                        </div>
                     </div>
                 </div>
             </div>

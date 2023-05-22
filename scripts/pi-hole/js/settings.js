@@ -50,7 +50,9 @@ function setConfigValues(topic, key, value) {
         $("#" + escapedKey).append(newopt);
       });
       // Select the current value
-      $("#" + escapedKey + "-" + value.value).trigger("click");
+      $("#" + escapedKey)
+        .val(value.value)
+        .trigger("click");
 
       break;
     }
