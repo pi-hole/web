@@ -26,6 +26,7 @@
   --network-never: #182028;
 
   --allowed-color: #3c7;
+  --allowed-color: var(--primary-color);
   --blocked-color: var(--danger-color);
 
   --datatable-bgcolor: rgba(18, 44, 68, 0.3);
@@ -445,6 +446,9 @@ div.dataTables_wrapper div.dataTables_length select {
 }
 .queries-blocked {
   background-color: var(--blocked-color);
+}
+.queries-cached {
+  background-color: var(--cached-color);
 }
 
 code,

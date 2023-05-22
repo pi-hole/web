@@ -197,6 +197,9 @@
 .queries-blocked {
   background-color: #999;
 }
+.queries-cached {
+  background-color: #59ac86;
+}
 .progress {
   background-color: #eee;
 }

@@ -1976,6 +1976,10 @@ input[type="password"]::-webkit-caps-lock-indicator {
   background-color: rgb(196, 50, 50);
 }
 
+.queries-cached {
+  background-color: rgb(37, 88, 64);
+}
+
 /*--- Used in the Query Log table ---*/
 .text-black {
   color: #000 !important;

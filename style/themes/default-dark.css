@@ -370,6 +370,9 @@ h4 {
 .queries-blocked {
   background-color: #999;
 }
+.queries-cached {
+  background-color: #295340;
+}
 .progress {
   background-color: #333;
 }

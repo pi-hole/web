@@ -236,6 +236,9 @@ a:hover {
 .queries-blocked {
   background-color: var(--blocked-color);
 }
+.queries-cached {
+  background-color: var(--primary-color);
+}
 .progress {
   background-color: #eee;
 }
