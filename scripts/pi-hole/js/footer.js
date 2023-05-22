@@ -546,7 +546,7 @@ function initSettingsLevel() {
   }
 
   // Set the settings level
-  $("#settings-level").val("" + settingsLevel);
+  $("#settings-level").val(String(settingsLevel));
   applySettingsLevel();
 }
 

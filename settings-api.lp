@@ -140,13 +140,13 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                             <thead>
                                 <tr>
                                     <td></td>
-                                    <th>ID</th>
-                                    <th>Valid</th>
+                                    <th title="Session ID used internally by our Pi-hole">ID</th>
+                                    <th title="Session is still valid (neither expired nor closed)">Valid</th>
                                     <th title="Connection between client and Pi-hole is end-to-end encrypted">TLS</th>
-                                    <th>Login at</th>
-                                    <th>Valid until</th>
-                                    <th>Client IP</th>
-                                    <th>User Agent</th>
+                                    <th title="Time at which the client created the session">Login at</th>
+                                    <th title="Time at which the session expires (if not prolonged)">Valid until</th>
+                                    <th title="The client that created this session (the current connection is highlighted in bold-face)">Client IP</th>
+                                    <th title="User agent of the client to ease client identifiability (if available)">User Agent</th>
                                     <td></td>
                                 </tr>
                             </thead>
