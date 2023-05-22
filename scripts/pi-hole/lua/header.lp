@@ -8,6 +8,7 @@
 *  Please see LICENSE file for your rights under this license.
 -->
 <?
+starttime = mg.time(true)
 hostname = pihole.hostname()
 -- Get name of script by matching whatever is after the last "/" in the URI
 scriptname = mg.request_info.request_uri:match("/([^/]*)$")

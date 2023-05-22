@@ -58,5 +58,12 @@
 </div>
 <!-- ./wrapper -->
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/footer.js')?>"></script>
+
+<div id="advanced-info" style="display: none;">
+    <strong>Advanced info</strong><br>
+    <? totaltime = 1e3*(mg.time(true)-starttime) ?>
+    Client: <i class="fa-solid fa-fw fa-lock<? if not mg.request_info.https then mg.write("-open") end ?>" title="Your connection is <? if not mg.request_info.https then mg.write("NOT ") end ?>end-to-end encrypted (TLS/SSL)"></i>&nbsp;<?=mg.request_info.remote_addr?><br>
+    Render time: <? if totaltime > 0.5 then mg.write(string.format("%.1f",totaltime)) else mg.write(string.format("%.3f",totaltime)) end ?> ms
+</div>
 </body>
 </html>

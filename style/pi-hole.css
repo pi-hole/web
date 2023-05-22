@@ -1127,3 +1127,7 @@ table.dataTable tbody > tr > .selected {
 .settings-level-2 {
   display: none;
 }
+
+.main-footer {
+  padding-bottom: 0px;
+}

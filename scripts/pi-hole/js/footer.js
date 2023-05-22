@@ -10,6 +10,8 @@
 //The following functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
 
+var settingsLevel = 0;
+
 function secondsTimeSpanToHMS(s) {
   var h = Math.floor(s / 3600); //Get whole hours
   s -= h * 3600;
@@ -537,22 +539,23 @@ $("#pihole-disable-custom").on("click", function (e) {
 
 function initSettingsLevel() {
   // Restore settings level from local storage (if available) or default to 0
-  var level = localStorage.getItem("settings-level");
-  if (level === null) {
-    level = "0";
+  settingsLevel = parseInt(localStorage.getItem("settings-level"), 10);
+  if (isNaN(settingsLevel)) {
+    settingsLevel = 0;
+    localStorage.setItem("settings-level", settingsLevel);
   }
 
   // Set the settings level
-  $("#settings-level").val(level);
-  applySettingsLevel(level);
+  $("#settings-level").val("" + settingsLevel);
+  applySettingsLevel();
 }
 
-function applySettingsLevel(level) {
-  if (level === "2") {
+function applySettingsLevel() {
+  if (settingsLevel === 2) {
     $(".settings-level-0").show();
     $(".settings-level-1").show();
     $(".settings-level-2").show();
-  } else if (level === "1") {
+  } else if (settingsLevel === 1) {
     $(".settings-level-0").show();
     $(".settings-level-1").show();
     $(".settings-level-2").hide();
@@ -564,13 +567,26 @@ function applySettingsLevel(level) {
 }
 
 $("#settings-level").on("change", function () {
-  var level = $(this).val();
-  applySettingsLevel(level);
-  localStorage.setItem("settings-level", level);
+  settingsLevel = parseInt($(this).val(), 10);
+  localStorage.setItem("settings-level", settingsLevel);
+  applySettingsLevel();
+  addAdvancedInfo();
 });
+
+function addAdvancedInfo() {
+  const advancedInfoSource = $("#advanced-info");
+  const advancedInfoTarget = $("#advanced-info-target");
+  if (settingsLevel >= 2) {
+    advancedInfoTarget.html(advancedInfoSource.html());
+    advancedInfoTarget.show();
+  } else {
+    advancedInfoTarget.hide();
+  }
+}
 
 $(function () {
   initSettingsLevel();
+  addAdvancedInfo();
 });
 
 // Install custom AJAX error handler for DataTables
