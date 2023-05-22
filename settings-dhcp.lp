@@ -11,7 +11,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
 <div class="row">
     <!-- DHCP Settings Box -->
-    <div class="col-md-6">
+    <div class="col-md-6 settings-level-0">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">DHCP Settings</h3>
@@ -64,7 +64,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 settings-level-1">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">Advanced DHCP Settings</h3>
@@ -139,7 +139,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-12 settings-level-1">
+    <div class="col-md-12 settings-level-2">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">Static DHCP configuration&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>

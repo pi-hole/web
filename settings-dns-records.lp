@@ -10,7 +10,7 @@
 mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 settings-level-1">
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">Local DNS records</h3>
@@ -69,7 +69,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 settings-level-1">
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">Local CNAME records records</h3>

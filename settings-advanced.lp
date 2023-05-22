@@ -9,7 +9,7 @@
 
 mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
-<div class="row" id="advanced-content">
+<div class="row settings-level-2" id="advanced-content">
     <!-- dynamically filled with content -->
     <div class="overlay" id="advanced-overlay">
         <i class="fa fa-sync fa-spin"></i>

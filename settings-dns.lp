@@ -206,7 +206,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 </div>
             </div>
         </div>
-        <div class="box box-warning settings-level-1">
+        <div class="box box-warning settings-level-2">
             <div class="box-header with-border">
                 <h3 class="box-title">Rate-limiting&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
             </div>

@@ -1115,3 +1115,15 @@ table.dataTable tbody > tr > .selected {
   bottom: 2%;
   right: 2%;
 }
+
+.settings-level-0 {
+  display: none;
+}
+
+.settings-level-1 {
+  display: none;
+}
+
+.settings-level-2 {
+  display: none;
+}
