@@ -40,12 +40,12 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 <div class="row">
                     <div class="col-lg-12">
                         <div>
-                            <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <? if queryLog == 'permittedonly' or queryLog == 'all' then mg.write("checked") end ?>>
+                            <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <? if queryLog == 'permittedonly' or queryLog == 'all' then ?>checked<? end ?>>
                             <label for="querylog-permitted"><strong>Show permitted domain entries</strong></label>
                             <p class="help-block"><span class="text-red">This will show all permitted domain entries in the query log.</span></p>
                         </div>
                         <div>
-                            <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <? if queryLog == 'blockedonly' or queryLog == 'all' then mg.write("checked") end ?>>
+                            <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <? if queryLog == 'blockedonly' or queryLog == 'all' then ?>checked<? end ?>>
                             <label for="querylog-blocked"><strong>Show blocked domain entries</strong></label>
                             <p class="help-block"><span class="text-red">This will show all blocked domain entries in the query log.</span></p>
                         </div>

@@ -20,7 +20,7 @@ mg.include('header.lp','r')
     <script src="<?=pihole.fileversion('scripts/vendor/chart.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/vendor/chartjs-adapter-moment.js')?>"></script>
 </head>
-<body class="<?=pihole.webtheme()?> hold-transition sidebar-mini<? if pihole.boxedlayout() then mg.write("layout-boxed") end ?> logged-in">
+<body class="<?=pihole.webtheme()?> hold-transition sidebar-mini<? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in">
 <noscript>
     <!-- JS Warning -->
     <div>
@@ -53,18 +53,18 @@ mg.include('header.lp','r')
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                <? if startsWith(scriptname, 'settings-') then mg.write('\
-                    <li class="nav-item">\
-                        <p class="navbar-text">\
-                            Settings level: <select id="settings-level" class="form-control input-sm">\
-                                <option value="0">Basic</option>\
-                                <option value="1">Advanced</option>\
-                                <option value="2">Expert</option>\
-                            </select>\
-                        </p>\
-                    </li>\
-                    ') end ?>
-                    <li<? if string.len(hostname) == 0 then mg.write(' class="hidden"') end ?>>
+                <? if startsWith(scriptname, 'settings-') then ?>
+                    <li class="nav-item">
+                        <p class="navbar-text">
+                            Settings level: <select id="settings-level" class="form-control input-sm">
+                                <option value="0">Basic</option>
+                                <option value="1">Advanced</option>
+                                <option value="2">Expert</option>
+                            </select>
+                        </p>
+                    </li>
+                <? end ?>
+                    <li<? if string.len(hostname) == 0 then ?> class="hidden"<? end ?>>
                         <p class="navbar-text">
                             <span class="hidden-xs">hostname:</span>
                             <code><?=hostname?></code>

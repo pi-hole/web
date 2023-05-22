@@ -27,13 +27,13 @@
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">Main</li>
                 <!-- Home Page -->
-                <li class="menu-main<? if scriptname == 'index.lp' then mg.write(" active") end ?>">
+                <li class="menu-main<? if scriptname == 'index.lp' then ?> active<? end ?>">
                     <a href="index.lp">
                         <i class="fa fa-fw menu-icon fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
                 <!-- Query Log -->
-                <li class="menu-analysis<? if scriptname == 'queries.lp' then mg.write(" active") end ?>">
+                <li class="menu-analysis<? if scriptname == 'queries.lp' then ?> active<? end ?>">
                     <a href="queries.lp">
                         <i class="fa fa-fw menu-icon fa-file-alt"></i> <span>Query Log</span>
                     </a>
@@ -41,7 +41,7 @@
 
                 <li class="header text-uppercase">Group Management</li>
                 <!-- Group Management -->
-                <li class="menu-group<? if scriptname == 'groups.lp' then mg.write(" active") end ?>">
+                <li class="menu-group<? if scriptname == 'groups.lp' then ?> active<? end ?>">
                     <a href="groups.lp">
                         <i class="fa fa-fw menu-icon fa-user-friends"></i> <span>Groups
                         <span class="pull-right-container">
@@ -49,7 +49,7 @@
                         </span>
                     </a>
                 </li>
-                <li class="menu-group<? if scriptname == 'groups-clients.lp' then mg.write(" active") end ?>">
+                <li class="menu-group<? if scriptname == 'groups-clients.lp' then ?> active<? end ?>">
                     <a href="groups-clients.lp">
                         <i class="fa fa-fw menu-icon fa-laptop"></i> <span>Clients
                         <span class="pull-right-container">
@@ -57,7 +57,7 @@
                         </span>
                     </a>
                 </li>
-                <li class="menu-group<? if scriptname == 'groups-domains.lp' then mg.write(" active") end ?>">
+                <li class="menu-group<? if scriptname == 'groups-domains.lp' then ?> active<? end ?>">
                     <a href="groups-domains.lp">
                         <i class="fa fa-fw menu-icon fa-list"></i> <span>Domains
                         <span class="pull-right-container">
@@ -66,7 +66,7 @@
                         </span>
                     </a>
                 </li>
-                <li class="menu-group<? if scriptname == 'groups-adlists.lp' then mg.write(" active") end ?>">
+                <li class="menu-group<? if scriptname == 'groups-adlists.lp' then ?> active<? end ?>">
                     <a href="groups-adlists.lp">
                         <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adlists
                         <span class="pull-right-container">
@@ -125,7 +125,7 @@
                 </li>
                 <li class="header text-uppercase">System</li>
                 <!-- Settings -->
-                <li class="menu-system treeview <? if startsWith(scriptname, 'settings-') then mg.write(" active") end ?>">
+                <li class="menu-system treeview <? if startsWith(scriptname, 'settings-') then ?> active<? end ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-cogs"></i> <span>Settings</span>
                         <span class="pull-right-container">
@@ -133,42 +133,42 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="<? if scriptname == 'settings-system.lp' then mg.write(" active") end ?>">
+                        <li class="<? if scriptname == 'settings-system.lp' then ?> active<? end ?>">
                             <a href="settings-system.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-circle-info"></i> <span>System</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-dns.lp' then mg.write(" active") end ?>">
+                        <li class="<? if scriptname == 'settings-dns.lp' then ?> active<? end ?>">
                             <a href="settings-dns.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-book-atlas"></i> <span>DNS</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-dhcp.lp' then mg.write(" active") end ?>">
+                        <li class="<? if scriptname == 'settings-dhcp.lp' then ?> active<? end ?>">
                             <a href="settings-dhcp.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-sitemap"></i> <span>DHCP</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-api.lp' then mg.write(" active") end ?>">
+                        <li class="<? if scriptname == 'settings-api.lp' then ?> active<? end ?>">
                             <a href="settings-api.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-window-restore"></i> <span>Web interface / API</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-privacy.lp' then mg.write(" active") end ?>">
+                        <li class="<? if scriptname == 'settings-privacy.lp' then ?> active<? end ?>">
                             <a href="settings-privacy.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> <span>Privacy</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-advanced.lp' then mg.write(" active") end ?> settings-level-2">
+                        <li class="<? if scriptname == 'settings-advanced.lp' then ?> active<? end ?> settings-level-2">
                             <a href="settings-advanced.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> <span>Advanced</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-teleporter.lp' then mg.write(" active") end ?>">
+                        <li class="<? if scriptname == 'settings-teleporter.lp' then ?> active<? end ?>">
                             <a href="settings-teleporter.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-file-export"></i> <span>Teleporter</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-dns-records.lp' then mg.write(" active") end ?>">
+                        <li class="<? if scriptname == 'settings-dns-records.lp' then ?> active<? end ?>">
                             <a href="settings-dns-records.lp">
                                 <i class="fa-fw menu-icon fa-solid fa-address-book"></i> <span>Local DNS Records</span>
                             </a>
@@ -176,7 +176,7 @@
                     </ul>
                 </li>
                 <!-- Tools -->
-                <li class="menu-system treeview<? if in_array(scriptname, {'messages.lp', 'gravity.lp', 'search.lp', 'taillog.lp', 'network.lp'}) then mg.write(" active") end ?>">
+                <li class="menu-system treeview<? if in_array(scriptname, {'messages.lp', 'gravity.lp', 'search.lp', 'taillog.lp', 'network.lp'}) then ?> active<? end ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-tools"></i> <span>Tools</span>
                         <span class="warning-count hidden"></span>
@@ -186,14 +186,14 @@
                     </a>
                     <ul class="treeview-menu">
                         <!-- Pi-hole diagnosis -->
-                        <li class="<? if scriptname == 'messages.lp' then mg.write(" active") end ?>">
+                        <li class="<? if scriptname == 'messages.lp' then ?> active<? end ?>">
                             <a href="messages.lp">
                                 <i class="fa fa-fw menu-icon fa-file-medical-alt"></i> <span>Pi-hole diagnosis</span>
                                 <span class="pull-right-container warning-count hidden"></span>
                             </a>
                         </li>
                         <!-- Tail log files -->
-                        <li class="treeview <? if scriptname == 'taillog.lp' then mg.write(" active") end ?>">
+                        <li class="treeview <? if scriptname == 'taillog.lp' then ?> active<? end ?>">
                             <a href="#">
                                 <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <span>Tail log files</span>
                                 <span class="pull-right-container">
@@ -202,19 +202,19 @@
                             </a>
                             <ul class="treeview-menu">
                                 <!-- Tail pihole.log -->
-                                <li class="<? if scriptname == 'taillog.lp' and GET("file") == "dnsmasq" then mg.write(" active") end ?>">
+                                <li class="<? if scriptname == 'taillog.lp' and GET("file") == "dnsmasq" then ?> active<? end ?>">
                                     <a href="taillog.lp?file=dnsmasq">
                                         <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>pihole.log</code>
                                     </a>
                                 </li>
                                 <!-- Tail FTL.log -->
-                                <li class="<? if scriptname == 'taillog.lp' and GET("file") == "ftl" then mg.write(" active") end ?>">
+                                <li class="<? if scriptname == 'taillog.lp' and GET("file") == "ftl" then ?> active<? end ?>">
                                     <a href="taillog.lp?file=ftl">
                                         <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>FTL.log</code>
                                     </a>
                                 </li>
                                 <!-- Tail webserver.log -->
-                                <li class="<? if scriptname == 'taillog.lp' and GET("file") == "webserver" then mg.write(" active") end ?>">
+                                <li class="<? if scriptname == 'taillog.lp' and GET("file") == "webserver" then ?> active<? end ?>">
                                     <a href="taillog.lp?file=webserver">
                                         <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>webserver.log</code>
                                     </a>
@@ -222,19 +222,19 @@
                             </ul>
                         </li>
                         <!-- Run gravity.sh -->
-                        <li class="<? if scriptname == 'gravity.lp' then mg.write(" active") end ?>">
+                        <li class="<? if scriptname == 'gravity.lp' then ?> active<? end ?>">
                             <a href="gravity.lp">
                                 <i class="fa fa-fw menu-icon fa-arrow-circle-down"></i> <span>Update Gravity</span>
                             </a>
                         </li>
                         <!-- Query Lists -->
-                        <li class="<? if scriptname == 'search.lp' then mg.write(" active") end ?>">
+                        <li class="<? if scriptname == 'search.lp' then ?> active<? end ?>">
                             <a href="search.lp">
                                 <i class="fa fa-fw menu-icon fa-search"></i> <span>Search Adlists</span>
                             </a>
                         </li>
                         <!-- Network -->
-                        <li class="<? if scriptname == 'network.lp' then mg.write(" active") end ?>">
+                        <li class="<? if scriptname == 'network.lp' then ?> active<? end ?>">
                             <a href="network.lp">
                                 <i class="fa fa-fw menu-icon fa-network-wired"></i> <span>Network</span>
                             </a>

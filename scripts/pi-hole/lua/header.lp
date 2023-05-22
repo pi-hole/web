@@ -1,6 +1,3 @@
-HTTP/1.0 200 OK
-Content-Type: text/html
-
 <!DOCTYPE html>
 <!--
 *  Pi-hole: A black hole for Internet advertisements
@@ -64,30 +61,31 @@ end
     <!-- Theme styles -->
     <meta name="theme-color" content="<?=theme.color?>">
 
-<? if theme.dark then mg.write("\
-    <style>\
-        html { background-color: #000; }\
-    </style>\
-") end ?>
+<? if theme.dark then ?>
+    <style>
+        html { background-color: #000; }
+    </style>
+<? end ?>
 
     <!-- Theme fonts -->
-<? if theme == 'lcars' then mg.write('\
-    <link rel="stylesheet" href="'..pihole.fileversion('style/vendor/fonts/ubuntu-mono/ubuntu-mono.css')..'">\
-    <link rel="stylesheet" href="'..pihole.fileversion('style/vendor/fonts/antonio/antonio.css')..'">\
-') else mg.write('\
-    <link rel="stylesheet" href="'..pihole.fileversion('style/vendor/SourceSansPro/SourceSansPro.css')..'">\
-') end ?>
+<? if theme == 'lcars' then ?>
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/fonts/ubuntu-mono/ubuntu-mono.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/fonts/antonio/antonio.css')?>">
+<? else ?>
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/SourceSansPro/SourceSansPro.css')?>">
+<? end ?>
 
     <!-- Common styles -->
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap/css/bootstrap.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/AdminLTE.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/select2.min.css')?>">
 
-    <? if startsWith(scriptname, 'groups') then mg.write('\
-    <!-- Group management styles -->\
-    <link rel="stylesheet" href="'..pihole.fileversion('style/vendor/animate.min.css')..'">\
-    <link rel="stylesheet" href="'..pihole.fileversion('style/vendor/bootstrap-select.min.css')..'">\
-    <link rel="stylesheet" href="'..pihole.fileversion('style/vendor/bootstrap-toggle.min.css')..'">') end ?>
+    <? if startsWith(scriptname, 'groups') then ?>
+    <!-- Group management styles -->
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/animate.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap-select.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap-toggle.min.css')?>">
+    <? end ?>
 
     <!-- Theme styles -->
     <link rel="stylesheet" href="<?=pihole.fileversion('style/pi-hole.css')?>">
