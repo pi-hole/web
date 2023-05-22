@@ -38,7 +38,7 @@ $(function () {
       { data: null, width: "22px" },
       { data: "id" },
       { data: "valid", render: renderBool },
-      { data: "tls", render: renderBool },
+      { data: null },
       { data: "login_at", render: utils.renderTimestamp },
       { data: "valid_until", render: utils.renderTimestamp },
       { data: "remote_addr", type: "ip-address" },
@@ -76,6 +76,10 @@ $(function () {
         data.id +
         '" data-del-id="' +
         data.id +
+        '" title="Delete ' +
+        (data.current_session
+          ? "your current session\nWARNING: This will require you to re-login"
+          : "this session") +
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
@@ -87,6 +91,20 @@ $(function () {
             data.remote_addr +
             "</strong>"
         );
+        let icon = "";
+        let title = "";
+        if (data.tls.mixed) {
+          title = "Session is PARTIALLY end-to-end encrypted";
+          icon = "fa-triangle-exclamation";
+        } else if (data.tls.login) {
+          title = "Session is end-to-end encrypted (TLS/SSL)";
+          icon = "fa-check";
+        } else {
+          title = "Session is NOT end-to-end encrypted (TLS/SSL)";
+          icon = "fa-xmark";
+        }
+
+        $("td:eq(3)", row).html('<i class="fa-solid ' + icon + '" title="' + title + '"></i>');
       }
     },
     select: {
