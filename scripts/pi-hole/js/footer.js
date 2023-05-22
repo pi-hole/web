@@ -574,14 +574,41 @@ $("#settings-level").on("change", function () {
 });
 
 function addAdvancedInfo() {
-  const advancedInfoSource = $("#advanced-info");
-  const advancedInfoTarget = $("#advanced-info-target");
-  if (settingsLevel >= 2) {
-    advancedInfoTarget.html(advancedInfoSource.html());
-    advancedInfoTarget.show();
-  } else {
+  const advancedInfoSource = $("#advanced-info-data");
+  const advancedInfoTarget = $("#advanced-info");
+  const isTLS = advancedInfoSource.data("tls");
+  const clientIP = advancedInfoSource.data("client-ip");
+  const starttime = parseFloat(advancedInfoSource.data("starttime"));
+  const endtime = parseFloat(advancedInfoSource.data("endtime"));
+  const totaltime = 1e3 * (endtime - starttime);
+
+  // Hide advanced info if settings level is lower than 2
+  if (settingsLevel < 2) {
     advancedInfoTarget.hide();
+    return;
   }
+
+  // Show advanced info
+  advancedInfoTarget.empty();
+
+  // Add TLS and client IP info
+  advancedInfoTarget.append(
+    'Client: <i class="fa-solid fa-fw fa-lock' +
+      (isTLS ? "" : "-open") +
+      '" title="Your connection is ' +
+      (isTLS ? "" : "NOT ") +
+      'end-to-end encrypted (TLS/SSL)"></i>&nbsp;' +
+      clientIP +
+      "<br>"
+  );
+
+  // Add render time info
+  advancedInfoTarget.append(
+    "Render time: " + (totaltime > 0.5 ? totaltime.toFixed(1) : totaltime.toFixed(3)) + " ms"
+  );
+
+  // Show advanced info
+  advancedInfoTarget.show();
 }
 
 $(function () {
