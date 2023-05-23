@@ -118,7 +118,7 @@
                 <li id="pihole-enable" class="menu-dns treeview" style="display: none;">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-play"></i>
-                        <span id="enableLabel" class="text-green">Enable Blocking&nbsp;&nbsp;&nbsp;
+                        <span id="enableLabel">Enable Blocking&nbsp;&nbsp;&nbsp;
                             <span id="flip-status-enable"></span>
                         </span>
                     </a>

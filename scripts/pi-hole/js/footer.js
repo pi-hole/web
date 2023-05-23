@@ -25,15 +25,39 @@ function piholeChanged(blocking) {
   var ena = $("#pihole-enable");
   var dis = $("#pihole-disable");
 
-  if (blocking) {
-    status.html("<i class='fa fa-circle fa-fw text-green-light'></i>&nbsp;Active");
-    ena.hide();
-    dis.show();
-    dis.removeClass("active");
-  } else {
-    status.html("<i class='fa fa-circle fa-fw text-red'></i>&nbsp;Blocking disabled");
-    ena.show();
-    dis.hide();
+  switch (blocking) {
+    case "enabled": {
+      status.html("<i class='fa fa-circle fa-fw text-green-light'></i>&nbsp;Active");
+      ena.hide();
+      dis.show();
+      dis.removeClass("active");
+
+      break;
+    }
+
+    case "disabled": {
+      status.html("<i class='fa fa-circle fa-fw text-red'></i>&nbsp;Blocking disabled");
+      ena.show();
+      dis.hide();
+
+      break;
+    }
+
+    case "failure": {
+      status.html(
+        "<i class='fa-solid fa-triangle-exclamation fa-fw text-red'></i>&nbsp;<span class='text-red'>DNS server failure</span>"
+      );
+      ena.hide();
+      dis.hide();
+
+      break;
+    }
+
+    default: {
+      status.html("<i class='fa fa-circle fa-fw text-red'></i>&nbsp;Status unknown");
+      ena.hide();
+      dis.hide();
+    }
   }
 }
 
@@ -92,19 +116,18 @@ function piholeChange(action, duration) {
   }
 
   btnStatus.html("<i class='fa fa-spinner fa-spin'> </i>");
-  const blocking = action === "enable";
   $.ajax({
     url: "/api/dns/blocking",
     method: "POST",
     data: JSON.stringify({
-      blocking: blocking,
+      blocking: action === "enable",
       timer: parseInt(duration, 10) > 0 ? parseInt(duration, 10) : null,
     }),
   })
     .done(function (data) {
-      if (data.blocking === blocking) {
+      if (data.blocking === action + "d") {
         btnStatus.html("");
-        piholeChanged(blocking);
+        piholeChanged(data.blocking);
         if (duration > 0) {
           enaT.html(Date.now() + duration * 1000);
           setTimeout(countDown, 100);
