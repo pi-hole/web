@@ -174,18 +174,26 @@ function updateMetrics() {
     });
 }
 
-function showQueryLoggingButton() {
+function showQueryLoggingButton(state) {
+  if (state) {
+    $("#loggingButton").addClass("btn-warning");
+    $("#loggingButton").removeClass("btn-success");
+    $("#loggingButton").text("Disable query logging");
+    $("#loggingButton").data("state", "enabled");
+  } else {
+    $("#loggingButton").addClass("btn-success");
+    $("#loggingButton").removeClass("btn-warning");
+    $("#loggingButton").text("Enable query logging");
+    $("#loggingButton").data("state", "disabled");
+  }
+}
+
+function getLoggingButton() {
   $.ajax({
     url: "/api/config/dns/queryLogging",
   })
     .done(function (data) {
-      if (data.config.dns.queryLogging) {
-        $("#disableLoggingButton").show();
-        $("#enableLoggingButton").hide();
-      } else {
-        $("#disableLoggingButton").hide();
-        $("#enableLoggingButton").show();
-      }
+      showQueryLoggingButton(data.config.dns.queryLogging);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -193,15 +201,23 @@ function showQueryLoggingButton() {
 }
 
 $(".confirm-poweroff").confirm({
-  text: "Are you sure you want to send a poweroff command to your Pi-hole?",
+  text:
+    "Are you sure you want to send a poweroff command to your Pi-hole?<br><br>" +
+    "<strong>This will shut down your Pi-hole and power it off.</strong><br>" +
+    "You will not be able to access the web interface or use any Pi-hole functionality until you manually power it back on.",
   title: "Confirmation required",
   confirm: function () {
-    $("#poweroffform").submit();
+    $.ajax({
+      url: "/api/action/poweroff",
+      type: "POST",
+    }).fail(function (data) {
+      apiFailure(data);
+    });
   },
   cancel: function () {
     // nothing to do
   },
-  confirmButton: "Yes, poweroff",
+  confirmButton: "Yes, shutdown and poweroff the Pi-hole now",
   cancelButton: "No, go back",
   post: true,
   confirmButtonClass: "btn-danger",
@@ -210,15 +226,23 @@ $(".confirm-poweroff").confirm({
 });
 
 $(".confirm-reboot").confirm({
-  text: "Are you sure you want to send a reboot command to your Pi-hole?",
+  text:
+    "Are you sure you want to send a reboot command to your Pi-hole?<br><br>" +
+    "<strong>This will reboot your Pi-hole.</strong><br>" +
+    "You will not be able to access the web interface or use any Pi-hole functionality until it has finished rebooting.",
   title: "Confirmation required",
   confirm: function () {
-    $("#rebootform").submit();
+    $.ajax({
+      url: "/api/action/reboot",
+      type: "POST",
+    }).fail(function (data) {
+      apiFailure(data);
+    });
   },
   cancel: function () {
     // nothing to do
   },
-  confirmButton: "Yes, reboot",
+  confirmButton: "Yes, reboot the Pi-hole now",
   cancelButton: "No, go back",
   post: true,
   confirmButtonClass: "btn-danger",
@@ -227,15 +251,23 @@ $(".confirm-reboot").confirm({
 });
 
 $(".confirm-restartdns").confirm({
-  text: "Are you sure you want to send a restart command to your DNS server?",
+  text:
+    "Are you sure you want to send a restart command to your DNS server?<br><br>" +
+    "This will clear the DNS cache and may temporarily interrupt your internet connection.<br>" +
+    "Furthermore, you will be logged out of the web interface as consequence of this action.",
   title: "Confirmation required",
   confirm: function () {
-    $("#restartdnsform").submit();
+    $.ajax({
+      url: "/api/action/restartdns",
+      type: "POST",
+    }).fail(function (data) {
+      apiFailure(data);
+    });
   },
   cancel: function () {
     // nothing to do
   },
-  confirmButton: "Yes, restart DNS",
+  confirmButton: "Yes, restart DNS server",
   cancelButton: "No, go back",
   post: true,
   confirmButtonClass: "btn-danger",
@@ -244,10 +276,17 @@ $(".confirm-restartdns").confirm({
 });
 
 $(".confirm-flushlogs").confirm({
-  text: "Are you sure you want to flush your logs?",
+  text:
+    "Are you sure you want to flush your logs?<br><br>" +
+    "<strong>This will clear all logs and cannot be undone.</strong>",
   title: "Confirmation required",
   confirm: function () {
-    $("#flushlogsform").submit();
+    $.ajax({
+      url: "/api/action/flush/logs",
+      type: "POST",
+    }).fail(function (data) {
+      apiFailure(data);
+    });
   },
   cancel: function () {
     // nothing to do
@@ -261,10 +300,17 @@ $(".confirm-flushlogs").confirm({
 });
 
 $(".confirm-flusharp").confirm({
-  text: "Are you sure you want to flush your network table?",
+  text:
+    "Are you sure you want to flush your network table?<br><br>" +
+    "<strong>This will clear all entries and cannot be undone.</strong>",
   title: "Confirmation required",
   confirm: function () {
-    $("#flusharpform").submit();
+    $.ajax({
+      url: "/api/action/flush/arp",
+      type: "POST",
+    }).fail(function (data) {
+      apiFailure(data);
+    });
   },
   cancel: function () {
     // nothing to do
@@ -277,16 +323,34 @@ $(".confirm-flusharp").confirm({
   dialogClass: "modal-dialog",
 });
 
-$(".confirm-disablelogging-noflush").confirm({
-  text: "Are you sure you want to disable logging?",
+$("#loggingButton").confirm({
+  text:
+    "Are you sure you want to switch query logging mode?<br><br>" +
+    "<strong>This will restart the DNS server.</strong><br>" +
+    "As consequence of this action, your DNS cache will be cleared and you may temporarily loose your internet connection.<br>" +
+    "Furthermore, you will be logged out of the web interface.",
   title: "Confirmation required",
   confirm: function () {
-    $("#disablelogsform-noflush").submit();
+    const data = {};
+    data.config = {};
+    data.config.dns = {};
+    data.config.dns.queryLogging = $("#loggingButton").data("state") !== "enabled";
+    $.ajax({
+      url: "/api/config/dns/queryLogging",
+      type: "PATCH",
+      data: JSON.stringify(data),
+    })
+      .done(function (data) {
+        showQueryLoggingButton(data.config.dns.queryLogging);
+      })
+      .fail(function (data) {
+        apiFailure(data);
+      });
   },
   cancel: function () {
     // nothing to do
   },
-  confirmButton: "Yes, disable logs",
+  confirmButton: "Yes, change query logging",
   cancelButton: "No, go back",
   post: true,
   confirmButtonClass: "btn-warning",
@@ -297,7 +361,7 @@ $(".confirm-disablelogging-noflush").confirm({
 $(function () {
   updateHostInfo();
   updateMetrics();
-  showQueryLoggingButton();
+  getLoggingButton();
 
   var ctx = document.getElementById("cachePieChart").getContext("2d");
   cachePieChart = new Chart(ctx, {

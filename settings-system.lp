@@ -278,32 +278,29 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
     <div class="col-md-12 settings-level-1">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title">Actions&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
+                <h3 class="box-title">Actions<span id="actions-title"></span>&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
             </div>
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-4">
-                            <button type="button" id="disableLoggingButton" class="btn btn-warning confirm-disablelogging-noflush btn-block" style="display: none">Disable query logging</button>
-                            <button type="button" id="enableLoggingButton" class="btn btn-success btn-block" style="display: none">Enable query logging</button>
+                        <button type="button" id="loggingButton" class="btn btn-block button-pad btn-primary"><i class="fa fa-spinner fa-pulse"></i></button>
                     </div>
-                    <p class="hidden-md hidden-lg"></p>
                     <div class="col-md-4">
-                        <button type="button" class="btn btn-warning confirm-flusharp btn-block">Flush network table</button>
+                            <button type="button" class="btn btn-warning confirm-restartdns btn-block button-pad destructive_action" disabled="true">Restart DNS resolver</button>
                     </div>
-                    <p class="hidden-md hidden-lg"></p>
                     <div class="col-md-4">
-                        <button type="button" class="btn btn-warning confirm-restartdns btn-block">Restart DNS resolver</button>
+                            <button type="button" class="btn btn-danger confirm-flusharp btn-block button-pad destructive_action" disabled="true">Flush network table</button>
                     </div>
                     <div class="col-md-4 settings-level-2">
-                        <button type="button" class="btn btn-danger confirm-flushlogs btn-block">Flush logs (last 24 hours)</button>
-                    </div>
-                    <p class="hidden-md hidden-lg"></p>
-                    <div class="col-md-4 settings-level-2">
-                        <button type="button" class="btn btn-danger confirm-poweroff btn-block">Power off system</button>
+                            <button type="button" class="btn btn-danger confirm-flushlogs btn-block button-pad destructive_action" disabled="true">Flush logs (last 24 hours)</button>
                     </div>
                     <p class="hidden-md hidden-lg"></p>
                     <div class="col-md-4 settings-level-2">
-                        <button type="button" class="btn btn-danger confirm-reboot btn-block">Restart system</button>
+                            <button type="button" class="btn btn-danger confirm-poweroff btn-block button-pad destructive_action" disabled="true">Power off system</button>
+                    </div>
+                    <p class="hidden-md hidden-lg"></p>
+                    <div class="col-md-4 settings-level-2">
+                            <button type="button" class="btn btn-danger confirm-reboot btn-block button-pad destructive_action" disabled="true">Restart system</button>
                     </div>
                 </div>
             </div>

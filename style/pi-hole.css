@@ -1143,3 +1143,7 @@ table.dataTable tbody > tr > .selected {
   border-style: solid;
   animation: error-border 1s infinite;
 }
+
+.button-pad {
+  margin: 2px;
+}

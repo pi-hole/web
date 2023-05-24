@@ -231,6 +231,13 @@ function updateFtlInfo() {
       $("#sysinfo-uptime-ftl").text(startdate);
       $("#sysinfo-privacy_level").text(ftl.privacy_level);
       $("#sysinfo-ftl-overlay").hide();
+
+      $(".destructive_action").prop("disabled", !ftl.allow_destructive);
+      $(".destructive_action").prop(
+        "title",
+        ftl.allow_destructive ? "" : "Destructive actions are disabled by a config setting"
+      );
+
       // Update every 120 seconds
       clearTimeout(ftlinfoTimer);
       ftlinfoTimer = setTimeout(updateFtlInfo, 120000);
