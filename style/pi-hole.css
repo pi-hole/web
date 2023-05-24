@@ -1131,3 +1131,15 @@ table.dataTable tbody > tr > .selected {
 .main-footer {
   padding-bottom: 0px;
 }
+
+@keyframes error-border {
+  0% { border-color: rgba(255,0,0,0.5) }
+  50% { border-color: rgba(255,0,0,0.2) }
+  100% { border-color: rgba(255,0,0,0.5) }
+}
+
+.error-box {
+  border-width: 2px;
+  border-style: solid;
+  animation: error-border 1s infinite;
+}

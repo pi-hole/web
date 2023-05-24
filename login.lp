@@ -11,7 +11,7 @@ mg.include('scripts/pi-hole/lua/header.lp','r')
 
 ?>
 <body class="hold-transition layout-boxed login-page">
-<div class="box login-box">
+<div class="box login-box" id="login-box">
     <section style="padding: 15px;">
         <div class="login-logo">
             <div class="text-center">
@@ -24,6 +24,9 @@ mg.include('scripts/pi-hole/lua/header.lp','r')
         <div class="card">
             <div class="card-body login-card-body">
                 <div id="cookieInfo" class="panel-title text-center text-red" style="font-size: 150%" hidden>Verify that cookies are allowed</div>
+                <div class="text-center form-group has-error" id="dns-failure-label" style="display: none;">
+                    <label>DNS Server failure detected, log in to see Pi-hole diagnosis messages</label>
+                </div>
                 <div class="form-group has-error login-box-msg" id="error-label" style="display: none;">
                     <label class="control-label"><i class="fa fa-times-circle"></i> Wrong password!</label>
                 </div>

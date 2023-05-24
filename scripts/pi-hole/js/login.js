@@ -29,11 +29,16 @@ function redirect() {
   // Default: Send back to index.lp (dashboard)
   var target = "index.lp";
 
-  // If specified: Send to requested page
-  var GETDict = getParams();
-  if ("target" in GETDict) {
-    // URL-decode target
-    target = decodeURIComponent(GETDict.target);
+  // If DNS failure: send to Pi-hole diagnosis messages page
+  if ($("#dns-failure-label").is(":visible")) {
+    target = "messages.lp";
+  } else {
+    // If specified: Send to requested page
+    var GETDict = getParams();
+    if ("target" in GETDict) {
+      // URL-decode target
+      target = decodeURIComponent(GETDict.target);
+    }
   }
 
   // Redirect to target
@@ -114,6 +119,11 @@ $("#totp").on("keyup", function () {
   }
 });
 
+function showDNSfailure() {
+  $("#dns-failure-label").show();
+  $("#login-box").addClass("error-box");
+}
+
 $(function () {
   // Check if we need to login at all
   $.ajax({
@@ -121,6 +131,7 @@ $(function () {
   }).done(function (data) {
     if (data.session.valid === true) redirect();
     if (data.session.totp === true) $("#totp_input").removeClass("hidden");
+    if (data.dns === false) showDNSfailure();
   });
 
   // Clear TOTP field
