@@ -95,15 +95,15 @@ var tableApi, statistics;
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
-  } else if (xhr.responseText.indexOf("Connection refused") !== -1) {
-    alert("An error occurred while loading the data: Connection refused. Is FTL running?");
-  } else {
+  } else if (xhr.responseText.indexOf("Connection refused") === -1) {
     alert(
       "An unknown error occurred while loading the data.\n" +
         xhr.responseText +
         "\nCheck the server's log files (/var/log/lighttpd/error-pihole.log) for details.\n\nYou may need to increase PHP memory limit." +
         "\n\nYou can find more info in pi-hole's FAQ:\nhttps://docs.pi-hole.net/main/faq/#error-while-loading-data-from-the-long-term-database"
     );
+  } else {
+    alert("An error occurred while loading the data: Connection refused. Is FTL running?");
   }
 
   $("#all-queries_processing").hide();
@@ -457,10 +457,10 @@ $(function () {
   });
   $("#all-queries tbody").on("click", "button", function () {
     var data = tableApi.row($(this).parents("tr")).data();
-    if ([1, 4, 5, 9, 10, 11].indexOf(data[4]) !== -1) {
-      utils.addFromQueryLog(data[2], "white");
-    } else {
+    if ([1, 4, 5, 9, 10, 11].indexOf(data[4]) === -1) {
       utils.addFromQueryLog(data[2], "black");
+    } else {
+      utils.addFromQueryLog(data[2], "white");
     }
   });
 
