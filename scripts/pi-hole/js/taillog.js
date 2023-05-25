@@ -99,6 +99,9 @@ function getData() {
     })
     .fail(function (data) {
       apiFailure(data);
+
+      // Restart timer
+      setTimeout(getData, 5*interval);
     });
 }
 
