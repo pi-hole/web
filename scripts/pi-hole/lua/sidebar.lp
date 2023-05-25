@@ -27,38 +27,38 @@
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">Main</li>
                 <!-- Home Page -->
-                <li class="menu-main<? if scriptname == 'index.lp' then ?> active<? end ?>">
-                    <a href="index.lp">
+                <li class="menu-main<? if scriptname == 'index' or scriptname == 'index.lp' then ?> active<? end ?>">
+                    <a href=".">
                         <i class="fa fa-fw menu-icon fa-home"></i> <span>Dashboard</span>
                     </a>
                 </li>
                 <!-- Query Log -->
-                <li class="menu-analysis<? if scriptname == 'queries.lp' then ?> active<? end ?>">
-                    <a href="queries.lp">
+                <li class="menu-analysis<? if scriptname == 'queries' then ?> active<? end ?>">
+                    <a href="queries">
                         <i class="fa fa-fw menu-icon fa-file-alt"></i> <span>Query Log</span>
                     </a>
                 </li>
 
                 <li class="header text-uppercase">Group Management</li>
                 <!-- Group Management -->
-                <li class="menu-group<? if scriptname == 'groups.lp' then ?> active<? end ?>">
-                    <a href="groups.lp">
+                <li class="menu-group<? if scriptname == 'groups' then ?> active<? end ?>">
+                    <a href="groups">
                         <i class="fa fa-fw menu-icon fa-user-friends"></i> <span>Groups
                         <span class="pull-right-container">
                             <span class="label label-primary pull-right" id="num_groups" title="Number of defined groups"></span>
                         </span>
                     </a>
                 </li>
-                <li class="menu-group<? if scriptname == 'groups-clients.lp' then ?> active<? end ?>">
-                    <a href="groups-clients.lp">
+                <li class="menu-group<? if scriptname == 'groups-clients' then ?> active<? end ?>">
+                    <a href="groups-clients">
                         <i class="fa fa-fw menu-icon fa-laptop"></i> <span>Clients
                         <span class="pull-right-container">
                             <span class="label label-primary pull-right" id="num_clients" title="Number of defined clients"></span>
                         </span>
                     </a>
                 </li>
-                <li class="menu-group<? if scriptname == 'groups-domains.lp' then ?> active<? end ?>">
-                    <a href="groups-domains.lp">
+                <li class="menu-group<? if scriptname == 'groups-domains' then ?> active<? end ?>">
+                    <a href="groups-domains">
                         <i class="fa fa-fw menu-icon fa-list"></i> <span>Domains
                         <span class="pull-right-container">
                             <span class="label bg-red pull-right" id="num_denied" title="Number of deny rules (domains and regex)"></span>
@@ -66,8 +66,8 @@
                         </span>
                     </a>
                 </li>
-                <li class="menu-group<? if scriptname == 'groups-adlists.lp' then ?> active<? end ?>">
-                    <a href="groups-adlists.lp">
+                <li class="menu-group<? if scriptname == 'groups-adlists' then ?> active<? end ?>">
+                    <a href="groups-adlists">
                         <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adlists
                         <span class="pull-right-container">
                             <span class="label bg-blue pull-right" id="num_lists" title="Number of defined adlists"></span>
@@ -133,50 +133,50 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="<? if scriptname == 'settings-system.lp' then ?> active<? end ?>">
-                            <a href="settings-system.lp">
+                        <li class="<? if scriptname == 'settings-system' then ?> active<? end ?>">
+                            <a href="settings-system">
                                 <i class="fa-fw menu-icon fa-solid fa-circle-info"></i> <span>System</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-dns.lp' then ?> active<? end ?>">
-                            <a href="settings-dns.lp">
+                        <li class="<? if scriptname == 'settings-dns' then ?> active<? end ?>">
+                            <a href="settings-dns">
                                 <i class="fa-fw menu-icon fa-solid fa-book-atlas"></i> <span>DNS</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-dhcp.lp' then ?> active<? end ?>">
-                            <a href="settings-dhcp.lp">
+                        <li class="<? if scriptname == 'settings-dhcp' then ?> active<? end ?>">
+                            <a href="settings-dhcp">
                                 <i class="fa-fw menu-icon fa-solid fa-sitemap"></i> <span>DHCP</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-api.lp' then ?> active<? end ?>">
-                            <a href="settings-api.lp">
+                        <li class="<? if scriptname == 'settings-api' then ?> active<? end ?>">
+                            <a href="settings-api">
                                 <i class="fa-fw menu-icon fa-solid fa-window-restore"></i> <span>Web interface / API</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-privacy.lp' then ?> active<? end ?>">
-                            <a href="settings-privacy.lp">
+                        <li class="<? if scriptname == 'settings-privacy' then ?> active<? end ?>">
+                            <a href="settings-privacy">
                                 <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> <span>Privacy</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-teleporter.lp' then ?> active<? end ?>">
-                            <a href="settings-teleporter.lp">
+                        <li class="<? if scriptname == 'settings-teleporter' then ?> active<? end ?>">
+                            <a href="settings-teleporter">
                                 <i class="fa-fw menu-icon fa-solid fa-file-export"></i> <span>Teleporter</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-dns-records.lp' then ?> active<? end ?> settings-level-1">
-                            <a href="settings-dns-records.lp">
+                        <li class="<? if scriptname == 'settings-dns-records' then ?> active<? end ?> settings-level-1">
+                            <a href="settings-dns-records">
                                 <i class="fa-fw menu-icon fa-solid fa-address-book"></i> <span>Local DNS Records</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings-advanced.lp' then ?> active<? end ?> settings-level-2">
-                            <a href="settings-advanced.lp">
+                        <li class="<? if scriptname == 'settings-advanced' then ?> active<? end ?> settings-level-2">
+                            <a href="settings-advanced">
                                 <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> <span>All settings</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <!-- Tools -->
-                <li class="menu-system treeview<? if in_array(scriptname, {'messages.lp', 'gravity.lp', 'search.lp', 'taillog.lp', 'network.lp'}) then ?> active<? end ?>">
+                <li class="menu-system treeview<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'network'}) then ?> active<? end ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-tools"></i> <span>Tools</span>
                         <span class="warning-count hidden"></span>
@@ -186,14 +186,14 @@
                     </a>
                     <ul class="treeview-menu">
                         <!-- Pi-hole diagnosis -->
-                        <li class="<? if scriptname == 'messages.lp' then ?> active<? end ?>">
-                            <a href="messages.lp">
+                        <li class="<? if scriptname == 'messages' then ?> active<? end ?>">
+                            <a href="messages">
                                 <i class="fa fa-fw menu-icon fa-file-medical-alt"></i> <span>Pi-hole diagnosis</span>
                                 <span class="pull-right-container warning-count hidden"></span>
                             </a>
                         </li>
                         <!-- Tail log files -->
-                        <li class="treeview <? if scriptname == 'taillog.lp' then ?> active<? end ?>">
+                        <li class="treeview <? if scriptname == 'taillog' then ?> active<? end ?>">
                             <a href="#">
                                 <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <span>Tail log files</span>
                                 <span class="pull-right-container">
@@ -202,40 +202,40 @@
                             </a>
                             <ul class="treeview-menu">
                                 <!-- Tail pihole.log -->
-                                <li class="<? if scriptname == 'taillog.lp' and GET("file") == "dnsmasq" then ?> active<? end ?>">
-                                    <a href="taillog.lp?file=dnsmasq">
+                                <li class="<? if scriptname == 'taillog' and GET("file") == "dnsmasq" then ?> active<? end ?>">
+                                    <a href="taillog?file=dnsmasq">
                                         <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>pihole.log</code>
                                     </a>
                                 </li>
                                 <!-- Tail FTL.log -->
-                                <li class="<? if scriptname == 'taillog.lp' and GET("file") == "ftl" then ?> active<? end ?>">
-                                    <a href="taillog.lp?file=ftl">
+                                <li class="<? if scriptname == 'taillog' and GET("file") == "ftl" then ?> active<? end ?>">
+                                    <a href="taillog?file=ftl">
                                         <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>FTL.log</code>
                                     </a>
                                 </li>
                                 <!-- Tail webserver.log -->
-                                <li class="<? if scriptname == 'taillog.lp' and GET("file") == "webserver" then ?> active<? end ?>">
-                                    <a href="taillog.lp?file=webserver">
+                                <li class="<? if scriptname == 'taillog' and GET("file") == "webserver" then ?> active<? end ?>">
+                                    <a href="taillog?file=webserver">
                                         <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>webserver.log</code>
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <!-- Run gravity.sh -->
-                        <li class="<? if scriptname == 'gravity.lp' then ?> active<? end ?>">
-                            <a href="gravity.lp">
+                        <li class="<? if scriptname == 'gravity' then ?> active<? end ?>">
+                            <a href="gravity">
                                 <i class="fa fa-fw menu-icon fa-arrow-circle-down"></i> <span>Update Gravity</span>
                             </a>
                         </li>
                         <!-- Query Lists -->
-                        <li class="<? if scriptname == 'search.lp' then ?> active<? end ?>">
-                            <a href="search.lp">
+                        <li class="<? if scriptname == 'search' then ?> active<? end ?>">
+                            <a href="search">
                                 <i class="fa fa-fw menu-icon fa-search"></i> <span>Search Adlists</span>
                             </a>
                         </li>
                         <!-- Network -->
-                        <li class="<? if scriptname == 'network.lp' then ?> active<? end ?>">
-                            <a href="network.lp">
+                        <li class="<? if scriptname == 'network' then ?> active<? end ?>">
+                            <a href="network">
                                 <i class="fa fa-fw menu-icon fa-network-wired"></i> <span>Network</span>
                             </a>
                         </li>

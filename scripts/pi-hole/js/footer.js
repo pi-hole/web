@@ -515,7 +515,7 @@ function updateVersionInfo() {
 }
 
 $(function () {
-  if (window.location.pathname !== "/admin/login.lp") updateInfo();
+  if (window.location.pathname !== "/admin/login") updateInfo();
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - Date.now()) / 1000);
@@ -530,7 +530,7 @@ $(function () {
   // Apply per-browser styling settings
   initCheckboxRadioStyle();
 
-  if (window.location.pathname !== "/admin/login.lp") {
+  if (window.location.pathname !== "/admin/login") {
     // Run check immediately after page loading ...
     utils.checkMessages();
     // ... and once again with five seconds delay
