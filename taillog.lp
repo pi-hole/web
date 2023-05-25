@@ -15,6 +15,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             <div class="box-header with-border">
                 <h3 class="box-title"><code>tail -F <span id="filename">...</span></code></h3>
                 <div class="pull-right">
+                    Autoscroll:&nbsp;<i class="fa fa-fw fa-check" id="autoscrolling"></i>&nbsp;&nbsp;
                     <button class="btn btn-success" id="live-feed">
                         <span id="title">Live</span>&nbsp;&nbsp;
                         <i id="feed-icon" class="fa-solid fa-fw fa-play fa-fade"></i>

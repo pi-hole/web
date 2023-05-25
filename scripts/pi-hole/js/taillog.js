@@ -25,8 +25,7 @@ const markUpdates = true;
 function getData() {
   // Only update when spinner is spinning
   if (!$("#feed-icon").hasClass("fa-play")) {
-    // Restart timer
-    setTimeout(getData, interval);
+    window.setTimeout(getData, interval);
     return;
   }
 
@@ -44,6 +43,7 @@ function getData() {
 
   $.ajax({
     url: "/api/logs/" + GETDict.file + "?nextID=" + nextID,
+    timeout: 5000,
     method: "GET",
   })
     .done(function (data) {
@@ -52,8 +52,7 @@ function getData() {
           $("#output").html("<i>*** Log file is empty ***</i>");
         }
 
-        // Restart timer
-        setTimeout(getData, interval);
+        window.setTimeout(getData, interval);
         return;
       }
 
@@ -85,8 +84,11 @@ function getData() {
         $("#output").val(lines.join("\n"));
       }
 
-      // Scroll to bottom of output
-      $("#output").scrollTop($("#output")[0].scrollHeight);
+      // Scroll to bottom of output if we are already at the bottom
+      if (gAutoScrolling) {
+        // Auto-scrolling is enabled
+        $("#output").scrollTop($("#output")[0].scrollHeight);
+      }
 
       // Update nextID
       nextID = data.nextID;
@@ -94,16 +96,29 @@ function getData() {
       // Set filename
       $("#filename").text(data.file);
 
-      // Restart timer
-      setTimeout(getData, interval);
+      window.setTimeout(getData, interval);
     })
     .fail(function (data) {
       apiFailure(data);
-
-      // Restart timer
-      setTimeout(getData, 5*interval);
+      window.setTimeout(getData, 5*interval);
     });
 }
+
+var gAutoScrolling = true;
+$("#output").on("scroll", function () {
+  // Check if we are at the bottom of the output
+  if ($("#output").scrollTop() + $("#output").innerHeight() >= $("#output")[0].scrollHeight) {
+    // Auto-scrolling is enabled
+    gAutoScrolling = true;
+    $("#autoscrolling").addClass("fa-check");
+    $("#autoscrolling").removeClass("fa-xmark");
+  } else {
+    // Auto-scrolling is disabled
+    gAutoScrolling = false;
+    $("#autoscrolling").addClass("fa-xmark");
+    $("#autoscrolling").removeClass("fa-check");
+  }
+});
 
 $(function () {
   getData();
