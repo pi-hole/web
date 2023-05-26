@@ -11,7 +11,7 @@
 starttime = mg.time(true)
 hostname = pihole.hostname()
 -- Get name of script by matching whatever is after the last "/" in the URI
-scriptname = mg.request_info.request_uri:match("/([^/]*)$")
+scriptname = mg.request_info.request_uri:match(pihole.webhome().."(.*)$")
 -- Fall back to "index.lp" if no match is found (e.g. when accessing the root)
 if scriptname == nil or string.len(scriptname) == 0 then scriptname = "index.lp" end
 

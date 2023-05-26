@@ -169,7 +169,7 @@ function applyCheckboxRadioStyle() {
 function initCheckboxRadioStyle() {
   function getCheckboxURL(style) {
     var extra = style.startsWith("material-") ? "material" : "bootstrap";
-    return "style/vendor/icheck-" + extra + ".min.css";
+    return "/admin/style/vendor/icheck-" + extra + ".min.css";
   }
 
   // Read from local storage, initialize if needed
