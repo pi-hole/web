@@ -26,8 +26,8 @@ function computeResponse(password, challenge) {
 
 function redirect() {
   // Login succeeded or not needed (empty password)
-  // Default: Send back to index.lp (dashboard)
-  var target = "index.lp";
+  // Default: Send back to dashboard
+  var target = ".";
 
   // If DNS failure: send to Pi-hole diagnosis messages page
   if ($("#dns-failure-label").is(":visible")) {

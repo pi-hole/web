@@ -100,7 +100,7 @@ function getData() {
     })
     .fail(function (data) {
       apiFailure(data);
-      window.setTimeout(getData, 5*interval);
+      window.setTimeout(getData, 5 * interval);
     });
 }
 
