@@ -79,7 +79,7 @@ $(function () {
       statusEl.on("change", editGroup);
 
       $("td:eq(3)", row).html('<input id="desc_' + data.id + '" class="form-control">');
-      var desc = data.description !== null ? data.description : "";
+      var desc = data.description === null ? "" : data.description;
       var descEl = $("#desc_" + data.id, row);
       descEl.val(utils.unescapeHtml(desc));
       descEl.on("change", editGroup);
