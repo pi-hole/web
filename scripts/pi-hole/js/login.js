@@ -13,7 +13,7 @@ function getParams() {
     .substr(1)
     .split("&")
     .forEach(function (item) {
-      GETDict[item.split("=")[0]] = item.split("=")[1];
+      GETDict[item.split("=")[0]] = decodeURIComponent(item.split("=")[1]);
     });
   return GETDict;
 }
@@ -37,7 +37,7 @@ function redirect() {
     var GETDict = getParams();
     if ("target" in GETDict) {
       // URL-decode target
-      target = decodeURIComponent(GETDict.target);
+      target = GETDict.target;
     }
   }
 

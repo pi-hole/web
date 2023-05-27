@@ -494,7 +494,7 @@ function parseQueryString(queryString = window.location.search) {
     .substr(1)
     .split("&")
     .forEach(function (item) {
-      GETDict[item.split("=")[0]] = item.split("=")[1];
+      GETDict[item.split("=")[0]] = decodeURIComponent(item.split("=")[1]);
     });
 
   return GETDict;

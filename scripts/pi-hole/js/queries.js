@@ -433,7 +433,7 @@ function getAPIURL(filters) {
       var filter = filters[key];
       if (filterOn(key, filters)) {
         if (!apiurl.endsWith("?")) apiurl += "&";
-        apiurl += key + "=" + filter;
+        apiurl += key + "=" + encodeURIComponent(filter);
       }
     }
   }
@@ -450,13 +450,7 @@ function getAPIURL(filters) {
 
 $(function () {
   // Do we want to filter queries?
-  var GETDict = {};
-  window.location.search
-    .substr(1)
-    .split("&")
-    .forEach(function (item) {
-      GETDict[item.split("=")[0]] = item.split("=")[1];
-    });
+  var GETDict = utils.parseQueryString();
 
   for (var sel in filters) {
     if (Object.hasOwnProperty.call(filters, sel)) {

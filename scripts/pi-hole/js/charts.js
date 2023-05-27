@@ -81,7 +81,8 @@ const htmlLegendPlugin = {
           if (chart.canvas.id === "queryTypePieChart") {
             window.location.href = "queries.lp?type=" + item.text;
           } else if (chart.canvas.id === "forwardDestinationPieChart") {
-            window.location.href = "queries.lp?forwarddest=" + encodeURIComponent(item.text);
+            // Encode the forward destination as it may contain an "#" character
+            window.location.href = "queries.lp?upstream=" + encodeURIComponent(item.text);
           }
         });
       }

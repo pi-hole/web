@@ -29,13 +29,7 @@ function getData() {
     return;
   }
 
-  var GETDict = {};
-  window.location.search
-    .substr(1)
-    .split("&")
-    .forEach(function (item) {
-      GETDict[item.split("=")[0]] = item.split("=")[1];
-    });
+  var GETDict = utils.parseQueryString();
   if (!("file" in GETDict)) {
     window.location.href += "?file=dnsmasq";
     return;
