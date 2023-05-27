@@ -5,8 +5,6 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global querytypeids:false */
-
 // eslint-disable-next-line no-unused-vars
 var THEME_COLORS = [
   "#f56954",
@@ -81,7 +79,7 @@ const htmlLegendPlugin = {
 
         textLink.addEventListener("click", () => {
           if (chart.canvas.id === "queryTypePieChart") {
-            window.location.href = "queries.lp?querytype=" + querytypeids[item.index];
+            window.location.href = "queries.lp?type=" + item.text;
           } else if (chart.canvas.id === "forwardDestinationPieChart") {
             window.location.href = "queries.lp?forwarddest=" + encodeURIComponent(item.text);
           }

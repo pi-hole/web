@@ -74,7 +74,6 @@ function updateQueriesOverTime() {
     });
 }
 
-var querytypeids = [];
 function updateQueryTypesPie() {
   $.getJSON("/api/stats/query_types", function (data) {
     var v = [],
@@ -89,13 +88,11 @@ function updateQueryTypesPie() {
     });
 
     // Fill chart with data (only include query types which appeared recently)
-    querytypeids = [];
     Object.keys(data.types).forEach(function (item) {
       if (data.types[item] > 0) {
         v.push((100 * data.types[item]) / sum);
         c.push(THEME_COLORS[i % THEME_COLORS.length]);
         k.push(item);
-        querytypeids.push(i + 1);
       }
 
       i++;
