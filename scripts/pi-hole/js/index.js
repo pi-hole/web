@@ -207,8 +207,8 @@ function updateForwardDestinationsPie() {
     // Collect values and colors
     data.upstreams.forEach(function (item) {
       var label = item.ip;
-      if (item.name.length > 0) {
-        label = item.ip;
+      if (item.port > 0) {
+        label += "#" + item.port;
       }
 
       var percent = (100 * item.count) / sum;
