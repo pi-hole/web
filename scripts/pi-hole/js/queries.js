@@ -7,8 +7,8 @@
 
 /* global moment:false, utils:false */
 
-var beginningOfTime = 0; // Jan 01 1970, 00:00
-var endOfTime = 2147483647 * 1000; // Jan 19, 2038, 03:14
+const beginningOfTime = 1262304000; // Jan 01 2010, 00:00
+const endOfTime = 2147483647; // Jan 19, 2038, 03:14
 var from = beginningOfTime;
 var until = endOfTime;
 
@@ -27,15 +27,15 @@ var filters = [
   "dnssec",
 ];
 
-$(function () {
+function init_datepicker() {
   $("#querytime").daterangepicker(
     {
       timePicker: true,
       timePickerIncrement: 5,
       timePicker24Hour: true,
       locale: { format: dateformat },
-      startDate: moment(beginningOfTime),
-      endDate: moment(endOfTime),
+      startDate: moment(from * 1000),
+      endDate: moment(until * 1000),
       ranges: {
         "Last 10 Minutes": [moment().subtract(10, "minutes"), moment()],
         "Last Hour": [moment().subtract(1, "hours"), moment()],
@@ -63,7 +63,7 @@ $(function () {
       until = moment(endt).utc().valueOf() / 1000;
     }
   );
-});
+}
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
@@ -422,17 +422,26 @@ function parseFilters() {
 }
 
 function filterOn(param, dict) {
-  return param in dict && typeof dict[param] === "string" && dict[param].length > 0;
+  const typ = typeof dict[param];
+  console.log([param, dict, typ]);
+  return param in dict && (typ === "number" || typ === "string" && dict[param].length > 0);
 }
 
-function getAPIURL(dict) {
+function getAPIURL(filters) {
   var apiurl = "/api/queries?";
   for (var key in filters) {
     if (Object.hasOwnProperty.call(filters, key)) {
       var filter = filters[key];
-      if (filterOn(filter, dict)) apiurl += "&" + filter + "=" + dict[filter];
+      if (filterOn(key, filters))
+      {
+        if(!apiurl.endsWith("?")) apiurl += "&";
+        apiurl += key + "=" + filter;
+      }
     }
   }
+
+  console.log(filters);
+  console.log(apiurl);
 
   // Omit from/until filtering if we cannot reach these times. This will speed
   // up the database lookups notably on slow devices.
@@ -468,6 +477,16 @@ $(function () {
 
   getSuggestions(GETDict);
   var apiurl = getAPIURL(GETDict);
+
+  if("from" in GETDict) {
+    from = GETDict["from"];
+    $("#from").val(moment.unix(from).format("Y-MM-DD HH:mm:ss"));
+  }
+  if("until" in GETDict) {
+    until = GETDict["until"];
+    $("#until").val(moment.unix(until).format("Y-MM-DD HH:mm:ss"));
+  }
+  init_datepicker();
 
   table = $("#all-queries").DataTable({
     ajax: {
@@ -598,6 +617,8 @@ function refreshTable() {
 
   // Source data from API
   var filters = parseFilters();
+  filters["from"] = from;
+  filters["until"] = until;
   var apiurl = getAPIURL(filters);
   table.ajax.url(apiurl).draw();
 }
