@@ -71,9 +71,9 @@ function verifyPassword($pwhash, $use_api = false)
 
                 // Login successful, redirect the user to the original requested page
                 if (
-                    $_SERVER['REQUEST_METHOD'] === 'POST' &&
-                    strlen($_SERVER['SCRIPT_NAME']) >= 10 &&
-                    substr_compare($_SERVER['SCRIPT_NAME'], '/login.php', -10) === 0
+                    $_SERVER['REQUEST_METHOD'] === 'POST'
+                    && strlen($_SERVER['SCRIPT_NAME']) >= 10
+                    && substr_compare($_SERVER['SCRIPT_NAME'], '/login.php', -10) === 0
                 ) {
                     header('Location: '.$redirect_url);
                     exit;
