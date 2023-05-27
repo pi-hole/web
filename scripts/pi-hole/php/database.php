@@ -73,12 +73,12 @@ function SQLite3_connect($filename, $mode = SQLITE3_OPEN_READONLY)
 /**
  * Add domains to a given table.
  *
- * @param $db object The SQLite3 database connection object
- * @param $table string The target table
- * @param $domains array Array of domains (strings) to be added to the table
- * @param $wildcardstyle boolean Whether to format the input domains in legacy wildcard notation
- * @param $returnnum boolean Whether to return an integer or a string
- * @param $type integer The target type (0 = exact whitelist, 1 = exact blacklist, 2 = regex whitelist, 3 = regex blacklist)
+ * @param            $db            object The SQLite3 database connection object
+ * @param            $table         string The target table
+ * @param            $domains       array Array of domains (strings) to be added to the table
+ * @param            $wildcardstyle boolean Whether to format the input domains in legacy wildcard notation
+ * @param            $returnnum     boolean Whether to return an integer or a string
+ * @param            $type          integer The target type (0 = exact whitelist, 1 = exact blacklist, 2 = regex whitelist, 3 = regex blacklist)
  * @param mixed|null $comment
  *
  * @return string Success/error and number of processed domains
@@ -199,11 +199,11 @@ function add_to_table($db, $table, $domains, $comment = null, $wildcardstyle = f
 /**
  * Remove domains from a given table.
  *
- * @param $db object The SQLite3 database connection object
- * @param $table string The target table
- * @param $domains array Array of domains (strings) to be removed from the table
+ * @param $db        object The SQLite3 database connection object
+ * @param $table     string The target table
+ * @param $domains   array Array of domains (strings) to be removed from the table
  * @param $returnnum boolean Whether to return an integer or a string
- * @param $type integer The target type (0 = exact whitelist, 1 = exact blacklist, 2 = regex whitelist, 3 = regex blacklist)
+ * @param $type      integer The target type (0 = exact whitelist, 1 = exact blacklist, 2 = regex whitelist, 3 = regex blacklist)
  *
  * @return string Success/error and number of processed domains
  */

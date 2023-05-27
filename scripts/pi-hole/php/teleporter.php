@@ -34,9 +34,9 @@ function archive_add_file($path, $name, $subdir = '')
 /**
  * Add the contents of a table to the archive.
  *
- * @param $name string The name of the file in the archive to save the table to
+ * @param $name  string The name of the file in the archive to save the table to
  * @param $table string The table to export
- * @param $type integer Type of domains to store
+ * @param $type  integer Type of domains to store
  */
 function archive_add_table($name, $table, $type = -1)
 {
@@ -66,7 +66,7 @@ function archive_add_table($name, $table, $type = -1)
 /**
  * Restore the contents of a table from an uploaded archive.
  *
- * @param $file object The file in the archive to restore the table from
+ * @param $file  object The file in the archive to restore the table from
  * @param $table string The table to import
  * @param $flush boolean Whether to flush the table before importing the archived data
  *
@@ -214,9 +214,9 @@ function archive_restore_table($file, $table, $flush = false)
 /**
  * Create table rows from an uploaded archive file.
  *
- * @param $file object The file in the archive to import
- * @param $table string The target table
- * @param $flush boolean Whether to flush the table before importing the archived data
+ * @param $file          object The file in the archive to import
+ * @param $table         string The target table
+ * @param $flush         boolean Whether to flush the table before importing the archived data
  * @param $wildcardstyle boolean Whether to format the input domains in legacy wildcard notation
  *
  * @return int Number of processed rows from the imported file
@@ -270,7 +270,7 @@ function archive_insert_into_table($file, $table, $flush = false, $wildcardstyle
  * Flush table if requested. This subroutine flushes each table only once.
  *
  * @param $table string The target table
- * @param $type integer Type of item to flush in table (applies only to domainlist table)
+ * @param $type  integer Type of item to flush in table (applies only to domainlist table)
  */
 function flush_table($table, $type = null)
 {
