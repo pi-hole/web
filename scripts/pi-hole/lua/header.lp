@@ -10,6 +10,7 @@
 <?
 starttime = mg.time(true)
 hostname = pihole.hostname()
+webhome = pihole.webhome()
 -- Get name of script by matching whatever is after the last "/" in the URI
 scriptname = mg.request_info.request_uri:match(pihole.webhome().."(.*)$")
 -- Fall back to "index.lp" if no match is found (e.g. when accessing the root)
