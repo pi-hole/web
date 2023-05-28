@@ -576,7 +576,16 @@ function initSettingsLevel() {
   }
 
   // Set the settings level
-  $("#settings-level").val(String(settingsLevel));
+
+  $("#settings-level").append(
+    '<option value="0"' + (settingsLevel === 0 ? " selected" : "") + ">Basic</option>"
+  );
+  $("#settings-level").append(
+    '<option value="1"' + (settingsLevel === 1 ? " selected" : "") + ">Advanced</option>"
+  );
+  $("#settings-level").append(
+    '<option value="2"' + (settingsLevel === 2 ? " selected" : "") + ">Expert</option>"
+  );
   applySettingsLevel();
 }
 

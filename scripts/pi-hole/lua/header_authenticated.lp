@@ -53,13 +53,12 @@ mg.include('header.lp','r')
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                <? if startsWith(scriptname, 'settings-') then ?>
+                <? if startsWith(scriptname, 'settings/') then ?>
                     <li class="nav-item">
                         <p class="navbar-text">
                             Settings level: <select id="settings-level" class="form-control input-sm">
-                                <option value="0">Basic</option>
-                                <option value="1">Advanced</option>
-                                <option value="2">Expert</option>
+                                <option></option>
+                                <option>Advanced</option>
                             </select>
                         </p>
                     </li>
