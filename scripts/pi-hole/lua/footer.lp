@@ -59,6 +59,6 @@
 <!-- ./wrapper -->
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/footer.js')?>"></script>
 
-<div id="advanced-info-data" style="display: none;" data-starttime="<?=starttime?>" data-endtime="<?=mg.time(true)?>" data-client-ip="<?=mg.request_info.remote_addr?>" data-tls="<?=tostring(mg.request_info.https)?>"></div>
+<div id="advanced-info-data" style="display: none;" data-starttime="<?=starttime?>" data-endtime="<?=mg.time(true)?>" data-client-ip="<?=mg.request_info.remote_addr?>" data-tls="<?=tostring(is_secure)?>"></div>
 </body>
 </html>

@@ -9,6 +9,14 @@
 
 mg.include('scripts/pi-hole/lua/header.lp','r')
 
+-- Build HTTPS upgrade link if HTTP is used
+https_link = ""
+if not is_secure then
+    https_link = "https://pi.hole" .. mg.request_info.request_uri
+    if mg.request_info.query_string then
+        https_link = https_link .. "?" .. mg.request_info.query_string
+    end
+end
 ?>
 <body class="hold-transition layout-boxed login-page">
 <div class="box login-box" id="login-box">
@@ -26,6 +34,16 @@ mg.include('scripts/pi-hole/lua/header.lp','r')
                 <div id="cookieInfo" class="panel-title text-center text-red" style="font-size: 150%" hidden>Verify that cookies are allowed</div>
                 <div class="text-center form-group has-error" id="dns-failure-label" style="display: none;">
                     <label>DNS Server failure detected, log in to see Pi-hole diagnosis messages</label>
+                </div>
+                <div class="text-center form-group has-error" id="dns-failure-label" style="display: <? if is_secure then ?>none<? else ?>block<? end ?>;">
+                    <div class="box box-danger" id="insecure-box">
+                        <div class="box-header with-border pointer no-user-select">
+                            <h3 class="box-title has-error control-label"><i class="fa fa-fw fa-triangle-exclamation"></i>&nbsp;&nbsp;Insecure network connection&nbsp;&nbsp;<i class="fa fa-fw fa-triangle-exclamation"></i></h3>
+                        </div>
+                        <div class="box-body">
+                            <p>Consider upgrading to <a href="<?=https_link?>">HTTPS</a> (end-to-end encryption)</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group has-error login-box-msg" id="error-label" style="display: none;">
                     <label class="control-label"><i class="fa fa-times-circle"></i> Wrong password!</label>
