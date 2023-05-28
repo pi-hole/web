@@ -16,16 +16,12 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 <h3 class="box-title">Export your Pi-hole's configuration</h3>
             </div>
             <div class="box-body">
-                <div class="row">
-                    <div class="col-lg-10">
-                        <p>Warning: This archive contains sensitive information about your Pi-hole installation, e.g. the API token and the 2FA-TOTP secret (if enabled). Please be careful with this file and do not share it with anyone even if they claim to help you.</p>
-                        <? if not mg.request_info.https then mg.write("<p class='text-danger'>Warning: You are currently not using an end-to-end encryption. This means that your API token and 2FA-TOTP secret will be transmitted in plain text. We recommend to use HTTPS when exporting your configuration.</p>") end ?>
-                    </div>
-                    <div class="col-lg-2">
-                        <a class="btn btn-app btn-success" href="/api/teleporter" target="_blank">
-                            <i class="fa fa-save"></i><br>Export
-                        </a>
-                    </div>
+                <p>Warning: This archive contains sensitive information about your Pi-hole installation, e.g. the API token and the 2FA-TOTP secret (if enabled). Please be careful with this file and do not share it with anyone even if they claim to help you.</p>
+                <? if not mg.request_info.https then ?><p class='text-danger'>Warning: You are currently not using an end-to-end encryption. This means that your API token and 2FA-TOTP secret will be transmitted in plain text. We recommend to use HTTPS when exporting your configuration.</p><? end ?>
+                <div class="pull-right">
+                    <a class="btn btn-app btn-success" href="/api/teleporter" target="_blank">
+                        <i class="fa fa-save"></i><br>Export
+                    </a>
                 </div>
             </div>
         </div>
@@ -36,19 +32,15 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 <h3 class="box-title">Import previously imported configuration</h3>
             </div>
             <div class="box-body">
-                <div class="row">
-                    <div class="col-lg-10">
-                        <div class="form-group">
-                            <label for="file">File input</label>
-                            <input type="file" name="file" id="file" accept=".zip">
-                            <p class="help-block">When importing settings from a <em>newer</em> version of Pi-hole, not yet existing settings will be ignored. When importing from an <em>older</em> version of Pi-hole, settings for newer features will be initialized with their default values.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <a class="btn btn-app btn-success" id="submit-import">
-                            <i class="fa fa-upload"></i><br>Import
-                        </a>
-                    </div>
+                <div class="form-group">
+                    <label for="file">File input</label>
+                    <input type="file" name="file" id="file" accept=".zip">
+                    <p class="help-block">When importing settings from a <em>newer</em> version of Pi-hole, not yet existing settings will be ignored. When importing from an <em>older</em> version of Pi-hole, settings for newer features will be initialized with their default values.</p>
+                </div>
+                <div class="pull-right">
+                    <a class="btn btn-app btn-success" id="submit-import">
+                        <i class="fa fa-upload"></i><br>Import
+                    </a>
                 </div>
             </div>
         </div>
