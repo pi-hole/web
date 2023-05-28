@@ -25,11 +25,11 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
-    "eslint-plugin-compat": "^4.1.2",
-    "postcss": "^8.4.21",
+    "eslint-plugin-compat": "^4.1.4",
+    "postcss": "^8.4.23",
     "postcss-cli": "^10.1.0",
-    "prettier": "2.8.4",
-    "xo": "^0.53.1"
+    "prettier": "2.8.8",
+    "xo": "^0.54.2"
   },
   "browserslist": [
     "defaults",
@@ -101,7 +101,8 @@
       "unicorn/prefer-string-slice": "off",
       "unicorn/prevent-abbreviations": "off",
       "unicorn/prefer-logical-operator-over-ternary": "off",
-      "unicorn/switch-case-braces": "off"
+      "unicorn/switch-case-braces": "off",
+      "unicorn/no-negated-condition": "off"
     }
   },
   "dependencies": {}

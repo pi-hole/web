@@ -64,30 +64,37 @@ if ((isset($_GET['summary']) || isset($_GET['summaryRaw']) || !count($_GET)) && 
 }
 
 if (isset($_GET['getMaxlogage']) && $auth) {
-    $return = callFTLAPI('maxlogage');
-    if (array_key_exists('FTLnotrunning', $return)) {
+    $maxlogage = getMaxlogage();
+
+    if ($maxlogage < 0) {
+        // FTL is offline
         $data = array('FTLnotrunning' => true);
     } else {
-        // Convert seconds to hours and rounds to one decimal place.
-        $ret = round(intval($return[0]) / 3600, 1);
-        // Return 24h if value is 0, empty, null or non numeric.
-        $ret = $ret ?: 24;
-
-        $data = array_merge($data, array('maxlogage' => $ret));
+        $data = array_merge($data, array('maxlogage' => $maxlogage));
     }
 }
 
 if (isset($_GET['overTimeData10mins']) && $auth) {
+    $maxlogage = getMaxlogage();
+
     $return = callFTLAPI('overTime');
-    if (array_key_exists('FTLnotrunning', $return)) {
+    if (array_key_exists('FTLnotrunning', $return) || $maxlogage < 0) {
         $data = array('FTLnotrunning' => true);
     } else {
         $domains_over_time = array();
         $ads_over_time = array();
+
+        // Use current time and maxlogage to limit the time range
+        $time_end = time();
+        $time_start = $time_end - ($maxlogage * 3600);
+
         foreach ($return as $line) {
             $tmp = explode(' ', $line);
-            $domains_over_time[intval($tmp[0])] = intval($tmp[1]);
-            $ads_over_time[intval($tmp[0])] = intval($tmp[2]);
+            $timeslot = intval($tmp[0]);
+            if ($timeslot >= $time_start && $timeslot <= $time_end) {
+                $domains_over_time[$timeslot] = intval($tmp[1]);
+                $ads_over_time[$timeslot] = intval($tmp[2]);
+            }
         }
 
         $result = array(
@@ -401,16 +408,25 @@ if (isset($_GET['getClientNames']) && $auth) {
 }
 
 if (isset($_GET['overTimeDataClients']) && $auth) {
-    $return = callFTLAPI('ClientsoverTime');
+    $maxlogage = getMaxlogage();
 
-    if (array_key_exists('FTLnotrunning', $return)) {
+    $return = callFTLAPI('ClientsoverTime');
+    if (array_key_exists('FTLnotrunning', $return) || $maxlogage < 0) {
         $data = array('FTLnotrunning' => true);
     } else {
         $over_time = array();
+
+        // Use current time and maxlogage to limit the time range
+        $time_end = time();
+        $time_start = $time_end - ($maxlogage * 3600);
+
         foreach ($return as $line) {
             $tmp = explode(' ', $line);
             for ($i = 0; $i < count($tmp) - 1; ++$i) {
-                $over_time[intval($tmp[0])][$i] = floatval($tmp[$i + 1]);
+                $timeslot = intval($tmp[0]);
+                if ($timeslot >= $time_start && $timeslot <= $time_end) {
+                    $over_time[$timeslot][$i] = floatval($tmp[$i + 1]);
+                }
             }
         }
         $result = array('over_time' => $over_time);
