@@ -204,19 +204,19 @@
                                 <!-- Tail pihole.log -->
                                 <li class="<? if scriptname == 'taillog' and GET("file") == "dnsmasq" then ?> active<? end ?>">
                                     <a href="<?=pihole.webhome()?>taillog?file=dnsmasq">
-                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>pihole.log</code>
+                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> pihole.log
                                     </a>
                                 </li>
                                 <!-- Tail FTL.log -->
                                 <li class="<? if scriptname == 'taillog' and GET("file") == "ftl" then ?> active<? end ?>">
                                     <a href="<?=pihole.webhome()?>taillog?file=ftl">
-                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>FTL.log</code>
+                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> FTL.log
                                     </a>
                                 </li>
                                 <!-- Tail webserver.log -->
                                 <li class="<? if scriptname == 'taillog' and GET("file") == "webserver" then ?> active<? end ?>">
                                     <a href="<?=pihole.webhome()?>taillog?file=webserver">
-                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <code>webserver.log</code>
+                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> webserver.log
                                     </a>
                                 </li>
                             </ul>
