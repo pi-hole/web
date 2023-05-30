@@ -111,7 +111,6 @@ end
     </div>
 </div>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/login.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/vendor/geraintluff-sha256.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/footer.js')?>"></script>
 </body>
 </html>

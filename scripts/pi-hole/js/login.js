@@ -5,8 +5,6 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global sha256:false */
-
 function getParams() {
   var GETDict = {};
   window.location.search
@@ -16,12 +14,6 @@ function getParams() {
       GETDict[item.split("=")[0]] = decodeURIComponent(item.split("=")[1]);
     });
   return GETDict;
-}
-
-function computeResponse(password, challenge) {
-  // Compute password hash twice to mitigate rainbow
-  // table vulnerability
-  return sha256(challenge + ":" + sha256(sha256(password)));
 }
 
 function redirect() {
@@ -63,12 +55,12 @@ function wrongPassword(isError = false, isSuccess = false) {
   }
 }
 
-function doLogin(response) {
+function doLogin(password) {
   wrongPassword(false, false);
   $.ajax({
     url: "/api/auth",
     method: "POST",
-    data: JSON.stringify({ response: response, totp: parseInt($("#totp").val(), 10) }),
+    data: JSON.stringify({ password: password, totp: parseInt($("#totp").val(), 10) }),
   })
     .done(function () {
       wrongPassword(false, true);
@@ -93,18 +85,7 @@ $("#loginform").submit(function (e) {
     return;
   }*/
 
-  // Get challenge
-  $.ajax({
-    url: "/api/auth",
-    method: "GET",
-  }).done(function (data) {
-    if ("challenge" in data) {
-      var response = computeResponse($("#loginpw").val(), data.challenge);
-      doLogin(response);
-    } else if (data.session.valid === true)
-      // Password may have been remove meanwhile
-      redirect();
-  });
+  doLogin($("#loginpw").val());
 });
 
 // Trigger keyup event when pasting into the TOTP code input field
