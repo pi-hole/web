@@ -66,7 +66,7 @@ td.lookatme {
   content: attr(lookatme-text);
   padding: inherit;
   position: absolute;
-  inset: 0 0 0 0;
+  inset: 0;
   z-index: 1;
   /* 20 steps / 2 seconds = 10fps */
   -webkit-animation: 2s infinite Pulse steps(20);
@@ -432,7 +432,7 @@ td.lookatme {
 }
 
 .small-box-header {
-  padding: 4px 8px 4px 8px;
+  padding: 4px 8px;
 }
 
 .small-box span {

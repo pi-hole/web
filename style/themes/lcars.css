@@ -355,7 +355,7 @@ p.login-box-msg,
   margin: -20px -20px 20px;
   padding: calc(176px - 0.5em) 0 0;
   position: absolute;
-  inset: 0 0 0 0;
+  inset: 0;
   font-size: clamp(40px, calc((100vw - 60px) / 6), 90px);
   line-height: 1;
   height: calc(176px + 2em);
@@ -1646,7 +1646,7 @@ table.dataTable {
   border-radius: 12px;
   position: absolute;
   margin-top: -3px;
-  inset: 0 0 0 0;
+  inset: 0;
   z-index: -1;
   animation: 3s infinite warningPulse steps(30);
 }

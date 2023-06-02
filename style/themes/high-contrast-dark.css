@@ -25,7 +25,6 @@
   --network-older: #182840;
   --network-never: #182028;
 
-  --allowed-color: #3c7;
   --allowed-color: var(--primary-color);
   --blocked-color: var(--danger-color);
 
