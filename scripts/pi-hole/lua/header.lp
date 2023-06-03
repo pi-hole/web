@@ -55,15 +55,15 @@ is_secure = mg.request_info.https or pihole.rev_proxy()
 
     <title>Pi-hole <?=hostname?></title>
 
-    <link rel="apple-touch-icon" href="img/favicons/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" href="img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
-    <link rel="icon" href="img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
-    <link rel="manifest" href="img/favicons/manifest.json">
+    <link rel="apple-touch-icon" href="<?=pihole.webhome()?>img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="<?=pihole.webhome()?>img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="<?=pihole.webhome()?>img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="<?=pihole.webhome()?>img/favicons/manifest.json">
     <? pihole.include('scripts/pi-hole/lua/theme.lua') ?>
-    <link rel="mask-icon" href="img/favicons/safari-pinned-tab.svg" color="<?=theme.color?>">
-    <link rel="shortcut icon" href="img/favicons/favicon.ico">
+    <link rel="mask-icon" href="<?=pihole.webhome()?>img/favicons/safari-pinned-tab.svg" color="<?=theme.color?>">
+    <link rel="shortcut icon" href="<?=pihole.webhome()?>img/favicons/favicon.ico">
     <meta name="msapplication-TileColor" content="<?=theme.color?>">
-    <meta name="msapplication-TileImage" content="img/favicons/mstile-150x150.png">
+    <meta name="msapplication-TileImage" content="<?=pihole.webhome()?>img/favicons/mstile-150x150.png">
 
     <!-- Theme styles -->
     <meta name="theme-color" content="<?=theme.color?>">
