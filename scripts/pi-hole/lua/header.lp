@@ -55,6 +55,8 @@ is_secure = mg.request_info.https or pihole.rev_proxy()
 
     <title>Pi-hole <?=hostname?></title>
 
+    <meta name="csrf-token" content="<?=mg.request_info.csrf_token?>">
+
     <link rel="apple-touch-icon" href="<?=pihole.webhome()?>img/favicons/apple-touch-icon.png" sizes="180x180">
     <link rel="icon" href="<?=pihole.webhome()?>img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="<?=pihole.webhome()?>img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">

@@ -653,6 +653,11 @@ function addAdvancedInfo() {
 $(function () {
   initSettingsLevel();
   addAdvancedInfo();
+
+  // CSRF protection for AJAX requests
+  $.ajaxSetup({
+    headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
+  });
 });
 
 // Install custom AJAX error handler for DataTables
