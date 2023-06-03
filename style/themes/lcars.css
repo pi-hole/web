@@ -607,7 +607,7 @@ p.login-box-msg,
 }
 
 .sidebar-menu li > a > .pull-right-container.warning-count {
-  transform: scale(1);
+  transform: none;
   position: relative;
   bottom: 0.15em;
 }
@@ -860,6 +860,16 @@ p.login-box-msg,
   right: unset;
   left: 0;
   transform: scaleX(-1);
+}
+
+.sidebar-menu li > a > span .pull-right-container {
+  position: absolute;
+  bottom: 7px;
+  left: 10px;
+}
+
+.sidebar-menu li > a > span .pull-right-container span {
+  float: left !important;
 }
 
 .treeview-menu > li > a {
