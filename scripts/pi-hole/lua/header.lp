@@ -75,7 +75,7 @@ is_secure = mg.request_info.https or pihole.rev_proxy()
 <? end ?>
 
     <!-- Theme fonts -->
-<? if theme == 'lcars' then ?>
+<? if pihole.webtheme() == 'lcars' then ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/fonts/ubuntu-mono/ubuntu-mono.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/fonts/antonio/antonio.css')?>">
 <? else ?>
