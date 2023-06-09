@@ -491,13 +491,13 @@ function updateTopClientsChart() {
         }
 
         client = utils.escapeHtml(client);
-        if (client.indexOf("|") !== -1) {
+        if (client.indexOf("|") === -1) {
+          clientname = client;
+          clientip = client;
+        } else {
           idx = client.indexOf("|");
           clientname = client.substr(0, idx);
           clientip = client.substr(idx + 1, client.length - idx);
-        } else {
-          clientname = client;
-          clientip = client;
         }
 
         url =
@@ -531,13 +531,13 @@ function updateTopClientsChart() {
         }
 
         client = utils.escapeHtml(client);
-        if (client.indexOf("|") !== -1) {
+        if (client.indexOf("|") === -1) {
+          clientname = client;
+          clientip = client;
+        } else {
           idx = client.indexOf("|");
           clientname = client.substr(0, idx);
           clientip = client.substr(idx + 1, client.length - idx);
-        } else {
-          clientname = client;
-          clientip = client;
         }
 
         url =
@@ -719,10 +719,10 @@ function updateSummaryData(runOnce) {
     }, 500);
   })
     .done(function () {
-      if (!FTLoffline) {
-        setTimer(1);
-      } else {
+      if (FTLoffline) {
         setTimer(10);
+      } else {
+        setTimer(1);
       }
     })
     .fail(function () {

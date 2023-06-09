@@ -240,10 +240,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array('sysadmin', 'dns', 'piho
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <?php
-                                            $FTLpid = intval(pidofFTL());
+<?php
+// Try to get FTL PID
+$FTLpid = intval(pidofFTL());
+
 if ($FTLpid !== 0) {
-    $FTLversion = exec('/usr/bin/pihole-FTL version'); ?>
+    $FTLversion = exec('/usr/bin/pihole-FTL version');
+    ?>
                                             <table class="table table-striped table-bordered nowrap">
                                                 <tbody>
                                                     <tr>
@@ -256,20 +259,19 @@ if ($FTLpid !== 0) {
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">Time FTL started:</th>
-                                                        <td><?php print_r(get_FTL_data($FTLpid, 'lstart'));
-    echo ' '.$timezone; ?></td>
+                                                        <td><?php echo get_FTL_data($FTLpid, 'lstart').' '.$timezone; ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">User / Group:</th>
-                                                        <td><?php print_r(get_FTL_data($FTLpid, 'euser')); ?> / <?php print_r(get_FTL_data($FTLpid, 'egroup')); ?></td>
+                                                        <td><?php echo get_FTL_data($FTLpid, 'euser').' / '.get_FTL_data($FTLpid, 'egroup'); ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">Total CPU utilization:</th>
-                                                        <td><?php print_r(get_FTL_data($FTLpid, '%cpu')); ?>%</td>
+                                                        <td><?php echo get_FTL_data($FTLpid, '%cpu'); ?>%</td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">Memory utilization:</th>
-                                                        <td><?php print_r(get_FTL_data($FTLpid, '%mem')); ?>%</td>
+                                                        <td><?php echo get_FTL_data($FTLpid, '%mem'); ?>%</td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">
@@ -298,10 +300,20 @@ if ($FTLpid !== 0) {
                                                 </tbody>
                                             </table>
                                             See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
-                                            <?php
-} else { ?>
+<?php
+} elseif ($FTLrestarted) {
+    // Show a countdown and a message if FTL was restarted
+    ?>
+                                            <div id="restart-countdown"></div>
+                                            <script src="<?php echo fileversion('scripts/pi-hole/js/restartdns.js'); ?>"></script>
+<?php
+} else {
+    // Show a message if FTL is offline
+    ?>
                                             <div>The FTL service is offline!</div>
-                                            <?php } ?>
+<?php
+}
+?>
                                         </div>
                                     </div>
                                 </div>
@@ -428,16 +440,18 @@ if ($FTLpid !== 0) {
                         }
                     } else {
                         $DHCP = false;
+                        $DHCPstart = '';
+                        $DHCPend = '';
+                        $DHCProuter = '';
+
                         // Try to guess initial settings
                         if ($IPv4GW !== 'unknown') {
                             $DHCPparts = explode('.', $IPv4GW);
-                            $DHCPstart = $DHCPparts[0].'.'.$DHCPparts[1].'.'.$DHCPparts[2].'.201';
-                            $DHCPend = $DHCPparts[0].'.'.$DHCPparts[1].'.'.$DHCPparts[2].'.251';
-                            $DHCProuter = $IPv4GW;
-                        } else {
-                            $DHCPstart = '';
-                            $DHCPend = '';
-                            $DHCProuter = '';
+                            if (isset($DHCPparts[0]) && isset($DHCPparts[1]) && isset($DHCPparts[2])) {
+                                $DHCPstart = $DHCPparts[0].'.'.$DHCPparts[1].'.'.$DHCPparts[2].'.201';
+                                $DHCPend = $DHCPparts[0].'.'.$DHCPparts[1].'.'.$DHCPparts[2].'.251';
+                                $DHCProuter = $IPv4GW;
+                            }
                         }
                         $DHCPleasetime = 24;
                         $DHCPIPv6 = false;
@@ -940,7 +954,7 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
                                                         Use an upstream DNS server which supports DNSSEC when activating DNSSEC. Note that
                                                         the size of your log might increase significantly
                                                         when enabling DNSSEC. A DNSSEC resolver test can be found
-                                                        <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
+                                                        <a href="https://wander.science/projects/dns/dnssec-resolver-test/" rel="noopener" target="_blank">here</a>.</p>
                                                 </div>
                                                 <br>
                                                 <h4><a id="ratelimit"></a>Rate-limiting</h4>

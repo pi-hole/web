@@ -243,7 +243,7 @@ function stateLoadCallback(itemName) {
   // Receive previous state from client's local storage area
   if (localStorage === null) {
     var item = backupStorage[itemName];
-    data = typeof item === "undefined" ? null : item;
+    data = item === "undefined" ? null : item;
   } else {
     data = localStorage.getItem(itemName);
   }
@@ -310,15 +310,7 @@ function addFromQueryLog(domain, list) {
       },
       success: function (response) {
         alProcessing.hide();
-        if (!response.success) {
-          // Failure
-          alNetworkErr.hide();
-          alCustomErr.html(response.message);
-          alFailure.fadeIn(1000);
-          setTimeout(function () {
-            alertModal.modal("hide");
-          }, 10000);
-        } else {
+        if (response.success) {
           // Success
           alSuccess.children(alDomain).text(domain);
           alSuccess.children(alList).text(listtype);
@@ -326,6 +318,14 @@ function addFromQueryLog(domain, list) {
           setTimeout(function () {
             alertModal.modal("hide");
           }, 2000);
+        } else {
+          // Failure
+          alNetworkErr.hide();
+          alCustomErr.html(response.message);
+          alFailure.fadeIn(1000);
+          setTimeout(function () {
+            alertModal.modal("hide");
+          }, 10000);
         }
       },
       error: function () {

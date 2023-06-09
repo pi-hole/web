@@ -12,6 +12,11 @@
   --datatable-bgcolor: rgba(64, 76, 88, 0.8);
 }
 
+/* fix #2554: browser not detecting dark mode */
+html {
+  color-scheme: dark;
+}
+
 body {
   background-color: #353c42;
   color: #bec5cb;
