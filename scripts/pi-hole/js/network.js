@@ -160,12 +160,15 @@ $(function () {
 
       // MAC + Vendor field if available
       if (data.macVendor && data.macVendor.length > 0) {
-        $("td:eq(1)", row).html(data.hwaddr + "<br/>" + data.macVendor);
+        $("td:eq(1)", row).html(
+          utils.escapeHtml(data.hwaddr) + "<br/>" + utils.escapeHtml(data.macVendor)
+        );
       }
 
-      // Hide mock MAC addresses
+      // Make mock MAC addresses italics and add title
       if (data.hwaddr.startsWith("ip-")) {
-        $("td:eq(1)", row).text("N/A");
+        $("td:eq(1)", row).css("font-style", "italic");
+        $("td:eq(1)", row).attr("title", "Mock MAC address");
       }
 
       // Add delete button

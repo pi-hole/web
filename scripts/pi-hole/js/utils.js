@@ -7,6 +7,16 @@
 
 /* global moment:false, apiFailure: false */
 
+$(function () {
+  // CSRF protection for AJAX requests, this has to be configured globally
+  // because we are using the jQuery $.ajax() function directly in some cases
+  // Furthermore, has this to be done before any AJAX request is made so that
+  // the CSRF token is sent along with each request to the API
+  $.ajaxSetup({
+    headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
+  });
+});
+
 // Credit: https://stackoverflow.com/a/4835406
 function escapeHtml(text) {
   var map = {
