@@ -194,13 +194,13 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                                 </tr>
                                 <tr>
                                     <th scope="row">
-                                        <span title="Number of cache entries that were removed because they expired">DNS cache expiries:</span>
+                                        <span title="Number of expired cache entries (they can still be used by the cache optimizer). These entries will only be freed when space is really needed (for efficiency reasons)">Expired DNS cache entries:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-expired">&nbsp;</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">
-                                        <span title="Number of immortan cache entries that will never expire (e.g. from /etc/hosts or local configuration)">Immortal DNS cache entries:</span>
+                                        <span title="Number of immortal cache entries that will never expire (e.g. from /etc/hosts or local configuration)">Immortal DNS cache entries:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-immortal">&nbsp;</td>
                                 </tr>
