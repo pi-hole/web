@@ -162,7 +162,9 @@ function updateMetrics() {
       // Set metrics
       setMetrics(metrics, "sysinfo-");
 
-      $("#cache-utilization").text(cacheEntries.toLocaleString() + " (" + ((100 * cacheEntries) / cacheSize).toFixed(1) + "%)");
+      $("#cache-utilization").text(
+        cacheEntries.toLocaleString() + " (" + ((100 * cacheEntries) / cacheSize).toFixed(1) + "%)"
+      );
 
       $("div[id^='sysinfo-metrics-overlay']").hide();
       // Update every 10 seconds

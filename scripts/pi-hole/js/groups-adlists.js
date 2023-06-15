@@ -77,12 +77,17 @@ function format(data) {
         ")"
       : "N/A") +
     '</td></tr><tr class="dataTables-child"><td>Number of entries on this list:&nbsp;&nbsp;</td><td>' +
-    (data.number !== null && numbers === true ? parseInt(data.number, 10) : "N/A") +
+    (data.number !== null && numbers === true
+      ? parseInt(data.number, 10).toLocaleString()
+      : "N/A") +
+    (data.abp_entries !== null && parseInt(data.abp_entries, 10) > 0 && numbers === true
+      ? " (out of which " + parseInt(data.abp_entries, 10).toLocaleString() + " are in ABP-style)"
+      : "N/A") +
     '</td></tr><tr class="dataTables-child"' +
     "><td>Number of non-domains on this list:&nbsp;&nbsp;</td>" +
     "<td>" +
     (data.invalid_domains !== null && numbers === true
-      ? parseInt(data.invalid_domains, 10)
+      ? parseInt(data.invalid_domains, 10).toLocaleString()
       : "N/A") +
     '</td></tr><tr class="dataTables-child"><td>Database ID of this list:</td><td>' +
     data.id +
