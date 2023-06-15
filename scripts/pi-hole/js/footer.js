@@ -325,7 +325,7 @@ function updateSystemInfo() {
       var startdate = moment()
         .subtract(system.uptime, "seconds")
         .format("dddd, MMMM Do YYYY, HH:mm:ss");
-      $("#temperature").prop(
+      $("#status").prop(
         "title",
         "System uptime: " +
           moment.duration(1000 * system.uptime).humanize() +
@@ -351,8 +351,13 @@ function updateSensorsInfo() {
     url: "/api/info/sensors",
   })
     .done(function (data) {
+      var unit = "°" + data.sensors.unit;
+      if (data.sensors.unit === "°K") {
+        unit = data.sensors.unit;
+      }
+
       if (data.sensors.cpu_temp !== null) {
-        var temp = data.sensors.cpu_temp.toFixed(1) + "&thinsp;&deg;C";
+        var temp = data.sensors.cpu_temp.toFixed(1) + "&thinsp;" + unit;
         var color =
           data.sensors.cpu_temp > data.sensors.hot_limit
             ? "text-red fa-temperature-high"
@@ -361,6 +366,27 @@ function updateSensorsInfo() {
           '<i class="fa fa-fw fas ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp
         );
       } else $("#temperature").html('<i class="fa fa-fw fas fa-temperature-low"></i>&nbsp;Temp:&nbsp;N/A');
+
+      // Get a text listing of all sensors
+      let sensorlist = "Available sensors:\n";
+      $.each(data.sensors.list, function (index, hwmon) {
+        sensorlist += "- " + hwmon.name + " (" + hwmon.source + "):\n";
+        $.each(hwmon.temps, function (index, temp) {
+          sensorlist +=
+            "  - " +
+            temp.name +
+            ": " +
+            temp.value.toFixed(1) +
+            unit +
+            " (max: " +
+            (temp.max === null ? "N/A" : temp.max.toFixed(1) + unit) +
+            ", crit: " +
+            (temp.crit === null ? "N/A" : temp.crit.toFixed(1) + unit) +
+            ")\n";
+        });
+      });
+      $("#temperature").prop("title", sensorlist);
+
       // Update every 20 seconds
       clearTimeout(sensorsTimer);
       sensorsTimer = setTimeout(updateSensorsInfo, 20000);
