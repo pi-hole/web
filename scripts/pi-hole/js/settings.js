@@ -54,6 +54,9 @@ function setConfigValues(topic, key, value) {
         .val(value.value)
         .trigger("click");
 
+      // Also select matching radio button (if any)
+      $("#" + escapedKey + "-" + value.value).prop("checked", true);
+
       break;
     }
 
