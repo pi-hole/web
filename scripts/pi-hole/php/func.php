@@ -113,7 +113,7 @@ function checkfile($filename)
 
 // Avoid browser caching old versions of a file, using the last modification time
 //   Receive the file URL (without "/admin/");
-//   Return the string containin URL + "?v=xxx", where xxx is the last modified time of the file.
+//   Return the string containing URL + "?v=xxx", where xxx is the last modified time of the file.
 function fileversion($url)
 {
     $filename = $_SERVER['DOCUMENT_ROOT'].'/admin/'.$url;
