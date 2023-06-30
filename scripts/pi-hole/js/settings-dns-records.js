@@ -38,7 +38,7 @@ $(function () {
     rowCallback: function (row, data) {
       // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
       var ip = data.substring(0, data.indexOf(" "));
-      // The name can be mulitple domains separated by spaces
+      // The name can be multiple domains separated by spaces
       var name = data.substring(data.indexOf(" ") + 1);
 
       $(row).attr("data-id", data);

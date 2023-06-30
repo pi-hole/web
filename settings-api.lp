@@ -203,7 +203,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                         </div>
                     </div>
                 </div>
-                <p>IMPORTANT: If you lose your 2FA token, you will not be able to login. You will need to disable 2FA on the comand line and re-enable 2FA to generate a new secret.</p>
+                <p>IMPORTANT: If you lose your 2FA token, you will not be able to login. You will need to disable 2FA on the command line and re-enable 2FA to generate a new secret.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>

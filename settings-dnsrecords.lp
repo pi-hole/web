@@ -99,7 +99,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                                         <input id="Ctarget" type="url" class="form-control" placeholder="Associated Target Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <label for="target">TTL (optinal):</label>
+                                        <label for="target">TTL (optional):</label>
                                         <input id="Cttl" type="numeric" class="form-control" placeholder="TTL in seconds" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                 </div>
