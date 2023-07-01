@@ -110,7 +110,7 @@ $(function () {
     },
     rowCallback: function (row, data) {
       // Split record in format <cname>,<target>[,<TTL>]
-      var splitted = data.split(",");
+      var CNAMEarr = data.split(",");
 
       $(row).attr("data-id", data);
       var button =
@@ -122,9 +122,9 @@ $(function () {
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
       $("td:eq(3)", row).html(button);
-      $("td:eq(0)", row).text(splitted[0]);
-      $("td:eq(1)", row).text(splitted[1]);
-      if (splitted.length > 2) $("td:eq(2)", row).text(splitted[2]);
+      $("td:eq(0)", row).text(CNAMEarr[0]);
+      $("td:eq(1)", row).text(CNAMEarr[1]);
+      if (CNAMEarr.length > 2) $("td:eq(2)", row).text(CNAMEarr[2]);
       else $("td:eq(2)", row).text("-");
     },
     dom:
