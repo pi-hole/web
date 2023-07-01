@@ -1133,9 +1133,13 @@ table.dataTable tbody > tr > .selected {
 }
 
 @keyframes error-border {
-  0% { border-color: rgba(255,0,0,0.5) }
-  50% { border-color: rgba(255,0,0,0.2) }
-  100% { border-color: rgba(255,0,0,0.5) }
+  0%,
+  100% {
+    border-color: rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    border-color: rgba(255, 0, 0, 0.2);
+  }
 }
 
 .error-box {
