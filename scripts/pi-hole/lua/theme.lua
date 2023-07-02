@@ -52,6 +52,6 @@ available_themes['lcars'] = {
     color = '#4488FF'
 }
 
--- Get properties of currenty selected theme by asking FTL what the currently
+-- Get properties of currently selected theme by asking FTL what the currently
 -- enabled theme is
 theme = available_themes[pihole.webtheme()]

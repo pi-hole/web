@@ -38,7 +38,7 @@ $(function () {
     rowCallback: function (row, data) {
       // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
       var ip = data.substring(0, data.indexOf(" "));
-      // The name can be mulitple domains separated by spaces
+      // The name can be multiple domains separated by spaces
       var name = data.substring(data.indexOf(" ") + 1);
 
       $(row).attr("data-id", data);
@@ -110,7 +110,7 @@ $(function () {
     },
     rowCallback: function (row, data) {
       // Split record in format <cname>,<target>[,<TTL>]
-      var splitted = data.split(",");
+      var CNAMEarr = data.split(",");
 
       $(row).attr("data-id", data);
       var button =
@@ -122,9 +122,9 @@ $(function () {
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
       $("td:eq(3)", row).html(button);
-      $("td:eq(0)", row).text(splitted[0]);
-      $("td:eq(1)", row).text(splitted[1]);
-      if (splitted.length > 2) $("td:eq(2)", row).text(splitted[2]);
+      $("td:eq(0)", row).text(CNAMEarr[0]);
+      $("td:eq(1)", row).text(CNAMEarr[1]);
+      if (CNAMEarr.length > 2) $("td:eq(2)", row).text(CNAMEarr[2]);
       else $("td:eq(2)", row).text("-");
     },
     dom:

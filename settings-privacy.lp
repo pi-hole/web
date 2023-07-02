@@ -20,7 +20,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                     <div class="box-body">
                         <div class="row">
                             <div class="col-lg-12">
-                                <p>The currently configued logging file is <code id="files.log.dnsmasq"></code></p>
+                                <p>The currently configured logging file is <code id="files.log.dnsmasq"></code></p>
                                 <div>
                                     <input type="checkbox" id="dns.queryLogging" data-key="dns.queryLogging" title="log-queries">
                                     <label for="dns.queryLogging"><strong>Log DNS queries and replies</strong></label>
