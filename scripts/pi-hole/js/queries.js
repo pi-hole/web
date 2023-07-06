@@ -250,7 +250,7 @@ function formatInfo(data) {
     cnameInfo = "";
   if (queryStatus.regexLink) {
     var regexLink =
-      '<a href="groups-domains.php?domainid=' +
+      '<a href="groups-domains.lp?domainid=' +
       data.regex +
       'target="_blank">Regex ID ' +
       data.regex +

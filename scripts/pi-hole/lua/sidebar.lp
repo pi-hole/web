@@ -66,12 +66,12 @@
                         </span>
                     </a>
                 </li>
-                <li class="menu-group<? if scriptname == 'groups/adlists' then ?> active<? end ?>">
-                    <a href="<?=webhome?>groups/adlists">
-                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Adlists
+                <li class="menu-group<? if scriptname == 'groups/lists' then ?> active<? end ?>">
+                    <a href="<?=webhome?>groups/lists">
+                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Lists
                         <span class="pull-right-container">
-                            <span class="label bg-blue pull-right" id="num_lists" title="Number of defined adlists"></span>
-                            <span class="label bg-yellow pull-right" id="num_gravity" title="Total number of domains blocked by your Pi-hole"></span>
+                            <span class="label bg-blue pull-right" id="num_lists" title="Number of subscribed lists"></span>
+                            <span class="label bg-yellow pull-right" id="num_gravity" title="Total number of domains subscribed by your Pi-hole"></span>
                         </span>
                     </a>
                 </li>
