@@ -582,7 +582,9 @@ td.details-control {
 }
 
 .form-control-feedback {
-  right: 12px;
+  right: 0.5em;
+  width: 16px;
+  height: 100%;
 }
 
 .loginpage-logo {

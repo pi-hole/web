@@ -344,11 +344,6 @@ p.login-box-msg,
   box-shadow: none;
 }
 
-.form-control-feedback {
-  right: 0.4em;
-  height: 32px;
-}
-
 .has-error.login-box-msg::before,
 .has-error.login-box-msg::after {
   content: "ACCESS DENIED";
