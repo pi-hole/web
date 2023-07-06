@@ -43,6 +43,9 @@ end
 -- a reverse proxy (e.g. Traefik)
 is_secure = mg.request_info.https or pihole.rev_proxy()
 
+-- Variable to check if user is already authenticated
+is_authenticated = mg.request_info.is_authenticated
+
 ?>
 <html lang="en">
 <head>
@@ -86,15 +89,21 @@ is_secure = mg.request_info.https or pihole.rev_proxy()
 
     <!-- Common styles -->
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap/css/bootstrap.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/AdminLTE.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/select2.min.css')?>">
-
-    <? if startsWith(scriptname, 'groups') then ?>
-    <!-- Group management styles -->
+<?
+if startsWith(scriptname, 'groups') then
+    -- Group management styles
+?>
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/animate.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap-select.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap-toggle.min.css')?>">
-    <? end ?>
+<? end ?>
+<? if is_authenticated then ?>
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/datatables.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/datatables_extensions.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/daterangepicker.min.css')?>">
+<? end ?>
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/select2.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/AdminLTE.min.css')?>">
 
     <!-- Theme styles -->
     <link rel="stylesheet" href="<?=pihole.fileversion('style/pi-hole.css')?>">

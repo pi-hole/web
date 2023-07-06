@@ -9,9 +9,6 @@
 ]]--
 mg.include('header.lp','r')
 ?>
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/datatables.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/datatables_extensions.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/daterangepicker.min.css')?>">
     <script src="<?=pihole.fileversion('scripts/vendor/select2.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/vendor/datatables.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/vendor/datatables.select.min.js')?>"></script>
