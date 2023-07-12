@@ -31,3 +31,36 @@ updates:
   target-branch: devel
   reviewers:
     - "pi-hole/web-maintainers"
+
+# As above, but for development-v6
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: saturday
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: development-v6
+  versioning-strategy: increase
+  reviewers:
+    - "pi-hole/web-maintainers"
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: saturday
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: development-v6
+  reviewers:
+    - "pi-hole/web-maintainers"
+- package-ecosystem: composer
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: saturday
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: development-v6
+  reviewers:
+    - "pi-hole/web-maintainers"
