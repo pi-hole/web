@@ -472,9 +472,13 @@ p.login-box-msg,
       #8bf 754px,
       #000 754px
     );
-  background-size: 304px 100%, 758px 100%;
+  background-size:
+    304px 100%,
+    758px 100%;
   background-repeat: no-repeat;
-  background-position: 0 0, 100% 0;
+  background-position:
+    0 0,
+    100% 0;
   border-radius: 0 0 0 min(75px, var(--sidebar-width));
   font-weight: bold;
   text-transform: uppercase;
@@ -718,11 +722,19 @@ p.login-box-msg,
       #000 754px
     ),
     linear-gradient(#48f, #48f);
-  background-size: calc(304px - var(--sidebar-width)) 50px, 758px 50px, 100% 50px;
-  background-position: 0 4px, 100% 4px, 0 4px;
+  background-size:
+    calc(304px - var(--sidebar-width)) 50px,
+    758px 50px,
+    100% 50px;
+  background-position:
+    0 4px,
+    100% 4px,
+    0 4px;
   background-repeat: no-repeat;
   overflow: hidden;
-  transition: all 0.3s ease-in-out, width 0.3s ease-in-out;
+  transition:
+    all 0.3s ease-in-out,
+    width 0.3s ease-in-out;
 }
 
 .content {
@@ -1731,7 +1743,9 @@ table.dataTable {
   }
   .content-wrapper {
     background-image: linear-gradient(to left, #000 4px, #cce6ff 4px), linear-gradient(#48f, #48f);
-    background-size: var(--gradient-pos) 50px, 100% 50px;
+    background-size:
+      var(--gradient-pos) 50px,
+      100% 50px;
     background-repeat: no-repeat;
   }
   .content {
