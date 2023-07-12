@@ -365,7 +365,10 @@ function updateSensorsInfo() {
         $("#temperature").html(
           '<i class="fa fa-fw fas ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp
         );
-      } else $("#temperature").html('<i class="fa fa-fw fas fa-temperature-low"></i>&nbsp;Temp:&nbsp;N/A');
+      } else
+        $("#temperature").html(
+          '<i class="fa fa-fw fas fa-temperature-low"></i>&nbsp;Temp:&nbsp;N/A'
+        );
 
       // Get a text listing of all sensors
       let sensorlist = "Available sensors:\n";
