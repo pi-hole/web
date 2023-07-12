@@ -16,6 +16,3 @@ test.html
 
 # vim
 *.swp
-
-# Composer
-/vendor/
