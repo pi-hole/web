@@ -597,7 +597,11 @@ function updateTopLists() {
         }
 
         domain = utils.escapeHtml(domain);
-        url = '<a href="queries.php?domain=' + domain + '">' + domain + "</a>";
+        var displayDomain = domain;
+        if (domain.length > 40) {
+        displayDomain = domain.substring(0, 40) + "...";
+        }
+        url = '<a href="queries.php?domain=' + domain + '" title="' + domain + '">' + displayDomain + "</a>";
         percentage = (data.top_queries[domain] / data.dns_queries_today) * 100;
         domaintable.append(
           "<tr> " +
