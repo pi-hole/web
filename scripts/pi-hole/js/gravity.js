@@ -26,6 +26,7 @@ function eventsource() {
   // eslint-disable-next-line compat/compat
   fetch("/api/action/gravity", {
     method: "POST",
+    headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
   })
     // Retrieve its body as ReadableStream
     .then(response => {
