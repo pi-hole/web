@@ -24,8 +24,10 @@ function fillDNSupstreams(value, servers) {
     var row = "<tr>";
     // Build checkboxes for IPv4 and IPv6
     const addresses = [element.v4, element.v6];
+    // Loop over address types (IPv4, IPv6)
     for (let v = 0; v < 2; v++) {
       const address = addresses[v];
+      // Loop over available addresses (up to 2)
       for (let index = 0; index < 2; index++) {
         if (address.length > index) {
           row +=
@@ -34,7 +36,10 @@ function fillDNSupstreams(value, servers) {
             '"><div><input type="checkbox" id="DNSupstreams-' +
             i +
             '"';
-          if (address[index] in value.value || address[index] + "#53" in value.value) {
+          if (
+            value.value.includes(address[index]) ||
+            value.value.includes(address[index] + "#53")
+          ) {
             row += " checked";
             customServers--;
           }
