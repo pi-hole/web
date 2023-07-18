@@ -54,8 +54,6 @@ mg.include('header.lp','r')
                     <li class="nav-item">
                         <p class="navbar-text">
                             Settings level: <select id="settings-level" class="form-control input-sm">
-                                <option></option>
-                                <option>Advanced</option>
                             </select>
                         </p>
                     </li>
