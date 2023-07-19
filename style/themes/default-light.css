@@ -304,3 +304,7 @@ select:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px #fff inset;
   transition: background-color 1s ease-in-out 0s;
 }
+
+.page-header {
+  border-color: #ddd;
+}
