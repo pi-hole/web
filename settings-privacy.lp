@@ -8,6 +8,10 @@
 --]]
 
 mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
+
+-- Page title and level selector
+PageTitle = "Privacy Settings"
+mg.include('scripts/pi-hole/lua/settings_header.lp','r')
 ?>
 <div class="row">
     <div class="col-md-6 settings-level-0">

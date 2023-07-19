@@ -8,6 +8,10 @@
 --]]
 
 mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
+
+-- Page title and level selector
+PageTitle = "DNS Settings"
+mg.include('scripts/pi-hole/lua/settings_header.lp','r')
 ?>
 <div class="row">
     <div class="col-lg-6">

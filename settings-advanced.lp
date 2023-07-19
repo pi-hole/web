@@ -8,6 +8,10 @@
 --]]
 
 mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
+
+-- Page title and level selector
+PageTitle = "Advanced Settings"
+mg.include('scripts/pi-hole/lua/settings_header.lp','r')
 ?>
 <div class="row settings-level-2" id="advanced-content">
     <!-- dynamically filled with content -->
