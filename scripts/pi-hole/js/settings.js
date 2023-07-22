@@ -36,7 +36,7 @@ function setConfigValues(topic, key, value) {
   }
 
   // else: we have a setting we can set
-  var escapedKey = key.replace(/\./g, "\\.");
+  var escapedKey = key.replaceAll(/\./, "\\.");
   switch (value.type) {
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
@@ -127,7 +127,7 @@ function saveSettings() {
       tmp = tmp[parts[i]];
     }
 
-    tmp[parts[parts.length - 1]] = value;
+    tmp[parts.at(-1)] = value;
 
     // Merge deep object into settings
     $.extend(true, settings, obj);
