@@ -31,7 +31,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 <!-- /domain-search-block -->
                 <div id="limitbox-block">
                     <input type="number" min="0" value="20" id="number">
-                    <label for="number"><strong>Maximum of results to be returned</label></i>
+                    <label for="number">Maximum of results to be returned</label>
                 </div>
             </div>
         </div>
