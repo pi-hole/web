@@ -36,7 +36,7 @@ function setConfigValues(topic, key, value) {
   }
 
   // else: we have a setting we can set
-  var escapedKey = key.replaceAll(/\./, "\\.");
+  var escapedKey = key.replaceAll(".", "\\.");
   switch (value.type) {
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
