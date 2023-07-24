@@ -29,8 +29,8 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             </div>
             <div class="box-body">
                 <!-- /domain-search-block -->
-                <div id="limitbox-block">
-                    <input type="number" min="0" value="20" id="number">
+                <div id="limitbox-block" class="form-inline">
+                    <input class="form-control input-sm" type="number" min="0" value="20" id="number">
                     <label for="number">Maximum of results to be returned</label>
                 </div>
             </div>
