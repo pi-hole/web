@@ -33,6 +33,11 @@ function redirect() {
     }
   }
 
+  // Ensure the target ends in "/" if there is no query string
+  if (target.indexOf("?") === -1 && target.slice(-1) !== "/") {
+    target += "/";
+  }
+
   // Redirect to target
   window.location.replace(target);
 }
