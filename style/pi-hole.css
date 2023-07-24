@@ -368,7 +368,7 @@ td.lookatme {
   font-family: inherit;
 }
 
-.form-inline .form-control {
+.form-inline .dataTables .form-control {
   display: inline-block;
   width: 100%;
   vertical-align: middle;
