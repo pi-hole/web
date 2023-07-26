@@ -12,7 +12,7 @@ const endOfTime = 2147483647; // Jan 19, 2038, 03:14
 var from = beginningOfTime;
 var until = endOfTime;
 
-var dateformat = "MMMM Do YYYY, HH:mm";
+var dateformat = "MMM Do YYYY, HH:mm";
 
 var table = null;
 var cursor = null;
