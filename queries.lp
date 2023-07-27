@@ -70,116 +70,68 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
-                        <div class="box box-default box-solid">
-                            <div class="box-header small-box-header">
-                                <h3 class="box-title">Domain</h3>
-                                <!-- /.box-tools -->
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <select id="domain_filter" class="form-control" placeholder="">
-                                    <option disabled selected>Loading...</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="box box-default box-solid">
-                            <div class="box-header small-box-header">
-                                <h3 class="box-title">Client (by IP)</h3>
-                                <!-- /.box-tools -->
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <select id="client_ip_filter" class="form-control" placeholder="">
-                                    <option disabled selected>Loading...</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="box box-default box-solid">
-                            <div class="box-header small-box-header">
-                                <h3 class="box-title">Client (by name)</h3>
-                                <!-- /.box-tools -->
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <select id="client_name_filter" class="form-control" placeholder="">
-                                    <option disabled selected>Loading...</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="box box-default box-solid">
-                            <div class="box-header small-box-header">
-                                <h3 class="box-title">Upstream</h3>
-                                <!-- /.box-tools -->
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <select id="upstream_filter" class="form-control" placeholder="">
-                                    <option disabled selected>Loading...</option>
-                                </select>
-                            </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label>Domain</label>
+                            <select id="domain_filter" class="form-control" placeholder="">
+                                <option disabled selected>Loading...</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                        <div class="box box-default box-solid">
-                            <div class="box-header small-box-header">
-                                <h3 class="box-title">Type</h3>
-                                <!-- /.box-tools -->
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <select id="type_filter" class="form-control" placeholder="">
-                                    <option disabled selected>Loading...</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label>Client (by IP)</label>
+                            <select id="client_ip_filter" class="form-control" placeholder="">
+                                <option disabled selected>Loading...</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                        <div class="box box-default box-solid">
-                            <div class="box-header small-box-header">
-                                <h3 class="box-title">Status</h3>
-                                <!-- /.box-tools -->
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <select id="status_filter" class="form-control" placeholder="">
-                                    <option disabled selected>Loading...</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label>Client (by name)</label>
+                            <select id="client_name_filter" class="form-control" placeholder="">
+                                <option disabled selected>Loading...</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                        <div class="box box-default box-solid">
-                            <div class="box-header small-box-header">
-                                <h3 class="box-title">Reply</h3>
-                                <!-- /.box-tools -->
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <select id="reply_filter" class="form-control" placeholder="">
-                                    <option disabled selected>Loading...</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label>Upstream</label>
+                            <select id="upstream_filter" class="form-control" placeholder="">
+                                <option disabled selected>Loading...</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                        <div class="box box-default box-solid">
-                            <div class="box-header small-box-header">
-                                <h3 class="box-title">DNSSEC status</h3>
-                                <!-- /.box-tools -->
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <select id="dnssec_filter" class="form-control" placeholder="">
-                                    <option disabled selected>Loading...</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select id="type_filter" class="form-control" placeholder="">
+                                <option disabled selected>Loading...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="status_filter" class="form-control" placeholder="">
+                                <option disabled selected>Loading...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label>Reply</label>
+                            <select id="reply_filter" class="form-control" placeholder="">
+                                <option disabled selected>Loading...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label>DNSSEC status</label>
+                            <select id="dnssec_filter" class="form-control" placeholder="">
+                                <option disabled selected>Loading...</option>
+                            </select>
                         </div>
                     </div>
                 </div>
