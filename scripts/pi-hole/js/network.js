@@ -142,9 +142,9 @@ $(function () {
         var ip = data.ips[index];
         if (ip.name !== null && ip.name.length > 0)
           ips.push(
-            '<a href="queries.php?client=' + ip.ip + '">' + ip.ip + " (" + ip.name + ")</a>"
+            '<a href="queries.lp?client_ip=' + ip.ip + '">' + ip.ip + " (" + ip.name + ")</a>"
           );
-        else ips.push('<a href="queries.php?client=' + ip.ip + '">' + ip.ip + "</a>");
+        else ips.push('<a href="queries.lp?client_ip=' + ip.ip + '">' + ip.ip + "</a>");
       }
 
       if (data.ips.length > MAXIPDISPLAY) {
