@@ -585,6 +585,11 @@ $(function () {
     var tr = $(this);
     var row = table.row(tr);
 
+    if(window.getSelection().toString().length > 0) {
+      // This event was triggered by a selection, so don't open the row
+      return;
+    }
+
     if (row.child.isShown()) {
       // This row is already open - close it
       row.child.hide();
