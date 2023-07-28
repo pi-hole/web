@@ -515,8 +515,9 @@ $(function () {
       },
       { data: "status", width: "1%" },
       { data: "type", width: "5%" },
-      { data: "domain", width: "50%" },
-      { data: "client.ip", width: "34%", type: "ip-address", render: $.fn.dataTable.render.text() },
+      { data: "domain", width: "45%" },
+      { data: "client.ip", width: "29%", type: "ip-address", render: $.fn.dataTable.render.text() },
+      { data: null, width: "10%", sortable: false, searchable: false },
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],
@@ -565,25 +566,40 @@ $(function () {
       } else {
         $("td:eq(4)", row).text(data.client.ip);
       }
+
+      if (querystatus.buttontext !== false) {
+        $("td:eq(5)", row).html(querystatus.buttontext);
+      }
     },
   });
 
-  $("#all-queries tbody").on("click", "button", function () {
-    var tr = $(this).parents("tr");
-    var permitted = tr[0].classList.contains("text-green");
-    var blocked = tr[0].classList.contains("text-red");
+  // Add event listener for adding domains to the allow-/blocklist
+  $("#all-queries tbody").on("click", "button", function (event) {
+    var button = $(this);
+    var tr = button.parents("tr");
+    var allowButton = button[0].classList.contains("text-green");
+    var denyButton = button[0].classList.contains("text-red");
     var data = table.row(tr).data();
-    if (permitted) {
+    if (denyButton) {
       utils.addFromQueryLog(data.domain, "deny");
-    } else if (blocked) {
+    } else if (allowButton) {
       utils.addFromQueryLog(data.domain, "allow");
     }
+    // else: no (colorful) button, so nothing to do
+
+    // Prevent tr click even tto be triggered for row from opening/closing
+    event.stopPropagation();
   });
 
   // Add event listener for opening and closing details
   $("#all-queries tbody").on("click", "tr", function () {
     var tr = $(this);
     var row = table.row(tr);
+
+    if (window.getSelection().toString().length > 0) {
+      // This event was triggered by a selection, so don't open the row
+      return;
+    }
 
     if (row.child.isShown()) {
       // This row is already open - close it
