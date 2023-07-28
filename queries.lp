@@ -165,6 +165,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                             <th>Type</th>
                             <th>Domain</th>
                             <th>Client</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -174,6 +175,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                             <th>Type</th>
                             <th>Domain</th>
                             <th>Client</th>
+                            <th></th>
                         </tr>
                     </tfoot>
                 </table>

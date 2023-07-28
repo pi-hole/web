@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false, apiFailure: false */
+/* global moment:false, apiFailure: false, updateFtlInfo: false */
 
 $(function () {
   // CSRF protection for AJAX requests, this has to be configured globally
@@ -289,7 +289,6 @@ function getGraphType() {
 }
 
 function addFromQueryLog(domain, list) {
-  var token = $("#token").text();
   var alertModal = $("#alertModal");
   var alProcessing = alertModal.find(".alProcessing");
   var alSuccess = alertModal.find(".alSuccess");
@@ -304,7 +303,7 @@ function addFromQueryLog(domain, list) {
     return;
   }
 
-  var listtype = list === "white" ? "Whitelist" : "Blacklist";
+  var listtype = list === "allow" ? "Allowlist" : "Denylist";
 
   alProcessing.children(alDomain).text(domain);
   alProcessing.children(alList).text(listtype);
@@ -313,22 +312,24 @@ function addFromQueryLog(domain, list) {
   // add Domain to List after Modal has faded in
   alertModal.one("shown.bs.modal", function () {
     $.ajax({
-      url: "scripts/pi-hole/php/groups.php",
+      url: "/api/domains/" + list + "/exact",
       method: "post",
-      data: {
+      dataType: "json",
+      data: JSON.stringify({
         domain: domain,
-        list: list,
-        token: token,
-        action: "replace_domain",
         comment: "Added from Query Log",
-      },
+        type: list,
+        kind: "exact",
+      }),
       success: function (response) {
         alProcessing.hide();
-        if (response.success) {
+        if ("domains" in response && response.domains.length > 0) {
           // Success
           alSuccess.children(alDomain).text(domain);
           alSuccess.children(alList).text(listtype);
           alSuccess.fadeIn(1000);
+          // Update domains counter in the menu
+          updateFtlInfo();
           setTimeout(function () {
             alertModal.modal("hide");
           }, 2000);
