@@ -202,56 +202,6 @@ function getLoggingButton() {
     });
 }
 
-$(".confirm-poweroff").confirm({
-  text:
-    "Are you sure you want to send a poweroff command to your Pi-hole?<br><br>" +
-    "<strong>This will shut down your Pi-hole and power it off.</strong><br>" +
-    "You will not be able to access the web interface or use any Pi-hole functionality until you manually power it back on.",
-  title: "Confirmation required",
-  confirm: function () {
-    $.ajax({
-      url: "/api/action/poweroff",
-      type: "POST",
-    }).fail(function (data) {
-      apiFailure(data);
-    });
-  },
-  cancel: function () {
-    // nothing to do
-  },
-  confirmButton: "Yes, shutdown and poweroff the Pi-hole now",
-  cancelButton: "No, go back",
-  post: true,
-  confirmButtonClass: "btn-danger",
-  cancelButtonClass: "btn-success",
-  dialogClass: "modal-dialog",
-});
-
-$(".confirm-reboot").confirm({
-  text:
-    "Are you sure you want to send a reboot command to your Pi-hole?<br><br>" +
-    "<strong>This will reboot your Pi-hole.</strong><br>" +
-    "You will not be able to access the web interface or use any Pi-hole functionality until it has finished rebooting.",
-  title: "Confirmation required",
-  confirm: function () {
-    $.ajax({
-      url: "/api/action/reboot",
-      type: "POST",
-    }).fail(function (data) {
-      apiFailure(data);
-    });
-  },
-  cancel: function () {
-    // nothing to do
-  },
-  confirmButton: "Yes, reboot the Pi-hole now",
-  cancelButton: "No, go back",
-  post: true,
-  confirmButtonClass: "btn-danger",
-  cancelButtonClass: "btn-success",
-  dialogClass: "modal-dialog",
-});
-
 $(".confirm-restartdns").confirm({
   text:
     "Are you sure you want to send a restart command to your DNS server?<br><br>" +
