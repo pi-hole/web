@@ -38,7 +38,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             <div class="icon">
                 <i class="fas fa-hand-paper"></i>
             </div>
-            <a href="queries.lp?forwarddest=blocked" class="small-box-footer" title="">
+            <a href="queries.lp?upstream=blocklist" class="small-box-footer" title="">
                 List blocked queries <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
