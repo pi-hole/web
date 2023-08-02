@@ -41,7 +41,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             <div class="box-footer clearfix">
                 <strong>Hints:</strong>
                 <ol>
-                    <li>Please run <code>pihole -g</code> or update your gravity list <a href="gravity.php">online</a> after modifying your adlists.</li>
+                    <li>Please run <code>pihole -g</code> or update your gravity list <a href="gravity.lp">online</a> after modifying your adlists.</li>
                     <li>Multiple adlists can be added by separating each <i>unique</i> URL with a space</li>
                     <li>Click on the icon in the first column to get additional information about your lists. The icons correspond to the health of the list.</li>
                 </ol>

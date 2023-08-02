@@ -277,7 +277,7 @@ function updateTopClientsTable(blocked) {
       var clientname = utils.escapeHtml(client.name);
       var clientip = utils.escapeHtml(client.ip);
       if (clientname.length === 0) clientname = clientip;
-      url = '<a href="queries.php?client=' + clientip + '">' + clientname + "</a>";
+      url = '<a href="queries.lp?client_ip=' + clientip + '">' + clientname + "</a>";
       percentage = (client.count / sum) * 100;
 
       // Add row to table
