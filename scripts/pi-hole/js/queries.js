@@ -111,7 +111,7 @@ function parseQueryStatus(data) {
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (regex)";
-      regexLink = data.regex > 0;
+      regexLink = data.regex_id > 0;
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       break;
@@ -151,8 +151,8 @@ function parseQueryStatus(data) {
     case "REGEX_CNAME":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked (regex diened, CNAME)";
-      regexLink = data.regex > 0;
+      fieldtext = "Blocked (regex denied, CNAME)";
+      regexLink = data.regex_id > 0;
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
@@ -250,12 +250,12 @@ function formatInfo(data) {
     cnameInfo = "";
   if (queryStatus.regexLink) {
     var regexLink =
-      '<a href="groups-domains.php?domainid=' +
-      data.regex +
-      'target="_blank">Regex ID ' +
-      data.regex +
+      '<a href="groups/domains?domainid=' +
+      data.regex_id +
+      '" target="_blank">Regex ID ' +
+      data.regex_id +
       "</a>";
-    regexInfo = divStart + "Query was blocked by:</td><td>" + regexLink + "</div>";
+    regexInfo = divStart + "Query was blocked by: </td><td>" + regexLink + "</div>";
   }
 
   if (queryStatus.isCNAME) {
