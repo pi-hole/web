@@ -34,7 +34,7 @@ available_themes['high-contrast'] = {
 
 available_themes['high-contrast-dark'] = {
     name = 'High contrast dark',
-    dark = false,
+    dark = true,
     color = '#0077c7'
 }
 
