@@ -151,7 +151,7 @@ function parseQueryStatus(data) {
     case "REGEX_CNAME":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked (regex diened, CNAME)";
+      fieldtext = "Blocked (regex denied, CNAME)";
       regexLink = data.regex_id > 0;
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
