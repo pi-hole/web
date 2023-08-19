@@ -29,7 +29,7 @@
     "postcss": "^8.4.28",
     "postcss-cli": "^10.1.0",
     "prettier": "3.0.1",
-    "xo": "^0.55.1"
+    "xo": "^0.56.0"
   },
   "browserslist": [
     "defaults",
