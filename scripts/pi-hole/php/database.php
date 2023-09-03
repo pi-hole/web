@@ -47,6 +47,7 @@ function SQLite3_connect_try($filename, $mode, $trytoreconnect)
 
             return SQLite3_connect_try($filename, $mode, false);
         }
+
         // If we should not try again (or are already trying again!), we return the exception string
         // so the user gets it on the dashboard
         return $filename.': '.$exception->getMessage();
