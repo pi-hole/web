@@ -12,7 +12,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 
 <!-- Title -->
 <div class="page-header">
-    <h1>Adlist group management</h1>
+    <h1>Subscribed lists group management</h1>
 </div>
 
 <!-- Domain Input -->
@@ -22,7 +22,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             <!-- /.box-header -->
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    Add a new adlist
+                    Add a new subscribed list
                 </h3>
             </div>
             <!-- /.box-header -->
@@ -45,7 +45,14 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                     <li>Multiple adlists can be added by separating each <i>unique</i> URL with a space</li>
                     <li>Click on the icon in the first column to get additional information about your lists. The icons correspond to the health of the list.</li>
                 </ol>
-                <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
+                <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
+                    <div class="btn-group" role="group">
+                        <button type="button" id="btnAddBlock" class="btn btn-danger pull-right">Add blocklist</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" id="btnAddAllow" class="btn btn-success pull-right">Add allowlist</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -55,7 +62,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
         <div class="box" id="adlists-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of adlists
+                    List of subscribed lists
                 </h3>
             </div>
             <!-- /.box-header -->

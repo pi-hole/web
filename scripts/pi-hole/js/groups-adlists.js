@@ -13,7 +13,8 @@ var GETDict = {};
 $(function () {
   GETDict = utils.parseQueryString();
 
-  $("#btnAdd").on("click", addAdlist);
+  $("#btnAddAllow").on("click", { type: "allow" }, addAdlist);
+  $("#btnAddBlock").on("click", { type: "block" }, addAdlist);
 
   utils.setBsSelectDefaults();
   initTable();
@@ -59,7 +60,9 @@ function format(data) {
   // Compile extra info for displaying
   return (
     "<table>" +
-    '<tr class="dataTables-child"><td>Health status of this list:</td><td>' +
+    '<tr class="dataTables-child"><td>Type of this list:</td><td>' +
+    data.type +
+    'list</td><tr class="dataTables-child"><td>Health status of this list:</td><td>' +
     statusText +
     '</td></tr><tr class="dataTables-child"><td>This list was added to Pi-hole&nbsp;&nbsp;</td><td>' +
     utils.datetimeRelative(data.date_added) +
@@ -170,9 +173,22 @@ function initTable() {
             break;
         }
 
+        // Add red minus sign icon if data["type"] is "block"
+        // Add green plus sign icon if data["type"] is "allow"
+        let status =
+          "<i class='fa fa-fw fa-question-circle text-orange' title='This list is of unknown type'></i>";
+        if (data.type === "block") {
+          status = "<i class='fa fa-fw fa-minus text-red' title='This is a blocklist'></i>";
+        } else if (data.type === "allow") {
+          status = "<i class='fa fa-fw fa-plus text-green' title='This is an allowlist'></i>";
+        }
+
         $("td:eq(1)", row).addClass("list-status-" + statusCode);
         $("td:eq(1)", row).html(
-          "<i class='fa " + statusIcon + "' title='Click for details about this list'></i>"
+          "<i class='fa fa-fw " +
+            statusIcon +
+            "' title='Click for details about this list'></i>" +
+            status
         );
 
         if (data.address.startsWith("file://")) {
@@ -480,17 +496,18 @@ function delItems(ids) {
     });
 }
 
-function addAdlist() {
+function addAdlist(event) {
+  const type = event.data.type;
   const address = utils.escapeHtml($("#new_address").val());
   const comment = utils.escapeHtml($("#new_comment").val());
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding adlist...", address);
+  utils.showAlert("info", "", "Adding subscribed " + type + "list...", address);
 
   if (address.length === 0) {
     // enable the ui elements again
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify an adlist address");
+    utils.showAlert("warning", "", "Warning", "Please specify " + type + "list address");
     return;
   }
 
@@ -498,10 +515,10 @@ function addAdlist() {
     url: "/api/lists",
     method: "post",
     dataType: "json",
-    data: JSON.stringify({ address: address, comment: comment }),
+    data: JSON.stringify({ address: address, comment: comment, type: type }),
     success: function () {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-plus", "Successfully added list", address);
+      utils.showAlert("success", "fas fa-plus", "Successfully added " + type + "list", address);
       table.ajax.reload(null, false);
       table.rows().deselect();
 
@@ -511,7 +528,7 @@ function addAdlist() {
     error: function (data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new list", data.responseText);
+      utils.showAlert("error", "", "Error while adding new " + type + "list", data.responseText);
       console.log(exception); // eslint-disable-line no-console
     },
   });
