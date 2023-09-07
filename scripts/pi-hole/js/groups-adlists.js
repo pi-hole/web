@@ -499,13 +499,21 @@ function delItems(ids) {
 
 function addAdlist(event) {
   const type = event.data.type;
-  const address = utils.escapeHtml($("#new_address").val());
   const comment = utils.escapeHtml($("#new_comment").val());
 
-  utils.disableAll();
-  utils.showAlert("info", "", "Adding subscribed " + type + "list...", address);
+  // Check if the user wants to add multiple domains (space or newline separated)
+  // If so, split the input and store it in an array
+  var addresses = utils.escapeHtml($("#new_address").val()).split(/[\s,]+/);
+  // Remove empty elements
+  addresses = addresses.filter(function (el) {
+    return el !== "";
+  });
+  const addressestr = JSON.stringify(addresses);
 
-  if (address.length === 0) {
+  utils.disableAll();
+  utils.showAlert("info", "", "Adding subscribed " + type + "list(s)...", addressestr);
+
+  if (addresses.length === 0) {
     // enable the ui elements again
     utils.enableAll();
     utils.showAlert("warning", "", "Warning", "Please specify " + type + "list address");
@@ -516,10 +524,15 @@ function addAdlist(event) {
     url: "/api/lists",
     method: "post",
     dataType: "json",
-    data: JSON.stringify({ address: address, comment: comment, type: type }),
+    data: JSON.stringify({ address: addresses, comment: comment, type: type }),
     success: function () {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-plus", "Successfully added " + type + "list", address);
+      utils.showAlert(
+        "success",
+        "fas fa-plus",
+        "Successfully added " + type + "list(s)",
+        addressestr
+      );
       table.ajax.reload(null, false);
       table.rows().deselect();
 

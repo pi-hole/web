@@ -277,13 +277,24 @@ function delItems(ids) {
 }
 
 function addGroup() {
-  const name = utils.escapeHtml($("#new_name").val());
   const comment = utils.escapeHtml($("#new_comment").val());
 
-  utils.disableAll();
-  utils.showAlert("info", "", "Adding group...", name);
+  // Check if the user wants to add multiple groups (space or newline separated)
+  // If so, split the input and store it in an array
+  var names = utils
+    .escapeHtml($("#new_name"))
+    .val()
+    .split(/[\s,]+/);
+  // Remove empty elements
+  names = names.filter(function (el) {
+    return el !== "";
+  });
+  const groupStr = JSON.stringify(names);
 
-  if (name.length === 0) {
+  utils.disableAll();
+  utils.showAlert("info", "", "Adding group(s)...", groupStr);
+
+  if (names.length === 0) {
     // enable the ui elements again
     utils.enableAll();
     utils.showAlert("warning", "", "Warning", "Please specify a group name");
@@ -295,13 +306,13 @@ function addGroup() {
     method: "post",
     dataType: "json",
     data: JSON.stringify({
-      name: name,
+      name: names,
       comment: comment,
       enabled: true,
     }),
     success: function () {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-plus", "Successfully added group", name);
+      utils.showAlert("success", "fas fa-plus", "Successfully added group(s)", groupStr);
       $("#new_name").val("");
       $("#new_comment").val("");
       table.ajax.reload();

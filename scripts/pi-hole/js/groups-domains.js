@@ -497,45 +497,53 @@ function addDomain() {
     commentEl = $("#new_regex_comment");
   }
 
-  var domain = utils.escapeHtml(domainEl.val());
   const comment = utils.escapeHtml(commentEl.val());
 
-  utils.disableAll();
-  utils.showAlert("info", "", "Adding domain...", domain);
+  // Check if the user wants to add multiple domains (space or newline separated)
+  // If so, split the input and store it in an array
+  var domains = utils.escapeHtml(domainEl.val()).split(/[\s,]+/);
+  // Remove empty elements
+  domains = domains.filter(function (el) {
+    return el !== "";
+  });
+  const domainStr = JSON.stringify(domains);
 
-  if (domain.length < 2) {
+  utils.disableAll();
+  utils.showAlert("info", "", "Adding domain(s)...", domainStr);
+
+  if (domains.length === 0) {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify a domain");
+    utils.showAlert("warning", "", "Warning", "Please specify at least one domain");
     return;
   }
 
-  // strip "*." if specified by user in wildcard mode
-  if (kind === "exact" && wildcardChecked && domain.startsWith("*.")) {
-    domain = domain.substr(2);
+  for (var i = 0; i < domains.length; i++) {
+    if (kind === "exact" && wildcardChecked) {
+      // Transform domain to wildcard if specified by user
+      domains[i] = "(\\.|^)" + domains[i].replaceAll(".", "\\.") + "$";
+      kind = "regex";
+
+      // strip leading "*." if specified by user in wildcard mode
+      if (domains[i].startsWith("*.")) domains[i] = domains[i].substr(2);
+    }
   }
 
   // determine list type
   const type = action === "add_deny" ? "deny" : "allow";
-
-  // Transform domain to wildcard if specified by user
-  if (kind === "exact" && wildcardChecked) {
-    domain = "(\\.|^)" + domain.replaceAll(".", "\\.") + "$";
-    kind = "regex";
-  }
 
   $.ajax({
     url: "/api/domains/" + type + "/" + kind,
     method: "post",
     dataType: "json",
     data: JSON.stringify({
-      domain: domain,
+      domain: domains,
       comment: comment,
       type: type,
       kind: kind,
     }),
     success: function () {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-plus", "Successfully added domain", domain);
+      utils.showAlert("success", "fas fa-plus", "Successfully added domain(s)", domainStr);
       table.ajax.reload(null, false);
       table.rows().deselect();
 

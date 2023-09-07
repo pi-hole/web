@@ -405,34 +405,47 @@ function delItems(ids) {
 }
 
 function addClient() {
-  var ip = utils.escapeHtml($("#select").val().trim());
   const comment = utils.escapeHtml($("#new_comment").val());
 
-  utils.disableAll();
-  utils.showAlert("info", "", "Adding client...", ip);
-
-  if (ip.length === 0) {
-    utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify a client IP or MAC address");
-    return;
-  }
+  // Check if the user wants to add multiple IPs (space or newline separated)
+  // If so, split the input and store it in an array
+  var ips = utils.escapeHtml($("#select").val().trim()).split(/[\s,]+/);
+  // Remove empty elements
+  ips = ips.filter(function (el) {
+    return el !== "";
+  });
+  const ipStr = JSON.stringify(ips);
 
   // Validate input, can be:
   // - IPv4 address (with and without CIDR)
   // - IPv6 address (with and without CIDR)
   // - MAC address (in the form AA:BB:CC:DD:EE:FF)
   // - host name (arbitrary form, we're only checking against some reserved characters)
-  if (utils.validateIPv4CIDR(ip) || utils.validateIPv6CIDR(ip) || utils.validateMAC(ip)) {
-    // Convert input to upper case (important for MAC addresses)
-    ip = ip.toUpperCase();
-  } else if (!utils.validateHostname(ip)) {
+  for (var i = 0; i < ips.length; i++) {
+    if (
+      utils.validateIPv4CIDR(ips[i]) ||
+      utils.validateIPv6CIDR(ips[i]) ||
+      utils.validateMAC(ips[i])
+    ) {
+      // Convert input to upper case (important for MAC addresses)
+      ips[i] = ips[i].toUpperCase();
+    } else if (!utils.validateHostname(ips[i])) {
+      utils.showAlert(
+        "warning",
+        "",
+        "Warning",
+        "Input is neither a valid IP or MAC address nor a valid host name!"
+      );
+      return;
+    }
+  }
+
+  utils.disableAll();
+  utils.showAlert("info", "", "Adding client(s)...", ipStr);
+
+  if (ips.length === 0) {
     utils.enableAll();
-    utils.showAlert(
-      "warning",
-      "",
-      "Warning",
-      "Input is neither a valid IP or MAC address nor a valid host name!"
-    );
+    utils.showAlert("warning", "", "Warning", "Please specify a client IP or MAC address");
     return;
   }
 
@@ -440,10 +453,10 @@ function addClient() {
     url: "/api/clients",
     method: "post",
     dataType: "json",
-    data: JSON.stringify({ client: ip, comment: comment }),
+    data: JSON.stringify({ client: ips, comment: comment }),
     success: function () {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-plus", "Successfully added client", ip);
+      utils.showAlert("success", "fas fa-plus", "Successfully added client(s)", ipStr);
       reloadClientSuggestions();
       table.ajax.reload(null, false);
       table.rows().deselect();
