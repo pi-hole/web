@@ -93,6 +93,55 @@ if (isset($_GET['enable']) && $auth) {
     }
 
     $data = array_merge($data, array('result' => $result));
+} elseif (isset($_GET['DHCP']) && $auth) {
+        if(isset($_GET["auth"]))
+        {
+        if($_GET["auth"] !== $pwhash)
+            die("Not authorized!");
+        }
+        else
+        {
+                // Skip token validation if explicit auth string is given
+                check_csrf($_GET['token']);
+        }
+        $dhcp_leases = array();
+        $leasesfile = true;
+        $dhcpleases = @fopen('/etc/pihole/dhcp.leases', 'r');
+        if (!is_resource($dhcpleases))
+            $leasesfile = false;
+
+        while (!feof($dhcpleases) && $leasesfile) {
+            $line = explode(" ", trim(fgets($dhcpleases)));
+            if (count($line) == 5) {
+                $counter = intval($line[0]);
+                if ($counter == 0) {
+                    $time = "Infinite";
+                } elseif ($counter <= 315360000) // 10 years in seconds
+                {
+                    $time = convertseconds($counter);
+                } else // Assume time stamp
+                {
+                    $time = convertseconds($counter - time());
+                }
+                if (strpos($line[2], ':') !== false) {
+                    // IPv6 address
+                    $type = 6;
+                } else {
+                    // IPv4 lease
+                    $type = 4;
+                }
+                $host = $line[3];
+                if ($host == "*") {
+                    $host = "unknown";
+                }
+                $clid = $line[4];
+                if ($clid == "*") {
+                    $clid = "unknown";
+                }
+                array_push($dhcp_leases, ["TIME" =>  $time, "hwaddr" => strtoupper($line[1]), "IP" => $line[2], "host" => $host, "clid" => $clid, "type" => $type]);
+            }
+        }
+        $data = array_merge($data,$dhcp_leases);
 } elseif (isset($_GET['list'])) {
     if (!$auth) {
         exit('Not authorized!');
