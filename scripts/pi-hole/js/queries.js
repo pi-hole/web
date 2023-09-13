@@ -83,8 +83,7 @@ function parseQueryStatus(data) {
     buttontext,
     icon = null,
     colorClass = false,
-    isCNAME = false,
-    regexLink = false;
+    isCNAME = false;
   switch (data.status) {
     case "GRAVITY":
       colorClass = "text-red";
@@ -111,7 +110,6 @@ function parseQueryStatus(data) {
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (regex)";
-      regexLink = data.regex_id > 0;
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       break;
@@ -152,7 +150,6 @@ function parseQueryStatus(data) {
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (regex denied, CNAME)";
-      regexLink = data.regex_id > 0;
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
@@ -160,7 +157,7 @@ function parseQueryStatus(data) {
     case "DENYLIST_CNAME":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked (exact diened, CNAME)";
+      fieldtext = "Blocked (exact denied, CNAME)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
@@ -198,13 +195,16 @@ function parseQueryStatus(data) {
       buttontext = "";
   }
 
+  var matchText =
+    colorClass === "text-green" ? "allowed" : colorClass === "text-red" ? "blocked" : "matched";
+
   return {
     fieldtext: fieldtext,
     buttontext: buttontext,
     colorClass: colorClass,
     icon: icon,
     isCNAME: isCNAME,
-    regexLink: regexLink,
+    matchText: matchText,
   };
 }
 
@@ -248,14 +248,15 @@ function formatInfo(data) {
 
   var regexInfo = "",
     cnameInfo = "";
-  if (queryStatus.regexLink) {
+  if (data.regex_id !== null && data.regex_id > -1) {
     var regexLink =
       '<a href="groups/domains?domainid=' +
       data.regex_id +
-      '" target="_blank">Regex ID ' +
+      '" target="_blank">regex ID ' +
       data.regex_id +
       "</a>";
-    regexInfo = divStart + "Query was blocked by: </td><td>" + regexLink + "</div>";
+    regexInfo =
+      divStart + "Query was " + queryStatus.matchText + " by </td><td>" + regexLink + "</div>";
   }
 
   if (queryStatus.isCNAME) {
