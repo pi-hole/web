@@ -41,7 +41,7 @@ $hostname = gethostname() ? gethostname() : '';
 <?php } ?>
 
     <!-- Theme fonts -->
-<?php if ($theme == 'lcars') { ?>
+<?php if ($theme == 'lcars' || $theme == 'lcars-picard') { ?>
     <link rel="stylesheet" href="<?php echo fileversion('style/vendor/fonts/ubuntu-mono/ubuntu-mono.css'); ?>">
     <link rel="stylesheet" href="<?php echo fileversion('style/vendor/fonts/antonio/antonio.css'); ?>">
 <?php } else { ?>
