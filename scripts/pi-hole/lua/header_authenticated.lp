@@ -17,7 +17,7 @@ mg.include('header.lp','r')
     <script src="<?=pihole.fileversion('scripts/vendor/chart.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/vendor/chartjs-adapter-moment.js')?>"></script>
 </head>
-<body class="<?=pihole.webtheme()?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in">
+<body class="<?=theme.name?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in">
 <noscript>
     <!-- JS Warning -->
     <div>
