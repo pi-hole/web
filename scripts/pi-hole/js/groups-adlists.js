@@ -146,6 +146,7 @@ function initTable() {
       rowCallback: function (row, data) {
         var dataId = utils.hexEncode(data.address);
         $(row).attr("data-id", dataId);
+        $(row).attr("data-type", data.type);
 
         var statusCode = 0,
           statusIcon;
@@ -534,10 +535,10 @@ function addAdlist(event) {
   });
 }
 
-function editAdlist(event) {
-  const type = event.data.type;
+function editAdlist() {
   const elem = $(this).attr("id");
   const tr = $(this).closest("tr");
+  const type = tr.attr("data-type");
   const address = tr.attr("data-id");
   const status = tr.find("#enabled_" + address).is(":checked");
   const comment = utils.escapeHtml(tr.find("#comment_" + address).val());
