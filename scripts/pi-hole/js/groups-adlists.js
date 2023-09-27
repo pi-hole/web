@@ -534,7 +534,8 @@ function addAdlist(event) {
   });
 }
 
-function editAdlist() {
+function editAdlist(event) {
+  const type = event.data.type;
   const elem = $(this).attr("id");
   const tr = $(this).closest("tr");
   const address = tr.attr("data-id");
@@ -584,6 +585,7 @@ function editAdlist() {
       groups: groups,
       comment: comment,
       enabled: enabled,
+      type: type,
     }),
     success: function () {
       utils.enableAll();
