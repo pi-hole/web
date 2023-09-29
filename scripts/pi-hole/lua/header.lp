@@ -64,7 +64,7 @@ is_authenticated = mg.request_info.is_authenticated
     <link rel="icon" href="<?=pihole.webhome()?>img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="<?=pihole.webhome()?>img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
     <link rel="manifest" href="<?=pihole.webhome()?>img/favicons/manifest.json">
-    <? pihole.include('scripts/pi-hole/lua/theme.lua') ?>
+    <? theme = pihole.webtheme() ?>
     <link rel="mask-icon" href="<?=pihole.webhome()?>img/favicons/safari-pinned-tab.svg" color="<?=theme.color?>">
     <link rel="shortcut icon" href="<?=pihole.webhome()?>img/favicons/favicon.ico">
     <meta name="msapplication-TileColor" content="<?=theme.color?>">
@@ -80,7 +80,7 @@ is_authenticated = mg.request_info.is_authenticated
 <? end ?>
 
     <!-- Theme fonts -->
-<? if pihole.webtheme() == 'lcars' then ?>
+<? if theme.name == 'lcars' then ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/fonts/ubuntu-mono/ubuntu-mono.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/fonts/antonio/antonio.css')?>">
 <? else ?>
@@ -107,7 +107,7 @@ if startsWith(scriptname, 'groups') then
 
     <!-- Theme styles -->
     <link rel="stylesheet" href="<?=pihole.fileversion('style/pi-hole.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/themes/'..pihole.webtheme()..'.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/themes/'..theme.name..'.css')?>">
 
     <noscript><link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/js-warn.css')?>"></noscript>
 
