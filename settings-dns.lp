@@ -8,6 +8,10 @@
 --]]
 
 mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
+
+-- Page title and level selector
+PageTitle = "DNS Settings"
+mg.include('scripts/pi-hole/lua/settings_header.lp','r')
 ?>
 <div class="row">
     <div class="col-lg-6">
@@ -231,7 +235,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-lg-12 settings-level-1">
+    <div class="col-lg-12 settings-level-0">
         <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
     </div>
 </div>

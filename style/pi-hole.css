@@ -877,12 +877,31 @@ body:not(.lcars) .filter_types [class*="icheck-"] > input:first-child:checked + 
   }
 }
 
+/* Page title container (flex) */
+.flex-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap-reverse;
+}
+
+.flex-header h1 {
+  margin: 10px 30px 10px 0;
+  flex: 1 0 auto;
+}
+
+/* Global settings level selector container */
+.settings-selector {
+  padding: 14px 0 0;
+  order: 2;
+  font-size: 18px;
+}
+
 /* Global settings level selector */
 #settings-level {
   display: inline-block;
   width: auto;
-  height: 2.2em;
-  border-radius: 4px;
+  min-width: 90px;
 }
 
 .navbar-nav {

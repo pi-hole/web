@@ -50,16 +50,6 @@ mg.include('header.lp','r')
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                <? if startsWith(scriptname, 'settings/') then ?>
-                    <li class="nav-item">
-                        <p class="navbar-text">
-                            Settings level: <select id="settings-level" class="form-control input-sm">
-                                <option></option>
-                                <option>Advanced</option>
-                            </select>
-                        </p>
-                    </li>
-                <? end ?>
                     <li<? if string.len(hostname) == 0 then ?> class="hidden"<? end ?>>
                         <p class="navbar-text">
                             <span class="hidden-xs">hostname:</span>
