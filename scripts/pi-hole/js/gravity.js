@@ -47,9 +47,18 @@ function eventsource() {
               // Enqueue the next data chunk into our target stream
               controller.enqueue(value);
               var string = new TextDecoder().decode(value);
-              // Remove ${OVER} from the string
-              string = string.replaceAll("\r[K", "\n");
-              ta.append(string);
+
+              // If a Carriage Return is found ...
+              if (string.indexOf("\r") === -1) {
+                ta.append(string);
+              } else {
+                // ... remove the last line from the output ...
+                ta.text(ta.text().substring(0, ta.text().lastIndexOf("\n")) + "\n");
+                // ... and append the new text to the end of the output,
+                // without ${OVER} ("CR + ESC[K") or Carriage Return.
+                ta.append(string.replaceAll("\r[K", "").replaceAll("\r", ""));
+              }
+
               if (string.indexOf("Pi-hole blocking is") !== -1) {
                 alSuccess.show();
               }
