@@ -107,12 +107,12 @@ function saveSettings() {
       value = value === "" ? [] : value.split("\n");
     }
 
-    // If this is an integer number, parse it accordignly
+    // If this is an integer number, parse it accordingly
     if ($(this).data("type") === "integer") {
       value = parseInt(value, 10);
     }
 
-    // If this is a floating point value, parse it accordignly
+    // If this is a floating point value, parse it accordingly
     if ($(this).data("type") === "float") {
       value = parseFloat(value);
     }
