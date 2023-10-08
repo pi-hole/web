@@ -38,6 +38,7 @@ function eventsource() {
             return reader.read().then(({ done, value }) => {
               // When no more data needs to be consumed, close the stream
               if (done) {
+                ta.append("Done.");
                 controller.close();
                 alInfo.hide();
                 $("#gravityBtn").prop("disabled", false);
