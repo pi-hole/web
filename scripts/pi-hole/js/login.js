@@ -109,23 +109,27 @@ $(function () {
   // Check if we need to login at all
   $.ajax({
     url: "/api/auth",
-  })
-    .done(function (data) {
-      if (data.session.valid === true) redirect();
-      if (data.session.totp === true) $("#totp_input").removeClass("hidden");
-      if (data.dns === false) showDNSfailure();
-    })
-    .always(function (data) {
-      // Generate HTTPS redirection link (only used if not already HTTPS)
-      if (location.protocol !== "https:" && data.responseJSON.https_port !== 0) {
-        let url = "https://" + location.hostname;
-        if (data.responseJSON.https_port !== 443) url += ":" + data.responseJSON.https_port;
-        url += location.pathname + location.search + location.hash;
+  }).done(function (data) {
+    if (data.session.valid === true) redirect();
+    if (data.session.totp === true) $("#totp_input").removeClass("hidden");
+  });
 
-        $("#https-link").attr("href", url);
-        $("#insecure-box").show();
-      }
-    });
+  // Get imformation about HTTPS port and DNS status
+  $.ajax({
+    url: "/api/info/login",
+  }).done(function (data) {
+    if (data.dns === false) showDNSfailure();
+
+    // Generate HTTPS redirection link (only used if not already HTTPS)
+    if (location.protocol !== "https:" && data.https_port !== 0) {
+      let url = "https://" + location.hostname;
+      if (data.https_port !== 443) url += ":" + data.https_port;
+      url += location.pathname + location.search + location.hash;
+
+      $("#https-link").attr("href", url);
+      $("#insecure-box").show();
+    }
+  });
 
   // Clear TOTP field
   $("#totp").val("");
