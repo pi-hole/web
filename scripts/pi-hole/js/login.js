@@ -109,18 +109,24 @@ $(function () {
   // Check if we need to login at all
   $.ajax({
     url: "/api/auth",
-  }).done(function (data) {
-    if (data.session.valid === true) redirect();
-    if (data.session.totp === true) $("#totp_input").removeClass("hidden");
-    if (data.dns === false) showDNSfailure();
-  });
+  })
+    .done(function (data) {
+      if (data.session.valid === true) redirect();
+      if (data.session.totp === true) $("#totp_input").removeClass("hidden");
+      if (data.dns === false) showDNSfailure();
+    })
+    .always(function (data) {
+      // Generate HTTPS redirection link (only used if not already HTTPS)
+      if (location.protocol !== "https:" && data.responseJSON.https_port !== 0) {
+        let url = "https://" + location.hostname;
+        if (data.responseJSON.https_port !== 443) url += ":" + data.responseJSON.https_port;
+        url += location.pathname + location.search + location.hash;
+
+        $("#https-link").attr("href", url);
+        $("#insecure-box").show();
+      }
+    });
 
   // Clear TOTP field
   $("#totp").val("");
-
-  // Generate HTTPS redirection link (only used if not already HTTPS)
-  if (location.protocol !== "https:") {
-    const url = "https:" + location.href.substring(location.protocol.length);
-    $("#https-link").attr("href", url);
-  }
 });
