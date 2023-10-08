@@ -47,17 +47,7 @@ function eventsource() {
               // Enqueue the next data chunk into our target stream
               controller.enqueue(value);
               var string = new TextDecoder().decode(value);
-
-              // If a Carriage Return is found ...
-              if (string.indexOf("\r") === -1) {
-                ta.append(string);
-              } else {
-                // ... remove the last line from the output ...
-                ta.text(ta.text().substring(0, ta.text().lastIndexOf("\n")) + "\n");
-                // ... and append the new text to the end of the output,
-                // without ${OVER} ("CR + ESC[K") or Carriage Return.
-                ta.append(string.replaceAll("\r[K", "").replaceAll("\r", ""));
-              }
+              parseLines(ta, string);
 
               if (string.indexOf("Pi-hole blocking is") !== -1) {
                 alSuccess.show();
@@ -93,3 +83,24 @@ $(function () {
     eventsource();
   }
 });
+
+function parseLines(ta, str) {
+  // str can contain multiple lines.
+  // We want to split the text before an "OVER" escape sequence to allow overwriting previous line when needed
+
+  // Splitting the text on "\r"
+  var lines = str.split(/(?=\r)/g);
+
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i][0] === "\r") {
+      // This line starts with the "OVER" sequence. Replace them with "\n" before print
+      lines[i] = lines[i].replaceAll("\r[K", "\n").replaceAll("\r", "\n");
+
+      // Last line from the textarea will be overwritten, so we remove it
+      ta.text(ta.text().substring(0, ta.text().lastIndexOf("\n")));
+    }
+
+    // Append the new text to the end of the output
+    ta.append(lines[i]);
+  }
+}
