@@ -310,9 +310,9 @@ function addGroup() {
       comment: comment,
       enabled: true,
     }),
-    success: function () {
+    success: function (data) {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-plus", "Successfully added group(s)", groupStr);
+      utils.listsAlert("group", names, data);
       $("#new_name").val("");
       $("#new_comment").val("");
       table.ajax.reload();

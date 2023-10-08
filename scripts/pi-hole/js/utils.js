@@ -536,6 +536,81 @@ function hexDecode(string) {
   return back;
 }
 
+function listAlert(type, items, data) {
+  // Show simple success message if there is no "processed" object in "data" or
+  // if all items were processed successfully
+  if (data.processed === undefined || data.processed.success.length === items.length) {
+    showAlert(
+      "success",
+      "fas fa-plus",
+      "Successfully added " + type + (items.length !== 1 ? "s" : ""),
+      items.join(", ")
+    );
+    return;
+  }
+
+  // Show a more detailed message if there is a "processed" object in "data" and
+  // not all items were processed successfully
+  let message = "";
+
+  // Show a list of successful items if there are any
+  if (data.processed.success.length > 0) {
+    message +=
+      "<strong>Successfully added " +
+      data.processed.success.length +
+      " " +
+      type +
+      (data.processed.success.length !== 1 ? "s" : "") +
+      ":</strong>";
+
+    // Loop over data.processed.success and print "item"
+    for (const item in data.processed.success) {
+      if (Object.prototype.hasOwnProperty.call(data.processed.success, item)) {
+        message += "<br>- <strong>" + data.processed.success[item].item + "</strong>";
+      }
+    }
+  }
+
+  // Add a line break if there are both successful and failed items
+  if (data.processed.success.length > 0 && data.processed.errors.length > 0) {
+    message += "<br><br>";
+  }
+
+  // Show a list of failed items if there are any
+  if (data.processed.errors.length > 0) {
+    message +=
+      "<strong>Failed to add " +
+      data.processed.errors.length +
+      " " +
+      type +
+      (data.processed.errors.length !== 1 ? "s" : "") +
+      ":</strong>\n";
+
+    // Loop over data.processed.errors and print "item: error"
+    for (const item in data.processed.errors) {
+      if (Object.prototype.hasOwnProperty.call(data.processed.errors, item)) {
+        let error = data.processed.errors[item].error;
+        if (error === "UNIQUE constraint failed: domainlist.domain, domainlist.type") {
+          // Replace the error message with a more user-friendly one
+          error = "Already present";
+        }
+
+        message += "<br>- <strong>" + data.processed.errors[item].item + "</strong>: " + error;
+      }
+    }
+  }
+
+  // Show the warning message
+  const total = data.processed.success.length + data.processed.errors.length;
+  const processed = "(" + total + " " + type + (total !== 1 ? "s" : "") + " processed)";
+  showAlert(
+    "warning",
+    "fas fa-exclamation-triangle",
+    "Some " + type + (items.length !== 1 ? "s" : "") + " could not be added " + processed,
+    message
+  );
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -569,5 +644,6 @@ window.utils = (function () {
     parseQueryString: parseQueryString,
     hexEncode: hexEncode,
     hexDecode: hexDecode,
+    listsAlert: listAlert,
   };
 })();

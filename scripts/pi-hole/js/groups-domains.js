@@ -541,9 +541,9 @@ function addDomain() {
       type: type,
       kind: kind,
     }),
-    success: function () {
+    success: function (data) {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-plus", "Successfully added domain(s)", domainStr);
+      utils.listsAlert("domain", domains, data);
       table.ajax.reload(null, false);
       table.rows().deselect();
 

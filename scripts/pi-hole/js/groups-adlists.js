@@ -525,14 +525,9 @@ function addAdlist(event) {
     method: "post",
     dataType: "json",
     data: JSON.stringify({ address: addresses, comment: comment, type: type }),
-    success: function () {
+    success: function (data) {
       utils.enableAll();
-      utils.showAlert(
-        "success",
-        "fas fa-plus",
-        "Successfully added " + type + "list(s)",
-        addressestr
-      );
+      utils.listsAlert("list", addresses, data);
       table.ajax.reload(null, false);
       table.rows().deselect();
 

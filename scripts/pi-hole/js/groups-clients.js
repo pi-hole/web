@@ -454,9 +454,9 @@ function addClient() {
     method: "post",
     dataType: "json",
     data: JSON.stringify({ client: ips, comment: comment }),
-    success: function () {
+    success: function (data) {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-plus", "Successfully added client(s)", ipStr);
+      utils.listsAlert("client", ips, data);
       reloadClientSuggestions();
       table.ajax.reload(null, false);
       table.rows().deselect();
