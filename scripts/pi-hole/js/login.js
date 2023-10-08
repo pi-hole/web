@@ -117,4 +117,10 @@ $(function () {
 
   // Clear TOTP field
   $("#totp").val("");
+
+  // Generate HTTPS redirection link (only used if not already HTTPS)
+  if (location.protocol !== "https:") {
+    const url = "https:" + location.href.substring(location.protocol.length);
+    $("#https-link").attr("href", url);
+  }
 });
