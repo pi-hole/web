@@ -114,7 +114,7 @@ $(function () {
     if (data.session.totp === true) $("#totp_input").removeClass("hidden");
   });
 
-  // Get imformation about HTTPS port and DNS status
+  // Get information about HTTPS port and DNS status
   $.ajax({
     url: "/api/info/login",
   }).done(function (data) {
