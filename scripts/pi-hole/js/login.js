@@ -112,15 +112,25 @@ $(function () {
   }).done(function (data) {
     if (data.session.valid === true) redirect();
     if (data.session.totp === true) $("#totp_input").removeClass("hidden");
+  });
+
+  // Get information about HTTPS port and DNS status
+  $.ajax({
+    url: "/api/info/login",
+  }).done(function (data) {
     if (data.dns === false) showDNSfailure();
+
+    // Generate HTTPS redirection link (only used if not already HTTPS)
+    if (location.protocol !== "https:" && data.https_port !== 0) {
+      let url = "https://" + location.hostname;
+      if (data.https_port !== 443) url += ":" + data.https_port;
+      url += location.pathname + location.search + location.hash;
+
+      $("#https-link").attr("href", url);
+      $("#insecure-box").show();
+    }
   });
 
   // Clear TOTP field
   $("#totp").val("");
-
-  // Generate HTTPS redirection link (only used if not already HTTPS)
-  if (location.protocol !== "https:") {
-    const url = "https:" + location.href.substring(location.protocol.length);
-    $("#https-link").attr("href", url);
-  }
 });
