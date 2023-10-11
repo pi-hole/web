@@ -475,6 +475,7 @@ function updateVersionInfo() {
         remote: version.core.remote.version,
         branch: version.core.local.branch,
         hash: version.core.local.hash,
+        hash_remote: version.core.remote.hash,
         url: "https://github.com/pi-hole/pi-hole/releases",
       },
       {
@@ -483,6 +484,7 @@ function updateVersionInfo() {
         remote: version.ftl.remote.version,
         branch: version.ftl.local.branch,
         hash: version.ftl.local.hash,
+        hash_remote: version.ftl.remote.hash,
         url: "https://github.com/pi-hole/FTL/releases",
       },
       {
@@ -491,6 +493,7 @@ function updateVersionInfo() {
         remote: version.web.remote.version,
         branch: version.web.local.branch,
         hash: version.web.local.hash,
+        hash_remote: version.web.remote.hash,
         url: "https://github.com/pi-hole/web/releases",
       },
     ];
@@ -509,23 +512,38 @@ function updateVersionInfo() {
               '" rel="noopener" target="_blank">' +
               localVersion +
               "</a>";
-          } else localVersion = "vDev (" + v.branch + ", " + v.hash + ")";
-
-        if (versionCompare(v.local, v.remote) === -1) {
-          if (v.name === "Docker Tag") dockerUpdate = true;
-          else updateAvailable = true;
-          $("#versions").append(
-            "<li><strong>" +
-              v.name +
-              "</strong> " +
-              localVersion +
-              '&middot; <a class="lookatme" lookatme-text="Update available!" href="' +
-              v.url +
-              '" rel="noopener" target="_blank">Update available!</a></li>'
-          );
-        } else {
-          $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
-        }
+            if (versionCompare(v.local, v.remote) === -1) {
+              // Update available
+                $("#versions").append(
+                  "<li><strong>" +
+                    v.name +
+                    "</strong> " +
+                    localVersion +
+                    '&middot; <a class="lookatme" lookatme-text="Update available!" href="' +
+                    v.url +
+                    '" rel="noopener" target="_blank">Update available!</a></li>'
+                );
+              } else {
+                $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
+              }
+          } else {
+            // non-master branch
+            localVersion = "vDev (" + v.branch + ", " + v.hash + ")";
+            if (v.hash != v.hash_remote) {
+            // hash differ > Update available
+              $("#versions").append(
+                "<li><strong>" +
+                  v.name +
+                  "</strong> " +
+                  localVersion +
+                  '&middot; <a class="lookatme" lookatme-text="Update available!" href="' +
+                  v.url +
+                  '" rel="noopener" target="_blank">Update available!</a></li>'
+              );
+            } else {
+              $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
+            }
+          }
       }
     });
 
