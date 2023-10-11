@@ -490,7 +490,7 @@ function updateVersionInfo() {
         remote: version.web.remote.version,
         branch: version.web.local.branch,
         hash: version.web.local.hash,
-        url: "https://github.com/pi-hole/AdminLTE/releases",
+        url: "https://github.com/pi-hole/web/releases",
       },
     ];
 
