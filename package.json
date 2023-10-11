@@ -24,12 +24,12 @@
     "testpr": "npm run prettier:fix && git diff --ws-error-highlight=all --color=always --exit-code && npm run xo"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.14",
-    "eslint-plugin-compat": "^4.1.4",
-    "postcss": "^8.4.23",
+    "autoprefixer": "^10.4.16",
+    "eslint-plugin-compat": "^4.2.0",
+    "postcss": "^8.4.31",
     "postcss-cli": "^10.1.0",
-    "prettier": "2.8.8",
-    "xo": "^0.54.2"
+    "prettier": "3.0.3",
+    "xo": "^0.56.0"
   },
   "browserslist": [
     "defaults",

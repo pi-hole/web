@@ -109,7 +109,7 @@ function computeInterval(from, until) {
     preverr = err;
   }
 
-  return intervals[intervals.length - 1];
+  return intervals.at(-1);
 }
 
 function updateQueriesOverTime() {

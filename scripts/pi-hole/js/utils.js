@@ -19,7 +19,7 @@ function escapeHtml(text) {
 
   if (text === null) return null;
 
-  return text.replace(/[&<>"']/g, function (m) {
+  return text.replaceAll(/[&<>"']/g, function (m) {
     return map[m];
   });
 }
@@ -42,7 +42,7 @@ function unescapeHtml(text) {
 
   if (text === null) return null;
 
-  return text.replace(
+  return text.replaceAll(
     /&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/g,
     function (m) {
       return map[m];
