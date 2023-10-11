@@ -525,6 +525,11 @@ function updateVersionInfo() {
             }
           }
 
+        if (v.name === "Docker Tag" && versionCompare(v.local, v.remote) === -1) {
+          updateAvailable = true;
+          dockerUpdate = true;
+        }
+
         if (updateAvailable) {
           $("#versions").append(
             "<li><strong>" +
