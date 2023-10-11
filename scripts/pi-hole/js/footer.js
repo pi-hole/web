@@ -514,36 +514,29 @@ function updateVersionInfo() {
               "</a>";
             if (versionCompare(v.local, v.remote) === -1) {
               // Update available
-                $("#versions").append(
-                  "<li><strong>" +
-                    v.name +
-                    "</strong> " +
-                    localVersion +
-                    '&middot; <a class="lookatme" lookatme-text="Update available!" href="' +
-                    v.url +
-                    '" rel="noopener" target="_blank">Update available!</a></li>'
-                );
-              } else {
-                $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
-              }
-          } else {
-            // non-master branch
-            localVersion = "vDev (" + v.branch + ", " + v.hash + ")";
-            if (v.hash != v.hash_remote) {
-            // hash differ > Update available
-              $("#versions").append(
-                "<li><strong>" +
-                  v.name +
-                  "</strong> " +
-                  localVersion +
-                  '&middot; <a class="lookatme" lookatme-text="Update available!" href="' +
-                  v.url +
-                  '" rel="noopener" target="_blank">Update available!</a></li>'
-              );
+              updateAvailable = true;
             } else {
-              $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
+              // non-master branch
+              localVersion = "vDev (" + v.branch + ", " + v.hash + ")";
+              if (v.hash != v.hash_remote) {
+                // hash differ > Update available
+                updateAvailable = true;
+              }
             }
           }
+        if (updateAvailable) {
+          $("#versions").append(
+            "<li><strong>" +
+              v.name +
+              "</strong> " +
+              localVersion +
+              '&middot; <a class="lookatme" lookatme-text="Update available!" href="' +
+              v.url +
+              '" rel="noopener" target="_blank">Update available!</a></li>'
+          );
+        } else {
+          $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
+        }
       }
     });
 
