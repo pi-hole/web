@@ -1,8 +1,8 @@
 **In raising this issue, I confirm the following:** `{please fill the checkboxes, e.g: [X]}`
 
-- [] I have read and understood the [contributors guide](https://github.com/pi-hole/AdminLTE/blob/master/CONTRIBUTING.md).
+- [] I have read and understood the [contributors guide](https://github.com/pi-hole/web/blob/master/CONTRIBUTING.md).
 - [] The issue I am reporting can be _replicated_.
-- [] The issue I am reporting isn't a duplicate (see [FAQs](https://github.com/pi-hole/pi-hole/wiki/FAQs), [closed issues](https://github.com/pi-hole/AdminLTE/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aclosed%20), and [open issues](https://github.com/pi-hole/AdminLTE/issues)).
+- [] The issue I am reporting isn't a duplicate (see [FAQs](https://github.com/pi-hole/pi-hole/wiki/FAQs), [closed issues](https://github.com/pi-hole/web/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aclosed%20), and [open issues](https://github.com/pi-hole/web/issues)).
 
 **How familiar are you with the the source code relevant to this issue?:**
 
