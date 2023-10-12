@@ -81,12 +81,12 @@ $("#GETTeleporter").on("click", function () {
     xhrFields: {
       responseType: "blob",
     },
-    success: function (data) {
+    success: function (data, status, xhr) {
       var a = document.createElement("a");
       // eslint-disable-next-line compat/compat
       var url = window.URL.createObjectURL(data);
       a.href = url;
-      a.download = "teleporter.zip";
+      a.download = xhr.getResponseHeader("Content-Disposition").split("filename=")[1];
       document.body.append(a);
       a.click();
       a.remove();
