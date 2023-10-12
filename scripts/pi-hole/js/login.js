@@ -60,7 +60,8 @@ function doLogin(password) {
   $.ajax({
     url: "/api/auth",
     method: "POST",
-    data: JSON.stringify({ password: password, totp: parseInt($("#totp").val(), 10) }),
+    dataType: "json",
+    data: { password: password, totp: parseInt($("#totp").val(), 10) },
   })
     .done(function () {
       wrongPassword(false, true);
