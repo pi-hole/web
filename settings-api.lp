@@ -143,7 +143,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-12 settings-level-2">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">Currently active sessions</h3>
