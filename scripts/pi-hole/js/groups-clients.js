@@ -440,7 +440,7 @@ function addClient() {
     url: "/api/clients",
     method: "post",
     dataType: "json",
-    data: JSON.stringify({ client: ip, comment: comment }),
+    data: { client: ip, comment: comment },
     success: function () {
       utils.enableAll();
       utils.showAlert("success", "fas fa-plus", "Successfully added client", ip);
@@ -495,12 +495,12 @@ function editClient() {
     url: "/api/clients/" + encodeURIComponent(clientDecoded),
     method: "put",
     dataType: "json",
-    data: JSON.stringify({
+    data: {
       client: client,
       groups: groups,
       comment: comment,
       enabled: enabled,
-    }),
+    },
     success: function () {
       utils.enableAll();
       utils.showAlert(

@@ -318,7 +318,8 @@ function setTOTPSecret(secret) {
   $.ajax({
     url: "/api/config",
     type: "PATCH",
-    data: JSON.stringify({ config: { webserver: { api: { totp_secret: secret } } } }),
+    dataType: "json",
+    data: { config: { webserver: { api: { totp_secret: secret } } } },
     contentType: "application/json",
   })
     .done(function () {
