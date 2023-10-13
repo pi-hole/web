@@ -137,8 +137,7 @@ function saveSettings() {
   $.ajax({
     url: "/api/config",
     method: "PATCH",
-    dataType: "json",
-    data: { config: settings },
+    data: JSON.stringify({ config: settings }),
     contentType: "application/json; charset=utf-8",
   })
     .done(function () {
