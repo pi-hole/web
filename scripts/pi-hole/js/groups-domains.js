@@ -527,12 +527,12 @@ function addDomain() {
     url: "/api/domains/" + type + "/" + kind,
     method: "post",
     dataType: "json",
-    data: {
+    data: JSON.stringify({
       domain: domain,
       comment: comment,
       type: type,
       kind: kind,
-    },
+    }),
     success: function () {
       utils.enableAll();
       utils.showAlert("success", "fas fa-plus", "Successfully added domain", domain);
@@ -609,13 +609,13 @@ function editDomain() {
     url: "/api/domains/" + newTypestr + "/" + encodeURIComponent(domainDecoded),
     method: "put",
     dataType: "json",
-    data: {
+    data: JSON.stringify({
       groups: groups,
       comment: comment,
       enabled: enabled,
       type: oldType,
       kind: oldKind,
-    },
+    }),
     success: function () {
       utils.enableAll();
       utils.showAlert(
