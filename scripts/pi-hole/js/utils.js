@@ -315,6 +315,7 @@ function addFromQueryLog(domain, list) {
       url: "/api/domains/" + list + "/exact",
       method: "post",
       dataType: "json",
+      processData: false,
       data: JSON.stringify({
         domain: domain,
         comment: "Added from Query Log",

@@ -516,6 +516,7 @@ function addAdlist(event) {
     url: "/api/lists",
     method: "post",
     dataType: "json",
+    processData: false,
     data: JSON.stringify({ address: address, comment: comment, type: type }),
     success: function () {
       utils.enableAll();
@@ -582,6 +583,7 @@ function editAdlist() {
     url: "/api/lists/" + encodeURIComponent(addressDecoded),
     method: "put",
     dataType: "json",
+    processData: false,
     data: JSON.stringify({
       groups: groups,
       comment: comment,
