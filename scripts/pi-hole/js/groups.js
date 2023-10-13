@@ -294,6 +294,7 @@ function addGroup() {
     url: "/api/groups",
     method: "post",
     dataType: "json",
+    processData: false,
     data: JSON.stringify({
       name: name,
       comment: comment,
@@ -360,6 +361,7 @@ function editGroup() {
     url: "/api/groups/" + oldName,
     method: "put",
     dataType: "json",
+    processData: false,
     data: JSON.stringify({
       name: name,
       comment: comment,

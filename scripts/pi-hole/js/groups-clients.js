@@ -440,6 +440,7 @@ function addClient() {
     url: "/api/clients",
     method: "post",
     dataType: "json",
+    processData: false,
     data: JSON.stringify({ client: ip, comment: comment }),
     success: function () {
       utils.enableAll();
@@ -495,6 +496,7 @@ function editClient() {
     url: "/api/clients/" + encodeURIComponent(clientDecoded),
     method: "put",
     dataType: "json",
+    processData: false,
     data: JSON.stringify({
       client: client,
       groups: groups,
