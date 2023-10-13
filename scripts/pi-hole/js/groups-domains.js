@@ -535,6 +535,7 @@ function addDomain() {
     url: "/api/domains/" + type + "/" + kind,
     method: "post",
     dataType: "json",
+    processData: false,
     data: JSON.stringify({
       domain: domains,
       comment: comment,
@@ -617,6 +618,7 @@ function editDomain() {
     url: "/api/domains/" + newTypestr + "/" + encodeURIComponent(domainDecoded),
     method: "put",
     dataType: "json",
+    processData: false,
     data: JSON.stringify({
       groups: groups,
       comment: comment,

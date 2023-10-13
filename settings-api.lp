@@ -14,7 +14,7 @@ PageTitle = "Web Interface - API Settings"
 mg.include('scripts/pi-hole/lua/settings_header.lp','r')
 ?>
 <div class="row">
-    <div class="col-md-6 settings-level-1">
+    <div class="col-md-6 settings-level-0">
         <div class="row">
             <div class="col-md-12 settings-level-1">
                 <div class="box box-warning">
@@ -143,7 +143,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-12 settings-level-2">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">Currently active sessions</h3>

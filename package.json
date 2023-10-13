@@ -5,15 +5,15 @@
   "description": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pi-hole/AdminLTE.git"
+    "url": "git+https://github.com/pi-hole/web.git"
   },
   "keywords": [],
   "author": "",
   "license": "EUPL-1.2",
   "bugs": {
-    "url": "https://github.com/pi-hole/AdminLTE/issues"
+    "url": "https://github.com/pi-hole/web/issues"
   },
-  "homepage": "https://github.com/pi-hole/AdminLTE#readme",
+  "homepage": "https://github.com/pi-hole/web#readme",
   "scripts": {
     "prefix": "postcss \"style/*.css\" \"style/themes/*.css\" --use autoprefixer --no-map --replace",
     "prettier:check": "prettier -l \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**/*.js\"",

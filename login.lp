@@ -8,15 +8,6 @@
 --]]
 
 mg.include('scripts/pi-hole/lua/header.lp','r')
-
--- Build HTTPS upgrade link if HTTP is used
-https_link = ""
-if not is_secure then
-    https_link = "https://pi.hole" .. mg.request_info.request_uri
-    if mg.request_info.query_string then
-        https_link = https_link .. "?" .. mg.request_info.query_string
-    end
-end
 ?>
 <body class="hold-transition layout-boxed login-page">
 <div class="box login-box" id="login-box">
@@ -35,13 +26,13 @@ end
                 <div class="text-center form-group has-error" id="dns-failure-label" style="display: none;">
                     <label>DNS Server failure detected, log in to see Pi-hole diagnosis messages</label>
                 </div>
-                <div class="text-center form-group has-error" id="dns-failure-label" style="display: <? if is_secure then ?>none<? else ?>block<? end ?>;">
-                    <div class="box box-danger" id="insecure-box">
+                <div class="text-center form-group has-error" id="insecure-box" style="display: none;">
+                    <div class="box box-danger">
                         <div class="box-header with-border pointer no-user-select">
                             <h3 class="box-title has-error control-label"><i class="fa fa-fw fa-triangle-exclamation"></i>&nbsp;&nbsp;Insecure network connection&nbsp;&nbsp;<i class="fa fa-fw fa-triangle-exclamation"></i></h3>
                         </div>
                         <div class="box-body">
-                            <p>Consider upgrading to <a href="<?=https_link?>">HTTPS</a> (end-to-end encryption)</p>
+                            <p>Consider upgrading to <a href="#" id="https-link">HTTPS</a> (end-to-end encryption)</p>
                         </div>
                     </div>
                 </div>
@@ -89,7 +80,7 @@ end
                                     a new password (or explicitly disable the password by setting an empty password)
                                     using the command
                                 </p>
-                                <pre>sudo pihole -a -p</pre>
+                                <pre>sudo pihole setpassword</pre>
                             </div>
                         </div>
                     </div>

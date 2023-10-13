@@ -290,6 +290,8 @@ $("#loggingButton").confirm({
     $.ajax({
       url: "/api/config/dns/queryLogging",
       type: "PATCH",
+      dataType: "json",
+      processData: false,
       data: JSON.stringify(data),
     })
       .done(function (data) {
