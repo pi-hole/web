@@ -315,12 +315,13 @@ function addFromQueryLog(domain, list) {
       url: "/api/domains/" + list + "/exact",
       method: "post",
       dataType: "json",
-      data: {
+      processData: false,
+      data: JSON.stringify({
         domain: domain,
         comment: "Added from Query Log",
         type: list,
         kind: "exact",
-      },
+      }),
       success: function (response) {
         alProcessing.hide();
         if ("domains" in response && response.domains.length > 0) {

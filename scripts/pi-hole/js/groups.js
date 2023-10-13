@@ -294,11 +294,12 @@ function addGroup() {
     url: "/api/groups",
     method: "post",
     dataType: "json",
-    data: {
+    processData: false,
+    data: JSON.stringify({
       name: name,
       comment: comment,
       enabled: true,
-    },
+    }),
     success: function () {
       utils.enableAll();
       utils.showAlert("success", "fas fa-plus", "Successfully added group", name);
@@ -360,11 +361,12 @@ function editGroup() {
     url: "/api/groups/" + oldName,
     method: "put",
     dataType: "json",
-    data: {
+    processData: false,
+    data: JSON.stringify({
       name: name,
       comment: comment,
       enabled: enabled,
-    },
+    }),
     success: function () {
       utils.enableAll();
       utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " group", oldName);

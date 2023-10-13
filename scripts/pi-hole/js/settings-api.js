@@ -319,7 +319,8 @@ function setTOTPSecret(secret) {
     url: "/api/config",
     type: "PATCH",
     dataType: "json",
-    data: { config: { webserver: { api: { totp_secret: secret } } } },
+    processData: false,
+    data: JSON.stringify({ config: { webserver: { api: { totp_secret: secret } } } }),
     contentType: "application/json",
   })
     .done(function () {

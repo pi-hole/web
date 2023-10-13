@@ -138,7 +138,8 @@ function saveSettings() {
     url: "/api/config",
     method: "PATCH",
     dataType: "json",
-    data: { config: settings },
+    processData: false,
+    data: JSON.stringify({ config: settings }),
     contentType: "application/json; charset=utf-8",
   })
     .done(function () {

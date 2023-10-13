@@ -61,7 +61,8 @@ function doLogin(password) {
     url: "/api/auth",
     method: "POST",
     dataType: "json",
-    data: { password: password, totp: parseInt($("#totp").val(), 10) },
+    processData: false,
+    data: JSON.stringify({ password: password, totp: parseInt($("#totp").val(), 10) }),
   })
     .done(function () {
       wrongPassword(false, true);

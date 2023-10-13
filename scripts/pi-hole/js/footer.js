@@ -120,10 +120,11 @@ function piholeChange(action, duration) {
     url: "/api/dns/blocking",
     method: "POST",
     dataType: "json",
-    data: {
+    processData: false,
+    data: JSON.stringify({
       blocking: action === "enable",
       timer: parseInt(duration, 10) > 0 ? parseInt(duration, 10) : null,
-    },
+    }),
   })
     .done(function (data) {
       if (data.blocking === action + "d") {
