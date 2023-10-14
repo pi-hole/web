@@ -526,7 +526,7 @@ function updateVersionInfo() {
               // hash differ > Update available
               updateComponentAvailable = true;
               // link to the commit history instead of release page
-              v.url = v.url.replace("releases", "commits" + v.branch);
+              v.url = v.url.replace("releases", "commits/" + v.branch);
             }
           }
         }
