@@ -522,7 +522,7 @@ function updateVersionInfo() {
           } else {
             // non-master branch
             localVersion = "vDev (" + v.branch + ", " + v.hash + ")";
-            if (v.hash_remote !== null && v.hash !== v.hash_remote) {
+            if (v.hash_remote && v.hash !== v.hash_remote) {
               // hash differ > Update available
               updateComponentAvailable = true;
               // link to the commit history instead of release page
