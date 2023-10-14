@@ -12,7 +12,7 @@ mg.include('scripts/pi-hole/lua/header.lp','r')
 <div class="box login-box" id="login-box">
     <section style="padding: 15px;">
 <div class="text-center"> <h1 class="error-headline text-yellow"> Yellow Alert</h2>
-    <div class="login-logo">          
+    <div class="login-logo">
                 <img src="<?=pihole.webhome()?>img/logo.svg" alt="Pi-hole logo" class="loginpage-logo">
 <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;"><b>Pi-hole</b></span></div>
         </div>
@@ -23,7 +23,7 @@ mg.include('scripts/pi-hole/lua/header.lp','r')
 <!--
 If you want to redirect automatically, replace/comment out the Romulan Warbird comment with the following:
     <h5> <p> Plot heading to <a href="<?=pihole.webhome()?>">the admin dashboard</a> and make it so in five seconds</a></p>
-     <meta http-equiv="Refresh" content="5; url='<?=pihole.webhome()?>'" />
+<meta http-equiv="Refresh" content="5; url='<?=pihole.webhome()?>'" />
 -->
 </div>
 </body>
