@@ -359,7 +359,7 @@ function initTable() {
             var ids = [];
             $("tr.selected").each(function () {
               // ... add the row identified by "data-id".
-              ids.push($(this).attr("data-id"), 10);
+              ids.push($(this).attr("data-id"));
             });
             // Delete all selected rows at once
             delItems(ids);
