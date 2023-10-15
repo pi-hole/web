@@ -48,16 +48,19 @@ function eventsource(partial) {
         (numDomains > 0 ? ":" : ".") +
         "<br><br>";
       for (const domain of res.domains) {
+        const color = domain.type === "deny" ? "red" : "green";
         result +=
           "  - <a href='groups-domains.lp?domainid=" +
           domain.id +
-          "' target='_blank'><strong class='text-green'>" +
+          "' target='_blank'><strong>" +
           utils.escapeHtml(domain.domain) +
-          "</strong></a><br>    " +
+          "</strong></a><br>    <strong class='text-" +
+          color +
+          "'>" +
           domain.kind +
           " " +
           domain.type +
-          " domain<br>    added:         " +
+          " domain</strong><br>    added:         " +
           utils.renderTimestamp(domain.date_added, "display") +
           "<br>    last modified: " +
           utils.renderTimestamp(domain.date_modified, "display") +
@@ -88,7 +91,7 @@ function eventsource(partial) {
       result +=
         "Found " +
         numAdlists +
-        " adlist" +
+        " list" +
         (numAdlists !== 1 ? "s" : "") +
         " <em>" +
         verb +
@@ -99,12 +102,18 @@ function eventsource(partial) {
         "<br><br>";
       for (const address of Object.keys(grouped)) {
         const adlist = grouped[address][0];
+        const color = adlist.type === "block" ? "red" : "green";
         result +=
           "  - <a href='groups-adlists.lp?adlistid=" +
           adlist.id +
           "' target='_blank'>" +
           utils.escapeHtml(address) +
-          "</a><br>    added:         " +
+          "</a><br>    <strong class='text-" +
+          color +
+          "'>" +
+          adlist.type +
+          " list</strong>" +
+          "<br>    added:         " +
           utils.renderTimestamp(adlist.date_added, "display") +
           "<br>    last modified: " +
           utils.renderTimestamp(adlist.date_modified, "display") +
@@ -122,12 +131,10 @@ function eventsource(partial) {
           (adlist.comment !== null && adlist.comment.length > 0
             ? '<br>    comment: "' + utils.escapeHtml(adlist.comment) + '"'
             : "<br>    no comment") +
-          "<br>";
+          "<br>    matching entries:<br>";
         for (const adlists of grouped[address]) {
           result +=
-            "    - <strong class='text-green'>" +
-            utils.escapeHtml(adlists.domain) +
-            "</strong><br>";
+            "    - <strong class='text-blue'>" + utils.escapeHtml(adlists.domain) + "</strong><br>";
         }
 
         result += "<br>";
