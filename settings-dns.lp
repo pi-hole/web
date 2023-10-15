@@ -204,7 +204,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 Use an upstream DNS server which supports DNSSEC when activating DNSSEC. Note that
                                 the size of your log might increase significantly
                                 when enabling DNSSEC. A DNSSEC resolver test can be found
-                                <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
+                                <a href="https://wander.science/projects/dns/dnssec-resolver-test/" rel="noopener" target="_blank">here</a>.</p>
                         </div>
                     </div>
                 </div>
