@@ -143,7 +143,7 @@ function initCheckboxRadioStyle() {
   }
 
   var boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet" />');
-  boxsheet.appendTo("head");
+  boxsheet.insertAfter($("link[href*='style/vendor/bootstrap/css/bootstrap.min.css']"));
 
   applyCheckboxRadioStyle(chkboxStyle);
 
