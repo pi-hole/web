@@ -140,7 +140,41 @@ function eventsource(partial) {
         result += "<br>";
       }
 
-      result += "Search took " + (1000 * data.took).toFixed(1) + " ms";
+      result += "Number of results per type:<br>";
+      result +=
+        "  - <strong class='text-blue'>" +
+        data.search.results.domains.exact +
+        "</strong> exact domain matches<br>";
+      result +=
+        "  - <strong class='text-blue'>" +
+        data.search.results.domains.regex +
+        "</strong> regex domain matches<br>";
+      result +=
+        "  - <strong class='text-blue'>" +
+        data.search.results.gravity.allow +
+        "</strong> allowlist (antigravity) matches<br>";
+      result +=
+        "  - <strong class='text-blue'>" +
+        data.search.results.gravity.block +
+        "</strong> blocklist (gravity) matches<br>";
+
+      if (
+        data.search.results.gravity.allow > data.search.parameters.N ||
+        data.search.results.gravity.block > data.search.parameters.N ||
+        data.search.results.domains.exact > data.search.parameters.N ||
+        data.search.results.domains.regex > data.search.parameters.N
+      ) {
+        result +=
+          "<br><br><strong class='text-green'>Note:</strong> " +
+          "The number of results to return per type is limited to " +
+          data.search.parameters.N +
+          " entries.<br>      There are " +
+          data.search.results.total +
+          " matching entries in total.<br>      Consider " +
+          "using a more specific search term or increase N.<br>";
+      }
+
+      result += "<br>Search took " + (1000 * data.took).toFixed(1) + " ms";
 
       ta.append(result);
     })
