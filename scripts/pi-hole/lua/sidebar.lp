@@ -230,7 +230,7 @@
                         <!-- Query Lists -->
                         <li class="<? if scriptname == 'search' then ?> active<? end ?>">
                             <a href="<?=webhome?>search">
-                                <i class="fa fa-fw menu-icon fa-search"></i> <span>Search Adlists</span>
+                                <i class="fa fa-fw menu-icon fa-search"></i> <span>Search Lists</span>
                             </a>
                         </li>
                         <!-- Network -->
