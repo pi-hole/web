@@ -34,15 +34,15 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                     </div>
                     <div class="form-group col-md-6">
                         <label for="new_comment">Comment:</label>
-                        <input id="new_comment" type="text" class="form-control" placeholder="Adlist description (optional)">
+                        <input id="new_comment" type="text" class="form-control" placeholder="List description (optional)">
                     </div>
                 </div>
             </div>
             <div class="box-footer clearfix">
                 <strong>Hints:</strong>
                 <ol>
-                    <li>Please run <code>pihole -g</code> or update your gravity list <a href="<?=webhome?>gravity">online</a> after modifying your adlists.</li>
-                    <li>Multiple adlists can be added by separating each <i>unique</i> URL with a space</li>
+                    <li>Please run <code>pihole -g</code> or update your gravity list <a href="<?=webhome?>gravity">online</a> after modifying your lists.</li>
+                    <li>Multiple lists can be added by separating each <i>unique</i> URL with a space</li>
                     <li>Click on the icon in the first column to get additional information about your lists. The icons correspond to the health of the list.</li>
                 </ol>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
@@ -59,7 +59,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="adlists-list">
+        <div class="box" id="lists-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
                     List of subscribed lists
@@ -67,7 +67,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="adlistsTable" class="table table-striped table-bordered" width="100%">
+                <table id="listsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -92,6 +92,6 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 <script src="<?=pihole.fileversion('scripts/vendor/bootstrap-select.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/vendor/bootstrap-toggle.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/groups-common.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/groups-adlists.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/groups-lists.js')?>"></script>
 
 <? mg.include('scripts/pi-hole/lua/footer.lp','r')?>

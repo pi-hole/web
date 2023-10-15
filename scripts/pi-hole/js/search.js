@@ -78,63 +78,63 @@ function eventsource(partial) {
 
       // Group results in res.gravity by res.gravity[].address
       var grouped = {};
-      for (const adlist of res.gravity) {
-        if (grouped[adlist.address] === undefined) {
-          grouped[adlist.address] = [];
+      for (const list of res.gravity) {
+        if (grouped[list.address] === undefined) {
+          grouped[list.address] = [];
         }
 
-        grouped[adlist.address].push(adlist);
+        grouped[list.address].push(list);
       }
 
-      const numAdlists = Object.keys(grouped).length;
+      const numLists = Object.keys(grouped).length;
 
       result +=
         "Found " +
-        numAdlists +
+        numLists +
         " list" +
-        (numAdlists !== 1 ? "s" : "") +
+        (numLists !== 1 ? "s" : "") +
         " <em>" +
         verb +
         "</em> matching '<strong class='text-blue'>" +
         utils.escapeHtml(q) +
         "</strong>'" +
-        (numAdlists > 0 ? ":" : ".") +
+        (numLists > 0 ? ":" : ".") +
         "<br><br>";
       for (const address of Object.keys(grouped)) {
-        const adlist = grouped[address][0];
-        const color = adlist.type === "block" ? "red" : "green";
+        const list = grouped[address][0];
+        const color = list.type === "block" ? "red" : "green";
         result +=
-          "  - <a href='groups-adlists.lp?adlistid=" +
-          adlist.id +
+          "  - <a href='groups-lists.lp?listid=" +
+          list.id +
           "' target='_blank'>" +
           utils.escapeHtml(address) +
           "</a><br>    <strong class='text-" +
           color +
           "'>" +
-          adlist.type +
+          list.type +
           " list</strong>" +
           "<br>    added:         " +
-          utils.renderTimestamp(adlist.date_added, "display") +
+          utils.renderTimestamp(list.date_added, "display") +
           "<br>    last modified: " +
-          utils.renderTimestamp(adlist.date_modified, "display") +
+          utils.renderTimestamp(list.date_modified, "display") +
           "<br>    last updated:  " +
-          utils.renderTimestamp(adlist.date_updated, "display") +
+          utils.renderTimestamp(list.date_updated, "display") +
           " (" +
-          adlist.number.toLocaleString() +
+          list.number.toLocaleString() +
           " domains)" +
           "<br>    " +
-          (adlist.enabled ? "enabled" : "disabled") +
+          (list.enabled ? "enabled" : "disabled") +
           ", used in " +
-          adlist.groups.length +
+          list.groups.length +
           " group" +
-          (adlist.groups.length === 1 ? "" : "s") +
-          (adlist.comment !== null && adlist.comment.length > 0
-            ? '<br>    comment: "' + utils.escapeHtml(adlist.comment) + '"'
+          (list.groups.length === 1 ? "" : "s") +
+          (list.comment !== null && list.comment.length > 0
+            ? '<br>    comment: "' + utils.escapeHtml(list.comment) + '"'
             : "<br>    no comment") +
           "<br>    matching entries:<br>";
-        for (const adlists of grouped[address]) {
+        for (const lists of grouped[address]) {
           result +=
-            "    - <strong class='text-blue'>" + utils.escapeHtml(adlists.domain) + "</strong><br>";
+            "    - <strong class='text-blue'>" + utils.escapeHtml(lists.domain) + "</strong><br>";
         }
 
         result += "<br>";
