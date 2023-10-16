@@ -11,7 +11,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 ?>
 <!-- Title -->
 <div class="page-header">
-    <h1>Find Blocked Domain In Lists</h1>
+    <h1>Find Domains In Lists</h1>
 </div>
 <div class="row">
     <div class="col-md-12">
