@@ -70,7 +70,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             <div class="icon">
                 <i class="fas fa-list-alt"></i>
             </div>
-            <a href="groups-adlists.lp" class="small-box-footer" title="">
+            <a href="groups-lists.lp" class="small-box-footer" title="">
                 Manage adlists <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
