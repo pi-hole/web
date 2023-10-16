@@ -208,8 +208,7 @@ function parseQueryStatus(data) {
   };
 }
 
-function formatReplyTime(data, type) {
-  const replyTime = data.reply.time;
+function formatReplyTime(replyTime, type) {
   if (type === "display") {
     // Units:
     //  - seconds if replytime >= 1 second
@@ -321,16 +320,10 @@ function formatInfo(data) {
 
   // Always show reply info, add reply delay if applicable
   var replyInfo = "";
-  if (data.reply.type !== "UNKNOWN") {
-    replyInfo = divStart + "Reply:&nbsp&nbsp;" + data.reply.type;
-    if (data.reply.time >= 0 && data.reply.type !== "UNKNOWN") {
-      replyInfo += " (" + formatReplyTime(data, "display") + ")";
-    }
-
-    replyInfo += "</div>";
-  } else {
-    replyInfo = divStart + "Reply:&nbsp;&nbsp;No reply received</div>";
-  }
+  replyInfo =
+    data.reply.type !== "UNKNOWN"
+      ? divStart + "Reply:&nbsp&nbsp;" + data.reply.type + "</div>"
+      : divStart + "Reply:&nbsp;&nbsp;No reply received</div>";
 
   // Compile extra info for displaying
   return (
@@ -532,7 +525,7 @@ $(function () {
       { data: "type", width: "1%" },
       { data: "domain", width: "45%" },
       { data: "client.ip", width: "29%", type: "ip-address" },
-      { data: null, width: "4%", render: formatReplyTime },
+      { data: "reply.time", width: "4%", render: formatReplyTime },
       { data: null, width: "10%", sortable: false, searchable: false },
     ],
     lengthMenu: [
