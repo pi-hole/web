@@ -38,7 +38,6 @@ function eventsource() {
             return reader.read().then(({ done, value }) => {
               // When no more data needs to be consumed, close the stream
               if (done) {
-                ta.append("Done.");
                 controller.close();
                 alInfo.hide();
                 $("#gravityBtn").prop("disabled", false);
@@ -50,7 +49,7 @@ function eventsource() {
               var string = new TextDecoder().decode(value);
               parseLines(ta, string);
 
-              if (string.indexOf("Pi-hole blocking is") !== -1) {
+              if (string.indexOf("Done.") !== -1) {
                 alSuccess.show();
               }
 
