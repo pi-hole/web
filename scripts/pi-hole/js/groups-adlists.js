@@ -85,7 +85,7 @@ function format(data) {
       : "N/A") +
     (data.abp_entries !== null && parseInt(data.abp_entries, 10) > 0 && numbers === true
       ? " (out of which " + parseInt(data.abp_entries, 10).toLocaleString() + " are in ABP-style)"
-      : "N/A") +
+      : "") +
     '</td></tr><tr class="dataTables-child"' +
     "><td>Number of non-domains on this list:&nbsp;&nbsp;</td>" +
     "<td>" +
