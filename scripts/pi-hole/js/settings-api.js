@@ -70,7 +70,7 @@ $(function () {
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback: function (row, data) {
-      $(row).attr("data-id", data.ip);
+      $(row).attr("data-id", data.id);
       var button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteSession_' +
         data.id +
@@ -148,7 +148,7 @@ $(function () {
             ids.push(parseInt($(this).attr("data-id"), 10));
           });
           // Delete all selected rows at once
-          delSession(ids);
+          delSessions(ids);
         },
       },
     ],
