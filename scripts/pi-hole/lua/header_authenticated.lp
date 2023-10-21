@@ -34,7 +34,7 @@ mg.include('header.lp','r')
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
-        <a href="index.lp" class="logo">
+        <a href="<?=pihole.webhome()?>" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">P<strong>h</strong></span>
             <!-- logo for regular state and mobile devices -->
