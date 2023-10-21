@@ -384,7 +384,10 @@ function updateSummaryData(runOnce) {
   $.getJSON("/api/stats/summary", function (data) {
     var intl = new Intl.NumberFormat();
     glowIfChanged($("span#dns_queries"), intl.format(parseInt(data.queries.total, 10)));
-    glowIfChanged($("span#total_clients"), intl.format(parseInt(data.clients.total, 10)));
+    let clientsString = intl.format(parseInt(data.clients.active, 10));
+    if (data.clients.active !== data.clients.total)
+      clientsString += " / " + intl.format(parseInt(data.clients.total, 10));
+    glowIfChanged($("span#total_clients"), clientsString);
     glowIfChanged($("span#blocked_queries"), intl.format(parseFloat(data.queries.blocked)));
     glowIfChanged(
       $("span#percent_blocked"),
