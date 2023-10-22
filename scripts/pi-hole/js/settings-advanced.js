@@ -41,10 +41,16 @@ function generateRow(topic, key, value) {
     '<h3 class="box-title">' +
     key +
     (value.modified
-      ? '&nbsp;&nbsp;<i class="far fa-edit text-light-blue" title="Modified"></i>'
+      ? '&nbsp;&nbsp;<i class="far fa-edit text-light-blue" title="Modified from default"></i>'
       : "") +
     (value.flags.advanced
       ? '&nbsp;&nbsp;<i class="fas fa-cogs text-yellow" title="Expert-level setting"></i>'
+      : "") +
+    (value.flags.restart_dnsmasq
+      ? '&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>'
+      : "") +
+    (value.flags.env_var
+      ? '&nbsp;&nbsp;<i class="fas fa-times-circle text-red" title="Setting overwritten by an environmental variable are read-only"></i>'
       : "") +
     "</h3>" +
     "<p>" +
@@ -84,6 +90,11 @@ function generateRow(topic, key, value) {
     }
   }
 
+  let extraAttributes = "";
+  if (value.flags.env_var) {
+    extraAttributes = " disabled";
+  }
+
   switch (value.type) {
     case "IPv4 address":
     case "IPv6 address":
@@ -95,7 +106,9 @@ function generateRow(topic, key, value) {
         value.value +
         '" data-key="' +
         key +
-        '"> ' +
+        '"' +
+        extraAttributes +
+        "> " +
         defaultValueHint +
         addAllowedValues(value.allowed) +
         "</div>";
@@ -111,7 +124,9 @@ function generateRow(topic, key, value) {
         key +
         '-checkbox" data-key="' +
         key +
-        '"><label for="' +
+        '"' +
+        extraAttributes +
+        '><label for="' +
         key +
         '-checkbox">Enabled ' +
         defaultValueHint +
@@ -129,7 +144,9 @@ function generateRow(topic, key, value) {
         value.value +
         '" data-key="' +
         key +
-        '" data-type="float"> ' +
+        '" data-type="float"' +
+        extraAttributes +
+        "> " +
         defaultValueHint +
         "</div>";
 
@@ -144,7 +161,9 @@ function generateRow(topic, key, value) {
         value.value +
         '" data-key="' +
         key +
-        '" data-type="integer"> ' +
+        '" data-type="integer"' +
+        extraAttributes +
+        "> " +
         defaultValueHint +
         "</div>";
 
@@ -159,7 +178,9 @@ function generateRow(topic, key, value) {
         value.value +
         '" data-key="' +
         key +
-        '" data-type="integer"> ' +
+        '" data-type="integer"' +
+        extraAttributes +
+        "> " +
         defaultValueHint +
         "</div>";
 
@@ -174,7 +195,9 @@ function generateRow(topic, key, value) {
         value.value +
         '" data-key="' +
         key +
-        '" data-type="integer"> ' +
+        '" data-type="integer"' +
+        extraAttributes +
+        "> " +
         defaultValueHint +
         "</div>";
 
@@ -187,7 +210,9 @@ function generateRow(topic, key, value) {
         '<div class="col-sm-7">' +
         '<textarea class="form-control" data-key="' +
         key +
-        '">' +
+        '"' +
+        extraAttributes +
+        ">" +
         value.value.join("\n") +
         "</textarea> " +
         defaultValueHint +
@@ -204,7 +229,9 @@ function generateRow(topic, key, value) {
         '<div class="col-sm-8">' +
         '<select class="form-control" data-key="' +
         key +
-        '">';
+        '"' +
+        extraAttributes +
+        ">";
       value.allowed.forEach(function (option) {
         box +=
           '<option value="' +
@@ -234,7 +261,9 @@ function generateRow(topic, key, value) {
         value.value +
         '" data-key="' +
         key +
-        '"> ' +
+        '"' +
+        extraAttributes +
+        "> " +
         defaultValueHint +
         addAllowedValues(value.allowed) +
         "</div>";
