@@ -46,6 +46,9 @@ function generateRow(topic, key, value) {
     (value.flags.advanced
       ? '&nbsp;&nbsp;<i class="fas fa-cogs text-yellow" title="Expert-level setting"></i>'
       : "") +
+    (value.flags.restart_dnsmasq
+      ? '&nbsp;&nbsp;<i class="fas fa-redo text-red" title="Setting requires FTL restart on change"></i>'
+      : "") +
     "</h3>" +
     "<p>" +
     utils.escapeHtml(value.description).replace("\n", "<br>") +

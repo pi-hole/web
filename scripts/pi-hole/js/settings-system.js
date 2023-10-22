@@ -280,7 +280,7 @@ $("#loggingButton").confirm({
     "Are you sure you want to switch query logging mode?<br><br>" +
     "<strong>This will restart the DNS server.</strong><br>" +
     "As consequence of this action, your DNS cache will be cleared and you may temporarily loose your internet connection.<br>" +
-    "Furthermore, you will be logged out of the web interface.",
+    "Furthermore, you may be logged out of the web interface.",
   title: "Confirmation required",
   confirm: function () {
     const data = {};
