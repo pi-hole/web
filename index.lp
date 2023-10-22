@@ -22,8 +22,8 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             <div class="icon">
                 <i class="fas fa-globe-americas"></i>
             </div>
-            <a href="network.lp" class="small-box-footer" title="">
-                <span id="total_clients">-</span> active clients <i class="fa fa-arrow-circle-right"></i>
+            <a href="network.lp" class="small-box-footer" title="" id="total_clients">
+                <span id="active_clients">-</span> active clients <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
     </div>
