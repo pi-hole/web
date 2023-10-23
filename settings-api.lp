@@ -19,7 +19,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             <div class="col-md-12 settings-level-1">
                 <div class="box box-warning">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Exclusions</h3>
+                        <h3 class="box-title">Exclusions&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
                     </div>
                     <div class="box-body">
                         <div class="row">
@@ -92,7 +92,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-1">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title">Advanced Settings</h3>
+                <h3 class="box-title">Advanced Settings&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -146,7 +146,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-12 settings-level-2">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title">Currently active sessions</h3>
+                <h3 class="box-title">Currently active sessions&nbsp;&nbsp;<i class="fas fa-cogs text-yellow" title="Expert-level setting"></i></h3>
             </div>
             <div class="box-body">
                 <div class="row">

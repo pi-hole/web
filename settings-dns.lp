@@ -166,7 +166,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
         </div>
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title">Advanced DNS settings</h3>
+                <h3 class="box-title">Advanced DNS settings&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -212,7 +212,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
         </div>
         <div class="box box-warning settings-level-2">
             <div class="box-header with-border">
-                <h3 class="box-title">Rate-limiting&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
+                <h3 class="box-title">Rate-limiting&nbsp;&nbsp;<i class="fas fa-cogs text-yellow" title="Expert-level setting"></i></h3>
             </div>
             <div class="box-body">
                 <div class="row">

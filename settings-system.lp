@@ -295,7 +295,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                     <div class="col-xs-12 col-md-6 col-lg-3">
                         <button type="button" class="btn btn-danger confirm-flusharp btn-block button-pad destructive_action" disabled="true">Flush network table</button>
                     </div>
-                    <div class="col-xs-12 col-md-6 col-lg-3 settings-level-2">
+                    <div class="col-xs-12 col-md-6 col-lg-3">
                         <button type="button" class="btn btn-danger confirm-flushlogs btn-block button-pad destructive_action" disabled="true">Flush logs (last 24 hours)</button>
                     </div>
                 </div>
