@@ -10,15 +10,15 @@
 mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 
 -- Page title and level selector
-PageTitle = "Advanced Settings"
+PageTitle = "All Settings"
 mg.include('scripts/pi-hole/lua/settings_header.lp','r')
 ?>
-<div class="row settings-level-2" id="advanced-content">
+<div class="row settings-level-0" id="advanced-content">
     <!-- dynamically filled with content -->
     <div class="overlay" id="advanced-overlay">
         <i class="fa fa-sync fa-spin"></i>
     </div>
-    <div class="col-lg-12 settings-level-2">
+    <div class="col-lg-12 settings-level-0">
         <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
     </div>
 </div>
