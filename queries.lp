@@ -165,7 +165,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                             <th>Type</th>
                             <th>Domain</th>
                             <th>Client</th>
-                            <th>Delay</th>
+                            <th><i class="fas fa-stopwatch" title="Query reply time"></i></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -176,7 +176,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                             <th>Type</th>
                             <th>Domain</th>
                             <th>Client</th>
-                            <th>Delay</th>
+                            <th><i class="fas fa-stopwatch" title="Query reply time"></i></th>
                             <th></th>
                         </tr>
                     </tfoot>

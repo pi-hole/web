@@ -80,13 +80,13 @@ td.lookatme {
 /* Optimize Queries-Table for small screens */
 /* Time column */
 #all-queries td:nth-of-type(1),
-/* Status column */
-#all-queries td:nth-of-type(5) {
+/* Reply time column */
+#all-queries td:nth-of-type(6) {
   white-space: nowrap;
 }
 
 /* Domain column */
-#all-queries td:nth-of-type(3) {
+#all-queries td:nth-of-type(4) {
   min-width: 200px;
   word-break: break-all;
   white-space: pre-wrap;
