@@ -14,10 +14,10 @@ PageTitle = "Local DNS Settings"
 mg.include('scripts/pi-hole/lua/settings_header.lp','r')
 ?>
 <div class="row">
-    <div class="col-md-6 settings-level-1">
+    <div class="col-md-6 settings-level-0">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Local DNS records</h3>
+                <h3 class="box-title">Local DNS records&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -73,10 +73,10 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-6 settings-level-1">
+    <div class="col-md-6 settings-level-0">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Local CNAME records records</h3>
+                <h3 class="box-title">Local CNAME records records&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
             </div>
             <div class="box-body">
                 <div class="row">
