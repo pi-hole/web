@@ -591,8 +591,8 @@ function listAlert(type, items, data) {
     for (const item in data.processed.errors) {
       if (Object.prototype.hasOwnProperty.call(data.processed.errors, item)) {
         let error = data.processed.errors[item].error;
-        if (error === "UNIQUE constraint failed: domainlist.domain, domainlist.type") {
-          // Replace the error message with a more user-friendly one
+        // Replace some error messages with a more user-friendly text
+        if (error.indexOf("UNIQUE constraint failed") > -1) {
           error = "Already present";
         }
 
