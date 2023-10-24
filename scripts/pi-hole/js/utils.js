@@ -283,11 +283,6 @@ function stateLoadCallback(itemName) {
   return data;
 }
 
-function getGraphType() {
-  // Only return line if `barchart_chkbox` is explicitly set to false. Else return bar
-  return localStorage && localStorage.getItem("barchart_chkbox") === "false" ? "line" : "bar";
-}
-
 function addFromQueryLog(domain, list) {
   var alertModal = $("#alertModal");
   var alProcessing = alertModal.find(".alProcessing");
@@ -628,7 +623,6 @@ window.utils = (function () {
     setBsSelectDefaults: setBsSelectDefaults,
     stateSaveCallback: stateSaveCallback,
     stateLoadCallback: stateLoadCallback,
-    getGraphType: getGraphType,
     validateMAC: validateMAC,
     validateHostname: validateHostname,
     addFromQueryLog: addFromQueryLog,

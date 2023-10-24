@@ -23,9 +23,6 @@ function updateQueriesOverTime() {
       return;
     }
 
-    // remove last data point for line charts as it is not representative there
-    if (utils.getGraphType() === "line") data.history.splice(-1, 1);
-
     // Remove possibly already existing data
     timeLineChart.data.labels = [];
     timeLineChart.data.datasets = [];
@@ -136,9 +133,6 @@ function updateClientsOverTime() {
       $("#clients").remove();
       return;
     }
-
-    // remove last data point for line charts as it is not representative there
-    if (utils.getGraphType() === "line") data.history.splice(-1, 1);
 
     var i,
       labels = [];
@@ -430,7 +424,7 @@ $(function () {
   var ticksColor = utils.getCSSval("graphs-ticks", "color");
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   timeLineChart = new Chart(ctx, {
-    type: utils.getGraphType(),
+    type: "bar",
     data: {
       labels: [],
       datasets: [{ data: [], parsing: false }],
@@ -541,7 +535,7 @@ $(function () {
   if (clientsChartEl) {
     ctx = clientsChartEl.getContext("2d");
     clientsChart = new Chart(ctx, {
-      type: utils.getGraphType(),
+      type: "bar",
       data: {
         labels: [],
         datasets: [{ data: [], parsing: false }],
