@@ -16,6 +16,16 @@ var queryTypePieChart, forwardDestinationPieChart;
 var failures = 0;
 function updateQueriesOverTime() {
   $.getJSON("/api/history", function (data) {
+    // Remove graph if there are no results (e.g. new
+    // installation or privacy mode enabled)
+    if (jQuery.isEmptyObject(data.history)) {
+      $("#queries-over-time").remove();
+      return;
+    }
+
+    // remove last data point for line charts as it is not representative there
+    if (utils.getGraphType() === "line") data.history.splice(-1, 1);
+
     // Remove possibly already existing data
     timeLineChart.data.labels = [];
     timeLineChart.data.datasets = [];
@@ -123,7 +133,7 @@ function updateClientsOverTime() {
     // Remove graph if there are no results (e.g. new
     // installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.history)) {
-      $("#clients-over-time").parent().remove();
+      $("#clients").remove();
       return;
     }
 
