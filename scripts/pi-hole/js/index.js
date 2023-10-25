@@ -475,7 +475,7 @@ $(function () {
         },
       },
       scales: {
-        xAxes: {
+        x: {
           type: "time",
           stacked: true,
           offset: false,
@@ -495,7 +495,7 @@ $(function () {
             color: ticksColor,
           },
         },
-        yAxes: {
+        y: {
           stacked: true,
           beginAtZero: true,
           ticks: {
@@ -570,7 +570,7 @@ $(function () {
           },
         },
         scales: {
-          xAxes: {
+          x: {
             type: "time",
             stacked: true,
             offset: false,
@@ -590,7 +590,7 @@ $(function () {
               color: ticksColor,
             },
           },
-          yAxes: {
+          y: {
             beginAtZero: true,
             ticks: {
               color: ticksColor,
