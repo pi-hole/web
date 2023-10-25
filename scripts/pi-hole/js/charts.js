@@ -103,11 +103,11 @@ const htmlLegendPlugin = {
 // eslint-disable-next-line no-unused-vars
 var customTooltips = function (context) {
   var tooltip = context.tooltip;
-  var tooltipEl = document.getElementById(this._chart.canvas.id + "-customTooltip");
+  var tooltipEl = document.getElementById(this.chart.canvas.id + "-customTooltip");
   if (!tooltipEl) {
     // Create Tooltip Element once per chart
     tooltipEl = document.createElement("div");
-    tooltipEl.id = this._chart.canvas.id + "-customTooltip";
+    tooltipEl.id = this.chart.canvas.id + "-customTooltip";
     tooltipEl.classList.add("chartjs-tooltip");
     tooltipEl.innerHTML = "<div class='arrow'></div> <table></table>";
     // avoid browser's font-zoom since we know that <body>'s
@@ -121,7 +121,7 @@ var customTooltips = function (context) {
     tooltipEl.style.fontSize = tooltip.options.bodyFont.size / fontZoom + "px";
     tooltipEl.style.fontStyle = tooltip.options.bodyFont.style;
     // append Tooltip next to canvas-containing box
-    tooltipEl.ancestor = this._chart.canvas.closest(".box[id]").parentNode;
+    tooltipEl.ancestor = this.chart.canvas.closest(".box[id]").parentNode;
     tooltipEl.ancestor.append(tooltipEl);
   }
 
@@ -175,7 +175,7 @@ var customTooltips = function (context) {
     tableRoot.innerHTML = innerHtml;
   }
 
-  var canvasPos = this._chart.canvas.getBoundingClientRect();
+  var canvasPos = this.chart.canvas.getBoundingClientRect();
   var boxPos = tooltipEl.ancestor.getBoundingClientRect();
   var offsetX = canvasPos.left - boxPos.left;
   var offsetY = canvasPos.top - boxPos.top;
