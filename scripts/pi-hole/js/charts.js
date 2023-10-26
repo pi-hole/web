@@ -87,7 +87,6 @@ const htmlLegendPlugin = {
         });
       }
 
-      textLink.style.color = item.fontColor;
       textLink.style.margin = 0;
       textLink.style.padding = 0;
       textLink.style.textDecoration = item.hidden ? "line-through" : "";
