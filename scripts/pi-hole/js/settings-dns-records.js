@@ -10,6 +10,36 @@
 var dnsRecordsTable = null;
 var customCNAMETable = null;
 
+function hostsDomain(data) {
+  // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
+  const name = data.substring(data.indexOf(" ") + 1);
+  return name;
+}
+
+function hostsIP(data) {
+  // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
+  const ip = data.substring(0, data.indexOf(" "));
+  return ip;
+}
+
+function CNAMEdomain(data) {
+  // Split record in format <cname>,<target>[,<TTL>]
+  const CNAMEarr = data.split(",");
+  return CNAMEarr[0];
+}
+
+function CNAMEtarget(data) {
+  // Split record in format <cname>,<target>[,<TTL>]
+  const CNAMEarr = data.split(",");
+  return CNAMEarr[1];
+}
+
+function CNAMEttl(data) {
+  // Split record in format <cname>,<target>[,<TTL>]
+  const CNAMEarr = data.split(",");
+  return CNAMEarr.length > 2 ? CNAMEarr[2] : "-";
+}
+
 $(function () {
   dnsRecordsTable = $("#dnsRecordsTable").DataTable({
     ajax: {
@@ -19,8 +49,8 @@ $(function () {
     },
     order: [[0, "asc"]],
     columns: [
-      { data: null },
-      { data: null, type: "ip-address" },
+      { data: null, render: hostsDomain },
+      { data: null, type: "ip-address", render: hostsIP },
       { data: null, width: "22px", orderable: false },
     ],
     columnDefs: [
@@ -36,11 +66,6 @@ $(function () {
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback: function (row, data) {
-      // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
-      var ip = data.substring(0, data.indexOf(" "));
-      // The name can be multiple domains separated by spaces
-      var name = data.substring(data.indexOf(" ") + 1);
-
       $(row).attr("data-id", data);
       var button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteRecord' +
@@ -51,8 +76,6 @@ $(function () {
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
       $("td:eq(2)", row).html(button);
-      $("td:eq(0)", row).text(name);
-      $("td:eq(1)", row).text(ip);
     },
     dom:
       "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
@@ -91,9 +114,9 @@ $(function () {
     },
     order: [[0, "asc"]],
     columns: [
-      { data: null },
-      { data: null },
-      { data: null },
+      { data: null, render: CNAMEdomain },
+      { data: null, render: CNAMEtarget },
+      { data: null, render: CNAMEttl },
       { data: null, width: "22px", orderable: false },
     ],
     columnDefs: [
@@ -109,9 +132,6 @@ $(function () {
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback: function (row, data) {
-      // Split record in format <cname>,<target>[,<TTL>]
-      var CNAMEarr = data.split(",");
-
       $(row).attr("data-id", data);
       var button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteCNAME' +
@@ -122,10 +142,6 @@ $(function () {
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
       $("td:eq(3)", row).html(button);
-      $("td:eq(0)", row).text(CNAMEarr[0]);
-      $("td:eq(1)", row).text(CNAMEarr[1]);
-      if (CNAMEarr.length > 2) $("td:eq(2)", row).text(CNAMEarr[2]);
-      else $("td:eq(2)", row).text("-");
     },
     dom:
       "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
