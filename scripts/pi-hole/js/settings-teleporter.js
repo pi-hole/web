@@ -33,6 +33,7 @@ function importZIP() {
   fetch("/api/teleporter", {
     method: "POST",
     body: formData,
+    headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
   })
     .then(response => response.json())
     .then(data => {
@@ -70,3 +71,27 @@ function importZIP() {
       console.error(error); // eslint-disable-line no-console
     });
 }
+
+// Inspired by https://stackoverflow.com/a/59576416/2087442
+$("#GETTeleporter").on("click", function () {
+  $.ajax({
+    url: "/api/teleporter",
+    headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
+    method: "GET",
+    xhrFields: {
+      responseType: "blob",
+    },
+    success: function (data, status, xhr) {
+      var a = document.createElement("a");
+      // eslint-disable-next-line compat/compat
+      var url = window.URL.createObjectURL(data);
+      a.href = url;
+      a.download = xhr.getResponseHeader("Content-Disposition").match(/filename="([^"]*)"/)[1];
+      document.body.append(a);
+      a.click();
+      a.remove();
+      // eslint-disable-next-line compat/compat
+      window.URL.revokeObjectURL(url);
+    },
+  });
+});
