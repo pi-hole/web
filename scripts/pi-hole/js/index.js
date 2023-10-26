@@ -16,6 +16,13 @@ var queryTypePieChart, forwardDestinationPieChart;
 var failures = 0;
 function updateQueriesOverTime() {
   $.getJSON("/api/history", function (data) {
+    // Remove graph if there are no results (e.g. new
+    // installation or privacy mode enabled)
+    if (jQuery.isEmptyObject(data.history)) {
+      $("#queries-over-time").remove();
+      return;
+    }
+
     // Remove possibly already existing data
     timeLineChart.data.labels = [];
     timeLineChart.data.datasets = [];
@@ -123,12 +130,9 @@ function updateClientsOverTime() {
     // Remove graph if there are no results (e.g. new
     // installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.history)) {
-      $("#clients-over-time").parent().remove();
+      $("#clients").remove();
       return;
     }
-
-    // remove last data point for line charts as it is not representative there
-    if (utils.getGraphType() === "line") data.history.splice(-1, 1);
 
     var i,
       labels = [];
@@ -420,7 +424,7 @@ $(function () {
   var ticksColor = utils.getCSSval("graphs-ticks", "color");
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   timeLineChart = new Chart(ctx, {
-    type: utils.getGraphType(),
+    type: "bar",
     data: {
       labels: [],
       datasets: [{ data: [], parsing: false }],
@@ -531,7 +535,7 @@ $(function () {
   if (clientsChartEl) {
     ctx = clientsChartEl.getContext("2d");
     clientsChart = new Chart(ctx, {
-      type: utils.getGraphType(),
+      type: "bar",
       data: {
         labels: [],
         datasets: [{ data: [], parsing: false }],
