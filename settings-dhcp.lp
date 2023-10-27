@@ -18,7 +18,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-0">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title">DHCP Settings</h3>
+                <h3 class="box-title dhcp.active dhcp.start dhcp.end dhcp.router dhcp.ipv6">DHCP Settings</h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -71,7 +71,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-1">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title">Advanced DHCP Settings</h3>
+                <h3 class="box-title dhcp.domain dhcp.leaseTime dhcp.rapidCommit chdp.multiDNS">Advanced DHCP Settings</h3>
             </div>
             <div class="box-body">
                 <div class="row">

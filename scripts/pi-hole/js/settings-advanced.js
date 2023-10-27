@@ -50,7 +50,7 @@ function generateRow(topic, key, value) {
       ? '&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>'
       : "") +
     (value.flags.env_var
-      ? '&nbsp;&nbsp;<i class="fas fa-times-circle text-red" title="Setting overwritten by an environmental variable are read-only"></i>'
+      ? '&nbsp;&nbsp;<i class="fas fa-lock text-orange" title="Settings overwritten by an environmental variable are read-only"></i>'
       : "") +
     "</h3>" +
     "<p>" +

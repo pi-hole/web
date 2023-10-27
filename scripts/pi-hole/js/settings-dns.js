@@ -18,6 +18,12 @@ function removeFromArray(arr, what) {
 }
 
 function fillDNSupstreams(value, servers) {
+  var disabledStr = "";
+  if (value.flags.env_var === true) {
+    $("#DNSupstreamsTextfield").prop("disabled", true);
+    disabledStr = 'disabled="Disabled"';
+  }
+
   var i = 0;
   var customServers = value.value.length;
   servers.forEach(element => {
@@ -30,21 +36,21 @@ function fillDNSupstreams(value, servers) {
       // Loop over available addresses (up to 2)
       for (let index = 0; index < 2; index++) {
         if (address.length > index) {
-          row +=
-            '<td title="' +
-            address[index] +
-            '"><div><input type="checkbox" id="DNSupstreams-' +
-            i +
-            '"';
+          var checkedStr = "";
           if (
             value.value.includes(address[index]) ||
             value.value.includes(address[index] + "#53")
           ) {
-            row += " checked";
+            checkedStr = "checked";
             customServers--;
           }
 
-          row += '><label for="DNSupstreams-' + i++ + '"></label></div></td>';
+          row += `<td title="${address[index]}">
+                    <div>
+                      <input type="checkbox" id="DNSupstreams-${i}" ${disabledStr} ${checkedStr}>
+                      <label for="DNSupstreams-${i++}"></label>
+                    </div>
+                  </td>`;
         } else {
           row += "<td></td>";
         }
