@@ -246,15 +246,17 @@ function delCNAME(elem) {
 
 $(document).ready(function () {
   $("#btnAdd-host").on("click", function () {
+    utils.disableAll();
     const elem = $("#Hip").val() + " " + $("#Hdomain").val();
     const url = "/api/config/dns/hosts/" + encodeURIComponent(elem);
+    utils.showAlert("info", "", "Adding DNS record...", elem);
     $.ajax({
       url: url,
       method: "PUT",
     })
       .done(function () {
         utils.enableAll();
-        utils.showAlert("success", "far fa-plus", "Successfully added DNS record", "");
+        utils.showAlert("success", "fas fa-plus", "Successfully added DNS record", elem);
         dnsRecordsTable.ajax.reload(null, false);
       })
       .fail(function (data, exception) {
@@ -266,17 +268,19 @@ $(document).ready(function () {
   });
 
   $("#btnAdd-cname").on("click", function () {
+    utils.disableAll();
     var elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
     var ttlVal = parseInt($("#Cttl").val(), 10);
     if (isFinite(ttlVal) && ttlVal >= 0) elem += "," + ttlVal;
     const url = "/api/config/dns/cnameRecords/" + encodeURIComponent(elem);
+    utils.showAlert("info", "", "Adding DNS record...", elem);
     $.ajax({
       url: url,
       method: "PUT",
     })
       .done(function () {
         utils.enableAll();
-        utils.showAlert("success", "far fa-plus", "Successfully added CNAME record", "");
+        utils.showAlert("success", "fas fa-plus", "Successfully added CNAME record", elem);
         dnsRecordsTable.ajax.reload(null, false);
       })
       .fail(function (data, exception) {

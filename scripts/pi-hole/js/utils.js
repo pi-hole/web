@@ -83,63 +83,51 @@ function padNumber(num) {
   return ("00" + num).substr(-2, 2);
 }
 
-var info = null;
+var showAlertBox = null;
 function showAlert(type, icon, title, message) {
-  var opts = {};
-  title = "&nbsp;<strong>" + title + "</strong><br>";
+  const options = {
+      title: "&nbsp;<strong>" + title + "</strong><br>",
+      message: message,
+    },
+    settings = {
+      type: type,
+      delay: 5000, // default value
+      mouse_over: "pause",
+    };
   switch (type) {
     case "info":
-      opts = {
-        type: "info",
-        icon: "far fa-clock",
-        title: title,
-        message: message,
-      };
-      info = $.notify(opts);
-      break;
-    case "success":
-      opts = {
-        type: "success",
-        icon: icon,
-        title: title,
-        message: message,
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
+      options.icon = icon !== null && icon.len > 0 ? icon : "far fa-clock";
 
       break;
+    case "success":
+      break;
     case "warning":
-      opts = {
-        type: "warning",
-        icon: "fas fa-exclamation-triangle",
-        title: title,
-        message: message,
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
+      options.icon = "fas fa-exclamation-triangle";
+      settings.delay *= 2;
 
       break;
     case "error":
-      opts = {
-        type: "danger",
-        icon: "fas fa-times",
-        title: "&nbsp;<strong>Error, something went wrong!</strong><br>",
-        message: message,
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
+      options.icon = "fas fa-times";
+      options.title = "&nbsp;<strong>Error, something went wrong!</strong><br>";
+      settings.delay *= 2;
 
       break;
     default:
+      // Case not handled, do nothing
+      console.log("Unknown alert type: " + type); // eslint-disable-line no-console
+      return;
+  }
+
+  if (type === "info") {
+    // Create a new notification for info boxes
+    showAlertBox = $.notify(options, settings);
+  } else if (showAlertBox !== null) {
+    // Update existing notification for other boxes (if available)
+    showAlertBox.update(options);
+    showAlertBox.update(settings);
+  } else {
+    // Create a new notification for other boxes if no previous info box exists
+    $.notify(options, settings);
   }
 }
 
