@@ -123,7 +123,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 <label for="webserver.api.temp.limit"><strong>Temperature limit for "hot":</strong></label>
                             </div>
                             <div class="col-md-6">
-                                <input type="number" id="webserver.api.temp.limit" data-key="webserver.api.temp.limit">
+                                <input type="number" data-type="integer" id="webserver.api.temp.limit" data-key="webserver.api.temp.limit">
                             </div>
                         </div>
                         <div class="row">
