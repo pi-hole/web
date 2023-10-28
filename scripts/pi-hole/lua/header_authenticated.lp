@@ -13,8 +13,8 @@ mg.include('header.lp','r')
     <script src="<?=pihole.fileversion('scripts/vendor/datatables.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/vendor/datatables.select.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/vendor/datatables.buttons.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/vendor/chart.umd.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/vendor/moment.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('scripts/vendor/chart.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/vendor/chartjs-adapter-moment.js')?>"></script>
 </head>
 <body class="<?=theme.name?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in">
