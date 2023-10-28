@@ -194,7 +194,6 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 <script src="<?=pihole.fileversion('scripts/vendor/bootstrap-select.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/ip-address-sorting.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/vendor/daterangepicker.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/utils.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/queries.js')?>"></script>
 
 <? mg.include('scripts/pi-hole/lua/footer.lp','r')?>
