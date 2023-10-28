@@ -9,6 +9,7 @@
 
 var apiSessionsTable = null;
 var ownSessionID = null;
+var deleted = 0;
 var TOTPdata = null;
 
 function renderBool(data, type) {
@@ -60,7 +61,7 @@ $(function () {
       },
     ],
     drawCallback: function () {
-      $('button[id^="deleteSession_"]').on("click", deleteSession);
+      $('button[id^="deleteSession_"]').on("click", deleteThisSession);
 
       // Hide buttons if all messages were deleted
       var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
@@ -70,7 +71,7 @@ $(function () {
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback: function (row, data) {
-      $(row).attr("data-id", data.ip);
+      $(row).attr("data-id", data.id);
       var button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteSession_' +
         data.id +
@@ -148,7 +149,7 @@ $(function () {
             ids.push(parseInt($(this).attr("data-id"), 10));
           });
           // Delete all selected rows at once
-          delSession(ids);
+          deleteMultipleSessions(ids);
         },
       },
     ],
@@ -186,13 +187,18 @@ $(function () {
   });
 });
 
-function deleteSession() {
-  // Passes the button data-del-id attribute as ID
-  var ids = [$(this).attr("data-del-id")];
-  delSessions(ids);
+function deleteThisSession() {
+  // This function is called when a red trash button is clicked
+  // We get the ID of the current item from the data-del-id attribute
+  const thisID = parseInt(this.attr("data-del-id"), 10);
+  deleted = 0;
+  deleteOneSession(thisID, 1, false);
 }
 
-function delSessions(ids) {
+function deleteMultipleSessions(ids) {
+  // This function is called when multiple sessions are selected and the gray
+  // trash button is clicked
+
   // Check input validity
   if (!Array.isArray(ids)) return;
 
@@ -206,9 +212,12 @@ function delSessions(ids) {
     return parseInt(value, 10);
   });
 
-  // Check if own session is selected
+  // Check if own session is selected and remove it when deleting multiple
+  // We need this only when multiple sessions are removed to ensure we do not
+  // accidentally remove our own session and thus log us out *before* we can
+  // remove the other sessions
   let ownSessionDelete = false;
-  if (ids.includes(ownSessionID)) {
+  if (ids.includes(ownSessionID) && ids.length > 1) {
     ownSessionDelete = true;
     // Strip own session ID from array
     ids = ids.filter(function (value) {
@@ -217,24 +226,29 @@ function delSessions(ids) {
   }
 
   // Loop through IDs and delete them
+  deleted = 0;
   for (const id of ids) {
-    if (Object.hasOwnProperty.call(ids, id)) {
-      delSession(ids[id]);
-    }
-  }
-
-  // Delete own session last (if selected)
-  if (ownSessionDelete) {
-    delSession(ownSessionID);
+    deleteOneSession(id, ids.length, ownSessionDelete);
   }
 }
 
-function delSession(id) {
+function deleteOneSession(id, len, ownSessionDelete) {
+  // This function is called to delete a single session
+  // If we are batch deleting, we ensure that we do not delete our own session
+  // before having successfully deleted all other sessions, the deletion of
+  // our own session is then triggered by the last successful deletion of
+  // another session (ownSessionDelete == true, len == global deleted)
   $.ajax({
     url: "/api/auth/session/" + id,
     method: "DELETE",
   })
     .done(function () {
+      // Do not reload page when deleting multiple sessions
+      if (++deleted < len) return;
+
+      // All other sessions have been deleted, now delete own session
+      if (ownSessionDelete) deleteOneSession(ownSessionID, 1, false);
+
       if (id !== ownSessionID) {
         // Reload table to remove session
         apiSessionsTable.ajax.reload();
