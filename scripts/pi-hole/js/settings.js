@@ -37,10 +37,26 @@ function setConfigValues(topic, key, value) {
 
   // else: we have a setting we can set
   var escapedKey = key.replaceAll(".", "\\.");
+  var envTitle = $(`.${escapedKey}`);
+
+  if (value.flags.advanced) {
+    if (envTitle.find(".advanced-warning").length === 0) {
+      envTitle.append(
+        `<span class="advanced-warning">&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced level setting"></i></span>`
+      );
+    }
+  }
+
+  if (value.flags.restart_dnsmasq) {
+    if (envTitle.find(".restart-warning").length === 0) {
+      envTitle.append(
+        `<span class="restart-warning">&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i></span>`
+      );
+    }
+  }
 
   if (value.flags.env_var) {
     // If this setting has been set by environment variable, display a padlock in the section title
-    var envTitle = $(`.${escapedKey}`);
     if (envTitle.find(".env-warning").length === 0) {
       envTitle.append(
         `<span class="env-warning">&nbsp;&nbsp;<i class="fas fa-lock text-orange env-warning" title="Settings overwritten by an environmental variable are read-only"></i></span>`
