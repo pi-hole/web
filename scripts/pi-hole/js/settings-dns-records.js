@@ -7,9 +7,6 @@
 
 /* global utils: false, apiFailure:false */
 
-var dnsRecordsTable = null;
-var customCNAMETable = null;
-
 function hostsDomain(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
   const name = data.substring(data.indexOf(" ") + 1);
@@ -40,85 +37,44 @@ function CNAMEttl(data) {
   return CNAMEarr.length > 2 ? CNAMEarr[2] : "-";
 }
 
-$(function () {
-  dnsRecordsTable = $("#dnsRecordsTable").DataTable({
-    ajax: {
-      url: "/api/config/dns/hosts",
-      type: "GET",
-      dataSrc: "config.dns.hosts",
-    },
-    order: [[0, "asc"]],
-    columns: [
+function populateDataTable(endpoint) {
+  var columns = "";
+  if (endpoint === "hosts") {
+    columns = [
       { data: null, render: hostsDomain },
       { data: null, type: "ip-address", render: hostsIP },
       { data: null, width: "22px", orderable: false },
-    ],
-    columnDefs: [
-      {
-        targets: "_all",
-        render: $.fn.dataTable.render.text(),
-      },
-    ],
-    drawCallback: function () {
-      $('button[id^="deleteRecord"]').on("click", deleteRecord);
-
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
-    },
-    rowCallback: function (row, data) {
-      $(row).attr("data-id", data);
-      var button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteRecord' +
-        utils.hexEncode(data) +
-        '" data-tag="' +
-        data +
-        '" data-type="hosts">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
-      $("td:eq(2)", row).html(button);
-    },
-    dom:
-      "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
-      "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
-      "<'row'<'col-sm-12'i>>",
-    lengthMenu: [
-      [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"],
-    ],
-    language: {
-      emptyTable: "No local DNS records defined.",
-    },
-    stateSave: true,
-    stateDuration: 0,
-    processing: true,
-    stateSaveCallback: function (settings, data) {
-      utils.stateSaveCallback("dns-records-table", data);
-    },
-    stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("dns-records-table");
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
-
-      // Apply loaded state to table
-      return data;
-    },
-  });
-
-  dnsRecordsTable = $("#customCNAMETable").DataTable({
-    ajax: {
-      url: "/api/config/dns/cnameRecords",
-      type: "GET",
-      dataSrc: "config.dns.cnameRecords",
-    },
-    order: [[0, "asc"]],
-    columns: [
+    ];
+  } else {
+    columns = [
       { data: null, render: CNAMEdomain },
       { data: null, render: CNAMEtarget },
       { data: null, render: CNAMEttl },
       { data: null, width: "22px", orderable: false },
-    ],
+    ];
+  }
+
+  var setByEnv = false;
+  $.ajax({
+    url: `/api/config/dns/${endpoint}?detailed=true`,
+  }).done(function (data) {
+    setByEnv = data.config.dns[endpoint].flags.env_var;
+
+    if (setByEnv) {
+      $(`#title-${endpoint}`).append(
+        `<span class="env-warning">&nbsp;&nbsp;<i class="fas fa-lock text-orange env-warning" title="Settings overwritten by an environmental variable are read-only"></i></span>`
+      );
+      $(`.${endpoint}`).prop("disabled", true);
+    }
+  });
+
+  $(`#${endpoint}-Table`).DataTable({
+    ajax: {
+      url: `/api/config/dns/${endpoint}`,
+      type: "GET",
+      dataSrc: `config.dns.${endpoint}`,
+    },
+    columns: columns,
     columnDefs: [
       {
         targets: "_all",
@@ -126,22 +82,22 @@ $(function () {
       },
     ],
     drawCallback: function () {
-      $('button[id^="deleteCNAME"]').on("click", deleteRecord);
+      $(`button[id^="delete${endpoint}"]`).on("click", deleteRecord);
 
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback: function (row, data) {
       $(row).attr("data-id", data);
-      var button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteCNAME' +
-        utils.hexEncode(data) +
-        '" data-tag="' +
-        data +
-        '" data-type="cname">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
-      $("td:eq(3)", row).html(button);
+      var button = `<button type="button"
+                      class="btn btn-danger btn-xs"
+                      id="delete${endpoint}${utils.hexEncode(data)}"
+                      data-tag="${data}"
+                      data-type="${endpoint}"
+                      ${setByEnv ? "disabled" : ""}>
+                      <span class="far fa-trash-alt"></span>
+                    </button>`;
+      $(`td:eq(${endpoint === "hosts" ? 2 : 3})`, row).html(button);
     },
     dom:
       "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
@@ -152,16 +108,20 @@ $(function () {
       [10, 25, 50, 100, "All"],
     ],
     language: {
-      emptyTable: "No local CNAME records defined.",
+      emptyTable: function () {
+        return endpoint === "hosts"
+          ? "No local DNS records defined."
+          : "No local CNAME records defined.";
+      },
     },
     stateSave: true,
     stateDuration: 0,
     processing: true,
     stateSaveCallback: function (settings, data) {
-      utils.stateSaveCallback("dns-cname-records-table", data);
+      utils.stateSaveCallback(`${endpoint}-records-table`, data);
     },
     stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("dns-cname-records-table");
+      var data = utils.stateLoadCallback(`${endpoint}-records-table`);
       // Return if not available
       if (data === null) {
         return null;
@@ -171,13 +131,17 @@ $(function () {
       return data;
     },
   });
+}
+
+$(function () {
+  populateDataTable("hosts");
+  populateDataTable("cnameRecords");
 });
 
 function deleteRecord() {
   // Get the tags
   var tags = [$(this).attr("data-tag")];
   var types = [$(this).attr("data-type")];
-
   // Check input validity
   if (!Array.isArray(tags)) return;
 
@@ -202,7 +166,7 @@ function delHosts(elem) {
     .done(function () {
       utils.enableAll();
       utils.showAlert("success", "far fa-trash-alt", "Successfully deleted DNS record", "");
-      dnsRecordsTable.ajax.reload(null, false);
+      $("#hosts-Table").DataTable().ajax.reload(null, false);
     })
     .fail(function (data, exception) {
       utils.enableAll();
@@ -229,7 +193,7 @@ function delCNAME(elem) {
     .done(function () {
       utils.enableAll();
       utils.showAlert("success", "far fa-trash-alt", "Successfully deleted local CNAME record", "");
-      customCNAMETable.ajax.reload(null, false);
+      $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
     })
     .fail(function (data, exception) {
       utils.enableAll();
@@ -256,8 +220,8 @@ $(document).ready(function () {
     })
       .done(function () {
         utils.enableAll();
-        utils.showAlert("success", "fas fa-plus", "Successfully added DNS record", elem);
-        dnsRecordsTable.ajax.reload(null, false);
+        utils.showAlert("success", "far fa-plus", "Successfully added DNS record", "");
+        $("#hosts-Table").DataTable().ajax.reload(null, false);
       })
       .fail(function (data, exception) {
         utils.enableAll();
@@ -280,8 +244,8 @@ $(document).ready(function () {
     })
       .done(function () {
         utils.enableAll();
-        utils.showAlert("success", "fas fa-plus", "Successfully added CNAME record", elem);
-        dnsRecordsTable.ajax.reload(null, false);
+        utils.showAlert("success", "far fa-plus", "Successfully added CNAME record", "");
+        $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
       })
       .fail(function (data, exception) {
         utils.enableAll();
