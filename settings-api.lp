@@ -136,8 +136,11 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 </select>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-lg-12 pt-3">
                         <button type="button" id="button-enable-totp" class="btn btn-success hidden" data-toggle="modal" data-target="#modal-totp">Enable 2FA</button>
                         <button type="button" id="button-disable-totp" class="btn btn-danger hidden" data-toggle="modal" data-target="#modal-totp-disable">Disable 2FA</button>
+                        <button type="button" id="button-apppw" class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-apppw">Configure app password</button>
                     </div>
                 </div>
             </div>
@@ -158,6 +161,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                     <th title="Session ID used internally by our Pi-hole">ID</th>
                                     <th title="Session is still valid (neither expired nor closed)">Valid</th>
                                     <th title="Connection between client and Pi-hole is end-to-end encrypted">TLS</th>
+                                    <th title="Session used application password during authentication"><i class="fas fa-robot"></i></th>
                                     <th title="Time at which the client created the session">Login at</th>
                                     <th title="Time at which the session expires (if not prolonged)">Valid until</th>
                                     <th title="The client that created this session (the current connection is highlighted in bold-face)">Client IP</th>
@@ -212,6 +216,39 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
                 <button type="button" id="totp_submit" disabled="true" class="btn btn-default">Enable 2FA</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-apppw" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Configure application password</h4>
+            </div>
+            <div class="modal-body">
+                <p>After you turn on two-factor (2FA) verification and set up an
+                Authenticator app, you may run into issues if you use apps or
+                other services that don't support two-step verification. In this
+                case, you can create and use an app password to sign in.</p>
+                <p>An app password is a long, randomly generated password that
+                can be used instead of your regular password + 2FA token when
+                signing in to the API. You can revoke the app password at any
+                time. The app password can also be used when 2FA is not enabled.</p>
+                <div class="text-center">
+                    <i id="password-spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
+                </div>
+                <p id="password_display" class="text-center hidden">&#x1F510;<br><strong>Your new app password is:</strong><br><code class="password_background m-5" id="password_code"></code></p>
+                <p>IMPORTANT: The app password generated here will only be shown
+                once and cannot be recovered. Make sure to store it in a safe
+                place!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="apppw_clear" class="btn btn-default btn-danger pull-left">Remove currently set app password</button>
+                <button type="button" id="apppw_submit" class="btn btn-default btn-success">Enable new app password</button>
             </div>
         </div>
     </div>
