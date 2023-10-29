@@ -16,6 +16,13 @@ var queryTypePieChart, forwardDestinationPieChart;
 var failures = 0;
 function updateQueriesOverTime() {
   $.getJSON("/api/history", function (data) {
+    // Remove graph if there are no results (e.g. new
+    // installation or privacy mode enabled)
+    if (jQuery.isEmptyObject(data.history)) {
+      $("#queries-over-time").remove();
+      return;
+    }
+
     // Remove possibly already existing data
     timeLineChart.data.labels = [];
     timeLineChart.data.datasets = [];
@@ -123,12 +130,9 @@ function updateClientsOverTime() {
     // Remove graph if there are no results (e.g. new
     // installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.history)) {
-      $("#clients-over-time").parent().remove();
+      $("#clients").remove();
       return;
     }
-
-    // remove last data point for line charts as it is not representative there
-    if (utils.getGraphType() === "line") data.history.splice(-1, 1);
 
     var i,
       labels = [];
@@ -384,7 +388,11 @@ function updateSummaryData(runOnce) {
   $.getJSON("/api/stats/summary", function (data) {
     var intl = new Intl.NumberFormat();
     glowIfChanged($("span#dns_queries"), intl.format(parseInt(data.queries.total, 10)));
-    glowIfChanged($("span#total_clients"), intl.format(parseInt(data.clients.total, 10)));
+    glowIfChanged($("span#active_clients"), intl.format(parseInt(data.clients.active, 10)));
+    $("a#total_clients").attr(
+      "title",
+      intl.format(parseInt(data.clients.total, 10)) + " total clients"
+    );
     glowIfChanged($("span#blocked_queries"), intl.format(parseFloat(data.queries.blocked)));
     glowIfChanged(
       $("span#percent_blocked"),
@@ -416,7 +424,7 @@ $(function () {
   var ticksColor = utils.getCSSval("graphs-ticks", "color");
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   timeLineChart = new Chart(ctx, {
-    type: utils.getGraphType(),
+    type: "bar",
     data: {
       labels: [],
       datasets: [{ data: [], parsing: false }],
@@ -471,7 +479,7 @@ $(function () {
         },
       },
       scales: {
-        xAxes: {
+        x: {
           type: "time",
           stacked: true,
           offset: false,
@@ -491,7 +499,7 @@ $(function () {
             color: ticksColor,
           },
         },
-        yAxes: {
+        y: {
           stacked: true,
           beginAtZero: true,
           ticks: {
@@ -527,7 +535,7 @@ $(function () {
   if (clientsChartEl) {
     ctx = clientsChartEl.getContext("2d");
     clientsChart = new Chart(ctx, {
-      type: utils.getGraphType(),
+      type: "bar",
       data: {
         labels: [],
         datasets: [{ data: [], parsing: false }],
@@ -566,7 +574,7 @@ $(function () {
           },
         },
         scales: {
-          xAxes: {
+          x: {
             type: "time",
             stacked: true,
             offset: false,
@@ -586,7 +594,7 @@ $(function () {
               color: ticksColor,
             },
           },
-          yAxes: {
+          y: {
             beginAtZero: true,
             ticks: {
               color: ticksColor,

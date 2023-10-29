@@ -501,8 +501,10 @@ function updateVersionInfo() {
 
     versions.forEach(function (v) {
       if (v.local !== null) {
+        // reset update status for each component
+        var updateComponentAvailable = false;
         var localVersion = v.local;
-        if (v.branch !== null && v.hash !== null)
+        if (v.branch !== null && v.hash !== null) {
           if (v.branch === "master") {
             localVersion = v.local.split("-")[0];
             localVersion =
@@ -515,32 +517,37 @@ function updateVersionInfo() {
               "</a>";
             if (versionCompare(v.local, v.remote) === -1) {
               // Update available
-              updateAvailable = true;
+              updateComponentAvailable = true;
             }
           } else {
             // non-master branch
             localVersion = "vDev (" + v.branch + ", " + v.hash + ")";
-            if (v.hash !== v.hash_remote) {
+            if (v.hash_remote && v.hash !== v.hash_remote) {
               // hash differ > Update available
-              updateAvailable = true;
+              updateComponentAvailable = true;
+              // link to the commit history instead of release page
+              v.url = v.url.replace("releases", "commits/" + v.branch);
             }
           }
+        }
 
         if (v.name === "Docker Tag" && versionCompare(v.local, v.remote) === -1) {
-          updateAvailable = true;
+          updateComponentAvailable = true;
           dockerUpdate = true;
         }
 
-        if (updateAvailable) {
+        if (updateComponentAvailable) {
           $("#versions").append(
             "<li><strong>" +
               v.name +
               "</strong> " +
               localVersion +
-              '&middot; <a class="lookatme" lookatme-text="Update available!" href="' +
+              '&nbsp&middot; <a class="lookatme" lookatme-text="Update available!" href="' +
               v.url +
               '" rel="noopener" target="_blank">Update available!</a></li>'
           );
+          // if at least one component can be updated, display the update-hint footer
+          updateAvailable = true;
         } else {
           $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
         }
@@ -548,11 +555,11 @@ function updateVersionInfo() {
     });
 
     if (dockerUpdate)
-      $("update-hint").html(
+      $("#update-hint").html(
         'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener" target="_blank">replace this old container with a fresh upgraded image</a>.'
       );
     else if (updateAvailable)
-      $("update-hint").html(
+      $("#update-hint").html(
         'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener" target="_blank">pihole -up</a></code>.'
       );
 

@@ -83,63 +83,65 @@ function padNumber(num) {
   return ("00" + num).substr(-2, 2);
 }
 
-var info = null;
+var showAlertBox = null;
 function showAlert(type, icon, title, message) {
-  var opts = {};
-  title = "&nbsp;<strong>" + title + "</strong><br>";
+  const options = {
+      title: "&nbsp;<strong>" + title + "</strong><br>",
+      message: message,
+    },
+    settings = {
+      type: type,
+      delay: 5000, // default value
+      mouse_over: "pause",
+    };
   switch (type) {
     case "info":
-      opts = {
-        type: "info",
-        icon: "far fa-clock",
-        title: title,
-        message: message,
-      };
-      info = $.notify(opts);
-      break;
-    case "success":
-      opts = {
-        type: "success",
-        icon: icon,
-        title: title,
-        message: message,
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
+      options.icon = icon !== null && icon.len > 0 ? icon : "far fa-clock";
 
       break;
+    case "success":
+      break;
     case "warning":
-      opts = {
-        type: "warning",
-        icon: "fas fa-exclamation-triangle",
-        title: title,
-        message: message,
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
+      options.icon = "fas fa-exclamation-triangle";
+      settings.delay *= 2;
 
       break;
     case "error":
-      opts = {
-        type: "danger",
-        icon: "fas fa-times",
-        title: "&nbsp;<strong>Error, something went wrong!</strong><br>",
-        message: message,
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
+      options.icon = "fas fa-times";
+      options.title = "&nbsp;<strong>Error, something went wrong!</strong><br>";
+      settings.delay *= 2;
+
+      // If the message is an API object, nicely format the error message
+      // Try to parse message as JSON
+      try {
+        var data = JSON.parse(message);
+        console.log(data); // eslint-disable-line no-console
+        if (data.error !== undefined) {
+          options.title = "&nbsp;<strong>" + data.error.message + "</strong><br>";
+
+          if (data.error.hint !== null) options.message = data.error.hint;
+        }
+      } catch {
+        // Do nothing
       }
 
       break;
     default:
+      // Case not handled, do nothing
+      console.log("Unknown alert type: " + type); // eslint-disable-line no-console
+      return;
+  }
+
+  if (type === "info") {
+    // Create a new notification for info boxes
+    showAlertBox = $.notify(options, settings);
+  } else if (showAlertBox !== null) {
+    // Update existing notification for other boxes (if available)
+    showAlertBox.update(options);
+    showAlertBox.update(settings);
+  } else {
+    // Create a new notification for other boxes if no previous info box exists
+    $.notify(options, settings);
   }
 }
 
@@ -281,11 +283,6 @@ function stateLoadCallback(itemName) {
   data.search.search = "";
   // Apply loaded state to table
   return data;
-}
-
-function getGraphType() {
-  // Only return line if `barchart_chkbox` is explicitly set to false. Else return bar
-  return localStorage && localStorage.getItem("barchart_chkbox") === "false" ? "line" : "bar";
 }
 
 function addFromQueryLog(domain, list) {
@@ -537,6 +534,81 @@ function hexDecode(string) {
   return back;
 }
 
+function listAlert(type, items, data) {
+  // Show simple success message if there is no "processed" object in "data" or
+  // if all items were processed successfully
+  if (data.processed === undefined || data.processed.success.length === items.length) {
+    showAlert(
+      "success",
+      "fas fa-plus",
+      "Successfully added " + type + (items.length !== 1 ? "s" : ""),
+      items.join(", ")
+    );
+    return;
+  }
+
+  // Show a more detailed message if there is a "processed" object in "data" and
+  // not all items were processed successfully
+  let message = "";
+
+  // Show a list of successful items if there are any
+  if (data.processed.success.length > 0) {
+    message +=
+      "<strong>Successfully added " +
+      data.processed.success.length +
+      " " +
+      type +
+      (data.processed.success.length !== 1 ? "s" : "") +
+      ":</strong>";
+
+    // Loop over data.processed.success and print "item"
+    for (const item in data.processed.success) {
+      if (Object.prototype.hasOwnProperty.call(data.processed.success, item)) {
+        message += "<br>- <strong>" + data.processed.success[item].item + "</strong>";
+      }
+    }
+  }
+
+  // Add a line break if there are both successful and failed items
+  if (data.processed.success.length > 0 && data.processed.errors.length > 0) {
+    message += "<br><br>";
+  }
+
+  // Show a list of failed items if there are any
+  if (data.processed.errors.length > 0) {
+    message +=
+      "<strong>Failed to add " +
+      data.processed.errors.length +
+      " " +
+      type +
+      (data.processed.errors.length !== 1 ? "s" : "") +
+      ":</strong>\n";
+
+    // Loop over data.processed.errors and print "item: error"
+    for (const item in data.processed.errors) {
+      if (Object.prototype.hasOwnProperty.call(data.processed.errors, item)) {
+        let error = data.processed.errors[item].error;
+        // Replace some error messages with a more user-friendly text
+        if (error.indexOf("UNIQUE constraint failed") > -1) {
+          error = "Already present";
+        }
+
+        message += "<br>- <strong>" + data.processed.errors[item].item + "</strong>: " + error;
+      }
+    }
+  }
+
+  // Show the warning message
+  const total = data.processed.success.length + data.processed.errors.length;
+  const processed = "(" + total + " " + type + (total !== 1 ? "s" : "") + " processed)";
+  showAlert(
+    "warning",
+    "fas fa-exclamation-triangle",
+    "Some " + type + (items.length !== 1 ? "s" : "") + " could not be added " + processed,
+    message
+  );
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -553,7 +625,6 @@ window.utils = (function () {
     setBsSelectDefaults: setBsSelectDefaults,
     stateSaveCallback: stateSaveCallback,
     stateLoadCallback: stateLoadCallback,
-    getGraphType: getGraphType,
     validateMAC: validateMAC,
     validateHostname: validateHostname,
     addFromQueryLog: addFromQueryLog,
@@ -570,5 +641,6 @@ window.utils = (function () {
     parseQueryString: parseQueryString,
     hexEncode: hexEncode,
     hexDecode: hexDecode,
+    listsAlert: listAlert,
   };
 })();

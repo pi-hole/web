@@ -208,6 +208,23 @@ function parseQueryStatus(data) {
   };
 }
 
+function formatReplyTime(replyTime, type) {
+  if (type === "display") {
+    // Units:
+    //  - seconds if replytime >= 1 second
+    //  - milliseconds if reply time >= 100 µs
+    //  - microseconds otherwise
+    return replyTime < 1e-4
+      ? (1e6 * replyTime).toFixed(1) + " µs"
+      : replyTime < 1
+      ? (1e3 * replyTime).toFixed(1) + " ms"
+      : replyTime.toFixed(1) + " s";
+  }
+
+  // else: return the number itself (for sorting and searching)
+  return replyTime;
+}
+
 function formatInfo(data) {
   // DNSSEC status
   var dnssecStatus = data.dnssec,
@@ -303,20 +320,10 @@ function formatInfo(data) {
 
   // Always show reply info, add reply delay if applicable
   var replyInfo = "";
-  if (data.reply.type !== "UNKNOWN") {
-    replyInfo = divStart + "Reply:&nbsp&nbsp;" + data.reply.type;
-    if (data.reply.time >= 0 && data.reply.type !== "UNKNOWN") {
-      replyInfo +=
-        " (" +
-        (data.reply.time < 1
-          ? (1e3 * data.reply.time).toFixed(1) + " ms)"
-          : data.reply.time.toFixed(1) + " s)");
-    }
-
-    replyInfo += "</div>";
-  } else {
-    replyInfo = divStart + "Reply:&nbsp;&nbsp;No reply received</div>";
-  }
+  replyInfo =
+    data.reply.type !== "UNKNOWN"
+      ? divStart + "Reply:&nbsp&nbsp;" + data.reply.type + "</div>"
+      : divStart + "Reply:&nbsp;&nbsp;No reply received</div>";
 
   // Compile extra info for displaying
   return (
@@ -515,9 +522,10 @@ $(function () {
         },
       },
       { data: "status", width: "1%" },
-      { data: "type", width: "5%" },
+      { data: "type", width: "1%" },
       { data: "domain", width: "45%" },
-      { data: "client.ip", width: "29%", type: "ip-address", render: $.fn.dataTable.render.text() },
+      { data: "client.ip", width: "29%", type: "ip-address" },
+      { data: "reply.time", width: "4%", render: formatReplyTime },
       { data: null, width: "10%", sortable: false, searchable: false },
     ],
     lengthMenu: [
@@ -569,7 +577,7 @@ $(function () {
       }
 
       if (querystatus.buttontext !== false) {
-        $("td:eq(5)", row).html(querystatus.buttontext);
+        $("td:eq(6)", row).html(querystatus.buttontext);
       }
     },
   });

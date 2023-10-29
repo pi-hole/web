@@ -37,6 +37,31 @@ function setConfigValues(topic, key, value) {
 
   // else: we have a setting we can set
   var escapedKey = key.replaceAll(".", "\\.");
+  var envTitle = $(`.${escapedKey}`);
+
+  if (value.flags.advanced && envTitle.find(".advanced-warning").length === 0) {
+    envTitle.append(
+      `<span class="advanced-warning">&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced level setting"></i></span>`
+    );
+  }
+
+  if (value.flags.restart_dnsmasq && envTitle.find(".restart-warning").length === 0) {
+    envTitle.append(
+      `<span class="restart-warning">&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i></span>`
+    );
+  }
+
+  if (value.flags.env_var) {
+    // If this setting has been set by environment variable, display a padlock in the section title
+    if (envTitle.find(".env-warning").length === 0) {
+      envTitle.append(
+        `<span class="env-warning">&nbsp;&nbsp;<i class="fas fa-lock text-orange env-warning" title="Settings overwritten by an environmental variable are read-only"></i></span>`
+      );
+    }
+
+    $(`#${escapedKey}`).prop("disabled", "disabled");
+  }
+
   switch (value.type) {
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
@@ -44,6 +69,7 @@ function setConfigValues(topic, key, value) {
       $("#" + escapedKey + " option").remove();
       // Add allowed select items (if available)
       value.allowed.forEach(function (allowedValue) {
+        $("#" + escapedKey + "-" + allowedValue.item).prop("disabled", value.flags.env_var);
         var newopt = $("<option></option>")
           .attr("value", allowedValue.item)
           .text(allowedValue.description);
@@ -70,7 +96,6 @@ function setConfigValues(topic, key, value) {
     case "string array": {
       // Set input field values from array (if available)
       $("#" + escapedKey).val(value.value.join("\n"));
-
       break;
     }
 
