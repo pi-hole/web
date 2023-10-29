@@ -17,7 +17,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-1">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Local DNS records</h3>
+                <h3 class="box-title" id="title-hosts">Local DNS records<span class="restart-warning">&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i></span></h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -29,7 +29,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                     Add new DNS record
                                 </h3>
                                 <div class="box-tools pull-right">
-                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                                    <button type="button" class="btn btn-box-tool hosts" data-widget="collapse"><i class="fa fa-plus"></i></button>
                                 </div>
                             </div>
                             <!-- /.box-header -->
@@ -37,11 +37,11 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="domain">Domain:</label>
-                                        <input id="Hdomain" type="url" class="form-control" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Hdomain" type="url" class="form-control hosts" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="target">IP address:</label>
-                                        <input id="Hip" type="text" class="form-control" placeholder="Associated IP address" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Hip" type="text" class="form-control hosts" placeholder="Associated IP address" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                 </div>
                             </div>
@@ -51,14 +51,14 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                             <p>The reason for this is that Pi-hole will not send additional queries upstream when serving <code>CNAME</code> replies. As consequence, if you set a target that isn't already known, the reply to the client may be incomplete. Pi-hole just returns the information it knows at the time of the query. This results in certain limitations for <code>CNAME</code> targets,
                                 for instance, only <i>active</i> DHCP leases work as targets - mere DHCP <i>leases</i> aren't sufficient as they aren't (yet) valid DNS records.</p>
                                 <p>Additionally, you can't <code>CNAME</code> external domains (<code>bing.com</code> to <code>google.com</code>) successfully as this could result in invalid SSL certificate errors when the target server does not serve content for the requested domain.</p>
-                                <button type="button" id="btnAdd-host" class="btn btn-primary pull-right">Add</button>
+                                <button type="button" id="btnAdd-host" class="btn btn-primary pull-right hosts">Add</button>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <h3 class="box-title">List of local DNS records</h3>
                             <!-- /.box-header -->
-                        <table id="dnsRecordsTable" class="table table-striped table-bordered" width="100%">
+                        <table id="hosts-Table" class="table table-striped table-bordered" width="100%">
                             <thead>
                             <tr>
                                 <th>Domain</th>
@@ -76,7 +76,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-1">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Local CNAME records records</h3>
+                <h3 class="box-title" id="title-cnameRecords">Local CNAME records records<span class="restart-warning">&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i></span></h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -88,7 +88,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                     Add new CNAME record
                                 </h3>
                                 <div class="box-tools pull-right">
-                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                                    <button type="button" class="btn btn-box-tool cnameRecords" data-widget="collapse"><i class="fa fa-plus"></i></button>
                                 </div>
                             </div>
                             <!-- /.box-header -->
@@ -96,27 +96,27 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 <div class="row">
                                     <div class="form-group col-md-5">
                                         <label for="domain">Domain:</label>
-                                        <input id="Cdomain" type="url" class="form-control" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Cdomain" type="url" class="form-control cnameRecords" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                     <div class="form-group col-md-5">
                                         <label for="target">Target Domain:</label>
-                                        <input id="Ctarget" type="url" class="form-control" placeholder="Associated Target Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Ctarget" type="url" class="form-control cnameRecords" placeholder="Associated Target Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                     <div class="form-group col-md-2">
                                         <label for="target">TTL (optional):</label>
-                                        <input id="Cttl" type="numeric" class="form-control" placeholder="TTL in seconds" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Cttl" type="numeric" class="form-control cnameRecords" placeholder="TTL in seconds" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                 </div>
                             </div>
                             <div class="box-footer clearfix">
-                                <button type="button" id="btnAdd-cname" class="btn btn-primary pull-right">Add</button>
+                                <button type="button" id="btnAdd-cname" class="btn btn-primary pull-right cnameRecords">Add</button>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <h3 class="box-title">List of local CNAME records</h3>
                             <!-- /.box-header -->
-                        <table id="customCNAMETable" class="table table-striped table-bordered" width="100%">
+                        <table id="cnameRecords-Table" class="table table-striped table-bordered" width="100%">
                             <thead>
                             <tr>
                                 <th>Domain</th>
