@@ -111,6 +111,20 @@ function showAlert(type, icon, title, message) {
       options.title = "&nbsp;<strong>Error, something went wrong!</strong><br>";
       settings.delay *= 2;
 
+      // If the message is an API object, nicely format the error message
+      // Try to parse message as JSON
+      try {
+        var data = JSON.parse(message);
+        console.log(data); // eslint-disable-line no-console
+        if (data.error !== undefined) {
+          options.title = "&nbsp;<strong>" + data.error.message + "</strong><br>";
+
+          if (data.error.hint !== null) options.message = data.error.hint;
+        }
+      } catch {
+        // Do nothing
+      }
+
       break;
     default:
       // Case not handled, do nothing
