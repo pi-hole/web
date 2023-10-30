@@ -48,16 +48,11 @@ mg.include('scripts/pi-hole/lua/header.lp','r')
                             <input type="password" id="loginpw" class="form-control" placeholder="Password" value="" spellcheck="false" autocomplete="current-password" autofocus>
                             <span class="fa fa-key pwd-field form-control-feedback"></span>
                         </div>
-                        <div class="form-group hidden" id="totp_input">
-                            <input type="text" id="totp" size="6" maxlen="6" class="form-control totp_token" placeholder="" value="" spellcheck="false" autocomplete="current-password" autofocus>
-                            <span class="fa-solid fa-clock-rotate-left pwd-field form-control-feedback"></span>
-                        </div>
                     </div>
-                    <!--
-                    <div class="form-group" title="Pi-hole has to set a cookie for the login session to be successful. The cookie will not contain your password nor is it used anywhere outside of you local Pi-hole.">
-                        <input type="checkbox" id="logincookie" checked>
-                        <label for="logincookie">Keep me logged in (uses cookie)</label>
-                    </div> -->
+                    <div class="form-group has-feedback" id="totp_input">
+                        <input type="text" id="totp" size="6" maxlen="6" class="form-control totp_token" placeholder="123456" value="" spellcheck="false" autofocus>
+                        <span class="fa fa-clock-rotate-left pwd-field form-control-feedback"></span>
+                    </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary form-control"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in (uses cookie)</button>
                     </div>
