@@ -95,9 +95,11 @@ $("#totp").on("paste", function (e) {
   $(e.target).keyup();
 });
 
+// Submit form when TOTP code is entered and password is already filled
 $("#totp").on("keyup", function () {
-  var code = $(this).val();
-  if (code.length === 6) {
+  const code = $(this).val();
+  const password = $("#loginpw").val();
+  if (code.length === 6 && password.length > 0) {
     $("#loginform").submit();
   }
 });
