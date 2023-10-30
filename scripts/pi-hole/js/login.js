@@ -87,7 +87,7 @@ $("#loginform").submit(function (e) {
     return;
   }*/
 
-  doLogin($("#loginpw").val());
+  doLogin($("#current-password").val());
 });
 
 // Trigger keyup event when pasting into the TOTP code input field
@@ -98,7 +98,7 @@ $("#totp").on("paste", function (e) {
 // Submit form when TOTP code is entered and password is already filled
 $("#totp").on("keyup", function () {
   const code = $(this).val();
-  const password = $("#loginpw").val();
+  const password = $("#current-password").val();
   if (code.length === 6 && password.length > 0) {
     $("#loginform").submit();
   }
@@ -120,8 +120,11 @@ $(function () {
     })
     .fail(function (xhr) {
       const session = xhr.responseJSON.session;
-      // If TOPT is enabled, show the input field
-      if (session.totp === true) $("#totp_input").removeClass("hidden");
+      // If TOPT is enabled, show the input field and add the required attribute
+      if (session.totp === true) {
+        $("#totp_input").removeClass("hidden");
+        $("#totp").attr("required", "required");
+      }
     });
 
   // Get information about HTTPS port and DNS status
@@ -144,3 +147,21 @@ $(function () {
   // Clear TOTP field
   $("#totp").val("");
 });
+
+const passwordInput = document.getElementById("current-password");
+const togglePasswordButton = document.getElementById("toggle-password");
+togglePasswordButton.addEventListener("click", togglePassword);
+function togglePassword() {
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    togglePasswordButton.textContent = "Hide password";
+    togglePasswordButton.setAttribute("title", "Hide password");
+  } else {
+    passwordInput.type = "password";
+    togglePasswordButton.textContent = "Show password";
+    togglePasswordButton.setAttribute(
+      "title",
+      "Show password as plain text. Warning: this will display your password on the screen"
+    );
+  }
+}
