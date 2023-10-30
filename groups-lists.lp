@@ -42,7 +42,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 <strong>Hints:</strong>
                 <ol>
                     <li>Please run <code>pihole -g</code> or update your gravity list <a href="<?=webhome?>gravity">online</a> after modifying your adlists.</li>
-                    <li>Multiple adlists can be added by separating each <i>unique</i> URL with a space</li>
+                    <li>Multiple lists can be added by separating each <i>unique</i> URL with a space</li>
                     <li>Click on the icon in the first column to get additional information about your lists. The icons correspond to the health of the list.</li>
                 </ol>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
@@ -62,7 +62,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
         <div class="box" id="adlists-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of subscribed lists
+                    Subscribed lists
                 </h3>
             </div>
             <!-- /.box-header -->
