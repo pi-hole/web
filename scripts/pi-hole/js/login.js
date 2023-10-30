@@ -111,10 +111,16 @@ $(function () {
   // Check if we need to login at all
   $.ajax({
     url: "/api/auth",
-  }).done(function (data) {
-    if (data.session.valid === true) redirect();
-    if (data.session.totp === true) $("#totp_input").removeClass("hidden");
-  });
+  })
+    .done(function (data) {
+      // If we are already logged in, redirect to dashboard
+      if (data.session.valid === true) redirect();
+    })
+    .fail(function (xhr) {
+      const session = xhr.responseJSON.session;
+      // If TOPT is enabled, show the input field
+      if (session.totp === true) $("#totp_input").removeClass("hidden");
+    });
 
   // Get information about HTTPS port and DNS status
   $.ajax({
