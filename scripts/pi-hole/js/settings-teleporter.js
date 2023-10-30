@@ -48,7 +48,9 @@ function importZIP() {
         if (data.error.hint !== null) $("#modal-import-error-message").text(data.error.hint);
       } else if ("files" in data) {
         $("#modal-import-success").show();
-        $("#modal-import-success-title").text("Import successful");
+        $("#modal-import-success-title").text(
+          "Import successful, please run pihole -g to update gravity."
+        );
         var text = "<p>Processed files:<ul>";
         for (var i = 0; i < data.files.length; i++) {
           text += "<li>/" + utils.escapeHtml(data.files[i]) + "</li>";
