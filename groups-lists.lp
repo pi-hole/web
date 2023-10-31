@@ -62,7 +62,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
         <div class="box" id="lists-list">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    List of subscribed lists
+                    Subscribed lists
                 </h3>
             </div>
             <!-- /.box-header -->
