@@ -282,7 +282,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-12 settings-level-1">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title">Actions<span id="actions-title"></span>&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced-level setting"></i></h3>
+                <h3 class="box-title">Actions<span id="actions-title"></span></h3>
             </div>
             <div class="box-body">
                 <div class="row">

@@ -40,6 +40,7 @@ $(function () {
       { data: "id" },
       { data: "valid", render: renderBool },
       { data: null },
+      { data: "app", render: renderBool },
       { data: "login_at", render: utils.renderTimestamp },
       { data: "valid_until", render: utils.renderTimestamp },
       { data: "remote_addr", type: "ip-address" },
@@ -84,10 +85,10 @@ $(function () {
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
-      $("td:eq(8)", row).html(button);
+      $("td:eq(9)", row).html(button);
       if (data.current_session) {
         ownSessionID = data.id;
-        $("td:eq(6)", row).html(
+        $("td:eq(7)", row).html(
           '<strong title="This is the session you are currently using for the web interface">' +
             data.remote_addr +
             "</strong>"
@@ -309,6 +310,69 @@ $("#modal-totp").on("shown.bs.modal", function () {
     .fail(function (data) {
       apiFailure(data);
     });
+});
+
+var apppwhash = null;
+$("#modal-apppw").on("shown.bs.modal", function () {
+  $.ajax({
+    url: "/api/auth/app",
+  })
+    .done(function (data) {
+      apppwhash = data.app.hash;
+      $("#password_code").text(data.app.password);
+      $("#password_display").removeClass("hidden");
+      $("#password-spinner").hide();
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
+});
+
+$("#apppw_submit").on("click", function () {
+  // Enable app password
+  setAppPassword();
+});
+
+$("#apppw_clear").on("click", function () {
+  // Disable app password
+  apppwhash = "";
+  setAppPassword();
+});
+
+function setAppPassword() {
+  $.ajax({
+    url: "/api/config",
+    type: "PATCH",
+    dataType: "json",
+    processData: false,
+    data: JSON.stringify({ config: { webserver: { api: { app_pwhash: apppwhash } } } }),
+    contentType: "application/json",
+  })
+    .done(function () {
+      $("#modal-apppw").modal("hide");
+      const verb = apppwhash.length > 0 ? "enabled" : "disabled";
+      const verb2 = apppwhash.length > 0 ? "will" : "may";
+      alert(
+        "App password has been " +
+          verb +
+          ", you " +
+          verb2 +
+          " need to re-login to continue using the web interface."
+      );
+      location.reload();
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
+}
+
+// Remove class "password_background" from the password input field with ID
+// password_code when the user hovers over it or if it is focused
+$("#password_code").on("mouseover focus", function () {
+  $(this).removeClass("password_background");
+});
+$("#password_code").on("mouseout blur", function () {
+  $(this).addClass("password_background");
 });
 
 // Trigger keyup event when pasting into the TOTP code input field
