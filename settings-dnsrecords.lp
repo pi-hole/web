@@ -29,7 +29,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                     Add new DNS record
                                 </h3>
                                 <div class="box-tools pull-right">
-                                    <button type="button" class="btn btn-box-tool hosts" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                                    <button type="button" class="btn btn-box-tool" data-configkeys="hosts" data-widget="collapse"><i class="fa fa-plus"></i></button>
                                 </div>
                             </div>
                             <!-- /.box-header -->
@@ -37,11 +37,11 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="domain">Domain:</label>
-                                        <input id="Hdomain" type="url" class="form-control hosts" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Hdomain" type="url" class="form-control" data-configkeys="hosts" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="target">IP address:</label>
-                                        <input id="Hip" type="text" class="form-control hosts" placeholder="Associated IP address" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Hip" type="text" class="form-control" data-configkeys="hosts" placeholder="Associated IP address" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                 </div>
                             </div>
@@ -51,7 +51,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                             <p>The reason for this is that Pi-hole will not send additional queries upstream when serving <code>CNAME</code> replies. As consequence, if you set a target that isn't already known, the reply to the client may be incomplete. Pi-hole just returns the information it knows at the time of the query. This results in certain limitations for <code>CNAME</code> targets,
                                 for instance, only <i>active</i> DHCP leases work as targets - mere DHCP <i>leases</i> aren't sufficient as they aren't (yet) valid DNS records.</p>
                                 <p>Additionally, you can't <code>CNAME</code> external domains (<code>bing.com</code> to <code>google.com</code>) successfully as this could result in invalid SSL certificate errors when the target server does not serve content for the requested domain.</p>
-                                <button type="button" id="btnAdd-host" class="btn btn-primary pull-right hosts">Add</button>
+                                <button type="button" id="btnAdd-host" class="btn btn-primary pull-right" data-configkeys="hosts">Add</button>
                             </div>
                         </div>
                     </div>
@@ -88,7 +88,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                     Add new CNAME record
                                 </h3>
                                 <div class="box-tools pull-right">
-                                    <button type="button" class="btn btn-box-tool cnameRecords" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                                    <button type="button" class="btn btn-box-tool" data-configkeys="cnameRecords" data-widget="collapse"><i class="fa fa-plus"></i></button>
                                 </div>
                             </div>
                             <!-- /.box-header -->
@@ -96,20 +96,20 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 <div class="row">
                                     <div class="form-group col-md-5">
                                         <label for="domain">Domain:</label>
-                                        <input id="Cdomain" type="url" class="form-control cnameRecords" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Cdomain" type="url" class="form-control" data-configkeys="cnameRecords" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                     <div class="form-group col-md-5">
                                         <label for="target">Target Domain:</label>
-                                        <input id="Ctarget" type="url" class="form-control cnameRecords" placeholder="Associated Target Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Ctarget" type="url" class="form-control" data-configkeys="cnameRecords" placeholder="Associated Target Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                     <div class="form-group col-md-2">
                                         <label for="target">TTL (optional):</label>
-                                        <input id="Cttl" type="numeric" class="form-control cnameRecords" placeholder="TTL in seconds" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Cttl" type="numeric" class="form-control" data-configkeys="cnameRecords" placeholder="TTL in seconds" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </div>
                                 </div>
                             </div>
                             <div class="box-footer clearfix">
-                                <button type="button" id="btnAdd-cname" class="btn btn-primary pull-right cnameRecords">Add</button>
+                                <button type="button" id="btnAdd-cname" class="btn btn-primary pull-right" data-configkeys="cnameRecords">Add</button>
                             </div>
                         </div>
                     </div>
