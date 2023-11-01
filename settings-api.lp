@@ -19,7 +19,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             <div class="col-md-12 settings-level-1">
                 <div class="box box-warning">
                     <div class="box-header with-border">
-                        <h3 class="box-title webserver.api.excludeDomains webserver.api.excludeClients">Exclusions</h3>
+                        <h3 class="box-title" data-configkeys="webserver.api.excludeDomains webserver.api.excludeClients">Exclusions</h3>
                     </div>
                     <div class="box-body">
                         <div class="row">
@@ -40,7 +40,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             <div class="col-md-12 settings-level-0">
                 <div class="box box-warning">
                     <div class="box-header with-border">
-                        <h3 class="box-title webserver.interface.theme webserver.interface.boxed">Theme settings</h3>
+                        <h3 class="box-title" data-configkeys="webserver.interface.theme webserver.interface.boxed">Theme settings</h3>
                     </div>
                     <div class="box-body">
                         <div class="row">
@@ -92,7 +92,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-1">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title webserver.api.localAPIauth webserver.api.prettyJSON webserver.api.allow_destructive webserver.api.temp.limit webserver.api.temp.unit">Advanced Settings</h3>
+                <h3 class="box-title" data-configkeys="webserver.api.localAPIauth webserver.api.prettyJSON webserver.api.allow_destructive webserver.api.temp.limit webserver.api.temp.unit">Advanced Settings</h3>
             </div>
             <div class="box-body">
                 <div class="row">

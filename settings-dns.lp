@@ -17,7 +17,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-lg-6">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h1 class="box-title dns.upstreams" id="lblDNSupstreams">Upstream DNS Servers</h1>
+                <h1 class="box-title" data-configkeys="dns.upstreams" id="lblDNSupstreams">Upstream DNS Servers</h1>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -59,7 +59,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
         </div>
         <div class="box box-warning settings-level-1">
             <div class="box-header with-border">
-                <h3 class="box-title dns.revServer.active dns.revServer.cidr dns.revServer.target dns.revServer.domain">Conditional forwarding</h3>
+                <h3 class="box-title" data-configkeys="dns.revServer.active dns.revServer.cidr dns.revServer.target dns.revServer.domain">Conditional forwarding</h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -125,7 +125,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-lg-6 settings-level-1">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h1 class="box-title dns.listeningMode">Interface settings</h1>
+                <h1 class="box-title" data-configkeys="dns.listeningMode">Interface settings</h1>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -166,7 +166,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
         </div>
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title dns.domainNeeded dns.bogusPriv dns.dnssec">Advanced DNS settings</h3>
+                <h3 class="box-title" data-configkeys="dns.domainNeeded dns.bogusPriv dns.dnssec">Advanced DNS settings</h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -212,7 +212,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
         </div>
         <div class="box box-warning settings-level-2">
             <div class="box-header with-border">
-                <h3 class="box-title dns.rateLimit.count dns.rateLimit.interval">Rate-limiting</h3>
+                <h3 class="box-title" data-configkeys="dns.rateLimit.count dns.rateLimit.interval">Rate-limiting</h3>
             </div>
             <div class="box-body">
                 <div class="row">
