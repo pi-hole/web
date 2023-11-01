@@ -23,6 +23,7 @@ $available_themes['high-contrast-dark'] = array('High contrast dark', false, 'hi
 // Option to have the theme go with the device dark mode setting, always set the background to black to avoid flashing
 $available_themes['default-auto'] = array('Pi-hole auto theme (light/dark)', true, 'default-auto', '#367fa9');
 $available_themes['lcars'] = array('Star Trek LCARS theme (dark)', true, 'lcars', '#4488FF');
+$available_themes['lcars-picard'] = array('Star Trek Picard LCARS theme (dark)', true, 'lcars-picard', '#53596C');
 
 $webtheme = '';
 // Try to load theme settings from setupVars.conf
