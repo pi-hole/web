@@ -1174,6 +1174,14 @@ table.dataTable tbody > tr > .selected {
   margin: 2px;
 }
 
+.error-headline {
+  float: none;
+  text-align: center;
+  font-size: 100px;
+  font-weight: 500;
+  padding-right: 20px;
+}
+
 .m-0 {
   margin: 0 !important;
 }
