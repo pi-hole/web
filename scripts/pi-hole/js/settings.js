@@ -37,7 +37,7 @@ function setConfigValues(topic, key, value) {
 
   // else: we have a setting we can set
   var escapedKey = key.replaceAll(".", "\\.");
-  var envTitle = $(`.${escapedKey}`);
+  var envTitle = $(`[data-configkeys~='${key}']`);
 
   if (value.flags.advanced && envTitle.find(".advanced-warning").length === 0) {
     envTitle.append(
