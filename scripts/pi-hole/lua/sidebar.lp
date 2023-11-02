@@ -133,6 +133,11 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
+                        <li>
+                            <div class="settings-selector">
+                                Settings level: <select id="settings-level" class="form-control input-sm"></select>
+                            </div>
+                        </li>
                         <li class="<? if scriptname == 'settings/system' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/system">
                                 <i class="fa-fw menu-icon fa-solid fa-circle-info"></i> <span>System</span>

@@ -892,9 +892,8 @@ body:not(.lcars) .filter_types [class*="icheck-"] > input:first-child:checked + 
 
 /* Global settings level selector container */
 .settings-selector {
-  padding: 14px 0 0;
+  padding: 2px 2px 0 16px;
   order: 2;
-  font-size: 18px;
 }
 
 /* Global settings level selector */
