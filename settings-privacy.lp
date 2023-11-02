@@ -19,7 +19,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             <div class="col-md-12">
                 <div class="box box-warning">
                     <div class="box-header with-border">
-                        <h3 class="box-title dns.queryLogging">Query Logging</h3>
+                        <h3 class="box-title" data-configkeys="dns.queryLogging">Query Logging</h3>
                     </div>
                     <div class="box-body">
                         <div class="row">
@@ -37,7 +37,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             <div class="col-md-12 settings-level-2">
                 <div class="box box-warning">
                     <div class="box-header with-border">
-                        <h3 class="box-title database.DBimport database.DBexport database.maxDBdays database.network.expire">Privacy-related database settings</h3>
+                        <h3 class="box-title" data-configkeys="database.DBimport database.DBexport database.maxDBdays database.network.expire">Privacy-related database settings</h3>
                     </div>
                     <div class="box-body">
                         <div class="row">
@@ -70,7 +70,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-1">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title misc.privacylevel">Query Anonymization ("Privacy Level")</h3>
+                <h3 class="box-title" data-configkeys="misc.privacylevel">Query Anonymization ("Privacy Level")</h3>
             </div>
             <div class="box-body">
                 <div class="row">
