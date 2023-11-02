@@ -67,6 +67,28 @@ function validIP($address)
     return !filter_var($address, FILTER_VALIDATE_IP) === false;
 }
 
+function validSubnetMask($subnetMask)
+{
+    $octets = explode('.', $subnetMask);
+    if (count($octets) != 4) {
+        return false;
+    }
+
+    $subnetBinary = '';
+    foreach ($octets as $octet) {
+        if (!is_numeric($octet) || $octet < 0 || $octet > 255) {
+            return false;
+        }
+        $subnetBinary .= str_pad(decbin($octet), 8, '0', STR_PAD_LEFT);
+    }
+
+    if (strpos($subnetBinary, '01') !== false) {
+        return false;
+    }
+
+    return true;
+}
+
 function validCIDRIP($address)
 {
     // This validation strategy has been taken from ../js/groups-common.js

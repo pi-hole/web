@@ -496,6 +496,12 @@ if (isset($_POST['field'])) {
                     $error .= 'To IP ('.htmlspecialchars($to).') is invalid!<br>';
                 }
 
+                // Validate to Subnet Mask
+                $subnetMask = $_POST['subnetMask'];
+                if (!validSubnetMask($subnetMask)) {
+                    $error .= 'Subnet Mask ('.htmlspecialchars($subnetMask).') is invalid!<br>';
+                }
+
                 // Validate router IP
                 $router = $_POST['router'];
                 if (!validIP($router)) {
@@ -531,7 +537,7 @@ if (isset($_POST['field'])) {
                 }
 
                 if (!strlen($error)) {
-                    pihole_execute('-a enabledhcp '.$from.' '.$to.' '.$router.' '.$leasetime.' '.$domain.' '.$ipv6.' '.$rapidcommit);
+                    pihole_execute('-a enabledhcp '.$from.' '.$to.' '.$subnetMask.' '.$router.' '.$leasetime.' '.$domain.' '.$ipv6.' '.$rapidcommit);
                     $success .= 'The DHCP server has been activated '.htmlspecialchars($type);
                 }
             } else {
