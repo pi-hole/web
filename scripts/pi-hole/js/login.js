@@ -104,6 +104,25 @@ $("#totp").on("keyup", function () {
   }
 });
 
+// Toggle password visibility button
+$("#toggle-password").on("click", function () {
+  // Toggle font-awesome classes to change the svg icon on the button
+  $("svg", this).toggleClass("fa-eye fa-eye-slash");
+
+  // Password field
+  var $pwd = $("#current-password");
+  if ($pwd.attr("type") === "password") {
+    $pwd.attr("type", "text");
+    $pwd.attr("title", "Hide password");
+  } else {
+    $pwd.attr("type", "password");
+    $pwd.attr(
+      "title",
+      "Show password as plain text. Warning: this will display your password on the screen"
+    );
+  }
+});
+
 function showDNSfailure() {
   $("#dns-failure-label").show();
   $("#login-box").addClass("error-box");
@@ -147,21 +166,3 @@ $(function () {
   // Clear TOTP field
   $("#totp").val("");
 });
-
-const passwordInput = document.getElementById("current-password");
-const togglePasswordButton = document.getElementById("toggle-password");
-togglePasswordButton.addEventListener("click", togglePassword);
-function togglePassword() {
-  if (passwordInput.type === "password") {
-    passwordInput.type = "text";
-    togglePasswordButton.textContent = "Hide password";
-    togglePasswordButton.setAttribute("title", "Hide password");
-  } else {
-    passwordInput.type = "password";
-    togglePasswordButton.textContent = "Show password";
-    togglePasswordButton.setAttribute(
-      "title",
-      "Show password as plain text. Warning: this will display your password on the screen"
-    );
-  }
-}
