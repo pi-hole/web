@@ -2,7 +2,7 @@
 <div class="page-header flex-header">
     <h1><?= PageTitle ?></h1>
 <?
-if scriptname ~= 'settings/advanced' then
+if scriptname ~= 'settings/all' then
     -- Show the level selector, except in All Settings page
 ?>
     <div class="settings-selector">
