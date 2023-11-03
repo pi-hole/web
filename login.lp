@@ -43,11 +43,14 @@ mg.include('scripts/pi-hole/lua/header.lp','r')
                 <form id="loginform">
                     <div class="login-options has-feedback" id="pw-field">
                         <input type="text" id="username" value="pi.hole" autocomplete="username" hidden>
-                        <div class="pwd-field form-group">
+                        <div class="input-group pwd-field form-group">
                             <!-- hidden username input field to help password managers to autfill the password -->
-                            <button id="toggle-password" type="button" title="Show password as plain text. Warning: this will display your password on the screen.">Show password</button>
                             <input type="password" class="form-control" placeholder="Password" value="" spellcheck="false" autocomplete="current-password" id="current-password" autofocus required>
-                            <span class="fa fa-key pwd-field form-control-feedback"></span>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" id="toggle-password" type="button" title="Show password as plain text. Warning: this will display your password on the screen.">
+                                    <span class="fa fa-fw fa-eye field-icon"></span>
+                                </button>
+                            </span>
                         </div>
                     </div>
                     <div class="form-group has-feedback hidden" id="totp_input">
