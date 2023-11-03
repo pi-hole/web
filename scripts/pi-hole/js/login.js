@@ -121,6 +121,9 @@ $("#toggle-password").on("click", function () {
       "Show password as plain text. Warning: this will display your password on the screen"
     );
   }
+
+  // move the focus to password field after the click
+  $pwd.trigger("focus");
 });
 
 function showDNSfailure() {
