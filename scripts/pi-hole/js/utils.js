@@ -93,6 +93,10 @@ function showAlert(type, icon, title, message) {
       type: type,
       delay: 5000, // default value
       mouse_over: "pause",
+      animate: {
+        enter: "animate__animated animate__fadeInDown",
+        exit: "animate__animated animate__fadeOutUp",
+      },
     };
   switch (type) {
     case "info":
