@@ -76,6 +76,12 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                         <p id="modal-import-error-message"></p>
                     </div>
                 </div>
+                <div id="modal-import-gravity" style="display:none">
+                    <div class="alert alert-info alert-dismissible">
+                        <h4><i class="icon fa fa-fw fa-info-circle"></i> Please run gravity</h4>
+                        <p>Use <a href='/admin/gravity'>Tools &rarr; Gravity</a> or run <code>pihole -g</code> to update your lists.</p>
+                    </div>
+                </div>
                 <p id="modal-import-info-message"></p>
             </div>
             <div class="modal-footer">
