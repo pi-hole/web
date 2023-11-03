@@ -174,8 +174,6 @@ function eventsource(partial) {
           "using a more specific search term or increase N.<br>";
       }
 
-      result += "<br>Search took " + (1000 * data.took).toFixed(1) + " ms";
-
       ta.append(result);
     })
     .fail(function (data) {

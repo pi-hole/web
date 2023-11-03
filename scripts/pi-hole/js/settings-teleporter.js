@@ -58,12 +58,6 @@ function importZIP() {
         $("#modal-import-success-message").html(text);
       }
 
-      if ("took" in data) {
-        $("#modal-import-info-message").text(
-          "Processing took " + data.took.toFixed(3) + " seconds."
-        );
-      }
-
       $("#modal-import").modal("show");
     })
     .catch(error => {

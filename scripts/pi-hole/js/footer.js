@@ -676,12 +676,6 @@ function addAdvancedInfo() {
   const endtime = parseFloat(advancedInfoSource.data("endtime"));
   const totaltime = 1e3 * (endtime - starttime);
 
-  // Hide advanced info if settings level is lower than 2
-  if (settingsLevel < 2) {
-    advancedInfoTarget.hide();
-    return;
-  }
-
   // Show advanced info
   advancedInfoTarget.empty();
 
