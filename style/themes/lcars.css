@@ -1374,20 +1374,20 @@ table.dataTable thead .sorting_desc_disabled:after {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.85);
 }
 
-#adlistsTable table td:first-child {
+#listsTable table td:first-child {
   font-weight: bold;
 }
 
-#adlistsTable table td:last-child {
+#listsTable table td:last-child {
   color: #fff;
   font-weight: 100;
 }
 
-#adlistsTable table tr {
+#listsTable table tr {
   border-bottom: 1px solid #333 !important;
 }
 
-#adlistsTable table tr:last-child {
+#listsTable table tr:last-child {
   border: none !important;
 }
 

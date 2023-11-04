@@ -64,14 +64,14 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
         <!-- small box -->
         <div class="small-box bg-green no-user-select">
             <div class="inner">
-                <p>Domains on Adlists</p>
+                <p>Domains on Lists</p>
                 <h3 class="statistic"><span id="gravity_size">---</span></h3>
             </div>
             <div class="icon">
                 <i class="fas fa-list-alt"></i>
             </div>
-            <a href="groups-adlists.lp" class="small-box-footer" title="">
-                Manage adlists <i class="fa fa-arrow-circle-right"></i>
+            <a href="groups-lists.lp" class="small-box-footer" title="">
+                Manage lists <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
     </div>

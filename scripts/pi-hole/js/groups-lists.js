@@ -13,8 +13,8 @@ var GETDict = {};
 $(function () {
   GETDict = utils.parseQueryString();
 
-  $("#btnAddAllow").on("click", { type: "allow" }, addAdlist);
-  $("#btnAddBlock").on("click", { type: "block" }, addAdlist);
+  $("#btnAddAllow").on("click", { type: "allow" }, addList);
+  $("#btnAddBlock").on("click", { type: "block" }, addList);
 
   utils.setBsSelectDefaults();
   initTable();
@@ -99,7 +99,7 @@ function format(data) {
 }
 
 function initTable() {
-  table = $("#adlistsTable")
+  table = $("#listsTable")
     .on("preXhr.dt", function () {
       getGroups();
     })
@@ -135,11 +135,11 @@ function initTable() {
         },
       ],
       drawCallback: function () {
-        // Hide buttons if all adlists were deleted
+        // Hide buttons if all lists were deleted
         var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
         $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
-        $('button[id^="deleteAdlist_"]').on("click", deleteAdlist);
+        $('button[id^="deleteList_"]').on("click", deleteList);
         // Remove visible dropdown to prevent orphaning
         $("body > .bootstrap-select.dropdown").remove();
       },
@@ -225,12 +225,12 @@ function initTable() {
           onstyle: "success",
           width: "80px",
         });
-        statusEl.on("change", editAdlist);
+        statusEl.on("change", editList);
 
         $("td:eq(4)", row).html('<input id="comment_' + dataId + '" class="form-control">');
         var commentEl = $("#comment_" + dataId, row);
         commentEl.val(utils.unescapeHtml(data.comment));
-        commentEl.on("change", editAdlist);
+        commentEl.on("change", editList);
 
         $("td:eq(5)", row).empty();
         $("td:eq(5)", row).append(
@@ -275,7 +275,7 @@ function initTable() {
                 .addClass("btn-success")
                 .prop("disabled", false)
                 .on("click", function () {
-                  editAdlist.call(selectEl);
+                  editList.call(selectEl);
                 });
             }
           })
@@ -297,13 +297,13 @@ function initTable() {
 
         var applyBtn = "#btn_apply_" + dataId;
 
-        // Highlight row (if url parameter "adlistid=" is used)
-        if ("adlistid" in GETDict && data.id === parseInt(GETDict.adlistid, 10)) {
+        // Highlight row (if url parameter "listid=" is used)
+        if ("listid" in GETDict && data.id === parseInt(GETDict.listid, 10)) {
           $(row).find("td").addClass("highlight");
         }
 
         var button =
-          '<button type="button" class="btn btn-danger btn-xs" id="deleteAdlist_' +
+          '<button type="button" class="btn btn-danger btn-xs" id="deleteList_' +
           dataId +
           '" data-id="' +
           dataId +
@@ -369,10 +369,10 @@ function initTable() {
       stateSave: true,
       stateDuration: 0,
       stateSaveCallback: function (settings, data) {
-        utils.stateSaveCallback("groups-adlists-table", data);
+        utils.stateSaveCallback("groups-lists-table", data);
       },
       stateLoadCallback: function () {
-        var data = utils.stateLoadCallback("groups-adlists-table");
+        var data = utils.stateLoadCallback("groups-lists-table");
 
         // Return if not available
         if (data === null) {
@@ -385,11 +385,11 @@ function initTable() {
         return data;
       },
       initComplete: function () {
-        if ("adlistid" in GETDict) {
+        if ("listid" in GETDict) {
           var pos = table
             .column(0, { order: "current" })
             .data()
-            .indexOf(parseInt(GETDict.adlistid, 10));
+            .indexOf(parseInt(GETDict.listid, 10));
           if (pos >= 0) {
             var page = Math.floor(pos / table.page.info().length);
             table.page(page).draw(false);
@@ -417,7 +417,7 @@ function initTable() {
   });
 
   // Add event listener for opening and closing details
-  $("#adlistsTable tbody").on("click", "td.details-control", function () {
+  $("#listsTable tbody").on("click", "td.details-control", function () {
     var tr = $(this).closest("tr");
     var row = table.row(tr);
 
@@ -445,7 +445,7 @@ function initTable() {
 // Remove 'bnt-group' class from container, to avoid grouping
 $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
-function deleteAdlist() {
+function deleteList() {
   // Passes the button data-id attribute as ID
   const ids = [$(this).attr("data-id")];
   delItems(ids);
@@ -464,7 +464,7 @@ function delItems(ids) {
 
   utils.disableAll();
   const idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting adlist(s) ...", "<ul>" + address + "</ul>");
+  utils.showAlert("info", "", "Deleting list(s) ...", "<ul>" + address + "</ul>");
 
   $.ajax({
     url: "/api/lists/" + encodeURIComponent(address),
@@ -497,7 +497,7 @@ function delItems(ids) {
     });
 }
 
-function addAdlist(event) {
+function addList(event) {
   const type = event.data.type;
   const comment = utils.escapeHtml($("#new_comment").val());
 
@@ -544,7 +544,7 @@ function addAdlist(event) {
   });
 }
 
-function editAdlist() {
+function editList() {
   const elem = $(this).attr("id");
   const tr = $(this).closest("tr");
   const type = tr.attr("data-type");
