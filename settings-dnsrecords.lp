@@ -17,7 +17,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-1">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title" id="title-hosts">Local DNS records<span class="restart-warning">&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i></span></h3>
+                <h3 class="box-title" id="title-hosts" data-configkeys="dns.hosts">Local DNS records</h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -73,7 +73,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-1">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title" id="title-cnameRecords">Local CNAME records records<span class="restart-warning">&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i></span></h3>
+                <h3 class="box-title" id="title-cnameRecords" data-configkeys="dns.cnameRecords">Local CNAME records records</h3>
             </div>
             <div class="box-body">
                 <div class="row">
