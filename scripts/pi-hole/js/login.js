@@ -37,22 +37,36 @@ function redirect() {
   window.location.replace(target);
 }
 
-function wrongPassword(isError = false, isSuccess = false) {
+function wrongPassword(isError = false, isSuccess = false, isInvalidTOTP = false) {
   if (isError) {
-    $("#pw-field").addClass("has-error");
     $("#error-label").show();
-    $("#forgot-pw-box").removeClass("box-info").removeClass("collapsed-box").addClass("box-danger");
-    $("#forgot-pw-box .box-body").show();
-    $("#forgot-pw-toggle-icon").removeClass("fa-plus").addClass("fa-minus");
+    if (isInvalidTOTP) {
+      $("#invalid2fa-box").removeClass("hidden");
+      $("#totp_input").addClass("has-error");
+    } else {
+      $("#pw-field").addClass("has-error");
+      $("#forgot-pw-box")
+        .removeClass("box-info")
+        .removeClass("collapsed-box")
+        .addClass("box-danger");
+      $("#forgot-pw-box .box-body").show();
+      $("#forgot-pw-toggle-icon").removeClass("fa-plus").addClass("fa-minus");
+    }
+
+    return;
   } else if (isSuccess) {
     $("#pw-field").addClass("has-success");
+    $("#totp_input").addClass("has-success");
   } else {
     $("#pw-field").removeClass("has-error");
+    $("#totp_input").removeClass("has-error");
     $("#error-label").hide();
-    $("#forgot-pw-box").addClass("box-info").addClass("collapsed-box").removeClass("box-danger");
-    $("#forgot-pw-box .box-body").hide();
-    $("#forgot-pw-toggle-icon").removeClass("fa-minus").addClass("fa-plus");
   }
+
+  $("#invalid2fa-box").addClass("hidden");
+  $("#forgot-pw-box").addClass("box-info").addClass("collapsed-box").removeClass("box-danger");
+  $("#forgot-pw-box .box-body").hide();
+  $("#forgot-pw-toggle-icon").removeClass("fa-minus").addClass("fa-plus");
 }
 
 function doLogin(password) {
@@ -65,13 +79,15 @@ function doLogin(password) {
     data: JSON.stringify({ password: password, totp: parseInt($("#totp").val(), 10) }),
   })
     .done(function () {
-      wrongPassword(false, true);
+      wrongPassword(false, true, false);
       redirect();
     })
     .fail(function (data) {
       if (data.status === 401) {
         // Login failed, show error message
-        wrongPassword(true, false);
+        const invalidTOTP =
+          "error" in data.responseJSON && data.responseJSON.error.message === "Invalid 2FA token";
+        wrongPassword(true, false, invalidTOTP);
       }
     });
 }
@@ -146,6 +162,8 @@ $(function () {
       if (session.totp === true) {
         $("#totp_input").removeClass("hidden");
         $("#totp").attr("required", "required");
+        $("#totp-forgotten-title").removeClass("hidden");
+        $("#totp-forgotten-body").removeClass("hidden");
       }
     });
 

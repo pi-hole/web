@@ -54,7 +54,7 @@ mg.include('scripts/pi-hole/lua/header.lp','r')
                         </div>
                     </div>
                     <div class="form-group has-feedback hidden" id="totp_input">
-                        <input type="text" id="totp" size="6" maxlen="6" class="form-control totp_token" placeholder="123456" value="" spellcheck="false" autofocus>
+                        <input type="text" id="totp" size="6" maxlen="6" class="form-control totp_token" placeholder="123456" value="" spellcheck="false" autofocus autocomplete="off">
                         <span class="fa fa-clock-rotate-left pwd-field form-control-feedback"></span>
                     </div>
                     <div class="form-group">
@@ -62,6 +62,26 @@ mg.include('scripts/pi-hole/lua/header.lp','r')
                     </div>
                 </form>
                 <br>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="box box-danger hidden" id="invalid2fa-box">
+                            <div class="box-header with-border pointer no-user-select" data-widget="collapse">
+                                <h3 class="box-title">Wrong 2FA token</h3>
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <p>Your Pi-hole has two-factor authentication enabled. You have to
+                                    enter a valid <a href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_algorithm" target="_blank">TOTP</a>
+                                    token in addition to your password. You see this message because your
+                                    token was incorrect or has already expired.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="box box-info collapsed-box" id="forgot-pw-box">
