@@ -60,6 +60,17 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                             </div>
                         </div>
                     </div>
+                    <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
+                        <label>Netmask (<code>0.0.0.0</code> = auto)</label>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">Netmask</div>
+                                <input type="text" class="form-control DHCPgroup" id="dhcp.netmask" data-key="dhcp.netmask"
+                                    autocomplete="off" spellcheck="false" autocapitalize="none"
+                                    autocorrect="off" value="">
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-12">
                         <div><input type="checkbox" id="dhcp.ipv6" data-key="dhcp.ipv6" class="DHCPgroup">&nbsp;<label for="dhcp.ipv6"><strong>Enable additional IPv6 support (SLAAC + RA)</strong></label></div>
                         <p>Enable this option to enable IPv6 support for the Pi-hole DHCP server. This will allow the Pi-hole to hand out IPv6 addresses to clients and also provide IPv6 router advertisements (RA) to clients. This option is only useful if the Pi-hole is configured with an IPv6 address.</p>
