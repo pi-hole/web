@@ -11,6 +11,13 @@
 var timeLineChart, clientsChart;
 var queryTypePieChart, forwardDestinationPieChart;
 
+// Register the ChartDeferred plugin to all charts:
+Chart.register(ChartDeferred);
+Chart.defaults.set('plugins.deferred', {
+  yOffset: '50%',
+  delay: 500
+})
+
 // Functions to update data in page
 
 var failures = 0;
@@ -114,7 +121,7 @@ function updateQueryTypesPie() {
     queryTypePieChart.update();
 
     // Don't use rotation animation for further updates
-    queryTypePieChart.options.animation.duration = 0;
+    //queryTypePieChart.options.animation.duration = 0;
   })
     .done(function () {
       // Reload graph after minute
@@ -236,7 +243,7 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.update();
 
     // Don't use rotation animation for further updates
-    forwardDestinationPieChart.options.animation.duration = 0;
+    //forwardDestinationPieChart.options.animation.duration = 0;
   })
     .done(function () {
       // Reload graph after one minute
