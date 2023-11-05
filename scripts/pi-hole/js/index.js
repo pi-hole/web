@@ -420,6 +420,35 @@ $(function () {
   // Pull in data via AJAX
   updateSummaryData();
 
+  const zoomPlugin = {
+    /* Allow zooming only on the y axis */
+    zoom: {
+      enabled: true,
+      wheel: {
+        enabled: true,
+        modifierKey: "ctrl" /* Modifier key required for zooming via mouse wheel */,
+      },
+      pinch: {
+        enabled: true,
+      },
+      mode: "y",
+    },
+    /* Allow panning only on the y axis */
+    pan: {
+      enabled: true,
+      mode: "y",
+    },
+    limits: {
+      y: {
+        /* Users are not allowed to zoom out further than the initial range */
+        min: "original",
+        max: "original",
+        /* Users are not allowed to zoom in further than a range of 10 queries */
+        minRange: 10,
+      },
+    },
+  };
+
   var gridColor = utils.getCSSval("graphs-grid", "background-color");
   var ticksColor = utils.getCSSval("graphs-ticks", "color");
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
@@ -477,6 +506,7 @@ $(function () {
             },
           },
         },
+        zoom: zoomPlugin,
       },
       scales: {
         x: {
@@ -510,6 +540,7 @@ $(function () {
             color: gridColor,
             drawBorder: false,
           },
+          min: 0,
         },
       },
       elements: {
@@ -572,6 +603,7 @@ $(function () {
               },
             },
           },
+          zoom: zoomPlugin,
         },
         scales: {
           x: {
@@ -605,6 +637,7 @@ $(function () {
               color: gridColor,
               drawBorder: false,
             },
+            min: 0,
           },
         },
         elements: {

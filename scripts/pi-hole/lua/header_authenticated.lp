@@ -16,6 +16,8 @@ mg.include('header.lp','r')
     <script src="<?=pihole.fileversion('scripts/vendor/chart.umd.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/vendor/moment.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/vendor/chartjs-adapter-moment.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/vendor/hammer.min.js')?>"></script> <!-- Needed for chartjs-plugin-zoom --->
+    <script src="<?=pihole.fileversion('scripts/vendor/chartjs-plugin-zoom.min.js')?>"></script>
 </head>
 <body class="<?=theme.name?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in">
 <noscript>
