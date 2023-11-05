@@ -106,13 +106,8 @@ $("#loginform").submit(function (e) {
   doLogin($("#current-password").val());
 });
 
-// Trigger keyup event when pasting into the TOTP code input field
-$("#totp").on("paste", function (e) {
-  $(e.target).keyup();
-});
-
 // Submit form when TOTP code is entered and password is already filled
-$("#totp").on("keyup", function () {
+$("#totp").on("input", function () {
   const code = $(this).val();
   const password = $("#current-password").val();
   if (code.length === 6 && password.length > 0) {
