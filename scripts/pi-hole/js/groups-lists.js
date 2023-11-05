@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false */
+/* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false */
 
 var table;
 var GETDict = {};
@@ -549,20 +549,19 @@ function editList() {
   const tr = $(this).closest("tr");
   const type = tr.attr("data-type");
   const address = tr.attr("data-id");
-  const status = tr.find("#enabled_" + address).is(":checked");
+  const enabled = tr.find("#enabled_" + address).is(":checked");
   const comment = utils.escapeHtml(tr.find("#comment_" + address).val());
   // Convert list of string integers to list of integers using map(Number)
   const groups = tr
     .find("#multiselect_" + address)
     .val()
     .map(Number);
-  const enabled = tr.find("#enabled_" + address).is(":checked");
 
   var done = "edited";
   var notDone = "editing";
   switch (elem) {
     case "enabled_" + address:
-      if (status) {
+      if (!enabled) {
         done = "disabled";
         notDone = "disabling";
       } else {
@@ -598,14 +597,9 @@ function editList() {
       enabled: enabled,
       type: type,
     }),
-    success: function () {
+    success: function (data) {
       utils.enableAll();
-      utils.showAlert(
-        "success",
-        "fas fa-pencil-alt",
-        "Successfully " + done + " list",
-        addressDecoded
-      );
+      processGroupResult(data, "list", done, notDone);
       table.ajax.reload(null, false);
     },
     error: function (data, exception) {

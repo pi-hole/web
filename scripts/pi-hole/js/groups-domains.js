@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, groups:false,, getGroups:false, updateFtlInfo:false, apiFailure:false */
+/* global utils:false, groups:false,, getGroups:false, updateFtlInfo:false, apiFailure:false, processGroupResult:false */
 
 var table;
 var GETDict = {};
@@ -581,7 +581,7 @@ function editDomain() {
   var notDone = "editing";
   switch (elem) {
     case "enabled_" + domain:
-      if (enabled) {
+      if (!enabled) {
         done = "disabled";
         notDone = "disabling";
       } else {
@@ -626,14 +626,9 @@ function editDomain() {
       type: oldType,
       kind: oldKind,
     }),
-    success: function () {
+    success: function (data) {
       utils.enableAll();
-      utils.showAlert(
-        "success",
-        "fas fa-pencil-alt",
-        "Successfully " + done + " domain",
-        domainDecoded
-      );
+      processGroupResult(data, "domain", done, notDone);
       table.ajax.reload(null, false);
     },
     error: function (data, exception) {
