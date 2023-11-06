@@ -423,7 +423,6 @@ $(function () {
   const zoomPlugin = {
     /* Allow zooming only on the y axis */
     zoom: {
-      enabled: true,
       wheel: {
         enabled: true,
         modifierKey: "ctrl" /* Modifier key required for zooming via mouse wheel */,
@@ -432,6 +431,18 @@ $(function () {
         enabled: true,
       },
       mode: "y",
+      onZoom: function ({ chart }) {
+        // Get absolute maximum from all datasets
+        const absMax = Math.max(...chart.data.datasets.map(dataset => Math.max(...dataset.data)));
+        // Calculate the maximum value to be shown for the current zoom level
+        const zoomMax = absMax / chart.getZoomLevel();
+        // Update the y axis scale
+        chart.zoomScale("y", { min: 0, max: zoomMax }, "default");
+        // Update the y axis ticks and round values to natural numbers
+        chart.options.scales.y.ticks.callback = function (value) {
+          return value.toFixed(0);
+        };
+      },
     },
     /* Allow panning only on the y axis */
     pan: {
