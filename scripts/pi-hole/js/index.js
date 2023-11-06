@@ -118,10 +118,10 @@ function updateQueryTypesPie() {
     queryTypePieChart.data.datasets[0] = dd;
     queryTypePieChart.data.labels = k;
     $("#query-types-pie .overlay").hide();
-    queryTypePieChart.update();
+    // Passing 'none' will prevent rotation animation for further updates
+    //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
+    queryTypePieChart.update('none');
 
-    // Don't use rotation animation for further updates
-    //queryTypePieChart.options.animation.duration = 0;
   })
     .done(function () {
       // Reload graph after minute
@@ -240,10 +240,12 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.data.datasets[0] = dd;
     // and push it at once
     $("#forward-destinations-pie .overlay").hide();
-    forwardDestinationPieChart.update();
 
-    // Don't use rotation animation for further updates
-    //forwardDestinationPieChart.options.animation.duration = 0;
+    // Passing 'none' will prevent rotation animation for further updates
+    //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
+    queryTypePieChart.update('none');
+    forwardDestinationPieChart.update('none');
+
   })
     .done(function () {
       // Reload graph after one minute
