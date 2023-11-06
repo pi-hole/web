@@ -37,14 +37,37 @@ function redirect() {
   window.location.replace(target);
 }
 
-function wrongPassword(isError = false, isSuccess = false, isInvalidTOTP = false) {
+function wrongPassword(isError = false, isSuccess = false, data = null) {
   if (isError) {
-    $("#error-label").show();
-    if (isInvalidTOTP) {
-      $("#invalid2fa-box").removeClass("hidden");
-      $("#totp_input").addClass("has-error");
+    let isErrorResponse = false,
+      isInvalidTOTP = false;
+
+    if (data !== null && "error" in data.responseJSON && "message" in data.responseJSON.error) {
+      // This is an error, highlight both the password and the TOTP field
+      isErrorResponse = true;
+      // Check if the error is caused by an invalid TOTP token
+      isInvalidTOTP = data.responseJSON.error.message === "Invalid 2FA token";
+      $("#error-message").text(data.responseJSON.error.message);
     } else {
-      $("#pw-field").addClass("has-error");
+      $("#error-message").text("Wrong password!");
+    }
+
+    $("#error-label").show();
+
+    // Always highlight the TOTP field on error
+    if (isErrorResponse) $("#totp_input").addClass("has-error");
+
+    // Only show the invalid 2FA box if the error is caused by an invalid TOTP
+    // token
+    if (isInvalidTOTP) $("#invalid2fa-box").removeClass("hidden");
+
+    // Only highlight the password field if the error is NOT caused by an
+    // invalid TOTP token
+    if (!isInvalidTOTP) $("#pw-field").addClass("has-error");
+
+    // Only show the forgot password box if the error is NOT caused by an
+    // invalid TOTP token and this is no error response (= password is wrong)
+    if (!isErrorResponse && !isInvalidTOTP) {
       $("#forgot-pw-box")
         .removeClass("box-info")
         .removeClass("collapsed-box")
@@ -70,7 +93,7 @@ function wrongPassword(isError = false, isSuccess = false, isInvalidTOTP = false
 }
 
 function doLogin(password) {
-  wrongPassword(false, false);
+  wrongPassword(false, false, null);
   $.ajax({
     url: "/api/auth",
     method: "POST",
@@ -78,17 +101,12 @@ function doLogin(password) {
     processData: false,
     data: JSON.stringify({ password: password, totp: parseInt($("#totp").val(), 10) }),
   })
-    .done(function () {
-      wrongPassword(false, true, false);
+    .done(function (data) {
+      wrongPassword(false, true, data);
       redirect();
     })
     .fail(function (data) {
-      if (data.status === 401) {
-        // Login failed, show error message
-        const invalidTOTP =
-          "error" in data.responseJSON && data.responseJSON.error.message === "Invalid 2FA token";
-        wrongPassword(true, false, invalidTOTP);
-      }
+      wrongPassword(true, false, data);
     });
 }
 
