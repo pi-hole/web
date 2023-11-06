@@ -502,10 +502,12 @@ $(function () {
           grid: {
             color: gridColor,
             offset: false,
-            drawBorder: false,
           },
           ticks: {
             color: ticksColor,
+          },
+          border: {
+            display: false,
           },
         },
         y: {
@@ -517,8 +519,10 @@ $(function () {
           },
           grid: {
             color: gridColor,
-            drawBorder: false,
           },
+          border: {
+            display: false,
+          }
         },
       },
       elements: {
@@ -597,7 +601,9 @@ $(function () {
             grid: {
               color: gridColor,
               offset: false,
-              drawBorder: false,
+            },
+            border: {
+              display: false,
             },
             ticks: {
               color: ticksColor,
@@ -612,7 +618,9 @@ $(function () {
             stacked: true,
             grid: {
               color: gridColor,
-              drawBorder: false,
+            },
+            border: {
+              display: false,
             },
           },
         },
