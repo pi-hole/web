@@ -37,7 +37,7 @@ mg.include('scripts/pi-hole/lua/header.lp','r')
                     </div>
                 </div>
                 <div class="form-group has-error login-box-msg" id="error-label" style="display: none;">
-                    <label class="control-label"><i class="fa fa-times-circle"></i> <span id="error-message"></span></label>
+                    <label class="control-label"><i class="fa fa-times-circle"></i> <span id="error-message"></span><br><span id="error-hint" style="display: none;"></span></label>
                 </div>
 
                 <form id="loginform">

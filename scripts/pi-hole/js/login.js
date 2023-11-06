@@ -42,12 +42,20 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
     let isErrorResponse = false,
       isInvalidTOTP = false;
 
+    // Reset hint and error message
+    $("#error-message").text("");
+    $("#error-hint").hide();
+    $("#error-hint").text("");
     if (data !== null && "error" in data.responseJSON && "message" in data.responseJSON.error) {
       // This is an error, highlight both the password and the TOTP field
       isErrorResponse = true;
       // Check if the error is caused by an invalid TOTP token
       isInvalidTOTP = data.responseJSON.error.message === "Invalid 2FA token";
       $("#error-message").text(data.responseJSON.error.message);
+      if ("hint" in data.responseJSON.error && data.responseJSON.error.hint !== null) {
+        $("#error-hint").text(data.responseJSON.error.hint);
+        $("#error-hint").show();
+      }
     } else {
       $("#error-message").text("Wrong password!");
     }
