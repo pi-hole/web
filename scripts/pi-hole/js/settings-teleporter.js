@@ -56,6 +56,7 @@ function importZIP() {
 
         text += "</ul></p>";
         $("#modal-import-success-message").html(text);
+        $("#modal-import-gravity").show();
       }
 
       $("#modal-import").modal("show");
