@@ -156,7 +156,7 @@ function deleteRecord() {
 
 function delHosts(elem) {
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting DNS record...");
+  utils.showAlert("info", "", "Deleting DNS record...", elem);
   const url = "/api/config/dns/hosts/" + encodeURIComponent(elem);
 
   $.ajax({
@@ -165,7 +165,7 @@ function delHosts(elem) {
   })
     .done(function () {
       utils.enableAll();
-      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted DNS record", "");
+      utils.showAlert("success", "fas fa-trash-alt", "Successfully deleted DNS record", elem);
       $("#hosts-Table").DataTable().ajax.reload(null, false);
     })
     .fail(function (data, exception) {
@@ -183,7 +183,7 @@ function delHosts(elem) {
 
 function delCNAME(elem) {
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting local CNAME record...");
+  utils.showAlert("info", "", "Deleting local CNAME record...", elem);
   const url = "/api/config/dns/cnameRecords/" + encodeURIComponent(elem);
 
   $.ajax({
@@ -192,7 +192,12 @@ function delCNAME(elem) {
   })
     .done(function () {
       utils.enableAll();
-      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted local CNAME record", "");
+      utils.showAlert(
+        "success",
+        "fas fa-trash-alt",
+        "Successfully deleted local CNAME record",
+        elem
+      );
       $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
     })
     .fail(function (data, exception) {
@@ -220,7 +225,7 @@ $(document).ready(function () {
     })
       .done(function () {
         utils.enableAll();
-        utils.showAlert("success", "far fa-plus", "Successfully added DNS record", "");
+        utils.showAlert("success", "fas fa-plus", "Successfully added DNS record", elem);
         $("#hosts-Table").DataTable().ajax.reload(null, false);
       })
       .fail(function (data, exception) {
@@ -244,7 +249,7 @@ $(document).ready(function () {
     })
       .done(function () {
         utils.enableAll();
-        utils.showAlert("success", "far fa-plus", "Successfully added CNAME record", "");
+        utils.showAlert("success", "fas fa-plus", "Successfully added CNAME record", elem);
         $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
       })
       .fail(function (data, exception) {

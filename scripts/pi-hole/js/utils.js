@@ -88,6 +88,7 @@ function showAlert(type, icon, title, message) {
   const options = {
       title: "&nbsp;<strong>" + title + "</strong><br>",
       message: message,
+      icon: icon,
     },
     settings = {
       type: type,
@@ -100,7 +101,7 @@ function showAlert(type, icon, title, message) {
     };
   switch (type) {
     case "info":
-      options.icon = icon !== null && icon.len > 0 ? icon : "far fa-clock";
+      options.icon = icon !== null && icon.len > 0 ? icon : "fas fa-clock";
 
       break;
     case "success":
