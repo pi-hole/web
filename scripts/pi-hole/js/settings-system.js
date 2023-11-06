@@ -12,6 +12,13 @@ var cachePieChart = null;
 var cacheSize = 0,
   cacheEntries = 0;
 
+// Register the ChartDeferred plugin to all charts:
+Chart.register(ChartDeferred);
+Chart.defaults.set('plugins.deferred', {
+  yOffset: '50%',
+  delay: 500
+})
+
 function updateCachePie(data) {
   var v = [],
     c = [],
@@ -69,10 +76,10 @@ function updateCachePie(data) {
   cachePieChart.data.datasets[0] = dd;
   cachePieChart.data.labels = k;
   $("#cache-pie-chart .overlay").hide();
-  cachePieChart.update();
+  // Passing 'none' will prevent rotation animation for further updates
+  //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
+  cachePieChart.update('none');
 
-  // Don't use rotation animation for further updates
-  cachePieChart.options.animation.duration = 0;
 }
 
 function updateHostInfo() {
