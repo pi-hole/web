@@ -13,10 +13,10 @@ var queryTypePieChart, forwardDestinationPieChart;
 
 // Register the ChartDeferred plugin to all charts:
 Chart.register(ChartDeferred);
-Chart.defaults.set('plugins.deferred', {
-  yOffset: '50%',
-  delay: 500
-})
+Chart.defaults.set("plugins.deferred", {
+  yOffset: "50%",
+  delay: 500,
+});
 
 // Functions to update data in page
 
@@ -120,8 +120,7 @@ function updateQueryTypesPie() {
     $("#query-types-pie .overlay").hide();
     // Passing 'none' will prevent rotation animation for further updates
     //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
-    queryTypePieChart.update('none');
-
+    queryTypePieChart.update("none");
   })
     .done(function () {
       // Reload graph after minute
@@ -243,9 +242,8 @@ function updateForwardDestinationsPie() {
 
     // Passing 'none' will prevent rotation animation for further updates
     //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
-    queryTypePieChart.update('none');
-    forwardDestinationPieChart.update('none');
-
+    queryTypePieChart.update("none");
+    forwardDestinationPieChart.update("none");
   })
     .done(function () {
       // Reload graph after one minute
@@ -522,7 +520,7 @@ $(function () {
           },
           border: {
             display: false,
-          }
+          },
         },
       },
       elements: {
