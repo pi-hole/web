@@ -427,6 +427,46 @@ $(function () {
   // Pull in data via AJAX
   updateSummaryData();
 
+  const zoomPlugin = {
+    /* Allow zooming only on the y axis */
+    zoom: {
+      wheel: {
+        enabled: true,
+        modifierKey: "ctrl" /* Modifier key required for zooming via mouse wheel */,
+      },
+      pinch: {
+        enabled: true,
+      },
+      mode: "y",
+      onZoom: function ({ chart }) {
+        // The first time the chart is zoomed, save the maximum initial scale bound
+        if (!chart.absMax) chart.absMax = chart.getInitialScaleBounds().y.max;
+        // Calculate the maximum value to be shown for the current zoom level
+        const zoomMax = chart.absMax / chart.getZoomLevel();
+        // Update the y axis scale
+        chart.zoomScale("y", { min: 0, max: zoomMax }, "default");
+        // Update the y axis ticks and round values to natural numbers
+        chart.options.scales.y.ticks.callback = function (value) {
+          return value.toFixed(0);
+        };
+      },
+    },
+    /* Allow panning only on the y axis */
+    pan: {
+      enabled: true,
+      mode: "y",
+    },
+    limits: {
+      y: {
+        /* Users are not allowed to zoom out further than the initial range */
+        min: "original",
+        max: "original",
+        /* Users are not allowed to zoom in further than a range of 10 queries */
+        minRange: 10,
+      },
+    },
+  };
+
   var gridColor = utils.getCSSval("graphs-grid", "background-color");
   var ticksColor = utils.getCSSval("graphs-ticks", "color");
   var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
@@ -484,6 +524,7 @@ $(function () {
             },
           },
         },
+        zoom: zoomPlugin,
       },
       scales: {
         x: {
@@ -521,6 +562,7 @@ $(function () {
           border: {
             display: false,
           },
+          min: 0,
         },
       },
       elements: {
@@ -583,6 +625,7 @@ $(function () {
               },
             },
           },
+          zoom: zoomPlugin,
         },
         scales: {
           x: {
@@ -620,6 +663,7 @@ $(function () {
             border: {
               display: false,
             },
+            min: 0,
           },
         },
         elements: {
