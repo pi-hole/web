@@ -832,3 +832,8 @@ $(function () {
 window.addEventListener("resize", function () {
   $(".chartjs-tooltip").remove();
 });
+
+// Tooltips
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
+});
