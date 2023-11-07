@@ -432,8 +432,8 @@ $(function () {
       },
       mode: "y",
       onZoom: function ({ chart }) {
-        // The first time the chart is zoomed, save the absolute maximum value
-        if (!chart.absMax) chart.absMax = chart.scales.y.max;
+        // The first time the chart is zoomed, save the maximum initial scale bound
+        if (!chart.absMax) chart.absMax = chart.getInitialScaleBounds().y.max;
         // Calculate the maximum value to be shown for the current zoom level
         const zoomMax = chart.absMax / chart.getZoomLevel();
         // Update the y axis scale
