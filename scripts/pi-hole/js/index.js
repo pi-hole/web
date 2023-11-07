@@ -432,10 +432,10 @@ $(function () {
       },
       mode: "y",
       onZoom: function ({ chart }) {
-        // Get absolute maximum from all datasets
-        const absMax = Math.max(...chart.data.datasets.map(dataset => Math.max(...dataset.data)));
+        // The first time the chart is zoomed, save the absolute maximum value
+        if (!chart.absMax) chart.absMax = chart.scales.y.max;
         // Calculate the maximum value to be shown for the current zoom level
-        const zoomMax = absMax / chart.getZoomLevel();
+        const zoomMax = chart.absMax / chart.getZoomLevel();
         // Update the y axis scale
         chart.zoomScale("y", { min: 0, max: zoomMax }, "default");
         // Update the y axis ticks and round values to natural numbers
