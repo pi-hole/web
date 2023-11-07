@@ -31,13 +31,28 @@ const htmlLegendPlugin = {
   afterUpdate(chart, args, options) {
     const ul = getOrCreateLegendList(chart, options.containerID);
 
+    // Use the built-in legendItems generator
+    const items = chart.options.plugins.legend.labels.generateLabels(chart);
+
+    // Exit early if the legend has the same items as last time
+    if (
+      options.lastLegendItems &&
+      items.length === options.lastLegendItems.length &&
+      items.every((item, i) => item.text === options.lastLegendItems[i].text)
+    ) {
+      return;
+    }
+    // else: Update the HTML legend if it is different from last time or if it
+    // did not exist
+
+    // Save the legend items so we can check against them next time to see if we
+    // need to update the legend
+    options.lastLegendItems = items;
+
     // Remove old legend items
     while (ul.firstChild) {
       ul.firstChild.remove();
     }
-
-    // Reuse the built-in legendItems generator
-    const items = chart.options.plugins.legend.labels.generateLabels(chart);
 
     items.forEach(item => {
       const li = document.createElement("li");
