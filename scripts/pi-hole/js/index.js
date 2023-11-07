@@ -5,11 +5,18 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false */
+/* global utils:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false */
 
 // Define global variables
 var timeLineChart, clientsChart;
 var queryTypePieChart, forwardDestinationPieChart;
+
+// Register the ChartDeferred plugin to all charts:
+Chart.register(ChartDeferred);
+Chart.defaults.set("plugins.deferred", {
+  yOffset: "50%",
+  delay: 500,
+});
 
 // Functions to update data in page
 
@@ -111,10 +118,9 @@ function updateQueryTypesPie() {
     queryTypePieChart.data.datasets[0] = dd;
     queryTypePieChart.data.labels = k;
     $("#query-types-pie .overlay").hide();
-    queryTypePieChart.update();
-
-    // Don't use rotation animation for further updates
-    queryTypePieChart.options.animation.duration = 0;
+    // Passing 'none' will prevent rotation animation for further updates
+    //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
+    queryTypePieChart.update("none");
   })
     .done(function () {
       // Reload graph after minute
@@ -233,10 +239,11 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.data.datasets[0] = dd;
     // and push it at once
     $("#forward-destinations-pie .overlay").hide();
-    forwardDestinationPieChart.update();
 
-    // Don't use rotation animation for further updates
-    forwardDestinationPieChart.options.animation.duration = 0;
+    // Passing 'none' will prevent rotation animation for further updates
+    //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
+    queryTypePieChart.update("none");
+    forwardDestinationPieChart.update("none");
   })
     .done(function () {
       // Reload graph after one minute
@@ -493,10 +500,12 @@ $(function () {
           grid: {
             color: gridColor,
             offset: false,
-            drawBorder: false,
           },
           ticks: {
             color: ticksColor,
+          },
+          border: {
+            display: false,
           },
         },
         y: {
@@ -508,7 +517,9 @@ $(function () {
           },
           grid: {
             color: gridColor,
-            drawBorder: false,
+          },
+          border: {
+            display: false,
           },
         },
       },
@@ -588,7 +599,9 @@ $(function () {
             grid: {
               color: gridColor,
               offset: false,
-              drawBorder: false,
+            },
+            border: {
+              display: false,
             },
             ticks: {
               color: ticksColor,
@@ -603,7 +616,9 @@ $(function () {
             stacked: true,
             grid: {
               color: gridColor,
-              drawBorder: false,
+            },
+            border: {
+              display: false,
             },
           },
         },

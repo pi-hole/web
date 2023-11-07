@@ -5,12 +5,19 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global apiFailure:false, Chart:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false */
+/* global apiFailure:false, Chart:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false */
 
 var hostinfoTimer = null;
 var cachePieChart = null;
 var cacheSize = 0,
   cacheEntries = 0;
+
+// Register the ChartDeferred plugin to all charts:
+Chart.register(ChartDeferred);
+Chart.defaults.set("plugins.deferred", {
+  yOffset: "50%",
+  delay: 500,
+});
 
 function updateCachePie(data) {
   var v = [],
@@ -69,10 +76,9 @@ function updateCachePie(data) {
   cachePieChart.data.datasets[0] = dd;
   cachePieChart.data.labels = k;
   $("#cache-pie-chart .overlay").hide();
-  cachePieChart.update();
-
-  // Don't use rotation animation for further updates
-  cachePieChart.options.animation.duration = 0;
+  // Passing 'none' will prevent rotation animation for further updates
+  //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
+  cachePieChart.update("none");
 }
 
 function updateHostInfo() {
