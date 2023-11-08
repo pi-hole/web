@@ -1398,3 +1398,9 @@ table.dataTable tbody > tr > .selected {
     white 4%
   );
 }
+
+/* Dashboard graphics: reset zoom button and info tooltip */
+.zoom-reset {
+  display: none;
+  margin-top: -1px;
+}
