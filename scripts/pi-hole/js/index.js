@@ -427,6 +427,17 @@ $(function () {
   // Pull in data via AJAX
   updateSummaryData();
 
+  // On click of the "Reset zoom" buttons, the closest chart to the button is reset
+  $("[data-sel^='zoom-reset']").on("click", function () {
+    if ($(this).data("sel") === "zoom-reset-clients") clientsChart.resetZoom();
+    else timeLineChart.resetZoom();
+
+    // Show the closest info icon to the current chart
+    $(this).parent().find("[data-sel='zoom-info']").show();
+    // Hide the reset zoom button
+    $(this).hide();
+  });
+
   const zoomPlugin = {
     /* Allow zooming only on the y axis */
     zoom: {
@@ -449,6 +460,20 @@ $(function () {
         chart.options.scales.y.ticks.callback = function (value) {
           return value.toFixed(0);
         };
+
+        // Update the top right info icon and reset zoom button depending on the
+        // current zoom level
+        if (chart.getZoomLevel() === 1) {
+          // Show the closest info icon to the current chart
+          $(chart.canvas).parent().parent().parent().find("[data-sel='zoom-info']").show();
+          // Hide the reset zoom button
+          $(chart.canvas).parent().parent().parent().find("[data-sel^='zoom-reset']").hide();
+        } else {
+          // Hide the closest info icon to the current chart
+          $(chart.canvas).parent().parent().parent().find("[data-sel='zoom-info']").hide();
+          // Show the reset zoom button
+          $(chart.canvas).parent().parent().parent().find("[data-sel^='zoom-reset']").show();
+        }
       },
     },
     /* Allow panning only on the y axis */

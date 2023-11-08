@@ -83,7 +83,8 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
         <div class="box" id="queries-over-time">
             <div class="box-header with-border">
                 <h3 class="box-title">Total queries over last 24 hours</h3>
-                <span class="pull-right" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
+                <button class="btn btn-xs btn-default pull-right" data-sel="zoom-reset-history" style="display:none;"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
+                <span class="pull-right" data-sel="zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
             </div>
             <div class="box-body">
                 <div class="chart" style="width: 100%; height: 180px">
@@ -102,7 +103,8 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
         <div class="box" id="clients">
             <div class="box-header with-border">
                 <h3 class="box-title">Client activity over last 24 hours</h3>
-                <span class="pull-right" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
+                <button class="btn btn-xs btn-default pull-right" data-sel="zoom-reset-clients" style="display:none;"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
+                <span class="pull-right" data-sel="zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
             </div>
             <div class="box-body">
                 <div class="chart" style="width: 100%; height: 180px">
