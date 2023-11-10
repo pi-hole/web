@@ -449,7 +449,7 @@ function delItems(ids) {
   })
     .done(function () {
       utils.enableAll();
-      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted list: ", domain);
+      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted domain: ", domain);
       table.row(domainRaw).remove().draw(false);
       if (ids.length > 0) {
         // Recursively delete all remaining items
