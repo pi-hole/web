@@ -37,26 +37,71 @@ function redirect() {
   window.location.replace(target);
 }
 
-function wrongPassword(isError = false, isSuccess = false) {
+function wrongPassword(isError = false, isSuccess = false, data = null) {
   if (isError) {
-    $("#pw-field").addClass("has-error");
+    let isErrorResponse = false,
+      isInvalidTOTP = false;
+
+    // Reset hint and error message
+    $("#error-message").text("");
+    $("#error-hint").hide();
+    $("#error-hint").text("");
+    if (data !== null && "error" in data.responseJSON && "message" in data.responseJSON.error) {
+      // This is an error, highlight both the password and the TOTP field
+      isErrorResponse = true;
+      // Check if the error is caused by an invalid TOTP token
+      isInvalidTOTP = data.responseJSON.error.message === "Invalid 2FA token";
+      $("#error-message").text(data.responseJSON.error.message);
+      if ("hint" in data.responseJSON.error && data.responseJSON.error.hint !== null) {
+        $("#error-hint").text(data.responseJSON.error.hint);
+        $("#error-hint").show();
+      }
+    } else {
+      $("#error-message").text("Wrong password!");
+    }
+
     $("#error-label").show();
-    $("#forgot-pw-box").removeClass("box-info").removeClass("collapsed-box").addClass("box-danger");
-    $("#forgot-pw-box .box-body").show();
-    $("#forgot-pw-toggle-icon").removeClass("fa-plus").addClass("fa-minus");
+
+    // Always highlight the TOTP field on error
+    if (isErrorResponse) $("#totp_input").addClass("has-error");
+
+    // Only show the invalid 2FA box if the error is caused by an invalid TOTP
+    // token
+    if (isInvalidTOTP) $("#invalid2fa-box").removeClass("hidden");
+
+    // Only highlight the password field if the error is NOT caused by an
+    // invalid TOTP token
+    if (!isInvalidTOTP) $("#pw-field").addClass("has-error");
+
+    // Only show the forgot password box if the error is NOT caused by an
+    // invalid TOTP token and this is no error response (= password is wrong)
+    if (!isErrorResponse && !isInvalidTOTP) {
+      $("#forgot-pw-box")
+        .removeClass("box-info")
+        .removeClass("collapsed-box")
+        .addClass("box-danger");
+      $("#forgot-pw-box .box-body").show();
+      $("#forgot-pw-toggle-icon").removeClass("fa-plus").addClass("fa-minus");
+    }
+
+    return;
   } else if (isSuccess) {
     $("#pw-field").addClass("has-success");
+    $("#totp_input").addClass("has-success");
   } else {
     $("#pw-field").removeClass("has-error");
+    $("#totp_input").removeClass("has-error");
     $("#error-label").hide();
-    $("#forgot-pw-box").addClass("box-info").addClass("collapsed-box").removeClass("box-danger");
-    $("#forgot-pw-box .box-body").hide();
-    $("#forgot-pw-toggle-icon").removeClass("fa-minus").addClass("fa-plus");
   }
+
+  $("#invalid2fa-box").addClass("hidden");
+  $("#forgot-pw-box").addClass("box-info").addClass("collapsed-box").removeClass("box-danger");
+  $("#forgot-pw-box .box-body").hide();
+  $("#forgot-pw-toggle-icon").removeClass("fa-minus").addClass("fa-plus");
 }
 
 function doLogin(password) {
-  wrongPassword(false, false);
+  wrongPassword(false, false, null);
   $.ajax({
     url: "/api/auth",
     method: "POST",
@@ -64,15 +109,12 @@ function doLogin(password) {
     processData: false,
     data: JSON.stringify({ password: password, totp: parseInt($("#totp").val(), 10) }),
   })
-    .done(function () {
-      wrongPassword(false, true);
+    .done(function (data) {
+      wrongPassword(false, true, data);
       redirect();
     })
     .fail(function (data) {
-      if (data.status === 401) {
-        // Login failed, show error message
-        wrongPassword(true, false);
-      }
+      wrongPassword(true, false, data);
     });
 }
 
@@ -87,19 +129,38 @@ $("#loginform").submit(function (e) {
     return;
   }*/
 
-  doLogin($("#loginpw").val());
+  doLogin($("#current-password").val());
 });
 
-// Trigger keyup event when pasting into the TOTP code input field
-$("#totp").on("paste", function (e) {
-  $(e.target).keyup();
-});
-
-$("#totp").on("keyup", function () {
-  var code = $(this).val();
-  if (code.length === 6) {
+// Submit form when TOTP code is entered and password is already filled
+$("#totp").on("input", function () {
+  const code = $(this).val();
+  const password = $("#current-password").val();
+  if (code.length === 6 && password.length > 0) {
     $("#loginform").submit();
   }
+});
+
+// Toggle password visibility button
+$("#toggle-password").on("click", function () {
+  // Toggle font-awesome classes to change the svg icon on the button
+  $("svg", this).toggleClass("fa-eye fa-eye-slash");
+
+  // Password field
+  var $pwd = $("#current-password");
+  if ($pwd.attr("type") === "password") {
+    $pwd.attr("type", "text");
+    $pwd.attr("title", "Hide password");
+  } else {
+    $pwd.attr("type", "password");
+    $pwd.attr(
+      "title",
+      "Show password as plain text. Warning: this will display your password on the screen"
+    );
+  }
+
+  // move the focus to password field after the click
+  $pwd.trigger("focus");
 });
 
 function showDNSfailure() {
@@ -118,8 +179,13 @@ $(function () {
     })
     .fail(function (xhr) {
       const session = xhr.responseJSON.session;
-      // If TOPT is enabled, show the input field
-      if (session.totp === true) $("#totp_input").removeClass("hidden");
+      // If TOPT is enabled, show the input field and add the required attribute
+      if (session.totp === true) {
+        $("#totp_input").removeClass("hidden");
+        $("#totp").attr("required", "required");
+        $("#totp-forgotten-title").removeClass("hidden");
+        $("#totp-forgotten-body").removeClass("hidden");
+      }
     });
 
   // Get information about HTTPS port and DNS status
