@@ -108,7 +108,7 @@ mg.include('scripts/pi-hole/lua/header.lp','r')
             <!-- /.login-card-body -->
             <div class="login-footer" style="margin-top: 15px; display: flex; justify-content: space-between;">
                 <a class="btn btn-default btn-sm" role="button" href="https://docs.pi-hole.net/" target="_blank"><i class="fas fa-question-circle"></i> Documentation</a>
-                <a class="btn btn-default btn-sm" role="button" href="https://github.com/pi-hole/" target="_blank"><i class="fab fa-github"></i> Github</a>
+                <a class="btn btn-default btn-sm" role="button" href="https://github.com/pi-hole/" target="_blank"><i class="fab fa-github"></i> GitHub</a>
                 <a class="btn btn-default btn-sm" role="button" href="https://discourse.pi-hole.net/" target="_blank"><i class="fab fa-discourse"></i> Pi-hole Discourse</a>
             </div>
         </div>
