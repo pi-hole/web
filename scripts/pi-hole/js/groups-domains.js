@@ -13,6 +13,7 @@ var GETDict = {};
 $(function () {
   GETDict = utils.parseQueryString();
 
+  // Tabs: Domain/Regex handling
   // sync description fields, reset inactive inputs on tab change
   $('a[data-toggle="tab"]').on("shown.bs.tab", function () {
     var tabHref = $(this).attr("href");
@@ -34,6 +35,7 @@ $(function () {
 
   $("#add_deny, #add_allow").on("click", addDomain);
 
+  // Domain suggestion handling
   var suggestTimeout;
   $("#new_domain").on("input", function (e) {
     hideSuggestDomains();
@@ -45,6 +47,7 @@ $(function () {
   initTable();
 });
 
+// Show a list of suggested domains based on the user's input
 function showSuggestDomains(value) {
   function createButton(hostname) {
     // Purposefully omit 'btn' class to save space on padding
@@ -134,8 +137,9 @@ function initTable() {
         $("body > .bootstrap-select.dropdown").remove();
       },
       rowCallback: function (row, data) {
-        var dataId = utils.hexEncode(data.domain);
+        var dataId = utils.hexEncode(data.domain) + "_" + data.type + "_" + data.kind;
         $(row).attr("data-id", dataId);
+        // Tooltip for domain
         var tooltip =
           "Added: " +
           utils.datetime(data.date_added, false) +
@@ -182,6 +186,7 @@ function initTable() {
         var typeEl = $("#type_" + dataId, row);
         typeEl.on("change", editDomain);
 
+        // Initialize bootstrap-toggle for status field (enabled/disabled)
         $("td:eq(3)", row).html(
           '<input type="checkbox" id="enabled_' +
             dataId +
@@ -199,12 +204,13 @@ function initTable() {
         });
         statusEl.on("change", editDomain);
 
+        // Comment field
         $("td:eq(4)", row).html('<input id="comment_' + dataId + '" class="form-control">');
         var commentEl = $("#comment_" + dataId, row);
         commentEl.val(utils.unescapeHtml(data.comment));
         commentEl.on("change", editDomain);
 
-        // Group assignment field
+        // Group assignment field (multi-select)
         $("td:eq(5)", row).empty();
         $("td:eq(5)", row).append(
           '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
@@ -227,6 +233,7 @@ function initTable() {
         // Select assigned groups
         selectEl.val(data.groups);
         // Initialize bootstrap-select
+        const applyBtn = "#btn_apply_" + dataId;
         selectEl
           // fix dropdown if it would stick out right of the viewport
           .on("show.bs.select", function () {
@@ -242,7 +249,8 @@ function initTable() {
             }
           })
           .on("changed.bs.select", function () {
-            // enable Apply button
+            // enable Apply button if changes were made to the drop-down menu
+            // and have it call editDomain() on click
             if ($(applyBtn).prop("disabled")) {
               $(applyBtn)
                 .addClass("btn-success")
@@ -253,7 +261,9 @@ function initTable() {
             }
           })
           .on("hide.bs.select", function () {
-            // Restore values if drop-down menu is closed without clicking the Apply button
+            // Restore values if drop-down menu is closed without clicking the
+            // Apply button (e.g. by clicking outside) and re-disable the Apply
+            // button
             if (!$(applyBtn).prop("disabled")) {
               $(this).val(data.groups).selectpicker("refresh");
               $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
@@ -267,8 +277,6 @@ function initTable() {
               dataId +
               ' class="btn btn-block btn-sm" disabled>Apply</button>'
           );
-
-        var applyBtn = "#btn_apply_" + dataId;
 
         // Highlight row (if url parameter "domainid=" is used)
         if ("domainid" in GETDict && data.id === parseInt(GETDict.domainid, 10)) {
@@ -288,7 +296,7 @@ function initTable() {
       },
       select: {
         style: "multi",
-        selector: "td:not(:last-child)",
+        selector: "td:first-child",
         info: false,
       },
       buttons: [
@@ -433,7 +441,7 @@ function delItems(ids) {
 
   // Get first element from array
   const domainRaw = ids[0];
-  const domain = utils.hexDecode(domainRaw);
+  const domain = utils.hexDecode(domainRaw.split("_")[0]);
   const typestr = $("#old_type_" + domainRaw).val();
 
   // Remove first element from array
@@ -612,7 +620,7 @@ function editDomain() {
   }
 
   utils.disableAll();
-  const domainDecoded = utils.hexDecode(domain);
+  const domainDecoded = utils.hexDecode(domain.split("_")[0]);
   utils.showAlert("info", "", "Editing domain...", domain);
   $.ajax({
     url: "/api/domains/" + newTypestr + "/" + encodeURIComponent(domainDecoded),
