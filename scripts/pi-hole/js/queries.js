@@ -7,8 +7,8 @@
 
 /* global moment:false, utils:false */
 
-const beginningOfTime = 1262304000; // Jan 01 2010, 00:00
-const endOfTime = 2147483647; // Jan 19, 2038, 03:14
+const beginningOfTime = 1262304000000; // Jan 01 2010, 00:00
+const endOfTime = 2147483647000; // Jan 19, 2038, 03:14
 var from = beginningOfTime;
 var until = endOfTime;
 
