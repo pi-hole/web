@@ -146,7 +146,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-12 settings-level-2">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title">Static DHCP configuration</h3>
+                <h3 class="box-title" data-configkeys="dhcp.hosts">Static DHCP configuration</h3>
             </div>
             <div class="box-body">
                 <div class="row">
