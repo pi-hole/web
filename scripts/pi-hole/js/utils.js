@@ -113,7 +113,8 @@ function showAlert(type, icon, title, message) {
       break;
     case "error":
       options.icon = "fas fa-times";
-      options.title = "&nbsp;<strong>Error, something went wrong!</strong><br>";
+      if (title.length === 0)
+        options.title = "&nbsp;<strong>Error, something went wrong!</strong><br>";
       settings.delay *= 2;
 
       // If the message is an API object, nicely format the error message

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure:false, updateFtlInfo:false */
+/* global utils:false, apiFailure:false, updateFtlInfo:false, processGroupResult:false */
 
 var table,
   idNames = {};
@@ -344,10 +344,10 @@ function editGroup() {
   var notDone = "editing";
   switch (elem) {
     case "enabled_" + id:
-      if (enabled === false) {
+      if (!enabled) {
         done = "disabled";
         notDone = "disabling";
-      } else if (enabled === true) {
+      } else {
         done = "enabled";
         notDone = "enabling";
       }
@@ -378,9 +378,10 @@ function editGroup() {
       comment: comment,
       enabled: enabled,
     }),
-    success: function () {
+    success: function (data) {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-pencil-alt", "Successfully " + done + " group", oldName);
+      processGroupResult(data, "group", done, notDone);
+      table.ajax.reload(null, false);
     },
     error: function (data, exception) {
       apiFailure(data);

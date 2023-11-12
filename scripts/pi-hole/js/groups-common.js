@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global apiFailure:false */
+/* global apiFailure:false, utils:false */
 
 // eslint-disable-next-line no-unused-vars
 var groups = [];
@@ -22,5 +22,23 @@ function getGroups() {
     error: function (data) {
       apiFailure(data);
     },
+  });
+}
+
+// eslint-disable-next-line no-unused-vars
+function processGroupResult(data, type, done, notDone) {
+  // Loop over data.processed.success and show toasts
+  data.processed.success.forEach(function (item) {
+    utils.showAlert("success", "fas fa-pencil-alt", `Successfully ${done} ${type}`, item);
+  });
+  // Loop over errors and display them
+  data.processed.errors.forEach(function (error) {
+    console.log(error); // eslint-disable-line no-console
+    utils.showAlert(
+      "error",
+      "",
+      `Error while ${notDone} ${type} ${utils.escapeHtml(error.item)}`,
+      error.error
+    );
   });
 }
