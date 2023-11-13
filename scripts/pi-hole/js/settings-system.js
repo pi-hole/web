@@ -15,8 +15,8 @@ var cacheSize = 0,
 // Register the ChartDeferred plugin to all charts:
 Chart.register(ChartDeferred);
 Chart.defaults.set("plugins.deferred", {
-  yOffset: "50%",
-  delay: 500,
+  yOffset: "20%",
+  delay: 300,
 });
 
 function updateCachePie(data) {
