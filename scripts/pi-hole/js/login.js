@@ -5,6 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global utils:false */
+
 function getParams() {
   var GETDict = {};
   window.location.search
@@ -102,6 +104,7 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
 
 function doLogin(password) {
   wrongPassword(false, false, null);
+  utils.disableAll();
   $.ajax({
     url: "/api/auth",
     method: "POST",
@@ -115,6 +118,7 @@ function doLogin(password) {
     })
     .fail(function (data) {
       wrongPassword(true, false, data);
+      utils.enableAll();
     });
 }
 
