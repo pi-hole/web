@@ -71,21 +71,11 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-1">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dhcp.domain dhcp.leaseTime dhcp.rapidCommit dhcp.multiDNS">Advanced DHCP Settings</h3>
+                <h3 class="box-title" data-configkeys="dhcp.leaseTime dhcp.rapidCommit dhcp.multiDNS">Advanced DHCP Settings</h3>
             </div>
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <label>Pi-hole domain name</label>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-addon">Domain</div>
-                                <input type="text" class="form-control DHCPgroup" id="dhcp.domain" data-key="dhcp.domain" value="">
-                            </div>
-                        </div>
-                        <p>The DNS domains for the DHCP server. If no domain is specified, then any DHCP hostname with a domain part (i.e., with a period) will be disallowed. If a domain is specified, then hostnames with a domain parts matching the domain here are allowed. In addition, when a suffix is set then hostnames without a domain part have the suffix added as an optional domain part.</p>
-                    </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label>DHCP lease time</label>
                         <div class="form-group">
                             <div class="input-group">
