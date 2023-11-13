@@ -216,7 +216,7 @@ function updateForwardDestinationsPie() {
 
     // Collect values and colors
     data.upstreams.forEach(function (item) {
-      var label = item.ip;
+      var label = item.name !== null && item.name.length > 0 ? item.name : item.ip;
       if (item.port > 0) {
         label += "#" + item.port;
       }
