@@ -34,8 +34,8 @@ function initDateRangePicker() {
       timePickerIncrement: 5,
       timePicker24Hour: true,
       locale: { format: dateformat },
-      startDate: moment(from * 1000),
-      endDate: moment(until * 1000),
+      startDate: moment(from),
+      endDate: moment(until),
       ranges: {
         "Last 10 Minutes": [moment().subtract(10, "minutes"), moment()],
         "Last Hour": [moment().subtract(1, "hours"), moment()],
