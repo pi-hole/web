@@ -7,8 +7,8 @@
 
 /* global moment:false, utils:false */
 
-const beginningOfTime = 1262304000000; // Jan 01 2010, 00:00
-const endOfTime = 2147483647000; // Jan 19, 2038, 03:14
+const beginningOfTime = 1262304000; // Jan 01 2010, 00:00 in seconds
+const endOfTime = 2147483647; // Jan 19, 2038, 03:14 in seconds
 var from = beginningOfTime;
 var until = endOfTime;
 
@@ -34,8 +34,8 @@ function initDateRangePicker() {
       timePickerIncrement: 5,
       timePicker24Hour: true,
       locale: { format: dateformat },
-      startDate: moment(from * 1000),
-      endDate: moment(until * 1000),
+      startDate: moment(from * 1000), // convert to milliseconds since epoch
+      endDate: moment(until * 1000), // convert to milliseconds since epoch
       ranges: {
         "Last 10 Minutes": [moment().subtract(10, "minutes"), moment()],
         "Last Hour": [moment().subtract(1, "hours"), moment()],
@@ -52,13 +52,15 @@ function initDateRangePicker() {
           moment().subtract(1, "month").endOf("month"),
         ],
         "This Year": [moment().startOf("year"), moment().endOf("year")],
-        "All Time": [moment(beginningOfTime), moment(endOfTime)],
+        "All Time": [moment(beginningOfTime * 1000), moment(endOfTime * 1000)], // convert to milliseconds since epoch
       },
       opens: "center",
       showDropdowns: true,
       autoUpdateInput: true,
     },
     function (startt, endt) {
+      // Update global variables
+      // Convert milliseconds (JS) to seconds (API)
       from = moment(startt).utc().valueOf() / 1000;
       until = moment(endt).utc().valueOf() / 1000;
     }
@@ -447,7 +449,8 @@ function getAPIURL(filters) {
   }
 
   // Omit from/until filtering if we cannot reach these times. This will speed
-  // up the database lookups notably on slow devices.
+  // up the database lookups notably on slow devices. The API accepts timestamps
+  // in seconds since epoch
   if (from > beginningOfTime) apiurl += "&from=" + from;
   if (until > beginningOfTime && until < endOfTime) apiurl += "&until=" + until;
 
