@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Precord see LICENSE file for your rights under this license. */
 
-/* global utils: false, apiFailure:false */
+/* global utils: false, apiFailure:false, setConfigValues: false */
 
 function hostsDomain(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
@@ -58,12 +58,11 @@ function populateDataTable(endpoint) {
   $.ajax({
     url: `/api/config/dns/${endpoint}?detailed=true`,
   }).done(function (data) {
-    setByEnv = data.config.dns[endpoint].flags.env_var;
+    // Set the title icons if needed
+    setConfigValues("dns", "dns", data.config.dns);
 
-    if (setByEnv) {
-      $(`#title-${endpoint}`).append(
-        `<span class="env-warning">&nbsp;&nbsp;<i class="fas fa-lock text-orange env-warning" title="Settings overwritten by an environmental variable are read-only"></i></span>`
-      );
+    // disable input fields if set by env var
+    if (data.config.dns[endpoint].flags.env_var) {
       $(`.${endpoint}`).prop("disabled", true);
     }
   });

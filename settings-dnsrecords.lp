@@ -17,7 +17,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-1">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title" id="title-hosts">Local DNS records<span class="restart-warning">&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i></span></h3>
+                <h3 class="box-title" id="title-hosts" data-configkeys="dns.hosts">Local DNS records</h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -46,11 +46,8 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 </div>
                             </div>
                             <div class="box-footer clearfix">
-                            <strong>Note:</strong>
-                            <p>The target of a <code>CNAME</code> must be a domain that the Pi-hole already has in its cache or is authoritative for. This is a universal limitation of <code>CNAME</code> records.</p>
-                            <p>The reason for this is that Pi-hole will not send additional queries upstream when serving <code>CNAME</code> replies. As consequence, if you set a target that isn't already known, the reply to the client may be incomplete. Pi-hole just returns the information it knows at the time of the query. This results in certain limitations for <code>CNAME</code> targets,
-                                for instance, only <i>active</i> DHCP leases work as targets - mere DHCP <i>leases</i> aren't sufficient as they aren't (yet) valid DNS records.</p>
-                                <p>Additionally, you can't <code>CNAME</code> external domains (<code>bing.com</code> to <code>google.com</code>) successfully as this could result in invalid SSL certificate errors when the target server does not serve content for the requested domain.</p>
+                                <strong>Note:</strong>
+                                <p>Adding/removing local DNS records will flush the cache but does not require a restart of the DNS server.</p>
                                 <button type="button" id="btnAdd-host" class="btn btn-primary pull-right" data-configkeys="hosts">Add</button>
                             </div>
                         </div>
@@ -76,7 +73,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-1">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title" id="title-cnameRecords">Local CNAME records records<span class="restart-warning">&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i></span></h3>
+                <h3 class="box-title" id="title-cnameRecords" data-configkeys="dns.cnameRecords">Local CNAME records records</h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -109,6 +106,12 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 </div>
                             </div>
                             <div class="box-footer clearfix">
+                                <strong>Note:</strong>
+                                <p>The target of a <code>CNAME</code> must be a domain that the Pi-hole already has in its cache or is authoritative for. This is a universal limitation of <code>CNAME</code> records.</p>
+                                <p>The reason for this is that Pi-hole will not send additional queries upstream when serving <code>CNAME</code> replies. As consequence, if you set a target that isn't already known, the reply to the client may be incomplete. Pi-hole just returns the information it knows at the time of the query. This results in certain limitations for <code>CNAME</code> targets,
+                                for instance, only <i>active</i> DHCP leases work as targets - mere DHCP <i>leases</i> aren't sufficient as they aren't (yet) valid DNS records.</p>
+                                <p>Additionally, you can't <code>CNAME</code> external domains (<code>bing.com</code> to <code>google.com</code>) successfully as this could result in invalid SSL certificate errors when the target server does not serve content for the requested domain.</p>
+                                <p>Adding/removing local CNAME records will restart the DNS server.</p>
                                 <button type="button" id="btnAdd-cname" class="btn btn-primary pull-right" data-configkeys="cnameRecords">Add</button>
                             </div>
                         </div>
