@@ -166,7 +166,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
         </div>
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dns.domain dns.domainNeeded dns.bogusPriv dns.dnssec">Advanced DNS settings</h3>
+                <h3 class="box-title" data-configkeys="dns.domain dns.expandHosts">DNS domain settings</h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -175,11 +175,25 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">Domain</div>
-                                <input type="text" class="form-control DHCPgroup" id="dns.domain" data-key="dns.domain" value="">
+                                <input type="text" class="form-control" id="dns.domain" data-key="dns.domain" value="">
                             </div>
                         </div>
                         <p>The DNS domains for your Pi-hole. If no domain is specified and you are using Pi-hole's DHCP server, then any hostnames with a domain part (i.e., with a period) will be disallowed. If a domain is specified, then hostnames with a domain parts matching the domain here are allowed. In addition, when a suffix is set then hostnames without a domain part have the suffix added as an optional domain part.</p>
+                        <div>
+                            <input type="checkbox" id="dns.expandHosts" data-key="dns.expandHosts" title="domain-needed">
+                            <label for="dns.expandHosts"><strong>Expand hostnames</strong></label>
+                            <p>If set, the domain is added to simple names (without a period) in /etc/hosts in the same way as for DHCP-derived names.</p>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="box box-warning">
+            <div class="box-header with-border">
+                <h3 class="box-title" data-configkeys="dns.domainNeeded dns.bogusPriv dns.dnssec">Advanced DNS settings</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
                     <div class="col-lg-12">
                         <div>
                             <input type="checkbox" id="dns.domainNeeded" data-key="dns.domainNeeded" title="domain-needed">
