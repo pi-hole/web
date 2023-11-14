@@ -553,6 +553,10 @@ function addDomain() {
     success: function (data) {
       utils.enableAll();
       utils.listsAlert("domain", domains, data);
+      $("#new_domain").val("");
+      $("#new_domain_comment").val("");
+      $("#new_regex").val("");
+      $("#new_regex_comment").val("");
       table.ajax.reload(null, false);
       table.rows().deselect();
 

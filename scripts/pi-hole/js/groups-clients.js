@@ -459,6 +459,7 @@ function addClient() {
       utils.enableAll();
       utils.listsAlert("client", ips, data);
       reloadClientSuggestions();
+      $("#new_comment").val("");
       table.ajax.reload(null, false);
       table.rows().deselect();
 
