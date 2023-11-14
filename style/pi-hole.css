@@ -1404,3 +1404,12 @@ table.dataTable tbody > tr > .selected {
   display: none;
   margin-top: -1px;
 }
+
+/* General layout - Row containing flex elements */
+.row-flex {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+  margin: 0.5em 0;
+  align-items: start;
+}
