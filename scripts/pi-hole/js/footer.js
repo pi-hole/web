@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, moment:false, NProgress: false */
+/* global utils:false, moment:false */
 
 //The following functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
@@ -712,8 +712,3 @@ if ($.fn.dataTable) {
     console.log("DataTables warning: " + message);
   };
 }
-
-// Page has finished loading
-$(window).on("load", function () {
-  NProgress.done();
-});
