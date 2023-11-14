@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false, apiFailure: false, updateFtlInfo: false */
+/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false */
 
 $(function () {
   // CSRF protection for AJAX requests, this has to be configured globally
@@ -615,6 +615,49 @@ function listAlert(type, items, data) {
   );
 }
 
+var loadingTime = 0;
+// Callback function for the loading overlay timeout
+function loadingOverlayTimeoutCallback(loadingTimeout, reloadAfterTimeout) {
+  if (loadingTime <= loadingTimeout) {
+    // Update progress bar
+    NProgress.set(loadingTime / loadingTimeout);
+    // Increase loading time
+    loadingTime += 100;
+    // Schedule next update
+    setTimeout(loadingOverlayTimeoutCallback, 100, loadingTimeout, reloadAfterTimeout);
+    return;
+  }
+
+  // Hide loading overlay
+  NProgress.done();
+
+  // Reload page if requested
+  if (reloadAfterTimeout) {
+    location.reload();
+  }
+}
+
+function loadingOverlay(timeout = 6000, reloadAfterTimeout = false) {
+  // Add three extra seconds to the timeout as safety margin
+  // timeout is specified in milliseconds
+  timeout += 3000;
+
+  NProgress.configure({ minimum: 0, trickle: false });
+  NProgress.start();
+  $(".wrapper").waitMe({
+    effect: "bounce",
+    text: "Pi-hole is currently applying your changes...",
+    bg: "rgba(0,0,0,0.7)",
+    color: "#fff",
+    maxSize: "",
+    waitTime: timeout,
+    textPos: "vertical",
+  });
+  setTimeout(loadingOverlayTimeoutCallback, 100, timeout, reloadAfterTimeout);
+
+  return true;
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -648,5 +691,6 @@ window.utils = (function () {
     hexEncode: hexEncode,
     hexDecode: hexDecode,
     listsAlert: listAlert,
+    loadingOverlay: loadingOverlay,
   };
 })();

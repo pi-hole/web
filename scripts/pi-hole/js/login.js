@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, NProgress:false */
 
 function getParams() {
   var GETDict = {};
@@ -104,6 +104,7 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
 
 function doLogin(password) {
   wrongPassword(false, false, null);
+  NProgress.start();
   utils.disableAll();
   $.ajax({
     url: "/api/auth",
@@ -114,10 +115,12 @@ function doLogin(password) {
   })
     .done(function (data) {
       wrongPassword(false, true, data);
+      NProgress.done();
       redirect();
     })
     .fail(function (data) {
       wrongPassword(true, false, data);
+      NProgress.done();
       utils.enableAll();
     });
 }

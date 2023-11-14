@@ -61,4 +61,10 @@
 
 <div id="advanced-info-data" style="display: none;" data-starttime="<?=starttime?>" data-endtime="<?=mg.time(true)?>" data-client-ip="<?=mg.request_info.remote_addr?>" data-tls="<?=tostring(is_secure)?>"></div>
 </body>
+<script>
+    NProgress.configure({
+        showSpinner: false
+    });
+    NProgress.start();
+</script>
 </html>

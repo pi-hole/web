@@ -175,8 +175,8 @@ function saveSettings() {
         "Successfully saved and applied settings",
         ""
       );
-      // Reload page
-      location.reload();
+      // Show loading overlay
+      utils.loadingOverlay(1000, true);
     })
     .fail(function (data) {
       apiFailure(data);
