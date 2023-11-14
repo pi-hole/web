@@ -51,6 +51,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                     <input type="checkbox" id="database.DBexport" data-key="database.DBexport" title="log-queries">
                                     <label for="database.DBexport"><strong>Should FTL store queries in the database?</strong></label>
                                 </div>
+                                <br>
                                 <div class="row-flex">
                                     <input type="number" id="database.maxDBdays" data-key="database.maxDBdays" data-type="integer" value="" min="0" step="10" style="width: 5em;">
                                     <label for="database.maxDBdays"><strong>Maximum number of days to keep queries in the database</strong></label>
