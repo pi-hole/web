@@ -176,7 +176,7 @@ function saveSettings() {
         ""
       );
       // Show loading overlay
-      utils.loadingOverlay(1000, true);
+      utils.loadingOverlay(true);
     })
     .fail(function (data) {
       apiFailure(data);

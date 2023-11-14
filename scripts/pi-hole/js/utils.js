@@ -615,34 +615,31 @@ function listAlert(type, items, data) {
   );
 }
 
-var loadingTime = 0;
 // Callback function for the loading overlay timeout
-function loadingOverlayTimeoutCallback(loadingTimeout, reloadAfterTimeout) {
-  if (loadingTime <= loadingTimeout) {
-    // Update progress bar
-    NProgress.set(loadingTime / loadingTimeout);
-    // Increase loading time
-    loadingTime += 100;
-    // Schedule next update
-    setTimeout(loadingOverlayTimeoutCallback, 100, loadingTimeout, reloadAfterTimeout);
-    return;
-  }
-
-  // Hide loading overlay
-  NProgress.done();
-
-  // Reload page if requested
-  if (reloadAfterTimeout) {
-    location.reload();
-  }
+function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
+  // Try to ping FTL to see if it finished restarting
+  $.ajax({
+    url: "/api/info/login",
+    method: "GET",
+    cache: false,
+    dataType: "json",
+  })
+    .done(function () {
+      // FTL is running again, hide loading overlay
+      NProgress.done();
+      if (reloadAfterTimeout) {
+        location.reload();
+      } else {
+        $(".wrapper").waitMe("hide");
+      }
+    })
+    .fail(function () {
+      // FTL is not running yet, try again in 500ms
+      setTimeout(loadingOverlayTimeoutCallback, 500, reloadAfterTimeout);
+    });
 }
 
-function loadingOverlay(timeout = 6000, reloadAfterTimeout = false) {
-  // Add three extra seconds to the timeout as safety margin
-  // timeout is specified in milliseconds
-  timeout += 3000;
-
-  NProgress.configure({ minimum: 0, trickle: false });
+function loadingOverlay(reloadAfterTimeout = false) {
   NProgress.start();
   $(".wrapper").waitMe({
     effect: "bounce",
@@ -650,10 +647,10 @@ function loadingOverlay(timeout = 6000, reloadAfterTimeout = false) {
     bg: "rgba(0,0,0,0.7)",
     color: "#fff",
     maxSize: "",
-    waitTime: timeout,
     textPos: "vertical",
   });
-  setTimeout(loadingOverlayTimeoutCallback, 100, timeout, reloadAfterTimeout);
+  // Start checking for FTL status after 2 seconds
+  setTimeout(loadingOverlayTimeoutCallback, 2000, reloadAfterTimeout);
 
   return true;
 }
