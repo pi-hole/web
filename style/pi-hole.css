@@ -680,6 +680,11 @@ li:not(.menu-open) .treeview-menu .warning-count {
   border-color: #3c8dbc;
 }
 
+/* Fix indentation of <p> elements inside icheck elements */
+[class*="icheck-"] > label + p {
+  padding-left: 29px;
+}
+
 /* Fix some datatables layout on small screens */
 @media screen and (max-width: 660px), screen and (min-width: 767px) and (max-width: 960px) {
   #domainsTable_wrapper .table-responsive {
@@ -1403,4 +1408,13 @@ table.dataTable tbody > tr > .selected {
 .zoom-reset {
   display: none;
   margin-top: -1px;
+}
+
+/* General layout - Row containing flex elements */
+.row-flex {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+  margin: 0.5em 0;
+  align-items: start;
 }
