@@ -225,6 +225,8 @@ $(document).ready(function () {
       .done(function () {
         utils.enableAll();
         utils.showAlert("success", "fas fa-plus", "Successfully added DNS record", elem);
+        $("#Hdomain").val("");
+        $("#Hip").val("");
         $("#hosts-Table").DataTable().ajax.reload(null, false);
       })
       .fail(function (data, exception) {
@@ -249,6 +251,8 @@ $(document).ready(function () {
       .done(function () {
         utils.enableAll();
         utils.showAlert("success", "fas fa-plus", "Successfully added CNAME record", elem);
+        $("#Cdomain").val("");
+        $("#Ctarget").val("");
         $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
       })
       .fail(function (data, exception) {
