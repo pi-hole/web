@@ -603,8 +603,8 @@ $(function () {
     event.stopPropagation();
   });
 
-  // Add event listener for opening and closing details
-  $("#all-queries tbody").on("click", "tr", function () {
+  // Add event listener for opening and closing details, except on rows with "details-row" class
+  $("#all-queries tbody").on("click", "tr:not(.details-row)", function () {
     var tr = $(this);
     var row = table.row(tr);
 
@@ -618,8 +618,8 @@ $(function () {
       row.child.hide();
       tr.removeClass("shown");
     } else {
-      // Open this row
-      row.child(formatInfo(row.data())).show();
+      // Open this row. Add a class to the row
+      row.child(formatInfo(row.data()), "details-row").show();
       tr.addClass("shown");
     }
   });
