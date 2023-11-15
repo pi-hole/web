@@ -92,6 +92,11 @@ td.lookatme {
   white-space: pre-wrap;
 }
 
+/* Client column */
+#all-queries td:nth-of-type(5) {
+  word-break: break-all;
+}
+
 /* Allow Info String to wrap (useful while filtering entries on small screen) */
 #all-queries_info {
   white-space: unset;
