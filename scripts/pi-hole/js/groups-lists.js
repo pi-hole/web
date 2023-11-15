@@ -529,6 +529,8 @@ function addList(event) {
     success: function (data) {
       utils.enableAll();
       utils.listsAlert("list", addresses, data);
+      $("#new_address").val("");
+      $("#new_comment").val("");
       table.ajax.reload(null, false);
       table.rows().deselect();
 
