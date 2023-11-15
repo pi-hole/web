@@ -509,7 +509,7 @@ function addDomain() {
 
   // Check if the user wants to add multiple domains (space or newline separated)
   // If so, split the input and store it in an array
-  var domains = utils.escapeHtml(domainEl.val()).split(/[\s,]+/);
+  var domains = utils.escapeHtml(domainEl.val()).split(/\s+/);
   // Remove empty elements
   domains = domains.filter(function (el) {
     return el !== "";
