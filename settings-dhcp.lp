@@ -32,7 +32,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                     <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <div class="input-group-addon">From</div>
+                                <div class="input-group-addon">Start</div>
                                 <input type="text" class="form-control DHCPgroup" id="dhcp.start" data-key="dhcp.start"
                                     autocomplete="off" spellcheck="false" autocapitalize="none"
                                     autocorrect="off" value="">
@@ -42,7 +42,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                     <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <div class="input-group-addon">To</div>
+                                <div class="input-group-addon">End</div>
                                 <input type="text" class="form-control DHCPgroup" id="dhcp.end" data-key="dhcp.end"
                                     autocomplete="off" spellcheck="false" autocapitalize="none"
                                     autocorrect="off" value="">
@@ -55,6 +55,17 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                             <div class="input-group">
                                 <div class="input-group-addon">Router</div>
                                 <input type="text" class="form-control DHCPgroup" id="dhcp.router" data-key="dhcp.router"
+                                    autocomplete="off" spellcheck="false" autocapitalize="none"
+                                    autocorrect="off" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
+                        <label>Netmask (<code>0.0.0.0</code> = auto)</label>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">Netmask</div>
+                                <input type="text" class="form-control DHCPgroup" id="dhcp.netmask" data-key="dhcp.netmask"
                                     autocomplete="off" spellcheck="false" autocapitalize="none"
                                     autocorrect="off" value="">
                             </div>
