@@ -5,6 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global upstreams */
+
 // eslint-disable-next-line no-unused-vars
 var THEME_COLORS = [
   "#f56954",
@@ -97,7 +99,8 @@ const htmlLegendPlugin = {
             window.location.href = "queries.lp?type=" + item.text;
           } else if (chart.canvas.id === "forwardDestinationPieChart") {
             // Encode the forward destination as it may contain an "#" character
-            window.location.href = "queries.lp?upstream=" + encodeURIComponent(item.text);
+            const upstream = encodeURIComponent(upstreams[item.text]);
+            window.location.href = "queries.lp?upstream=" + upstream;
           }
         });
       }
