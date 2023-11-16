@@ -41,7 +41,8 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <p>You can select an existing client or add a custom one by typing into the field above and confirming your entry with <kbd>&#x23CE;</kbd>.</p>
+                        <p>You can select an existing client or add a custom one by typing into the field above and confirming your entry with <kbd>&#x23CE;</kbd>.
+                        Multiple clients can be added by separating each client with a space or comma.</p>
                         <p>Clients may be described either by their IP addresses (IPv4 and IPv6 are supported),
                             IP subnets (CIDR notation, like <code>192.168.2.0/24</code>),
                             their MAC addresses (like <code>12:34:56:78:9A:BC</code>),
