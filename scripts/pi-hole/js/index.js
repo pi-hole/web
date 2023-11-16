@@ -200,6 +200,7 @@ function updateClientsOverTime() {
     });
 }
 
+var upstreams = {};
 function updateForwardDestinationsPie() {
   $.getJSON("/api/stats/upstreams", function (data) {
     var v = [],
@@ -219,6 +220,12 @@ function updateForwardDestinationsPie() {
       var label = item.name !== null && item.name.length > 0 ? item.name : item.ip;
       if (item.port > 0) {
         label += "#" + item.port;
+      }
+
+      // Store upstreams for generating links to the Query Log
+      upstreams[label] = item.ip;
+      if (item.port > 0) {
+        upstreams[label] += "#" + item.port;
       }
 
       var percent = (100 * item.count) / sum;
