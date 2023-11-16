@@ -96,7 +96,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                     autocorrect="off" id="dhcp.leaseTime" data-key="dhcp.leaseTime" value="">
                             </div>
                         </div>
-                        <p>The lease time can be in seconds, minutes (e.g., "45m"), hours (e.g., "1h"), days (like "2d"), or even weeks ("1w"). You may also use "infinite" as string but be aware of the drawbacks: assigned addresses are will only be made available again after the lease time has passed or when leases are manually deleted below.</p>
+                        <p>The lease time can be in seconds, minutes (e.g., "45m"), hours (e.g., "1h"), days (like "2d"), or even weeks ("1w"). If no lease time is specified (empty), <code>dnsmasq</code>'s default lease time is one hour for IPv4 and one day for IPv6. You may also use "infinite" as string but be aware of the drawbacks: assigned addresses are will only be made available again after the lease time has passed or when leases are manually deleted below.</p>
                     </div>
                 </div>
                 <div class="row">
