@@ -85,6 +85,7 @@ function parseQueryStatus(data) {
     buttontext,
     icon = null,
     colorClass = false,
+    blocked = false,
     isCNAME = false;
   switch (data.status) {
     case "GRAVITY":
@@ -93,6 +94,7 @@ function parseQueryStatus(data) {
       fieldtext = "Blocked (gravity)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      blocked = true;
       break;
     case "FORWARDED":
       colorClass = "text-green";
@@ -114,6 +116,7 @@ function parseQueryStatus(data) {
       fieldtext = "Blocked (regex)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      blocked = true;
       break;
     case "DENYLIST":
       colorClass = "text-red";
@@ -121,24 +124,28 @@ function parseQueryStatus(data) {
       fieldtext = "Blocked (exact)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      blocked = true;
       break;
     case "EXTERNAL_BLOCKED_IP":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (external, IP)";
       buttontext = "";
+      blocked = true;
       break;
     case "EXTERNAL_BLOCKED_NULL":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (external, NULL)";
       buttontext = "";
+      blocked = true;
       break;
     case "EXTERNAL_BLOCKED_NXRA":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (external, NXRA)";
       buttontext = "";
+      blocked = true;
       break;
     case "GRAVITY_CNAME":
       colorClass = "text-red";
@@ -147,6 +154,7 @@ function parseQueryStatus(data) {
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
+      blocked = true;
       break;
     case "REGEX_CNAME":
       colorClass = "text-red";
@@ -155,6 +163,7 @@ function parseQueryStatus(data) {
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
+      blocked = true;
       break;
     case "DENYLIST_CNAME":
       colorClass = "text-red";
@@ -163,6 +172,7 @@ function parseQueryStatus(data) {
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
+      blocked = true;
       break;
     case "RETRIED":
       colorClass = "text-green";
@@ -207,6 +217,7 @@ function parseQueryStatus(data) {
     icon: icon,
     isCNAME: isCNAME,
     matchText: matchText,
+    blocked: blocked,
   };
 }
 
@@ -561,6 +572,9 @@ $(function () {
       } else if (querystatus.colorClass !== false) {
         $(row).addClass(querystatus.colorClass);
       }
+
+      // Define row background color
+      $(row).addClass(querystatus.blocked === true ? "blocked-row" : "allowed-row");
 
       // Substitute domain by "." if empty
       var domain = data.domain === 0 ? "." : data.domain;
