@@ -17,7 +17,7 @@ $(function () {
   $("#btnAddBlock").on("click", { type: "block" }, addList);
 
   utils.setBsSelectDefaults();
-  initTable();
+  getGroups();
 });
 
 function format(data) {
@@ -100,9 +100,6 @@ function format(data) {
 
 function initTable() {
   table = $("#listsTable")
-    .on("preXhr.dt", function () {
-      getGroups();
-    })
     .DataTable({
       processing: true,
       ajax: {

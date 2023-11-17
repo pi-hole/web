@@ -44,7 +44,7 @@ $(function () {
   });
 
   utils.setBsSelectDefaults();
-  initTable();
+  getGroups();
 });
 
 // Show a list of suggested domains based on the user's input
@@ -93,9 +93,6 @@ function hideSuggestDomains() {
 
 function initTable() {
   table = $("#domainsTable")
-    .on("preXhr.dt", function () {
-      getGroups();
-    })
     .DataTable({
       processing: true,
       ajax: {

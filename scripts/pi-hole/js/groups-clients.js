@@ -82,7 +82,7 @@ $(function () {
 
   reloadClientSuggestions();
   utils.setBsSelectDefaults();
-  initTable();
+  getGroups();
 
   $("#select").on("change", function () {
     $("#ip-custom").val("");
@@ -92,9 +92,6 @@ $(function () {
 
 function initTable() {
   table = $("#clientsTable")
-    .on("preXhr.dt", function () {
-      getGroups();
-    })
     .DataTable({
       processing: true,
       ajax: {
