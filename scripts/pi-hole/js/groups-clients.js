@@ -6,6 +6,7 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils:false, groups:false,, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false */
+/* exported initTable */
 
 var table;
 
@@ -90,228 +91,228 @@ $(function () {
   });
 });
 
+// eslint-disable-next-line no-unused-vars
 function initTable() {
-  table = $("#clientsTable")
-    .DataTable({
-      processing: true,
-      ajax: {
-        url: "/api/clients",
-        dataSrc: "clients",
-        type: "GET",
+  table = $("#clientsTable").DataTable({
+    processing: true,
+    ajax: {
+      url: "/api/clients",
+      dataSrc: "clients",
+      type: "GET",
+    },
+    order: [[0, "asc"]],
+    columns: [
+      { data: "id", visible: false },
+      { data: null, visible: true, orderable: false, width: "15px" },
+      { data: "client", type: "ip-address" },
+      { data: "comment" },
+      { data: "groups", searchable: false },
+      { data: null, width: "22px", orderable: false },
+    ],
+    columnDefs: [
+      {
+        targets: 1,
+        className: "select-checkbox",
+        render: function () {
+          return "";
+        },
       },
-      order: [[0, "asc"]],
-      columns: [
-        { data: "id", visible: false },
-        { data: null, visible: true, orderable: false, width: "15px" },
-        { data: "client", type: "ip-address" },
-        { data: "comment" },
-        { data: "groups", searchable: false },
-        { data: null, width: "22px", orderable: false },
-      ],
-      columnDefs: [
-        {
-          targets: 1,
-          className: "select-checkbox",
-          render: function () {
-            return "";
-          },
-        },
-        {
-          targets: "_all",
-          render: $.fn.dataTable.render.text(),
-        },
-      ],
-      drawCallback: function () {
-        // Hide buttons if all clients were deleted
-        var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
-        $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
+    ],
+    drawCallback: function () {
+      // Hide buttons if all clients were deleted
+      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
-        $('button[id^="deleteClient_"]').on("click", deleteClient);
-        // Remove visible dropdown to prevent orphaning
-        $("body > .bootstrap-select.dropdown").remove();
-      },
-      rowCallback: function (row, data) {
-        var dataId = utils.hexEncode(data.client);
-        $(row).attr("data-id", dataId);
-        var tooltip =
-          "Added: " +
-          utils.datetime(data.date_added, false) +
-          "\nLast modified: " +
-          utils.datetime(data.date_modified, false) +
-          "\nDatabase ID: " +
-          data.id;
-        var ipName =
-          '<code id="ip_' +
+      $('button[id^="deleteClient_"]').on("click", deleteClient);
+      // Remove visible dropdown to prevent orphaning
+      $("body > .bootstrap-select.dropdown").remove();
+    },
+    rowCallback: function (row, data) {
+      var dataId = utils.hexEncode(data.client);
+      $(row).attr("data-id", dataId);
+      var tooltip =
+        "Added: " +
+        utils.datetime(data.date_added, false) +
+        "\nLast modified: " +
+        utils.datetime(data.date_modified, false) +
+        "\nDatabase ID: " +
+        data.id;
+      var ipName =
+        '<code id="ip_' +
+        dataId +
+        '" title="' +
+        tooltip +
+        '" class="breakall">' +
+        data.client +
+        "</code>";
+      if (data.name !== null && data.name.length > 0)
+        ipName +=
+          '<br><code id="name_' +
           dataId +
           '" title="' +
           tooltip +
           '" class="breakall">' +
-          data.client +
+          data.name +
           "</code>";
-        if (data.name !== null && data.name.length > 0)
-          ipName +=
-            '<br><code id="name_' +
-            dataId +
-            '" title="' +
-            tooltip +
-            '" class="breakall">' +
-            data.name +
-            "</code>";
-        $("td:eq(1)", row).html(ipName);
+      $("td:eq(1)", row).html(ipName);
 
-        $("td:eq(2)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-        var commentEl = $("#comment_" + dataId, row);
-        commentEl.val(utils.unescapeHtml(data.comment));
-        commentEl.on("change", editClient);
+      $("td:eq(2)", row).html('<input id="comment_' + dataId + '" class="form-control">');
+      var commentEl = $("#comment_" + dataId, row);
+      commentEl.val(utils.unescapeHtml(data.comment));
+      commentEl.on("change", editClient);
 
-        $("td:eq(3)", row).empty();
-        $("td:eq(3)", row).append(
-          '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
+      $("td:eq(3)", row).empty();
+      $("td:eq(3)", row).append(
+        '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
+      );
+      var selectEl = $("#multiselect_" + dataId, row);
+      // Add all known groups
+      for (var i = 0; i < groups.length; i++) {
+        var dataSub = "";
+        if (!groups[i].enabled) {
+          dataSub = 'data-subtext="(disabled)"';
+        }
+
+        selectEl.append(
+          $("<option " + dataSub + "/>")
+            .val(groups[i].id)
+            .text(groups[i].name)
         );
-        var selectEl = $("#multiselect_" + dataId, row);
-        // Add all known groups
-        for (var i = 0; i < groups.length; i++) {
-          var dataSub = "";
-          if (!groups[i].enabled) {
-            dataSub = 'data-subtext="(disabled)"';
+      }
+
+      // Select assigned groups
+      selectEl.val(data.groups);
+      // Initialize bootstrap-select
+      selectEl
+        // fix dropdown if it would stick out right of the viewport
+        .on("show.bs.select", function () {
+          var winWidth = $(window).width();
+          var dropdownEl = $("body > .bootstrap-select.dropdown");
+          if (dropdownEl.length > 0) {
+            dropdownEl.removeClass("align-right");
+            var width = dropdownEl.width();
+            var left = dropdownEl.offset().left;
+            if (left + width > winWidth) {
+              dropdownEl.addClass("align-right");
+            }
           }
+        })
+        .on("changed.bs.select", function () {
+          // enable Apply button
+          if ($(applyBtn).prop("disabled")) {
+            $(applyBtn)
+              .addClass("btn-success")
+              .prop("disabled", false)
+              .on("click", function () {
+                editClient.call(selectEl);
+              });
+          }
+        })
+        .on("hide.bs.select", function () {
+          // Restore values if drop-down menu is closed without clicking the Apply button
+          if (!$(applyBtn).prop("disabled")) {
+            $(this).val(data.groups).selectpicker("refresh");
+            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+          }
+        })
+        .selectpicker()
+        .siblings(".dropdown-menu")
+        .find(".bs-actionsbox")
+        .prepend(
+          '<button type="button" id=btn_apply_' +
+            dataId +
+            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+        );
 
-          selectEl.append(
-            $("<option " + dataSub + "/>")
-              .val(groups[i].id)
-              .text(groups[i].name)
-          );
-        }
+      var applyBtn = "#btn_apply_" + dataId;
 
-        // Select assigned groups
-        selectEl.val(data.groups);
-        // Initialize bootstrap-select
-        selectEl
-          // fix dropdown if it would stick out right of the viewport
-          .on("show.bs.select", function () {
-            var winWidth = $(window).width();
-            var dropdownEl = $("body > .bootstrap-select.dropdown");
-            if (dropdownEl.length > 0) {
-              dropdownEl.removeClass("align-right");
-              var width = dropdownEl.width();
-              var left = dropdownEl.offset().left;
-              if (left + width > winWidth) {
-                dropdownEl.addClass("align-right");
-              }
-            }
-          })
-          .on("changed.bs.select", function () {
-            // enable Apply button
-            if ($(applyBtn).prop("disabled")) {
-              $(applyBtn)
-                .addClass("btn-success")
-                .prop("disabled", false)
-                .on("click", function () {
-                  editClient.call(selectEl);
-                });
-            }
-          })
-          .on("hide.bs.select", function () {
-            // Restore values if drop-down menu is closed without clicking the Apply button
-            if (!$(applyBtn).prop("disabled")) {
-              $(this).val(data.groups).selectpicker("refresh");
-              $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
-            }
-          })
-          .selectpicker()
-          .siblings(".dropdown-menu")
-          .find(".bs-actionsbox")
-          .prepend(
-            '<button type="button" id=btn_apply_' +
-              dataId +
-              ' class="btn btn-block btn-sm" disabled>Apply</button>'
-          );
-
-        var applyBtn = "#btn_apply_" + dataId;
-
-        var button =
-          '<button type="button" class="btn btn-danger btn-xs" id="deleteClient_' +
-          dataId +
-          '" data-id="' +
-          dataId +
-          '">' +
-          '<span class="far fa-trash-alt"></span>' +
-          "</button>";
-        $("td:eq(4)", row).html(button);
-      },
-      select: {
-        style: "multi",
-        selector: "td:not(:last-child)",
-        info: false,
-      },
-      buttons: [
-        {
-          text: '<span class="far fa-square"></span>',
-          titleAttr: "Select All",
-          className: "btn-sm datatable-bt selectAll",
-          action: function () {
-            table.rows({ page: "current" }).select();
-          },
+      var button =
+        '<button type="button" class="btn btn-danger btn-xs" id="deleteClient_' +
+        dataId +
+        '" data-id="' +
+        dataId +
+        '">' +
+        '<span class="far fa-trash-alt"></span>' +
+        "</button>";
+      $("td:eq(4)", row).html(button);
+    },
+    select: {
+      style: "multi",
+      selector: "td:not(:last-child)",
+      info: false,
+    },
+    buttons: [
+      {
+        text: '<span class="far fa-square"></span>',
+        titleAttr: "Select All",
+        className: "btn-sm datatable-bt selectAll",
+        action: function () {
+          table.rows({ page: "current" }).select();
         },
-        {
-          text: '<span class="far fa-plus-square"></span>',
-          titleAttr: "Select All",
-          className: "btn-sm datatable-bt selectMore",
-          action: function () {
-            table.rows({ page: "current" }).select();
-          },
-        },
-        {
-          extend: "selectNone",
-          text: '<span class="far fa-check-square"></span>',
-          titleAttr: "Deselect All",
-          className: "btn-sm datatable-bt removeAll",
-        },
-        {
-          text: '<span class="far fa-trash-alt"></span>',
-          titleAttr: "Delete Selected",
-          className: "btn-sm datatable-bt deleteSelected",
-          action: function () {
-            // For each ".selected" row ...
-            var ids = [];
-            $("tr.selected").each(function () {
-              // ... add the row identified by "data-id".
-              ids.push($(this).attr("data-id"));
-            });
-            // Delete all selected rows at once
-            delItems(ids);
-          },
-        },
-      ],
-      dom:
-        "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
-        "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
-        "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
-        "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
-        "<'row'<'col-sm-12'i>>",
-      lengthMenu: [
-        [10, 25, 50, 100, -1],
-        [10, 25, 50, 100, "All"],
-      ],
-      stateSave: true,
-      stateDuration: 0,
-      stateSaveCallback: function (settings, data) {
-        utils.stateSaveCallback("groups-clients-table", data);
       },
-      stateLoadCallback: function () {
-        var data = utils.stateLoadCallback("groups-clients-table");
-
-        // Return if not available
-        if (data === null) {
-          return null;
-        }
-
-        // Reset visibility of ID column
-        data.columns[0].visible = false;
-        // Apply loaded state to table
-        return data;
+      {
+        text: '<span class="far fa-plus-square"></span>',
+        titleAttr: "Select All",
+        className: "btn-sm datatable-bt selectMore",
+        action: function () {
+          table.rows({ page: "current" }).select();
+        },
       },
-    });
+      {
+        extend: "selectNone",
+        text: '<span class="far fa-check-square"></span>',
+        titleAttr: "Deselect All",
+        className: "btn-sm datatable-bt removeAll",
+      },
+      {
+        text: '<span class="far fa-trash-alt"></span>',
+        titleAttr: "Delete Selected",
+        className: "btn-sm datatable-bt deleteSelected",
+        action: function () {
+          // For each ".selected" row ...
+          var ids = [];
+          $("tr.selected").each(function () {
+            // ... add the row identified by "data-id".
+            ids.push($(this).attr("data-id"));
+          });
+          // Delete all selected rows at once
+          delItems(ids);
+        },
+      },
+    ],
+    dom:
+      "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
+      "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
+      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
+      "<'row'<'col-sm-12'i>>",
+    lengthMenu: [
+      [10, 25, 50, 100, -1],
+      [10, 25, 50, 100, "All"],
+    ],
+    stateSave: true,
+    stateDuration: 0,
+    stateSaveCallback: function (settings, data) {
+      utils.stateSaveCallback("groups-clients-table", data);
+    },
+    stateLoadCallback: function () {
+      var data = utils.stateLoadCallback("groups-clients-table");
+
+      // Return if not available
+      if (data === null) {
+        return null;
+      }
+
+      // Reset visibility of ID column
+      data.columns[0].visible = false;
+      // Apply loaded state to table
+      return data;
+    },
+  });
 
   // Disable autocorrect in the search box
   var input = document.querySelector("input[type=search]");
