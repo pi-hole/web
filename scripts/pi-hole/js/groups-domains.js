@@ -151,7 +151,7 @@ function initTable() {
           '" title="' +
           tooltip +
           '" class="breakall">' +
-          data.domain +
+          utils.escapeHtml(data.domain) +
           "</code>"
       );
 
@@ -205,7 +205,7 @@ function initTable() {
       // Comment field
       $("td:eq(4)", row).html('<input id="comment_' + dataId + '" class="form-control">');
       var commentEl = $("#comment_" + dataId, row);
-      commentEl.val(utils.unescapeHtml(data.comment));
+      commentEl.val(data.comment);
       commentEl.on("change", editDomain);
 
       // Group assignment field (multi-select)
@@ -512,7 +512,7 @@ function addDomain() {
   domains = domains.filter(function (el) {
     return el !== "";
   });
-  const domainStr = utils.escapeHtml(JSON.stringify(domains));
+  const domainStr = JSON.stringify(domains);
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding domain(s)...", domainStr);
@@ -578,7 +578,7 @@ function editDomain() {
   const newTypestr = tr.find("#type_" + domain).val();
   const oldTypeStr = tr.find("#old_type_" + domain).val();
   const enabled = tr.find("#enabled_" + domain).is(":checked");
-  const comment = utils.escapeHtml(tr.find("#comment_" + domain).val());
+  const comment = tr.find("#comment_" + domain).val();
   // Convert list of string integers to list of integers using map
   const groups = tr
     .find("#multiselect_" + domain)
@@ -624,7 +624,7 @@ function editDomain() {
 
   utils.disableAll();
   const domainDecoded = utils.hexDecode(domain.split("_")[0]);
-  utils.showAlert("info", "", "Editing domain...", domain);
+  utils.showAlert("info", "", "Editing domain...", domainDecoded);
   $.ajax({
     url: "/api/domains/" + newTypestr + "/" + encodeURIComponent(domainDecoded),
     method: "put",

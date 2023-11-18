@@ -262,7 +262,7 @@ function updateForwardDestinationsPie() {
 }
 
 function updateTopClientsTable(blocked) {
-  var api, style, tablecontent, overlay, clienttable;
+  let api, style, tablecontent, overlay, clienttable;
   if (blocked) {
     api = "/api/stats/top_clients?blocked=true";
     style = "queries-blocked";
@@ -280,9 +280,8 @@ function updateTopClientsTable(blocked) {
   $.getJSON(api, function (data) {
     // Clear tables before filling them with data
     tablecontent.remove();
-    var url,
-      percentage,
-      sum = blocked ? data.blocked_queries : data.total_queries;
+    let url, percentage;
+    const sum = blocked ? data.blocked_queries : data.total_queries;
 
     // Add note if there are no results (e.g. privacy mode enabled)
     if (jQuery.isEmptyObject(data.clients)) {
@@ -292,10 +291,14 @@ function updateTopClientsTable(blocked) {
     // Populate table with content
     data.clients.forEach(function (client) {
       // Sanitize client
-      var clientname = utils.escapeHtml(client.name);
-      var clientip = utils.escapeHtml(client.ip);
-      if (clientname.length === 0) clientname = clientip;
-      url = '<a href="queries.lp?client_ip=' + clientip + '">' + clientname + "</a>";
+      let clientname = client.name;
+      if (clientname.length === 0) clientname = client.ip;
+      url =
+        '<a href="queries.lp?client_ip=' +
+        encodeURIComponent(client.ip) +
+        '">' +
+        utils.escapeHtml(clientname) +
+        "</a>";
       percentage = (client.count / sum) * 100;
 
       // Add row to table
@@ -316,7 +319,7 @@ function updateTopClientsTable(blocked) {
 }
 
 function updateTopDomainsTable(blocked) {
-  var api, style, tablecontent, overlay, domaintable;
+  let api, style, tablecontent, overlay, domaintable;
   if (blocked) {
     api = "/api/stats/top_domains?blocked=true";
     style = "queries-blocked";
@@ -334,11 +337,8 @@ function updateTopDomainsTable(blocked) {
   $.getJSON(api, function (data) {
     // Clear tables before filling them with data
     tablecontent.remove();
-    var url,
-      domain,
-      percentage,
-      urlText,
-      sum = blocked ? data.blocked_queries : data.total_queries;
+    let url, domain, percentage, urlText;
+    const sum = blocked ? data.blocked_queries : data.total_queries;
 
     // Add note if there are no results (e.g. privacy mode enabled)
     if (jQuery.isEmptyObject(data.domains)) {
@@ -348,7 +348,7 @@ function updateTopDomainsTable(blocked) {
     // Populate table with content
     data.domains.forEach(function (item) {
       // Sanitize domain
-      domain = utils.escapeHtml(item.domain);
+      domain = encodeURIComponent(item.domain);
       // Substitute "." for empty domain lookups
       urlText = domain === "" ? "." : domain;
       url = '<a href="queries.lp?domain=' + domain + '">' + urlText + "</a>";

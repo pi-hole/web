@@ -36,11 +36,6 @@ function processGroupResult(data, type, done, notDone) {
   // Loop over errors and display them
   data.processed.errors.forEach(function (error) {
     console.log(error); // eslint-disable-line no-console
-    utils.showAlert(
-      "error",
-      "",
-      `Error while ${notDone} ${type} ${utils.escapeHtml(error.item)}`,
-      error.error
-    );
+    utils.showAlert("error", "", `Error while ${notDone} ${type} ${error.item}`, error.error);
   });
 }

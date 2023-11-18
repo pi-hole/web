@@ -194,16 +194,20 @@ function initTable() {
         // Local files cannot be downloaded from a distant client so don't show
         // a link to such a list here
         $("td:eq(2)", row).html(
-          '<code id="address_' + dataId + '" class="breakall">' + data.address + "</code>"
+          '<code id="address_' +
+            dataId +
+            '" class="breakall">' +
+            utils.escapeHtml(data.address) +
+            "</code>"
         );
       } else {
         $("td:eq(2)", row).html(
           '<a id="address_' +
             dataId +
             '" class="breakall" href="' +
-            data.address +
+            encodeURI(data.address) +
             '" target="_blank" rel="noopener noreferrer">' +
-            data.address +
+            utils.escapeHtml(data.address) +
             "</a>"
         );
       }
@@ -227,7 +231,7 @@ function initTable() {
 
       $("td:eq(4)", row).html('<input id="comment_' + dataId + '" class="form-control">');
       var commentEl = $("#comment_" + dataId, row);
-      commentEl.val(utils.unescapeHtml(data.comment));
+      commentEl.val(data.comment);
       commentEl.on("change", editList);
 
       $("td:eq(5)", row).empty();
@@ -497,11 +501,13 @@ function delItems(ids) {
 
 function addList(event) {
   const type = event.data.type;
-  const comment = utils.escapeHtml($("#new_comment").val());
+  const comment = $("#new_comment").val();
 
   // Check if the user wants to add multiple domains (space or newline separated)
   // If so, split the input and store it in an array
-  var addresses = utils.escapeHtml($("#new_address").val()).split(/[\s,]+/);
+  var addresses = $("#new_address")
+    .val()
+    .split(/[\s,]+/);
   // Remove empty elements
   addresses = addresses.filter(function (el) {
     return el !== "";

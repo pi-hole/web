@@ -173,7 +173,7 @@ function delHosts(elem) {
       utils.showAlert(
         "error",
         "",
-        "Error while deleting DNS record: <code>" + utils.escapeHtml(elem) + "</code>",
+        "Error while deleting DNS record: <code>" + elem + "</code>",
         data.responseText
       );
       console.log(exception); // eslint-disable-line no-console
@@ -205,7 +205,7 @@ function delCNAME(elem) {
       utils.showAlert(
         "error",
         "",
-        "Error while deleting CNAME record: <code>" + utils.escapeHtml(elem) + "</code>",
+        "Error while deleting CNAME record: <code>" + elem + "</code>",
         data.responseText
       );
       console.log(exception); // eslint-disable-line no-console
