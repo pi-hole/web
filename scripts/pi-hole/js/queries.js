@@ -230,8 +230,8 @@ function formatReplyTime(replyTime, type) {
     return replyTime < 1e-4
       ? (1e6 * replyTime).toFixed(1) + " µs"
       : replyTime < 1
-      ? (1e3 * replyTime).toFixed(1) + " ms"
-      : replyTime.toFixed(1) + " s";
+        ? (1e3 * replyTime).toFixed(1) + " ms"
+        : replyTime.toFixed(1) + " s";
   }
 
   // else: return the number itself (for sorting and searching)
