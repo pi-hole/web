@@ -522,6 +522,7 @@ $(function () {
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     autoWidth: false,
     processing: true,
+    pagingTag: "button",
     order: [[0, "desc"]],
     columns: [
       {

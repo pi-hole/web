@@ -109,6 +109,7 @@ function initTable() {
       type: "GET",
     },
     order: [[0, "asc"]],
+    pagingTag: "button",
     columns: [
       { data: "id", visible: false },
       { data: null, visible: true, orderable: false, width: "15px" },

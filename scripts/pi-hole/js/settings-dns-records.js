@@ -73,6 +73,7 @@ function populateDataTable(endpoint) {
       type: "GET",
       dataSrc: `config.dns.${endpoint}`,
     },
+    pagingTag: "button",
     columns: columns,
     columnDefs: [
       {
