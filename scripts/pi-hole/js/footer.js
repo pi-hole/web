@@ -121,6 +121,7 @@ function piholeChange(action, duration) {
     method: "POST",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       blocking: action === "enable",
       timer: parseInt(duration, 10) > 0 ? parseInt(duration, 10) : null,

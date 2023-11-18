@@ -319,6 +319,7 @@ function addFromQueryLog(domain, list) {
       method: "post",
       dataType: "json",
       processData: false,
+      contentType: "application/json; charset=utf-8",
       data: JSON.stringify({
         domain: domain,
         comment: "Added from Query Log",

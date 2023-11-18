@@ -523,6 +523,7 @@ function addList(event) {
     method: "post",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({ address: addresses, comment: comment, type: type }),
     success: function (data) {
       utils.enableAll();
@@ -591,6 +592,7 @@ function editList() {
     method: "put",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       groups: groups,
       comment: comment,

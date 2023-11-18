@@ -452,6 +452,7 @@ function addClient() {
     method: "post",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({ client: ips, comment: comment }),
     success: function (data) {
       utils.enableAll();
@@ -519,6 +520,7 @@ function editClient() {
     method: "put",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       client: client,
       groups: groups,

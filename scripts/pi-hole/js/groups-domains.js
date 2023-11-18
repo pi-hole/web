@@ -503,16 +503,16 @@ function addDomain() {
     commentEl = $("#new_regex_comment");
   }
 
-  const comment = utils.escapeHtml(commentEl.val());
+  const comment = commentEl.val();
 
   // Check if the user wants to add multiple domains (space or newline separated)
   // If so, split the input and store it in an array
-  var domains = utils.escapeHtml(domainEl.val()).split(/\s+/);
+  var domains = domainEl.val().split(/\s+/);
   // Remove empty elements
   domains = domains.filter(function (el) {
     return el !== "";
   });
-  const domainStr = JSON.stringify(domains);
+  const domainStr = utils.escapeHtml(JSON.stringify(domains));
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding domain(s)...", domainStr);
@@ -542,6 +542,7 @@ function addDomain() {
     method: "post",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       domain: domains,
       comment: comment,
@@ -629,6 +630,7 @@ function editDomain() {
     method: "put",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       groups: groups,
       comment: comment,

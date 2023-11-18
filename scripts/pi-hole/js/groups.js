@@ -306,6 +306,7 @@ function addGroup() {
     method: "post",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       name: names,
       comment: comment,
@@ -373,6 +374,7 @@ function editGroup() {
     method: "put",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       name: name,
       comment: comment,

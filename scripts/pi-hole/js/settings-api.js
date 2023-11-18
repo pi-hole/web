@@ -346,7 +346,7 @@ function setAppPassword() {
     dataType: "json",
     processData: false,
     data: JSON.stringify({ config: { webserver: { api: { app_pwhash: apppwhash } } } }),
-    contentType: "application/json",
+    contentType: "application/json; charset=utf-8",
   })
     .done(function () {
       $("#modal-apppw").modal("hide");
@@ -399,7 +399,7 @@ function setTOTPSecret(secret) {
     dataType: "json",
     processData: false,
     data: JSON.stringify({ config: { webserver: { api: { totp_secret: secret } } } }),
-    contentType: "application/json",
+    contentType: "application/json; charset=utf-8",
   })
     .done(function () {
       $("#button-enable-totp").addClass("hidden");
