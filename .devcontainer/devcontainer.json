@@ -18,6 +18,6 @@
     "GIT_EDITOR": "nano"
   },
   "mounts": [
-    "type=bind,source=/home/${localEnv:USER}/.ssh,target=/root/.ssh,readonly"
+    "type=bind,source=/home/${localEnv:USER}/.ssh,target=/home/node/.ssh,readonly"
   ]
 }
