@@ -98,7 +98,7 @@ if startsWith(scriptname, 'groups') then
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap-toggle.min.css')?>">
 <? end ?>
 <? if is_authenticated then ?>
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/datatables.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/datatables-pihole.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/datatables_extensions.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/daterangepicker.min.css')?>">
 <? end ?>
