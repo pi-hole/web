@@ -20,7 +20,6 @@ $(function () {
       dataSrc: "messages",
     },
     order: [[0, "asc"]],
-    pagingTag: "button",
     columns: [
       { data: "id", visible: false },
       { data: null, visible: true, width: "15px" },

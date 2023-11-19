@@ -100,7 +100,6 @@ function initTable() {
       dataSrc: "clients",
       type: "GET",
     },
-    pagingTag: "button",
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },

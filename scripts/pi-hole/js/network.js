@@ -200,7 +200,6 @@ $(function () {
     },
     autoWidth: false,
     processing: true,
-    pagingTag: "button",
     order: [[6, "desc"]],
     columns: [
       { data: "id", visible: false },

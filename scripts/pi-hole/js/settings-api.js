@@ -34,7 +34,6 @@ $(function () {
       type: "GET",
       dataSrc: "sessions",
     },
-    pagingTag: "button",
     order: [[1, "asc"]],
     columns: [
       { data: null, width: "22px" },
