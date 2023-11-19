@@ -483,6 +483,11 @@ kbd {
   color: #808890;
 }
 
+/* Used in error403 */
+.text-danger {
+  color: #f54;
+}
+
 .warning-count {
   color: #000;
   background: #f94;
