@@ -191,7 +191,7 @@ $(function () {
 function deleteThisSession() {
   // This function is called when a red trash button is clicked
   // We get the ID of the current item from the data-del-id attribute
-  const thisID = parseInt(this.attr("data-del-id"), 10);
+  const thisID = parseInt($(this).attr("data-del-id"), 10);
   deleted = 0;
   deleteOneSession(thisID, 1, false);
 }
