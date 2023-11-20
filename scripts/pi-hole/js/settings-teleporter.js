@@ -51,7 +51,7 @@ function importZIP() {
         $("#modal-import-success-title").text("Import successful");
         var text = "<p>Processed files:<ul>";
         for (var i = 0; i < data.files.length; i++) {
-          text += "<li>/" + utils.escapeHtml(data.files[i]) + "</li>";
+          text += "<li>" + utils.escapeHtml(data.files[i]) + "</li>";
         }
 
         text += "</ul></p>";
