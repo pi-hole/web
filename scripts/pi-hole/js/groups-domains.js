@@ -151,7 +151,8 @@ function initTable() {
           '" title="' +
           tooltip +
           '" class="breakall">' +
-          utils.escapeHtml(data.domain) +
+          utils.escapeHtml(data.unicode) +
+          (data.domain !== data.unicode ? " (" + utils.escapeHtml(data.domain) + ")" : "") +
           "</code>"
       );
 
