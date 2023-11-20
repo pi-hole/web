@@ -151,7 +151,8 @@ function initTable() {
           '" title="' +
           tooltip +
           '" class="breakall">' +
-          data.domain +
+          data.unicode +
+          (data.domain !== data.unicode ? " (" + data.domain + ")" : "") +
           "</code>"
       );
 
