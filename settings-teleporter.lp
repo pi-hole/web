@@ -20,8 +20,8 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                 <h3 class="box-title">Export your Pi-hole's configuration</h3>
             </div>
             <div class="box-body">
-                <p>Warning: This archive contains sensitive information about your Pi-hole installation, e.g. the API token and the 2FA-TOTP secret (if enabled). Please be careful with this file and do not share it with anyone even if they claim to help you.</p>
-                <? if not is_secure then ?><p class='text-danger'>Warning: You are currently not using an end-to-end encryption. This means that your API token and 2FA-TOTP secret will be transmitted in plain text. We recommend to use HTTPS when exporting your configuration.</p><? end ?>
+                <p>Warning: This archive contains sensitive information about your Pi-hole installation, e.g. your 2FA-TOTP secret (if enabled). Please be careful with this file and do not share it with anyone even if they claim to help you.</p>
+                <? if not is_secure then ?><p class='text-danger'>Warning: You are currently not using an end-to-end encryption. This means that secrets like your 2FA-TOTP secret will be transmitted in plain text. We recommend to use HTTPS when exporting your configuration.</p><? end ?>
                 <div class="pull-right">
                     <a class="btn btn-app btn-success" id="GETTeleporter" target="_blank">
                         <i class="fa fa-save"></i><br>Export
