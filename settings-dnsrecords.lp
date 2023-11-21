@@ -60,7 +60,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                             <tr>
                                 <th>Domain</th>
                                 <th>IP</th>
-                                <th>Action</th>
+                                <th></th>
                             </tr>
                             </thead>
                         </table>
@@ -125,7 +125,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 <th>Domain</th>
                                 <th>Target</th>
                                 <th>TTL</th>
-                                <th>Action</th>
+                                <th></th>
                             </tr>
                             </thead>
                         </table>
