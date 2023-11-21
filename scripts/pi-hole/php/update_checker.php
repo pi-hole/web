@@ -101,7 +101,7 @@ if (!is_readable($versionsfile)) {
 
 // URLs for the links
 $coreUrl = 'https://github.com/pi-hole/pi-hole/releases';
-$webUrl = 'https://github.com/pi-hole/AdminLTE/releases';
+$webUrl = 'https://github.com/pi-hole/web/releases';
 $ftlUrl = 'https://github.com/pi-hole/FTL/releases';
 $dockerUrl = 'https://github.com/pi-hole/docker-pi-hole/releases';
 
