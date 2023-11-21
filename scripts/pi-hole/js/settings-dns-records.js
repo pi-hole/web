@@ -100,7 +100,9 @@ function populateDataTable(endpoint) {
     },
     dom:
       "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+      "<'row'<'col-sm-12'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
+      "<'row'<'col-sm-12'p>>" +
       "<'row'<'col-sm-12'i>>",
     lengthMenu: [
       [10, 25, 50, 100, -1],
@@ -228,6 +230,7 @@ $(document).ready(function () {
         $("#Hdomain").val("");
         $("#Hip").val("");
         $("#hosts-Table").DataTable().ajax.reload(null, false);
+        $("#hosts-Table").DataTable().rows().deselect();
       })
       .fail(function (data, exception) {
         utils.enableAll();
@@ -254,6 +257,7 @@ $(document).ready(function () {
         $("#Cdomain").val("");
         $("#Ctarget").val("");
         $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
+        $("#cnameRecords-Table").DataTable().rows().deselect();
       })
       .fail(function (data, exception) {
         utils.enableAll();
