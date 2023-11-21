@@ -99,7 +99,7 @@ function populateDataTable(endpoint) {
       $(`td:eq(${endpoint === "hosts" ? 2 : 3})`, row).html(button);
     },
     dom:
-      "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+      "<'row'<'col-sm-5'l><'col-sm-7'f>>" +
       "<'row'<'col-sm-12'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-12'p>>" +
