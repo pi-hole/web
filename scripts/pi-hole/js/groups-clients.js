@@ -147,7 +147,7 @@ function initTable() {
         '" title="' +
         tooltip +
         '" class="breakall">' +
-        data.client +
+        utils.escapeHtml(data.client) +
         "</code>";
       if (data.name !== null && data.name.length > 0)
         ipName +=
@@ -156,13 +156,13 @@ function initTable() {
           '" title="' +
           tooltip +
           '" class="breakall">' +
-          data.name +
+          utils.escapeHtml(data.name) +
           "</code>";
       $("td:eq(1)", row).html(ipName);
 
       $("td:eq(2)", row).html('<input id="comment_' + dataId + '" class="form-control">');
       var commentEl = $("#comment_" + dataId, row);
-      commentEl.val(utils.unescapeHtml(data.comment));
+      commentEl.val(data.comment);
       commentEl.on("change", editClient);
 
       $("td:eq(3)", row).empty();
@@ -403,11 +403,14 @@ function delItems(ids) {
 }
 
 function addClient() {
-  const comment = utils.escapeHtml($("#new_comment").val());
+  const comment = $("#new_comment").val();
 
   // Check if the user wants to add multiple IPs (space or newline separated)
   // If so, split the input and store it in an array
-  var ips = utils.escapeHtml($("#select").val().trim()).split(/[\s,]+/);
+  var ips = $("#select")
+    .val()
+    .trim()
+    .split(/[\s,]+/);
   // Remove empty elements
   ips = ips.filter(function (el) {
     return el !== "";
@@ -452,6 +455,7 @@ function addClient() {
     method: "post",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({ client: ips, comment: comment }),
     success: function (data) {
       utils.enableAll();
@@ -482,7 +486,7 @@ function editClient() {
     .find("#multiselect_" + client)
     .val()
     .map(Number);
-  const comment = utils.escapeHtml(tr.find("#comment_" + client).val());
+  const comment = tr.find("#comment_" + client).val();
   const enabled = tr.find("#enabled_" + client).is(":checked");
 
   var done = "edited";
@@ -519,6 +523,7 @@ function editClient() {
     method: "put",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       client: client,
       groups: groups,

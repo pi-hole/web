@@ -151,8 +151,8 @@ function initTable() {
           '" title="' +
           tooltip +
           '" class="breakall">' +
-          data.unicode +
-          (data.domain !== data.unicode ? " (" + data.domain + ")" : "") +
+          utils.escapeHtml(data.unicode) +
+          (data.domain !== data.unicode ? " (" + utils.escapeHtml(data.domain) + ")" : "") +
           "</code>"
       );
 
@@ -206,7 +206,7 @@ function initTable() {
       // Comment field
       $("td:eq(4)", row).html('<input id="comment_' + dataId + '" class="form-control">');
       var commentEl = $("#comment_" + dataId, row);
-      commentEl.val(utils.unescapeHtml(data.comment));
+      commentEl.val(data.comment);
       commentEl.on("change", editDomain);
 
       // Group assignment field (multi-select)
@@ -504,11 +504,11 @@ function addDomain() {
     commentEl = $("#new_regex_comment");
   }
 
-  const comment = utils.escapeHtml(commentEl.val());
+  const comment = commentEl.val();
 
   // Check if the user wants to add multiple domains (space or newline separated)
   // If so, split the input and store it in an array
-  var domains = utils.escapeHtml(domainEl.val()).split(/\s+/);
+  var domains = domainEl.val().split(/\s+/);
   // Remove empty elements
   domains = domains.filter(function (el) {
     return el !== "";
@@ -543,6 +543,7 @@ function addDomain() {
     method: "post",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       domain: domains,
       comment: comment,
@@ -578,7 +579,7 @@ function editDomain() {
   const newTypestr = tr.find("#type_" + domain).val();
   const oldTypeStr = tr.find("#old_type_" + domain).val();
   const enabled = tr.find("#enabled_" + domain).is(":checked");
-  const comment = utils.escapeHtml(tr.find("#comment_" + domain).val());
+  const comment = tr.find("#comment_" + domain).val();
   // Convert list of string integers to list of integers using map
   const groups = tr
     .find("#multiselect_" + domain)
@@ -624,12 +625,13 @@ function editDomain() {
 
   utils.disableAll();
   const domainDecoded = utils.hexDecode(domain.split("_")[0]);
-  utils.showAlert("info", "", "Editing domain...", domain);
+  utils.showAlert("info", "", "Editing domain...", domainDecoded);
   $.ajax({
     url: "/api/domains/" + newTypestr + "/" + encodeURIComponent(domainDecoded),
     method: "put",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       groups: groups,
       comment: comment,

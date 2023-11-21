@@ -86,8 +86,8 @@ function padNumber(num) {
 var showAlertBox = null;
 function showAlert(type, icon, title, message) {
   const options = {
-      title: "&nbsp;<strong>" + title + "</strong><br>",
-      message: message,
+      title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
+      message: escapeHtml(message),
       icon: icon,
     },
     settings = {
@@ -123,9 +123,9 @@ function showAlert(type, icon, title, message) {
         var data = JSON.parse(message);
         console.log(data); // eslint-disable-line no-console
         if (data.error !== undefined) {
-          options.title = "&nbsp;<strong>" + data.error.message + "</strong><br>";
+          options.title = "&nbsp;<strong>" + escapeHtml(data.error.message) + "</strong><br>";
 
-          if (data.error.hint !== null) options.message = data.error.hint;
+          if (data.error.hint !== null) options.message = escapeHtml(data.error.hint);
         }
       } catch {
         // Do nothing
@@ -319,6 +319,7 @@ function addFromQueryLog(domain, list) {
       method: "post",
       dataType: "json",
       processData: false,
+      contentType: "application/json; charset=utf-8",
       data: JSON.stringify({
         domain: domain,
         comment: "Added from Query Log",
