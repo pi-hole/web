@@ -92,6 +92,11 @@ td.lookatme {
   white-space: pre-wrap;
 }
 
+/* Client column */
+#all-queries td:nth-of-type(4) {
+  word-break: break-all;
+}
+
 /* Allow Info String to wrap (useful while filtering entries on small screen) */
 #all-queries_info {
   white-space: unset;
@@ -779,29 +784,33 @@ li:not(.menu-open) .treeview-menu .warning-count {
 }
 
 /* Domains table: filter by type - smaller icheck */
-body:not(.lcars) .filter_types [class*="icheck-"] > label {
+body:not([class*="lcars"]) .filter_types [class*="icheck-"] > label {
   padding-left: 1.5em !important;
   line-height: 1.2em;
   min-height: 1.2em;
 }
-body:not(.lcars)
+body:not([class*="lcars"])
   .filter_types
   [class*="icheck-"]
   > input:first-child
   + input[type="hidden"]
   + label::before,
-body:not(.lcars) .filter_types [class*="icheck-"] > input:first-child + label::before {
+body:not([class*="lcars"]) .filter_types [class*="icheck-"] > input:first-child + label::before {
   width: 1.2em;
   height: 1.2em;
   margin-left: -1.55em;
 }
-body:not(.lcars)
+body:not([class*="lcars"])
   .filter_types
   [class*="icheck-"]
   > input:first-child:checked
   + input[type="hidden"]
   + label::after,
-body:not(.lcars) .filter_types [class*="icheck-"] > input:first-child:checked + label::after {
+body:not([class*="lcars"])
+  .filter_types
+  [class*="icheck-"]
+  > input:first-child:checked
+  + label::after {
   width: 0.35em;
   height: 0.7em;
   top: -0.2em;
