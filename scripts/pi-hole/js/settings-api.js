@@ -90,7 +90,10 @@ $(function () {
         ownSessionID = data.id;
         $("td", row).each(function () {
           $(this).addClass("text-bold");
-          $(this).attr("title", "This is the session you are currently using for the web interface");
+          $(this).attr(
+            "title",
+            "This is the session you are currently using for the web interface"
+          );
         });
       }
 
