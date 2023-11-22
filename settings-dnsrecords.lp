@@ -71,7 +71,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 <tr>
                                     <th>Domain</th>
                                     <th>Target</th>
-                                    <th>TTL</th>
+                                    <th>TTL <i class="small">(optional)</i></th>
                                     <th></th>
                                 </tr>
                             </thead>
