@@ -373,10 +373,16 @@ td.lookatme {
   font-family: inherit;
 }
 
-.form-inline .dataTables .form-control {
+.form-inline .dataTable .form-control {
   display: inline-block;
   width: 100%;
   vertical-align: middle;
+}
+
+/* Table footer row used to add new items, using inline input fields */
+tfoot.add-new-item > tr > th {
+  font-weight: normal;
+  vertical-align: inherit;
 }
 
 .select2-container--default .select2-results > .select2-results__options {

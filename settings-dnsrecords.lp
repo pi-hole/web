@@ -22,45 +22,29 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="box collapsed-box">
-                            <!-- /.box-header -->
-                            <div class="box-header with-border">
-                                <h3 class="box-title">
-                                    Add new DNS record
-                                </h3>
-                                <div class="box-tools pull-right">
-                                    <button type="button" class="btn btn-box-tool" data-configkeys="hosts" data-widget="collapse"><i class="fa fa-plus"></i></button>
-                                </div>
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label for="domain">Domain:</label>
-                                        <input id="Hdomain" type="url" class="form-control" data-configkeys="hosts" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="target">IP address:</label>
-                                        <input id="Hip" type="text" class="form-control" data-configkeys="hosts" placeholder="Associated IP address" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="box-footer">
-                                <button type="button" id="btnAdd-host" class="btn btn-primary pull-right" data-configkeys="hosts">Add</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
                         <h3 class="box-title">List of local DNS records</h3>
                             <!-- /.box-header -->
                         <table id="hosts-Table" class="table table-striped table-bordered" width="100%">
                             <thead>
-                            <tr>
-                                <th>Domain</th>
-                                <th>IP</th>
-                                <th></th>
-                            </tr>
+                                <tr>
+                                    <th>Domain</th>
+                                    <th>IP</th>
+                                    <th></th>
+                                </tr>
                             </thead>
+                            <tfoot class="add-new-item">
+                                <tr>
+                                    <th>
+                                        <input id="Hdomain" type="url" class="form-control" data-configkeys="hosts" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                    </th>
+                                    <th>
+                                        <input id="Hip" type="text" class="form-control" data-configkeys="hosts" placeholder="Associated IP address" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                    </th>
+                                    <th>
+                                        <button type="button" id="btnAdd-host" class="btn btn-primary btn-xs" data-configkeys="hosts"><i class="fa fa-plus"></i></button>
+                                    </th>
+                                </tr>
+                            </tfoot>
                         </table>
                         <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear Filters</button>
                     </div>
@@ -80,50 +64,33 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="box collapsed-box">
-                            <!-- /.box-header -->
-                            <div class="box-header with-border">
-                                <h3 class="box-title">
-                                    Add new CNAME record
-                                </h3>
-                                <div class="box-tools pull-right">
-                                    <button type="button" class="btn btn-box-tool" data-configkeys="cnameRecords" data-widget="collapse"><i class="fa fa-plus"></i></button>
-                                </div>
-                            </div>
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <div class="row">
-                                    <div class="form-group col-md-5">
-                                        <label for="domain">Domain:</label>
-                                        <input id="Cdomain" type="url" class="form-control" data-configkeys="cnameRecords" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                                    </div>
-                                    <div class="form-group col-md-5">
-                                        <label for="target">Target Domain:</label>
-                                        <input id="Ctarget" type="url" class="form-control" data-configkeys="cnameRecords" placeholder="Associated Target Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <label for="target">TTL (optional):</label>
-                                        <input id="Cttl" type="numeric" class="form-control" data-configkeys="cnameRecords" placeholder="TTL in seconds" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="box-footer">
-                                <button type="button" id="btnAdd-cname" class="btn btn-primary pull-right" data-configkeys="cnameRecords">Add</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
                         <h3 class="box-title">List of local CNAME records</h3>
                             <!-- /.box-header -->
                         <table id="cnameRecords-Table" class="table table-striped table-bordered" width="100%">
                             <thead>
-                            <tr>
-                                <th>Domain</th>
-                                <th>Target</th>
-                                <th>TTL</th>
-                                <th></th>
-                            </tr>
+                                <tr>
+                                    <th>Domain</th>
+                                    <th>Target</th>
+                                    <th>TTL</th>
+                                    <th></th>
+                                </tr>
                             </thead>
+                            <tfoot class="add-new-item">
+                                <tr>
+                                    <th>
+                                        <input id="Cdomain" type="url" class="form-control" data-configkeys="cnameRecords" placeholder="Add a domain (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                    </th>
+                                    <th>
+                                        <input id="Ctarget" type="url" class="form-control" data-configkeys="cnameRecords" placeholder="Associated Target Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                    </th>
+                                    <th>
+                                        <input id="Cttl" type="numeric" class="form-control" data-configkeys="cnameRecords" placeholder="TTL in seconds" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                    </th>
+                                    <th>
+                                        <button type="button" id="btnAdd-cname" class="btn btn-primary btn-xs" data-configkeys="cnameRecords"><i class="fa fa-plus"></i></button>
+                                    </th>
+                                </tr>
+                            </tfoot>
                         </table>
                         <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear Filters</button>
                     </div>
