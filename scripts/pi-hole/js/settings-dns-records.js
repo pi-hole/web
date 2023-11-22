@@ -49,7 +49,7 @@ function populateDataTable(endpoint) {
     columns = [
       { data: null, render: CNAMEdomain },
       { data: null, render: CNAMEtarget },
-      { data: null, render: CNAMEttl },
+      { data: null, width: "40px", render: CNAMEttl },
       { data: null, width: "22px", orderable: false },
     ];
   }
@@ -266,4 +266,7 @@ $(document).ready(function () {
         console.log(exception); // eslint-disable-line no-console
       });
   });
+
+  // Add a small legend below the CNAME table
+  $("#cnameRecords-Table").after("<small>* <b>TTL</b> in seconds <i>(optional)</i></small>");
 });
