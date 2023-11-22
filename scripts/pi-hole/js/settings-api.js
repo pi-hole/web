@@ -88,13 +88,8 @@ $(function () {
       $("td:eq(9)", row).html(button);
       if (data.current_session) {
         ownSessionID = data.id;
-        $("td", row).each(function () {
-          $(this).addClass("text-bold");
-          $(this).attr(
-            "title",
-            "This is the session you are currently using for the web interface"
-          );
-        });
+        $(row).addClass("text-bold");
+        $(row).attr("title", "This is the session you are currently using for the web interface");
       }
 
       let icon = "";
