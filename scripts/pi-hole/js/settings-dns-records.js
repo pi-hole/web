@@ -73,6 +73,7 @@ function populateDataTable(endpoint) {
       type: "GET",
       dataSrc: `config.dns.${endpoint}`,
     },
+    autoWidth: false,
     columns: columns,
     columnDefs: [
       {
