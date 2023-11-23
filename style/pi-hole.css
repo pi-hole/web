@@ -1008,6 +1008,8 @@ body:not(.lcars) .filter_types [class*="icheck-"] > input:first-child:checked + 
 /* Datatables Select - bgcolor */
 :root {
   --datatable-bgcolor: #e0e8ee;
+  --dt-row-selected: var(--datatable-bgcolor);
+  --dt-row-selected-text: currentColor;
 }
 
 div.dt-buttons {
