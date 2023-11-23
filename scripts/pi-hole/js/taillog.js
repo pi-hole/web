@@ -8,6 +8,7 @@
 /* global moment: false, apiFailure: false, utils: false */
 
 var nextID = 0;
+var lastPID = -1;
 
 // Check every 0.5s for fresh data
 const interval = 500;
@@ -41,6 +42,22 @@ function getData() {
     method: "GET",
   })
     .done(function (data) {
+      // Check if we have a new PID -> FTL was restarted
+      if (lastPID !== data.pid) {
+        if (lastPID !== -1) {
+          $("#output").append("<i class='text-danger'>*** FTL restarted ***</i><br>");
+        }
+
+        // Remember PID
+        lastPID = data.pid;
+        // Reset nextID
+        nextID = 0;
+
+        getData();
+        return;
+      }
+
+      // Set placeholder text if log file is empty and we have no new lines
       if (data.log.length === 0) {
         if (nextID === 0) {
           $("#output").html("<i>*** Log file is empty ***</i>");
