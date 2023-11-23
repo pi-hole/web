@@ -49,7 +49,7 @@ function populateDataTable(endpoint) {
     columns = [
       { data: null, render: CNAMEdomain },
       { data: null, render: CNAMEtarget },
-      { data: null, render: CNAMEttl },
+      { data: null, width: "40px", render: CNAMEttl },
       { data: null, width: "22px", orderable: false },
     ];
   }
@@ -73,6 +73,7 @@ function populateDataTable(endpoint) {
       type: "GET",
       dataSrc: `config.dns.${endpoint}`,
     },
+    autoWidth: false,
     columns: columns,
     columnDefs: [
       {
@@ -99,7 +100,7 @@ function populateDataTable(endpoint) {
       $(`td:eq(${endpoint === "hosts" ? 2 : 3})`, row).html(button);
     },
     dom:
-      "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+      "<'row'<'col-sm-5'l><'col-sm-7'f>>" +
       "<'row'<'col-sm-12'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-12'p>>" +
@@ -264,4 +265,7 @@ $(document).ready(function () {
         console.log(exception); // eslint-disable-line no-console
       });
   });
+
+  // Add a small legend below the CNAME table
+  $("#cnameRecords-Table").after("<small>* <b>TTL</b> in seconds <i>(optional)</i></small>");
 });
