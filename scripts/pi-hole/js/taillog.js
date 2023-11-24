@@ -5,13 +5,10 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment: false, apiFailure: false, utils: false */
+/* global moment: false, apiFailure: false, utils: false, REFRESH_INTERVAL: false */
 
 var nextID = 0;
 var lastPID = -1;
-
-// Check every 0.5s for fresh data
-const interval = 500;
 
 // Maximum number of lines to display
 const maxlines = 5000;
@@ -26,7 +23,7 @@ const markUpdates = true;
 function getData() {
   // Only update when spinner is spinning
   if (!$("#feed-icon").hasClass("fa-play")) {
-    window.setTimeout(getData, interval);
+    window.setTimeout(getData, REFRESH_INTERVAL.logs);
     return;
   }
 
@@ -63,7 +60,7 @@ function getData() {
           $("#output").html("<i>*** Log file is empty ***</i>");
         }
 
-        window.setTimeout(getData, interval);
+        window.setTimeout(getData, REFRESH_INTERVAL.logs);
         return;
       }
 
@@ -107,11 +104,11 @@ function getData() {
       // Set filename
       $("#filename").text(data.file);
 
-      window.setTimeout(getData, interval);
+      window.setTimeout(getData, REFRESH_INTERVAL.logs);
     })
     .fail(function (data) {
       apiFailure(data);
-      window.setTimeout(getData, 5 * interval);
+      window.setTimeout(getData, 5 * REFRESH_INTERVAL.logs);
     });
 }
 
