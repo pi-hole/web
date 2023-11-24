@@ -14,11 +14,11 @@ var settingsLevel = 0;
 
 const REFRESH_INTERVAL = {
   logs: 500, // 0.5 sec (logs page)
-  summary: 1000, // 1 sec (dashboard)
+  summary: 10000, // 10 sec (dashboard)
   blocking: 10000, // 10 sec (all pages, sidebar)
-  metrics: 10000, // 10 sec (settings page)
-  system: 20000, // 20 sec (all pages, sidebar)
-  sensors: 20000, // 20 sec (all pages, sidebar)
+  metrics: 30000, // 30 sec (settings page)
+  system: 40000, // 40 sec (all pages, sidebar)
+  sensors: 40000, // 40 sec (all pages, sidebar)
   query_types: 60000, // 1 min (dashboard)
   upstreams: 60000, // 1 min (dashboard)
   top_lists: 60000, // 1 min (dashboard)
