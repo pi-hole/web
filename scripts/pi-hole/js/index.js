@@ -72,13 +72,13 @@ function updateQueriesOverTime() {
   })
     .done(function () {
       failures = 0;
-      setTimeout(updateQueriesOverTime, REFRESH_INTERVAL.history);
+      utils.setTimer(updateQueriesOverTime, REFRESH_INTERVAL.history);
     })
     .fail(function () {
       failures++;
       if (failures < 5) {
         // Try again ´only if this has not failed more than five times in a row
-        setTimeout(updateQueriesOverTime, 0.1 * REFRESH_INTERVAL.history);
+        utils.setTimer(updateQueriesOverTime, 0.1 * REFRESH_INTERVAL.history);
       }
     })
     .fail(function (data) {
@@ -121,7 +121,7 @@ function updateQueryTypesPie() {
     queryTypePieChart.update("none");
   })
     .done(function () {
-      setTimeout(updateQueryTypesPie, REFRESH_INTERVAL.query_types);
+      utils.setTimer(updateQueryTypesPie, REFRESH_INTERVAL.query_types);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -182,13 +182,13 @@ function updateClientsOverTime() {
     .done(function () {
       // Reload graph after 10 minutes
       failures = 0;
-      setTimeout(updateClientsOverTime, REFRESH_INTERVAL.clients);
+      utils.setTimer(updateClientsOverTime, REFRESH_INTERVAL.clients);
     })
     .fail(function () {
       failures++;
       if (failures < 5) {
         // Try again only if this has not failed more than five times in a row
-        setTimeout(updateClientsOverTime, 0.1 * REFRESH_INTERVAL.clients);
+        utils.setTimer(updateClientsOverTime, 0.1 * REFRESH_INTERVAL.clients);
       }
     })
     .fail(function (data) {
@@ -249,7 +249,7 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.update("none");
   })
     .done(function () {
-      setTimeout(updateForwardDestinationsPie, REFRESH_INTERVAL.upstreams);
+      utils.setTimer(updateForwardDestinationsPie, REFRESH_INTERVAL.upstreams);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -377,7 +377,7 @@ function updateTopLists() {
   updateTopClientsTable(false);
 
   // Update top lists data every 10 seconds
-  setTimeout(updateTopLists, REFRESH_INTERVAL.top_lists);
+  utils.setTimer(updateTopLists, REFRESH_INTERVAL.top_lists);
 }
 
 function glowIfChanged(elem, textData) {
@@ -411,10 +411,10 @@ function updateSummaryData(runOnce = false) {
     }, 500);
   })
     .done(function () {
-      if (!runOnce) setTimeout(updateSummaryData, REFRESH_INTERVAL.summary);
+      if (!runOnce) utils.setTimer(updateSummaryData, REFRESH_INTERVAL.summary);
     })
     .fail(function (data) {
-      setTimeout(updateSummaryData, 3 * REFRESH_INTERVAL.summary);
+      utils.setTimer(updateSummaryData, 3 * REFRESH_INTERVAL.summary);
       apiFailure(data);
     });
 }

@@ -23,7 +23,7 @@ const markUpdates = true;
 function getData() {
   // Only update when spinner is spinning
   if (!$("#feed-icon").hasClass("fa-play")) {
-    window.setTimeout(getData, REFRESH_INTERVAL.logs);
+    utils.setTimer(getData, REFRESH_INTERVAL.logs);
     return;
   }
 
@@ -60,7 +60,7 @@ function getData() {
           $("#output").html("<i>*** Log file is empty ***</i>");
         }
 
-        window.setTimeout(getData, REFRESH_INTERVAL.logs);
+        utils.setTimer(getData, REFRESH_INTERVAL.logs);
         return;
       }
 
@@ -104,11 +104,11 @@ function getData() {
       // Set filename
       $("#filename").text(data.file);
 
-      window.setTimeout(getData, REFRESH_INTERVAL.logs);
+      utils.setTimer(getData, REFRESH_INTERVAL.logs);
     })
     .fail(function (data) {
       apiFailure(data);
-      window.setTimeout(getData, 5 * REFRESH_INTERVAL.logs);
+      utils.setTimer(getData, 5 * REFRESH_INTERVAL.logs);
     });
 }
 

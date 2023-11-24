@@ -104,17 +104,23 @@ function countDown() {
 }
 
 function checkBlocking() {
+  // Skip if page is hidden
+  if (document.hidden) {
+    utils.setTimer(checkBlocking, REFRESH_INTERVAL.blocking);
+    return;
+  }
+
   $.ajax({
     url: "/api/dns/blocking",
     method: "GET",
   })
     .done(function (data) {
       piholeChanged(data.blocking);
-      setTimeout(checkBlocking, REFRESH_INTERVAL.blocking);
+      utils.setTimer(checkBlocking, REFRESH_INTERVAL.blocking);
     })
     .fail(function (data) {
       apiFailure(data);
-      setTimeout(checkBlocking, 3 * REFRESH_INTERVAL.blocking);
+      utils.setTimer(checkBlocking, 3 * REFRESH_INTERVAL.blocking);
     });
 }
 
@@ -260,7 +266,7 @@ function updateFtlInfo() {
       );
 
       clearTimeout(ftlinfoTimer);
-      ftlinfoTimer = setTimeout(updateFtlInfo, REFRESH_INTERVAL.ftl);
+      ftlinfoTimer = utils.setTimer(updateFtlInfo, REFRESH_INTERVAL.ftl);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -359,7 +365,7 @@ function updateSystemInfo() {
       $("#sysinfo-system-overlay").hide();
 
       clearTimeout(systemTimer);
-      systemTimer = setTimeout(updateSystemInfo, REFRESH_INTERVAL.system);
+      systemTimer = utils.setTimer(updateSystemInfo, REFRESH_INTERVAL.system);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -412,7 +418,7 @@ function updateSensorsInfo() {
 
       // Update every 20 seconds
       clearTimeout(sensorsTimer);
-      sensorsTimer = setTimeout(updateSensorsInfo, REFRESH_INTERVAL.sensors);
+      sensorsTimer = utils.setTimer(updateSensorsInfo, REFRESH_INTERVAL.sensors);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -582,7 +588,7 @@ function updateVersionInfo() {
       );
 
     clearTimeout(versionTimer);
-    versionTimer = setTimeout(updateVersionInfo, REFRESH_INTERVAL.version);
+    versionTimer = utils.setTimer(updateVersionInfo, REFRESH_INTERVAL.version);
   });
 }
 
@@ -606,7 +612,7 @@ $(function () {
     // Run check immediately after page loading ...
     utils.checkMessages();
     // ... and then periodically
-    setInterval(utils.checkMessages, REFRESH_INTERVAL.messages);
+    utils.setInter(utils.checkMessages, REFRESH_INTERVAL.messages);
   }
 });
 

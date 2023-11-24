@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global apiFailure:false, Chart:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false */
+/* global apiFailure:false, Chart:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, utils: false */
 
 var hostinfoTimer = null;
 var cachePieChart = null;
@@ -106,7 +106,7 @@ function updateHostInfo() {
           uname.machine
       );
       clearTimeout(hostinfoTimer);
-      hostinfoTimer = setTimeout(updateHostInfo, REFRESH_INTERVAL.hosts);
+      hostinfoTimer = utils.setTimer(updateHostInfo, REFRESH_INTERVAL.hosts);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -173,7 +173,7 @@ function updateMetrics() {
 
       $("div[id^='sysinfo-metrics-overlay']").hide();
       clearTimeout(metricsTimer);
-      metricsTimer = setTimeout(updateMetrics, REFRESH_INTERVAL.metrics);
+      metricsTimer = utils.setTimer(updateMetrics, REFRESH_INTERVAL.metrics);
     })
     .fail(function (data) {
       apiFailure(data);
