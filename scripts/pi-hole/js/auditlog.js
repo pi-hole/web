@@ -28,14 +28,9 @@ function updateTopLists() {
         domain = utils.escapeHtml(domain);
         url = '<a href="queries.php?domain=' + domain + '">' + domain + "</a>";
         domaintable.append(
-          "<tr><td>" +
-            url +
-            "</td> <td>" +
-            data.top_queries[domain] +
-            "</td> <td>" +
-            '<button type="button" class="btn btn-default btn-xs text-red btn-blacklist"><i class="fa fa-ban"></i> Blacklist</button>' +
-            '<button type="button" class="btn btn-default btn-xs text-orange btn-audit"><i class="fa fa-balance-scale"></i> Audit</button>' +
-            "</td> </tr> "
+          "<tr><td>" + url + "</td> <td>" + data.top_queries[domain] + "</td> <td>" +
+          '<button type="button" class="btn btn-default btn-xs text-red btn-blacklist"><i class="fa fa-ban"></i> Blacklist</button>' +
+          '<button type="button" class="btn btn-default btn-xs text-orange btn-audit"><i class="fa fa-balance-scale"></i> Audit</button>' + "</td></tr>"
         );
       }
     }
@@ -46,46 +41,28 @@ function updateTopLists() {
         // Sanitize domain
         var printdomain = utils.escapeHtml(input[0]);
         if (input.length > 1) {
-          url =
-            '<a href="queries.php?domain=' +
-            printdomain +
-            '">' +
-            printdomain +
-            "</a> (wildcard blocked)";
-          adtable.append(
-            "<tr><td>" +
-              url +
-              "</td> <td>" +
-              data.top_ads[domain] +
-              "</td> <td>" +
-              '<button type="button" class="btn btn-default btn-sm text-orange btn-audit"><i class="fa fa-balance-scale"></i> Audit</button>' +
-              "</td> </tr> "
+          url = '<a href="queries.php?domain=' + printdomain + '">' + printdomain + "</a> (wildcard blocked)";
+          adtable.append("<tr><td>" + url + "</td> <td>" + data.top_ads[domain] + "</td> <td>" +
+            '<button type="button" class="btn btn-default btn-sm text-orange btn-audit"><i class="fa fa-balance-scale"></i> Audit</button>' + "</td></tr>"
           );
         } else {
           url = '<a href="queries.php?domain=' + printdomain + '">' + printdomain + "</a>";
-          adtable.append(
-            "<tr><td>" +
-              url +
-              "</td> <td>" +
-              data.top_ads[domain] +
-              "</td> <td>" +
-              '<button type="button" class="btn btn-default btn-xs text-green btn-whitelist"><i class="fas fa-check"></i> Whitelist</button>' +
-              '<button type="button" class="btn btn-default btn-xs text-orange btn-audit"><i class="fa fa-balance-scale"></i> Audit</button>' +
-              "</td> </tr> "
+          adtable.append("<tr><td>" + url + "</td> <td>" + data.top_ads[domain] + "</td> <td>" +
+            '<button type="button" class="btn btn-default btn-sm text-orange btn-audit"><i class="fa fa-balance-scale"></i> Audit</button>' + "</td></tr>"
           );
         }
       }
     }
 
+    /*     Update top lists data every ten seconds
+    Updates are also triggered by button actions
+    and reset the running timer
+ */
     $("#domain-frequency .overlay").hide();
     $("#ad-frequency .overlay").hide();
-    // Update top lists data every ten seconds
-    // Updates are also triggered by button actions
-    // and reset the running timer
     if (auditTimeout !== null) {
       window.clearTimeout(auditTimeout);
     }
-
     auditTimeout = setTimeout(updateTopLists, 10000);
   });
 }
