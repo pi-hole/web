@@ -13,21 +13,21 @@
 var settingsLevel = 0;
 
 const REFRESH_INTERVAL = {
-  blocking: 10000, // 10 sec
-  system: 20000, // 20 sec
-  sensors: 20000, // 20 sec
-  messages: 60000, // 1 min
-  version: 120000, // 2 min
-  ftl: 120000, // 2 min
-  history: 600000, // 10 min
-  clients: 600000, // 10 min
-  query_types: 60000, // 1 min
-  upstreams: 60000, // 1 min
-  summary: 1000, // 1 sec
-  top_lists: 60000, // 1 min
-  hosts: 120000, // 2 min
-  metrics: 10000, // 10 sec
-  logs: 500, // 0.5 sec
+  logs: 500, // 0.5 sec (logs page)
+  summary: 1000, // 1 sec (dashboard)
+  blocking: 10000, // 10 sec (all pages, sidebar)
+  metrics: 10000, // 10 sec (settings page)
+  system: 20000, // 20 sec (all pages, sidebar)
+  sensors: 20000, // 20 sec (all pages, sidebar)
+  query_types: 60000, // 1 min (dashboard)
+  upstreams: 60000, // 1 min (dashboard)
+  top_lists: 60000, // 1 min (dashboard)
+  messages: 60000, // 1 min (all pages)
+  version: 120000, // 2 min (all pages, footer)
+  ftl: 120000, // 2 min (all pages, sidebar)
+  hosts: 120000, // 2 min (settings page)
+  history: 600000, // 10 min (dashboard)
+  clients: 600000, // 10 min (dashboard)
 };
 
 function secondsTimeSpanToHMS(s) {
