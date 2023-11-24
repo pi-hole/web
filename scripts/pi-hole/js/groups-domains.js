@@ -448,7 +448,7 @@ function delItems(ids) {
 
   utils.disableAll();
   const idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting domain...", "<ul>" + domain + "</ul>");
+  utils.showAlert("info", "", "Deleting domain...", domain);
 
   $.ajax({
     url: "/api/domains/" + typestr + "/" + encodeURIComponent(domain),
