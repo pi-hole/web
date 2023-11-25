@@ -1,6 +1,9 @@
 name: Codespell
 
 on:
+  push:
+    branches:
+      - '**'
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 

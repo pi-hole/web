@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false */
+/* global utils:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false */
 
 // Define global variables
 var timeLineChart, clientsChart;
@@ -71,16 +71,14 @@ function updateQueriesOverTime() {
     timeLineChart.update();
   })
     .done(function () {
-      // Reload graph after 10 minutes
       failures = 0;
-      setTimeout(updateQueriesOverTime, 600000);
+      utils.setTimer(updateQueriesOverTime, REFRESH_INTERVAL.history);
     })
     .fail(function () {
       failures++;
       if (failures < 5) {
-        // Try again after 1 minute only if this has not failed more
-        // than five times in a row
-        setTimeout(updateQueriesOverTime, 60000);
+        // Try again ´only if this has not failed more than five times in a row
+        utils.setTimer(updateQueriesOverTime, 0.1 * REFRESH_INTERVAL.history);
       }
     })
     .fail(function (data) {
@@ -123,8 +121,7 @@ function updateQueryTypesPie() {
     queryTypePieChart.update("none");
   })
     .done(function () {
-      // Reload graph after minute
-      setTimeout(updateQueryTypesPie, 60000);
+      utils.setTimer(updateQueryTypesPie, REFRESH_INTERVAL.query_types);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -185,14 +182,13 @@ function updateClientsOverTime() {
     .done(function () {
       // Reload graph after 10 minutes
       failures = 0;
-      setTimeout(updateClientsOverTime, 600000);
+      utils.setTimer(updateClientsOverTime, REFRESH_INTERVAL.clients);
     })
     .fail(function () {
       failures++;
       if (failures < 5) {
-        // Try again after 1 minute only if this has not failed more
-        // than five times in a row
-        setTimeout(updateClientsOverTime, 60000);
+        // Try again only if this has not failed more than five times in a row
+        utils.setTimer(updateClientsOverTime, 0.1 * REFRESH_INTERVAL.clients);
       }
     })
     .fail(function (data) {
@@ -253,8 +249,7 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.update("none");
   })
     .done(function () {
-      // Reload graph after one minute
-      setTimeout(updateForwardDestinationsPie, 60000);
+      utils.setTimer(updateForwardDestinationsPie, REFRESH_INTERVAL.upstreams);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -382,7 +377,7 @@ function updateTopLists() {
   updateTopClientsTable(false);
 
   // Update top lists data every 10 seconds
-  setTimeout(updateTopLists, 10000);
+  utils.setTimer(updateTopLists, REFRESH_INTERVAL.top_lists);
 }
 
 function glowIfChanged(elem, textData) {
@@ -392,13 +387,7 @@ function glowIfChanged(elem, textData) {
   }
 }
 
-function updateSummaryData(runOnce) {
-  var setTimer = function (timeInSeconds) {
-    if (!runOnce) {
-      setTimeout(updateSummaryData, timeInSeconds * 1000);
-    }
-  };
-
+function updateSummaryData(runOnce = false) {
   $.getJSON("/api/stats/summary", function (data) {
     var intl = new Intl.NumberFormat();
     glowIfChanged($("span#dns_queries"), intl.format(parseInt(data.queries.total, 10)));
@@ -422,10 +411,10 @@ function updateSummaryData(runOnce) {
     }, 500);
   })
     .done(function () {
-      setTimer(1);
+      if (!runOnce) utils.setTimer(updateSummaryData, REFRESH_INTERVAL.summary);
     })
     .fail(function (data) {
-      setTimer(300);
+      utils.setTimer(updateSummaryData, 3 * REFRESH_INTERVAL.summary);
       apiFailure(data);
     });
 }

@@ -616,6 +616,42 @@ function listAlert(type, items, data) {
   );
 }
 
+// Function that calls a function only if the page is currently visible. This is
+// useful to prevent unnecessary API calls when the page is not visible (e.g.
+// when the user is on another tab).
+function callIfVisible(func) {
+  if (document.hidden) {
+    // Page is not visible, try again in 1 second
+    window.setTimeout(callIfVisible, 1000, func);
+    return;
+  }
+
+  // Page is visible, call function instead
+  func();
+}
+
+// Timer that calls a function after <interval> milliseconds but only if the
+// page is currently visible. We cancel possibly running timers for the same
+// function before starting a new one to prevent multiple timers running at
+// the same time causing unnecessary identical API calls when the page is
+// visible again.
+function setTimer(func, interval) {
+  // Cancel possibly running timer
+  window.clearTimeout(func.timer);
+  // Start new timer
+  func.timer = window.setTimeout(callIfVisible, interval, func);
+}
+
+// Same as setTimer() but calls the function every <interval> milliseconds
+function setInter(func, interval) {
+  // Cancel possibly running timer
+  window.clearTimeout(func.timer);
+  // Start new timer
+  func.timer = window.setTimeout(callIfVisible, interval, func);
+  // Restart timer
+  window.setTimeout(setInter, interval, func, interval);
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -649,5 +685,7 @@ window.utils = (function () {
     hexEncode: hexEncode,
     hexDecode: hexDecode,
     listsAlert: listAlert,
+    setTimer: setTimer,
+    setInter: setInter,
   };
 })();

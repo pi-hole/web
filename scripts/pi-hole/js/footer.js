@@ -12,6 +12,24 @@
 
 var settingsLevel = 0;
 
+const REFRESH_INTERVAL = {
+  logs: 500, // 0.5 sec (logs page)
+  summary: 1000, // 1 sec (dashboard)
+  blocking: 10000, // 10 sec (all pages, sidebar)
+  metrics: 10000, // 10 sec (settings page)
+  system: 20000, // 20 sec (all pages, sidebar)
+  sensors: 20000, // 20 sec (all pages, sidebar)
+  query_types: 60000, // 1 min (dashboard)
+  upstreams: 60000, // 1 min (dashboard)
+  top_lists: 60000, // 1 min (dashboard)
+  messages: 60000, // 1 min (all pages)
+  version: 120000, // 2 min (all pages, footer)
+  ftl: 120000, // 2 min (all pages, sidebar)
+  hosts: 120000, // 2 min (settings page)
+  history: 600000, // 10 min (dashboard)
+  clients: 600000, // 10 min (dashboard)
+};
+
 function secondsTimeSpanToHMS(s) {
   var h = Math.floor(s / 3600); //Get whole hours
   s -= h * 3600;
@@ -86,17 +104,23 @@ function countDown() {
 }
 
 function checkBlocking() {
+  // Skip if page is hidden
+  if (document.hidden) {
+    utils.setTimer(checkBlocking, REFRESH_INTERVAL.blocking);
+    return;
+  }
+
   $.ajax({
     url: "/api/dns/blocking",
     method: "GET",
   })
     .done(function (data) {
       piholeChanged(data.blocking);
-      setTimeout(checkBlocking, 10000);
+      utils.setTimer(checkBlocking, REFRESH_INTERVAL.blocking);
     })
     .fail(function (data) {
       apiFailure(data);
-      setTimeout(checkBlocking, 30000);
+      utils.setTimer(checkBlocking, 3 * REFRESH_INTERVAL.blocking);
     });
 }
 
@@ -241,9 +265,8 @@ function updateFtlInfo() {
         ftl.allow_destructive ? "" : "Destructive actions are disabled by a config setting"
       );
 
-      // Update every 120 seconds
       clearTimeout(ftlinfoTimer);
-      ftlinfoTimer = setTimeout(updateFtlInfo, 120000);
+      ftlinfoTimer = utils.setTimer(updateFtlInfo, REFRESH_INTERVAL.ftl);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -340,9 +363,9 @@ function updateSystemInfo() {
         moment.duration(1000 * system.uptime).humanize() + " (running since " + startdate + ")"
       );
       $("#sysinfo-system-overlay").hide();
-      // Update every 20 seconds
+
       clearTimeout(systemTimer);
-      systemTimer = setTimeout(updateSystemInfo, 20000);
+      systemTimer = utils.setTimer(updateSystemInfo, REFRESH_INTERVAL.system);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -395,7 +418,7 @@ function updateSensorsInfo() {
 
       // Update every 20 seconds
       clearTimeout(sensorsTimer);
-      sensorsTimer = setTimeout(updateSensorsInfo, 20000);
+      sensorsTimer = utils.setTimer(updateSensorsInfo, REFRESH_INTERVAL.sensors);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -564,9 +587,8 @@ function updateVersionInfo() {
         'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener" target="_blank">pihole -up</a></code>.'
       );
 
-    // Update every 120 seconds
     clearTimeout(versionTimer);
-    versionTimer = setTimeout(updateVersionInfo, 120000);
+    versionTimer = utils.setTimer(updateVersionInfo, REFRESH_INTERVAL.version);
   });
 }
 
@@ -589,8 +611,8 @@ $(function () {
   if (window.location.pathname !== "/admin/login") {
     // Run check immediately after page loading ...
     utils.checkMessages();
-    // ... and once again with five seconds delay
-    setTimeout(utils.checkMessages, 5000);
+    // ... and then periodically
+    utils.setInter(utils.checkMessages, REFRESH_INTERVAL.messages);
   }
 });
 
