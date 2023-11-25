@@ -40,7 +40,8 @@ const htmlLegendPlugin = {
     if (
       options.lastLegendItems &&
       items.length === options.lastLegendItems.length &&
-      items.every((item, i) => item.text === options.lastLegendItems[i].text)
+      items.every((item, i) => item.text === options.lastLegendItems[i].text) &&
+      items.every((item, i) => item.hidden === options.lastLegendItems[i].hidden)
     ) {
       return;
     }
