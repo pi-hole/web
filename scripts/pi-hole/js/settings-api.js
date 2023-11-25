@@ -88,11 +88,8 @@ $(function () {
       $("td:eq(9)", row).html(button);
       if (data.current_session) {
         ownSessionID = data.id;
-        $("td:eq(7)", row).html(
-          '<strong title="This is the session you are currently using for the web interface">' +
-            data.remote_addr +
-            "</strong>"
-        );
+        $(row).addClass("text-bold");
+        $(row).attr("title", "This is the session you are currently using for the web interface");
       }
 
       let icon = "";
@@ -191,7 +188,7 @@ $(function () {
 function deleteThisSession() {
   // This function is called when a red trash button is clicked
   // We get the ID of the current item from the data-del-id attribute
-  const thisID = parseInt(this.attr("data-del-id"), 10);
+  const thisID = parseInt($(this).attr("data-del-id"), 10);
   deleted = 0;
   deleteOneSession(thisID, 1, false);
 }
@@ -346,7 +343,7 @@ function setAppPassword() {
     dataType: "json",
     processData: false,
     data: JSON.stringify({ config: { webserver: { api: { app_pwhash: apppwhash } } } }),
-    contentType: "application/json",
+    contentType: "application/json; charset=utf-8",
   })
     .done(function () {
       $("#modal-apppw").modal("hide");
@@ -399,7 +396,7 @@ function setTOTPSecret(secret) {
     dataType: "json",
     processData: false,
     data: JSON.stringify({ config: { webserver: { api: { totp_secret: secret } } } }),
-    contentType: "application/json",
+    contentType: "application/json; charset=utf-8",
   })
     .done(function () {
       $("#button-enable-totp").addClass("hidden");

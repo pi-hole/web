@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false */
+/* global utils:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false */
 
 // Define global variables
 var timeLineChart, clientsChart;
@@ -71,16 +71,14 @@ function updateQueriesOverTime() {
     timeLineChart.update();
   })
     .done(function () {
-      // Reload graph after 10 minutes
       failures = 0;
-      setTimeout(updateQueriesOverTime, 600000);
+      utils.setTimer(updateQueriesOverTime, REFRESH_INTERVAL.history);
     })
     .fail(function () {
       failures++;
       if (failures < 5) {
-        // Try again after 1 minute only if this has not failed more
-        // than five times in a row
-        setTimeout(updateQueriesOverTime, 60000);
+        // Try again ´only if this has not failed more than five times in a row
+        utils.setTimer(updateQueriesOverTime, 0.1 * REFRESH_INTERVAL.history);
       }
     })
     .fail(function (data) {
@@ -123,8 +121,7 @@ function updateQueryTypesPie() {
     queryTypePieChart.update("none");
   })
     .done(function () {
-      // Reload graph after minute
-      setTimeout(updateQueryTypesPie, 60000);
+      utils.setTimer(updateQueryTypesPie, REFRESH_INTERVAL.query_types);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -185,14 +182,13 @@ function updateClientsOverTime() {
     .done(function () {
       // Reload graph after 10 minutes
       failures = 0;
-      setTimeout(updateClientsOverTime, 600000);
+      utils.setTimer(updateClientsOverTime, REFRESH_INTERVAL.clients);
     })
     .fail(function () {
       failures++;
       if (failures < 5) {
-        // Try again after 1 minute only if this has not failed more
-        // than five times in a row
-        setTimeout(updateClientsOverTime, 60000);
+        // Try again only if this has not failed more than five times in a row
+        utils.setTimer(updateClientsOverTime, 0.1 * REFRESH_INTERVAL.clients);
       }
     })
     .fail(function (data) {
@@ -200,6 +196,7 @@ function updateClientsOverTime() {
     });
 }
 
+var upstreams = {};
 function updateForwardDestinationsPie() {
   $.getJSON("/api/stats/upstreams", function (data) {
     var v = [],
@@ -219,6 +216,12 @@ function updateForwardDestinationsPie() {
       var label = item.name !== null && item.name.length > 0 ? item.name : item.ip;
       if (item.port > 0) {
         label += "#" + item.port;
+      }
+
+      // Store upstreams for generating links to the Query Log
+      upstreams[label] = item.ip;
+      if (item.port > 0) {
+        upstreams[label] += "#" + item.port;
       }
 
       var percent = (100 * item.count) / sum;
@@ -246,8 +249,7 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.update("none");
   })
     .done(function () {
-      // Reload graph after one minute
-      setTimeout(updateForwardDestinationsPie, 60000);
+      utils.setTimer(updateForwardDestinationsPie, REFRESH_INTERVAL.upstreams);
     })
     .fail(function (data) {
       apiFailure(data);
@@ -255,7 +257,7 @@ function updateForwardDestinationsPie() {
 }
 
 function updateTopClientsTable(blocked) {
-  var api, style, tablecontent, overlay, clienttable;
+  let api, style, tablecontent, overlay, clienttable;
   if (blocked) {
     api = "/api/stats/top_clients?blocked=true";
     style = "queries-blocked";
@@ -273,9 +275,8 @@ function updateTopClientsTable(blocked) {
   $.getJSON(api, function (data) {
     // Clear tables before filling them with data
     tablecontent.remove();
-    var url,
-      percentage,
-      sum = blocked ? data.blocked_queries : data.total_queries;
+    let url, percentage;
+    const sum = blocked ? data.blocked_queries : data.total_queries;
 
     // Add note if there are no results (e.g. privacy mode enabled)
     if (jQuery.isEmptyObject(data.clients)) {
@@ -285,10 +286,14 @@ function updateTopClientsTable(blocked) {
     // Populate table with content
     data.clients.forEach(function (client) {
       // Sanitize client
-      var clientname = utils.escapeHtml(client.name);
-      var clientip = utils.escapeHtml(client.ip);
-      if (clientname.length === 0) clientname = clientip;
-      url = '<a href="queries.lp?client_ip=' + clientip + '">' + clientname + "</a>";
+      let clientname = client.name;
+      if (clientname.length === 0) clientname = client.ip;
+      url =
+        '<a href="queries.lp?client_ip=' +
+        encodeURIComponent(client.ip) +
+        '">' +
+        utils.escapeHtml(clientname) +
+        "</a>";
       percentage = (client.count / sum) * 100;
 
       // Add row to table
@@ -309,7 +314,7 @@ function updateTopClientsTable(blocked) {
 }
 
 function updateTopDomainsTable(blocked) {
-  var api, style, tablecontent, overlay, domaintable;
+  let api, style, tablecontent, overlay, domaintable;
   if (blocked) {
     api = "/api/stats/top_domains?blocked=true";
     style = "queries-blocked";
@@ -327,11 +332,8 @@ function updateTopDomainsTable(blocked) {
   $.getJSON(api, function (data) {
     // Clear tables before filling them with data
     tablecontent.remove();
-    var url,
-      domain,
-      percentage,
-      urlText,
-      sum = blocked ? data.blocked_queries : data.total_queries;
+    let url, domain, percentage, urlText;
+    const sum = blocked ? data.blocked_queries : data.total_queries;
 
     // Add note if there are no results (e.g. privacy mode enabled)
     if (jQuery.isEmptyObject(data.domains)) {
@@ -341,7 +343,7 @@ function updateTopDomainsTable(blocked) {
     // Populate table with content
     data.domains.forEach(function (item) {
       // Sanitize domain
-      domain = utils.escapeHtml(item.domain);
+      domain = encodeURIComponent(item.domain);
       // Substitute "." for empty domain lookups
       urlText = domain === "" ? "." : domain;
       url = '<a href="queries.lp?domain=' + domain + '">' + urlText + "</a>";
@@ -375,7 +377,7 @@ function updateTopLists() {
   updateTopClientsTable(false);
 
   // Update top lists data every 10 seconds
-  setTimeout(updateTopLists, 10000);
+  utils.setTimer(updateTopLists, REFRESH_INTERVAL.top_lists);
 }
 
 function glowIfChanged(elem, textData) {
@@ -385,13 +387,7 @@ function glowIfChanged(elem, textData) {
   }
 }
 
-function updateSummaryData(runOnce) {
-  var setTimer = function (timeInSeconds) {
-    if (!runOnce) {
-      setTimeout(updateSummaryData, timeInSeconds * 1000);
-    }
-  };
-
+function updateSummaryData(runOnce = false) {
   $.getJSON("/api/stats/summary", function (data) {
     var intl = new Intl.NumberFormat();
     glowIfChanged($("span#dns_queries"), intl.format(parseInt(data.queries.total, 10)));
@@ -415,10 +411,10 @@ function updateSummaryData(runOnce) {
     }, 500);
   })
     .done(function () {
-      setTimer(1);
+      if (!runOnce) utils.setTimer(updateSummaryData, REFRESH_INTERVAL.summary);
     })
     .fail(function (data) {
-      setTimer(300);
+      utils.setTimer(updateSummaryData, 3 * REFRESH_INTERVAL.summary);
       apiFailure(data);
     });
 }

@@ -203,7 +203,7 @@ $(function () {
     order: [[6, "desc"]],
     columns: [
       { data: "id", visible: false },
-      { data: "ip", type: "ip-address", width: "25%" },
+      { data: "ips[].ip", type: "ip-address", width: "25%" },
       { data: "hwaddr", width: "10%" },
       { data: "interface", width: "4%" },
       {

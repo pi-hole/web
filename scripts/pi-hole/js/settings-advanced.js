@@ -59,11 +59,11 @@ function generateRow(topic, key, value) {
     "</div>" +
     '<div class="box-body">' +
     '<div class="form-group">';
-  var defaultValueHint = "";
+  let defaultValueHint = "";
   if (value.modified) {
     defaultValueHint = "";
     if (value.default !== null) {
-      var defVal = utils.escapeHtml(JSON.stringify(value.default));
+      let defVal = utils.escapeHtml(JSON.stringify(value.default));
       switch (defVal) {
         case "true": {
           defVal = "enabled";

@@ -51,15 +51,16 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                     <input type="checkbox" id="database.DBexport" data-key="database.DBexport" title="log-queries">
                                     <label for="database.DBexport"><strong>Should FTL store queries in the database?</strong></label>
                                 </div>
-                                <div>
+                                <br>
+                                <div class="row-flex">
                                     <input type="number" id="database.maxDBdays" data-key="database.maxDBdays" data-type="integer" value="" min="0" step="10" style="width: 5em;">
                                     <label for="database.maxDBdays"><strong>Maximum number of days to keep queries in the database</strong></label>
                                 </div>
-                                <div>
+                                <div class="row-flex">
                                     <input type="number" id="database.network.expire" data-key="database.network.expire" data-type="integer" value="" min="0" step="10" style="width: 5em;">
                                     <label for="database.network.expire"><strong>How long should IP addresses be kept in the network_addresses table [days]?</strong></label>
-                                    <p>IP addresses (and associated host names) older than the specified number of days are removed to avoid dead entries in the network overview table.</p>
                                 </div>
+                                <p>IP addresses (and associated host names) older than the specified number of days are removed to avoid dead entries in the network overview table.</p>
                             </div>
                         </div>
                     </div>

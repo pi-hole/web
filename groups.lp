@@ -30,7 +30,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="new_name">Name:</label>
-                        <input id="new_name" type="text" class="form-control" placeholder="Group name or space-separated group names">
+                        <input id="new_name" type="text" class="form-control" placeholder="Group name">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="new_comment">Comment:</label>
@@ -41,7 +41,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             <div class="box-footer clearfix">
                 <strong>Hints:</strong>
                 <ol>
-                    <li>Multiple groups can be added by separating each group name with a space</li>
+                    <li>Multiple groups can be added by separating each group name with a space or comma</li>
                     <li>Group names can have spaces if entered in quotes. e.g "My New Group"</li>
                 </ol>
                 <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>

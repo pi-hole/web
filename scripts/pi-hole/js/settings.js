@@ -114,6 +114,7 @@ function setConfigValues(topic, key, value) {
 
 function saveSettings() {
   var settings = {};
+  utils.disableAll();
   $("[data-key]").each(function () {
     var key = $(this).data("key");
     var value = $(this).val();
@@ -168,6 +169,7 @@ function saveSettings() {
     contentType: "application/json; charset=utf-8",
   })
     .done(function () {
+      utils.enableAll();
       // Success
       utils.showAlert(
         "success",
@@ -178,7 +180,10 @@ function saveSettings() {
       // Show loading overlay
       utils.loadingOverlay(true);
     })
-    .fail(function (data) {
+    .fail(function (data, exception) {
+      utils.enableAll();
+      utils.showAlert("error", "", "Error while applying settings", data.responseText);
+      console.log(exception); // eslint-disable-line no-console
       apiFailure(data);
     });
 }

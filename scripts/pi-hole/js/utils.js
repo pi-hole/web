@@ -86,8 +86,8 @@ function padNumber(num) {
 var showAlertBox = null;
 function showAlert(type, icon, title, message) {
   const options = {
-      title: "&nbsp;<strong>" + title + "</strong><br>",
-      message: message,
+      title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
+      message: escapeHtml(message),
       icon: icon,
     },
     settings = {
@@ -123,9 +123,9 @@ function showAlert(type, icon, title, message) {
         var data = JSON.parse(message);
         console.log(data); // eslint-disable-line no-console
         if (data.error !== undefined) {
-          options.title = "&nbsp;<strong>" + data.error.message + "</strong><br>";
+          options.title = "&nbsp;<strong>" + escapeHtml(data.error.message) + "</strong><br>";
 
-          if (data.error.hint !== null) options.message = data.error.hint;
+          if (data.error.hint !== null) options.message = escapeHtml(data.error.hint);
         }
       } catch {
         // Do nothing
@@ -319,6 +319,7 @@ function addFromQueryLog(domain, list) {
       method: "post",
       dataType: "json",
       processData: false,
+      contentType: "application/json; charset=utf-8",
       data: JSON.stringify({
         domain: domain,
         comment: "Added from Query Log",
@@ -655,6 +656,42 @@ function loadingOverlay(reloadAfterTimeout = false) {
   return true;
 }
 
+// Function that calls a function only if the page is currently visible. This is
+// useful to prevent unnecessary API calls when the page is not visible (e.g.
+// when the user is on another tab).
+function callIfVisible(func) {
+  if (document.hidden) {
+    // Page is not visible, try again in 1 second
+    window.setTimeout(callIfVisible, 1000, func);
+    return;
+  }
+
+  // Page is visible, call function instead
+  func();
+}
+
+// Timer that calls a function after <interval> milliseconds but only if the
+// page is currently visible. We cancel possibly running timers for the same
+// function before starting a new one to prevent multiple timers running at
+// the same time causing unnecessary identical API calls when the page is
+// visible again.
+function setTimer(func, interval) {
+  // Cancel possibly running timer
+  window.clearTimeout(func.timer);
+  // Start new timer
+  func.timer = window.setTimeout(callIfVisible, interval, func);
+}
+
+// Same as setTimer() but calls the function every <interval> milliseconds
+function setInter(func, interval) {
+  // Cancel possibly running timer
+  window.clearTimeout(func.timer);
+  // Start new timer
+  func.timer = window.setTimeout(callIfVisible, interval, func);
+  // Restart timer
+  window.setTimeout(setInter, interval, func, interval);
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -689,5 +726,7 @@ window.utils = (function () {
     hexDecode: hexDecode,
     listsAlert: listAlert,
     loadingOverlay: loadingOverlay,
+    setTimer: setTimer,
+    setInter: setInter,
   };
 })();

@@ -75,7 +75,7 @@ $(function () {
         '<input id="name_' + data.id + '" title="' + tooltip + '" class="form-control">'
       );
       var nameEl = $("#name_" + data.id, row);
-      nameEl.val(utils.unescapeHtml(data.name));
+      nameEl.val(data.name);
       nameEl.on("change", editGroup);
 
       $("td:eq(2)", row).html(
@@ -98,7 +98,7 @@ $(function () {
       $("td:eq(3)", row).html('<input id="comment_' + data.id + '" class="form-control">');
       var comment = data.comment !== null ? data.comment : "";
       var commentEl = $("#comment_" + data.id, row);
-      commentEl.val(utils.unescapeHtml(comment));
+      commentEl.val(comment);
       commentEl.on("change", editGroup);
 
       $("td:eq(4)", row).empty();
@@ -277,7 +277,7 @@ function delItems(ids) {
 }
 
 function addGroup() {
-  const comment = utils.escapeHtml($("#new_comment").val());
+  const comment = $("#new_comment").val();
 
   // Check if the user wants to add multiple groups (space or newline separated)
   // If so, split the input and store it in an array
@@ -306,6 +306,7 @@ function addGroup() {
     method: "post",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       name: names,
       comment: comment,
@@ -336,9 +337,9 @@ function editGroup() {
   const tr = $(this).closest("tr");
   const id = tr.attr("data-id");
   const oldName = idNames[id];
-  const name = utils.escapeHtml(tr.find("#name_" + id).val());
+  const name = tr.find("#name_" + id).val();
   const enabled = tr.find("#enabled_" + id).is(":checked");
-  const comment = utils.escapeHtml(tr.find("#comment_" + id).val());
+  const comment = tr.find("#comment_" + id).val();
 
   var done = "edited";
   var notDone = "editing";
@@ -373,6 +374,7 @@ function editGroup() {
     method: "put",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       name: name,
       comment: comment,

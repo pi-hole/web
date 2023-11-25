@@ -85,6 +85,7 @@ function parseQueryStatus(data) {
     buttontext,
     icon = null,
     colorClass = false,
+    blocked = false,
     isCNAME = false;
   switch (data.status) {
     case "GRAVITY":
@@ -93,6 +94,7 @@ function parseQueryStatus(data) {
       fieldtext = "Blocked (gravity)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      blocked = true;
       break;
     case "FORWARDED":
       colorClass = "text-green";
@@ -114,6 +116,7 @@ function parseQueryStatus(data) {
       fieldtext = "Blocked (regex)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      blocked = true;
       break;
     case "DENYLIST":
       colorClass = "text-red";
@@ -121,24 +124,28 @@ function parseQueryStatus(data) {
       fieldtext = "Blocked (exact)";
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      blocked = true;
       break;
     case "EXTERNAL_BLOCKED_IP":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (external, IP)";
       buttontext = "";
+      blocked = true;
       break;
     case "EXTERNAL_BLOCKED_NULL":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (external, NULL)";
       buttontext = "";
+      blocked = true;
       break;
     case "EXTERNAL_BLOCKED_NXRA":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (external, NXRA)";
       buttontext = "";
+      blocked = true;
       break;
     case "GRAVITY_CNAME":
       colorClass = "text-red";
@@ -147,6 +154,7 @@ function parseQueryStatus(data) {
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
+      blocked = true;
       break;
     case "REGEX_CNAME":
       colorClass = "text-red";
@@ -155,6 +163,7 @@ function parseQueryStatus(data) {
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
+      blocked = true;
       break;
     case "DENYLIST_CNAME":
       colorClass = "text-red";
@@ -163,6 +172,7 @@ function parseQueryStatus(data) {
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
+      blocked = true;
       break;
     case "RETRIED":
       colorClass = "text-green";
@@ -207,6 +217,7 @@ function parseQueryStatus(data) {
     icon: icon,
     isCNAME: isCNAME,
     matchText: matchText,
+    blocked: blocked,
   };
 }
 
@@ -219,8 +230,8 @@ function formatReplyTime(replyTime, type) {
     return replyTime < 1e-4
       ? (1e6 * replyTime).toFixed(1) + " µs"
       : replyTime < 1
-      ? (1e3 * replyTime).toFixed(1) + " ms"
-      : replyTime.toFixed(1) + " s";
+        ? (1e3 * replyTime).toFixed(1) + " ms"
+        : replyTime.toFixed(1) + " s";
   }
 
   // else: return the number itself (for sorting and searching)
@@ -562,6 +573,9 @@ $(function () {
         $(row).addClass(querystatus.colorClass);
       }
 
+      // Define row background color
+      $(row).addClass(querystatus.blocked === true ? "blocked-row" : "allowed-row");
+
       // Substitute domain by "." if empty
       var domain = data.domain === 0 ? "." : data.domain;
 
@@ -603,8 +617,8 @@ $(function () {
     event.stopPropagation();
   });
 
-  // Add event listener for opening and closing details
-  $("#all-queries tbody").on("click", "tr", function () {
+  // Add event listener for opening and closing details, except on rows with "details-row" class
+  $("#all-queries tbody").on("click", "tr:not(.details-row)", function () {
     var tr = $(this);
     var row = table.row(tr);
 
@@ -618,8 +632,8 @@ $(function () {
       row.child.hide();
       tr.removeClass("shown");
     } else {
-      // Open this row
-      row.child(formatInfo(row.data())).show();
+      // Open this row. Add a class to the row
+      row.child(formatInfo(row.data()), "details-row").show();
       tr.addClass("shown");
     }
   });

@@ -5,12 +5,10 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment: false, apiFailure: false, utils: false */
+/* global moment: false, apiFailure: false, utils: false, REFRESH_INTERVAL: false */
 
 var nextID = 0;
-
-// Check every 0.5s for fresh data
-const interval = 500;
+var lastPID = -1;
 
 // Maximum number of lines to display
 const maxlines = 5000;
@@ -25,7 +23,7 @@ const markUpdates = true;
 function getData() {
   // Only update when spinner is spinning
   if (!$("#feed-icon").hasClass("fa-play")) {
-    window.setTimeout(getData, interval);
+    utils.setTimer(getData, REFRESH_INTERVAL.logs);
     return;
   }
 
@@ -41,12 +39,28 @@ function getData() {
     method: "GET",
   })
     .done(function (data) {
+      // Check if we have a new PID -> FTL was restarted
+      if (lastPID !== data.pid) {
+        if (lastPID !== -1) {
+          $("#output").append("<i class='text-danger'>*** FTL restarted ***</i><br>");
+        }
+
+        // Remember PID
+        lastPID = data.pid;
+        // Reset nextID
+        nextID = 0;
+
+        getData();
+        return;
+      }
+
+      // Set placeholder text if log file is empty and we have no new lines
       if (data.log.length === 0) {
         if (nextID === 0) {
           $("#output").html("<i>*** Log file is empty ***</i>");
         }
 
-        window.setTimeout(getData, interval);
+        utils.setTimer(getData, REFRESH_INTERVAL.logs);
         return;
       }
 
@@ -90,11 +104,11 @@ function getData() {
       // Set filename
       $("#filename").text(data.file);
 
-      window.setTimeout(getData, interval);
+      utils.setTimer(getData, REFRESH_INTERVAL.logs);
     })
     .fail(function (data) {
       apiFailure(data);
-      window.setTimeout(getData, 5 * interval);
+      utils.setTimer(getData, 5 * REFRESH_INTERVAL.logs);
     });
 }
 

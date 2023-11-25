@@ -6,6 +6,7 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false */
+/* exported initTable */
 
 var table;
 var GETDict = {};
@@ -17,7 +18,7 @@ $(function () {
   $("#btnAddBlock").on("click", { type: "block" }, addList);
 
   utils.setBsSelectDefaults();
-  initTable();
+  getGroups();
 });
 
 function format(data) {
@@ -98,305 +99,306 @@ function format(data) {
   );
 }
 
+// eslint-disable-next-line no-unused-vars
 function initTable() {
-  table = $("#listsTable")
-    .on("preXhr.dt", function () {
-      getGroups();
-    })
-    .DataTable({
-      processing: true,
-      ajax: {
-        url: "/api/lists",
-        dataSrc: "lists",
-        type: "GET",
-      },
-      order: [[0, "asc"]],
-      columns: [
-        { data: "id", visible: false },
-        { data: null, visible: true, orderable: false, width: "15px" },
-        { data: "status", searchable: false, class: "details-control" },
-        { data: "address" },
-        { data: "enabled", searchable: false },
-        { data: "comment" },
-        { data: "groups", searchable: false },
-        { data: null, width: "22px", orderable: false },
-      ],
-      columnDefs: [
-        {
-          targets: 1,
-          className: "select-checkbox",
-          render: function () {
-            return "";
-          },
+  table = $("#listsTable").DataTable({
+    processing: true,
+    ajax: {
+      url: "/api/lists",
+      dataSrc: "lists",
+      type: "GET",
+    },
+    order: [[0, "asc"]],
+    columns: [
+      { data: "id", visible: false },
+      { data: null, visible: true, orderable: false, width: "15px" },
+      { data: "status", searchable: false, class: "details-control" },
+      { data: "address" },
+      { data: "enabled", searchable: false },
+      { data: "comment" },
+      { data: "groups", searchable: false },
+      { data: null, width: "22px", orderable: false },
+    ],
+    columnDefs: [
+      {
+        targets: 1,
+        className: "select-checkbox",
+        render: function () {
+          return "";
         },
-        {
-          targets: "_all",
-          render: $.fn.dataTable.render.text(),
-        },
-      ],
-      drawCallback: function () {
-        // Hide buttons if all lists were deleted
-        var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
-        $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
-
-        $('button[id^="deleteList_"]').on("click", deleteList);
-        // Remove visible dropdown to prevent orphaning
-        $("body > .bootstrap-select.dropdown").remove();
       },
-      rowCallback: function (row, data) {
-        var dataId = utils.hexEncode(data.address);
-        $(row).attr("data-id", dataId);
-        $(row).attr("data-type", data.type);
+      {
+        targets: "_all",
+        render: $.fn.dataTable.render.text(),
+      },
+    ],
+    drawCallback: function () {
+      // Hide buttons if all lists were deleted
+      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
-        var statusCode = 0,
-          statusIcon;
-        // If there is no status or the list is disabled, we keep
-        // status 0 (== unknown)
-        if (data.status !== null && data.enabled) {
-          statusCode = parseInt(data.status, 10);
-        }
+      $('button[id^="deleteList_"]').on("click", deleteList);
+      // Remove visible dropdown to prevent orphaning
+      $("body > .bootstrap-select.dropdown").remove();
+    },
+    rowCallback: function (row, data) {
+      var dataId = utils.hexEncode(data.address);
+      $(row).attr("data-id", dataId);
+      $(row).attr("data-type", data.type);
 
-        switch (statusCode) {
-          case 1:
-            statusIcon = "fa-check";
-            break;
-          case 2:
-            statusIcon = "fa-history";
-            break;
-          case 3:
-            statusIcon = "fa-exclamation-circle";
-            break;
-          case 4:
-            statusIcon = "fa-times";
-            break;
-          default:
-            statusIcon = "fa-question-circle";
-            break;
-        }
+      var statusCode = 0,
+        statusIcon;
+      // If there is no status or the list is disabled, we keep
+      // status 0 (== unknown)
+      if (data.status !== null && data.enabled) {
+        statusCode = parseInt(data.status, 10);
+      }
 
-        // Add red minus sign icon if data["type"] is "block"
-        // Add green plus sign icon if data["type"] is "allow"
-        let status =
-          "<i class='fa fa-fw fa-question-circle text-orange' title='This list is of unknown type'></i>";
-        if (data.type === "block") {
-          status = "<i class='fa fa-fw fa-minus text-red' title='This is a blocklist'></i>";
-        } else if (data.type === "allow") {
-          status = "<i class='fa fa-fw fa-plus text-green' title='This is an allowlist'></i>";
-        }
+      switch (statusCode) {
+        case 1:
+          statusIcon = "fa-check";
+          break;
+        case 2:
+          statusIcon = "fa-history";
+          break;
+        case 3:
+          statusIcon = "fa-exclamation-circle";
+          break;
+        case 4:
+          statusIcon = "fa-times";
+          break;
+        default:
+          statusIcon = "fa-question-circle";
+          break;
+      }
 
-        $("td:eq(1)", row).addClass("list-status-" + statusCode);
-        $("td:eq(1)", row).html(
-          "<i class='fa fa-fw " +
-            statusIcon +
-            "' title='Click for details about this list'></i>" +
-            status
-        );
+      // Add red minus sign icon if data["type"] is "block"
+      // Add green plus sign icon if data["type"] is "allow"
+      let status =
+        "<i class='fa fa-fw fa-question-circle text-orange' title='This list is of unknown type'></i>";
+      if (data.type === "block") {
+        status = "<i class='fa fa-fw fa-minus text-red' title='This is a blocklist'></i>";
+      } else if (data.type === "allow") {
+        status = "<i class='fa fa-fw fa-plus text-green' title='This is an allowlist'></i>";
+      }
 
-        if (data.address.startsWith("file://")) {
-          // Local files cannot be downloaded from a distant client so don't show
-          // a link to such a list here
-          $("td:eq(2)", row).html(
-            '<code id="address_' + dataId + '" class="breakall">' + data.address + "</code>"
-          );
-        } else {
-          $("td:eq(2)", row).html(
-            '<a id="address_' +
-              dataId +
-              '" class="breakall" href="' +
-              data.address +
-              '" target="_blank" rel="noopener noreferrer">' +
-              data.address +
-              "</a>"
-          );
-        }
+      $("td:eq(1)", row).addClass("list-status-" + statusCode);
+      $("td:eq(1)", row).html(
+        "<i class='fa fa-fw " +
+          statusIcon +
+          "' title='Click for details about this list'></i>" +
+          status
+      );
 
-        $("td:eq(3)", row).html(
-          '<input type="checkbox" id="enabled_' +
+      if (data.address.startsWith("file://")) {
+        // Local files cannot be downloaded from a distant client so don't show
+        // a link to such a list here
+        $("td:eq(2)", row).html(
+          '<code id="address_' +
             dataId +
-            '"' +
-            (data.enabled ? " checked" : "") +
-            ">"
+            '" class="breakall">' +
+            utils.escapeHtml(data.address) +
+            "</code>"
         );
-        var statusEl = $("#enabled_" + dataId, row);
-        statusEl.bootstrapToggle({
-          on: "Enabled",
-          off: "Disabled",
-          size: "small",
-          onstyle: "success",
-          width: "80px",
-        });
-        statusEl.on("change", editList);
-
-        $("td:eq(4)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-        var commentEl = $("#comment_" + dataId, row);
-        commentEl.val(utils.unescapeHtml(data.comment));
-        commentEl.on("change", editList);
-
-        $("td:eq(5)", row).empty();
-        $("td:eq(5)", row).append(
-          '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
+      } else {
+        $("td:eq(2)", row).html(
+          '<a id="address_' +
+            dataId +
+            '" class="breakall" href="' +
+            encodeURI(data.address) +
+            '" target="_blank" rel="noopener noreferrer">' +
+            utils.escapeHtml(data.address) +
+            "</a>"
         );
-        var selectEl = $("#multiselect_" + dataId, row);
-        // Add all known groups
-        for (var i = 0; i < groups.length; i++) {
-          var dataSub = "";
-          if (!groups[i].enabled) {
-            dataSub = 'data-subtext="(disabled)"';
-          }
+      }
 
-          selectEl.append(
-            $("<option " + dataSub + "/>")
-              .val(groups[i].id)
-              .text(groups[i].name)
-          );
-        }
-
-        // Select assigned groups
-        selectEl.val(data.groups);
-        // Initialize bootstrap-select
-        selectEl
-          // fix dropdown if it would stick out right of the viewport
-          .on("show.bs.select", function () {
-            var winWidth = $(window).width();
-            var dropdownEl = $("body > .bootstrap-select.dropdown");
-            if (dropdownEl.length > 0) {
-              dropdownEl.removeClass("align-right");
-              var width = dropdownEl.width();
-              var left = dropdownEl.offset().left;
-              if (left + width > winWidth) {
-                dropdownEl.addClass("align-right");
-              }
-            }
-          })
-          .on("changed.bs.select", function () {
-            // enable Apply button
-            if ($(applyBtn).prop("disabled")) {
-              $(applyBtn)
-                .addClass("btn-success")
-                .prop("disabled", false)
-                .on("click", function () {
-                  editList.call(selectEl);
-                });
-            }
-          })
-          .on("hide.bs.select", function () {
-            // Restore values if drop-down menu is closed without clicking the Apply button
-            if (!$(applyBtn).prop("disabled")) {
-              $(this).val(data.groups).selectpicker("refresh");
-              $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
-            }
-          })
-          .selectpicker()
-          .siblings(".dropdown-menu")
-          .find(".bs-actionsbox")
-          .prepend(
-            '<button type="button" id=btn_apply_' +
-              dataId +
-              ' class="btn btn-block btn-sm" disabled>Apply</button>'
-          );
-
-        var applyBtn = "#btn_apply_" + dataId;
-
-        // Highlight row (if url parameter "listid=" is used)
-        if ("listid" in GETDict && data.id === parseInt(GETDict.listid, 10)) {
-          $(row).find("td").addClass("highlight");
-        }
-
-        var button =
-          '<button type="button" class="btn btn-danger btn-xs" id="deleteList_' +
+      $("td:eq(3)", row).html(
+        '<input type="checkbox" id="enabled_' +
           dataId +
-          '" data-id="' +
-          dataId +
-          '">' +
-          '<span class="far fa-trash-alt"></span>' +
-          "</button>";
-        $("td:eq(6)", row).html(button);
-      },
-      dom:
-        "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
-        "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
-        "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
-        "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
-        "<'row'<'col-sm-12'i>>",
-      lengthMenu: [
-        [10, 25, 50, 100, -1],
-        [10, 25, 50, 100, "All"],
-      ],
-      select: {
-        style: "multi",
-        selector: "td:not(:last-child)",
-        info: false,
-      },
-      buttons: [
-        {
-          text: '<span class="far fa-square"></span>',
-          titleAttr: "Select All",
-          className: "btn-sm datatable-bt selectAll",
-          action: function () {
-            table.rows({ page: "current" }).select();
-          },
-        },
-        {
-          text: '<span class="far fa-plus-square"></span>',
-          titleAttr: "Select All",
-          className: "btn-sm datatable-bt selectMore",
-          action: function () {
-            table.rows({ page: "current" }).select();
-          },
-        },
-        {
-          extend: "selectNone",
-          text: '<span class="far fa-check-square"></span>',
-          titleAttr: "Deselect All",
-          className: "btn-sm datatable-bt removeAll",
-        },
-        {
-          text: '<span class="far fa-trash-alt"></span>',
-          titleAttr: "Delete Selected",
-          className: "btn-sm datatable-bt deleteSelected",
-          action: function () {
-            // For each ".selected" row ...
-            var ids = [];
-            $("tr.selected").each(function () {
-              // ... add the row identified by "data-id".
-              ids.push($(this).attr("data-id"));
-            });
-            // Delete all selected rows at once
-            delItems(ids);
-          },
-        },
-      ],
-      stateSave: true,
-      stateDuration: 0,
-      stateSaveCallback: function (settings, data) {
-        utils.stateSaveCallback("groups-lists-table", data);
-      },
-      stateLoadCallback: function () {
-        var data = utils.stateLoadCallback("groups-lists-table");
+          '"' +
+          (data.enabled ? " checked" : "") +
+          ">"
+      );
+      var statusEl = $("#enabled_" + dataId, row);
+      statusEl.bootstrapToggle({
+        on: "Enabled",
+        off: "Disabled",
+        size: "small",
+        onstyle: "success",
+        width: "80px",
+      });
+      statusEl.on("change", editList);
 
-        // Return if not available
-        if (data === null) {
-          return null;
+      $("td:eq(4)", row).html('<input id="comment_' + dataId + '" class="form-control">');
+      var commentEl = $("#comment_" + dataId, row);
+      commentEl.val(data.comment);
+      commentEl.on("change", editList);
+
+      $("td:eq(5)", row).empty();
+      $("td:eq(5)", row).append(
+        '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
+      );
+      var selectEl = $("#multiselect_" + dataId, row);
+      // Add all known groups
+      for (var i = 0; i < groups.length; i++) {
+        var dataSub = "";
+        if (!groups[i].enabled) {
+          dataSub = 'data-subtext="(disabled)"';
         }
 
-        // Reset visibility of ID column
-        data.columns[0].visible = false;
-        // Apply loaded state to table
-        return data;
-      },
-      initComplete: function () {
-        if ("listid" in GETDict) {
-          var pos = table
-            .column(0, { order: "current" })
-            .data()
-            .indexOf(parseInt(GETDict.listid, 10));
-          if (pos >= 0) {
-            var page = Math.floor(pos / table.page.info().length);
-            table.page(page).draw(false);
+        selectEl.append(
+          $("<option " + dataSub + "/>")
+            .val(groups[i].id)
+            .text(groups[i].name)
+        );
+      }
+
+      // Select assigned groups
+      selectEl.val(data.groups);
+      // Initialize bootstrap-select
+      selectEl
+        // fix dropdown if it would stick out right of the viewport
+        .on("show.bs.select", function () {
+          var winWidth = $(window).width();
+          var dropdownEl = $("body > .bootstrap-select.dropdown");
+          if (dropdownEl.length > 0) {
+            dropdownEl.removeClass("align-right");
+            var width = dropdownEl.width();
+            var left = dropdownEl.offset().left;
+            if (left + width > winWidth) {
+              dropdownEl.addClass("align-right");
+            }
           }
-        }
+        })
+        .on("changed.bs.select", function () {
+          // enable Apply button
+          if ($(applyBtn).prop("disabled")) {
+            $(applyBtn)
+              .addClass("btn-success")
+              .prop("disabled", false)
+              .on("click", function () {
+                editList.call(selectEl);
+              });
+          }
+        })
+        .on("hide.bs.select", function () {
+          // Restore values if drop-down menu is closed without clicking the Apply button
+          if (!$(applyBtn).prop("disabled")) {
+            $(this).val(data.groups).selectpicker("refresh");
+            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+          }
+        })
+        .selectpicker()
+        .siblings(".dropdown-menu")
+        .find(".bs-actionsbox")
+        .prepend(
+          '<button type="button" id=btn_apply_' +
+            dataId +
+            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+        );
+
+      var applyBtn = "#btn_apply_" + dataId;
+
+      // Highlight row (if url parameter "listid=" is used)
+      if ("listid" in GETDict && data.id === parseInt(GETDict.listid, 10)) {
+        $(row).find("td").addClass("highlight");
+      }
+
+      var button =
+        '<button type="button" class="btn btn-danger btn-xs" id="deleteList_' +
+        dataId +
+        '" data-id="' +
+        dataId +
+        '">' +
+        '<span class="far fa-trash-alt"></span>' +
+        "</button>";
+      $("td:eq(6)", row).html(button);
+    },
+    dom:
+      "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
+      "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
+      "<'row'<'col-sm-3'B><'col-sm-9'p>>" +
+      "<'row'<'col-sm-12'i>>",
+    lengthMenu: [
+      [10, 25, 50, 100, -1],
+      [10, 25, 50, 100, "All"],
+    ],
+    select: {
+      style: "multi",
+      selector: "td:not(:last-child)",
+      info: false,
+    },
+    buttons: [
+      {
+        text: '<span class="far fa-square"></span>',
+        titleAttr: "Select All",
+        className: "btn-sm datatable-bt selectAll",
+        action: function () {
+          table.rows({ page: "current" }).select();
+        },
       },
-    });
+      {
+        text: '<span class="far fa-plus-square"></span>',
+        titleAttr: "Select All",
+        className: "btn-sm datatable-bt selectMore",
+        action: function () {
+          table.rows({ page: "current" }).select();
+        },
+      },
+      {
+        extend: "selectNone",
+        text: '<span class="far fa-check-square"></span>',
+        titleAttr: "Deselect All",
+        className: "btn-sm datatable-bt removeAll",
+      },
+      {
+        text: '<span class="far fa-trash-alt"></span>',
+        titleAttr: "Delete Selected",
+        className: "btn-sm datatable-bt deleteSelected",
+        action: function () {
+          // For each ".selected" row ...
+          var ids = [];
+          $("tr.selected").each(function () {
+            // ... add the row identified by "data-id".
+            ids.push($(this).attr("data-id"));
+          });
+          // Delete all selected rows at once
+          delItems(ids);
+        },
+      },
+    ],
+    stateSave: true,
+    stateDuration: 0,
+    stateSaveCallback: function (settings, data) {
+      utils.stateSaveCallback("groups-lists-table", data);
+    },
+    stateLoadCallback: function () {
+      var data = utils.stateLoadCallback("groups-lists-table");
+
+      // Return if not available
+      if (data === null) {
+        return null;
+      }
+
+      // Reset visibility of ID column
+      data.columns[0].visible = false;
+      // Apply loaded state to table
+      return data;
+    },
+    initComplete: function () {
+      if ("listid" in GETDict) {
+        var pos = table
+          .column(0, { order: "current" })
+          .data()
+          .indexOf(parseInt(GETDict.listid, 10));
+        if (pos >= 0) {
+          var page = Math.floor(pos / table.page.info().length);
+          table.page(page).draw(false);
+        }
+      }
+    },
+  });
 
   table.on("init select deselect", function () {
     utils.changeBulkDeleteStates(table);
@@ -464,7 +466,7 @@ function delItems(ids) {
 
   utils.disableAll();
   const idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting list(s) ...", "<ul>" + address + "</ul>");
+  utils.showAlert("info", "", "Deleting list(s) ...", address);
 
   $.ajax({
     url: "/api/lists/" + encodeURIComponent(address),
@@ -499,11 +501,13 @@ function delItems(ids) {
 
 function addList(event) {
   const type = event.data.type;
-  const comment = utils.escapeHtml($("#new_comment").val());
+  const comment = $("#new_comment").val();
 
   // Check if the user wants to add multiple domains (space or newline separated)
   // If so, split the input and store it in an array
-  var addresses = utils.escapeHtml($("#new_address").val()).split(/[\s,]+/);
+  var addresses = $("#new_address")
+    .val()
+    .split(/[\s,]+/);
   // Remove empty elements
   addresses = addresses.filter(function (el) {
     return el !== "";
@@ -525,10 +529,13 @@ function addList(event) {
     method: "post",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({ address: addresses, comment: comment, type: type }),
     success: function (data) {
       utils.enableAll();
       utils.listsAlert("list", addresses, data);
+      $("#new_address").val("");
+      $("#new_comment").val("");
       table.ajax.reload(null, false);
       table.rows().deselect();
 
@@ -591,6 +598,7 @@ function editList() {
     method: "put",
     dataType: "json",
     processData: false,
+    contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       groups: groups,
       comment: comment,
