@@ -82,8 +82,10 @@ function format(data) {
 }
 
 // Define the status icon element
-function setStatusIcon(statusCode) {
-  var statusIcon;
+function setStatusIcon(data) {
+  var statusCode = parseInt(data.status, 10),
+    statusTitle = setStatusText(data) + "\nClick for details about this list",
+    statusIcon;
 
   switch (statusCode) {
     case 1:
@@ -103,7 +105,7 @@ function setStatusIcon(statusCode) {
       break;
   }
 
-  return "<i class='fa fa-fw " + statusIcon + "' title='Click for details about this list'></i>";
+  return "<i class='fa fa-fw " + statusIcon + "' title='" + statusTitle + "'></i>";
 }
 
 // Define human-friendly status string
@@ -146,19 +148,21 @@ function setStatusText(data, showdetails = false) {
   return statusText + (showdetails === true ? statusDetails : "");
 }
 
-// Define the status icon element
+// Define the type icon element
 function setTypeIcon(type) {
   //Add red ban icon if data["type"] is "block"
   //Add green check icon if data["type"] is "allow"
-  let typeIcon =
-    "<i class='fa fa-fw fa-question text-orange' title='This list is of unknown type'></i> ";
+  let iconClass = "fa-question text-orange",
+    title = "This list is of unknown type";
   if (type === "block") {
-    typeIcon = "<i class='fa fa-fw fa-ban text-red' title='This is a blocklist'></i> ";
+    iconClass = "fa-ban text-red";
+    title = "This is a blocklist";
   } else if (type === "allow") {
-    typeIcon = "<i class='fa fa-fw fa-check text-green' title='This is an allowlist'></i> ";
+    iconClass = "fa-check text-green";
+    title = "This is an allowlist";
   }
 
-  return typeIcon;
+  return `<i class='fa fa-fw ${iconClass}' title='${title}\nClick for details about this list'></i> `;
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -217,7 +221,7 @@ function initTable() {
       }
 
       $("td:eq(1)", row).addClass("list-status-" + statusCode);
-      $("td:eq(1)", row).html(setStatusIcon(statusCode));
+      $("td:eq(1)", row).html(setStatusIcon(data));
 
       $("td:eq(2)", row).addClass("list-type-" + statusCode);
       $("td:eq(2)", row).html(setTypeIcon(data.type));
