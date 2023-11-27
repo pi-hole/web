@@ -67,13 +67,13 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                 <div id="modal-import-success" style="display:none">
                     <div class="alert alert-success alert-dismissible">
                         <h4><i class="icon fa fa-fw fa-check"></i> <span id="modal-import-success-title"></span></h4>
-                        <p id="modal-import-success-message"></p>
+                        <div id="modal-import-success-message"></div>
                     </div>
                 </div>
                 <div id="modal-import-error" style="display:none">
                     <div class="alert alert-danger alert-dismissible">
                         <h4><i class="icon fa fa-fw fa-ban"></i> <span id="modal-import-error-title"></span></h4>
-                        <p id="modal-import-error-message"></p>
+                        <div id="modal-import-error-message"></div>
                     </div>
                 </div>
                 <div id="modal-import-gravity" style="display:none">
@@ -82,7 +82,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                         <p>Use <a href='/admin/gravity'>Tools &rarr; Gravity</a> or run <code>pihole -g</code> to update your lists.</p>
                     </div>
                 </div>
-                <p id="modal-import-info-message"></p>
+                <div id="modal-import-info-message"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
