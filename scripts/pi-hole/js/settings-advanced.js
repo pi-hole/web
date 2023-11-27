@@ -11,13 +11,13 @@
 function addAllowedValues(allowed) {
   if (typeof allowed === "object") {
     return (
-      "<p>Available options: <ul><li>" +
+      "<p>Available options:</p><ul><li>" +
       allowed
         .map(function (option) {
           return "<code>" + option.item + "</code>: " + utils.escapeHtml(option.description);
         })
         .join("</li><li>") +
-      "</li></ul></p>"
+      "</li></ul>"
     );
   } else if (typeof allowed === "string") {
     return "<p><small>Allowed value: " + utils.escapeHtml(allowed) + "</small></p>";

@@ -49,12 +49,12 @@ function importZIP() {
       } else if ("files" in data) {
         $("#modal-import-success").show();
         $("#modal-import-success-title").text("Import successful");
-        var text = "<p>Processed files:<ul>";
+        var text = "<p>Processed files:</p><ul>";
         for (var i = 0; i < data.files.length; i++) {
           text += "<li>/" + utils.escapeHtml(data.files[i]) + "</li>";
         }
 
-        text += "</ul></p>";
+        text += "</ul>";
         $("#modal-import-success-message").html(text);
         $("#modal-import-gravity").show();
       }
