@@ -23,39 +23,10 @@ $(function () {
 
 function format(data) {
   // Generate human-friendly status string
-  var statusText = "Unknown";
+  var statusText = setStatusText(data, true);
   var numbers = true;
-  if (data.status !== null) {
-    switch (parseInt(data.status, 10)) {
-      case 0:
-        statusText =
-          data.enabled === 0
-            ? "List is disabled and not checked"
-            : "List was not downloaded so far";
-        numbers = false;
-        break;
-      case 1:
-        statusText = 'List download was successful (<span class="list-status-1">OK</span>)';
-        break;
-      case 2:
-        statusText =
-          'List unchanged upstream, Pi-hole used a local copy (<span class="list-status-2">OK</span>)';
-        break;
-      case 3:
-        statusText =
-          'List unavailable, Pi-hole used a local copy (<span class="list-status-3">check list</span>)';
-        break;
-      case 4:
-        statusText =
-          'List unavailable, there is no local copy of this list available on your Pi-hole (<span class="list-status-4">replace list</span>)';
-        numbers = false;
-        break;
-
-      default:
-        statusText =
-          'Unknown (<span class="list-status-0">' + parseInt(data.status, 10) + "</span>)";
-        break;
-    }
+  if (data.status === 0 || data.status === 4) {
+    numbers = false;
   }
 
   // Compile extra info for displaying
@@ -133,6 +104,46 @@ function setStatusIcon(statusCode) {
   }
 
   return "<i class='fa fa-fw " + statusIcon + "' title='Click for details about this list'></i>";
+}
+
+// Define human-friendly status string
+function setStatusText(data, showdetails = false) {
+  var statusText = "Unknown",
+    statusDetails = "";
+  if (data.status !== null) {
+    switch (parseInt(data.status, 10)) {
+      case 0:
+        statusText =
+          data.enabled === 0
+            ? "List is disabled and not checked"
+            : "List was not downloaded so far";
+        break;
+      case 1:
+        statusText = "List download was successful";
+        statusDetails = ' (<span class="list-status-1">OK</span>)';
+        break;
+      case 2:
+        statusText = "List unchanged upstream, Pi-hole used a local copy";
+        statusDetails = ' (<span class="list-status-2">OK</span>)';
+        break;
+      case 3:
+        statusText = "List unavailable, Pi-hole used a local copy";
+        statusDetails = ' (<span class="list-status-3">check list</span>)';
+        break;
+      case 4:
+        statusText =
+          "List unavailable, there is no local copy of this list available on your Pi-hole";
+        statusDetails = ' (<span class="list-status-4">replace list</span>)';
+        break;
+
+      default:
+        statusText = "Unknown";
+        statusDetails = ' (<span class="list-status-0">' + parseInt(data.status, 10) + "</span>)";
+        break;
+    }
+  }
+
+  return statusText + (showdetails === true ? statusDetails : "");
 }
 
 // Define the status icon element
