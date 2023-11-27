@@ -17,7 +17,7 @@ mg.include('scripts/pi-hole/lua/header.lp','r')
                     <h3><i class="fa fa-warning text-yellow"></i> Oops! Page not found.</h3>
                     <p>
                         We could not find the page you were looking for.<br>
-                        Meanwhile, you may want to return to <a href="<?=pihole.webhome()?>">the dashboard</a> .
+                        Meanwhile, you may want to return to <a href="<?=pihole.webhome()?>">the dashboard</a>.
                     </p>
             </div>
         </section>
