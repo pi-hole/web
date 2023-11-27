@@ -59,45 +59,55 @@ function format(data) {
   }
 
   // Compile extra info for displaying
-  return (
-    "<table>" +
-    '<tr class="dataTables-child"><td>Type of this list:</td><td>' +
-    setTypeIcon(data.type) +
-    data.type +
-    'list</td><tr class="dataTables-child"><td>Health status of this list:</td><td>' +
-    statusText +
-    '</td></tr><tr class="dataTables-child"><td>This list was added to Pi-hole&nbsp;&nbsp;</td><td>' +
-    utils.datetimeRelative(data.date_added) +
-    "&nbsp;(" +
-    utils.datetime(data.date_added, false) +
-    ')</td></tr><tr class="dataTables-child"><td>Database entry was last modified&nbsp;&nbsp;</td><td>' +
-    utils.datetimeRelative(data.date_modified) +
-    "&nbsp;(" +
-    utils.datetime(data.date_modified, false) +
-    ')</td></tr><tr class="dataTables-child"><td>The list contents were last updated&nbsp;&nbsp;</td><td>' +
-    (data.date_updated > 0
-      ? utils.datetimeRelative(data.date_updated) +
-        "&nbsp;(" +
-        utils.datetime(data.date_updated, false) +
-        ")"
-      : "N/A") +
-    '</td></tr><tr class="dataTables-child"><td>Number of entries on this list:&nbsp;&nbsp;</td><td>' +
-    (data.number !== null && numbers === true
-      ? parseInt(data.number, 10).toLocaleString()
-      : "N/A") +
-    (data.abp_entries !== null && parseInt(data.abp_entries, 10) > 0 && numbers === true
-      ? " (out of which " + parseInt(data.abp_entries, 10).toLocaleString() + " are in ABP-style)"
-      : "") +
-    '</td></tr><tr class="dataTables-child"' +
-    "><td>Number of non-domains on this list:&nbsp;&nbsp;</td>" +
-    "<td>" +
-    (data.invalid_domains !== null && numbers === true
-      ? parseInt(data.invalid_domains, 10).toLocaleString()
-      : "N/A") +
-    '</td></tr><tr class="dataTables-child"><td>Database ID of this list:</td><td>' +
-    data.id +
-    "</td></tr></table>"
-  );
+  var dateAddedISO = utils.datetime(data.date_added, false),
+    dateModifiedISO = utils.datetime(data.date_modified, false),
+    dateUpdated =
+      data.date_updated > 0
+        ? utils.datetimeRelative(data.date_updated) +
+          "&nbsp;(" +
+          utils.datetime(data.date_updated, false) +
+          ")"
+        : "N/A",
+    numberOfEntries =
+      (data.number !== null && numbers === true
+        ? parseInt(data.number, 10).toLocaleString()
+        : "N/A") +
+      (data.abp_entries !== null && parseInt(data.abp_entries, 10) > 0 && numbers === true
+        ? " (out of which " + parseInt(data.abp_entries, 10).toLocaleString() + " are in ABP-style)"
+        : ""),
+    nonDomains =
+      data.invalid_domains !== null && numbers === true
+        ? parseInt(data.invalid_domains, 10).toLocaleString()
+        : "N/A";
+
+  return `<table>
+      <tr class="dataTables-child">
+        <td>Type of this list:</td><td>${setTypeIcon(data.type)}${data.type}list</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>Health status of this list:</td><td>${statusText}</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>This list was added to Pi-hole&nbsp;&nbsp;</td>
+        <td>${utils.datetimeRelative(data.date_added)}&nbsp;(${dateAddedISO})</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>Database entry was last modified&nbsp;&nbsp;</td>
+        <td>${utils.datetimeRelative(data.date_modified)}&nbsp;(${dateModifiedISO})</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>The list contents were last updated&nbsp;&nbsp;</td><td>${dateUpdated}</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>Number of entries on this list:&nbsp;&nbsp;</td><td>${numberOfEntries}</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>Number of non-domains on this list:&nbsp;&nbsp;</td><td>${nonDomains}</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>Database ID of this list:</td><td>${data.id}</td>
+      </tr>
+    </table>`;
 }
 
 // Define the status icon element
