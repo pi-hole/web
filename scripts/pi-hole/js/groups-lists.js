@@ -62,6 +62,7 @@ function format(data) {
   return (
     "<table>" +
     '<tr class="dataTables-child"><td>Type of this list:</td><td>' +
+    setTypeIcon(data.type) +
     data.type +
     'list</td><tr class="dataTables-child"><td>Health status of this list:</td><td>' +
     statusText +
@@ -99,6 +100,46 @@ function format(data) {
   );
 }
 
+// Define the status icon element
+function setStatusIcon(statusCode) {
+  var statusIcon;
+
+  switch (statusCode) {
+    case 1:
+      statusIcon = "fa-check-circle";
+      break;
+    case 2:
+      statusIcon = "fa-history";
+      break;
+    case 3:
+      statusIcon = "fa-exclamation-circle";
+      break;
+    case 4:
+      statusIcon = "fa-times-circle";
+      break;
+    default:
+      statusIcon = "fa-question-circle";
+      break;
+  }
+
+  return "<i class='fa fa-fw " + statusIcon + "' title='Click for details about this list'></i>";
+}
+
+// Define the status icon element
+function setTypeIcon(type) {
+  //Add red ban icon if data["type"] is "block"
+  //Add green check icon if data["type"] is "allow"
+  let typeIcon =
+    "<i class='fa fa-fw fa-question text-orange' title='This list is of unknown type'></i> ";
+  if (type === "block") {
+    typeIcon = "<i class='fa fa-fw fa-ban text-red' title='This is a blocklist'></i> ";
+  } else if (type === "allow") {
+    typeIcon = "<i class='fa fa-fw fa-check text-green' title='This is an allowlist'></i> ";
+  }
+
+  return typeIcon;
+}
+
 // eslint-disable-next-line no-unused-vars
 function initTable() {
   table = $("#listsTable").DataTable({
@@ -113,6 +154,7 @@ function initTable() {
       { data: "id", visible: false },
       { data: null, visible: true, orderable: false, width: "15px" },
       { data: "status", searchable: false, class: "details-control" },
+      { data: "type", searchable: false, class: "details-control" },
       { data: "address" },
       { data: "enabled", searchable: false },
       { data: "comment" },
@@ -146,54 +188,23 @@ function initTable() {
       $(row).attr("data-id", dataId);
       $(row).attr("data-type", data.type);
 
-      var statusCode = 0,
-        statusIcon;
+      var statusCode = 0;
       // If there is no status or the list is disabled, we keep
       // status 0 (== unknown)
       if (data.status !== null && data.enabled) {
         statusCode = parseInt(data.status, 10);
       }
 
-      switch (statusCode) {
-        case 1:
-          statusIcon = "fa-check";
-          break;
-        case 2:
-          statusIcon = "fa-history";
-          break;
-        case 3:
-          statusIcon = "fa-exclamation-circle";
-          break;
-        case 4:
-          statusIcon = "fa-times";
-          break;
-        default:
-          statusIcon = "fa-question-circle";
-          break;
-      }
-
-      // Add red minus sign icon if data["type"] is "block"
-      // Add green plus sign icon if data["type"] is "allow"
-      let status =
-        "<i class='fa fa-fw fa-question-circle text-orange' title='This list is of unknown type'></i>";
-      if (data.type === "block") {
-        status = "<i class='fa fa-fw fa-minus text-red' title='This is a blocklist'></i>";
-      } else if (data.type === "allow") {
-        status = "<i class='fa fa-fw fa-plus text-green' title='This is an allowlist'></i>";
-      }
-
       $("td:eq(1)", row).addClass("list-status-" + statusCode);
-      $("td:eq(1)", row).html(
-        "<i class='fa fa-fw " +
-          statusIcon +
-          "' title='Click for details about this list'></i>" +
-          status
-      );
+      $("td:eq(1)", row).html(setStatusIcon(statusCode));
+
+      $("td:eq(2)", row).addClass("list-type-" + statusCode);
+      $("td:eq(2)", row).html(setTypeIcon(data.type));
 
       if (data.address.startsWith("file://")) {
         // Local files cannot be downloaded from a distant client so don't show
         // a link to such a list here
-        $("td:eq(2)", row).html(
+        $("td:eq(3)", row).html(
           '<code id="address_' +
             dataId +
             '" class="breakall">' +
@@ -201,7 +212,7 @@ function initTable() {
             "</code>"
         );
       } else {
-        $("td:eq(2)", row).html(
+        $("td:eq(3)", row).html(
           '<a id="address_' +
             dataId +
             '" class="breakall" href="' +
@@ -212,7 +223,7 @@ function initTable() {
         );
       }
 
-      $("td:eq(3)", row).html(
+      $("td:eq(4)", row).html(
         '<input type="checkbox" id="enabled_' +
           dataId +
           '"' +
@@ -229,13 +240,13 @@ function initTable() {
       });
       statusEl.on("change", editList);
 
-      $("td:eq(4)", row).html('<input id="comment_' + dataId + '" class="form-control">');
+      $("td:eq(5)", row).html('<input id="comment_' + dataId + '" class="form-control">');
       var commentEl = $("#comment_" + dataId, row);
       commentEl.val(data.comment);
       commentEl.on("change", editList);
 
-      $("td:eq(5)", row).empty();
-      $("td:eq(5)", row).append(
+      $("td:eq(6)", row).empty();
+      $("td:eq(6)", row).append(
         '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
       );
       var selectEl = $("#multiselect_" + dataId, row);
@@ -312,7 +323,7 @@ function initTable() {
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
-      $("td:eq(6)", row).html(button);
+      $("td:eq(7)", row).html(button);
     },
     dom:
       "<'row'<'col-sm-6'l><'col-sm-6'f>>" +

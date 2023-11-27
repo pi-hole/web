@@ -516,6 +516,7 @@ tfoot.add-new-item > tr > th {
 
 td.details-control {
   cursor: pointer;
+  text-align: center;
 }
 
 .dataTables-child td {
