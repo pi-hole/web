@@ -60,7 +60,7 @@ $(function () {
       },
     ],
     drawCallback: function () {
-      $('button[id^="deleteLease_"]').on("click", deleteLease);
+      $('button[id^="deleteLease_"]').on("click", delLease);
 
       // Hide buttons if all messages were deleted
       var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
@@ -115,13 +115,10 @@ $(function () {
         className: "btn-sm datatable-bt deleteSelected",
         action: function () {
           // For each ".selected" row ...
-          var ids = [];
           $("tr.selected").each(function () {
-            // ... add the row identified by "data-id".
-            ids.push($(this).attr("data-id"));
+            // ... delete the row identified by "data-id".
+            delLease($(this).attr("data-id"));
           });
-          // Delete all selected rows at once
-          delLease(ids);
         },
       },
     ],
@@ -159,24 +156,14 @@ $(function () {
   });
 });
 
-function deleteLease() {
-  // Passes the button data-del-id attribute as IP
-  var ips = [$(this).attr("data-del-ip")];
-
-  // Check input validity
-  if (!Array.isArray(ips)) return;
-
-  // Exploit prevention: Return early for non-numeric IDs
-  for (var ip in ips) {
-    if (Object.hasOwnProperty.call(ips, ip)) {
-      delLease(ips);
-    }
-  }
-}
-
-function delLease(ip) {
+function delLease(ip = null) {
   utils.disableAll();
   utils.showAlert("info", "", "Deleting lease...");
+
+  // If no IP is passed, use the button data-del-ip attribute
+  if (ip === null) {
+    ip = $(this).attr("data-del-ip");
+  }
 
   $.ajax({
     url: "/api/dhcp/leases/" + ip,
