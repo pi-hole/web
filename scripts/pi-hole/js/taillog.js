@@ -95,7 +95,7 @@ function getData() {
 
         // Add new line to output
         $("#output").append(
-          '<span><span style="border-left: 2px red" class="left-line">&nbsp;</span><span class="text-muted">' +
+          '<span class="log-entry"><span class="text-muted">' +
             moment(1000 * line.timestamp).format("YYYY-MM-DD HH:mm:ss.SSS") +
             "</span> " +
             line.message +
