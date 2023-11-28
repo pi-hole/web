@@ -73,6 +73,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                             <th>ID</th>
                             <th></th>
                             <th class="no-padding"></th>
+                            <th class="no-padding"></th>
                             <th>Address</th>
                             <th>Status</th>
                             <th>Comment</th>

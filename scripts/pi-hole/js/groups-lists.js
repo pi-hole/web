@@ -23,8 +23,95 @@ $(function () {
 
 function format(data) {
   // Generate human-friendly status string
-  var statusText = "Unknown";
+  var statusText = setStatusText(data, true);
   var numbers = true;
+  if (data.status === 0 || data.status === 4) {
+    numbers = false;
+  }
+
+  // Compile extra info for displaying
+  var dateAddedISO = utils.datetime(data.date_added, false),
+    dateModifiedISO = utils.datetime(data.date_modified, false),
+    dateUpdated =
+      data.date_updated > 0
+        ? utils.datetimeRelative(data.date_updated) +
+          "&nbsp;(" +
+          utils.datetime(data.date_updated, false) +
+          ")"
+        : "N/A",
+    numberOfEntries =
+      (data.number !== null && numbers === true
+        ? parseInt(data.number, 10).toLocaleString()
+        : "N/A") +
+      (data.abp_entries !== null && parseInt(data.abp_entries, 10) > 0 && numbers === true
+        ? " (out of which " + parseInt(data.abp_entries, 10).toLocaleString() + " are in ABP-style)"
+        : ""),
+    nonDomains =
+      data.invalid_domains !== null && numbers === true
+        ? parseInt(data.invalid_domains, 10).toLocaleString()
+        : "N/A";
+
+  return `<table>
+      <tr class="dataTables-child">
+        <td>Type of this list:</td><td>${setTypeIcon(data.type)}${data.type}list</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>Health status of this list:</td><td>${statusText}</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>This list was added to Pi-hole&nbsp;&nbsp;</td>
+        <td>${utils.datetimeRelative(data.date_added)}&nbsp;(${dateAddedISO})</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>Database entry was last modified&nbsp;&nbsp;</td>
+        <td>${utils.datetimeRelative(data.date_modified)}&nbsp;(${dateModifiedISO})</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>The list contents were last updated&nbsp;&nbsp;</td><td>${dateUpdated}</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>Number of entries on this list:&nbsp;&nbsp;</td><td>${numberOfEntries}</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>Number of non-domains on this list:&nbsp;&nbsp;</td><td>${nonDomains}</td>
+      </tr>
+      <tr class="dataTables-child">
+        <td>Database ID of this list:</td><td>${data.id}</td>
+      </tr>
+    </table>`;
+}
+
+// Define the status icon element
+function setStatusIcon(data) {
+  var statusCode = parseInt(data.status, 10),
+    statusTitle = setStatusText(data) + "\nClick for details about this list",
+    statusIcon;
+
+  switch (statusCode) {
+    case 1:
+      statusIcon = "fa-check-circle";
+      break;
+    case 2:
+      statusIcon = "fa-history";
+      break;
+    case 3:
+      statusIcon = "fa-exclamation-circle";
+      break;
+    case 4:
+      statusIcon = "fa-times-circle";
+      break;
+    default:
+      statusIcon = "fa-question-circle";
+      break;
+  }
+
+  return "<i class='fa fa-fw " + statusIcon + "' title='" + statusTitle + "'></i>";
+}
+
+// Define human-friendly status string
+function setStatusText(data, showdetails = false) {
+  var statusText = "Unknown",
+    statusDetails = "";
   if (data.status !== null) {
     switch (parseInt(data.status, 10)) {
       case 0:
@@ -32,71 +119,50 @@ function format(data) {
           data.enabled === 0
             ? "List is disabled and not checked"
             : "List was not downloaded so far";
-        numbers = false;
         break;
       case 1:
-        statusText = 'List download was successful (<span class="list-status-1">OK</span>)';
+        statusText = "List download was successful";
+        statusDetails = ' (<span class="list-status-1">OK</span>)';
         break;
       case 2:
-        statusText =
-          'List unchanged upstream, Pi-hole used a local copy (<span class="list-status-2">OK</span>)';
+        statusText = "List unchanged upstream, Pi-hole used a local copy";
+        statusDetails = ' (<span class="list-status-2">OK</span>)';
         break;
       case 3:
-        statusText =
-          'List unavailable, Pi-hole used a local copy (<span class="list-status-3">check list</span>)';
+        statusText = "List unavailable, Pi-hole used a local copy";
+        statusDetails = ' (<span class="list-status-3">check list</span>)';
         break;
       case 4:
         statusText =
-          'List unavailable, there is no local copy of this list available on your Pi-hole (<span class="list-status-4">replace list</span>)';
-        numbers = false;
+          "List unavailable, there is no local copy of this list available on your Pi-hole";
+        statusDetails = ' (<span class="list-status-4">replace list</span>)';
         break;
 
       default:
-        statusText =
-          'Unknown (<span class="list-status-0">' + parseInt(data.status, 10) + "</span>)";
+        statusText = "Unknown";
+        statusDetails = ' (<span class="list-status-0">' + parseInt(data.status, 10) + "</span>)";
         break;
     }
   }
 
-  // Compile extra info for displaying
-  return (
-    "<table>" +
-    '<tr class="dataTables-child"><td>Type of this list:</td><td>' +
-    data.type +
-    'list</td><tr class="dataTables-child"><td>Health status of this list:</td><td>' +
-    statusText +
-    '</td></tr><tr class="dataTables-child"><td>This list was added to Pi-hole&nbsp;&nbsp;</td><td>' +
-    utils.datetimeRelative(data.date_added) +
-    "&nbsp;(" +
-    utils.datetime(data.date_added, false) +
-    ')</td></tr><tr class="dataTables-child"><td>Database entry was last modified&nbsp;&nbsp;</td><td>' +
-    utils.datetimeRelative(data.date_modified) +
-    "&nbsp;(" +
-    utils.datetime(data.date_modified, false) +
-    ')</td></tr><tr class="dataTables-child"><td>The list contents were last updated&nbsp;&nbsp;</td><td>' +
-    (data.date_updated > 0
-      ? utils.datetimeRelative(data.date_updated) +
-        "&nbsp;(" +
-        utils.datetime(data.date_updated, false) +
-        ")"
-      : "N/A") +
-    '</td></tr><tr class="dataTables-child"><td>Number of entries on this list:&nbsp;&nbsp;</td><td>' +
-    (data.number !== null && numbers === true
-      ? parseInt(data.number, 10).toLocaleString()
-      : "N/A") +
-    (data.abp_entries !== null && parseInt(data.abp_entries, 10) > 0 && numbers === true
-      ? " (out of which " + parseInt(data.abp_entries, 10).toLocaleString() + " are in ABP-style)"
-      : "") +
-    '</td></tr><tr class="dataTables-child"' +
-    "><td>Number of non-domains on this list:&nbsp;&nbsp;</td>" +
-    "<td>" +
-    (data.invalid_domains !== null && numbers === true
-      ? parseInt(data.invalid_domains, 10).toLocaleString()
-      : "N/A") +
-    '</td></tr><tr class="dataTables-child"><td>Database ID of this list:</td><td>' +
-    data.id +
-    "</td></tr></table>"
-  );
+  return statusText + (showdetails === true ? statusDetails : "");
+}
+
+// Define the type icon element
+function setTypeIcon(type) {
+  //Add red ban icon if data["type"] is "block"
+  //Add green check icon if data["type"] is "allow"
+  let iconClass = "fa-question text-orange",
+    title = "This list is of unknown type";
+  if (type === "block") {
+    iconClass = "fa-ban text-red";
+    title = "This is a blocklist";
+  } else if (type === "allow") {
+    iconClass = "fa-check text-green";
+    title = "This is an allowlist";
+  }
+
+  return `<i class='fa fa-fw ${iconClass}' title='${title}\nClick for details about this list'></i> `;
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -113,6 +179,7 @@ function initTable() {
       { data: "id", visible: false },
       { data: null, visible: true, orderable: false, width: "15px" },
       { data: "status", searchable: false, class: "details-control" },
+      { data: "type", searchable: false, class: "details-control" },
       { data: "address" },
       { data: "enabled", searchable: false },
       { data: "comment" },
@@ -146,54 +213,23 @@ function initTable() {
       $(row).attr("data-id", dataId);
       $(row).attr("data-type", data.type);
 
-      var statusCode = 0,
-        statusIcon;
+      var statusCode = 0;
       // If there is no status or the list is disabled, we keep
       // status 0 (== unknown)
       if (data.status !== null && data.enabled) {
         statusCode = parseInt(data.status, 10);
       }
 
-      switch (statusCode) {
-        case 1:
-          statusIcon = "fa-check";
-          break;
-        case 2:
-          statusIcon = "fa-history";
-          break;
-        case 3:
-          statusIcon = "fa-exclamation-circle";
-          break;
-        case 4:
-          statusIcon = "fa-times";
-          break;
-        default:
-          statusIcon = "fa-question-circle";
-          break;
-      }
-
-      // Add red minus sign icon if data["type"] is "block"
-      // Add green plus sign icon if data["type"] is "allow"
-      let status =
-        "<i class='fa fa-fw fa-question-circle text-orange' title='This list is of unknown type'></i>";
-      if (data.type === "block") {
-        status = "<i class='fa fa-fw fa-minus text-red' title='This is a blocklist'></i>";
-      } else if (data.type === "allow") {
-        status = "<i class='fa fa-fw fa-plus text-green' title='This is an allowlist'></i>";
-      }
-
       $("td:eq(1)", row).addClass("list-status-" + statusCode);
-      $("td:eq(1)", row).html(
-        "<i class='fa fa-fw " +
-          statusIcon +
-          "' title='Click for details about this list'></i>" +
-          status
-      );
+      $("td:eq(1)", row).html(setStatusIcon(data));
+
+      $("td:eq(2)", row).addClass("list-type-" + statusCode);
+      $("td:eq(2)", row).html(setTypeIcon(data.type));
 
       if (data.address.startsWith("file://")) {
         // Local files cannot be downloaded from a distant client so don't show
         // a link to such a list here
-        $("td:eq(2)", row).html(
+        $("td:eq(3)", row).html(
           '<code id="address_' +
             dataId +
             '" class="breakall">' +
@@ -201,7 +237,7 @@ function initTable() {
             "</code>"
         );
       } else {
-        $("td:eq(2)", row).html(
+        $("td:eq(3)", row).html(
           '<a id="address_' +
             dataId +
             '" class="breakall" href="' +
@@ -212,7 +248,7 @@ function initTable() {
         );
       }
 
-      $("td:eq(3)", row).html(
+      $("td:eq(4)", row).html(
         '<input type="checkbox" id="enabled_' +
           dataId +
           '"' +
@@ -229,13 +265,13 @@ function initTable() {
       });
       statusEl.on("change", editList);
 
-      $("td:eq(4)", row).html('<input id="comment_' + dataId + '" class="form-control">');
+      $("td:eq(5)", row).html('<input id="comment_' + dataId + '" class="form-control">');
       var commentEl = $("#comment_" + dataId, row);
       commentEl.val(data.comment);
       commentEl.on("change", editList);
 
-      $("td:eq(5)", row).empty();
-      $("td:eq(5)", row).append(
+      $("td:eq(6)", row).empty();
+      $("td:eq(6)", row).append(
         '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
       );
       var selectEl = $("#multiselect_" + dataId, row);
@@ -312,7 +348,7 @@ function initTable() {
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
-      $("td:eq(6)", row).html(button);
+      $("td:eq(7)", row).html(button);
     },
     dom:
       "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
