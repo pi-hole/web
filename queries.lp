@@ -152,7 +152,10 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
         <div class="box" id="recent-queries">
             <div class="box-header with-border">
                 <h3 class="box-title">Recent Queries</h3>
-                <a id="refresh" href="#" class="btn btn-sm btn-info btn-flat pull-right">Refresh</a>
+                <div class="pull-right align-click-options">
+                    <span><input type="checkbox" id="live"><label for="live">Live update</label></span>
+                    <a id="refresh" href="#" class="btn btn-sm btn-info btn-flat">Refresh</a>
+                </div>
             </div>
             <!-- /.box-header -->
             <div class="box-body">

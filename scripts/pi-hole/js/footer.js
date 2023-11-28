@@ -15,6 +15,7 @@ var settingsLevel = 0;
 const REFRESH_INTERVAL = {
   logs: 500, // 0.5 sec (logs page)
   summary: 1000, // 1 sec (dashboard)
+  query_log: 2000, // 2 sec (Query Log)
   blocking: 10000, // 10 sec (all pages, sidebar)
   metrics: 10000, // 10 sec (settings page)
   system: 20000, // 20 sec (all pages, sidebar)
