@@ -19,6 +19,25 @@ const fadeIn = true;
 // Mark new lines with a red line above them
 const markUpdates = true;
 
+// Format a line of the dnsmasq log
+function formatLine(line) {
+  // Remove dnsmasq + PID
+  let txt = line.replaceAll(/ dnsmasq\[\d*]/g, "");
+
+  if (line.includes("denied") || line.includes("gravity blocked")) {
+    // Red bold text for blocked domains
+    txt = `<b class="log-red">${txt}</b>`;
+  } else if (line.includes("query[A") || line.includes("query[DHCP")) {
+    // Bold text for initial query lines
+    txt = `<b>${txt}</b>`;
+  } else {
+    // Grey text for all other lines
+    txt = `<span class="text-muted">${txt}</span>`;
+  }
+
+  return txt;
+}
+
 // Function that asks the API for new data
 function getData() {
   // Only update when spinner is spinning
@@ -71,9 +90,12 @@ function getData() {
       }
 
       data.log.forEach(function (line) {
+        // Format line if this is the dnsmasq log
+        if (GETDict.file === "dnsmasq") line.message = formatLine(line.message);
+
         // Add new line to output
         $("#output").append(
-          '<span><span style="border-left: 2px red" class="left-line">&nbsp;</span><span class="text-muted">' +
+          '<span class="log-entry"><span class="text-muted">' +
             moment(1000 * line.timestamp).format("YYYY-MM-DD HH:mm:ss.SSS") +
             "</span> " +
             line.message +

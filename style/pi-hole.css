@@ -1430,3 +1430,7 @@ table.dataTable tbody > tr > .selected {
   margin: 0.5em 0;
   align-items: start;
 }
+
+.log-entry {
+  padding-left: 0.5em;
+}
