@@ -61,7 +61,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                 <i class="fa fa-sync fa-spin"></i>
             </div>
         </div>
-        <div class="box settings-level-2">
+        <div class="box settings-level-expert">
             <div class="box-header with-border">
                 <h3 class="box-title">DHCP server metrics</h3>
             </div>
@@ -163,7 +163,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-md-6">
-        <div class="box settings-level-1" id="cache-metrics">
+        <div class="box settings-level-expert" id="cache-metrics">
             <div class="box-header with-border">
                 <h3 class="box-title">DNS cache metrics</h3>
             </div>
@@ -210,7 +210,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 </tr>
                             </tbody>
                         </table>
-<!--                    <table class="table table-striped table-bordered nowrap settings-level-2">
+<!--                    <table class="table table-striped table-bordered nowrap settings-level-expert">
                             <tbody id="dns-cache-table">
                             </tbody>
                         </table> -->
@@ -263,7 +263,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                     </th>
                                     <td id="sysinfo-dns-replies-unanswered">&nbsp;</td>
                                 </tr>
-                                <tr class="settings-level-2">
+                                <tr class="settings-level-expert">
                                     <th scope="row">
                                         <span>Authoritative replies:</span>
                                     </th>
@@ -279,7 +279,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-12 settings-level-1">
+    <div class="col-md-12 settings-level-expert">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">Actions<span id="actions-title"></span></h3>
@@ -295,7 +295,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                     <div class="col-xs-12 col-md-6 col-lg-3">
                         <button type="button" class="btn btn-danger confirm-flusharp btn-block button-pad destructive_action" disabled="true">Flush network table</button>
                     </div>
-                    <div class="col-xs-12 col-md-6 col-lg-3 settings-level-2">
+                    <div class="col-xs-12 col-md-6 col-lg-3 settings-level-expert">
                         <button type="button" class="btn btn-danger confirm-flushlogs btn-block button-pad destructive_action" disabled="true">Flush logs (last 24 hours)</button>
                     </div>
                 </div>

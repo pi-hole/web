@@ -681,13 +681,11 @@ function initSettingsLevel() {
 
 function applyExpertSettings() {
   if (localStorage.getItem("expert_settings") === "true") {
-    $(".settings-level-0").show();
-    $(".settings-level-1").show();
-    $(".settings-level-2").show();
+    $(".settings-level-basic").show();
+    $(".settings-level-expert").show();
   } else {
-    $(".settings-level-0").show();
-    $(".settings-level-1").hide();
-    $(".settings-level-2").hide();
+    $(".settings-level-basic").show();
+    $(".settings-level-expert").hide();
   }
 }
 

@@ -1148,15 +1148,15 @@ table.dataTable tbody > tr > .selected {
   z-index: 10;
 }
 
-.settings-level-0 {
+.settings-level-basic {
   display: none;
 }
 
-.settings-level-1 {
+.settings-level-expert {
   display: none;
 }
 
-.settings-level-2 {
+.settings-level-expert {
   display: none;
 }
 
