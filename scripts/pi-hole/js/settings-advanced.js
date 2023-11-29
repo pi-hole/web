@@ -356,7 +356,7 @@ function initOnlyChanged() {
   elem.bootstrapToggle({
     on: "Only modified settings",
     off: "Show all settings",
-    onstyle: "warning",
+    onstyle: "primary",
     offstyle: "success",
     size: "small",
     width: "180px",
