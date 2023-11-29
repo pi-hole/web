@@ -10,8 +10,6 @@
 //The following functions allow us to display time until pi-hole is enabled after disabling.
 //Works between all pages
 
-var settingsLevel = 0;
-
 const REFRESH_INTERVAL = {
   logs: 500, // 0.5 sec (logs page)
   summary: 1000, // 1 sec (dashboard)
@@ -188,6 +186,8 @@ function applyCheckboxRadioStyle() {
   var sel = $("input[type='radio'],input[type='checkbox']")
     .not("#selSec")
     .not("#selMin")
+    .not("#expert-settings")
+    .not("#only-changed")
     .not("[id^=status_]");
   sel.parent().removeClass();
   sel.parent().addClass("icheck-" + iCheckStyle);
@@ -646,49 +646,50 @@ $("#pihole-disable-custom").on("click", function (e) {
 });
 
 function initSettingsLevel() {
-  // Restore settings level from local storage (if available) or default to 0
-  settingsLevel = parseInt(localStorage.getItem("settings-level"), 10);
-  if (isNaN(settingsLevel)) {
-    settingsLevel = 0;
-    localStorage.setItem("settings-level", settingsLevel);
+  const elem = $("#expert-settings");
+
+  // Skip if element is not present (e.g. on login page)
+  if (!elem) return;
+
+  // Restore settings level from local storage (if available) or default to "false"
+  if (localStorage.getItem("expert_settings") === null) {
+    localStorage.setItem("expert_settings", "false");
   }
 
-  // Set the settings level
+  elem.prop("checked", localStorage.getItem("expert_settings") === "true");
 
-  $("#settings-level").append(
-    '<option value="0"' + (settingsLevel === 0 ? " selected" : "") + ">Basic</option>"
-  );
-  $("#settings-level").append(
-    '<option value="1"' + (settingsLevel === 1 ? " selected" : "") + ">Advanced</option>"
-  );
-  $("#settings-level").append(
-    '<option value="2"' + (settingsLevel === 2 ? " selected" : "") + ">Expert</option>"
-  );
-  applySettingsLevel();
+  // Init the settings level toggle
+  elem.bootstrapToggle({
+    on: "Expert",
+    off: "Basic",
+    size: "small",
+    offstyle: "success",
+    onstyle: "danger",
+    width: "80px",
+  });
+
+  // Add handler for settings level toggle
+  elem.on("change", function () {
+    localStorage.setItem("expert_settings", $(this).prop("checked") ? "true" : "false");
+    applyExpertSettings();
+    addAdvancedInfo();
+  });
+
+  // Apply settings level
+  applyExpertSettings();
 }
 
-function applySettingsLevel() {
-  if (settingsLevel === 2) {
+function applyExpertSettings() {
+  if (localStorage.getItem("expert_settings") === "true") {
     $(".settings-level-0").show();
     $(".settings-level-1").show();
     $(".settings-level-2").show();
-  } else if (settingsLevel === 1) {
-    $(".settings-level-0").show();
-    $(".settings-level-1").show();
-    $(".settings-level-2").hide();
   } else {
     $(".settings-level-0").show();
     $(".settings-level-1").hide();
     $(".settings-level-2").hide();
   }
 }
-
-$("#settings-level").on("change", function () {
-  settingsLevel = parseInt($(this).val(), 10);
-  localStorage.setItem("settings-level", settingsLevel);
-  applySettingsLevel();
-  addAdvancedInfo();
-});
 
 function addAdvancedInfo() {
   const advancedInfoSource = $("#advanced-info-data");

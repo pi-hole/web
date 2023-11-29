@@ -303,6 +303,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
         </div>
     </div>
 </div>
+<script src="<?=pihole.fileversion('scripts/vendor/bootstrap-toggle.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/vendor/jquery.confirm.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/charts.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings-system.js')?>"></script>

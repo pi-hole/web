@@ -38,7 +38,11 @@ function generateRow(topic, key, value) {
   var box =
     '<div class="box">' +
     '<div class="box-header">' +
-    '<h3 class="box-title">' +
+    '<h3 class="box-title" data-key="' +
+    key +
+    '" data-modified="' +
+    (value.modified ? "true" : "false") +
+    '">' +
     key +
     (value.modified
       ? '&nbsp;&nbsp;<i class="far fa-edit text-light-blue" title="Modified from default"></i>'
@@ -332,12 +336,52 @@ function createDynamicConfigTabs() {
       });
 
       applyCheckboxRadioStyle();
+      applyOnlyChanged();
     })
     .fail(function (data) {
       apiFailure(data);
     });
 }
 
+function initOnlyChanged() {
+  const elem = $("#only-changed");
+
+  // Restore settings level from local storage (if available) or default to "false"
+  if (localStorage.getItem("only-changed") === null) {
+    localStorage.setItem("only-changed", "false");
+  }
+
+  elem.prop("checked", localStorage.getItem("only-changed") === "true");
+
+  elem.bootstrapToggle({
+    on: "Only modified settings",
+    off: "Show all settings",
+    onstyle: "warning",
+    offstyle: "success",
+    size: "small",
+    width: "180px",
+  });
+
+  elem.on("change", function () {
+    localStorage.setItem("only-changed", $(this).prop("checked") ? "true" : "false");
+    applyOnlyChanged();
+  });
+
+  elem.bootstrapToggle(localStorage.getItem("only-changed") === "true" ? "on" : "off");
+  elem.trigger("change");
+}
+
+function applyOnlyChanged() {
+  if (localStorage.getItem("only-changed") === "true") {
+    // Hide all boxes that have a data-key attribute
+    $(".box-title[data-key]").not("[data-modified='true']").closest(".box").hide();
+  } else {
+    // Show all boxes that have a data-key attribute
+    $(".box-title[data-key]").closest(".box").show();
+  }
+}
+
 $(document).ready(function () {
   createDynamicConfigTabs();
+  initOnlyChanged();
 });
