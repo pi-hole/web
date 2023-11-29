@@ -1434,3 +1434,8 @@ table.dataTable tbody > tr > .selected {
 .log-entry {
   padding-left: 0.5em;
 }
+
+.overflow-wrap {
+  overflow-wrap: break-word;
+  inline-size: auto;
+}
