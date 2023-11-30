@@ -1122,8 +1122,18 @@ table.dataTable tbody > tr > .selected {
 }
 
 .pre-scrollable {
-  max-height: 100vb;
+  max-height: max(195px, 100vh - 170px);
   overflow-y: scroll;
+}
+@media screen and (max-width: 767px) {
+  .pre-scrollable {
+    max-height: max(195px, 100vh - 220px);
+  }
+}
+@media screen and (max-width: 546px) {
+  .pre-scrollable {
+    max-height: max(195px, 100vh - 240px);
+  }
 }
 
 .hr-small {
