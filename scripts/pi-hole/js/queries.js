@@ -656,6 +656,17 @@ $(function () {
   });
 
   $("#refresh").on("click", refreshTable);
+
+  // Disable live mode when #disk is checked
+  $("#disk").on("click", function () {
+    if ($(this).prop("checked")) {
+      $("#live").prop("checked", false);
+      $("#live").prop("disabled", true);
+      liveMode = false;
+    } else {
+      $("#live").prop("disabled", false);
+    }
+  });
 });
 
 function refreshTable() {
