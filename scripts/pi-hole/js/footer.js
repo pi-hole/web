@@ -649,7 +649,7 @@ function initSettingsLevel() {
   const elem = $("#expert-settings");
 
   // Skip if element is not present (e.g. on login page)
-  if (!elem) return;
+  if (elem.length === 0) return;
 
   // Restore settings level from local storage (if available) or default to "false"
   if (localStorage.getItem("expert_settings") === null) {
