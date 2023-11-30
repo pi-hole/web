@@ -137,7 +137,22 @@ function getData() {
 var gAutoScrolling = true;
 $("#output").on("scroll", function () {
   // Check if we are at the bottom of the output
-  if ($("#output").scrollTop() + $("#output").innerHeight() >= $("#output")[0].scrollHeight) {
+  //
+  // - $("#output")[0].scrollHeight: This gets the entire height of the content
+  //   of the "output" element, including the part that is not visible due to
+  //   scrolling.
+  // - $("#output").innerHeight(): This gets the inner height of the "output"
+  //   element, which is the visible part of the content.
+  // - $("#output").scrollTop(): This gets the number of pixels that the content
+  //   of the "output" element is scrolled vertically from the top.
+  //
+  // By subtracting the inner height and the scroll top from the scroll height,
+  // you get the distance from the bottom of the scrollable area.
+  const bottom =
+    $("#output")[0].scrollHeight - $("#output").innerHeight() - $("#output").scrollTop();
+  // Add a tolerance of four line heights
+  const tolerance = 4 * parseFloat($("#output").css("line-height"));
+  if (bottom <= tolerance) {
     // Auto-scrolling is enabled
     gAutoScrolling = true;
     $("#autoscrolling").addClass("fa-check");
