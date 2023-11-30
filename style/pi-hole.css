@@ -1122,17 +1122,20 @@ table.dataTable tbody > tr > .selected {
 }
 
 .pre-scrollable {
-  max-height: max(195px, 100vh - 170px);
+  /* use dynamic unit to account for mobile browser interface height */
+  max-height: max(195px, 100dvh - 170px);
   overflow-y: scroll;
 }
 @media screen and (max-width: 767px) {
   .pre-scrollable {
-    max-height: max(195px, 100vh - 220px);
+    /* reduce max-height on mobile (higher header) */
+    max-height: max(195px, 100dvh - 220px);
   }
 }
 @media screen and (max-width: 546px) {
   .pre-scrollable {
-    max-height: max(195px, 100vh - 240px);
+    /* reduce max-height even more (box-header text wraps, increasing the height) */
+    max-height: max(195px, 100dvh - 240px);
   }
 }
 
