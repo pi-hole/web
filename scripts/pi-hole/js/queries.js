@@ -263,7 +263,7 @@ function formatInfo(data) {
 
   // Parse Query Status
   var queryStatus = parseQueryStatus(data);
-  var divStart = '<div class="col-xl-2 col-lg-4 col-md-6 col-12">';
+  var divStart = '<div class="col-xl-2 col-lg-4 col-md-6 col-12 overflow-wrap">';
   var statusInfo = "";
   if (queryStatus.colorClass !== false) {
     statusInfo =

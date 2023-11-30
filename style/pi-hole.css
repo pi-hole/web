@@ -1441,3 +1441,8 @@ table.dataTable tbody > tr > .selected {
   grid-auto-flow: column;
   grid-column-gap: 15px;
 }
+
+.overflow-wrap {
+  overflow-wrap: break-word;
+  inline-size: auto;
+}
