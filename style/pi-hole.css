@@ -1156,10 +1156,6 @@ table.dataTable tbody > tr > .selected {
   display: none;
 }
 
-.settings-level-expert {
-  display: none;
-}
-
 .main-footer {
   padding-bottom: 0px;
 }
