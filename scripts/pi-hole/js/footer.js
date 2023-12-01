@@ -693,6 +693,16 @@ function applyExpertSettings() {
   } else {
     $(".settings-level-basic").show();
     $(".settings-level-expert").hide();
+
+    // if we are on admin/settings/all, show an error toast
+    if (window.location.pathname === "/admin/settings/all") {
+      utils.showAlert(
+        "error",
+        "",
+        "Expert settings are disabled",
+        "Please go to any other settings page to enable expert mode if needed."
+      );
+    }
   }
 }
 
