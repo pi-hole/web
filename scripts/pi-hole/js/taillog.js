@@ -20,7 +20,7 @@ const fadeIn = true;
 const markUpdates = true;
 
 // Format a line of the dnsmasq log
-function formatLine(line) {
+function formatDnsmasq(line) {
   // Remove dnsmasq + PID
   let txt = line.replaceAll(/ dnsmasq\[\d*]/g, "");
 
@@ -36,6 +36,36 @@ function formatLine(line) {
   }
 
   return txt;
+}
+
+function formatFTL(line, prio) {
+  // Colorize priority
+  let prioClass = "";
+  switch (prio) {
+    case "INFO": {
+      prioClass = "text-success";
+      break;
+    }
+
+    case "WARNING": {
+      prioClass = "text-warning";
+      break;
+    }
+
+    case "ERR":
+    case "EMERG":
+    case "ALERT":
+    case "CRIT": {
+      prioClass = "text-danger";
+      break;
+    }
+
+    default:
+      prioClass = prio.startsWith("DEBUG") ? "text-info" : "text-muted";
+  }
+
+  // Return formatted line
+  return `<span class="${prioClass}">${utils.escapeHtml(prio)}</span> ${line}`;
 }
 
 // Function that asks the API for new data
@@ -90,8 +120,11 @@ function getData() {
       }
 
       data.log.forEach(function (line) {
-        // Format line if this is the dnsmasq log
-        if (GETDict.file === "dnsmasq") line.message = formatLine(line.message);
+        // Escape HTML
+        line.message = utils.escapeHtml(line.message);
+        // Format line if applicable
+        if (GETDict.file === "dnsmasq") line.message = formatDnsmasq(line.message);
+        else if (GETDict.file === "ftl") line.message = formatFTL(line.message, line.prio);
 
         // Add new line to output
         $("#output").append(
@@ -99,7 +132,7 @@ function getData() {
             moment(1000 * line.timestamp).format("YYYY-MM-DD HH:mm:ss.SSS") +
             "</span> " +
             line.message +
-            "<br></span>"
+            "</span><br>"
         );
         if (fadeIn) {
           //$(".left-line:last").fadeOut(2000);
