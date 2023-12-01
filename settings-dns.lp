@@ -57,38 +57,50 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                 </div>
             </div>
         </div>
-        <div class="box box-warning settings-level-1">
+        <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dns.revServers">Conditional forwarding</h3>
+                <h3 class="box-title" data-configkeys="dns.domain dns.expandHosts">DNS domain settings</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Pi-hole domain name</label>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">Domain</div>
+                                <input type="text" class="form-control" id="dns.domain" data-key="dns.domain" value="">
+                            </div>
+                        </div>
+                        <p>The DNS domains for your Pi-hole. If no domain is specified and you are using Pi-hole's DHCP server, then any hostnames with a domain part (i.e., with a period) will be disallowed. If a domain is specified, then hostnames with a domain parts matching the domain here are allowed. In addition, when a suffix is set then hostnames without a domain part have the suffix added as an optional domain part.</p>
+                        <div>
+                            <input type="checkbox" id="dns.expandHosts" data-key="dns.expandHosts" title="domain-needed">
+                            <label for="dns.expandHosts"><strong>Expand hostnames</strong></label>
+                            <p>If set, the domain is added to simple names (without a period) in /etc/hosts in the same way as for DHCP-derived names.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box box-warning settings-level-expert">
+            <div class="box-header with-border">
+                <h3 class="box-title" data-configkeys="dns.rateLimit.count dns.rateLimit.interval">Rate-limiting</h3>
             </div>
             <div class="box-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <p>If not configured as your DHCP server, Pi-hole typically won't be able to
-                            determine the names of devices on your local network.  As a
-                            result, tables such as Top Clients will only show IP addresses.</p>
-                        <p>One solution for this is to configure Pi-hole to forward these
-                            requests to your DHCP server (most likely your router), but only for devices on your
-                            home network.  To configure this we will need to know the IP
-                            address of your DHCP server and which addresses belong to your local network.
-                            Exemplary input is given below as placeholder in the text boxes (if empty).</p>
-                        <p>If your local network spans 192.168.0.1 - 192.168.0.255, then you will have to input
-                            <code>192.168.0.0/24</code>. If your local network is 192.168.47.1 - 192.168.47.255, it will
-                            be <code>192.168.47.0/24</code> and similar. If your network is larger, the CIDR has to be
-                            different, for instance a range of 10.8.0.1 - 10.8.255.255 results in <code>10.8.0.0/16</code>,
-                            whereas an even wider network of 10.0.0.1 - 10.255.255.255 results in <code>10.0.0.0/8</code>.
-                            Setting up IPv6 ranges is exactly similar to setting up IPv4 here and fully supported.
-                            Feel free to reach out to us on our
-                            <a href="https://discourse.pi-hole.net" rel="noopener" target="_blank">Discourse forum</a>
-                            in case you need any assistance setting up local host name resolution for your particular system.</p>
-                        <p>You can also specify a local domain name (like <code>fritz.box</code>) to ensure queries to
-                            devices ending in your local domain name will not leave your network, however, this is optional.
-                            The local domain name must match the domain name specified
-                            in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
-                        <p>Enabling Conditional Forwarding will also forward all hostnames (i.e., non-FQDNs) to the router
-                            when "Never forward non-FQDNs" is <em>not</em> enabled.</p>
-                        <p>The following list contains all reverse servers you want to add. The expected format is one server per line in form of <code>&lt;enabled&gt;,&lt;ip-address&gt;[/&lt;prefix-len&gt;],&lt;server&gt;[#&lt;port&gt;][,&lt;domain&gt;]</code>. A valid config line could look like <code>true,192.168.0.0/24,192.168.0.1,fritz.box</code></p>
-                        <textarea class="form-control" rows="3" id="dns.revServers" data-key="dns.revServers" placeholder="Enter reverse DNS servers, one per line" style="resize: vertical;"></textarea>
+                        <p>Block clients making more than <input type="number" id="dns.rateLimit.count" data-key="dns.rateLimit.count" data-type="integer" value="" min="0" step="10" style="width: 5em;"> queries within
+                            <input type="number" id="dns.rateLimit.interval" data-key="dns.rateLimit.interval" data-type="integer" value="" min="0" step="10" style="width: 4em;"> seconds.</p>
+                            <p>When a client makes too many queries in too short time, it
+                            gets rate-limited. Rate-limited queries are answered with a
+                            <code>REFUSED</code> reply and not further processed by FTL
+                            and prevent Pi-holes getting overwhelmed by rogue clients.
+                            It is important to note that rate-limiting is happening on a
+                            per-client basis. Other clients can continue to use FTL while
+                            rate-limited clients are short-circuited at the same time.</p>
+                        <p>Rate-limiting may be disabled altogether by setting both
+                            values to zero. See
+                            <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" target="_blank">our documentation</a>
+                            for further details.</p>
                     </div>
                 </div>
             </div>
@@ -138,30 +150,6 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
         </div>
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dns.domain dns.expandHosts">DNS domain settings</h3>
-            </div>
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <label>Pi-hole domain name</label>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-addon">Domain</div>
-                                <input type="text" class="form-control" id="dns.domain" data-key="dns.domain" value="">
-                            </div>
-                        </div>
-                        <p>The DNS domains for your Pi-hole. If no domain is specified and you are using Pi-hole's DHCP server, then any hostnames with a domain part (i.e., with a period) will be disallowed. If a domain is specified, then hostnames with a domain parts matching the domain here are allowed. In addition, when a suffix is set then hostnames without a domain part have the suffix added as an optional domain part.</p>
-                        <div>
-                            <input type="checkbox" id="dns.expandHosts" data-key="dns.expandHosts" title="domain-needed">
-                            <label for="dns.expandHosts"><strong>Expand hostnames</strong></label>
-                            <p>If set, the domain is added to simple names (without a period) in /etc/hosts in the same way as for DHCP-derived names.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="box box-warning">
-            <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dns.domainNeeded dns.bogusPriv dns.dnssec">Advanced DNS settings</h3>
             </div>
             <div class="box-body">
@@ -205,26 +193,40 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-lg-12">
         <div class="box box-warning settings-level-2">
             <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dns.rateLimit.count dns.rateLimit.interval">Rate-limiting</h3>
+                <h3 class="box-title" data-configkeys="dns.revServers">Conditional forwarding</h3>
             </div>
             <div class="box-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <p>Block clients making more than <input type="number" id="dns.rateLimit.count" data-key="dns.rateLimit.count" data-type="integer" value="" min="0" step="10" style="width: 5em;"> queries within
-                            <input type="number" id="dns.rateLimit.interval" data-key="dns.rateLimit.interval" data-type="integer" value="" min="0" step="10" style="width: 4em;"> seconds.</p>
-                            <p>When a client makes too many queries in too short time, it
-                            gets rate-limited. Rate-limited queries are answered with a
-                            <code>REFUSED</code> reply and not further processed by FTL
-                            and prevent Pi-holes getting overwhelmed by rogue clients.
-                            It is important to note that rate-limiting is happening on a
-                            per-client basis. Other clients can continue to use FTL while
-                            rate-limited clients are short-circuited at the same time.</p>
-                        <p>Rate-limiting may be disabled altogether by setting both
-                            values to zero. See
-                            <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" target="_blank">our documentation</a>
-                            for further details.</p>
+                        <p>If not configured as your DHCP server, Pi-hole typically won't be able to
+                            determine the names of devices on your local network.  As a
+                            result, tables such as Top Clients will only show IP addresses.</p>
+                        <p>One solution for this is to configure Pi-hole to forward these
+                            requests to your DHCP server (most likely your router), but only for devices on your
+                            home network.  To configure this we will need to know the IP
+                            address of your DHCP server and which addresses belong to your local network.
+                            Exemplary input is given below as placeholder in the text boxes (if empty).</p>
+                        <p>If your local network spans 192.168.0.1 - 192.168.0.255, then you will have to input
+                            <code>192.168.0.0/24</code>. If your local network is 192.168.47.1 - 192.168.47.255, it will
+                            be <code>192.168.47.0/24</code> and similar. If your network is larger, the CIDR has to be
+                            different, for instance a range of 10.8.0.1 - 10.8.255.255 results in <code>10.8.0.0/16</code>,
+                            whereas an even wider network of 10.0.0.1 - 10.255.255.255 results in <code>10.0.0.0/8</code>.
+                            Setting up IPv6 ranges is exactly similar to setting up IPv4 here and fully supported.
+                            Feel free to reach out to us on our
+                            <a href="https://discourse.pi-hole.net" rel="noopener" target="_blank">Discourse forum</a>
+                            in case you need any assistance setting up local host name resolution for your particular system.</p>
+                        <p>You can also specify a local domain name (like <code>fritz.box</code>) to ensure queries to
+                            devices ending in your local domain name will not leave your network, however, this is optional.
+                            The local domain name must match the domain name specified
+                            in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
+                        <p>Enabling Conditional Forwarding will also forward all hostnames (i.e., non-FQDNs) to the router
+                            when "Never forward non-FQDNs" is <em>not</em> enabled.</p>
+                        <p>The following list contains all reverse servers you want to add. The expected format is one server per line in form of <code>&lt;enabled&gt;,&lt;ip-address&gt;[/&lt;prefix-len&gt;],&lt;server&gt;[#&lt;port&gt;][,&lt;domain&gt;]</code>. A valid config line could look like <code>true,192.168.0.0/24,192.168.0.1,fritz.box</code></p>
+                        <textarea class="form-control" rows="3" id="dns.revServers" data-key="dns.revServers" placeholder="Enter reverse DNS servers, one per line" style="resize: vertical;"></textarea>
                     </div>
                 </div>
             </div>
