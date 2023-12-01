@@ -648,8 +648,11 @@ $("#pihole-disable-custom").on("click", function (e) {
 function initSettingsLevel() {
   const elem = $("#expert-settings");
 
-  // Skip if element is not present (e.g. on login page)
-  if (elem.length === 0) return;
+  // Skip init if element is not present (e.g. on login page)
+  if (elem.length === 0) {
+    applyExpertSettings();
+    return;
+  }
 
   // Restore settings level from local storage (if available) or default to "false"
   if (localStorage.getItem("expert_settings") === null) {
@@ -680,6 +683,10 @@ function initSettingsLevel() {
 }
 
 function applyExpertSettings() {
+  // Apply settings level, this will hide/show elements with the class
+  // "settings-level-basic" or "settings-level-expert" depending on the
+  // current settings level
+  // If "expert_settings" is not set, we default to !"true" (basic settings)
   if (localStorage.getItem("expert_settings") === "true") {
     $(".settings-level-basic").show();
     $(".settings-level-expert").show();
