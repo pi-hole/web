@@ -59,7 +59,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
         </div>
         <div class="box box-warning settings-level-1">
             <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dns.revServer.active dns.revServer.cidr dns.revServer.target dns.revServer.domain">Conditional forwarding</h3>
+                <h3 class="box-title" data-configkeys="dns.revServers">Conditional forwarding</h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -87,36 +87,8 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                             in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
                         <p>Enabling Conditional Forwarding will also forward all hostnames (i.e., non-FQDNs) to the router
                             when "Never forward non-FQDNs" is <em>not</em> enabled.</p>
-                        <div class="form-group">
-                            <div>
-                                <input type="checkbox" id="dns.revServer.active" data-key="dns.revServer.active">
-                                <label for="dns.revServer.active"><strong>Use Conditional Forwarding</strong></label>
-                            </div>
-                            <div class="input-group">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Local network in <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" target="_blank">CIDR notation</a></th>
-                                            <th>IP address of your DHCP server (router)</th>
-                                            <th>Local domain name (optional)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <input type="text" id="dns.revServer.cidr" data-key="dns.revServer.cidr" placeholder="192.168.0.0/16" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="dns.revServer.target" data-key="dns.revServer.target" placeholder="192.168.0.1" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
-                                            </td>
-                                            <td>
-                                                <input type="text" id="dns.revServer.domain" data-key="dns.revServer.domain" placeholder="local" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off" value="">
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <p>The following list contains all reverse servers you want to add. The expected format is one server per line in form of <code>&lt;enabled&gt;,&lt;ip-address&gt;[/&lt;prefix-len&gt;],&lt;server&gt;[#&lt;port&gt;][,&lt;domain&gt;]</code>. A valid config line could look like <code>true,192.168.0.0/24,192.168.0.1,fritz.box</code></p>
+                        <textarea class="form-control" rows="3" id="dns.revServers" data-key="dns.revServers" placeholder="Enter reverse DNS servers, one per line" style="resize: vertical;"></textarea>
                     </div>
                 </div>
             </div>
