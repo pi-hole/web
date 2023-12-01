@@ -1447,3 +1447,15 @@ table.dataTable tbody > tr > .selected {
 .log-entry {
   padding-left: 0.5em;
 }
+
+.align-click-options {
+  align-items: center;
+  display: grid;
+  grid-auto-flow: column;
+  grid-column-gap: 15px;
+}
+
+.overflow-wrap {
+  overflow-wrap: break-word;
+  inline-size: auto;
+}
