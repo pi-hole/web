@@ -18,7 +18,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="overlay" id="advanced-overlay">
         <i class="fa fa-sync fa-spin"></i>
     </div>
-    <div class="col-lg-12 settings-level-2">
+    <div class="col-lg-12 settings-level-2 save-button-container">
         <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
     </div>
 </div>

@@ -1148,14 +1148,22 @@ table.dataTable tbody > tr > .selected {
   opacity: 0.1;
 }
 
-.save-button {
+.save-button-container {
   position: fixed;
   bottom: 12px;
   right: 12px;
   z-index: 10;
+  background: var(--datatable-bgcolor);
+  width: fit-content;
+  border: 1px solid rgba(127, 127, 127, 0.15);
+  border-radius: 6px;
+  padding: 0;
+}
+.save-button {
+  margin: 12px;
 }
 @media (min-width: 1250px) {
-  .layout-boxed .save-button {
+  .layout-boxed .save-button-container {
     right: calc((100% - 1250px) / 2 + 12px);
   }
 }
