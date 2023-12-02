@@ -2123,8 +2123,16 @@ td.highlight {
 }
 
 /*** add style to the information/about dropdown ***/
-
 .navbar-nav > .user-menu > .dropdown-menu > .user-header,
 .navbar-nav > .user-menu > .dropdown-menu > .user-footer {
   background-color: #111111;
+}
+
+.save-button-container {
+  border-radius: 50px;
+}
+@media (min-width: 1320px) {
+  .layout-boxed .save-button-container {
+    right: calc((100% - 1320px) / 2 + 12px);
+  }
 }
