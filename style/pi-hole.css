@@ -553,6 +553,16 @@ td.details-control {
   width: calc((100% / var(--number-of-columns)) - 20px);
 }
 
+.settings-container:has(.box[style*="display: none;"])::before {
+  content: "No modified settings to display";
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.settings-container:has(.box:not([style*="display: none;"]))::before {
+  content: none;
+}
+
 @media screen and (max-width: 991px) {
   #domain-search-block {
     display: block;
