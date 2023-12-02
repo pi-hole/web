@@ -1072,6 +1072,7 @@ table.dataTable tbody > tr > .selected {
 
 #output {
   position: relative;
+  display: grid;
   margin: 5px 0;
   min-height: 36px;
   padding: 4px 8px;
@@ -1140,8 +1141,8 @@ table.dataTable tbody > tr > .selected {
 }
 
 .hr-small {
-  margin-top: 0px;
-  margin-bottom: 0px;
+  width: 100%;
+  margin: 0 0 -1px;
   border-top: 1px solid #ff0000aa;
 }
 
