@@ -1150,9 +1150,14 @@ table.dataTable tbody > tr > .selected {
 
 .save-button {
   position: fixed;
-  bottom: 2%;
-  right: 2%;
+  bottom: 12px;
+  right: 12px;
   z-index: 10;
+}
+@media (min-width: 1250px) {
+  .layout-boxed .save-button {
+    right: calc((100% - 1250px) / 2 + 12px);
+  }
 }
 
 .settings-level-0 {
