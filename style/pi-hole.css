@@ -5,6 +5,14 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
+:root {
+  /* Datatables Select - bgcolor */
+  --datatable-bgcolor: #e0e8ee;
+
+  /* Used in settings save button */
+  --overlay-bgcolor: rgba(212, 220, 232, 0.55);
+}
+
 .layout-boxed {
   background: url("../img/boxed-bg.png") repeat fixed;
 }
@@ -1010,11 +1018,6 @@ body:not(.lcars) .filter_types [class*="icheck-"] > input:first-child:checked + 
 
 .menu-icon {
   margin-right: 0.5em;
-}
-
-/* Datatables Select - bgcolor */
-:root {
-  --datatable-bgcolor: #e0e8ee;
 }
 
 div.dt-buttons {
