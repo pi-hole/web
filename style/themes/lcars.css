@@ -2130,9 +2130,18 @@ td.highlight {
 
 .save-button-container {
   border-radius: 50px;
+  background: none;
+  box-shadow:
+    0 0 10px -1px #000,
+    0 0 20px 2px #000;
+  bottom: 2em;
+  right: 1.7em;
+}
+.save-button {
+  margin: 0;
 }
 @media (min-width: 1320px) {
   .layout-boxed .save-button-container {
-    right: calc((100% - 1320px) / 2 + 12px);
+    right: calc((100% - 1320px) / 2 + 0.85em);
   }
 }

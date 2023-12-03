@@ -10,6 +10,7 @@
 
 :root {
   --datatable-bgcolor: rgba(64, 76, 88, 0.8);
+  --overlay-bgcolor: var(--datatable-bgcolor);
 }
 
 /* fix #2554: browser not detecting dark mode */

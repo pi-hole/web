@@ -109,6 +109,7 @@ select:-webkit-autofill {
   --darkreader-selection-background: #004daa;
   --darkreader-selection-text: #e8e6e3;
   --datatable-bgcolor: rgb(35, 47, 52);
+  --overlay-bgcolor: rgba(35, 47, 52, 0.7);
 }
 
 /* Modified CSS */
