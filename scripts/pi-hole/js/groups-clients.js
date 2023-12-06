@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, groups:false,, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false */
+/* global utils:false, groups:false,, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false */
 /* exported initTable */
 
 var table;
@@ -277,10 +277,10 @@ function initTable() {
           var ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
-            ids.push($(this).attr("data-id"));
+            ids.push({ item: $(this).attr("data-id") });
           });
           // Delete all selected rows at once
-          delItems(ids);
+          delGroupItems("client", ids, table);
         },
       },
     ],
@@ -347,59 +347,8 @@ $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteClient() {
   // Passes the button data-id attribute as ID
-  const ids = [$(this).attr("data-id")];
-  delItems(ids);
-}
-
-function delItems(ids) {
-  // Check input validity
-  if (!Array.isArray(ids)) return;
-
-  // Get first element from array
-  const clientRaw = ids[0];
-  const client = utils.hexDecode(clientRaw);
-
-  // Remove first element from array
-  ids.shift();
-
-  utils.disableAll();
-  const idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting client...", client);
-
-  $.ajax({
-    url: "/api/clients/" + encodeURIComponent(client),
-    method: "delete",
-  })
-    .done(function () {
-      utils.enableAll();
-      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted client: ", client);
-      table.row(clientRaw).remove().draw(false);
-      if (ids.length > 0) {
-        // Recursively delete all remaining items
-        delItems(ids);
-        return;
-      }
-
-      table.ajax.reload(null, false);
-
-      // Clear selection after deletion
-      table.rows().deselect();
-      utils.changeBulkDeleteStates(table);
-
-      // Update number of clients in the sidebar
-      updateFtlInfo();
-    })
-    .fail(function (data, exception) {
-      apiFailure(data);
-      utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while deleting client(s): " + idstring,
-        data.responseText
-      );
-      console.log(exception); // eslint-disable-line no-console
-    });
+  const ids = [{ item: $(this).attr("data-id") }];
+  delGroupItems("client", ids, table);
 }
 
 function addClient() {

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false */
+/* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false */
 /* exported initTable */
 
 var table;
@@ -400,7 +400,7 @@ function initTable() {
             ids.push($(this).attr("data-id"));
           });
           // Delete all selected rows at once
-          delItems(ids);
+          delGroupItems("list", ids, table);
         },
       },
     ],
@@ -485,54 +485,8 @@ $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteList() {
   // Passes the button data-id attribute as ID
-  const ids = [$(this).attr("data-id")];
-  delItems(ids);
-}
-
-function delItems(ids) {
-  // Check input validity
-  if (!Array.isArray(ids)) return;
-
-  // Get first element from array
-  const addressRaw = ids[0];
-  const address = utils.hexDecode(addressRaw);
-
-  // Remove first element from array
-  ids.shift();
-
-  utils.disableAll();
-  const idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting list(s) ...", address);
-
-  $.ajax({
-    url: "/api/lists/" + encodeURIComponent(address),
-    method: "delete",
-  })
-    .done(function () {
-      utils.enableAll();
-      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted list: ", address);
-      table.row(addressRaw).remove().draw(false);
-      if (ids.length > 0) {
-        // Recursively delete all remaining items
-        delItems(ids);
-        return;
-      }
-
-      table.ajax.reload(null, false);
-
-      // Clear selection after deletion
-      table.rows().deselect();
-      utils.changeBulkDeleteStates(table);
-
-      // Update number of lists in the sidebar
-      updateFtlInfo();
-    })
-    .fail(function (data, exception) {
-      apiFailure(data);
-      utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting list(s): " + idstring, data.responseText);
-      console.log(exception); // eslint-disable-line no-console
-    });
+  const ids = [{ item: $(this).attr("data-id") }];
+  delGroupItems("list", ids, table);
 }
 
 function addList(event) {
