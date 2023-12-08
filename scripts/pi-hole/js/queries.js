@@ -200,6 +200,12 @@ function parseQueryStatus(data) {
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
       break;
+    case "SPECIAL_DOMAIN":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = data.status;
+      buttontext = "";
+      break;
     default:
       colorClass = "text-orange";
       icon = "fa-solid fa-question";
