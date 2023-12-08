@@ -282,7 +282,7 @@ function formatInfo(data) {
     var regexLink =
       '<a href="groups/domains?domainid=' +
       data.regex_id +
-      '" target="_blank">domain with ID ' +
+      '" target="_blank">entry with ID ' +
       data.regex_id +
       "</a>";
     regexInfo =
