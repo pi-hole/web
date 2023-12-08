@@ -322,11 +322,6 @@ function createDynamicConfigTabs() {
       });
       $("#advanced-overlay").hide();
 
-      $("#advanced-content").append(
-        '<div class="col-lg-12 settings-level-1">' +
-          '<button type="button" class="btn btn-primary save-button" id="save"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>' +
-          "</div>"
-      );
       $("button[id='save']").on("click", function () {
         saveSettings();
       });
