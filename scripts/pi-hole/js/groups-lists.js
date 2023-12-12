@@ -397,7 +397,7 @@ function initTable() {
           var ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
-            ids.push($(this).attr("data-id"));
+            ids.push({ item: $(this).attr("data-id") });
           });
           // Delete all selected rows at once
           delGroupItems("list", ids, table);
