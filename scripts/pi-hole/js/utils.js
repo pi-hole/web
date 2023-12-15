@@ -561,35 +561,35 @@ function listAlert(type, items, data) {
   // Show a list of successful items if there are any
   if (data.processed.success.length > 0) {
     message +=
-      "<strong>Successfully added " +
+      "Successfully added " +
       data.processed.success.length +
       " " +
       type +
       (data.processed.success.length !== 1 ? "s" : "") +
-      ":</strong>";
+      ":";
 
     // Loop over data.processed.success and print "item"
     for (const item in data.processed.success) {
       if (Object.prototype.hasOwnProperty.call(data.processed.success, item)) {
-        message += "<br>- <strong>" + data.processed.success[item].item + "</strong>";
+        message += "\n- " + data.processed.success[item].item;
       }
     }
   }
 
   // Add a line break if there are both successful and failed items
   if (data.processed.success.length > 0 && data.processed.errors.length > 0) {
-    message += "<br><br>";
+    message += "\n\n";
   }
 
   // Show a list of failed items if there are any
   if (data.processed.errors.length > 0) {
     message +=
-      "<strong>Failed to add " +
+      "Failed to add " +
       data.processed.errors.length +
       " " +
       type +
       (data.processed.errors.length !== 1 ? "s" : "") +
-      ":</strong>\n";
+      ":\n";
 
     // Loop over data.processed.errors and print "item: error"
     for (const item in data.processed.errors) {
@@ -600,7 +600,7 @@ function listAlert(type, items, data) {
           error = "Already present";
         }
 
-        message += "<br>- <strong>" + data.processed.errors[item].item + "</strong>: " + error;
+        message += "\n- " + data.processed.errors[item].item + ": " + error;
       }
     }
   }

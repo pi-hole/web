@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure:false, updateFtlInfo:false, processGroupResult:false */
+/* global utils:false, apiFailure:false, updateFtlInfo:false, processGroupResult:false, delGroupItems:false */
 
 var table,
   idNames = {};
@@ -56,14 +56,15 @@ $(function () {
     ],
     drawCallback: function () {
       // Hide buttons if all groups were deleted
-      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      // if there is one row, it's the default group
+      var hasRows = this.api().rows({ filter: "applied" }).data().length > 1;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       $('button[id^="deleteGroup_"]').on("click", deleteGroup);
     },
     rowCallback: function (row, data) {
-      idNames[data.id] = data.name;
-      $(row).attr("data-id", data.id);
+      var dataId = utils.hexEncode(data.name);
+      $(row).attr("data-id", dataId);
       var tooltip =
         "Added: " +
         utils.datetime(data.date_added, false) +
@@ -102,12 +103,13 @@ $(function () {
       commentEl.on("change", editGroup);
 
       $("td:eq(4)", row).empty();
+      // Show delete button for all but the default group
       if (data.id !== 0) {
         var button =
           '<button type="button" class="btn btn-danger btn-xs" id="deleteGroup_' +
-          data.id +
-          '" data-del-id="' +
-          data.id +
+          dataId +
+          '" data-id="' +
+          dataId +
           '">' +
           '<span class="far fa-trash-alt"></span>' +
           "</button>";
@@ -151,10 +153,10 @@ $(function () {
           var ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
-            ids.push(parseInt($(this).attr("data-id"), 10));
+            ids.push({ item: $(this).attr("data-id") });
           });
           // Delete all selected rows at once
-          delItems(ids);
+          delGroupItems("group", ids, table);
         },
       },
     ],
@@ -198,6 +200,11 @@ $(function () {
   }
 
   table.on("init select deselect", function () {
+    // if the Default group is selected, undo the selection of it
+    if (table.rows({ selected: true }).data().pluck("id").indexOf(0) !== -1) {
+      table.rows(0).deselect();
+    }
+
     utils.changeBulkDeleteStates(table);
   });
 
@@ -221,59 +228,8 @@ $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteGroup() {
   // Passes the button data-del-id attribute as ID
-  const ids = [parseInt($(this).attr("data-del-id"), 10)];
-  delItems(ids);
-}
-
-function delItems(ids) {
-  // Check input validity
-  if (!Array.isArray(ids)) return;
-
-  for (const id of ids) {
-    // Exploit prevention: Return early for non-numeric IDs
-    if (typeof id !== "number") return;
-  }
-
-  // Get first element from array
-  const id = ids[0];
-  const name = idNames[id];
-
-  // Remove first element from array
-  ids.shift();
-
-  utils.disableAll();
-  const idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting group...", name);
-
-  $.ajax({
-    url: "/api/groups/" + name,
-    method: "delete",
-  })
-    .done(function () {
-      utils.enableAll();
-      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted group: ", name);
-      table.row(id).remove().draw(false);
-      if (ids.length > 0) {
-        // Recursively delete all remaining items
-        delItems(ids);
-        return;
-      }
-
-      table.ajax.reload(null, false);
-
-      // Clear selection after deletion
-      table.rows().deselect();
-      utils.changeBulkDeleteStates(table);
-
-      // Update number of groups in the sidebar
-      updateFtlInfo();
-    })
-    .fail(function (data, exception) {
-      apiFailure(data);
-      utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting group(s): " + idstring, data.responseText);
-      console.log(exception); // eslint-disable-line no-console
-    });
+  const ids = [{ item: $(this).attr("data-id") }];
+  delGroupItems("group", ids, table);
 }
 
 function addGroup() {

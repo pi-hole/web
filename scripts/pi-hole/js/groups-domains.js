@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, groups:false,, getGroups:false, updateFtlInfo:false, apiFailure:false, processGroupResult:false */
+/* global utils:false, groups:false,, getGroups:false, updateFtlInfo:false, apiFailure:false, processGroupResult:false, delGroupItems:false */
 /* exported initTable */
 
 var table;
@@ -333,7 +333,7 @@ function initTable() {
             ids.push($(this).attr("data-id"));
           });
           // Delete all selected rows at once
-          delItems(ids);
+          deleteDomains(ids);
         },
       },
     ],
@@ -430,60 +430,22 @@ $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteDomain() {
   // Passes the button data-id attribute as ID
-  const ids = [$(this).attr("data-id")];
-  delItems(ids);
+  deleteDomains([$(this).attr("data-id")]);
 }
 
-function delItems(ids) {
-  // Check input validity
-  if (!Array.isArray(ids)) return;
+function deleteDomains(encodedIds) {
+  const decodedIds = [];
+  for (let i = 0; i < encodedIds.length; i++) {
+    // Decode domain, type, and kind and add to array
+    const parts = encodedIds[i].split("_");
+    decodedIds[i] = {
+      item: parts[0],
+      type: parts[1],
+      kind: parts[2],
+    };
+  }
 
-  // Get first element from array
-  const domainRaw = ids[0];
-  const domain = utils.hexDecode(domainRaw.split("_")[0]);
-  const typestr = $("#old_type_" + domainRaw).val();
-
-  // Remove first element from array
-  ids.shift();
-
-  utils.disableAll();
-  const idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting domain...", domain);
-
-  $.ajax({
-    url: "/api/domains/" + typestr + "/" + encodeURIComponent(domain),
-    method: "delete",
-  })
-    .done(function () {
-      utils.enableAll();
-      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted domain: ", domain);
-      table.row(domainRaw).remove().draw(false);
-      if (ids.length > 0) {
-        // Recursively delete all remaining items
-        delItems(ids);
-        return;
-      }
-
-      table.ajax.reload(null, false);
-
-      // Clear selection after deletion
-      table.rows().deselect();
-      utils.changeBulkDeleteStates(table);
-
-      // Update number of lists in the sidebar
-      updateFtlInfo();
-    })
-    .fail(function (data, exception) {
-      apiFailure(data);
-      utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while deleting domain(s): " + idstring,
-        data.responseText
-      );
-      console.log(exception); // eslint-disable-line no-console
-    });
+  delGroupItems("domain", decodedIds, table);
 }
 
 function addDomain() {
