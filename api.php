@@ -165,6 +165,11 @@ if (isset($_GET['enable']) && $auth) {
 
             break;
 
+        case 'edit':
+            $data = editCustomDNSEntry();
+
+            break;
+
         case 'delete':
             $data = deleteCustomDNSEntry();
 
