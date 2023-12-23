@@ -35,6 +35,17 @@ function getQueriesDBFilename()
     return '/etc/pihole/pihole-FTL.db';
 }
 
+function getMacVendorsDBFilename()
+{
+    // Get possible non-standard location of FTL's database
+    $FTLsettings = parse_ini_file('/etc/pihole/pihole-FTL.conf');
+    if (isset($FTLsettings['MACVENDORDB'])) {
+        return $FTLsettings['MACVENDORDB'];
+    }
+
+    return '/etc/pihole/macvendor.db';
+}
+
 function SQLite3_connect_try($filename, $mode, $trytoreconnect)
 {
     try {

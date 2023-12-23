@@ -10,6 +10,7 @@
 
 require 'scripts/pi-hole/php/header_authenticated.php';
 require 'scripts/pi-hole/php/savesettings.php';
+require 'scripts/pi-hole/php/macvendor.php';
 require_once 'scripts/pi-hole/php/FTL.php';
 
 // Reread ini file as things might have been changed
@@ -615,7 +616,9 @@ if ($DHCP) {
                 $clid = '<i>unknown</i>';
             }
 
-            array_push($dhcp_leases, array('TIME' => $time, 'hwaddr' => strtoupper($line[1]), 'IP' => $line[2], 'host' => $host, 'clid' => $clid, 'type' => $type));
+            $vendor = getVendor($line[1]);
+
+            array_push($dhcp_leases, array('TIME' => $time, 'hwaddr' => strtoupper($line[1]), 'IP' => $line[2], 'host' => $host, 'clid' => $clid, 'type' => $type, 'vendor' => $vendor));
         }
     }
 }
@@ -634,6 +637,7 @@ readStaticLeasesFile();
                                                     <thead>
                                                         <tr>
                                                             <th>MAC address</th>
+                                                            <th>Vendor</th>
                                                             <th>IP address</th>
                                                             <th>Hostname</th>
                                                             <td></td>
@@ -644,6 +648,7 @@ readStaticLeasesFile();
                                                         <tr data-placement="auto" data-container="body" data-toggle="tooltip"
                                                             title="Lease type: IPv<?php echo $lease['type']; ?><br/>Remaining lease time: <?php echo $lease['TIME']; ?><br/>DHCP UID: <?php echo $lease['clid']; ?>">
                                                             <td id="MAC"><?php echo $lease['hwaddr']; ?></td>
+                                                            <td id="VENDOR"><?php echo $lease['vendor']; ?></td>
                                                             <td id="IP" data-order="<?php echo bin2hex(inet_pton($lease['IP'])); ?>"><?php echo $lease['IP']; ?></td>
                                                             <td id="HOST"><?php echo $lease['host']; ?></td>
                                                             <td>

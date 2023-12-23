@@ -245,11 +245,11 @@ $(function () {
       columnDefs: [
         { bSortable: false, orderable: false, targets: -1 },
         {
-          targets: [0, 1],
+          targets: [0, 1, 2],
           render: $.fn.dataTable.render.text(),
         },
         {
-          targets: 2,
+          targets: 3,
           render: function (data) {
             // Show "unknown", when host is "*"
             var str;
