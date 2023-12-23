@@ -42,8 +42,12 @@ require 'scripts/pi-hole/php/header.php';
                 <form action="" id="loginform" method="post">
                     <div class="form-group login-options has-feedback<?php if ($wrongpassword) { ?> has-error<?php } ?>">
                         <div class="pwd-field">
-                            <!-- hidden username input field to help password managers to autfill the password -->
-                            <input type="text" id="username" value="pi.hole" autocomplete="username" hidden>
+                            <?php if ($ldapAuth) { ?>
+                                <input id="username" name="username" class="form-control" placeholder="Username" autofocus>
+                            <?php } else { ?>
+                                <!-- hidden username input field to help password managers to autfill the password -->
+                                <input type="text" id="username" value="pi.hole" autocomplete="username" hidden>
+                            <?php } ?>
                             <input type="password" id="loginpw" name="pw" class="form-control" placeholder="Password" spellcheck="false" autocomplete="current-password" autofocus>
                             <span class="fa fa-key form-control-feedback"></span>
                         </div>
@@ -69,12 +73,16 @@ require 'scripts/pi-hole/php/header.php';
                                 </div>
                             </div>
                             <div class="box-body">
-                                <p>After installing Pi-hole for the first time, a password is generated and displayed
+                                <?php if ($ldapAuth) { ?>
+                                    Ask LDAP administrator to reset your password
+                                <?php } else { ?>
+                                    <p>After installing Pi-hole for the first time, a password is generated and displayed
                                     to the user. The password cannot be retrieved later on, but it is possible to set
                                     a new password (or explicitly disable the password by setting an empty password)
                                     using the command
-                                </p>
-                                <pre>sudo pihole -a -p</pre>
+                                    </p>
+                                    <pre>sudo pihole -a -p</pre>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
