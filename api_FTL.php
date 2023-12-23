@@ -344,8 +344,19 @@ if (isset($_GET['getAllQueries']) && $auth) {
 }
 
 if (isset($_GET['recentBlocked']) && $auth) {
-    exit(utf8_encode(callFTLAPI('recentBlocked')[0]));
-    unset($data);
+    if (is_numeric($_GET['recentBlocked']) && $_GET['recentBlocked'] > 1) {
+        $return = callFTLAPI('recentBlocked ('.$_GET['recentBlocked'].')');
+        $recent_blocked = array();
+        foreach ($return as $line) {
+            $blocked = utf8_encode($line);
+            $recent_blocked[] = $blocked;
+        }
+        $result = array('recent_blocked' => $recent_blocked);
+        $data = array_merge($data, $result);
+    } else {
+        exit(utf8_encode(callFTLAPI('recentBlocked')[0]));
+        unset($data);
+    }
 }
 
 if (isset($_GET['getForwardDestinationNames']) && $auth) {
