@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  dev-pihole:
+    image: ghcr.io/pi-hole/pihole:latest
+    volumes:
+      - ../:/var/www/html/admin:ro
+    environment:
+      WEBPASSWORD: admin
+
+  npm:
+    image: mcr.microsoft.com/playwright:v1.29.1
+    entrypoint: npm
+    working_dir: /tests
+    volumes:
+      - ./:/tests
+    ipc: host
+    user: pwuser

@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+
+docker-compose -f ./tests/docker-compose.yml run --rm --use-aliases npm "$@"

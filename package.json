@@ -58,7 +58,8 @@
     "prettier": true,
     "space": 2,
     "ignores": [
-      "**/vendor/**"
+      "**/vendor/**",
+      "**/tests/**"
     ],
     "rules": {
       "camelcase": [

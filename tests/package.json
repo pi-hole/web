@@ -1,0 +1,17 @@
+{
+  "name": "admin-lte-tests",
+  "version": "0.0.0",
+  "description": "Tests for Pi-hole AdminLTE",
+  "main": "index.js",
+  "scripts": {
+    "test:integration": "playwright test",
+    "format": "prettier --write ."
+  },
+  "author": "",
+  "license": "EUPL-1.2",
+  "devDependencies": {
+    "@playwright/test": "^1.29.1",
+    "playwright": "^1.29.1",
+    "prettier": "^2.8.1"
+  }
+}
