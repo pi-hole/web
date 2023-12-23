@@ -709,11 +709,11 @@ readStaticLeasesFile();
                                                         </tr>
                                                     </tfoot>
                                                 </table>
-                                                <p>Specifying the MAC address is mandatory and only one entry per MAC
-                                                    address is allowed. If the IP address is omitted and a host name is
-                                                    given, the IP address will still be generated dynamically and the
-                                                    specified host name will be used. If the host name is omitted, only
-                                                    a static lease will be added.</p>
+                                                <p>Specifying the MAC address(es) is mandatory and only one entry per
+                                                    (set of) MAC addresses is allowed. If the IP address is omitted and
+                                                    a host name is given, the IP address will still be generated
+                                                    dynamically and the specified host name will be used. If the host
+                                                    name is omitted, only a static lease will be added.</p>
                                             </div>
                                         </div>
                                     </div>
