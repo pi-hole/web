@@ -278,15 +278,22 @@ function formatInfo(data) {
 
   var regexInfo = "",
     cnameInfo = "";
-  if (data.regex_id !== null && data.regex_id > -1) {
-    var regexLink =
-      '<a href="groups/domains?domainid=' +
-      data.regex_id +
-      '" target="_blank">entry with ID ' +
-      data.regex_id +
+  if (data.list_id !== null && data.list_id !== -1) {
+    // Undo the negation of the list ID if this is an anti-/gravity match
+    const gravityMatch = data.list_id < -1;
+    const listID = gravityMatch ? -2 - data.list_id : data.list_id;
+
+    var listLink =
+      '<a href="' +
+      (gravityMatch ? "groups/lists?listid=" : "groups/domains?domainid=") +
+      listID +
+      '" target="_blank">' +
+      (gravityMatch ? "list" : "domain") +
+      " ID " +
+      listID +
       "</a>";
     regexInfo =
-      divStart + "Query was " + queryStatus.matchText + " by </td><td>" + regexLink + "</div>";
+      divStart + "Query was " + queryStatus.matchText + " by </td><td>" + listLink + "</div>";
   }
 
   if (queryStatus.isCNAME) {
