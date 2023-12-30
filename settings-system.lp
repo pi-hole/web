@@ -70,67 +70,67 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                     <div class="col-lg-12">
                         <table class="table table-striped table-bordered nowrap">
                             <tbody>
-                                <tr>
+                                <tr title="Client broadcast to locate available servers">
                                     <th scope="row">
                                         <span>DHCPDISCOVER:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-discover">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Server to client in response to DHCPDISCOVER with offer of configuration parameters">
                                     <th scope="row">
                                         <span>DHCPOFFER:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-offer">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Client message to servers either (a) requesting offered parameters from one server and implicitly declining offers from all others, (b) confirming correctness of previously allocated address after, e.g., system reboot, or (c) extending the lease on a particular network address">
                                     <th scope="row">
                                         <span>DHCPREQUEST:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-request">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Server to client with configuration parameters, including committed network address">
                                     <th scope="row">
                                         <span>DHCPACK:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-ack">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Server to client indicating client's notion of network address is incorrect (e.g., client has moved to new subnet) or client's lease as expired">
                                     <th scope="row">
                                         <span>DHCPNAK:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-nak">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Client to server indicating network address is already in use">
                                     <th scope="row">
                                         <span>DHCPDECLINE:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-decline">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Client to server, asking only for local configuration parameters; client already has externally configured network address">
                                     <th scope="row">
                                         <span>DHCPINFORM:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-inform">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Client to server relinquishing network address and cancelling remaining lease">
                                     <th scope="row">
                                         <span>DHCPRELEASE:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-release">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Could not provide an answer, e.g., because there are no leases left, the client wants to renew a lease that is outside of our range, or the explicitly requested address is already in use">
                                     <th scope="row">
                                         <span>DHCPNOANSWER:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-noanswer">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Processed BOOTP packets">
                                     <th scope="row">
                                         <span>BOOTP:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-bootp">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Processed PXE packets">
                                     <th scope="row">
                                         <span>PXE:</span>
                                     </th>
