@@ -82,7 +82,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                     </th>
                                     <td id="sysinfo-dhcp-offer">&nbsp;</td>
                                 </tr>
-                                <tr title="Client message to servers either (a) requesting offered parameters from one server and implicitly declining offers from all others, (b) confirming correctness of previously allocated address after, e.g., system reboot, or (c) extending the lease on a particular network address">
+                                <tr title="Client message to servers either &#010;  (a) requesting offered parameters from one server and implicitly declining offers from all others, &#010;  (b) confirming correctness of previously allocated address after, e.g., system reboot, or &#010;  (c) extending the lease on a particular network address">
                                     <th scope="row">
                                         <span>DHCPREQUEST:</span>
                                     </th>
