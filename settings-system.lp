@@ -172,39 +172,39 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                     <div class="col-lg-12">
                         <table class="table table-striped table-bordered nowrap">
                             <tbody>
-                                <tr>
+                                <tr title="Total size of the DNS cache">
                                     <th scope="row">
-                                        <span title="Total size of the DNS cache">DNS cache size:</span>
+                                        <span>DNS cache size:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-size">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Share of the allocated cache that is currently in use (this includes stale/expired entries). If the percentage value is very low, it is advisable to reduce the DNS cache size to optimize performance">
                                     <th scope="row">
-                                        <span title="Share of the allocated cache that is currently in use (this includes stale/expired entries). If the percentage value is very low, it is advisable to reduce the DNS cache size to optimize performance">Active cache records:</span>
+                                        <span>Active cache records:</span>
                                     </th>
                                     <td id="cache-utilization">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Number of cache insertions, this number will grow continuously as expiring records naturally make space for new records">
                                     <th scope="row">
-                                        <span title="Number of cache insertions, this number will grow continuously as expiring records naturally make space for new records">Total cache insertions:</span>
+                                        <span>Total cache insertions:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-inserted">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Number of cache entries that had to be removed although they are not expired. When this number if larger than zero, you should consider increasing your total cache size" lookatme-text="DNS cache evictions:">
                                     <th scope="row">
-                                        <span title="Number of cache entries that had to be removed although they are not expired. When this number if larger than zero, you should consider increasing your total cache size" lookatme-text="DNS cache evictions:">DNS cache evictions:</span>
+                                        <span>DNS cache evictions:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-evicted">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Number of expired cache entries (they can still be used by the cache optimizer). These entries will only be freed when space is really needed (for efficiency reasons)">
                                     <th scope="row">
-                                        <span title="Number of expired cache entries (they can still be used by the cache optimizer). These entries will only be freed when space is really needed (for efficiency reasons)">Expired DNS cache entries:</span>
+                                        <span>Expired DNS cache entries:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-expired">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Number of immortal cache entries that will never expire (e.g. from /etc/hosts or local configuration)">
                                     <th scope="row">
-                                        <span title="Number of immortal cache entries that will never expire (e.g. from /etc/hosts or local configuration)">Immortal DNS cache entries:</span>
+                                        <span>Immortal DNS cache entries:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-immortal">&nbsp;</td>
                                 </tr>
