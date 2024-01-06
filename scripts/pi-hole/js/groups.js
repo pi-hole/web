@@ -7,8 +7,7 @@
 
 /* global utils:false, apiFailure:false, updateFtlInfo:false, processGroupResult:false, delGroupItems:false */
 
-var table,
-  idNames = {};
+var table;
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
@@ -73,20 +72,20 @@ $(function () {
         "\nDatabase ID: " +
         data.id;
       $("td:eq(1)", row).html(
-        '<input id="name_' + data.id + '" title="' + tooltip + '" class="form-control">'
+        '<input id="name_' + dataId + '" title="' + tooltip + '" class="form-control">'
       );
-      var nameEl = $("#name_" + data.id, row);
+      var nameEl = $("#name_" + dataId, row);
       nameEl.val(data.name);
       nameEl.on("change", editGroup);
 
       $("td:eq(2)", row).html(
         '<input type="checkbox" id="enabled_' +
-          data.id +
+          dataId +
           '"' +
           (data.enabled ? " checked" : "") +
           ">"
       );
-      var enabledEl = $("#enabled_" + data.id, row);
+      var enabledEl = $("#enabled_" + dataId, row);
       enabledEl.bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
@@ -96,9 +95,9 @@ $(function () {
       });
       enabledEl.on("change", editGroup);
 
-      $("td:eq(3)", row).html('<input id="comment_' + data.id + '" class="form-control">');
+      $("td:eq(3)", row).html('<input id="comment_' + dataId + '" class="form-control">');
       var comment = data.comment !== null ? data.comment : "";
-      var commentEl = $("#comment_" + data.id, row);
+      var commentEl = $("#comment_" + dataId, row);
       commentEl.val(comment);
       commentEl.on("change", editGroup);
 
@@ -292,7 +291,7 @@ function editGroup() {
   const elem = $(this).attr("id");
   const tr = $(this).closest("tr");
   const id = tr.attr("data-id");
-  const oldName = idNames[id];
+  const oldName = utils.hexDecode(id);
   const name = tr.find("#name_" + id).val();
   const enabled = tr.find("#enabled_" + id).is(":checked");
   const comment = tr.find("#comment_" + id).val();
