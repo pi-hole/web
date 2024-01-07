@@ -20,7 +20,7 @@ const fadeIn = true;
 const markUpdates = true;
 
 // Format a line of the dnsmasq log
-function formatLine(line) {
+function formatDnsmasq(line) {
   // Remove dnsmasq + PID
   let txt = line.replaceAll(/ dnsmasq\[\d*]/g, "");
 
@@ -36,6 +36,36 @@ function formatLine(line) {
   }
 
   return txt;
+}
+
+function formatFTL(line, prio) {
+  // Colorize priority
+  let prioClass = "";
+  switch (prio) {
+    case "INFO": {
+      prioClass = "text-success";
+      break;
+    }
+
+    case "WARNING": {
+      prioClass = "text-warning";
+      break;
+    }
+
+    case "ERR":
+    case "EMERG":
+    case "ALERT":
+    case "CRIT": {
+      prioClass = "text-danger";
+      break;
+    }
+
+    default:
+      prioClass = prio.startsWith("DEBUG") ? "text-info" : "text-muted";
+  }
+
+  // Return formatted line
+  return `<span class="${prioClass}">${utils.escapeHtml(prio)}</span> ${line}`;
 }
 
 // Function that asks the API for new data
@@ -61,7 +91,7 @@ function getData() {
       // Check if we have a new PID -> FTL was restarted
       if (lastPID !== data.pid) {
         if (lastPID !== -1) {
-          $("#output").append("<i class='text-danger'>*** FTL restarted ***</i><br>");
+          $("#output").append("<div><i class='text-danger'>*** FTL restarted ***</i></div>");
         }
 
         // Remember PID
@@ -76,7 +106,7 @@ function getData() {
       // Set placeholder text if log file is empty and we have no new lines
       if (data.log.length === 0) {
         if (nextID === 0) {
-          $("#output").html("<i>*** Log file is empty ***</i>");
+          $("#output").html("<div><i>*** Log file is empty ***</i></div>");
         }
 
         utils.setTimer(getData, REFRESH_INTERVAL.logs);
@@ -90,16 +120,19 @@ function getData() {
       }
 
       data.log.forEach(function (line) {
-        // Format line if this is the dnsmasq log
-        if (GETDict.file === "dnsmasq") line.message = formatLine(line.message);
+        // Escape HTML
+        line.message = utils.escapeHtml(line.message);
+        // Format line if applicable
+        if (GETDict.file === "dnsmasq") line.message = formatDnsmasq(line.message);
+        else if (GETDict.file === "ftl") line.message = formatFTL(line.message, line.prio);
 
         // Add new line to output
         $("#output").append(
-          '<span class="log-entry"><span class="text-muted">' +
+          '<div class="log-entry"><span class="text-muted">' +
             moment(1000 * line.timestamp).format("YYYY-MM-DD HH:mm:ss.SSS") +
             "</span> " +
             line.message +
-            "<br></span>"
+            "</div>"
         );
         if (fadeIn) {
           //$(".left-line:last").fadeOut(2000);
@@ -137,7 +170,22 @@ function getData() {
 var gAutoScrolling = true;
 $("#output").on("scroll", function () {
   // Check if we are at the bottom of the output
-  if ($("#output").scrollTop() + $("#output").innerHeight() >= $("#output")[0].scrollHeight) {
+  //
+  // - $("#output")[0].scrollHeight: This gets the entire height of the content
+  //   of the "output" element, including the part that is not visible due to
+  //   scrolling.
+  // - $("#output").innerHeight(): This gets the inner height of the "output"
+  //   element, which is the visible part of the content.
+  // - $("#output").scrollTop(): This gets the number of pixels that the content
+  //   of the "output" element is scrolled vertically from the top.
+  //
+  // By subtracting the inner height and the scroll top from the scroll height,
+  // you get the distance from the bottom of the scrollable area.
+  const bottom =
+    $("#output")[0].scrollHeight - $("#output").innerHeight() - $("#output").scrollTop();
+  // Add a tolerance of four line heights
+  const tolerance = 4 * parseFloat($("#output").css("line-height"));
+  if (bottom <= tolerance) {
     // Auto-scrolling is enabled
     gAutoScrolling = true;
     $("#autoscrolling").addClass("fa-check");

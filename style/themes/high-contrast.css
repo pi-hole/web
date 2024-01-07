@@ -25,6 +25,8 @@
 
   --allowed-color: #3c7;
   --blocked-color: var(--danger-color);
+
+  --overlay-bgcolor: rgba(255, 255, 255, 0.8);
 }
 
 /* removing transition for every element, to avoid unnecessary movement */

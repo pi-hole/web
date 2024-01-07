@@ -5,6 +5,14 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
+:root {
+  /* Datatables Select - bgcolor */
+  --datatable-bgcolor: #e0e8ee;
+
+  /* Used in settings save button */
+  --overlay-bgcolor: rgba(212, 220, 232, 0.55);
+}
+
 .layout-boxed {
   background: url("../img/boxed-bg.png") repeat fixed;
 }
@@ -1005,11 +1013,6 @@ body:not(.lcars) .filter_types [class*="icheck-"] > input:first-child:checked + 
   margin-right: 0.5em;
 }
 
-/* Datatables Select - bgcolor */
-:root {
-  --datatable-bgcolor: #e0e8ee;
-}
-
 div.dt-buttons {
   margin: 2px 0 5px;
 }
@@ -1065,6 +1068,7 @@ table.dataTable tbody > tr > .selected {
 
 #output {
   position: relative;
+  display: grid;
   margin: 5px 0;
   min-height: 36px;
   padding: 4px 8px;
@@ -1115,13 +1119,26 @@ table.dataTable tbody > tr > .selected {
 }
 
 .pre-scrollable {
-  max-height: calc(100vh - 300px);
+  /* use dynamic unit to account for mobile browser interface height */
+  max-height: max(195px, 100dvh - 170px);
   overflow-y: scroll;
+}
+@media screen and (max-width: 767px) {
+  .pre-scrollable {
+    /* reduce max-height on mobile (higher header) */
+    max-height: max(195px, 100dvh - 220px);
+  }
+}
+@media screen and (max-width: 546px) {
+  .pre-scrollable {
+    /* reduce max-height even more (box-header text wraps, increasing the height) */
+    max-height: max(195px, 100dvh - 240px);
+  }
 }
 
 .hr-small {
-  margin-top: 0px;
-  margin-bottom: 0px;
+  width: 100%;
+  margin: 0 0 -1px;
   border-top: 1px solid #ff0000aa;
 }
 
@@ -1141,11 +1158,23 @@ table.dataTable tbody > tr > .selected {
   opacity: 0.1;
 }
 
-.save-button {
+.save-button-container {
   position: fixed;
-  bottom: 2%;
-  right: 2%;
+  bottom: 1.2em;
+  right: 0.6em;
   z-index: 10;
+  background: var(--overlay-bgcolor);
+  width: fit-content;
+  border-radius: 0.5em;
+  padding: 0;
+}
+.save-button {
+  margin: 1.2em;
+}
+@media (min-width: 1250px) {
+  .layout-boxed .save-button-container {
+    right: calc((100% - 1250px) / 2 + 1.2em);
+  }
 }
 
 .settings-level-basic {
@@ -1422,4 +1451,16 @@ table.dataTable tbody > tr > .selected {
 
 .log-entry {
   padding-left: 0.5em;
+}
+
+.align-click-options {
+  align-items: center;
+  display: grid;
+  grid-auto-flow: column;
+  grid-column-gap: 15px;
+}
+
+.overflow-wrap {
+  overflow-wrap: break-word;
+  inline-size: auto;
 }

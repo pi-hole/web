@@ -70,67 +70,67 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                     <div class="col-lg-12">
                         <table class="table table-striped table-bordered nowrap">
                             <tbody>
-                                <tr>
+                                <tr title="Client broadcast to locate available servers">
                                     <th scope="row">
                                         <span>DHCPDISCOVER:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-discover">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Server to client in response to DHCPDISCOVER with offer of configuration parameters">
                                     <th scope="row">
                                         <span>DHCPOFFER:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-offer">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Client message to servers either &#010;  (a) requesting offered parameters from one server and implicitly declining offers from all others, &#010;  (b) confirming correctness of previously allocated address after, e.g., system reboot, or &#010;  (c) extending the lease on a particular network address">
                                     <th scope="row">
                                         <span>DHCPREQUEST:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-request">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Server to client with configuration parameters, including committed network address">
                                     <th scope="row">
                                         <span>DHCPACK:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-ack">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Server to client indicating client's notion of network address is incorrect (e.g., client has moved to new subnet) or client's lease as expired">
                                     <th scope="row">
                                         <span>DHCPNAK:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-nak">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Client to server indicating network address is already in use">
                                     <th scope="row">
                                         <span>DHCPDECLINE:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-decline">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Client to server, asking only for local configuration parameters; client already has externally configured network address">
                                     <th scope="row">
                                         <span>DHCPINFORM:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-inform">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Client to server relinquishing network address and cancelling remaining lease">
                                     <th scope="row">
                                         <span>DHCPRELEASE:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-release">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Could not provide an answer, e.g., because there are no leases left, the client wants to renew a lease that is outside of our range, or the explicitly requested address is already in use">
                                     <th scope="row">
                                         <span>DHCPNOANSWER:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-noanswer">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Processed BOOTP packets">
                                     <th scope="row">
                                         <span>BOOTP:</span>
                                     </th>
                                     <td id="sysinfo-dhcp-bootp">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Processed PXE packets">
                                     <th scope="row">
                                         <span>PXE:</span>
                                     </th>
@@ -172,39 +172,39 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                     <div class="col-lg-12">
                         <table class="table table-striped table-bordered nowrap">
                             <tbody>
-                                <tr>
+                                <tr title="Total size of the DNS cache">
                                     <th scope="row">
-                                        <span title="Total size of the DNS cache">DNS cache size:</span>
+                                        <span>DNS cache size:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-size">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Share of the allocated cache that is currently in use (this includes stale/expired entries). If the percentage value is very low, it is advisable to reduce the DNS cache size to optimize performance">
                                     <th scope="row">
-                                        <span title="Share of the allocated cache that is currently in use (this includes stale/expired entries). If the percentage value is very low, it is advisable to reduce the DNS cache size to optimize performance">Active cache records:</span>
+                                        <span>Active cache records:</span>
                                     </th>
                                     <td id="cache-utilization">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Number of cache insertions, this number will grow continuously as expiring records naturally make space for new records">
                                     <th scope="row">
-                                        <span title="Number of cache insertions, this number will grow continuously as expiring records naturally make space for new records">Total cache insertions:</span>
+                                        <span>Total cache insertions:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-inserted">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Number of cache entries that had to be removed although they are not expired. When this number if larger than zero, you should consider increasing your total cache size" lookatme-text="DNS cache evictions:">
                                     <th scope="row">
-                                        <span title="Number of cache entries that had to be removed although they are not expired. When this number if larger than zero, you should consider increasing your total cache size" lookatme-text="DNS cache evictions:">DNS cache evictions:</span>
+                                        <span>DNS cache evictions:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-evicted">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Number of expired cache entries (they can still be used by the cache optimizer). These entries will only be freed when space is really needed (for efficiency reasons)">
                                     <th scope="row">
-                                        <span title="Number of expired cache entries (they can still be used by the cache optimizer). These entries will only be freed when space is really needed (for efficiency reasons)">Expired DNS cache entries:</span>
+                                        <span>Expired DNS cache entries:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-expired">&nbsp;</td>
                                 </tr>
-                                <tr>
+                                <tr title="Number of immortal cache entries that will never expire (e.g. from /etc/hosts or local configuration)">
                                     <th scope="row">
-                                        <span title="Number of immortal cache entries that will never expire (e.g. from /etc/hosts or local configuration)">Immortal DNS cache entries:</span>
+                                        <span>Immortal DNS cache entries:</span>
                                     </th>
                                     <td id="sysinfo-dns-cache-immortal">&nbsp;</td>
                                 </tr>

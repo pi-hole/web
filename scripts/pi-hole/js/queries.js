@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false, utils:false */
+/* global moment:false, utils:false, REFRESH_INTERVAL:false */
 
 const beginningOfTime = 1262304000; // Jan 01 2010, 00:00 in seconds
 const endOfTime = 2147483647; // Jan 19, 2038, 03:14 in seconds
@@ -263,7 +263,7 @@ function formatInfo(data) {
 
   // Parse Query Status
   var queryStatus = parseQueryStatus(data);
-  var divStart = '<div class="col-xl-2 col-lg-4 col-md-6 col-12">';
+  var divStart = '<div class="col-xl-2 col-lg-4 col-md-6 col-12 overflow-wrap">';
   var statusInfo = "";
   if (queryStatus.colorClass !== false) {
     statusInfo =
@@ -282,7 +282,7 @@ function formatInfo(data) {
     var regexLink =
       '<a href="groups/domains?domainid=' +
       data.regex_id +
-      '" target="_blank">regex ID ' +
+      '" target="_blank">entry with ID ' +
       data.regex_id +
       "</a>";
     regexInfo =
@@ -470,6 +470,19 @@ function getAPIURL(filters) {
   return encodeURI(apiurl);
 }
 
+var liveMode = false;
+$("#live").prop("checked", liveMode);
+$("#live").on("click", function () {
+  liveMode = $(this).prop("checked");
+  liveUpdate();
+});
+
+function liveUpdate() {
+  if (liveMode) {
+    refreshTable();
+  }
+}
+
 $(function () {
   // Do we want to filter queries?
   var GETDict = utils.parseQueryString();
@@ -512,6 +525,10 @@ $(function () {
       dataFilter: function (d) {
         var json = jQuery.parseJSON(d);
         cursor = json.cursor; // Extract cursor from original data
+        if (liveMode) {
+          utils.setTimer(liveUpdate, REFRESH_INTERVAL.query_log);
+        }
+
         return d;
       },
     },
@@ -521,7 +538,7 @@ $(function () {
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     autoWidth: false,
-    processing: true,
+    processing: false,
     order: [[0, "desc"]],
     columns: [
       {
@@ -639,6 +656,17 @@ $(function () {
   });
 
   $("#refresh").on("click", refreshTable);
+
+  // Disable live mode when #disk is checked
+  $("#disk").on("click", function () {
+    if ($(this).prop("checked")) {
+      $("#live").prop("checked", false);
+      $("#live").prop("disabled", true);
+      liveMode = false;
+    } else {
+      $("#live").prop("disabled", false);
+    }
+  });
 });
 
 function refreshTable() {
