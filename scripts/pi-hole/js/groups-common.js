@@ -66,6 +66,7 @@ function delGroupItems(type, ids, table) {
   $.ajax({
     url: url,
     data: JSON.stringify(ids),
+    contentType: "application/json",
     method: "POST",
   })
     .done(function () {
