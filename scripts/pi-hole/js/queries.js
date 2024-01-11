@@ -205,6 +205,7 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-ban";
       fieldtext = data.status;
       buttontext = "";
+      blocked = true;
       break;
     default:
       colorClass = "text-orange";
