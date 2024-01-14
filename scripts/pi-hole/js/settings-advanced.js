@@ -54,7 +54,7 @@ function generateRow(topic, key, value) {
       : "") +
     "</h3>" +
     "<p>" +
-    utils.escapeHtml(value.description).replace("\n", "<br>") +
+    utils.escapeHtml(value.description).replaceAll("\n", "<br>") +
     "</p>" +
     "</div>" +
     '<div class="box-body">' +
