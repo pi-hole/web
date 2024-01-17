@@ -391,7 +391,7 @@ function checkMessages() {
   })
     .done(function (data) {
       if (data.count > 0) {
-        var more = '\nAccess "Tools/Pi-hole diganosis" for further details.';
+        var more = '\nAccess "Tools/Pi-hole diagnosis" for further details.';
         var title =
           data.count > 1
             ? "There are " + data.count + " warnings." + more
