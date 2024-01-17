@@ -104,6 +104,7 @@ function valueDetails(key, value) {
 
     case "boolean": {
       content +=
+        '<div class="col-sm-12">' +
         '<div><input type="checkbox" ' +
         (value.value ? " checked" : "") +
         ' id="' +
@@ -116,7 +117,7 @@ function valueDetails(key, value) {
         key +
         '-checkbox">Enabled ' +
         defaultValueHint +
-        "</label>" +
+        "</label></div>" +
         " </div>";
 
       break;
@@ -262,7 +263,7 @@ function valueDetails(key, value) {
     }
   }
 
-  return content;
+  return '<div class="form-group row">' + content + "</div>";
 }
 
 function generateRow(topic, key, value) {
@@ -292,9 +293,8 @@ function generateRow(topic, key, value) {
     "</p>" +
     "</div>" +
     '<div class="box-body">' +
-    '<div class="form-group">' +
     valueDetails(key, value) +
-    "</div></div></div> ";
+    "</div></div> ";
 
   var topKey = key.split(".")[0];
   var elem = $("#advanced-content-" + topKey + "-flex");
