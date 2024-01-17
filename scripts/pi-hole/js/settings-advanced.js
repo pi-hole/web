@@ -40,34 +40,8 @@ function boxIcons(value) {
   );
 }
 
-function generateRow(topic, key, value) {
-  // If the value is an object, we need to recurse
-  if (!("description" in value)) {
-    Object.keys(value).forEach(function (subkey) {
-      var subvalue = value[subkey];
-      generateRow(topic, key + "." + subkey, subvalue);
-    });
-    return;
-  }
-
-  // else: we have a setting we can display
-  var box =
-    '<div class="box">' +
-    '<div class="box-header">' +
-    '<h3 class="box-title" data-key="' +
-    key +
-    '" data-modified="' +
-    (value.modified ? "true" : "false") +
-    '">' +
-    key +
-    boxIcons(value) +
-    "</h3>" +
-    "<p>" +
-    utils.escapeHtml(value.description).replaceAll("\n", "<br>") +
-    "</p>" +
-    "</div>" +
-    '<div class="box-body">' +
-    '<div class="form-group">';
+function valueDetails(key, value) {
+  // Define default hint text
   let defaultValueHint = "";
   if (value.modified) {
     defaultValueHint = "";
@@ -99,16 +73,19 @@ function generateRow(topic, key, value) {
     }
   }
 
+  // Define extraAttributes, if needed
   let extraAttributes = "";
   if (value.flags.env_var) {
     extraAttributes = " disabled";
   }
 
+  // Format the output depending on the value type
+  let content = "";
   switch (value.type) {
     case "IPv4 address":
     case "IPv6 address":
     case "string": {
-      box +=
+      content +=
         '<label class="col-sm-4 control-label">Value (string)</label>' +
         '<div class="col-sm-8">' +
         '<input type="text" class="form-control" value="' +
@@ -126,7 +103,7 @@ function generateRow(topic, key, value) {
     }
 
     case "boolean": {
-      box +=
+      content +=
         '<div><input type="checkbox" ' +
         (value.value ? " checked" : "") +
         ' id="' +
@@ -146,7 +123,7 @@ function generateRow(topic, key, value) {
     }
 
     case "double": {
-      box +=
+      content +=
         '<label class="col-sm-4 control-label">Value</label>' +
         '<div class="col-sm-8">' +
         '<input type="number" class="form-control" value="' +
@@ -163,7 +140,7 @@ function generateRow(topic, key, value) {
     }
 
     case "integer": {
-      box +=
+      content +=
         '<label class="col-sm-4 control-label">Value (integer)</label>' +
         '<div class="col-sm-8">' +
         '<input type="number" step="1" class="form-control" value="' +
@@ -180,7 +157,7 @@ function generateRow(topic, key, value) {
     }
 
     case "unsigned integer": {
-      box +=
+      content +=
         '<label class="col-sm-4 control-label">Value (unsigned integer)</label>' +
         '<div class="col-sm-8">' +
         '<input type="number" step="1" min="0" class="form-control" value="' +
@@ -197,7 +174,7 @@ function generateRow(topic, key, value) {
     }
 
     case "unsigned integer (16 bit)": {
-      box +=
+      content +=
         '<label class="col-sm-4 control-label">Value (unsigned 16bit integer)</label>' +
         '<div class="col-sm-8">' +
         '<input type="number" step="1" min="0" max="65535" class="form-control" value="' +
@@ -214,7 +191,7 @@ function generateRow(topic, key, value) {
     }
 
     case "string array": {
-      box +=
+      content +=
         '<label class="col-sm-5 control-label">Values (one item per line)</label>' +
         '<div class="col-sm-7">' +
         '<textarea class="form-control field-sizing-content" data-key="' +
@@ -233,7 +210,7 @@ function generateRow(topic, key, value) {
 
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
-      box +=
+      content +=
         '<label class="col-sm-4 control-label">Selected Option</label>' +
         '<div class="col-sm-8">' +
         '<select class="form-control" data-key="' +
@@ -242,7 +219,7 @@ function generateRow(topic, key, value) {
         extraAttributes +
         ">";
       value.allowed.forEach(function (option) {
-        box +=
+        content +=
           '<option value="' +
           option.item +
           '"' +
@@ -251,7 +228,7 @@ function generateRow(topic, key, value) {
           option.item +
           "</option>";
       });
-      box +=
+      content +=
         "</select> " +
         defaultValueHint +
         "</div>" +
@@ -263,7 +240,7 @@ function generateRow(topic, key, value) {
     }
 
     case "password (write-only string)": {
-      box +=
+      content +=
         '<label class="col-sm-4 control-label">Value (string)</label>' +
         '<div class="col-sm-8">' +
         '<input type="password" class="form-control" value="' +
@@ -281,11 +258,44 @@ function generateRow(topic, key, value) {
     }
 
     default: {
-      box += "TYPE " + value.type + " NOT DEFINED";
+      content += "TYPE " + value.type + " NOT DEFINED";
     }
   }
 
-  box += "</div></div> ";
+  return content;
+}
+
+function generateRow(topic, key, value) {
+  // If the value is an object, we need to recurse
+  if (!("description" in value)) {
+    Object.keys(value).forEach(function (subkey) {
+      var subvalue = value[subkey];
+      generateRow(topic, key + "." + subkey, subvalue);
+    });
+    return;
+  }
+
+  // else: we have a setting we can display
+  var box =
+    '<div class="box">' +
+    '<div class="box-header">' +
+    '<h3 class="box-title" data-key="' +
+    key +
+    '" data-modified="' +
+    (value.modified ? "true" : "false") +
+    '">' +
+    key +
+    boxIcons(value) +
+    "</h3>" +
+    "<p>" +
+    utils.escapeHtml(value.description).replaceAll("\n", "<br>") +
+    "</p>" +
+    "</div>" +
+    '<div class="box-body">' +
+    '<div class="form-group">' +
+    valueDetails(key, value) +
+    "</div></div></div> ";
+
   var topKey = key.split(".")[0];
   var elem = $("#advanced-content-" + topKey + "-flex");
   elem.append(box);
