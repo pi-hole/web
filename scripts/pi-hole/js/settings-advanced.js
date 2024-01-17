@@ -288,11 +288,11 @@ function generateRow(topic, key, value) {
     key +
     boxIcons(value) +
     "</h3>" +
-    "<p>" +
-    utils.escapeHtml(value.description).replaceAll("\n", "<br>") +
-    "</p>" +
     "</div>" +
     '<div class="box-body">' +
+    utils.escapeHtml(value.description).replaceAll("\n", "<br>") +
+    "</div>" +
+    '<div class="box-footer">' +
     valueDetails(key, value) +
     "</div></div> ";
 
