@@ -28,13 +28,13 @@ function boxIcons(value) {
   return (
     '<span class="box-icons">' +
     (value.modified
-      ? '&nbsp;&nbsp;<i class="far fa-edit text-light-blue" title="Modified from default"></i>'
+      ? '<i class="far fa-edit text-light-blue" title="Modified from default"></i>'
       : "") +
     (value.flags.restart_dnsmasq
-      ? '&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>'
+      ? '<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>'
       : "") +
     (value.flags.env_var
-      ? '&nbsp;&nbsp;<i class="fas fa-lock text-orange" title="Settings overwritten by an environmental variable are read-only"></i>'
+      ? '<i class="fas fa-lock text-orange" title="Settings overwritten by an environmental variable are read-only"></i>'
       : "") +
     "</span>"
   );
