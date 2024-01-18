@@ -86,8 +86,8 @@ function valueDetails(key, value) {
     case "IPv6 address":
     case "string": {
       content +=
-        '<label class="col-sm-4 control-label">Value (string)</label>' +
-        '<div class="col-sm-8">' +
+        '<label class="col-sm-2 control-label">Value <small>(string)</small></label>' +
+        '<div class="col-sm-10">' +
         '<input type="text" class="form-control" value="' +
         value.value +
         '" data-key="' +
@@ -125,8 +125,8 @@ function valueDetails(key, value) {
 
     case "double": {
       content +=
-        '<label class="col-sm-4 control-label">Value</label>' +
-        '<div class="col-sm-8">' +
+        '<label class="col-sm-2 control-label">Value</label>' +
+        '<div class="col-sm-10">' +
         '<input type="number" class="form-control" value="' +
         value.value +
         '" data-key="' +
@@ -142,8 +142,8 @@ function valueDetails(key, value) {
 
     case "integer": {
       content +=
-        '<label class="col-sm-4 control-label">Value (integer)</label>' +
-        '<div class="col-sm-8">' +
+        '<label class="col-sm-2 control-label">Value <small>(integer)</small></label>' +
+        '<div class="col-sm-10">' +
         '<input type="number" step="1" class="form-control" value="' +
         value.value +
         '" data-key="' +
@@ -159,7 +159,7 @@ function valueDetails(key, value) {
 
     case "unsigned integer": {
       content +=
-        '<label class="col-sm-4 control-label">Value (unsigned integer)</label>' +
+        '<label class="col-sm-4 control-label">Value <small>(unsigned integer)</small></label>' +
         '<div class="col-sm-8">' +
         '<input type="number" step="1" min="0" class="form-control" value="' +
         value.value +
@@ -176,7 +176,7 @@ function valueDetails(key, value) {
 
     case "unsigned integer (16 bit)": {
       content +=
-        '<label class="col-sm-4 control-label">Value (unsigned 16bit integer)</label>' +
+        '<label class="col-sm-4 control-label">Value <small>(unsigned 16bit integer)</small></label>' +
         '<div class="col-sm-8">' +
         '<input type="number" step="1" min="0" max="65535" class="form-control" value="' +
         value.value +
@@ -193,8 +193,8 @@ function valueDetails(key, value) {
 
     case "string array": {
       content +=
-        '<label class="col-sm-5 control-label">Values (one item per line)</label>' +
-        '<div class="col-sm-7">' +
+        '<label class="col-sm-4 control-label">Values <small>(one item per line)</small></label>' +
+        '<div class="col-sm-8">' +
         '<textarea class="form-control field-sizing-content" data-key="' +
         key +
         '"' +
@@ -242,8 +242,8 @@ function valueDetails(key, value) {
 
     case "password (write-only string)": {
       content +=
-        '<label class="col-sm-4 control-label">Value (string)</label>' +
-        '<div class="col-sm-8">' +
+        '<label class="col-sm-2 control-label">Value <small>(string)</small></label>' +
+        '<div class="col-sm-10">' +
         '<input type="password" class="form-control" value="' +
         value.value +
         '" data-key="' +
@@ -278,7 +278,7 @@ function generateRow(topic, key, value) {
 
   // else: we have a setting we can display
   var box =
-    '<div class="box">' +
+    '<div class="box settings-box">' +
     '<div class="box-header">' +
     '<h3 class="box-title" data-key="' +
     key +
