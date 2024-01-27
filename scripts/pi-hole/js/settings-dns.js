@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false */
+/* global utils:false, applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false */
 
 // Remove an element from an array (inline)
 function removeFromArray(arr, what) {
@@ -107,13 +107,13 @@ function updateDNSserversTextfield(upstreams, customServers) {
   );
 }
 
-function RevServersField(data, fieldIndex) {
+function revServersField(data, fieldIndex) {
   // If an invalid index is received, return null
   if (fieldIndex < 0 || fieldIndex > 4) {
     return null;
   }
 
-  let arrRevServers = data.split(",");
+  const arrRevServers = data.split(",");
   return arrRevServers.length > fieldIndex ? arrRevServers[fieldIndex] : "";
 }
 
@@ -150,7 +150,7 @@ function revServerDataTable() {
       {
         targets: 0,
         render: function (data) {
-          return RevServersField(data, 0) == "true"
+          return revServersField(data, 0) === "true"
             ? '<input type="checkbox" class="no-icheck" checked disabled>'
             : '<input type="checkbox" class="no-icheck" disabled>';
         },
@@ -158,7 +158,7 @@ function revServerDataTable() {
       {
         targets: "_all",
         render: function (data, type, full, meta) {
-          return RevServersField(data, meta.col);
+          return revServersField(data, meta.col);
         },
       },
     ],
@@ -180,7 +180,7 @@ function revServerDataTable() {
                     </button>`;
       $("td:eq(4)", row).html(button);
     },
-    dom: "<'row'<'col-sm-12'<'table-responsive'tr>>>" + "<'row'<'col-sm-12'i>>",
+    dom: "<'row'<'col-sm-12'<'table-responsive'tr>>><'row'<'col-sm-12'i>>",
     paging: false,
     language: {
       emptyTable: "No revese DNS servers defined.",
@@ -207,7 +207,7 @@ function revServerDataTable() {
 function deleteRecord() {
   // Get the tags
   var tags = [$(this).attr("data-tag")];
-  var types = [$(this).attr("data-type")];
+
   // Check input validity
   if (!Array.isArray(tags)) return;
 
