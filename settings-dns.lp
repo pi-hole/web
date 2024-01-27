@@ -225,7 +225,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                             in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
                         <p>Enabling Conditional Forwarding will also forward all hostnames (i.e., non-FQDNs) to the router
                             when "Never forward non-FQDNs" is <em>not</em> enabled.</p>
-                        <p>The following list contains all reverse servers you want to add. The expected format is one server per line in form of <code>&lt;enabled&gt;,&lt;ip-address&gt;[/&lt;prefix-len&gt;],&lt;server&gt;[#&lt;port&gt;][,&lt;domain&gt;]</code>. A valid config line could look like <code>true,192.168.0.0/24,192.168.0.1,fritz.box</code></p>
+                        <p>The following list contains all reverse servers you want to add.</p>
 
                         <table id="revServers-table" class="table table-striped table-bordered" width="100%">
                             <thead>
