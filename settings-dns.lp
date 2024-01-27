@@ -240,7 +240,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                             <tfoot class="add-new-item">
                                 <tr>
                                     <th>
-                                        <input id="enabled-revServers" type="checkbox" data-configkeys="revServers">
+                                        <input id="enabled-revServers" type="checkbox" class="no-icheck" data-configkeys="revServers">
                                     </th>
                                     <th>
                                         <input id="network-revServers" type="text" class="form-control" data-configkeys="revServers" placeholder="192.168.0.0/24" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">

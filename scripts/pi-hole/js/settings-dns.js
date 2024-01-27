@@ -149,9 +149,11 @@ function revServerDataTable() {
     columnDefs: [
       {
         targets: 0,
-        render: function(data) {
-          return RevServersField(data, 0) == "true" ? '<input type="checkbox" checked disabled>' : '<input type="checkbox" disabled>';
-        }
+        render: function (data) {
+          return RevServersField(data, 0) == "true"
+            ? '<input type="checkbox" class="no-icheck" checked disabled>'
+            : '<input type="checkbox" class="no-icheck" disabled>';
+        },
       },
       {
         targets: "_all",
