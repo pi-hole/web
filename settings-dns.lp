@@ -226,7 +226,44 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                         <p>Enabling Conditional Forwarding will also forward all hostnames (i.e., non-FQDNs) to the router
                             when "Never forward non-FQDNs" is <em>not</em> enabled.</p>
                         <p>The following list contains all reverse servers you want to add. The expected format is one server per line in form of <code>&lt;enabled&gt;,&lt;ip-address&gt;[/&lt;prefix-len&gt;],&lt;server&gt;[#&lt;port&gt;][,&lt;domain&gt;]</code>. A valid config line could look like <code>true,192.168.0.0/24,192.168.0.1,fritz.box</code></p>
-                        <textarea class="form-control" rows="3" id="dns.revServers" data-key="dns.revServers" placeholder="Enter reverse DNS servers, one per line" style="resize: vertical;"></textarea>
+
+                        <table id="revServers-table" class="table table-striped table-bordered" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Enabled</th>
+                                    <th>Network Range <sup>1</sup></th>
+                                    <th>Server <sup>2</sup></th>
+                                    <th>Domain <sup>3</sup></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tfoot class="add-new-item">
+                                <tr>
+                                    <th>
+                                        <input id="enabled-revServers" type="checkbox" data-configkeys="revServers">
+                                    </th>
+                                    <th>
+                                        <input id="network-revServers" type="text" class="form-control" data-configkeys="revServers" placeholder="192.168.0.0/24" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                    </th>
+                                    <th>
+                                        <input id="server-revServers" type="text" class="form-control" data-configkeys="revServers" placeholder="192.168.0.1" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                    </th>
+                                    <th>
+                                        <input id="domain-revServers" type="text" class="form-control" data-configkeys="revServers" placeholder="local" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                    </th>
+                                    <th>
+                                        <button type="button" id="btnAdd-revServers" class="btn btn-primary btn-xs" data-configkeys="revServers"><i class="fa fa-plus"></i></button>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="5">
+                                        <div><small>1: <i>Local network range using <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" target="_blank">CIDR notation</a></i></small></div>
+                                        <div><small>2: <i>IP address of your DHCP server (or router)</i></small></div>
+                                        <div><small>3: <i>Local domain name (optional)</i></small></div>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             </div>
