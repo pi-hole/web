@@ -107,6 +107,143 @@ function updateDNSserversTextfield(upstreams, customServers) {
   );
 }
 
+function RevServersField(data, fieldIndex) {
+  // If an invalid index is received, return null
+  if (fieldIndex < 0 || fieldIndex > 4) {
+    return null;
+  }
+
+  let arrRevServers = data.split(",");
+  return arrRevServers.length > fieldIndex ? arrRevServers[fieldIndex] : "";
+}
+
+function revServerDataTable() {
+  var setByEnv = false;
+  $.ajax({
+    url: "/api/config/dns/revServers?detailed=true",
+  }).done(function (data) {
+    // Set the title icons if needed
+    setConfigValues("dns", "dns", data.config.dns);
+
+    // disable input fields if set by env var
+    if (data.config.dns.revServers.flags.env_var) {
+      $(".revServers").prop("disabled", true);
+    }
+  });
+
+  $("#revServers-table").DataTable({
+    ajax: {
+      url: "/api/config/dns/revServers",
+      type: "GET",
+      dataSrc: "config.dns.revServers",
+    },
+    autoWidth: false,
+    columns: [
+      { data: null, class: "text-center", width: "60px" },
+      { data: null },
+      { data: null },
+      { data: null },
+      { data: null, width: "22px" },
+    ],
+    ordering: false,
+    columnDefs: [
+      {
+        targets: 0,
+        render: function(data) {
+          return RevServersField(data, 0) == "true" ? '<input type="checkbox" checked disabled>' : '<input type="checkbox" disabled>';
+        }
+      },
+      {
+        targets: "_all",
+        render: function (data, type, full, meta) {
+          return RevServersField(data, meta.col);
+        },
+      },
+    ],
+    drawCallback: function () {
+      $('button[id^="deleteRevServers"]').on("click", deleteRecord);
+
+      // Remove visible dropdown to prevent orphaning
+      $("body > .bootstrap-select.dropdown").remove();
+    },
+    rowCallback: function (row, data) {
+      $(row).attr("data-id", data);
+      var button = `<button type="button"
+                      class="btn btn-danger btn-xs"
+                      id="deleteRevServers${utils.hexEncode(data)}"
+                      data-tag="${data}"
+                      data-type="revServers"
+                      ${setByEnv ? "disabled" : ""}>
+                      <span class="far fa-trash-alt"></span>
+                    </button>`;
+      $("td:eq(4)", row).html(button);
+    },
+    dom: "<'row'<'col-sm-12'<'table-responsive'tr>>>" + "<'row'<'col-sm-12'i>>",
+    paging: false,
+    language: {
+      emptyTable: "No revese DNS servers defined.",
+    },
+    stateSave: true,
+    stateDuration: 0,
+    processing: true,
+    stateSaveCallback: function (settings, data) {
+      utils.stateSaveCallback("revServers-records-table", data);
+    },
+    stateLoadCallback: function () {
+      var data = utils.stateLoadCallback("revServers-records-table");
+      // Return if not available
+      if (data === null) {
+        return null;
+      }
+
+      // Apply loaded state to table
+      return data;
+    },
+  });
+}
+
+function deleteRecord() {
+  // Get the tags
+  var tags = [$(this).attr("data-tag")];
+  var types = [$(this).attr("data-type")];
+  // Check input validity
+  if (!Array.isArray(tags)) return;
+
+  // Exploit prevention: Return early for non-numeric IDs
+  for (var tag in tags) {
+    if (Object.hasOwnProperty.call(tags, tag)) {
+      delRevServers(tags);
+    }
+  }
+}
+
+function delRevServers(elem) {
+  utils.disableAll();
+  utils.showAlert("info", "", "Deleting reverse server...", elem);
+  const url = "/api/config/dns/revServers/" + encodeURIComponent(elem);
+
+  $.ajax({
+    url: url,
+    method: "DELETE",
+  })
+    .done(function () {
+      utils.enableAll();
+      utils.showAlert("success", "fas fa-trash-alt", "Successfully deleted reverse server", elem);
+      $("#revServers-table").DataTable().ajax.reload(null, false);
+    })
+    .fail(function (data, exception) {
+      utils.enableAll();
+      apiFailure(data);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting DNS record: <code>" + elem + "</code>",
+        data.responseText
+      );
+      console.log(exception); // eslint-disable-line no-console
+    });
+}
+
 function processDNSConfig() {
   $.ajax({
     url: "/api/config/dns?detailed=true", // We need the detailed output to get the DNS server list
@@ -123,4 +260,35 @@ function processDNSConfig() {
 
 $(document).ready(function () {
   processDNSConfig();
+  revServerDataTable();
+
+  // Button to add a new reverse server
+  $("#btnAdd-revServers").on("click", function () {
+    utils.disableAll();
+    var items = [];
+    items[0] = $("#enabled-revServers").is(":checked") ? "true" : "false";
+    items[1] = $("#network-revServers").val();
+    items[2] = $("#server-revServers").val();
+    items[3] = $("#domain-revServers").val();
+    const elem = items.join(",");
+    const url = "/api/config/dns/revServers/" + encodeURIComponent(elem);
+    utils.showAlert("info", "", "Adding reverse server...", elem);
+    $.ajax({
+      url: url,
+      method: "PUT",
+    })
+      .done(function () {
+        utils.enableAll();
+        utils.showAlert("success", "fas fa-plus", "Successfully added reverse server", elem);
+        $("#revServers-table tfoot .form-control").val("");
+        $("#enabled-revServers").prop("checked", true);
+        $("#revServers-table").DataTable().ajax.reload(null, false);
+      })
+      .fail(function (data, exception) {
+        utils.enableAll();
+        apiFailure(data);
+        utils.showAlert("error", "", "Error while deleting reverse server", data.responseText);
+        console.log(exception); // eslint-disable-line no-console
+      });
+  });
 });
