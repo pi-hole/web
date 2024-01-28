@@ -193,8 +193,8 @@ function valueDetails(key, value) {
 
     case "string array": {
       content +=
-        '<label class="col-sm-4 control-label">Values <small>(one item per line)</small></label>' +
-        '<div class="col-sm-8">' +
+        '<label class="col-sm-12 control-label">Values <small>(one item per line)</small></label>' +
+        '<div class="col-sm-12">' +
         '<textarea class="form-control field-sizing-content" data-key="' +
         key +
         '"' +
@@ -263,7 +263,7 @@ function valueDetails(key, value) {
     }
   }
 
-  return '<div class="form-group row">' + content + "</div>";
+  return '<div class="row">' + content + "</div>";
 }
 
 function generateRow(topic, key, value) {
