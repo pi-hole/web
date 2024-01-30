@@ -211,31 +211,24 @@ function valueDetails(key, value) {
 
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
-      content +=
-        '<label class="col-sm-4 control-label">Selected Option</label>' +
-        '<div class="col-sm-8">' +
-        '<select class="form-control" data-key="' +
-        key +
-        '"' +
-        extraAttributes +
-        ">";
-      value.allowed.forEach(function (option) {
+      content += '<div class="col-sm-12">';
+      value.allowed.forEach(function (option, i) {
         content +=
-          '<option value="' +
-          option.item +
-          '"' +
-          (option.item === value.value ? " selected" : "") +
+          "<div>" +
+          // Radio button
+          '<input type="radio" class="form-control" ' +
+          `value="${option.item}" name="${key}" id="${key}_${i}" data-key="${key}"${extraAttributes}` +
+          (option.item === value.value ? " checked" : "") +
           ">" +
-          option.item +
-          "</option>";
+          // Label
+          `<label for="${key}_${i}"><strong>${utils.escapeHtml(option.item)}` +
+          (option.item === value.default ? " <em>(default)</em>" : "") +
+          "</strong></label>" +
+          // Paragraph with description
+          `<p class="help-block">${option.description}</p>` +
+          "</div>";
       });
-      content +=
-        "</select> " +
-        defaultValueHint +
-        "</div>" +
-        '<div class="col-sm-12">' +
-        addAllowedValues(value.allowed) +
-        "</div>";
+      content += "</div>";
 
       break;
     }
