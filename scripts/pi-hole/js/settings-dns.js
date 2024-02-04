@@ -135,30 +135,68 @@ function revServerDataTable() {
     ajax: {
       url: "/api/config/dns/revServers",
       type: "GET",
-      dataSrc: "config.dns.revServers",
+      dataSrc: function (json) {
+        const output = [];
+        for (let i = 0; i < json.config.dns.revServers.length; i++) {
+          const cols = json.config.dns.revServers[i].split(",");
+          output.push({
+            enabled: cols[0],
+            network: cols[1],
+            ip: cols[2],
+            domain: cols[3],
+          });
+        }
+
+        return output;
+      },
     },
     autoWidth: false,
     columns: [
-      { data: null, class: "text-center", width: "60px" },
-      { data: null },
-      { data: null },
-      { data: null },
-      { data: null, width: "22px" },
+      { data: null, width: "60px" },
+      { data: "network" },
+      { data: "ip" },
+      { data: "domain" },
+      { data: null, width: "50px" },
     ],
+    bFilter: false,
     ordering: false,
     columnDefs: [
       {
         targets: 0,
-        render: function (data) {
-          return revServersField(data, 0) === "true"
-            ? '<input type="checkbox" class="no-icheck" checked disabled>'
-            : '<input type="checkbox" class="no-icheck" disabled>';
+        class: "input-checkbox text-center",
+        render: function (data, type, row, meta) {
+          const name = "enabled_" + meta.row;
+          const ckbox =
+            '<input type="checkbox" disabled ' +
+            (data.enabled === "true" ? "checked " : "") +
+            `name="${name}" id="${name}" class="no-icheck" data-initial-value="${data.enabled}"` +
+            ">";
+          return ckbox;
         },
       },
       {
         targets: "_all",
-        render: function (data, type, full, meta) {
-          return revServersField(data, meta.col);
+        class: "input-text",
+        render: function (data, type, row, meta) {
+          let name;
+          switch (meta.col) {
+            case 1:
+              name = "network_" + meta.row;
+              break;
+            case 2:
+              name = "ip_" + meta.row;
+              break;
+            case 3:
+              name = "domain_" + meta.row;
+              break;
+            // No default
+          }
+
+          return (
+            '<input type="text" class="form-control" disabled ' +
+            `name="${name}" id="${name}" value="${data}" data-initial-value="${data}"` +
+            ">"
+          );
         },
       },
     ],
