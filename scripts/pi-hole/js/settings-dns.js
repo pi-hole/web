@@ -261,6 +261,14 @@ function revServerDataTable() {
 }
 
 function editRecord() {
+  // Enable fields on the selected row
+  $(this).closest("tr").find("td input").prop("disabled", false);
+
+  // Hide EDIT and DELETE buttons. Show SAVE and UNDO buttons
+  $(this).hide();
+  $(this).siblings('[id^="delete"]').hide();
+  $(this).siblings('[id^="save"]').show();
+  $(this).siblings('[id^="cancel"]').show();
 }
 
 function saveRecord() {
