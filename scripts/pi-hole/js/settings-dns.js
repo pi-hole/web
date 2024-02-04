@@ -272,6 +272,28 @@ function editRecord() {
 }
 
 function saveRecord() {
+  // Find the row index
+  const index = $(this).attr("data-index");
+
+  // Get the edited values from each field
+  const values = [];
+  values[0] = $("#enabled_" + index).prop("checked") ? "true" : "false";
+  values[1] = $("#network_" + index).val();
+  values[2] = $("#ip_" + index).val();
+  values[3] = $("#domain_" + index).val();
+
+  // Save the new values
+  // --- insert $.ajax() call to actually save the data
+  console.log(values.join(","));
+
+  // Finish the edition disabling the fields
+  $(this).closest("tr").find("td input").prop("disabled", true);
+
+  // Show EDIT and DELETE buttons. Hide SAVE and UNDO buttons
+  $(this).siblings('[id^="edit"]').show();
+  $(this).siblings('[id^="delete"]').show();
+  $(this).hide();
+  $(this).siblings('[id^="cancel"]').hide();
 }
 
 function restoreRecord() {
