@@ -388,7 +388,8 @@ td.lookatme {
 }
 
 /* Table footer row used to add new items, using inline input fields */
-tfoot.add-new-item > tr > th {
+#revServers-table td,
+#revServers-table tfoot > tr > th {
   font-weight: normal;
   vertical-align: inherit;
 }
