@@ -275,6 +275,26 @@ function saveRecord() {
 }
 
 function restoreRecord() {
+  // Find the row index
+  const index = $(this).attr("data-index");
+
+  // Reset values
+  $("#enabled_" + index).prop("checked", $("#enabled_" + index).attr("data-initial-value"));
+  $("#network_" + index).val($("#network_" + index).attr("data-initial-value"));
+  $("#ip_" + index).val($("#ip_" + index).attr("data-initial-value"));
+  $("#domain_" + index).val($("#domain_" + index).attr("data-initial-value"));
+
+  // Show cancellation message
+  utils.showAlert("info", "fas fa-undo", "Operation canceled", "Original values restored");
+
+  // Finish the edition disabling the fields
+  $(this).closest("tr").find("td input").prop("disabled", true);
+
+  // Show EDIT and DELETE buttons. Hide SAVE and UNDO buttons
+  $(this).siblings('[id^="edit"]').show();
+  $(this).siblings('[id^="delete"]').show();
+  $(this).siblings('[id^="save"]').hide();
+  $(this).hide();
 }
 
 function deleteRecord() {
