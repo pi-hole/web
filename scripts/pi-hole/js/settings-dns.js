@@ -202,6 +202,9 @@ function revServerDataTable() {
     ],
     drawCallback: function () {
       $('button[id^="deleteRevServers"]').on("click", deleteRecord);
+      $('button[id^="editRevServers"]').on("click", editRecord);
+      $('button[id^="saveRevServers"]').on("click", saveRecord).hide();
+      $('button[id^="cancelRevServers"]').on("click", restoreRecord).hide();
 
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
@@ -209,6 +212,14 @@ function revServerDataTable() {
     rowCallback: function (row, data, displayNum, displayIndex, dataIndex) {
       $(row).attr("data-index", dataIndex);
       var button = `<button type="button"
+                      class="btn btn-primary btn-xs"
+                      id="editRevServers_${dataIndex}"
+                      data-index="${dataIndex}"
+                      title="Edit"
+                      ${setByEnv ? "disabled" : ""}>
+                      <span class="far fa-edit"></span>
+                    </button>
+                    <button type="button"
                       class="btn btn-danger btn-xs"
                       id="deleteRevServers_${dataIndex}"
                       data-index="${dataIndex}"
@@ -217,6 +228,21 @@ function revServerDataTable() {
                       title="Delete"
                       ${setByEnv ? "disabled" : ""}>
                       <span class="far fa-trash-alt"></span>
+                    </button>
+                    <button type="button"
+                      class="btn btn-success btn-xs"
+                      id="saveRevServers_${dataIndex}"
+                      data-index="${dataIndex}"
+                      title="Save changes">
+                      <span class="far fa-save"></span>
+                    </button>
+                    <button type="button"
+                      class="btn btn-warning btn-xs"
+                      id="cancelRevServers_${dataIndex}"
+                      data-index="${dataIndex}"
+                      data-tag="${Object.values(data)}"
+                      title="Undo changes">
+                      <span class="fas fa-undo"></span>
                     </button>`;
       $("td:eq(4)", row).html(button);
     },
@@ -242,6 +268,15 @@ function revServerDataTable() {
       return data;
     },
   });
+}
+
+function editRecord() {
+}
+
+function saveRecord() {
+}
+
+function restoreRecord() {
 }
 
 function deleteRecord() {
