@@ -206,13 +206,15 @@ function revServerDataTable() {
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
-    rowCallback: function (row, data) {
-      $(row).attr("data-id", data);
+    rowCallback: function (row, data, displayNum, displayIndex, dataIndex) {
+      $(row).attr("data-index", dataIndex);
       var button = `<button type="button"
                       class="btn btn-danger btn-xs"
-                      id="deleteRevServers${utils.hexEncode(data)}"
-                      data-tag="${data}"
+                      id="deleteRevServers_${dataIndex}"
+                      data-index="${dataIndex}"
+                      data-tag="${Object.values(data)}"
                       data-type="revServers"
+                      title="Delete"
                       ${setByEnv ? "disabled" : ""}>
                       <span class="far fa-trash-alt"></span>
                     </button>`;
