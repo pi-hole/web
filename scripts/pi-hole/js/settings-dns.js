@@ -107,16 +107,6 @@ function updateDNSserversTextfield(upstreams, customServers) {
   );
 }
 
-function revServersField(data, fieldIndex) {
-  // If an invalid index is received, return null
-  if (fieldIndex < 0 || fieldIndex > 4) {
-    return null;
-  }
-
-  const arrRevServers = data.split(",");
-  return arrRevServers.length > fieldIndex ? arrRevServers[fieldIndex] : "";
-}
-
 function revServerDataTable() {
   var setByEnv = false;
   $.ajax({
