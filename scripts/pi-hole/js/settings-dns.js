@@ -284,7 +284,7 @@ function saveRecord() {
 
   // Save the new values
   // --- insert $.ajax() call to actually save the data
-  console.log(values.join(","));
+  console.log(values.join(",")); // eslint-disable-line no-console
 
   // Finish the edition disabling the fields
   $(this).closest("tr").find("td input").prop("disabled", true);
