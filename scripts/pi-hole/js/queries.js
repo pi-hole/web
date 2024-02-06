@@ -276,24 +276,17 @@ function formatInfo(data) {
       "</span></strong></div>";
   }
 
-  var regexInfo = "",
+  var listInfo = "",
     cnameInfo = "";
   if (data.list_id !== null && data.list_id !== -1) {
-    // Undo the negation of the list ID if this is an anti-/gravity match
-    const gravityMatch = data.list_id < -1;
-    const listID = gravityMatch ? -2 - data.list_id : data.list_id;
+    // Some list matched - add link to search page
 
     var listLink =
-      '<a href="' +
-      (gravityMatch ? "groups/lists?listid=" : "groups/domains?domainid=") +
-      listID +
-      '" target="_blank">' +
-      (gravityMatch ? "list" : "domain") +
-      " ID " +
-      listID +
-      "</a>";
-    regexInfo =
-      divStart + "Query was " + queryStatus.matchText + " by </td><td>" + listLink + "</div>";
+      '<a href="search?domain=' +
+      encodeURIComponent(data.domain) +
+      '" target="_blank">search lists</a>';
+    listInfo =
+      divStart + 'Query was ' + queryStatus.matchText + ', ' + listLink + "</div>";
   }
 
   if (queryStatus.isCNAME) {
@@ -356,7 +349,7 @@ function formatInfo(data) {
     dnssecInfo +
     statusInfo +
     cnameInfo +
-    regexInfo +
+    listInfo +
     ttlInfo +
     replyInfo +
     dbInfo +
