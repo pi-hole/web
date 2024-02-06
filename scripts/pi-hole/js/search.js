@@ -13,6 +13,7 @@ $(function () {
   if (GETDict.domain !== undefined) {
     $("input[id^='domain']").val(GETDict.domain);
   }
+
   if (GETDict.N !== undefined) {
     $("#number").val(GETDict.number);
   }

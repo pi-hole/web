@@ -285,8 +285,7 @@ function formatInfo(data) {
       '<a href="search?domain=' +
       encodeURIComponent(data.domain) +
       '" target="_blank">search lists</a>';
-    listInfo =
-      divStart + 'Query was ' + queryStatus.matchText + ', ' + listLink + "</div>";
+    listInfo = divStart + "Query was " + queryStatus.matchText + ", " + listLink + "</div>";
   }
 
   if (queryStatus.isCNAME) {
