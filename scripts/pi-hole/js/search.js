@@ -6,6 +6,18 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils:false, apiFailure:false */
+var GETDict = {};
+
+$(function () {
+  GETDict = utils.parseQueryString();
+  if (GETDict.domain !== undefined) {
+    $("input[id^='domain']").val(GETDict.domain);
+  }
+
+  if (GETDict.N !== undefined) {
+    $("#number").val(GETDict.number);
+  }
+});
 
 function eventsource(partial) {
   const ta = $("#output");
