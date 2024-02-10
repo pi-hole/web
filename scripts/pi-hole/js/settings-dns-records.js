@@ -149,7 +149,7 @@ function deleteRecord() {
 
   // Exploit prevention: Return early for non-numeric IDs
   for (var tag in tags) {
-    if (Object.hasOwnProperty.call(tags, tag)) {
+    if (Object.hasOwn(tags, tag)) {
       if (types[0] === "hosts") delHosts(tags);
       else delCNAME(tags);
     }

@@ -69,6 +69,7 @@
         }
       ],
       "capitalized-comments": "off",
+      "logical-assignment-operators": "off",
       "new-cap": [
         "error",
         {
