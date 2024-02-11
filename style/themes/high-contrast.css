@@ -25,6 +25,8 @@
 
   --allowed-color: #3c7;
   --blocked-color: var(--danger-color);
+  --cached-color: var(--primary-color);
+  --other-color: #0077a6;
 
   --overlay-bgcolor: rgba(255, 255, 255, 0.8);
 }
@@ -239,7 +241,10 @@ a:hover {
   background-color: var(--blocked-color);
 }
 .queries-cached {
-  background-color: var(--primary-color);
+  background-color: var(--cached-color);
+}
+.queries-other {
+  background-color: var(--other-color);
 }
 .progress {
   background-color: #eee;

@@ -1999,6 +1999,10 @@ input[type="password"]::-webkit-caps-lock-indicator {
   background-color: rgb(37, 88, 64);
 }
 
+.queries-other {
+  background-color: #0077a6;
+}
+
 /*--- Used in the Query Log table ---*/
 .text-black {
   color: #000 !important;

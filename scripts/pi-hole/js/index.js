@@ -34,11 +34,17 @@ function updateQueriesOverTime() {
     timeLineChart.data.labels = [];
     timeLineChart.data.datasets = [];
 
-    var labels = ["Blocked DNS Queries", "Cached DNS Queries", "Forwarded DNS Queries"];
+    var labels = [
+      "Other DNS Queries",
+      "Blocked DNS Queries",
+      "Cached DNS Queries",
+      "Forwarded DNS Queries",
+    ];
     var cachedColor = utils.getCSSval("queries-cached", "background-color");
     var blockedColor = utils.getCSSval("queries-blocked", "background-color");
     var permittedColor = utils.getCSSval("queries-permitted", "background-color");
-    var colors = [blockedColor, cachedColor, permittedColor];
+    var otherColor = utils.getCSSval("queries-other", "background-color");
+    var colors = [otherColor, blockedColor, cachedColor, permittedColor];
 
     // Collect values and colors, and labels
     for (var i = 0; i < labels.length; i++) {
@@ -59,12 +65,11 @@ function updateQueriesOverTime() {
       var timestamp = new Date(1000 * parseInt(item.timestamp, 10));
 
       timeLineChart.data.labels.push(timestamp);
-      var blocked = item.blocked;
-      var cached = item.cached;
-      var permitted = item.total - (blocked + cached);
-      timeLineChart.data.datasets[0].data.push(blocked);
-      timeLineChart.data.datasets[1].data.push(cached);
-      timeLineChart.data.datasets[2].data.push(permitted);
+      var other = item.total - (item.blocked + item.cached + item.forwarded);
+      timeLineChart.data.datasets[0].data.push(other);
+      timeLineChart.data.datasets[1].data.push(item.blocked);
+      timeLineChart.data.datasets[2].data.push(item.cached);
+      timeLineChart.data.datasets[3].data.push(item.forwarded);
     });
 
     $("#queries-over-time .overlay").hide();
@@ -527,19 +532,22 @@ $(function () {
             },
             label: function (tooltipLabel) {
               var label = tooltipLabel.dataset.label;
-              // Add percentage only for blocked queries
-              if (tooltipLabel.datasetIndex === 0) {
-                var percentage = 0;
-                var permitted = parseInt(tooltipLabel.parsed._stacks.y[1], 10);
-                var blocked = parseInt(tooltipLabel.parsed._stacks.y[0], 10);
-                if (permitted + blocked > 0) {
-                  percentage = (100 * blocked) / (permitted + blocked);
-                }
-
-                label += ": " + tooltipLabel.parsed.y + " (" + percentage.toFixed(1) + "%)";
-              } else {
-                label += ": " + tooltipLabel.parsed.y;
+              // Sum all queries for the current time
+              let sum = 0;
+              for (let i = 0; i < tooltipLabel.parsed._stacks.y._top; i++) {
+                sum += parseInt(tooltipLabel.parsed._stacks.y[i], 10);
               }
+
+              let percentage = 0;
+              const blocked = parseInt(
+                tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex],
+                10
+              );
+              if (sum > 0) {
+                percentage = (100 * blocked) / sum;
+              }
+
+              label += ": " + tooltipLabel.parsed.y + " (" + percentage.toFixed(1) + "%)";
 
               return label;
             },
