@@ -47,9 +47,6 @@ function generateRow(topic, key, value) {
     (value.modified
       ? '&nbsp;&nbsp;<i class="far fa-edit text-light-blue" title="Modified from default"></i>'
       : "") +
-    (value.flags.advanced
-      ? '&nbsp;&nbsp;<i class="fas fa-cogs text-yellow" title="Expert-level setting"></i>'
-      : "") +
     (value.flags.restart_dnsmasq
       ? '&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>'
       : "") +
