@@ -200,6 +200,13 @@ function parseQueryStatus(data) {
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
       break;
+    case "SPECIAL_DOMAIN":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = data.status;
+      buttontext = "";
+      blocked = true;
+      break;
     default:
       colorClass = "text-orange";
       icon = "fa-solid fa-question";
@@ -276,17 +283,16 @@ function formatInfo(data) {
       "</span></strong></div>";
   }
 
-  var regexInfo = "",
+  var listInfo = "",
     cnameInfo = "";
-  if (data.regex_id !== null && data.regex_id > -1) {
-    var regexLink =
-      '<a href="groups/domains?domainid=' +
-      data.regex_id +
-      '" target="_blank">entry with ID ' +
-      data.regex_id +
-      "</a>";
-    regexInfo =
-      divStart + "Query was " + queryStatus.matchText + " by </td><td>" + regexLink + "</div>";
+  if (data.list_id !== null && data.list_id !== -1) {
+    // Some list matched - add link to search page
+
+    var listLink =
+      '<a href="search?domain=' +
+      encodeURIComponent(data.domain) +
+      '" target="_blank">search lists</a>';
+    listInfo = divStart + "Query was " + queryStatus.matchText + ", " + listLink + "</div>";
   }
 
   if (queryStatus.isCNAME) {
@@ -349,7 +355,7 @@ function formatInfo(data) {
     dnssecInfo +
     statusInfo +
     cnameInfo +
-    regexInfo +
+    listInfo +
     ttlInfo +
     replyInfo +
     dbInfo +

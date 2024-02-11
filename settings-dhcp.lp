@@ -61,15 +61,18 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
-                        <label>Netmask (<code>0.0.0.0</code> = auto)</label>
+                        <label>Netmask</label>
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">Netmask</div>
                                 <input type="text" class="form-control DHCPgroup" id="dhcp.netmask" data-key="dhcp.netmask"
                                     autocomplete="off" spellcheck="false" autocapitalize="none"
-                                    autocorrect="off" value="">
+                                    autocorrect="off" value="" placeholder="automatic">
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-12">
+                        <p>Leave the netmask field empty to have Pi-hole infer it from the configured IP address of your device. If you want to specify a netmask, you can use the format <code>255.255.255.0</code>.</p>
                     </div>
                     <div class="col-md-12">
                         <div><input type="checkbox" id="dhcp.ipv6" data-key="dhcp.ipv6" class="DHCPgroup">&nbsp;<label for="dhcp.ipv6"><strong>Enable additional IPv6 support (SLAAC + RA)</strong></label></div>

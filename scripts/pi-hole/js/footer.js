@@ -37,10 +37,16 @@ function secondsTimeSpanToHMS(s) {
   return h + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s); //zero padding on minutes and seconds
 }
 
-function piholeChanged(blocking) {
-  var status = $("#status");
-  var ena = $("#pihole-enable");
-  var dis = $("#pihole-disable");
+function piholeChanged(blocking, timer = null) {
+  const status = $("#status");
+  const ena = $("#pihole-enable");
+  const dis = $("#pihole-disable");
+  const enaT = $("#enableTimer");
+
+  if (timer !== null && parseFloat(timer) > 0) {
+    enaT.html(Date.now() + parseFloat(timer) * 1000);
+    setTimeout(countDown, 100);
+  }
 
   switch (blocking) {
     case "enabled": {
@@ -81,7 +87,7 @@ function piholeChanged(blocking) {
 function countDown() {
   var ena = $("#enableLabel");
   var enaT = $("#enableTimer");
-  var target = new Date(parseInt(enaT.html(), 10));
+  var target = new Date(parseInt(enaT.text(), 10));
   var seconds = Math.round((target.getTime() - Date.now()) / 1000);
 
   //Stop and remove timer when user enabled early
@@ -95,7 +101,7 @@ function countDown() {
     ena.text("Enable Blocking (" + secondsTimeSpanToHMS(seconds) + ")");
   } else {
     ena.text("Enable Blocking");
-    piholeChanged("enabled");
+    piholeChanged("enabled", null);
     if (localStorage) {
       localStorage.removeItem("countDownTarget");
     }
@@ -114,7 +120,7 @@ function checkBlocking() {
     method: "GET",
   })
     .done(function (data) {
-      piholeChanged(data.blocking);
+      piholeChanged(data.blocking, data.timer);
       utils.setTimer(checkBlocking, REFRESH_INTERVAL.blocking);
     })
     .fail(function (data) {
@@ -124,8 +130,7 @@ function checkBlocking() {
 }
 
 function piholeChange(action, duration) {
-  var enaT = $("#enableTimer");
-  var btnStatus;
+  let btnStatus = null;
 
   switch (action) {
     case "enable":
@@ -153,11 +158,7 @@ function piholeChange(action, duration) {
     .done(function (data) {
       if (data.blocking === action + "d") {
         btnStatus.html("");
-        piholeChanged(data.blocking);
-        if (duration > 0) {
-          enaT.html(Date.now() + duration * 1000);
-          setTimeout(countDown, 100);
-        }
+        piholeChanged(data.blocking, data.timer);
       }
     })
     .fail(function (data) {

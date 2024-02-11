@@ -25,7 +25,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <pre id="output" class="pre pre-scrollable"></pre>
+                        <pre id="output" class="pre pre-scrollable pre-taillog"></pre>
                     </div>
                 </div>
             </div>

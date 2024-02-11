@@ -1068,10 +1068,13 @@ table.dataTable tbody > tr > .selected {
 
 #output {
   position: relative;
-  display: grid;
   margin: 5px 0;
   min-height: 36px;
   padding: 4px 8px;
+}
+
+#output.pre-taillog {
+  display: grid;
 }
 
 .loading::before {
