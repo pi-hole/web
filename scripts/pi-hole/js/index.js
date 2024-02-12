@@ -532,9 +532,12 @@ $(function () {
             },
             label: function (tooltipLabel) {
               var label = tooltipLabel.dataset.label;
-              // Sum all queries for the current time
+              // Sum all queries for the current time by iterating over all keys
+              // in the current dataset
               let sum = 0;
-              for (let i = 0; i < tooltipLabel.parsed._stacks.y._top; i++) {
+              const keys = Object.keys(tooltipLabel.parsed._stacks.y);
+              for (let i = 0; i < keys.length; i++) {
+                if (tooltipLabel.parsed._stacks.y[i] === undefined) continue;
                 sum += parseInt(tooltipLabel.parsed._stacks.y[i], 10);
               }
 
