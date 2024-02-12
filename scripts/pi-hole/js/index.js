@@ -424,6 +424,28 @@ function updateSummaryData(runOnce = false) {
     });
 }
 
+function labelWithPercentage(tooltipLabel) {
+  var label = tooltipLabel.dataset.label;
+  // Sum all queries for the current time by iterating over all keys in the
+  // current dataset
+  let sum = 0;
+  const keys = Object.keys(tooltipLabel.parsed._stacks.y);
+  for (let i = 0; i < keys.length; i++) {
+    if (tooltipLabel.parsed._stacks.y[i] === undefined) continue;
+    sum += parseInt(tooltipLabel.parsed._stacks.y[i], 10);
+  }
+
+  let percentage = 0;
+  const blocked = parseInt(tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex], 10);
+  if (sum > 0) {
+    percentage = (100 * blocked) / sum;
+  }
+
+  label += ": " + tooltipLabel.parsed.y + " (" + percentage.toFixed(1) + "%)";
+
+  return label;
+}
+
 $(function () {
   // Pull in data via AJAX
   updateSummaryData();
@@ -531,28 +553,7 @@ $(function () {
               return "Queries from " + from + " to " + to;
             },
             label: function (tooltipLabel) {
-              var label = tooltipLabel.dataset.label;
-              // Sum all queries for the current time by iterating over all keys
-              // in the current dataset
-              let sum = 0;
-              const keys = Object.keys(tooltipLabel.parsed._stacks.y);
-              for (let i = 0; i < keys.length; i++) {
-                if (tooltipLabel.parsed._stacks.y[i] === undefined) continue;
-                sum += parseInt(tooltipLabel.parsed._stacks.y[i], 10);
-              }
-
-              let percentage = 0;
-              const blocked = parseInt(
-                tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex],
-                10
-              );
-              if (sum > 0) {
-                percentage = (100 * blocked) / sum;
-              }
-
-              label += ": " + tooltipLabel.parsed.y + " (" + percentage.toFixed(1) + "%)";
-
-              return label;
+              return labelWithPercentage(tooltipLabel);
             },
           },
         },
@@ -654,6 +655,9 @@ $(function () {
                 var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
                 var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
                 return "Client activity from " + from + " to " + to;
+              },
+              label: function (tooltipLabel) {
+                return labelWithPercentage(tooltipLabel);
               },
             },
           },
