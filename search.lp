@@ -22,16 +22,25 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
                     <input id="domain" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     <input id="quiet" type="hidden" value="no">
                     <span class="input-group-btn">
-                        <button type="button" id="btnSearch" class="btn btn-default">Search partial match</button>
-                        <button type="button" id="btnSearchExact" class="btn btn-default">Search exact match</button>
+                        <button type="button" id="btnSearch" class="btn btn-default">Search</button>
                     </span>
                 </div>
             </div>
             <div class="box-body">
-                <!-- /domain-search-block -->
-                <div id="limitbox-block" class="form-inline">
-                    <input class="form-control input-sm" type="number" min="0" value="20" id="number">
-                    <label for="number">Maximum of results to be returned</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div>
+                            <input type="checkbox" id="partialMatch" data-key="partialMatch">
+                            <label for="partialMatch"><strong>Use partial matching</strong></label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- /domain-search-block -->
+                        <div id="limitbox-block" class="form-inline">
+                            <input class="form-control input-sm" type="number" min="0" value="20" id="number">
+                            <label for="number">Maximum number of results to be returned</label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
