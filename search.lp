@@ -17,7 +17,6 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
     <div class="col-md-12">
         <div class="box">
             <div class="box-header">
-                <!-- domain-search-block - Single search field mobile/desktop -->
                 <div id="domain-search-block" class="input-group">
                     <input id="domain" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     <input id="quiet" type="hidden" value="no">
@@ -28,17 +27,17 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
             </div>
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div>
                             <input type="checkbox" id="partialMatch" data-key="partialMatch">
                             <label for="partialMatch"><strong>Use partial matching</strong></label>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <!-- /domain-search-block -->
-                        <div id="limitbox-block" class="form-inline">
+                    <br class="hidden-md hidden-lg">
+                    <div class="col-md-8">
+                        <div id="domain-limitbox-block" class="form-inline">
+                            <label for="number">Maximum number of results to be returned:&nbsp;</label>
                             <input class="form-control input-sm" type="number" min="0" value="20" id="number">
-                            <label for="number">Maximum number of results to be returned</label>
                         </div>
                     </div>
                 </div>
