@@ -41,7 +41,7 @@ function processGroupResult(data, type, done, notDone) {
 }
 
 // eslint-disable-next-line no-unused-vars
-function delGroupItems(type, ids, table) {
+function delGroupItems(type, ids, table, listType = undefined) {
   // Check input validity
   if (!Array.isArray(ids)) return;
 
@@ -59,6 +59,11 @@ function delGroupItems(type, ids, table) {
 
   // Append "s" to type if more than one item is deleted
   type += ids.length > 1 ? "s" : "";
+
+  // Prepend listType to type if it is not undefined
+  if (listType !== undefined) {
+    type = listType + " " + type;
+  }
 
   utils.disableAll();
   utils.showAlert("info", "", "Deleting " + ids.length + " " + type + "...", idstring);
