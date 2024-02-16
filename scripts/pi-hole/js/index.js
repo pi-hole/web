@@ -142,17 +142,19 @@ function updateClientsOverTime() {
       return;
     }
 
-    var i,
-      labels = [];
-    data.clients.forEach(function (client) {
-      labels.push(client.name !== null ? client.name : client.ip);
+    let numClients = 0;
+    const labels = [],
+      clients = {};
+    Object.keys(data.clients).forEach(function (ip) {
+      clients[ip] = numClients++;
+      labels.push(data.clients[ip].name !== null ? data.clients[ip].name : ip);
     });
 
     // Remove possibly already existing data
     clientsChart.data.labels = [];
     clientsChart.data.datasets = [];
 
-    for (i = 0; i < data.clients.length; i++) {
+    for (let i = 0; i < numClients; i++) {
       clientsChart.data.datasets.push({
         data: [],
         // If we ran out of colors, make a random one
@@ -169,9 +171,16 @@ function updateClientsOverTime() {
     }
 
     // Add data for each dataset that is available
-    data.clients.forEach(function (i, c) {
-      data.history.forEach(function (item) {
-        clientsChart.data.datasets[c].data.push(item.data[c]);
+    // We need to iterate over all time slots and fill in the data for each client
+    Object.keys(data.history).forEach(function (item) {
+      Object.keys(clients).forEach(function (client) {
+        if (data.history[item].data[client] === undefined) {
+          // If there is no data for this client in this timeslot, we push 0
+          clientsChart.data.datasets[clients[client]].data.push(0);
+        } else {
+          // Otherwise, we push the data
+          clientsChart.data.datasets[clients[client]].data.push(data.history[item].data[client]);
+        }
       });
     });
 
@@ -424,8 +433,7 @@ function updateSummaryData(runOnce = false) {
     });
 }
 
-function labelWithPercentage(tooltipLabel) {
-  var label = tooltipLabel.dataset.label;
+function labelWithPercentage(tooltipLabel, skipZero = false) {
   // Sum all queries for the current time by iterating over all keys in the
   // current dataset
   let sum = 0;
@@ -436,14 +444,15 @@ function labelWithPercentage(tooltipLabel) {
   }
 
   let percentage = 0;
-  const blocked = parseInt(tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex], 10);
+  const data = parseInt(tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex], 10);
   if (sum > 0) {
-    percentage = (100 * blocked) / sum;
+    percentage = (100 * data) / sum;
   }
 
-  label += ": " + tooltipLabel.parsed.y + " (" + percentage.toFixed(1) + "%)";
-
-  return label;
+  if (skipZero && data === 0) return undefined;
+  return (
+    tooltipLabel.dataset.label + ": " + tooltipLabel.parsed.y + " (" + percentage.toFixed(1) + "%)"
+  );
 }
 
 $(function () {
@@ -657,7 +666,7 @@ $(function () {
                 return "Client activity from " + from + " to " + to;
               },
               label: function (tooltipLabel) {
-                return labelWithPercentage(tooltipLabel);
+                return labelWithPercentage(tooltipLabel, true);
               },
             },
           },
