@@ -11,6 +11,7 @@ require 'password.php';
 require 'auth.php'; // Also imports func.php
 require 'database.php';
 require 'savesettings.php';
+require_once 'customwildcarddns/CustomWildcardDNS.php';
 
 if (php_sapi_name() !== 'cli') {
     if (!$auth) {
@@ -293,6 +294,10 @@ function archive_add_directory($path, $subdir = '')
     if ($dir = opendir($path)) {
         while (false !== ($entry = readdir($dir))) {
             if ($entry !== '.' && $entry !== '..') {
+                if (is_dir($path.$entry)) {
+                    archive_add_directory($path.$entry.'/', $subdir.$entry.'/');
+                    continue;
+                }
                 archive_add_file($path, $entry, $subdir);
             }
         }
@@ -544,6 +549,14 @@ if (isset($_POST['action'])) {
                 ob_end_clean();
                 echo 'Processed local CNAME records ('.$num.noun($num).")<br>\n";
                 if ($num > 0) {
+                    // we need a full pihole restart
+                    $fullpiholerestart = true;
+                }
+            }
+
+            if (isset($_POST['localwildcarddnsrecords']) && strpos($file->getPathname(), Custom\WildcardDNS::$DIR_NAME)) {
+                $customWildcardDNS = Custom\WildcardDNS::getInstance();
+                if ($customWildcardDNS->teleporterImport($flushtables, $file)) {
                     // we need a full pihole restart
                     $fullpiholerestart = true;
                 }
