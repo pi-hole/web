@@ -1422,6 +1422,10 @@ if (isset($piholeFTLConf['RATE_LIMIT'])) {
                                                     <input type="checkbox" name="localcnamerecords" id="tele_localcnamerecords" value="true" checked>
                                                     <label for="tele_localcnamerecords">Local CNAME Records</label>
                                                 </div>
+                                                <div>
+                                                    <input type="checkbox" name="localwildcarddnsrecords" id="tele_localwildcarddnsrecords" value="true" checked>
+                                                    <label for="tele_localwildcarddnsrecords">Local Wildcard DNS Records</label>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row">

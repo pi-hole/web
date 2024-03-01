@@ -177,7 +177,7 @@
                         </span>
                     </a>
                 </li>
-                <li class="menu-dns treeview <?php if (in_array($scriptname, array('dns_records.php', 'cname_records.php'))) { ?>active<?php } ?>">
+                <li class="menu-dns treeview <?php if (in_array($scriptname, array('dns_records.php', 'cname_records.php', 'wildcarddns_records.php'))) { ?>active<?php } ?>">
                     <a href="#">
                         <i class="fa fa-fw menu-icon fa-address-book"></i> <span>Local DNS</span>
                         <span class="pull-right-container">
@@ -193,6 +193,11 @@
                         <li class="<?php if ($scriptname === 'cname_records.php') { ?> active<?php } ?>">
                             <a href="cname_records.php">
                                 <i class="fa fa-fw menu-icon fa-address-book"></i> CNAME Records
+                            </a>
+                        </li>
+                        <li class="<?php if ($scriptname === 'wildcarddns_records.php') { ?> active<?php } ?>">
+                            <a href="wildcarddns_records.php">
+                                <i class="fa fa-fw menu-icon fa-address-book"></i> Wildcard DNS Records
                             </a>
                         </li>
                     </ul>
