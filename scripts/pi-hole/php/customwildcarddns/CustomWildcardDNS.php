@@ -207,7 +207,7 @@ class WildcardDNS
 
             $found = false;
             foreach ($existingEntries as $entry) {
-                if ($entry->domain == $domain && $entry->name == $name) {
+                if ($entry->name == $name && ($entry->domain == $domain || $domain === '*')) {
                     $found = true;
                     break;
                 }

@@ -85,13 +85,22 @@ $(function () {
           if (last !== group) {
             $(rows)
               .eq(i)
-              .before(`<tr class="group"><td colspan="4">${group}</td></tr>`);
+              .before(`<tr class="group"><td colspan="3">${group}</td><td><button type="button" class="btn btn-danger btn-xs deleteGroupCustomWildcardDNS" data-name="${group}"><span class="far fa-trash-alt"></span></button></td></tr>`);
 
             last = group;
           }
         });
 
-      $(".deleteCustomWildcardDNS").on("click", deleteCustomWildcardDNS);
+      $(".deleteGroupCustomWildcardDNS").on("click", function () {
+        const data = {
+          name: $(this).data('name'),
+          domain: '*'
+        };
+        deleteCustomWildcardDNS(data);
+      });$(".deleteCustomWildcardDNS").on("click", function () {
+        const data = JSON.parse(decodeURIComponent($(this).data('row')));
+        deleteCustomWildcardDNS(data);
+      });
       $(".updateCustomWildcardDNS").on("change", updateCustomWildcardDNS);
     },
   });
@@ -144,8 +153,7 @@ $(function () {
     });
   }
 
-  function deleteCustomWildcardDNS() {
-    const data = JSON.parse(decodeURIComponent($(this).data('row')));
+  function deleteCustomWildcardDNS(data) {
     data.action = 'delete';
     data.token = token;
 
