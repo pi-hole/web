@@ -7,6 +7,8 @@
 
 /* global moment:false */
 
+import 'formatter.js'
+
 // Credit: https://stackoverflow.com/a/4835406
 function escapeHtml(text) {
   var map = {
@@ -354,10 +356,12 @@ function addTD(content) {
   return "<td>" + content + "</td> ";
 }
 
+}
 function colorBar(percentage, total, cssClass) {
-  var title = percentage.toFixed(1) + "% of " + total;
-  var bar = '<div class="progress-bar ' + cssClass + '" style="width: ' + percentage + '%"></div>';
-  return '<div class="progress progress-sm" title="' + title + '"> ' + bar + " </div>";
+  const percentFormatted = percentage.toPercent(1);
+  const title = `${percentFormatted} of ${total}`;
+  const bar = `<div class="progress-bar ${cssClass}" style="width: ${percentage}%"></div>`;
+  return `<div class="progress progress-sm" title="${title}"> ${bar} </div>`;
 }
 
 function checkMessages() {

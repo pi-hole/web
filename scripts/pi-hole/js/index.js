@@ -7,6 +7,8 @@
 
 /* global utils:false, Chart:false */
 
+import 'formatter.js'
+
 // Define global variables
 var timeLineChart, clientsChart;
 var queryTypePieChart, forwardDestinationPieChart;
@@ -206,8 +208,8 @@ var customTooltips = function (context) {
   } else {
     // Calculate percentage X value depending on the tooltip's
     // width to avoid hanging arrow out on tooltip width changes
-    var arrowXpercent = ((100 / tooltipWidth) * arrowX).toFixed(1);
-    tooltipEl.querySelector(".arrow").style.left = arrowXpercent + "%";
+    var arrowXpercent = ((100 / tooltipWidth) * arrowX);
+    tooltipEl.querySelector(".arrow").style.left = `${arrowXpercent.toPercent(1)}`;
   }
 
   tooltipEl.style.opacity = 1;
@@ -694,14 +696,11 @@ function updateSummaryData(runOnce) {
       var textData = data[apiName];
       if (!FTLoffline) {
         // Only format as number if FTL is online
-        var formatter = new Intl.NumberFormat();
-
-        // Round to one decimal place and format locale-aware
-        var text = formatter.format(Math.round(data[apiName] * 10) / 10);
-        textData = idx === 2 && data[apiName] !== "to" ? text + "%" : text;
+        const roundedValue = Math.round(data[apiName] * 10) / 10;
+        const textData = idx === 2 && data[apiName] !== "to" ? roundedValue.toPercent(1) : roundedValue;
       }
 
-      if ($todayElement.text() !== textData && $todayElement.text() !== textData + "%") {
+      if ($todayElement.text() !== textData && $todayElement.text() !== `${textData}`) {
         $todayElement.addClass("glow");
         $todayElement.text(textData);
       }
@@ -738,32 +737,28 @@ function doughnutTooltip(tooltipLabel) {
   var label = " " + tooltipLabel.label;
   var itemPercentage;
 
-  // if we only show < 1% percent of all, show each item with two decimals
+  // If we only show < 1% percent of all, show each item with two decimals
   if (percentageTotalShown < 1) {
-    itemPercentage = tooltipLabel.parsed.toFixed(2);
+    itemPercentage = tooltipLabel.parsed.toPercent(2);
   } else {
-    // show with one decimal, but in case the item share is really small it could be rounded to 0.0
-    // we compensate for this
+    // Show with one decimal, but in case the item share is really small, it could be rounded to 0.0
+    // We compensate for this
     itemPercentage =
-      tooltipLabel.parsed.toFixed(1) === "0.0" ? "< 0.1" : tooltipLabel.parsed.toFixed(1);
+      tooltipLabel.parsed.toPercent(1) === "0.0" ? "< 0.1" : tooltipLabel.parsed.toPercent(1);
   }
 
-  // even if no doughnut slice is hidden, sometimes percentageTotalShown is slightly less then 100
-  // we therefore use 99.9 to decide if slices are hidden (we only show with 0.1 precision)
+  // Even if no doughnut slice is hidden, sometimes percentageTotalShown is slightly less than 100
+  // We therefore use 99.9 to decide if slices are hidden (we only show with 0.1 precision)
   if (percentageTotalShown > 99.9) {
     // All items shown
-    return label + ": " + itemPercentage + "%";
+    return `${label}: ${itemPercentage}`;
   } else {
-    // set percentageTotalShown again without rounding to account
-    // for cases where the total shown percentage would be <0.1% of all
+    // Set percentageTotalShown again without rounding to account
+    // for cases where the total shown percentage would be < 0.1% of all
     percentageTotalShown = tooltipLabel.chart._metasets[0].total;
     return (
-      label +
-      ":<br>&bull; " +
-      itemPercentage +
-      "% of all queries<br>&bull; " +
-      ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) +
-      "% of shown items"
+      `${label}:<br>&bull; ${itemPercentage} of all queries` +
+      `<br>&bull; ${(tooltipLabel.parsed * 100 / percentageTotalShown).toPercent(1)} of shown items`
     );
   }
 }
@@ -917,7 +912,7 @@ $(function () {
                   percentage = (100 * blocked) / (permitted + blocked);
                 }
 
-                label += ": " + tooltipLabel.parsed.y + " (" + percentage.toFixed(1) + "%)";
+                label += `: ${tooltipLabel.parsed.y} (${percentage.toPercent(1)})`;
               } else {
                 label += ": " + tooltipLabel.parsed.y;
               }

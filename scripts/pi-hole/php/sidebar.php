@@ -42,7 +42,12 @@
                         echo 'text-green-light';
                     }
                     if ($memory_usage > 0.0) {
-                        echo '"></i> Memory usage:&nbsp;&nbsp;'.sprintf('%.1f', 100.0 * $memory_usage).'&thinsp;%</span>';
+                        $locale = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : 'en_US';
+                        $formatter = new NumberFormatter($locale, NumberFormatter::PERCENT);
+                        $formatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, 1);
+                        $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 1);
+                        $formattedPercent = $formatter->format($memory_usage);
+                        echo '"></i> Memory usage:&nbsp;&nbsp;' . $formattedPercent . '</span>';
                     } else {
                         echo '"></i> Memory usage:&nbsp;&nbsp; N/A</span>';
                     }
