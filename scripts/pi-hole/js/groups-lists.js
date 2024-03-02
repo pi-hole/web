@@ -209,8 +209,9 @@ function initTable() {
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback: function (row, data) {
-      var dataId = utils.hexEncode(data.address);
+      var dataId = utils.hexEncode(data.address + "_" + data.type);
       $(row).attr("data-id", dataId);
+      $(row).attr("data-address", utils.hexEncode(data.address));
       $(row).attr("data-type", data.type);
 
       var statusCode = 0;
@@ -289,6 +290,8 @@ function initTable() {
         );
       }
 
+      var applyBtn = "#btn_apply_" + dataId;
+
       // Select assigned groups
       selectEl.val(data.groups);
       // Initialize bootstrap-select
@@ -332,8 +335,6 @@ function initTable() {
             dataId +
             ' class="btn btn-block btn-sm" disabled>Apply</button>'
         );
-
-      var applyBtn = "#btn_apply_" + dataId;
 
       // Highlight row (if url parameter "listid=" is used)
       if ("listid" in GETDict && data.id === parseInt(GETDict.listid, 10)) {
@@ -397,10 +398,10 @@ function initTable() {
           var ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
-            ids.push({ item: $(this).attr("data-id") });
+            ids.push({ item: $(this).attr("data-address"), type: $(this).attr("data-type") });
           });
           // Delete all selected rows at once
-          delGroupItems("list", ids, table);
+          delGroupItems("list", ids, table, "multiple ");
         },
       },
     ],
@@ -484,9 +485,10 @@ function initTable() {
 $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteList() {
-  // Passes the button data-id attribute as ID
-  const ids = [{ item: $(this).attr("data-id") }];
-  delGroupItems("list", ids, table);
+  const tr = $(this).closest("tr");
+  const listType = tr.attr("data-type");
+  const ids = [{ item: tr.attr("data-address"), type: listType }];
+  delGroupItems("list", ids, table, listType);
 }
 
 function addList(event) {
@@ -523,7 +525,7 @@ function addList(event) {
     data: JSON.stringify({ address: addresses, comment: comment, type: type }),
     success: function (data) {
       utils.enableAll();
-      utils.listsAlert("list", addresses, data);
+      utils.listsAlert(type + "list", addresses, data);
       $("#new_address").val("");
       $("#new_comment").val("");
       table.ajax.reload(null, false);
@@ -545,19 +547,20 @@ function editList() {
   const elem = $(this).attr("id");
   const tr = $(this).closest("tr");
   const type = tr.attr("data-type");
-  const address = tr.attr("data-id");
-  const enabled = tr.find("#enabled_" + address).is(":checked");
-  const comment = utils.escapeHtml(tr.find("#comment_" + address).val());
+  const dataId = tr.attr("data-id");
+  const address = utils.hexDecode(tr.attr("data-address"));
+  const enabled = tr.find("#enabled_" + dataId).is(":checked");
+  const comment = utils.escapeHtml(tr.find("#comment_" + dataId).val());
   // Convert list of string integers to list of integers using map(Number)
   const groups = tr
-    .find("#multiselect_" + address)
+    .find("#multiselect_" + dataId)
     .val()
     .map(Number);
 
   var done = "edited";
   var notDone = "editing";
   switch (elem) {
-    case "enabled_" + address:
+    case "enabled_" + dataId:
       if (!enabled) {
         done = "disabled";
         notDone = "disabling";
@@ -567,11 +570,11 @@ function editList() {
       }
 
       break;
-    case "comment_" + address:
+    case "comment_" + dataId:
       done = "edited comment of";
       notDone = "editing comment of";
       break;
-    case "multiselect_" + address:
+    case "multiselect_" + dataId:
       done = "edited groups of";
       notDone = "editing groups of";
       break;
@@ -581,10 +584,9 @@ function editList() {
   }
 
   utils.disableAll();
-  const addressDecoded = utils.hexDecode(address);
-  utils.showAlert("info", "", "Editing address...", addressDecoded);
+  utils.showAlert("info", "", "Editing address...", address);
   $.ajax({
-    url: "/api/lists/" + encodeURIComponent(addressDecoded),
+    url: "/api/lists/" + encodeURIComponent(address) + "?type=" + type,
     method: "put",
     dataType: "json",
     processData: false,
@@ -597,7 +599,7 @@ function editList() {
     }),
     success: function (data) {
       utils.enableAll();
-      processGroupResult(data, "list", done, notDone);
+      processGroupResult(data, type + "list", done, notDone);
       table.ajax.reload(null, false);
     },
     error: function (data, exception) {
@@ -606,7 +608,7 @@ function editList() {
       utils.showAlert(
         "error",
         "",
-        "Error while " + notDone + " list " + addressDecoded,
+        "Error while " + notDone + type + "list " + address,
         data.responseText
       );
       console.log(exception); // eslint-disable-line no-console
