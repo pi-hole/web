@@ -378,10 +378,20 @@ function addTD(content) {
   return "<td>" + content + "</td> ";
 }
 
+function toPercent(number, fractionDigits = 0) {
+  const userLocale = navigator.language || "en-US";
+  return new Intl.NumberFormat(userLocale, {
+    style: "percent",
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  }).format(number / 100);
+}
+
 function colorBar(percentage, total, cssClass) {
-  var title = percentage.toFixed(1) + "% of " + total;
-  var bar = '<div class="progress-bar ' + cssClass + '" style="width: ' + percentage + '%"></div>';
-  return '<div class="progress progress-sm" title="' + title + '"> ' + bar + " </div>";
+  const formattedPercentage = toPercent(percentage, 1);
+  const title = `${formattedPercentage} of ${total}`;
+  const bar = `<div class="progress-bar ${cssClass}" style="width: ${percentage}%"></div>`;
+  return `<div class="progress progress-sm" title="${title}"> ${bar} </div>`;
 }
 
 function checkMessages() {
@@ -676,6 +686,7 @@ window.utils = (function () {
     validateHostname: validateHostname,
     addFromQueryLog: addFromQueryLog,
     addTD: addTD,
+    toPercent: toPercent,
     colorBar: colorBar,
     checkMessages: checkMessages,
     changeBulkDeleteStates: changeBulkDeleteStates,
