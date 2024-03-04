@@ -132,7 +132,7 @@ function eventsource(partial) {
           "<br>    last updated:  " +
           utils.renderTimestamp(list.date_updated, "display") +
           " (" +
-          list.number.toLocaleString() +
+          utils.formatNumber(list.number) +
           " domains)" +
           "<br>    " +
           (list.enabled ? "enabled" : "disabled") +

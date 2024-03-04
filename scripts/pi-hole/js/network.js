@@ -134,7 +134,7 @@ $(function () {
       }
 
       // Set number of queries to localized string (add thousand separators)
-      $("td:eq(5)", row).html(data.numQueries.toLocaleString());
+      $("td:eq(5)", row).html(utils.formatNumber(data.numQueries));
 
       var ips = [];
       maxiter = Math.min(data.ips.length, MAXIPDISPLAY);
