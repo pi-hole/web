@@ -208,6 +208,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     </div>
 </div>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings-dhcp.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/pi-hole/js/ip-address-sorting.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings.js')?>"></script>
 
 <? mg.include('scripts/pi-hole/lua/footer.lp','r')?>
