@@ -19,11 +19,13 @@ $(function () {
   }
 });
 
-function eventsource(partial) {
+function doSearch() {
   const ta = $("#output");
   // process with the current visible domain input field
   const q = $("input[id^='domain']:visible").val().trim().toLowerCase();
   const N = $("#number").val();
+  // Partial matching?
+  const partial = $("#partialMatch").is(":checked");
 
   if (q.length === 0) {
     return;
@@ -197,17 +199,11 @@ function eventsource(partial) {
 $("#domain").on("keypress", function (e) {
   if (e.which === 13) {
     // Enter was pressed, and the input has focus
-    eventsource(false);
+    doSearch();
   }
 });
 
 // Handle search buttons
-$("button[id^='btnSearch']").on("click", function () {
-  var partial = false;
-
-  if (!this.id.match("^btnSearchExact")) {
-    partial = true;
-  }
-
-  eventsource(partial);
+$("button[id='btnSearch']").on("click", function () {
+  doSearch();
 });

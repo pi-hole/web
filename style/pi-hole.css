@@ -562,19 +562,6 @@ td.details-control {
 }
 
 @media screen and (max-width: 991px) {
-  #domain-search-block {
-    display: block;
-  }
-  #domain {
-    margin: 5px 0;
-  }
-  #domain-search-block .input-group-btn {
-    display: inline-block;
-  }
-  #domain-search-block .input-group-btn button {
-    margin: 0 5px 0 0;
-    border-radius: 3px;
-  }
   .settings-container {
     --number-of-columns: 1;
   }
@@ -1477,4 +1464,15 @@ table.dataTable tbody > tr > .selected {
 .overflow-wrap {
   overflow-wrap: break-word;
   inline-size: auto;
+}
+
+/* Search page options */
+#domain-limitbox-block {
+  /* Add margin to match the other component (icheck) height */
+  margin: 3px 0;
+}
+@media (min-width: 992px) {
+  #domain-limitbox-block {
+    text-align: right;
+  }
 }
