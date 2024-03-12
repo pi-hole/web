@@ -38,7 +38,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             <div class="box-body">
                 <div class="form-group">
                     <label for="file">File input</label>
-                    <input type="file" name="file" id="file" accept=".zip,.tar.gz">
+                    <input type="file" name="file" id="file" accept="application/gzip,application/zip">
                     <p class="help-block">When importing settings from a <em>newer</em> version of Pi-hole, not yet existing settings will be ignored. When importing from an <em>older</em> version of Pi-hole, settings for newer features will be initialized with their default values.</p>
                 </div>
                 <div class="pull-right">
