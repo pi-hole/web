@@ -696,8 +696,9 @@ function applyExpertSettings() {
     $(".settings-level-basic").show();
     $(".settings-level-expert").hide();
 
-    // if we are on admin/settings/all, redirect to admin/settings/system
-    if (window.location.pathname === "/admin/settings/all") {
+    // If we left with an empty page (no visible boxes) after switching from
+    // Expert to Basic settings, redirect to admin/settings/system instead
+    if ($(".box:visible").length === 0) {
       window.location.href = "/admin/settings/system";
     }
   }
