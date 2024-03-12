@@ -371,6 +371,22 @@ function applyOnlyChanged() {
     // Show all boxes that have a data-key attribute
     $(".box-title[data-key]").closest(".box").show();
   }
+
+  // Hide group headers on the all settings page after toggling to show only
+  // modified settings if there are no modified settings within that group. This
+  // prevents empty boxes when only-changed is enabled by hiding all boxes if
+  // the box does not have at least one visible box as a child
+  $(".box-title:not([data-key])").each(function () {
+    const box = $(this).closest(".box");
+    if (
+      box.find(".box-title[data-key]:visible").length === 0 &&
+      localStorage.getItem("only-changed") === "true"
+    ) {
+      box.hide();
+    } else {
+      box.show();
+    }
+  });
 }
 
 $(document).ready(function () {
