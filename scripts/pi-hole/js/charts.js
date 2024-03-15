@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global upstreams */
+/* global upstreams, utils */
 
 // eslint-disable-next-line no-unused-vars
 var THEME_COLORS = [
@@ -167,7 +167,7 @@ var customTooltips = function (context) {
     innerHtml += "</thead><tbody>";
     var printed = 0;
 
-    var devicePixel = (1 / window.devicePixelRatio).toFixed(1);
+    var devicePixel = utils.formatNumber(1 / window.devicePixelRatio, 1);
     bodyLines.forEach(function (body, i) {
       var labelColors = tooltip.labelColors[i];
       var style = "background-color: " + labelColors.backgroundColor;
@@ -288,15 +288,15 @@ var customTooltips = function (context) {
   }
 
   // Position tooltip and display
-  tooltipEl.style.top = tooltipY.toFixed(1) + "px";
-  tooltipEl.style.left = tooltipX.toFixed(1) + "px";
+  tooltipEl.style.top = utils.formatNumber(tooltipY, 1) + "px";
+  tooltipEl.style.left = utils.formatNumber(tooltipX, 1) + "px";
   if (arrowX === undefined) {
     tooltipEl.querySelector(".arrow").style.left = "";
   } else {
     // Calculate percentage X value depending on the tooltip's
     // width to avoid hanging arrow out on tooltip width changes
-    var arrowXpercent = ((100 / tooltipWidth) * arrowX).toFixed(1);
-    tooltipEl.querySelector(".arrow").style.left = arrowXpercent + "%";
+    var arrowXpercent = utils.formatNumber((100 / tooltipWidth) * arrowX, 1);
+    tooltipEl.querySelector(".arrow").style.left = utils.formatPercent(arrowXpercent);
   }
 
   tooltipEl.style.opacity = 1;
@@ -325,7 +325,7 @@ function doughnutTooltip(tooltipLabel) {
   // we therefore use 99.9 to decide if slices are hidden (we only show with 0.1 precision)
   if (percentageTotalShown > 99.9) {
     // All items shown
-    return label + ": " + itemPercentage + "%";
+    return label + ": " + utils.formatPercent(itemPercentage);
   } else {
     // set percentageTotalShown again without rounding to account
     // for cases where the total shown percentage would be <0.1% of all
@@ -335,7 +335,7 @@ function doughnutTooltip(tooltipLabel) {
       ":<br>&bull; " +
       itemPercentage +
       "% of all data<br>&bull; " +
-      ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) +
+      utils.formatPercent((tooltipLabel.parsed * 100) / percentageTotalShown, 1) +
       "% of shown items"
     );
   }

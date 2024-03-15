@@ -295,7 +295,7 @@ function updateSystemInfo() {
         '<i class="fa fa-fw fa-circle ' +
           color +
           '"></i>&nbsp;&nbsp;Memory usage:&nbsp;' +
-          percentRAM.toFixed(1) +
+          utils.formatPercent(percentRAM, 1) +
           "&thinsp;%"
       );
       $("#memory").prop(
@@ -303,11 +303,11 @@ function updateSystemInfo() {
         "Total memory: " + totalRAMGB.toFixed(1) + " GB, Swap usage: " + swap
       );
       $("#sysinfo-memory-ram").text(
-        percentRAM.toFixed(1) + "% of " + totalRAMGB.toFixed(1) + " GB is used"
+        utils.formatPercent(percentRAM, 1) + "% of " + totalRAMGB.toFixed(1) + " GB is used"
       );
       if (system.memory.swap.total > 0) {
         $("#sysinfo-memory-swap").text(
-          percentSwap.toFixed(1) + "% of " + totalSwapGB.toFixed(1) + " GB is used"
+          utils.formatPercent(percentSwap, 1) + "% of " + totalSwapGB.toFixed(1) + " GB is used"
         );
       } else {
         $("#sysinfo-memory-swap").text("No swap space available");
@@ -318,35 +318,35 @@ function updateSystemInfo() {
         '<i class="fa fa-fw fa-circle ' +
           color +
           '"></i>&nbsp;&nbsp;CPU:&nbsp;' +
-          system.cpu.load.percent[0].toFixed(1) +
+          utils.formatPercent(system.cpu.load.percent[0], 1) +
           "&thinsp;%"
       );
       $("#cpu").prop(
         "title",
         "Load: " +
-          system.cpu.load.raw[0].toFixed(2) +
+          utils.formatNumber(system.cpu.load.raw[0], 2) +
           " " +
-          system.cpu.load.raw[1].toFixed(2) +
+          utils.formatNumber(system.cpu.load.raw[1], 2) +
           " " +
-          system.cpu.load.raw[2].toFixed(2) +
+          utils.formatNumber(system.cpu.load.raw[2], 2) +
           " on " +
-          system.cpu.nprocs +
+          utils.formatNumber(system.cpu.nprocs) +
           " cores running " +
-          system.procs +
+          utils.formatNumber(system.procs) +
           " processes"
       );
       $("#sysinfo-cpu").text(
-        system.cpu.load.percent[0].toFixed(1) +
+        utils.formatPercent(system.cpu.load.percent[0], 1) +
           "% (load: " +
-          system.cpu.load.raw[0].toFixed(2) +
+          utils.formatNumber(system.cpu.load.raw[0], 2) +
           " " +
-          system.cpu.load.raw[1].toFixed(2) +
+          utils.formatNumber(system.cpu.load.raw[1], 2) +
           " " +
-          system.cpu.load.raw[2].toFixed(2) +
+          utils.formatNumber(system.cpu.load.raw[2], 2) +
           ") on " +
-          system.cpu.nprocs +
+          utils.formatNumber(system.cpu.nprocs) +
           " cores running " +
-          system.procs +
+          utils.formatNumber(system.procs) +
           " processes"
       );
 
@@ -385,7 +385,7 @@ function updateSensorsInfo() {
       }
 
       if (data.sensors.cpu_temp !== null) {
-        var temp = data.sensors.cpu_temp.toFixed(1) + "&thinsp;" + unit;
+        var temp = utils.formatNumber(data.sensors.cpu_temp, 1) + "&thinsp;" + unit;
         var color =
           data.sensors.cpu_temp > data.sensors.hot_limit
             ? "text-red fa-temperature-high"
@@ -407,7 +407,7 @@ function updateSensorsInfo() {
             "  - " +
             temp.name +
             ": " +
-            temp.value.toFixed(1) +
+            utils.formatNumber(temp.value, 1) +
             unit +
             " (max: " +
             (temp.max === null ? "N/A" : temp.max.toFixed(1) + unit) +

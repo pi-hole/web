@@ -41,14 +41,16 @@ function format(data) {
         : "N/A",
     numberOfEntries =
       (data.number !== null && numbers === true
-        ? parseInt(data.number, 10).toLocaleString()
+        ? utils.formatNumber(parseInt(data.number, 10))
         : "N/A") +
       (data.abp_entries !== null && parseInt(data.abp_entries, 10) > 0 && numbers === true
-        ? " (out of which " + parseInt(data.abp_entries, 10).toLocaleString() + " are in ABP-style)"
+        ? " (out of which " +
+          utils.formatNumber(parseInt(data.abp_entries, 10)) +
+          " are in ABP-style)"
         : ""),
     nonDomains =
       data.invalid_domains !== null && numbers === true
-        ? parseInt(data.invalid_domains, 10).toLocaleString()
+        ? utils.formatNumber(parseInt(data.invalid_domains, 10))
         : "N/A";
 
   return `<table>
