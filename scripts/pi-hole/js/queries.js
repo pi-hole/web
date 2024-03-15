@@ -557,12 +557,13 @@ $(function () {
 
           return data;
         },
+        searchable: false,
       },
-      { data: "status", width: "1%" },
-      { data: "type", width: "1%" },
+      { data: "status", width: "1%", searchable: false },
+      { data: "type", width: "1%", searchable: false },
       { data: "domain", width: "45%" },
       { data: "client.ip", width: "29%", type: "ip-address" },
-      { data: "reply.time", width: "4%", render: formatReplyTime },
+      { data: "reply.time", width: "4%", render: formatReplyTime, searchable: false },
       { data: null, width: "10%", sortable: false, searchable: false },
     ],
     lengthMenu: [
@@ -619,6 +620,32 @@ $(function () {
       if (querystatus.buttontext !== false) {
         $("td:eq(6)", row).html(querystatus.buttontext);
       }
+    },
+    initComplete: function () {
+      this.api()
+        .columns()
+        .every(function () {
+          // Skip columns that are not searchable
+          const colIdx = this.index();
+          const bSearchable = this.context[0].aoColumns[colIdx].bSearchable;
+          if (!bSearchable) {
+            return null;
+          }
+
+          // Replace footer text with input field for searchable columns
+          const input = document.createElement("input");
+          input.placeholder = this.footer().textContent;
+          this.footer().replaceChildren(input);
+
+          // Event listener for user input
+          input.addEventListener("keyup", () => {
+            if (this.search() !== this.value) {
+              this.search(input.value).draw();
+            }
+          });
+
+          return null;
+        });
     },
   });
 
