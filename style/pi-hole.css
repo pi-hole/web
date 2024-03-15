@@ -1180,6 +1180,12 @@ table.dataTable tbody > tr > .selected {
   }
 }
 
+/* Hide the checkbox used for settings level selector */
+#expert-settings,
+#only-changed {
+  display: none;
+}
+
 .settings-level-basic {
   display: none;
 }
