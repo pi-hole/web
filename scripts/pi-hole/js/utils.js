@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false, apiFailure: false, updateFtlInfo: false */
+/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false */
 
 $(function () {
   // CSRF protection for AJAX requests, this has to be configured globally
@@ -378,10 +378,20 @@ function addTD(content) {
   return "<td>" + content + "</td> ";
 }
 
+function toPercent(number, fractionDigits = 0) {
+  const userLocale = navigator.language || "en-US";
+  return new Intl.NumberFormat(userLocale, {
+    style: "percent",
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  }).format(number / 100);
+}
+
 function colorBar(percentage, total, cssClass) {
-  var title = percentage.toFixed(1) + "% of " + total;
-  var bar = '<div class="progress-bar ' + cssClass + '" style="width: ' + percentage + '%"></div>';
-  return '<div class="progress progress-sm" title="' + title + '"> ' + bar + " </div>";
+  const formattedPercentage = toPercent(percentage, 1);
+  const title = `${formattedPercentage} of ${total}`;
+  const bar = `<div class="progress-bar ${cssClass}" style="width: ${percentage}%"></div>`;
+  return `<div class="progress progress-sm" title="${title}"> ${bar} </div>`;
 }
 
 function checkMessages() {
@@ -620,6 +630,46 @@ function listAlert(type, items, data) {
   );
 }
 
+// Callback function for the loading overlay timeout
+function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
+  // Try to ping FTL to see if it finished restarting
+  $.ajax({
+    url: "/api/info/login",
+    method: "GET",
+    cache: false,
+    dataType: "json",
+  })
+    .done(function () {
+      // FTL is running again, hide loading overlay
+      NProgress.done();
+      if (reloadAfterTimeout) {
+        location.reload();
+      } else {
+        $(".wrapper").waitMe("hide");
+      }
+    })
+    .fail(function () {
+      // FTL is not running yet, try again in 500ms
+      setTimeout(loadingOverlayTimeoutCallback, 500, reloadAfterTimeout);
+    });
+}
+
+function loadingOverlay(reloadAfterTimeout = false) {
+  NProgress.start();
+  $(".wrapper").waitMe({
+    effect: "bounce",
+    text: "Pi-hole is currently applying your changes...",
+    bg: "rgba(0,0,0,0.7)",
+    color: "#fff",
+    maxSize: "",
+    textPos: "vertical",
+  });
+  // Start checking for FTL status after 2 seconds
+  setTimeout(loadingOverlayTimeoutCallback, 2000, reloadAfterTimeout);
+
+  return true;
+}
+
 // Function that calls a function only if the page is currently visible. This is
 // useful to prevent unnecessary API calls when the page is not visible (e.g.
 // when the user is on another tab).
@@ -676,6 +726,7 @@ window.utils = (function () {
     validateHostname: validateHostname,
     addFromQueryLog: addFromQueryLog,
     addTD: addTD,
+    toPercent: toPercent,
     colorBar: colorBar,
     checkMessages: checkMessages,
     changeBulkDeleteStates: changeBulkDeleteStates,
@@ -689,6 +740,7 @@ window.utils = (function () {
     hexEncode: hexEncode,
     hexDecode: hexDecode,
     listsAlert: listAlert,
+    loadingOverlay: loadingOverlay,
     setTimer: setTimer,
     setInter: setInter,
   };

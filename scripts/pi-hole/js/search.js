@@ -19,11 +19,13 @@ $(function () {
   }
 });
 
-function eventsource(partial) {
+function doSearch() {
   const ta = $("#output");
   // process with the current visible domain input field
   const q = $("input[id^='domain']:visible").val().trim().toLowerCase();
   const N = $("#number").val();
+  // Partial matching?
+  const partial = $("#partialMatch").is(":checked");
 
   if (q.length === 0) {
     return;
@@ -91,11 +93,11 @@ function eventsource(partial) {
       // Group results in res.gravity by res.gravity[].address
       var grouped = {};
       for (const list of res.gravity) {
-        if (grouped[list.address] === undefined) {
-          grouped[list.address] = [];
+        if (grouped[list.address + "_" + list.type] === undefined) {
+          grouped[list.address + "_" + list.type] = [];
         }
 
-        grouped[list.address].push(list);
+        grouped[list.address + "_" + list.type].push(list);
       }
 
       const numLists = Object.keys(grouped).length;
@@ -112,14 +114,14 @@ function eventsource(partial) {
         "</strong>'" +
         (numLists > 0 ? ":" : ".") +
         "<br><br>";
-      for (const address of Object.keys(grouped)) {
-        const list = grouped[address][0];
+      for (const listId of Object.keys(grouped)) {
+        const list = grouped[listId][0];
         const color = list.type === "block" ? "red" : "green";
         result +=
           "  - <a href='groups-lists.lp?listid=" +
           list.id +
           "' target='_blank'>" +
-          utils.escapeHtml(address) +
+          utils.escapeHtml(list.address) +
           "</a><br>    <strong class='text-" +
           color +
           "'>" +
@@ -144,7 +146,7 @@ function eventsource(partial) {
             ? '<br>    comment: "' + utils.escapeHtml(list.comment) + '"'
             : "<br>    no comment") +
           "<br>    matching entries:<br>";
-        for (const lists of grouped[address]) {
+        for (const lists of grouped[listId]) {
           result +=
             "    - <strong class='text-blue'>" + utils.escapeHtml(lists.domain) + "</strong><br>";
         }
@@ -197,17 +199,11 @@ function eventsource(partial) {
 $("#domain").on("keypress", function (e) {
   if (e.which === 13) {
     // Enter was pressed, and the input has focus
-    eventsource(false);
+    doSearch();
   }
 });
 
 // Handle search buttons
-$("button[id^='btnSearch']").on("click", function () {
-  var partial = false;
-
-  if (!this.id.match("^btnSearchExact")) {
-    partial = true;
-  }
-
-  eventsource(partial);
+$("button[id='btnSearch']").on("click", function () {
+  doSearch();
 });

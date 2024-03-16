@@ -177,8 +177,8 @@ function saveSettings() {
         "Successfully saved and applied settings",
         ""
       );
-      // Reload page
-      location.reload();
+      // Show loading overlay
+      utils.loadingOverlay(true);
     })
     .fail(function (data, exception) {
       utils.enableAll();

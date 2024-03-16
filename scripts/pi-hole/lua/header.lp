@@ -78,6 +78,8 @@ is_authenticated = mg.request_info.is_authenticated
         html { background-color: #000; }
     </style>
 <? end ?>
+    <script src="<?=pihole.fileversion('scripts/vendor/nprogress.min.js')?>"></script>
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/nprogress.min.css')?>">
 
     <!-- Theme fonts -->
 <? if theme.name == 'lcars' then ?>
@@ -118,3 +120,5 @@ if startsWith(scriptname, 'groups') then
     <script src="<?=pihole.fileversion('scripts/vendor/bootstrap-notify.min.js')?>"></script>
     <script src="<?=pihole.fileversion('style/vendor/font-awesome/js/all.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/pi-hole/js/utils.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/vendor/waitMe.min.js')?>"></script>
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/waitMe.min.css')?>">

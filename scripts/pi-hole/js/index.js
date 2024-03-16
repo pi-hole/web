@@ -411,10 +411,8 @@ function updateSummaryData(runOnce = false) {
       intl.format(parseInt(data.clients.total, 10)) + " total clients"
     );
     glowIfChanged($("span#blocked_queries"), intl.format(parseFloat(data.queries.blocked)));
-    glowIfChanged(
-      $("span#percent_blocked"),
-      parseFloat(data.queries.percent_blocked).toFixed(1) + "%"
-    );
+    var formattedPercentage = utils.toPercent(data.queries.percent_blocked, 1);
+    glowIfChanged($("span#percent_blocked"), formattedPercentage);
     glowIfChanged(
       $("span#gravity_size"),
       intl.format(parseInt(data.gravity.domains_being_blocked, 10))
@@ -451,7 +449,12 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
 
   if (skipZero && data === 0) return undefined;
   return (
-    tooltipLabel.dataset.label + ": " + tooltipLabel.parsed.y + " (" + percentage.toFixed(1) + "%)"
+    tooltipLabel.dataset.label +
+    ": " +
+    tooltipLabel.parsed.y +
+    " (" +
+    utils.toPercent(percentage, 1) +
+    ")"
   );
 }
 
