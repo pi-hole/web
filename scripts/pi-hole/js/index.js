@@ -34,11 +34,17 @@ function updateQueriesOverTime() {
     timeLineChart.data.labels = [];
     timeLineChart.data.datasets = [];
 
-    var labels = ["Blocked DNS Queries", "Cached DNS Queries", "Forwarded DNS Queries"];
+    var labels = [
+      "Other DNS Queries",
+      "Blocked DNS Queries",
+      "Cached DNS Queries",
+      "Forwarded DNS Queries",
+    ];
     var cachedColor = utils.getCSSval("queries-cached", "background-color");
     var blockedColor = utils.getCSSval("queries-blocked", "background-color");
     var permittedColor = utils.getCSSval("queries-permitted", "background-color");
-    var colors = [blockedColor, cachedColor, permittedColor];
+    var otherColor = utils.getCSSval("queries-other", "background-color");
+    var colors = [otherColor, blockedColor, cachedColor, permittedColor];
 
     // Collect values and colors, and labels
     for (var i = 0; i < labels.length; i++) {
@@ -59,12 +65,11 @@ function updateQueriesOverTime() {
       var timestamp = new Date(1000 * parseInt(item.timestamp, 10));
 
       timeLineChart.data.labels.push(timestamp);
-      var blocked = item.blocked;
-      var cached = item.cached;
-      var permitted = item.total - (blocked + cached);
-      timeLineChart.data.datasets[0].data.push(blocked);
-      timeLineChart.data.datasets[1].data.push(cached);
-      timeLineChart.data.datasets[2].data.push(permitted);
+      var other = item.total - (item.blocked + item.cached + item.forwarded);
+      timeLineChart.data.datasets[0].data.push(other);
+      timeLineChart.data.datasets[1].data.push(item.blocked);
+      timeLineChart.data.datasets[2].data.push(item.cached);
+      timeLineChart.data.datasets[3].data.push(item.forwarded);
     });
 
     $("#queries-over-time .overlay").hide();
@@ -137,17 +142,19 @@ function updateClientsOverTime() {
       return;
     }
 
-    var i,
-      labels = [];
-    data.clients.forEach(function (client) {
-      labels.push(client.name !== null ? client.name : client.ip);
+    let numClients = 0;
+    const labels = [],
+      clients = {};
+    Object.keys(data.clients).forEach(function (ip) {
+      clients[ip] = numClients++;
+      labels.push(data.clients[ip].name !== null ? data.clients[ip].name : ip);
     });
 
     // Remove possibly already existing data
     clientsChart.data.labels = [];
     clientsChart.data.datasets = [];
 
-    for (i = 0; i < data.clients.length; i++) {
+    for (let i = 0; i < numClients; i++) {
       clientsChart.data.datasets.push({
         data: [],
         // If we ran out of colors, make a random one
@@ -164,9 +171,16 @@ function updateClientsOverTime() {
     }
 
     // Add data for each dataset that is available
-    data.clients.forEach(function (i, c) {
-      data.history.forEach(function (item) {
-        clientsChart.data.datasets[c].data.push(item.data[c]);
+    // We need to iterate over all time slots and fill in the data for each client
+    Object.keys(data.history).forEach(function (item) {
+      Object.keys(clients).forEach(function (client) {
+        if (data.history[item].data[client] === undefined) {
+          // If there is no data for this client in this timeslot, we push 0
+          clientsChart.data.datasets[clients[client]].data.push(0);
+        } else {
+          // Otherwise, we push the data
+          clientsChart.data.datasets[clients[client]].data.push(data.history[item].data[client]);
+        }
       });
     });
 
@@ -417,6 +431,33 @@ function updateSummaryData(runOnce = false) {
     });
 }
 
+function labelWithPercentage(tooltipLabel, skipZero = false) {
+  // Sum all queries for the current time by iterating over all keys in the
+  // current dataset
+  let sum = 0;
+  const keys = Object.keys(tooltipLabel.parsed._stacks.y);
+  for (let i = 0; i < keys.length; i++) {
+    if (tooltipLabel.parsed._stacks.y[i] === undefined) continue;
+    sum += parseInt(tooltipLabel.parsed._stacks.y[i], 10);
+  }
+
+  let percentage = 0;
+  const data = parseInt(tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex], 10);
+  if (sum > 0) {
+    percentage = (100 * data) / sum;
+  }
+
+  if (skipZero && data === 0) return undefined;
+  return (
+    tooltipLabel.dataset.label +
+    ": " +
+    tooltipLabel.parsed.y +
+    " (" +
+    utils.toPercent(percentage, 1) +
+    ")"
+  );
+}
+
 $(function () {
   // Pull in data via AJAX
   updateSummaryData();
@@ -524,23 +565,7 @@ $(function () {
               return "Queries from " + from + " to " + to;
             },
             label: function (tooltipLabel) {
-              var label = tooltipLabel.dataset.label;
-              // Add percentage only for blocked queries
-              if (tooltipLabel.datasetIndex === 0) {
-                var percentage = 0;
-                var permitted = parseInt(tooltipLabel.parsed._stacks.y[1], 10);
-                var blocked = parseInt(tooltipLabel.parsed._stacks.y[0], 10);
-                if (permitted + blocked > 0) {
-                  percentage = (100 * blocked) / (permitted + blocked);
-                }
-
-                var formattedPercentage = utils.toPercent(percentage, 1);
-                label += `: ${tooltipLabel.parsed.y} (${formattedPercentage})`;
-              } else {
-                label += ": " + tooltipLabel.parsed.y;
-              }
-
-              return label;
+              return labelWithPercentage(tooltipLabel);
             },
           },
         },
@@ -642,6 +667,9 @@ $(function () {
                 var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
                 var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
                 return "Client activity from " + from + " to " + to;
+              },
+              label: function (tooltipLabel) {
+                return labelWithPercentage(tooltipLabel, true);
               },
             },
           },
