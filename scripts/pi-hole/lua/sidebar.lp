@@ -163,12 +163,12 @@
                                 <i class="fa-fw menu-icon fa-solid fa-file-export"></i> <span>Teleporter</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings/dnsrecords' then ?> active<? end ?> settings-level-1">
+                        <li class="<? if scriptname == 'settings/dnsrecords' then ?> active<? end ?> settings-level-expert">
                             <a href="<?=webhome?>settings/dnsrecords">
                                 <i class="fa-fw menu-icon fa-solid fa-address-book"></i> <span>Local DNS Records</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings/all' then ?> active<? end ?> settings-level-2">
+                        <li class="<? if scriptname == 'settings/all' then ?> active<? end ?> settings-level-expert">
                             <a href="<?=webhome?>settings/all">
                                 <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> <span>All settings</span>
                             </a>

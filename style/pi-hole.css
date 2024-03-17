@@ -909,13 +909,6 @@ body:not(.lcars) .filter_types [class*="icheck-"] > input:first-child:checked + 
   font-size: 18px;
 }
 
-/* Global settings level selector */
-#settings-level {
-  display: inline-block;
-  width: auto;
-  min-width: 90px;
-}
-
 .navbar-nav {
   height: 50px;
 }
@@ -1174,15 +1167,17 @@ table.dataTable tbody > tr > .selected {
   }
 }
 
-.settings-level-0 {
+/* Hide the checkbox used for settings level selector */
+#expert-settings,
+#only-changed {
   display: none;
 }
 
-.settings-level-1 {
+.settings-level-basic {
   display: none;
 }
 
-.settings-level-2 {
+.settings-level-expert {
   display: none;
 }
 

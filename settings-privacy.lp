@@ -14,7 +14,7 @@ PageTitle = "Privacy Settings"
 mg.include('scripts/pi-hole/lua/settings_header.lp','r')
 ?>
 <div class="row">
-    <div class="col-md-6 settings-level-0">
+    <div class="col-md-6 settings-level-basic">
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-warning">
@@ -34,7 +34,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 settings-level-2">
+            <div class="col-md-12 settings-level-expert">
                 <div class="box box-warning">
                     <div class="box-header with-border">
                         <h3 class="box-title" data-configkeys="database.DBimport database.DBexport database.maxDBdays database.network.expire">Privacy-related database settings</h3>
@@ -68,7 +68,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-6 settings-level-1">
+    <div class="col-md-6 settings-level-expert">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="misc.privacylevel">Query Anonymization ("Privacy Level")</h3>
@@ -103,11 +103,12 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-lg-12 settings-level-0 save-button-container">
+    <div class="col-lg-12 settings-level-basic save-button-container">
         <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
     </div>
 </div>
 
+<script src="<?=pihole.fileversion('scripts/vendor/bootstrap-toggle.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings-privacy.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings.js')?>"></script>
 

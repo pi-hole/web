@@ -97,12 +97,12 @@ if startsWith(scriptname, 'groups') then
     -- Group management styles
 ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap-select.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap-toggle.min.css')?>">
 <? end ?>
 <? if is_authenticated then ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/datatables.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/datatables_extensions.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/daterangepicker.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap-toggle.min.css')?>">
 <? end ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/select2.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/AdminLTE.min.css')?>">

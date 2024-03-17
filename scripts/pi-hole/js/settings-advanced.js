@@ -38,13 +38,14 @@ function generateRow(topic, key, value) {
   var box =
     '<div class="box">' +
     '<div class="box-header">' +
-    '<h3 class="box-title">' +
+    '<h3 class="box-title" data-key="' +
+    key +
+    '" data-modified="' +
+    (value.modified ? "true" : "false") +
+    '">' +
     key +
     (value.modified
       ? '&nbsp;&nbsp;<i class="far fa-edit text-light-blue" title="Modified from default"></i>'
-      : "") +
-    (value.flags.advanced
-      ? '&nbsp;&nbsp;<i class="fas fa-cogs text-yellow" title="Expert-level setting"></i>'
       : "") +
     (value.flags.restart_dnsmasq
       ? '&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>'
@@ -327,12 +328,68 @@ function createDynamicConfigTabs() {
       });
 
       applyCheckboxRadioStyle();
+      applyOnlyChanged();
     })
     .fail(function (data) {
       apiFailure(data);
     });
 }
 
+function initOnlyChanged() {
+  const elem = $("#only-changed");
+
+  // Restore settings level from local storage (if available) or default to "false"
+  if (localStorage.getItem("only-changed") === null) {
+    localStorage.setItem("only-changed", "false");
+  }
+
+  elem.prop("checked", localStorage.getItem("only-changed") === "true");
+
+  elem.bootstrapToggle({
+    on: "Modified settings",
+    off: "All settings",
+    onstyle: "primary",
+    offstyle: "success",
+    size: "small",
+    width: "180px",
+  });
+
+  elem.on("change", function () {
+    localStorage.setItem("only-changed", $(this).prop("checked") ? "true" : "false");
+    applyOnlyChanged();
+  });
+
+  elem.bootstrapToggle(localStorage.getItem("only-changed") === "true" ? "on" : "off");
+  elem.trigger("change");
+}
+
+function applyOnlyChanged() {
+  if (localStorage.getItem("only-changed") === "true") {
+    // Hide all boxes that have a data-key attribute
+    $(".box-title[data-key]").not("[data-modified='true']").closest(".box").hide();
+  } else {
+    // Show all boxes that have a data-key attribute
+    $(".box-title[data-key]").closest(".box").show();
+  }
+
+  // Hide group headers on the all settings page after toggling to show only
+  // modified settings if there are no modified settings within that group. This
+  // prevents empty boxes when only-changed is enabled by hiding all boxes if
+  // the box does not have at least one visible box as a child
+  $(".box-title:not([data-key])").each(function () {
+    const box = $(this).closest(".box");
+    if (
+      box.find(".box-title[data-key]:visible").length === 0 &&
+      localStorage.getItem("only-changed") === "true"
+    ) {
+      box.hide();
+    } else {
+      box.show();
+    }
+  });
+}
+
 $(document).ready(function () {
   createDynamicConfigTabs();
+  initOnlyChanged();
 });

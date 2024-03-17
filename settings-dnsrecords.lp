@@ -14,7 +14,7 @@ PageTitle = "Local DNS Settings"
 mg.include('scripts/pi-hole/lua/settings_header.lp','r')
 ?>
 <div class="row">
-    <div class="col-md-12 col-lg-6 settings-level-1">
+    <div class="col-md-12 col-lg-6 settings-level-expert">
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title" id="title-hosts" data-configkeys="dns.hosts">Local DNS records</h3>
@@ -56,7 +56,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-12 col-lg-6 settings-level-1">
+    <div class="col-md-12 col-lg-6 settings-level-expert">
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title" id="title-cnameRecords" data-configkeys="dns.cnameRecords">Local CNAME records records</h3>
@@ -107,6 +107,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
         </div>
     </div>
 </div>
+<script src="<?=pihole.fileversion('scripts/vendor/bootstrap-toggle.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/vendor/jquery.confirm.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings-dns-records.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/ip-address-sorting.js')?>"></script>

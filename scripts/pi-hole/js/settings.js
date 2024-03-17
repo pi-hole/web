@@ -41,7 +41,7 @@ function setConfigValues(topic, key, value) {
 
   if (value.flags.advanced && envTitle.find(".advanced-warning").length === 0) {
     envTitle.append(
-      `<span class="advanced-warning">&nbsp;&nbsp;<i class="fas fa-wrench" title="This is an advanced level setting"></i></span>`
+      `<span class="advanced-warning">&nbsp;&nbsp;<i class="fas fa-wrench" title="Expert level setting"></i></span>`
     );
   }
 

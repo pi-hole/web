@@ -57,7 +57,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                 </div>
             </div>
         </div>
-        <div class="box box-warning">
+        <div class="box box-warning settings-level-expert">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dns.domain dns.expandHosts">DNS domain settings</h3>
             </div>
@@ -106,7 +106,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-lg-6 settings-level-1">
+    <div class="col-lg-6 settings-level-expert">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h1 class="box-title" data-configkeys="dns.listeningMode">Interface settings</h1>
@@ -195,7 +195,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-lg-12">
-        <div class="box box-warning settings-level-2">
+        <div class="box box-warning settings-level-expert">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dns.revServers">Conditional forwarding</h3>
             </div>
@@ -232,10 +232,11 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-lg-12 settings-level-0 save-button-container">
+    <div class="col-lg-12 settings-level-basic save-button-container">
         <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
     </div>
 </div>
+<script src="<?=pihole.fileversion('scripts/vendor/bootstrap-toggle.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings-dns.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings.js')?>"></script>
 
