@@ -168,7 +168,7 @@ function deleteLease() {
 
   // Exploit prevention: Return early for non-numeric IDs
   for (var ip in ips) {
-    if (Object.hasOwnProperty.call(ips, ip)) {
+    if (Object.hasOwn(ips, ip)) {
       delLease(ips);
     }
   }

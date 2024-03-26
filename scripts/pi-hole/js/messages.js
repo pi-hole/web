@@ -157,7 +157,7 @@ function deleteMessage() {
 
   // Exploit prevention: Return early for non-numeric IDs
   for (var id in ids) {
-    if (Object.hasOwnProperty.call(ids, id)) {
+    if (Object.hasOwn(ids, id)) {
       if (typeof ids[id] !== "number") return;
       delMsg(ids);
     }
@@ -183,7 +183,7 @@ function delMsg(ids) {
         );
         // Loop over id in case of multiple IDs
         for (var id in ids) {
-          if (Object.hasOwnProperty.call(ids, id)) {
+          if (Object.hasOwn(ids, id)) {
             table.row(id).remove();
           }
         }
