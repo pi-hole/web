@@ -183,13 +183,16 @@ function testCookies() {
 
 var iCheckStyle = "primary";
 function applyCheckboxRadioStyle() {
-  // Get all radio/checkboxes for theming, with the exception of the two radio buttons on the custom disable timer,
-  // as well as every element with an id that starts with "status_"
+  // Get all radio/checkboxes for theming, with the exception of:
+  // - the two radio buttons on the custom disable timer,
+  // - radio/checkboxes elements with class "no-icheck",
+  // - every element with an id that starts with "status_"
   var sel = $("input[type='radio'],input[type='checkbox']")
     .not("#selSec")
     .not("#selMin")
     .not("#expert-settings")
     .not("#only-changed")
+    .not(".no-icheck")
     .not("[id^=status_]");
   sel.parent().removeClass();
   sel.parent().addClass("icheck-" + iCheckStyle);
