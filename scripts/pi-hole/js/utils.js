@@ -84,7 +84,7 @@ function padNumber(num) {
 }
 
 var showAlertBox = null;
-function showAlert(type, icon, title, message) {
+function showAlert(type, icon, title, message, toast) {
   const options = {
       title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
       message: escapeHtml(message),
@@ -138,16 +138,28 @@ function showAlert(type, icon, title, message) {
       return;
   }
 
-  if (type === "info") {
-    // Create a new notification for info boxes
-    showAlertBox = $.notify(options, settings);
-  } else if (showAlertBox !== null) {
-    // Update existing notification for other boxes (if available)
-    showAlertBox.update(options);
-    showAlertBox.update(settings);
+  if (toast === undefined) {
+    if (type === "info") {
+      // Create a new notification for info boxes
+      showAlertBox = $.notify(options, settings);
+      return showAlertBox;
+    } else if (showAlertBox !== null) {
+      // Update existing notification for other boxes (if available)
+      showAlertBox.update(options);
+      showAlertBox.update(settings);
+      return showAlertBox;
+    } else {
+      // Create a new notification for other boxes if no previous info box exists
+      return $.notify(options, settings);
+    }
+  } else if (toast === null) {
+    // Always create a new toast
+    return $.notify(options, settings);
   } else {
-    // Create a new notification for other boxes if no previous info box exists
-    $.notify(options, settings);
+    // Update existing toast
+    toast.update(options);
+    toast.update(settings);
+    return toast;
   }
 }
 
