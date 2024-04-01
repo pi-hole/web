@@ -1472,6 +1472,10 @@ table.dataTable tbody > tr > .selected {
   }
 }
 
-.field-sizing-content {
+textarea.field-sizing-content {
+  min-block-size: 3.5rlh;
+  max-block-size: 20rlh;
+  min-inline-size: 20ch;
+  max-inline-size: 50ch;
   field-sizing: content;
 }
