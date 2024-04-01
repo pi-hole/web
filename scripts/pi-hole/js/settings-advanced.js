@@ -209,7 +209,7 @@ function generateRow(topic, key, value) {
       box +=
         '<label class="col-sm-5 control-label">Values (one item per line)</label>' +
         '<div class="col-sm-7">' +
-        '<textarea class="form-control" data-key="' +
+        '<textarea class="form-control field-sizing-content" data-key="' +
         key +
         '"' +
         extraAttributes +
