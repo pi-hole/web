@@ -53,6 +53,7 @@ function formatFTL(line, prio) {
     }
 
     case "ERR":
+    case "ERROR":
     case "EMERG":
     case "ALERT":
     case "CRIT": {

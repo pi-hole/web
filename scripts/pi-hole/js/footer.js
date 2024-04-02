@@ -701,7 +701,12 @@ function applyExpertSettings() {
 
     // If we left with an empty page (no visible boxes) after switching from
     // Expert to Basic settings, redirect to admin/settings/system instead
-    if ($(".box:visible").length === 0) {
+    //  - class settings-selector is present (this class is present in every
+    //    settings pages, but not in other pages - it is there on the "all"
+    //    settings page as well, even when the button has "only modified"
+    //    functionality there), and
+    //  - there are no visible boxes (the page is empty)
+    if ($(".settings-selector").length > 0 && $(".box:visible").length === 0) {
       window.location.href = "/admin/settings/system";
     }
   }
