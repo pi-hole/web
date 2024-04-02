@@ -23,8 +23,10 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <div><input type="checkbox" id="dhcp.active" data-key="dhcp.active"><label for="dhcp.active"><strong>DHCP server enabled</strong></label></div>
-                        <p id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
+                        <div>
+                            <input type="checkbox" id="dhcp.active" data-key="dhcp.active"><label for="dhcp.active"><strong>DHCP server enabled</strong></label>
+                            <p class="help-block" id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
+                        </div>
                     </div>
                     <div class="col-xs-12">
                         <label style="margin-top: 10px">Range of IP addresses to hand out</label>
@@ -75,8 +77,10 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                         <p>Leave the netmask field empty to have Pi-hole infer it from the configured IP address of your device. If you want to specify a netmask, you can use the format <code>255.255.255.0</code>.</p>
                     </div>
                     <div class="col-md-12">
-                        <div><input type="checkbox" id="dhcp.ipv6" data-key="dhcp.ipv6" class="DHCPgroup">&nbsp;<label for="dhcp.ipv6"><strong>Enable additional IPv6 support (SLAAC + RA)</strong></label></div>
-                        <p>Enable this option to enable IPv6 support for the Pi-hole DHCP server. This will allow the Pi-hole to hand out IPv6 addresses to clients and also provide IPv6 router advertisements (RA) to clients. This option is only useful if the Pi-hole is configured with an IPv6 address.</p>
+                        <div>
+                            <input type="checkbox" id="dhcp.ipv6" data-key="dhcp.ipv6" class="DHCPgroup">&nbsp;<label for="dhcp.ipv6"><strong>Enable additional IPv6 support (SLAAC + RA)</strong></label>
+                            <p class="help-block">Enable this option to enable IPv6 support for the Pi-hole DHCP server. This will allow the Pi-hole to hand out IPv6 addresses to clients and also provide IPv6 router advertisements (RA) to clients. This option is only useful if the Pi-hole is configured with an IPv6 address.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -103,13 +107,17 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
-                        <div><input type="checkbox" id="dhcp.rapidCommit" data-key="dhcp.rapidCommit" class="DHCPgroup">&nbsp;<label for="dhcp.rapidCommit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label></div>
-                        <p>The DHCPv4 rapid commit option allows the Pi-hole DHCP server to assign an IP address to a client right away. This can notably speed up the address assignment process and you will notice, e.g., faster WiFi joins in your network. This option should only be enabled if the Pi-hole DHCP server is the only DHCP server in your network.</p>
+                    <div class="col-sm-12">
+                        <div>
+                            <input type="checkbox" id="dhcp.rapidCommit" data-key="dhcp.rapidCommit" class="DHCPgroup">&nbsp;<label for="dhcp.rapidCommit"><strong>Enable DHCPv4 rapid commit (fast address assignment)</strong></label>
+                            <p class="help-block">The DHCPv4 rapid commit option allows the Pi-hole DHCP server to assign an IP address to a client right away. This can notably speed up the address assignment process and you will notice, e.g., faster WiFi joins in your network. This option should only be enabled if the Pi-hole DHCP server is the only DHCP server in your network.</p>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <div><input type="checkbox" id="dhcp.multiDNS" data-key="dhcp.multiDNS" class="DHCPgroup">&nbsp;<label for="dhcp.multiDNS"><strong>Advertise DNS server multiple times</strong></label></div>
-                        <p>Advertise DNS server multiple times to clients. Some devices will add their own proprietary DNS servers to the list of DNS servers, which can cause issues with Pi-hole. This option will advertise the Pi-hole DNS server multiple times to clients, which should prevent this from happening.</p>
+                    <div class="col-sm-12">
+                        <div>
+                            <input type="checkbox" id="dhcp.multiDNS" data-key="dhcp.multiDNS" class="DHCPgroup">&nbsp;<label for="dhcp.multiDNS"><strong>Advertise DNS server multiple times</strong></label>
+                            <p class="help-block">Advertise DNS server multiple times to clients. Some devices will add their own proprietary DNS servers to the list of DNS servers, which can cause issues with Pi-hole. This option will advertise the Pi-hole DNS server multiple times to clients, which should prevent this from happening.</p>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1444,6 +1444,9 @@ table.dataTable tbody > tr > .selected {
   margin: 0.5em 0;
   align-items: start;
 }
+.row-flex .form-control {
+  width: auto;
+}
 
 .log-entry {
   padding-left: 0.5em;

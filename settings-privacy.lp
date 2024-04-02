@@ -53,11 +53,11 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 </div>
                                 <br>
                                 <div class="row-flex">
-                                    <input type="number" id="database.maxDBdays" data-key="database.maxDBdays" data-type="integer" value="" min="0" step="10" style="width: 5em;">
+                                    <input class="form-control" type="number" id="database.maxDBdays" data-key="database.maxDBdays" data-type="integer" value="" min="0" step="10">
                                     <label for="database.maxDBdays"><strong>Maximum number of days to keep queries in the database</strong></label>
                                 </div>
                                 <div class="row-flex">
-                                    <input type="number" id="database.network.expire" data-key="database.network.expire" data-type="integer" value="" min="0" step="10" style="width: 5em;">
+                                    <input class="form-control" type="number" id="database.network.expire" data-key="database.network.expire" data-type="integer" value="" min="0" step="10">
                                     <label for="database.network.expire"><strong>How long should IP addresses be kept in the network_addresses table [days]?</strong></label>
                                 </div>
                                 <p>IP addresses (and associated host names) older than the specified number of days are removed to avoid dead entries in the network overview table.</p>
@@ -80,22 +80,22 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                         <div>
                             <input type="radio" id="misc.privacylevel-0" name="misc.privacylevel" data-key="misc.privacylevel" data-type="integer" value="0">
                             <label for="misc.privacylevel-0"><strong>Show everything and record everything</strong></label>
-                            <p>Gives maximum amount of statistics</p>
+                            <p class="help-block">Gives maximum amount of statistics</p>
                         </div>
                         <div>
                             <input type="radio" id="misc.privacylevel-1" name="misc.privacylevel" data-key="misc.privacylevel" data-type="integer" value="1">
                             <label for="misc.privacylevel-1"><strong>Hide domains: Display and store all domains as <code>hidden</code></strong></label>
-                            <p>This disables the Top Permitted Domains and Top Blocked Domains tables on the dashboard</p>
+                            <p class="help-block">This disables the Top Permitted Domains and Top Blocked Domains tables on the dashboard</p>
                         </div>
                         <div>
                             <input type="radio" id="misc.privacylevel-2" name="misc.privacylevel" data-key="misc.privacylevel" data-type="integer" value="2">
                             <label for="misc.privacylevel-2"><strong> Hide domains and clients: Display and store all domains as <code>hidden</code> and all clients as <code>0.0.0.0</code> </strong></label>
-                            <p>This disables all tables on the dashboard</p>
+                            <p class="help-block">This disables all tables on the dashboard</p>
                         </div>
                         <div>
                             <input type="radio" id="misc.privacylevel-3" name="misc.privacylevel" data-key="misc.privacylevel" data-type="integer" value="3">
                             <label for="misc.privacylevel-3"><strong> Anonymous mode: This disables basically everything except the live anonymous statistics</strong></label>
-                            <p>No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists. Note that this also largely disabled regex capabilities.</p>
+                            <p class="help-block">No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists. Note that this also largely disabled regex capabilities.</p>
                         </div>
                         <p>The privacy level may be increased at any time without having to restart the DNS resolver. However, note that the DNS resolver needs to be restarted when lowering the privacy level. This restarting is automatically done when saving.</p>
                     </div>
