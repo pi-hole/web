@@ -25,12 +25,12 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                         <div class="row">
                             <div class="col-md-6">
                                 <p><strong>Domains to be excluded from Top Domain Lists and Query Log</strong></p>
-                                <textarea class="form-control" rows="4" id="webserver.api.excludeDomains" data-key="webserver.api.excludeDomains" placeholder="Enter regex domains, one per line" style="resize: vertical;"></textarea>
+                                <textarea class="form-control field-sizing-content" rows="4" id="webserver.api.excludeDomains" data-key="webserver.api.excludeDomains" placeholder="Enter regex domains, one per line" style="resize: vertical;"></textarea>
                                 <p class="help-block">Domains may be described by their domain name (like <code>^example\.com$</code>)</p>
                             </div>
                             <div class="col-md-6">
                                 <p><strong>Clients to be excluded from Top Client Lists and Query Log </strong></p>
-                                <textarea class="form-control" rows="4" id="webserver.api.excludeClients" data-key="webserver.api.excludeClients" placeholder="Enter regex clients, one per line" style="resize: vertical;"></textarea>
+                                <textarea class="form-control field-sizing-content" rows="4" id="webserver.api.excludeClients" data-key="webserver.api.excludeClients" placeholder="Enter regex clients, one per line" style="resize: vertical;"></textarea>
                                 <p class="help-block">Clients may be described either by their IP addresses (IPv4 and IPv6 are supported), or hostnames (like <code>^laptop\.lan$</code>).</p>
                             </div>
                         </div>

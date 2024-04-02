@@ -1471,3 +1471,10 @@ table.dataTable tbody > tr > .selected {
     text-align: right;
   }
 }
+
+textarea.field-sizing-content {
+  min-block-size: 3.5rlh;
+  max-block-size: 20rlh;
+  min-inline-size: 20ch;
+  field-sizing: content;
+}
