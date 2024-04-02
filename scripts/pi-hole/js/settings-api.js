@@ -15,9 +15,9 @@ var TOTPdata = null;
 function renderBool(data, type) {
   // Display and search content
   if (type === "display" || type === "filter") {
-    var icon = "fa-xmark";
+    var icon = "fa-xmark text-danger";
     if (data === true) {
-      icon = "fa-check";
+      icon = "fa-check text-success";
     }
 
     return '<i class="fa-solid ' + icon + '"></i>';
@@ -88,7 +88,7 @@ $(function () {
       $("td:eq(9)", row).html(button);
       if (data.current_session) {
         ownSessionID = data.id;
-        $(row).addClass("text-bold");
+        $(row).addClass("text-bold allowed-row");
         $(row).attr("title", "This is the session you are currently using for the web interface");
       }
 
@@ -96,13 +96,13 @@ $(function () {
       let title = "";
       if (data.tls.mixed) {
         title = "Session is PARTIALLY end-to-end encrypted";
-        icon = "fa-triangle-exclamation";
+        icon = "fa-triangle-exclamation text-warning";
       } else if (data.tls.login) {
         title = "Session is end-to-end encrypted (TLS/SSL)";
-        icon = "fa-check";
+        icon = "fa-check text-success";
       } else {
         title = "Session is NOT end-to-end encrypted (TLS/SSL)";
-        icon = "fa-xmark";
+        icon = "fa-xmark text-danger";
       }
 
       $("td:eq(3)", row).html('<i class="fa-solid ' + icon + '" title="' + title + '"></i>');
