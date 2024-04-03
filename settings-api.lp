@@ -36,7 +36,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                            <p><strong>Important:</strong> Those input fields accept regex entries only. Please refer to  <a href="https://docs.pi-hole.net/regex/tutorial/" rel="noopener" target="_blank">our guide</a> how to construct valid regex entries.
+                            <p><strong>Important</strong>:<br>Those input fields accept regex entries only.<br>Please refer to  <a href="https://docs.pi-hole.net/regex/tutorial/" rel="noopener" target="_blank">our guide</a> how to construct valid regex entries.
                             </div>
                         </div>
                     </div>
@@ -50,7 +50,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                     <div class="box-body">
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="row">
+                                <div class="row form-group">
                                     <div class="col-lg-3">
                                         <label for="webserver.interface.theme">Used theme:</label>
                                     </div>
@@ -123,19 +123,19 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                         </div>
                     </div>
                     <div class="col-lg-12">
-                        <div class="row">
-                            <div class="col-md-6">
+                        <div class="row form-group">
+                            <div class="col-sm-6">
                                 <label for="webserver.api.temp.limit"><strong>Temperature limit for "hot":</strong></label>
                             </div>
-                            <div class="col-md-6">
-                                <input type="number" data-type="integer" id="webserver.api.temp.limit" data-key="webserver.api.temp.limit">
+                            <div class="col-sm-6">
+                                <input class="form-control" type="number" data-type="integer" id="webserver.api.temp.limit" data-key="webserver.api.temp.limit">
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-6">
+                        <div class="row form-group">
+                            <div class="col-sm-6">
                                 <label for="webserver.api.temp.unit">Temperature unit:</label>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-sm-6">
                                 <select id="webserver.api.temp.unit" data-key="webserver.api.temp.unit" class="form-control" placeholder="">
                                     <option disabled selected>Loading...</option>
                                 </select>

@@ -37,7 +37,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                     </div>
                     <div class="col-sm-12">
                         <div class="box collapsed-box">
-                            <div class="box-header with-border pointer no-user-select" data-widget="collapse">
+                            <div class="box-header with-border pointer" data-widget="collapse">
                                 <h3 class="box-title">Custom DNS servers <span id="custom-servers-title"></span></h3>
                                 <div class="box-tools pull-right">
                                     <button type="button" class="btn btn-box-tool">
@@ -75,7 +75,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                         <div>
                             <input type="checkbox" id="dns.expandHosts" data-key="dns.expandHosts" title="domain-needed">
                             <label for="dns.expandHosts"><strong>Expand hostnames</strong></label>
-                            <p>If set, the domain is added to simple names (without a period) in /etc/hosts in the same way as for DHCP-derived names.</p>
+                            <p class="help-block">If set, the domain is added to simple names (without a period) in /etc/hosts in the same way as for DHCP-derived names.</p>
                         </div>
                     </div>
                 </div>
@@ -119,7 +119,8 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 <h4>Recommended setting</h4>
                                 <div>
                                     <input type="radio" name="DNSinterface" id="dns.listeningMode-LOCAL" data-key="dns.listeningMode" value="local">
-                                    <label for="dns.listeningMode-LOCAL"><strong>Allow only local requests</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
+                                    <label for="dns.listeningMode-LOCAL"><strong>Allow only local requests</strong>
+                                    <p class="help-block">Allows only queries from devices that are at most one hop away (local devices)</p>
                                 </div>
                             </div>
                             <div class="danger-area">
@@ -136,7 +137,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                     <input type="radio" name="DNSinterface" id="dns.listeningMode-ALL" data-key="dns.listeningMode" value="all">
                                     <label for="dns.listeningMode-ALL"><strong>Permit all origins</strong></label>
                                 </div>
-                                <p>These options are dangerous on devices
+                                <p class="help-block">These options are dangerous on devices
                                     directly connected to the Internet such as cloud instances and are only safe if your
                                     Pi-hole is properly firewalled. In a typical at-home setup where your Pi-hole is
                                     located within your local network (and you have <strong>not</strong> forwarded port 53
@@ -158,7 +159,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                         <div>
                             <input type="checkbox" id="dns.domainNeeded" data-key="dns.domainNeeded" title="domain-needed">
                             <label for="dns.domainNeeded"><strong>Never forward non-FQDN <code>A</code> and <code>AAAA</code> queries</strong></label>
-                            <p>Tells Pi-hole to never forward A or AAAA queries for plain
+                            <p class="help-block">Tells Pi-hole to never forward A or AAAA queries for plain
                                 names, without dots or domain parts, to upstream nameservers. If
                                 the name is not known from <code>/etc/hosts</code> or DHCP then a "not found"
                                 answer is returned.<br>
@@ -169,18 +170,18 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                         <div>
                             <input type="checkbox" id="dns.bogusPriv" data-key="dns.bogusPriv" title="bogus-priv">
                             <label for="dns.bogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
-                            <p>All reverse lookups for private IP ranges (i.e., <code>192.168.0.x/24</code>, etc.)
+                            <p class="help-block">All reverse lookups for private IP ranges (i.e., <code>192.168.0.x/24</code>, etc.)
                                 which are not found in <code>/etc/hosts</code> or the DHCP leases are answered
                                 with "no such domain" rather than being forwarded upstream. The set
                                 of prefixes affected is the list given in <a href="https://tools.ietf.org/html/rfc6303">RFC6303</a>.</p>
-                                <p><strong>Important</strong>: Enabling these two options may increase your privacy,
+                                <p><strong>Important:</strong><br>Enabling these two options may increase your privacy,
                                 but may also prevent you from being able to access. Make sure you have set up conditional forwarding in this case.</p>
                         </div>
                         <br>
                         <div>
                             <input type="checkbox" id="dns.dnssec" data-key="dns.dnssec">
                             <label for="dns.dnssec"><strong>Use DNSSEC</strong></label>
-                            <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
+                            <p class="help-block">Validate DNS replies and cache DNSSEC data. When forwarding DNS
                                 queries, Pi-hole requests the DNSSEC records needed to validate
                                 the replies. If a domain fails validation or the upstream does not
                                 support DNSSEC, this setting can cause issues resolving domains.

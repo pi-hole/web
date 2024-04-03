@@ -494,6 +494,10 @@ kbd {
   color: #f54;
 }
 
+.help-block {
+  color: #999;
+}
+
 .warning-count {
   color: #000;
   background: #f94;
@@ -535,18 +539,22 @@ kbd {
 .btn-info {
   background: var(--info-color);
   border-color: var(--info-color) !important;
+  color: #fff;
 }
 .btn-danger {
   background: var(--danger-color);
   border-color: var(--danger-color) !important;
+  color: #fff;
 }
 .btn-warning {
   background: var(--warning-color);
   border-color: var(--warning-color) !important;
+  color: #fff;
 }
 .btn-success {
   background: var(--success-color);
   border-color: var(--success-color) !important;
+  color: #fff;
 }
 
 .btn-info:hover {
