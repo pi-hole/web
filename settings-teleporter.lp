@@ -33,7 +33,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title">Import previously imported configuration</h3>
+                <h3 class="box-title">Import previously exported configuration</h3>
             </div>
             <div class="box-body">
                 <div class="form-group">
@@ -41,6 +41,15 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                     <input type="file" name="file" id="file" accept="application/gzip,application/zip">
                     <br>
                     <p class="help-block">When importing settings from a <em>newer</em> version of Pi-hole, not yet existing settings will be ignored. When importing from an <em>older</em> version of Pi-hole, settings for newer features will be initialized with their default values.</p>
+                </div>
+                <div class="form-group">
+                    <label for="import-selection">Select what to import</label>
+                    <div><input type="checkbox" id="import.config" data-key="config" class="import-select" checked="true">&nbsp;<label for="import.config"><strong>Configuration</strong></label></div>
+                    <div><input type="checkbox" id="import.dhcp_leases" data-key="dhcp_leases" class="import-select" checked="true">&nbsp;<label for="import.dhcp_leases"><strong>DHCP leases</strong></label></div>
+                    <div><input type="checkbox" id="import.gravity.group" data-key="config" class="import-select" checked="true">&nbsp;<label for="import.gravity.group"><strong>Groups</strong></label></div>
+                    <div><input type="checkbox" id="import.gravity.adlist" data-key="config" class="import-select" checked="true">&nbsp;<label for="import.gravity.adlist"><strong>Lists</strong></label></div>
+                    <div><input type="checkbox" id="import.gravity.domainlist" data-key="config" class="import-select" checked="true">&nbsp;<label for="import.gravity.domainlist"><strong>Domains/Regexes</strong></label></div>
+                    <div><input type="checkbox" id="import.gravity.client" data-key="config" class="import-select" checked="true">&nbsp;<label for="import.gravity.client"><strong>Clients</strong></label></div>
                 </div>
                 <div class="pull-right">
                     <a class="btn btn-app btn-success" id="submit-import">

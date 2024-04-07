@@ -27,7 +27,22 @@ function importZIP() {
     return;
   }
 
+  // Get the selected import options
+  const imports = {},
+    gravity = {};
+  imports.config = document.getElementById("import.config").checked;
+  imports.dhcp_leases = document.getElementById("import.dhcp_leases").checked;
+  gravity.group = document.getElementById("import.gravity.group").checked;
+  gravity.adlist = document.getElementById("import.gravity.adlist").checked;
+  gravity.adlist_by_group = document.getElementById("import.gravity.adlist").checked;
+  gravity.domainlist = document.getElementById("import.gravity.domainlist").checked;
+  gravity.domainlist_by_group = document.getElementById("import.gravity.domainlist").checked;
+  gravity.client = document.getElementById("import.gravity.client").checked;
+  gravity.client_by_group = document.getElementById("import.gravity.client").checked;
+  imports.gravity = gravity;
+
   const formData = new FormData();
+  formData.append("import", JSON.stringify(imports));
   formData.append("file", file);
   // eslint-disable-next-line compat/compat
   fetch("/api/teleporter", {
