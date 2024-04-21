@@ -457,11 +457,11 @@ if ($FTLpid !== 0) {
                         $DHCPIPv6 = false;
                         $DHCP_rapid_commit = false;
                     }
-                    if (isset($setupVars['PIHOLE_DOMAIN'])) {
-                        $piHoleDomain = $setupVars['PIHOLE_DOMAIN'];
-                    } else {
-                        $piHoleDomain = 'lan';
-                    }
+if (isset($setupVars['PIHOLE_DOMAIN'])) {
+    $piHoleDomain = $setupVars['PIHOLE_DOMAIN'];
+} else {
+    $piHoleDomain = 'lan';
+}
 ?>
                     <form role="form" method="post">
                         <div class="row">

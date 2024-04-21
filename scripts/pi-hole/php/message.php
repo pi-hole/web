@@ -50,7 +50,7 @@ if ($_POST['action'] == 'delete_message' && isset($_POST['id'])) {
 
         $reload = true;
         JSON_success();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } else {
