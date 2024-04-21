@@ -51,7 +51,7 @@ if ($_POST['action'] == 'get_groups') {
 
         header('Content-type: application/json');
         echo json_encode(array('data' => $data));
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'add_group') {
@@ -93,7 +93,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $reload = true;
         JSON_success();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'edit_group') {
@@ -134,7 +134,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $reload = true;
         JSON_success();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'delete_group') {
@@ -167,7 +167,7 @@ if ($_POST['action'] == 'get_groups') {
         }
         $reload = true;
         JSON_success();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'get_clients') {
@@ -247,7 +247,7 @@ if ($_POST['action'] == 'get_groups') {
 
         header('Content-type: application/json');
         echo json_encode(array('data' => $data));
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'get_unconfigured_clients') {
@@ -329,7 +329,7 @@ if ($_POST['action'] == 'get_groups') {
 
         header('Content-type: application/json');
         echo json_encode($ips);
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'add_client') {
@@ -372,7 +372,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $reload = true;
         JSON_success();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'edit_client') {
@@ -443,7 +443,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $reload = true;
         JSON_success();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'delete_client') {
@@ -481,7 +481,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $reload = true;
         JSON_success();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'get_domains') {
@@ -525,7 +525,7 @@ if ($_POST['action'] == 'get_groups') {
 
         header('Content-type: application/json');
         echo json_encode(array('data' => $data));
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'add_domain' || $_POST['action'] == 'replace_domain') {
@@ -693,7 +693,7 @@ if ($_POST['action'] == 'get_groups') {
         }
         $reload = true;
         JSON_success($msg);
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'edit_domain') {
@@ -778,7 +778,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $reload = true;
         JSON_success();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'delete_domain') {
@@ -817,7 +817,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $reload = true;
         JSON_success();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'delete_domain_string') {
@@ -869,7 +869,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $reload = true;
         JSON_success();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'get_adlists') {
@@ -897,7 +897,7 @@ if ($_POST['action'] == 'get_groups') {
 
         header('Content-type: application/json');
         echo json_encode(array('data' => $data));
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'add_adlist') {
@@ -978,7 +978,7 @@ if ($_POST['action'] == 'get_groups') {
             $msg = $added_list.'<br><b>Total: '.$total.' adlist(s) processed.</b>';
             JSON_success($msg);
         }
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'edit_adlist') {
@@ -1059,7 +1059,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $reload = true;
         JSON_success();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'delete_adlist') {
@@ -1100,7 +1100,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $reload = true;
         JSON_success();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } elseif ($_POST['action'] == 'add_audit') {
@@ -1157,7 +1157,7 @@ if ($_POST['action'] == 'get_groups') {
         // Reloading isn't necessary for audit domains (no effect on blocking)
         $reload = false;
         JSON_success($msg);
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } else {

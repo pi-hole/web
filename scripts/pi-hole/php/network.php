@@ -57,7 +57,7 @@ if ($_POST['action'] == 'delete_network_entry' && isset($_POST['id'])) {
 
         $reload = true;
         JSON_success();
-    } catch (\Exception $ex) {
+    } catch (Exception $ex) {
         JSON_error($ex->getMessage());
     }
 } else {
