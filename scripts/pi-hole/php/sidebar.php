@@ -31,7 +31,7 @@
                     } else {
                         echo 'text-green-light';
                     }
-                    echo '"></i> Load:&nbsp;&nbsp;'.$loaddata[0].'&nbsp;&nbsp;'.$loaddata[1].'&nbsp;&nbsp;'.$loaddata[2].'</span>';
+                    echo '"></i> Load:&nbsp;&nbsp;'.vsprintf('%.2f,&nbsp;%.2f,&nbsp;%.2f', $loaddata).'</span>';
                     ?>
                     <br/>
                     <?php

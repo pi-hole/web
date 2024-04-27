@@ -133,9 +133,6 @@ list($celsius, $temperaturelimit, $temperatureunit) = getTemperature();
 
 // Get CPU load
 $loaddata = sys_getloadavg();
-foreach ($loaddata as $key => $value) {
-    $loaddata[$key] = round($value, 2);
-}
 
 // Get number of processing units available to PHP
 // (may be less than the number of online processors)
