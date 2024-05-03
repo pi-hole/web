@@ -436,21 +436,10 @@ function editClient() {
     .val()
     .map(Number);
   const comment = tr.find("#comment_" + client).val();
-  const enabled = tr.find("#enabled_" + client).is(":checked");
 
   var done = "edited";
   var notDone = "editing";
   switch (elem) {
-    case "enabled_" + client:
-      if (!enabled) {
-        done = "disabled";
-        notDone = "disabling";
-      } else {
-        done = "enabled";
-        notDone = "enabling";
-      }
-
-      break;
     case "multiselect_" + client:
       done = "edited groups of";
       notDone = "editing groups of";
@@ -474,10 +463,8 @@ function editClient() {
     processData: false,
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
-      client: client,
       groups: groups,
       comment: comment,
-      enabled: enabled,
     }),
     success: function (data) {
       utils.enableAll();
