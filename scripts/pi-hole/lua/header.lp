@@ -82,7 +82,7 @@ is_authenticated = mg.request_info.is_authenticated
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/nprogress.min.css')?>">
 
     <!-- Theme fonts -->
-<? if theme.name == 'lcars' then ?>
+<? if theme.name == 'lcars' or theme.name == 'lcars-picard' then ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/fonts/ubuntu-mono/ubuntu-mono.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/fonts/antonio/antonio.css')?>">
 <? else ?>
