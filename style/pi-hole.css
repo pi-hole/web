@@ -462,10 +462,6 @@ tfoot.add-new-item > tr > th {
   transition-duration: 0s;
 }
 
-.small-box span.glow {
-  text-shadow: 0 0 5px currentColor;
-}
-
 .small-box p {
   margin: 0 0 5px;
 }

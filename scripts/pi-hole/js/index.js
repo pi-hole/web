@@ -394,33 +394,19 @@ function updateTopLists() {
   utils.setTimer(updateTopLists, REFRESH_INTERVAL.top_lists);
 }
 
-function glowIfChanged(elem, textData) {
-  if (elem.text() !== textData) {
-    elem.addClass("glow");
-    elem.text(textData);
-  }
-}
-
 function updateSummaryData(runOnce = false) {
   $.getJSON("/api/stats/summary", function (data) {
     var intl = new Intl.NumberFormat();
-    glowIfChanged($("span#dns_queries"), intl.format(parseInt(data.queries.total, 10)));
-    glowIfChanged($("span#active_clients"), intl.format(parseInt(data.clients.active, 10)));
+    $("span#dns_queries").text(intl.format(parseInt(data.queries.total, 10)));
+    $("span#active_clients").text(intl.format(parseInt(data.clients.active, 10)));
     $("a#total_clients").attr(
       "title",
       intl.format(parseInt(data.clients.total, 10)) + " total clients"
     );
-    glowIfChanged($("span#blocked_queries"), intl.format(parseFloat(data.queries.blocked)));
+    $("span#blocked_queries").text(intl.format(parseFloat(data.queries.blocked)));
     var formattedPercentage = utils.toPercent(data.queries.percent_blocked, 1);
-    glowIfChanged($("span#percent_blocked"), formattedPercentage);
-    glowIfChanged(
-      $("span#gravity_size"),
-      intl.format(parseInt(data.gravity.domains_being_blocked, 10))
-    );
-
-    setTimeout(function () {
-      $("span.glow").removeClass("glow");
-    }, 500);
+    $("span#percent_blocked").text(formattedPercentage);
+    $("span#gravity_size").text(intl.format(parseInt(data.gravity.domains_being_blocked, 10)));
   })
     .done(function () {
       if (!runOnce) utils.setTimer(updateSummaryData, REFRESH_INTERVAL.summary);
