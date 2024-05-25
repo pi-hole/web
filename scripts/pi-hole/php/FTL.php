@@ -47,9 +47,9 @@ function connectFTL()
     return @fsockopen($address, $port, $errno, $errstr, 1.0);
 }
 
-function sendRequestFTL($requestin, $socket)
+function sendRequestFTL($request_in, $socket)
 {
-    $request = '>'.$requestin;
+    $request = '>'.$request_in;
     fwrite($socket, $request) or exit('{"error":"Could not send data to server"}');
 }
 
