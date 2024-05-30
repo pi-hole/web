@@ -98,13 +98,10 @@ $(function () {
         className: "btn-sm datatable-bt deleteSelected",
         action: function () {
           // For each ".selected" row ...
-          var ids = [];
           $("tr.selected").each(function () {
-            // ... add the row identified by "data-id".
-            ids.push(parseInt($(this).attr("data-id"), 10));
+            // ... delete the row identified by "data-id".
+            delMsg($(this).attr("data-id"));
           });
-          // Delete all selected rows at once
-          delMsg(ids);
         },
       },
     ],
@@ -169,7 +166,7 @@ function delMsg(ids) {
   utils.showAlert("info", "", "Deleting message...");
 
   $.ajax({
-    url: "/api/info/messages/" + ids,
+    url: "/api/info/messages/" + encodeURIComponent(ids),
     method: "DELETE",
   })
     .done(function (response) {

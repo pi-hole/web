@@ -115,13 +115,10 @@ $(function () {
         className: "btn-sm datatable-bt deleteSelected",
         action: function () {
           // For each ".selected" row ...
-          var ids = [];
           $("tr.selected").each(function () {
-            // ... add the row identified by "data-id".
-            ids.push(parseInt($(this).attr("data-id"), 10));
+            // ... delete the row identified by "data-id".
+            delLease($(this).attr("data-id"));
           });
-          // Delete all selected rows at once
-          delLease(ids);
         },
       },
     ],
@@ -161,17 +158,7 @@ $(function () {
 
 function deleteLease() {
   // Passes the button data-del-id attribute as IP
-  var ips = [$(this).attr("data-del-ip")];
-
-  // Check input validity
-  if (!Array.isArray(ips)) return;
-
-  // Exploit prevention: Return early for non-numeric IDs
-  for (var ip in ips) {
-    if (Object.hasOwnProperty.call(ips, ip)) {
-      delLease(ips);
-    }
-  }
+  delLease($(this).attr("data-del-ip"));
 }
 
 function delLease(ip) {
@@ -179,7 +166,7 @@ function delLease(ip) {
   utils.showAlert("info", "", "Deleting lease...");
 
   $.ajax({
-    url: "/api/dhcp/leases/" + ip,
+    url: "/api/dhcp/leases/" + encodeURIComponent(ip),
     method: "DELETE",
   })
     .done(function (response) {
