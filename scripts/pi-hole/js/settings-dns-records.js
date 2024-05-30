@@ -141,19 +141,8 @@ $(function () {
 });
 
 function deleteRecord() {
-  // Get the tags
-  var tags = [$(this).attr("data-tag")];
-  var types = [$(this).attr("data-type")];
-  // Check input validity
-  if (!Array.isArray(tags)) return;
-
-  // Exploit prevention: Return early for non-numeric IDs
-  for (var tag in tags) {
-    if (Object.hasOwnProperty.call(tags, tag)) {
-      if (types[0] === "hosts") delHosts(tags);
-      else delCNAME(tags);
-    }
-  }
+  if ($(this).attr("data-type") === "hosts") delHosts($(this).attr("data-tag"));
+  else delCNAME($(this).attr("data-tag"));
 }
 
 function delHosts(elem) {

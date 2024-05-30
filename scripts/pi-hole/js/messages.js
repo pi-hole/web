@@ -98,13 +98,10 @@ $(function () {
         className: "btn-sm datatable-bt deleteSelected",
         action: function () {
           // For each ".selected" row ...
-          var ids = [];
           $("tr.selected").each(function () {
-            // ... add the row identified by "data-id".
-            ids.push(parseInt($(this).attr("data-id"), 10));
+            // ... delete the row identified by "data-id".
+            delMsg($(this).attr("data-id"));
           });
-          // Delete all selected rows at once
-          delMsg(ids);
         },
       },
     ],
