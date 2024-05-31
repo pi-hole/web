@@ -119,6 +119,16 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                             <p class="help-block">Advertise DNS server multiple times to clients. Some devices will add their own proprietary DNS servers to the list of DNS servers, which can cause issues with Pi-hole. This option will advertise the Pi-hole DNS server multiple times to clients, which should prevent this from happening.</p>
                         </div>
                     </div>
+                    <div class="col-sm-12">
+                        <div>
+                            <input type="checkbox" id="dhcp.ignoreUnknownClients" data-key="dhcp.ignoreUnknownClients" class="DHCPgroup">&nbsp;<label for="dhcp.ignoreUnknownClients"><strong>Ignore unknown DHCP clients</strong></label>
+                            <p class="help-block">
+                                If this option is set, Pi-hole ignores all clients which are not explicitly configured through dhcp.hosts. This can be useful to prevent unauthorized clients from getting an IP address from the DHCP server.<br>
+                                It should be noted that this option is not a security feature, as clients can still assign themselves an IP address and use the network. It is merely a convenience feature to prevent unknown clients from getting a valid IP configuration assigned automatically.<br>
+                                Note that you will need to configure new clients manually in dhcp.hosts before they can use the network when this feature is enabled.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
