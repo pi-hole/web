@@ -117,7 +117,7 @@
     "chartjs-plugin-zoom": "2.0.1",
     "datatables.net-bs": "1.10.21",
     "datatables.net-buttons-bs": "1.7.1",
-    "datatables.net-select-bs": "1.3.1",
+    "datatables.net-select-bs": "2.0.3",
     "daterangepicker": "3.1.0",
     "hammerjs": "2.0.8",
     "jquery": "3.7.1",
