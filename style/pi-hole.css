@@ -1158,6 +1158,45 @@ table.dataTable tbody > tr > .selected {
   display: block;
 }
 
+/* Settings containers without modified items and with hidden boxes will display this text */
+.settings-container:not(:has(h3[data-modified="true"])):has(.box[style*="display: none;"])::before {
+  content: "No modified settings to display";
+  opacity: 0.7;
+  font-style: italic;
+}
+
+#advanced-settings-menu {
+  margin-bottom: 1.5em;
+}
+
+#advanced-settings-menu ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.5em;
+}
+#advanced-settings-menu ul:before,
+#advanced-settings-menu ul:after {
+  content: none;
+}
+
+#advanced-settings-menu ul > li {
+  margin: 0;
+  min-width: 112px;
+  flex: 1 1 auto;
+  text-align: center;
+  border: 1px solid rgba(127, 127, 127, 0.2);
+}
+
+#advanced-settings-menu ul > li a:not(:hover) {
+  color: inherit;
+  background: none;
+}
+#advanced-settings-menu ul > li a:hover {
+  color: inherit;
+  background: rgba(127, 127, 127, 0.2);
+}
+
 @media screen and (max-width: 991px) {
   .settings-container {
     --columns: 1;
