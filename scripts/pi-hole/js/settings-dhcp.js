@@ -163,7 +163,7 @@ function deleteLease() {
 
 function delLease(ip) {
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting lease...");
+  const toast = utils.showAlert("info", "", "Deleting lease...", ip, null);
 
   $.ajax({
     url: "/api/dhcp/leases/" + encodeURIComponent(ip),
@@ -172,10 +172,10 @@ function delLease(ip) {
     .done(function (response) {
       utils.enableAll();
       if (response === undefined) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted lease", "");
+        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted lease", ip, toast);
         dhcpLeaesTable.ajax.reload(null, false);
       } else {
-        utils.showAlert("error", "", "Error while deleting lease: " + ip, response.lease);
+        utils.showAlert("error", "", "Error while deleting lease: " + ip, response.lease, toast);
       }
 
       // Clear selection after deletion
@@ -184,7 +184,7 @@ function delLease(ip) {
     })
     .fail(function (jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting lease: " + ip, jqXHR.responseText);
+      utils.showAlert("error", "", "Error while deleting lease: " + ip, jqXHR.responseText, toast);
       console.log(exception); // eslint-disable-line no-console
     });
 }
