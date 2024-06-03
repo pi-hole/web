@@ -272,7 +272,7 @@ function generateRow(topic, key, value) {
   // else: we have a setting we can display
   var box =
     '<div class="box settings-box">' +
-    '<div class="box-header">' +
+    '<div class="box-header with-border">' +
     '<h3 class="box-title" data-key="' +
     key +
     '" data-modified="' +
@@ -299,40 +299,37 @@ function createDynamicConfigTabs() {
     url: "/api/config?detailed=true",
   })
     .done(function (data) {
-      // Create the content for the advanced dynamic config topics
+      // Create the tabs for the advanced dynamic config topics
       Object.keys(data.topics).forEach(function (n) {
         var topic = data.topics[n];
-        $("#advanced-content").append(
-          '<div class="col-lg-12" id="advanced-content-' +
-            topic.name +
-            '">' +
-            '<div class="box box-success">' +
-            '<div class="box-header with-border no-user-select">' +
-            '<h3 class="box-title">' +
-            topic.description +
-            " (<code>" +
-            topic.name +
-            "</code>)" +
-            "</h3>" +
-            "</div>" +
-            '<div class="box-body">' +
-            '<div class="row" id="advanced-content-' +
-            topic.name +
-            '-body">' +
-            '<div class="col-xs-12 settings-container" id="advanced-content-' +
-            topic.name +
-            '-flex"></div>' +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>"
-        );
+
+        $("#advanced-settings-tabs").append(`
+          <div id="advanced-content-${topic.name}" role="tabpanel" class="tab-pane fade">
+            <h3 class="page-header">${topic.description} (<code>${topic.name}</code>)</h3>
+            <div class="row" id="advanced-content-${topic.name}-body">
+              <div class="col-xs-12 settings-container" id="advanced-content-${topic.name}-flex"></div>
+            </div>
+          </div>
+        `);
+
+        // Dynamically create the settings menu
+        $("#advanced-settings-menu ul").append(`
+          <li role="presentation">
+            <a href="#advanced-content-${topic.name}" aria-controls="advanced-content-${topic.name}" role="pill" data-toggle="pill">${topic.description}</a>
+          </li>
+        `);
       });
+
+      // Dynamically fill the tabs with config topics
       Object.keys(data.config).forEach(function (topic) {
         var value = data.config[topic];
         generateRow(topic, topic, value, data);
       });
       $("#advanced-overlay").hide();
+
+      // Select the first tab and show the content
+      $("#advanced-settings-menu ul li:first-child").addClass("active");
+      $("#advanced-settings-tabs > div:first-child").addClass("active in");
 
       $("button[id='save']").on("click", function () {
         saveSettings();

@@ -1150,6 +1150,8 @@ table.dataTable tbody > tr > .selected {
 .settings-container > .box {
   margin: 0;
   width: calc((100% - (var(--gap) * (var(--columns) - 1))) / var(--columns));
+  border: none;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
 }
 .settings-box .control-label small {
   font-weight: normal;
