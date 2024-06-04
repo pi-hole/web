@@ -39,9 +39,12 @@ function setConfigValues(topic, key, value) {
   var escapedKey = key.replaceAll(".", "\\.");
   var envTitle = $(`[data-configkeys~='${key}']`);
 
-  if (value.flags.advanced && envTitle.find(".advanced-warning").length === 0) {
+  if (
+    envTitle.parents().parents().hasClass("settings-level-expert") &&
+    envTitle.find(".expert-warning").length === 0
+  ) {
     envTitle.append(
-      `<span class="advanced-warning">&nbsp;&nbsp;<i class="fas fa-wrench" title="Expert level setting"></i></span>`
+      `<span class="expert-warning">&nbsp;&nbsp;<i class="fas fa-wrench" title="Expert level setting"></i></span>`
     );
   }
 
