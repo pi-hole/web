@@ -15,85 +15,33 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
 ?>
 <div class="row">
     <div class="col-md-6 settings-level-basic">
-        <div class="row">
-            <div class="col-md-12 settings-level-expert">
-                <div class="box box-warning">
-                    <div class="box-header with-border">
-                        <h3 class="box-title" data-configkeys="webserver.api.excludeDomains webserver.api.excludeClients">Exclusions</h3>
-                    </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p><strong>Domains to be excluded from Top Domain Lists and Query Log</strong></p>
-                                <textarea class="form-control field-sizing-content" rows="4" id="webserver.api.excludeDomains" data-key="webserver.api.excludeDomains" placeholder="Enter regex domains, one per line" style="resize: vertical;"></textarea>
-                                <p class="help-block">Domains may be described by their domain name (like <code>^example\.com$</code>)</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>Clients to be excluded from Top Client Lists and Query Log </strong></p>
-                                <textarea class="form-control field-sizing-content" rows="4" id="webserver.api.excludeClients" data-key="webserver.api.excludeClients" placeholder="Enter regex clients, one per line" style="resize: vertical;"></textarea>
-                                <p class="help-block">Clients may be described either by their IP addresses (IPv4 and IPv6 are supported), or hostnames (like <code>^laptop\.lan$</code>).</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                            <p><strong>Important</strong>:<br>Those input fields accept regex entries only.<br>Please refer to  <a href="https://docs.pi-hole.net/regex/tutorial/" rel="noopener" target="_blank">our guide</a> how to construct valid regex entries.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 settings-level-basic">
-                <div class="box box-warning">
-                    <div class="box-header with-border">
-                        <h3 class="box-title" data-configkeys="webserver.interface.theme webserver.interface.boxed">Theme settings</h3>
-                    </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="row form-group">
-                                    <div class="col-lg-3">
-                                        <label for="webserver.interface.theme">Used theme:</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <select id="webserver.interface.theme" data-key="webserver.interface.theme" class="form-control" placeholder="">
-                                            <option disabled selected>Loading...</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div>
-                                    <input type="checkbox" id="webserver.interface.boxed" data-key="webserver.interface.boxed">
-                                    <label for="webserver.interface.boxed"><strong>Should the web interface use the boxed layout?</strong></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div><!-- TODO: Why is this commented out?
-    <div class="col-md-6">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title">Query Log</h3>
+                <h3 class="box-title" data-configkeys="webserver.interface.theme webserver.interface.boxed">Theme settings</h3>
             </div>
             <div class="box-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div>
-                            <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <? if queryLog == 'permittedonly' or queryLog == 'all' then ?>checked<? end ?>>
-                            <label for="querylog-permitted"><strong>Show permitted domain entries</strong></label>
-                            <p class="help-block"><span class="text-red">This will show all permitted domain entries in the query log.</span></p>
+                        <div class="row form-group">
+                            <div class="col-lg-3">
+                                <label for="webserver.interface.theme">Used theme:</label>
+                            </div>
+                            <div class="col-md-9">
+                                <select id="webserver.interface.theme" data-key="webserver.interface.theme" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
                         </div>
                         <div>
-                            <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <? if queryLog == 'blockedonly' or queryLog == 'all' then ?>checked<? end ?>>
-                            <label for="querylog-blocked"><strong>Show blocked domain entries</strong></label>
-                            <p class="help-block"><span class="text-red">This will show all blocked domain entries in the query log.</span></p>
+                            <input type="checkbox" id="webserver.interface.boxed" data-key="webserver.interface.boxed">
+                            <label for="webserver.interface.boxed"><strong>Should the web interface use the boxed layout?</strong></label>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>-->
+    </div>
+
     <div class="col-md-6 settings-level-expert">
         <div class="box box-warning">
             <div class="box-header with-border">
@@ -151,6 +99,61 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
+</div>
+
+<div class="row">
+        <div class="col-md-12 settings-level-expert">
+        <div class="box box-warning">
+            <div class="box-header with-border">
+                <h3 class="box-title" data-configkeys="webserver.api.excludeDomains webserver.api.excludeClients">Exclusions</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Domains to be excluded from Top Domain Lists and Query Log</strong></p>
+                        <textarea class="form-control field-sizing-content" rows="4" id="webserver.api.excludeDomains" data-key="webserver.api.excludeDomains" placeholder="Enter regex domains, one per line" style="resize: vertical;"></textarea>
+                        <p class="help-block">Domains may be described by their domain name (like <code>^example\.com$</code>)</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Clients to be excluded from Top Client Lists and Query Log </strong></p>
+                        <textarea class="form-control field-sizing-content" rows="4" id="webserver.api.excludeClients" data-key="webserver.api.excludeClients" placeholder="Enter regex clients, one per line" style="resize: vertical;"></textarea>
+                        <p class="help-block">Clients may be described either by their IP addresses (IPv4 and IPv6 are supported), or hostnames (like <code>^laptop\.lan$</code>).</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                    <p><strong>Important</strong>:<br>Those input fields accept regex entries only.<br>Please refer to  <a href="https://docs.pi-hole.net/regex/tutorial/" rel="noopener" target="_blank">our guide</a> how to construct valid regex entries.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TODO: Why is this commented out?
+    <div class="col-md-6">
+        <div class="box box-warning">
+            <div class="box-header with-border">
+                <h3 class="box-title">Query Log</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div>
+                            <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <? if queryLog == 'permittedonly' or queryLog == 'all' then ?>checked<? end ?>>
+                            <label for="querylog-permitted"><strong>Show permitted domain entries</strong></label>
+                            <p class="help-block"><span class="text-red">This will show all permitted domain entries in the query log.</span></p>
+                        </div>
+                        <div>
+                            <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <? if queryLog == 'blockedonly' or queryLog == 'all' then ?>checked<? end ?>>
+                            <label for="querylog-blocked"><strong>Show blocked domain entries</strong></label>
+                            <p class="help-block"><span class="text-red">This will show all blocked domain entries in the query log.</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
     <div class="col-md-12 settings-level-expert">
         <div class="box box-warning">
             <div class="box-header with-border">
