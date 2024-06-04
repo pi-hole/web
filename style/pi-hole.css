@@ -1197,7 +1197,20 @@ table.dataTable tbody > tr > .selected {
   background: rgba(127, 127, 127, 0.2);
 }
 
-@media screen and (max-width: 991px) {
+@media screen and (min-width: 2250px) {
+  /* show 3 columns in larger screens */
+  .settings-container {
+    --columns: 3;
+  }
+}
+@media screen and (max-width: 1150px) {
+  /* avoid narrow columns in medium screens with sidebar expanded */
+  body:not(.sidebar-collapse) .settings-container {
+    --columns: 1;
+  }
+}
+@media screen and (max-width: 940px) {
+  /* show 1 columns in smaller screens */
   .settings-container {
     --columns: 1;
   }
