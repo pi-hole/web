@@ -23,18 +23,45 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="row form-group">
-                            <div class="col-lg-3">
-                                <label for="webserver.interface.theme">Used theme:</label>
+                            <div class="col-sm-3">
+                                <label for="webserver.interface.theme">Theme:</label>
                             </div>
-                            <div class="col-md-9">
+                            <div class="col-sm-9">
                                 <select id="webserver.interface.theme" data-key="webserver.interface.theme" class="form-control" placeholder="">
                                     <option disabled selected>Loading...</option>
                                 </select>
                             </div>
                         </div>
-                        <div>
-                            <input type="checkbox" id="webserver.interface.boxed" data-key="webserver.interface.boxed">
-                            <label for="webserver.interface.boxed"><strong>Should the web interface use the boxed layout?</strong></label>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="row form-group">
+                            <div class="col-sm-12">
+                                <div>
+                                    <input type="checkbox" id="webserver.interface.boxed" data-key="webserver.interface.boxed">
+                                    <label for="webserver.interface.boxed"><strong>Use the boxed layout</strong></label>
+                                    <p class="help-block">The boxed layout is helpful when working on large screens because it prevents the site from stretching very wide.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="row form-group">
+                            <div class="col-sm-6">
+                                <label for="webserver.api.temp.limit"><strong>Temperature limit for "hot":</strong></label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" type="number" data-type="integer" id="webserver.api.temp.limit" data-key="webserver.api.temp.limit">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-6">
+                                <label for="webserver.api.temp.unit">Temperature unit:</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select id="webserver.api.temp.unit" data-key="webserver.api.temp.unit" class="form-control" placeholder="">
+                                    <option disabled selected>Loading...</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -68,26 +95,6 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                             <input type="checkbox" id="webserver.api.allow_destructive" data-key="webserver.api.allow_destructive">
                             <label for="webserver.api.allow_destructive"><strong>Permit destructive actions via API</strong></label>
                             <p class="help-block">This will allow clients to perform destructive actions via the API, such as rebooting or shutting down the system Pi-hole is running on.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="row form-group">
-                            <div class="col-sm-6">
-                                <label for="webserver.api.temp.limit"><strong>Temperature limit for "hot":</strong></label>
-                            </div>
-                            <div class="col-sm-6">
-                                <input class="form-control" type="number" data-type="integer" id="webserver.api.temp.limit" data-key="webserver.api.temp.limit">
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-sm-6">
-                                <label for="webserver.api.temp.unit">Temperature unit:</label>
-                            </div>
-                            <div class="col-sm-6">
-                                <select id="webserver.api.temp.unit" data-key="webserver.api.temp.unit" class="form-control" placeholder="">
-                                    <option disabled selected>Loading...</option>
-                                </select>
-                            </div>
                         </div>
                     </div>
                     <div class="col-lg-12 pt-3">
