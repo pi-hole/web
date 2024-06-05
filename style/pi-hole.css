@@ -1185,16 +1185,22 @@ table.dataTable tbody > tr > .selected {
   min-width: 112px;
   flex: 1 1 auto;
   text-align: center;
-  border: 1px solid rgba(127, 127, 127, 0.2);
 }
 
-#advanced-settings-menu ul > li a:not(:hover) {
-  color: inherit;
-  background: none;
+#advanced-settings-menu ul > li a {
+  border: 1px solid rgba(127, 127, 127, 0.2);
+  border-radius: 3px;
 }
-#advanced-settings-menu ul > li a:hover {
+#advanced-settings-menu ul > li:not(.active) a {
   color: inherit;
-  background: rgba(127, 127, 127, 0.2);
+}
+#advanced-settings-menu ul > li:not(.active) a:hover,
+#advanced-settings-menu ul > li:not(.active) a:focus {
+  background: rgba(127, 127, 127, 0.1);
+}
+
+#advanced-settings-tabs > .tab-pane {
+  margin-bottom: 2em;
 }
 
 @media screen and (min-width: 2250px) {
