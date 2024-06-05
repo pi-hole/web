@@ -373,28 +373,32 @@ function initOnlyChanged() {
 
 function applyOnlyChanged() {
   if (localStorage.getItem("only-changed") === "true") {
-    // Hide all boxes that have a data-key attribute
+    // Show only modified settings (hide tabs menu and empty tabs).
+
+    // Hide the tabs menu
+    $("#advanced-settings-menu").hide();
+
+    // Show all tabs, except the ones containing "data-modified='true'" attribute
+    // to prevent empty tabs (using the same classes used by Boostrap3)
+    $("#advanced-settings-tabs > .tab-pane").addClass("in active");
+    $("#advanced-settings-tabs > .tab-pane:not(:has(h3[data-modified='true']))").removeClass(
+      "in active"
+    );
+
+    // Hide all boxes with data-key attribute, except the ones with "data-modified='true'" attribute
     $(".box-title[data-key]").not("[data-modified='true']").closest(".box").hide();
   } else {
-    // Show all boxes that have a data-key attribute
+    // Show the tabs menu and activate only the first button (deactivate other buttons)
+    $("#advanced-settings-menu").show();
+    $("#advanced-settings-menu ul li").removeClass("active");
+    $("#advanced-settings-menu ul li:first-child").addClass("active");
+
+    // Hide all tabs, except the first one (removing the classes used by Boostrap3)
+    $("#advanced-settings-tabs > .tab-pane:not(:first-child)").removeClass("in active");
+
+    // Show all boxes with data-key attribute
     $(".box-title[data-key]").closest(".box").show();
   }
-
-  // Hide group headers on the all settings page after toggling to show only
-  // modified settings if there are no modified settings within that group. This
-  // prevents empty boxes when only-changed is enabled by hiding all boxes if
-  // the box does not have at least one visible box as a child
-  $(".box-title:not([data-key])").each(function () {
-    const box = $(this).closest(".box");
-    if (
-      box.find(".box-title[data-key]:visible").length === 0 &&
-      localStorage.getItem("only-changed") === "true"
-    ) {
-      box.hide();
-    } else {
-      box.show();
-    }
-  });
 }
 
 $(document).ready(function () {
