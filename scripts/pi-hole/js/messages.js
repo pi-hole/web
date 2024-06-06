@@ -154,7 +154,7 @@ function deleteMessage() {
 function delMsg(id) {
   id = parseInt(id, 10);
   utils.disableAll();
-  toasts[id] = utils.showAlert("info", "", "Deleting message...", null, null);
+  toasts[id] = utils.showAlert("info", "", "Deleting message...", "ID: " + id, null);
 
   $.ajax({
     url: "/api/info/messages/" + id,
@@ -167,7 +167,7 @@ function delMsg(id) {
           "success",
           "far fa-trash-alt",
           "Successfully deleted message",
-          "",
+          "ID: " + id,
           toasts[id]
         );
         table.row(id).remove();
