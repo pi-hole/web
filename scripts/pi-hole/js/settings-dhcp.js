@@ -7,7 +7,8 @@
 
 /* global utils:false, setConfigValues: false, apiFailure: false */
 
-var dhcpLeaesTable = null;
+var dhcpLeaesTable = null,
+  toasts = {};
 
 // DHCP leases tooltips
 $(function () {
@@ -115,13 +116,10 @@ $(function () {
         className: "btn-sm datatable-bt deleteSelected",
         action: function () {
           // For each ".selected" row ...
-          var ids = [];
           $("tr.selected").each(function () {
-            // ... add the row identified by "data-id".
-            ids.push(parseInt($(this).attr("data-id"), 10));
+            // ... delete the row identified by "data-id".
+            delLease($(this).attr("data-id"));
           });
-          // Delete all selected rows at once
-          delLease(ids);
         },
       },
     ],
@@ -161,34 +159,36 @@ $(function () {
 
 function deleteLease() {
   // Passes the button data-del-id attribute as IP
-  var ips = [$(this).attr("data-del-ip")];
-
-  // Check input validity
-  if (!Array.isArray(ips)) return;
-
-  // Exploit prevention: Return early for non-numeric IDs
-  for (var ip in ips) {
-    if (Object.hasOwnProperty.call(ips, ip)) {
-      delLease(ips);
-    }
-  }
+  delLease($(this).attr("data-del-ip"));
 }
 
 function delLease(ip) {
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting lease...");
+  toasts[ip] = utils.showAlert("info", "", "Deleting lease...", ip, null);
 
   $.ajax({
-    url: "/api/dhcp/leases/" + ip,
+    url: "/api/dhcp/leases/" + encodeURIComponent(ip),
     method: "DELETE",
   })
     .done(function (response) {
       utils.enableAll();
       if (response === undefined) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted lease", "");
+        utils.showAlert(
+          "success",
+          "far fa-trash-alt",
+          "Successfully deleted lease",
+          ip,
+          toasts[ip]
+        );
         dhcpLeaesTable.ajax.reload(null, false);
       } else {
-        utils.showAlert("error", "", "Error while deleting lease: " + ip, response.lease);
+        utils.showAlert(
+          "error",
+          "",
+          "Error while deleting lease: " + ip,
+          response.lease,
+          toasts[ip]
+        );
       }
 
       // Clear selection after deletion
@@ -197,7 +197,13 @@ function delLease(ip) {
     })
     .fail(function (jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting lease: " + ip, jqXHR.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting lease: " + ip,
+        jqXHR.responseText,
+        toasts[ip]
+      );
       console.log(exception); // eslint-disable-line no-console
     });
 }

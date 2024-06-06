@@ -6,7 +6,8 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils:false */
-var table;
+var table,
+  toasts = {};
 
 $(function () {
   var ignoreNonfatal = localStorage
@@ -98,13 +99,10 @@ $(function () {
         className: "btn-sm datatable-bt deleteSelected",
         action: function () {
           // For each ".selected" row ...
-          var ids = [];
           $("tr.selected").each(function () {
-            // ... add the row identified by "data-id".
-            ids.push(parseInt($(this).attr("data-id"), 10));
+            // ... delete the row identified by "data-id".
+            delMsg($(this).attr("data-id"));
           });
-          // Delete all selected rows at once
-          delMsg(ids);
         },
       },
     ],
@@ -150,26 +148,16 @@ $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteMessage() {
   // Passes the button data-del-id attribute as ID
-  var ids = [parseInt($(this).attr("data-del-id"), 10)];
-
-  // Check input validity
-  if (!Array.isArray(ids)) return;
-
-  // Exploit prevention: Return early for non-numeric IDs
-  for (var id in ids) {
-    if (Object.hasOwnProperty.call(ids, id)) {
-      if (typeof ids[id] !== "number") return;
-      delMsg(ids);
-    }
-  }
+  delMsg($(this).attr("data-del-id"));
 }
 
-function delMsg(ids) {
+function delMsg(id) {
+  id = parseInt(id, 10);
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting message...");
+  toasts[id] = utils.showAlert("info", "", "Deleting message...", "ID: " + id, null);
 
   $.ajax({
-    url: "/api/info/messages/" + ids,
+    url: "/api/info/messages/" + id,
     method: "DELETE",
   })
     .done(function (response) {
@@ -178,19 +166,21 @@ function delMsg(ids) {
         utils.showAlert(
           "success",
           "far fa-trash-alt",
-          "Successfully deleted " + ids.length + " message" + (ids.length > 1 ? "s" : ""),
-          ""
+          "Successfully deleted message",
+          "ID: " + id,
+          toasts[id]
         );
-        // Loop over id in case of multiple IDs
-        for (var id in ids) {
-          if (Object.hasOwnProperty.call(ids, id)) {
-            table.row(id).remove();
-          }
-        }
+        table.row(id).remove();
 
         table.draw(false).ajax.reload(null, false);
       } else {
-        utils.showAlert("error", "", "Error while deleting message: " + ids, response.message);
+        utils.showAlert(
+          "error",
+          "",
+          "Error while deleting message: " + id,
+          response.message,
+          toasts[id]
+        );
       }
 
       // Clear selection after deletion
@@ -202,7 +192,13 @@ function delMsg(ids) {
     )
     .fail(function (jqXHR, exception) {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting message: " + ids, jqXHR.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting message: " + id,
+        jqXHR.responseText,
+        toasts[id]
+      );
       console.log(exception); // eslint-disable-line no-console
     });
 }
