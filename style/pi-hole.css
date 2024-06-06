@@ -354,14 +354,15 @@ td.lookatme {
 }
 
 .user-panel > .info > p {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .user-panel > .info > span {
-  display: inline-block;
+  display: block;
   padding: 0;
-  margin: 2px 0;
+  margin: 4px 0;
   font-size: 11px;
+  line-height: 1.1;
 }
 
 .user-panel > .info i {
