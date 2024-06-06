@@ -2149,3 +2149,27 @@ td.highlight {
     right: calc((100% - 1320px) / 2 + 0.85em);
   }
 }
+
+.flex-header h1 {
+  margin-right: 0;
+}
+
+.settings-selector {
+  order: -1;
+}
+.settings-selector .toggle {
+  width: 125px !important;
+}
+
+#advanced-settings-menu ul > li a {
+  border: none;
+  border-radius: 20px;
+  color: #000;
+}
+#advanced-settings-menu ul > li:not(.active) a:hover,
+#advanced-settings-menu ul > li a:focus {
+  background: #fff;
+}
+#advanced-settings-menu ul > li:not(.active) a {
+  color: #000;
+}

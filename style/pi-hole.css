@@ -547,22 +547,6 @@ td.details-control {
   padding-right: 20px;
 }
 
-.settings-container {
-  --number-of-columns: 2;
-  display: flex;
-  flex-wrap: wrap;
-}
-.settings-container > .box {
-  margin: 10px;
-  width: calc((100% / var(--number-of-columns)) - 20px);
-}
-
-@media screen and (max-width: 991px) {
-  .settings-container {
-    --number-of-columns: 1;
-  }
-}
-
 /*** Login page ***/
 .login-page {
   padding: 15px;
@@ -898,13 +882,6 @@ body:not(.lcars) .filter_types [class*="icheck-"] > input:first-child:checked + 
   flex: 1 0 auto;
 }
 
-/* Global settings level selector container */
-.settings-selector {
-  padding: 14px 0 0;
-  order: 2;
-  font-size: 18px;
-}
-
 .navbar-nav {
   height: 50px;
 }
@@ -1161,6 +1138,95 @@ table.dataTable tbody > tr > .selected {
   .layout-boxed .save-button-container {
     right: calc((100% - 1250px) / 2 + 1.2em);
   }
+}
+
+.settings-container {
+  --columns: 2;
+  --gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+}
+.settings-container > .box {
+  margin: 0;
+  width: calc((100% - (var(--gap) * (var(--columns) - 1))) / var(--columns));
+  border: none;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+}
+.settings-box .control-label small {
+  font-weight: normal;
+  display: block;
+}
+
+/* Settings containers without modified items and with hidden boxes will display this text */
+.settings-container:not(:has(h3[data-modified="true"])):has(.box[style*="display: none;"])::before {
+  content: "No modified settings to display";
+  opacity: 0.7;
+  font-style: italic;
+}
+
+#advanced-settings-menu {
+  margin-bottom: 1.5em;
+}
+
+#advanced-settings-menu ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.5em;
+}
+#advanced-settings-menu ul:before,
+#advanced-settings-menu ul:after {
+  content: none;
+}
+
+#advanced-settings-menu ul > li {
+  margin: 0;
+  min-width: 112px;
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+#advanced-settings-menu ul > li a {
+  border: 1px solid rgba(127, 127, 127, 0.2);
+  border-radius: 3px;
+}
+#advanced-settings-menu ul > li:not(.active) a {
+  color: inherit;
+}
+#advanced-settings-menu ul > li:not(.active) a:hover,
+#advanced-settings-menu ul > li:not(.active) a:focus {
+  background: rgba(127, 127, 127, 0.1);
+}
+
+#advanced-settings-tabs > .tab-pane {
+  margin-bottom: 2em;
+}
+
+@media screen and (min-width: 2250px) {
+  /* show 3 columns in larger screens */
+  .settings-container {
+    --columns: 3;
+  }
+}
+@media screen and (max-width: 1150px) {
+  /* avoid narrow columns in medium screens with sidebar expanded */
+  body:not(.sidebar-collapse) .settings-container {
+    --columns: 1;
+  }
+}
+@media screen and (max-width: 940px) {
+  /* show 1 columns in smaller screens */
+  .settings-container {
+    --columns: 1;
+  }
+}
+
+/* Global settings level selector container */
+.settings-selector {
+  padding: 14px 0 0;
+  order: 2;
+  font-size: 18px;
 }
 
 /* Hide the checkbox used for settings level selector */
@@ -1469,6 +1535,14 @@ table.dataTable tbody > tr > .selected {
   #domain-limitbox-block {
     text-align: right;
   }
+}
+
+.box-icons {
+  margin: 0 5px;
+}
+
+.box-icons svg {
+  margin: 0 4px;
 }
 
 textarea.field-sizing-content {

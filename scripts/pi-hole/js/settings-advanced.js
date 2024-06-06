@@ -24,42 +24,24 @@ function addAllowedValues(allowed) {
   }
 }
 
-function generateRow(topic, key, value) {
-  // If the value is an object, we need to recurse
-  if (!("description" in value)) {
-    Object.keys(value).forEach(function (subkey) {
-      var subvalue = value[subkey];
-      generateRow(topic, key + "." + subkey, subvalue);
-    });
-    return;
-  }
-
-  // else: we have a setting we can display
-  var box =
-    '<div class="box">' +
-    '<div class="box-header">' +
-    '<h3 class="box-title" data-key="' +
-    key +
-    '" data-modified="' +
-    (value.modified ? "true" : "false") +
-    '">' +
-    key +
+function boxIcons(value) {
+  return (
+    '<span class="box-icons">' +
     (value.modified
-      ? '&nbsp;&nbsp;<i class="far fa-edit text-light-blue" title="Modified from default"></i>'
+      ? '<i class="far fa-edit text-light-blue" title="Modified from default"></i>'
       : "") +
     (value.flags.restart_dnsmasq
-      ? '&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>'
+      ? '<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>'
       : "") +
     (value.flags.env_var
-      ? '&nbsp;&nbsp;<i class="fas fa-lock text-orange" title="Settings overwritten by an environmental variable are read-only"></i>'
+      ? '<i class="fas fa-lock text-orange" title="Settings overwritten by an environmental variable are read-only"></i>'
       : "") +
-    "</h3>" +
-    "<p>" +
-    utils.escapeHtml(value.description).replaceAll("\n", "<br>") +
-    "</p>" +
-    "</div>" +
-    '<div class="box-body">' +
-    '<div class="form-group">';
+    "</span>"
+  );
+}
+
+function valueDetails(key, value) {
+  // Define default hint text
   let defaultValueHint = "";
   if (value.modified) {
     defaultValueHint = "";
@@ -91,18 +73,21 @@ function generateRow(topic, key, value) {
     }
   }
 
+  // Define extraAttributes, if needed
   let extraAttributes = "";
   if (value.flags.env_var) {
     extraAttributes = " disabled";
   }
 
+  // Format the output depending on the value type
+  let content = "";
   switch (value.type) {
     case "IPv4 address":
     case "IPv6 address":
     case "string": {
-      box +=
-        '<label class="col-sm-4 control-label">Value (string)</label>' +
-        '<div class="col-sm-8">' +
+      content +=
+        '<label class="col-sm-2 control-label">Value <small>(string)</small></label>' +
+        '<div class="col-sm-10">' +
         '<input type="text" class="form-control" value="' +
         value.value +
         '" data-key="' +
@@ -118,7 +103,8 @@ function generateRow(topic, key, value) {
     }
 
     case "boolean": {
-      box +=
+      content +=
+        '<div class="col-sm-12">' +
         '<div><input type="checkbox" ' +
         (value.value ? " checked" : "") +
         ' id="' +
@@ -131,16 +117,16 @@ function generateRow(topic, key, value) {
         key +
         '-checkbox">Enabled ' +
         defaultValueHint +
-        "</label>" +
+        "</label></div>" +
         " </div>";
 
       break;
     }
 
     case "double": {
-      box +=
-        '<label class="col-sm-4 control-label">Value</label>' +
-        '<div class="col-sm-8">' +
+      content +=
+        '<label class="col-sm-2 control-label">Value</label>' +
+        '<div class="col-sm-10">' +
         '<input type="number" class="form-control" value="' +
         value.value +
         '" data-key="' +
@@ -155,9 +141,9 @@ function generateRow(topic, key, value) {
     }
 
     case "integer": {
-      box +=
-        '<label class="col-sm-4 control-label">Value (integer)</label>' +
-        '<div class="col-sm-8">' +
+      content +=
+        '<label class="col-sm-2 control-label">Value <small>(integer)</small></label>' +
+        '<div class="col-sm-10">' +
         '<input type="number" step="1" class="form-control" value="' +
         value.value +
         '" data-key="' +
@@ -172,8 +158,8 @@ function generateRow(topic, key, value) {
     }
 
     case "unsigned integer": {
-      box +=
-        '<label class="col-sm-4 control-label">Value (unsigned integer)</label>' +
+      content +=
+        '<label class="col-sm-4 control-label">Value <small>(unsigned integer)</small></label>' +
         '<div class="col-sm-8">' +
         '<input type="number" step="1" min="0" class="form-control" value="' +
         value.value +
@@ -189,8 +175,8 @@ function generateRow(topic, key, value) {
     }
 
     case "unsigned integer (16 bit)": {
-      box +=
-        '<label class="col-sm-4 control-label">Value (unsigned 16bit integer)</label>' +
+      content +=
+        '<label class="col-sm-4 control-label">Value <small>(unsigned 16bit integer)</small></label>' +
         '<div class="col-sm-8">' +
         '<input type="number" step="1" min="0" max="65535" class="form-control" value="' +
         value.value +
@@ -206,9 +192,9 @@ function generateRow(topic, key, value) {
     }
 
     case "string array": {
-      box +=
-        '<label class="col-sm-5 control-label">Values (one item per line)</label>' +
-        '<div class="col-sm-7">' +
+      content +=
+        '<label class="col-sm-12 control-label">Values <small>(one item per line)</small></label>' +
+        '<div class="col-sm-12">' +
         '<textarea class="form-control field-sizing-content" data-key="' +
         key +
         '"' +
@@ -225,39 +211,32 @@ function generateRow(topic, key, value) {
 
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
-      box +=
-        '<label class="col-sm-4 control-label">Selected Option</label>' +
-        '<div class="col-sm-8">' +
-        '<select class="form-control" data-key="' +
-        key +
-        '"' +
-        extraAttributes +
-        ">";
-      value.allowed.forEach(function (option) {
-        box +=
-          '<option value="' +
-          option.item +
-          '"' +
-          (option.item === value.value ? " selected" : "") +
+      content += '<div class="col-sm-12">';
+      value.allowed.forEach(function (option, i) {
+        content +=
+          "<div>" +
+          // Radio button
+          '<input type="radio" class="form-control" ' +
+          `value="${option.item}" name="${key}" id="${key}_${i}" data-key="${key}"${extraAttributes}` +
+          (option.item === value.value ? " checked" : "") +
           ">" +
-          option.item +
-          "</option>";
+          // Label
+          `<label for="${key}_${i}"><strong>${utils.escapeHtml(option.item)}` +
+          (option.item === value.default ? " <em>(default)</em>" : "") +
+          "</strong></label>" +
+          // Paragraph with description
+          `<p class="help-block">${option.description}</p>` +
+          "</div>";
       });
-      box +=
-        "</select> " +
-        defaultValueHint +
-        "</div>" +
-        '<div class="col-sm-12">' +
-        addAllowedValues(value.allowed) +
-        "</div>";
+      content += "</div>";
 
       break;
     }
 
     case "password (write-only string)": {
-      box +=
-        '<label class="col-sm-4 control-label">Value (string)</label>' +
-        '<div class="col-sm-8">' +
+      content +=
+        '<label class="col-sm-2 control-label">Value <small>(string)</small></label>' +
+        '<div class="col-sm-10">' +
         '<input type="password" class="form-control" value="' +
         value.value +
         '" data-key="' +
@@ -273,11 +252,43 @@ function generateRow(topic, key, value) {
     }
 
     default: {
-      box += "TYPE " + value.type + " NOT DEFINED";
+      content += "TYPE " + value.type + " NOT DEFINED";
     }
   }
 
-  box += "</div></div> ";
+  return '<div class="row">' + content + "</div>";
+}
+
+function generateRow(topic, key, value) {
+  // If the value is an object, we need to recurse
+  if (!("description" in value)) {
+    Object.keys(value).forEach(function (subkey) {
+      var subvalue = value[subkey];
+      generateRow(topic, key + "." + subkey, subvalue);
+    });
+    return;
+  }
+
+  // else: we have a setting we can display
+  var box =
+    '<div class="box settings-box">' +
+    '<div class="box-header with-border">' +
+    '<h3 class="box-title" data-key="' +
+    key +
+    '" data-modified="' +
+    (value.modified ? "true" : "false") +
+    '">' +
+    key +
+    boxIcons(value) +
+    "</h3>" +
+    "</div>" +
+    '<div class="box-body">' +
+    utils.escapeHtml(value.description).replaceAll("\n", "<br>") +
+    "</div>" +
+    '<div class="box-footer">' +
+    valueDetails(key, value) +
+    "</div></div> ";
+
   var topKey = key.split(".")[0];
   var elem = $("#advanced-content-" + topKey + "-flex");
   elem.append(box);
@@ -288,40 +299,37 @@ function createDynamicConfigTabs() {
     url: "/api/config?detailed=true",
   })
     .done(function (data) {
-      // Create the content for the advanced dynamic config topics
+      // Create the tabs for the advanced dynamic config topics
       Object.keys(data.topics).forEach(function (n) {
         var topic = data.topics[n];
-        $("#advanced-content").append(
-          '<div class="col-lg-12" id="advanced-content-' +
-            topic.name +
-            '">' +
-            '<div class="box box-success">' +
-            '<div class="box-header with-border no-user-select">' +
-            '<h3 class="box-title">' +
-            topic.description +
-            " (<code>" +
-            topic.name +
-            "</code>)" +
-            "</h3>" +
-            "</div>" +
-            '<div class="box-body">' +
-            '<div class="row" id="advanced-content-' +
-            topic.name +
-            '-body">' +
-            '<div class="col-xs-12 settings-container" id="advanced-content-' +
-            topic.name +
-            '-flex"></div>' +
-            "</div>" +
-            "</div>" +
-            "</div>" +
-            "</div>"
-        );
+
+        $("#advanced-settings-tabs").append(`
+          <div id="advanced-content-${topic.name}" role="tabpanel" class="tab-pane fade">
+            <h3 class="page-header">${topic.description} (<code>${topic.name}</code>)</h3>
+            <div class="row" id="advanced-content-${topic.name}-body">
+              <div class="col-xs-12 settings-container" id="advanced-content-${topic.name}-flex"></div>
+            </div>
+          </div>
+        `);
+
+        // Dynamically create the settings menu
+        $("#advanced-settings-menu ul").append(`
+          <li role="presentation">
+            <a href="#advanced-content-${topic.name}" class="btn btn-default" aria-controls="advanced-content-${topic.name}" role="pill" data-toggle="pill">${topic.description.replace(" settings", "")}</a>
+          </li>
+        `);
       });
+
+      // Dynamically fill the tabs with config topics
       Object.keys(data.config).forEach(function (topic) {
         var value = data.config[topic];
         generateRow(topic, topic, value, data);
       });
       $("#advanced-overlay").hide();
+
+      // Select the first tab and show the content
+      $("#advanced-settings-menu ul li:first-child").addClass("active");
+      $("#advanced-settings-tabs > div:first-child").addClass("active in");
 
       $("button[id='save']").on("click", function () {
         saveSettings();
@@ -365,28 +373,32 @@ function initOnlyChanged() {
 
 function applyOnlyChanged() {
   if (localStorage.getItem("only-changed") === "true") {
-    // Hide all boxes that have a data-key attribute
+    // Show only modified settings (hide tabs menu and empty tabs).
+
+    // Hide the tabs menu
+    $("#advanced-settings-menu").hide();
+
+    // Show all tabs, except the ones containing "data-modified='true'" attribute
+    // to prevent empty tabs (using the same classes used by Boostrap3)
+    $("#advanced-settings-tabs > .tab-pane").addClass("in active");
+    $("#advanced-settings-tabs > .tab-pane:not(:has(h3[data-modified='true']))").removeClass(
+      "in active"
+    );
+
+    // Hide all boxes with data-key attribute, except the ones with "data-modified='true'" attribute
     $(".box-title[data-key]").not("[data-modified='true']").closest(".box").hide();
   } else {
-    // Show all boxes that have a data-key attribute
+    // Show the tabs menu and activate only the first button (deactivate other buttons)
+    $("#advanced-settings-menu").show();
+    $("#advanced-settings-menu ul li").removeClass("active");
+    $("#advanced-settings-menu ul li:first-child").addClass("active");
+
+    // Hide all tabs, except the first one (removing the classes used by Boostrap3)
+    $("#advanced-settings-tabs > .tab-pane:not(:first-child)").removeClass("in active");
+
+    // Show all boxes with data-key attribute
     $(".box-title[data-key]").closest(".box").show();
   }
-
-  // Hide group headers on the all settings page after toggling to show only
-  // modified settings if there are no modified settings within that group. This
-  // prevents empty boxes when only-changed is enabled by hiding all boxes if
-  // the box does not have at least one visible box as a child
-  $(".box-title:not([data-key])").each(function () {
-    const box = $(this).closest(".box");
-    if (
-      box.find(".box-title[data-key]:visible").length === 0 &&
-      localStorage.getItem("only-changed") === "true"
-    ) {
-      box.hide();
-    } else {
-      box.show();
-    }
-  });
 }
 
 $(document).ready(function () {
