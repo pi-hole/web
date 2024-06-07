@@ -379,12 +379,16 @@ function updateSensorsInfo() {
     url: "/api/info/sensors",
   })
     .done(function (data) {
-      var unit = "°" + data.sensors.unit;
-      if (data.sensors.unit === "°K") {
-        unit = data.sensors.unit;
-      }
-
+      // Check if there is temperature information available
       if (data.sensors.cpu_temp !== null) {
+        $("#temperature").show();
+
+        // Get the temperature unit
+        var unit = "°" + data.sensors.unit;
+        if (data.sensors.unit === "°K") {
+          unit = data.sensors.unit;
+        }
+
         var temp = data.sensors.cpu_temp.toFixed(1) + "&thinsp;" + unit;
         var color =
           data.sensors.cpu_temp > data.sensors.hot_limit
@@ -393,30 +397,29 @@ function updateSensorsInfo() {
         $("#temperature").html(
           '<i class="fa fa-fw fas ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp
         );
-      } else
-        $("#temperature").html(
-          '<i class="fa fa-fw fas fa-temperature-low"></i>&nbsp;Temp:&nbsp;N/A'
-        );
 
-      // Get a text listing of all sensors
-      let sensorlist = "Available sensors:\n";
-      $.each(data.sensors.list, function (index, hwmon) {
-        sensorlist += "- " + hwmon.name + " (" + hwmon.source + "):\n";
-        $.each(hwmon.temps, function (index, temp) {
-          sensorlist +=
-            "  - " +
-            temp.name +
-            ": " +
-            temp.value.toFixed(1) +
-            unit +
-            " (max: " +
-            (temp.max === null ? "N/A" : temp.max.toFixed(1) + unit) +
-            ", crit: " +
-            (temp.crit === null ? "N/A" : temp.crit.toFixed(1) + unit) +
-            ")\n";
+        // Get a text listing of all sensors
+        let sensorlist = "Available sensors:\n";
+        $.each(data.sensors.list, function (index, hwmon) {
+          sensorlist += "- " + hwmon.name + " (" + hwmon.source + "):\n";
+          $.each(hwmon.temps, function (index, temp) {
+            sensorlist +=
+              "  - " +
+              temp.name +
+              ": " +
+              temp.value.toFixed(1) +
+              unit +
+              " (max: " +
+              (temp.max === null ? "N/A" : temp.max.toFixed(1) + unit) +
+              ", crit: " +
+              (temp.crit === null ? "N/A" : temp.crit.toFixed(1) + unit) +
+              ")\n";
+          });
         });
-      });
-      $("#temperature").prop("title", sensorlist);
+        $("#temperature").prop("title", sensorlist);
+      } else {
+        $("#temperature").hide();
+      }
 
       // Update every 20 seconds
       clearTimeout(sensorsTimer);
