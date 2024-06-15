@@ -266,6 +266,8 @@ function processWebServerConfig() {
   })
     .done(function (data) {
       setConfigValues("webserver", "webserver", data.config.webserver);
+      if (data.config.webserver.api.app_pwhash.value.length > 0)
+        $("#existing_apppw_warning").show();
     })
     .fail(function (data) {
       apiFailure(data);
