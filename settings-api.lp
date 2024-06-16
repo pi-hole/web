@@ -260,7 +260,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                 <p>IMPORTANT: The app password generated here will only be shown
                 once and cannot be recovered. Make sure to store it in a safe
                 place!</p>
-                <div class="danger-area" style="display: none;" id="existing_apppw_warning">
+                <div class="callout callout-warning" style="display: none;" id="existing_apppw_warning">
                     <h4>Application password already configured</h4>Enabling the new app password will forcefully log out all existing applications.
                 </div>
             </div>
