@@ -266,8 +266,12 @@ function processWebServerConfig() {
   })
     .done(function (data) {
       setConfigValues("webserver", "webserver", data.config.webserver);
-      if (data.config.webserver.api.app_pwhash.value.length > 0)
+      if (data.config.webserver.api.app_pwhash.value.length > 0) {
         $("#existing_apppw_warning").show();
+        $("#apppw_submit").text("Replace app password");
+        $("#apppw_submit").removeClass("btn-success");
+        $("#apppw_submit").addClass("btn-warning");
+      }
     })
     .fail(function (data) {
       apiFailure(data);
