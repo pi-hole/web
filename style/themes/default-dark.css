@@ -25,6 +25,9 @@ body {
 h4 {
   color: #44def1;
 }
+.callout h4 {
+  color: inherit;
+}
 .content-header > .breadcrumb > li > a {
   color: #bec5cb;
 }
