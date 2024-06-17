@@ -265,8 +265,8 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="apppw_clear" class="btn btn-default btn-danger pull-left">Remove currently set app password</button>
-                <button type="button" id="apppw_submit" class="btn btn-default btn-success">Enable new app password</button>
+                <button type="button" id="apppw_clear" class="btn btn-danger pull-left">Remove currently set app password</button>
+                <button type="button" id="apppw_submit" class="btn btn-success">Enable new app password</button>
             </div>
         </div>
     </div>
