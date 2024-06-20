@@ -177,6 +177,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                     <th title="Session is still valid (neither expired nor closed)">Valid</th>
                                     <th title="Connection between client and Pi-hole is end-to-end encrypted">TLS</th>
                                     <th title="Session used application password during authentication"><i class="fas fa-robot"></i></th>
+                                    <th title="Session used CLI password during authentication"><i class="fas fa-terminal"></i></th>
                                     <th title="Time at which the client created the session">Login at</th>
                                     <th title="Time at which the session expires (if not prolonged)">Valid until</th>
                                     <th title="The client that created this session (the current connection is highlighted in bold-face)">Client IP</th>

@@ -41,6 +41,7 @@ $(function () {
       { data: "valid", render: renderBool },
       { data: null },
       { data: "app", render: renderBool },
+      { data: "cli", render: renderBool },
       { data: "login_at", render: utils.renderTimestamp },
       { data: "valid_until", render: utils.renderTimestamp },
       { data: "remote_addr", type: "ip-address" },
@@ -85,7 +86,7 @@ $(function () {
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
-      $("td:eq(9)", row).html(button);
+      $("td:eq(10)", row).html(button);
       if (data.current_session) {
         ownSessionID = data.id;
         $(row).addClass("text-bold allowed-row");
