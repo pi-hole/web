@@ -273,7 +273,7 @@ function processWebServerConfig() {
         $("#apppw_submit").text("Replace app password");
         $("#apppw_submit").removeClass("btn-success");
         $("#apppw_submit").addClass("btn-warning");
-      }
+      } else $("#apppw_clear").hide();
     })
     .fail(function (data) {
       apiFailure(data);
