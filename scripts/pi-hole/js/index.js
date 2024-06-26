@@ -394,10 +394,16 @@ function updateTopLists() {
   utils.setTimer(updateTopLists, REFRESH_INTERVAL.top_lists);
 }
 
+var previousCount = 0;
 function updateSummaryData(runOnce = false) {
   $.getJSON("/api/stats/summary", function (data) {
     var intl = new Intl.NumberFormat();
-    $("span#dns_queries").text(intl.format(parseInt(data.queries.total, 10)));
+    const newCount = parseInt(data.queries.total, 10);
+    if (previousCount === 0) {
+      previousCount = newCount;
+    }
+
+    $("span#dns_queries").text(intl.format(newCount));
     $("span#active_clients").text(intl.format(parseInt(data.clients.active, 10)));
     $("a#total_clients").attr(
       "title",
@@ -407,6 +413,15 @@ function updateSummaryData(runOnce = false) {
     var formattedPercentage = utils.toPercent(data.queries.percent_blocked, 1);
     $("span#percent_blocked").text(formattedPercentage);
     $("span#gravity_size").text(intl.format(parseInt(data.gravity.domains_being_blocked, 10)));
+
+    if (2 * previousCount < newCount && newCount > 100) {
+      // Update the charts if the number of queries has increased significantly
+      updateQueriesOverTime();
+      updateClientsOverTime();
+      updateQueryTypesPie();
+      updateForwardDestinationsPie();
+      updateTopLists();
+    }
   })
     .done(function () {
       if (!runOnce) utils.setTimer(updateSummaryData, REFRESH_INTERVAL.summary);
