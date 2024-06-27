@@ -25,6 +25,9 @@ body {
 h4 {
   color: #44def1;
 }
+.callout h4 {
+  color: inherit;
+}
 .content-header > .breadcrumb > li > a {
   color: #bec5cb;
 }
@@ -627,7 +630,12 @@ input[type="password"]::-webkit-caps-lock-indicator {
 }
 
 .close {
-  color: #383838;
+  color: #fff;
+  text-shadow: 0 1px 0 #000;
+}
+.close:focus,
+.close:hover {
+  color: #fff;
 }
 
 .login-page {

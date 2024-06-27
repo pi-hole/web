@@ -64,6 +64,9 @@ a:active {
 h4 {
   color: #44def1;
 }
+.callout h4 {
+  color: inherit;
+}
 
 .page-header {
   border-color: #202830;
@@ -820,7 +823,14 @@ input[type="password"]::-webkit-caps-lock-indicator {
 }
 
 .close {
-  color: #383838;
+  color: #fff;
+  text-shadow: 0 1px 0 #000;
+  opacity: 0.4;
+}
+.close:focus,
+.close:hover {
+  color: #fff;
+  opacity: 0.8;
 }
 
 .login-page {

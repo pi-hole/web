@@ -11,6 +11,7 @@ var apiSessionsTable = null;
 var ownSessionID = null;
 var deleted = 0;
 var TOTPdata = null;
+var apppwSet = false;
 
 function renderBool(data, type) {
   // Display and search content
@@ -266,6 +267,13 @@ function processWebServerConfig() {
   })
     .done(function (data) {
       setConfigValues("webserver", "webserver", data.config.webserver);
+      if (data.config.webserver.api.app_pwhash.value.length > 0) {
+        apppwSet = true;
+        $("#existing_apppw_warning").show();
+        $("#apppw_submit").text("Replace app password");
+        $("#apppw_submit").removeClass("btn-success");
+        $("#apppw_submit").addClass("btn-warning");
+      } else $("#apppw_clear").hide();
     })
     .fail(function (data) {
       apiFailure(data);
@@ -327,7 +335,25 @@ $("#modal-apppw").on("shown.bs.modal", function () {
 
 $("#apppw_submit").on("click", function () {
   // Enable app password
-  setAppPassword();
+  if (!apppwSet) {
+    return setAppPassword();
+  }
+
+  // Else: Show confirm dialog
+  $.confirm({
+    text: "Are you sure you want to replace your previous app password? You will need to re-login to continue using the web interface.",
+    title: "Confirmation required",
+    confirm: setAppPassword,
+    cancel: function () {
+      // nothing to do
+    },
+    confirmButton: "Yes, replace password",
+    cancelButton: "No, go back",
+    post: true,
+    confirmButtonClass: "btn-danger",
+    cancelButtonClass: "btn-success",
+    dialogClass: "modal-dialog",
+  });
 });
 
 $("#apppw_clear").on("click", function () {
