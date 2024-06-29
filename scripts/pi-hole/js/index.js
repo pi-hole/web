@@ -399,9 +399,6 @@ function updateSummaryData(runOnce = false) {
   $.getJSON("/api/stats/summary", function (data) {
     var intl = new Intl.NumberFormat();
     const newCount = parseInt(data.queries.total, 10);
-    if (previousCount === 0) {
-      previousCount = newCount;
-    }
 
     $("span#dns_queries").text(intl.format(newCount));
     $("span#active_clients").text(intl.format(parseInt(data.clients.active, 10)));
@@ -422,6 +419,8 @@ function updateSummaryData(runOnce = false) {
       updateForwardDestinationsPie();
       updateTopLists();
     }
+
+    previousCount = newCount;
   })
     .done(function () {
       if (!runOnce) utils.setTimer(updateSummaryData, REFRESH_INTERVAL.summary);
