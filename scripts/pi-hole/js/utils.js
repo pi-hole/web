@@ -467,8 +467,8 @@ function doLogout() {
   $.ajax({
     url: "/api/auth",
     method: "DELETE",
-  }).always(function (data) {
-    if (data.status === 410) location.reload();
+  }).success(function () {
+    location.reload();
   });
 }
 
