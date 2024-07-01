@@ -395,6 +395,7 @@ function updateTopLists() {
 }
 
 var previousCount = 0;
+var firstSummaryUpdate = true;
 function updateSummaryData(runOnce = false) {
   $.getJSON("/api/stats/summary", function (data) {
     var intl = new Intl.NumberFormat();
@@ -411,8 +412,11 @@ function updateSummaryData(runOnce = false) {
     $("span#percent_blocked").text(formattedPercentage);
     $("span#gravity_size").text(intl.format(parseInt(data.gravity.domains_being_blocked, 10)));
 
-    if (2 * previousCount < newCount && newCount > 100) {
+    if (2 * previousCount < newCount && newCount > 100 && !firstSummaryUpdate) {
       // Update the charts if the number of queries has increased significantly
+      // Do not run this on the first update as reloading the same data after
+      // creating the charts happens asynchronously and can cause a race
+      // condition
       updateQueriesOverTime();
       updateClientsOverTime();
       updateQueryTypesPie();
@@ -421,6 +425,7 @@ function updateSummaryData(runOnce = false) {
     }
 
     previousCount = newCount;
+    firstSummaryUpdate = false;
   })
     .done(function () {
       if (!runOnce) utils.setTimer(updateSummaryData, REFRESH_INTERVAL.summary);
