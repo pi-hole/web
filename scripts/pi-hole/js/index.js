@@ -295,6 +295,8 @@ function updateTopClientsTable(blocked) {
     // Add note if there are no results (e.g. privacy mode enabled)
     if (jQuery.isEmptyObject(data.clients)) {
       clienttable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
+      overlay.hide();
+      return;
     }
 
     // Populate table with content
@@ -352,6 +354,8 @@ function updateTopDomainsTable(blocked) {
     // Add note if there are no results (e.g. privacy mode enabled)
     if (jQuery.isEmptyObject(data.domains)) {
       domaintable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
+      overlay.hide();
+      return;
     }
 
     // Populate table with content
