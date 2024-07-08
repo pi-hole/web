@@ -292,10 +292,11 @@ function updateTopClientsTable(blocked) {
     let url, percentage;
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
-    // Add note if there are no results (e.g. privacy mode enabled)
+    // Remove graph if there are no results (e.g. new
+    // installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.clients)) {
-      clienttable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
-      overlay.hide();
+      $("#client-frequency-blocked").remove();
+      $("#client-frequency").remove();      
       return;
     }
 
@@ -351,10 +352,11 @@ function updateTopDomainsTable(blocked) {
     let url, domain, percentage, urlText;
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
-    // Add note if there are no results (e.g. privacy mode enabled)
+    // Remove graph if there are no results (e.g. new
+    // installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.domains)) {
-      domaintable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
-      overlay.hide();
+      $("#ad-frequency").remove();
+      $("#domain-frequency").remove();
       return;
     }
 
