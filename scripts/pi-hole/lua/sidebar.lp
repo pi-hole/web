@@ -233,6 +233,12 @@
                                 <i class="fa fa-fw menu-icon fa-search"></i> <span>Search Lists</span>
                             </a>
                         </li>
+                        <!-- Interfaces -->
+                        <li class="<? if scriptname == 'interfaces' then ?> active<? end ?>">
+                            <a href="<?=webhome?>interfaces">
+                                <i class="fa fa-fw menu-icon fa-wifi"></i> <span>Interfaces</span>
+                            </a>
+                        </li>
                         <!-- Network -->
                         <li class="<? if scriptname == 'network' then ?> active<? end ?>">
                             <a href="<?=webhome?>network">

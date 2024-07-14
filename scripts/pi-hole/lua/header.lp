@@ -92,6 +92,7 @@ is_authenticated = mg.request_info.is_authenticated
     <!-- Common styles -->
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap/css/bootstrap.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/animate.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bstreeview.min.css')?>">
 <?
 if startsWith(scriptname, 'groups') then
     -- Group management styles
