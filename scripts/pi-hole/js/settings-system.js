@@ -362,4 +362,23 @@ $(function () {
       },
     },
   });
+
+  $.ajax({
+    url: "/api/network/gateway",
+  })
+    .done(function (data) {
+      const gateway = data.gateway;
+      // Get first object in gateway that has family == "inet"
+      const inet = gateway.find(obj => obj.family === "inet");
+      // Get first object in gateway that has family == "inet6"
+      const inet6 = gateway.find(obj => obj.family === "inet6");
+
+      $("#sysinfo-gw-v4-addr").text(inet ? inet.local.join('\n') : "N/A");
+      $("#sysinfo-gw-v4-iface").text(inet ? inet.interface : "N/A");
+      $("#sysinfo-gw-v6-addr").text(inet6 ? inet6.local.join('\n') : "N/A");
+      $("#sysinfo-gw-v6-iface").text(inet6 ? inet6.interface : "N/A");
+    })
+    .fail(function (data) {
+      apiFailure(data);
+    });
 });
