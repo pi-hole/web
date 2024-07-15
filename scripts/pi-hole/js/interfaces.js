@@ -55,7 +55,7 @@ $(function () {
 
       if (interface.type !== undefined) {
         obj.nodes.push({
-          text: "Type: <code>" + utils.escapeHtml(interface.type) + "</code>",
+          text: "Type: " + utils.escapeHtml(interface.type),
           icon: "fa fa-network-wired fa-fw",
         });
       }
@@ -96,6 +96,19 @@ $(function () {
             extraaddr += " / <code>" + addr.prefixlen + "</code>";
           }
 
+          if (addr.address_type !== undefined) {
+            let familyextra = "";
+            if (addr.family !== undefined) {
+              if (addr.family === "inet") {
+                familyextra = "IPv4 ";
+              } else if (addr.family === "inet6") {
+                familyextra = "IPv6 ";
+              }
+            }
+
+            extraaddr += " (" + familyextra + utils.escapeHtml(addr.address_type) + ")";
+          }
+
           let family = "";
           if (addr.family !== undefined) {
             family = addr.family + "</code> <code>";
@@ -123,7 +136,7 @@ $(function () {
 
           if (addr.scope !== undefined) {
             jaddr.nodes.push({
-              text: "Scope: <code>" + utils.escapeHtml(addr.scope) + "</code>",
+              text: "Scope: " + utils.escapeHtml(addr.scope),
               icon: "fa fa-map-marker-alt fa-fw",
             });
           }
@@ -348,6 +361,13 @@ $(function () {
         });
       }
 
+      if (interface.qdisc !== undefined) {
+        furtherDetails.nodes.push({
+          text: "Scheduler: " + utils.escapeHtml(interface.qdisc),
+          icon: "fa fa-network-wired fa-fw",
+        });
+      }
+
       if (furtherDetails.nodes.length > 0) {
         obj.nodes.push(furtherDetails);
       }
@@ -365,9 +385,9 @@ $(function () {
 
     // Expand gateway interfaces by default
     for (const gw of gateways) {
-      let div = $("#tree").find("div:contains('" + gw + "')");
+      const div = $("#tree").find("div:contains('" + gw + "')");
       div.removeClass("collapsed");
-      div.next("div").collapse('show');
+      div.next("div").collapse("show");
       // Change expand icon to collapse icon
       div.find("i:first").removeClass("fa-angle-right").addClass("fa-angle-down");
     }
