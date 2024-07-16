@@ -82,7 +82,7 @@ if (isset($_GET['enable']) && $auth) {
     $data = array_merge($data, $current);
     $data = array_merge($data, $latest);
     $data = array_merge($data, $branches);
-} elseif (isset($_GET['setTempUnit'])) {
+} elseif (isset($_GET['setTempUnit']) && $auth) {
     $unit = strtolower($_GET['setTempUnit']);
     if ($unit == 'c' || $unit == 'f' || $unit == 'k') {
         pihole_execute('-a -'.$unit);
