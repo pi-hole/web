@@ -18,7 +18,15 @@ $(function () {
     const inet = gateway.find(obj => obj.family === "inet");
     // Get first object in gateway that has family == "inet6"
     const inet6 = gateway.find(obj => obj.family === "inet6");
-    const gateways = new Set([inet.interface, inet6.interface]);
+    // Create a set of the gateways when they are found
+    const gateways = new Set();
+    if (inet !== undefined) {
+      gateways.add(inet.gateway);
+    }
+
+    if (inet6 !== undefined) {
+      gateways.add(inet6.gateway);
+    }
 
     var json = [];
 
