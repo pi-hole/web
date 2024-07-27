@@ -714,6 +714,7 @@ function addAdvancedInfo() {
   const advancedInfoTarget = $("#advanced-info");
   const isTLS = advancedInfoSource.data("tls");
   const clientIP = advancedInfoSource.data("client-ip");
+  const XForwardedFor = atob(advancedInfoSource.data("xff"));
   const starttime = parseFloat(advancedInfoSource.data("starttime"));
   const endtime = parseFloat(advancedInfoSource.data("endtime"));
   const totaltime = 1e3 * (endtime - starttime);
@@ -727,10 +728,17 @@ function addAdvancedInfo() {
       (isTLS ? "" : "-open") +
       '" title="Your connection is ' +
       (isTLS ? "" : "NOT ") +
-      'end-to-end encrypted (TLS/SSL)"></i>&nbsp;' +
-      clientIP +
-      "<br>"
+      'end-to-end encrypted (TLS/SSL)"></i>&nbsp;<span id="client-id"></span><br>'
   );
+
+  // Add client IP info
+  $("#client-id").text(XForwardedFor ? XForwardedFor : clientIP);
+  if (XForwardedFor) {
+    // If X-Forwarded-For is set, show the X-Forwarded-For in italics and add
+    // the real client IP as tooltip
+    $("#client-id").css("font-style", "italic");
+    $("#client-id").prop("title", "Original remote address: " + clientIP);
+  }
 
   // Add render time info
   advancedInfoTarget.append(
