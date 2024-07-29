@@ -9,10 +9,9 @@
 
 -- Iterate over the array mg.request_info.http_headers and check if there is an 'X-Forwarded-For' header
 x_forwarded_for = ""
-local headers = mg.request_info.http_headers
-for k,v in pairs(headers) do
+for k,v in pairs(mg.request_info.http_headers) do
     if k:lower() == "x-forwarded-for" then
-        x_forwarded_for = v
+        x_forwarded_for = mg.base64_encode(v)
         break
     end
 end
@@ -69,6 +68,6 @@ end
 <!-- ./wrapper -->
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/footer.js')?>"></script>
 
-<div id="advanced-info-data" style="display: none;" data-starttime="<?=starttime?>" data-endtime="<?=mg.time(true)?>" data-client-ip="<?=mg.request_info.remote_addr?>" data-tls="<?=tostring(is_secure)?>" data-xff="<?=mg.base64_encode(x_forwarded_for)?>"></div>
+<div id="advanced-info-data" style="display: none;" data-starttime="<?=starttime?>" data-endtime="<?=mg.time(true)?>" data-client-ip="<?=mg.request_info.remote_addr?>" data-tls="<?=tostring(is_secure)?>" data-xff="<?=x_forwarded_for?>"></div>
 </body>
 </html>
