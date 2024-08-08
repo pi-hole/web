@@ -136,15 +136,20 @@ $(function () {
       // Set number of queries to localized string (add thousand separators)
       $("td:eq(5)", row).html(data.numQueries.toLocaleString());
 
-      var ips = [];
+      var ips = [],
+        iptxt = [];
       maxiter = Math.min(data.ips.length, MAXIPDISPLAY);
       for (index = 0; index < maxiter; index++) {
         var ip = data.ips[index];
-        if (ip.name !== null && ip.name.length > 0)
+        if (ip.name !== null && ip.name.length > 0) {
+          iptxt.push(ip.ip + " (" + ip.name + ")");
           ips.push(
             '<a href="queries.lp?client_ip=' + ip.ip + '">' + ip.ip + " (" + ip.name + ")</a>"
           );
-        else ips.push('<a href="queries.lp?client_ip=' + ip.ip + '">' + ip.ip + "</a>");
+        } else {
+          iptxt.push(ip.ip);
+          ips.push('<a href="queries.lp?client_ip=' + ip.ip + '">' + ip.ip + "</a>");
+        }
       }
 
       if (data.ips.length > MAXIPDISPLAY) {
@@ -154,9 +159,7 @@ $(function () {
       }
 
       $("td:eq(0)", row).html(ips.join("<br>"));
-      $("td:eq(0)", row).on("hover", function () {
-        this.title = data.ips.join("\n");
-      });
+      $("td:eq(0)", row).attr("title", iptxt.join("\n"));
 
       // MAC + Vendor field if available
       if (data.macVendor && data.macVendor.length > 0) {
