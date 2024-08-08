@@ -173,9 +173,7 @@ $(function () {
         }
 
         $("td:eq(3)", row).html(names.join("<br>"));
-        $("td:eq(3)", row).on("hover", function () {
-          this.title = allnames.join("\n");
-        });
+        $("td:eq(3)", row).attr("title", allnames.join("\n"));
       }
 
       // Set number of queries to localized string (add thousand separators)
@@ -196,9 +194,7 @@ $(function () {
       }
 
       $("td:eq(0)", row).html(ips.join("<br>"));
-      $("td:eq(0)", row).on("hover", function () {
-        this.title = data.ip.join("\n");
-      });
+      $("td:eq(0)", row).attr("title", data.ip.join("\n"));
 
       // MAC + Vendor field if available
       if (data.macVendor && data.macVendor.length > 0) {
