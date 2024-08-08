@@ -156,10 +156,12 @@ $(function () {
         // We hit the maximum above, add "..." to symbolize we would
         // have more to show here
         ips.push("...");
+        // Show the IPs on the title when there are more than MAXIPDISPLAY items
+        $("td:eq(0)", row).attr("title", iptxt.join("\n"));
       }
 
+      // Show the IPs in the first column
       $("td:eq(0)", row).html(ips.join("<br>"));
-      $("td:eq(0)", row).attr("title", iptxt.join("\n"));
 
       // MAC + Vendor field if available
       if (data.macVendor && data.macVendor.length > 0) {
