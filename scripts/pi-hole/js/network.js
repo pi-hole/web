@@ -95,7 +95,6 @@ $(function () {
     rowCallback: function (row, data) {
       var color;
       var index;
-      var maxiter;
       var iconClasses;
       var lastQuery = parseInt(data.lastQuery, 10);
       var diff = getTimestamp() - lastQuery;
@@ -137,18 +136,21 @@ $(function () {
       $("td:eq(5)", row).html(data.numQueries.toLocaleString());
 
       var ips = [],
-        iptxt = [];
-      maxiter = Math.min(data.ips.length, MAXIPDISPLAY);
-      for (index = 0; index < maxiter; index++) {
-        var ip = data.ips[index];
+        iptitles = [];
+
+      for (index = 0; index < data.ips.length; index++) {
+        var ip = data.ips[index],
+          iptext = ip.ip;
+
         if (ip.name !== null && ip.name.length > 0) {
-          iptxt.push(ip.ip + " (" + ip.name + ")");
-          ips.push(
-            '<a href="queries.lp?client_ip=' + ip.ip + '">' + ip.ip + " (" + ip.name + ")</a>"
-          );
-        } else {
-          iptxt.push(ip.ip);
-          ips.push('<a href="queries.lp?client_ip=' + ip.ip + '">' + ip.ip + "</a>");
+          iptext = iptext + " (" + ip.name + ")";
+        }
+
+        iptitles.push(iptext);
+
+        // Only add IPs to the table if we have not reached the maximum
+        if (index < MAXIPDISPLAY) {
+          ips.push('<a href="queries.lp?client_ip=' + ip.ip + '">' + iptext + "</a>");
         }
       }
 
@@ -157,7 +159,7 @@ $(function () {
         // have more to show here
         ips.push("...");
         // Show the IPs on the title when there are more than MAXIPDISPLAY items
-        $("td:eq(0)", row).attr("title", iptxt.join("\n"));
+        $("td:eq(0)", row).attr("title", iptitles.join("\n"));
       }
 
       // Show the IPs in the first column
