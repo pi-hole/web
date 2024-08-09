@@ -95,7 +95,6 @@ $(function () {
     rowCallback: function (row, data) {
       var color;
       var index;
-      var maxiter;
       var iconClasses;
       var lastQuery = parseInt(data.lastQuery, 10);
       var diff = getTimestamp() - lastQuery;
@@ -136,27 +135,35 @@ $(function () {
       // Set number of queries to localized string (add thousand separators)
       $("td:eq(5)", row).html(data.numQueries.toLocaleString());
 
-      var ips = [];
-      maxiter = Math.min(data.ips.length, MAXIPDISPLAY);
-      for (index = 0; index < maxiter; index++) {
-        var ip = data.ips[index];
-        if (ip.name !== null && ip.name.length > 0)
-          ips.push(
-            '<a href="queries.lp?client_ip=' + ip.ip + '">' + ip.ip + " (" + ip.name + ")</a>"
-          );
-        else ips.push('<a href="queries.lp?client_ip=' + ip.ip + '">' + ip.ip + "</a>");
+      var ips = [],
+        iptitles = [];
+
+      for (index = 0; index < data.ips.length; index++) {
+        var ip = data.ips[index],
+          iptext = ip.ip;
+
+        if (ip.name !== null && ip.name.length > 0) {
+          iptext = iptext + " (" + ip.name + ")";
+        }
+
+        iptitles.push(iptext);
+
+        // Only add IPs to the table if we have not reached the maximum
+        if (index < MAXIPDISPLAY) {
+          ips.push('<a href="queries.lp?client_ip=' + ip.ip + '">' + iptext + "</a>");
+        }
       }
 
       if (data.ips.length > MAXIPDISPLAY) {
         // We hit the maximum above, add "..." to symbolize we would
         // have more to show here
         ips.push("...");
+        // Show the IPs on the title when there are more than MAXIPDISPLAY items
+        $("td:eq(0)", row).attr("title", iptitles.join("\n"));
       }
 
+      // Show the IPs in the first column
       $("td:eq(0)", row).html(ips.join("<br>"));
-      $("td:eq(0)", row).on("hover", function () {
-        this.title = data.ips.join("\n");
-      });
 
       // MAC + Vendor field if available
       if (data.macVendor && data.macVendor.length > 0) {
