@@ -155,12 +155,6 @@ $(function () {
           names.push('<a href="queries.php?client=' + name + '">' + name + "</a>");
         }
 
-        if (data.name.length > MAXIPDISPLAY) {
-          // We hit the maximum above, add "..." to symbolize we would
-          // have more to show here
-          names.push("...");
-        }
-
         maxiter = Math.min(data.ip.length, data.name.length);
         var allnames = [];
         for (index = 0; index < maxiter; index++) {
@@ -172,10 +166,16 @@ $(function () {
           }
         }
 
+        if (data.name.length > MAXIPDISPLAY) {
+          // We hit the maximum above, add "..." to symbolize we would
+          // have more to show here
+          names.push("...");
+          // Show the names on the title when there are more than MAXIPDISPLAY items
+          $("td:eq(3)", row).attr("title", allnames.join("\n"));
+        }
+
+        // Show the names in the first column
         $("td:eq(3)", row).html(names.join("<br>"));
-        $("td:eq(3)", row).on("hover", function () {
-          this.title = allnames.join("\n");
-        });
       }
 
       // Set number of queries to localized string (add thousand separators)
@@ -193,12 +193,12 @@ $(function () {
         // We hit the maximum above, add "..." to symbolize we would
         // have more to show here
         ips.push("...");
+        // Show the IPs on the title when there are more than MAXIPDISPLAY items
+        $("td:eq(0)", row).attr("title", data.ip.join("\n"));
       }
 
+      // Show the IPs in the first column
       $("td:eq(0)", row).html(ips.join("<br>"));
-      $("td:eq(0)", row).on("hover", function () {
-        this.title = data.ip.join("\n");
-      });
 
       // MAC + Vendor field if available
       if (data.macVendor && data.macVendor.length > 0) {
