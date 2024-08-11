@@ -50,7 +50,7 @@ function piholeChanged(blocking, timer = null) {
 
   switch (blocking) {
     case "enabled": {
-      status.html("<i class='fa fa-circle fa-fw text-green-light'></i>&nbsp;Active");
+      status.html("<i class='fa fa-circle fa-fw text-green-light'></i>&nbsp;&nbsp;Active");
       ena.hide();
       dis.show();
       dis.removeClass("active");
@@ -59,7 +59,7 @@ function piholeChanged(blocking, timer = null) {
     }
 
     case "disabled": {
-      status.html("<i class='fa fa-circle fa-fw text-red'></i>&nbsp;Blocking disabled");
+      status.html("<i class='fa fa-circle fa-fw text-red'></i>&nbsp;&nbsp;Blocking disabled");
       ena.show();
       dis.hide();
 
@@ -68,7 +68,7 @@ function piholeChanged(blocking, timer = null) {
 
     case "failure": {
       status.html(
-        "<i class='fa-solid fa-triangle-exclamation fa-fw text-red'></i>&nbsp;<span class='text-red'>DNS server failure</span>"
+        "<i class='fa-solid fa-triangle-exclamation fa-fw text-red'></i>&nbsp;&nbsp;<span class='text-red'>DNS server failure</span>"
       );
       ena.hide();
       dis.hide();
@@ -77,7 +77,7 @@ function piholeChanged(blocking, timer = null) {
     }
 
     default: {
-      status.html("<i class='fa fa-circle fa-fw text-red'></i>&nbsp;Status unknown");
+      status.html("<i class='fa fa-circle fa-fw text-red'></i>&nbsp;&nbsp;Status unknown");
       ena.hide();
       dis.hide();
     }
@@ -391,11 +391,11 @@ function updateSensorsInfo() {
             ? "text-red fa-temperature-high"
             : "text-green-light fa-temperature-low";
         $("#temperature").html(
-          '<i class="fa fa-fw fas ' + color + '"></i>&nbsp;Temp:&nbsp;' + temp
+          '<i class="fa fa-fw fas ' + color + '"></i>&nbsp;&nbsp;Temp:&nbsp;' + temp
         );
       } else
         $("#temperature").html(
-          '<i class="fa fa-fw fas fa-temperature-low"></i>&nbsp;Temp:&nbsp;N/A'
+          '<i class="fa fa-fw fas fa-temperature-low"></i>&nbsp;&nbsp;Temp:&nbsp;N/A'
         );
 
       // Get a text listing of all sensors
