@@ -70,9 +70,18 @@ const htmlLegendPlugin = {
       boxSpan.style.color = item.fillStyle;
       boxSpan.style.display = "inline-block";
       boxSpan.style.margin = "0 10px";
-      boxSpan.innerHTML = item.hidden
-        ? '<i class="colorBoxWrapper fa fa-square"></i>'
-        : '<i class="colorBoxWrapper fa fa-check-square"></i>';
+
+      // Using replaceChildren() instead of appendChild() to avoid cases where the same node might
+      // be accidentally appended over and over to the parent node.
+      if (item.hidden) {
+        const i = document.createElement("i");
+        i.classList.add("colorBoxWrapper", "fa", "fa-square");
+        boxSpan.replaceChildren(i);
+      } else {
+        const i = document.createElement("i");
+        i.classList.add("colorBoxWrapper", "fa", "fa-check-square");
+        boxSpan.replaceChildren(i);
+      }
 
       boxSpan.addEventListener("click", () => {
         const { type } = chart.config;
@@ -124,10 +133,15 @@ var customTooltips = function (context) {
   var tooltipEl = document.getElementById(this.chart.canvas.id + "-customTooltip");
   if (!tooltipEl) {
     // Create Tooltip Element once per chart
+    const div = document.createElement("div");
+    div.classList.add("arrow");
+    const table = document.createElement("table");
+
     tooltipEl = document.createElement("div");
     tooltipEl.id = this.chart.canvas.id + "-customTooltip";
     tooltipEl.classList.add("chartjs-tooltip");
-    tooltipEl.innerHTML = "<div class='arrow'></div> <table></table>";
+    tooltipEl.replaceChildren(div, table);
+
     // avoid browser's font-zoom since we know that <body>'s
     // font-size was set to 14px by bootstrap's css
     var fontZoom = parseFloat($("body").css("font-size")) / 14;
@@ -159,38 +173,71 @@ var customTooltips = function (context) {
     var bodyLines = tooltip.body.map(function (bodyItem) {
       return bodyItem.lines;
     });
-    var innerHtml = "<thead>";
 
+    const tHead = document.createElement("thead");
     titleLines.forEach(function (title) {
-      innerHtml += "<tr><th>" + title + "</th></tr>";
-    });
-    innerHtml += "</thead><tbody>";
-    var printed = 0;
+      const th = document.createElement("th");
+      th.textContent = title;
 
+      const tr = document.createElement("tr");
+      tr.appendChild(th);
+
+      tHead.appendChild(tr);
+    });
+
+    var printed = 0;
     var devicePixel = (1 / window.devicePixelRatio).toFixed(1);
+
+    const tBody = document.createElement("tbody");
+
     bodyLines.forEach(function (body, i) {
       var labelColors = tooltip.labelColors[i];
       var style = "background-color: " + labelColors.backgroundColor;
       style += "; outline: 1px solid " + labelColors.backgroundColor;
       style += "; border: " + devicePixel + "px solid #fff";
-      var span = "<span class='chartjs-tooltip-key' style='" + style + "'></span>";
+
+      const span = document.createElement("span");
+      span.classList.add("chartjs-tooltip-key");
+      span.style.cssText = style;
 
       var num = body[0].split(": ");
       // do not display entries with value of 0 (in bar chart),
       // but pass through entries with "0.0% (in pie charts)
       if (num[1] !== "0") {
-        innerHtml += "<tr><td>" + span + body + "</td></tr>";
+        const td = document.createElement("td");
+        td.appendChild(span);
+
+        body.forEach(function (line, i) {
+          const lineNode = document.createTextNode(line);
+          td.appendChild(lineNode);
+
+          // Avoid trailing line break element
+          if (i != (body.length - 1)) {
+            const br = document.createElement("br");
+            td.appendChild(br);
+          }
+        });
+
+        const tr = document.createElement("tr");
+        tr.appendChild(td);
+
+        tBody.appendChild(tr);
         printed++;
       }
     });
+
     if (printed < 1) {
-      innerHtml += "<tr><td>No activity recorded</td></tr>";
+      const td = document.createElement("td");
+      td.textContent = "No activity recorded";
+
+      const tr = document.createElement("tr");
+      tr.appendChild(td);
+
+      tBody.appendChild(tr);
     }
 
-    innerHtml += "</tbody>";
-
-    var tableRoot = tooltipEl.querySelector("table");
-    tableRoot.innerHTML = innerHtml;
+    const tableRoot = tooltipEl.querySelector("table");
+    tableRoot.replaceChildren(tHead, tBody);
   }
 
   var canvasPos = this.chart.canvas.getBoundingClientRect();
@@ -325,19 +372,18 @@ function doughnutTooltip(tooltipLabel) {
   // we therefore use 99.9 to decide if slices are hidden (we only show with 0.1 precision)
   if (percentageTotalShown > 99.9) {
     // All items shown
-    return label + ": " + itemPercentage + "%";
+    return [
+      label + ": " + itemPercentage + "%"
+    ]
   } else {
     // set percentageTotalShown again without rounding to account
     // for cases where the total shown percentage would be <0.1% of all
     percentageTotalShown = tooltipLabel.chart._metasets[0].total;
-    return (
-      label +
-      ":<br>&bull; " +
-      itemPercentage +
-      "% of all data<br>&bull; " +
-      ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) +
-      "% of shown items"
-    );
+    return [
+      label + ":",
+      "• " + itemPercentage + "% of all data",
+      "• " + ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) + "% of shown items"
+    ]
   }
 }
 
