@@ -71,7 +71,7 @@ const htmlLegendPlugin = {
       boxSpan.style.display = "inline-block";
       boxSpan.style.margin = "0 10px";
 
-      // Using replaceChildren() instead of appendChild() to avoid cases where the same node might
+      // Using replaceChildren() instead of append() to avoid cases where the same node might
       // be accidentally appended over and over to the parent node.
       if (item.hidden) {
         const i = document.createElement("i");
@@ -180,9 +180,9 @@ var customTooltips = function (context) {
       th.textContent = title;
 
       const tr = document.createElement("tr");
-      tr.appendChild(th);
+      tr.append(th);
 
-      tHead.appendChild(tr);
+      tHead.append(tr);
     });
 
     var printed = 0;
@@ -205,23 +205,23 @@ var customTooltips = function (context) {
       // but pass through entries with "0.0% (in pie charts)
       if (num[1] !== "0") {
         const td = document.createElement("td");
-        td.appendChild(span);
+        td.append(span);
 
         body.forEach(function (line, i) {
           const lineNode = document.createTextNode(line);
-          td.appendChild(lineNode);
+          td.append(lineNode);
 
           // Avoid trailing line break element
-          if (i != (body.length - 1)) {
+          if (i !== body.length - 1) {
             const br = document.createElement("br");
-            td.appendChild(br);
+            td.append(br);
           }
         });
 
         const tr = document.createElement("tr");
-        tr.appendChild(td);
+        tr.append(td);
 
-        tBody.appendChild(tr);
+        tBody.append(tr);
         printed++;
       }
     });
@@ -231,9 +231,9 @@ var customTooltips = function (context) {
       td.textContent = "No activity recorded";
 
       const tr = document.createElement("tr");
-      tr.appendChild(td);
+      tr.append(td);
 
-      tBody.appendChild(tr);
+      tBody.append(tr);
     }
 
     const tableRoot = tooltipEl.querySelector("table");
@@ -372,9 +372,7 @@ function doughnutTooltip(tooltipLabel) {
   // we therefore use 99.9 to decide if slices are hidden (we only show with 0.1 precision)
   if (percentageTotalShown > 99.9) {
     // All items shown
-    return [
-      label + ": " + itemPercentage + "%"
-    ]
+    return [label + ": " + itemPercentage + "%"];
   } else {
     // set percentageTotalShown again without rounding to account
     // for cases where the total shown percentage would be <0.1% of all
@@ -382,8 +380,8 @@ function doughnutTooltip(tooltipLabel) {
     return [
       label + ":",
       "• " + itemPercentage + "% of all data",
-      "• " + ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) + "% of shown items"
-    ]
+      "• " + ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) + "% of shown items",
+    ];
   }
 }
 

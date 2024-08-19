@@ -5,18 +5,21 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global trustedTypes:false DOMPurify:false */
+
 // See https://github.com/cure53/DOMPurify?tab=readme-ov-file#what-about-dompurify-and-trusted-types
 // on why, counterintuitively, the RETURN_TRUSTED_TYPE property is set to false.
 const domPurifyProfile = {
-    RETURN_TRUSTED_TYPE: false,
-    USE_PROFILES: {
-        html: true
-    }
-}
+  RETURN_TRUSTED_TYPE: false,
+  USE_PROFILES: {
+    html: true,
+  },
+};
 
-const defaultPolicy = trustedTypes.createPolicy("default", {
-    createHTML: (string) => {
-        // console.warn("Please stop using 'innerHTML'.");
-        return DOMPurify.sanitize(string, domPurifyProfile);
-    }
+// eslint-disable-next-line compat/compat
+trustedTypes.createPolicy("default", {
+  createHTML: string => {
+    // console.warn("Please stop using 'innerHTML'.");
+    return DOMPurify.sanitize(string, domPurifyProfile);
+  },
 });
