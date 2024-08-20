@@ -79,7 +79,7 @@ is_authenticated = mg.request_info.is_authenticated
 <? end ?>
     <!-- First script provides a polyfill implementation on browsers that haven't adopted Trusted Types -->
     <!-- yet (such as Safari and Firefox). The native implementation will be used anyway if available. -->
-    <script src="<?=pihole.fileversion('scripts/vendor/trustedtypes.build.js')?>" data-csp="require-trusted-types-for 'script'"></script>
+    <script src="<?=pihole.fileversion('scripts/vendor/trustedtypes.build.js')?>" data-csp="require-trusted-types-for 'script'; trusted-types default dompurify"></script>
     <script src="<?=pihole.fileversion('scripts/vendor/purify.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/pi-hole/js/trusted-types-policies.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/vendor/nprogress.min.js')?>"></script>
