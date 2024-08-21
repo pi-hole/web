@@ -18,8 +18,9 @@ const domPurifyProfile = {
 
 // eslint-disable-next-line compat/compat
 trustedTypes.createPolicy("default", {
-  createHTML: string => {
-    // console.warn("Please stop using 'innerHTML'.");
+  // eslint-disable-next-line no-unused-vars
+  createHTML: (string, type, sink) => {
+    // console.warn("Created a '" + type + "' object but please stop using '" + sink + "'.");
     return DOMPurify.sanitize(string, domPurifyProfile);
   },
 });
