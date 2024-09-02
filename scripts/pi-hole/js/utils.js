@@ -5,7 +5,17 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false */
+/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false */
+
+$(function () {
+  // CSRF protection for AJAX requests, this has to be configured globally
+  // because we are using the jQuery $.ajax() function directly in some cases
+  // Furthermore, has this to be done before any AJAX request is made so that
+  // the CSRF token is sent along with each request to the API
+  $.ajaxSetup({
+    headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
+  });
+});
 
 // Credit: https://stackoverflow.com/a/4835406
 function escapeHtml(text) {
@@ -17,7 +27,8 @@ function escapeHtml(text) {
     "'": "&#039;",
   };
 
-  if (text === null) return null;
+  // Return early when text is not a string
+  if (typeof text !== "string") return text;
 
   return text.replaceAll(/[&<>"']/g, function (m) {
     return map[m];
@@ -72,69 +83,96 @@ function padNumber(num) {
   return ("00" + num).substr(-2, 2);
 }
 
-var info = null; // TODO clear this up; there shouldn't be a global var here
-function showAlert(type, icon, title, message) {
-  var opts = {};
-  title = "&nbsp;<strong>" + title + "</strong><br>";
+var showAlertBox = null;
+function showAlert(type, icon, title, message, toast) {
+  const options = {
+      title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
+      message: escapeHtml(message),
+      icon: icon,
+    },
+    settings = {
+      type: type,
+      delay: 5000, // default value
+      mouse_over: "pause",
+      animate: {
+        enter: "animate__animated animate__fadeInDown",
+        exit: "animate__animated animate__fadeOutUp",
+      },
+    };
   switch (type) {
     case "info":
-      opts = {
-        type: "info",
-        icon: "far fa-clock",
-        title: title,
-        message: message,
-      };
-      info = $.notify(opts);
-      break;
-    case "success":
-      opts = {
-        type: "success",
-        icon: icon,
-        title: title,
-        message: message,
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
+      options.icon = icon !== null && icon.len > 0 ? icon : "fas fa-clock";
 
       break;
+    case "success":
+      break;
     case "warning":
-      opts = {
-        type: "warning",
-        icon: "fas fa-exclamation-triangle",
-        title: title,
-        message: message,
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
-      }
+      options.icon = "fas fa-exclamation-triangle";
+      settings.delay *= 2;
 
       break;
     case "error":
-      opts = {
-        type: "danger",
-        icon: "fas fa-times",
-        title: "&nbsp;<strong>Error, something went wrong!</strong><br>",
-        message: message,
-      };
-      if (info) {
-        info.update(opts);
-      } else {
-        $.notify(opts);
+      options.icon = "fas fa-times";
+      if (title.length === 0)
+        options.title = "&nbsp;<strong>Error, something went wrong!</strong><br>";
+      settings.delay *= 2;
+
+      // If the message is an API object, nicely format the error message
+      // Try to parse message as JSON
+      try {
+        var data = JSON.parse(message);
+        console.log(data); // eslint-disable-line no-console
+        if (data.error !== undefined) {
+          options.title = "&nbsp;<strong>" + escapeHtml(data.error.message) + "</strong><br>";
+
+          if (data.error.hint !== null) options.message = escapeHtml(data.error.hint);
+        }
+      } catch {
+        // Do nothing
       }
 
       break;
     default:
+      // Case not handled, do nothing
+      console.log("Unknown alert type: " + type); // eslint-disable-line no-console
+      return;
+  }
+
+  if (toast === undefined) {
+    if (type === "info") {
+      // Create a new notification for info boxes
+      showAlertBox = $.notify(options, settings);
+      return showAlertBox;
+    } else if (showAlertBox !== null) {
+      // Update existing notification for other boxes (if available)
+      showAlertBox.update(options);
+      showAlertBox.update(settings);
+      return showAlertBox;
+    } else {
+      // Create a new notification for other boxes if no previous info box exists
+      return $.notify(options, settings);
+    }
+  } else if (toast === null) {
+    // Always create a new toast
+    return $.notify(options, settings);
+  } else {
+    // Update existing toast
+    toast.update(options);
+    toast.update(settings);
+    return toast;
   }
 }
 
-function datetime(date, html) {
+function datetime(date, html, humanReadable) {
+  if (date === 0 && humanReadable) {
+    return "Never";
+  }
+
   var format = html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
-  return moment.unix(Math.floor(date)).format(format).trim();
+  var timestr = moment.unix(Math.floor(date)).format(format).trim();
+  return humanReadable
+    ? '<span title="' + timestr + '">' + moment.unix(Math.floor(date)).fromNow() + "</span>"
+    : timestr;
 }
 
 function datetimeRelative(date) {
@@ -269,13 +307,7 @@ function stateLoadCallback(itemName) {
   return data;
 }
 
-function getGraphType() {
-  // Only return line if `barchart_chkbox` is explicitly set to false. Else return bar
-  return localStorage && localStorage.getItem("barchart_chkbox") === "false" ? "line" : "bar";
-}
-
 function addFromQueryLog(domain, list) {
-  var token = $("#token").text();
   var alertModal = $("#alertModal");
   var alProcessing = alertModal.find(".alProcessing");
   var alSuccess = alertModal.find(".alSuccess");
@@ -290,7 +322,7 @@ function addFromQueryLog(domain, list) {
     return;
   }
 
-  var listtype = list === "white" ? "Whitelist" : "Blacklist";
+  var listtype = list === "allow" ? "Allowlist" : "Denylist";
 
   alProcessing.children(alDomain).text(domain);
   alProcessing.children(alList).text(listtype);
@@ -299,22 +331,26 @@ function addFromQueryLog(domain, list) {
   // add Domain to List after Modal has faded in
   alertModal.one("shown.bs.modal", function () {
     $.ajax({
-      url: "scripts/pi-hole/php/groups.php",
+      url: "/api/domains/" + list + "/exact",
       method: "post",
-      data: {
+      dataType: "json",
+      processData: false,
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({
         domain: domain,
-        list: list,
-        token: token,
-        action: "replace_domain",
         comment: "Added from Query Log",
-      },
+        type: list,
+        kind: "exact",
+      }),
       success: function (response) {
         alProcessing.hide();
-        if (response.success) {
+        if ("domains" in response && response.domains.length > 0) {
           // Success
           alSuccess.children(alDomain).text(domain);
           alSuccess.children(alList).text(listtype);
           alSuccess.fadeIn(1000);
+          // Update domains counter in the menu
+          updateFtlInfo();
           setTimeout(function () {
             alertModal.modal("hide");
           }, 2000);
@@ -354,35 +390,114 @@ function addTD(content) {
   return "<td>" + content + "</td> ";
 }
 
+function toPercent(number, fractionDigits = 0) {
+  const userLocale = navigator.language || "en-US";
+  return new Intl.NumberFormat(userLocale, {
+    style: "percent",
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  }).format(number / 100);
+}
+
 function colorBar(percentage, total, cssClass) {
-  var title = percentage.toFixed(1) + "% of " + total;
-  var bar = '<div class="progress-bar ' + cssClass + '" style="width: ' + percentage + '%"></div>';
-  return '<div class="progress progress-sm" title="' + title + '"> ' + bar + " </div>";
+  const formattedPercentage = toPercent(percentage, 1);
+  const title = `${formattedPercentage} of ${total}`;
+  const bar = `<div class="progress-bar ${cssClass}" style="width: ${percentage}%"></div>`;
+  return `<div class="progress progress-sm" title="${title}"> ${bar} </div>`;
 }
 
 function checkMessages() {
   var ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
-  $.getJSON("api_db.php?status" + (ignoreNonfatal ? "&ignore=DNSMASQ_WARN" : ""), function (data) {
-    if ("message_count" in data && data.message_count > 0) {
-      var more = '\nAccess "Tools/Pi-hole diganosis" for further details.';
-      var title =
-        data.message_count > 1
-          ? "There are " + data.message_count + " warnings." + more
-          : "There is one warning." + more;
+  $.ajax({
+    url: "/api/info/messages/count" + (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""),
+    method: "GET",
+    dataType: "json",
+  })
+    .done(function (data) {
+      if (data.count > 0) {
+        var more = '\nAccess "Tools/Pi-hole diagnosis" for further details.';
+        var title =
+          data.count > 1
+            ? "There are " + data.count + " warnings." + more
+            : "There is one warning." + more;
 
-      $(".warning-count").prop("title", title);
-      $(".warning-count").text(data.message_count);
-      $(".warning-count").removeClass("hidden");
-    } else {
+        $(".warning-count").prop("title", title);
+        $(".warning-count").text(data.count);
+        $(".warning-count").removeClass("hidden");
+      } else {
+        $(".warning-count").addClass("hidden");
+      }
+    })
+    .fail(function (data) {
       $(".warning-count").addClass("hidden");
-    }
-  });
+      apiFailure(data);
+    });
 }
 
 // Show only the appropriate delete buttons in datatables
 function changeBulkDeleteStates(table) {
+  var allRows = table.rows({ filter: "applied" }).data().length;
+  var pageLength = table.page.len();
+  var selectedRows = table.rows(".selected").data().length;
+
+  if (selectedRows === 0) {
+    // Nothing selected
+    $(".selectAll").removeClass("hidden");
+    $(".selectMore").addClass("hidden");
+    $(".removeAll").addClass("hidden");
+    $(".deleteSelected").addClass("hidden");
+  } else if (selectedRows >= pageLength || selectedRows === allRows) {
+    // Whole page is selected (or all available messages were selected)
+    $(".selectAll").addClass("hidden");
+    $(".selectMore").addClass("hidden");
+    $(".removeAll").removeClass("hidden");
+    $(".deleteSelected").removeClass("hidden");
+  } else {
+    // Some rows are selected, but not all
+    $(".selectAll").addClass("hidden");
+    $(".selectMore").removeClass("hidden");
+    $(".removeAll").addClass("hidden");
+    $(".deleteSelected").removeClass("hidden");
+  }
+}
+
+function doLogout() {
+  $.ajax({
+    url: "/api/auth",
+    method: "DELETE",
+  }).always(function () {
+    location.reload();
+  });
+}
+
+function renderTimestamp(data, type) {
+  // Display and search content
+  if (type === "display" || type === "filter") {
+    return datetime(data, false, false);
+  }
+
+  // Sorting content
+  return data;
+}
+
+function renderTimespan(data, type) {
+  // Display and search content
+  if (type === "display" || type === "filter") {
+    return datetime(data, false, true);
+  }
+
+  // Sorting content
+  return data;
+}
+
+function htmlPass(data, _type) {
+  return data;
+}
+
+// Show only the appropriate buttons
+function changeTableButtonStates(table) {
   var allRows = table.rows({ filter: "applied" }).data().length;
   var pageLength = table.page.len();
   var selectedRows = table.rows(".selected").data().length;
@@ -415,6 +530,194 @@ function getCSSval(cssclass, cssproperty) {
   return val;
 }
 
+function parseQueryString(queryString = window.location.search) {
+  const GETDict = {};
+  queryString
+    .substr(1)
+    .split("&")
+    .forEach(function (item) {
+      GETDict[item.split("=")[0]] = decodeURIComponent(item.split("=")[1]);
+    });
+
+  return GETDict;
+}
+
+// https://stackoverflow.com/q/21647928
+function hexEncode(string) {
+  var hex, i;
+
+  var result = "";
+  for (i = 0; i < string.length; i++) {
+    hex = string.codePointAt(i).toString(16);
+    result += ("000" + hex).slice(-4);
+  }
+
+  return result;
+}
+
+// https://stackoverflow.com/q/21647928
+function hexDecode(string) {
+  var j;
+  var hexes = string.match(/.{1,4}/g) || [];
+  var back = "";
+  for (j = 0; j < hexes.length; j++) {
+    back += String.fromCodePoint(parseInt(hexes[j], 16));
+  }
+
+  return back;
+}
+
+function listAlert(type, items, data) {
+  // Show simple success message if there is no "processed" object in "data" or
+  // if all items were processed successfully
+  if (data.processed === undefined || data.processed.success.length === items.length) {
+    showAlert(
+      "success",
+      "fas fa-plus",
+      "Successfully added " + type + (items.length !== 1 ? "s" : ""),
+      items.join(", ")
+    );
+    return;
+  }
+
+  // Show a more detailed message if there is a "processed" object in "data" and
+  // not all items were processed successfully
+  let message = "";
+
+  // Show a list of successful items if there are any
+  if (data.processed.success.length > 0) {
+    message +=
+      "Successfully added " +
+      data.processed.success.length +
+      " " +
+      type +
+      (data.processed.success.length !== 1 ? "s" : "") +
+      ":";
+
+    // Loop over data.processed.success and print "item"
+    for (const item in data.processed.success) {
+      if (Object.prototype.hasOwnProperty.call(data.processed.success, item)) {
+        message += "\n- " + data.processed.success[item].item;
+      }
+    }
+  }
+
+  // Add a line break if there are both successful and failed items
+  if (data.processed.success.length > 0 && data.processed.errors.length > 0) {
+    message += "\n\n";
+  }
+
+  // Show a list of failed items if there are any
+  if (data.processed.errors.length > 0) {
+    message +=
+      "Failed to add " +
+      data.processed.errors.length +
+      " " +
+      type +
+      (data.processed.errors.length !== 1 ? "s" : "") +
+      ":\n";
+
+    // Loop over data.processed.errors and print "item: error"
+    for (const item in data.processed.errors) {
+      if (Object.prototype.hasOwnProperty.call(data.processed.errors, item)) {
+        let error = data.processed.errors[item].error;
+        // Replace some error messages with a more user-friendly text
+        if (error.indexOf("UNIQUE constraint failed") > -1) {
+          error = "Already present";
+        }
+
+        message += "\n- " + data.processed.errors[item].item + ": " + error;
+      }
+    }
+  }
+
+  // Show the warning message
+  const total = data.processed.success.length + data.processed.errors.length;
+  const processed = "(" + total + " " + type + (total !== 1 ? "s" : "") + " processed)";
+  showAlert(
+    "warning",
+    "fas fa-exclamation-triangle",
+    "Some " + type + (items.length !== 1 ? "s" : "") + " could not be added " + processed,
+    message
+  );
+}
+
+// Callback function for the loading overlay timeout
+function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
+  // Try to ping FTL to see if it finished restarting
+  $.ajax({
+    url: "/api/info/login",
+    method: "GET",
+    cache: false,
+    dataType: "json",
+  })
+    .done(function () {
+      // FTL is running again, hide loading overlay
+      NProgress.done();
+      if (reloadAfterTimeout) {
+        location.reload();
+      } else {
+        $(".wrapper").waitMe("hide");
+      }
+    })
+    .fail(function () {
+      // FTL is not running yet, try again in 500ms
+      setTimeout(loadingOverlayTimeoutCallback, 500, reloadAfterTimeout);
+    });
+}
+
+function loadingOverlay(reloadAfterTimeout = false) {
+  NProgress.start();
+  $(".wrapper").waitMe({
+    effect: "bounce",
+    text: "Pi-hole is currently applying your changes...",
+    bg: "rgba(0,0,0,0.7)",
+    color: "#fff",
+    maxSize: "",
+    textPos: "vertical",
+  });
+  // Start checking for FTL status after 2 seconds
+  setTimeout(loadingOverlayTimeoutCallback, 2000, reloadAfterTimeout);
+
+  return true;
+}
+
+// Function that calls a function only if the page is currently visible. This is
+// useful to prevent unnecessary API calls when the page is not visible (e.g.
+// when the user is on another tab).
+function callIfVisible(func) {
+  if (document.hidden) {
+    // Page is not visible, try again in 1 second
+    window.setTimeout(callIfVisible, 1000, func);
+    return;
+  }
+
+  // Page is visible, call function instead
+  func();
+}
+
+// Timer that calls a function after <interval> milliseconds but only if the
+// page is currently visible. We cancel possibly running timers for the same
+// function before starting a new one to prevent multiple timers running at
+// the same time causing unnecessary identical API calls when the page is
+// visible again.
+function setTimer(func, interval) {
+  // Cancel possibly running timer
+  window.clearTimeout(func.timer);
+  // Start new timer
+  func.timer = window.setTimeout(callIfVisible, interval, func);
+}
+
+// Same as setTimer() but calls the function every <interval> milliseconds
+function setInter(func, interval) {
+  // Cancel possibly running timer
+  window.clearTimeout(func.timer);
+  // Start new timer
+  func.timer = window.setTimeout(callIfVisible, interval, func);
+  // Restart timer
+  window.setTimeout(setInter, interval, func, interval);
+}
+
 window.utils = (function () {
   return {
     escapeHtml: escapeHtml,
@@ -431,14 +734,26 @@ window.utils = (function () {
     setBsSelectDefaults: setBsSelectDefaults,
     stateSaveCallback: stateSaveCallback,
     stateLoadCallback: stateLoadCallback,
-    getGraphType: getGraphType,
     validateMAC: validateMAC,
     validateHostname: validateHostname,
     addFromQueryLog: addFromQueryLog,
     addTD: addTD,
+    toPercent: toPercent,
     colorBar: colorBar,
     checkMessages: checkMessages,
     changeBulkDeleteStates: changeBulkDeleteStates,
+    doLogout: doLogout,
+    renderTimestamp: renderTimestamp,
+    renderTimespan: renderTimespan,
+    htmlPass: htmlPass,
+    changeTableButtonStates: changeTableButtonStates,
     getCSSval: getCSSval,
+    parseQueryString: parseQueryString,
+    hexEncode: hexEncode,
+    hexDecode: hexDecode,
+    listsAlert: listAlert,
+    loadingOverlay: loadingOverlay,
+    setTimer: setTimer,
+    setInter: setInter,
   };
 })();

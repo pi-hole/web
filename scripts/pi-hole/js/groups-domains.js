@@ -5,33 +5,16 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, groups:false,, getGroups:false, updateFtlInfo:false, apiFailure:false, processGroupResult:false, delGroupItems:false */
+/* exported initTable */
 
 var table;
-var groups = [];
-var token = $("#token").text();
 var GETDict = {};
 
-function getGroups() {
-  $.post(
-    "scripts/pi-hole/php/groups.php",
-    { action: "get_groups", token: token },
-    function (data) {
-      groups = data.data;
-      initTable();
-    },
-    "json"
-  );
-}
-
 $(function () {
-  window.location.search
-    .substr(1)
-    .split("&")
-    .forEach(function (item) {
-      GETDict[item.split("=")[0]] = item.split("=")[1];
-    });
+  GETDict = utils.parseQueryString();
 
+  // Tabs: Domain/Regex handling
   // sync description fields, reset inactive inputs on tab change
   $('a[data-toggle="tab"]').on("shown.bs.tab", function () {
     var tabHref = $(this).attr("href");
@@ -51,8 +34,9 @@ $(function () {
     $("#suggest_domains").hide();
   });
 
-  $("#add2black, #add2white").on("click", addDomain);
+  $("#add_deny, #add_allow").on("click", addDomain);
 
+  // Domain suggestion handling
   var suggestTimeout;
   $("#new_domain").on("input", function (e) {
     hideSuggestDomains();
@@ -64,6 +48,7 @@ $(function () {
   getGroups();
 });
 
+// Show a list of suggested domains based on the user's input
 function showSuggestDomains(value) {
   function createButton(hostname) {
     // Purposefully omit 'btn' class to save space on padding
@@ -107,12 +92,14 @@ function hideSuggestDomains() {
   $("#suggest_domains").slideUp("fast");
 }
 
+// eslint-disable-next-line no-unused-vars
 function initTable() {
   table = $("#domainsTable").DataTable({
+    processing: true,
     ajax: {
-      url: "scripts/pi-hole/php/groups.php",
-      data: { action: "get_domains", token: token },
-      type: "POST",
+      url: "/api/domains",
+      dataSrc: "domains",
+      type: "GET",
     },
     order: [[0, "asc"]],
     columns: [
@@ -148,7 +135,9 @@ function initTable() {
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback: function (row, data) {
-      $(row).attr("data-id", data.id);
+      var dataId = utils.hexEncode(data.domain) + "_" + data.type + "_" + data.kind;
+      $(row).attr("data-id", dataId);
+      // Tooltip for domain
       var tooltip =
         "Added: " +
         utils.datetime(data.date_added, false) +
@@ -158,41 +147,53 @@ function initTable() {
         data.id;
       $("td:eq(1)", row).html(
         '<code id="domain_' +
-          data.id +
+          dataId +
           '" title="' +
           tooltip +
           '" class="breakall">' +
-          data.domain +
+          utils.escapeHtml(data.unicode) +
+          (data.domain !== data.unicode ? " (" + utils.escapeHtml(data.domain) + ")" : "") +
           "</code>"
       );
 
       // Drop-down type selector
       $("td:eq(2)", row).html(
         '<select id="type_' +
-          data.id +
+          dataId +
           '" class="form-control">' +
-          '<option value="0"' +
-          (data.type === 0 ? " selected" : "") +
-          ">Exact whitelist</option>" +
-          '<option value="2"' +
-          (data.type === 2 ? " selected" : "") +
-          ">Regex whitelist</option>" +
-          '<option value="1"' +
-          (data.type === 1 ? " selected " : " ") +
-          ">Exact blacklist</option>" +
-          '<option value="3"' +
-          (data.type === 3 ? " selected" : "") +
-          ">Regex blacklist</option>" +
-          "</select>"
+          '<option value="allow/exact"' +
+          (data.type === "allow" && data.kind === "exact" ? " selected" : "") +
+          ">Exact allow</option>" +
+          '<option value="allow/regex"' +
+          (data.type === "allow" && data.kind === "regex" ? " selected" : "") +
+          ">Regex allow</option>" +
+          '<option value="deny/exact"' +
+          (data.type === "deny" && data.kind === "exact" ? " selected " : "") +
+          ">Exact deny</option>" +
+          '<option value="deny/regex"' +
+          (data.type === "deny" && data.kind === "regex" ? " selected" : "") +
+          ">Regex deny</option>" +
+          "</select>" +
+          "<input type='hidden' id='old_type_" +
+          dataId +
+          "' value='" +
+          data.type +
+          "/" +
+          data.kind +
+          "'>"
       );
-      var typeEl = $("#type_" + data.id, row);
+      var typeEl = $("#type_" + dataId, row);
       typeEl.on("change", editDomain);
 
-      var disabled = data.enabled === 0;
+      // Initialize bootstrap-toggle for status field (enabled/disabled)
       $("td:eq(3)", row).html(
-        '<input type="checkbox" id="status_' + data.id + '"' + (disabled ? "" : " checked") + ">"
+        '<input type="checkbox" id="enabled_' +
+          dataId +
+          '"' +
+          (data.enabled ? " checked" : "") +
+          ">"
       );
-      var statusEl = $("#status_" + data.id, row);
+      var statusEl = $("#enabled_" + dataId, row);
       statusEl.bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
@@ -202,17 +203,18 @@ function initTable() {
       });
       statusEl.on("change", editDomain);
 
-      $("td:eq(4)", row).html('<input id="comment_' + data.id + '" class="form-control">');
-      var commentEl = $("#comment_" + data.id, row);
-      commentEl.val(utils.unescapeHtml(data.comment));
+      // Comment field
+      $("td:eq(4)", row).html('<input id="comment_' + dataId + '" class="form-control">');
+      var commentEl = $("#comment_" + dataId, row);
+      commentEl.val(data.comment);
       commentEl.on("change", editDomain);
 
-      // Group assignment field
+      // Group assignment field (multi-select)
       $("td:eq(5)", row).empty();
       $("td:eq(5)", row).append(
-        '<select class="selectpicker" id="multiselect_' + data.id + '" multiple></select>'
+        '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
       );
-      var selectEl = $("#multiselect_" + data.id, row);
+      var selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
       for (var i = 0; i < groups.length; i++) {
         var dataSub = "";
@@ -230,6 +232,7 @@ function initTable() {
       // Select assigned groups
       selectEl.val(data.groups);
       // Initialize bootstrap-select
+      const applyBtn = "#btn_apply_" + dataId;
       selectEl
         // fix dropdown if it would stick out right of the viewport
         .on("show.bs.select", function () {
@@ -245,7 +248,8 @@ function initTable() {
           }
         })
         .on("changed.bs.select", function () {
-          // enable Apply button
+          // enable Apply button if changes were made to the drop-down menu
+          // and have it call editDomain() on click
           if ($(applyBtn).prop("disabled")) {
             $(applyBtn)
               .addClass("btn-success")
@@ -256,7 +260,9 @@ function initTable() {
           }
         })
         .on("hide.bs.select", function () {
-          // Restore values if drop-down menu is closed without clicking the Apply button
+          // Restore values if drop-down menu is closed without clicking the
+          // Apply button (e.g. by clicking outside) and re-disable the Apply
+          // button
           if (!$(applyBtn).prop("disabled")) {
             $(this).val(data.groups).selectpicker("refresh");
             $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
@@ -267,11 +273,9 @@ function initTable() {
         .find(".bs-actionsbox")
         .prepend(
           '<button type="button" id=btn_apply_' +
-            data.id +
+            dataId +
             ' class="btn btn-block btn-sm" disabled>Apply</button>'
         );
-
-      var applyBtn = "#btn_apply_" + data.id;
 
       // Highlight row (if url parameter "domainid=" is used)
       if ("domainid" in GETDict && data.id === parseInt(GETDict.domainid, 10)) {
@@ -281,9 +285,9 @@ function initTable() {
       // Add delete domain button
       var button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteDomain_' +
-        data.id +
-        '" data-del-id="' +
-        data.id +
+        dataId +
+        '" data-id="' +
+        dataId +
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
@@ -291,7 +295,7 @@ function initTable() {
     },
     select: {
       style: "multi",
-      selector: "td:not(:last-child)",
+      selector: "td:first-child",
       info: false,
     },
     buttons: [
@@ -326,10 +330,10 @@ function initTable() {
           var ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
-            ids.push(parseInt($(this).attr("data-id"), 10));
+            ids.push($(this).attr("data-id"));
           });
           // Delete all selected rows at once
-          delItems(ids);
+          deleteDomains(ids);
         },
       },
     ],
@@ -410,7 +414,8 @@ $.fn.dataTable.ext.search.push(function (settings, searchData, index, rowData) {
     })
     .get();
 
-  if (types.indexOf(rowData.type.toString()) !== -1) {
+  const typeStr = rowData.type + "/" + rowData.kind;
+  if (types.indexOf(typeStr) !== -1) {
     return true;
   }
 
@@ -424,259 +429,191 @@ $(".filter_types input:checkbox").on("change", function () {
 $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteDomain() {
-  // Passes the button data-del-id attribute as ID
-  var ids = [parseInt($(this).attr("data-del-id"), 10)];
-  delItems(ids);
+  // Passes the button data-id attribute as ID
+  deleteDomains([$(this).attr("data-id")]);
 }
 
-function delItems(ids) {
-  // Check input validity
-  if (!Array.isArray(ids)) return;
-
-  var items = "";
-  var type = "";
-  var typeID = "";
-
-  for (var id of ids) {
-    // Exploit prevention: Return early for non-numeric IDs
-    if (typeof id !== "number") return;
-
-    // Retrieve domain type
-    typeID = $("#type_" + id).val();
-    if (typeID === "0" || typeID === "1") {
-      type = " (<i>domain</i>)";
-    } else if (typeID === "2" || typeID === "3") {
-      type = " (<i>regex</i>)";
-    }
-
-    // Add item
-    items += "<li>" + utils.escapeHtml($("#domain_" + id).text()) + type + "</li>";
+function deleteDomains(encodedIds) {
+  const decodedIds = [];
+  for (let i = 0; i < encodedIds.length; i++) {
+    // Decode domain, type, and kind and add to array
+    const parts = encodedIds[i].split("_");
+    decodedIds[i] = {
+      item: parts[0],
+      type: parts[1],
+      kind: parts[2],
+    };
   }
 
-  utils.disableAll();
-  var idstring = ids.join(", ");
-  utils.showAlert("info", "", "Deleting domain(s)...", "<ul>" + items + "</ul>");
-
-  $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
-    dataType: "json",
-    data: { action: "delete_domain", id: JSON.stringify(ids), token: token },
-  })
-    .done(function (response) {
-      utils.enableAll();
-      if (response.success) {
-        utils.showAlert(
-          "success",
-          "far fa-trash-alt",
-          "Successfully deleted domain(s): ",
-          "<ul>" + items + "</ul>"
-        );
-        for (var id in ids) {
-          if (Object.hasOwnProperty.call(ids, id)) {
-            table.row(id).remove().draw(false).ajax.reload(null, false);
-          }
-        }
-      } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while deleting domain(s): " + idstring,
-          response.message
-        );
-      }
-
-      // Clear selection after deletion
-      table.rows().deselect();
-      utils.changeBulkDeleteStates(table);
-    })
-    .fail(function (jqXHR, exception) {
-      utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while deleting domain(s): " + idstring,
-        jqXHR.responseText
-      );
-      console.log(exception); // eslint-disable-line no-console
-    });
+  delGroupItems("domain", decodedIds, table);
 }
 
 function addDomain() {
-  var action = this.id;
-  var tabHref = $('a[data-toggle="tab"][aria-expanded="true"]').attr("href");
-  var wildcardEl = $("#wildcard_checkbox");
-  var wildcardChecked = wildcardEl.prop("checked");
-  var type;
+  const action = this.id;
+  const tabHref = $('a[data-toggle="tab"][aria-expanded="true"]').attr("href");
+  const wildcardEl = $("#wildcard_checkbox");
+  const wildcardChecked = wildcardEl.prop("checked");
 
   // current tab's inputs
-  var domainRegex, domainEl, commentEl;
+  var kind, domainEl, commentEl;
   if (tabHref === "#tab_domain") {
-    domainRegex = "domain";
+    kind = "exact";
     domainEl = $("#new_domain");
     commentEl = $("#new_domain_comment");
   } else if (tabHref === "#tab_regex") {
-    domainRegex = "regex";
+    kind = "regex";
     domainEl = $("#new_regex");
     commentEl = $("#new_regex_comment");
   }
 
-  var domain = utils.escapeHtml(domainEl.val());
-  var comment = utils.escapeHtml(commentEl.val());
+  const comment = commentEl.val();
+
+  // Check if the user wants to add multiple domains (space or newline separated)
+  // If so, split the input and store it in an array
+  var domains = domainEl.val().split(/\s+/);
+  // Remove empty elements
+  domains = domains.filter(function (el) {
+    return el !== "";
+  });
+  const domainStr = JSON.stringify(domains);
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding " + domainRegex + "...", domain);
+  utils.showAlert("info", "", "Adding domain(s)...", domainStr);
 
-  if (domain.length > 0) {
-    // strip "*." if specified by user in wildcard mode
-    if (domainRegex === "domain" && wildcardChecked && domain.startsWith("*.")) {
-      domain = domain.substr(2);
-    }
-
-    // determine list type
-    if (domainRegex === "domain" && action === "add2black" && wildcardChecked) {
-      type = "3W";
-    } else if (domainRegex === "domain" && action === "add2black" && !wildcardChecked) {
-      type = "1";
-    } else if (domainRegex === "domain" && action === "add2white" && wildcardChecked) {
-      type = "2W";
-    } else if (domainRegex === "domain" && action === "add2white" && !wildcardChecked) {
-      type = "0";
-    } else if (domainRegex === "regex" && action === "add2black") {
-      type = "3";
-    } else if (domainRegex === "regex" && action === "add2white") {
-      type = "2";
-    }
-  } else {
+  if (domains.length === 0) {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify a " + domainRegex);
+    utils.showAlert("warning", "", "Warning", "Please specify at least one domain");
     return;
   }
 
+  for (var i = 0; i < domains.length; i++) {
+    if (kind === "exact" && wildcardChecked) {
+      // Transform domain to wildcard if specified by user
+      domains[i] = "(\\.|^)" + domains[i].replaceAll(".", "\\.") + "$";
+      kind = "regex";
+
+      // strip leading "*." if specified by user in wildcard mode
+      if (domains[i].startsWith("*.")) domains[i] = domains[i].substr(2);
+    }
+  }
+
+  // determine list type
+  const type = action === "add_deny" ? "deny" : "allow";
+
   $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
+    url: "/api/domains/" + type + "/" + kind,
     method: "post",
     dataType: "json",
-    data: {
-      action: "add_domain",
-      domain: domain,
-      type: type,
+    processData: false,
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify({
+      domain: domains,
       comment: comment,
-      token: token,
-    },
-    success: function (response) {
+      type: type,
+      kind: kind,
+    }),
+    success: function (data) {
       utils.enableAll();
-      if (response.success) {
-        utils.showAlert("success", "fas fa-plus", "Success!", response.message);
-        domainEl.val("");
-        commentEl.val("");
-        wildcardEl.prop("checked", false);
-        table.ajax.reload(null, false);
-        table.rows().deselect();
-        domainEl.focus();
-      } else {
-        utils.showAlert("error", "", "Error while adding new " + domainRegex, response.message);
-      }
+      utils.listsAlert("domain", domains, data);
+      $("#new_domain").val("");
+      $("#new_domain_comment").val("");
+      $("#new_regex").val("");
+      $("#new_regex_comment").val("");
+      table.ajax.reload(null, false);
+      table.rows().deselect();
+
+      // Update number of groups in the sidebar
+      updateFtlInfo();
     },
-    error: function (jqXHR, exception) {
+    error: function (data, exception) {
+      apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new " + domainRegex, jqXHR.responseText);
+      utils.showAlert("error", "", "Error while adding new domain", data.responseText);
       console.log(exception); // eslint-disable-line no-console
     },
   });
 }
 
 function editDomain() {
-  var elem = $(this).attr("id");
-  var tr = $(this).closest("tr");
-  var id = tr.attr("data-id");
-  var domain = utils.escapeHtml(tr.find("#domain_" + id).text());
-  var type = tr.find("#type_" + id).val();
-  var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
-  var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
-  var groups = tr.find("#multiselect_" + id).val();
+  const elem = $(this).attr("id");
+  const tr = $(this).closest("tr");
+  const domain = tr.attr("data-id");
+  const newTypestr = tr.find("#type_" + domain).val();
+  const oldTypeStr = tr.find("#old_type_" + domain).val();
+  const enabled = tr.find("#enabled_" + domain).is(":checked");
+  const comment = tr.find("#comment_" + domain).val();
+  // Convert list of string integers to list of integers using map
+  const groups = tr
+    .find("#multiselect_" + domain)
+    .val()
+    .map(Number);
 
-  var domainRegex;
-  if (type === "0" || type === "1") {
-    domainRegex = "domain";
-  } else if (type === "2" || type === "3") {
-    domainRegex = "regex";
-  }
+  const oldType = oldTypeStr.split("/")[0];
+  const oldKind = oldTypeStr.split("/")[1];
 
   var done = "edited";
   var notDone = "editing";
   switch (elem) {
-    case "status_" + id:
-      if (status === 0) {
+    case "enabled_" + domain:
+      if (!enabled) {
         done = "disabled";
         notDone = "disabling";
-      } else if (status === 1) {
+      } else {
         done = "enabled";
         notDone = "enabling";
       }
 
       break;
-    case "name_" + id:
+    case "name_" + domain:
       done = "edited name of";
       notDone = "editing name of";
       break;
-    case "comment_" + id:
+    case "comment_" + domain:
       done = "edited comment of";
       notDone = "editing comment of";
       break;
-    case "type_" + id:
+    case "type_" + domain:
       done = "edited type of";
       notDone = "editing type of";
       break;
-    case "multiselect_" + id:
+    case "multiselect_" + domain:
       done = "edited groups of";
       notDone = "editing groups of";
       break;
     default:
-      alert("bad element or invalid data-id!");
+      alert("bad element (" + elem + ") or invalid data-id!");
       return;
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Editing " + domainRegex + "...", name);
+  const domainDecoded = utils.hexDecode(domain.split("_")[0]);
+  utils.showAlert("info", "", "Editing domain...", domainDecoded);
   $.ajax({
-    url: "scripts/pi-hole/php/groups.php",
-    method: "post",
+    url: "/api/domains/" + newTypestr + "/" + encodeURIComponent(domainDecoded),
+    method: "put",
     dataType: "json",
-    data: {
-      action: "edit_domain",
-      id: id,
-      type: type,
-      comment: comment,
-      status: status,
+    processData: false,
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify({
       groups: groups,
-      token: token,
-    },
-    success: function (response) {
+      comment: comment,
+      enabled: enabled,
+      type: oldType,
+      kind: oldKind,
+    }),
+    success: function (data) {
       utils.enableAll();
-      if (response.success) {
-        utils.showAlert(
-          "success",
-          "fas fa-pencil-alt",
-          "Successfully " + done + " " + domainRegex,
-          domain
-        );
-        table.ajax.reload(null, false);
-      } else
-        utils.showAlert(
-          "error",
-          "",
-          "Error while " + notDone + " " + domainRegex + " with ID " + id,
-          response.message
-        );
+      processGroupResult(data, "domain", done, notDone);
+      table.ajax.reload(null, false);
     },
-    error: function (jqXHR, exception) {
+    error: function (data, exception) {
+      apiFailure(data);
       utils.enableAll();
       utils.showAlert(
         "error",
         "",
-        "Error while " + notDone + " " + domainRegex + " with ID " + id,
-        jqXHR.responseText
+        "Error while " + notDone + " domain " + domainDecoded,
+        data.responseText
       );
       console.log(exception); // eslint-disable-line no-console
     },

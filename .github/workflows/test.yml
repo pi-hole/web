@@ -24,7 +24,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4.0.3
         with:
-          node-version: "16.x"
+          node-version: "20.x"
           cache: npm
 
       - name: Install npm dependencies

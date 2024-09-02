@@ -194,8 +194,14 @@
 .queries-permitted {
   background-color: #00a65a;
 }
+.queries-other {
+  background-color: #0077a6;
+}
 .queries-blocked {
   background-color: #999;
+}
+.queries-cached {
+  background-color: #59ac86;
 }
 .progress {
   background-color: #eee;
@@ -300,4 +306,8 @@ select:-webkit-autofill {
   -webkit-text-fill-color: #666 !important;
   -webkit-box-shadow: 0 0 0px 1000px #fff inset;
   transition: background-color 1s ease-in-out 0s;
+}
+
+.page-header {
+  border-color: #ddd;
 }

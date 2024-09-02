@@ -5,558 +5,714 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false, utils:false */
+/* global moment:false, utils:false, REFRESH_INTERVAL:false */
 
-var tableApi;
-var tableFilters = [];
+const beginningOfTime = 1262304000; // Jan 01 2010, 00:00 in seconds
+const endOfTime = 2147483647; // Jan 19, 2038, 03:14 in seconds
+var from = beginningOfTime;
+var until = endOfTime;
 
-var replyTypes = [
-  "N/A",
-  "NODATA",
-  "NXDOMAIN",
-  "CNAME",
-  "IP",
-  "DOMAIN",
-  "RRNAME",
-  "SERVFAIL",
-  "REFUSED",
-  "NOTIMP",
-  "upstream error",
-  "DNSSEC",
-  "NONE",
-  "BLOB",
+var dateformat = "MMM Do YYYY, HH:mm";
+
+var table = null;
+var cursor = null;
+var filters = [
+  "client_ip",
+  "client_name",
+  "domain",
+  "upstream",
+  "type",
+  "status",
+  "reply",
+  "dnssec",
 ];
-var colTypes = ["time", "query type", "domain", "client", "status", "reply type"];
+
+function initDateRangePicker() {
+  $("#querytime").daterangepicker(
+    {
+      timePicker: true,
+      timePickerIncrement: 5,
+      timePicker24Hour: true,
+      locale: { format: dateformat },
+      startDate: moment(from * 1000), // convert to milliseconds since epoch
+      endDate: moment(until * 1000), // convert to milliseconds since epoch
+      ranges: {
+        "Last 10 Minutes": [moment().subtract(10, "minutes"), moment()],
+        "Last Hour": [moment().subtract(1, "hours"), moment()],
+        Today: [moment().startOf("day"), moment().endOf("day")],
+        Yesterday: [
+          moment().subtract(1, "days").startOf("day"),
+          moment().subtract(1, "days").endOf("day"),
+        ],
+        "Last 7 Days": [moment().subtract(6, "days"), moment().endOf("day")],
+        "Last 30 Days": [moment().subtract(29, "days"), moment().endOf("day")],
+        "This Month": [moment().startOf("month"), moment().endOf("month")],
+        "Last Month": [
+          moment().subtract(1, "month").startOf("month"),
+          moment().subtract(1, "month").endOf("month"),
+        ],
+        "This Year": [moment().startOf("year"), moment().endOf("year")],
+        "All Time": [moment(beginningOfTime * 1000), moment(endOfTime * 1000)], // convert to milliseconds since epoch
+      },
+      opens: "center",
+      showDropdowns: true,
+      autoUpdateInput: true,
+    },
+    function (startt, endt) {
+      // Update global variables
+      // Convert milliseconds (JS) to seconds (API)
+      from = moment(startt).utc().valueOf() / 1000;
+      until = moment(endt).utc().valueOf() / 1000;
+    }
+  );
+}
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
-  } else if (xhr.responseText.indexOf("Connection refused") === -1) {
-    alert("An unknown error occurred while loading the data.\n" + xhr.responseText);
   } else {
-    alert("An error occurred while loading the data: Connection refused. Is FTL running?");
+    alert("An unknown error occurred while loading the data.\n" + xhr.responseText);
   }
 
   $("#all-queries_processing").hide();
-  tableApi.clear();
-  tableApi.draw();
+  table.clear();
+  table.draw();
+}
+
+function parseQueryStatus(data) {
+  // Parse query status
+  var fieldtext,
+    buttontext,
+    icon = null,
+    colorClass = false,
+    blocked = false,
+    isCNAME = false;
+  switch (data.status) {
+    case "GRAVITY":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = "Blocked (gravity)";
+      buttontext =
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      blocked = true;
+      break;
+    case "FORWARDED":
+      colorClass = "text-green";
+      icon = "fa-solid fa-cloud-download-alt";
+      fieldtext = "Forwarded to " + data.upstream;
+      buttontext =
+        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+      break;
+    case "CACHE":
+      colorClass = "text-green";
+      icon = "fa-solid fa-database";
+      fieldtext = "Served from cache";
+      buttontext =
+        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+      break;
+    case "REGEX":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = "Blocked (regex)";
+      buttontext =
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      blocked = true;
+      break;
+    case "DENYLIST":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = "Blocked (exact)";
+      buttontext =
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      blocked = true;
+      break;
+    case "EXTERNAL_BLOCKED_IP":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = "Blocked (external, IP)";
+      buttontext = "";
+      blocked = true;
+      break;
+    case "EXTERNAL_BLOCKED_NULL":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = "Blocked (external, NULL)";
+      buttontext = "";
+      blocked = true;
+      break;
+    case "EXTERNAL_BLOCKED_NXRA":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = "Blocked (external, NXRA)";
+      buttontext = "";
+      blocked = true;
+      break;
+    case "GRAVITY_CNAME":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = "Blocked (gravity, CNAME)";
+      buttontext =
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      isCNAME = true;
+      blocked = true;
+      break;
+    case "REGEX_CNAME":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = "Blocked (regex denied, CNAME)";
+      buttontext =
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      isCNAME = true;
+      blocked = true;
+      break;
+    case "DENYLIST_CNAME":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = "Blocked (exact denied, CNAME)";
+      buttontext =
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      isCNAME = true;
+      blocked = true;
+      break;
+    case "RETRIED":
+      colorClass = "text-green";
+      icon = "fa-solid fa-redo"; // fa-repeat
+      fieldtext = "Retried";
+      buttontext = "";
+      break;
+    case "RETRIED_DNSSEC":
+      colorClass = "text-green";
+      icon = "fa-solid fa-redo"; // fa-repeat
+      fieldtext = "Retried (ignored)";
+      buttontext = "";
+      break;
+    case "IN_PROGRESS":
+      colorClass = "text-green";
+      icon = "fa-solid fa-hourglass-half";
+      fieldtext = "Already forwarded, awaiting reply";
+      buttontext =
+        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+      break;
+    case "CACHE_STALE":
+      colorClass = "text-green";
+      icon = "fa-solid fa-infinity";
+      fieldtext = "Served by cache optimizer";
+      buttontext =
+        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+      break;
+    case "SPECIAL_DOMAIN":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = data.status;
+      buttontext = "";
+      blocked = true;
+      break;
+    default:
+      colorClass = "text-orange";
+      icon = "fa-solid fa-question";
+      fieldtext = data.status;
+      buttontext = "";
+  }
+
+  var matchText =
+    colorClass === "text-green" ? "allowed" : colorClass === "text-red" ? "blocked" : "matched";
+
+  return {
+    fieldtext: fieldtext,
+    buttontext: buttontext,
+    colorClass: colorClass,
+    icon: icon,
+    isCNAME: isCNAME,
+    matchText: matchText,
+    blocked: blocked,
+  };
+}
+
+function formatReplyTime(replyTime, type) {
+  if (type === "display") {
+    // Units:
+    //  - seconds if replytime >= 1 second
+    //  - milliseconds if reply time >= 100 µs
+    //  - microseconds otherwise
+    return replyTime < 1e-4
+      ? (1e6 * replyTime).toFixed(1) + " µs"
+      : replyTime < 1
+        ? (1e3 * replyTime).toFixed(1) + " ms"
+        : replyTime.toFixed(1) + " s";
+  }
+
+  // else: return the number itself (for sorting and searching)
+  return replyTime;
+}
+
+function formatInfo(data) {
+  // DNSSEC status
+  var dnssecStatus = data.dnssec,
+    dnssecClass;
+  switch (data.dnssec) {
+    case "SECURE":
+      dnssecClass = "text-green";
+      break;
+    case "INSECURE":
+      dnssecClass = "text-orange";
+      break;
+    case "BOGUS":
+      dnssecClass = "text-red";
+      break;
+    case "ABANDONED":
+      dnssecClass = "text-red";
+      break;
+    default:
+      // No DNSSEC or UNKNOWN
+      dnssecStatus = "N/A";
+      dnssecClass = false;
+  }
+
+  // Parse Query Status
+  var queryStatus = parseQueryStatus(data);
+  var divStart = '<div class="col-xl-2 col-lg-4 col-md-6 col-12 overflow-wrap">';
+  var statusInfo = "";
+  if (queryStatus.colorClass !== false) {
+    statusInfo =
+      divStart +
+      "Query Status:&nbsp;&nbsp;" +
+      '<strong><span class="' +
+      queryStatus.colorClass +
+      '">' +
+      queryStatus.fieldtext +
+      "</span></strong></div>";
+  }
+
+  var listInfo = "",
+    cnameInfo = "";
+  if (data.list_id !== null && data.list_id !== -1) {
+    // Some list matched - add link to search page
+
+    var listLink =
+      '<a href="search?domain=' +
+      encodeURIComponent(data.domain) +
+      '" target="_blank">search lists</a>';
+    listInfo = divStart + "Query was " + queryStatus.matchText + ", " + listLink + "</div>";
+  }
+
+  if (queryStatus.isCNAME) {
+    cnameInfo =
+      divStart + "Query was blocked during CNAME inspection of&nbsp;&nbsp;" + data.cname + "</div>";
+  }
+
+  // Show TTL if applicable
+  var ttlInfo = "";
+  if (data.ttl > 0) {
+    ttlInfo =
+      divStart +
+      "Time-to-live (TTL):&nbsp;&nbsp;" +
+      moment.duration(data.ttl, "s").humanize() +
+      " (" +
+      data.ttl +
+      "s)</div>";
+  }
+
+  // Show client information, show hostname only if available
+  var ipInfo =
+    data.client.name !== null && data.client.name.length > 0
+      ? utils.escapeHtml(data.client.name) + " (" + data.client.ip + ")"
+      : data.client.ip;
+  var clientInfo = divStart + "Client:&nbsp;&nbsp;<strong>" + ipInfo + "</strong></div>";
+
+  // Show DNSSEC status if applicable
+  var dnssecInfo = "";
+  if (dnssecClass !== false) {
+    dnssecInfo =
+      divStart +
+      'DNSSEC status:&nbsp&nbsp;<strong><span class="' +
+      dnssecClass +
+      '">' +
+      dnssecStatus +
+      "</span></strong></div>";
+  }
+
+  // Show long-term database information if applicable
+  var dbInfo = "";
+  if (data.dbid !== false) {
+    dbInfo = divStart + "Database ID:&nbsp;&nbsp;" + data.id + "</div>";
+  }
+
+  // Always show reply info, add reply delay if applicable
+  var replyInfo = "";
+  replyInfo =
+    data.reply.type !== "UNKNOWN"
+      ? divStart + "Reply:&nbsp&nbsp;" + data.reply.type + "</div>"
+      : divStart + "Reply:&nbsp;&nbsp;No reply received</div>";
+
+  // Compile extra info for displaying
+  return (
+    '<div class="row">' +
+    divStart +
+    "Query received on:&nbsp;&nbsp;" +
+    moment.unix(data.time).format("Y-MM-DD HH:mm:ss.SSS z") +
+    "</div>" +
+    clientInfo +
+    dnssecInfo +
+    statusInfo +
+    cnameInfo +
+    listInfo +
+    ttlInfo +
+    replyInfo +
+    dbInfo +
+    "</div>"
+  );
+}
+
+function addSelectSuggestion(name, dict, data) {
+  var obj = $("#" + name + "_filter"),
+    value = "";
+  obj.empty();
+
+  // In order for the placeholder value to appear, we have to have a blank
+  // <option> as the first option in our <select> control. This is because
+  // the browser tries to select the first option by default. If our first
+  // option were non-empty, the browser would display this instead of the
+  // placeholder.
+  obj.append($("<option />"));
+
+  // Add GET parameter as first suggestion (if present and not already included)
+  if (name in dict) {
+    value = decodeURIComponent(dict[name]);
+    if (!data.includes(value)) data.unshift(value);
+  }
+
+  // Add data obtained from API
+  for (var key in data) {
+    if (!Object.prototype.hasOwnProperty.call(data, key)) {
+      continue;
+    }
+
+    var text = data[key];
+    obj.append($("<option />").val(text).text(text));
+  }
+
+  // Select GET parameter (if present)
+  if (name in dict) {
+    obj.val(value);
+  }
+}
+
+/*
+function addChkboxSuggestion(name, data) {
+  var obj = $("#" + name + "_filter");
+  obj.empty();
+
+  // Add data obtained from API
+  for (var key in data) {
+    if (!Object.prototype.hasOwnProperty.call(data, key)) {
+      continue;
+    }
+
+    var text = data[key];
+    obj.append(
+      '<div class="checkbox"><label><input type="checkbox" checked id="' +
+        name +
+        "_" +
+        key +
+        '">' +
+        text +
+        "</label></div>"
+    );
+  }
+}
+*/
+function getSuggestions(dict) {
+  $.get(
+    "/api/queries/suggestions",
+    function (data) {
+      for (var key in filters) {
+        if (Object.hasOwnProperty.call(filters, key)) {
+          var f = filters[key];
+          addSelectSuggestion(f, dict, data.suggestions[f]);
+        }
+      }
+    },
+    "json"
+  );
+}
+
+function parseFilters() {
+  var filter = {};
+  for (var key in filters) {
+    if (Object.hasOwnProperty.call(filters, key)) {
+      var f = filters[key];
+      filter[f] = $("#" + f + "_filter").val();
+    }
+  }
+
+  return filter;
+}
+
+function filterOn(param, dict) {
+  const typ = typeof dict[param];
+  return param in dict && (typ === "number" || (typ === "string" && dict[param].length > 0));
+}
+
+function getAPIURL(filters) {
+  var apiurl = "/api/queries?";
+  for (var key in filters) {
+    if (Object.hasOwnProperty.call(filters, key)) {
+      var filter = filters[key];
+      if (filterOn(key, filters)) {
+        if (!apiurl.endsWith("?")) apiurl += "&";
+        apiurl += key + "=" + encodeURIComponent(filter);
+      }
+    }
+  }
+
+  // Omit from/until filtering if we cannot reach these times. This will speed
+  // up the database lookups notably on slow devices. The API accepts timestamps
+  // in seconds since epoch
+  if (from > beginningOfTime) apiurl += "&from=" + from;
+  if (until > beginningOfTime && until < endOfTime) apiurl += "&until=" + until;
+
+  if ($("#disk").prop("checked")) apiurl += "&disk=true";
+
+  return encodeURI(apiurl);
+}
+
+var liveMode = false;
+$("#live").prop("checked", liveMode);
+$("#live").on("click", function () {
+  liveMode = $(this).prop("checked");
+  liveUpdate();
+});
+
+function liveUpdate() {
+  if (liveMode) {
+    refreshTable();
+  }
 }
 
 $(function () {
   // Do we want to filter queries?
-  var GETDict = {};
-  window.location.search
-    .substr(1)
-    .split("&")
-    .forEach(function (item) {
-      GETDict[item.split("=")[0]] = item.split("=")[1];
-    });
+  var GETDict = utils.parseQueryString();
 
-  var APIstring = "api.php?getAllQueries";
-
-  if ("from" in GETDict && "until" in GETDict) {
-    APIstring += "&from=" + GETDict.from;
-    APIstring += "&until=" + GETDict.until;
-  } else if ("client" in GETDict) {
-    APIstring += "&client=" + GETDict.client;
-  } else if ("domain" in GETDict) {
-    APIstring += "&domain=" + GETDict.domain;
-  } else if ("querytype" in GETDict) {
-    APIstring += "&querytype=" + GETDict.querytype;
-  } else if ("forwarddest" in GETDict) {
-    APIstring += "&forwarddest=" + GETDict.forwarddest;
-  }
-  // If we don't ask filtering and also not for all queries, just request the most recent 100 queries
-  else if (!("all" in GETDict)) {
-    APIstring += "=100";
+  for (var sel in filters) {
+    if (Object.hasOwnProperty.call(filters, sel)) {
+      var element = filters[sel];
+      $("#" + element + "_filter").select2({
+        width: "100%",
+        tags: sel < 3, // Only the first three are allowed to freely specify input
+        placeholder: "Select...",
+        allowClear: true,
+      });
+    }
   }
 
-  if ("type" in GETDict) {
-    APIstring += "&type=" + GETDict.type;
+  getSuggestions(GETDict);
+  var apiurl = getAPIURL(GETDict);
+
+  if ("from" in GETDict) {
+    from = GETDict.from;
+    $("#from").val(moment.unix(from).format("Y-MM-DD HH:mm:ss"));
   }
 
-  tableApi = $("#all-queries").DataTable({
-    rowCallback: function (row, data) {
-      var replyid = parseInt(data[5], 10);
-      // DNSSEC status
-      var dnssecStatus;
-      var ede = data[11] ? data[11] : "";
-      switch (data[6]) {
-        case "1":
-          dnssecStatus = '<br><span class="text-green">SECURE';
-          break;
-        case "2":
-          dnssecStatus = '<br><span class="text-orange">INSECURE';
-          break;
-        case "3":
-          dnssecStatus = '<br><span class="text-red">BOGUS';
-          break;
-        case "4":
-          dnssecStatus = '<br><span class="text-red">ABANDONED';
-          break;
-        case "5":
-          dnssecStatus = '<br><span class="text-orange">UNKNOWN';
-          break;
-        default:
-          // No DNSSEC
-          dnssecStatus = "";
-      }
+  if ("until" in GETDict) {
+    until = GETDict.until;
+    $("#until").val(moment.unix(until).format("Y-MM-DD HH:mm:ss"));
+  }
 
-      if (dnssecStatus.length > 0) {
-        if (ede.length > 0) dnssecStatus += " (" + ede + ")";
-        else if (replyid === 7) dnssecStatus += " (refused upstream)";
-        dnssecStatus += "</span>";
-      }
+  initDateRangePicker();
 
-      // Query status
-      var fieldtext,
-        buttontext = "",
-        blocked = false,
-        isCNAME = false,
-        DomainlistLink = false;
+  table = $("#all-queries").DataTable({
+    ajax: {
+      url: apiurl,
+      error: handleAjaxError,
+      dataSrc: "queries",
+      data: function (d) {
+        if (cursor !== null) d.cursor = cursor;
+      },
+      dataFilter: function (d) {
+        var json = jQuery.parseJSON(d);
+        cursor = json.cursor; // Extract cursor from original data
+        if (liveMode) {
+          utils.setTimer(liveUpdate, REFRESH_INTERVAL.query_log);
+        }
 
-      // accompanies Store domainlist IDs for blocked/permitted queries FTL PR 1409
-      if (data.length > 9 && Number.isInteger(parseInt(data[9], 10)) && data[9] > 0) {
-        DomainlistLink = true;
-      }
-
-      switch (data[4]) {
-        case "1":
-          fieldtext = "<span class='text-red'>Blocked (gravity)</span>";
-          buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Whitelist</button>';
-          blocked = true;
-          break;
-        case "2":
-          fieldtext =
-            replyid === 0
-              ? "<span class='text-green'>OK</span> (sent to <br class='hidden-lg'>"
-              : "<span class='text-green'>OK</span> (answered by <br class='hidden-lg'>";
-          fieldtext +=
-            (data.length > 10 && data[10] !== "N/A" ? data[10] : "") + ")" + dnssecStatus;
-          buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Blacklist</button>';
-          break;
-        case "3":
-          fieldtext =
-            "<span class='text-green'>OK</span> <br class='hidden-lg'>(cache)" + dnssecStatus;
-          buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Blacklist</button>';
-          break;
-        case "4":
-          fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist)";
-          blocked = true;
-          buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Whitelist</button>';
-          break;
-        case "5":
-          fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist)";
-          blocked = true;
-          buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Whitelist</button>';
-          break;
-        case "6":
-          fieldtext = "<span class='text-red'>Blocked <br class='hidden-lg'>(external, IP)";
-          blocked = true;
-          buttontext = "";
-          break;
-        case "7":
-          fieldtext =
-            "<span class='text-red'>Blocked <br class='hidden-lg'>(external, NULL)</span>";
-          blocked = true;
-          buttontext = "";
-          break;
-        case "8":
-          fieldtext =
-            "<span class='text-red'>Blocked <br class='hidden-lg'>(external, NXRA)</span>";
-          blocked = true;
-          buttontext = "";
-          break;
-        case "9":
-          fieldtext =
-            "<span class='text-red'>Blocked <br class='hidden-lg'>(gravity, CNAME)</span>";
-          blocked = true;
-          buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Whitelist</button>';
-          isCNAME = true;
-          break;
-        case "10":
-          fieldtext =
-            "<span class='text-red'>Blocked <br class='hidden-lg'>(regex blacklist, CNAME)</span>";
-          blocked = true;
-          buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Whitelist</button>';
-          isCNAME = true;
-          break;
-        case "11":
-          fieldtext =
-            "<span class='text-red'>Blocked <br class='hidden-lg'>(exact blacklist, CNAME)</span>";
-          blocked = true;
-          buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Whitelist</button>';
-          isCNAME = true;
-          break;
-        case "12":
-          fieldtext = "<span class='text-green'>Retried</span>";
-          break;
-        case "13":
-          fieldtext = "<span class='text-green'>Retried</span> <br class='hidden-lg'>(ignored)";
-          break;
-        case "14":
-          fieldtext =
-            "<span class='text-green'>OK</span> <br class='hidden-lg'>(already forwarded)" +
-            dnssecStatus;
-          buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Blacklist</button>';
-          break;
-        case "15":
-          fieldtext =
-            "<span class='text-orange'>Blocked <br class='hidden-lg'>(database is busy)</span>";
-          blocked = true;
-          break;
-        case "16":
-          fieldtext =
-            "<span class='text-orange'>Blocked <br class='hidden-lg'>(special domain)</span>";
-          blocked = true;
-          break;
-        case "17":
-          fieldtext =
-            "<span class='text-orange'>OK</span> <br class='hidden-lg'>(stale cache)" +
-            dnssecStatus;
-          buttontext =
-            '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Blacklist</button>';
-          break;
-        default:
-          fieldtext = "Unknown (" + parseInt(data[4], 10) + ")";
-      }
-
-      // Add EDE here if available and not included in dnssecStatus
-      if (ede.length > 0 && dnssecStatus.length === 0) fieldtext += " (" + ede + ")";
-
-      // Cannot block internal queries of this type
-      if ((data[1] === "DNSKEY" || data[1] === "DS") && data[3] === "pi.hole") buttontext = "";
-
-      fieldtext += '<input type="hidden" name="id" value="' + parseInt(data[4], 10) + '">';
-
-      $(row).addClass(blocked === true ? "blocked-row" : "allowed-row");
-      if (localStorage && localStorage.getItem("colorfulQueryLog_chkbox") === "true") {
-        $(row).addClass(blocked === true ? "text-red" : "text-green");
-      }
-
-      $("td:eq(4)", row).html(fieldtext);
-      $("td:eq(6)", row).html(buttontext);
-
-      if (DomainlistLink) {
-        $("td:eq(4)", row).on(
-          "hover",
-          (function () {
-            this.title = "Click to show matching blacklist/whitelist domain";
-            this.style.color = "#72afd2";
-          },
-          function () {
-            this.style.color = "";
-          })
-        );
-        $("td:eq(4)", row).off(); // Release any possible previous onClick event handlers
-        $("td:eq(4)", row).on("click", function () {
-          var newTab = window.open("groups-domains.php?domainid=" + data[9], "_blank");
-          if (newTab) {
-            newTab.focus();
-          }
-        });
-        $("td:eq(4)", row).addClass("text-underline pointer");
-      }
-
-      var domain = data[2];
-      if (isCNAME) {
-        var CNAMEDomain = data[8];
-        // Add domain in CNAME chain causing the query to have been blocked
-        $("td:eq(2)", row).text(domain + "\n(blocked " + CNAMEDomain + ")");
-      } else {
-        $("td:eq(2)", row).text(domain);
-      }
-
-      // Check for existence of sixth column and display only if not Pi-holed
-      var replytext =
-        replyid >= 0 && replyid < replyTypes.length ? replyTypes[replyid] : "? (" + replyid + ")";
-
-      replytext += '<input type="hidden" name="id" value="' + replyid + '">';
-
-      $("td:eq(5)", row).html(replytext);
-
-      // Show response time only when reply is not N/A
-      if (data.length > 7 && replyid !== 0) {
-        var content = $("td:eq(5)", row).html();
-        $("td:eq(5)", row).html(content + " (" + (0.1 * data[7]).toFixed(1) + "ms)");
-      }
+        return d;
+      },
     },
+    serverSide: true,
     dom:
-      "<'row'<'col-sm-12'f>>" +
       "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-    ajax: {
-      url: APIstring,
-      error: handleAjaxError,
-      dataSrc: function (data) {
-        if ("FTLnotrunning" in data) {
-          // if FTL is not running, return empyt array (empty table)
-          utils.showAlert(
-            "error",
-            "",
-            "Error while deleting DHCP lease for ",
-            "FTL is not running"
-          );
-          data = {};
-          return data;
-        } else {
-          var dataIndex = 0;
-          return data.data.map(function (x) {
-            x[0] = x[0] * 1e6 + dataIndex++;
-            var dnssec = x[5];
-            var reply = x[6];
-            x[5] = reply;
-            x[6] = dnssec;
-            return x;
-          });
-        }
-      },
-    },
     autoWidth: false,
-    processing: true,
+    processing: false,
     order: [[0, "desc"]],
     columns: [
       {
-        width: "15%",
+        data: "time",
+        width: "10%",
         render: function (data, type) {
           if (type === "display") {
-            return moment
-              .unix(Math.floor(data / 1e6))
-              .format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
+            return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
           }
 
           return data;
         },
+        searchable: false,
       },
-      { width: "4%" },
-      { width: "36%" },
-      { width: "8%", type: "ip-address" },
-      { width: "14%", orderData: 4 },
-      { width: "8%", orderData: 5 },
-      { width: "10%", orderData: 4 },
+      { data: "status", width: "1%", searchable: false },
+      { data: "type", width: "1%", searchable: false },
+      { data: "domain", width: "45%" },
+      { data: "client.ip", width: "29%", type: "ip-address" },
+      { data: "reply.time", width: "4%", render: formatReplyTime, searchable: false },
+      { data: null, width: "10%", sortable: false, searchable: false },
     ],
     lengthMenu: [
       [10, 25, 50, 100, -1],
       [10, 25, 50, 100, "All"],
     ],
     stateSave: true,
-    stateDuration: 0,
     stateSaveCallback: function (settings, data) {
       utils.stateSaveCallback("query_log_table", data);
     },
     stateLoadCallback: function () {
       return utils.stateLoadCallback("query_log_table");
     },
-    columnDefs: [
-      {
-        targets: -1,
-        data: null,
-        defaultContent: "",
-      },
-      {
-        targets: "_all",
-        render: $.fn.dataTable.render.text(),
-      },
-    ],
-    initComplete: function () {
-      var api = this.api();
+    rowCallback: function (row, data) {
+      var querystatus = parseQueryStatus(data);
 
-      // Query type IPv4 / IPv6
-      api
-        .$("td:eq(1)")
-        .on("click", function (event) {
-          addColumnFilter(event, 1, this.textContent);
-        })
-        .on(
-          "hover",
-          (function () {
-            $(this).addClass("pointer").attr("title", tooltipText(1, this.textContent));
-          },
-          function () {
-            $(this).removeClass("pointer");
-          })
+      // Remove HTML from querystatus.fieldtext
+      var rawtext = $("<div/>").html(querystatus.fieldtext).text();
+
+      if (querystatus.icon !== false) {
+        $("td:eq(1)", row).html(
+          "<i class='fa fa-fw " +
+            querystatus.icon +
+            " " +
+            querystatus.colorClass +
+            "' title='" +
+            rawtext +
+            "'></i>"
         );
-
-      // Domain
-      api
-        .$("td:eq(2)")
-        .on("click", function (event) {
-          addColumnFilter(event, 2, this.textContent.split("\n")[0]);
-        })
-        .on(
-          "hover",
-          (function () {
-            $(this).addClass("pointer").attr("title", tooltipText(2, this.textContent));
-          },
-          function () {
-            $(this).removeClass("pointer");
-          })
-        );
-
-      // Client
-      api
-        .$("td:eq(3)")
-        .on("click", function (event) {
-          addColumnFilter(event, 3, this.textContent);
-        })
-        .on(
-          "hover",
-          (function () {
-            $(this).addClass("pointer").attr("title", tooltipText(3, this.textContent));
-          },
-          function () {
-            $(this).removeClass("pointer");
-          })
-        );
-
-      // Status
-      api
-        .$("td:eq(4)")
-        .on("click", function (event) {
-          var id = this.children.id.value;
-          var text = this.textContent;
-          addColumnFilter(event, 4, id + "#" + text);
-        })
-        .on(
-          "hover",
-          (function () {
-            $(this).addClass("pointer").attr("title", tooltipText(4, this.textContent));
-          },
-          function () {
-            $(this).removeClass("pointer");
-          })
-        );
-
-      // Reply type
-      api
-        .$("td:eq(5)")
-        .on("click", function (event) {
-          var id = this.children.id.value;
-          var text = this.textContent.split(" ")[0];
-          addColumnFilter(event, 5, id + "#" + text);
-        })
-        .on(
-          "hover",
-          (function () {
-            $(this).addClass("pointer").attr("title", tooltipText(5, this.textContent));
-          },
-          function () {
-            $(this).removeClass("pointer");
-          })
-        );
-
-      // Disable autocorrect in the search box
-      var input = $("input[type=search]");
-      if (input !== null) {
-        input.attr("autocomplete", "off");
-        input.attr("autocorrect", "off");
-        input.attr("autocapitalize", "off");
-        input.attr("spellcheck", false);
-        input.attr("placeholder", "Type / Domain / Client");
+      } else if (querystatus.colorClass !== false) {
+        $(row).addClass(querystatus.colorClass);
       }
+
+      // Define row background color
+      $(row).addClass(querystatus.blocked === true ? "blocked-row" : "allowed-row");
+
+      // Substitute domain by "." if empty
+      var domain = data.domain === 0 ? "." : data.domain;
+
+      if (querystatus.isCNAME) {
+        // Add domain in CNAME chain causing the query to have been blocked
+        $("td:eq(3)", row).text(domain + "\n(blocked " + data.cname + ")");
+      } else {
+        $("td:eq(3)", row).text(domain);
+      }
+
+      // Show hostname instead of IP if available
+      if (data.client.name !== null && data.client.name !== "") {
+        $("td:eq(4)", row).text(data.client.name);
+      } else {
+        $("td:eq(4)", row).text(data.client.ip);
+      }
+
+      if (querystatus.buttontext !== false) {
+        $("td:eq(6)", row).html(querystatus.buttontext);
+      }
+    },
+    initComplete: function () {
+      this.api()
+        .columns()
+        .every(function () {
+          // Skip columns that are not searchable
+          const colIdx = this.index();
+          const bSearchable = this.context[0].aoColumns[colIdx].bSearchable;
+          if (!bSearchable) {
+            return null;
+          }
+
+          // Replace footer text with input field for searchable columns
+          const input = document.createElement("input");
+          input.placeholder = this.footer().textContent;
+          this.footer().replaceChildren(input);
+
+          // Event listener for user input
+          input.addEventListener("keyup", () => {
+            if (this.search() !== this.value) {
+              this.search(input.value).draw();
+            }
+          });
+
+          return null;
+        });
     },
   });
 
-  resetColumnsFilters();
+  // Add event listener for adding domains to the allow-/blocklist
+  $("#all-queries tbody").on("click", "button", function (event) {
+    var button = $(this);
+    var tr = button.parents("tr");
+    var allowButton = button[0].classList.contains("text-green");
+    var denyButton = button[0].classList.contains("text-red");
+    var data = table.row(tr).data();
+    if (denyButton) {
+      utils.addFromQueryLog(data.domain, "deny");
+    } else if (allowButton) {
+      utils.addFromQueryLog(data.domain, "allow");
+    }
+    // else: no (colorful) button, so nothing to do
 
-  $("#all-queries tbody").on("click", "button", function () {
-    var data = tableApi.row($(this).parents("tr")).data();
-    if (data[4] === "2" || data[4] === "3" || data[4] === "14" || data[4] === "17") {
-      utils.addFromQueryLog(data[2], "black");
+    // Prevent tr click even tto be triggered for row from opening/closing
+    event.stopPropagation();
+  });
+
+  // Add event listener for opening and closing details, except on rows with "details-row" class
+  $("#all-queries tbody").on("click", "tr:not(.details-row)", function () {
+    var tr = $(this);
+    var row = table.row(tr);
+
+    if (window.getSelection().toString().length > 0) {
+      // This event was triggered by a selection, so don't open the row
+      return;
+    }
+
+    if (row.child.isShown()) {
+      // This row is already open - close it
+      row.child.hide();
+      tr.removeClass("shown");
     } else {
-      utils.addFromQueryLog(data[2], "white");
+      // Open this row. Add a class to the row
+      row.child(formatInfo(row.data()), "details-row").show();
+      tr.addClass("shown");
     }
   });
 
-  $("#resetButton").on("click", function () {
-    tableApi.search("");
-    resetColumnsFilters();
+  $("#refresh").on("click", refreshTable);
+
+  // Disable live mode when #disk is checked
+  $("#disk").on("click", function () {
+    if ($(this).prop("checked")) {
+      $("#live").prop("checked", false);
+      $("#live").prop("disabled", true);
+      liveMode = false;
+    } else {
+      $("#live").prop("disabled", false);
+    }
   });
 });
 
-function tooltipText(index, text) {
-  if (index === 5) {
-    // Strip reply time from tooltip text
-    text = text.split(" ")[0];
-  }
+function refreshTable() {
+  // Set cursor to NULL so we pick up newer queries
+  cursor = null;
 
-  if (index in tableFilters && tableFilters[index].length > 0) {
-    return "Click to remove " + colTypes[index] + ' "' + text + '" from filter.';
-  }
+  // Clear table
+  table.clear();
 
-  return "Click to add " + colTypes[index] + ' "' + text + '" to filter.';
-}
-
-function addColumnFilter(event, colID, filterstring) {
-  // If the below modifier keys are held down, do nothing
-  if (event.ctrlKey || event.metaKey || event.altKey) {
-    return;
-  }
-
-  if (tableFilters[colID] === filterstring) {
-    filterstring = "";
-  }
-
-  tableFilters[colID] = filterstring;
-
-  applyColumnFiltering();
-}
-
-function resetColumnsFilters() {
-  tableFilters.forEach(function (value, index) {
-    tableFilters[index] = "";
-  });
-
-  // Clear filter reset button
-  applyColumnFiltering();
-}
-
-function applyColumnFiltering() {
-  var showReset = false;
-  tableFilters.forEach(function (value, index) {
-    // Prepare regex filter string
-    var regex = "";
-
-    // Split filter string if we received a combined ID#Name column
-    var valArr = value.split("#");
-    if (valArr.length > 0) {
-      value = valArr[0];
-    }
-
-    if (value.length > 0) {
-      // Exact matching
-      regex = "^" + value + "$";
-
-      // Add background color
-      tableApi.$("td:eq(" + index + ")").addClass("highlight");
-
-      // Remember to show reset button
-      showReset = true;
-    } else {
-      // Clear background color
-      tableApi.$("td:eq(" + index + ")").removeClass("highlight");
-    }
-
-    // Apply filtering on this column (regex may be empty -> no filtering)
-    tableApi.column(index).search(regex, true, true);
-  });
-
-  if (showReset) {
-    $("#resetButton").removeClass("hidden");
-  } else {
-    $("#resetButton").addClass("hidden");
-  }
-
-  // Trigger table update
-  tableApi.draw();
+  // Source data from API
+  var filters = parseFilters();
+  filters.from = from;
+  filters.until = until;
+  var apiurl = getAPIURL(filters);
+  table.ajax.url(apiurl).draw();
 }

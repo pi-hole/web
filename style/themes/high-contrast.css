@@ -25,6 +25,10 @@
 
   --allowed-color: #3c7;
   --blocked-color: var(--danger-color);
+  --cached-color: var(--primary-color);
+  --other-color: #0077a6;
+
+  --overlay-bgcolor: rgba(255, 255, 255, 0.8);
 }
 
 /* removing transition for every element, to avoid unnecessary movement */
@@ -235,6 +239,12 @@ a:hover {
 }
 .queries-blocked {
   background-color: var(--blocked-color);
+}
+.queries-cached {
+  background-color: var(--cached-color);
+}
+.queries-other {
+  background-color: var(--other-color);
 }
 .progress {
   background-color: #eee;
@@ -490,18 +500,22 @@ table.dataTable thead th:hover.sorting_desc_disabled::after {
 .btn-info {
   background: var(--info-color);
   border-color: var(--info-color) !important;
+  color: #fff;
 }
 .btn-danger {
   background: var(--danger-color);
   border-color: var(--danger-color) !important;
+  color: #fff;
 }
 .btn-warning {
   background: var(--warning-color);
   border-color: var(--warning-color) !important;
+  color: #fff;
 }
 .btn-success {
   background: var(--success-color);
   border-color: var(--success-color) !important;
+  color: #fff;
 }
 
 .btn-default:hover {

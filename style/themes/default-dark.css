@@ -10,6 +10,7 @@
 
 :root {
   --datatable-bgcolor: rgba(64, 76, 88, 0.8);
+  --overlay-bgcolor: var(--datatable-bgcolor);
 }
 
 /* fix #2554: browser not detecting dark mode */
@@ -23,6 +24,9 @@ body {
 }
 h4 {
   color: #44def1;
+}
+.callout h4 {
+  color: inherit;
 }
 .content-header > .breadcrumb > li > a {
   color: #bec5cb;
@@ -189,14 +193,10 @@ h4 {
 }
 .box-solid,
 .box {
-  border: 1px solid #272c30;
+  border: 1px solid dimgray;
 }
 .box-solid > .box-header,
 .box > .box-header {
-  color: #bec5cb;
-}
-.box-solid > .box-header .btn,
-.box > .box-header .btn {
   color: #bec5cb;
 }
 .box.box-info,
@@ -371,8 +371,14 @@ h4 {
 .queries-permitted {
   background-color: #00a65a;
 }
+.queries-other {
+  background-color: #0077a6;
+}
 .queries-blocked {
   background-color: #999;
+}
+.queries-cached {
+  background-color: #295340;
 }
 .progress {
   background-color: #333;
@@ -624,7 +630,12 @@ input[type="password"]::-webkit-caps-lock-indicator {
 }
 
 .close {
-  color: #383838;
+  color: #fff;
+  text-shadow: 0 1px 0 #000;
+}
+.close:focus,
+.close:hover {
+  color: #fff;
 }
 
 .login-page {

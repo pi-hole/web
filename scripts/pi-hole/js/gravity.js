@@ -10,52 +10,56 @@ function eventsource() {
   var alSuccess = $("#alSuccess");
   var ta = $("#output");
 
-  // IE does not support EventSource - exit early
-  if (typeof EventSource !== "function") {
+  // https://caniuse.com/fetch - everything except IE
+  // This is fine, as we dropped support for IE a while ago
+  if (typeof fetch !== "function") {
     ta.show();
     ta.html("Updating lists of ad-serving domains is not supported with this browser!");
     return;
   }
-
-  var source = new EventSource("scripts/pi-hole/php/gravity.sh.php");
 
   ta.html("");
   ta.show();
   alInfo.show();
   alSuccess.hide();
 
-  source.addEventListener(
-    "message",
-    function (e) {
-      if (e.data.indexOf("Pi-hole blocking is") !== -1) {
-        alSuccess.show();
-      }
+  // eslint-disable-next-line compat/compat
+  fetch("/api/action/gravity", {
+    method: "POST",
+    headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
+  })
+    // Retrieve its body as ReadableStream
+    .then(response => {
+      const reader = response.body.getReader();
+      return new ReadableStream({
+        start(controller) {
+          return pump();
+          function pump() {
+            return reader.read().then(({ done, value }) => {
+              // When no more data needs to be consumed, close the stream
+              if (done) {
+                controller.close();
+                alInfo.hide();
+                $("#gravityBtn").prop("disabled", false);
+                return;
+              }
 
-      // Detect ${OVER}
-      var newString = "<------";
+              // Enqueue the next data chunk into our target stream
+              controller.enqueue(value);
+              var string = new TextDecoder().decode(value);
+              parseLines(ta, string);
 
-      if (e.data.indexOf(newString) === -1) {
-        ta.append(e.data);
-      } else {
-        ta.text(ta.text().substring(0, ta.text().lastIndexOf("\n")) + "\n");
-        ta.append(e.data.replace(newString, ""));
-      }
-    },
-    false
-  );
+              if (string.indexOf("Done.") !== -1) {
+                alSuccess.show();
+              }
 
-  // Will be called when script has finished
-  source.addEventListener(
-    "error",
-    function () {
-      alInfo.delay(1000).fadeOut(2000, function () {
-        alInfo.hide();
+              return pump();
+            });
+          }
+        },
       });
-      source.close();
-      $("#gravityBtn").prop("disabled", false);
-    },
-    false
-  );
+    })
+    .catch(error => console.error(error)); // eslint-disable-line no-console
 }
 
 $("#gravityBtn").on("click", function () {
@@ -72,10 +76,31 @@ $(function () {
   });
 
   // Do we want to start updating immediately?
-  // gravity.php?go
+  // gravity.lp?go
   var searchString = window.location.search.substring(1);
   if (searchString.indexOf("go") !== -1) {
     $("#gravityBtn").prop("disabled", true);
     eventsource();
   }
 });
+
+function parseLines(ta, str) {
+  // str can contain multiple lines.
+  // We want to split the text before an "OVER" escape sequence to allow overwriting previous line when needed
+
+  // Splitting the text on "\r"
+  var lines = str.split(/(?=\r)/g);
+
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i][0] === "\r") {
+      // This line starts with the "OVER" sequence. Replace them with "\n" before print
+      lines[i] = lines[i].replaceAll("\r[K", "\n").replaceAll("\r", "\n");
+
+      // Last line from the textarea will be overwritten, so we remove it
+      ta.text(ta.text().substring(0, ta.text().lastIndexOf("\n")));
+    }
+
+    // Append the new text to the end of the output
+    ta.append(lines[i]);
+  }
+}

@@ -344,18 +344,13 @@ p.login-box-msg,
   box-shadow: none;
 }
 
-.form-control-feedback {
-  right: 0.4em;
-  height: 32px;
-}
-
 .has-error.login-box-msg::before,
 .has-error.login-box-msg::after {
   content: "ACCESS DENIED";
   margin: -20px -20px 20px;
   padding: calc(176px - 0.5em) 0 0;
   position: absolute;
-  inset: 0 0 0 0;
+  inset: 0;
   font-size: clamp(40px, calc((100vw - 60px) / 6), 90px);
   line-height: 1;
   height: calc(176px + 2em);
@@ -611,7 +606,7 @@ p.login-box-msg,
 }
 
 .sidebar-menu li > a > .pull-right-container.warning-count {
-  transform: scale(1);
+  transform: none;
   position: relative;
   bottom: 0.15em;
 }
@@ -872,6 +867,16 @@ p.login-box-msg,
   right: unset;
   left: 0;
   transform: scaleX(-1);
+}
+
+.sidebar-menu li > a > span .pull-right-container {
+  position: absolute;
+  bottom: 7px;
+  left: 10px;
+}
+
+.sidebar-menu li > a > span .pull-right-container span {
+  float: left !important;
 }
 
 .treeview-menu > li > a {
@@ -1369,20 +1374,20 @@ table.dataTable thead .sorting_desc_disabled:after {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.85);
 }
 
-#adlistsTable table td:first-child {
+#listsTable table td:first-child {
   font-weight: bold;
 }
 
-#adlistsTable table td:last-child {
+#listsTable table td:last-child {
   color: #fff;
   font-weight: 100;
 }
 
-#adlistsTable table tr {
+#listsTable table tr {
   border-bottom: 1px solid #333 !important;
 }
 
-#adlistsTable table tr:last-child {
+#listsTable table tr:last-child {
   border: none !important;
 }
 
@@ -1658,7 +1663,7 @@ table.dataTable {
   border-radius: 12px;
   position: absolute;
   margin-top: -3px;
-  inset: 0 0 0 0;
+  inset: 0;
   z-index: -1;
   animation: 3s infinite warningPulse steps(30);
 }
@@ -1990,6 +1995,14 @@ input[type="password"]::-webkit-caps-lock-indicator {
   background-color: rgb(196, 50, 50);
 }
 
+.queries-cached {
+  background-color: rgb(37, 88, 64);
+}
+
+.queries-other {
+  background-color: #0077a6;
+}
+
 /*--- Used in the Query Log table ---*/
 .text-black {
   color: #000 !important;
@@ -2114,8 +2127,49 @@ td.highlight {
 }
 
 /*** add style to the information/about dropdown ***/
-
 .navbar-nav > .user-menu > .dropdown-menu > .user-header,
 .navbar-nav > .user-menu > .dropdown-menu > .user-footer {
   background-color: #111111;
+}
+
+.save-button-container {
+  border-radius: 50px;
+  background: none;
+  box-shadow:
+    0 0 10px -1px #000,
+    0 0 20px 2px #000;
+  bottom: 2em;
+  right: 1.7em;
+}
+.save-button {
+  margin: 0;
+}
+@media (min-width: 1320px) {
+  .layout-boxed .save-button-container {
+    right: calc((100% - 1320px) / 2 + 0.85em);
+  }
+}
+
+.flex-header h1 {
+  margin-right: 0;
+}
+
+.settings-selector {
+  order: -1;
+}
+.settings-selector .toggle {
+  width: 125px !important;
+}
+
+#advanced-settings-menu ul > li a {
+  border: none;
+  border-radius: 20px;
+  color: #000;
+}
+#advanced-settings-menu ul > li:not(.active) a:hover,
+#advanced-settings-menu ul > li a:focus {
+  background: #fff;
+}
+#advanced-settings-menu ul > li:not(.active) a {
+  color: #000;
 }
