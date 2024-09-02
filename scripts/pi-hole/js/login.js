@@ -7,17 +7,6 @@
 
 /* global utils:false, NProgress:false */
 
-function getParams() {
-  var GETDict = {};
-  window.location.search
-    .substr(1)
-    .split("&")
-    .forEach(function (item) {
-      GETDict[item.split("=")[0]] = decodeURIComponent(item.split("=")[1]);
-    });
-  return GETDict;
-}
-
 function redirect() {
   // Login succeeded or not needed (empty password)
   // Default: Send back to dashboard
@@ -26,13 +15,6 @@ function redirect() {
   // If DNS failure: send to Pi-hole diagnosis messages page
   if ($("#dns-failure-label").is(":visible")) {
     target = "messages.lp";
-  } else {
-    // If specified: Send to requested page
-    var GETDict = getParams();
-    if ("target" in GETDict) {
-      // URL-decode target
-      target = GETDict.target;
-    }
   }
 
   // Redirect to target
