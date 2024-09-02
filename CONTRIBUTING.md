@@ -31,8 +31,8 @@ When requesting or submitting new features, first consider whether it might be u
 
 ## Technical Requirements
 
-- Submit Pull Requests to the **devel branch only**.
-- Before Submitting your Pull Request, merge `devel` with your new branch and fix any conflicts. (Make sure you don't break anything in development!)
+- Submit Pull Requests to the **development branch only**.
+- Before Submitting your Pull Request, merge `development` with your new branch and fix any conflicts. (Make sure you don't break anything in development!)
 - Commit Unix line endings.
 - Please use the Pi-hole brand: **Pi-hole** (Take a special look at the capitalized 'P' and a low 'h' with a hyphen)
 - (Optional fun) keep to the theme of Star Trek/black holes/gravity.
