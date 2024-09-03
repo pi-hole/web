@@ -416,6 +416,19 @@ function updateSummaryData(runOnce = false) {
     $("span#percent_blocked").text(formattedPercentage);
     $("span#gravity_size").text(intl.format(parseInt(data.gravity.domains_being_blocked, 10)));
 
+    const lastupdate = parseInt(data.gravity.last_update, 10);
+    var updatetxt = "Lists were never updated";
+    if (lastupdate > 0) {
+      updatetxt =
+        "Lists updated " +
+        utils.datetimeRelative(lastupdate) +
+        "\n(" +
+        utils.datetime(lastupdate, false, false) +
+        ")";
+    }
+
+    $(".small-box:has(#gravity_size)").attr("title", updatetxt);
+
     if (2 * previousCount < newCount && newCount > 100 && !firstSummaryUpdate) {
       // Update the charts if the number of queries has increased significantly
       // Do not run this on the first update as reloading the same data after
