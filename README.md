@@ -146,24 +146,68 @@ You can filter your log using the advanced filter:
 
 ## Blocking and allowing domains
 
-> [!WARNING]
-> **TODO:** this section needs more details.
+Lists, domains (block or allow) and regex entries can be managed through groups.
 
-- Adlists: gravity and antigravity
-- Domains and Regex
-- groups
+- [Group management overview](https://docs.pi-hole.net/group_management/groups/)
+- [How to use Pi-hole Groups with examples](https://docs.pi-hole.net/group_management/example/)
+
+<br>
 
 <p align="center">
   <img src="https://pi-hole.github.io/graphics/Screenshots/v6/v6_domain_management.png" alt="Domain Management">
 </p>
 
-## Manage and configure Pi-hole features
+## Settings - Manage and configure Pi-hole features
 
-> [!WARNING]
-> **TODO:** replace the images and maybe add some text with details
+
+<img src="https://pi-hole.github.io/graphics/Screenshots/v6/v6_settings_system.gif" alt="System Settings - Basic and Expert" align="right" width="45%">
+
+**System Settings:**
+  - System Information
+  - DNS reply metrics
+  - DNS cache metrics $\color{red}{\normalsize\textsf{[Expert]}}$
+  - DHCP server metrics $\color{red}{\normalsize\textsf{[Expert]}}$
+  - Actions (Buttons) $\color{red}{\normalsize\textsf{[Expert]}}$
+
+**DNS Settings:**
+  - Upstream DNS Servers (including custom DNS servers)
+  - Interface settings $\color{red}{\normalsize\textsf{[Expert]}}$
+  - Advanced DNS settings $\color{red}{\normalsize\textsf{[Expert]}}$
+  - DNS domain settings $\color{red}{\normalsize\textsf{[Expert]}}$
+  - Rate-limiting $\color{red}{\normalsize\textsf{[Expert]}}$
+  - Conditional forwarding $\color{red}{\normalsize\textsf{[Expert]}}$
+
+**DHCP Settings:**
+  - General DHCP Settings
+  - Advanced DHCP Settings $\color{red}{\normalsize\textsf{[Expert]}}$
+  - Currently active DHCP leases table
+  - Static DHCP configuration $\color{red}{\normalsize\textsf{[Expert]}}$
+  - Advanced description (Help text) $\color{red}{\normalsize\textsf{[Expert]}}$
+
+**Web Interface - API Settings:**
+  - Theme settings
+  - Advanced Settings $\color{red}{\normalsize\textsf{[Expert]}}$
+  - Exclusions (Domains and Clients to be excluded from dashboard tables) $\color{red}{\normalsize\textsf{[Expert]}}$
+  - Currently active sessions table $\color{red}{\normalsize\textsf{[Expert]}}$
+
+**Privacy Settings:**
+  - Query Logging
+  - Query Anonymization ("Privacy Level") $\color{red}{\normalsize\textsf{[Expert]}}$
+  - Privacy-related database settings $\color{red}{\normalsize\textsf{[Expert]}}$
+
+**Teleporter:**
+  - Export your Pi-hole's configuration
+  - Import previously exported configuration
+
+**Local DNS Settings:**
+  - Local DNS records
+  - Local CNAME records records
+
+**All Settings** (only visible in Expert mode):
+  - Advanced settings page, containing all available options
 
 <p align="center">
-  <img src="https://pi-hole.github.io/graphics/Screenshots/dashboard-settings.gif" alt="Settings">
+  <img src="https://pi-hole.github.io/graphics/Screenshots/v6/v6_all_settings.gif" alt="All Settings">
 </p>
 
 ## Tools
@@ -174,18 +218,12 @@ You can filter your log using the advanced filter:
 - Search a domain in your lists.
 
 <p align="center">
-  <img src="https://pi-hole.github.io/graphics/Screenshots/pihole-t.png" alt="Tail the log">
+  <img src="https://pi-hole.github.io/graphics/Screenshots/v6/v6_tail_pihole_log.gif" alt="Live Pi-hole log">
   <br><br>
-  <img src="https://pi-hole.github.io/graphics/Screenshots/pihole-q.png" alt="Query ad lists">
+  <img src="https://pi-hole.github.io/graphics/Screenshots/v6/v6_search.gif" alt="Search a domain in your lists">
 </p>
 
 ## API
-
-> [!WARNING]
-> **TODO:**
-> - Rewrite
-> - Add a link to the online API documentation.
-> - Add an image of the API documentation interface.
 
 The REST API can be accessed at `/api` and it returns data in JSON format.
 
