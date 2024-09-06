@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false */
+/* global utils:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, updateQueryFrequency: false */
 
 // Define global variables
 var timeLineChart, clientsChart;
@@ -415,6 +415,7 @@ function updateSummaryData(runOnce = false) {
     var formattedPercentage = utils.toPercent(data.queries.percent_blocked, 1);
     $("span#percent_blocked").text(formattedPercentage);
     $("span#gravity_size").text(intl.format(parseInt(data.gravity.domains_being_blocked, 10)));
+    updateQueryFrequency(intl, data.queries.frequency);
 
     const lastupdate = parseInt(data.gravity.last_update, 10);
     var updatetxt = "Lists were never updated";

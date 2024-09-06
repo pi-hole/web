@@ -17,7 +17,6 @@ const REFRESH_INTERVAL = {
   blocking: 10000, // 10 sec (all pages, sidebar)
   metrics: 10000, // 10 sec (settings page)
   system: 20000, // 20 sec (all pages, sidebar)
-  sensors: 20000, // 20 sec (all pages, sidebar)
   query_types: 60000, // 1 min (dashboard)
   upstreams: 60000, // 1 min (dashboard)
   top_lists: 60000, // 1 min (dashboard)
@@ -226,13 +225,22 @@ function initCheckboxRadioStyle() {
   }
 }
 
-var systemTimer, sensorsTimer, versionTimer;
+var systemTimer, versionTimer;
 function updateInfo() {
   updateSystemInfo();
-  updateSensorsInfo();
   updateVersionInfo();
   updateFtlInfo();
   checkBlocking();
+}
+
+function updateQueryFrequency(intl, frequency) {
+  $("#query_frequency")
+    .html(
+      '<i class="fa fa-fw fa-clock-rotate-left text-green-light"></i>&nbsp;&nbsp;' +
+        intl.format(parseFloat(frequency)) +
+        " q/s"
+    )
+    .attr("title", "Queries per second");
 }
 
 var ftlinfoTimer = null;
@@ -250,7 +258,7 @@ function updateFtlInfo() {
       $("#num_gravity").text(intl.format(database.gravity));
       $("#num_allowed").text(intl.format(database.domains.allowed));
       $("#num_denied").text(intl.format(database.domains.denied));
-
+      updateQueryFrequency(intl, ftl.query_frequency);
       $("#sysinfo-cpu-ftl").text("(" + ftl["%cpu"].toFixed(1) + "% used by FTL)");
       $("#sysinfo-ram-ftl").text("(" + ftl["%mem"].toFixed(1) + "% used by FTL)");
       $("#sysinfo-pid-ftl").text(ftl.pid);
@@ -292,7 +300,7 @@ function updateSystemInfo() {
       var color;
       color = percentRAM > 75 ? "text-red" : "text-green-light";
       $("#memory").html(
-        '<i class="fa fa-fw fa-circle ' +
+        '<i class="fa fa-fw fa-memory ' +
           color +
           '"></i>&nbsp;&nbsp;Memory usage:&nbsp;' +
           percentRAM.toFixed(1) +
@@ -315,7 +323,7 @@ function updateSystemInfo() {
 
       color = system.cpu.load.percent[0] > 100 ? "text-red" : "text-green-light";
       $("#cpu").html(
-        '<i class="fa fa-fw fa-circle ' +
+        '<i class="fa fa-fw fa-microchip ' +
           color +
           '"></i>&nbsp;&nbsp;CPU:&nbsp;' +
           system.cpu.load.percent[0].toFixed(1) +
@@ -368,59 +376,6 @@ function updateSystemInfo() {
 
       clearTimeout(systemTimer);
       systemTimer = utils.setTimer(updateSystemInfo, REFRESH_INTERVAL.system);
-    })
-    .fail(function (data) {
-      apiFailure(data);
-    });
-}
-
-function updateSensorsInfo() {
-  $.ajax({
-    url: "/api/info/sensors",
-  })
-    .done(function (data) {
-      var unit = "°" + data.sensors.unit;
-      if (data.sensors.unit === "°K") {
-        unit = data.sensors.unit;
-      }
-
-      if (data.sensors.cpu_temp !== null) {
-        var temp = data.sensors.cpu_temp.toFixed(1) + "&thinsp;" + unit;
-        var color =
-          data.sensors.cpu_temp > data.sensors.hot_limit
-            ? "text-red fa-temperature-high"
-            : "text-green-light fa-temperature-low";
-        $("#temperature").html(
-          '<i class="fa fa-fw fas ' + color + '"></i>&nbsp;&nbsp;Temp:&nbsp;' + temp
-        );
-      } else
-        $("#temperature").html(
-          '<i class="fa fa-fw fas fa-temperature-low"></i>&nbsp;&nbsp;Temp:&nbsp;N/A'
-        );
-
-      // Get a text listing of all sensors
-      let sensorlist = "Available sensors:\n";
-      $.each(data.sensors.list, function (index, hwmon) {
-        sensorlist += "- " + hwmon.name + " (" + hwmon.source + "):\n";
-        $.each(hwmon.temps, function (index, temp) {
-          sensorlist +=
-            "  - " +
-            temp.name +
-            ": " +
-            temp.value.toFixed(1) +
-            unit +
-            " (max: " +
-            (temp.max === null ? "N/A" : temp.max.toFixed(1) + unit) +
-            ", crit: " +
-            (temp.crit === null ? "N/A" : temp.crit.toFixed(1) + unit) +
-            ")\n";
-        });
-      });
-      $("#temperature").prop("title", sensorlist);
-
-      // Update every 20 seconds
-      clearTimeout(sensorsTimer);
-      sensorsTimer = utils.setTimer(updateSensorsInfo, REFRESH_INTERVAL.sensors);
     })
     .fail(function (data) {
       apiFailure(data);
