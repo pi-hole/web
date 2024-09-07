@@ -243,10 +243,21 @@ function updateQueryFrequency(intl, frequency) {
     title = "Queries per minute";
   }
 
+  // Determine number of fraction digits based on the frequency
+  // - 0 fraction digits for frequencies > 10
+  // - 1 fraction digit for frequencies between 1 and 10
+  // - 2 fraction digits for frequencies < 1
+  const fractionDigits = freq > 10 ? 0 : freq < 1 ? 2 : 1;
+  const userLocale = navigator.language || "en-US";
+  const freqFormatted = new Intl.NumberFormat(userLocale, {
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  }).format(freq);
+
   $("#query_frequency")
     .html(
       '<i class="fa fa-fw fa-gauge-high text-green-light"></i>&nbsp;&nbsp;' +
-        intl.format(freq) +
+        freqFormatted +
         "&thinsp;" +
         unit
     )
