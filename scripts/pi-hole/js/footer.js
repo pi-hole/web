@@ -234,13 +234,23 @@ function updateInfo() {
 }
 
 function updateQueryFrequency(intl, frequency) {
+  let freq = parseFloat(frequency);
+  let unit = "q/s";
+  let title = "Queries per second";
+  if (freq < 0.5) {
+    freq *= 60;
+    unit = "q/m";
+    title = "Queries per minute";
+  }
+
   $("#query_frequency")
     .html(
-      '<i class="fa fa-fw fa-clock-rotate-left text-green-light"></i>&nbsp;&nbsp;' +
-        intl.format(parseFloat(frequency)) +
-        " q/s"
+      '<i class="fa fa-fw fa-gauge-high text-green-light"></i>&nbsp;&nbsp;' +
+        intl.format(freq) +
+        "&thinsp;" +
+        unit
     )
-    .attr("title", "Queries per second");
+    .attr("title", title);
 }
 
 var ftlinfoTimer = null;
