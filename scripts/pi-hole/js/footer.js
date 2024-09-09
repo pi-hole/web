@@ -234,13 +234,13 @@ function updateInfo() {
 }
 
 function updateQueryFrequency(intl, frequency) {
-  let freq = parseFloat(frequency);
-  let unit = "q/s";
-  let title = "Queries per second";
-  if (freq < 0.5) {
-    freq *= 60;
-    unit = "q/m";
-    title = "Queries per minute";
+  let freq = parseFloat(frequency) * 60;
+  let unit = "q/min";
+  let title = "Queries per minute";
+  if (freq > 100) {
+    freq /= 60;
+    unit = "q/s";
+    title = "Queries per second";
   }
 
   // Determine number of fraction digits based on the frequency
