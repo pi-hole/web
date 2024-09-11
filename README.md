@@ -28,8 +28,10 @@ Pi-hole[®](https://pi-hole.net/trademark-rules-and-brand-guidelines/)'s Web int
 - **Insightful**: use the query log, including long-term stats to gain insight into your networks activity
 
 <br>
+<img src="https://pi-hole.github.io/graphics/Badges/browserstack-badge.png" width="150">
 
 ---
+<br>
 
 # Installation
 
