@@ -66,8 +66,8 @@ Make no mistake: **your support is absolutely vital to help keep us innovating!*
 
 Sending a donation using our links below is **extremely helpful** in offsetting a portion of our monthly expenses:
 
-- <img src="https://pi-hole.github.io/graphics/Badges/paypal-badge-black.svg" width="24" height="24" alt="PP"> [Donate via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY)
-- <img src="https://pi-hole.github.io/graphics/Badges/bitcoin-badge-black.svg" width="24" height="24" alt="BTC"> [Bitcoin, Bitcoin Cash, Ethereum, Litecoin](https://commerce.coinbase.com/checkout/dd304d04-f324-4a77-931b-0db61c77a41b)
+- <img src="https://pi-hole.github.io/graphics/Badges/paypal-badge-black.svg" width="20" height="20" align="absmiddle" alt="PayPal icon"> [Donate via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY)
+- <img src="https://pi-hole.github.io/graphics/Badges/bitcoin-badge-black.svg" width="20" height="20" align="absmiddle" alt="Bitcoin icon"> [Bitcoin, Bitcoin Cash, Ethereum, Litecoin](https://commerce.coinbase.com/checkout/dd304d04-f324-4a77-931b-0db61c77a41b)
 
 ### Alternative support
 
