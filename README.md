@@ -27,9 +27,9 @@ Pi-hole[®](https://pi-hole.net/trademark-rules-and-brand-guidelines/)'s Web int
 - **Useful**: control and configure your Pi-hole with our settings
 - **Insightful**: use the query log, including long-term stats to gain insight into your networks activity
 
----
+<br>
 
-<img src="https://pi-hole.github.io/graphics/Badges/browserstack-badge.png" height="80"><br>
+---
 
 # Installation
 
@@ -37,13 +37,16 @@ The Web interface is enabled by default when you install Pi-hole.
 
 ## Post-installation: access the Web interface and gain insight into your network's activity
 
-There are several ways to [access the dashboard](https://discourse.pi-hole.net/t/how-do-i-access-pi-holes-dashboard-admin-interface/3168):
+There are several ways to access the dashboard:
 
-1. `http://<IP_ADDRESS_OF_YOUR_PI_HOLE>/admin/`
-2. `http://pi.hole/admin/` (when using Pi-hole as your DNS server)
-3. `http://pi.hole/` (when using Pi-hole as your DNS server)
+1. `https://<IP_ADDRESS_OF_YOUR_PI_HOLE>/admin/`
+2. `https://pi.hole/admin/` (when using Pi-hole as your DNS server)
+3. `https://pi.hole/` (when using Pi-hole as your DNS server)
 
-Once logged in (forgot your password?), you can view your network stats to see things like:
+> [!TIP]
+> You can access the web interface using `http://` or `https://` protocols.
+
+Once logged in, you can view your network stats to see things like:
 
 - the domains being queried on your network
 - the time the queries were initiated
