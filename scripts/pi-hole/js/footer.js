@@ -714,7 +714,7 @@ function addAdvancedInfo() {
   const advancedInfoTarget = $("#advanced-info");
   const isTLS = advancedInfoSource.data("tls");
   const clientIP = advancedInfoSource.data("client-ip");
-  const XForwardedFor = window.atob(advancedInfoSource.data("xff"));
+  const XForwardedFor = window.atob(advancedInfoSource.data("xff") ?? "");
   const starttime = parseFloat(advancedInfoSource.data("starttime"));
   const endtime = parseFloat(advancedInfoSource.data("endtime"));
   const totaltime = 1e3 * (endtime - starttime);
