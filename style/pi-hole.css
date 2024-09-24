@@ -1551,3 +1551,12 @@ textarea.field-sizing-content {
   min-inline-size: 20ch;
   field-sizing: content;
 }
+
+/* Used in interfaces page */
+.list-group-item {
+  background: transparent;
+  border-color: rgba(127, 127, 127, 0.27);
+}
+.bstreeview .list-group-item:hover {
+  background-color: rgba(127, 127, 127, 0.18);
+}
