@@ -281,7 +281,8 @@ function updateFtlInfo() {
         .text(intl.format(database.domains.allowed + database.regex.allowed))
         .attr(
           "title",
-          intl.format(database.domains.allowed) +
+          "Allowed: " +
+            intl.format(database.domains.allowed) +
             " exact domains, " +
             intl.format(database.regex.allowed) +
             " regex filters"
@@ -290,7 +291,8 @@ function updateFtlInfo() {
         .text(intl.format(database.domains.denied + database.regex.denied))
         .attr(
           "title",
-          intl.format(database.domains.denied) +
+          "Denied: " +
+            intl.format(database.domains.denied) +
             " exact domains, " +
             intl.format(database.regex.denied) +
             " regex filters"
