@@ -39,9 +39,8 @@ function in_array (val, tab)
     return false
 end
 
--- Connection is considered secure if either running natively on HTTPS or behind
--- a reverse proxy (e.g. Traefik)
-is_secure = mg.request_info.https or pihole.rev_proxy()
+-- Connection is considered secure if running natively on HTTPS
+is_secure = mg.request_info.https
 
 -- Variable to check if user is already authenticated
 is_authenticated = mg.request_info.is_authenticated

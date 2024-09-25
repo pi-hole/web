@@ -227,7 +227,7 @@ $(".confirm-restartdns").confirm({
   cancelButton: "No, go back",
   post: true,
   confirmButtonClass: "btn-danger",
-  cancelButtonClass: "btn-success",
+  cancelButtonClass: "btn-default",
   dialogClass: "modal-dialog",
 });
 
@@ -251,7 +251,7 @@ $(".confirm-flushlogs").confirm({
   cancelButton: "No, go back",
   post: true,
   confirmButtonClass: "btn-danger",
-  cancelButtonClass: "btn-success",
+  cancelButtonClass: "btn-default",
   dialogClass: "modal-dialog",
 });
 
@@ -274,8 +274,8 @@ $(".confirm-flusharp").confirm({
   confirmButton: "Yes, flush my network table",
   cancelButton: "No, go back",
   post: true,
-  confirmButtonClass: "btn-warning",
-  cancelButtonClass: "btn-success",
+  confirmButtonClass: "btn-danger",
+  cancelButtonClass: "btn-default",
   dialogClass: "modal-dialog",
 });
 
@@ -312,8 +312,8 @@ $("#loggingButton").confirm({
   confirmButton: "Yes, change query logging",
   cancelButton: "No, go back",
   post: true,
-  confirmButtonClass: "btn-warning",
-  cancelButtonClass: "btn-success",
+  confirmButtonClass: "btn-danger",
+  cancelButtonClass: "btn-default",
   dialogClass: "modal-dialog",
 });
 

@@ -6,6 +6,15 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license.
 * ]]--
+
+-- Iterate over the array mg.request_info.http_headers and check if there is an 'X-Forwarded-For' header
+x_forwarded_for = ""
+for k,v in pairs(mg.request_info.http_headers) do
+    if k:lower() == "x-forwarded-for" then
+        x_forwarded_for = mg.base64_encode(v)
+        break
+    end
+end
 ?>
 
         </section>
@@ -59,6 +68,6 @@
 <!-- ./wrapper -->
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/footer.js')?>"></script>
 
-<div id="advanced-info-data" style="display: none;" data-starttime="<?=starttime?>" data-endtime="<?=mg.time(true)?>" data-client-ip="<?=mg.request_info.remote_addr?>" data-tls="<?=tostring(is_secure)?>"></div>
+<div id="advanced-info-data" style="display: none;" data-starttime="<?=starttime?>" data-endtime="<?=mg.time(true)?>" data-client-ip="<?=mg.request_info.remote_addr?>" data-tls="<?=tostring(is_secure)?>" data-xff="<?=x_forwarded_for?>"></div>
 </body>
 </html>
