@@ -617,6 +617,11 @@ $(function () {
         $("td:eq(4)", row).text(data.client.ip);
       }
 
+      // Show X-icon instead of reply time if no reply was received
+      if (data.reply.type === "UNKNOWN") {
+        $("td:eq(5)", row).html('<i class="fa fa-times"></i>');
+      }
+
       if (querystatus.buttontext !== false) {
         $("td:eq(6)", row).html(querystatus.buttontext);
       }
