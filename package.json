@@ -124,6 +124,7 @@
     "moment": "2.30.1",
     "myclabs.jquery.confirm": "2.7.0",
     "qrious": "4.0.2",
-    "select2": "4.0.13"
+    "select2": "4.0.13",
+    "bstreeview": "1.2.0"
   }
 }
