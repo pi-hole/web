@@ -277,8 +277,24 @@ function updateFtlInfo() {
       $("#num_clients").text(intl.format(database.clients));
       $("#num_lists").text(intl.format(database.lists));
       $("#num_gravity").text(intl.format(database.gravity));
-      $("#num_allowed").text(intl.format(database.domains.allowed));
-      $("#num_denied").text(intl.format(database.domains.denied));
+      $("#num_allowed")
+        .text(intl.format(database.domains.allowed + database.regex.allowed))
+        .attr(
+          "title",
+          intl.format(database.domains.allowed) +
+            " exact domains, " +
+            intl.format(database.regex.allowed) +
+            " regex filters"
+        );
+      $("#num_denied")
+        .text(intl.format(database.domains.denied + database.regex.denied))
+        .attr(
+          "title",
+          intl.format(database.domains.denied) +
+            " exact domains, " +
+            intl.format(database.regex.denied) +
+            " regex filters"
+        );
       updateQueryFrequency(intl, ftl.query_frequency);
       $("#sysinfo-cpu-ftl").text("(" + ftl["%cpu"].toFixed(1) + "% used by FTL)");
       $("#sysinfo-ram-ftl").text("(" + ftl["%mem"].toFixed(1) + "% used by FTL)");
