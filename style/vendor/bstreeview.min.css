@@ -1,0 +1,10 @@
+/*
+ @preserve
+ bstreeview.css
+ Version: 1.2.0
+ Authors: Sami CHNITER <sami.chniter@gmail.com>
+ Copyright 2020
+ License: Apache License 2.0
+ Project: https://github.com/chniter/bstreeview
+*/
+.bstreeview{position:relative;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;min-width:0;word-wrap:break-word;padding:0;overflow:hidden}.bstreeview .list-group{margin-bottom:0}.bstreeview .list-group-item{border-radius:0;border-width:1px 0 0 0;padding-top:.5rem;padding-bottom:.5rem;cursor:pointer}.bstreeview .list-group-item:hover{background-color:#dee2e6}.bstreeview>.list-group-item:first-child{border-top-width:0}.bstreeview .state-icon{margin-right:8px}.bstreeview .item-icon{margin-right:5px}

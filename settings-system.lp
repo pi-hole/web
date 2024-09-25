@@ -54,6 +54,19 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                                 </tr>
                             </tbody>
                         </table>
+                        <h4>Primary IP addresses</h4>
+                        <table class="table table-striped table-bordered nowrap">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">IPv4</th>
+                                    <td><code id="sysinfo-gw-v4-addr">?</code>&nbsp;@&nbsp;<code id="sysinfo-gw-v4-iface">?</code></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">IPv6</th>
+                                    <td><code id="sysinfo-gw-v6-addr">?</code>&nbsp;@&nbsp;<code id="sysinfo-gw-v6-iface">?</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
