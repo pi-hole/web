@@ -44,26 +44,6 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-12">
-                        <div class="row form-group">
-                            <div class="col-sm-6">
-                                <label for="webserver.api.temp.limit"><strong>Temperature limit for "hot":</strong></label>
-                            </div>
-                            <div class="col-sm-6">
-                                <input class="form-control" type="number" data-type="integer" id="webserver.api.temp.limit" data-key="webserver.api.temp.limit">
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-sm-6">
-                                <label for="webserver.api.temp.unit">Temperature unit:</label>
-                            </div>
-                            <div class="col-sm-6">
-                                <select id="webserver.api.temp.unit" data-key="webserver.api.temp.unit" class="form-control" placeholder="">
-                                    <option disabled selected>Loading...</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -72,7 +52,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-expert">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="webserver.api.localAPIauth webserver.api.prettyJSON webserver.api.allow_destructive webserver.api.temp.limit webserver.api.temp.unit">Advanced Settings</h3>
+                <h3 class="box-title" data-configkeys="webserver.api.localAPIauth webserver.api.prettyJSON webserver.api.allow_destructive">Advanced Settings</h3>
             </div>
             <div class="box-body">
                 <div class="row">
