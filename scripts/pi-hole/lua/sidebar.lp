@@ -176,7 +176,7 @@
                     </ul>
                 </li>
                 <!-- Tools -->
-                <li class="menu-system treeview<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'network'}) then ?> active<? end ?>">
+                <li class="menu-system treeview<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> active<? end ?>">
                     <a href="<?=webhome?>#">
                         <i class="fa fa-fw menu-icon fa-tools"></i> <span>Tools</span>
                         <span class="warning-count hidden"></span>
