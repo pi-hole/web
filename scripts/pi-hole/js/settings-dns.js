@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false */
+/* global utils:false, applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false */
 
 // Remove an element from an array (inline)
 function removeFromArray(arr, what) {
@@ -107,6 +107,260 @@ function updateDNSserversTextfield(upstreams, customServers) {
   );
 }
 
+function revServerDataTable() {
+  var setByEnv = false;
+  $.ajax({
+    url: "/api/config/dns/revServers?detailed=true",
+  }).done(function (data) {
+    // Set the title icons if needed
+    setConfigValues("dns", "dns", data.config.dns);
+
+    // disable input fields if set by env var
+    if (data.config.dns.revServers.flags.env_var) {
+      $(".revServers").prop("disabled", true);
+    }
+  });
+
+  $("#revServers-table").DataTable({
+    ajax: {
+      url: "/api/config/dns/revServers",
+      type: "GET",
+      dataSrc: function (json) {
+        const output = [];
+        for (let i = 0; i < json.config.dns.revServers.length; i++) {
+          const cols = json.config.dns.revServers[i].split(",");
+          output.push({
+            enabled: cols[0],
+            network: cols[1],
+            ip: cols[2],
+            domain: cols[3],
+          });
+        }
+
+        return output;
+      },
+    },
+    autoWidth: false,
+    columns: [
+      { data: null, width: "60px" },
+      { data: "network" },
+      { data: "ip" },
+      { data: "domain" },
+      { data: null, width: "50px" },
+    ],
+    bFilter: false,
+    ordering: false,
+    columnDefs: [
+      {
+        targets: 0,
+        class: "input-checkbox text-center",
+        render: function (data, type, row, meta) {
+          const name = "enabled_" + meta.row;
+          const ckbox =
+            '<input type="checkbox" disabled ' +
+            (data.enabled === "true" ? "checked " : "") +
+            `name="${name}" id="${name}" class="no-icheck" data-initial-value="${data.enabled}"` +
+            ">";
+          return ckbox;
+        },
+      },
+      {
+        targets: "_all",
+        class: "input-text",
+        render: function (data, type, row, meta) {
+          let name;
+          switch (meta.col) {
+            case 1:
+              name = "network_" + meta.row;
+              break;
+            case 2:
+              name = "ip_" + meta.row;
+              break;
+            case 3:
+              name = "domain_" + meta.row;
+              break;
+            // No default
+          }
+
+          return (
+            '<input type="text" class="form-control" disabled ' +
+            `name="${name}" id="${name}" value="${data}" data-initial-value="${data}"` +
+            ">"
+          );
+        },
+      },
+    ],
+    drawCallback: function () {
+      $('button[id^="deleteRevServers"]').on("click", deleteRecord);
+      $('button[id^="editRevServers"]').on("click", editRecord);
+      $('button[id^="saveRevServers"]').on("click", saveRecord).hide();
+      $('button[id^="cancelRevServers"]').on("click", restoreRecord).hide();
+
+      // Remove visible dropdown to prevent orphaning
+      $("body > .bootstrap-select.dropdown").remove();
+    },
+    rowCallback: function (row, data, displayNum, displayIndex, dataIndex) {
+      $(row).attr("data-index", dataIndex);
+      var button = `<button type="button"
+                      class="btn btn-primary btn-xs"
+                      id="editRevServers_${dataIndex}"
+                      data-index="${dataIndex}"
+                      title="Edit"
+                      ${setByEnv ? "disabled" : ""}>
+                      <span class="far fa-edit"></span>
+                    </button>
+                    <button type="button"
+                      class="btn btn-danger btn-xs"
+                      id="deleteRevServers_${dataIndex}"
+                      data-index="${dataIndex}"
+                      data-tag="${Object.values(data)}"
+                      data-type="revServers"
+                      title="Delete"
+                      ${setByEnv ? "disabled" : ""}>
+                      <span class="far fa-trash-alt"></span>
+                    </button>
+                    <button type="button"
+                      class="btn btn-success btn-xs"
+                      id="saveRevServers_${dataIndex}"
+                      data-index="${dataIndex}"
+                      title="Save changes">
+                      <span class="far fa-save"></span>
+                    </button>
+                    <button type="button"
+                      class="btn btn-warning btn-xs"
+                      id="cancelRevServers_${dataIndex}"
+                      data-index="${dataIndex}"
+                      data-tag="${Object.values(data)}"
+                      title="Undo changes">
+                      <span class="fas fa-undo"></span>
+                    </button>`;
+      $("td:eq(4)", row).html(button);
+    },
+    dom: "<'row'<'col-sm-12'<'table-responsive'tr>>><'row'<'col-sm-12'i>>",
+    paging: false,
+    language: {
+      emptyTable: "No revese DNS servers defined.",
+    },
+    stateSave: true,
+    stateDuration: 0,
+    processing: true,
+    stateSaveCallback: function (settings, data) {
+      utils.stateSaveCallback("revServers-records-table", data);
+    },
+    stateLoadCallback: function () {
+      var data = utils.stateLoadCallback("revServers-records-table");
+      // Return if not available
+      if (data === null) {
+        return null;
+      }
+
+      // Apply loaded state to table
+      return data;
+    },
+  });
+}
+
+function editRecord() {
+  // Enable fields on the selected row
+  $(this).closest("tr").find("td input").prop("disabled", false);
+
+  // Hide EDIT and DELETE buttons. Show SAVE and UNDO buttons
+  $(this).hide();
+  $(this).siblings('[id^="delete"]').hide();
+  $(this).siblings('[id^="save"]').show();
+  $(this).siblings('[id^="cancel"]').show();
+}
+
+function saveRecord() {
+  // Find the row index
+  const index = $(this).attr("data-index");
+
+  // Get the edited values from each field
+  const values = [];
+  values[0] = $("#enabled_" + index).prop("checked") ? "true" : "false";
+  values[1] = $("#network_" + index).val();
+  values[2] = $("#ip_" + index).val();
+  values[3] = $("#domain_" + index).val();
+
+  // Save the new values
+  // --- insert $.ajax() call to actually save the data
+  console.log(values.join(",")); // eslint-disable-line no-console
+
+  // Finish the edition disabling the fields
+  $(this).closest("tr").find("td input").prop("disabled", true);
+
+  // Show EDIT and DELETE buttons. Hide SAVE and UNDO buttons
+  $(this).siblings('[id^="edit"]').show();
+  $(this).siblings('[id^="delete"]').show();
+  $(this).hide();
+  $(this).siblings('[id^="cancel"]').hide();
+}
+
+function restoreRecord() {
+  // Find the row index
+  const index = $(this).attr("data-index");
+
+  // Reset values
+  $("#enabled_" + index).prop("checked", $("#enabled_" + index).attr("data-initial-value"));
+  $("#network_" + index).val($("#network_" + index).attr("data-initial-value"));
+  $("#ip_" + index).val($("#ip_" + index).attr("data-initial-value"));
+  $("#domain_" + index).val($("#domain_" + index).attr("data-initial-value"));
+
+  // Show cancellation message
+  utils.showAlert("info", "fas fa-undo", "Operation canceled", "Original values restored");
+
+  // Finish the edition disabling the fields
+  $(this).closest("tr").find("td input").prop("disabled", true);
+
+  // Show EDIT and DELETE buttons. Hide SAVE and UNDO buttons
+  $(this).siblings('[id^="edit"]').show();
+  $(this).siblings('[id^="delete"]').show();
+  $(this).siblings('[id^="save"]').hide();
+  $(this).hide();
+}
+
+function deleteRecord() {
+  // Get the tags
+  var tags = [$(this).attr("data-tag")];
+
+  // Check input validity
+  if (!Array.isArray(tags)) return;
+
+  // Exploit prevention: Return early for non-numeric IDs
+  for (var tag in tags) {
+    if (Object.hasOwnProperty.call(tags, tag)) {
+      delRevServers(tags);
+    }
+  }
+}
+
+function delRevServers(elem) {
+  utils.disableAll();
+  utils.showAlert("info", "", "Deleting reverse server...", elem);
+  const url = "/api/config/dns/revServers/" + encodeURIComponent(elem);
+
+  $.ajax({
+    url: url,
+    method: "DELETE",
+  })
+    .done(function () {
+      utils.enableAll();
+      utils.showAlert("success", "fas fa-trash-alt", "Successfully deleted reverse server", elem);
+      $("#revServers-table").DataTable().ajax.reload(null, false);
+    })
+    .fail(function (data, exception) {
+      utils.enableAll();
+      apiFailure(data);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting DNS record: <code>" + elem + "</code>",
+        data.responseText
+      );
+      console.log(exception); // eslint-disable-line no-console
+    });
+}
+
 function processDNSConfig() {
   $.ajax({
     url: "/api/config/dns?detailed=true", // We need the detailed output to get the DNS server list
@@ -123,4 +377,35 @@ function processDNSConfig() {
 
 $(document).ready(function () {
   processDNSConfig();
+  revServerDataTable();
+
+  // Button to add a new reverse server
+  $("#btnAdd-revServers").on("click", function () {
+    utils.disableAll();
+    var items = [];
+    items[0] = $("#enabled-revServers").is(":checked") ? "true" : "false";
+    items[1] = $("#network-revServers").val();
+    items[2] = $("#server-revServers").val();
+    items[3] = $("#domain-revServers").val();
+    const elem = items.join(",");
+    const url = "/api/config/dns/revServers/" + encodeURIComponent(elem);
+    utils.showAlert("info", "", "Adding reverse server...", elem);
+    $.ajax({
+      url: url,
+      method: "PUT",
+    })
+      .done(function () {
+        utils.enableAll();
+        utils.showAlert("success", "fas fa-plus", "Successfully added reverse server", elem);
+        $("#revServers-table tfoot .form-control").val("");
+        $("#enabled-revServers").prop("checked", true);
+        $("#revServers-table").DataTable().ajax.reload(null, false);
+      })
+      .fail(function (data, exception) {
+        utils.enableAll();
+        apiFailure(data);
+        utils.showAlert("error", "", "Error while deleting reverse server", data.responseText);
+        console.log(exception); // eslint-disable-line no-console
+      });
+  });
 });
