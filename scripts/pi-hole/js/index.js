@@ -414,9 +414,10 @@ function updateSummaryData(runOnce = false) {
     $("span#blocked_queries").text(intl.format(parseFloat(data.queries.blocked)));
     var formattedPercentage = utils.toPercent(data.queries.percent_blocked, 1);
     $("span#percent_blocked").text(formattedPercentage);
-    $("span#gravity_size").text(intl.format(parseInt(data.gravity.domains_being_blocked, 10)));
     updateQueryFrequency(intl, data.queries.frequency);
 
+    const gravityCount = parseInt(data.gravity.domains_being_blocked, 10);
+    $("span#gravity_size").text(intl.format(gravityCount > 0 ? gravityCount : 0));
     const lastupdate = parseInt(data.gravity.last_update, 10);
     var updatetxt = "Lists were never updated";
     if (lastupdate > 0) {
