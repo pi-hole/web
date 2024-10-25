@@ -52,17 +52,10 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     <div class="col-md-6 settings-level-expert">
         <div class="box box-warning">
             <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="webserver.api.localAPIauth webserver.api.prettyJSON webserver.api.allow_destructive">Advanced Settings</h3>
+                <h3 class="box-title" data-configkeys="webserver.api.prettyJSON webserver.api.allow_destructive">Advanced Settings</h3>
             </div>
             <div class="box-body">
                 <div class="row">
-                    <div class="col-lg-12">
-                        <div>
-                            <input type="checkbox" id="webserver.api.localAPIauth" data-key="webserver.api.localAPIauth">
-                            <label for="webserver.api.localAPIauth"><strong>Local clients need to authenticate to access the API</strong></label>
-                            <p class="help-block">This will require local clients to authenticate to access the API. This is useful if you want to prevent local users from accessing the API without knowing the password.</p>
-                        </div>
-                    </div>
                     <div class="col-lg-12">
                         <div>
                             <input type="checkbox" id="webserver.api.prettyJSON" data-key="webserver.api.prettyJSON">
