@@ -416,8 +416,6 @@ function updateSummaryData(runOnce = false) {
     $("span#percent_blocked").text(formattedPercentage);
     updateQueryFrequency(intl, data.queries.frequency);
 
-    const gravityCount = parseInt(data.gravity.domains_being_blocked, 10);
-    $("span#gravity_size").text(intl.format(gravityCount > 0 ? gravityCount : 0));
     const lastupdate = parseInt(data.gravity.last_update, 10);
     var updatetxt = "Lists were never updated";
     if (lastupdate > 0) {
@@ -427,6 +425,15 @@ function updateSummaryData(runOnce = false) {
         "\n(" +
         utils.datetime(lastupdate, false, false) +
         ")";
+    }
+
+    const gravityCount = parseInt(data.gravity.domains_being_blocked, 10);
+    if (gravityCount < 0) {
+      // Error. Change the title text and show the error code in parentheses
+      updatetxt = "Error! Update gravity to reset this value.";
+      $("span#gravity_size").text("Error (" + gravityCount + ")");
+    } else {
+      $("span#gravity_size").text(intl.format(gravityCount));
     }
 
     $(".small-box:has(#gravity_size)").attr("title", updatetxt);
