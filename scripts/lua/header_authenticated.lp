@@ -9,7 +9,7 @@
 ]]--
 mg.include('header.lp','r')
 ?>
-    <script src="<?=pihole.fileversion('scripts/pi-hole/js/logout.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/js/logout.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/select2/select2.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/datatables/datatables.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/datatables-select/datatables.select.min.js')?>"></script>

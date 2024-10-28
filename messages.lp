@@ -7,7 +7,7 @@
 *    Please see LICENSE file for your rights under this license.
 */ ]]--
 
-mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
+mg.include('scripts/lua/header_authenticated.lp','r')
 ?>
 
 <!-- Title -->
@@ -41,6 +41,6 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/messages.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/messages.js')?>"></script>
 
-<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>
+<? mg.include('scripts/lua/footer.lp','r')?>

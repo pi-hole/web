@@ -7,11 +7,11 @@
 *  Please see LICENSE file for your rights under this license.
 --]]
 
-mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
+mg.include('scripts/lua/header_authenticated.lp','r')
 
 -- Page title and level selector
 PageTitle = "System Settings"
-mg.include('scripts/pi-hole/lua/settings_header.lp','r')
+mg.include('scripts/lua/settings_header.lp','r')
 ?>
 <div class="row">
     <div class="col-md-6">
@@ -318,8 +318,8 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
 </div>
 <script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
 <script src="<?=pihole.fileversion('vendor/jquery-confirm/jquery.confirm.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/charts.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/settings-system.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/settings.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/charts.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/settings-system.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
 
-<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>
+<? mg.include('scripts/lua/footer.lp','r')?>

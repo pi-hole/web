@@ -26,7 +26,7 @@ function eventsource() {
   if (typeof EventSource !== "function") {
     $.ajax({
       method: "GET",
-      url: "scripts/pi-hole/php/debug.php?IE&token=" + token + checked,
+      url: "scripts/php/debug.php?IE&token=" + token + checked,
       async: false,
     }).done(function (data) {
       ta.show();
@@ -36,7 +36,7 @@ function eventsource() {
     return;
   }
 
-  var source = new EventSource("scripts/pi-hole/php/debug.php?&token=" + token + checked);
+  var source = new EventSource("scripts/php/debug.php?&token=" + token + checked);
 
   // Reset and show field
   ta.empty();

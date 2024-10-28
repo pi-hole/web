@@ -7,7 +7,7 @@
 *  Please see LICENSE file for your rights under this license.
 --]]
 
-mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
+mg.include('scripts/lua/header_authenticated.lp','r')
 ?>
 <!-- Title -->
 <div class="page-header">
@@ -27,5 +27,5 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 <button type="button" id="gravityBtn" class="btn btn-lg btn-primary btn-block">Update</button>
 <pre id="output" style="width: 100%; height: 100%;" hidden></pre>
 
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/gravity.js')?>"></script>
-<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>
+<script src="<?=pihole.fileversion('scripts/js/gravity.js')?>"></script>
+<? mg.include('scripts/lua/footer.lp','r')?>

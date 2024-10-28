@@ -7,7 +7,7 @@
 *  Please see LICENSE file for your rights under this license.
 --]]
 
-mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
+mg.include('scripts/lua/header_authenticated.lp','r')
 ?>
 <!-- Alert Modal -->
 <div id="alertModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -195,8 +195,8 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 <!-- /.row -->
 
 <script src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/ip-address-sorting.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>"></script>
 <script src="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/queries.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/queries.js')?>"></script>
 
-<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>
+<? mg.include('scripts/lua/footer.lp','r')?>
