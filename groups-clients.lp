@@ -91,8 +91,8 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('scripts/vendor/bootstrap-select.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/vendor/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/ip-address-sorting.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/groups-common.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/groups-clients.js')?>"></script>

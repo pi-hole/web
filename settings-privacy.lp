@@ -108,7 +108,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('scripts/vendor/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings-privacy.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings.js')?>"></script>
 

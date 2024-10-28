@@ -32,7 +32,7 @@ mg.include('scripts/pi-hole/lua/settings_header.lp','r')
         <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
     </div>
 </div>
-<script src="<?=pihole.fileversion('scripts/vendor/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings-advanced.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/pi-hole/js/settings.js')?>"></script>
 
