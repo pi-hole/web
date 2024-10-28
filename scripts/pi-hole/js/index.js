@@ -414,7 +414,6 @@ function updateSummaryData(runOnce = false) {
     $("span#blocked_queries").text(intl.format(parseFloat(data.queries.blocked)));
     var formattedPercentage = utils.toPercent(data.queries.percent_blocked, 1);
     $("span#percent_blocked").text(formattedPercentage);
-    $("span#gravity_size").text(intl.format(parseInt(data.gravity.domains_being_blocked, 10)));
     updateQueryFrequency(intl, data.queries.frequency);
 
     const lastupdate = parseInt(data.gravity.last_update, 10);
@@ -426,6 +425,15 @@ function updateSummaryData(runOnce = false) {
         "\n(" +
         utils.datetime(lastupdate, false, false) +
         ")";
+    }
+
+    const gravityCount = parseInt(data.gravity.domains_being_blocked, 10);
+    if (gravityCount < 0) {
+      // Error. Change the title text and show the error code in parentheses
+      updatetxt = "Error! Update gravity to reset this value.";
+      $("span#gravity_size").text("Error (" + gravityCount + ")");
+    } else {
+      $("span#gravity_size").text(intl.format(gravityCount));
     }
 
     $(".small-box:has(#gravity_size)").attr("title", updatetxt);
