@@ -89,7 +89,7 @@ is_authenticated = mg.request_info.is_authenticated
 <? end ?>
 
     <!-- Common styles -->
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap/bootstrap.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap/css/bootstrap.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/animate/animate.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.css')?>">
 <?
@@ -116,7 +116,7 @@ if startsWith(scriptname, 'groups') then
 
     <!-- scripts -->
     <script src="<?=pihole.fileversion('vendor/jquery/jquery.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/bootstrap/bootstrap.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/font-awesome/font-awesome.min.js')?>"></script>
