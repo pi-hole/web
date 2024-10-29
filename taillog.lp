@@ -7,7 +7,7 @@
 *    Please see LICENSE file for your rights under this license.
 */ ]]--
 
-mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
+mg.include('scripts/lua/header_authenticated.lp','r')
 ?>
 <div class="row">
     <div class="col-md-12">
@@ -33,6 +33,6 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/taillog.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/taillog.js')?>"></script>
 
-<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>
+<? mg.include('scripts/lua/footer.lp','r')?>

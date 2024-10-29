@@ -7,7 +7,7 @@
 *  Please see LICENSE file for your rights under this license.
 --]]
 
-mg.include('scripts/pi-hole/lua/header.lp','r')
+mg.include('scripts/lua/header.lp','r')
 ?>
 <body class="hold-transition layout-boxed login-page">
     <div class="box login-box">

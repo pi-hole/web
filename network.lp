@@ -7,7 +7,7 @@
 *  Please see LICENSE file for your rights under this license.
 --]]
 
-mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
+mg.include('scripts/lua/header_authenticated.lp','r')
 ?>
 
 <div class="row">
@@ -64,7 +64,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 </div>
 <!-- /.row -->
 
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/ip-address-sorting.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/network.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/network.js')?>"></script>
 
-<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>
+<? mg.include('scripts/lua/footer.lp','r')?>

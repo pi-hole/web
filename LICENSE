@@ -7,8 +7,8 @@ Please see https://joinup.ec.europa.eu/community/eupl/og_page/eupl for official 
 
 This license applies to the whole project EXCEPT the files located under
 
-- styles/vendor, and
-- scripts/vendor
+- vendor/
+
 whose licenses are located therein.
 
 -------------------------------------------------------------

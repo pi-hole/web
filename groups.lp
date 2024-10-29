@@ -7,7 +7,7 @@
 *  Please see LICENSE file for your rights under this license.
 --]]
 
-mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
+mg.include('scripts/lua/header_authenticated.lp','r')
 ?>
 
 <!-- Title -->
@@ -79,9 +79,9 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('scripts/vendor/bootstrap-select.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/vendor/bootstrap-toggle.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/groups-common.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/groups.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/groups-common.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/groups.js')?>"></script>
 
-<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>
+<? mg.include('scripts/lua/footer.lp','r')?>

@@ -77,48 +77,49 @@ is_authenticated = mg.request_info.is_authenticated
         html { background-color: #000; }
     </style>
 <? end ?>
-    <script src="<?=pihole.fileversion('scripts/vendor/nprogress.min.js')?>"></script>
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/nprogress.min.css')?>">
+    <script src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/nprogress/nprogress.min.css')?>">
 
     <!-- Theme fonts -->
 <? if theme.name == 'lcars' then ?>
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/fonts/ubuntu-mono/ubuntu-mono.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/fonts/antonio/antonio.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/ubuntu-mono/ubuntu-mono.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/antonio/antonio.css')?>">
 <? else ?>
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/SourceSansPro/SourceSansPro.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/SourceSansPro/SourceSansPro.css')?>">
 <? end ?>
 
     <!-- Common styles -->
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap/css/bootstrap.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/animate.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bstreeview.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap/css/bootstrap.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/animate/animate.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.css')?>">
 <?
 if startsWith(scriptname, 'groups') then
     -- Group management styles
 ?>
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap-select.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.css')?>">
 <? end ?>
 <? if is_authenticated then ?>
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/datatables.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/datatables_extensions.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/daterangepicker.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/bootstrap-toggle.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables/datatables.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-buttons/datatables.buttons.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-select/datatables.select.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.css')?>">
 <? end ?>
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/select2.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/AdminLTE.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/select2/select2.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/adminLTE/AdminLTE.min.css')?>">
 
     <!-- Theme styles -->
     <link rel="stylesheet" href="<?=pihole.fileversion('style/pi-hole.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('style/themes/'..theme.name..'.css')?>">
 
-    <noscript><link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/js-warn.css')?>"></noscript>
+    <noscript><link rel="stylesheet" href="<?=pihole.fileversion('vendor/js-warn/js-warn.css')?>"></noscript>
 
     <!-- scripts -->
-    <script src="<?=pihole.fileversion('scripts/vendor/jquery.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('style/vendor/bootstrap/js/bootstrap.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('scripts/vendor/adminlte.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('scripts/vendor/bootstrap-notify.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('style/vendor/font-awesome/js/all.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('scripts/pi-hole/js/utils.js')?>"></script>
-    <script src="<?=pihole.fileversion('scripts/vendor/waitMe.min.js')?>"></script>
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/vendor/waitMe.min.css')?>">
+    <script src="<?=pihole.fileversion('vendor/jquery/jquery.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/font-awesome/font-awesome.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/waitMe/waitMe.min.js')?>"></script>
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/waitMe/waitMe.min.css')?>">

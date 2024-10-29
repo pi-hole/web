@@ -8,7 +8,7 @@
 --]]
 
 indexpage = true
-mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
+mg.include('scripts/lua/header_authenticated.lp','r')
 ?>
 <!-- Small boxes (Stat box) -->
 <div class="row">
@@ -279,7 +279,7 @@ mg.include('scripts/pi-hole/lua/header_authenticated.lp','r')
 </div>
 <!-- /.row -->
 
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/charts.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/index.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/charts.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/index.js')?>"></script>
 
-<? mg.include('scripts/pi-hole/lua/footer.lp','r')?>
+<? mg.include('scripts/lua/footer.lp','r')?>

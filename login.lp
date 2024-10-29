@@ -7,7 +7,7 @@
 *  Please see LICENSE file for your rights under this license.
 --]]
 
-mg.include('scripts/pi-hole/lua/header.lp','r')
+mg.include('scripts/lua/header.lp','r')
 ?>
 <body class="hold-transition layout-boxed login-page">
 <div class="box login-box" id="login-box">
@@ -120,7 +120,7 @@ mg.include('scripts/pi-hole/lua/header.lp','r')
         <strong><a href="https://pi-hole.net/donate/" rel="noopener" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
     </div>
 </div>
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/login.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/pi-hole/js/footer.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/login.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/footer.js')?>"></script>
 </body>
 </html>
