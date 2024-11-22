@@ -479,6 +479,7 @@ function updateVersionInfo() {
     var version = data.version;
     var updateAvailable = false;
     var dockerUpdate = false;
+    var isDocker = false;
     $("#versions").empty();
 
     var versions = [
@@ -519,6 +520,11 @@ function updateVersionInfo() {
       },
     ];
 
+    // Check if we are running in a Docker container
+    if (version.docker.local !== null) {
+      isDocker = true;
+    }
+
     versions.forEach(function (v) {
       if (v.local !== null) {
         // reset update status for each component
@@ -556,7 +562,8 @@ function updateVersionInfo() {
           dockerUpdate = true;
         }
 
-        if (updateComponentAvailable) {
+        // Display update information of individual components only if we are not running in a Docker container
+        if ((!isDocker || (isDocker && v.name === "Docker Tag")) && updateComponentAvailable) {
           $("#versions").append(
             "<li><strong>" +
               v.name +
