@@ -515,7 +515,12 @@ $(function () {
         enabled: true,
       },
       mode: "y",
-      onZoom: function ({ chart }) {
+      onZoom: function ({ chart, trigger }) {
+        if (trigger === "api") {
+          // Ignore onZoom triggered by the chart.zoomScale api call below
+          return;
+        }
+
         // The first time the chart is zoomed, save the maximum initial scale bound
         if (!chart.absMax) chart.absMax = chart.getInitialScaleBounds().y.max;
         // Calculate the maximum value to be shown for the current zoom level
