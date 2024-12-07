@@ -77,7 +77,7 @@ $(function () {
 
   // Do we want to start updating immediately?
   // gravity.lp?go
-  var searchString = window.location.search.substring(1);
+  var searchString = globalThis.location.search.substring(1);
   if (searchString.indexOf("go") !== -1) {
     $("#gravityBtn").prop("disabled", true);
     eventsource();

@@ -298,7 +298,7 @@ function initTable() {
       selectEl
         // fix dropdown if it would stick out right of the viewport
         .on("show.bs.select", function () {
-          var winWidth = $(window).width();
+          var winWidth = $(globalThis).width();
           var dropdownEl = $("body > .bootstrap-select.dropdown");
           if (dropdownEl.length > 0) {
             dropdownEl.removeClass("align-right");

@@ -677,7 +677,7 @@ $(function () {
     var tr = $(this);
     var row = table.row(tr);
 
-    if (window.getSelection().toString().length > 0) {
+    if (globalThis.getSelection().toString().length > 0) {
       // This event was triggered by a selection, so don't open the row
       return;
     }
