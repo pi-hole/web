@@ -106,12 +106,10 @@ $(function () {
 
           if (addr.address_type !== undefined) {
             let familyextra = "";
-            if (addr.family !== undefined) {
-              if (addr.family === "inet") {
-                familyextra = "IPv4 ";
-              } else if (addr.family === "inet6") {
-                familyextra = "IPv6 ";
-              }
+            if (addr.family === "inet") {
+              familyextra = "IPv4 ";
+            } else if (addr.family === "inet6") {
+              familyextra = "IPv6 ";
             }
 
             extraaddr += " (" + familyextra + utils.escapeHtml(addr.address_type) + ")";
