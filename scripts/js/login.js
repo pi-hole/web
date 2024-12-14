@@ -18,7 +18,7 @@ function redirect() {
   }
 
   // Redirect to target
-  window.location.replace(target);
+  globalThis.location.replace(target);
 }
 
 function wrongPassword(isError = false, isSuccess = false, data = null) {

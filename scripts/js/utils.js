@@ -530,7 +530,7 @@ function getCSSval(cssclass, cssproperty) {
   return val;
 }
 
-function parseQueryString(queryString = window.location.search) {
+function parseQueryString(queryString = globalThis.location.search) {
   const GETDict = {};
   queryString
     .substr(1)
@@ -688,7 +688,7 @@ function loadingOverlay(reloadAfterTimeout = false) {
 function callIfVisible(func) {
   if (document.hidden) {
     // Page is not visible, try again in 1 second
-    window.setTimeout(callIfVisible, 1000, func);
+    globalThis.setTimeout(callIfVisible, 1000, func);
     return;
   }
 
@@ -703,22 +703,22 @@ function callIfVisible(func) {
 // visible again.
 function setTimer(func, interval) {
   // Cancel possibly running timer
-  window.clearTimeout(func.timer);
+  globalThis.clearTimeout(func.timer);
   // Start new timer
-  func.timer = window.setTimeout(callIfVisible, interval, func);
+  func.timer = globalThis.setTimeout(callIfVisible, interval, func);
 }
 
 // Same as setTimer() but calls the function every <interval> milliseconds
 function setInter(func, interval) {
   // Cancel possibly running timer
-  window.clearTimeout(func.timer);
+  globalThis.clearTimeout(func.timer);
   // Start new timer
-  func.timer = window.setTimeout(callIfVisible, interval, func);
+  func.timer = globalThis.setTimeout(callIfVisible, interval, func);
   // Restart timer
-  window.setTimeout(setInter, interval, func, interval);
+  globalThis.setTimeout(setInter, interval, func, interval);
 }
 
-window.utils = (function () {
+globalThis.utils = (function () {
   return {
     escapeHtml: escapeHtml,
     unescapeHtml: unescapeHtml,

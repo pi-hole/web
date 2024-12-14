@@ -94,14 +94,14 @@ $("#GETTeleporter").on("click", function () {
     success: function (data, status, xhr) {
       var a = document.createElement("a");
       // eslint-disable-next-line compat/compat
-      var url = window.URL.createObjectURL(data);
+      var url = globalThis.URL.createObjectURL(data);
       a.href = url;
       a.download = xhr.getResponseHeader("Content-Disposition").match(/filename="([^"]*)"/)[1];
       document.body.append(a);
       a.click();
       a.remove();
       // eslint-disable-next-line compat/compat
-      window.URL.revokeObjectURL(url);
+      globalThis.URL.revokeObjectURL(url);
     },
   });
 });

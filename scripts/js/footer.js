@@ -424,7 +424,7 @@ function updateSystemInfo() {
 function apiFailure(data) {
   if (data.status === 401) {
     // Unauthorized, reload page
-    window.location.reload();
+    globalThis.location.reload();
   }
 }
 
@@ -596,7 +596,7 @@ function updateVersionInfo() {
 }
 
 $(function () {
-  if (window.location.pathname !== "/admin/login") updateInfo();
+  if (globalThis.location.pathname !== "/admin/login") updateInfo();
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - Date.now()) / 1000);
@@ -611,7 +611,7 @@ $(function () {
   // Apply per-browser styling settings
   initCheckboxRadioStyle();
 
-  if (window.location.pathname !== "/admin/login") {
+  if (globalThis.location.pathname !== "/admin/login") {
     // Run check immediately after page loading ...
     utils.checkMessages();
     // ... and then periodically
@@ -705,7 +705,7 @@ function applyExpertSettings() {
     //    functionality there), and
     //  - there are no visible boxes (the page is empty)
     if ($(".settings-selector").length > 0 && $(".box:visible").length === 0) {
-      window.location.href = "/admin/settings/system";
+      globalThis.location.href = "/admin/settings/system";
     }
   }
 }
@@ -715,7 +715,7 @@ function addAdvancedInfo() {
   const advancedInfoTarget = $("#advanced-info");
   const isTLS = advancedInfoSource.data("tls");
   const clientIP = advancedInfoSource.data("client-ip");
-  const XForwardedFor = window.atob(advancedInfoSource.data("xff") ?? "");
+  const XForwardedFor = globalThis.atob(advancedInfoSource.data("xff") ?? "");
   const starttime = parseFloat(advancedInfoSource.data("starttime"));
   const endtime = parseFloat(advancedInfoSource.data("endtime"));
   const totaltime = 1e3 * (endtime - starttime);

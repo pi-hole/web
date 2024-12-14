@@ -790,7 +790,7 @@ $(function () {
       //get value by index
       var from = label / 1000 - 300;
       var until = label / 1000 + 300;
-      window.location.href = "queries.lp?from=" + from + "&until=" + until;
+      globalThis.location.href = "queries.lp?from=" + from + "&until=" + until;
     }
 
     return false;
@@ -813,7 +813,7 @@ $(function () {
       //get value by index
       var from = label / 1000 - 300;
       var until = label / 1000 + 300;
-      window.location.href = "queries.lp?from=" + from + "&until=" + until;
+      globalThis.location.href = "queries.lp?from=" + from + "&until=" + until;
     }
 
     return false;

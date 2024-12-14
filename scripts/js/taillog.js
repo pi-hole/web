@@ -79,7 +79,7 @@ function getData() {
 
   var GETDict = utils.parseQueryString();
   if (!("file" in GETDict)) {
-    window.location.href += "?file=dnsmasq";
+    globalThis.location.href += "?file=dnsmasq";
     return;
   }
 
