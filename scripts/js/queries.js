@@ -245,30 +245,41 @@ function formatReplyTime(replyTime, type) {
   return replyTime;
 }
 
-function formatInfo(data) {
-  // DNSSEC status
-  var dnssecStatus = data.dnssec,
-    dnssecClass;
-  switch (data.dnssec) {
+// Parse DNSSEC status
+function parseDNSSEC(data) {
+  var icon = null, // Icon to display
+    color = false, // Class to apply to text
+    text = data.dnssec; // Text to display
+  switch (text) {
     case "SECURE":
-      dnssecClass = "text-green";
+      icon = "fa-solid fa-lock";
+      color = "text-green";
       break;
     case "INSECURE":
-      dnssecClass = "text-orange";
+      icon = "fa-solid fa-unlock";
+      color = "text-orange";
       break;
     case "BOGUS":
-      dnssecClass = "text-red";
+      icon = "fa-solid fa-exclamation-triangle";
+      color = "text-red";
       break;
     case "ABANDONED":
-      dnssecClass = "text-red";
+      icon = "fa-solid fa-exclamation-triangle";
+      color = "text-red";
       break;
     default:
       // No DNSSEC or UNKNOWN
-      dnssecStatus = "N/A";
-      dnssecClass = false;
+      text = "N/A";
+      color = false;
+      icon = false;
   }
 
+  return { text: text, icon: icon, color: color };
+}
+
+function formatInfo(data) {
   // Parse Query Status
+  var dnssec = parseDNSSEC(data);
   var queryStatus = parseQueryStatus(data);
   var divStart = '<div class="col-xl-2 col-lg-4 col-md-6 col-12 overflow-wrap">';
   var statusInfo = "";
@@ -321,13 +332,13 @@ function formatInfo(data) {
 
   // Show DNSSEC status if applicable
   var dnssecInfo = "";
-  if (dnssecClass !== false) {
+  if (dnssec.color !== false) {
     dnssecInfo =
       divStart +
       'DNSSEC status:&nbsp&nbsp;<strong><span class="' +
-      dnssecClass +
+      dnssec.color +
       '">' +
-      dnssecStatus +
+      dnssec.text +
       "</span></strong></div>";
   }
 
@@ -397,30 +408,6 @@ function addSelectSuggestion(name, dict, data) {
   }
 }
 
-/*
-function addChkboxSuggestion(name, data) {
-  var obj = $("#" + name + "_filter");
-  obj.empty();
-
-  // Add data obtained from API
-  for (var key in data) {
-    if (!Object.prototype.hasOwnProperty.call(data, key)) {
-      continue;
-    }
-
-    var text = data[key];
-    obj.append(
-      '<div class="checkbox"><label><input type="checkbox" checked id="' +
-        name +
-        "_" +
-        key +
-        '">' +
-        text +
-        "</label></div>"
-    );
-  }
-}
-*/
 function getSuggestions(dict) {
   $.get(
     "/api/queries/suggestions",
@@ -579,6 +566,7 @@ $(function () {
     },
     rowCallback: function (row, data) {
       var querystatus = parseQueryStatus(data);
+      const dnssec = parseDNSSEC(data);
 
       // Remove HTML from querystatus.fieldtext
       var rawtext = $("<div/>").html(querystatus.fieldtext).text();
@@ -603,11 +591,29 @@ $(function () {
       // Substitute domain by "." if empty
       var domain = data.domain === 0 ? "." : data.domain;
 
+      var dnssecIcon = "";
+      if (dnssec.color !== false) {
+        // Append colored icon to domain text
+        dnssecIcon =
+          "&nbsp;&nbsp;" +
+          '<i class="fa fa-fw ' +
+          dnssec.icon +
+          " " +
+          dnssec.color +
+          '" title="DNSSEC: ' +
+          dnssec.text +
+          '"></i>';
+      }
+
+      // Escape HTML in domain
+      domain = utils.escapeHtml(domain) + dnssecIcon;
+
       if (querystatus.isCNAME) {
         // Add domain in CNAME chain causing the query to have been blocked
-        $("td:eq(3)", row).text(domain + "\n(blocked " + data.cname + ")");
+        data.cname = utils.escapeHtml(data.cname);
+        $("td:eq(3)", row).html(domain + "\n(blocked " + data.cname + ")");
       } else {
-        $("td:eq(3)", row).text(domain);
+        $("td:eq(3)", row).html(domain);
       }
 
       // Show hostname instead of IP if available
