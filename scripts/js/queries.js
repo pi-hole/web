@@ -256,7 +256,7 @@ function parseDNSSEC(data) {
       color = "text-green";
       break;
     case "INSECURE":
-      icon = "fa-solid fa-unlock";
+      icon = "fa-solid fa-lock-open";
       color = "text-orange";
       break;
     case "BOGUS":
