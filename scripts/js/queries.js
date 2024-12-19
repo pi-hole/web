@@ -247,8 +247,8 @@ function formatReplyTime(replyTime, type) {
 
 // Parse DNSSEC status
 function parseDNSSEC(data) {
-  var icon = null, // Icon to display
-    color = false, // Class to apply to text
+  var icon = "", // Icon to display
+    color = "", // Class to apply to text
     text = data.dnssec; // Text to display
   switch (text) {
     case "SECURE":
@@ -270,8 +270,8 @@ function parseDNSSEC(data) {
     default:
       // No DNSSEC or UNKNOWN
       text = "N/A";
-      color = false;
-      icon = false;
+      color = "";
+      icon = "";
   }
 
   return { text: text, icon: icon, color: color };
@@ -332,7 +332,7 @@ function formatInfo(data) {
 
   // Show DNSSEC status if applicable
   var dnssecInfo = "";
-  if (dnssec.color !== false) {
+  if (dnssec.color !== "") {
     dnssecInfo =
       divStart +
       'DNSSEC status:&nbsp&nbsp;<strong><span class="' +
@@ -591,19 +591,16 @@ $(function () {
       // Substitute domain by "." if empty
       var domain = data.domain === 0 ? "." : data.domain;
 
+      // Append colored icon to domain text
       var dnssecIcon = "";
-      if (dnssec.color !== false) {
-        // Append colored icon to domain text
-        dnssecIcon =
-          "&nbsp;&nbsp;" +
-          '<i class="fa fa-fw ' +
-          dnssec.icon +
-          " " +
-          dnssec.color +
-          '" title="DNSSEC: ' +
-          dnssec.text +
-          '"></i>';
-      }
+      dnssecIcon =
+        '<i class="fa fa-fw ' +
+        dnssec.icon +
+        " " +
+        dnssec.color +
+        '" title="DNSSEC: ' +
+        dnssec.text +
+        '"></i>&nbsp;&nbsp;';
 
       // Escape HTML in domain
       domain = utils.escapeHtml(domain) + dnssecIcon;
