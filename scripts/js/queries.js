@@ -591,7 +591,7 @@ $(function () {
       // Substitute domain by "." if empty
       var domain = data.domain === 0 ? "." : data.domain;
 
-      // Append colored icon to domain text
+      // Prefix colored DNSSEC icon to domain text
       var dnssecIcon = "";
       dnssecIcon =
         '<i class="fa fa-fw ' +
