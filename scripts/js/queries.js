@@ -603,7 +603,7 @@ $(function () {
         '"></i>&nbsp;&nbsp;';
 
       // Escape HTML in domain
-      domain = utils.escapeHtml(domain) + dnssecIcon;
+      domain = dnssecIcon + utils.escapeHtml(domain);
 
       if (querystatus.isCNAME) {
         // Add domain in CNAME chain causing the query to have been blocked
