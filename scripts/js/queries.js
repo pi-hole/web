@@ -344,6 +344,17 @@ function formatInfo(data) {
       ? divStart + "Reply:&nbsp&nbsp;" + data.reply.type + "</div>"
       : divStart + "Reply:&nbsp;&nbsp;No reply received</div>";
 
+  // Show extended DNS error if applicable
+  var edeInfo = "";
+  if (data.ede !== null && data.ede.text !== null) {
+    edeInfo = divStart + "Extended DNS error:&nbsp;&nbsp;<strong";
+    if (dnssecClass !== false) {
+      edeInfo += ' class="' + dnssecClass + '"';
+    }
+
+    edeInfo += ">" + data.ede.text + "</strong></div>";
+  }
+
   // Compile extra info for displaying
   return (
     '<div class="row">' +
@@ -353,6 +364,7 @@ function formatInfo(data) {
     "</div>" +
     clientInfo +
     dnssecInfo +
+    edeInfo +
     statusInfo +
     cnameInfo +
     listInfo +
