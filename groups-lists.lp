@@ -32,9 +32,13 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         <label for="new_address">Address:</label>
                         <input id="new_address" type="text" class="form-control" placeholder="URL" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-3">
                         <label for="new_comment">Comment:</label>
                         <input id="new_comment" type="text" class="form-control" placeholder="List description (optional)">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="new_group">Group assignment:</label>
+                        <div><select class="selectpicker" id="new_group" multiple></select></div>
                     </div>
                 </div>
             </div>

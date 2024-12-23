@@ -75,7 +75,7 @@ function reloadClientSuggestions() {
 
 $(function () {
   $("#btnAdd").on("click", addClient);
-  $("select").select2({
+  $("#select").select2({
     tags: true,
     placeholder: "Select client...",
     allowClear: true,
@@ -353,6 +353,8 @@ function deleteClient() {
 
 function addClient() {
   const comment = $("#new_comment").val();
+  // Convert all group IDs to integers
+  const group = $("#new_group").val().map(Number);
 
   // Check if the user wants to add multiple IPs (space or newline separated)
   // If so, split the input and store it in an array
@@ -405,7 +407,7 @@ function addClient() {
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({ client: ips, comment: comment }),
+    data: JSON.stringify({ client: ips, comment: comment, groups: group }),
     success: function (data) {
       utils.enableAll();
       utils.listsAlert("client", ips, data);

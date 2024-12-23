@@ -46,9 +46,13 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                         <div id="suggest_domains" class="table-responsive no-border"></div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 form-group">
+                                <div class="col-md-3 form-group">
                                     <label for="new_domain_comment">Comment:</label>
                                     <input id="new_domain_comment" type="text" class="form-control" placeholder="Description (optional)">
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label for="new_domain_group">Group assignment:</label>
+                                    <div><select class="selectpicker" id="new_domain_group" multiple></select></div>
                                 </div>
                             </div>
                             <div class="row">
@@ -75,9 +79,13 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                             regular expressions tutorial</a>.
                                     </div>
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-3">
                                     <label for="new_regex_comment">Comment:</label>
                                     <input id="new_regex_comment" type="text" class="form-control" placeholder="Description (optional)">
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label for="new_regex_group">Group assignment:</label>
+                                    <div><select class="selectpicker" id="new_regex_group" multiple></select></div>
                                 </div>
                             </div>
                         </div>

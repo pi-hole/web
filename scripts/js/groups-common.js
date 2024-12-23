@@ -7,17 +7,51 @@
 
 /* global apiFailure:false, utils:false, initTable:false, updateFtlInfo:false */
 
-// eslint-disable-next-line no-unused-vars
 var groups = [];
 
+function populateGroupSelect(selectEl) {
+  if (selectEl.length === 0) {
+    // No select element found, return
+    return;
+  }
+
+  // Add all known groups
+  for (var i = 0; i < groups.length; i++) {
+    var dataSub = "";
+    if (!groups[i].enabled) {
+      dataSub = 'data-subtext="(disabled)"';
+    }
+
+    selectEl.append(
+      $("<option " + dataSub + "/>")
+        .val(groups[i].id)
+        .text(groups[i].name)
+    );
+  }
+
+  // Initialize selectpicker
+  selectEl.val([0]);
+
+  // Refresh selectpicker
+  selectEl.selectpicker("refresh");
+}
+
 // eslint-disable-next-line no-unused-vars
-function getGroups() {
+function getGroups(groupSelector) {
   $.ajax({
     url: "/api/groups",
     type: "GET",
     dataType: "json",
     success: function (data) {
       groups = data.groups;
+
+      // Get all all <select> elements with the class "selectpicker"
+      var groupSelector = $(".selectpicker");
+      // Populate the groupSelector with the groups
+      for (var i = 0; i < groupSelector.length; i++) {
+        populateGroupSelect($(groupSelector[i]));
+      }
+
       // Actually load table contents
       initTable();
     },

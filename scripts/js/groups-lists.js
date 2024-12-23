@@ -494,6 +494,8 @@ function deleteList() {
 function addList(event) {
   const type = event.data.type;
   const comment = $("#new_comment").val();
+  // Convert all group IDs to integers
+  const group = $("#new_group").val().map(Number);
 
   // Check if the user wants to add multiple domains (space or newline separated)
   // If so, split the input and store it in an array
@@ -522,7 +524,7 @@ function addList(event) {
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({ address: addresses, comment: comment, type: type }),
+    data: JSON.stringify({ address: addresses, comment: comment, type: type, groups: group }),
     success: function (data) {
       utils.enableAll();
       utils.listsAlert(type + "list", addresses, data);
