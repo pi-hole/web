@@ -287,13 +287,19 @@ div.dataTables_wrapper div.dataTables_length select {
   border-radius: 8px;
 }
 
+/* Remove border from group assignment select */
+.form-control:has(.selectpicker) {
+  border: none;
+  color: #246;
+}
+
 /*** Overwrite chrome's input field auto-filling ***/
 input:-webkit-autofill,
 input:-webkit-autofill:focus,
 textarea:-webkit-autofill,
 select:-webkit-autofill {
   -webkit-text-fill-color: #fff !important;
-  -webkit-box-shadow: 0 0 0px 1000px #000 inset;
+  -webkit-box-shadow: 0 0 0 1000px #000 inset;
   transition: background-color 1s ease-in-out 0s;
 }
 
@@ -528,13 +534,21 @@ p.login-box-msg,
   color: #456;
 }
 
-.bootstrap-select.bs-container .dropdown-menu {
+.bootstrap-select.bs-container .dropdown-menu,
+.open > .dropdown-menu {
   border-radius: 12px;
   border-width: 2px;
 }
 
-.bootstrap-select.bs-container .dropdown-menu.open {
+.bootstrap-select.bs-container .dropdown-menu.open,
+.open > .dropdown-menu.open {
   filter: invert(0.88) hue-rotate(180deg);
+}
+
+.open > .dropdown-toggle.btn-default,
+.open > .dropdown-toggle.btn-default:active {
+  background-color: #353c42;
+  color: #bec5cb;
 }
 
 /*** Set .dropdown-toggle width to fill the whole table cell ***/
@@ -1163,7 +1177,7 @@ footer a:focus {
 }
 
 .modal-body .overlay {
-  padding: 0px;
+  padding: 0;
   border-radius: 3px;
 }
 
