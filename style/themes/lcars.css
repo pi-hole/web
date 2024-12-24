@@ -1161,6 +1161,10 @@ footer a:focus {
   color: #9ab;
 }
 
+.btn .box-title {
+  color: inherit;
+}
+
 .box {
   margin-bottom: 1.8em;
   background: #111;
