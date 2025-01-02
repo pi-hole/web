@@ -684,7 +684,7 @@ function convertIDNAToUnicode($IDNA)
     }
 
     // if the conversion failed (e.g. domain to long) return the original domain
-    if ($unicode == false) {
+    if (!isset($unicode) || $unicode == false) {
         return $IDNA;
     } else {
         return $unicode;
