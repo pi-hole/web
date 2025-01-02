@@ -692,8 +692,7 @@ fieldset[disabled] .btn {
 .btn-default:active,
 .open > .dropdown-toggle.btn-default {
   color: rgb(200, 195, 188);
-  background-color: rgb(38, 41, 43);
-  background-image: none;
+  background: rgb(24, 26, 27);
   border-color: rgb(71, 77, 80);
 }
 .btn-default.active.focus,
@@ -706,9 +705,15 @@ fieldset[disabled] .btn {
 .open > .dropdown-toggle.btn-default:focus,
 .open > .dropdown-toggle.btn-default:hover {
   color: rgb(200, 195, 188);
-  background-color: rgb(48, 52, 54);
+  background: rgb(24, 26, 27);
   border-color: rgb(80, 87, 91);
 }
+
+.bootstrap-select > .dropdown-toggle {
+  border-radius: 0;
+  background: rgb(24, 26, 27);
+}
+
 .btn-default.disabled.focus,
 .btn-default.disabled:focus,
 .btn-default.disabled:hover,

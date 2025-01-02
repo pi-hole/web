@@ -311,3 +311,13 @@ select:-webkit-autofill {
 .page-header {
   border-color: #ddd;
 }
+
+/* Group assignment select */
+.bootstrap-select > .dropdown-toggle {
+  border-radius: 0;
+  background-color: #fff;
+}
+.open > .dropdown-toggle.btn-default,
+.open > .dropdown-toggle.btn-default:active {
+  background-color: #fff;
+}

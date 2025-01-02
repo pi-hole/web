@@ -985,3 +985,19 @@ td.highlight {
   animation: none;
   border-radius: 6px;
 }
+
+/* Group assignment select */
+.bootstrap-select > .dropdown-toggle {
+  border-radius: 0;
+  background-color: #2d363f;
+  border: 1px solid #3c4652;
+}
+
+.open > .dropdown-toggle.btn-default:active,
+.bootstrap-select > .dropdown-toggle:hover {
+  color: var(--main-text-color);
+}
+.bootstrap-select > .dropdown-toggle:focus {
+  border-color: #3c8dbc;
+  color: var(--main-text-color);
+}

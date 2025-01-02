@@ -654,3 +654,23 @@ input[type="password"]::-webkit-caps-lock-indicator {
   background: none;
   border-color: rgb(120, 127, 133);
 }
+
+/* Group assignment select */
+.bootstrap-select > .dropdown-toggle {
+  border-radius: 0;
+  background-color: #353c42;
+  border-color: #3d444b;
+}
+.bootstrap-select > .dropdown-toggle:hover,
+.bootstrap-select > .dropdown-toggle:focus {
+  color: #fff;
+}
+.open > .dropdown-toggle.btn-default,
+.open > .dropdown-toggle.btn-default:active {
+  background-color: #353c42;
+  color: #bec5cb;
+  border: 1px solid #3d444b;
+}
+.open > .dropdown-toggle.btn-default:hover {
+  color: #fff;
+}
