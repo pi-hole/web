@@ -455,18 +455,22 @@ function addDomain() {
   const wildcardChecked = wildcardEl.prop("checked");
 
   // current tab's inputs
-  var kind, domainEl, commentEl;
+  var kind, domainEl, commentEl, groupEl;
   if (tabHref === "#tab_domain") {
     kind = "exact";
     domainEl = $("#new_domain");
     commentEl = $("#new_domain_comment");
+    groupEl = $("#new_domain_group");
   } else if (tabHref === "#tab_regex") {
     kind = "regex";
     domainEl = $("#new_regex");
     commentEl = $("#new_regex_comment");
+    groupEl = $("#new_regex_group");
   }
 
   const comment = commentEl.val();
+  // Convert all group IDs to integers
+  const group = groupEl.val().map(Number);
 
   // Check if the user wants to add multiple domains (space or newline separated)
   // If so, split the input and store it in an array
@@ -511,6 +515,7 @@ function addDomain() {
       comment: comment,
       type: type,
       kind: kind,
+      groups: group,
     }),
     success: function (data) {
       utils.enableAll();

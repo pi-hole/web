@@ -235,11 +235,15 @@ function addGroup() {
   const comment = $("#new_comment").val();
 
   // Check if the user wants to add multiple groups (space or newline separated)
-  // If so, split the input and store it in an array
+  // If so, split the input and store it in an array, however, do not split
+  // group names enclosed in quotes
   var names = utils
     .escapeHtml($("#new_name"))
     .val()
-    .split(/[\s,]+/);
+    .match(/(?:[^\s"]+|"[^"]*")+/g)
+    .map(function (name) {
+      return name.replaceAll(/(^"|"$)/g, "");
+    });
   // Remove empty elements
   names = names.filter(function (el) {
     return el !== "";

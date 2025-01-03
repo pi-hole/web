@@ -574,3 +574,13 @@ table.dataTable thead th:hover.sorting_desc_disabled::after {
   animation: none;
   border-radius: 6px;
 }
+
+/* Group assignment select */
+.bootstrap-select > .dropdown-toggle {
+  border-radius: 0;
+  background-color: #fff;
+}
+.bootstrap-select > .dropdown-toggle:hover {
+  color: #000;
+  background-color: #eee;
+}

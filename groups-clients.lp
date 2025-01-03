@@ -34,9 +34,13 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <option disabled selected>Loading...</option>
                         </select>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-lg-3 col-md-6">
                         <label for="new_comment">Comment:</label>
                         <input id="new_comment" type="text" class="form-control" placeholder="Client description (optional)">
+                    </div>
+                    <div class="form-group col-lg-3 col-md-6">
+                        <label for="new_group">Group assignment:</label>
+                        <div><select class="selectpicker form-control" id="new_group" multiple></select></div>
                     </div>
                 </div>
                 <div class="row">
