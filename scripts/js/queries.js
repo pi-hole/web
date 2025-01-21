@@ -359,8 +359,8 @@ function formatInfo(data) {
   var edeInfo = "";
   if (data.ede !== null && data.ede.text !== null) {
     edeInfo = divStart + "Extended DNS error:&nbsp;&nbsp;<strong";
-    if (dnssecClass !== false) {
-      edeInfo += ' class="' + dnssecClass + '"';
+    if (dnssec.color !== "") {
+      edeInfo += ' class="' + dnssec.color + '"';
     }
 
     edeInfo += ">" + data.ede.text + "</strong></div>";
