@@ -23,10 +23,11 @@
   --network-older: #cce6fe;
   --network-never: #ffca98;
 
-  --allowed-color: #3c7;
-  --blocked-color: var(--danger-color);
-  --cached-color: var(--primary-color);
-  --other-color: #0077a6;
+  /* Dashboard graphic bars colors */
+  --allowed-color: #009960;
+  --blocked-color: #b00000;
+  --cached-color: #acf;
+  --other-color: #908878;
 
   --overlay-bgcolor: rgba(255, 255, 255, 0.8);
 }
