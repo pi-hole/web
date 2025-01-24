@@ -368,18 +368,7 @@ h4 {
 .graphs-ticks {
   color: #b8c7ce;
 }
-.queries-permitted {
-  background-color: #00a65a;
-}
-.queries-other {
-  background-color: #0077a6;
-}
-.queries-blocked {
-  background-color: #999;
-}
-.queries-cached {
-  background-color: #295340;
-}
+
 .progress {
   background-color: #333;
 }

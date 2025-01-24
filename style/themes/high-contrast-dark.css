@@ -446,19 +446,6 @@ div.dataTables_wrapper div.dataTables_length select {
   background-color: #181c20;
 }
 
-.queries-permitted {
-  background-color: var(--allowed-color);
-}
-.queries-blocked {
-  background-color: var(--blocked-color);
-}
-.queries-cached {
-  background-color: var(--cached-color);
-}
-.queries-other {
-  background-color: var(--other-color);
-}
-
 code,
 pre {
   padding: 2px 4px;

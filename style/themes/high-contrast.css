@@ -234,18 +234,7 @@ a:hover {
 .graphs-ticks {
   color: #000;
 }
-.queries-permitted {
-  background-color: var(--allowed-color);
-}
-.queries-blocked {
-  background-color: var(--blocked-color);
-}
-.queries-cached {
-  background-color: var(--cached-color);
-}
-.queries-other {
-  background-color: var(--other-color);
-}
+
 .progress {
   background-color: #eee;
 }
