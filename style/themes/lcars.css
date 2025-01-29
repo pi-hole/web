@@ -23,7 +23,6 @@
 
 /*** General ***/
 html {
-  font-size: 17px;
   /* fix #2554: browser not detecting dark mode */
   color-scheme: dark;
 }
@@ -54,25 +53,25 @@ h1 {
 }
 
 h2 {
-  font-size: 1.6rem;
+  font-size: 1.6em;
   font-weight: normal;
 }
 
 h3,
 .box-header .box-title {
-  font-size: 1.2rem;
+  font-size: 1.2em;
 }
 
 h4 {
-  font-size: 1rem;
+  font-size: 1em;
 }
 
 h5 {
-  font-size: 0.9rem;
+  font-size: 0.9em;
 }
 
 h6 {
-  font-size: 0.75rem;
+  font-size: 0.75em;
 }
 
 a {
@@ -92,8 +91,8 @@ td a {
 code,
 pre {
   padding: 1px 3px;
-  line-height: 1rem;
-  font-size: 1rem;
+  line-height: 1em;
+  font-size: 1em;
   color: #000;
   background-color: #9ab;
   border-radius: 4px;
@@ -325,7 +324,7 @@ select.form-control {
   background: #678;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 1em;
   color: #000;
 }
 
@@ -1698,7 +1697,7 @@ table.dataTable {
     font-size: 1.8em;
   }
   h2 {
-    font-size: 1.4rem;
+    font-size: 1.4em;
   }
   .sidebar-collapse {
     --sidebar-width: 230px;
