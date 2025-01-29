@@ -2190,3 +2190,8 @@ td.highlight {
 #advanced-settings-menu ul > li:not(.active) a {
   color: #000;
 }
+
+.bstreeview .list-group-item {
+  padding-top: 0.2em;
+  padding-bottom: 0.55em;
+}
