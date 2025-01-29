@@ -11,6 +11,12 @@
 :root {
   --datatable-bgcolor: rgba(64, 76, 88, 0.8);
   --overlay-bgcolor: var(--datatable-bgcolor);
+
+  /* Dashboard graphic bars */
+  --allowed-color: #12b660;
+  --blocked-color: #822d21;
+  --cached-color: #44649c;
+  --other-color: #969798;
 }
 
 /* fix #2554: browser not detecting dark mode */
@@ -368,18 +374,7 @@ h4 {
 .graphs-ticks {
   color: #b8c7ce;
 }
-.queries-permitted {
-  background-color: #00a65a;
-}
-.queries-other {
-  background-color: #0077a6;
-}
-.queries-blocked {
-  background-color: #999;
-}
-.queries-cached {
-  background-color: #295340;
-}
+
 .progress {
   background-color: #333;
 }

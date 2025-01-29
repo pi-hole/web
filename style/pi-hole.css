@@ -11,6 +11,26 @@
 
   /* Used in settings save button */
   --overlay-bgcolor: rgba(212, 220, 232, 0.55);
+
+  /* Dashboard graphic bars colors */
+  --allowed-color: #00a65a;
+  --blocked-color: #b00000;
+  --cached-color: #9be;
+  --other-color: #908878;
+}
+
+/* Dashboard graphic bars */
+.queries-permitted {
+  background-color: var(--allowed-color);
+}
+.queries-blocked {
+  background-color: var(--blocked-color);
+}
+.queries-cached {
+  background-color: var(--cached-color);
+}
+.queries-other {
+  background-color: var(--other-color);
 }
 
 .layout-boxed {

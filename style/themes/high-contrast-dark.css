@@ -25,10 +25,11 @@
   --network-older: #182840;
   --network-never: #182028;
 
-  --allowed-color: var(--primary-color);
-  --blocked-color: var(--danger-color);
-  --cached-color: #a86600;
-  --other-color: #0077a6;
+  /* Dashboard graphic bars */
+  --allowed-color: #12b660;
+  --blocked-color: #822d21;
+  --cached-color: #44649c;
+  --other-color: #969798;
 
   --datatable-bgcolor: rgba(18, 44, 68, 0.3);
   --overlay-bgcolor: rgba(24, 28, 32, 0.8);
@@ -444,19 +445,6 @@ div.dataTables_wrapper div.dataTables_length select {
 
 .progress {
   background-color: #181c20;
-}
-
-.queries-permitted {
-  background-color: var(--allowed-color);
-}
-.queries-blocked {
-  background-color: var(--blocked-color);
-}
-.queries-cached {
-  background-color: var(--cached-color);
-}
-.queries-other {
-  background-color: var(--other-color);
 }
 
 code,

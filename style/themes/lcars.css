@@ -11,6 +11,12 @@
   --net-old-color: #125;
   --net-older-color: #1c2228;
   --datatable-bgcolor: var(--net-old-color);
+
+  /* Dashboard graphic bars */
+  --allowed-color: #073;
+  --blocked-color: #d43;
+  --cached-color: #7bf;
+  --other-color: #eca;
 }
 
 .sidebar-collapse {
@@ -2003,22 +2009,6 @@ input[type="password"]::-webkit-caps-lock-indicator {
 
 .progress-bar {
   background-color: #48f;
-}
-
-.queries-permitted {
-  background-color: rgb(0, 133, 72);
-}
-
-.queries-blocked {
-  background-color: rgb(196, 50, 50);
-}
-
-.queries-cached {
-  background-color: rgb(37, 88, 64);
-}
-
-.queries-other {
-  background-color: #0077a6;
 }
 
 /*--- Used in the Query Log table ---*/
