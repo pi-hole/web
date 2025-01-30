@@ -385,7 +385,8 @@ $(function () {
       data: json,
       expandIcon: "fa fa-angle-down fa-fw",
       collapseIcon: "fa fa-angle-right fa-fw",
-      indent: 1.25,
+      parentsMarginLeft: "0",
+      indent: 2.5,
     });
     $("#spinner").hide();
 
