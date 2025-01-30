@@ -99,7 +99,9 @@ function parseQueryStatus(data) {
     case "FORWARDED":
       colorClass = "text-green";
       icon = "fa-solid fa-cloud-download-alt";
-      fieldtext = "Forwarded to " + data.upstream;
+      fieldtext =
+        (data.reply.type !== "UNKNOWN" ? "Forwarded, reply from " : "Forwarded to ") +
+        data.upstream;
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
       break;
