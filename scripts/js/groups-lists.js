@@ -53,30 +53,30 @@ function format(data) {
 
   return `<table>
       <tr class="dataTables-child">
-        <td>Type of this list:</td><td>${setTypeIcon(data.type)}${data.type}list</td>
+        <td>Type:&nbsp;&nbsp;</td><td>${setTypeIcon(data.type)}${data.type}list</td>
       </tr>
       <tr class="dataTables-child">
-        <td>Health status of this list:</td><td>${statusText}</td>
+        <td>Health status:&nbsp;&nbsp;</td><td>${statusText}</td>
       </tr>
       <tr class="dataTables-child">
-        <td>This list was added to Pi-hole&nbsp;&nbsp;</td>
+        <td>Added to Pi-hole:&nbsp;&nbsp;</td>
         <td>${utils.datetimeRelative(data.date_added)}&nbsp;(${dateAddedISO})</td>
       </tr>
       <tr class="dataTables-child">
-        <td>Database entry was last modified&nbsp;&nbsp;</td>
+        <td>Database entry last modified:&nbsp;&nbsp;</td>
         <td>${utils.datetimeRelative(data.date_modified)}&nbsp;(${dateModifiedISO})</td>
       </tr>
       <tr class="dataTables-child">
-        <td>The list contents were last updated&nbsp;&nbsp;</td><td>${dateUpdated}</td>
+        <td>Content last updated on:&nbsp;&nbsp;</td><td>${dateUpdated}</td>
       </tr>
       <tr class="dataTables-child">
-        <td>Number of entries on this list:&nbsp;&nbsp;</td><td>${numberOfEntries}</td>
+        <td>Number of entries:&nbsp;&nbsp;</td><td>${numberOfEntries}</td>
       </tr>
       <tr class="dataTables-child">
-        <td>Number of non-domains on this list:&nbsp;&nbsp;</td><td>${nonDomains}</td>
+        <td>Number of non-domains:&nbsp;&nbsp;</td><td>${nonDomains}</td>
       </tr>
       <tr class="dataTables-child">
-        <td>Database ID of this list:</td><td>${data.id}</td>
+        <td>Database ID:</td><td>${data.id}</td>
       </tr>
     </table>`;
 }
