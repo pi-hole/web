@@ -45,7 +45,7 @@
                     <a href="<?=webhome?>groups">
                         <i class="fa fa-fw menu-icon fa-user-friends"></i> <span>Groups
                         <span class="pull-right-container">
-                            <span class="label label-primary pull-right" id="num_groups" title="Number of defined groups"></span>
+                            <span class="label label-primary pull-right" id="num_groups" title="Number of enabled groups"></span>
                         </span>
                     </a>
                 </li>
@@ -61,8 +61,8 @@
                     <a href="<?=webhome?>groups/domains">
                         <i class="fa fa-fw menu-icon fa-list"></i> <span>Domains
                         <span class="pull-right-container">
-                            <span class="label bg-red pull-right" id="num_denied" title="Number of deny rules (domains and regex)"></span>
-                            <span class="label bg-green pull-right" id="num_allowed" title="Number of allow rules (domains and regex)"></span>
+                            <span class="label bg-red pull-right" id="num_denied" title="Number of enabled deny rules (domains and regex)"></span>
+                            <span class="label bg-green pull-right" id="num_allowed" title="Number of enabled allow rules (domains and regex)"></span>
                         </span>
                     </a>
                 </li>
@@ -70,7 +70,7 @@
                     <a href="<?=webhome?>groups/lists">
                         <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Lists
                         <span class="pull-right-container">
-                            <span class="label bg-blue pull-right" id="num_lists" title="Number of subscribed lists"></span>
+                            <span class="label bg-blue pull-right" id="num_lists" title="Number of subscribed and enabled lists"></span>
                             <span class="label bg-yellow pull-right" id="num_gravity" title="Total number of domains subscribed by your Pi-hole"></span>
                         </span>
                     </a>
