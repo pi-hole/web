@@ -283,9 +283,9 @@ function updateFtlInfo() {
           "title",
           "Allowed: " +
             intl.format(database.domains.allowed) +
-            " exact domains, " +
+            " exact domains and " +
             intl.format(database.regex.allowed) +
-            " regex filters"
+            " regex filters are enabled"
         );
       $("#num_denied")
         .text(intl.format(database.domains.denied + database.regex.denied))
@@ -293,9 +293,9 @@ function updateFtlInfo() {
           "title",
           "Denied: " +
             intl.format(database.domains.denied) +
-            " exact domains, " +
+            " exact domains and " +
             intl.format(database.regex.denied) +
-            " regex filters"
+            " regex filters are enabled"
         );
       updateQueryFrequency(intl, ftl.query_frequency);
       $("#sysinfo-cpu-ftl").text("(" + ftl["%cpu"].toFixed(1) + "% used by FTL)");
