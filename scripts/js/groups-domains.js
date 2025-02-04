@@ -106,7 +106,7 @@ function initTable() {
       { data: "id", visible: false },
       { data: null, visible: true, orderable: false, width: "15px" },
       { data: "domain" },
-      { data: "type", searchable: false },
+      { data: null, searchable: false },
       { data: "enabled", searchable: false },
       { data: "comment" },
       { data: "groups", searchable: false },
@@ -118,6 +118,12 @@ function initTable() {
         className: "select-checkbox",
         render: function () {
           return "";
+        },
+      },
+      {
+        targets: 3,
+        render: function (data) {
+          return data.kind + "_" + data.type;
         },
       },
       {
