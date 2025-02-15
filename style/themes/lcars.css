@@ -37,7 +37,8 @@ body {
   font-size: 17px;
   color: #9ab;
   background: #000;
-  font-family: Antonio, Oswald, "Myriad Pro Cond", "Roboto Condensed", "Futura Condensed",
+  font-family:
+    Antonio, Oswald, "Myriad Pro Cond", "Roboto Condensed", "Futura Condensed",
     "Helvetica Condensed", "Arial Narrow", sans-serif;
 }
 
@@ -464,7 +465,8 @@ p.login-box-msg,
 .main-header {
   padding-bottom: 25px;
   background: #48f;
-  background-image: linear-gradient(to right, #48f 300px, #000 300px),
+  background-image:
+    linear-gradient(to right, #48f 300px, #000 300px),
     linear-gradient(
       to left,
       #48f 359.5px,
@@ -720,7 +722,8 @@ p.login-box-msg,
 }
 
 .content-wrapper {
-  background-image: linear-gradient(to left, #000 4px, #cce6ff 4px),
+  background-image:
+    linear-gradient(to left, #000 4px, #cce6ff 4px),
     linear-gradient(
       to left,
       #48f 359.5px,
