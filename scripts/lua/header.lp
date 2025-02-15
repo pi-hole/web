@@ -99,7 +99,7 @@ is_authenticated = mg.request_info.is_authenticated
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.css')?>">
 <? end ?>
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/waitMe/waitMe.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/waitMe-js/waitMe.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/select2/select2.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/adminLTE/AdminLTE.min.css')?>">
 
@@ -119,6 +119,6 @@ is_authenticated = mg.request_info.is_authenticated
     <script defer src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
     <script defer src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
     <script defer src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
-    <script defer src="<?=pihole.fileversion('vendor/waitMe/waitMe.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
     <script defer src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
     <script defer src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false, apiUrl: false, apiFailure: false, updateFtlInfo: false, NProgress:false */
+/* global moment:false, apiUrl: false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false */
 
 $(function () {
   // CSRF protection for AJAX requests, this has to be configured globally
@@ -635,6 +635,7 @@ function listAlert(type, items, data) {
   );
 }
 
+let waitMe = null;
 // Callback function for the loading overlay timeout
 function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
   // Try to ping FTL to see if it finished restarting
@@ -650,7 +651,7 @@ function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
       if (reloadAfterTimeout) {
         location.reload();
       } else {
-        $(".wrapper").waitMe("hide");
+        waitMe.hideAll();
       }
     })
     .fail(function () {
@@ -661,7 +662,7 @@ function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
 
 function loadingOverlay(reloadAfterTimeout = false) {
   NProgress.start();
-  $(".wrapper").waitMe({
+  waitMe = new WaitMe(".wrapper", {
     effect: "bounce",
     text: "Pi-hole is currently applying your changes...",
     bg: "rgba(0,0,0,0.7)",
