@@ -37,7 +37,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             <div class="col-md-12 settings-level-expert">
                 <div class="box box-warning">
                     <div class="box-header with-border">
-                        <h3 class="box-title" data-configkeys="database.DBimport database.DBexport database.maxDBdays database.network.expire">Privacy-related database settings</h3>
+                        <h3 class="box-title" data-configkeys="database.DBimport database.maxDBdays database.network.expire">Privacy-related database settings</h3>
                     </div>
                     <div class="box-body">
                         <div class="row">
@@ -46,10 +46,6 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 <div>
                                     <input type="checkbox" id="database.DBimport" data-key="database.DBimport" title="log-queries">
                                     <label for="database.DBimport"><strong>Should FTL load queries from the database on (re)start?</strong></label>
-                                </div>
-                                <div>
-                                    <input type="checkbox" id="database.DBexport" data-key="database.DBexport" title="log-queries">
-                                    <label for="database.DBexport"><strong>Should FTL store queries in the database?</strong></label>
                                 </div>
                                 <br>
                                 <div class="row-flex">
