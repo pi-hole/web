@@ -25,10 +25,14 @@
   --network-older: #182840;
   --network-never: #182028;
 
-  --allowed-color: #3c7;
-  --blocked-color: var(--danger-color);
+  /* Dashboard graphic bars */
+  --allowed-color: #12b660;
+  --blocked-color: #822d21;
+  --cached-color: #44649c;
+  --other-color: #969798;
 
   --datatable-bgcolor: rgba(18, 44, 68, 0.3);
+  --overlay-bgcolor: rgba(24, 28, 32, 0.8);
 }
 
 /* removing transition for every element, to avoid unnecessary movement */
@@ -60,6 +64,9 @@ a:active {
 
 h4 {
   color: #44def1;
+}
+.callout h4 {
+  color: inherit;
 }
 
 .page-header {
@@ -440,13 +447,6 @@ div.dataTables_wrapper div.dataTables_length select {
   background-color: #181c20;
 }
 
-.queries-permitted {
-  background-color: var(--allowed-color);
-}
-.queries-blocked {
-  background-color: var(--blocked-color);
-}
-
 code,
 pre {
   padding: 2px 4px;
@@ -478,6 +478,15 @@ kbd {
 }
 .text-muted {
   color: #808890;
+}
+
+/* Used in error403 */
+.text-danger {
+  color: #f54;
+}
+
+.help-block {
+  color: #999;
 }
 
 .warning-count {
@@ -521,18 +530,22 @@ kbd {
 .btn-info {
   background: var(--info-color);
   border-color: var(--info-color) !important;
+  color: #fff;
 }
 .btn-danger {
   background: var(--danger-color);
   border-color: var(--danger-color) !important;
+  color: #fff;
 }
 .btn-warning {
   background: var(--warning-color);
   border-color: var(--warning-color) !important;
+  color: #fff;
 }
 .btn-success {
   background: var(--success-color);
   border-color: var(--success-color) !important;
+  color: #fff;
 }
 
 .btn-info:hover {
@@ -798,7 +811,14 @@ input[type="password"]::-webkit-caps-lock-indicator {
 }
 
 .close {
-  color: #383838;
+  color: #fff;
+  text-shadow: 0 1px 0 #000;
+  opacity: 0.4;
+}
+.close:focus,
+.close:hover {
+  color: #fff;
+  opacity: 0.8;
 }
 
 .login-page {
@@ -952,4 +972,20 @@ td.highlight {
   z-index: -100;
   animation: none;
   border-radius: 6px;
+}
+
+/* Group assignment select */
+.bootstrap-select > .dropdown-toggle {
+  border-radius: 0;
+  background-color: #2d363f;
+  border: 1px solid #3c4652;
+}
+
+.open > .dropdown-toggle.btn-default:active,
+.bootstrap-select > .dropdown-toggle:hover {
+  color: var(--main-text-color);
+}
+.bootstrap-select > .dropdown-toggle:focus {
+  border-color: #3c8dbc;
+  color: var(--main-text-color);
 }

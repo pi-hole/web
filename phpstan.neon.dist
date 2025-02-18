@@ -1,8 +1,0 @@
-parameters:
-    level: 0
-    excludePaths:
-        - vendor
-    scanDirectories:
-        - .
-    paths:
-        - .

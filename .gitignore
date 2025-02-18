@@ -7,7 +7,7 @@ TODO
 *.zip
 test.html
 *.log
-.php-cs-fixer.cache
+
 
 # Intellij IDEA Project Files
 *.iml
@@ -16,6 +16,3 @@ test.html
 
 # vim
 *.swp
-
-# Composer
-/vendor/

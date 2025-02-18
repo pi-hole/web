@@ -23,8 +23,13 @@
   --network-older: #cce6fe;
   --network-never: #ffca98;
 
-  --allowed-color: #3c7;
-  --blocked-color: var(--danger-color);
+  /* Dashboard graphic bars colors */
+  --allowed-color: #009960;
+  --blocked-color: #b00000;
+  --cached-color: #acf;
+  --other-color: #908878;
+
+  --overlay-bgcolor: rgba(255, 255, 255, 0.8);
 }
 
 /* removing transition for every element, to avoid unnecessary movement */
@@ -230,12 +235,7 @@ a:hover {
 .graphs-ticks {
   color: #000;
 }
-.queries-permitted {
-  background-color: var(--allowed-color);
-}
-.queries-blocked {
-  background-color: var(--blocked-color);
-}
+
 .progress {
   background-color: #eee;
 }
@@ -490,18 +490,22 @@ table.dataTable thead th:hover.sorting_desc_disabled::after {
 .btn-info {
   background: var(--info-color);
   border-color: var(--info-color) !important;
+  color: #fff;
 }
 .btn-danger {
   background: var(--danger-color);
   border-color: var(--danger-color) !important;
+  color: #fff;
 }
 .btn-warning {
   background: var(--warning-color);
   border-color: var(--warning-color) !important;
+  color: #fff;
 }
 .btn-success {
   background: var(--success-color);
   border-color: var(--success-color) !important;
+  color: #fff;
 }
 
 .btn-default:hover {
@@ -559,4 +563,14 @@ table.dataTable thead th:hover.sorting_desc_disabled::after {
   z-index: -100;
   animation: none;
   border-radius: 6px;
+}
+
+/* Group assignment select */
+.bootstrap-select > .dropdown-toggle {
+  border-radius: 0;
+  background-color: #fff;
+}
+.bootstrap-select > .dropdown-toggle:hover {
+  color: #000;
+  background-color: #eee;
 }

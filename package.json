@@ -1,35 +1,36 @@
 {
-  "name": "AdminLTE",
+  "name": "Pi-hole web interface",
   "version": "1.0.0",
   "private": true,
   "description": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pi-hole/AdminLTE.git"
+    "url": "git+https://github.com/pi-hole/web.git"
   },
   "keywords": [],
   "author": "",
   "license": "EUPL-1.2",
   "bugs": {
-    "url": "https://github.com/pi-hole/AdminLTE/issues"
+    "url": "https://github.com/pi-hole/web/issues"
   },
-  "homepage": "https://github.com/pi-hole/AdminLTE#readme",
+  "homepage": "https://github.com/pi-hole/web#readme",
   "scripts": {
     "prefix": "postcss \"style/*.css\" \"style/themes/*.css\" --use autoprefixer --no-map --replace",
-    "prettier:check": "prettier -l \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**/*.js\"",
-    "prettier:fix": "prettier --write \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**/*.js\"",
+    "prettier:check": "prettier -l \"style/*.css\" \"style/themes/*.css\" \"scripts/**/*.js\"",
+    "prettier:fix": "prettier --write \"style/*.css\" \"style/themes/*.css\" \"scripts/**/*.js\"",
     "xo": "xo",
-    "xo:fix": "npm run xo -- --fix",
-    "test": "npm run prettier:check && npm run xo",
-    "testpr": "npm run prettier:fix && git diff --ws-error-highlight=all --color=always --exit-code && npm run xo"
+    "xo:check": "npm run xo -- \"style/*.css\" \"style/themes/*.css\" \"scripts/**\"",
+    "xo:fix": "npm run xo -- --fix \"style/*.css\" \"style/themes/*.css\" \"scripts/**\"",
+    "test": "npm run prettier:check && npm run xo:check",
+    "testpr": "npm run prettier:fix && git diff --ws-error-highlight=all --color=always --exit-code && npm run xo:check"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.16",
-    "eslint-plugin-compat": "^4.2.0",
-    "postcss": "^8.4.31",
-    "postcss-cli": "^10.1.0",
-    "prettier": "3.1.0",
-    "xo": "^0.56.0"
+    "autoprefixer": "^10.4.20",
+    "eslint-plugin-compat": "^6.0.2",
+    "postcss": "^8.5.2",
+    "postcss-cli": "^11.0.0",
+    "prettier": "^3.5.1",
+    "xo": "^0.60.0"
   },
   "browserslist": [
     "defaults",
@@ -102,8 +103,37 @@
       "unicorn/prevent-abbreviations": "off",
       "unicorn/prefer-logical-operator-over-ternary": "off",
       "unicorn/switch-case-braces": "off",
-      "unicorn/no-negated-condition": "off"
+      "unicorn/no-negated-condition": "off",
+      "logical-assignment-operators": "off",
+      "prefer-object-has-own": "off"
     }
   },
-  "dependencies": {}
+  "dependencies": {
+    "admin-lte": "2.4.18",
+    "animate.css": "4.1.1",
+    "bootstrap": "3.4.1",
+    "bootstrap-notify": "3.1.3",
+    "bootstrap-select": "1.13.18",
+    "bootstrap-toggle": "2.2.2",
+    "bstreeview": "1.2.0",
+    "chart.js": "4.4.7",
+    "chartjs-adapter-moment": "1.0.1",
+    "chartjs-plugin-deferred": "2.0.0",
+    "chartjs-plugin-zoom": "2.2.0",
+    "datatables.net-bs": "1.10.21",
+    "datatables.net-buttons-bs": "1.7.1",
+    "datatables.net-select-bs": "1.3.1",
+    "daterangepicker": "3.1.0",
+    "@fortawesome/fontawesome-free": "6.7.2",
+    "hammerjs": "2.0.8",
+    "icheck-bootstrap": "3.0.1",
+    "icheck-material": "1.0.1",
+    "jquery": "3.7.1",
+    "moment": "2.30.1",
+    "myclabs.jquery.confirm": "2.7.0",
+    "nprogress": "0.2.0",
+    "qrious": "4.0.2",
+    "select2": "4.0.13",
+    "waitme": "1.19.0"
+  }
 }

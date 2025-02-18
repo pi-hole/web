@@ -191,12 +191,7 @@
 .graphs-ticks {
   color: #000;
 }
-.queries-permitted {
-  background-color: #00a65a;
-}
-.queries-blocked {
-  background-color: #999;
-}
+
 .progress {
   background-color: #eee;
 }
@@ -300,4 +295,18 @@ select:-webkit-autofill {
   -webkit-text-fill-color: #666 !important;
   -webkit-box-shadow: 0 0 0px 1000px #fff inset;
   transition: background-color 1s ease-in-out 0s;
+}
+
+.page-header {
+  border-color: #ddd;
+}
+
+/* Group assignment select */
+.bootstrap-select > .dropdown-toggle {
+  border-radius: 0;
+  background-color: #fff;
+}
+.open > .dropdown-toggle.btn-default,
+.open > .dropdown-toggle.btn-default:active {
+  background-color: #fff;
 }

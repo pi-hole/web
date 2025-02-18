@@ -10,6 +10,13 @@
 
 :root {
   --datatable-bgcolor: rgba(64, 76, 88, 0.8);
+  --overlay-bgcolor: var(--datatable-bgcolor);
+
+  /* Dashboard graphic bars */
+  --allowed-color: #12b660;
+  --blocked-color: #822d21;
+  --cached-color: #44649c;
+  --other-color: #969798;
 }
 
 /* fix #2554: browser not detecting dark mode */
@@ -23,6 +30,9 @@ body {
 }
 h4 {
   color: #44def1;
+}
+.callout h4 {
+  color: inherit;
 }
 .content-header > .breadcrumb > li > a {
   color: #bec5cb;
@@ -189,14 +199,10 @@ h4 {
 }
 .box-solid,
 .box {
-  border: 1px solid #272c30;
+  border: 1px solid dimgray;
 }
 .box-solid > .box-header,
 .box > .box-header {
-  color: #bec5cb;
-}
-.box-solid > .box-header .btn,
-.box > .box-header .btn {
   color: #bec5cb;
 }
 .box.box-info,
@@ -368,12 +374,7 @@ h4 {
 .graphs-ticks {
   color: #b8c7ce;
 }
-.queries-permitted {
-  background-color: #00a65a;
-}
-.queries-blocked {
-  background-color: #999;
-}
+
 .progress {
   background-color: #333;
 }
@@ -624,7 +625,12 @@ input[type="password"]::-webkit-caps-lock-indicator {
 }
 
 .close {
-  color: #383838;
+  color: #fff;
+  text-shadow: 0 1px 0 #000;
+}
+.close:focus,
+.close:hover {
+  color: #fff;
 }
 
 .login-page {
@@ -642,4 +648,24 @@ input[type="password"]::-webkit-caps-lock-indicator {
 .login-options [class*="icheck-"] > input:first-child + label::before {
   background: none;
   border-color: rgb(120, 127, 133);
+}
+
+/* Group assignment select */
+.bootstrap-select > .dropdown-toggle {
+  border-radius: 0;
+  background-color: #353c42;
+  border-color: #3d444b;
+}
+.bootstrap-select > .dropdown-toggle:hover,
+.bootstrap-select > .dropdown-toggle:focus {
+  color: #fff;
+}
+.open > .dropdown-toggle.btn-default,
+.open > .dropdown-toggle.btn-default:active {
+  background-color: #353c42;
+  color: #bec5cb;
+  border: 1px solid #3d444b;
+}
+.open > .dropdown-toggle.btn-default:hover {
+  color: #fff;
 }

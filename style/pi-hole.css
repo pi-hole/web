@@ -5,6 +5,34 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
+:root {
+  /* Datatables Select - bgcolor */
+  --datatable-bgcolor: #e0e8ee;
+
+  /* Used in settings save button */
+  --overlay-bgcolor: rgba(212, 220, 232, 0.55);
+
+  /* Dashboard graphic bars colors */
+  --allowed-color: #00a65a;
+  --blocked-color: #b00000;
+  --cached-color: #9be;
+  --other-color: #908878;
+}
+
+/* Dashboard graphic bars */
+.queries-permitted {
+  background-color: var(--allowed-color);
+}
+.queries-blocked {
+  background-color: var(--blocked-color);
+}
+.queries-cached {
+  background-color: var(--cached-color);
+}
+.queries-other {
+  background-color: var(--other-color);
+}
+
 .layout-boxed {
   background: url("../img/boxed-bg.png") repeat fixed;
 }
@@ -66,7 +94,7 @@ td.lookatme {
   content: attr(lookatme-text);
   padding: inherit;
   position: absolute;
-  inset: 0 0 0 0;
+  inset: 0;
   z-index: 1;
   /* 20 steps / 2 seconds = 10fps */
   -webkit-animation: 2s infinite Pulse steps(20);
@@ -80,20 +108,20 @@ td.lookatme {
 /* Optimize Queries-Table for small screens */
 /* Time column */
 #all-queries td:nth-of-type(1),
-/* Status column */
-#all-queries td:nth-of-type(5) {
+/* Reply time column */
+#all-queries td:nth-of-type(6) {
   white-space: nowrap;
 }
 
 /* Domain column */
-#all-queries td:nth-of-type(3) {
+#all-queries td:nth-of-type(4) {
   min-width: 200px;
   word-break: break-all;
   white-space: pre-wrap;
 }
 
 /* Client column */
-#all-queries td:nth-of-type(4) {
+#all-queries td:nth-of-type(5) {
   word-break: break-all;
 }
 
@@ -236,6 +264,12 @@ td.lookatme {
   display: flex;
 }
 
+#query-types-pie .box-body,
+#forward-destinations-pie .box-body,
+#cache-metrics-chart {
+  display: flex;
+}
+
 .chart-legend {
   overflow: auto;
   display: flex;
@@ -367,10 +401,16 @@ td.lookatme {
   font-family: inherit;
 }
 
-.form-inline .form-control {
+.form-inline .dataTable .form-control {
   display: inline-block;
   width: 100%;
   vertical-align: middle;
+}
+
+/* Table footer row used to add new items, using inline input fields */
+tfoot.add-new-item > tr > th {
+  font-weight: normal;
+  vertical-align: inherit;
 }
 
 .select2-container--default .select2-results > .select2-results__options {
@@ -414,21 +454,24 @@ td.lookatme {
   margin-left: 0;
 }
 
-/* "Hide" all sidebar header titles, but keep them readable to screen readers */
 .sidebar-menu > li.header {
   color: transparent;
-  font-size: 0;
-  padding: 1px;
+  padding: 5px;
 }
 
 .box {
-  border-radius: 10px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .small-box {
-  border-radius: 10px;
+  border-radius: 8px;
   z-index: 0; /* fix the small-box z-index (related to '.small-box .icon') */
   overflow: hidden;
+}
+
+.small-box-header {
+  padding: 4px 8px;
 }
 
 .small-box span {
@@ -437,10 +480,6 @@ td.lookatme {
 
 .small-box-footer span {
   transition-duration: 0s;
-}
-
-.small-box span.glow {
-  text-shadow: 0 0 5px currentColor;
 }
 
 .small-box p {
@@ -501,6 +540,7 @@ td.lookatme {
 
 td.details-control {
   cursor: pointer;
+  text-align: center;
 }
 
 .dataTables-child td {
@@ -527,22 +567,6 @@ td.details-control {
   padding-right: 20px;
 }
 
-@media screen and (max-width: 991px) {
-  #domain-search-block {
-    display: block;
-  }
-  #domain {
-    margin: 5px 0;
-  }
-  #domain-search-block .input-group-btn {
-    display: inline-block;
-  }
-  #domain-search-block .input-group-btn button {
-    margin: 0 5px 0 0;
-    border-radius: 3px;
-  }
-}
-
 /*** Login page ***/
 .login-page {
   padding: 15px;
@@ -565,7 +589,9 @@ td.details-control {
 }
 
 .form-control-feedback {
-  right: 12px;
+  right: 0.5em;
+  width: 16px;
+  height: 100%;
 }
 
 .loginpage-logo {
@@ -587,7 +613,6 @@ td.details-control {
 .login-options div:last-child {
   margin-right: 2px;
   margin-bottom: 0 !important;
-  flex: 0 1 auto;
   font-size: 95%;
 }
 
@@ -660,6 +685,11 @@ li:not(.menu-open) .treeview-menu .warning-count {
 [class*="icheck-"] > input:first-child:focus + label::before {
   outline: 1px #3c8dbc solid;
   border-color: #3c8dbc;
+}
+
+/* Fix indentation of <p> elements inside icheck elements */
+[class*="icheck-"] > label + p {
+  padding-left: 29px;
 }
 
 /* Fix some datatables layout on small screens */
@@ -863,6 +893,19 @@ body:not([class*="lcars"])
   }
 }
 
+/* Page title container (flex) */
+.flex-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap-reverse;
+}
+
+.flex-header h1 {
+  margin: 10px 30px 10px 0;
+  flex: 1 0 auto;
+}
+
 .navbar-nav {
   height: 50px;
 }
@@ -954,11 +997,6 @@ body:not([class*="lcars"])
   margin-right: 0.5em;
 }
 
-/* Datatables Select - bgcolor */
-:root {
-  --datatable-bgcolor: #e0e8ee;
-}
-
 div.dt-buttons {
   margin: 2px 0 5px;
 }
@@ -1019,6 +1057,10 @@ table.dataTable tbody > tr > .selected {
   padding: 4px 8px;
 }
 
+#output.pre-taillog {
+  display: grid;
+}
+
 .loading::before {
   content: " ";
   position: absolute;
@@ -1052,6 +1094,493 @@ table.dataTable tbody > tr > .selected {
   translate: -50% -50%;
 }
 
+.pull-nav-right {
+  float: right !important;
+  margin-right: 5px;
+  margin-left: 5px;
+  padding: 5px;
+}
+
 .faint-border {
   border-color: rgba(127, 127, 127, 0.1);
+}
+
+.pre-scrollable {
+  /* use dynamic unit to account for mobile browser interface height */
+  max-height: max(195px, 100dvh - 170px);
+  overflow-y: scroll;
+}
+@media screen and (max-width: 767px) {
+  .pre-scrollable {
+    /* reduce max-height on mobile (higher header) */
+    max-height: max(195px, 100dvh - 220px);
+  }
+}
+@media screen and (max-width: 546px) {
+  .pre-scrollable {
+    /* reduce max-height even more (box-header text wraps, increasing the height) */
+    max-height: max(195px, 100dvh - 240px);
+  }
+}
+
+.hr-small {
+  width: 100%;
+  margin: 0 0 -1px;
+  border-top: 1px solid #ff0000aa;
+}
+
+.qrcode {
+  width: 50%;
+}
+
+.totp_token {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+  font-family: monospace;
+  letter-spacing: 0.5em;
+}
+
+.totp_token::placeholder {
+  opacity: 0.1;
+}
+
+.save-button-container {
+  position: fixed;
+  bottom: 1.2em;
+  right: 0.6em;
+  z-index: 10;
+  background: var(--overlay-bgcolor);
+  width: fit-content;
+  border-radius: 0.5em;
+  padding: 0;
+}
+.save-button {
+  margin: 1.2em;
+}
+@media (min-width: 1250px) {
+  .layout-boxed .save-button-container {
+    right: calc((100% - 1250px) / 2 + 1.2em);
+  }
+}
+
+.settings-container {
+  --columns: 2;
+  --gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+}
+.settings-container > .box {
+  margin: 0;
+  width: calc((100% - (var(--gap) * (var(--columns) - 1))) / var(--columns));
+  border: none;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+}
+.settings-box .control-label small {
+  font-weight: normal;
+  display: block;
+}
+
+/* Settings containers without modified items and with hidden boxes will display this text */
+.settings-container:not(:has(h3[data-modified="true"])):has(.box[style*="display: none;"])::before {
+  content: "No modified settings to display";
+  opacity: 0.7;
+  font-style: italic;
+}
+
+#advanced-settings-menu {
+  margin-bottom: 1.5em;
+}
+
+#advanced-settings-menu ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.5em;
+}
+#advanced-settings-menu ul:before,
+#advanced-settings-menu ul:after {
+  content: none;
+}
+
+#advanced-settings-menu ul > li {
+  margin: 0;
+  min-width: 112px;
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+#advanced-settings-menu ul > li a {
+  border: 1px solid rgba(127, 127, 127, 0.2);
+  border-radius: 3px;
+}
+#advanced-settings-menu ul > li:not(.active) a {
+  color: inherit;
+}
+#advanced-settings-menu ul > li:not(.active) a:hover,
+#advanced-settings-menu ul > li:not(.active) a:focus {
+  background: rgba(127, 127, 127, 0.1);
+}
+
+#advanced-settings-tabs > .tab-pane {
+  margin-bottom: 2em;
+}
+
+@media screen and (min-width: 2250px) {
+  /* show 3 columns in larger screens */
+  .settings-container {
+    --columns: 3;
+  }
+}
+@media screen and (max-width: 1150px) {
+  /* avoid narrow columns in medium screens with sidebar expanded */
+  body:not(.sidebar-collapse) .settings-container {
+    --columns: 1;
+  }
+}
+@media screen and (max-width: 940px) {
+  /* show 1 columns in smaller screens */
+  .settings-container {
+    --columns: 1;
+  }
+}
+
+/* Global settings level selector container */
+.settings-selector {
+  padding: 14px 0 0;
+  order: 2;
+  font-size: 18px;
+}
+
+/* Hide the checkbox used for settings level selector */
+#expert-settings,
+#only-changed {
+  display: none;
+}
+
+.settings-level-basic {
+  display: none;
+}
+
+.settings-level-expert {
+  display: none;
+}
+
+.main-footer {
+  padding-bottom: 0px;
+}
+
+@keyframes error-border {
+  0%,
+  100% {
+    border-color: rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    border-color: rgba(255, 0, 0, 0.2);
+  }
+}
+
+.error-box {
+  border-width: 2px;
+  border-style: solid;
+  animation: error-border 1s infinite;
+}
+
+.button-pad {
+  margin: 2px;
+}
+
+.error-headline {
+  float: none;
+  text-align: center;
+  font-size: 100px;
+  font-weight: 500;
+  padding-right: 20px;
+}
+
+.m-0 {
+  margin: 0 !important;
+}
+.m-1 {
+  margin: 0.25rem !important;
+}
+.m-2 {
+  margin: 0.5rem !important;
+}
+.m-3 {
+  margin: 1rem !important;
+}
+.m-4 {
+  margin: 1.5rem !important;
+}
+.m-5 {
+  margin: 3rem !important;
+}
+
+.mt-0 {
+  margin-top: 0 !important;
+}
+.mr-0 {
+  margin-right: 0 !important;
+}
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+.ml-0 {
+  margin-left: 0 !important;
+}
+.mx-0 {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.my-0 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.mt-1 {
+  margin-top: 0.25rem !important;
+}
+.mr-1 {
+  margin-right: 0.25rem !important;
+}
+.mb-1 {
+  margin-bottom: 0.25rem !important;
+}
+.ml-1 {
+  margin-left: 0.25rem !important;
+}
+.mx-1 {
+  margin-left: 0.25rem !important;
+  margin-right: 0.25rem !important;
+}
+.my-1 {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.mt-2 {
+  margin-top: 0.5rem !important;
+}
+.mr-2 {
+  margin-right: 0.5rem !important;
+}
+.mb-2 {
+  margin-bottom: 0.5rem !important;
+}
+.ml-2 {
+  margin-left: 0.5rem !important;
+}
+.mx-2 {
+  margin-right: 0.5rem !important;
+  margin-left: 0.5rem !important;
+}
+.my-2 {
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.mt-3 {
+  margin-top: 1rem !important;
+}
+.mr-3 {
+  margin-right: 1rem !important;
+}
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+.ml-3 {
+  margin-left: 1rem !important;
+}
+.mx-3 {
+  margin-right: 1rem !important;
+  margin-left: 1rem !important;
+}
+.my-3 {
+  margin-bottom: 1rem !important;
+  margin-top: 1rem !important;
+}
+
+.p-0 {
+  padding: 0 !important;
+}
+.p-1 {
+  padding: 0.25rem !important;
+}
+.p-2 {
+  padding: 0.5rem !important;
+}
+.p-3 {
+  padding: 1rem !important;
+}
+.p-4 {
+  padding: 1.5rem !important;
+}
+.p-5 {
+  padding: 3rem !important;
+}
+
+.pt-0 {
+  padding-top: 0 !important;
+}
+.pr-0 {
+  padding-right: 0 !important;
+}
+.pb-0 {
+  padding-bottom: 0 !important;
+}
+.pl-0 {
+  padding-left: 0 !important;
+}
+.px-0 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.py-0 {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.pt-1 {
+  padding-top: 0.25rem !important;
+}
+.pr-1 {
+  padding-right: 0.25rem !important;
+}
+.pb-1 {
+  padding-bottom: 0.25rem !important;
+}
+.pl-1 {
+  padding-left: 0.25rem !important;
+}
+.px-1 {
+  padding-left: 0.25rem !important;
+  padding-right: 0.25rem !important;
+}
+.py-1 {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+}
+
+.pt-2 {
+  padding-top: 0.5rem !important;
+}
+.pr-2 {
+  padding-right: 0.5rem !important;
+}
+.pb-2 {
+  padding-bottom: 0.5rem !important;
+}
+.pl-2 {
+  padding-left: 0.5rem !important;
+}
+.px-2 {
+  padding-right: 0.5rem !important;
+  padding-left: 0.5rem !important;
+}
+.py-2 {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.pt-3 {
+  padding-top: 1rem !important;
+}
+.pr-3 {
+  padding-right: 1rem !important;
+}
+.pb-3 {
+  padding-bottom: 1rem !important;
+}
+.pl-3 {
+  padding-left: 1rem !important;
+}
+.px-3 {
+  padding-right: 1rem !important;
+  padding-left: 1rem !important;
+}
+.py-3 {
+  padding-bottom: 1rem !important;
+  padding-top: 1rem !important;
+}
+
+.password_background {
+  background-image: repeating-linear-gradient(
+    45deg,
+    white 0%,
+    white 2%,
+    rgb(0, 0, 0) 2%,
+    rgb(0, 0, 0) 4%,
+    white 4%
+  );
+}
+
+/* Dashboard graphics: reset zoom button and info tooltip */
+.zoom-reset {
+  display: none;
+  margin-top: -1px;
+}
+
+/* General layout - Row containing flex elements */
+.row-flex {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+  margin: 0.5em 0;
+  align-items: start;
+}
+.row-flex .form-control {
+  width: auto;
+}
+
+.log-entry {
+  padding-left: 0.5em;
+}
+
+.align-click-options {
+  align-items: center;
+  display: grid;
+  grid-auto-flow: column;
+  grid-column-gap: 15px;
+}
+
+.overflow-wrap {
+  overflow-wrap: break-word;
+  inline-size: auto;
+}
+
+/* Search page options */
+#domain-limitbox-block {
+  /* Add margin to match the other component (icheck) height */
+  margin: 3px 0;
+}
+@media (min-width: 992px) {
+  #domain-limitbox-block {
+    text-align: right;
+  }
+}
+
+.box-icons {
+  margin: 0 5px;
+}
+
+.box-icons svg {
+  margin: 0 4px;
+}
+
+textarea.field-sizing-content {
+  min-block-size: 3.5rlh;
+  max-block-size: 20rlh;
+  min-inline-size: 20ch;
+  field-sizing: content;
+}
+
+/* Used in interfaces page */
+.list-group-item {
+  background: transparent;
+  border-color: rgba(127, 127, 127, 0.27);
+}
+.bstreeview .list-group-item:hover {
+  background-color: rgba(127, 127, 127, 0.18);
 }
