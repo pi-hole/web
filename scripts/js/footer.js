@@ -576,7 +576,17 @@ function updateVersionInfo() {
           // if at least one component can be updated, display the update-hint footer
           updateAvailable = true;
         } else {
-          $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
+          $("#versions").append(
+            "<li><strong>" +
+              v.name +
+              "</strong>" +
+              '<a href="' +
+              v.url +
+              localVersion.slice(1) +
+              '" rel="noopener" target="_blank">' +
+              localVersion +
+              "</a></li>"
+          );
         }
       }
     });
