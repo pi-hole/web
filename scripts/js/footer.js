@@ -565,13 +565,13 @@ function updateVersionInfo() {
           } else {
             // Display the link for the current tag
             localVersion =
-            '<a href="' +
-            v.url +
-            "/" +
-            localVersion +
-            '" rel="noopener" target="_blank">' +
-            localVersion +
-            "</a>";
+              '<a href="' +
+              v.url +
+              "/" +
+              localVersion +
+              '" rel="noopener" target="_blank">' +
+              localVersion +
+              "</a>";
           }
         }
 
