@@ -557,9 +557,22 @@ function updateVersionInfo() {
           }
         }
 
-        if (v.name === "Docker Tag" && versionCompare(v.local, v.remote) === -1) {
-          updateComponentAvailable = true;
-          dockerUpdate = true;
+        if (v.name === "Docker Tag") {
+          if (versionCompare(v.local, v.remote) === -1) {
+            // Display update information for the docker tag
+            updateComponentAvailable = true;
+            dockerUpdate = true;
+          } else {
+            // Display the link for the current tag
+            localVersion =
+              '<a href="' +
+              v.url +
+              "/" +
+              localVersion +
+              '" rel="noopener" target="_blank">' +
+              localVersion +
+              "</a>";
+          }
         }
 
         // Display update information of individual components only if we are not running in a Docker container
