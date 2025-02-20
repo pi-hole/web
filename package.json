@@ -27,7 +27,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "eslint-plugin-compat": "^6.0.2",
-    "postcss": "^8.5.2",
+    "postcss": "^8.5.3",
     "postcss-cli": "^11.0.0",
     "prettier": "^3.5.1",
     "xo": "^0.60.0"
@@ -116,7 +116,7 @@
     "bootstrap-select": "1.13.18",
     "bootstrap-toggle": "2.2.2",
     "bstreeview": "1.2.0",
-    "chart.js": "4.4.7",
+    "chart.js": "4.4.8",
     "chartjs-adapter-moment": "1.0.1",
     "chartjs-plugin-deferred": "2.0.0",
     "chartjs-plugin-zoom": "2.2.0",
