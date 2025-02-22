@@ -19,7 +19,9 @@ function addAllowedValues(allowed) {
         .join("</li><li>") +
       "</li></ul>"
     );
-  } else if (typeof allowed === "string") {
+  }
+
+  if (typeof allowed === "string") {
     return "<p><small>Allowed value: " + utils.escapeHtml(allowed) + "</small></p>";
   }
 }

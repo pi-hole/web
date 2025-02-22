@@ -143,24 +143,28 @@ function showAlert(type, icon, title, message, toast) {
       // Create a new notification for info boxes
       showAlertBox = $.notify(options, settings);
       return showAlertBox;
-    } else if (showAlertBox !== null) {
+    }
+
+    if (showAlertBox !== null) {
       // Update existing notification for other boxes (if available)
       showAlertBox.update(options);
       showAlertBox.update(settings);
       return showAlertBox;
-    } else {
-      // Create a new notification for other boxes if no previous info box exists
-      return $.notify(options, settings);
     }
-  } else if (toast === null) {
+
+    // Create a new notification for other boxes if no previous info box exists
+    return $.notify(options, settings);
+  }
+
+  if (toast === null) {
     // Always create a new toast
     return $.notify(options, settings);
-  } else {
-    // Update existing toast
-    toast.update(options);
-    toast.update(settings);
-    return toast;
   }
+
+  // Update existing toast
+  toast.update(options);
+  toast.update(settings);
+  return toast;
 }
 
 function datetime(date, html, humanReadable) {

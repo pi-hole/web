@@ -71,7 +71,9 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
     }
 
     return;
-  } else if (isSuccess) {
+  }
+
+  if (isSuccess) {
     $("#pw-field").addClass("has-success");
     $("#totp_input").addClass("has-success");
   } else {
