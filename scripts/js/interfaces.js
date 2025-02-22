@@ -7,12 +7,12 @@
 
 /* global utils: false */
 
-$(function () {
+$(() => {
   $.ajax({
     url: document.body.dataset.apiurl + "/network/gateway",
     data: { detailed: true },
-  }).done(function (data) {
-    var intl = new Intl.NumberFormat();
+  }).done(data => {
+    const intl = new Intl.NumberFormat();
     const gateway = data.gateway;
     // Get all objects in gateway that has family == "inet"
     const inet = gateway.find(obj => obj.family === "inet");
@@ -28,11 +28,11 @@ $(function () {
       gateways.add(inet6.gateway);
     }
 
-    var interfaces = {};
-    var masterInterfaces = {};
+    const interfaces = {};
+    const masterInterfaces = {};
 
     // For each interface in data.interface, create a new object and push it to json
-    data.interfaces.forEach(function (interface) {
+    for (const interface of data.interfaces) {
       const carrierColor = interface.carrier ? "text-green" : "text-red";
       let stateText = interface.state.toUpperCase();
       if (stateText === "UNKNOWN" && interface.flags !== undefined && interface.flags.length > 0) {
@@ -57,7 +57,7 @@ $(function () {
       const indentIcon =
         master === null ? "" : "<span class='child-interface-icon'>&nbsp;&rdca;</span> ";
 
-      var obj = {
+      const obj = {
         text: indentIcon + interface.name + " - " + status,
         class: gateways.has(interface.name) ? "text-bold" : null,
         icon: master === null ? "fa fa-network-wired fa-fw" : "",
@@ -179,7 +179,7 @@ $(function () {
 
           if (addr.prefered !== undefined) {
             const pref =
-              addr.prefered === 4294967295 ? "forever" : intl.format(addr.prefered) + " s";
+              addr.prefered === 4_294_967_295 ? "forever" : intl.format(addr.prefered) + " s";
             jaddr.nodes.push({
               text: "Preferred lifetime: " + pref,
               icon: "fa fa-clock fa-fw",
@@ -187,7 +187,7 @@ $(function () {
           }
 
           if (addr.valid !== undefined) {
-            const valid = addr.valid === 4294967295 ? "forever" : intl.format(addr.valid) + " s";
+            const valid = addr.valid === 4_294_967_295 ? "forever" : intl.format(addr.valid) + " s";
             jaddr.nodes.push({
               text: "Valid lifetime: " + valid,
               icon: "fa fa-clock fa-fw",
@@ -417,7 +417,7 @@ $(function () {
       }
 
       interfaces[interface.name] = obj;
-    });
+    }
 
     // Sort interfaces based on masterInterfaces. If an item is found in
     // masterInterfaces, it should be placed after the master interface

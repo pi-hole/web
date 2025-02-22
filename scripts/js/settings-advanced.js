@@ -13,13 +13,15 @@ function addAllowedValues(allowed) {
     return (
       "<p>Available options:</p><ul><li>" +
       allowed
-        .map(function (option) {
+        .map(option => {
           return "<code>" + option.item + "</code>: " + utils.escapeHtml(option.description);
         })
         .join("</li><li>") +
       "</li></ul>"
     );
-  } else if (typeof allowed === "string") {
+  }
+
+  if (typeof allowed === "string") {
     return "<p><small>Allowed value: " + utils.escapeHtml(allowed) + "</small></p>";
   }
 }
@@ -212,7 +214,7 @@ function valueDetails(key, value) {
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
       content += '<div class="col-sm-12">';
-      value.allowed.forEach(function (option, i) {
+      for (const [i, option] of value.allowed.entries()) {
         content +=
           "<div>" +
           // Radio button
@@ -227,7 +229,8 @@ function valueDetails(key, value) {
           // Paragraph with description
           `<p class="help-block">${option.description}</p>` +
           "</div>";
-      });
+      }
+
       content += "</div>";
 
       break;
@@ -262,15 +265,16 @@ function valueDetails(key, value) {
 function generateRow(topic, key, value) {
   // If the value is an object, we need to recurse
   if (!("description" in value)) {
-    Object.keys(value).forEach(function (subkey) {
-      var subvalue = value[subkey];
+    for (const subkey of Object.keys(value)) {
+      const subvalue = value[subkey];
       generateRow(topic, key + "." + subkey, subvalue);
-    });
+    }
+
     return;
   }
 
   // else: we have a setting we can display
-  var box =
+  const box =
     '<div class="box settings-box">' +
     '<div class="box-header with-border">' +
     '<h3 class="box-title" data-key="' +
@@ -289,8 +293,8 @@ function generateRow(topic, key, value) {
     valueDetails(key, value) +
     "</div></div> ";
 
-  var topKey = key.split(".")[0];
-  var elem = $("#advanced-content-" + topKey + "-flex");
+  const topKey = key.split(".")[0];
+  const elem = $("#advanced-content-" + topKey + "-flex");
   elem.append(box);
 }
 
@@ -298,10 +302,10 @@ function createDynamicConfigTabs() {
   $.ajax({
     url: document.body.dataset.apiurl + "/config?detailed=true",
   })
-    .done(function (data) {
+    .done(data => {
       // Create the tabs for the advanced dynamic config topics
-      Object.keys(data.topics).forEach(function (n) {
-        var topic = data.topics[n];
+      for (const n of Object.keys(data.topics)) {
+        const topic = data.topics[n];
 
         $("#advanced-settings-tabs").append(`
           <div id="advanced-content-${topic.name}" role="tabpanel" class="tab-pane fade">
@@ -318,27 +322,28 @@ function createDynamicConfigTabs() {
             <a href="#advanced-content-${topic.name}" class="btn btn-default" aria-controls="advanced-content-${topic.name}" role="pill" data-toggle="pill">${topic.description.replace(" settings", "")}</a>
           </li>
         `);
-      });
+      }
 
       // Dynamically fill the tabs with config topics
-      Object.keys(data.config).forEach(function (topic) {
-        var value = data.config[topic];
+      for (const topic of Object.keys(data.config)) {
+        const value = data.config[topic];
         generateRow(topic, topic, value);
-      });
+      }
+
       $("#advanced-overlay").hide();
 
       // Select the first tab and show the content
       $("#advanced-settings-menu ul li:first-child").addClass("active");
       $("#advanced-settings-tabs > div:first-child").addClass("active in");
 
-      $("button[id='save']").on("click", function () {
+      $("button[id='save']").on("click", () => {
         saveSettings();
       });
 
       applyCheckboxRadioStyle();
       applyOnlyChanged();
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -401,7 +406,7 @@ function applyOnlyChanged() {
   }
 }
 
-$(document).ready(function () {
+$(document).ready(() => {
   createDynamicConfigTabs();
   initOnlyChanged();
 });

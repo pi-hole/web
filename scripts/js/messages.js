@@ -6,20 +6,20 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils: false */
-var table,
-  toasts = {};
+let table;
+const toasts = {};
 
-$(function () {
-  var ignoreNonfatal = localStorage
+$(() => {
+  const ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
-  var url =
+  const url =
     document.body.dataset.apiurl +
     "/info/messages" +
     (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : "");
   table = $("#messagesTable").DataTable({
     ajax: {
-      url: url,
+      url,
       type: "GET",
       dataSrc: "messages",
     },
@@ -37,7 +37,7 @@ $(function () {
         targets: 1,
         orderable: false,
         className: "select-checkbox",
-        render: function () {
+        render() {
           return "";
         },
       },
@@ -46,19 +46,19 @@ $(function () {
         render: $.fn.dataTable.render.text(),
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       $('button[id^="deleteMessage_"]').on("click", deleteMessage);
 
       // Hide buttons if all messages were deleted
-      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
-    rowCallback: function (row, data) {
+    rowCallback(row, data) {
       $(row).attr("data-id", data.id);
-      var button =
+      const button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteMessage_' +
         data.id +
         '" data-del-id="' +
@@ -78,7 +78,7 @@ $(function () {
         text: '<span class="far fa-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectAll",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -86,7 +86,7 @@ $(function () {
         text: '<span class="far fa-plus-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectMore",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -100,7 +100,7 @@ $(function () {
         text: '<span class="far fa-trash-alt"></span>',
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
-        action: function () {
+        action() {
           // For each ".selected" row ...
           $("tr.selected").each(function () {
             // ... delete the row identified by "data-id".
@@ -124,11 +124,11 @@ $(function () {
     },
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("messages-table", data);
     },
-    stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("messages-table");
+    stateLoadCallback() {
+      const data = utils.stateLoadCallback("messages-table");
       // Return if not available
       if (data === null) {
         return null;
@@ -141,7 +141,7 @@ $(function () {
       return data;
     },
   });
-  table.on("init select deselect", function () {
+  table.on("init select deselect", () => {
     utils.changeTableButtonStates(table);
   });
 });
@@ -155,7 +155,7 @@ function deleteMessage() {
 }
 
 function delMsg(id) {
-  id = parseInt(id, 10);
+  id = Number.parseInt(id, 10);
   utils.disableAll();
   toasts[id] = utils.showAlert("info", "", "Deleting message...", "ID: " + id, null);
 
@@ -163,7 +163,7 @@ function delMsg(id) {
     url: document.body.dataset.apiurl + "/info/messages/" + id,
     method: "DELETE",
   })
-    .done(function (response) {
+    .done(response => {
       utils.enableAll();
       if (response === undefined) {
         utils.showAlert(
@@ -193,7 +193,7 @@ function delMsg(id) {
     .done(
       utils.checkMessages // Update icon warnings count
     )
-    .fail(function (jqXHR, exception) {
+    .fail((jqXHR, exception) => {
       utils.enableAll();
       utils.showAlert(
         "error",

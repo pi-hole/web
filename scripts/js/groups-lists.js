@@ -8,10 +8,10 @@
 /* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false */
 /* exported initTable */
 
-var table;
-var GETDict = {};
+let table;
+let GETDict = {};
 
-$(function () {
+$(() => {
   GETDict = utils.parseQueryString();
 
   $("#btnAddAllow").on("click", { type: "allow" }, addList);
@@ -23,33 +23,35 @@ $(function () {
 
 function format(data) {
   // Generate human-friendly status string
-  var statusText = setStatusText(data, true);
-  var numbers = true;
+  const statusText = setStatusText(data, true);
+  let numbers = true;
   if (data.status === 0 || data.status === 4) {
     numbers = false;
   }
 
   // Compile extra info for displaying
-  var dateAddedISO = utils.datetime(data.date_added, false),
-    dateModifiedISO = utils.datetime(data.date_modified, false),
-    dateUpdated =
-      data.date_updated > 0
-        ? utils.datetimeRelative(data.date_updated) +
-          "&nbsp;(" +
-          utils.datetime(data.date_updated, false) +
-          ")"
-        : "N/A",
-    numberOfEntries =
-      (data.number !== null && numbers === true
-        ? parseInt(data.number, 10).toLocaleString()
-        : "N/A") +
-      (data.abp_entries !== null && parseInt(data.abp_entries, 10) > 0 && numbers === true
-        ? " (out of which " + parseInt(data.abp_entries, 10).toLocaleString() + " are in ABP-style)"
-        : ""),
-    nonDomains =
-      data.invalid_domains !== null && numbers === true
-        ? parseInt(data.invalid_domains, 10).toLocaleString()
-        : "N/A";
+  const dateAddedISO = utils.datetime(data.date_added, false);
+  const dateModifiedISO = utils.datetime(data.date_modified, false);
+  const dateUpdated =
+    data.date_updated > 0
+      ? utils.datetimeRelative(data.date_updated) +
+        "&nbsp;(" +
+        utils.datetime(data.date_updated, false) +
+        ")"
+      : "N/A";
+  const numberOfEntries =
+    (data.number !== null && numbers === true
+      ? Number.parseInt(data.number, 10).toLocaleString()
+      : "N/A") +
+    (data.abp_entries !== null && Number.parseInt(data.abp_entries, 10) > 0 && numbers === true
+      ? " (out of which " +
+        Number.parseInt(data.abp_entries, 10).toLocaleString() +
+        " are in ABP-style)"
+      : "");
+  const nonDomains =
+    data.invalid_domains !== null && numbers === true
+      ? Number.parseInt(data.invalid_domains, 10).toLocaleString()
+      : "N/A";
 
   return `<table>
       <tr class="dataTables-child">
@@ -83,9 +85,9 @@ function format(data) {
 
 // Define the status icon element
 function setStatusIcon(data) {
-  var statusCode = parseInt(data.status, 10),
-    statusTitle = setStatusText(data) + "\nClick for details about this list",
-    statusIcon;
+  const statusCode = Number.parseInt(data.status, 10);
+  const statusTitle = setStatusText(data) + "\nClick for details about this list";
+  let statusIcon;
 
   switch (statusCode) {
     case 1:
@@ -110,10 +112,10 @@ function setStatusIcon(data) {
 
 // Define human-friendly status string
 function setStatusText(data, showdetails = false) {
-  var statusText = "Unknown",
-    statusDetails = "";
+  let statusText = "Unknown";
+  let statusDetails = "";
   if (data.status !== null) {
-    switch (parseInt(data.status, 10)) {
+    switch (Number.parseInt(data.status, 10)) {
       case 0:
         statusText =
           data.enabled === 0
@@ -140,7 +142,8 @@ function setStatusText(data, showdetails = false) {
 
       default:
         statusText = "Unknown";
-        statusDetails = ' (<span class="list-status-0">' + parseInt(data.status, 10) + "</span>)";
+        statusDetails =
+          ' (<span class="list-status-0">' + Number.parseInt(data.status, 10) + "</span>)";
         break;
     }
   }
@@ -152,8 +155,8 @@ function setStatusText(data, showdetails = false) {
 function setTypeIcon(type) {
   //Add red ban icon if data["type"] is "block"
   //Add green check icon if data["type"] is "allow"
-  let iconClass = "fa-question text-orange",
-    title = "This list is of unknown type";
+  let iconClass = "fa-question text-orange";
+  let title = "This list is of unknown type";
   if (type === "block") {
     iconClass = "fa-ban text-red";
     title = "This is a blocklist";
@@ -190,7 +193,7 @@ function initTable() {
       {
         targets: 1,
         className: "select-checkbox",
-        render: function () {
+        render() {
           return "";
         },
       },
@@ -199,26 +202,26 @@ function initTable() {
         render: $.fn.dataTable.render.text(),
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       // Hide buttons if all lists were deleted
-      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       $('button[id^="deleteList_"]').on("click", deleteList);
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
-    rowCallback: function (row, data) {
-      var dataId = utils.hexEncode(data.address + "_" + data.type);
+    rowCallback(row, data) {
+      const dataId = utils.hexEncode(data.address + "_" + data.type);
       $(row).attr("data-id", dataId);
       $(row).attr("data-address", utils.hexEncode(data.address));
       $(row).attr("data-type", data.type);
 
-      var statusCode = 0;
+      let statusCode = 0;
       // If there is no status or the list is disabled, we keep
       // status 0 (== unknown)
       if (data.status !== null && data.enabled) {
-        statusCode = parseInt(data.status, 10);
+        statusCode = Number.parseInt(data.status, 10);
       }
 
       $("td:eq(1)", row).addClass("list-status-" + statusCode);
@@ -256,7 +259,7 @@ function initTable() {
           (data.enabled ? " checked" : "") +
           ">"
       );
-      var statusEl = $("#enabled_" + dataId, row);
+      const statusEl = $("#enabled_" + dataId, row);
       statusEl.bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
@@ -267,7 +270,7 @@ function initTable() {
       statusEl.on("change", editList);
 
       $("td:eq(5)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-      var commentEl = $("#comment_" + dataId, row);
+      const commentEl = $("#comment_" + dataId, row);
       commentEl.val(data.comment);
       commentEl.on("change", editList);
 
@@ -275,47 +278,47 @@ function initTable() {
       $("td:eq(6)", row).append(
         '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
       );
-      var selectEl = $("#multiselect_" + dataId, row);
+      const selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
-      for (var i = 0; i < groups.length; i++) {
-        var dataSub = "";
-        if (!groups[i].enabled) {
+      for (const group of groups) {
+        let dataSub = "";
+        if (!group.enabled) {
           dataSub = 'data-subtext="(disabled)"';
         }
 
         selectEl.append(
           $("<option " + dataSub + "/>")
-            .val(groups[i].id)
-            .text(groups[i].name)
+            .val(group.id)
+            .text(group.name)
         );
       }
 
-      var applyBtn = "#btn_apply_" + dataId;
+      const applyBtn = "#btn_apply_" + dataId;
 
       // Select assigned groups
       selectEl.val(data.groups);
       // Initialize bootstrap-select
       selectEl
         // fix dropdown if it would stick out right of the viewport
-        .on("show.bs.select", function () {
-          var winWidth = $(globalThis).width();
-          var dropdownEl = $("body > .bootstrap-select.dropdown");
+        .on("show.bs.select", () => {
+          const winWidth = $(globalThis).width();
+          const dropdownEl = $("body > .bootstrap-select.dropdown");
           if (dropdownEl.length > 0) {
             dropdownEl.removeClass("align-right");
-            var width = dropdownEl.width();
-            var left = dropdownEl.offset().left;
+            const width = dropdownEl.width();
+            const left = dropdownEl.offset().left;
             if (left + width > winWidth) {
               dropdownEl.addClass("align-right");
             }
           }
         })
-        .on("changed.bs.select", function () {
+        .on("changed.bs.select", () => {
           // enable Apply button
           if ($(applyBtn).prop("disabled")) {
             $(applyBtn)
               .addClass("btn-success")
               .prop("disabled", false)
-              .on("click", function () {
+              .on("click", () => {
                 editList.call(selectEl);
               });
           }
@@ -337,11 +340,11 @@ function initTable() {
         );
 
       // Highlight row (if url parameter "listid=" is used)
-      if ("listid" in GETDict && data.id === parseInt(GETDict.listid, 10)) {
+      if ("listid" in GETDict && data.id === Number.parseInt(GETDict.listid, 10)) {
         $(row).find("td").addClass("highlight");
       }
 
-      var button =
+      const button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteList_' +
         dataId +
         '" data-id="' +
@@ -371,7 +374,7 @@ function initTable() {
         text: '<span class="far fa-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectAll",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -379,7 +382,7 @@ function initTable() {
         text: '<span class="far fa-plus-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectMore",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -393,9 +396,9 @@ function initTable() {
         text: '<span class="far fa-trash-alt"></span>',
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
-        action: function () {
+        action() {
           // For each ".selected" row ...
-          var ids = [];
+          const ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
             ids.push({ item: $(this).attr("data-address"), type: $(this).attr("data-type") });
@@ -407,11 +410,11 @@ function initTable() {
     ],
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("groups-lists-table", data);
     },
-    stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("groups-lists-table");
+    stateLoadCallback() {
+      const data = utils.stateLoadCallback("groups-lists-table");
 
       // Return if not available
       if (data === null) {
@@ -423,26 +426,26 @@ function initTable() {
       // Apply loaded state to table
       return data;
     },
-    initComplete: function () {
+    initComplete() {
       if ("listid" in GETDict) {
-        var pos = table
+        const pos = table
           .column(0, { order: "current" })
           .data()
-          .indexOf(parseInt(GETDict.listid, 10));
-        if (pos >= 0) {
-          var page = Math.floor(pos / table.page.info().length);
+          .indexOf(Number.parseInt(GETDict.listid, 10));
+        if (pos !== -1) {
+          const page = Math.floor(pos / table.page.info().length);
           table.page(page).draw(false);
         }
       }
     },
   });
 
-  table.on("init select deselect", function () {
+  table.on("init select deselect", () => {
     utils.changeBulkDeleteStates(table);
   });
 
-  table.on("order.dt", function () {
-    var order = table.order();
+  table.on("order.dt", () => {
+    const order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
       $("#resetButton").removeClass("hidden");
     } else {
@@ -450,15 +453,15 @@ function initTable() {
     }
   });
 
-  $("#resetButton").on("click", function () {
+  $("#resetButton").on("click", () => {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").addClass("hidden");
   });
 
   // Add event listener for opening and closing details
   $("#listsTable tbody").on("click", "td.details-control", function () {
-    var tr = $(this).closest("tr");
-    var row = table.row(tr);
+    const tr = $(this).closest("tr");
+    const row = table.row(tr);
 
     if (row.child.isShown()) {
       // This row is already open - close it
@@ -472,7 +475,7 @@ function initTable() {
   });
 
   // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
+  const input = document.querySelector("input[type=search]");
   if (input !== null) {
     input.setAttribute("autocomplete", "off");
     input.setAttribute("autocorrect", "off");
@@ -499,11 +502,11 @@ function addList(event) {
 
   // Check if the user wants to add multiple domains (space or newline separated)
   // If so, split the input and store it in an array
-  var addresses = $("#new_address")
+  let addresses = $("#new_address")
     .val()
     .split(/[\s,]+/);
   // Remove empty elements
-  addresses = addresses.filter(function (el) {
+  addresses = addresses.filter(el => {
     return el !== "";
   });
   const addressestr = JSON.stringify(addresses);
@@ -524,8 +527,8 @@ function addList(event) {
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({ address: addresses, comment: comment, type: type, groups: group }),
-    success: function (data) {
+    data: JSON.stringify({ address: addresses, comment, type, groups: group }),
+    success(data) {
       utils.enableAll();
       utils.listsAlert(type + "list", addresses, data);
       $("#new_address").val("");
@@ -536,7 +539,7 @@ function addList(event) {
       // Update number of groups in the sidebar
       updateFtlInfo();
     },
-    error: function (data, exception) {
+    error(data, exception) {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new " + type + "list", data.responseText);
@@ -559,8 +562,8 @@ function editList() {
     .val()
     .map(Number);
 
-  var done = "edited";
-  var notDone = "editing";
+  let done = "edited";
+  let notDone = "editing";
   switch (elem) {
     case "enabled_" + dataId:
       if (!enabled) {
@@ -594,17 +597,17 @@ function editList() {
     processData: false,
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
-      groups: groups,
-      comment: comment,
-      enabled: enabled,
-      type: type,
+      groups,
+      comment,
+      enabled,
+      type,
     }),
-    success: function (data) {
+    success(data) {
       utils.enableAll();
       processGroupResult(data, type + "list", done, notDone);
       table.ajax.reload(null, false);
     },
-    error: function (data, exception) {
+    error(data, exception) {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert(

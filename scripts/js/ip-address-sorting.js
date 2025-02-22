@@ -11,25 +11,26 @@
 // CIDR notation and be more robust against invalid
 // input data (like empty IP addresses)
 $.extend($.fn.dataTableExt.oSort, {
-  "ip-address-pre": function (a) {
+  "ip-address-pre"(a) {
     // Skip empty fields (IP address might have expired or
     // reassigned to a different device)
     if (!a || a.length === 0) {
       return Infinity;
     }
 
-    var i, item;
+    let i;
+    let item;
     // Use the first IP in case there is a list of IPs
     // for a given device
     if (Array.isArray(a)) {
       a = a[0];
     }
 
-    var m = a.split("."),
-      n = a.split(":"),
-      x = "",
-      xa = "",
-      cidr = [];
+    let m = a.split(".");
+    let n = a.split(":");
+    let x = "";
+    let xa = "";
+    let cidr = [];
     if (m.length === 4) {
       // IPV4 (possibly with CIDR)
       cidr = m[3].split("/");
@@ -51,7 +52,7 @@ $.extend($.fn.dataTableExt.oSort, {
       }
     } else if (n.length > 0) {
       // IPV6 (possibly with CIDR)
-      var count = 0;
+      let count = 0;
       for (i = 0; i < n.length; i++) {
         item = n[i];
 
@@ -96,12 +97,12 @@ $.extend($.fn.dataTableExt.oSort, {
 
       // Padding the ::
       n = xa.split(":");
-      var paddDone = 0;
+      let paddDone = 0;
 
       for (i = 0; i < n.length; i++) {
         item = n[i];
         if (item.length === 0 && paddDone === 0) {
-          for (var padding = 0; padding < 32 - count; padding++) {
+          for (let padding = 0; padding < 32 - count; padding++) {
             x += "0";
             paddDone = 1;
           }
@@ -127,11 +128,11 @@ $.extend($.fn.dataTableExt.oSort, {
     return x;
   },
 
-  "ip-address-asc": function (a, b) {
+  "ip-address-asc"(a, b) {
     return a < b ? -1 : a > b ? 1 : 0;
   },
 
-  "ip-address-desc": function (a, b) {
+  "ip-address-desc"(a, b) {
     return a < b ? 1 : a > b ? -1 : 0;
   },
 });
