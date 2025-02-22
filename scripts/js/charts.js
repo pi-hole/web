@@ -326,19 +326,19 @@ function doughnutTooltip(tooltipLabel) {
   if (percentageTotalShown > 99.9) {
     // All items shown
     return label + ": " + itemPercentage + "%";
-  } else {
-    // set percentageTotalShown again without rounding to account
-    // for cases where the total shown percentage would be <0.1% of all
-    percentageTotalShown = tooltipLabel.chart._metasets[0].total;
-    return (
-      label +
-      ":<br>&bull; " +
-      itemPercentage +
-      "% of all data<br>&bull; " +
-      ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) +
-      "% of shown items"
-    );
   }
+
+  // set percentageTotalShown again without rounding to account
+  // for cases where the total shown percentage would be <0.1% of all
+  percentageTotalShown = tooltipLabel.chart._metasets[0].total;
+  return (
+    label +
+    ":<br>&bull; " +
+    itemPercentage +
+    "% of all data<br>&bull; " +
+    ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) +
+    "% of shown items"
+  );
 }
 
 // chartjs plugin used by the custom doughnut legend

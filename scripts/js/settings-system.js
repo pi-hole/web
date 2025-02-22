@@ -36,11 +36,13 @@ function updateCachePie(data) {
   var sorted = Object.keys(data).sort(function (a, b) {
     if (a === "OTHER") {
       return 1;
-    } else if (b === "OTHER") {
-      return -1;
-    } else {
-      return data[b].valid + data[b].stale - (data[a].valid + data[a].stale);
     }
+
+    if (b === "OTHER") {
+      return -1;
+    }
+
+    return data[b].valid + data[b].stale - (data[a].valid + data[a].stale);
   });
 
   // Rebuild data object
