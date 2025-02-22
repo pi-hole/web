@@ -175,7 +175,8 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 with "no such domain" rather than being forwarded upstream. The set
                                 of prefixes affected is the list given in <a href="https://tools.ietf.org/html/rfc6303">RFC6303</a>.</p>
                                 <p><strong>Important:</strong><br>Enabling these two options may increase your privacy,
-                                but may also prevent you from being able to access. Make sure you have set up conditional forwarding in this case.</p>
+                                but may also prevent you from being able to access to access local hostnames if the Pi-hole is not used as DHCP server.
+                                Make sure you have set up conditional forwarding in this case.</p>
                         </div>
                         <br>
                         <div>
