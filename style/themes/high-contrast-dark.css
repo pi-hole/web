@@ -675,6 +675,7 @@ textarea:-webkit-autofill,
 select:-webkit-autofill {
   -webkit-text-fill-color: var(--main-text-color) !important;
   -webkit-box-shadow: 0 0 0px 1000px #3c4652 inset;
+  -webkit-transition: background-color 1s ease-in-out 0s;
   transition: background-color 1s ease-in-out 0s;
 }
 
@@ -684,6 +685,7 @@ fieldset[disabled] .form-control {
   background-color: #3c4652;
   opacity: 1;
   -moz-appearance: textfield;
+  -webkit-appearance: textfield;
   appearance: textfield;
 }
 
@@ -854,10 +856,11 @@ input[type="password"]::-webkit-caps-lock-indicator {
   background-color: transparent;
 }
 
-.form-control::placeholder {
+.form-control::-moz-placeholder {
   color: #9ab;
 }
-.form-control::-webkit-input-placeholder {
+
+.form-control::placeholder {
   color: #9ab;
 }
 .form-control:focus::placeholder,

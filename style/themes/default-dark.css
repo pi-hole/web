@@ -518,6 +518,7 @@ textarea:-webkit-autofill,
 select:-webkit-autofill {
   -webkit-text-fill-color: #bec5cb !important;
   -webkit-box-shadow: 0 0 0px 1000px #353c42 inset;
+  -webkit-transition: background-color 1s ease-in-out 0s;
   transition: background-color 1s ease-in-out 0s;
 }
 .form-control[disabled],

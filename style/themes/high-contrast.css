@@ -202,6 +202,9 @@ a:hover {
 .form-control {
   color: #000;
 }
+.form-control::-moz-placeholder {
+  color: #6c747b;
+}
 .form-control::placeholder {
   color: #6c747b;
 }
@@ -331,6 +334,7 @@ textarea:-webkit-autofill,
 select:-webkit-autofill {
   -webkit-text-fill-color: #666 !important;
   -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+  -webkit-transition: background-color 1s ease-in-out 0s;
   transition: background-color 1s ease-in-out 0s;
 }
 
