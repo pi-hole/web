@@ -281,10 +281,7 @@ function initTable() {
       const selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
       for (const group of groups) {
-        let dataSub = "";
-        if (!group.enabled) {
-          dataSub = 'data-subtext="(disabled)"';
-        }
+        const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
 
         selectEl.append(
           $("<option " + dataSub + "/>")
@@ -506,9 +503,7 @@ function addList(event) {
     .val()
     .split(/[\s,]+/);
   // Remove empty elements
-  addresses = addresses.filter(el => {
-    return el !== "";
-  });
+  addresses = addresses.filter(el => el !== "");
   const addressestr = JSON.stringify(addresses);
 
   utils.disableAll();

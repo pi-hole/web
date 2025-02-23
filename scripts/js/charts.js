@@ -156,9 +156,7 @@ const customTooltips = function (context) {
   // Set Text
   if (tooltip.body) {
     const titleLines = tooltip.title || [];
-    const bodyLines = tooltip.body.map(bodyItem => {
-      return bodyItem.lines;
-    });
+    const bodyLines = tooltip.body.map(bodyItem => bodyItem.lines);
     let innerHtml = "<thead>";
 
     for (const title of titleLines) {
@@ -216,10 +214,10 @@ const customTooltips = function (context) {
     tooltipX = offsetX + caretX;
     if (tooltip.yAlign === "top" || tooltip.yAlign === "bottom") {
       switch (tooltip.xAlign) {
-        case "center":
+        case "center": {
           // set a minimal X position to 5px to prevent
           // the tooltip to stick out left of the viewport
-          var minX = 5;
+          const minX = 5;
           if (2 * tooltipX < tooltipWidth + minX) {
             arrowX = tooltipX - minX;
             tooltipX = minX;
@@ -228,6 +226,8 @@ const customTooltips = function (context) {
           }
 
           break;
+        }
+
         case "left":
           tooltipX -= arrowMinIndent;
           arrowX = arrowMinIndent;

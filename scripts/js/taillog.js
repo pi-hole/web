@@ -69,6 +69,8 @@ function formatFTL(line, prio) {
   return `<span class="${prioClass}">${utils.escapeHtml(prio)}</span> ${line}`;
 }
 
+let gAutoScrolling;
+
 // Function that asks the API for new data
 function getData() {
   // Only update when spinner is spinning
@@ -168,7 +170,7 @@ function getData() {
     });
 }
 
-var gAutoScrolling = true;
+gAutoScrolling = true;
 $("#output").on("scroll", () => {
   // Check if we are at the bottom of the output
   //

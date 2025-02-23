@@ -212,13 +212,13 @@ function deleteMultipleSessions(ids) {
 
   // Exploit prevention: Return early for non-numeric IDs
   for (const id of ids) {
+    // TODO Fix eslint
+    // eslint-disable-next-line unicorn/prefer-number-properties
     if (Object.hasOwn(ids, id) && isNaN(ids[id])) return;
   }
 
   // Convert all ids to integers
-  ids = ids.map(value => {
-    return Number.parseInt(value, 10);
-  });
+  ids = ids.map(value => Number.parseInt(value, 10));
 
   // Check if own session is selected and remove it when deleting multiple
   // We need this only when multiple sessions are removed to ensure we do not
@@ -228,9 +228,7 @@ function deleteMultipleSessions(ids) {
   if (ids.includes(ownSessionID) && ids.length > 1) {
     ownSessionDelete = true;
     // Strip own session ID from array
-    ids = ids.filter(value => {
-      return value !== ownSessionID;
-    });
+    ids = ids.filter(value => value !== ownSessionID);
   }
 
   // Loop through IDs and delete them

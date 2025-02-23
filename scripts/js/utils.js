@@ -30,9 +30,7 @@ function escapeHtml(text) {
   // Return early when text is not a string
   if (typeof text !== "string") return text;
 
-  return text.replaceAll(/[&<>"']/g, m => {
-    return map[m];
-  });
+  return text.replaceAll(/[&<>"']/g, m => map[m]);
 }
 
 function unescapeHtml(text) {
@@ -53,22 +51,19 @@ function unescapeHtml(text) {
 
   if (text === null) return null;
 
-  return text.replaceAll(/&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/g, m => {
-    return map[m];
-  });
+  return text.replaceAll(
+    /&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/g,
+    m => map[m]
+  );
 }
 
 // Helper function for converting Objects to Arrays after sorting the keys
 function objectToArray(obj) {
   const arr = [];
   const idx = [];
-  const keys = Object.keys(obj);
+  const sortedKeys = Object.keys(obj).sort((a, b) => a - b);
 
-  keys.sort((a, b) => {
-    return a - b;
-  });
-
-  for (const key of keys) {
+  for (const key of sortedKeys) {
     arr.push(obj[key]);
     idx.push(key);
   }
@@ -297,7 +292,8 @@ function stateLoadCallback(itemName) {
   data = JSON.parse(data);
 
   // Clear possible filtering settings
-  for (const [index, value] of data.columns.entries()) {
+  // TODO Maybe Object.values() is meant to be used here?
+  for (const [index, _value] of data.columns.entries()) {
     data.columns[index].search.search = "";
   }
 
@@ -566,7 +562,7 @@ function hexDecode(string) {
   return back;
 }
 
-function listAlert(type, items, data) {
+function listsAlert(type, items, data) {
   // Show simple success message if there is no "processed" object in "data" or
   // if all items were processed successfully
   if (data.processed === undefined || data.processed.success.length === items.length) {
@@ -751,7 +747,7 @@ globalThis.utils = (function () {
     parseQueryString,
     hexEncode,
     hexDecode,
-    listsAlert: listAlert,
+    listsAlert,
     loadingOverlay,
     setTimer,
     setInter,
