@@ -50,6 +50,9 @@ $(() => {
 
 // Show a list of suggested domains based on the user's input
 function showSuggestDomains(value) {
+  const newDomainEl = $("#new_domain");
+  const suggestDomainEl = $("#suggest_domains");
+
   function createButton(hostname) {
     // Purposefully omit 'btn' class to save space on padding
     return $('<button type="button" class="btn-link btn-block text-right">')
@@ -59,9 +62,6 @@ function showSuggestDomains(value) {
         newDomainEl.val(hostname);
       });
   }
-
-  var newDomainEl = $("#new_domain");
-  const suggestDomainEl = $("#suggest_domains");
 
   try {
     const parts = new URL(value).hostname.split(".");
@@ -228,10 +228,7 @@ function initTable() {
       const selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
       for (const group of groups) {
-        let dataSub = "";
-        if (!group.enabled) {
-          dataSub = 'data-subtext="(disabled)"';
-        }
+        const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
 
         selectEl.append(
           $("<option " + dataSub + "/>")
@@ -490,9 +487,7 @@ function addDomain() {
   // If so, split the input and store it in an array
   let domains = domainEl.val().split(/\s+/);
   // Remove empty elements
-  domains = domains.filter(el => {
-    return el !== "";
-  });
+  domains = domains.filter(el => el !== "");
   const domainStr = JSON.stringify(domains);
 
   utils.disableAll();

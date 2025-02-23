@@ -13,9 +13,7 @@ function addAllowedValues(allowed) {
     return (
       "<p>Available options:</p><ul><li>" +
       allowed
-        .map(option => {
-          return "<code>" + option.item + "</code>: " + utils.escapeHtml(option.description);
-        })
+        .map(option => "<code>" + option.item + "</code>: " + utils.escapeHtml(option.description))
         .join("</li><li>") +
       "</li></ul>"
     );

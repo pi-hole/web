@@ -172,10 +172,7 @@ function initTable() {
       const selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
       for (const group of groups) {
-        let dataSub = "";
-        if (!group.enabled) {
-          dataSub = 'data-subtext="(disabled)"';
-        }
+        const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
 
         selectEl.append(
           $("<option " + dataSub + "/>")
@@ -183,6 +180,8 @@ function initTable() {
             .text(group.name)
         );
       }
+
+      const applyBtn = "#btn_apply_" + dataId;
 
       // Select assigned groups
       selectEl.val(data.groups);
@@ -227,8 +226,6 @@ function initTable() {
             dataId +
             ' class="btn btn-block btn-sm" disabled>Apply</button>'
         );
-
-      var applyBtn = "#btn_apply_" + dataId;
 
       const button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteClient_' +
@@ -358,14 +355,12 @@ function addClient() {
 
   // Check if the user wants to add multiple IPs (space or newline separated)
   // If so, split the input and store it in an array
-  let ips = $("#select")
+  const ips = $("#select")
     .val()
     .trim()
-    .split(/[\s,]+/);
-  // Remove empty elements
-  ips = ips.filter(el => {
-    return el !== "";
-  });
+    .split(/[\s,]+/)
+    // Remove empty elements
+    .filter(el => el !== "");
   const ipStr = JSON.stringify(ips);
 
   // Validate input, can be:

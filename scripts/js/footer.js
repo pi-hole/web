@@ -7,7 +7,7 @@
 
 /* global utils:false, moment:false */
 
-const _isLoginPage = false;
+globalThis._isLoginPage = false;
 
 const REFRESH_INTERVAL = {
   logs: 500, // 0.5 sec (logs page)
@@ -587,7 +587,7 @@ function updateVersionInfo() {
 }
 
 $(() => {
-  if (!_isLoginPage) updateInfo();
+  if (!globalThis._isLoginPage) updateInfo();
   const enaT = $("#enableTimer");
   const target = new Date(Number.parseInt(enaT.html(), 10));
   const seconds = Math.round((target.getTime() - Date.now()) / 1000);
@@ -602,7 +602,7 @@ $(() => {
   // Apply icheckbox/iradio style
   applyCheckboxRadioStyle();
 
-  if (!_isLoginPage) {
+  if (!globalThis._isLoginPage) {
     // Run check immediately after page loading ...
     utils.checkMessages();
     // ... and then periodically
@@ -707,7 +707,7 @@ function addAdvancedInfo() {
   const advancedInfoTarget = $("#advanced-info");
   const isTLS = location.protocol === "https:";
   const clientIP = advancedInfoSource.data("client-ip");
-  const XForwardedFor = globalThis.atob(advancedInfoSource.data("xff") ?? "");
+  const XForwardedFor = globalThis.atob(advancedInfoSource.data("xff") || "") || null;
   const starttime = Number.parseFloat(advancedInfoSource.data("starttime"));
   const endtime = Number.parseFloat(advancedInfoSource.data("endtime"));
   const totaltime = 1e3 * (endtime - starttime);
@@ -725,7 +725,7 @@ function addAdvancedInfo() {
   );
 
   // Add client IP info
-  $("#client-id").text(XForwardedFor ? XForwardedFor : clientIP);
+  $("#client-id").text(XForwardedFor ?? clientIP);
   if (XForwardedFor) {
     // If X-Forwarded-For is set, show the X-Forwarded-For in italics and add
     // the real client IP as tooltip
