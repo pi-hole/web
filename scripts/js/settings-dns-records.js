@@ -241,6 +241,8 @@ $(document).ready(() => {
     utils.disableAll();
     let elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
     const ttlVal = Number.parseInt($("#Cttl").val(), 10);
+    // TODO Fix eslint
+    // eslint-disable-next-line unicorn/prefer-number-properties
     if (isFinite(ttlVal) && ttlVal >= 0) elem += "," + ttlVal;
     const url =
       document.body.dataset.apiurl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);

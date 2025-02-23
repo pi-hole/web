@@ -7,7 +7,7 @@
 
 /* global utils:false, NProgress:false */
 
-const _isLoginPage = true;
+globalThis._isLoginPage = true;
 
 function redirect() {
   // Login succeeded or not needed (empty password)

@@ -17,10 +17,7 @@ function populateGroupSelect(selectEl) {
 
   // Add all known groups
   for (const group of groups) {
-    let dataSub = "";
-    if (!group.enabled) {
-      dataSub = 'data-subtext="(disabled)"';
-    }
+    const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
 
     selectEl.append(
       $("<option " + dataSub + "/>")
