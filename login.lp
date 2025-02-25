@@ -26,11 +26,8 @@ mg.include('scripts/lua/header.lp','r')
                 <div class="text-center form-group has-error" id="dns-failure-label" style="display: none;">
                     <label>DNS Server failure detected, log in to see Pi-hole diagnosis messages</label>
                 </div>
-                <div class="text-center form-group has-error" id="insecure-box" style="display: none;">
-                    <div class="box box-danger">
-                        <div class="box-header with-border pointer no-user-select">
-                            <h3 class="box-title has-error control-label"><i class="fa fa-fw fa-triangle-exclamation"></i>&nbsp;&nbsp;Insecure network connection&nbsp;&nbsp;<i class="fa fa-fw fa-triangle-exclamation"></i></h3>
-                        </div>
+                <div class="text-center form-group has-warning" id="insecure-box" style="display: none;">
+                    <div class="box box-warning">
                         <div class="box-body">
                             <p>Consider upgrading to <a href="#" id="https-link">HTTPS</a> (end-to-end encryption)</p>
                         </div>
