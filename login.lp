@@ -29,7 +29,7 @@ mg.include('scripts/lua/header.lp','r')
                 <div class="text-center form-group has-warning" id="insecure-box" style="display: none;">
                     <div class="box box-warning">
                         <div class="box-body">
-                            <p>Consider upgrading to <a href="#" id="https-link">HTTPS</a> (end-to-end encryption)</p>
+                            Consider upgrading to <a href="#" id="https-link">HTTPS</a> (end-to-end encryption)
                         </div>
                     </div>
                 </div>
