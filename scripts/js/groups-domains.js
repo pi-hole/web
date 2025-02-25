@@ -496,15 +496,17 @@ function addDomain() {
     return;
   }
 
-  for (var i = 0; i < domains.length; i++) {
-    if (kind === "exact" && wildcardChecked) {
+  // Check if the wildcard checkbox was marked and transform the domains into regex
+  if (kind === "exact" && wildcardChecked) {
+    for (var i = 0; i < domains.length; i++) {
       // Transform domain to wildcard if specified by user
       domains[i] = "(\\.|^)" + domains[i].replaceAll(".", "\\.") + "$";
-      kind = "regex";
 
       // strip leading "*." if specified by user in wildcard mode
       if (domains[i].startsWith("*.")) domains[i] = domains[i].substr(2);
     }
+
+    kind = "regex";
   }
 
   // determine list type
