@@ -360,37 +360,33 @@ function updateSystemInfo() {
         $("#sysinfo-memory-swap").text("No swap space available");
       }
 
-      color = system.cpu.load.percent[0] > 100 ? "text-red" : "text-green-light";
+      color = system.cpu.load.raw[0] > system.cpu.nprocs ? "text-red" : "text-green-light";
       $("#cpu").html(
         '<i class="fa fa-fw fa-microchip ' +
           color +
-          '"></i>&nbsp;&nbsp;CPU:&nbsp;' +
-          system.cpu.load.percent[0].toFixed(1) +
-          "&thinsp;%"
+          '"></i>&nbsp;&nbsp;Load:&nbsp;' +
+          system.cpu.load.raw[0].toFixed(2) +
+          "&nbsp;/&nbsp;" +
+          system.cpu.load.raw[1].toFixed(2) +
+          "&nbsp;/&nbsp;" +
+          system.cpu.load.raw[2].toFixed(2)
       );
       $("#cpu").prop(
         "title",
-        "Load: " +
-          system.cpu.load.raw[0].toFixed(2) +
-          " " +
-          system.cpu.load.raw[1].toFixed(2) +
-          " " +
-          system.cpu.load.raw[2].toFixed(2) +
-          " on " +
+        "Shown load metrics are load averages for the past 1, 5, and 15 minutes on a system having " +
           system.cpu.nprocs +
-          " cores running " +
+          " cores and running " +
           system.procs +
           " processes"
       );
-      $("#sysinfo-cpu").text(
-        system.cpu.load.percent[0].toFixed(1) +
-          "% (load: " +
+      $("#sysinfo-cpu").html(
+        "Load: " +
           system.cpu.load.raw[0].toFixed(2) +
-          " " +
+          "&nbsp;/&nbsp;" +
           system.cpu.load.raw[1].toFixed(2) +
-          " " +
+          "&nbsp;/&nbsp;" +
           system.cpu.load.raw[2].toFixed(2) +
-          ") on " +
+          " on " +
           system.cpu.nprocs +
           " cores running " +
           system.procs +
