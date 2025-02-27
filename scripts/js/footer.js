@@ -377,16 +377,14 @@ function updateSystemInfo() {
           system.cpu.nprocs +
           " cores and running " +
           system.procs +
-          " processes"
+          " processes " +
+          (system.cpu.load.raw[0] > system.cpu.nprocs
+            ? " (load is higher than the number of cores)"
+            : "")
       );
       $("#sysinfo-cpu").html(
-        "Load: " +
-          system.cpu.load.raw[0].toFixed(2) +
-          "&nbsp;/&nbsp;" +
-          system.cpu.load.raw[1].toFixed(2) +
-          "&nbsp;/&nbsp;" +
-          system.cpu.load.raw[2].toFixed(2) +
-          " on " +
+        system.cpu["%cpu"].toFixed(1) +
+          "% on " +
           system.cpu.nprocs +
           " cores running " +
           system.procs +
