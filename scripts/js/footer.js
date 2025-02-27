@@ -373,7 +373,7 @@ function updateSystemInfo() {
       );
       $("#cpu").prop(
         "title",
-        "Shown load metrics are load averages for the past 1, 5, and 15 minutes on a system having " +
+        "Load averages for the past 1, 5, and 15 minutes\non a system with " +
           system.cpu.nprocs +
           " cores and running " +
           system.procs +
