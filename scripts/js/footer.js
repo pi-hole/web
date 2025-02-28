@@ -526,7 +526,7 @@ function updateVersionInfo() {
     }
 
     versions.forEach(function (v) {
-      if (v.local !== null) {
+      if (v.local !== null && v.local !== "" && v.local !== "null") {
         // reset update status for each component
         var updateComponentAvailable = false;
         var localVersion = v.local;
@@ -591,6 +591,8 @@ function updateVersionInfo() {
         } else {
           $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
         }
+      } else {
+        $("#versions").append("<li><strong>" + v.name + "</strong> N/A</li>");
       }
     });
 
