@@ -127,11 +127,11 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 <h4>Potentially dangerous options</h4>Make sure your Pi-hole is properly firewalled!
                                 <div>
                                     <input type="radio" name="DNSinterface" id="dns.listeningMode-SINGLE" data-key="dns.listeningMode" value="single">
-                                    <label for="dns.listeningMode-SINGLE"><strong>Respond only on interface <span id="interface-name-1"></span></strong></label>
+                                    <label for="dns.listeningMode-SINGLE"><strong>Respond only on interface <code id="interface-name-1"></code></strong></label>
                                 </div>
                                 <div>
                                     <input type="radio" name="DNSinterface" id="dns.listeningMode-BIND" data-key="dns.listeningMode" value="bind">
-                                    <label for="dns.listeningMode-BIND"><strong>Bind only to interface <span id="interface-name-2"></span></strong></label>
+                                    <label for="dns.listeningMode-BIND"><strong>Bind only to interface <code id="interface-name-2"></code></strong></label>
                                 </div>
                                 <div>
                                     <input type="radio" name="DNSinterface" id="dns.listeningMode-ALL" data-key="dns.listeningMode" value="all">
