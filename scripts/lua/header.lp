@@ -121,5 +121,5 @@ if startsWith(scriptname, 'groups') then
     <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/font-awesome/all.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/waitMe/waitMe.min.js')?>"></script>
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/waitMe/waitMe.min.css')?>">
+    <script src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/waitMe-js/waitMe.min.css')?>">
