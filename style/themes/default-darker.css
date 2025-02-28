@@ -54,6 +54,10 @@ table {
   border-color: #545b5e;
   background-color: transparent;
 }
+::-moz-placeholder {
+  color: #b2aba1;
+  opacity: 0.5 !important;
+}
 ::placeholder {
   color: #b2aba1;
   opacity: 0.5 !important;
@@ -66,6 +70,7 @@ textarea:-webkit-autofill,
 select:-webkit-autofill {
   -webkit-text-fill-color: #b2aba1 !important;
   -webkit-box-shadow: 0 0 0px 1000px #181a1b inset;
+  -webkit-transition: background-color 1s ease-in-out 0s;
   transition: background-color 1s ease-in-out 0s;
 }
 ::-webkit-scrollbar {
@@ -87,11 +92,11 @@ select:-webkit-autofill {
 * {
   scrollbar-color: #454a4d #202324;
 }
-::selection {
+::-moz-selection {
   background-color: #004daa !important;
   color: #e8e6e3 !important;
 }
-::-moz-selection {
+::selection {
   background-color: #004daa !important;
   color: #e8e6e3 !important;
 }
@@ -551,6 +556,9 @@ output {
   outline-color: currentcolor;
   border-color: rgb(44, 103, 137);
   box-shadow: none;
+}
+.form-control::-moz-placeholder {
+  color: rgb(168, 160, 149);
 }
 .form-control::placeholder {
   color: rgb(168, 160, 149);
@@ -2476,6 +2484,9 @@ a:focus {
   border-color: rgba(140, 130, 115, 0.1);
   background-color: rgba(24, 26, 27, 0.9);
   background-image: none;
+}
+.main-header #navbar-search-input.form-control::-moz-placeholder {
+  color: rgb(200, 195, 188);
 }
 .main-header #navbar-search-input.form-control::placeholder {
   color: rgb(200, 195, 188);
