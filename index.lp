@@ -14,7 +14,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-aqua no-user-select" id="total_queries" title="only A + AAAA queries">
+        <div class="small-box bg-aqua no-user-select" id="total_queries" title="Total number of queries">
             <div class="inner">
                 <p>Total queries</p>
                 <h3 class="statistic"><span id="dns_queries">---</span></h3>
