@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, apiUrl: false */
 
 // Add event listener to import button
 document.getElementById("submit-import").addEventListener("click", function () {
@@ -45,7 +45,7 @@ function importZIP() {
   formData.append("import", JSON.stringify(imports));
   formData.append("file", file);
   // eslint-disable-next-line compat/compat
-  fetch("/api/teleporter", {
+  fetch(apiUrl + "/teleporter", {
     method: "POST",
     body: formData,
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
@@ -85,7 +85,7 @@ function importZIP() {
 // Inspired by https://stackoverflow.com/a/59576416/2087442
 $("#GETTeleporter").on("click", function () {
   $.ajax({
-    url: "/api/teleporter",
+    url: apiUrl + "/teleporter",
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
     method: "GET",
     xhrFields: {

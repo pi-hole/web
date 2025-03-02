@@ -7,8 +7,8 @@
 
 /* global utils:false, moment:false */
 
-//The following functions allow us to display time until pi-hole is enabled after disabling.
-//Works between all pages
+var _isLoginPage = false;
+const apiUrl = document.getElementById("api-url").textContent;
 
 const REFRESH_INTERVAL = {
   logs: 500, // 0.5 sec (logs page)
@@ -115,7 +115,7 @@ function checkBlocking() {
   }
 
   $.ajax({
-    url: "/api/dns/blocking",
+    url: apiUrl + "/dns/blocking",
     method: "GET",
   })
     .done(function (data) {
@@ -144,7 +144,7 @@ function piholeChange(action, duration) {
 
   btnStatus.html("<i class='fa fa-spinner fa-spin'> </i>");
   $.ajax({
-    url: "/api/dns/blocking",
+    url: apiUrl + "/dns/blocking",
     method: "POST",
     dataType: "json",
     processData: false,
@@ -267,7 +267,7 @@ function updateQueryFrequency(intl, frequency) {
 var ftlinfoTimer = null;
 function updateFtlInfo() {
   $.ajax({
-    url: "/api/info/ftl",
+    url: apiUrl + "/info/ftl",
   })
     .done(function (data) {
       var ftl = data.ftl;
@@ -324,7 +324,7 @@ function updateFtlInfo() {
 
 function updateSystemInfo() {
   $.ajax({
-    url: "/api/info/system",
+    url: apiUrl + "/info/system",
   })
     .done(function (data) {
       var system = data.system;
@@ -474,7 +474,7 @@ function versionCompare(v1, v2) {
 
 function updateVersionInfo() {
   $.ajax({
-    url: "/api/info/version",
+    url: apiUrl + "/info/version",
   }).done(function (data) {
     var version = data.version;
     var updateAvailable = false;
@@ -609,7 +609,7 @@ function updateVersionInfo() {
 }
 
 $(function () {
-  if (globalThis.location.pathname !== "/admin/login") updateInfo();
+  if (!_isLoginPage) updateInfo();
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - Date.now()) / 1000);
@@ -624,7 +624,7 @@ $(function () {
   // Apply per-browser styling settings
   initCheckboxRadioStyle();
 
-  if (globalThis.location.pathname !== "/admin/login") {
+  if (!_isLoginPage) {
     // Run check immediately after page loading ...
     utils.checkMessages();
     // ... and then periodically
