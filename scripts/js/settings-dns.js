@@ -99,6 +99,11 @@ function fillDNSupstreams(value, servers) {
   applyCheckboxRadioStyle();
 }
 
+function setInterfaceName(interface) {
+  $("#interface-name-1").text(interface);
+  $("#interface-name-2").text(interface);
+}
+
 // Update the textfield with all (incl. custom) upstream servers
 function updateDNSserversTextfield(upstreams, customServers) {
   $("#DNSupstreamsTextfield").val(upstreams.join("\n"));
@@ -114,6 +119,7 @@ function processDNSConfig() {
     .done(function (data) {
       // Initialize the DNS upstreams
       fillDNSupstreams(data.config.dns.upstreams, data.dns_servers);
+      setInterfaceName(data.config.dns.interface.value);
       setConfigValues("dns", "dns", data.config.dns);
     })
     .fail(function (data) {

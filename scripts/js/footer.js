@@ -330,8 +330,20 @@ function updateSystemInfo() {
       var system = data.system;
       var percentRAM = system.memory.ram["%used"];
       var percentSwap = system.memory.swap["%used"];
-      var totalRAMGB = system.memory.ram.total / 1024 / 1024;
-      var totalSwapGB = system.memory.swap.total / 1024 / 1024;
+      let totalRAM = system.memory.ram.total / 1024;
+      let totalRAMUnit = "MB";
+      if (totalRAM > 1024) {
+        totalRAM /= 1024;
+        totalRAMUnit = "GB";
+      }
+
+      let totalSwap = system.memory.swap.total / 1024;
+      let totalSwapUnit = "MB";
+      if (totalSwap > 1024) {
+        totalSwap /= 1024;
+        totalSwapUnit = "GB";
+      }
+
       var swap =
         system.memory.swap.total > 0
           ? ((1e2 * system.memory.swap.used) / system.memory.swap.total).toFixed(1) + " %"
@@ -347,14 +359,14 @@ function updateSystemInfo() {
       );
       $("#memory").prop(
         "title",
-        "Total memory: " + totalRAMGB.toFixed(1) + " GB, Swap usage: " + swap
+        "Total memory: " + totalRAM.toFixed(1) + " " + totalRAMUnit + ", Swap usage: " + swap
       );
       $("#sysinfo-memory-ram").text(
-        percentRAM.toFixed(1) + "% of " + totalRAMGB.toFixed(1) + " GB is used"
+        percentRAM.toFixed(1) + "% of " + totalRAM.toFixed(1) + " " + totalRAMUnit + " is used"
       );
       if (system.memory.swap.total > 0) {
         $("#sysinfo-memory-swap").text(
-          percentSwap.toFixed(1) + "% of " + totalSwapGB.toFixed(1) + " GB is used"
+          percentSwap.toFixed(1) + "% of " + totalSwap.toFixed(1) + " " + totalSwapUnit + " is used"
         );
       } else {
         $("#sysinfo-memory-swap").text("No swap space available");
@@ -378,7 +390,9 @@ function updateSystemInfo() {
           system.cpu.load.raw[2].toFixed(2) +
           " on " +
           system.cpu.nprocs +
-          " cores running " +
+          " core" +
+          (system.cpu.nprocs > 1 ? "s" : "") +
+          " running " +
           system.procs +
           " processes"
       );
@@ -392,7 +406,9 @@ function updateSystemInfo() {
           system.cpu.load.raw[2].toFixed(2) +
           ") on " +
           system.cpu.nprocs +
-          " cores running " +
+          " core" +
+          (system.cpu.nprocs > 1 ? "s" : "") +
+          " running " +
           system.procs +
           " processes"
       );

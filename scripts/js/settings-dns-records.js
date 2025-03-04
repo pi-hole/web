@@ -9,26 +9,34 @@
 
 function hostsDomain(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
-  const name = data.substring(data.indexOf(" ") + 1);
+  // We split both on spaces and tabs to support both formats
+  // Also, we remove any comments after the name(s)
+  const name = data
+    .split(/[\t ]+/)
+    .slice(1)
+    .join(" ")
+    .split("#")[0]
+    .trim();
   return name;
 }
 
 function hostsIP(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
-  const ip = data.substring(0, data.indexOf(" "));
+  // We split both on spaces and tabs to support both formats
+  const ip = data.split(/[\t ]+/)[0].trim();
   return ip;
 }
 
 function CNAMEdomain(data) {
   // Split record in format <cname>,<target>[,<TTL>]
   const CNAMEarr = data.split(",");
-  return CNAMEarr[0];
+  return CNAMEarr[0].trim();
 }
 
 function CNAMEtarget(data) {
   // Split record in format <cname>,<target>[,<TTL>]
   const CNAMEarr = data.split(",");
-  return CNAMEarr[1];
+  return CNAMEarr[1].trim();
 }
 
 function CNAMEttl(data) {

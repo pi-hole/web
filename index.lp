@@ -14,7 +14,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-aqua no-user-select" id="total_queries" title="only A + AAAA queries">
+        <div class="small-box bg-aqua no-user-select" id="total_queries" title="Total number of queries">
             <div class="inner">
                 <p>Total queries</p>
                 <h3 class="statistic"><span id="dns_queries">---</span></h3>
@@ -82,7 +82,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     <div class="col-md-12">
         <div class="box" id="queries-over-time">
             <div class="box-header with-border">
-                <h3 class="box-title">Total queries over last 24 hours</h3>
+                <h3 class="box-title">Total queries</h3>
                 <button class="btn btn-xs btn-default pull-right zoom-reset" data-sel="reset-history"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
                 <span class="pull-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
             </div>
@@ -102,7 +102,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     <div class="col-md-12">
         <div class="box" id="clients">
             <div class="box-header with-border">
-                <h3 class="box-title">Client activity over last 24 hours</h3>
+                <h3 class="box-title">Client activity</h3>
                 <button class="btn btn-xs btn-default pull-right zoom-reset" data-sel="reset-clients"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
                 <span class="pull-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
             </div>
