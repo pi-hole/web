@@ -390,7 +390,9 @@ function updateSystemInfo() {
           system.cpu.load.raw[2].toFixed(2) +
           " on " +
           system.cpu.nprocs +
-          " cores running " +
+          " core" +
+          (system.cpu.nprocs > 1 ? "s" : "") +
+          " running " +
           system.procs +
           " processes"
       );
@@ -404,7 +406,9 @@ function updateSystemInfo() {
           system.cpu.load.raw[2].toFixed(2) +
           ") on " +
           system.cpu.nprocs +
-          " cores running " +
+          " core" +
+          (system.cpu.nprocs > 1 ? "s" : "") +
+          " running " +
           system.procs +
           " processes"
       );
