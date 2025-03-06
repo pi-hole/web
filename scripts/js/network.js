@@ -138,6 +138,19 @@ $(function () {
       var ips = [],
         iptitles = [];
 
+      // Sort IPs, IPv4 before IPv6, then alphabetically
+      data.ips.sort(function (a, b) {
+        if (a.ip.includes(":") && !b.ip.includes(":")) {
+          return 1;
+        }
+
+        if (!a.ip.includes(":") && b.ip.includes(":")) {
+          return -1;
+        }
+
+        return a.ip.localeCompare(b.ip);
+      });
+
       for (index = 0; index < data.ips.length; index++) {
         var ip = data.ips[index],
           iptext = ip.ip;
