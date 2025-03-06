@@ -39,9 +39,6 @@ function in_array (val, tab)
     return false
 end
 
--- Connection is considered secure if running natively on HTTPS
-is_secure = mg.request_info.https
-
 -- Variable to check if user is already authenticated
 is_authenticated = mg.request_info.is_authenticated
 
