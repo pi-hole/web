@@ -307,7 +307,7 @@ function updateTopClientsTable(blocked) {
       url =
         '<a href="queries.lp?client_ip=' +
         encodeURIComponent(client.ip) +
-        (blocked ? "&upstream=blocked" : "") +
+        (blocked ? "&upstream=blocklist" : "") +
         '">' +
         utils.escapeHtml(clientname) +
         "</a>";
