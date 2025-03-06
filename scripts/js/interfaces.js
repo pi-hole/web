@@ -32,9 +32,19 @@ $(function () {
 
     // For each interface in data.interface, create a new object and push it to json
     data.interfaces.forEach(function (interface) {
-      const status = interface.carrier
-        ? '<span class="text-green">UP</span>'
-        : '<span class="text-red">DOWN</span>';
+      const carrierColor = interface.carrier ? "text-green" : "text-red";
+      let stateText = interface.state.toUpperCase();
+      if (stateText === "UNKNOWN" && interface.flags !== undefined && interface.flags.length > 0) {
+        if (interface.flags.includes("pointopoint")) {
+          // WireGuards, etc. -> the typo is intentional
+          stateText = "P2P";
+        } else if (interface.flags.includes("loopback")) {
+          // Loopback interfaces
+          stateText = "LOOPBACK";
+        }
+      }
+
+      const status = `<span class="${carrierColor}">${stateText}</span>`;
 
       var obj = {
         text: interface.name + " - " + status,
@@ -305,6 +315,21 @@ $(function () {
         expanded: false,
         nodes: [],
       };
+
+      furtherDetails.nodes.push(
+        {
+          text:
+            "Carrier: " +
+            (interface.carrier
+              ? "<span class='text-green'>Connected</span>"
+              : "<span class='text-red'>Disconnected</span>"),
+          icon: "fa fa-link fa-fw",
+        },
+        {
+          text: "State: " + utils.escapeHtml(interface.state.toUpperCase()),
+          icon: "fa fa-server fa-fw",
+        }
+      );
 
       if (interface.parent_dev_name !== undefined) {
         let extra = "";
