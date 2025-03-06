@@ -307,6 +307,7 @@ function updateTopClientsTable(blocked) {
       url =
         '<a href="queries.lp?client_ip=' +
         encodeURIComponent(client.ip) +
+        (blocked ? "&upstream=blocked" : "") +
         '">' +
         utils.escapeHtml(clientname) +
         "</a>";
@@ -364,7 +365,13 @@ function updateTopDomainsTable(blocked) {
       domain = encodeURIComponent(item.domain);
       // Substitute "." for empty domain lookups
       urlText = domain === "" ? "." : domain;
-      url = '<a href="queries.lp?domain=' + domain + '">' + urlText + "</a>";
+      url =
+        '<a href="queries.lp?domain=' +
+        domain +
+        (blocked ? "&upstream=blocklist" : "&upstream=permitted") +
+        '">' +
+        urlText +
+        "</a>";
       percentage = (item.count / sum) * 100;
       domaintable.append(
         "<tr> " +
