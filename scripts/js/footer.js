@@ -503,7 +503,7 @@ function updateVersionInfo() {
       },
       {
         name: "Core",
-        local: version.core.local.version,
+        local: version.core.local.version || "N/A",
         remote: version.core.remote.version,
         branch: version.core.local.branch,
         hash: version.core.local.hash,
@@ -512,7 +512,7 @@ function updateVersionInfo() {
       },
       {
         name: "FTL",
-        local: version.ftl.local.version,
+        local: version.ftl.local.version || "N/A",
         remote: version.ftl.remote.version,
         branch: version.ftl.local.branch,
         hash: version.ftl.local.hash,
@@ -521,7 +521,7 @@ function updateVersionInfo() {
       },
       {
         name: "Web interface",
-        local: version.web.local.version,
+        local: version.web.local.version || "N/A",
         remote: version.web.remote.version,
         branch: version.web.local.branch,
         hash: version.web.local.hash,
