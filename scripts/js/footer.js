@@ -749,7 +749,7 @@ function addAdvancedInfo() {
   // Add TLS and client IP info
   advancedInfoTarget.append(
     'Client: <i class="fa-solid fa-fw fa-lock' +
-      (isTLS ? "" : "-open") +
+      (isTLS ? " text-green" : "-open") +
       '" title="Your connection is ' +
       (isTLS ? "" : "NOT ") +
       'end-to-end encrypted (TLS/SSL)"></i>&nbsp;<span id="client-id"></span><br>'
