@@ -736,7 +736,7 @@ function applyExpertSettings() {
 function addAdvancedInfo() {
   const advancedInfoSource = $("#advanced-info-data");
   const advancedInfoTarget = $("#advanced-info");
-  const isTLS = advancedInfoSource.data("tls");
+  const isTLS = location.protocol === "https:";
   const clientIP = advancedInfoSource.data("client-ip");
   const XForwardedFor = globalThis.atob(advancedInfoSource.data("xff") ?? "");
   const starttime = parseFloat(advancedInfoSource.data("starttime"));
@@ -749,7 +749,7 @@ function addAdvancedInfo() {
   // Add TLS and client IP info
   advancedInfoTarget.append(
     'Client: <i class="fa-solid fa-fw fa-lock' +
-      (isTLS ? "" : "-open") +
+      (isTLS ? " text-green" : "-open") +
       '" title="Your connection is ' +
       (isTLS ? "" : "NOT ") +
       'end-to-end encrypted (TLS/SSL)"></i>&nbsp;<span id="client-id"></span><br>'
