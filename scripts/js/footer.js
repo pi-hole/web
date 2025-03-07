@@ -736,7 +736,7 @@ function applyExpertSettings() {
 function addAdvancedInfo() {
   const advancedInfoSource = $("#advanced-info-data");
   const advancedInfoTarget = $("#advanced-info");
-  const isTLS = advancedInfoSource.data("tls");
+  const isTLS = location.protocol === "https:";
   const clientIP = advancedInfoSource.data("client-ip");
   const XForwardedFor = globalThis.atob(advancedInfoSource.data("xff") ?? "");
   const starttime = parseFloat(advancedInfoSource.data("starttime"));
