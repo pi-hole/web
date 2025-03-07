@@ -54,12 +54,13 @@ $(function () {
       }
 
       // Show an icon for indenting slave interfaces
-      const indentIcon = master === null ? "" : "<i class='fa fa-diagram-project fa-fw'></i> ";
+      const indentIcon =
+        master === null ? "" : "<span class='child-interface-icon'>&nbsp;&rdca;</span> ";
 
       var obj = {
         text: indentIcon + interface.name + " - " + status,
         class: gateways.has(interface.name) ? "text-bold" : null,
-        icon: "fa fa-network-wired fa-fw",
+        icon: master === null ? "fa fa-network-wired fa-fw" : "",
         nodes: [],
       };
 

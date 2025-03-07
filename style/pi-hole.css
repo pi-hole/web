@@ -1584,3 +1584,7 @@ textarea.field-sizing-content {
 .bstreeview .list-group-item:hover {
   background-color: rgba(127, 127, 127, 0.18);
 }
+.child-interface-icon {
+  line-height: 0.5em;
+  font-size: 1.7em;
+}
