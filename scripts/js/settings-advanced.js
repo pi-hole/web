@@ -323,7 +323,7 @@ function createDynamicConfigTabs() {
       // Dynamically fill the tabs with config topics
       Object.keys(data.config).forEach(function (topic) {
         var value = data.config[topic];
-        generateRow(topic, topic, value, data);
+        generateRow(topic, topic, value);
       });
       $("#advanced-overlay").hide();
 
