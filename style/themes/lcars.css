@@ -931,7 +931,7 @@ p.login-box-msg,
   margin-right: -9px;
 }
 
-.sidebar-menu li a > svg {
+.sidebar-menu li a > i {
   display: none;
 }
 
@@ -939,7 +939,7 @@ p.login-box-msg,
   margin-right: 0;
 }
 
-.treeview-menu li a svg {
+.treeview-menu li a i {
   display: inherit;
   position: absolute;
   right: 16px;
@@ -990,7 +990,7 @@ p.login-box-msg,
   position: absolute !important;
 }
 
-.sidebar-collapse .treeview-menu li a svg {
+.sidebar-collapse .treeview-menu li a i {
   top: auto;
   right: auto;
   bottom: 6px;
@@ -2190,8 +2190,7 @@ td.highlight {
 }
 
 /*** 🖖 ***/
-svg.fa-hand path {
-  d: path(
-    "M247 24a32 32 0 1 0-62 16l53 198c3 9-4 18-14 18-6 0-12-4-14-10l-43-143a32 32 0 0 0-62 18l63 207c3 8-7 13-13 8l-55-53a40 40 0 0 0-56 58l113 107c43 41 100 64 160 64h19c58-4 109-43 125-100l82-275c5-17-5-35-22-40s-35 5-40 22l-37 128c-2 5-7 9-12 9-8 0-14-7-13-15l36-170c4-18-7-35-24-38s-35 7-38 24l-38 178a26 26 0 0 1-51 1z"
-  ) !important;
+.fas.fa-hand-paper {
+  --fa: "\f259" !important;
+  --fa--fa: "\f259\f259" !important;
 }
