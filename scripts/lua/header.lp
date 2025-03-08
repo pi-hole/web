@@ -64,17 +64,7 @@ is_authenticated = mg.request_info.is_authenticated
     <link rel="shortcut icon" href="<?=webhome?>img/favicons/favicon.ico">
     <meta name="msapplication-TileColor" content="<?=theme.color?>">
     <meta name="msapplication-TileImage" content="<?=webhome?>img/favicons/mstile-150x150.png">
-
-    <!-- Theme styles -->
     <meta name="theme-color" content="<?=theme.color?>">
-
-<? if theme.dark then ?>
-    <style>
-        html { background-color: #000; }
-    </style>
-<? end ?>
-    <script src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/nprogress/nprogress.min.css')?>">
 
     <!-- Theme fonts -->
 <? if theme.name == 'lcars' then ?>
@@ -84,13 +74,20 @@ is_authenticated = mg.request_info.is_authenticated
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/source-sans-pro/source-sans-pro.css')?>">
 <? end ?>
 
+<? if theme.dark then ?>
+    <style>
+        html { background-color: #000; }
+    </style>
+<? end ?>
+
     <!-- Common styles -->
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap/css/bootstrap.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/animate/animate.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/font-awesome/css/all.min.css')?>">
-<?
-if startsWith(scriptname, 'groups') then
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/nprogress/nprogress.min.css')?>">
+
+<? if startsWith(scriptname, 'groups') then
     -- Group management styles
 ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.css')?>">
@@ -102,20 +99,26 @@ if startsWith(scriptname, 'groups') then
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.css')?>">
 <? end ?>
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/waitMe/waitMe.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/select2/select2.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/adminLTE/AdminLTE.min.css')?>">
 
-    <!-- Theme styles -->
+    <!-- Theme styles (<?= theme.name ?>) -->
     <link rel="stylesheet" href="<?=pihole.fileversion('style/pi-hole.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/themes/'..theme.name..'.css')?>">
+<? if theme.name == "default-auto" then ?>
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/themes/default-dark.css')?>" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/themes/default-light.css')?>" media="not (prefers-color-scheme: dark)">
+<? else ?>
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/themes/' ..theme.name.. '.css')?>">
+<? end ?>
 
     <noscript><link rel="stylesheet" href="<?=pihole.fileversion('vendor/js-warn/js-warn.css')?>"></noscript>
 
     <!-- scripts -->
-    <script src="<?=pihole.fileversion('vendor/jquery/jquery.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/waitMe/waitMe.min.js')?>"></script>
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/waitMe/waitMe.min.css')?>">
+    <script defer src="<?=pihole.fileversion('vendor/jquery/jquery.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/waitMe/waitMe.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>
