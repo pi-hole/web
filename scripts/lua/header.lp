@@ -82,7 +82,7 @@ is_authenticated = mg.request_info.is_authenticated
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/ubuntu-mono/ubuntu-mono.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/antonio/antonio.css')?>">
 <? else ?>
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/SourceSansPro/SourceSansPro.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/source-sans/source-sans.css')?>">
 <? end ?>
 
     <!-- Common styles -->
