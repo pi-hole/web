@@ -616,7 +616,7 @@ function updateVersionInfo() {
       );
     else if (updateAvailable)
       $("#update-hint").html(
-        'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener" target="_blank">pihole -up</a></code>.'
+        'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener" target="_blank">sudo pihole -up</a></code>.'
       );
 
     clearTimeout(versionTimer);
