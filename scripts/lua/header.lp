@@ -11,6 +11,7 @@
 starttime = mg.time(true)
 hostname = pihole.hostname()
 webhome = pihole.webhome()
+theme = pihole.webtheme()
 
 -- Get name of script by matching whatever is after the last "/" in the URI
 scriptname = mg.request_info.request_uri:match(webhome.."(.*)$")
@@ -59,15 +60,14 @@ is_authenticated = mg.request_info.is_authenticated
 
     <meta name="csrf-token" content="<?=mg.request_info.csrf_token?>">
 
-    <link rel="apple-touch-icon" href="<?=pihole.webhome()?>img/favicons/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" href="<?=pihole.webhome()?>img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
-    <link rel="icon" href="<?=pihole.webhome()?>img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
-    <link rel="manifest" href="<?=pihole.webhome()?>img/favicons/manifest.json">
-    <? theme = pihole.webtheme() ?>
-    <link rel="mask-icon" href="<?=pihole.webhome()?>img/favicons/safari-pinned-tab.svg" color="<?=theme.color?>">
-    <link rel="shortcut icon" href="<?=pihole.webhome()?>img/favicons/favicon.ico">
+    <link rel="apple-touch-icon" href="<?=webhome?>img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="<?=webhome?>img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="<?=webhome?>img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="<?=webhome?>img/favicons/manifest.json">
+    <link rel="mask-icon" href="<?=webhome?>img/favicons/safari-pinned-tab.svg" color="<?=theme.color?>">
+    <link rel="shortcut icon" href="<?=webhome?>img/favicons/favicon.ico">
     <meta name="msapplication-TileColor" content="<?=theme.color?>">
-    <meta name="msapplication-TileImage" content="<?=pihole.webhome()?>img/favicons/mstile-150x150.png">
+    <meta name="msapplication-TileImage" content="<?=webhome?>img/favicons/mstile-150x150.png">
 
     <!-- Theme styles -->
     <meta name="theme-color" content="<?=theme.color?>">

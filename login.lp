@@ -14,7 +14,7 @@ mg.include('scripts/lua/header.lp','r')
     <section style="padding: 15px;">
         <div class="login-logo">
             <div class="text-center">
-                <img src="<?=pihole.webhome()?>img/logo.svg" alt="Pi-hole logo" class="loginpage-logo">
+                <img src="<?=webhome?>img/logo.svg" alt="Pi-hole logo" class="loginpage-logo">
             </div>
             <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;">Pi-<b>hole</b></span></div>
         </div>
@@ -117,6 +117,7 @@ mg.include('scripts/lua/header.lp','r')
         <strong><a href="https://pi-hole.net/donate/" rel="noopener" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
     </div>
 </div>
+<div id="webhome" style="display: none;"><?=webhome?></div>
 <div id="api-url" style="display: none;"><?=pihole.api_url()?></div>
 <script src="<?=pihole.fileversion('scripts/js/footer.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/js/login.js')?>"></script>
