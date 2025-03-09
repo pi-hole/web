@@ -1,32 +1,28 @@
-/* antonio-100 - latin-ext_latin */
+/* https://gwfh.mranftl.com/fonts/antonio?subsets=latin */
+
+/* antonio-100 - latin */
 @font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
   font-family: 'Antonio';
   font-style: normal;
   font-weight: 100;
-  font-display: swap;
-  src: local('Antonio Light'),
-       url('antonio-v1-latin-ext_latin-100.woff2') format('woff2'), /* Super Modern Browsers */
-       url('antonio-v1-latin-ext_latin-100.woff') format('woff') /* Modern Browsers */
+  src: url('antonio-v19-latin-100.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
-/* antonio-regular - latin-ext_latin */
+/* antonio-regular - latin */
 @font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
   font-family: 'Antonio';
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
-  src: local('Antonio'),
-       url('antonio-v1-latin-ext_latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-       url('antonio-v1-latin-ext_latin-regular.woff') format('woff') /* Modern Browsers */
+  src: url('antonio-v19-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
-/* antonio-700 - latin-ext_latin */
+/* antonio-700 - latin */
 @font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
   font-family: 'Antonio';
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
-  src: local('Antonio Bold'),
-       url('antonio-v1-latin-ext_latin-700.woff2') format('woff2'), /* Super Modern Browsers */
-       url('antonio-v1-latin-ext_latin-700.woff') format('woff') /* Modern Browsers */
+  src: url('antonio-v19-latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
