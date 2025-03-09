@@ -220,7 +220,7 @@ function initCheckboxRadioStyle() {
     iCheckStyle.on("change", function () {
       var themename = $(this).val();
       localStorage.setItem("theme_icheck", themename);
-      applyCheckboxRadioStyle(themename);
+      applyCheckboxRadioStyle();
     });
   }
 }
@@ -586,7 +586,7 @@ function updateVersionInfo() {
         }
 
         // Display update information of individual components only if we are not running in a Docker container
-        if ((!isDocker || (isDocker && v.name === "Docker Tag")) && updateComponentAvailable) {
+        if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
           $("#versions").append(
             "<li><strong>" +
               v.name +
