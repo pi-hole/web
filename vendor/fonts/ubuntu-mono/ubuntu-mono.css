@@ -1,43 +1,37 @@
-/* ubuntu-mono-regular - latin-ext_latin */
+/* https://gwfh.mranftl.com/fonts/ubuntu-mono?subsets=latin */
+
+/* ubuntu-mono-regular - latin */
 @font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
   font-family: 'Ubuntu Mono';
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
-  src: local(''),
-       url('ubuntu-mono-v10-latin-ext_latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-       url('ubuntu-mono-v10-latin-ext_latin-regular.woff') format('woff') /* Modern Browsers */
+  src: url('ubuntu-mono-v17-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
-/* ubuntu-mono-italic - latin-ext_latin */
+/* ubuntu-mono-italic - latin */
 @font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
   font-family: 'Ubuntu Mono';
   font-style: italic;
   font-weight: 400;
-  font-display: swap;
-  src: local(''),
-       url('ubuntu-mono-v10-latin-ext_latin-italic.woff2') format('woff2'), /* Super Modern Browsers */
-       url('ubuntu-mono-v10-latin-ext_latin-italic.woff') format('woff') /* Modern Browsers */
+  src: url('ubuntu-mono-v17-latin-italic.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
-/* ubuntu-mono-700 - latin-ext_latin */
+/* ubuntu-mono-700 - latin */
 @font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
   font-family: 'Ubuntu Mono';
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
-  src: local(''),
-       url('ubuntu-mono-v10-latin-ext_latin-700.woff2') format('woff2'), /* Super Modern Browsers */
-       url('ubuntu-mono-v10-latin-ext_latin-700.woff') format('woff') /* Modern Browsers */
+  src: url('ubuntu-mono-v17-latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
-/* ubuntu-mono-700italic - latin-ext_latin */
+/* ubuntu-mono-700italic - latin */
 @font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
   font-family: 'Ubuntu Mono';
   font-style: italic;
   font-weight: 700;
-  font-display: swap;
-  src: local(''),
-       url('ubuntu-mono-v10-latin-ext_latin-700italic.woff2') format('woff2'), /* Super Modern Browsers */
-       url('ubuntu-mono-v10-latin-ext_latin-700italic.woff') format('woff') /* Modern Browsers */
+  src: url('ubuntu-mono-v17-latin-700italic.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
