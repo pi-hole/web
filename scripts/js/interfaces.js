@@ -28,29 +28,52 @@ $(function () {
       gateways.add(inet6.gateway);
     }
 
-    var json = [];
+    var interfaces = {};
+    var masterInterfaces = {};
 
     // For each interface in data.interface, create a new object and push it to json
     data.interfaces.forEach(function (interface) {
-      const status = interface.carrier
-        ? '<span class="text-green">UP</span>'
-        : '<span class="text-red">DOWN</span>';
+      const carrierColor = interface.carrier ? "text-green" : "text-red";
+      let stateText = interface.state.toUpperCase();
+      if (stateText === "UNKNOWN" && interface.flags !== undefined && interface.flags.length > 0) {
+        if (interface.flags.includes("pointopoint")) {
+          // WireGuards, etc. -> the typo is intentional
+          stateText = "P2P";
+        } else if (interface.flags.includes("loopback")) {
+          // Loopback interfaces
+          stateText = "LOOPBACK";
+        }
+      }
+
+      const status = `<span class="${carrierColor}">${stateText}</span>`;
+
+      let master = null;
+      if (interface.master !== undefined) {
+        // Find interface.master in data.interfaces
+        master = data.interfaces.find(obj => obj.index === interface.master).name;
+      }
+
+      // Show an icon for indenting slave interfaces
+      const indentIcon =
+        master === null ? "" : "<span class='child-interface-icon'>&nbsp;&rdca;</span> ";
 
       var obj = {
-        text: interface.name + " - " + status,
+        text: indentIcon + interface.name + " - " + status,
         class: gateways.has(interface.name) ? "text-bold" : null,
-        icon: "fa fa-network-wired fa-fw",
+        icon: master === null ? "fa fa-network-wired fa-fw" : "",
         nodes: [],
       };
 
-      if (interface.master !== undefined) {
-        // Find interface.master in data.interfaces
-        const master = data.interfaces.find(obj => obj.index === interface.master);
-        if (master !== undefined) {
-          obj.nodes.push({
-            text: "Master interface: <code>" + utils.escapeHtml(master.name) + "</code>",
-            icon: "fa fa-network-wired fa-fw",
-          });
+      if (master !== null) {
+        obj.nodes.push({
+          text: "Master interface: <code>" + utils.escapeHtml(master) + "</code>",
+          icon: "fa fa-network-wired fa-fw",
+        });
+
+        if (master in masterInterfaces) {
+          masterInterfaces[master].push(interface.name);
+        } else {
+          masterInterfaces[master] = [interface.name];
         }
       }
 
@@ -306,6 +329,21 @@ $(function () {
         nodes: [],
       };
 
+      furtherDetails.nodes.push(
+        {
+          text:
+            "Carrier: " +
+            (interface.carrier
+              ? "<span class='text-green'>Connected</span>"
+              : "<span class='text-red'>Disconnected</span>"),
+          icon: "fa fa-link fa-fw",
+        },
+        {
+          text: "State: " + utils.escapeHtml(interface.state.toUpperCase()),
+          icon: "fa fa-server fa-fw",
+        }
+      );
+
       if (interface.parent_dev_name !== undefined) {
         let extra = "";
         if (interface.parent_dev_bus_name !== undefined) {
@@ -378,8 +416,36 @@ $(function () {
         obj.nodes.push(furtherDetails);
       }
 
-      json.push(obj);
+      interfaces[interface.name] = obj;
     });
+
+    // Sort interfaces based on masterInterfaces. If an item is found in
+    // masterInterfaces, it should be placed after the master interface
+    const ifaces = Object.keys(interfaces);
+    const interfaceList = Object.keys(masterInterfaces);
+
+    // Add slave interfaces next to master interfaces
+    for (const master of interfaceList) {
+      if (master in masterInterfaces) {
+        for (const slave of masterInterfaces[master]) {
+          ifaces.splice(ifaces.indexOf(slave), 1);
+          interfaceList.splice(interfaceList.indexOf(master) + 1, 0, slave);
+        }
+      }
+    }
+
+    // Add interfaces that are not slaves at the top of the list (in reverse order)
+    for (const iface of ifaces.reverse()) {
+      if (!interfaceList.includes(iface)) {
+        interfaceList.unshift(iface);
+      }
+    }
+
+    // Build the tree view
+    const json = [];
+    for (const iface of interfaceList) {
+      json.push(interfaces[iface]);
+    }
 
     $("#tree").bstreeview({
       data: json,

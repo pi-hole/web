@@ -330,8 +330,20 @@ function updateSystemInfo() {
       var system = data.system;
       var percentRAM = system.memory.ram["%used"];
       var percentSwap = system.memory.swap["%used"];
-      var totalRAMGB = system.memory.ram.total / 1024 / 1024;
-      var totalSwapGB = system.memory.swap.total / 1024 / 1024;
+      let totalRAM = system.memory.ram.total / 1024;
+      let totalRAMUnit = "MB";
+      if (totalRAM > 1024) {
+        totalRAM /= 1024;
+        totalRAMUnit = "GB";
+      }
+
+      let totalSwap = system.memory.swap.total / 1024;
+      let totalSwapUnit = "MB";
+      if (totalSwap > 1024) {
+        totalSwap /= 1024;
+        totalSwapUnit = "GB";
+      }
+
       var swap =
         system.memory.swap.total > 0
           ? ((1e2 * system.memory.swap.used) / system.memory.swap.total).toFixed(1) + " %"
@@ -347,52 +359,50 @@ function updateSystemInfo() {
       );
       $("#memory").prop(
         "title",
-        "Total memory: " + totalRAMGB.toFixed(1) + " GB, Swap usage: " + swap
+        "Total memory: " + totalRAM.toFixed(1) + " " + totalRAMUnit + ", Swap usage: " + swap
       );
       $("#sysinfo-memory-ram").text(
-        percentRAM.toFixed(1) + "% of " + totalRAMGB.toFixed(1) + " GB is used"
+        percentRAM.toFixed(1) + "% of " + totalRAM.toFixed(1) + " " + totalRAMUnit + " is used"
       );
       if (system.memory.swap.total > 0) {
         $("#sysinfo-memory-swap").text(
-          percentSwap.toFixed(1) + "% of " + totalSwapGB.toFixed(1) + " GB is used"
+          percentSwap.toFixed(1) + "% of " + totalSwap.toFixed(1) + " " + totalSwapUnit + " is used"
         );
       } else {
         $("#sysinfo-memory-swap").text("No swap space available");
       }
 
-      color = system.cpu.load.percent[0] > 100 ? "text-red" : "text-green-light";
+      color = system.cpu.load.raw[0] > system.cpu.nprocs ? "text-red" : "text-green-light";
       $("#cpu").html(
         '<i class="fa fa-fw fa-microchip ' +
           color +
-          '"></i>&nbsp;&nbsp;CPU:&nbsp;' +
-          system.cpu.load.percent[0].toFixed(1) +
-          "&thinsp;%"
+          '"></i>&nbsp;&nbsp;Load:&nbsp;' +
+          system.cpu.load.raw[0].toFixed(2) +
+          "&nbsp;/&nbsp;" +
+          system.cpu.load.raw[1].toFixed(2) +
+          "&nbsp;/&nbsp;" +
+          system.cpu.load.raw[2].toFixed(2)
       );
       $("#cpu").prop(
         "title",
-        "Load: " +
-          system.cpu.load.raw[0].toFixed(2) +
-          " " +
-          system.cpu.load.raw[1].toFixed(2) +
-          " " +
-          system.cpu.load.raw[2].toFixed(2) +
-          " on " +
+        "Load averages for the past 1, 5, and 15 minutes\non a system with " +
           system.cpu.nprocs +
-          " cores running " +
+          " core" +
+          (system.cpu.nprocs > 1 ? "s" : "") +
+          " running " +
           system.procs +
-          " processes"
+          " processes " +
+          (system.cpu.load.raw[0] > system.cpu.nprocs
+            ? " (load is higher than the number of cores)"
+            : "")
       );
-      $("#sysinfo-cpu").text(
-        system.cpu.load.percent[0].toFixed(1) +
-          "% (load: " +
-          system.cpu.load.raw[0].toFixed(2) +
-          " " +
-          system.cpu.load.raw[1].toFixed(2) +
-          " " +
-          system.cpu.load.raw[2].toFixed(2) +
-          ") on " +
+      $("#sysinfo-cpu").html(
+        system.cpu["%cpu"].toFixed(1) +
+          "% on " +
           system.cpu.nprocs +
-          " cores running " +
+          " core" +
+          (system.cpu.nprocs > 1 ? "s" : "") +
+          " running " +
           system.procs +
           " processes"
       );
@@ -493,7 +503,7 @@ function updateVersionInfo() {
       },
       {
         name: "Core",
-        local: version.core.local.version,
+        local: version.core.local.version || "N/A",
         remote: version.core.remote.version,
         branch: version.core.local.branch,
         hash: version.core.local.hash,
@@ -502,7 +512,7 @@ function updateVersionInfo() {
       },
       {
         name: "FTL",
-        local: version.ftl.local.version,
+        local: version.ftl.local.version || "N/A",
         remote: version.ftl.remote.version,
         branch: version.ftl.local.branch,
         hash: version.ftl.local.hash,
@@ -511,7 +521,7 @@ function updateVersionInfo() {
       },
       {
         name: "Web interface",
-        local: version.web.local.version,
+        local: version.web.local.version || "N/A",
         remote: version.web.remote.version,
         branch: version.web.local.branch,
         hash: version.web.local.hash,
@@ -726,7 +736,7 @@ function applyExpertSettings() {
 function addAdvancedInfo() {
   const advancedInfoSource = $("#advanced-info-data");
   const advancedInfoTarget = $("#advanced-info");
-  const isTLS = advancedInfoSource.data("tls");
+  const isTLS = location.protocol === "https:";
   const clientIP = advancedInfoSource.data("client-ip");
   const XForwardedFor = globalThis.atob(advancedInfoSource.data("xff") ?? "");
   const starttime = parseFloat(advancedInfoSource.data("starttime"));
@@ -739,7 +749,7 @@ function addAdvancedInfo() {
   // Add TLS and client IP info
   advancedInfoTarget.append(
     'Client: <i class="fa-solid fa-fw fa-lock' +
-      (isTLS ? "" : "-open") +
+      (isTLS ? " text-green" : "-open") +
       '" title="Your connection is ' +
       (isTLS ? "" : "NOT ") +
       'end-to-end encrypted (TLS/SSL)"></i>&nbsp;<span id="client-id"></span><br>'

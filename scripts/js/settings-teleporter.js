@@ -105,3 +105,10 @@ $("#GETTeleporter").on("click", function () {
     },
   });
 });
+
+$(function () {
+  // Show warning if not accessed over HTTPS
+  if (location.protocol !== "https:") {
+    $("#encryption-warning").show();
+  }
+});

@@ -14,7 +14,7 @@ mg.include('scripts/lua/header.lp','r')
     <section style="padding: 15px;">
         <div class="login-logo">
             <div class="text-center">
-                <img src="<?=webhome?>img/logo.svg" alt="Pi-hole logo" class="loginpage-logo">
+                <img src="<?=webhome?>img/logo.svg" alt="Pi-hole logo" class="loginpage-logo" width="140" height="202">
             </div>
             <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;">Pi-<b>hole</b></span></div>
         </div>

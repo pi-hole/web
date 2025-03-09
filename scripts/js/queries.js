@@ -609,13 +609,13 @@ $(function () {
       // Prefix colored DNSSEC icon to domain text
       var dnssecIcon = "";
       dnssecIcon =
-        '<i class="fa fa-fw ' +
+        '<i class="mr-2 fa fa-fw ' +
         dnssec.icon +
         " " +
         dnssec.color +
         '" title="DNSSEC: ' +
         dnssec.text +
-        '"></i>&nbsp;&nbsp;';
+        '"></i>';
 
       // Escape HTML in domain
       domain = dnssecIcon + utils.escapeHtml(domain);

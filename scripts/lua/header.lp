@@ -40,9 +40,6 @@ function in_array (val, tab)
     return false
 end
 
--- Connection is considered secure if running natively on HTTPS
-is_secure = mg.request_info.https
-
 -- Variable to check if user is already authenticated
 is_authenticated = mg.request_info.is_authenticated
 
@@ -50,7 +47,6 @@ is_authenticated = mg.request_info.is_authenticated
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
     <meta http-equiv="x-dns-prefetch-control" content="off">
     <meta http-equiv="cache-control" content="max-age=60,private">
@@ -92,6 +88,7 @@ is_authenticated = mg.request_info.is_authenticated
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap/css/bootstrap.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/animate/animate.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/font-awesome/css/all.min.css')?>">
 <?
 if startsWith(scriptname, 'groups') then
     -- Group management styles
@@ -119,7 +116,6 @@ if startsWith(scriptname, 'groups') then
     <script src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/font-awesome/all.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/waitMe/waitMe.min.js')?>"></script>
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/waitMe/waitMe.min.css')?>">

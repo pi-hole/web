@@ -68,7 +68,7 @@ mg.include('header.lp','r')
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole Logo" style="border: 0" width="90" height="90">
+                                <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole Logo" width="50" height="50">
                                 <p>
                                     Open Source Ad Blocker
                                 </p>
@@ -78,7 +78,7 @@ mg.include('header.lp','r')
                             <!-- Menu Footer -->
                             <li class="user-footer">
                                 <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">
-                                    <svg class="svg-inline--fa fa-fw menu-icon" style="height: 1.25em"><use xlink:href="<?=webhome?>img/pihole_icon.svg#pihole-svg-logo"/></svg>
+                                    <? mg.include('../../img/logo-bw.svg', 'r') ?>
                                     Pi-hole Website
                                 </a>
                                 <hr>

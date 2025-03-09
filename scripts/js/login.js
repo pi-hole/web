@@ -136,7 +136,7 @@ $("#totp").on("input", function () {
 // Toggle password visibility button
 $("#toggle-password").on("click", function () {
   // Toggle font-awesome classes to change the svg icon on the button
-  $("svg", this).toggleClass("fa-eye fa-eye-slash");
+  $(".field-icon", this).toggleClass("fa-eye fa-eye-slash");
 
   // Password field
   var $pwd = $("#current-password");

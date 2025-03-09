@@ -138,6 +138,19 @@ $(function () {
       var ips = [],
         iptitles = [];
 
+      // Sort IPs, IPv4 before IPv6, then alphabetically
+      data.ips.sort(function (a, b) {
+        if (a.ip.includes(":") && !b.ip.includes(":")) {
+          return 1;
+        }
+
+        if (!a.ip.includes(":") && b.ip.includes(":")) {
+          return -1;
+        }
+
+        return a.ip.localeCompare(b.ip);
+      });
+
       for (index = 0; index < data.ips.length; index++) {
         var ip = data.ips[index],
           iptext = ip.ip;
@@ -238,6 +251,7 @@ $(function () {
       { data: "numQueries", width: "9%", render: $.fn.dataTable.render.text() },
       { data: "", width: "6%", orderable: false },
       { data: "", width: "6%", orderable: false },
+      { data: "ips[].name", visible: false, class: "hide" },
     ],
 
     drawCallback: function () {
