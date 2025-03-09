@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false, utils:false, REFRESH_INTERVAL:false */
+/* global moment:false, utils:false, apiUrl:false, REFRESH_INTERVAL:false */
 
 const beginningOfTime = 1262304000; // Jan 01 2010, 00:00 in seconds
 const endOfTime = 2147483647; // Jan 19, 2038, 03:14 in seconds
@@ -424,7 +424,7 @@ function addSelectSuggestion(name, dict, data) {
 
 function getSuggestions(dict) {
   $.get(
-    "/api/queries/suggestions",
+    apiUrl + "/queries/suggestions",
     function (data) {
       for (var key in filters) {
         if (Object.hasOwnProperty.call(filters, key)) {
@@ -455,7 +455,7 @@ function filterOn(param, dict) {
 }
 
 function getAPIURL(filters) {
-  var apiurl = "/api/queries?";
+  var apiurl = apiUrl + "/queries?";
   for (var key in filters) {
     if (Object.hasOwnProperty.call(filters, key)) {
       var filter = filters[key];
