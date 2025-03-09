@@ -27,5 +27,5 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <button type="button" id="gravityBtn" class="btn btn-lg btn-primary btn-block">Update</button>
 <pre id="output" style="width: 100%; height: 100%;" hidden></pre>
 
-<script src="<?=pihole.fileversion('scripts/js/gravity.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/gravity.js')?>"></script>
 <? mg.include('scripts/lua/footer.lp','r')?>
