@@ -463,12 +463,12 @@ function changeBulkDeleteStates(table) {
   }
 }
 
-function doLogout() {
+function doLogout(url) {
   $.ajax({
     url: "/api/auth",
     method: "DELETE",
   }).always(function () {
-    globalThis.location = "/admin/login";
+    globalThis.location = url;
   });
 }
 
