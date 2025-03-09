@@ -9,7 +9,8 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   const logoutButton = document.getElementById("logout-button");
-  logoutButton.addEventListener("click", () => {
+  logoutButton.addEventListener("click", event => {
+    event.preventDefault();
     utils.doLogout();
   });
 });
