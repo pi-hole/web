@@ -459,6 +459,12 @@ tfoot.add-new-item > tr > th {
   padding: 5px;
 }
 
+.main-header .navbar .nav > li.user > a > .fa,
+.main-header .navbar .nav > li.user > a > .glyphicon,
+.main-header .navbar .nav > li.user > a > .ion {
+  margin-right: 0;
+}
+
 .box {
   border-radius: 8px;
   overflow: hidden;
@@ -502,7 +508,7 @@ tfoot.add-new-item > tr > th {
   }
 }
 
-.small-box-footer svg {
+.small-box-footer i {
   margin: 0 5px;
   font-size: 13px;
 }
@@ -847,16 +853,16 @@ body:not([class*="lcars"])
 }
 
 /* reverse side menu collapse arrows when menu is closed */
-.sidebar-collapse .sidebar-toggle-svg svg {
+.sidebar-collapse .sidebar-toggle-svg i {
   transform: scaleX(-1);
 }
 
 /* reverse side menu collapse arrows on mobile screens */
 @media (max-width: 767px) {
-  .sidebar-toggle-svg svg {
+  .sidebar-toggle-svg i {
     transform: scaleX(-1);
   }
-  .sidebar-open .sidebar-toggle-svg svg {
+  .sidebar-open .sidebar-toggle-svg i {
     transform: scaleX(1);
   }
 }
@@ -994,6 +1000,11 @@ body:not([class*="lcars"])
 
 .menu-icon {
   margin-right: 0.5em;
+}
+
+.user-footer .menu-icon {
+  max-height: 1.75rem;
+  vertical-align: middle;
 }
 
 div.dt-buttons {
@@ -1564,7 +1575,7 @@ table.dataTable tbody > tr > .selected {
   margin: 0 5px;
 }
 
-.box-icons svg {
+.box-icons i {
   margin: 0 4px;
 }
 

@@ -78,7 +78,7 @@ mg.include('header.lp','r')
                             <!-- Menu Footer -->
                             <li class="user-footer">
                                 <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">
-                                    <svg class="svg-inline--fa fa-fw menu-icon" style="height: 1.25em"><use xlink:href="<?=pihole.webhome()?>img/pihole_icon.svg#pihole-svg-logo"/></svg>
+                                    <? mg.include('../../img/logo-bw.svg', 'r') ?>
                                     Pi-hole Website
                                 </a>
                                 <hr>
