@@ -8,7 +8,7 @@
 /* global utils:false, moment:false */
 
 var _isLoginPage = false;
-const apiUrl = document.getElementById("api-url").textContent;
+const apiUrl = document.body.dataset.apiurl;
 
 const REFRESH_INTERVAL = {
   logs: 500, // 0.5 sec (logs page)

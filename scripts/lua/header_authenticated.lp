@@ -22,7 +22,7 @@ mg.include('header.lp','r')
     <script src="<?=pihole.fileversion('vendor/chartjs-plugin-zoom/chartjs-plugin-zoom.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.js')?>"></script>
 </head>
-<body class="<?=theme.name?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in">
+<body class="<?=theme.name?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in" data-apiurl="<?=pihole.api_url()?>">
 <noscript>
     <!-- JS Warning -->
     <div>

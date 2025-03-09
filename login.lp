@@ -9,7 +9,7 @@
 
 mg.include('scripts/lua/header.lp','r')
 ?>
-<body class="hold-transition layout-boxed login-page">
+<body class="hold-transition layout-boxed login-page" data-apiurl="<?=pihole.api_url()?>">
 <div class="box login-box" id="login-box">
     <section style="padding: 15px;">
         <div class="login-logo">
@@ -117,8 +117,6 @@ mg.include('scripts/lua/header.lp','r')
         <strong><a href="https://pi-hole.net/donate/" rel="noopener" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
     </div>
 </div>
-<div id="webhome" style="display: none;"><?=webhome?></div>
-<div id="api-url" style="display: none;"><?=pihole.api_url()?></div>
 <script src="<?=pihole.fileversion('scripts/js/footer.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/js/login.js')?>"></script>
 </body>
