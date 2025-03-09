@@ -50,7 +50,7 @@
     "nprogress": "0.2.0",
     "qrious": "4.0.2",
     "select2": "4.0.13",
-    "waitme": "1.19.0"
+    "waitme-js": "1.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

@@ -657,7 +657,7 @@ function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
       if (reloadAfterTimeout) {
         location.reload();
       } else {
-        $(".wrapper").waitMe("hide");
+        WaitMe.hideAll();
       }
     })
     .fail(function () {
@@ -668,7 +668,7 @@ function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
 
 function loadingOverlay(reloadAfterTimeout = false) {
   NProgress.start();
-  $(".wrapper").waitMe({
+  new WaitMe(".wrapper", {
     effect: "bounce",
     text: "Pi-hole is currently applying your changes...",
     bg: "rgba(0,0,0,0.7)",
