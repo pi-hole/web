@@ -468,7 +468,7 @@ function doLogout() {
     url: "/api/auth",
     method: "DELETE",
   }).always(function () {
-    location.reload();
+    globalThis.location = "/admin/login";
   });
 }
 
