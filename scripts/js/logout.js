@@ -9,8 +9,10 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   const logoutButton = document.getElementById("logout-button");
+  const logoutUrl = document.body.dataset.logoutUrl;
+
   logoutButton.addEventListener("click", event => {
     event.preventDefault();
-    utils.doLogout();
+    utils.doLogout(logoutUrl);
   });
 });
