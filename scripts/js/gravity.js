@@ -92,12 +92,26 @@ function parseLines(ta, str) {
   var lines = str.split(/(?=\r)/g);
 
   for (let i = 0; i < lines.length; i++) {
+    if (lines[i].search(/\[[\d;]+m/) !== -1) {
+      // This line contains a color escape sequence - replace
+      lines[i] = lines[i]
+        .replaceAll(/\[(\d;)?[39]0m/g, "<span class=\"log-gray\">")
+        .replaceAll(/\[(\d;)?[39]1m/g, "<span class=\"log-red\">")
+        .replaceAll(/\[(\d;)?[39]2m/g, "<span class=\"log-green\">")
+        .replaceAll(/\[(\d;)?[39]3m/g, "<span class=\"log-yellow\">")
+        .replaceAll(/\[(\d;)?[39]4m/g, "<span class=\"log-blue\">")
+        .replaceAll(/\[(\d;)?[39]5m/g, "<span class=\"log-purple\">")
+        .replaceAll(/\[(\d;)?[39]6m/g, "<span class=\"log-cyan\">")
+        .replaceAll("[0m", "</span>")
+        .replaceAll("[1m", "<span class=\"text-bold\">")
+        .replaceAll("[4m", "<span class=\"text-underline\">");
+    }
     if (lines[i][0] === "\r") {
       // This line starts with the "OVER" sequence. Replace them with "\n" before print
       lines[i] = lines[i].replaceAll("\r[K", "\n").replaceAll("\r", "\n");
 
       // Last line from the textarea will be overwritten, so we remove it
-      ta.text(ta.text().substring(0, ta.text().lastIndexOf("\n")));
+      ta.html(ta.html().substring(0, ta.html().lastIndexOf("\n")));
     }
 
     // Append the new text to the end of the output
