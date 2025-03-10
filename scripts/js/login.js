@@ -30,7 +30,12 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
     $("#error-message").text("");
     $("#error-hint").hide();
     $("#error-hint").text("");
-    if (data !== null && "error" in data.responseJSON && "message" in data.responseJSON.error) {
+    if (
+      data !== null &&
+      "responseJSON" in data &&
+      "error" in data.responseJSON &&
+      "message" in data.responseJSON.error
+    ) {
       // This is an error, highlight both the password and the TOTP field
       isErrorResponse = true;
       // Check if the error is caused by an invalid TOTP token
@@ -168,13 +173,15 @@ $(function () {
       if (data.session.valid === true) redirect();
     })
     .fail(function (xhr) {
-      const session = xhr.responseJSON.session;
-      // If TOPT is enabled, show the input field and add the required attribute
-      if (session.totp === true) {
-        $("#totp_input").removeClass("hidden");
-        $("#totp").attr("required", "required");
-        $("#totp-forgotten-title").removeClass("hidden");
-        $("#totp-forgotten-body").removeClass("hidden");
+      if ("responseJSON" in xhr) {
+        const session = xhr.responseJSON.session;
+        // If TOPT is enabled, show the input field and add the required attribute
+        if (session.totp === true) {
+          $("#totp_input").removeClass("hidden");
+          $("#totp").attr("required", "required");
+          $("#totp-forgotten-title").removeClass("hidden");
+          $("#totp-forgotten-body").removeClass("hidden");
+        }
       }
     });
 
