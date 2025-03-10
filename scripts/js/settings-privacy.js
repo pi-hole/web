@@ -5,11 +5,11 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global setConfigValues: false, apiFailure: false */
+/* global setConfigValues: false, apiFailure: false, apiUrl: false */
 
 function getConfig() {
   $.ajax({
-    url: "/api/config/?detailed=true",
+    url: apiUrl + "/config/?detailed=true",
   })
     .done(function (data) {
       setConfigValues("", "", data.config);

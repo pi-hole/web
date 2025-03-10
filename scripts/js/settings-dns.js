@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false */
+/* global applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false, apiUrl: false */
 
 // Remove an element from an array (inline)
 function removeFromArray(arr, what) {
@@ -114,7 +114,7 @@ function updateDNSserversTextfield(upstreams, customServers) {
 
 function processDNSConfig() {
   $.ajax({
-    url: "/api/config/dns?detailed=true", // We need the detailed output to get the DNS server list
+    url: apiUrl + "/config/dns?detailed=true", // We need the detailed output to get the DNS server list
   })
     .done(function (data) {
       // Initialize the DNS upstreams
