@@ -206,7 +206,7 @@ function initCheckboxRadioStyle() {
     chkboxStyle = "primary";
   }
 
-  var boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet" />');
+  var boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet">');
   // Only add the stylesheet if it's not already present
   if ($("link[href='" + boxsheet.attr("href") + "']").length === 0) boxsheet.appendTo("head");
 

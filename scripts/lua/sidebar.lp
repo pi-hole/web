@@ -17,9 +17,9 @@
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
-                    <span id="status"></span><br/>
-                    <span id="query_frequency"></span><br/>
-                    <span id="cpu"></span><br/>
+                    <span id="status"></span><br>
+                    <span id="query_frequency"></span><br>
+                    <span id="cpu"></span><br>
                     <span id="memory"></span>
                 </div>
             </div>
