@@ -621,7 +621,7 @@ kbd {
   background: #181c20;
   font-size: 14px;
 }
-#output b.log-red {
+#output .log-red {
   background: #b23;
   color: #fff;
 }
