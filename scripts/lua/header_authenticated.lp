@@ -49,7 +49,7 @@ mg.include('header.lp','r')
         <nav class="navbar navbar-static-top">
             <!-- Sidebar toggle button-->
             <a href="#" class="sidebar-toggle-svg" data-toggle="push-menu" role="button">
-                <i aria-hidden="true" class="fa fa-angle-double-left"></i>
+                <em aria-hidden="true" class="fa fa-angle-double-left"></em>
                 <span class="sr-only">Toggle navigation</span>
                 <span class="warning-count hidden" id="top-warning-count"></span>
             </a>
@@ -63,7 +63,7 @@ mg.include('header.lp','r')
                     </li>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-bars"></i>
+                            <em class="fa fa-bars"></em>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
@@ -82,12 +82,12 @@ mg.include('header.lp','r')
                                     Pi-hole Website
                                 </a>
                                 <hr>
-                                <a class="btn-link" href="https://docs.pi-hole.net/" rel="noopener" target="_blank"><i class="fa-fw menu-icon fa-regular fa-circle-question"></i> Documentation</a>
-                                <a class="btn-link" href="https://discourse.pi-hole.net/" rel="noopener" target="_blank"><i class="fa-fw menu-icon fab fa-discourse"></i> Pi-hole Discourse</a>
-                                <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank"><i class="fa-fw menu-icon fab fa-github"></i> GitHub</a>
-                                <a class="btn-link" href="https://discourse.pi-hole.net/c/announcements/5" rel="noopener" target="_blank"><i class="fa-fw menu-icon fa-solid fa-rocket"></i> Pi-hole Releases</a>
+                                <a class="btn-link" href="https://docs.pi-hole.net/" rel="noopener" target="_blank"><em class="fa-fw menu-icon fa-regular fa-circle-question"></em> Documentation</a>
+                                <a class="btn-link" href="https://discourse.pi-hole.net/" rel="noopener" target="_blank"><em class="fa-fw menu-icon fab fa-discourse"></em> Pi-hole Discourse</a>
+                                <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank"><em class="fa-fw menu-icon fab fa-github"></em> GitHub</a>
+                                <a class="btn-link" href="https://discourse.pi-hole.net/c/announcements/5" rel="noopener" target="_blank"><em class="fa-fw menu-icon fa-solid fa-rocket"></em> Pi-hole Releases</a>
                                 <? if pihole.needLogin() then ?>
-                                <a class="btn-link" href="#" id="logout-button"><i class="fa-fw menu-icon fa-solid fa-arrow-right-from-bracket"></i> Log out</a>
+                                <a class="btn-link" href="#" id="logout-button"><em class="fa-fw menu-icon fa-solid fa-arrow-right-from-bracket"></em> Log out</a>
                                 <? end ?>
                             </li>
                         </ul>

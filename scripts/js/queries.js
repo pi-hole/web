@@ -93,7 +93,7 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (gravity)";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><em class="fas fa-check"></em> Allow</button>';
       blocked = true;
       break;
     case "FORWARDED":
@@ -103,21 +103,21 @@ function parseQueryStatus(data) {
         (data.reply.type !== "UNKNOWN" ? "Forwarded, reply from " : "Forwarded to ") +
         data.upstream;
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><em class="fa fa-ban"></em> Deny</button>';
       break;
     case "CACHE":
       colorClass = "text-green";
       icon = "fa-solid fa-database";
       fieldtext = "Served from cache";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><em class="fa fa-ban"></em> Deny</button>';
       break;
     case "REGEX":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (regex)";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><em class="fas fa-check"></em> Allow</button>';
       blocked = true;
       break;
     case "DENYLIST":
@@ -125,7 +125,7 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (exact)";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><em class="fas fa-check"></em> Allow</button>';
       blocked = true;
       break;
     case "EXTERNAL_BLOCKED_IP":
@@ -154,7 +154,7 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (gravity, CNAME)";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><em class="fas fa-check"></em> Allow</button>';
       isCNAME = true;
       blocked = true;
       break;
@@ -163,7 +163,7 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (regex denied, CNAME)";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><em class="fas fa-check"></em> Allow</button>';
       isCNAME = true;
       blocked = true;
       break;
@@ -172,7 +172,7 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (exact denied, CNAME)";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><em class="fas fa-check"></em> Allow</button>';
       isCNAME = true;
       blocked = true;
       break;
@@ -193,14 +193,14 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-hourglass-half";
       fieldtext = "Already forwarded, awaiting reply";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><em class="fa fa-ban"></em> Deny</button>';
       break;
     case "CACHE_STALE":
       colorClass = "text-green";
       icon = "fa-solid fa-infinity";
       fieldtext = "Served by cache optimizer";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><em class="fa fa-ban"></em> Deny</button>';
       break;
     case "SPECIAL_DOMAIN":
       colorClass = "text-red";
@@ -588,13 +588,13 @@ $(function () {
 
       if (querystatus.icon !== false) {
         $("td:eq(1)", row).html(
-          "<i class='fa fa-fw " +
+          "<em class='fa fa-fw " +
             querystatus.icon +
             " " +
             querystatus.colorClass +
             "' title='" +
             rawtext +
-            "'></i>"
+            "'></em>"
         );
       } else if (querystatus.colorClass !== false) {
         $(row).addClass(querystatus.colorClass);
@@ -609,13 +609,13 @@ $(function () {
       // Prefix colored DNSSEC icon to domain text
       var dnssecIcon = "";
       dnssecIcon =
-        '<i class="mr-2 fa fa-fw ' +
+        '<em class="mr-2 fa fa-fw ' +
         dnssec.icon +
         " " +
         dnssec.color +
         '" title="DNSSEC: ' +
         dnssec.text +
-        '"></i>';
+        '"></em>';
 
       // Escape HTML in domain
       domain = dnssecIcon + utils.escapeHtml(domain);
@@ -637,7 +637,7 @@ $(function () {
 
       // Show X-icon instead of reply time if no reply was received
       if (data.reply.type === "UNKNOWN") {
-        $("td:eq(5)", row).html('<i class="fa fa-times"></i>');
+        $("td:eq(5)", row).html('<em class="fa fa-times"></em>');
       }
 
       if (querystatus.buttontext !== false) {

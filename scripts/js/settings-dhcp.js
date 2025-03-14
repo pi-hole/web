@@ -19,7 +19,7 @@ function renderHostnameCLID(data, type) {
   // Display and search content
   if (type === "display" || type === "filter") {
     if (data === "*") {
-      return "<i>---</i>";
+      return "<em>---</em>";
     }
 
     return data;

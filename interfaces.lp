@@ -20,7 +20,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <div class="row">
                     <div class="col-md-12">
                         <div class="text-center">
-                            <i id="spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
+                            <em id="spinner" class="fas fa-spinner fa-pulse fa-5x"></em>
                         </div>
                         <div id="tree"></div>
                     </div>

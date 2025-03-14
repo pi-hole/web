@@ -14,7 +14,7 @@ mg.include('scripts/lua/header.lp','r')
         <section style="padding: 15px;">
                 <h2 class="error-headline text-yellow">404</h2>
                 <div class="error-content">
-                    <h3><i class="fa fa-warning text-yellow"></i> Oops! Page not found.</h3>
+                    <h3><em class="fa fa-warning text-yellow"></em> Oops! Page not found.</h3>
                     <p>
                         We could not find the page you were looking for.<br>
                         Meanwhile, you may want to return to <a href="<?=pihole.webhome()?>">the dashboard</a>.

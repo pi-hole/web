@@ -264,5 +264,5 @@ $(document).ready(function () {
   });
 
   // Add a small legend below the CNAME table
-  $("#cnameRecords-Table").after("<small>* <b>TTL</b> in seconds <i>(optional)</i></small>");
+  $("#cnameRecords-Table").after("<small>* <b>TTL</b> in seconds <em>(optional)</em></small>");
 });

@@ -105,7 +105,7 @@ function setStatusIcon(data) {
       break;
   }
 
-  return "<i class='fa fa-fw " + statusIcon + "' title='" + statusTitle + "'></i>";
+  return "<em class='fa fa-fw " + statusIcon + "' title='" + statusTitle + "'></em>";
 }
 
 // Define human-friendly status string
@@ -162,7 +162,7 @@ function setTypeIcon(type) {
     title = "This is an allowlist";
   }
 
-  return `<i class='fa fa-fw ${iconClass}' title='${title}\nClick for details about this list'></i> `;
+  return `<em class='fa fa-fw ${iconClass}' title='${title}\nClick for details about this list'></em> `;
 }
 
 // eslint-disable-next-line no-unused-vars

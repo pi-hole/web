@@ -24,7 +24,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <p class='text-danger' id="encryption-warning" style="display: none;"><strong>Warning:</strong><br>You are currently not using an end-to-end encryption. This means that secrets like your 2FA-TOTP secret will be transmitted in plain text. We recommend to use HTTPS when exporting your configuration.</p>
                 <div class="pull-right">
                     <a class="btn btn-app btn-success" id="GETTeleporter" target="_blank">
-                        <i class="fa fa-save fa-xl"></i><br>Export
+                        <em class="fa fa-save fa-xl"></em><br>Export
                     </a>
                 </div>
             </div>
@@ -53,7 +53,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
                 <div class="pull-right">
                     <a class="btn btn-app btn-success" id="submit-import">
-                        <i class="fa fa-upload fa-xl"></i><br>Import
+                        <em class="fa fa-upload fa-xl"></em><br>Import
                     </a>
                 </div>
             </div>
@@ -72,23 +72,23 @@ mg.include('scripts/lua/settings_header.lp','r')
             <div class="modal-body">
                 <p>Depending on your network speed, it may take a few moments until the file is uploaded and imported. Please be patient and don't interrupt the process...</p>
                 <div class="text-center">
-                    <i id="import-spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
+                    <em id="import-spinner" class="fas fa-spinner fa-pulse fa-5x"></em>
                 </div>
                 <div id="modal-import-success" style="display:none">
                     <div class="alert alert-success alert-dismissible">
-                        <h4><i class="icon fa fa-fw fa-check"></i> <span id="modal-import-success-title"></span></h4>
+                        <h4><em class="icon fa fa-fw fa-check"></em> <span id="modal-import-success-title"></span></h4>
                         <div id="modal-import-success-message"></div>
                     </div>
                 </div>
                 <div id="modal-import-error" style="display:none">
                     <div class="alert alert-danger alert-dismissible">
-                        <h4><i class="icon fa fa-fw fa-ban"></i> <span id="modal-import-error-title"></span></h4>
+                        <h4><em class="icon fa fa-fw fa-ban"></em> <span id="modal-import-error-title"></span></h4>
                         <div id="modal-import-error-message"></div>
                     </div>
                 </div>
                 <div id="modal-import-gravity" style="display:none">
                     <div class="alert alert-info alert-dismissible">
-                        <h4><i class="icon fa fa-fw fa-info-circle"></i> Please run gravity</h4>
+                        <h4><em class="icon fa fa-fw fa-info-circle"></em> Please run gravity</h4>
                         <p>Use <a href='/admin/gravity'>Tools &rarr; Update Gravity</a> or run <code>pihole -g</code> to update your lists.</p>
                     </div>
                 </div>

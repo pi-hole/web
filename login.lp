@@ -34,7 +34,7 @@ mg.include('scripts/lua/header.lp','r')
                     </div>
                 </div>
                 <div class="form-group has-error login-box-msg" id="error-label" style="display: none;">
-                    <label class="control-label"><i class="fa fa-times-circle"></i> <span id="error-message"></span><br><span id="error-hint" style="display: none;"></span></label>
+                    <label class="control-label"><em class="fa fa-times-circle"></em> <span id="error-message"></span><br><span id="error-hint" style="display: none;"></span></label>
                 </div>
 
                 <form id="loginform">
@@ -55,7 +55,7 @@ mg.include('scripts/lua/header.lp','r')
                         <span class="fa fa-clock-rotate-left pwd-field form-control-feedback"></span>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary form-control"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in (uses cookie)</button>
+                        <button type="submit" class="btn btn-primary form-control"><em class="fas fa-sign-in-alt"></em>&nbsp;&nbsp;&nbsp;Log in (uses cookie)</button>
                     </div>
                 </form>
                 <br>
@@ -66,7 +66,7 @@ mg.include('scripts/lua/header.lp','r')
                                 <h3 class="box-title">Wrong 2FA token</h3>
                                 <div class="box-tools pull-right">
                                     <button type="button" class="btn btn-box-tool">
-                                        <i class="fa fa-minus"></i>
+                                        <em class="fa fa-minus"></em>
                                     </button>
                                 </div>
                             </div>
@@ -86,7 +86,7 @@ mg.include('scripts/lua/header.lp','r')
                                 <h3 class="box-title">Forgot password?</h3>
                                 <div class="box-tools pull-right">
                                     <button type="button" class="btn btn-box-tool">
-                                        <i class="fa fa-plus" id="forgot-pw-toggle-icon"></i>
+                                        <em class="fa fa-plus" id="forgot-pw-toggle-icon"></em>
                                     </button>
                                 </div>
                             </div>
@@ -104,9 +104,9 @@ mg.include('scripts/lua/header.lp','r')
             </div>
             <!-- /.login-card-body -->
             <div class="login-footer" style="margin-top: 15px; display: flex; justify-content: space-between;">
-                <a class="btn btn-default btn-sm" role="button" href="https://docs.pi-hole.net/" target="_blank"><i class="fas fa-question-circle"></i> Documentation</a>
-                <a class="btn btn-default btn-sm" role="button" href="https://github.com/pi-hole/" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                <a class="btn btn-default btn-sm" role="button" href="https://discourse.pi-hole.net/" target="_blank"><i class="fab fa-discourse"></i> Pi-hole Discourse</a>
+                <a class="btn btn-default btn-sm" role="button" href="https://docs.pi-hole.net/" target="_blank"><em class="fas fa-question-circle"></em> Documentation</a>
+                <a class="btn btn-default btn-sm" role="button" href="https://github.com/pi-hole/" target="_blank"><em class="fab fa-github"></em> GitHub</a>
+                <a class="btn btn-default btn-sm" role="button" href="https://discourse.pi-hole.net/" target="_blank"><em class="fab fa-discourse"></em> Pi-hole Discourse</a>
             </div>
         </div>
     </section>
@@ -114,7 +114,7 @@ mg.include('scripts/lua/header.lp','r')
 
 <div class="login-donate">
     <div class="text-center" style="font-size:125%">
-        <strong><a href="https://pi-hole.net/donate/" rel="noopener" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
+        <strong><a href="https://pi-hole.net/donate/" rel="noopener" target="_blank"><em class="fa fa-heart text-red"></em> Donate</a></strong> if you found this useful.
     </div>
 </div>
 <script src="<?=pihole.fileversion('scripts/js/login.js')?>"></script>

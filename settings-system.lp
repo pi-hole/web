@@ -71,7 +71,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
             </div>
             <div class="overlay" id="sysinfo-system-overlay">
-                <i class="fa fa-sync fa-spin"></i>
+                <em class="fa fa-sync fa-spin"></em>
             </div>
         </div>
         <div class="box settings-level-expert">
@@ -171,7 +171,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
             </div>
             <div class="overlay" id="sysinfo-metrics-overlay-3">
-                <i class="fa fa-sync fa-spin"></i>
+                <em class="fa fa-sync fa-spin"></em>
             </div>
         </div>
     </div>
@@ -240,7 +240,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
             </div>
             <div class="overlay" id="sysinfo-metrics-overlay-1">
-                <i class="fa fa-sync fa-spin"></i>
+                <em class="fa fa-sync fa-spin"></em>
             </div>
         </div>
         <div class="box">
@@ -288,7 +288,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
             </div>
             <div class="overlay" id="sysinfo-metrics-overlay-2">
-                <i class="fa fa-sync fa-spin"></i>
+                <em class="fa fa-sync fa-spin"></em>
             </div>
         </div>
     </div>
@@ -300,7 +300,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             <div class="box-body">
                 <div class="row">
                     <div class="col-xs-12 col-md-6 col-lg-3">
-                        <button type="button" id="loggingButton" class="btn btn-block button-pad btn-primary"><i class="fa fa-spinner fa-pulse"></i></button>
+                        <button type="button" id="loggingButton" class="btn btn-block button-pad btn-primary"><em class="fa fa-spinner fa-pulse"></em></button>
                     </div>
                     <div class="col-xs-12 col-md-6 col-lg-3">
                         <button type="button" class="btn btn-warning confirm-restartdns btn-block button-pad destructive_action" disabled="true">Restart DNS resolver</button>

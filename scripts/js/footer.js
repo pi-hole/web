@@ -49,7 +49,7 @@ function piholeChanged(blocking, timer = null) {
 
   switch (blocking) {
     case "enabled": {
-      status.html("<i class='fa fa-circle fa-fw text-green-light'></i>&nbsp;&nbsp;Active");
+      status.html("<em class='fa fa-circle fa-fw text-green-light'></em>&nbsp;&nbsp;Active");
       ena.hide();
       dis.show();
       dis.removeClass("active");
@@ -58,7 +58,7 @@ function piholeChanged(blocking, timer = null) {
     }
 
     case "disabled": {
-      status.html("<i class='fa fa-circle fa-fw text-red'></i>&nbsp;&nbsp;Blocking disabled");
+      status.html("<em class='fa fa-circle fa-fw text-red'></em>&nbsp;&nbsp;Blocking disabled");
       ena.show();
       dis.hide();
 
@@ -67,7 +67,7 @@ function piholeChanged(blocking, timer = null) {
 
     case "failure": {
       status.html(
-        "<i class='fa-solid fa-triangle-exclamation fa-fw text-red'></i>&nbsp;&nbsp;<span class='text-red'>DNS server failure</span>"
+        "<em class='fa-solid fa-triangle-exclamation fa-fw text-red'></em>&nbsp;&nbsp;<span class='text-red'>DNS server failure</span>"
       );
       ena.hide();
       dis.hide();
@@ -76,7 +76,7 @@ function piholeChanged(blocking, timer = null) {
     }
 
     default: {
-      status.html("<i class='fa fa-circle fa-fw text-red'></i>&nbsp;&nbsp;Status unknown");
+      status.html("<em class='fa fa-circle fa-fw text-red'></em>&nbsp;&nbsp;Status unknown");
       ena.hide();
       dis.hide();
     }
@@ -142,7 +142,7 @@ function piholeChange(action, duration) {
       break;
   }
 
-  btnStatus.html("<i class='fa fa-spinner fa-spin'> </i>");
+  btnStatus.html("<em class='fa fa-spinner fa-spin'> </em>");
   $.ajax({
     url: "/api/dns/blocking",
     method: "POST",
@@ -256,7 +256,7 @@ function updateQueryFrequency(intl, frequency) {
 
   $("#query_frequency")
     .html(
-      '<i class="fa fa-fw fa-gauge-high text-green-light"></i>&nbsp;&nbsp;' +
+      '<em class="fa fa-fw fa-gauge-high text-green-light"></em>&nbsp;&nbsp;' +
         freqFormatted +
         "&thinsp;" +
         unit
@@ -351,9 +351,9 @@ function updateSystemInfo() {
       var color;
       color = percentRAM > 75 ? "text-red" : "text-green-light";
       $("#memory").html(
-        '<i class="fa fa-fw fa-memory ' +
+        '<em class="fa fa-fw fa-memory ' +
           color +
-          '"></i>&nbsp;&nbsp;Memory usage:&nbsp;' +
+          '"></em>&nbsp;&nbsp;Memory usage:&nbsp;' +
           percentRAM.toFixed(1) +
           "&thinsp;%"
       );
@@ -374,9 +374,9 @@ function updateSystemInfo() {
 
       color = system.cpu.load.raw[0] > system.cpu.nprocs ? "text-red" : "text-green-light";
       $("#cpu").html(
-        '<i class="fa fa-fw fa-microchip ' +
+        '<em class="fa fa-fw fa-microchip ' +
           color +
-          '"></i>&nbsp;&nbsp;Load:&nbsp;' +
+          '"></em>&nbsp;&nbsp;Load:&nbsp;' +
           system.cpu.load.raw[0].toFixed(2) +
           "&nbsp;/&nbsp;" +
           system.cpu.load.raw[1].toFixed(2) +
@@ -748,11 +748,11 @@ function addAdvancedInfo() {
 
   // Add TLS and client IP info
   advancedInfoTarget.append(
-    'Client: <i class="fa-solid fa-fw fa-lock' +
+    'Client: <em class="fa-solid fa-fw fa-lock' +
       (isTLS ? " text-green" : "-open") +
       '" title="Your connection is ' +
       (isTLS ? "" : "NOT ") +
-      'end-to-end encrypted (TLS/SSL)"></i>&nbsp;<span id="client-id"></span><br>'
+      'end-to-end encrypted (TLS/SSL)"></em>&nbsp;<span id="client-id"></span><br>'
   );
 
   // Add client IP info

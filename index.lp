@@ -20,10 +20,10 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <h3 class="statistic"><span id="dns_queries">---</span></h3>
             </div>
             <div class="icon">
-                <i class="fas fa-globe-americas"></i>
+                <em class="fas fa-globe-americas"></em>
             </div>
             <a href="network.lp" class="small-box-footer" title="" id="total_clients">
-                <span id="active_clients">-</span> active clients <i class="fa fa-arrow-circle-right"></i>
+                <span id="active_clients">-</span> active clients <em class="fa fa-arrow-circle-right"></em>
             </a>
         </div>
     </div>
@@ -36,10 +36,10 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <h3 class="statistic"><span id="blocked_queries">---</span></h3>
             </div>
             <div class="icon">
-                <i class="fas fa-hand-paper"></i>
+                <em class="fas fa-hand-paper"></em>
             </div>
             <a href="queries.lp?upstream=blocklist" class="small-box-footer" title="">
-                List blocked queries <i class="fa fa-arrow-circle-right"></i>
+                List blocked queries <em class="fa fa-arrow-circle-right"></em>
             </a>
         </div>
     </div>
@@ -52,10 +52,10 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <h3 class="statistic"><span id="percent_blocked">---</span></h3>
             </div>
             <div class="icon">
-                <i class="fas fa-chart-pie"></i>
+                <em class="fas fa-chart-pie"></em>
             </div>
             <a href="queries.lp" class="small-box-footer" title="">
-                List all queries <i class="fa fa-arrow-circle-right"></i>
+                List all queries <em class="fa fa-arrow-circle-right"></em>
             </a>
         </div>
     </div>
@@ -68,10 +68,10 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <h3 class="statistic"><span id="gravity_size">---</span></h3>
             </div>
             <div class="icon">
-                <i class="fas fa-list-alt"></i>
+                <em class="fas fa-list-alt"></em>
             </div>
             <a href="groups-lists.lp" class="small-box-footer" title="">
-                Manage lists <i class="fa fa-arrow-circle-right"></i>
+                Manage lists <em class="fa fa-arrow-circle-right"></em>
             </a>
         </div>
     </div>
@@ -83,8 +83,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
         <div class="box" id="queries-over-time">
             <div class="box-header with-border">
                 <h3 class="box-title">Total queries</h3>
-                <button class="btn btn-xs btn-default pull-right zoom-reset" data-sel="reset-history"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
-                <span class="pull-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
+                <button class="btn btn-xs btn-default pull-right zoom-reset" data-sel="reset-history"><em class="fas fa-undo"></em>&nbsp;Reset zoom</button>
+                <span class="pull-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><em class="fa fa-info-circle"></em></span>
             </div>
             <div class="box-body">
                 <div class="chart" style="width: 100%; height: 180px">
@@ -92,7 +92,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 </div>
             </div>
             <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
+                <em class="fa fa-sync fa-spin"></em>
             </div>
             <!-- /.box-body -->
         </div>
@@ -103,8 +103,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
         <div class="box" id="clients">
             <div class="box-header with-border">
                 <h3 class="box-title">Client activity</h3>
-                <button class="btn btn-xs btn-default pull-right zoom-reset" data-sel="reset-clients"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
-                <span class="pull-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
+                <button class="btn btn-xs btn-default pull-right zoom-reset" data-sel="reset-clients"><em class="fas fa-undo"></em>&nbsp;Reset zoom</button>
+                <span class="pull-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><em class="fa fa-info-circle"></em></span>
             </div>
             <div class="box-body">
                 <div class="chart" style="width: 100%; height: 180px">
@@ -112,7 +112,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 </div>
             </div>
             <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
+                <em class="fa fa-sync fa-spin"></em>
             </div>
             <!-- /.box-body -->
         </div>
@@ -132,7 +132,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <div class="chart-legend" style="width:50%" id="query-types-legend" ></div>
             </div>
             <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
+                <em class="fa fa-sync fa-spin"></em>
             </div>
             <!-- /.box-body -->
         </div>
@@ -149,7 +149,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <div class="chart-legend" style="width:50%" id="forward-destinations-legend"></div>
             </div>
             <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
+                <em class="fa fa-sync fa-spin"></em>
             </div>
             <!-- /.box-body -->
         </div>
@@ -180,7 +180,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 </div>
             </div>
             <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
+                <em class="fa fa-sync fa-spin"></em>
             </div>
             <!-- /.box-body -->
         </div>
@@ -209,7 +209,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 </div>
             </div>
             <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
+                <em class="fa fa-sync fa-spin"></em>
             </div>
             <!-- /.box-body -->
         </div>
@@ -240,7 +240,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 </div>
             </div>
             <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
+                <em class="fa fa-sync fa-spin"></em>
             </div>
             <!-- /.box-body -->
         </div>
@@ -269,7 +269,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 </div>
             </div>
             <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
+                <em class="fa fa-sync fa-spin"></em>
             </div>
             <!-- /.box-body -->
         </div>

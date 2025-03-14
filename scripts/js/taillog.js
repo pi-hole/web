@@ -92,7 +92,7 @@ function getData() {
       // Check if we have a new PID -> FTL was restarted
       if (lastPID !== data.pid) {
         if (lastPID !== -1) {
-          $("#output").append("<div><i class='text-danger'>*** FTL restarted ***</i></div>");
+          $("#output").append("<div><em class='text-danger'>*** FTL restarted ***</em></div>");
         }
 
         // Remember PID
@@ -107,7 +107,7 @@ function getData() {
       // Set placeholder text if log file is empty and we have no new lines
       if (data.log.length === 0) {
         if (nextID === 0) {
-          $("#output").html("<div><i>*** Log file is empty ***</i></div>");
+          $("#output").html("<div><em>*** Log file is empty ***</em></div>");
         }
 
         utils.setTimer(getData, REFRESH_INTERVAL.logs);

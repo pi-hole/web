@@ -15,7 +15,7 @@ mg.include('scripts/lua/settings_header.lp','r')
 ?>
 <div class="row settings-level-expert" id="advanced-content">
     <div class="overlay" id="advanced-overlay">
-        <i class="fa fa-sync fa-spin"></i>
+        <em class="fa fa-sync fa-spin"></em>
     </div>
 
     <div class="col-sm-12" id="advanced-settings-menu">
@@ -29,7 +29,7 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>
 
     <div class="col-sm-12 settings-level-expert save-button-container">
-        <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
+        <button type="button" class="btn btn-primary save-button"><em class="fa-solid fa-fw fa-floppy-disk"></em>&nbsp;Save & Apply</button>
     </div>
 </div>
 <script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>

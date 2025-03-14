@@ -17,15 +17,15 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <div class="modal-body text-center">
                     <span class="fa-stack fa-2x" style="margin-bottom: 10px">
                         <div class="alProcessing">
-                            <i class="fa-stack-2x alSpinner"></i>
+                            <em class="fa-stack-2x alSpinner"></em>
                         </div>
                         <div class="alSuccess" style="display: none">
-                            <i class="fa fa-circle fa-stack-2x text-green"></i>
-                            <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+                            <em class="fa fa-circle fa-stack-2x text-green"></em>
+                            <em class="fa fa-check fa-stack-1x fa-inverse"></em>
                         </div>
                         <div class="alFailure" style="display: none">
-                            <i class="fa fa-circle fa-stack-2x text-red"></i>
-                            <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                            <em class="fa fa-circle fa-stack-2x text-red"></em>
+                            <em class="fa fa-times fa-stack-1x fa-inverse"></em>
                         </div>
                     </span>
                     <div class="alProcessing">Adding <span id="alDomain"></span> to the <span id="alList"></span>...</div>
@@ -50,7 +50,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <button type="button" class="btn btn-box-tool btn-block" data-widget="collapse">
                     <h3 class="box-title pull-left">Advanced filtering</h3>
                     <div class="pull-right">
-                        <i class="fa fa-plus"></i>
+                        <em class="fa fa-plus"></em>
                     </div>
                 </button>
             </div>
@@ -60,7 +60,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     <div class="form-group col-md-6">
                         <div class="input-group">
                         <div class="input-group-addon">
-                            <i class="far fa-clock"></i>
+                            <em class="far fa-clock"></em>
                         </div>
                         <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
                         </div>
@@ -168,7 +168,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <th>Type</th>
                             <th>Domain</th>
                             <th>Client</th>
-                            <th><i class="fas fa-stopwatch" title="Query reply time"></i></th>
+                            <th><em class="fas fa-stopwatch" title="Query reply time"></em></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -179,7 +179,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <th>Type</th>
                             <th>Domain</th>
                             <th>Client</th>
-                            <th><i class="fas fa-stopwatch" title="Query reply time"></i></th>
+                            <th><em class="fas fa-stopwatch" title="Query reply time"></em></th>
                             <th></th>
                         </tr>
                     </tfoot>

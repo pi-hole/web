@@ -29,13 +29,13 @@
                 <!-- Home Page -->
                 <li class="menu-main<? if scriptname == 'index' or scriptname == 'index.lp' then ?> active<? end ?>">
                     <a href="<?=webhome?>">
-                        <i class="fa fa-fw menu-icon fa-home"></i> <span>Dashboard</span>
+                        <em class="fa fa-fw menu-icon fa-home"></em> <span>Dashboard</span>
                     </a>
                 </li>
                 <!-- Query Log -->
                 <li class="menu-analysis<? if scriptname == 'queries' then ?> active<? end ?>">
                     <a href="<?=webhome?>queries">
-                        <i class="fa fa-fw menu-icon fa-file-alt"></i> <span>Query Log</span>
+                        <em class="fa fa-fw menu-icon fa-file-alt"></em> <span>Query Log</span>
                     </a>
                 </li>
 
@@ -43,7 +43,7 @@
                 <!-- Group Management -->
                 <li class="menu-group<? if scriptname == 'groups' then ?> active<? end ?>">
                     <a href="<?=webhome?>groups">
-                        <i class="fa fa-fw menu-icon fa-user-friends"></i> <span>Groups</span>
+                        <em class="fa fa-fw menu-icon fa-user-friends"></em> <span>Groups</span>
                         <span class="pull-right-container">
                             <span class="label label-primary pull-right" id="num_groups" title="Number of enabled groups"></span>
                         </span>
@@ -51,7 +51,7 @@
                 </li>
                 <li class="menu-group<? if scriptname == 'groups/clients' then ?> active<? end ?>">
                     <a href="<?=webhome?>groups/clients">
-                        <i class="fa fa-fw menu-icon fa-laptop"></i> <span>Clients</span>
+                        <em class="fa fa-fw menu-icon fa-laptop"></em> <span>Clients</span>
                         <span class="pull-right-container">
                             <span class="label label-primary pull-right" id="num_clients" title="Number of defined clients"></span>
                         </span>
@@ -59,7 +59,7 @@
                 </li>
                 <li class="menu-group<? if scriptname == 'groups/domains' then ?> active<? end ?>">
                     <a href="<?=webhome?>groups/domains">
-                        <i class="fa fa-fw menu-icon fa-list"></i> <span>Domains</span>
+                        <em class="fa fa-fw menu-icon fa-list"></em> <span>Domains</span>
                         <span class="pull-right-container">
                             <span class="label bg-red pull-right" id="num_denied" title="Number of enabled deny rules (domains and regex)"></span>
                             <span class="label bg-green pull-right" id="num_allowed" title="Number of enabled allow rules (domains and regex)"></span>
@@ -68,7 +68,7 @@
                 </li>
                 <li class="menu-group<? if scriptname == 'groups/lists' then ?> active<? end ?>">
                     <a href="<?=webhome?>groups/lists">
-                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Lists</span>
+                        <em class="fa fa-fw menu-icon fa-shield-alt"></em> <span>Lists</span>
                         <span class="pull-right-container">
                             <span class="label bg-blue pull-right" id="num_lists" title="Number of subscribed and enabled lists"></span>
                             <span class="label bg-yellow pull-right" id="num_gravity" title="Total number of domains subscribed by your Pi-hole"></span>
@@ -81,43 +81,43 @@
                 <!-- Enable/Disable Blocking -->
                 <li id="pihole-disable" class="menu-dns treeview">
                     <a href="<?=webhome?>#">
-                        <i class="fa fa-fw menu-icon fa-stop"></i> <span>Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
+                        <em class="fa fa-fw menu-icon fa-stop"></em> <span>Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
                         <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
+                            <em class="fa fa-angle-left pull-right"></em>
                         </span>
                     </a>
                     <ul class="treeview-menu">
                         <li>
                             <a href="<?=webhome?>#" id="pihole-disable-indefinitely">
-                                <i class="fa fa-fw menu-icon fa-infinity"></i> Indefinitely
+                                <em class="fa fa-fw menu-icon fa-infinity"></em> Indefinitely
                             </a>
                         </li>
                         <li>
                             <a href="<?=webhome?>#" id="pihole-disable-10s">
-                                <i class="fa fa-fw menu-icon fa-clock"></i> For 10 seconds
+                                <em class="fa fa-fw menu-icon fa-clock"></em> For 10 seconds
                             </a>
                         </li>
                         <li>
                             <a href="<?=webhome?>#" id="pihole-disable-30s">
-                                <i class="fa fa-fw menu-icon fa-clock"></i> For 30 seconds
+                                <em class="fa fa-fw menu-icon fa-clock"></em> For 30 seconds
                             </a>
                         </li>
                         <li>
                             <a href="<?=webhome?>#" id="pihole-disable-5m">
-                                <i class="fa fa-fw menu-icon fas fa-clock"></i> For 5 minutes
+                                <em class="fa fa-fw menu-icon fas fa-clock"></em> For 5 minutes
                             </a>
                         </li>
                         <li>
                             <a href="<?=webhome?>#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal">
-                                <i class="fa fa-fw menu-icon fa-user-clock"></i> Custom time
+                                <em class="fa fa-fw menu-icon fa-user-clock"></em> Custom time
                             </a>
                         </li>
                     </ul>
-                    <!-- <a href="<?=webhome?>#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
+                    <!-- <a href="<?=webhome?>#" id="flip-status"><em class="fa fa-stop"></em> <span>Disable</span></a> -->
                 </li>
                 <li id="pihole-enable" class="menu-dns treeview" style="display: none;">
                     <a href="<?=webhome?>#">
-                        <i class="fa fa-fw menu-icon fa-play"></i>
+                        <em class="fa fa-fw menu-icon fa-play"></em>
                         <span id="enableLabel">Enable Blocking&nbsp;&nbsp;&nbsp;
                             <span id="flip-status-enable"></span>
                         </span>
@@ -127,50 +127,50 @@
                 <!-- Settings -->
                 <li class="menu-system treeview <? if startsWith(scriptname, 'settings/') then ?> active<? end ?>">
                     <a href="<?=webhome?>#">
-                        <i class="fa fa-fw menu-icon fa-cogs"></i> <span>Settings</span>
+                        <em class="fa fa-fw menu-icon fa-cogs"></em> <span>Settings</span>
                         <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
+                            <em class="fa fa-angle-left pull-right"></em>
                         </span>
                     </a>
                     <ul class="treeview-menu">
                         <li class="<? if scriptname == 'settings/system' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/system">
-                                <i class="fa-fw menu-icon fa-solid fa-circle-info"></i> <span>System</span>
+                                <em class="fa-fw menu-icon fa-solid fa-circle-info"></em> <span>System</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings/dns' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/dns">
-                                <i class="fa-fw menu-icon fa-solid fa-book-atlas"></i> <span>DNS</span>
+                                <em class="fa-fw menu-icon fa-solid fa-book-atlas"></em> <span>DNS</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings/dhcp' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/dhcp">
-                                <i class="fa-fw menu-icon fa-solid fa-sitemap"></i> <span>DHCP</span>
+                                <em class="fa-fw menu-icon fa-solid fa-sitemap"></em> <span>DHCP</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings/api' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/api">
-                                <i class="fa-fw menu-icon fa-solid fa-window-restore"></i> <span>Web interface / API</span>
+                                <em class="fa-fw menu-icon fa-solid fa-window-restore"></em> <span>Web interface / API</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings/privacy' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/privacy">
-                                <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> <span>Privacy</span>
+                                <em class="fa-fw menu-icon fa-solid fa-binoculars"></em> <span>Privacy</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings/teleporter' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/teleporter">
-                                <i class="fa-fw menu-icon fa-solid fa-file-export"></i> <span>Teleporter</span>
+                                <em class="fa-fw menu-icon fa-solid fa-file-export"></em> <span>Teleporter</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings/dnsrecords' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/dnsrecords">
-                                <i class="fa-fw menu-icon fa-solid fa-address-book"></i> <span>Local DNS Records</span>
+                                <em class="fa-fw menu-icon fa-solid fa-address-book"></em> <span>Local DNS Records</span>
                             </a>
                         </li>
                         <li class="<? if scriptname == 'settings/all' then ?> active<? end ?> settings-level-expert">
                             <a href="<?=webhome?>settings/all">
-                                <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> <span>All settings</span>
+                                <em class="fa-fw menu-icon fa-solid fa-pen-to-square"></em> <span>All settings</span>
                             </a>
                         </li>
                     </ul>
@@ -178,45 +178,45 @@
                 <!-- Tools -->
                 <li class="menu-system treeview<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> active<? end ?>">
                     <a href="<?=webhome?>#">
-                        <i class="fa fa-fw menu-icon fa-tools"></i> <span>Tools</span>
+                        <em class="fa fa-fw menu-icon fa-tools"></em> <span>Tools</span>
                         <span class="warning-count hidden"></span>
                         <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
+                            <em class="fa fa-angle-left pull-right"></em>
                         </span>
                     </a>
                     <ul class="treeview-menu">
                         <!-- Pi-hole diagnosis -->
                         <li class="<? if scriptname == 'messages' then ?> active<? end ?>">
                             <a href="<?=webhome?>messages">
-                                <i class="fa fa-fw menu-icon fa-file-medical-alt"></i> <span>Pi-hole diagnosis</span>
+                                <em class="fa fa-fw menu-icon fa-file-medical-alt"></em> <span>Pi-hole diagnosis</span>
                                 <span class="pull-right-container warning-count hidden"></span>
                             </a>
                         </li>
                         <!-- Tail log files -->
                         <li class="treeview <? if scriptname == 'taillog' then ?> active<? end ?>">
                             <a href="<?=webhome?>#">
-                                <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <span>Tail log files</span>
+                                <em class="fa-fw menu-icon fa-solid fa-list-ul"></em> <span>Tail log files</span>
                                 <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
+                                    <em class="fa fa-angle-left pull-right"></em>
                                 </span>
                             </a>
                             <ul class="treeview-menu">
                                 <!-- Tail pihole.log -->
                                 <li class="<? if scriptname == 'taillog' and GET("file") == "dnsmasq" then ?> active<? end ?>">
                                     <a href="<?=webhome?>taillog?file=dnsmasq">
-                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> pihole.log
+                                        <em class="fa-fw menu-icon fa-solid fa-list-ul"></em> pihole.log
                                     </a>
                                 </li>
                                 <!-- Tail FTL.log -->
                                 <li class="<? if scriptname == 'taillog' and GET("file") == "ftl" then ?> active<? end ?>">
                                     <a href="<?=webhome?>taillog?file=ftl">
-                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> FTL.log
+                                        <em class="fa-fw menu-icon fa-solid fa-list-ul"></em> FTL.log
                                     </a>
                                 </li>
                                 <!-- Tail webserver.log -->
                                 <li class="<? if scriptname == 'taillog' and GET("file") == "webserver" then ?> active<? end ?>">
                                     <a href="<?=webhome?>taillog?file=webserver">
-                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> webserver.log
+                                        <em class="fa-fw menu-icon fa-solid fa-list-ul"></em> webserver.log
                                     </a>
                                 </li>
                             </ul>
@@ -224,25 +224,25 @@
                         <!-- Run gravity.sh -->
                         <li class="<? if scriptname == 'gravity' then ?> active<? end ?>">
                             <a href="<?=webhome?>gravity">
-                                <i class="fa fa-fw menu-icon fa-arrow-circle-down"></i> <span>Update Gravity</span>
+                                <em class="fa fa-fw menu-icon fa-arrow-circle-down"></em> <span>Update Gravity</span>
                             </a>
                         </li>
                         <!-- Query Lists -->
                         <li class="<? if scriptname == 'search' then ?> active<? end ?>">
                             <a href="<?=webhome?>search">
-                                <i class="fa fa-fw menu-icon fa-search"></i> <span>Search Lists</span>
+                                <em class="fa fa-fw menu-icon fa-search"></em> <span>Search Lists</span>
                             </a>
                         </li>
                         <!-- Interfaces -->
                         <li class="<? if scriptname == 'interfaces' then ?> active<? end ?>">
                             <a href="<?=webhome?>interfaces">
-                                <i class="fa fa-fw menu-icon fa-wifi"></i> <span>Interfaces</span>
+                                <em class="fa fa-fw menu-icon fa-wifi"></em> <span>Interfaces</span>
                             </a>
                         </li>
                         <!-- Network -->
                         <li class="<? if scriptname == 'network' then ?> active<? end ?>">
                             <a href="<?=webhome?>network">
-                                <i class="fa fa-fw menu-icon fa-network-wired"></i> <span>Network</span>
+                                <em class="fa fa-fw menu-icon fa-network-wired"></em> <span>Network</span>
                             </a>
                         </li>
                     </ul>
@@ -252,7 +252,7 @@
                 <li class="header text-uppercase">Donate</li>
                 <li class="menu-donate">
                     <a href="https://pi-hole.net/donate/" target="_blank">
-                        <i class="fas fa-fw menu-icon fa-donate"></i> <span>Donate</span>
+                        <em class="fas fa-fw menu-icon fa-donate"></em> <span>Donate</span>
                     </a>
                 </li>
             </ul>

@@ -149,8 +149,8 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     <th title="Session ID used internally by our Pi-hole">ID</th>
                                     <th title="Session is still valid (neither expired nor closed)">Valid</th>
                                     <th title="Connection between client and Pi-hole is end-to-end encrypted">TLS</th>
-                                    <th title="Session used application password during authentication"><i class="fas fa-robot"></i></th>
-                                    <th title="Session used CLI password during authentication"><i class="fas fa-terminal"></i></th>
+                                    <th title="Session used application password during authentication"><em class="fas fa-robot"></em></th>
+                                    <th title="Session used CLI password during authentication"><em class="fas fa-terminal"></em></th>
                                     <th title="Time at which the client created the session">Login at</th>
                                     <th title="Time at which the session expires (if not prolonged)">Valid until</th>
                                     <th title="The client that created this session (the current connection is highlighted in bold-face)">Client IP</th>
@@ -167,7 +167,7 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-lg-12 settings-level-basic save-button-container">
-        <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
+        <button type="button" class="btn btn-primary save-button"><em class="fa-solid fa-fw fa-floppy-disk"></em>&nbsp;Save & Apply</button>
     </div>
 </div>
 
@@ -183,7 +183,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <p>Use a phone app like Google Authenticator, 2FA Authenticator, FreeOTP or BitWarden, etc. to get 2FA codes when prompted during login.</p>
                 <p>1. Scan the QR code below with your app or enter the secret manually.</p>
                 <div class="text-center">
-                    <i id="qrcode-spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
+                    <em id="qrcode-spinner" class="fas fa-spinner fa-pulse fa-5x"></em>
                 </div>
                 <div class="text-center">
                     <canvas id="qrcode" class="qrcode" title="QR Code" hidden="true"></canvas>
@@ -196,7 +196,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             <div class="pwd-field form-group">
                                 <input type="text" size="6" maxlength="6" class="form-control totp_token" id="totp_code" placeholder="">
                             </div>
-                            <i class="fa-solid fa-clock-rotate-left pwd-field form-control-feedback"></i>
+                            <em class="fa-solid fa-clock-rotate-left pwd-field form-control-feedback"></em>
                         </div>
                     </div>
                 </div>
@@ -228,7 +228,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 signing in to the API. You can revoke the app password at any
                 time. The app password can also be used when 2FA is not enabled.</p>
                 <div class="text-center">
-                    <i id="password-spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
+                    <em id="password-spinner" class="fas fa-spinner fa-pulse fa-5x"></em>
                 </div>
                 <p id="password_display" class="text-center hidden">&#x1F510;<br><strong>Your new app password is:</strong><br><code class="password_background m-5" id="password_code"></code></p>
                 <p>IMPORTANT: The app password generated here will only be shown

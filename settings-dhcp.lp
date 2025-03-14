@@ -194,7 +194,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 <h3 class="box-title">Advanced description</h3>
                                 <div class="box-tools pull-right">
                                     <button type="button" class="btn btn-box-tool">
-                                        <i class="fa fa-plus"></i>
+                                        <em class="fa fa-plus"></em>
                                     </button>
                                 </div>
                             </div>
@@ -222,7 +222,7 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-lg-12 settings-level-basic save-button-container">
-        <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
+        <button type="button" class="btn btn-primary save-button"><em class="fa-solid fa-fw fa-floppy-disk"></em>&nbsp;Save & Apply</button>
     </div>
 </div>
 <script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
