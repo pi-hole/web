@@ -71,8 +71,8 @@ const htmlLegendPlugin = {
       boxSpan.style.display = "inline-block";
       boxSpan.style.margin = "0 10px";
       boxSpan.innerHTML = item.hidden
-        ? '<em class="colorBoxWrapper fa fa-square"></em>'
-        : '<em class="colorBoxWrapper fa fa-check-square"></em>';
+        ? '<i class="colorBoxWrapper fa fa-square"></i>'
+        : '<i class="colorBoxWrapper fa fa-check-square"></i>';
 
       boxSpan.addEventListener("click", () => {
         const { type } = chart.config;

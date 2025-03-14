@@ -28,13 +28,13 @@ function boxIcons(value) {
   return (
     '<span class="box-icons">' +
     (value.modified
-      ? '<em class="far fa-edit text-light-blue" title="Modified from default"></em>'
+      ? '<i class="far fa-edit text-light-blue" title="Modified from default"></i>'
       : "") +
     (value.flags.restart_dnsmasq
-      ? '<em class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></em>'
+      ? '<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>'
       : "") +
     (value.flags.env_var
-      ? '<em class="fas fa-lock text-orange" title="Settings overwritten by an environmental variable are read-only"></em>'
+      ? '<i class="fas fa-lock text-orange" title="Settings overwritten by an environmental variable are read-only"></i>'
       : "") +
     "</span>"
   );
@@ -222,7 +222,7 @@ function valueDetails(key, value) {
           ">" +
           // Label
           `<label for="${key}_${i}"><strong>${utils.escapeHtml(option.item)}` +
-          (option.item === value.default ? " <em>(default)</em>" : "") +
+          (option.item === value.default ? " <i>(default)</i>" : "") +
           "</strong></label>" +
           // Paragraph with description
           `<p class="help-block">${option.description}</p>` +

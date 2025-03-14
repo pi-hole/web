@@ -124,7 +124,7 @@ $(function () {
 
       // Set determined background color
       $(row).css("background-color", color);
-      $("td:eq(6)", row).html('<em class="' + iconClasses + '"></em>');
+      $("td:eq(6)", row).html('<i class="' + iconClasses + '"></i>');
 
       // Insert "Never" into Last Query field when we have
       // never seen a query from this device

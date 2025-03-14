@@ -21,7 +21,7 @@ function renderBool(data, type) {
       icon = "fa-check text-success";
     }
 
-    return '<em class="fa-solid ' + icon + '"></em>';
+    return '<i class="fa-solid ' + icon + '"></i>';
   }
 
   // Sorting content
@@ -107,13 +107,13 @@ $(function () {
         icon = "fa-xmark text-danger";
       }
 
-      $("td:eq(3)", row).html('<em class="fa-solid ' + icon + '" title="' + title + '"></em>');
+      $("td:eq(3)", row).html('<i class="fa-solid ' + icon + '" title="' + title + '"></i>');
 
       // If x_forwarded_for is != null, the session is using a proxy
       // Show x-forwarded-for instead of the remote address in italics
       // and show the remote address in the title attribute
       if (data.x_forwarded_for !== null) {
-        $("td:eq(8)", row).html("<em>" + data.x_forwarded_for + "</em>");
+        $("td:eq(8)", row).html("<i>" + data.x_forwarded_for + "</i>");
         $("td:eq(8)", row).attr("title", "Original remote address: " + data.remote_addr);
       }
     },

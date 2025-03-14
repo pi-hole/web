@@ -54,9 +54,9 @@ function doSearch() {
         numDomains +
         " domain" +
         (numDomains !== 1 ? "s" : "") +
-        " <em>" +
+        " <i>" +
         verb +
-        "</em> matching '<strong class='text-blue'>" +
+        "</i> matching '<strong class='text-blue'>" +
         utils.escapeHtml(q) +
         "</strong>'" +
         (numDomains > 0 ? ":" : ".") +
@@ -107,9 +107,9 @@ function doSearch() {
         numLists +
         " list" +
         (numLists !== 1 ? "s" : "") +
-        " <em>" +
+        " <i>" +
         verb +
-        "</em> matching '<strong class='text-blue'>" +
+        "</i> matching '<strong class='text-blue'>" +
         utils.escapeHtml(q) +
         "</strong>'" +
         (numLists > 0 ? ":" : ".") +
