@@ -16,7 +16,7 @@ mg.include('scripts/lua/header.lp','r')
             <div class="text-center">
                 <img src="<?=pihole.webhome()?>img/logo.svg" alt="Pi-hole logo" class="loginpage-logo" width="140" height="202">
             </div>
-            <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;">Pi-<b>hole</b></span></div>
+            <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;">Pi-<strong>hole</strong></span></div>
         </div>
         <!-- /.login-logo -->
 

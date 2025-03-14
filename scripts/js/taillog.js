@@ -26,10 +26,10 @@ function formatDnsmasq(line) {
 
   if (line.includes("denied") || line.includes("gravity blocked")) {
     // Red bold text for blocked domains
-    txt = `<b class="log-red">${txt}</b>`;
+    txt = `<strong class="log-red">${txt}</strong>`;
   } else if (line.includes("query[A") || line.includes("query[DHCP")) {
     // Bold text for initial query lines
-    txt = `<b>${txt}</b>`;
+    txt = `<strong>${txt}</strong>`;
   } else {
     // Grey text for all other lines
     txt = `<span class="text-muted">${txt}</span>`;

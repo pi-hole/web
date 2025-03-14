@@ -125,7 +125,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             <p class="help-block">
                                 If this option is set, Pi-hole ignores all clients which are not explicitly configured through dhcp.hosts. This can be useful to prevent unauthorized clients from getting an IP address from the DHCP server.<br>
                                 It should be noted that this option is not a security feature, as clients can still assign themselves an IP address and use the network. It is merely a convenience feature to prevent unknown clients from getting a valid IP configuration assigned automatically.<br>
-                                <b>Note:</b> When this feature is enabled <b>you will need to configure new clients manually</b> in <code>dhcp.hosts</code> before they can use the network.
+                                <strong>Note:</strong> When this feature is enabled <strong>you will need to configure new clients manually</strong> in <code>dhcp.hosts</code> before they can use the network.
                             </p>
                         </div>
                     </div>
