@@ -615,14 +615,6 @@ p.login-box-msg,
   flex: 1 1 auto;
 }
 
-#pihole-diagnosis {
-  min-width: 50px;
-}
-
-#pihole-diagnosis svg {
-  font-size: 28px;
-}
-
 .warning-count {
   position: relative;
   margin: 0;
@@ -2077,11 +2069,6 @@ td.highlight {
 .small-box .icon,
 .select2-selection__clear {
   font-family: sans-serif;
-}
-
-/*** size correction to fit in one line - Settings/DNS ***/
-#dns .col-md-11 {
-  width: 84%;
 }
 
 /*** add style to the information/about dropdown ***/
