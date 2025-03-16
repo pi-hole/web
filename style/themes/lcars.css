@@ -1027,17 +1027,12 @@ p.login-box-msg,
   margin-top: 20px;
 }
 
-.user-panel .fa-circle path {
-  stroke: rgba(0, 0, 0, 0.5);
-  stroke-width: 5%;
+.user-panel > .info i {
+  text-shadow: 0 0 1px black;
 }
 
-.user-panel .svg-inline--fa {
-  margin-right: 2px;
-}
-
-.user-panel svg.text-orange,
-.user-panel svg.text-red {
+.user-panel > .info i.text-orange,
+.user-panel > .info i.text-red {
   animation: fire 1s ease-in-out 0s infinite;
 }
 
