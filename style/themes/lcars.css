@@ -535,6 +535,11 @@ p.login-box-msg,
   z-index: 1000;
 }
 
+.dropdown.bootstrap-select {
+  border: none;
+  background: none;
+}
+
 .bootstrap-select > .dropdown-toggle.bs-placeholder,
 .bootstrap-select > .dropdown-toggle.bs-placeholder:active,
 .bootstrap-select > .dropdown-toggle.bs-placeholder:focus {
