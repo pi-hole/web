@@ -1586,3 +1586,16 @@ textarea.field-sizing-content {
   line-height: 0.5em;
   font-size: 1.7em;
 }
+
+.o-50 {
+  opacity: 0.5;
+}
+
+.vertical-center {
+  display: flex !important;
+  align-items: center;
+}
+
+.ml-auto {
+  margin-left: auto;
+}

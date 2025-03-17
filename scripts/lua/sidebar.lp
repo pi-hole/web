@@ -260,7 +260,12 @@
                 <li class="header text-uppercase">Donate</li>
                 <li class="menu-donate">
                     <a href="https://pi-hole.net/donate/" target="_blank">
-                        <i class="fas fa-fw menu-icon fa-donate"></i> <span>Donate</span>
+                        <i class="fas fa-fw menu-icon fa-donate"></i>
+                        <span>Donate</span>
+
+                        <span class="pull-right-container">
+                            <i class="fa fa-link pull-right o-50" title="This is an external link" style="font-size: 12px; margin-right: 8px"></i>
+                        </span>
                     </a>
                 </li>
             </ul>

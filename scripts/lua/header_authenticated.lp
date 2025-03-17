@@ -77,15 +77,55 @@ mg.include('header.lp','r')
                             <li class="user-body" id="advanced-info" style="display:none;"></li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
-                                <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">
+                                <a class="btn-link vertical-center" href="https://pi-hole.net/" rel="noopener" target="_blank">
                                     <? mg.include('../../img/logo-bw.svg', 'r') ?>
                                     Pi-hole Website
+
+                                    <i class="fa fa-link ml-auto o-50"
+                                        title="This is an external link"
+                                        style="font-size: 10px; margin-right: 8px"></i>
                                 </a>
+
                                 <hr>
-                                <a class="btn-link" href="https://docs.pi-hole.net/" rel="noopener" target="_blank"><i class="fa-fw menu-icon fa-regular fa-circle-question"></i> Documentation</a>
-                                <a class="btn-link" href="https://discourse.pi-hole.net/" rel="noopener" target="_blank"><i class="fa-fw menu-icon fab fa-discourse"></i> Pi-hole Discourse</a>
-                                <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank"><i class="fa-fw menu-icon fab fa-github"></i> GitHub</a>
-                                <a class="btn-link" href="https://discourse.pi-hole.net/c/announcements/5" rel="noopener" target="_blank"><i class="fa-fw menu-icon fa-solid fa-rocket"></i> Pi-hole Releases</a>
+
+                                <a class="btn-link vertical-center"
+                                    href="https://docs.pi-hole.net/"
+                                    rel="noopener"
+                                    target="_blank">
+
+                                    <i class="fa-fw menu-icon fa-regular fa-circle-question"></i>
+
+                                    Documentation
+
+                                    <i class="fa fa-link ml-auto o-50"
+                                        title="This is an external link"
+                                        style="font-size: 10px; margin-right: 8px"></i>
+                                </a>
+
+                                <a class="btn-link vertical-center" href="https://discourse.pi-hole.net/" rel="noopener" target="_blank">
+                                    <i class="fa-fw menu-icon fab fa-discourse"></i>
+                                    Pi-hole Discourse
+                                    <i class="fa fa-link ml-auto o-50"
+                                        title="This is an external link"
+                                        style="font-size: 10px; margin-right: 8px"></i>
+                                </a>
+
+                                <a class="btn-link vertical-center" href="https://github.com/pi-hole" rel="noopener" target="_blank">
+                                    <i class="fa-fw menu-icon fab fa-github"></i>
+                                    GitHub
+                                    <i class="fa fa-link ml-auto o-50"
+                                        title="This is an external link"
+                                        style="font-size: 10px; margin-right: 8px"></i>
+                                </a>
+
+                                <a class="btn-link vertical-center" href="https://discourse.pi-hole.net/c/announcements/5" rel="noopener" target="_blank">
+                                    <i class="fa-fw menu-icon fa-solid fa-rocket"></i>
+                                    Pi-hole Releases
+                                    <i class="fa fa-link ml-auto o-50"
+                                        title="This is an external link"
+                                        style="font-size: 10px; margin-right: 8px"></i>
+                                </a>
+
                                 <? if pihole.needLogin() then ?>
                                 <a class="btn-link" href="#" id="logout-button"><i class="fa-fw menu-icon fa-solid fa-arrow-right-from-bracket"></i> Log out</a>
                                 <? end ?>

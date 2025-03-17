@@ -773,9 +773,40 @@ function addAdvancedInfo() {
   advancedInfoTarget.show();
 }
 
+/**
+ * This function blocks all external links and shows a disclaimer modal
+ */
+function addDiclaimerOutsideLink() {
+  const currentOrigin = location.origin;
+  const areYouSureModal = document.querySelector("#areYouSureModal");
+  const continueButton = areYouSureModal.querySelector(".btn-primary");
+  const title = "External Link Warning";
+  const disclaimer = `You are about to leave Pi-hole. We are not responsible for the content of external sites.
+  </br></br>Are you sure you want to visit: `;
+
+  // Event delegation
+  document.body.addEventListener("click", function (e) {
+    const link = e.target.closest("a[href]");
+    if (!link) return; // skip if its not a link
+    // if the link is not internal, show the modal
+    if (!link.href.startsWith(currentOrigin)) {
+      e.preventDefault();
+      const website = `<b><i>${link.href}</i></b>`;
+      areYouSureModal.querySelector(".modal-title").textContent = title;
+      areYouSureModal.querySelector(".modal-text").innerHTML = disclaimer + website;
+      continueButton.addEventListener("click", () => {
+        globalThis.location.href = link.href;
+      });
+
+      $(areYouSureModal).modal("show");
+    }
+  });
+}
+
 $(function () {
   initSettingsLevel();
   addAdvancedInfo();
+  addDiclaimerOutsideLink();
 });
 
 // Install custom AJAX error handler for DataTables
